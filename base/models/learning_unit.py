@@ -29,13 +29,14 @@ from base.enums.learning_unit_periodicity import PERIODICITY_TYPES
 
 
 class LearningUnitAdmin(SerializableModelAdmin):
-    list_display = ('acronym', 'title', 'start_year', 'end_year', 'changed')
-    fieldsets = ((None, {'fields': ('acronym','title','description','start_year','end_year')}),)
+    list_display = ('learning_container','acronym', 'title', 'start_year', 'end_year', 'changed')
+    fieldsets = ((None, {'fields': ('learning_container','acronym','title','description','start_year','end_year')}),)
     search_fields = ['acronym']
 
 
 class LearningUnit(SerializableModel):
     external_id = models.CharField(max_length=100, blank=True, null=True)
+    learning_container = models.ForeignKey('LearningContainer')
     changed = models.DateTimeField(null=True)
     acronym = models.CharField(max_length=15)
     title = models.CharField(max_length=255)
