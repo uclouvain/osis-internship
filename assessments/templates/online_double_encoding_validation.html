@@ -50,18 +50,22 @@
             <div class="col-md-3">
                 <div class="form-group">
                     <label>{% trans 'scores_responsible' %}</label><br>
-                    {% if coordinator %}
-                        {{ coordinator }}
-                    {% else %}
-                        {% trans 'none' %}
-                    {% endif %}
-                    {% if tutors %}
+                     {% if tutors %}
                         <a role="button" data-toggle="collapse" data-target="#tutors_by_course"
-                           aria-expanded="false"
+                           aria-expanded="false" class="pull-right"
                            aria-controls="tutors_by_course"
                            title="{% trans 'display_tutors' %}">
                           <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
                         </a>
+                    {% endif %}
+                    {% if score_responsibles %}
+                        <ul class="list-unstyled">
+                            {% for score_responsible in score_responsibles %}
+                                <li>{{ score_responsible }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        {% trans 'none' %}
                     {% endif %}
                     <div class="collapse" id="tutors_by_course">
                         <label>{% trans 'tutors' %}</label><br>

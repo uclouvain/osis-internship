@@ -49,18 +49,22 @@
             <div class="col-md-3">
                 <div class="form-group">
                     <label>{% trans 'scores_responsible' %}</label><br>
-                    {% if coordinator %}
-                        {{ coordinator }}
-                    {% else %}
-                        {% trans 'none' %}
-                    {% endif %}
                     {% if tutors %}
                         <a role="button" data-toggle="collapse" data-target="#tutors_by_course"
-                           aria-expanded="false"
+                           aria-expanded="false" class="pull-right"
                            aria-controls="tutors_by_course"
                            title="{% trans 'display_tutors' %}">
-                            <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+                          <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
                         </a>
+                    {% endif %}
+                    {% if score_responsibles %}
+                        <ul class="list-unstyled">
+                            {% for score_responsible in score_responsibles %}
+                                <li>{{ score_responsible }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        {% trans 'none' %}
                     {% endif %}
                     <div class="collapse" id="tutors_by_course">
                         <label>{% trans 'tutors' %}</label><br>
@@ -210,16 +214,24 @@ var values = [
         ['', '', '']];
 
 $("input[id^='num_score_']" ).change(function(event) {
-    console.log("coucou");
     // Get the object that received the event.
     var target = $(event.target);
     var id = target.attr("id");
+    var is_decimal = '{{enrollment.session_exam.learning_unit_year.decimal_scores}}'
     if (typeof id == 'undefined') {
         target = target.parent();
         id = target.attr("id");
     }
     var enrollmentId = id.substring(id.lastIndexOf("_") + 1);
-
+    if (!is_decimal && target.val() % 1 != 0){
+        target.css("border", "1px solid #ff0000");
+    }else{
+        if (target.val() > 20 || (target.val() < 0)) {
+            target.css("border", "1px solid #ff0000");
+        } else {
+            target.css("border", "1px solid lightgrey");
+        }
+    }
     if(target.val() != "") {
         $("#slt_justification_score_" + enrollmentId).val('');
     }
