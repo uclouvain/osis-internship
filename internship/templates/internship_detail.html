@@ -37,8 +37,8 @@
         <h2>{{ internship.organization.name }} - {{ internship.speciality.name }}</h2>
     </div>
     <div class="panel panel-default">
-        {% for i in number_choices %}
-            <div class="panel-body">
+        <div class="panel-body">
+            {% for i in number_choices %}
                 {% if forloop.counter0 != 0 %}
                     {% if forloop.counter0 == 1 %}
                         <label> {% trans 'first_choice' %} </label> : {{i}}<br/>
@@ -66,8 +66,12 @@
                     </div>
                     <br/>
                 {% endif %}
+                <br>
+            {% endfor %}
+                <div class="row">
+                    <a href="{% url 'edit_period_places' internship.id %}" class="btn btn-primary" role="button">{% trans 'edit_places' %}</a>
+                </div>
             </div>
-        {% endfor %}
     </div>
 
 {% endblock %}

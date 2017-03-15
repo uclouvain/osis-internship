@@ -23,23 +23,24 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.contrib import admin
 from django.db import models
 import urllib.request
 import unicodedata
 from xml.dom import minidom
 import logging
 from internship.models.organization import Organization
+from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 
 
-class OrganizationAddressAdmin(admin.ModelAdmin):
+class OrganizationAddressAdmin(SerializableModelAdmin):
     list_display = ('organization', 'label', 'location', 'postal_code', 'city', 'country', 'latitude', 'longitude')
     fieldsets = ((None, {'fields': ('organization', 'label', 'location', 'postal_code', 'city', 'country', 'latitude',
                                     'longitude')}),)
     raw_id_fields = ('organization',)
+    search_fields = ['organization__name', 'city']
 
 
-class OrganizationAddress(models.Model):
+class OrganizationAddress(SerializableModel):
     organization = models.ForeignKey('Organization')
     label = models.CharField(max_length=20)
     location = models.CharField(max_length=255)
@@ -48,6 +49,9 @@ class OrganizationAddress(models.Model):
     latitude = models.FloatField(blank=True, null=True)
     longitude = models.FloatField(blank=True, null=True)
     country = models.CharField(max_length=255)
+
+    def __str__(self):
+        return u"%s" % self.organization
 
     def save(self, *args, **kwargs):
         has_organization = False
