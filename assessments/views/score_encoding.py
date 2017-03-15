@@ -448,7 +448,9 @@ def get_data(request, offer_year_id=None):
                           'notes_list': scores_list,
                           'number_session': mdl.session_exam.find_session_exam_number(),
                           'offer_year_list': all_offers,
-                          'offer_year_id': offer_year_id})
+                          'offer_year_id': offer_year_id,
+                          'active_tab': request.GET.get('active_tab', None)  # Allow keep selection
+                          })
 
 
 def get_data_online(learning_unit_year_id, request):
@@ -638,7 +640,9 @@ def get_data_pgmer(request,
                           'number_session': mdl.session_exam.find_session_exam_number(),
                           'learning_unit_year_acronym': learning_unit_year_acronym,
                           'incomplete_encodings_only': incomplete_encodings_only,
-                          'last_synchronization': mdl.synchronization.find_last_synchronization_date()})
+                          'last_synchronization': mdl.synchronization.find_last_synchronization_date(),
+                          'active_tab': request.GET.get('active_tab', None) #Allow keep selection
+                          })
 
 
 @login_required
@@ -705,7 +709,8 @@ def get_data_specific_criteria(request):
             'offer_list': offers_year_managed,
             'number_session': number_session,
             'exam_enrollments': exam_enrollments,
-            'is_program_manager': is_program_manager}
+            'is_program_manager': is_program_manager
+    }
 
 
 @login_required
