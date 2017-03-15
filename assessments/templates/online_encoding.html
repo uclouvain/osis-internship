@@ -49,19 +49,23 @@
         <div class="row">
             <div class="col-md-3">
                 <div class="form-group">
-                    <label>{% trans 'coordinator' %}</label><br>
-                    {% if coordinator %}
-                        {{ coordinator }}
-                    {% else %}
-                        {% trans 'none' %}
-                    {% endif %}
+                    <label>{% trans 'scores_responsible' %}</label><br>
                     {% if tutors %}
                         <a role="button" data-toggle="collapse" data-target="#tutors_by_course"
-                           aria-expanded="false"
+                           aria-expanded="false" class="pull-right"
                            aria-controls="tutors_by_course"
                            title="{% trans 'display_tutors' %}">
                           <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
                         </a>
+                    {% endif %}
+                    {% if score_responsibles %}
+                        <ul class="list-unstyled">
+                            {% for score_responsible in score_responsibles %}
+                                <li>{{ score_responsible }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        {% trans 'none' %}
                     {% endif %}
                     <div class="collapse" id="tutors_by_course">
                         <label>{% trans 'tutors' %}</label><br>
@@ -260,9 +264,9 @@
                     <p class="help-block">{% trans 'help_submission_scores_label' as help_submission_scores_label %}{{ help_submission_scores_label | format:draft_scores_not_submitted | safe}}</p>
             </div>
             <div class="modal-footer">
-                <a class="btn btn-warning" href="{% url 'online_encoding_submission' learning_unit_year.id %}?{{ request.GET.urlencode }}"
-                   role="button" id="lnk_post_scores_submission_btn"
-                   data-toggle="tooltip" data-placement="left" title="{% trans 'definitive_save' %}" ><span class="glyphicon glyphicon-send" aria-hidden="true"></span> {% trans 'submission' %}</a>
+                <button class="btn btn-warning" href="{% url 'online_encoding_submission' learning_unit_year.id %}?{{ request.GET.urlencode }}"
+                   role="button" id="lnk_post_scores_submission_btn" data-container="body"
+                   data-toggle="tooltip" data-placement="left" title="{% trans 'definitive_save' %}" ><span class="glyphicon glyphicon-send" aria-hidden="true"></span> {% trans 'submission' %}</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal" id="bt_cancel_submission_score_modal">{% trans 'cancel' %}</button>
             </div>
         </div>

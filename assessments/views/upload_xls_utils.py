@@ -314,11 +314,11 @@ def __save_xls_scores(request, file_name, is_program_manager, user, learning_uni
         if not is_program_manager:
             tutor = mdl.tutor.find_by_user(user)
             if tutor and learning_unit_year.learning_unit_id:
-                coordinator = mdl_attr.attribution.search(tutor=tutor,
-                                                          learning_unit_year=learning_unit_year,
-                                                          score_responsible=True)
-                if not coordinator:
-                    messages.add_message(request, messages.SUCCESS, '%s' % _('the_coordinator_must_still_submit_scores'))
+                score_responsibles = mdl_attr.attribution.search(tutor=tutor,
+                                                                 learning_unit_year=learning_unit_year,
+                                                                 score_responsible=True)
+                if not score_responsibles:
+                    messages.add_message(request, messages.SUCCESS, '%s' % _('scores_responsible_must_still_submit_scores'))
         return True
     else:
         messages.add_message(request, messages.ERROR, '%s' % _('no_score_injected'))

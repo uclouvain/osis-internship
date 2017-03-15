@@ -1,6 +1,6 @@
 ##############################################################################
 #
-#    OSIS stands for Open Student Information System. It's an application
+# OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -23,20 +23,21 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.contrib import admin
-from assistant.models import reviewer, manager, settings, academic_assistant, assistant_mandate
-from assistant.models.assistant_document_file import AssistantDocumentFile
-from assistant.models.mandate_structure import MandateStructure
-from assistant.models.review import Review
-from assistant.models.tutoring_learning_unit_year import TutoringLearningUnitYear
+from django.test import SimpleTestCase
+from internship.forms import form_student_information
 
 
-admin.site.register(assistant_mandate.AssistantMandate, assistant_mandate.AssistantMandateAdmin)
-admin.site.register(AssistantDocumentFile)
-admin.site.register(academic_assistant.AcademicAssistant, academic_assistant.AcademicAssistantAdmin)
-admin.site.register(MandateStructure)
-admin.site.register(Review)
-admin.site.register(TutoringLearningUnitYear)
-admin.site.register(reviewer.Reviewer, reviewer.ReviewerAdmin)
-admin.site.register(manager.Manager, manager.ManagerAdmin)
-admin.site.register(settings.Settings, settings.SettingsAdmin)
+class TestFormStudentInformation(SimpleTestCase):
+    def test_valid_form(self):
+        data = {
+            "email": "test@test.com",
+            "phone_mobile": "046486313",
+            "location": "location",
+            "postal_code": "postal",
+            "city": "city",
+            "country": "country",
+            "contest": "GENERALIST"
+        }
+        form = form_student_information.StudentInformationForm(data)
+        self.assertTrue(form.is_valid())
+

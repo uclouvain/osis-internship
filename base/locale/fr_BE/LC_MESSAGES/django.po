@@ -995,6 +995,9 @@ msgstr "La note encodée est incorrecte (elle doit être comprise entre 0 et 20)
 msgid "scores_injection"
 msgstr "Injection des notes"
 
+msgid "scores_responsible"
+msgstr "Responsable de notes"
+
 msgid "scores_saved"
 msgstr "note(s) enregistrée(s)"
 
@@ -1353,3 +1356,12 @@ msgstr "Co-titulaire"
 
 msgid "DEPUTY"
 msgstr "Suppléant"
+
+msgid "SCORES_RESPONSIBLE"
+msgstr "Responsable de notes"
+
+msgid "scores_responsible_can_submit_partial_encoding"
+msgstr "Les responsables de notes peuvent soumettre des encodages partiels"
+
+msgid "scores_responsible_must_still_submit_scores"
+msgstr "Le responsable de notes doit toujours soumettre les notes"

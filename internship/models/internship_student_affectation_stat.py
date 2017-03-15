@@ -64,4 +64,5 @@ def find_by_id(affectation_id):
 
 def find_non_mandatory_affectations():
     periods = ["P9", "P10", "P11", "P12"]
-    return InternshipStudentAffectationStat.objects.filter(period__name__in=periods)
+    return InternshipStudentAffectationStat.objects.filter(period__name__in=periods).\
+        select_related("student", "organization", "speciality")
