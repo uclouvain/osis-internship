@@ -77,7 +77,7 @@ def _get_all_data(worksheet):
     registration_ids = []
     sessions = []
     academic_years = []
-    justifications = []
+
     for count, row in enumerate(worksheet.rows):
         if row[col_registration_id].value is None \
                 or len(str(row[col_registration_id].value)) == 0 \
@@ -111,16 +111,11 @@ def _get_all_data(worksheet):
         if registration_id and registration_id not in registration_ids:
             registration_ids.append(registration_id)
 
-        justification = row[col_justification].value
-        if justification:
-            justifications.append(justification)
-
     return {'learning_unit_acronyms': learn_unit_acronyms,
             'offer_acronyms': offer_acronyms,
             'registration_ids': registration_ids,
             'sessions': sessions,
-            'academic_years': academic_years,
-            'justifications': justifications}
+            'academic_years': academic_years}
 
 
 def __save_xls_scores(request, file_name, is_program_manager, user, learning_unit_year_id):
