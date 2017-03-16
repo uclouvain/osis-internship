@@ -43,18 +43,19 @@ class LearningUnitYearForm(forms.Form):
     )
 
     def clean(self):
-        cd=self.cleaned_data
-        academic_year = cd.get('academic_year')
-        acronym = cd.get('acronym').upper()
-        keyword = cd.get('keyword')
-        status = cd.get('status')
-        type = cd.get('type')
+        clean_data=self.cleaned_data
+        academic_year = clean_data.get('academic_year')
+        acronym = clean_data.get('acronym').upper()
+        keyword = clean_data.get('keyword')
+        status = clean_data.get('status')
+        type = clean_data.get('type')
 
         if (not acronym and not keyword and not status and not type):
             raise ValidationError(learning_unit_year.error_invalid_search)
         elif (str(academic_year) == "-1"):
-            check_when_academic_year_is_all(acronym,keyword,status,type)
-        return cd
+            #check_when_academic_year_is_all(acronym,keyword,status,type)
+            raise ValidationError(learning_unit_year.error_invalid_search)
+        return clean_data
 
     def set_academic_years_all(self):
         academic_year = self.cleaned_data.get('academic_year')
