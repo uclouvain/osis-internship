@@ -43,30 +43,15 @@ def learning_units(request):
 @login_required
 @permission_required('base.can_access_learningunit', raise_exception=True)
 def learning_units_search(request):
-    academic_year = request.GET['academic_year']
-    acronym = request.GET['acronym'].upper()
-    type = request.GET['type']
-    status = request.GET['status']
-    keyword = request.GET['keyword'].upper()
     academic_years = mdl.academic_year.find_academic_years()
-
     form = LearningUnitYearForm(request.GET)
-
-    if academic_year=="-1":
-        academic_years_all=1
-    else:
-        academic_years_all=0
-
     if form.is_valid():
-        if (academic_years_all==1 and acronym):
-            learning_units=mdl.learning_unit_year.find_by_acronym(acronym)
-        else:
-            if academic_years_all==1:
-                learning_units = mdl.learning_unit_year.search(academic_year_id=None,acronym=acronym,title=keyword,type=type,status=status)
-            else:
-                learning_units = mdl.learning_unit_year.search(academic_year_id=academic_year,acronym=acronym,title=keyword,type=type,status=status)
+        learning_units = form.get_learning_units()
     else:
         learning_units = None
+
+    academic_year = form.get_academic_year()
+    academic_years_all=form.set_academic_years_all()
 
     return layout.render(request, "learning_units.html", {'academic_year': int(academic_year),
                                                           'academic_years': academic_years,

@@ -56,13 +56,41 @@ class LearningUnitYearForm(forms.Form):
             if (acronym and not keyword and not type and not status):
                 learning_units=mdl.learning_unit_year.find_by_acronym(acronym)
                 if not learning_units:
-                    self.add_error('acronym', learning_unit_year.error_academic_year_required)
+                    raise ValidationError(learning_unit_year.error_academic_year_required)
             if (not acronym and keyword and not type and not status):
-                self.add_error('keyword', learning_unit_year.error_academic_year_required)
+                raise ValidationError(learning_unit_year.error_academic_year_required)
             if (not acronym and not keyword and not type and status):
-                self.add_error('status', learning_unit_year.error_academic_year_required)
+                raise ValidationError(learning_unit_year.error_academic_year_required)
             if (not acronym and not keyword and type and not status):
-                self.add_error('type', learning_unit_year.error_academic_year_required)
+                raise ValidationError(learning_unit_year.error_academic_year_required)
             if (not acronym and not keyword and type and status):
-                self.add_error('type', learning_unit_year.error_academic_year_required)
+                raise ValidationError(learning_unit_year.error_academic_year_required)
         return self.cleaned_data
+
+    def set_academic_years_all(self):
+        academic_year = self.cleaned_data.get('academic_year')
+        if academic_year=="-1":
+            academic_years_all=1
+        else:
+            academic_years_all=0
+        return academic_years_all
+
+    def get_learning_units(self):
+        academic_year = self.cleaned_data.get('academic_year')
+        acronym = self.cleaned_data.get('acronym').upper()
+        keyword = self.cleaned_data.get('keyword')
+        status = self.cleaned_data.get('status')
+        type = self.cleaned_data.get('type')
+        if (academic_year=="-1" and acronym):
+            learning_units=mdl.learning_unit_year.find_by_acronym(acronym)
+        else:
+            if (academic_year=="-1"):
+                learning_units = mdl.learning_unit_year.search(academic_year_id=None,acronym=acronym,title=keyword,type=type,status=status)
+            else:
+                learning_units = mdl.learning_unit_year.search(academic_year_id=academic_year,acronym=acronym,title=keyword,type=type,status=status)
+        return learning_units
+
+    def get_academic_year(self):
+        academic_year = self.cleaned_data.get('academic_year')
+        return academic_year
+
