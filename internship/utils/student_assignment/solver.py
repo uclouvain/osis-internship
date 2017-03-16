@@ -98,15 +98,15 @@ class Solver:
 
     def __classify_students(self, student_wrappers):
         for student_wrapper in student_wrappers.values():
-            if student_wrapper.has_priority:
+            if student_wrapper.has_priority():
                 self.priority_students.append(student_wrapper)
                 self.students_priority_lefts_to_assign.append(student_wrapper)
             elif is_generalist(student_wrapper):
-                self.specialists_students.append(student_wrapper)
-                self.specialists_students_lefts_to_assign.append(student_wrapper)
-            else:
                 self.generalists_students.append(student_wrapper)
                 self.generalists_students_lefts_to_assign.append(student_wrapper)
+            else:
+                self.specialists_students.append(student_wrapper)
+                self.specialists_students_lefts_to_assign.append(student_wrapper)
 
     def set_offers(self, internship_wrappers):
         self.offers_by_organization_speciality = internship_wrappers
@@ -205,9 +205,9 @@ class Solver:
         return False
 
     def __assign_first_possible_offer_to_student(self, student_wrapper):
-        if self.__assign_personal_offer(student_wrapper, 0):
+        if self.__assign_speciality(student_wrapper):
             return True
-        elif self.__assign_speciality(student_wrapper):
+        elif self.__assign_personal_offer(student_wrapper, 0):
             return True
         elif not is_generalist(student_wrapper) and self.__assign_personal_offer(student_wrapper, 1):
             return True
