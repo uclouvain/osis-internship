@@ -1353,3 +1353,9 @@ msgstr "Co-titulaire"
 
 msgid "DEPUTY"
 msgstr "Suppléant"
+
+msgid "no_valid_m_justification_error"
+msgstr "En tant qu'enseignant vous ne pouvez pas encoder d'absence justifiée (M)"
+
+msgid "abscence_justified_preserved"
+msgstr "Abscence justifiée dèjà encodée et préservée"
