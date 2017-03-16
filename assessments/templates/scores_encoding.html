@@ -60,7 +60,7 @@
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <form method="get" action="{% url 'refresh_list' %}" id="form_search_scores_by_offer">
+                    <form method="get" action="{% url 'scores_encoding' %}" id="form_search_scores_by_offer">
                         <div class="col-md-10">
                             <div class="form-group">
                                 <label>{% trans 'offer' %}</label><br>
@@ -110,7 +110,7 @@
                             {% for note_detail in notes_list %}
                             <tr>
                                 <td>{{ note_detail.learning_unit_year.acronym }}</td>
-                                <td><a href="{% url 'online_encoding' note_detail.learning_unit_year.id %}"
+                                <td><a href="{% url 'online_encoding' note_detail.learning_unit_year.id %}?{{ request.GET.urlencode }}"
                                            id="lnk_{{ note_detail.learning_unit_year.acronym }}">{{ note_detail.learning_unit_year.title }}</a>
                                 </td>
                                 <td id="txt_progress_{{ note_detail.learning_unit_year.acronym }}" >
@@ -121,7 +121,7 @@
                                     </div>
                                 </td>
                                 <td><a class="btn btn-default"
-                                       href="{% url 'online_encoding_form' note_detail.learning_unit_year.id%}"
+                                       href="{% url 'online_encoding_form' note_detail.learning_unit_year.id%}?{{ request.GET.urlencode }}"
                                        role="button"
                                        id="lnk_encode_{{ note_detail.learning_unit_year.acronym }}"
                                        data-toggle="tooltip" data-placement="right"
@@ -159,7 +159,7 @@
                             <tr>
                                 <td>{{ note_detail.learning_unit_year.acronym }}</td>
                                 <td><a
-                                        href="{% url 'online_encoding' note_detail.learning_unit_year.id %}"
+                                        href="{% url 'online_encoding' note_detail.learning_unit_year.id %}?{{ request.GET.urlencode }}"
                                         title="Visualiser/charger les notes pour le cours"
                                         id="lnk_paper_encoding_messages_{{note_detail.learning_unit_year.id}}">{{ note_detail.learning_unit_year.title }}</a>
                                 </td>
@@ -198,7 +198,7 @@
                             <tr>
                                 <td>{{ note_detail.learning_unit_year.acronym }}</td>
                                 <td><a
-                                        href="{% url 'online_encoding' note_detail.learning_unit_year.id %}"
+                                        href="{% url 'online_encoding' note_detail.learning_unit_year.id %}?{{ request.GET.urlencode }}"
                                         title="Visualiser/charger les notes pour le cours"
                                         id="lnk_online_encoding_messages_{{note_detail.learning_unit_year.id}}">{{ note_detail.learning_unit_year.title }}</a>
                                 </td>
