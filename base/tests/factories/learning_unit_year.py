@@ -30,7 +30,7 @@ import datetime
 import operator
 from django.conf import settings
 from django.utils import timezone
-from base.enums import learning_unit_year_type
+from base.enums import learning_unit_year
 
 from base.tests.factories.academic_year import AcademicYearFactory
 from base.tests.factories.learning_unit import LearningUnitFactory

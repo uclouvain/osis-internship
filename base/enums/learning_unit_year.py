@@ -25,16 +25,42 @@
 ##############################################################################
 
 from django.utils.translation import ugettext_lazy as _
-#Eviter l'utilisation de variables pour la traduction:
-#l’utilitaire de détection des chaînes à traduire de Django, django-admin makemessages, ne sera pas capable de trouver ces chaînes.
-REQUIRED = 'This field is required'
-INVALID = 'Enter a valid value'
-ACADEMIC_YEAR_REQUIRED = 'Please specify an academic year'
-INVALID_SEARCH = 'Invalid search - Please fill some information before executing a search.'
+
+#Global variable
+
+#Errors handling on form
+error_required = 'This field is required'
+error_invalid = 'Enter a valid value'
+error_academic_year_required = 'Please specify an academic year'
+error_invalid_search = 'Invalid search - Please fill some information before executing a search.'
 
 LEARNING_UNIT_YEARS_ERRORS = (
-    (REQUIRED, _('This field is required')),
-    (INVALID, _('Enter a valid value')),
-    (ACADEMIC_YEAR_REQUIRED, _('Please specify an academic year')),
-    (INVALID_SEARCH, _('Invalid search - Please fill some information before executing a search.'))
+    (error_required, _('This field is required')),
+    (error_invalid, _('Enter a valid value')),
+    (error_academic_year_required, _('Please specify an academic year')),
+    (error_invalid_search, _('Invalid search - Please fill some information before executing a search.'))
+)
+
+#Status in model learning_unit_year
+status_none = ""
+status_valid = "Valid"
+status_invalid = "Invalid"
+
+LEARNING_UNIT_YEAR_STATUS = (
+    (status_none, _('None')),
+    (status_valid, _('Valid')),
+    (status_invalid, _('Invalid'))
+)
+
+#Types in model learning_unit_year
+type_none = ""
+type_course = "Course"
+type_master_thesis = "Master thesis"
+type_internship = "Internship"
+
+LEARNING_UNIT_YEAR_TYPES = (
+    (type_none, _('None')),
+    (type_course, _('Course')),
+    (type_master_thesis, _('Master thesis')),
+    (type_internship, _('Internship'))
 )

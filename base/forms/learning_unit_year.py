@@ -26,10 +26,7 @@
 from django import forms
 from base import models as mdl
 from django.core.exceptions import ValidationError
-from django.utils.translation import ugettext_lazy as _
-from base.enums import learning_unit_year_type
-from base.enums import learning_unit_year_status
-from base.enums import learning_unit_year_errors
+from base.enums import learning_unit_year
 
 class LearningUnitYearForm(forms.Form):
 
@@ -37,11 +34,11 @@ class LearningUnitYearForm(forms.Form):
     acronym = forms.CharField(max_length=20, required=False)
     keyword = forms.CharField(max_length=20, required=False)
     type = forms.CharField(
-        widget=forms.Select(choices=learning_unit_year_type.LEARNING_UNIT_YEAR_TYPES),
+        widget=forms.Select(choices=learning_unit_year.LEARNING_UNIT_YEAR_TYPES),
         required=False
     )
     status=forms.CharField(
-        widget=forms.Select(choices=learning_unit_year_status.LEARNING_UNIT_YEAR_STATUS),
+        widget=forms.Select(choices=learning_unit_year.LEARNING_UNIT_YEAR_STATUS),
         required=False
     )
 
@@ -53,19 +50,19 @@ class LearningUnitYearForm(forms.Form):
         type = self.cleaned_data.get('type')
 
         if (not acronym and not keyword and not status and not type):
-            raise ValidationError(learning_unit_year_errors.INVALID_SEARCH)
+            raise ValidationError(learning_unit_year.error_invalid_search)
 
         if (str(academic_year) == "-1"):
             if (acronym and not keyword and not type and not status):
                 learning_units=mdl.learning_unit_year.find_by_acronym(acronym)
                 if not learning_units:
-                    self.add_error('acronym', learning_unit_year_errors.ACADEMIC_YEAR_REQUIRED)
+                    self.add_error('acronym', learning_unit_year.error_academic_year_required)
             if (not acronym and keyword and not type and not status):
-                self.add_error('keyword', learning_unit_year_errors.ACADEMIC_YEAR_REQUIRED)
+                self.add_error('keyword', learning_unit_year.error_academic_year_required)
             if (not acronym and not keyword and not type and status):
-                self.add_error('status', learning_unit_year_errors.ACADEMIC_YEAR_REQUIRED)
+                self.add_error('status', learning_unit_year.error_academic_year_required)
             if (not acronym and not keyword and type and not status):
-                self.add_error('type', learning_unit_year_errors.ACADEMIC_YEAR_REQUIRED)
+                self.add_error('type', learning_unit_year.error_academic_year_required)
             if (not acronym and not keyword and type and status):
-                self.add_error('type', learning_unit_year_errors.ACADEMIC_YEAR_REQUIRED)
+                self.add_error('type', learning_unit_year.error_academic_year_required)
         return self.cleaned_data
