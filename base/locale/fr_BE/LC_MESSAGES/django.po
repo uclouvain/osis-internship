@@ -1364,7 +1364,7 @@ msgid "scores_responsible_can_submit_partial_encoding"
 msgstr "Les responsables de notes peuvent soumettre des encodages partiels"
 
 msgid "scores_responsible_must_still_submit_scores"
-msgstr "Le responsable de notes doit toujours soumettre les notes"msgstr "Suppléant"
+msgstr "Le responsable de notes doit toujours soumettre les notes"
 
 msgid "no_valid_m_justification_error"
 msgstr "Vous ne pouvez pas encoder d'absence justifiée (M) via l'injection xls"
