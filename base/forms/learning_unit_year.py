@@ -50,9 +50,9 @@ class LearningUnitYearForm(forms.Form):
         status = clean_data.get('status')
         type = clean_data.get('type')
 
-        data_withou_academic_year=acronym+keyword+status+type
+        data_without_academic_year=acronym+keyword+status+type
 
-        if (data_withou_academic_year==""):
+        if (data_without_academic_year==""):
             raise ValidationError(learning_unit_year.error_invalid_search)
         elif (str(academic_year) == "-1"):
             check_when_academic_year_is_all(acronym,keyword,status,type)
