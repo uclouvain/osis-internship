@@ -64,6 +64,7 @@ INSTALLED_APPS = (
     'admission',
     'assessments',
     'localflavor',
+    'cms'
 )
 
 # check if we are testing right now
