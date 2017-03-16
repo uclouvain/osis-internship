@@ -1355,7 +1355,7 @@ msgid "DEPUTY"
 msgstr "Suppléant"
 
 msgid "no_valid_m_justification_error"
-msgstr "En tant qu'enseignant vous ne pouvez pas encoder d'absence justifiée (M)"
+msgstr "Vous ne pouvez pas encoder d'absence justifiée (M) via l'injection xls"
 
 msgid "abscence_justified_preserved"
 msgstr "Abscence justifiée dèjà encodée et préservée"

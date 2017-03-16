@@ -1362,7 +1362,7 @@ msgid "DEPUTY"
 msgstr "Deputy"
 
 msgid "no_valid_m_justification_error"
-msgstr "As a tutor you can't encode a JUSTIFIED ABSENCE (M)"
+msgstr "You can't encode a JUSTIFIED ABSENCE (M) via the XLS injection"
 
 msgid "abscence_justified_preserved"
 msgstr "Justified abscence already encoded and preserved"
