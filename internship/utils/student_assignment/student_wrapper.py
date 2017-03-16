@@ -51,7 +51,9 @@ class StudentWrapper:
         self.information = information
 
     def get_contest(self):
-        return self.information.contest
+        if self.information:
+            return self.information.contest
+        return None
 
     def add_enrollment(self, enrollment):
         key = enrollment.internship_choice
