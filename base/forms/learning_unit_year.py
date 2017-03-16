@@ -53,18 +53,9 @@ class LearningUnitYearForm(forms.Form):
             raise ValidationError(learning_unit_year.error_invalid_search)
 
         if (str(academic_year) == "-1"):
-            if (acronym and not keyword and not type and not status):
-                learning_units=mdl.learning_unit_year.find_by_acronym(acronym)
-                if not learning_units:
-                    raise ValidationError(learning_unit_year.error_academic_year_required)
-            if (not acronym and keyword and not type and not status):
-                raise ValidationError(learning_unit_year.error_academic_year_required)
-            if (not acronym and not keyword and not type and status):
-                raise ValidationError(learning_unit_year.error_academic_year_required)
-            if (not acronym and not keyword and type and not status):
-                raise ValidationError(learning_unit_year.error_academic_year_required)
-            if (not acronym and not keyword and type and status):
-                raise ValidationError(learning_unit_year.error_academic_year_required)
+            error=no_academic_year(acronym,keyword,status,type)
+            if not (error is None):
+                raise ValidationError(error)
         return self.cleaned_data
 
     def set_academic_years_all(self):
@@ -94,3 +85,18 @@ class LearningUnitYearForm(forms.Form):
         academic_year = self.cleaned_data.get('academic_year')
         return academic_year
 
+def no_academic_year(acronym,keyword,status,type):
+    error=None
+    if (acronym and not keyword and not type and not status):
+        learning_units=mdl.learning_unit_year.find_by_acronym(acronym)
+        if not learning_units:
+            error=ValidationError(learning_unit_year.error_academic_year_with_acronym)
+    if (not acronym and keyword and not type and not status):
+        error=learning_unit_year.error_academic_year_required
+    if (not acronym and not keyword and not type and status):
+        error=learning_unit_year.error_academic_year_required
+    if (not acronym and not keyword and type and not status):
+        error=learning_unit_year.error_academic_year_required
+    if (not acronym and not keyword and type and status):
+        error=learning_unit_year.error_academic_year_required
+    return error

@@ -32,13 +32,15 @@ from django.utils.translation import ugettext_lazy as _
 error_required = 'This field is required'
 error_invalid = 'Enter a valid value'
 error_academic_year_required = 'Please specify an academic year'
+error_academic_year_with_acronym = 'Please specify an academic year or enter a valid acronym.'
 error_invalid_search = 'Invalid search - Please fill some information before executing a search.'
 
 LEARNING_UNIT_YEARS_ERRORS = (
     (error_required, _('This field is required')),
     (error_invalid, _('Enter a valid value')),
     (error_academic_year_required, _('Please specify an academic year')),
-    (error_invalid_search, _('Invalid search - Please fill some information before executing a search.'))
+    (error_invalid_search, _('Invalid search - Please fill some information before executing a search.')),
+    (error_academic_year_with_acronym, _('Please specify an academic year or enter a valid acronym.'))
 )
 
 #Status in model learning_unit_year
