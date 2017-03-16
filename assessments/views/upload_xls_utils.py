@@ -286,11 +286,11 @@ def __save_xls_scores(request, file_name, is_program_manager, user, learning_uni
                                     messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('constraint_score_other_score')))
 
                                 elif score == 0 or score or justification:
+                                    if (justification=='ABSENCE_UNJUSTIFIED' or justification == "CHEATING" or justification == "MISSING") and \
+                                                    exam_enrollment.justification_final == 'ABSENCE_JUSTIFIED':
+                                        messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('abscence_justified_preserved')))
+                                        justification = 'ABSENCE_JUSTIFIED'
                                     if is_program_manager:
-                                        if (justification=='ABSENCE_UNJUSTIFIED' or justification == "CHEATING" or justification == "MISSING") and \
-                                                        exam_enrollment.justification_final == 'ABSENCE_JUSTIFIED':
-                                            messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('abscence_justified_preserved')))
-                                            justification = 'ABSENCE_JUSTIFIED'
                                         if exam_enrollment.score_final != score:
                                             new_scores_number += 1
                                             exam_enrollment.score_final = score
@@ -310,10 +310,7 @@ def __save_xls_scores(request, file_name, is_program_manager, user, learning_uni
                                             new_scores_number += 1
                                             exam_enrollment.score_draft = score
                                             exam_enrollment.justification_draft = None
-                                        if (justification=='ABSENCE_UNJUSTIFIED' or justification == "CHEATING" or justification == "MISSING") and \
-                                                        exam_enrollment.justification_draft == 'ABSENCE_JUSTIFIED':
-                                            messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('abscence_justified_preserved')))
-                                            justification = 'ABSENCE_JUSTIFIED'
+
                                         if justification and exam_enrollment.justification_draft != justification:
                                             new_scores_number += 1
                                             exam_enrollment.justification_draft = justification
