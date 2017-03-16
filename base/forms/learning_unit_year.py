@@ -51,11 +51,8 @@ class LearningUnitYearForm(forms.Form):
 
         if (not acronym and not keyword and not status and not type):
             raise ValidationError(learning_unit_year.error_invalid_search)
-
-        if (str(academic_year) == "-1"):
-            error=no_academic_year(acronym,keyword,status,type)
-            if not (error is None):
-                raise ValidationError(error)
+        elif (str(academic_year) == "-1"):
+            no_academic_year(acronym,keyword,status,type)
         return self.cleaned_data
 
     def set_academic_years_all(self):
@@ -86,17 +83,12 @@ class LearningUnitYearForm(forms.Form):
         return academic_year
 
 def no_academic_year(acronym,keyword,status,type):
-    error=None
     if (acronym and not keyword and not type and not status):
         learning_units=mdl.learning_unit_year.find_by_acronym(acronym)
         if not learning_units:
-            error=ValidationError(learning_unit_year.error_academic_year_with_acronym)
-    if (not acronym and keyword and not type and not status):
-        error=learning_unit_year.error_academic_year_required
-    if (not acronym and not keyword and not type and status):
-        error=learning_unit_year.error_academic_year_required
-    if (not acronym and not keyword and type and not status):
-        error=learning_unit_year.error_academic_year_required
-    if (not acronym and not keyword and type and status):
-        error=learning_unit_year.error_academic_year_required
-    return error
+           raise ValidationError(learning_unit_year.error_academic_year_with_acronym)
+    elif ((not acronym and keyword and not type and not status) or
+        (not acronym and not keyword and not type and status) or
+        (not acronym and not keyword and type and not status) or
+        (not acronym and not keyword and type and status)):
+            raise ValidationError(learning_unit_year.error_academic_year_required)
