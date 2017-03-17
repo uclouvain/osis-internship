@@ -32,9 +32,9 @@ from base.enums import learning_units_errors
 
 class LearningUnitYearForm(forms.Form):
 
-    academic_year=forms.CharField(max_length=20, required=False)
-    acronym = forms.CharField(max_length=20, required=False)
-    keyword = forms.CharField(max_length=20, required=False)
+    academic_year=forms.CharField(max_length=10, required=False)
+    acronym = forms.CharField(widget=forms.Textarea(attrs={'cols': 10, 'rows': 1}),max_length=20, required=False)
+    keyword = forms.CharField(widget=forms.Textarea(attrs={'cols': 10, 'rows': 1}),max_length=20, required=False)
     type = forms.CharField(
         widget=forms.Select(choices=learning_unit_year_types.LEARNING_UNIT_YEAR_TYPES),
         required=False

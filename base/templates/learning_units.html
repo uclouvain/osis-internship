@@ -39,13 +39,6 @@
     <form  method="get" action="{% url 'learning_units_search'%}" id="form_learning_units">
       <div class="panel-body">
         <div class="row">
-            {% if form.non_field_errors %}
-              <ul class='error'>
-                  {% for error in form.non_field_errors %}
-                      <li>{% trans error %}</li>
-                  {% endfor %}
-              </ul>
-            {% endif %}
           <div class="col-md-2">
               <label for="academic_year" >{% trans 'academic_year'%}</label>
               <select class="forms" id="slt_academic_year"  name="academic_year" value="{{ academic_year }}">
@@ -63,34 +56,29 @@
                   {% endif %}
                 {% endfor %}
               </select>
-              <span class="error">{{ form.academic_year.errors }}</span>
           </div>
 
-          <div class="col-md-3">
+          <div class="col-md-2">
               <label for="acronym">{% trans 'acronym'%}</label>
               <div class="forms"> {{ form.acronym }}</div>
-              <span class="error">{{ form.acronym.errors }}</span>
           </div>
 
-          <div class="col-md-3">
+          <div class="col-md-2">
               <label for="keyword">{% trans 'keyword' %}</label>
               <div class="forms"> {{ form.keyword }}</div>
-              <span class="error">{{ form.keyword.errors }}</span>
           </div>
 
           <div class="col-md-2">
               <label for="type">{% trans 'type' %}</label>
               <div class="forms">{{ form.type }}</div>
-              <span class="error">{{ form.type.errors }}</span>
           </div>
 
           <div class="col-md-2">
               <label for="status">{% trans 'status' %}</label>
               <div class="forms"> {{ form.status }}</div>
-              <span class="error">{{ form.status.errors }}</span>
           </div>
 
-          <div class="col-md-6">
+          <div class="col-md-2">
             <br>
             <button type="submit" id="bt_submit_learning_unit_search" class="btn btn-primary" role="button"
                     title="{% trans 'learning_unit_search' %}">
@@ -101,6 +89,14 @@
     </form>
 
   <div >
+
+    {% if form.non_field_errors %}
+      <ul class='error'>
+          {% for error in form.non_field_errors %}
+              <li>{% trans error %}</li>
+          {% endfor %}
+      </ul>
+    {% endif %}
     {% if learning_units|length == 0 and init == "0" %}
       <label class="alert alert-info" style="margin:5px">{% trans 'no_result' %}</label>
 
