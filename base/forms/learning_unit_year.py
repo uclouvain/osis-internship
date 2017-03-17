@@ -88,7 +88,9 @@ class LearningUnitYearForm(forms.Form):
 def check_when_academic_year_is_all(acronym,keyword,status,type):
     if (acronym and not keyword and not type and not status):
         check_learning_units_with_acronym(acronym)
-    else:
+    elif (not acronym and not keyword):
+        raise ValidationError(learning_unit_year.error_academic_year_required)
+    elif (not status and not type):
         raise ValidationError(learning_unit_year.error_academic_year_required)
 
 def check_learning_units_with_acronym(acronym):
