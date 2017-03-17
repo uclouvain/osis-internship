@@ -54,13 +54,13 @@ class LearningUnitYearForm(forms.Form):
 
         if (not acronym and not keyword and not status and not type):
             raise ValidationError(learning_units_errors.INVALID_SEARCH)
-        elif (str(academic_year) == "-1"):
+        elif (not academic_year):
             check_when_academic_year_is_all(acronym,keyword,status,type)
         return clean_data
 
     def set_academic_years_all(self):
         academic_year = self.cleaned_data.get('academic_year')
-        if academic_year=="-1":
+        if not academic_year:
             academic_years_all=1
         else:
             academic_years_all=0
@@ -72,10 +72,10 @@ class LearningUnitYearForm(forms.Form):
         keyword = self.cleaned_data.get('keyword')
         status = self.cleaned_data.get('status')
         type = self.cleaned_data.get('type')
-        if (academic_year=="-1" and acronym):
+        if (not academic_year and acronym and not keyword and not status and not type):
             learning_units=mdl.learning_unit_year.find_by_acronym(acronym)
         else:
-            if (academic_year=="-1"):
+            if (not academic_year):
                 learning_units = mdl.learning_unit_year.search(academic_year_id=None,acronym=acronym,title=keyword,type=type,status=status)
             else:
                 learning_units = mdl.learning_unit_year.search(academic_year_id=academic_year,acronym=acronym,title=keyword,type=type,status=status)
@@ -86,11 +86,9 @@ class LearningUnitYearForm(forms.Form):
         return academic_year
 
 def check_when_academic_year_is_all(acronym,keyword,status,type):
-    if (acronym and not keyword and not status and not type):
+    if (acronym):
         check_learning_units_with_acronym(acronym)
-    elif (not acronym and not keyword):
-        raise ValidationError(learning_units_errors.ACADEMIC_YEAR_REQUIRED)
-    elif (not type and not status):
+    elif (not acronym):
         raise ValidationError(learning_units_errors.ACADEMIC_YEAR_REQUIRED)
 
 def check_learning_units_with_acronym(acronym):

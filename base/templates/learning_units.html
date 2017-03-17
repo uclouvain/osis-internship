@@ -36,17 +36,17 @@
   <h2>{% trans 'learning_units' %}</h2>
 </div>
 <div class="panel panel-default">
-  <div class="panel-body">
-    <div class="row">
-      <form  method="get" action="{% url 'learning_units_search'%}" id="form_learning_units">
-          <font class="error">{{ form.non_field_errors }}</font>
+    <form  method="get" action="{% url 'learning_units_search'%}" id="form_learning_units">
+      <div class="panel-body">
+        <div class="row">
+          <span class="error">{{ form.non_field_errors }}</span>
           <div class="col-md-2">
               <label for="academic_year" >{% trans 'academic_year'%}</label>
               <select class="forms" id="slt_academic_year"  name="academic_year" value="{{ academic_year }}">
                   {% if academic_years_all == 1 %}
-                    <option selected value="-1">{% trans 'all years'%}</option>
+                    <option selected value="">{% trans 'all years'%}</option>
                   {% else %}
-                    <option value="-1">{% trans 'all years'%}</option>
+                    <option value="">{% trans 'all years'%}</option>
                   {% endif %}
 
                 {% for ay in academic_years %}
@@ -57,7 +57,7 @@
                   {% endif %}
                 {% endfor %}
               </select>
-              <font class="error">{{ form.academic_year.errors }}</font>
+              <span class="error">{{ form.academic_year.errors }}</span>
           </div>
 
           <div class="col-md-3">
@@ -69,19 +69,19 @@
           <div class="col-md-3">
               <label for="keyword">{% trans 'keyword' %}</label>
               <div class="forms"> {{ form.keyword }}</div>
-              <font class="error">{{ form.keyword.errors }}</font>
+              <span class="error">{{ form.keyword.errors }}</span>
           </div>
 
           <div class="col-md-2">
               <label for="type">{% trans 'type' %}</label>
               <div class="forms"> {{ form.type }}</div>
-              <font class="error">{{ form.type.errors }}</font>
+              <span class="error">{{ form.type.errors }}</span>
           </div>
 
           <div class="col-md-2">
               <label for="status">{% trans 'status' %}</label>
               <div class="forms"> {{ form.status }}</div>
-              <font class="error">{{ form.status.errors }}</font>
+              <span class="error">{{ form.status.errors }}</span>
           </div>
 
           <div class="col-md-6">
@@ -90,9 +90,9 @@
                     title="{% trans 'learning_unit_search' %}">
                     <span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
           </div>
-      </form>
-    </div>
-  </div>
+        </div>
+        </div>
+    </form>
 
   <div >
     {% if learning_units|length == 0 and init == "0" %}
