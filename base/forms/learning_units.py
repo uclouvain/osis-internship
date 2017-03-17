@@ -72,7 +72,11 @@ class LearningUnitYearForm(forms.Form):
         keyword = self.cleaned_data.get('keyword')
         status = self.cleaned_data.get('status')
         type = self.cleaned_data.get('type')
-        if (academic_year=="0" and acronym and not keyword and status=="NONE" and type=="NONE"):
+        if status=="NONE":
+            status=None
+        if type=="NONE":
+            type=None
+        if (academic_year=="0" and acronym and not keyword and not status and not type):
             learning_units=mdl.learning_unit_year.find_by_acronym(acronym)
         else:
             if (academic_year=="0"):

@@ -27,8 +27,8 @@
 from django.utils.translation import ugettext_lazy as _
 
 NONE = "NONE"
-VALID = "LUY_STATUS_VALID"
-INVALID = "LUY_STATUS_INVALID"
+VALID = "VALID"
+INVALID = "INVALID"
 
 LEARNING_UNIT_YEAR_STATUS = (
     (NONE, _(NONE)),
