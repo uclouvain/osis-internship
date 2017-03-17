@@ -26,12 +26,14 @@
 
 from django.utils.translation import ugettext_lazy as _
 
-ANNUAL = "Annual"
-BIENNIAL_EVEN = "Biennal even"
-BIENNIAL_ODD = "Biennal odd"
+NONE = ""
+COURSE = "Course"
+MASTER_THESIS = "Master thesis"
+INTERNSHIP = "Internship"
 
-PERIODICITY_TYPES = (
-    (ANNUAL,  _(ANNUAL)),
-    (BIENNIAL_EVEN,  _(BIENNIAL_EVEN)),
-    (BIENNIAL_ODD,  _(BIENNIAL_ODD))
+LEARNING_UNIT_YEAR_TYPES = (
+    (NONE, _(NONE)),
+    (COURSE, _(COURSE)),
+    (MASTER_THESIS, _(MASTER_THESIS)),
+    (INTERNSHIP, _(INTERNSHIP))
 )

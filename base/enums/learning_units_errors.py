@@ -26,43 +26,16 @@
 
 from django.utils.translation import ugettext_lazy as _
 
-#Global variable
-
-#Errors handling on form
-error_required = 'This field is required'
-error_invalid = 'Enter a valid value'
-error_academic_year_required = 'Please specify an academic year'
-error_academic_year_with_acronym = 'Please specify an academic year or enter a valid acronym.'
-error_invalid_search = 'Invalid search - Please fill some information before executing a search.'
+REQUIRED = 'This field is required'
+INVALID = 'Enter a valid value'
+INVALID_SEARCH = 'Invalid search - Please fill some information before executing a search.'
+ACADEMIC_YEAR_REQUIRED = 'Please specify an academic year'
+ACADEMIC_YEAR_WITH_ACRONYM = 'Please specify an academic year or enter a valid acronym.'
 
 LEARNING_UNIT_YEARS_ERRORS = (
-    (error_required, _('This field is required')),
-    (error_invalid, _('Enter a valid value')),
-    (error_academic_year_required, _('Please specify an academic year')),
-    (error_invalid_search, _('Invalid search - Please fill some information before executing a search.')),
-    (error_academic_year_with_acronym, _('Please specify an academic year or enter a valid acronym.'))
-)
-
-#Status in model learning_unit_year
-status_none = ""
-status_valid = "Valid"
-status_invalid = "Invalid"
-
-LEARNING_UNIT_YEAR_STATUS = (
-    (status_none, _('None')),
-    (status_valid, _('Valid')),
-    (status_invalid, _('Invalid'))
-)
-
-#Types in model learning_unit_year
-type_none = ""
-type_course = "Course"
-type_master_thesis = "Master thesis"
-type_internship = "Internship"
-
-LEARNING_UNIT_YEAR_TYPES = (
-    (type_none, _('None')),
-    (type_course, _('Course')),
-    (type_master_thesis, _('Master thesis')),
-    (type_internship, _('Internship'))
+    (REQUIRED, _(REQUIRED)),
+    (INVALID, _(INVALID)),
+    (INVALID_SEARCH, _(INVALID_SEARCH)),
+    (ACADEMIC_YEAR_REQUIRED, _(ACADEMIC_YEAR_REQUIRED)),
+    (ACADEMIC_YEAR_WITH_ACRONYM, _(ACADEMIC_YEAR_WITH_ACRONYM))
 )

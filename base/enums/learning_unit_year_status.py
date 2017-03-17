@@ -26,12 +26,12 @@
 
 from django.utils.translation import ugettext_lazy as _
 
-ANNUAL = "Annual"
-BIENNIAL_EVEN = "Biennal even"
-BIENNIAL_ODD = "Biennal odd"
+NONE = ""
+VALID = "Valid"
+INVALID = "Invalid"
 
-PERIODICITY_TYPES = (
-    (ANNUAL,  _(ANNUAL)),
-    (BIENNIAL_EVEN,  _(BIENNIAL_EVEN)),
-    (BIENNIAL_ODD,  _(BIENNIAL_ODD))
+LEARNING_UNIT_YEAR_STATUS = (
+    (NONE, _(NONE)),
+    (VALID, _(VALID)),
+    (INVALID, _(INVALID))
 )

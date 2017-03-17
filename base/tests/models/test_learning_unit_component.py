@@ -32,7 +32,7 @@ from base.models.learning_component_year import LearningComponentYear
 from base.models.learning_unit_year import LearningUnitYear
 from base.models.learning_unit_component import LearningUnitComponent
 from base.models.academic_year import AcademicYear
-from base.enums import learning_unit_year as enum_type_ue
+from base.enums import learning_unit_year_status as enum_type_ue
 
 now = datetime.datetime.now()
 
