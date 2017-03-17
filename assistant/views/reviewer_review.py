@@ -35,6 +35,7 @@ from django.utils import timezone
 from django.core.exceptions import ObjectDoesNotExist
 from assistant.enums import reviewer_role
 from base.enums import structure_type
+from assistant.models.enums import review_status
 import re
 
 
@@ -74,7 +75,7 @@ def review_edit(request, mandate_id):
         existing_review, created = review.Review.objects.get_or_create(
             mandate=mandate,
             reviewer=current_reviewer,
-            status='IN_PROGRESS'
+            status=review_status.IN_PROGRESS
         )
     previous_mandates = assistant_mandate.find_before_year_for_assistant(mandate.academic_year.year, mandate.assistant)
     role = current_reviewer.role
@@ -109,7 +110,7 @@ def review_save(request, review_id, mandate_id):
     if form.is_valid():
         current_review = form.save(commit=False)
         if 'validate_and_submit' in request.POST:
-            current_review.status = "DONE"
+            current_review.status = review_status.DONE
             current_review.save()
             if mandate.state == "PHD_SUPERVISOR":
                 if mandate_structure.find_by_mandate_and_type(mandate, 'INSTITUTE'):
@@ -130,7 +131,7 @@ def review_save(request, review_id, mandate_id):
             else:
                 return HttpResponseRedirect(reverse("phd_supervisor_assistants_list"))
         elif 'save' in request.POST:
-            current_review.status = "IN_PROGRESS"
+            current_review.status = review_status.IN_PROGRESS
             current_review.save()
             return review_edit(request, mandate_id)
     else:
@@ -175,7 +176,7 @@ def generate_reviewer_menu_tabs(role, mandate, active_item: None):
     if role == reviewer_role.PHD_SUPERVISOR:
         try:
             latest_review_done = review.find_done_by_supervisor_for_mandate(mandate)
-            if latest_review_done.status == 'DONE':
+            if latest_review_done.status == review_status.DONE:
                 review_is_done = True
             else:
                 review_is_done = False
@@ -185,7 +186,7 @@ def generate_reviewer_menu_tabs(role, mandate, active_item: None):
         latest_review_done = review.find_review_for_mandate_by_role(mandate, role)
     if latest_review_done is None:
         review_is_done = False
-    elif latest_review_done.status == 'DONE':
+    elif latest_review_done.status == review_status.DONE:
         review_is_done = True
     for state, order in sorted(mandate_states.items()):
         if role == reviewer_role.PHD_SUPERVISOR and (state == 'RESEARCH' or state == 'SUPERVISION'):

@@ -32,6 +32,7 @@ from assistant.enums import reviewer_role
 from django.utils import timezone
 from django.core.urlresolvers import reverse
 from assistant.forms import ReviewForm
+from assistant.models.enums import review_status
 
 
 @login_required
@@ -66,7 +67,7 @@ def review_edit(request, mandate_id):
         existing_review, created = review.Review.objects.get_or_create(
             mandate=mandate,
             reviewer=None,
-            status='IN_PROGRESS'
+            status=review_status.IN_PROGRESS
         )
     previous_mandates = assistant_mandate.find_before_year_for_assistant(mandate.academic_year.year, mandate.assistant)
     role = reviewer_role.PHD_SUPERVISOR
@@ -101,7 +102,7 @@ def review_save(request, review_id, mandate_id):
     if form.is_valid():
         current_review = form.save(commit=False)
         if 'validate_and_submit' in request.POST:
-            current_review.status = "DONE"
+            current_review.status = review_status.DONE
             current_review.save()
             if mandate_structure.find_by_mandate_and_type(mandate, 'INSTITUTE'):
                 mandate.state = "RESEARCH"
@@ -112,7 +113,7 @@ def review_save(request, review_id, mandate_id):
             mandate.save()
             return HttpResponseRedirect(reverse("phd_supervisor_assistants_list"))
         elif 'save' in request.POST:
-            current_review.status = "IN_PROGRESS"
+            current_review.status = review_status.IN_PROGRESS
             current_review.save()
             return review_edit(request, mandate_id)
     else:
@@ -142,7 +143,7 @@ def generate_phd_supervisor_menu_tabs(mandate, active_item: None):
     menu = []
     try:
         latest_review_done = review.find_done_by_supervisor_for_mandate(mandate)
-        if latest_review_done.status == 'DONE':
+        if latest_review_done.status == review_status.DONE:
             review_is_done = True
         else:
             review_is_done = False

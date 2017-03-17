@@ -36,6 +36,7 @@ from django.contrib.auth.decorators import user_passes_test
 from assistant.models import settings
 from django.utils.translation import ugettext as _
 from assistant.models import assistant_mandate
+from assistant.enums import reviewer_role
 
 
 class StructuresListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
@@ -77,7 +78,7 @@ def user_is_reviewer_and_can_delegate(user):
     try:
         if user.is_authenticated() and settings.access_to_procedure_is_open():
             return reviewer.Reviewer.objects.get(Q(person=user.person) &
-                                                   (Q(role="SUPERVISION") | Q(role="RESEARCH")))
+                                                   (Q(role=reviewer_role.SUPERVISION) | Q(role=reviewer_role.RESEARCH)))
     except ObjectDoesNotExist:
         return False
 
@@ -117,10 +118,10 @@ def add_reviewer_for_structure(request, structure_id):
                                                                   'related_structure': related_structure})
     else:
         this_reviewer = reviewer.find_by_person(person=request.user.person)
-        if this_reviewer.role == "SUPERVISION":
-            role = "SUPERVISION_ASSISTANT"
+        if this_reviewer.role == reviewer_role.SUPERVISION:
+            role = reviewer_role.SUPERVISION_ASSISTANT
         else: 
-            role = "RESEARCH_ASSISTANT" 
+            role = reviewer_role.RESEARCH_ASSISTANT
         form = ReviewerDelegationForm(initial={'structure': related_structure, 'year': year, 'role': role})
         return render(request, "reviewer_add_reviewer.html", {'form': form, 'year': year,
                                                               'related_structure': related_structure})
