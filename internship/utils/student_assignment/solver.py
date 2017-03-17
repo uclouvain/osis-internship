@@ -78,6 +78,21 @@ def save_assignments_to_db(assignments):
 
 
 class Solver:
+    """
+        Solver to assign internships to students.
+        It works by assigning first the priority students, then the generalists students and finally the specialists
+        ones.
+        For each group of students the solver must assign them 4 internships.
+        For priority students, it try first to assign one of the four choices submitted for the internship 1 by order of
+        preference. Then it does the same for all the others internships (2, 3, 4, 5 and 6) until 4 internships are
+        assigned to the student. If we have exhausted all the choices of the students, we assign the "hôpital erreur" to
+        the student for each internship not assigned.
+        For generalists and specialists students, it works differently, we first try to assign all the four choices,
+        if all choices cannot be assigned, we try to assign an internship of the same speciality of the choices. Also,
+        when all choices are exhausted, we try to assign all possible offers to fill the internships not assigned.
+        If with that, there is still internships not assigned, we assign at most one "stage personnel" to generalists
+        and two to specialists. Then we assign "hôpital erreur".
+    """
     def __init__(self):
         self.students_by_registration_id = dict()
         self.offers_by_organization_speciality = dict()
