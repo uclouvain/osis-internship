@@ -25,6 +25,7 @@
 ##############################################################################
 from django.db import models
 from django.contrib import admin
+from django.core.validators import MinValueValidator
 
 
 class TextLabelAdmin(admin.ModelAdmin):
@@ -42,7 +43,7 @@ class TextLabel(models.Model):
     parent = models.ForeignKey('self', blank=True, null=True)
     entity = models.CharField(max_length=100)
     label = models.CharField(max_length=255)
-    order = models.IntegerField()
+    order = models.PositiveIntegerField(validators=[MinValueValidator(1)])
     published = models.BooleanField(default=True)
 
     class Meta:
@@ -52,9 +53,6 @@ class TextLabel(models.Model):
         return self.entity
 
     def save(self, *args, **kwargs):
-        if 0 > self.order:
-            raise ValueError("The order must be greater than zero")
-
         parent_db = None
         if self.pk is not None:
             self.check_circular_dependency()

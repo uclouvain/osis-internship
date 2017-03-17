@@ -24,13 +24,15 @@
 #
 ##############################################################################
 from django.test import TestCase
+from django.core.exceptions import ValidationError
 from cms.tests.factories.text_label import TextLabelFactory
 
 
 class TextLabelTest(TestCase):
     def test_with_order_negative(self):
         text_label = TextLabelFactory.build(order=-10)
-        with self.assertRaises(ValueError):
+        with self.assertRaises(ValidationError):
+            text_label.full_clean()
             text_label.save()
 
     def test_without_parent_and_empty_database(self):
