@@ -52,15 +52,15 @@ class LearningUnitYearForm(forms.Form):
         status = clean_data.get('status')
         type = clean_data.get('type')
 
-        if (not acronym and not keyword and not status and not type):
+        if (not acronym and not keyword and status=="NONE" and type=="NONE"):
             raise ValidationError(learning_units_errors.INVALID_SEARCH)
-        elif (not academic_year):
-            check_when_academic_year_is_all(acronym,keyword,status,type)
+        elif academic_year=="0":
+            check_when_academic_year_is_all(acronym)
         return clean_data
 
     def set_academic_years_all(self):
         academic_year = self.cleaned_data.get('academic_year')
-        if not academic_year:
+        if academic_year=="0":
             academic_years_all=1
         else:
             academic_years_all=0
@@ -72,10 +72,10 @@ class LearningUnitYearForm(forms.Form):
         keyword = self.cleaned_data.get('keyword')
         status = self.cleaned_data.get('status')
         type = self.cleaned_data.get('type')
-        if (not academic_year and acronym and not keyword and not status and not type):
+        if (academic_year=="0" and acronym and not keyword and status=="NONE" and type=="NONE"):
             learning_units=mdl.learning_unit_year.find_by_acronym(acronym)
         else:
-            if (not academic_year):
+            if (academic_year=="0"):
                 learning_units = mdl.learning_unit_year.search(academic_year_id=None,acronym=acronym,title=keyword,type=type,status=status)
             else:
                 learning_units = mdl.learning_unit_year.search(academic_year_id=academic_year,acronym=acronym,title=keyword,type=type,status=status)
@@ -85,7 +85,7 @@ class LearningUnitYearForm(forms.Form):
         academic_year = self.cleaned_data.get('academic_year')
         return academic_year
 
-def check_when_academic_year_is_all(acronym,keyword,status,type):
+def check_when_academic_year_is_all(acronym):
     if (acronym):
         check_learning_units_with_acronym(acronym)
     elif (not acronym):

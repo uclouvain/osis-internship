@@ -26,10 +26,10 @@
 
 from django.utils.translation import ugettext_lazy as _
 
-NONE = ""
-COURSE = "Course"
-MASTER_THESIS = "Master thesis"
-INTERNSHIP = "Internship"
+NONE = "NONE"
+COURSE = "LUY_TYPE_COURSE"
+MASTER_THESIS = "LUY_TYPE_MASTER_THESIS"
+INTERNSHIP = "LUY_TYPE_INTERNSHIP"
 
 LEARNING_UNIT_YEAR_TYPES = (
     (NONE, _(NONE)),

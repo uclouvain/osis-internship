@@ -39,14 +39,20 @@
     <form  method="get" action="{% url 'learning_units_search'%}" id="form_learning_units">
       <div class="panel-body">
         <div class="row">
-          <span class="error">{{ form.non_field_errors }}</span>
+            {% if form.non_field_errors %}
+              <ul class='error'>
+                  {% for error in form.non_field_errors %}
+                      <li>{% trans error %}</li>
+                  {% endfor %}
+              </ul>
+            {% endif %}
           <div class="col-md-2">
               <label for="academic_year" >{% trans 'academic_year'%}</label>
               <select class="forms" id="slt_academic_year"  name="academic_year" value="{{ academic_year }}">
                   {% if academic_years_all == 1 %}
-                    <option selected value="">{% trans 'all years'%}</option>
+                    <option selected value="0">{% trans 'all years'%}</option>
                   {% else %}
-                    <option value="">{% trans 'all years'%}</option>
+                    <option value="0">{% trans 'all years'%}</option>
                   {% endif %}
 
                 {% for ay in academic_years %}
@@ -63,7 +69,7 @@
           <div class="col-md-3">
               <label for="acronym">{% trans 'acronym'%}</label>
               <div class="forms"> {{ form.acronym }}</div>
-              <font class="error">{{ form.acronym.errors }}</font>
+              <span class="error">{{ form.acronym.errors }}</span>
           </div>
 
           <div class="col-md-3">
@@ -74,7 +80,7 @@
 
           <div class="col-md-2">
               <label for="type">{% trans 'type' %}</label>
-              <div class="forms"> {{ form.type }}</div>
+              <div class="forms">{{ form.type }}</div>
               <span class="error">{{ form.type.errors }}</span>
           </div>
 

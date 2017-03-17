@@ -26,11 +26,11 @@
 
 from django.utils.translation import ugettext_lazy as _
 
-REQUIRED = 'This field is required'
-INVALID = 'Enter a valid value'
-INVALID_SEARCH = 'Invalid search - Please fill some information before executing a search.'
-ACADEMIC_YEAR_REQUIRED = 'Please specify an academic year'
-ACADEMIC_YEAR_WITH_ACRONYM = 'Please specify an academic year or enter a valid acronym.'
+REQUIRED = 'LU_ERRORS_REQUIRED'
+INVALID = 'LU_ERRORS_INVALID'
+INVALID_SEARCH = 'LU_ERRORS_INVALID_SEARCH'
+ACADEMIC_YEAR_REQUIRED = 'LU_ERRORS_ACADEMIC_YEAR_REQUIRED'
+ACADEMIC_YEAR_WITH_ACRONYM = 'LU_ERRORS_YEAR_WITH_ACRONYM'
 
 LEARNING_UNIT_YEARS_ERRORS = (
     (REQUIRED, _(REQUIRED)),
