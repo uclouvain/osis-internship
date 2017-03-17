@@ -29,13 +29,14 @@ from osis_common.models.serializable_model import SerializableModel,Serializable
 
 
 class AttributionAdmin(SerializableModelAdmin):
-    list_display = ('tutor', 'function', 'score_responsible', 'learning_unit_year', 'start_year', 'end_year', 'changed')
+    list_display = ('tutor', 'function', 'score_responsible', 'learning_unit_year', 'start_year', 'end_year', 'changed',
+                    'external_id')
     list_filter = ('function', 'learning_unit_year__academic_year')
     fieldsets = ((None, {'fields': ('learning_unit_year', 'tutor', 'function', 'score_responsible', 'start_year',
                                     'end_year')}),)
     raw_id_fields = ('learning_unit_year', 'tutor')
     search_fields = ['tutor__person__first_name', 'tutor__person__last_name', 'learning_unit_year__acronym',
-                     'tutor__person__global_id']
+                     'tutor__person__global_id', 'external_id']
 
 
 class Attribution(SerializableModel):
