@@ -158,3 +158,13 @@ class TextLabelComplexeStructureTest(TestCase):
         self.C.refresh_from_db()
         self.assertEqual(self.B.order, 2)  #Inversion
         self.assertEqual(self.C.order, 1)  #Inversion
+
+    def test_change_on_same_level_no_change_as_result(self):
+        self.E.order = 2
+        self.E.save()
+        self.F.refresh_from_db()
+        self.G.refresh_from_db()
+        # No change because we have reorder value
+        self.assertEqual(self.E.order, 1)
+        self.assertEqual(self.F.order, 2)
+        self.assertEqual(self.G.order, 3)
