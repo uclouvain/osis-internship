@@ -996,7 +996,7 @@ msgid "scores_injection"
 msgstr "Injection des notes"
 
 msgid "scores_responsible"
-msgstr "Responsable de notes"
+msgstr "Responsable(s) de notes"
 
 msgid "scores_saved"
 msgstr "note(s) enregistrée(s)"
@@ -1186,7 +1186,7 @@ msgid "tutors"
 msgstr "Enseignants"
 
 msgid "other_tutors"
-msgstr "Autres Enseignants"
+msgstr "Autre(s) Enseignant(s)"
 
 msgid "txt_message"
 msgstr "Message texte"
