@@ -38,3 +38,4 @@ from internship.models import organization
 from internship.models import organization_address
 from internship.models import period
 from internship.models import period_internship_places
+from internship.models import cohort

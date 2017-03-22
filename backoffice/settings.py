@@ -64,6 +64,7 @@ INSTALLED_APPS = (
     'admission',
     'assessments',
     'localflavor',
+    'django_extensions'
 )
 
 # check if we are testing right now

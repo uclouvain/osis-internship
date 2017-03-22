@@ -23,24 +23,34 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+import datetime
+
+from django.test import SimpleTestCase, TestCase
 
 from internship.models import period as mdl_period
-import datetime
-from django.test import TestCase
+from internship.tests.factories.period import PeriodFactory
 
 
 def create_period(name="P1"):
-    period = mdl_period.Period(name=name, date_start=datetime.date.today(), date_end=datetime.date.today())
-    period.save()
-    return period
+    return PeriodFactory(name=name)
+    # period = mdl_period.Period(name=name, date_start=datetime.date.today(), date_end=datetime.date.today())
+    # period.save()
+    # return period
 
 
 class TestGetByName(TestCase):
     def test_find(self):
-        period_1 = create_period(name="P1")
-        period_2 = create_period(name="P5")
+        period_1 = PeriodFactory(name="P1")
+        period_2 = PeriodFactory(name="P5")
 
         self.assertEqual(period_1, mdl_period.get_by_name("P1"))
         self.assertEqual(period_2, mdl_period.get_by_name("P5"))
 
         self.assertFalse(mdl_period.get_by_name("P4"))
+
+
+
+class PeriodFactoryTestCase(SimpleTestCase):
+    def test_dates(self):
+        period = PeriodFactory.build()
+        self.assertLess(period.date_start, period.date_end)
