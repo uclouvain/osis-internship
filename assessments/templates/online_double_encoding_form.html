@@ -184,7 +184,6 @@
                                 <option value="CHEATING">{% trans 'CHEATING' %}</option>
                                 <option value="SCORE_MISSING">{% trans 'SCORE_MISSING' %}</option>
                             </select>
-                            <input type="hidden" id="hdn_score_changed_{{ enrollment.id }}" name="score_changed_{{ enrollment.id }}">
                         </td>
                         <td>{{ enrollment.session_exam.deadline | default_if_none:''|date:"j/m/Y" }}</td>
                     </tr>
@@ -222,11 +221,7 @@
         }
 
         this.setCustomValidity('');
-
-        $("#hdn_score_changed_"+ enrollmentId).val(originalValueChanged(values, enrollmentId,
-                                                                    $("#num_double_score_"+ enrollmentId).val(),
-                                                                    $("#slt_double_justification_score_" + enrollmentId).val()));
-    });
+   });
 
     $("select[id^='slt_double_justification_score_']" ).change(function(event) {
         // Get the object that received the event.
@@ -243,10 +238,6 @@
         if(target.val() != "") {
             $("#num_double_score_" + enrollmentId).val('');
         }
-
-        $("#hdn_score_changed_"+ enrollmentId).val(originalValueChanged(values, enrollmentId,
-                                                                    $("#num_double_score_"+ enrollmentId).val(),
-                                                                    $("#slt_double_justification_score_" + enrollmentId).val()));
     });
 
     $("input[id^='num_double_score_']" ).blur(function(event) {
