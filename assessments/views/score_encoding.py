@@ -199,11 +199,19 @@ def send_messages_to_notify_encoding_progress(request, all_enrollments, learning
 
 
 def update_exam_enrollments(request, exam_enrollments, decimal_scores_authorized, is_program_manager):
+    validation_error = None
     updated_enrollments = []
     for enrollment in exam_enrollments:
-        is_updated = update_exam_enrollment(request, is_program_manager, decimal_scores_authorized, enrollment)
-        if is_updated:
-            updated_enrollments.append(enrollment)
+        try:
+            is_updated = update_exam_enrollment(request, is_program_manager, decimal_scores_authorized, enrollment)
+            if is_updated:
+                updated_enrollments.append(enrollment)
+        except ValidationError as e:
+            validation_error = e
+            pass
+
+    if validation_error is not None:
+        raise validation_error
     return updated_enrollments
 
 
@@ -268,6 +276,7 @@ def online_double_encoding_form(request, learning_unit_year_id=None):
         # Case asking for a double encoding
         return online_double_encoding_get_form(request, data, learning_unit_year_id)
     elif request.method == 'POST':
+        validation_error = None
         encoded_exam_enrollments = data['enrollments']
         # Case asking for a comparison with scores double encoded
         decimal_scores_authorized = data['learning_unit_year'].decimal_scores
@@ -291,9 +300,14 @@ def online_double_encoding_form(request, learning_unit_year_id=None):
             try:
                 enrollment.full_clean()
                 enrollment.save()
-            except ValidationError:
-                messages.add_message(request, messages.ERROR, "%s" % _('scores_must_be_between_0_and_20'))
-                return online_double_encoding_get_form(request, data, learning_unit_year_id)
+            except ValidationError as e:
+                validation_error = e
+                pass
+
+        if validation_error is not None:
+            # An validation error occured during the add [Mean: score_encoded < 1 or score_encoded > 20]
+            messages.add_message(request, messages.ERROR, "%s" % _('scores_must_be_between_0_and_20'))
+            return online_double_encoding_get_form(request, data, learning_unit_year_id)
 
         # Needs to filter by examEnrollments where the score_reencoded and justification_reencoded are not None
         # encoded_exam_enrollments = [exam_enrol for exam_enrol in reencoded_exam_enrollments
