@@ -200,47 +200,29 @@
 {% endblock %}
 {% block script %}
 <script>
-    var values = [
-        {% for enrollment in enrollments %}
-            ['{{ enrollment.id }}', '-1',''],
-        {% endfor %}
-        ['', '', '']];
+    var ensureOnlyOneInputCompleted = function(event) {
+        if (!event || event == null) { return; }
 
-    $("input[id^='num_double_score_']" ).change(function(event) {
-        // Get the object that received the event.
-        var target = $(event.target);
-        var id = target.attr("id");
-        if (typeof id == 'undefined') {
-            target = target.parent();
-            id = target.attr("id");
+        var self = $(this);
+        var id = self.attr('id');
+
+        if ( id != undefined && self.val() != "" ){
+            var selfPrefix = id.substring(0, id.lastIndexOf("_"));
+            var enrollmentId = id.substring(id.lastIndexOf("_") + 1); //Get enrollement id
+
+            //Empty the other input because we have set a value in [selfPrefix]
+            if (selfPrefix == "slt_double_justification_score") {
+                $("#num_double_score_" + enrollmentId).val("");
+            } else if (selfPrefix == "num_double_score") {
+                $("#slt_double_justification_score_" + enrollmentId).val("");
+            }
         }
-        var enrollmentId = id.substring(id.lastIndexOf("_") + 1);
-
-        if(target.val() != "") {
-            $("#slt_double_justification_score_" + enrollmentId).val('');
-        }
-
-        this.setCustomValidity('');
-   });
-
-    $("select[id^='slt_double_justification_score_']" ).change(function(event) {
-        // Get the object that received the event.
-        var target = $(event.target);
-        var id = target.attr("id");
-        if (typeof id == 'undefined') {
-            target = target.parent();
-            id = target.attr("id");
-        }
-
-        var enrollmentId = id.substring(id.lastIndexOf("_") + 1);
-
-        // Checks whether the object contains an id.
-        if(target.val() != "") {
-            $("#num_double_score_" + enrollmentId).val('');
-        }
-    });
+    }
+    $("input[id^='num_double_score_']" ).change(ensureOnlyOneInputCompleted);
+    $("select[id^='slt_double_justification_score_']" ).change(ensureOnlyOneInputCompleted);
 
     $("input[id^='num_double_score_']" ).blur(function(event) {
+        console.log("NUM_DOUBLOE_SCORE_BLUR");
         // Get the object that received the event.
         var target = $(event.target);
         var id = target.attr("id");
@@ -252,10 +234,10 @@
         var enrollmentId = id.substring(id.lastIndexOf("_") + 1);
         var score_draft = Number($("#hdn_score_draft_" + enrollmentId).val());
 
-        if (target.val() != score_draft) {
-            target.css("border", "1px solid #ff0000");
-        } else {
+        if (target.val() == "" || target.val() == score_draft) {
             target.css("border", "1px solid lightgrey");
+        } else {
+            target.css("border", "1px solid #ff0000");
         }
 
         var double_justification_field = $("#slt_double_justification_score_"+ enrollmentId);
@@ -293,10 +275,10 @@
         var score_double = double_score_field.val();
         var score_draft = $("#hdn_score_draft_"+ enrollmentId).val();
 
-        if(score_double != score_draft) {
-            double_score_field.css("border", "1px solid #ff0000");
-        } else {
+        if(score_double== "" || score_double == score_draft) {
             double_score_field.css("border", "1px solid lightgrey");
+        } else {
+            double_score_field.css("border", "1px solid #ff0000");
         }
     });
 
@@ -317,9 +299,7 @@
                                select_next_input_value);
 
 
-    $(document).on('keypress', function(e) {
-        disable_enter(e);
-    });
-
+    //Prevent enter key submit
+    $(document).on('keypress', function(e) { disable_enter(e); });
 </script>
 {% endblock %}
