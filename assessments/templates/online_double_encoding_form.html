@@ -222,7 +222,6 @@
     $("select[id^='slt_double_justification_score_']" ).change(ensureOnlyOneInputCompleted);
 
     $("input[id^='num_double_score_']" ).blur(function(event) {
-        console.log("NUM_DOUBLOE_SCORE_BLUR");
         // Get the object that received the event.
         var target = $(event.target);
         var id = target.attr("id");
