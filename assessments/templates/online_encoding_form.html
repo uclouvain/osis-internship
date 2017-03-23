@@ -203,16 +203,6 @@
 {% endblock %}
 {% block script %}
 <script>
-var values = [
-        {% for enrollment in enrollments %}
-            {% if is_program_manager %}
-                ['{{ enrollment.id }}', '{{ enrollment.score_final | default_if_none:'-1' }}','{{ enrollment.justification_final | default_if_none:'' }}'],
-            {% else %}
-                ['{{ enrollment.id }}', '{{ enrollment.score_draft | default_if_none:'-1' }}','{{ enrollment.justification_draft | default_if_none:'' }}'],
-            {% endif %}
-        {% endfor %}
-        ['', '', '']];
-
 var is_valid_score = function(score) {
     var is_decimal = '{{enrollment.session_exam.learning_unit_year.decimal_scores}}'
     if (!is_decimal && score % 1 != 0){
@@ -233,57 +223,30 @@ var validate_form = function() {
         }
     });
 }
+$( document ).ready(function() { validate_form() });
 
-$( document ).ready(function() {
+var ensureOnlyOneInputCompleted = function(event) {
+    if (!event || event == null) { return; }
+
+    var self = $(this);
+    var id = self.attr('id');
+
+    if ( id != undefined && self.val() != "" ) {
+        var selfPrefix = id.substring(0, id.lastIndexOf("_"));
+        var enrollmentId = id.substring(id.lastIndexOf("_") + 1); //Get enrollement id
+
+        //Empty the other input because we have set a value in [selfPrefix]
+        if (selfPrefix == "slt_justification_score") {
+            $("#num_score_" + enrollmentId).val("");
+        } else if (selfPrefix == "num_score") {
+            $("#slt_justification_score_" + enrollmentId).val("");
+            this.setCustomValidity('');
+        }
+    }
     validate_form()
-});
-
-
-$("input[id^='num_score_']" ).change(function(event) {
-    // Get the object that received the event.
-    var target = $(event.target);
-    var id = target.attr("id");
-    if (typeof id == 'undefined') {
-        target = target.parent();
-        id = target.attr("id");
-    }
-    var enrollmentId = id.substring(id.lastIndexOf("_") + 1);
-
-    var score_encoded = target.val();
-    if (is_valid_score(score_encoded)) {
-        target.css("border", "1px solid lightgrey");
-    } else {
-        target.css("border", "1px solid #ff0000");
-    }
-
-    if(score_encoded != "") {
-        $("#slt_justification_score_" + enrollmentId).val('');
-    }
-    this.setCustomValidity('');
-
-    $("#hdn_score_changed_"+ enrollmentId).val(originalValueChanged(values, enrollmentId,
-                                                                    $("#num_score_"+ enrollmentId).val(),
-                                                                    $("#slt_justification_score_" + enrollmentId).val()));
-});
-
-$("select[id^='slt_justification_score_']" ).change(function(event) {
-    // Get the object that received the event.
-    var target = $(event.target);
-    var id = target.attr("id");
-    if (typeof id == 'undefined') {
-        target = target.parent();
-        id = target.attr("id");
-    }
-
-    var enrollmentId = id.substring(id.lastIndexOf("_") + 1);
-    $("#num_score_" + enrollmentId).val('');
-
-    $("#hdn_score_changed_"+ enrollmentId).val(originalValueChanged(values, enrollmentId,
-                                                                    $("#num_score_"+ enrollmentId).val(),
-                                                                    $("#slt_justification_score_" + enrollmentId).val()));
-});
-
-
+}
+$("input[id^='num_score_']" ).change(ensureOnlyOneInputCompleted)
+$("select[id^='slt_justification_score_']" ).change(ensureOnlyOneInputCompleted)
 
 var target_score = '#form_online_encoding tbody tr td input';
 $(target_score).on('keypress',
@@ -300,13 +263,6 @@ $(target_justification).on('keypress',
                              "index_increment_value": 1},
                            select_next_input_value);
 
-
-$(document).on('keypress', function(e) {
-    disable_enter(e);
-});
-
-
-
-
+$(document).on('keypress', function(e) { disable_enter(e); });
 </script>
 {% endblock %}

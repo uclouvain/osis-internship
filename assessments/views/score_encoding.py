@@ -171,19 +171,43 @@ def online_encoding_form(request, learning_unit_year_id=None):
     data = get_data_online(learning_unit_year_id, request)
     if request.method == 'GET':
         return layout.render(request, "online_encoding_form.html", data)
-
     elif request.method == 'POST':
+        validation_error = None
+        encoded_exam_enrollments = data['enrollments']
         decimal_scores_authorized = data['learning_unit_year'].decimal_scores
         is_program_manager = data['is_program_manager']
-        try:
-            updated_enrollments = update_exam_enrollments(request, data["enrollments"], decimal_scores_authorized,
-                                                          is_program_manager)
-            data = get_data_online(learning_unit_year_id, request)
 
+        updated_enrollments = []
+        for enrollment in encoded_exam_enrollments:
+            score_encoded = request.POST.get('score_' + str(enrollment.id))
+            justification_encoded = request.POST.get('justification_' + str(enrollment.id))
+
+            score_encoded, justification_encoded = _truncate_decimals(score_encoded, justification_encoded,
+                                                                      decimal_scores_authorized)
+
+            # Ignore those which are not value
+            if score_encoded is None and justification_encoded is None:
+                continue
+            # Ignore those which are not modified
+            if score_encoded == enrollment.score_final and justification_encoded == enrollment.justification_final:
+                continue
+
+            # Modification is possible only for program managers OR score has changed but justification/score final is NONE
+            if is_program_manager or (not enrollment.score_final and not enrollment.justification_final):
+                try :
+                    set_score_and_justification_for_exam_enrollment(is_program_manager, enrollment, justification_encoded,
+                                                                    score_encoded, request.user)
+                    updated_enrollments.append(enrollment)
+                except ValidationError as e:
+                    validation_error = e
+                    pass
+
+        if validation_error is None :
+            data = get_data_online(learning_unit_year_id, request)
             send_messages_to_notify_encoding_progress(request, data["enrollments"], data["learning_unit_year"],
                                                       is_program_manager, updated_enrollments)
             return layout.render(request, "online_encoding.html", data)
-        except ValidationError:
+        else:
             messages.add_message(request, messages.ERROR, "%s" % _('scores_must_be_between_0_and_20'))
             return layout.render(request, "online_encoding_form.html", data)
 
