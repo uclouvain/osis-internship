@@ -33,6 +33,7 @@ from django.utils.translation import ugettext as _
 from assessments.forms.score_file import ScoreFileForm
 from base import models as mdl
 from attribution import models as mdl_attr
+from base.enums import exam_enrollment_justification_type as justification_types
 
 
 col_academic_year = 0
@@ -286,10 +287,14 @@ def __save_xls_scores(request, file_name, is_program_manager, user, learning_uni
                                     messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('constraint_score_other_score')))
 
                                 elif score == 0 or score or justification:
-                                    if (justification=='ABSENCE_UNJUSTIFIED' or justification == "CHEATING" or justification == "MISSING") and \
-                                                    exam_enrollment.justification_final == 'ABSENCE_JUSTIFIED':
+                                    print('ici')
+                                    print(justification)
+                                    if (justification in [justification_types.ABSENCE_UNJUSTIFIED,
+                                                          justification_types.CHEATING,
+                                                          justification_types.SCORE_MISSING]) and \
+                                                    exam_enrollment.justification_final == justification_types.ABSENCE_JUSTIFIED:
                                         messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('abscence_justified_preserved')))
-                                        justification = 'ABSENCE_JUSTIFIED'
+                                        justification = justification_types.ABSENCE_JUSTIFIED
                                     if is_program_manager:
                                         if exam_enrollment.score_final != score:
                                             new_scores_number += 1
