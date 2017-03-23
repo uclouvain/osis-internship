@@ -2,9 +2,8 @@ import factory
 import factory.fuzzy
 import pendulum
 
-import datetime
-
 from internship.tests.factories.cohort import CohortFactory
+
 
 class PeriodFactory(factory.django.DjangoModelFactory):
     class Meta:
