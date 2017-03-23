@@ -31,8 +31,8 @@
 {% block breadcrumb %}
 <li><a href="{% url 'studies' %}" id="lnk_studies">{% trans 'student_path' %}</a></li>
 <li><a href="{% url 'assessments' %}" id="lnk_evaluations">{% trans 'evaluations' %}</a></li>
-<li><a href="{% url 'scores_encoding' %}" id="lnk_scores_encoding">{% trans 'scores_encoding' %}</a></li>
-<li><a href="{% url 'online_encoding' learning_unit_year.id %}" id="lnk_online_scores_encoding">{% trans 'online_scores_encoding' %}</a></li>
+<li><a href="{% url 'scores_encoding' %}?{{ request.GET.urlencode }}" id="lnk_scores_encoding">{% trans 'scores_encoding' %}</a></li>
+<li><a href="{% url 'online_encoding' learning_unit_year.id %}?{{ request.GET.urlencode }}" id="lnk_online_scores_encoding">{% trans 'online_scores_encoding' %}</a></li>
 <li class="active">{% trans 'dubble_online_scores_encoding' %}</li>
 {% endblock %}
 
@@ -49,22 +49,26 @@
         <div class="row">
             <div class="col-md-3">
                 <div class="form-group">
-                    <label>{% trans 'coordinator' %}</label><br>
-                    {% if coordinator %}
-                        {{ coordinator }}
-                    {% else %}
-                        {% trans 'none' %}
-                    {% endif %}
-                    {% if tutors %}
+                    <label>{% trans 'scores_responsible' %}</label><br>
+                     {% if tutors %}
                         <a role="button" data-toggle="collapse" data-target="#tutors_by_course"
-                           aria-expanded="false"
+                           aria-expanded="false" class="pull-right"
                            aria-controls="tutors_by_course"
                            title="{% trans 'display_tutors' %}">
                           <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
                         </a>
                     {% endif %}
+                    {% if score_responsibles %}
+                        <ul class="list-unstyled">
+                            {% for score_responsible in score_responsibles %}
+                                <li>{{ score_responsible }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        {% trans 'none' %}
+                    {% endif %}
                     <div class="collapse" id="tutors_by_course">
-                        <label>{% trans 'tutors' %}</label><br>
+                        <label>{% trans 'other_tutors' %}</label><br>
                         <ul>
                             {% for prof in tutors %}
                                 <li>{{ prof }}</li>
@@ -94,7 +98,7 @@
         </div>
         <hr>
         <form class="form-inline" method="POST"
-              action="{% url 'online_double_encoding_validation' learning_unit_year.id %}"
+              action="{% url 'online_double_encoding_validation' learning_unit_year.id %}?{{ request.GET.urlencode }}"
               id="form_online_double_encoding_validation">
             {% csrf_token %}
             <table class="table">
@@ -244,7 +248,7 @@
             </table>
 
             <button type="submit" class="btn btn-primary" id="bt_submit_online_double_encoding_validation" disabled><span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span> {% trans 'save' %}</button>
-            <a class="btn btn-default" id="lnk_cancel" href="{% url 'online_encoding' learning_unit_year.id %}" role="button"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> {% trans 'cancel' %}</a>
+            <a class="btn btn-default" id="lnk_cancel" href="{% url 'online_encoding' learning_unit_year.id %}?{{ request.GET.urlencode }}" role="button"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> {% trans 'cancel' %}</a>
         </form>
     </div>
 </div>

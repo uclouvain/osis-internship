@@ -366,7 +366,7 @@ msgid "encode"
 msgstr "Encode"
 
 msgid "encode_as_coordinator"
-msgstr "Encode as coordinator"
+msgstr "Encode as scores responsible"
 
 msgid "encode_as_pgm"
 msgstr "Encode as program manager"
@@ -703,30 +703,6 @@ msgstr "No data for this academic year"
 
 msgid "no_dubble_score_encoded_comparison_impossible"
 msgstr "No dubble score encoded ; nothing to compare."
-#~ msgid "title_btn_upload_score"
-#~ msgstr "Select your xls file from which to inject scores"
-#~ msgid "submit"
-#~ msgstr "Submit"
-#~ msgid "download_xls_file"
-#~ msgstr "Download Excel File"
-#~ msgid "not_in_choices_list"
-#~ msgstr "Invalid entry, not in the list of choices"
-#~ msgid "invalid_entry"
-#~ msgstr "Invalid entry"
-#~ msgid "please_choose_in_the_list"
-#~ msgstr "Please choose in the list"
-#~ msgid "choices_list"
-#~ msgstr "List of choices"
-#~ msgid "changes_on_offer_year_and_academic_calendar"
-#~ msgstr "Watch out - Changes has been made on %s, academic calendar (%s)"
-#~ msgid "score_injected"
-#~ msgstr "Scores injected"
-#~ msgid "scores_injected"
-#~ msgstr "Scores injected"
-#~ msgid "add_address"
-#~ msgstr "Add address"
-#~ msgid "registration_date"
-#~ msgstr "Registration date"
 
 msgid "no_exam_session_opened_for_the_moment"
 msgstr "No scores' encoding session opened for the moment."
@@ -986,6 +962,9 @@ msgstr "Score legend: %s (0=Score of presence)"
 msgid "score_missing_pdf_legend"
 msgstr "?=Score missing"
 
+msgid "scores_responsible"
+msgstr "Scores Responsible"
+
 msgid "score_saved"
 msgstr "score Saved"
 
@@ -1012,6 +991,9 @@ msgstr "score(s) saved"
 
 msgid "scores_saved_cannot_be_saved_anymore"
 msgstr "Sore saved, button save not available anymore"
+
+msgid "scores_must_be_between_0_and_20"
+msgstr "Scores must be between 0 and 20"
 
 msgid "scores_sheet"
 msgstr "Scores sheet"
@@ -1184,6 +1166,9 @@ msgstr "Back to messages"
 
 msgid "tutors"
 msgstr "Tutors"
+
+msgid "other_tutors"
+msgstr "Other Tutors"
 
 msgid "txt_message"
 msgstr "Text Message"
@@ -1363,3 +1348,18 @@ msgstr "Deputy"
 
 msgid "format_date"
 msgstr "mm/dd/yyyy"
+
+msgid "SCORES_RESPONSIBLE"
+msgstr "Scores responsible"
+
+msgid "scores_responsible_can_submit_partial_encoding"
+msgstr "Scores responsible can submit partial encoding"
+
+msgid "the_scores_responsible_must_still_submit_scores"
+msgstr "The scores responsible must still submit the scores"
+
+msgid "no_valid_m_justification_error"
+msgstr "You can't encode a JUSTIFIED ABSENCE (M) via the XLS injection"
+
+msgid "abscence_justified_preserved"
+msgstr "Justified abscence already encoded and preserved"

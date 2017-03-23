@@ -33,14 +33,15 @@
 {% block breadcrumb %}
 <li><a href="{% url 'studies' %}" id="lnk_studies">{% trans 'studies' %}</a></li>
 <li><a href="{% url 'assessments' %}" id="lnk_assesments">{% trans 'evaluations' %}</a></li>
-<li><a href="{% url 'scores_encoding' %}" id="lnk_scores_encoding">{% trans 'scores_encoding' %}</a></li>
-<li><a href="{% url 'online_encoding' learning_unit_year.id %}" id="lnk_online_encoding">{% trans 'online_scores_encoding' %}</a></li>
+<li><a href="{% url 'scores_encoding' %}?{{ request.GET.urlencode }}" id="lnk_scores_encoding">{% trans 'scores_encoding' %}</a></li>
+<li><a href="{% url 'online_encoding' learning_unit_year.id %}?{{ request.GET.urlencode }}" id="lnk_online_encoding">{% trans 'online_scores_encoding' %}</a></li>
 <li class="active">{% trans 'dubble_online_scores_encoding' %}</li>
 {% endblock %}
 {% block content %}
 <div class="page-header">
     <h2>{% trans 'dubble_online_scores_encoding' %}</h2>
 </div>
+{% include "template_messages.html" %}
 <div class="panel panel-default">
     <div class="panel-heading">
         <h3 class="panel-title" style="font-size: 150%; color: #3399CC;">{{ learning_unit_year }}</h3>
@@ -49,22 +50,26 @@
         <div class="row">
             <div class="col-md-3">
                 <div class="form-group" id="pnl_responsable_name" >
-                    <label>{% trans 'coordinator' %}</label><br>
-                    {% if coordinator %}
-                        {{ coordinator }}
-                    {% else %}
-                        {% trans 'none' %}
-                    {% endif %}
+                    <label>{% trans 'scores_responsible' %}</label><br>
                     {% if tutors %}
                         <a role="button" data-toggle="collapse" data-target="#tutors_by_course"
-                           aria-expanded="false"
+                           aria-expanded="false" class="pull-right"
                            aria-controls="tutors_by_course"
                            title="{% trans 'display_tutors' %}">
                           <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
                         </a>
                     {% endif %}
+                    {% if score_responsibles %}
+                        <ul class="list-unstyled">
+                            {% for score_responsible in score_responsibles %}
+                                <li>{{ score_responsible }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        {% trans 'none' %}
+                    {% endif %}
                     <div class="collapse" id="tutors_by_course">
-                        <label>{% trans 'tutors' %}</label><br>
+                        <label>{% trans 'other_tutors' %}</label><br>
                         <ul>
                             {% for prof in tutors %}
                                 <li>{{ prof }}</li>
@@ -102,12 +107,12 @@
             {% endif %}
         </div>
         <form class="form-inline" method="POST"
-              action="{% url 'online_double_encoding_form' learning_unit_year.id %}"
+              action="{% url 'online_double_encoding_form' learning_unit_year.id %}?{{ request.GET.urlencode }}"
               id="form_online_double_encoding">
             {% csrf_token %}
             <button type="submit" class="btn btn-primary" id="bt_compare_up">
                 <span class="glyphicon glyphicon-transfer" aria-hidden="true"></span> {% trans 'compare' %}</button>
-            <a class="btn btn-default" href="{% url 'online_encoding' learning_unit_year.id %}" role="button" id="bt_cancel_online_double_encoding_up">
+            <a class="btn btn-default" href="{% url 'online_encoding' learning_unit_year.id %}?{{ request.GET.urlencode }}" role="button" id="bt_cancel_online_double_encoding_up">
                 <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> {% trans 'cancel' %}</a>
             <table class="table table-hover">
                 <thead>
@@ -141,7 +146,7 @@
                             <input type="hidden" id="hdn_score_draft_{{ enrollment.id }}"
                                    value="{{ enrollment.score_draft | score_display:enrollment.session_exam.learning_unit_year.decimal_scores }}"/>
                             {% endif %}
-                            <input type="number" min="0" max="20" name="score_{{ enrollment.id }}" id="num_double_score_{{ enrollment.id }}"
+                            <input type="text" min="0" max="20" name="score_{{ enrollment.id }}" id="num_double_score_{{ enrollment.id }}"
                                    tabindex="{{ forloop.counter }}" class="form-control"
                                    {% if not is_program_manager %}
                                      {% if enrollment.score_final != None or enrollment.justification_final %}
@@ -188,7 +193,7 @@
             </table>
             <button type="submit" class="btn btn-primary" id="bt_compare_down">
                 <span class="glyphicon glyphicon-transfer" aria-hidden="true"></span> {% trans 'compare' %}</button>
-            <a class="btn btn-default" href="{% url 'online_encoding' learning_unit_year.id %}" role="button" id="bt_cancel_online_double_encoding_down">
+            <a class="btn btn-default" href="{% url 'online_encoding' learning_unit_year.id %}?{{ request.GET.urlencode }}" role="button" id="bt_cancel_online_double_encoding_down">
                 <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> {% trans 'cancel' %}</a>
         </form>
     </div>

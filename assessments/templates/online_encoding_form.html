@@ -32,7 +32,7 @@
 {% block breadcrumb %}
   <li><a href="{% url 'studies' %}" id="lnk_studies">{% trans 'student_path' %}</a></li>
   <li><a href="{% url 'assessments' %}" id="lnk_assessments">{% trans 'evaluations' %}</a></li>
-  <li><a href="{% url 'scores_encoding' %}" id="lnk_scores_encoding">{% trans 'scores_encoding' %}</a></li>
+  <li><a href="{% url 'scores_encoding' %}?{{ request.GET.urlencode }}" id="lnk_scores_encoding">{% trans 'scores_encoding' %}</a></li>
   <li class="active">{% trans 'online_encoding' %}</li>
 {% endblock %}
 {% block content %}
@@ -48,22 +48,26 @@
         <div class="row">
             <div class="col-md-3">
                 <div class="form-group">
-                    <label>{% trans 'coordinator' %}</label><br>
-                    {% if coordinator %}
-                        {{ coordinator }}
+                    <label>{% trans 'scores_responsible' %}</label><br>
+                    {% if tutors %}
+                        <a role="button" data-toggle="collapse" data-target="#tutors_by_course"
+                           aria-expanded="false" class="pull-right"
+                           aria-controls="tutors_by_course"
+                           title="{% trans 'display_tutors' %}">
+                          <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+                        </a>
+                    {% endif %}
+                    {% if score_responsibles %}
+                        <ul class="list-unstyled">
+                            {% for score_responsible in score_responsibles %}
+                                <li>{{ score_responsible }}</li>
+                            {% endfor %}
+                        </ul>
                     {% else %}
                         {% trans 'none' %}
                     {% endif %}
-                    {% if tutors %}
-                        <a role="button" data-toggle="collapse" data-target="#tutors_by_course"
-                           aria-expanded="false"
-                           aria-controls="tutors_by_course"
-                           title="{% trans 'display_tutors' %}">
-                            <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
-                        </a>
-                    {% endif %}
                     <div class="collapse" id="tutors_by_course">
-                        <label>{% trans 'tutors' %}</label><br>
+                        <label>{% trans 'other_tutors' %}</label><br>
                         <ul>
                             {% for prof in tutors %}
                                 <li>{{ prof }}</li>
@@ -99,14 +103,14 @@
                 {% trans 'decimal_values_ignored' %}
             {% endif %}
         </div>
-        <form class="form-inline" method="POST" action="{% url 'online_encoding_form' learning_unit_year.id %}" id="form_online_encoding">
+        <form class="form-inline" method="POST" action="{% url 'online_encoding_form' learning_unit_year.id %}?{{ request.GET.urlencode }}" id="form_online_encoding">
             {% csrf_token %}
             <button type="submit" class="btn btn-primary" id="bt_save_online_encoding_up"
                 {% if not is_program_manager %}
                     data-toggle="tooltip" data-placement="left" title="{% trans 'temporary_save' %}"
                 {% endif %}>
                 <span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span> {% trans 'save' %}</button>
-            <a class="btn btn-default" href="{% url 'online_encoding' learning_unit_year.id %}" role="button" id="lnk_cancel_online_encoding_up">
+            <a class="btn btn-default" href="{% url 'online_encoding' learning_unit_year.id %}?{{ request.GET.urlencode }}" role="button" id="lnk_cancel_online_encoding_up">
                 <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> {% trans 'cancel' %}</a>
             <table class="table table-hover">
                 <thead>
@@ -132,7 +136,7 @@
                         <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.registration_id }}</td>
                         <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.last_name|title }}</td>
                         <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.first_name }}</td>
-                        <td><input type="number" min="0" max="20" name="score_{{ enrollment.id }}"
+                        <td><input type="text" min="0" max="20" name="score_{{ enrollment.id }}"
                                 id="num_score_{{ enrollment.id }}" tabindex="{{ forloop.counter }}"
                                 class="form-control"
                                 {% if is_program_manager %}
@@ -191,7 +195,7 @@
                     data-toggle="tooltip" data-placement="left" title="{% trans 'temporary_save' %}"
                 {% endif %}>
                 <span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span> {% trans 'save' %}</button>
-            <a class="btn btn-default" href="{% url 'online_encoding' learning_unit_year.id %}" role="button" id="lnk_cancel_online_encoding_down">
+            <a class="btn btn-default" href="{% url 'online_encoding' learning_unit_year.id %}?{{ request.GET.urlencode }}" role="button" id="lnk_cancel_online_encoding_down">
                 <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> {% trans 'cancel' %}</a>
         </form>
     </div>
@@ -209,8 +213,33 @@ var values = [
         {% endfor %}
         ['', '', '']];
 
+var is_valid_score = function(score) {
+    var is_decimal = '{{enrollment.session_exam.learning_unit_year.decimal_scores}}'
+    if (!is_decimal && score % 1 != 0){
+        return false
+    }else if( score > 20 || score < 0 ) {
+        return false
+    }
+    return true;
+}
+
+var validate_form = function() {
+    $("input[id^='num_score_']" ).each(function(){
+        var score_encoded = $(this).val();
+        if (is_valid_score(score_encoded)) {
+            $(this).css("border", "1px solid lightgrey");
+        } else {
+            $(this).css("border", "1px solid #ff0000");
+        }
+    });
+}
+
+$( document ).ready(function() {
+    validate_form()
+});
+
+
 $("input[id^='num_score_']" ).change(function(event) {
-    console.log("coucou");
     // Get the object that received the event.
     var target = $(event.target);
     var id = target.attr("id");
@@ -220,7 +249,14 @@ $("input[id^='num_score_']" ).change(function(event) {
     }
     var enrollmentId = id.substring(id.lastIndexOf("_") + 1);
 
-    if(target.val() != "") {
+    var score_encoded = target.val();
+    if (is_valid_score(score_encoded)) {
+        target.css("border", "1px solid lightgrey");
+    } else {
+        target.css("border", "1px solid #ff0000");
+    }
+
+    if(score_encoded != "") {
         $("#slt_justification_score_" + enrollmentId).val('');
     }
     this.setCustomValidity('');
@@ -268,6 +304,9 @@ $(target_justification).on('keypress',
 $(document).on('keypress', function(e) {
     disable_enter(e);
 });
+
+
+
 
 </script>
 {% endblock %}
