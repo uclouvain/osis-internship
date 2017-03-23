@@ -1378,3 +1378,9 @@ msgstr "Scores responsible can submit partial encoding"
 
 msgid "the_scores_responsible_must_still_submit_scores"
 msgstr "The scores responsible must still submit the scores"
+
+msgid "no_valid_m_justification_error"
+msgstr "You can't encode a JUSTIFIED ABSENCE (M) via the XLS injection"
+
+msgid "abscence_justified_preserved"
+msgstr "Justified abscence already encoded and preserved"
