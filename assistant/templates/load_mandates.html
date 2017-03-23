@@ -29,22 +29,17 @@
 {% block style %}
 <link rel="stylesheet" href="{% static 'css/custom.css' %}">
 {% endblock %}
-    
 {% block breadcrumb %}
 <li><a href="{% url 'institution' %}" id="lnk_institution">{% trans 'institution' %}</a></li>
 <li><a href="{% url 'mandates' %}" id="lnk_mandates">{% trans 'mandates' %}</a></li>
-<li><a href="{% url 'mandates_list' %}" id="lnk_assistants">{% trans 'mandates_list' %}</a></li>
+<li><a href="{% url 'manager_home' %}" id="lnk_manager_home">{% trans 'assistants' %}</a></li>
 <li class="active">{% trans 'load_mandates' %}</li>
-
 {% endblock %}
 {% block content %}
 <div class="page-header">
-    <h2>{% trans 'assistants' %}</h2>
+    <h3>{% trans 'assistantship_mandate_renewal' %}</h3>
+    <h1><small>{% trans 'import_data_from_xlsx'%}</small></h1>
 </div>
-	<div class = "page-header">
-   	<h1><small>{% trans 'import_data_from_xlsx'%}</small></h1>
-   	</div>
-
 <div class="panel panel-default">
     <div class="panel-body">
     {% if imported_mandates >= 0 or updated_mandates >= 0 %}
