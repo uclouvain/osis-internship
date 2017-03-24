@@ -90,7 +90,7 @@
             {% include "template_messages.html" %}
             
             {% if exam_enrollments %}
-            <button class="btn btn-primary" id="bt_save_online_encoding_up" onclick="submit_encoding()">
+            <button type="submit" class="btn btn-primary" id="bt_save_online_encoding_up">
                 <span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span> {% trans 'save' %}</button>
             <table class="table table-hover">
                 <thead>
@@ -105,21 +105,20 @@
                     </tr>
                 </thead>
                 <tbody>
-                {% for enrol in exam_enrollments %}
+                {% for enrollment in exam_enrollments %}
                     <tr>
-                        <td>{{ enrol.learning_unit_enrollment.offer_enrollment.offer_year.acronym }}</td>
-                        <td data-container="body" data-toggle="tooltip" title="{{ enrol.learning_unit_enrollment.learning_unit_year.title }}" >
-                            {{ enrol.learning_unit_enrollment.learning_unit_year.acronym |add:" - " |add:enrol.learning_unit_enrollment.learning_unit_year.title | truncatechars:22}}
+                        <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.offer_year.acronym }}</td>
+                        <td data-container="body" data-toggle="tooltip" title="{{ enrollment.learning_unit_enrollment.learning_unit_year.title }}" >
+                            {{ enrollment.learning_unit_enrollment.learning_unit_year.acronym |add:" - " |add:enrollment.learning_unit_enrollment.learning_unit_year.title | truncatechars:22}}
                         </td>
-                        <td>{{ enrol.learning_unit_enrollment.offer_enrollment.student.registration_id }}</td>
-                        <td>{{ enrol.learning_unit_enrollment.offer_enrollment.student.person.last_name }}</td>
-                        <td>{{ enrol.learning_unit_enrollment.offer_enrollment.student.person.first_name }}</td>
+                        <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.registration_id }}</td>
+                        <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.last_name }}</td>
+                        <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.first_name }}</td>
                         <td>
-                            <input class="form-control col-sm" type="number" min="0" max="20" name="score_{{ enrol.id }}"
-                                id="num_score_{{ enrol.id }}" tabindex="{{ forloop.counter }}"
-                                class="form-control"
-                                value="{{ enrol.score_final | score_display:enrol.learning_unit_enrollment.learning_unit_year.decimal_scores}}"
-                                {% if enrol.learning_unit_enrollment.learning_unit_year.decimal_scores %}
+                            <input class="form-control col-sm" type="text" name="score_{{ enrollment.id }}"
+                                id="num_score_{{ enrollment.id }}" tabindex="{{ forloop.counter }}"
+                                value="{{ enrollment.score_final | score_display:enrollment.learning_unit_enrollment.learning_unit_year.decimal_scores}}"
+                                {% if enrollment.learning_unit_enrollment.learning_unit_year.decimal_scores %}
                                     step="any"
                                     oninvalid="invalidScoreMsg(this,true,'{% trans 'decimal_score_not_allowed' %}','{% trans 'scores_gt_0_lt_20' %}')"
                                 {% else %}
@@ -128,22 +127,21 @@
                                 {% endif %}>
                         </td>
                         <td>
-                            <select class="form-control" name="justification_{{ enrol.id }}" id="slt_justification_score_{{ enrol.id }}"
+                            <select class="form-control" name="justification_{{ enrollment.id }}" id="slt_justification_score_{{ enrollment.id }}"
                                    tabindex="{{ exam_enrollments|length|sum:forloop.counter }}">
                                 <option value=""></option>
-                                <option {% if enrol.justification_final == "ABSENCE_UNJUSTIFIED" %} selected {% endif %} value="ABSENCE_UNJUSTIFIED">{% trans 'ABSENCE_UNJUSTIFIED' %}</option>
-                                <option {% if enrol.justification_final == "ABSENCE_JUSTIFIED" %} selected {% endif %} value="ABSENCE_JUSTIFIED">{% trans 'ABSENCE_JUSTIFIED' %}</option>
-                                <option {% if enrol.justification_final == "CHEATING" %} selected {% endif %} value="CHEATING">{% trans 'CHEATING' %}</option>
-                                <option {% if enrol.justification_final == "SCORE_MISSING" %} selected {% endif %} value="SCORE_MISSING">{% trans 'SCORE_MISSING' %}</option>
+                                <option {% if enrollment.justification_final == "ABSENCE_UNJUSTIFIED" %} selected {% endif %} value="ABSENCE_UNJUSTIFIED">{% trans 'ABSENCE_UNJUSTIFIED' %}</option>
+                                <option {% if enrollment.justification_final == "ABSENCE_JUSTIFIED" %} selected {% endif %} value="ABSENCE_JUSTIFIED">{% trans 'ABSENCE_JUSTIFIED' %}</option>
+                                <option {% if enrollment.justification_final == "CHEATING" %} selected {% endif %} value="CHEATING">{% trans 'CHEATING' %}</option>
+                                <option {% if enrollment.justification_final == "SCORE_MISSING" %} selected {% endif %} value="SCORE_MISSING">{% trans 'SCORE_MISSING' %}</option>
                             </select>
-                            <input type="hidden" id="hdn_score_changed_{{ enrol.id }}" name="score_changed_{{ enrol.id }}"></td>
                         </td>
                     </tr>
                 {% endfor %}
                 </tbody>
             </table>
             <br>
-            <button class="btn btn-primary" id="bt_save_online_encoding_down" onclick="submit_encoding()">
+            <button type="submit" class="btn btn-primary" id="bt_save_online_encoding_down">
                 <span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span> {% trans 'save' %}</button>
             {% endif %}
         </form>
@@ -154,75 +152,44 @@
 
 {% block script %}
 <script>
-    /**
-    * Return true if all scores are >= 0 and < 20.
-    */
-    function validate_form(){
-        var scores = $('*[id^="num_score_"]');
-        for (var i = 0, iLen = scores.length; i < iLen; i++){
-            if (scores[i].value && (scores[i].value < 0 || scores[i].value > 20)){
-                return false;
-            }
+    var is_valid_score = function(score) {
+        if( score > 20 || score < 0 ) {
+            return false
         }
         return true;
     }
-
-    function submit_encoding(){
-        // This validation is mandatory. Without this, the javascript submit bypass the rules min/max on the 'num_score_' input tag.
-        if (validate_form()){
-            var form = document.forms["form_justification"];
-            form.setAttribute("method", "post");
-            form.setAttribute("action", "/assessments/scores_encoding/specific_criteria/submission/");
-            form.submit();
-        } else { return false ;}
+    var validate_form = function() {
+        $("input[id^='num_score_']" ).each(function(){
+            var score_encoded = $(this).val();
+            if (is_valid_score(score_encoded)) {
+                $(this).css("border", "1px solid lightgrey");
+            } else {
+                $(this).css("border", "1px solid #ff0000");
+            }
+        });
     }
+    var ensureOnlyOneInputCompleted = function(event) {
+        if (!event || event == null) { return; }
 
-    var values = [
-        {% for enrollment in exam_enrollments %}
-            {% if is_program_manager %}
-                ['{{ enrollment.id }}', '{{ enrollment.score_final | default_if_none:'-1' }}','{{ enrollment.justification_final | default_if_none:'' }}'],
-            {% else %}
-                ['{{ enrollment.id }}', '{{ enrollment.score_draft | default_if_none:'-1' }}','{{ enrollment.justification_draft | default_if_none:'' }}'],
-            {% endif %}
-        {% endfor %}
-        ['', '', '']];
+        var self = $(this);
+        var id = self.attr('id');
 
-    $("input[id^='num_score_']" ).change(function(event) {
-        // Get the object that received the event.
-        var target = $(event.target);
-        var id = target.attr("id");
-        if (typeof id == 'undefined') {
-            target = target.parent();
-            id = target.attr("id");
+        if ( id != undefined && self.val() != "" ) {
+            var selfPrefix = id.substring(0, id.lastIndexOf("_"));
+            var enrollmentId = id.substring(id.lastIndexOf("_") + 1); //Get enrollement id
+
+            //Empty the other input because we have set a value in [selfPrefix]
+            if (selfPrefix == "slt_justification_score") {
+                $("#num_score_" + enrollmentId).val("");
+            } else if (selfPrefix == "num_score") {
+                $("#slt_justification_score_" + enrollmentId).val("");
+                this.setCustomValidity('');
+            }
         }
-        var enrollmentId = id.substring(id.lastIndexOf("_") + 1);
-
-        if(target.val() != "") {
-            $("#slt_justification_score_" + enrollmentId).val('');
-        }
-        this.setCustomValidity('');
-
-        $("#hdn_score_changed_"+ enrollmentId).val(originalValueChanged(values, enrollmentId,
-                                                                        $("#num_score_"+ enrollmentId).val(),
-                                                                        $("#slt_justification_score_" + enrollmentId).val()));
-    });
-
-    $("select[id^='slt_justification_score_']" ).change(function(event) {
-        // Get the object that received the event.
-        var target = $(event.target);
-        var id = target.attr("id");
-        if (typeof id == 'undefined') {
-            target = target.parent();
-            id = target.attr("id");
-        }
-
-        var enrollmentId = id.substring(id.lastIndexOf("_") + 1);
-        $("#num_score_" + enrollmentId).val('');
-
-        $("#hdn_score_changed_"+ enrollmentId).val(originalValueChanged(values, enrollmentId,
-                                                                        $("#num_score_"+ enrollmentId).val(),
-                                                                        $("#slt_justification_score_" + enrollmentId).val()));
-    });
+        validate_form()
+    }
+    $("input[id^='num_score_']" ).change(ensureOnlyOneInputCompleted)
+    $("select[id^='slt_justification_score_']" ).change(ensureOnlyOneInputCompleted)
 
 
     var target_score = '#form_justification tbody tr td input';
@@ -240,10 +207,9 @@
                                  "index_increment_value": 1},
                                select_next_input_value);
 
-
-    $(document).on('keypress', function(e) {
-        disable_enter(e);
-    });
-
+    // Disable key enter press
+    $(document).on('keypress', function(e) { disable_enter(e);  });
+    // Validate form on reload
+    $( document ).ready(function() { validate_form() });
 </script>
 {% endblock %}
