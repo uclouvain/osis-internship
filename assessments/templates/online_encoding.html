@@ -32,7 +32,7 @@
 {% block breadcrumb %}
 <li><a href="{% url 'studies' %}" id="lnk_studies">{% trans 'student_path' %}</a></li>
 <li><a href="{% url 'assessments' %}" id="lnk_evaluations">{% trans 'evaluations' %}</a></li>
-<li><a href="{% url 'scores_encoding' %}" id="lnk_scores_encoding">{% trans 'scores_encoding' %}</a></li>
+<li><a href="{% url 'scores_encoding' %}?{{ request.GET.urlencode }}" id="lnk_scores_encoding">{% trans 'scores_encoding' %}</a></li>
 <li class="active">{% trans 'online_encoding' %}</li>
 {% endblock %}
 
@@ -50,21 +50,25 @@
             <div class="col-md-3">
                 <div class="form-group">
                     <label>{% trans 'scores_responsible' %}</label><br>
-                    {% if coordinator %}
-                        {{ coordinator }}
-                    {% else %}
-                        {% trans 'none' %}
-                    {% endif %}
                     {% if tutors %}
                         <a role="button" data-toggle="collapse" data-target="#tutors_by_course"
-                           aria-expanded="false"
+                           aria-expanded="false" class="pull-right"
                            aria-controls="tutors_by_course"
                            title="{% trans 'display_tutors' %}">
                           <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
                         </a>
                     {% endif %}
+                    {% if score_responsibles %}
+                        <ul class="list-unstyled">
+                            {% for score_responsible in score_responsibles %}
+                                <li>{{ score_responsible }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        {% trans 'none' %}
+                    {% endif %}
                     <div class="collapse" id="tutors_by_course">
-                        <label>{% trans 'tutors' %}</label><br>
+                        <label>{% trans 'other_tutors' %}</label><br>
                         <ul>
                             {% for prof in tutors %}
                                 <li>{{ prof }}</li>
@@ -101,7 +105,7 @@
             </div>
         </div>
         <div class="btn-group" role="group" aria-label="Encode">
-            <a class="btn btn-default" href="{% url 'online_encoding_form' learning_unit_year.id  %}"
+            <a class="btn btn-default" href="{% url 'online_encoding_form' learning_unit_year.id  %}?{{ request.GET.urlencode }}"
                 role="button" id="lnk_encode"
                 data-toggle="tooltip" data-placement="bottom"
                 {% if enrollments and progress == '100' and not is_program_manager %}
@@ -110,7 +114,7 @@
                 {% else %}
                     title="{% trans 'tooltip_encode_for' %}"
                 {% endif %}><i class="fa fa-hashtag"></i> {% trans 'encode' %}</a>
-            <a class="btn btn-default" href="{% url 'online_double_encoding_form' learning_unit_year.id %}"
+            <a class="btn btn-default" href="{% url 'online_double_encoding_form' learning_unit_year.id %}?{{ request.GET.urlencode }}"
                 role="button" id="lnk_online_double_encoding"
                 data-toggle="tooltip" data-placement="bottom"
                 {% if enrollments and progress == '100' and not is_program_manager %}
@@ -260,8 +264,8 @@
                     <p class="help-block">{% trans 'help_submission_scores_label' as help_submission_scores_label %}{{ help_submission_scores_label | format:draft_scores_not_submitted | safe}}</p>
             </div>
             <div class="modal-footer">
-                <a class="btn btn-warning" href="{% url 'online_encoding_submission' learning_unit_year.id %}"
-                   role="button" id="lnk_post_scores_submission_btn"
+                <a class="btn btn-warning" href="{% url 'online_encoding_submission' learning_unit_year.id %}?{{ request.GET.urlencode }}"
+                   role="button" id="lnk_post_scores_submission_btn" data-container="body"
                    data-toggle="tooltip" data-placement="left" title="{% trans 'definitive_save' %}" ><span class="glyphicon glyphicon-send" aria-hidden="true"></span> {% trans 'submission' %}</a>
                 <button type="button" class="btn btn-default" data-dismiss="modal" id="bt_cancel_submission_score_modal">{% trans 'cancel' %}</button>
             </div>

@@ -241,6 +241,9 @@ msgid "decimal_values_ignored"
 msgstr ""
 "Les notes de ce cours ne peuvent PAS recevoir de valeurs décimales."
 
+msgid "score_have_more_than_2_decimal_places"
+msgstr "La note comporte plus de deux chiffres après la virgule"
+
 msgid "definitive_save"
 msgstr "Sauvegarde définitive (soumettre à la faculté)"
 
@@ -996,13 +999,16 @@ msgid "scores_injection"
 msgstr "Injection des notes"
 
 msgid "scores_responsible"
-msgstr "Responsable de notes"
+msgstr "Responsable(s) de notes"
 
 msgid "scores_saved"
 msgstr "note(s) enregistrée(s)"
 
 msgid "scores_saved_cannot_be_saved_anymore"
 msgstr "Notes sauvegardées, le bouton sauvegarder n'est plus présent"
+
+msgid "scores_must_be_between_0_and_20"
+msgstr "Les notes doivent être comprise entre 0 et 20"
 
 msgid "scores_sheet"
 msgstr "Feuille de notes"
@@ -1181,6 +1187,9 @@ msgstr "Enseignant(e)"
 
 msgid "tutors"
 msgstr "Enseignants"
+
+msgid "other_tutors"
+msgstr "Autre(s) Enseignant(s)"
 
 msgid "txt_message"
 msgstr "Message texte"
@@ -1401,3 +1410,9 @@ msgid "BIENNIAL_EVEN"
 msgstr "Bisannuel pair"
 msgid "BIENNIAL_ODD"
 msgstr "Bisannuel impair"
+
+msgid "no_valid_m_justification_error"
+msgstr "Vous ne pouvez pas encoder d'absence justifiée (M) via l'injection xls"
+
+msgid "abscence_justified_preserved"
+msgstr "Abscence justifiée dèjà encodée et préservée"

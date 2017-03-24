@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -23,27 +23,9 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django import template
 
-register = template.Library()
+IN_PROGRESS = 'IN_PROGRESS'
+DONE = 'DONE'
 
-
-@register.filter
-def score_display(value, decimal_option):
-    if value is None or str(value) == '-':
-        return ""
-    else:
-        try:
-            if decimal_option:
-                return "{0:.2f}".format(value)
-            else:
-                return "{0:.0f}".format(value)
-        except:
-            return value
-
-@register.filter
-def disabled(value):
-    if value is None:
-        return ""
-    else:
-        return "disabled"
+REVIEW_STATUS_CHOICES = ((IN_PROGRESS, IN_PROGRESS),
+                         (DONE, DONE))
