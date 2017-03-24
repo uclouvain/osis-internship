@@ -299,7 +299,6 @@ def online_double_encoding_form(request, learning_unit_year_id=None):
     data = get_data_online_double(learning_unit_year_id, request)
 
     if request.method == 'GET':
-        # Case asking for a double encoding
         return online_double_encoding_get_form(request, data, learning_unit_year_id)
     elif request.method == 'POST':
         validation_error = None
@@ -327,21 +326,26 @@ def online_double_encoding_form(request, learning_unit_year_id=None):
             reencoded_exam_enrollments.append(enrollment)
             try:
                 enrollment.full_clean()
-                enrollment.save()
             except ValidationError as e:
                 validation_error = e
                 pass
 
-
         if validation_error is not None:
             # An validation error occured during the score reencoding [Mean: score_encoded < 1 or score_encoded > 20]
             messages.add_message(request, messages.ERROR, "%s" % _('scores_must_be_between_0_and_20'))
+            #Preserve selection after a post which have failed
+            for enrollment in data['enrollments']:
+                enrollment.post_score_encoded = request.POST.get('score_' + str(enrollment.id))
+                enrollment.post_justification_encoded = request.POST.get('justification_' + str(enrollment.id))
+
             return online_double_encoding_get_form(request, data, learning_unit_year_id)
         elif not reencoded_exam_enrollments:
             messages.add_message(request, messages.WARNING, "%s" % _('no_dubble_score_encoded_comparison_impossible'))
             return online_encoding(request, learning_unit_year_id=learning_unit_year_id)
         else:
-            # Success case
+            # Save all value [Validation is OK]
+            for enrollment in encoded_exam_enrollments:
+                enrollment.save()
             data['enrollments'] = mdl.exam_enrollment.sort_for_encodings(reencoded_exam_enrollments)
             return layout.render(request, "online_double_encoding_validation.html", data)
 
