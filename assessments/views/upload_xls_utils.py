@@ -287,8 +287,6 @@ def __save_xls_scores(request, file_name, is_program_manager, user, learning_uni
                                     messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('constraint_score_other_score')))
 
                                 elif score == 0 or score or justification:
-                                    print('ici')
-                                    print(justification)
                                     if (justification in [justification_types.ABSENCE_UNJUSTIFIED,
                                                           justification_types.CHEATING,
                                                           justification_types.SCORE_MISSING]) and \
