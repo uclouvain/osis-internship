@@ -41,7 +41,7 @@ class OrganizationAddressAdmin(SerializableModelAdmin):
 
 
 class OrganizationAddress(SerializableModel):
-    organization = models.ForeignKey('Organization')
+    organization = models.ForeignKey('Organization', related_name='addresses', related_query_name='address')
     label = models.CharField(max_length=20)
     location = models.CharField(max_length=255)
     postal_code = models.CharField(max_length=20)

@@ -116,30 +116,28 @@
                                 </a>
                             </td>
                             <td>
-                                {% for address in organization.address %}
+                                {% for address in organization.addresses.all %}
                                     {{address.location}} <br/>
                                 {% endfor %}
                             </td>
                             <td>
-                                {% for address in organization.address %}
+                                {% for address in organization.addresses.all %}
                                     {{address.postal_code}} <br/>
                                 {% endfor %}
                             </td>
                             <td>
-                                {% for address in organization.address %}
+                                {% for address in organization.addresses.all %}
                                     {{address.city}} <br/>
                                 {% endfor %}
                             </td>
                             <td>
-                                {% for address in organization.address %}
+                                {% for address in organization.addresses.all %}
                                     {{address.country}} <br/>
                                 {% endfor %}
                             </td>
                             <td>
                                 {% if organization.website %}
                                     <a href="{{ organization.website }}" target="blank">{{ organization.website }}</a>
-                                {% else %}
-
                                 {%endif%}
                             </td>
                         </tr>

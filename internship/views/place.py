@@ -23,15 +23,18 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.shortcuts import render
+import operator
+
 from django.contrib.auth.decorators import login_required, permission_required
+from django.shortcuts import render
 
 from internship import models as mdl_internship
-from internship.forms.organization_form import OrganizationForm
 from internship.forms.organization_address_form import OrganizationAddressForm
-from internship.views.internship import set_tabs_name, get_all_specialities
+from internship.forms.organization_form import OrganizationForm
+from internship.models.organization import Organization
+from internship.models.organization_address import OrganizationAddress
 from internship.utils import export_utils, export_utils_pdf
-
+from internship.views.internship import get_all_specialities, set_tabs_name
 
 
 def sort_organizations(sort_organizations):
@@ -62,14 +65,13 @@ def set_organization_address(organizations):
         Get the address in the OrganizationAddress table and put it
         Get also the number of student of choose this organization for their internship
     """
-    if organizations:
-        for organization in organizations:
-            organization.address = ""
-            organization.student_choice = 0
-            address = mdl_internship.organization_address.search(organization = organization)
-            if address:
-                organization.address = address
-            organization.student_choice = len(mdl_internship.internship_choice.search(organization=organization))
+    for organization in organizations:
+        organization.address = ""
+        organization.student_choice = 0
+        address = mdl_internship.organization_address.search(organization = organization)
+        if address:
+            organization.address = address
+        organization.student_choice = len(mdl_internship.internship_choice.search(organization=organization))
 
 
 def sorted_organization(sort_organizations, sort_city):
@@ -142,26 +144,25 @@ def internships_places(request):
     if request.method == 'GET':
         city_sort_get = request.GET.get('city_sort')
 
-    # Import all the organizations order by their reference and set their address
-    organizations = mdl_internship.organization.search(type="service partner")
-    organizations = sort_organizations(organizations)
-    set_organization_address(organizations)
+    organizations = Organization.objects.prefetch_related('addresses') \
+        .filter(type='service partner') \
+        .order_by('reference')
 
-    # Next, if there is a value for the sort, browse all the organizations and put which have the same city
-    # in the address than the sort option
-    l_organizations = []
-    if city_sort_get and city_sort_get != "0":
-        l_organizations = sorted_organization(organizations, city_sort_get)
-    else:
-        l_organizations = organizations
+    if city_sort_get and city_sort_get != '0':
+        organizations = organizations.filter(address__city=city_sort_get)
 
-    # Create the options for the selected list, delete dubblons
-    organization_addresses = get_cities(organizations)
+    addresses = OrganizationAddress.objects.filter(organization__type='service partner') \
+                .distinct('city').order_by('city')
 
-    return render(request, "places.html", {'section': 'internship',
-                                           'all_organizations': l_organizations,
-                                           'all_addresses': organization_addresses,
-                                           'city_sort_get': city_sort_get})
+    cities = map(operator.attrgetter('city'), addresses)
+
+    context = {
+        'section': 'internship',
+        'all_organizations': organizations,
+        'all_addresses': cities,
+        'city_sort_get': city_sort_get
+    }
+    return render(request, "places.html", context)
 
 
 @login_required
