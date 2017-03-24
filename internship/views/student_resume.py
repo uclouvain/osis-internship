@@ -79,6 +79,75 @@ def get_number_ok_student(students_list, number_selection):
     return nbr_student
 
 
+def get_students():
+    import collections
+    from django.db import connection
+
+    from internship.models.internship_student_information import InternshipStudentInformation
+    from internship.models.internship_choice import InternshipChoice
+    from base.models.student import Student
+
+    connection.queries_log = collections.deque(maxlen=9000)
+    print("before queries", len(connection.queries))
+    qs_student_info = InternshipStudentInformation.objects.prefetch_related('person').all() \
+        .order_by('person__last_name', 'person__first_name')
+
+    person_ids = set(qs_student_info.values_list('person_id', flat=True))
+    qs_student = Student.objects.prefetch_related('person').filter(person_id__in=person_ids)
+
+    # select isi.id, person.id, person.first_name, person.last_name
+    # from internship_internshipstudentinformation isi,
+    #     base_person person,
+    #     base_student student
+    # where isi.person_id = person.id and student.person_id = person.id
+    # order by person.first_name, person.last_name
+
+    student_ids = qs_student.values_list('id', flat=True)
+
+    choices = InternshipChoice.objects.filter(student_id__in=student_ids, internship_choice__gt=0) \
+        .values_list('student_id', 'internship_choice') # .distinct('internship_choice')
+
+    print(choices)
+    # print(student_ids)
+
+    students = [(student, False) for student in qs_student]
+
+    print("after queries", len(connection.queries))
+
+    return students
+
+
+
+# FIXME
+# This function is the refactoring of the internship_student_resume
+# I try to improve the speed of the queries.
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def internships_student_resume_refactoring(request):
+    from django.db import connection
+    students_with_status = get_students()
+    student_with_internships = mdl_internship.internship_choice.get_number_students()
+    students_can_have_internships = mdl_internship.internship_student_information.get_number_students()
+    student_without_internship = students_can_have_internships - student_with_internships
+    number_students_ok = len(students_with_status) # len([x for x in students_with_status if x[1]])
+    number_students_not_ok = len(students_with_status) #len([x for x in students_with_status if x[1] is False])
+    number_generalists = mdl_internship.internship_student_information.get_number_of_generalists()
+    number_specialists = students_can_have_internships - number_generalists
+    context = {
+        'search_name': None,
+        'search_firstname': None,
+        'students': students_with_status,
+        'students_ok': number_students_ok,
+        'students_not_ok': number_students_not_ok,
+        'student_with_internships': student_with_internships,
+        'students_can_have_internships': students_can_have_internships,
+        'student_without_internship': student_without_internship,
+        "number_generalists": number_generalists,
+        "number_specialists": number_specialists
+    }
+    return render(request, "student_search.html", context)
+
+
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internships_student_resume(request):
@@ -90,17 +159,19 @@ def internships_student_resume(request):
     number_students_not_ok = len([x for x in students_with_status if x[1] is False])
     number_generalists = mdl_internship.internship_student_information.get_number_of_generalists()
     number_specialists = students_can_have_internships - number_generalists
-    return render(request, "student_search.html", {'search_name': None,
-                                                   'search_firstname': None,
-                                                   'students': students_with_status,
-                                                   'students_ok': number_students_ok,
-                                                   'students_not_ok': number_students_not_ok,
-                                                   'student_with_internships': student_with_internships,
-                                                   'students_can_have_internships': students_can_have_internships,
-                                                   'student_without_internship': student_without_internship,
-                                                   "number_generalists": number_generalists,
-                                                   "number_specialists": number_specialists
-                                                   })
+    context = {
+        'search_name': None,
+        'search_firstname': None,
+        'students': students_with_status,
+        'students_ok': number_students_ok,
+        'students_not_ok': number_students_not_ok,
+        'student_with_internships': student_with_internships,
+        'students_can_have_internships': students_can_have_internships,
+        'student_without_internship': student_without_internship,
+        "number_generalists": number_generalists,
+        "number_specialists": number_specialists
+    }
+    return render(request, "student_search.html", context)
 
 
 @login_required
