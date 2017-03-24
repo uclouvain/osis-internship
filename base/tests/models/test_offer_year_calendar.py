@@ -1,12 +1,12 @@
 ##############################################################################
 #
-# OSIS stands for Open Student Information System. It's an application
+#    OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -25,15 +25,18 @@
 ##############################################################################
 import datetime
 from django.test import TestCase
-from base.models import offer_year_calendar, academic_calendar, offer_year
+from base.models import offer_year_calendar, offer_year
 from base.tests.models import test_academic_calendar
 
 from base.tests.factories.academic_year import AcademicYearFactory
 from base.tests.factories.academic_calendar import AcademicCalendarFactory
 from base.tests.factories.offer_year_calendar import OfferYearCalendarFactory
+from base.tests.factories.offer_year import OfferYearFactory
+
 
 start_date = datetime.datetime.now()
 end_date = start_date.replace(year=start_date.year + 1)
+YEAR_CALENDAR = 2017
 
 
 def create_offer_year_calendar(offer_year, academic_year):
@@ -116,3 +119,40 @@ class AcademicCalendarWithOfferYearCalendarsNotCustomized(TestCase):
         for off_y_cal in offer_year_calendars:
             self.assertEquals(off_y_cal.start_date, start_date)
             self.assertEquals(off_y_cal.end_date, end_date)
+
+
+class OfferYearCalendarsAttributesValidation(TestCase):
+
+    def setUp(self):
+        self.academic_year = AcademicYearFactory(year=YEAR_CALENDAR,
+                                                 start_date=datetime.datetime(YEAR_CALENDAR, 9, 1),
+                                                 end_date=datetime.datetime(YEAR_CALENDAR+1, 10, 30))
+        self.academic_calendar = AcademicCalendarFactory.build(academic_year=self.academic_year,
+                                                               start_date=datetime.datetime(YEAR_CALENDAR, 9, 1),
+                                                               end_date=datetime.datetime(YEAR_CALENDAR+1, 10, 30))
+        self.academic_calendar.save(functions=[])
+        self.offer_year = OfferYearFactory(academic_year=self.academic_year)
+
+    def test_end_date_lower_than_start_date(self):
+        self.offer_year_calendar = OfferYearCalendarFactory.build(offer_year=self.offer_year,
+                                                                  academic_calendar=self.academic_calendar)
+        self.offer_year_calendar.start_date = datetime.datetime(YEAR_CALENDAR, 9, 1)
+        self.offer_year_calendar.end_date = datetime.datetime(YEAR_CALENDAR, 8, 1)
+        with self.assertRaises(AttributeError):
+            self.offer_year_calendar.save()
+
+    def test_end_date_greather_than_academic_calendar_end_date(self):
+        self.offer_year_calendar = OfferYearCalendarFactory.build(offer_year=self.offer_year,
+                                                                  academic_calendar=self.academic_calendar)
+        self.offer_year_calendar.start_date = datetime.datetime(YEAR_CALENDAR, 9, 1)
+        self.offer_year_calendar.end_date = self.academic_calendar.end_date + datetime.timedelta(days=2)
+        with self.assertRaises(AttributeError):
+            self.offer_year_calendar.save()
+
+    def test_start_date_lower_than_academic_calendar_start_date(self):
+        self.offer_year_calendar = OfferYearCalendarFactory.build(offer_year=self.offer_year,
+                                                                  academic_calendar=self.academic_calendar)
+        self.offer_year_calendar.end_date = datetime.datetime(YEAR_CALENDAR+2, 8, 1)
+        self.offer_year_calendar.start_date = self.academic_calendar.start_date - datetime.timedelta(days=2)
+        with self.assertRaises(AttributeError):
+            self.offer_year_calendar.save()

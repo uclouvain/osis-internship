@@ -1,12 +1,12 @@
 ##############################################################################
 #
-# OSIS stands for Open Student Information System. It's an application
+#    OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -23,13 +23,33 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.utils import timezone
 from base.models.exceptions import FunctionAgrumentMissingException, StartDateHigherThanEndDateException
-from osis_common.models.serializable_model import SerializableModel
+from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 
 FUNCTIONS = 'functions'
+
+
+class AcademicCalendarAdmin(SerializableModelAdmin):
+    list_display = ('academic_year', 'title', 'start_date', 'end_date')
+    list_display_links = None
+    readonly_fields = ('academic_year', 'title', 'start_date', 'end_date')  # The fields have to be readonly.
+                                                                            # The application/synchronization
+                                                                            # will update NOT THE ADMIN
+
+    def has_add_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+    def get_actions(self, request):
+        actions = super(AcademicCalendarAdmin, self).get_actions(request)
+
+        if 'delete_selected' in actions:
+            del actions['delete_selected']
+        return actions
 
 
 class AcademicCalendar(SerializableModel):

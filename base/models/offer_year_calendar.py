@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -58,6 +58,17 @@ class OfferYearCalendar(models.Model):
             self.start_date = start_date
             self.end_date = end_date
         self.save()
+
+    def save(self, *args, **kwargs):
+        if self.academic_calendar.start_date and self.start_date and \
+                        self.start_date < self.academic_calendar.start_date:
+            raise AttributeError("The start date should be between the start/end dates of the academic year.")
+        if self.academic_calendar.end_date and self.end_date and \
+                        self.end_date > self.academic_calendar.end_date:
+            raise AttributeError("The end date should be between the start/end dates of the academic year.")
+        if self.start_date and self.end_date and self.end_date < self.start_date:
+            raise AttributeError("The end date should be greather than the start date.")
+        super(OfferYearCalendar, self).save(*args, **kwargs)
 
     def __str__(self):
         return u"%s - %s" % (self.academic_calendar, self.offer_year)
