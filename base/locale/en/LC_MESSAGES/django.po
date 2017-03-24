@@ -248,6 +248,9 @@ msgstr ""
 "Decimal values in scores are NOT accepted. If you try to put decimal values, "
 "it will be ignored."
 
+msgid "score_have_more_than_2_decimal_places"
+msgstr "Score cannot have more than two decimal places"
+
 msgid "definitive_save"
 msgstr "Definitive submission (Submit to faculty)"
 

@@ -200,6 +200,22 @@
 {% endblock %}
 {% block script %}
 <script>
+    var is_valid_score = function(score) {
+        var is_decimal = {% if learning_unit_year.decimal_scores %} true {% else %} false {% endif %};
+        score = score.replace(',','.');
+        var regex = /^\d+$/
+        if (is_decimal) {
+            regex = /^\d+(\.\d{0,2})?$/
+        }
+        if(!regex.test(score)){
+            return false;
+        }
+        score = parseFloat(score).toFixed(2)
+        if( score > 20 || score < 0 ) {
+            return false
+        }
+        return true;
+    }
     var ensureOnlyOneInputCompleted = function(event) {
         if (!event || event == null) { return; }
 
@@ -216,11 +232,8 @@
             } else if (selfPrefix == "num_double_score") {
                 $("#slt_double_justification_score_" + enrollmentId).val("");
             }
-
-            //Validation
-            validate_num_double_score(enrollmentId)
-            validate_double_justification_score(enrollmentId)
         }
+        validate_form();
     }
     $("input[id^='num_double_score_']" ).change(ensureOnlyOneInputCompleted);
     $("select[id^='slt_double_justification_score_']" ).change(ensureOnlyOneInputCompleted);
@@ -229,10 +242,14 @@
         var input = $("input[id^='num_double_score_" + enrollmentId + "']");
         if(input.length > 0) {
             var score_draft = Number($("#hdn_score_draft_" + enrollmentId).val());
-            if (input.val() == "" || input.val() == score_draft) {
-                input.css("border", "1px solid lightgrey");
-            } else {
+            var score_encoded = input.val();
+
+            if(score_encoded == "" || (is_valid_score(score_encoded) && score_encoded == score_draft) ) {
+                input.css("border", "1px solid #D3D3D3");
+            }else if (!is_valid_score(score_encoded)) {
                 input.css("border", "1px solid #ff0000");
+            }else if ( score_encoded != score_draft ) {
+                input.css("border", "2px solid #ff0000");
             }
         }
     }
@@ -241,9 +258,9 @@
         if(select.length > 0) {
             var justification_draft =  $("#hdn_justification_draft_" + enrollmentId).val();
             if (select.val() == "" || select.val() == justification_draft) {
-                select.css("border", "1px solid lightgrey");
+                select.css("border", "1px solid #D3D3D3");
             } else {
-                select.css("border", "1px solid #ff0000");
+                select.css("border", "2px solid #ff0000");
             }
         }
     }

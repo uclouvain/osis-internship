@@ -117,14 +117,10 @@
                         <td>
                             <input class="form-control col-sm" type="text" name="score_{{ enrollment.id }}"
                                 id="num_score_{{ enrollment.id }}" tabindex="{{ forloop.counter }}"
-                                value="{{ enrollment.score_final | score_display:enrollment.learning_unit_enrollment.learning_unit_year.decimal_scores}}"
-                                {% if enrollment.learning_unit_enrollment.learning_unit_year.decimal_scores %}
-                                    step="any"
-                                    oninvalid="invalidScoreMsg(this,true,'{% trans 'decimal_score_not_allowed' %}','{% trans 'scores_gt_0_lt_20' %}')"
-                                {% else %}
-                                    step="1"
-                                    oninvalid="invalidScoreMsg(this,false,'{% trans 'decimal_score_not_allowed' %}','{% trans 'scores_gt_0_lt_20' %}')"
-                                {% endif %}>
+                                value="{{ enrollment.score_final | score_display:enrollment.learning_unit_enrollment.learning_unit_year.decimal_scores}}">
+
+                            <!-- Input hidden for allow decimal score -->
+                            <input id="score_{{ enrollment.id }}_can_be_decimal" type="hidden" value="{{enrollment.learning_unit_enrollment.learning_unit_year.decimal_scores}}">
                         </td>
                         <td>
                             <select class="form-control" name="justification_{{ enrollment.id }}" id="slt_justification_score_{{ enrollment.id }}"
@@ -152,7 +148,17 @@
 
 {% block script %}
 <script>
-    var is_valid_score = function(score) {
+     var is_valid_score = function(score, is_decimal) {
+        score = score.replace(',','.');
+        var regex = /^\d+$/
+        if (is_decimal) {
+            regex = /^\d+(\.\d{0,2})?$/
+        }
+        if(!regex.test(score)){
+            return false;
+        }
+
+        score = parseFloat(score).toFixed(2)
         if( score > 20 || score < 0 ) {
             return false
         }
@@ -161,8 +167,13 @@
     var validate_form = function() {
         $("input[id^='num_score_']" ).each(function(){
             var score_encoded = $(this).val();
-            if (is_valid_score(score_encoded)) {
-                $(this).css("border", "1px solid lightgrey");
+            var id = $(this).attr('id');
+            enrollmentId = id.substring(id.lastIndexOf("_") + 1);
+            var is_decimal = $("input[id^='score_" + enrollmentId + "_can_be_decimal']" ).val();
+            is_decimal = (is_decimal=="True") ? true : false;
+
+            if (score_encoded == "" || is_valid_score(score_encoded, is_decimal)) {
+                $(this).css("border", "1px solid #D3D3D3");
             } else {
                 $(this).css("border", "1px solid #ff0000");
             }

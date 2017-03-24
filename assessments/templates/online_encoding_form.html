@@ -204,10 +204,17 @@
 {% block script %}
 <script>
 var is_valid_score = function(score) {
-    var is_decimal = '{{enrollment.session_exam.learning_unit_year.decimal_scores}}'
-    if (!is_decimal && score % 1 != 0){
-        return false
-    }else if( score > 20 || score < 0 ) {
+    var is_decimal = {% if learning_unit_year.decimal_scores %} true {% else %} false {% endif %};
+    score = score.replace(',','.');
+    var regex = /^\d+$/
+    if (is_decimal) {
+        regex = /^\d+(\.\d{0,2})?$/
+    }
+    if(!regex.test(score)){
+        return false;
+    }
+    score = parseFloat(score).toFixed(2)
+    if( score > 20 || score < 0 ) {
         return false
     }
     return true;
@@ -216,8 +223,8 @@ var is_valid_score = function(score) {
 var validate_form = function() {
     $("input[id^='num_score_']" ).each(function(){
         var score_encoded = $(this).val();
-        if (is_valid_score(score_encoded)) {
-            $(this).css("border", "1px solid lightgrey");
+        if (score_encoded == "" || is_valid_score(score_encoded)) {
+            $(this).css("border", "1px solid #D3D3D3");
         } else {
             $(this).css("border", "1px solid #ff0000");
         }
@@ -243,7 +250,7 @@ var ensureOnlyOneInputCompleted = function(event) {
             this.setCustomValidity('');
         }
     }
-    validate_form()
+    validate_form();
 }
 $("input[id^='num_score_']" ).change(ensureOnlyOneInputCompleted)
 $("select[id^='slt_justification_score_']" ).change(ensureOnlyOneInputCompleted)
