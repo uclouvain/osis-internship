@@ -241,6 +241,9 @@ msgid "decimal_values_ignored"
 msgstr ""
 "Les notes de ce cours ne peuvent PAS recevoir de valeurs décimales."
 
+msgid "score_have_more_than_2_decimal_places"
+msgstr "La note comporte plus de deux chiffres après la virgule"
+
 msgid "definitive_save"
 msgstr "Sauvegarde définitive (soumettre à la faculté)"
 
