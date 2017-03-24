@@ -202,7 +202,7 @@ def online_encoding_form(request, learning_unit_year_id=None):
                     validation_error = e
                     pass
 
-        if validation_error is None :
+        if validation_error is None:
             data = get_data_online(learning_unit_year_id, request)
             send_messages_to_notify_encoding_progress(request, data["enrollments"], data["learning_unit_year"],
                                                       is_program_manager, updated_enrollments)
@@ -768,6 +768,15 @@ def get_data_specific_criteria(request):
 
 @login_required
 @permission_required('assessments.can_access_scoreencoding', raise_exception=True)
+def search_by_specific_criteria(request):
+    if request.method == "POST":
+        return specific_criteria_submission(request)
+    else:
+        return specific_criteria(request)
+
+
+@login_required
+@permission_required('assessments.can_access_scoreencoding', raise_exception=True)
 def specific_criteria(request):
     data = get_data_specific_criteria(request)
     return layout.render(request, "scores_encoding_by_specific_criteria.html", data)
@@ -775,44 +784,39 @@ def specific_criteria(request):
 
 @login_required
 @permission_required('assessments.can_access_scoreencoding', raise_exception=True)
-def search_by_specific_criteria(request):
-    return specific_criteria(request)
-
-
-@login_required
-@permission_required('assessments.can_access_scoreencoding', raise_exception=True)
 def specific_criteria_submission(request):
     data = get_data_specific_criteria(request)
 
-    scores_saved = 0
-
-    learning_unit_years_changed = []
-    all_modified_exam_enrollments = []
+    updated_enrollments = []
     is_program_manager = data['is_program_manager']
-
     for enrollment in data['exam_enrollments']:
+        score_encoded = request.POST.get('score_' + str(enrollment.id))
+        justification_encoded = request.POST.get('justification_' + str(enrollment.id))
         learning_unit_year = enrollment.learning_unit_enrollment.learning_unit_year
         decimal_scores_authorized = learning_unit_year.decimal_scores
-        try:
-            updated_enrollments = update_exam_enrollments(request, [enrollment], decimal_scores_authorized,
-                                                          is_program_manager)
-            all_modified_exam_enrollments.extend(updated_enrollments)
-            scores_saved += len(updated_enrollments)
-            if len(updated_enrollments) != 0 and learning_unit_year not in learning_unit_years_changed:
-                learning_unit_years_changed.append(learning_unit_year)
-        except ValidationError:
-            messages.add_message(request, messages.ERROR, "%s" % _('scores_must_be_between_0_and_20'))
-            return specific_criteria(request)
+
+        score_encoded, justification_encoded = _truncate_decimals(score_encoded, justification_encoded,
+                                                                  decimal_scores_authorized)
+
+        if exam_enrollment_can_be_updated(enrollment, score_encoded, justification_encoded, is_program_manager):
+            try:
+                set_score_and_justification_for_exam_enrollment(is_program_manager, enrollment,
+                                                                justification_encoded,
+                                                                score_encoded, request.user)
+                updated_enrollments.append(enrollment)
+            except ValidationError:
+                messages.add_message(request, messages.ERROR, "%s" % _('scores_must_be_between_0_and_20'))
+                return specific_criteria(request)
+
 
     # ExamEnrollments by learning_unit_year (only if examEnrollment of the learningUnitYear has changed)
     grouped_by_learning_unit_years_for_mails = {}
-    for enrollment in all_modified_exam_enrollments:
+    for enrollment in updated_enrollments:
         learning_unit_year = enrollment.learning_unit_enrollment.learning_unit_year
-        if learning_unit_year in learning_unit_years_changed:
-            if learning_unit_year in grouped_by_learning_unit_years_for_mails.keys():
-                grouped_by_learning_unit_years_for_mails[learning_unit_year].append(enrollment)
-            else:
-                grouped_by_learning_unit_years_for_mails[learning_unit_year] = [enrollment]
+        if learning_unit_year in grouped_by_learning_unit_years_for_mails.keys():
+            grouped_by_learning_unit_years_for_mails[learning_unit_year].append(enrollment)
+        else:
+            grouped_by_learning_unit_years_for_mails[learning_unit_year] = [enrollment]
 
     for learn_unit_year, updated_exam_enrollments in grouped_by_learning_unit_years_for_mails.items():
         all_enrollments = list(mdl.exam_enrollment.find_for_score_encodings(
@@ -822,8 +826,32 @@ def specific_criteria_submission(request):
         send_messages_to_notify_encoding_progress(request, all_enrollments, learn_unit_year, is_program_manager,
                                                   updated_exam_enrollments)
 
-    messages.add_message(request, messages.SUCCESS, "%s %s" % (scores_saved, _('scores_saved')))
+    if len(updated_enrollments) > 0:
+        messages.add_message(request, messages.SUCCESS, "%s %s" % (len(updated_enrollments), _('scores_saved')))
+
     return specific_criteria(request)
+
+
+
+def exam_enrollment_can_be_updated(enrollment, score, justification, is_program_manager):
+    """"
+        Check if the exam enrollment can be updated
+        Args:
+            enrollment: Exam enrollement which we want to make a modification.
+            score: New score encoding.
+            justification: New justification.
+            is_program_manager : Is a program manager autor of modification ?
+    """
+    # Ignore those which are not value
+    if score is None and justification is None:
+        return False
+    # Ignore those which are not modified
+    if score == enrollment.score_final and justification == enrollment.justification_final:
+        return False
+
+    # Modification is possible only for program managers OR score has changed but justification/score final is NONE
+    return is_program_manager or (not enrollment.score_final and not enrollment.justification_final)
+
 
 
 def _get_exam_enrollments(user, learning_unit_year_id=None, tutor_id=None, offer_year_id=None, academic_year=None,
