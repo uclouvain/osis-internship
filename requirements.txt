@@ -1,4 +1,4 @@
-coverage==4.0.3
+coverage
 Django==1.9
 django-jenkins==0.18.1
 et-xmlfile==1.0.1
