@@ -25,7 +25,7 @@
 ##############################################################################
 from django.db import models
 from attribution.models.enums import function
-from osis_common.models.serializable_model import SerializableModel,SerializableModelAdmin
+from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 
 
 class AttributionAdmin(SerializableModelAdmin):
@@ -73,19 +73,17 @@ def search(tutor=None, learning_unit_year=None, score_responsible=None, list_lea
     return queryset.select_related('tutor', 'learning_unit_year')
 
 
-def find_responsible(a_learning_unit_year):
-    # If there are more than 1 coordinator, we take the first in alphabetic order
-    attribution_list = Attribution.objects.filter(learning_unit_year=a_learning_unit_year) \
+def find_all_responsibles(a_learning_unit_year):
+    attribution_list = Attribution.objects.select_related("tutor") \
+        .filter(learning_unit_year=a_learning_unit_year) \
         .filter(score_responsible=True)
+    return [attribution.tutor for attribution in attribution_list]
 
-    if attribution_list and len(attribution_list) > 0:
-        if len(attribution_list) == 1:
-            return attribution_list[0].tutor
-        else:
-            for lu_attribution in attribution_list:
-                if lu_attribution.score_responsible:
-                    return lu_attribution.tutor
-            return attribution_list[0].tutor
+
+def find_responsible(a_learning_unit_year):
+    tutors_list = find_all_responsibles(a_learning_unit_year)
+    if tutors_list:
+        return tutors_list[0]
     return None
 
 

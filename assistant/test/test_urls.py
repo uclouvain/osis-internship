@@ -28,7 +28,6 @@ from django.core.urlresolvers import reverse
 from django.core.urlresolvers import resolve
 from assistant.views.messages import show_history
 from assistant.utils.send_email import send_message_to_assistants, send_message_to_deans
-from assistant.enums import message_type
 
 
 class AssistantURLsTestCase(TestCase):

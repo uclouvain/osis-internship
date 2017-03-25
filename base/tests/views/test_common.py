@@ -1,6 +1,6 @@
 ##############################################################################
 #
-#    OSIS stands for Open Student Information System. It's an application
+# OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -23,20 +23,19 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.contrib import admin
-from assistant.models import reviewer, manager, settings, academic_assistant, assistant_mandate
-from assistant.models.assistant_document_file import AssistantDocumentFile
-from assistant.models.mandate_structure import MandateStructure
-from assistant.models.review import Review
-from assistant.models.tutoring_learning_unit_year import TutoringLearningUnitYear
+from django.test import TestCase
+from django.core.urlresolvers import reverse
+from django.test.utils import override_settings
+from django.contrib.auth.models import User, Permission
 
+class ErrorViewTestCase(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user('tmp', 'tmp@gmail.com', 'tmp')
+        permission = Permission.objects.get(codename='can_access_academic_calendar')
+        self.user.user_permissions.add(permission)
 
-admin.site.register(assistant_mandate.AssistantMandate, assistant_mandate.AssistantMandateAdmin)
-admin.site.register(AssistantDocumentFile)
-admin.site.register(academic_assistant.AcademicAssistant, academic_assistant.AcademicAssistantAdmin)
-admin.site.register(MandateStructure)
-admin.site.register(Review)
-admin.site.register(TutoringLearningUnitYear)
-admin.site.register(reviewer.Reviewer, reviewer.ReviewerAdmin)
-admin.site.register(manager.Manager, manager.ManagerAdmin)
-admin.site.register(settings.Settings, settings.SettingsAdmin)
+    @override_settings(DEBUG=False)
+    def test_404_error(self):
+        self.client.login(username='tmp', password='tmp')
+        response = self.client.get(reverse('academic_calendar_read', args=[46898]), follow=True)
+        self.assertEqual(response.status_code, 404)
