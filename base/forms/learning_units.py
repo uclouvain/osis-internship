@@ -45,48 +45,46 @@ class LearningUnitYearForm(forms.Form):
     )
 
     def clean(self):
-        clean_data=self.cleaned_data
-        academic_year = clean_data.get('academic_year')
+        #Cleaning data, normalizing values coming from the user
+        clean_data = self.cleaned_data
+        academic_year = lambda : '' if self.cleaned_data.get('academic_year')=='0' else self.cleaned_data.get('academic_year')
         acronym = clean_data.get('acronym').upper()
         keyword = clean_data.get('keyword')
-        status = clean_data.get('status')
-        type = clean_data.get('type')
-
-        if (not acronym and not keyword and status=="NONE" and type=="NONE"):
+        status = lambda : '' if self.cleaned_data.get('status')=="NONE" else self.cleaned_data.get('status')
+        type = lambda : '' if self.cleaned_data.get('type')=="NONE" else self.cleaned_data.get('type')
+        #Save final values in cleaned_data for other use
+        self.cleaned_data['academic_year'] = academic_year()
+        self.cleaned_data['status'] = status()
+        self.cleaned_data['type'] = type()
+        self.cleaned_data['acronym'] = acronym
+        minimal_inputs_not_satisfied = lambda : True if (not acronym and not keyword and not type() and not status()) else False
+        if minimal_inputs_not_satisfied():
             raise ValidationError(learning_units_errors.INVALID_SEARCH)
-        elif academic_year=="0":
+        elif not academic_year():
             check_when_academic_year_is_all(acronym)
         return clean_data
 
     def set_academic_years_all(self):
-        academic_year = self.cleaned_data.get('academic_year')
-        if academic_year=="0":
-            academic_years_all=1
-        else:
-            academic_years_all=0
+        academic_years_all = True if not self.cleaned_data.get('academic_year') else False
         return academic_years_all
 
     def get_learning_units(self):
-        academic_year = self.cleaned_data.get('academic_year')
-        acronym = self.cleaned_data.get('acronym').upper()
-        keyword = self.cleaned_data.get('keyword')
-        status = self.cleaned_data.get('status')
-        type = self.cleaned_data.get('type')
-        if status=="NONE":
-            status=None
-        if type=="NONE":
-            type=None
-        if (academic_year=="0" and acronym and not keyword and not status and not type):
+        clean_data = self.cleaned_data
+        academic_year = clean_data.get('academic_year')
+        acronym = clean_data.get('acronym')
+        keyword = clean_data.get('keyword')
+        status = clean_data.get('status')
+        type = clean_data.get('type')
+
+        condition = lambda : True if (not academic_year and acronym and not keyword and not type and not status) else False
+        if condition():
             learning_units=mdl.learning_unit_year.find_by_acronym(acronym)
         else:
-            if (academic_year=="0"):
-                learning_units = mdl.learning_unit_year.search(academic_year_id=None,acronym=acronym,title=keyword,type=type,status=status)
-            else:
-                learning_units = mdl.learning_unit_year.search(academic_year_id=academic_year,acronym=acronym,title=keyword,type=type,status=status)
+            learning_units = mdl.learning_unit_year.search(academic_year_id=academic_year,acronym=acronym,title=keyword,type=type,status=status)
         return learning_units
 
     def get_academic_year(self):
-        academic_year = self.cleaned_data.get('academic_year')
+        academic_year = 0 if not self.cleaned_data.get('academic_year') else self.cleaned_data.get('academic_year')
         return academic_year
 
 def check_when_academic_year_is_all(acronym):

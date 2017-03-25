@@ -1423,3 +1423,6 @@ msgstr "You can't encode a JUSTIFIED ABSENCE (M) via the XLS injection"
 
 msgid "abscence_justified_preserved"
 msgstr "Justified abscence already encoded and preserved"
+
+msgid "all_years"
+msgstr "All years"

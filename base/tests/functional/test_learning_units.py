@@ -82,8 +82,6 @@ class LearningUnitsSearchTest(StaticLiveServerTestCase):
         self.wait_for(lambda:self.assertEqual(_('formation_catalogue'), self.browser.find_element_by_id('lnk_home_dropdown_catalog').text))
 
     def wait_for_text_in_table(self, table_id, text_to_find, row_or_col):
-        #table = self.browser.find_element_by_id(table_id)
-        #elements = table.find_elements_by_tag_name(row_or_col)
         self.wait_for(lambda:self.assertIn(text_to_find, [element.text for element in self.browser.find_element_by_id(table_id).find_elements_by_tag_name(row_or_col)]))
 
     def wait_for(self, fct):

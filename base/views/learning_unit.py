@@ -50,10 +50,10 @@ def learning_units_search(request):
     else:
         learning_units = None
 
-    academic_year = form.get_academic_year()
+    academic_year_selected_before_search = form.get_academic_year()
     academic_years_all=form.set_academic_years_all()
 
-    return layout.render(request, "learning_units.html", {'academic_year': int(academic_year),
+    return layout.render(request, "learning_units.html", {'academic_year': int(academic_year_selected_before_search),
                                                           'academic_years': academic_years,
                                                           'academic_year_all' : academic_years_all,
                                                           'learning_units': learning_units,

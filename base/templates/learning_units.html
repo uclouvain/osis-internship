@@ -42,10 +42,10 @@
           <div class="col-md-2">
               <label for="academic_year" >{% trans 'academic_year'%}</label>
               <select class="forms" id="slt_academic_year"  name="academic_year" value="{{ academic_year }}">
-                  {% if academic_years_all == 1 %}
-                    <option selected value="0">{% trans 'all years'%}</option>
+                  {% if academic_years_all %}
+                    <option selected value=0>{% trans 'all_years'%}</option>
                   {% else %}
-                    <option value="0">{% trans 'all years'%}</option>
+                    <option value=0>{% trans 'all_years'%}</option>
                   {% endif %}
 
                 {% for ay in academic_years %}
