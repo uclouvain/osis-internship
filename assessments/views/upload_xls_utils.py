@@ -33,6 +33,7 @@ from django.utils.translation import ugettext as _
 from assessments.forms.score_file import ScoreFileForm
 from base import models as mdl
 from attribution import models as mdl_attr
+from base.enums import exam_enrollment_justification_type as justification_types
 
 
 col_academic_year = 0
@@ -77,6 +78,7 @@ def _get_all_data(worksheet):
     registration_ids = []
     sessions = []
     academic_years = []
+
     for count, row in enumerate(worksheet.rows):
         if row[col_registration_id].value is None \
                 or len(str(row[col_registration_id].value)) == 0 \
@@ -275,13 +277,24 @@ def __save_xls_scores(request, file_name, is_program_manager, user, learning_uni
                                                     '?': "SCORE_MISSING"}
                                         justification = switcher.get(justification, None)
                                     else:
-                                        messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('justification_invalid')))
-                                        continue
 
+                                        if justification=='M':
+                                            messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('no_valid_m_justification_error')))
+                                        else:
+                                            messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('justification_invalid')))
+                                        continue
                                 if score is not None and justification:
                                     messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('constraint_score_other_score')))
 
                                 elif score == 0 or score or justification:
+                                    print('ici')
+                                    print(justification)
+                                    if (justification in [justification_types.ABSENCE_UNJUSTIFIED,
+                                                          justification_types.CHEATING,
+                                                          justification_types.SCORE_MISSING]) and \
+                                                    exam_enrollment.justification_final == justification_types.ABSENCE_JUSTIFIED:
+                                        messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('abscence_justified_preserved')))
+                                        justification = justification_types.ABSENCE_JUSTIFIED
                                     if is_program_manager:
                                         if exam_enrollment.score_final != score:
                                             new_scores_number += 1
@@ -314,11 +327,11 @@ def __save_xls_scores(request, file_name, is_program_manager, user, learning_uni
         if not is_program_manager:
             tutor = mdl.tutor.find_by_user(user)
             if tutor and learning_unit_year.learning_unit_id:
-                coordinator = mdl_attr.attribution.search(tutor=tutor,
-                                                          learning_unit_year=learning_unit_year,
-                                                          score_responsible=True)
-                if not coordinator:
-                    messages.add_message(request, messages.SUCCESS, '%s' % _('the_coordinator_must_still_submit_scores'))
+                score_responsibles = mdl_attr.attribution.search(tutor=tutor,
+                                                                 learning_unit_year=learning_unit_year,
+                                                                 score_responsible=True)
+                if not score_responsibles:
+                    messages.add_message(request, messages.SUCCESS, '%s' % _('scores_responsible_must_still_submit_scores'))
         return True
     else:
         messages.add_message(request, messages.ERROR, '%s' % _('no_score_injected'))

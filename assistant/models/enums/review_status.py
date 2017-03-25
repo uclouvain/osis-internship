@@ -23,20 +23,9 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.contrib import admin
-from assistant.models import reviewer, manager, settings, academic_assistant, assistant_mandate
-from assistant.models.assistant_document_file import AssistantDocumentFile
-from assistant.models.mandate_structure import MandateStructure
-from assistant.models.review import Review
-from assistant.models.tutoring_learning_unit_year import TutoringLearningUnitYear
 
+IN_PROGRESS = 'IN_PROGRESS'
+DONE = 'DONE'
 
-admin.site.register(assistant_mandate.AssistantMandate, assistant_mandate.AssistantMandateAdmin)
-admin.site.register(AssistantDocumentFile)
-admin.site.register(academic_assistant.AcademicAssistant, academic_assistant.AcademicAssistantAdmin)
-admin.site.register(MandateStructure)
-admin.site.register(Review)
-admin.site.register(TutoringLearningUnitYear)
-admin.site.register(reviewer.Reviewer, reviewer.ReviewerAdmin)
-admin.site.register(manager.Manager, manager.ManagerAdmin)
-admin.site.register(settings.Settings, settings.SettingsAdmin)
+REVIEW_STATUS_CHOICES = ((IN_PROGRESS, IN_PROGRESS),
+                         (DONE, DONE))

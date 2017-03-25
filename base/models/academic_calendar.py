@@ -87,7 +87,7 @@ def find_academic_calendar_by_academic_year_with_dates(academic_year_id):
 def find_by_id(academic_calendar_id):
     try:
         return AcademicCalendar.objects.get(pk=academic_calendar_id)
-    except ObjectDoesNotExist:
+    except AcademicCalendar.DoesNotExist:
         return None
 
 

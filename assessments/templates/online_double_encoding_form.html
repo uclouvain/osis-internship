@@ -33,14 +33,15 @@
 {% block breadcrumb %}
 <li><a href="{% url 'studies' %}" id="lnk_studies">{% trans 'studies' %}</a></li>
 <li><a href="{% url 'assessments' %}" id="lnk_assesments">{% trans 'evaluations' %}</a></li>
-<li><a href="{% url 'scores_encoding' %}" id="lnk_scores_encoding">{% trans 'scores_encoding' %}</a></li>
-<li><a href="{% url 'online_encoding' learning_unit_year.id %}" id="lnk_online_encoding">{% trans 'online_scores_encoding' %}</a></li>
+<li><a href="{% url 'scores_encoding' %}?{{ request.GET.urlencode }}" id="lnk_scores_encoding">{% trans 'scores_encoding' %}</a></li>
+<li><a href="{% url 'online_encoding' learning_unit_year.id %}?{{ request.GET.urlencode }}" id="lnk_online_encoding">{% trans 'online_scores_encoding' %}</a></li>
 <li class="active">{% trans 'dubble_online_scores_encoding' %}</li>
 {% endblock %}
 {% block content %}
 <div class="page-header">
     <h2>{% trans 'dubble_online_scores_encoding' %}</h2>
 </div>
+{% include "template_messages.html" %}
 <div class="panel panel-default">
     <div class="panel-heading">
         <h3 class="panel-title" style="font-size: 150%; color: #3399CC;">{{ learning_unit_year }}</h3>
@@ -49,22 +50,26 @@
         <div class="row">
             <div class="col-md-3">
                 <div class="form-group" id="pnl_responsable_name" >
-                    <label>{% trans 'coordinator' %}</label><br>
-                    {% if coordinator %}
-                        {{ coordinator }}
-                    {% else %}
-                        {% trans 'none' %}
-                    {% endif %}
+                    <label>{% trans 'scores_responsible' %}</label><br>
                     {% if tutors %}
                         <a role="button" data-toggle="collapse" data-target="#tutors_by_course"
-                           aria-expanded="false"
+                           aria-expanded="false" class="pull-right"
                            aria-controls="tutors_by_course"
                            title="{% trans 'display_tutors' %}">
                           <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
                         </a>
                     {% endif %}
+                    {% if score_responsibles %}
+                        <ul class="list-unstyled">
+                            {% for score_responsible in score_responsibles %}
+                                <li>{{ score_responsible }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        {% trans 'none' %}
+                    {% endif %}
                     <div class="collapse" id="tutors_by_course">
-                        <label>{% trans 'tutors' %}</label><br>
+                        <label>{% trans 'other_tutors' %}</label><br>
                         <ul>
                             {% for prof in tutors %}
                                 <li>{{ prof }}</li>
@@ -102,12 +107,12 @@
             {% endif %}
         </div>
         <form class="form-inline" method="POST"
-              action="{% url 'online_double_encoding_form' learning_unit_year.id %}"
+              action="{% url 'online_double_encoding_form' learning_unit_year.id %}?{{ request.GET.urlencode }}"
               id="form_online_double_encoding">
             {% csrf_token %}
             <button type="submit" class="btn btn-primary" id="bt_compare_up">
                 <span class="glyphicon glyphicon-transfer" aria-hidden="true"></span> {% trans 'compare' %}</button>
-            <a class="btn btn-default" href="{% url 'online_encoding' learning_unit_year.id %}" role="button" id="bt_cancel_online_double_encoding_up">
+            <a class="btn btn-default" href="{% url 'online_encoding' learning_unit_year.id %}?{{ request.GET.urlencode }}" role="button" id="bt_cancel_online_double_encoding_up">
                 <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> {% trans 'cancel' %}</a>
             <table class="table table-hover">
                 <thead>
@@ -141,8 +146,8 @@
                             <input type="hidden" id="hdn_score_draft_{{ enrollment.id }}"
                                    value="{{ enrollment.score_draft | score_display:enrollment.session_exam.learning_unit_year.decimal_scores }}"/>
                             {% endif %}
-                            <input type="number" min="0" max="20" name="score_{{ enrollment.id }}" id="num_double_score_{{ enrollment.id }}"
-                                   tabindex="{{ forloop.counter }}" class="form-control"
+                            <input type="text" min="0" max="20" name="score_{{enrollment.id}}" id="num_double_score_{{ enrollment.id }}"
+                                   tabindex="{{ forloop.counter }}" class="form-control" value="{{enrollment.post_score_encoded|default_if_none:''}}"
                                    {% if not is_program_manager %}
                                      {% if enrollment.score_final != None or enrollment.justification_final %}
                                        disabled
@@ -171,15 +176,14 @@
                                    {% endif %}>
                                 <option value=""></option>
                                 {% if is_program_manager %}
-                                    <option value="ABSENCE_UNJUSTIFIED">{% trans 'ABSENCE_UNJUSTIFIED' %}</option>
-                                    <option value="ABSENCE_JUSTIFIED">{% trans 'ABSENCE_JUSTIFIED' %}</option>
+                                    <option value="ABSENCE_UNJUSTIFIED" {% if enrollment.post_justification_encoded == 'ABSENCE_UNJUSTIFIED' %}selected{% endif %} >{% trans 'ABSENCE_UNJUSTIFIED' %}</option>
+                                    <option value="ABSENCE_JUSTIFIED" {% if enrollment.post_justification_encoded == 'ABSENCE_JUSTIFIED' %}selected{% endif %} >{% trans 'ABSENCE_JUSTIFIED' %}</option>
                                 {% else %}
-                                    <option value="ABSENCE_UNJUSTIFIED">{% trans 'absent' %}</option>
+                                    <option value="ABSENCE_UNJUSTIFIED" {% if enrollment.post_justification_encoded == 'ABSENCE_UNJUSTIFIED' %}selected{% endif %}>{% trans 'absent' %}</option>
                                 {% endif %}
-                                <option value="CHEATING">{% trans 'CHEATING' %}</option>
-                                <option value="SCORE_MISSING">{% trans 'SCORE_MISSING' %}</option>
+                                <option value="CHEATING" {% if enrollment.post_justification_encoded == 'CHEATING' %}selected{% endif %}>{% trans 'CHEATING' %}</option>
+                                <option value="SCORE_MISSING" {% if enrollment.post_justification_encoded == 'SCORE_MISSING' %}selected{% endif %}>{% trans 'SCORE_MISSING' %}</option>
                             </select>
-                            <input type="hidden" id="hdn_score_changed_{{ enrollment.id }}" name="score_changed_{{ enrollment.id }}">
                         </td>
                         <td>{{ enrollment.session_exam.deadline | default_if_none:''|date:"j/m/Y" }}</td>
                     </tr>
@@ -188,7 +192,7 @@
             </table>
             <button type="submit" class="btn btn-primary" id="bt_compare_down">
                 <span class="glyphicon glyphicon-transfer" aria-hidden="true"></span> {% trans 'compare' %}</button>
-            <a class="btn btn-default" href="{% url 'online_encoding' learning_unit_year.id %}" role="button" id="bt_cancel_online_double_encoding_down">
+            <a class="btn btn-default" href="{% url 'online_encoding' learning_unit_year.id %}?{{ request.GET.urlencode }}" role="button" id="bt_cancel_online_double_encoding_down">
                 <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> {% trans 'cancel' %}</a>
         </form>
     </div>
@@ -196,114 +200,91 @@
 {% endblock %}
 {% block script %}
 <script>
-    var values = [
-        {% for enrollment in enrollments %}
-            ['{{ enrollment.id }}', '-1',''],
-        {% endfor %}
-        ['', '', '']];
-
-    $("input[id^='num_double_score_']" ).change(function(event) {
-        // Get the object that received the event.
-        var target = $(event.target);
-        var id = target.attr("id");
-        if (typeof id == 'undefined') {
-            target = target.parent();
-            id = target.attr("id");
+    var is_valid_score = function(score) {
+        var is_decimal = {% if learning_unit_year.decimal_scores %} true {% else %} false {% endif %};
+        score = score.replace(',','.');
+        var regex = /^\d+$/
+        if (is_decimal) {
+            regex = /^\d+(\.\d{0,2})?$/
         }
-        var enrollmentId = id.substring(id.lastIndexOf("_") + 1);
-
-        if(target.val() != "") {
-            $("#slt_double_justification_score_" + enrollmentId).val('');
+        if(!regex.test(score)){
+            return false;
         }
-
-        this.setCustomValidity('');
-
-        $("#hdn_score_changed_"+ enrollmentId).val(originalValueChanged(values, enrollmentId,
-                                                                    $("#num_double_score_"+ enrollmentId).val(),
-                                                                    $("#slt_double_justification_score_" + enrollmentId).val()));
-    });
-
-    $("select[id^='slt_double_justification_score_']" ).change(function(event) {
-        // Get the object that received the event.
-        var target = $(event.target);
-        var id = target.attr("id");
-        if (typeof id == 'undefined') {
-            target = target.parent();
-            id = target.attr("id");
+        score = parseFloat(score).toFixed(2)
+        if( score > 20 || score < 0 ) {
+            return false
         }
+        return true;
+    }
+    var ensureOnlyOneInputCompleted = function(event) {
+        if (!event || event == null) { return; }
 
-        var enrollmentId = id.substring(id.lastIndexOf("_") + 1);
+        var self = $(this);
+        var id = self.attr('id');
 
-        // Checks whether the object contains an id.
-        if(target.val() != "") {
-            $("#num_double_score_" + enrollmentId).val('');
+        if ( id != undefined && self.val() != "" ){
+            var selfPrefix = id.substring(0, id.lastIndexOf("_"));
+            var enrollmentId = id.substring(id.lastIndexOf("_") + 1); //Get enrollement id
+
+            //Empty the other input because we have set a value in [selfPrefix]
+            if (selfPrefix == "slt_double_justification_score") {
+                $("#num_double_score_" + enrollmentId).val("");
+            } else if (selfPrefix == "num_double_score") {
+                $("#slt_double_justification_score_" + enrollmentId).val("");
+            }
         }
+        validate_form();
+    }
+    $("input[id^='num_double_score_']" ).change(ensureOnlyOneInputCompleted);
+    $("select[id^='slt_double_justification_score_']" ).change(ensureOnlyOneInputCompleted);
 
-        $("#hdn_score_changed_"+ enrollmentId).val(originalValueChanged(values, enrollmentId,
-                                                                    $("#num_double_score_"+ enrollmentId).val(),
-                                                                    $("#slt_double_justification_score_" + enrollmentId).val()));
-    });
+    var validate_num_double_score = function(enrollmentId) {
+        var input = $("input[id^='num_double_score_" + enrollmentId + "']");
+        if(input.length > 0) {
+            var score_draft = Number($("#hdn_score_draft_" + enrollmentId).val());
+            var score_encoded = input.val();
 
-    $("input[id^='num_double_score_']" ).blur(function(event) {
-        // Get the object that received the event.
-        var target = $(event.target);
-        var id = target.attr("id");
-        if (typeof id == 'undefined') {
-            target = target.parent();
-            id = target.attr("id");
+            if(score_encoded == "" || (is_valid_score(score_encoded) && score_encoded == score_draft) ) {
+                input.css("border", "1px solid #D3D3D3");
+            }else if (!is_valid_score(score_encoded)) {
+                input.css("border", "1px solid #ff0000");
+            }else if ( score_encoded != score_draft ) {
+                input.css("border", "2px solid #ff0000");
+            }
         }
-
-        var enrollmentId = id.substring(id.lastIndexOf("_") + 1);
-        var score_draft = Number($("#hdn_score_draft_" + enrollmentId).val());
-
-        if (target.val() != score_draft) {
-            target.css("border", "1px solid #ff0000");
-        } else {
-            target.css("border", "1px solid lightgrey");
+    }
+    var validate_double_justification_score = function(enrollmentId) {
+        var select = $("select[id^='slt_double_justification_score_" + enrollmentId + "']");
+        if(select.length > 0) {
+            var justification_draft =  $("#hdn_justification_draft_" + enrollmentId).val();
+            if (select.val() == "" || select.val() == justification_draft) {
+                select.css("border", "1px solid #D3D3D3");
+            } else {
+                select.css("border", "2px solid #ff0000");
+            }
         }
+    }
 
-        var double_justification_field = $("#slt_double_justification_score_"+ enrollmentId);
-        var justification_double = double_justification_field.val();
-        var justification_draft =  $("#hdn_justification_draft_" + enrollmentId).val();
-
-        // console.log(justification_double + " = " + justification_draft);
-
-        if ((justification_double != null || justification_draft != "") && justification_double != justification_draft) {
-            double_justification_field.css("border", "1px solid #ff0000");
-        } else {
-            double_justification_field.css("border", "1px solid lightgrey");
-        }
-    });
-
-    $("select[id^='slt_double_justification_score_']" ).blur(function(event) {
-        // Get the object that received the event.
-        var target = $(event.target);
-        var id = target.attr("id");
-        if (typeof id == 'undefined') {
-            target = target.parent();
-            id = target.attr("id");
-        }
-
-        var enrollmentId = id.substring(id.lastIndexOf("_") + 1);
-        var justification_draft =  $("#hdn_justification_draft_" + enrollmentId).val();
-
-        if (target.val() != justification_draft) {
-            target.css("border", "1px solid #ff0000");
-        } else {
-            target.css("border", "1px solid lightgrey");
-        }
-
-        var double_score_field = $("#num_double_score_"+ enrollmentId);
-        var score_double = double_score_field.val();
-        var score_draft = $("#hdn_score_draft_"+ enrollmentId).val();
-
-        if(score_double != score_draft) {
-            double_score_field.css("border", "1px solid #ff0000");
-        } else {
-            double_score_field.css("border", "1px solid lightgrey");
-        }
-    });
-
+    var validate_form = function() {
+        //Validation of score
+        $("input[id^='num_double_score_']").each(function(){
+            var self = $(this)
+            var id = self.attr("id");
+            if(id != undefined) {
+                var enrollmentId = id.substring(id.lastIndexOf("_") + 1);
+                validate_num_double_score(enrollmentId)
+            }
+        });
+        //Validation of justification
+        $("select[id^='slt_double_justification_score_']").each(function(){
+            var self = $(this)
+            var id = self.attr("id");
+            if(id != undefined) {
+                var enrollmentId = id.substring(id.lastIndexOf("_") + 1);
+                validate_double_justification_score(enrollmentId)
+            }
+        });
+    }
 
     var target_score = '#form_online_double_encoding tbody tr td input';
     $(target_score).on('keypress',
@@ -321,9 +302,9 @@
                                select_next_input_value);
 
 
-    $(document).on('keypress', function(e) {
-        disable_enter(e);
-    });
-
+    //Prevent enter key submit
+    $(document).on('keypress', function(e) { disable_enter(e); });
+    //Validate form
+    $( document ).ready(function() { validate_form() });
 </script>
 {% endblock %}
