@@ -184,7 +184,6 @@ class LearningUnitsSearchTest(StaticLiveServerTestCase):
         while True:
             try:
                 academic_year = Select(self.browser.find_element_by_id('slt_academic_year'))
-                #print ([ay.text for ay in academic_year.options])
                 academic_year.select_by_visible_text(academic_year_seed.name)
                 return
             except (AssertionError, WebDriverException) as e:

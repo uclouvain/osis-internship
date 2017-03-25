@@ -31,6 +31,9 @@ import operator
 from base.enums import learning_unit_periodicity
 from django.conf import settings
 from django.utils import timezone
+from factory.django import DjangoModelFactory
+from faker import Faker
+fake = Faker()
 
 def _get_tzinfo():
     if settings.USE_TZ:
@@ -38,7 +41,7 @@ def _get_tzinfo():
     else:
         return None
 
-class LearningUnitFactory(factory.django.DjangoModelFactory):
+class LearningUnitFactory(DjangoModelFactory):
     class Meta:
         model = "base.LearningUnit"
 
@@ -52,3 +55,16 @@ class LearningUnitFactory(factory.django.DjangoModelFactory):
     end_year = factory.LazyAttribute(lambda obj: factory.fuzzy.FuzzyInteger(obj.start_year + 1, obj.start_year + 9).fuzz())
     periodicity = factory.Iterator(learning_unit_periodicity.PERIODICITY_TYPES, getter=operator.itemgetter(0))
 
+
+class LearningUnitFakerFactory(DjangoModelFactory):
+    class Meta:
+        model = "base.LearningUnit"
+
+    external_id = factory.fuzzy.FuzzyText(length=10, chars=string.digits)
+    changed = fake.date_time_this_decade(before_now=True, after_now=True, tzinfo=_get_tzinfo())
+    acronym = factory.Sequence(lambda n: 'LU-%d' % n)
+    title = factory.Sequence(lambda n: 'Learning unit - %d' % n)
+    description =factory.LazyAttribute(lambda obj : 'Fake description of learning unit %s' % obj.acronym )
+    start_year = factory.fuzzy.FuzzyInteger(2000, timezone.now().year)
+    end_year = factory.LazyAttribute(lambda obj: factory.fuzzy.FuzzyInteger(obj.start_year + 1, obj.start_year + 9).fuzz())
+    periodicity = factory.Iterator(learning_unit_periodicity.PERIODICITY_TYPES, getter=operator.itemgetter(0))

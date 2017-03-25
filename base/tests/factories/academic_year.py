@@ -29,6 +29,9 @@ import string
 import datetime
 from django.conf import settings
 from django.utils import timezone
+from factory.django import DjangoModelFactory
+from faker import Faker
+fake = Faker()
 
 
 def _get_tzinfo():
@@ -38,7 +41,7 @@ def _get_tzinfo():
         return None
 
 
-class AcademicYearFactory(factory.django.DjangoModelFactory):
+class AcademicYearFactory(DjangoModelFactory):
     class Meta:
         model = "base.AcademicYear"
 
@@ -48,3 +51,14 @@ class AcademicYearFactory(factory.django.DjangoModelFactory):
     year = factory.fuzzy.FuzzyInteger(2000, timezone.now().year)
     start_date = factory.LazyAttribute(lambda obj: datetime.date(obj.year, 1, 1))
     end_date = factory.LazyAttribute(lambda obj: datetime.date(obj.year+1, 12, 30))
+
+
+class AcademicYearFakerFactory(DjangoModelFactory):
+    class Meta:
+        model = "base.AcademicYear"
+
+    external_id = factory.Sequence(lambda n: '10000000%02d' % n)
+    changed = fake.date_time_this_decade(before_now=True, after_now=True, tzinfo=_get_tzinfo())
+    start_date = fake.date_time_this_decade(before_now=True, after_now=False, tzinfo=_get_tzinfo())
+    end_date = fake.date_time_this_decade(before_now=False, after_now=True, tzinfo=_get_tzinfo())
+    year = factory.SelfAttribute('start_date.year')
