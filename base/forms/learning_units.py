@@ -45,26 +45,17 @@ class LearningUnitYearForm(forms.Form):
     )
 
     def clean(self):
-        #Cleaning data, normalizing values coming from the user
+        minimal_inputs_satisfied=''
         clean_data = self.cleaned_data
-        academic_year = lambda : '' if self.cleaned_data.get('academic_year')=='0' else self.cleaned_data.get('academic_year')
-        status = lambda : '' if self.cleaned_data.get('status')=="NONE" else self.cleaned_data.get('status')
-        type = lambda : '' if self.cleaned_data.get('type')=="NONE" else self.cleaned_data.get('type')
-        acronym = clean_data.get('acronym').upper()
-        keyword = clean_data.get('keyword')
-        #Save final values in cleaned_data for other use
-        self.cleaned_data['academic_year'] = academic_year()
-        self.cleaned_data['status'] = status()
-        self.cleaned_data['type'] = type()
-        self.cleaned_data['acronym'] = acronym
-        minimal_inputs_not_satisfied = lambda : True if (not self.cleaned_data.get('acronym')
-                                                         and not self.cleaned_data.get('keyword')
-                                                         and not self.cleaned_data.get('type')
-                                                         and not self.cleaned_data.get('status')) else False
-        if minimal_inputs_not_satisfied():
+        for cd_key, cd_value in clean_data.items():
+            if cd_value=='NONE' or cd_value=='0':
+                clean_data[cd_key]=''
+            minimal_inputs_satisfied=minimal_inputs_satisfied+clean_data[cd_key]
+
+        if not minimal_inputs_satisfied:
             raise ValidationError(learning_units_errors.INVALID_SEARCH)
-        elif not academic_year():
-            check_when_academic_year_is_all(acronym)
+        elif not clean_data.get('academic_year'):
+            check_when_academic_year_is_all(clean_data.get('acronym'))
         return clean_data
 
     def set_academic_years_all(self):
@@ -73,16 +64,14 @@ class LearningUnitYearForm(forms.Form):
 
     def get_learning_units(self):
         clean_data = self.cleaned_data
-        academic_year = clean_data.get('academic_year')
-        acronym = clean_data.get('acronym')
-        keyword = clean_data.get('keyword')
-        status = clean_data.get('status')
-        type = clean_data.get('type')
-
-        if not academic_year and acronym and not keyword and not type and not status:
-            learning_units=mdl.learning_unit_year.find_by_acronym(acronym)
+        if not clean_data.get('academic_year'):
+            learning_units = check_when_academic_year_is_all(clean_data.get('acronym'))
         else:
-            learning_units = mdl.learning_unit_year.search(academic_year_id=academic_year,acronym=acronym,title=keyword,type=type,status=status)
+            learning_units = mdl.learning_unit_year.search(academic_year_id=clean_data.get('academic_year'),
+                                                           acronym=clean_data.get('acronym'),
+                                                           title=clean_data.get('keyword'),
+                                                           type=clean_data.get('type'),
+                                                           status=clean_data.get('status'))
         return learning_units
 
     def get_academic_year(self):
@@ -91,11 +80,14 @@ class LearningUnitYearForm(forms.Form):
 
 def check_when_academic_year_is_all(acronym):
     if (acronym):
-        check_learning_units_with_acronym(acronym)
+        learning_units=check_learning_units_with_acronym(acronym)
+        return learning_units
     elif (not acronym):
         raise ValidationError(learning_units_errors.ACADEMIC_YEAR_REQUIRED)
 
 def check_learning_units_with_acronym(acronym):
         learning_units=mdl.learning_unit_year.find_by_acronym(acronym)
         if not learning_units:
-           raise ValidationError(learning_units_errors.ACADEMIC_YEAR_WITH_ACRONYM)
+            raise ValidationError(learning_units_errors.ACADEMIC_YEAR_WITH_ACRONYM)
+        else:
+            return learning_units
