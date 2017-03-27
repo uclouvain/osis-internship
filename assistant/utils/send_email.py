@@ -81,9 +81,8 @@ def save_message_history(request, type):
     message.save()
 
 
-def send_message(person, html_template_ref, txt_template_ref):
+def send_message(person, html_template_ref, txt_template_ref, assistant=None):
     procedure_dates = settings.get_settings()
-
     receivers = [message_config.create_receiver(person.id, person.email,
                                                 person.language)]
     first_ending_year = academic_year.current_academic_year().year + 1
@@ -92,6 +91,8 @@ def send_message(person, html_template_ref, txt_template_ref):
                           'first_name': person.first_name, 'last_name': person.last_name,
                           'first_ending_year': first_ending_year,
                           'last_ending_year': last_ending_year}
+    if assistant is not None:
+        template_base_data['assistant'] = assistant.person
     subject_data = None
     table = None
     message_content = message_config.create_message_content(html_template_ref, txt_template_ref, table,

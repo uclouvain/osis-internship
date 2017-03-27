@@ -33,7 +33,6 @@ from base.models.person import Person
 from base.models.program_manager import ProgramManager
 from base.models.student import Student
 from base.models.tutor import Tutor
-from internship.models import InternshipStudentInformation
 from base.models import models_signals as mdl_signals, person as mdl_person
 
 
@@ -157,13 +156,6 @@ class AddToGroupsSignalsTest(TestCase):
         offer_year = OfferYear.objects.create(offer=offer, academic_year=academic_year, title=title, acronym=acronym)
         return ProgramManager.objects.create(offer_year=offer_year, person=self.person_foo)
 
-    def create_internships_student_foo(self):
-        return InternshipStudentInformation.objects.create(person=self.person_foo,
-                                                           location='Location',
-                                                           postal_code='postal_code',
-                                                           city='city',
-                                                           country='country')
-
     def setUp(self):
         self.user_foo = User.objects.create_user('user_foo')
         self.person_foo = Person.objects.create(user=self.user_foo)
@@ -195,12 +187,3 @@ class AddToGroupsSignalsTest(TestCase):
         pgm_manager_foo.delete()
         self.assertFalse(self.is_member('program_managers'),
                          'user_foo should not be in program_managers group anymore')
-
-    def test_add_to_internship_students_group(self):
-        self.create_internships_student_foo()
-        self.assertTrue(self.is_member('internship_students'), 'user_foo should be in internship_students group')
-
-    def test_remove_from_internship_students_group(self):
-        internship_student = self.create_internships_student_foo()
-        internship_student.delete()
-        self.assertFalse(self.is_member('internship_students'), 'user_foo should not be in internship_students group')

@@ -45,5 +45,6 @@ class LearningUnitComponentClass(models.Model):
 def find_by_id(learning_unit_component_class_id):
     return LearningUnitComponentClass.objects.get(pk=learning_unit_component_class_id)
 
+
 def find_by_learning_unit_year(learning_unit_year):
     return LearningUnitComponentClass.objects.filter(learning_unit_year=learning_unit_year)

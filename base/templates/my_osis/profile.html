@@ -59,7 +59,10 @@
                 </div>
                 <div class="col-md-2">
                     <label>{% trans 'firstname' %}</label><br>
-                    {{ person.first_name }} {{ person.middle_name }}
+                    {{ person.first_name }}
+                    {% if person.middle_name %}
+                        {{ person.middle_name }}
+                    {% endif %}
                 </div>
                 <div class="col-md-2">
                     <label>{% trans 'lastname' %}</label><br>

@@ -16,3 +16,4 @@ backoffice/server_settings.py
 .pydevproject
 *.mo
 /uploads/
+.env

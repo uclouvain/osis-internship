@@ -35,7 +35,7 @@
 {% endblock %}
 {% block content %}
     <div class="page-header">
-        <h2>{{ student.person.last_name }} {{ student.person.first_name }}</h2>
+        <h2>{{ student.person.last_name }} {{ student.person.first_name }} ({{ information.contest }})</h2>
     </div>
     <div class="panel panel-default">
         <div class="panel-body">
@@ -67,12 +67,12 @@
                 {% csrf_token %}
                 <div class="row">
                     <div class="col-md-4">
-                        <label>{% trans 'email' %}</label><br>
-                        <input type="text" name="student_email" value="{{ information.email | default_if_none:'-' }}">
+                        <label for="{{ form.email.id_for_label }}">{% trans 'email' %}</label><br>
+                        <input type="text" id={{ form.email.id_for_label }} name="{{ form.email.html_name }}" value="{{ information.email | default_if_none:'-' }}">
                     </div>
                     <div class="col-md-4">
-                        <label>{% trans 'phone_mobile' %}</label><br>
-                        <input type="text" name="student_phone" value="{{ information.phone_mobile | default_if_none:'-' }}">
+                        <label for="{{ form.phone_mobile.id_for_label }}">{% trans 'phone_mobile' %}</label><br>
+                        <input for="{{ form.email.id_for_label }}" type="text"  name="{{ form.phone_mobile.html_name }}" value="{{ information.phone_mobile | default_if_none:'-' }}">
                     </div>
                     <div class="col-md-4">
                     </div>
@@ -82,20 +82,34 @@
                 <div class="row">
                     <label>{% trans 'address' %}</label><br>
                     <div class="col-md-3">
-                        <label>{% trans 'location' %}</label><br>
-                        <input type="text" name="student_location" value="{{ information.location | default_if_none:'-' }}">
+                        <label for="{{ form.location.id_for_label }}">{% trans 'location' %}</label><br>
+                        <input for="{{ form.location.id_for_label }}" type="text" name="{{ form.location.html_name }}" value="{{ information.location | default_if_none:'-' }}">
                     </div>
                     <div class="col-md-3">
-                        <label>{% trans 'postal_code' %}</label><br>
-                        <input type="text" name="student_postal_code" value="{{ information.postal_code | default_if_none:'-' }}">
+                        <label for="{{ form.postal_code.id_for_label }}">{% trans 'postal_code' %}</label><br>
+                        <input for="{{ form.postal_code.id_for_label }}" type="text" name="{{ form.postal_code.html_name }}" value="{{ information.postal_code | default_if_none:'-' }}">
                     </div>
                     <div class="col-md-3">
-                        <label>{% trans 'city' %}</label><br>
-                        <input type="text" name="student_city" value="{{ information.city | default_if_none:'-' }}">
+                        <label for="{{ form.city.id_for_label }}">{% trans 'city' %}</label><br>
+                        <input for="{{ form.city.id_for_label }}" type="text" name="{{ form.city.html_name }}" value="{{ information.city | default_if_none:'-' }}">
                     </div>
                     <div class="col-md-3">
-                        <label>{% trans 'country' %}</label><br>
-                        <input type="text" name="student_country" value="{{ information.country | default_if_none:'-' }}">
+                        <label for="{{ form.country.id_for_label }}">{% trans 'country' %}</label><br>
+                        <input for="{{ form.country.id_for_label }}" type="text" name="{{ form.country.html_name }}" value="{{ information.country | default_if_none:'-' }}">
+                    </div>
+                </div>
+                <br>
+
+                <div class="row">
+                    <div class="col-md-3">
+                        <label for="{{ form.contest.id_for_label }}">{% trans 'contest' %}</label><br>
+                        <select multiple id="{{ form.contest.id_for_label }}" name="{{ form.contest.html_name }}">
+                            {% for x, y in form.fields.contest.choices %}
+                                <option value="{{ x }}" {% if x == information.contest %}selected{% endif %}>
+                                {{ y }}
+                                </option>
+                            {% endfor %}
+                        </select>
                     </div>
                 </div>
                 <br>

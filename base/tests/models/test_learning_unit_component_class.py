@@ -70,7 +70,7 @@ class LearningComponentYearTest(TestCase):
                                                         learning_component=learning_component,
                                                         title="Cours magistral",
                                                         acronym="/C",
-                                                        type=learning_unit_year_type.COURS,
+                                                        type=learning_unit_year_type.COURSE,
                                                         comment="TEST")
         #Classe annualisée est associée à son composant et à son conteneur annualisé
         learning_class_year = LearningClassYear(learning_component_year=learning_component_year,

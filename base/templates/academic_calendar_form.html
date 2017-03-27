@@ -72,7 +72,7 @@
                     <label for="txt_title">{% trans 'title' %}</label>
                     <input class="form-control" value="{{ form.title.value | default_if_none:'' }}"
                            name="title" id="txt_title">
-                        <font class="error">{{ form.title.errors }}</font>
+                        <span class="error">{{ form.title.errors }}</span>
                 </div>
                 <div class="col-md-2">
                     <label for="txt_start_date">{% trans 'start_date'%}</label>
@@ -102,21 +102,21 @@
                     <label for="txt_highlight_title">{% trans 'highlight_title' %}</label>
                     <input class="form-control" value="{{ form.highlight_title.value | default_if_none:'' }}"
                            name="highlight_title" id="txt_highlight_title">
-                    <font class="error">{{ form.highlight_title.errors }}</font>
+                    <span class="error">{{ form.highlight_title.errors }}</span>
                 </div>
                 <div class="col-md-6">
                     <label for="txt_highlight_shortcut">{% trans 'highlight_shortcut' %}</label>
                     <input class="form-control"
                            value="{{ form.highlight_shortcut.value | default_if_none:'' }}"
                            name="highlight_shortcut" id="txt_highlight_shortcut">
-                    <font class="error">{{ form.highlight_shortcut.errors }}</font>
+                    <span class="error">{{ form.highlight_shortcut.errors }}</span>
                     <p style="margin-top: 5px;">http://osis.uclouvain.be/<span id="url"></span></p>
                 </div>
             </div>
             <br>
             <label for="txa_highlight_description">{% trans 'highlight_description' %}</label>
             <textarea name="highlight_description" id="txa_highlight_description" class="form-control">{{ form.highlight_description.value | default_if_none:'' }}</textarea>
-            <font class="error">{{ form.highlight_description.errors }}</font>
+            <span class="error">{{ form.highlight_description.errors }}</span>
             <br>
             <div class="jumbotron">
                 <h1><div id="pnl_title"></div></h1>

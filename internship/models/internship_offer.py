@@ -24,18 +24,20 @@
 #
 ##############################################################################
 from django.db import models
-from django.contrib import admin
 from internship.models.internship_choice import InternshipChoice
+from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
+from django.core.exceptions import ObjectDoesNotExist
 
 
-class InternshipOfferAdmin(admin.ModelAdmin):
+class InternshipOfferAdmin(SerializableModelAdmin):
     list_display = ('organization', 'speciality', 'title', 'maximum_enrollments', 'master', 'selectable')
     fieldsets = ((None, {'fields': ('organization', 'speciality', 'title', 'maximum_enrollments', 'master',
                                     'selectable')}),)
     raw_id_fields = ('organization', 'speciality')
+    search_fields = ['organization__name', 'speciality__name']
 
 
-class InternshipOffer(models.Model):
+class InternshipOffer(SerializableModel):
     organization = models.ForeignKey('internship.Organization')
     speciality = models.ForeignKey('internship.InternshipSpeciality', null=True)
     title = models.CharField(max_length=255)
@@ -83,3 +85,34 @@ def find_intership_by_id(id):
     for i in internship:
         if int(i.id) == int(id):
             return i
+
+
+def get_by_id(internship_id):
+    try:
+        return InternshipOffer.objects.get(id=internship_id)
+    except ObjectDoesNotExist:
+        return None
+
+
+def find_by_speciality(speciality):
+    return InternshipOffer.objects.filter(speciality=speciality).order_by("organization__reference")
+
+
+def find_by_pk(a_pk):
+    try:
+        return InternshipOffer.objects.get(pk=a_pk)
+    except ObjectDoesNotExist:
+        return None
+
+
+def get_number_selectable():
+    return InternshipOffer.objects.filter(selectable=True).count()
+
+
+def find_all():
+    return InternshipOffer.objects.all()
+
+
+def find_by_organization(organization):
+    return InternshipOffer.objects.filter(organization=organization)
+
