@@ -248,7 +248,6 @@ var validate_form = function() {
     }
 }
 $( document ).ready(function() { validate_form(); });
-
 var check_is_score_changed = function(enrollmentId, score, justification) {
     is_changed = originalValueChanged(values, enrollmentId, score, justification)
     $("#hdn_score_changed_" + enrollmentId).val(is_changed);
