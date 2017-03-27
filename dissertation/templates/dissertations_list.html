@@ -48,7 +48,7 @@
             </div>
               <table class="table table-hover">
                 <tr>
-                  <th  width="150px">{% trans 'photo'%}</th>
+                  <th width="75px">{% trans 'photo'%}</th>
                   <th>{% trans 'dissertation_title'%}</th>
                   <th>{% trans 'author'%}</th>
                   <th>{% trans 'status'%}</th>
@@ -56,12 +56,15 @@
                 </tr>
                 {% for adviser_list_dissertation in adviser_list_dissertations %}
                   <tr>
-                      <td rowspan="1" width="150px">
-                              <img src="/my_osis/profile/{{ adviser_list_dissertation.dissertation.author.person.id }}" class="avatar img-responsive"
-                                   height="50%" width="50%"/>
-                      </td>
-
-                    <td><a href="{% url 'dissertations_detail' pk=adviser_list_dissertation.dissertation.pk %}">{{ adviser_list_dissertation.dissertation.title }}</a></td>
+                    <td width="75px">
+                      <img src="/my_osis/profile/{{ adviser_list_dissertation.dissertation.author.person.id }}"
+                           class="avatar img-responsive" width="100%"/>
+                    </td>
+                    <td>
+                        <a href="{% url 'dissertations_detail' pk=adviser_list_dissertation.dissertation.pk %}">
+                            {{ adviser_list_dissertation.dissertation.title }}
+                        </a>
+                    </td>
                     <td>{{ adviser_list_dissertation.dissertation.author }}</td>
                     <td>
                         {% if adviser_list_dissertation.dissertation.status == 'DRAFT' %}
@@ -111,7 +114,7 @@
             </div>
               <table class="table table-hover">
                 <tr>
-                  <th  width="150px">{% trans 'photo'%}</th>
+                  <th width="75px">{% trans 'photo'%}</th>
                   <th>{% trans 'dissertation_title'%}</th>
                   <th>{% trans 'author'%}</th>
                   <th>{% trans 'status'%}</th>
@@ -119,11 +122,15 @@
                 </tr>
                 {% for adviser_list_dissertation in adviser_list_dissertations_copro %}
                   <tr>
-                      <td rowspan="1" width="150px">
-                          <img src="/my_osis/profile/{{ adviser_list_dissertation.dissertation.author.person.id }}" class="avatar img-responsive"
-                               height="50%" width="50%"/>
+                      <td width="75px">
+                          <img src="/my_osis/profile/{{ adviser_list_dissertation.dissertation.author.person.id }}"
+                               class="avatar img-responsive" width="100%"/>
                       </td>
-                    <td><a href="{% url 'dissertations_detail' pk=adviser_list_dissertation.dissertation.pk %}">{{ adviser_list_dissertation.dissertation.title }}</a></td>
+                    <td>
+                        <a href="{% url 'dissertations_detail' pk=adviser_list_dissertation.dissertation.pk %}">
+                            {{ adviser_list_dissertation.dissertation.title }}
+                        </a>
+                    </td>
                     <td>{{ adviser_list_dissertation.dissertation.author }}</td>
                     <td>
                         {% if adviser_list_dissertation.dissertation.status == 'DRAFT' %}
@@ -169,7 +176,7 @@
             </div>
               <table class="table table-hover">
                 <tr>
-                  <th  width="150px">{% trans 'photo'%}</th>
+                  <th width="75px">{% trans 'photo'%}</th>
                   <th>{% trans 'dissertation_title'%}</th>
                   <th>{% trans 'author'%}</th>
                   <th>{% trans 'status'%}</th>
@@ -177,11 +184,15 @@
                 </tr>
                 {% for adviser_list_dissertation in adviser_list_dissertations_reader %}
                   <tr>
-                      <td rowspan="1" width="150px">
-                              <img src="/my_osis/profile/{{ adviser_list_dissertation.dissertation.author.person.id }}" class="avatar img-responsive"
-                                   height="50%" width="50%"/>
+                      <td width="75px">
+                          <img src="/my_osis/profile/{{ adviser_list_dissertation.dissertation.author.person.id }}"
+                               class="avatar img-responsive" width="100%"/>
                       </td>
-                    <td><a href="{% url 'dissertations_detail' pk=adviser_list_dissertation.dissertation.pk %}">{{ adviser_list_dissertation.dissertation.title }}</a></td>
+                    <td>
+                        <a href="{% url 'dissertations_detail' pk=adviser_list_dissertation.dissertation.pk %}">
+                            {{ adviser_list_dissertation.dissertation.title }}
+                        </a>
+                    </td>
                     <td>{{ adviser_list_dissertation.dissertation.author }}</td>
                     <td>
                         {% if adviser_list_dissertation.dissertation.status == 'DRAFT' %}
@@ -227,7 +238,7 @@
             </div>
               <table class="table table-hover">
                 <tr>
-                    <th  width="150px">{% trans 'photo'%}</th>
+                    <th width="75px">{% trans 'photo'%}</th>
                     <th>{% trans 'dissertation_title'%}</th>
                   <th>{% trans 'author'%}</th>
                   <th>{% trans 'status'%}</th>
@@ -235,11 +246,15 @@
                 </tr>
                 {% for adviser_list_dissertation in adviser_list_dissertations_accompanist %}
                   <tr>
-                    <td rowspan="1" width="150px">
-                      <img src="/my_osis/profile/{{ adviser_list_dissertation.dissertation.author.person.id }}" class="avatar img-responsive"
-                           height="50%" width="50%"/>
+                    <td width="75px">
+                      <img src="/my_osis/profile/{{ adviser_list_dissertation.dissertation.author.person.id }}"
+                           class="avatar img-responsive" width="100%"/>
                     </td>
-                    <td><a href="{% url 'dissertations_detail' pk=adviser_list_dissertation.dissertation.pk %}">{{ adviser_list_dissertation.dissertation.title }}</a></td>
+                    <td>
+                        <a href="{% url 'dissertations_detail' pk=adviser_list_dissertation.dissertation.pk %}">
+                            {{ adviser_list_dissertation.dissertation.title }}
+                        </a>
+                    </td>
                     <td>{{ adviser_list_dissertation.dissertation.author }}</td>
                     <td>
                         {% if adviser_list_dissertation.dissertation.status == 'DRAFT' %}
@@ -285,7 +300,7 @@
             </div>
               <table class="table table-hover">
                 <tr>
-                  <th  width="150px">{% trans 'photo'%}</th>
+                  <th  width="75px">{% trans 'photo'%}</th>
                     <th>{% trans 'dissertation_title'%}</th>
                   <th>{% trans 'author'%}</th>
                   <th>{% trans 'status'%}</th>
@@ -293,11 +308,15 @@
                 </tr>
                 {% for adviser_list_dissertation in adviser_list_dissertations_internship %}
                   <tr>
-                      <td rowspan="1" width="150px">
-                          <img src="/my_osis/profile/{{ adviser_list_dissertation.dissertation.author.person.id }}" class="avatar img-responsive"
-                               height="50%" width="50%"/>
+                      <td width="75px">
+                          <img src="/my_osis/profile/{{ adviser_list_dissertation.dissertation.author.person.id }}"
+                               class="avatar img-responsive" width="100%"/>
                       </td>
-                    <td><a href="{% url 'dissertations_detail' pk=adviser_list_dissertation.dissertation.pk %}">{{ adviser_list_dissertation.dissertation.title }}</a></td>
+                    <td>
+                        <a href="{% url 'dissertations_detail' pk=adviser_list_dissertation.dissertation.pk %}">
+                            {{ adviser_list_dissertation.dissertation.title }}
+                        </a>
+                    </td>
                     <td>{{ adviser_list_dissertation.dissertation.author }}</td>
                     <td>
                         {% if adviser_list_dissertation.dissertation.status == 'DRAFT' %}

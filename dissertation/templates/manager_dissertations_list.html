@@ -75,7 +75,7 @@
         {% else %}
           <table class="table table-hover">
             <tr>
-              <th  width="150px">{% trans 'photo'%}</th>
+              <th width="75px">{% trans 'photo'%}</th>
               <th>{% trans 'title'%}</th>
               <th>{% trans 'author'%}</th>
               <th>{% trans 'status'%}</th>
@@ -85,11 +85,15 @@
             </tr>
             {% for dissertation in dissertations %}
               <tr>
-                <td rowspan="1" width="150px">
+                <td width="75px">
                       <img src="/my_osis/profile/{{ dissertation.author.person.id }}" class="avatar img-responsive"
-                           height="50%" width="50%"/>
+                           width="100%"/>
                 </td>
-                <td><a href="{% url 'manager_dissertations_detail' pk=dissertation.pk %}">{{ dissertation.title }}</a></td>
+                <td>
+                    <a href="{% url 'manager_dissertations_detail' pk=dissertation.pk %}">
+                        {{ dissertation.title }}
+                    </a>
+                </td>
                 <td>{{ dissertation.author }}</td>
                 <td>
                     {% if dissertation.status == 'DRAFT' %}
