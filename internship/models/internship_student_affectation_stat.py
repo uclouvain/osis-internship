@@ -23,19 +23,21 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.contrib import admin
 from django.db import models
+from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 
 
-class InternshipStudentAffectationStatAdmin(admin.ModelAdmin):
+class InternshipStudentAffectationStatAdmin(SerializableModelAdmin):
     list_display = ('student', 'organization', 'speciality', 'period', 'choice', 'cost', 'consecutive_month',
                     'type_of_internship')
     fieldsets = ((None, {'fields': ('student', 'organization', 'speciality', 'period', 'choice', 'cost',
                                     'consecutive_month', 'type_of_internship')}),)
     raw_id_fields = ('student', 'organization', 'speciality', 'period')
+    search_fields = ['student__first_name', 'student__last_name']
+    list_filter = ('period', 'choice')
 
 
-class InternshipStudentAffectationStat(models.Model):
+class InternshipStudentAffectationStat(SerializableModel):
     student = models.ForeignKey('base.Student')
     organization = models.ForeignKey('internship.Organization')
     speciality = models.ForeignKey('internship.InternshipSpeciality')
@@ -44,6 +46,9 @@ class InternshipStudentAffectationStat(models.Model):
     cost = models.IntegerField(blank=False, null=False)
     consecutive_month = models.BooleanField(default=False, null=False)
     type_of_internship = models.CharField(max_length=1, blank=False, null=False, default='N')
+
+    def __str__(self):
+        return u"%s : %s - %s (%s)" % (self.student, self.organization, self.speciality, self.period)
 
 
 def search(**kwargs):
@@ -55,3 +60,9 @@ def search(**kwargs):
 
 def find_by_id(affectation_id):
     return InternshipStudentAffectationStat.objects.get(pk=affectation_id)
+
+
+def find_non_mandatory_affectations():
+    periods = ["P9", "P10", "P11", "P12"]
+    return InternshipStudentAffectationStat.objects.filter(period__name__in=periods).\
+        select_related("student", "organization", "speciality")

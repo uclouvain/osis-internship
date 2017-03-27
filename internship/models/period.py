@@ -23,16 +23,18 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.contrib import admin
 from django.db import models
+from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
+from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
+from django.core.exceptions import ObjectDoesNotExist
 
 
-class PeriodAdmin(admin.ModelAdmin):
+class PeriodAdmin(SerializableModelAdmin):
     list_display = ('name', 'date_start', 'date_end')
     fieldsets = ((None, {'fields': ('name', 'date_start', 'date_end')}),)
 
 
-class Period(models.Model):
+class Period(SerializableModel):
     name = models.CharField(max_length=255)
     date_start = models.DateField(blank=False)
     date_end = models.DateField(blank=False)
@@ -48,3 +50,16 @@ def search(**kwargs):
 
 def find_by_id(period_id):
     return Period.objects.get(pk=period_id)
+
+
+def get_by_name(period_name):
+    try:
+        return Period.objects.get(name=period_name)
+    except ObjectDoesNotExist:
+        return None
+    except MultipleObjectsReturned:
+        return None
+
+
+def find_all():
+    return Period.objects.all()

@@ -43,7 +43,7 @@
         </div>
     {% else %}
         <div class="page-header">
-            <h2>{{ student.person.last_name }} {{ student.person.first_name }}</h2>
+            <h2>{{ student.person.last_name }} {{ student.person.first_name }} ({{ information.contest }})</h2>
         </div>
         <div class="panel panel-default">
             <div class="panel-body">
@@ -96,6 +96,13 @@
                     </div>
                 </div>
                 <br>
+                <div class="row">
+                    <div class="col-md-4">
+                        <label>{% trans 'contest' %}</label><br>
+                        {{ information.contest | default_if_none:'-' }}
+                    </div>
+                </div>
+                <br>
 
                 <div class="row">
                     <div class="col-md-9">
@@ -127,51 +134,27 @@
                             <li><a data-toggle="tab" href="#tab_rep">{% trans 'student_affectation' %}</a></li>
                         </ul>
                         <div class="tab-content">
-                            {% if selectable %}
-                                <div id="tab_choice" class="tab-pane fade in active">
-                                    <div class="panel panel-default">
-                                        <div class="tab-content">
-                                            <div role="tabpanel" class="tab-pane fade in active" id="profile">
-                                                {% for speciality in specialities %}
-                                                    <label>{{speciality.name}}</label><br/>
-                                                    <ul>
-                                                        {% for choice in internship_choice %}
-                                                            {% if choice.speciality.name == speciality.name %}
-                                                                <li> {% trans 'organization' %} :
-                                                                {{ choice.organization.reference }} - {{ choice.organization.name }} |
-                                                                {% trans 'choice' %} : {{ choice.choice }}
-                                                            {% endif %}
-                                                        {% endfor %}
-                                                    </ul>
-                                                {% endfor %}
-                                            </div>
+                            <div id="tab_choice" class="tab-pane fade in active">
+                                <div class="panel panel-default">
+                                    <div class="tab-content">
+                                        <div role="tabpanel" class="tab-pane fade in active" id="profile">
+                                            {% for internship in number_internships %}
+                                                <label>{% trans 'internship' %} {{ internship }}</label><br/>
+                                                <ul>
+                                                    {% for choice in internship_choice %}
+                                                        {% if choice.internship_choice == internship %}
+                                                            <li> {% trans 'organization' %} :
+                                                            {{ choice.organization.reference }} - {{ choice.organization.name }} |
+                                                            {% trans 'speciality' %} - {{ choice.speciality.name }} |
+                                                            {% trans 'choice' %} : {{ choice.choice }}
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </ul>
+                                            {% endfor %}
                                         </div>
                                     </div>
                                 </div>
-                            {% else %}
-                                {% if  perms.internship.is_internship_manager %}
-                                    <div id="tab_choice" class="tab-pane fade in active">
-                                        <div class="panel panel-default">
-                                            <div class="tab-content">
-                                                <div role="tabpanel" class="tab-pane fade in active" id="profile">
-                                                    {% for speciality in specialities %}
-                                                        <label>{{speciality.name}}</label><br/>
-                                                        <ul>
-                                                            {% for choice in internship_choice %}
-                                                                {% if choice.speciality.name == speciality.name %}
-                                                                    <li> {% trans 'organization' %} :
-                                                                    {{ choice.organization.reference }} - {{ choice.organization.name }} |
-                                                                    {% trans 'choice' %} : {{ choice.choice }}
-                                                                {% endif %}
-                                                            {% endfor %}
-                                                        </ul>
-                                                    {% endfor %}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                {% endif %}
-                            {% endif %}
+                            </div>
                             <div id="tab_rep" class="tab-pane fade">
                                 <div class="panel panel-default">
                                     <div class="tab-content">
@@ -189,7 +172,7 @@
                                                 {% for affectation in affectations %}
                                                     {% if affectation.period == period %}
                                                         <p>{{affectation.speciality.name}} |
-                                                            {{affectation.organization.reference}} {{affectation.organization.name}}<br/>
+                                                            {{affectation.organization.reference}} {{affectation.organization.name}} ({{ affectation.speciality.name }})<br/>
                                                             {% trans 'address' %} :
                                                             {{affectation.organization.address.location}} {{affectation.organization.address.postal_code}}
                                                             {{affectation.organization.address.city}}

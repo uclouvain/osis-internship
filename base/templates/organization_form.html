@@ -46,22 +46,22 @@
             <div class="row">
                 <div class="col-md-3">
                     <label for="txt_acronym">{% trans 'acronym' %}</label>
-                    <input class="form-control" value="{{ organization.acronym | default_if_none:'' }}" name="acronym" id="txt_acronym" maxlength="15"><font class="error">{{ form.acronym.errors }}</font>
+                    <input class="form-control" value="{{ organization.acronym | default_if_none:'' }}" name="acronym" id="txt_acronym" maxlength="15"><span class="error">{{ form.acronym.errors }}</span>
                 </div>
                 <div class="col-md-9">
                     <label for="txt_name">{% trans 'name'%}</label>
-                    <input class="form-control" value="{{ organization.name| default_if_none:'' }}" name="name" id="txt_name" maxlength="255"><font class="error">{{ form.name.errors }}</font>
+                    <input class="form-control" value="{{ organization.name| default_if_none:'' }}" name="name" id="txt_name" maxlength="255"><span class="error">{{ form.name.errors }}</span>
                 </div>
             </div>
             <br>
             <div class="row">
                 <div class="col-md-6">
                     <label for="txt_website">{% trans 'website' %}</label>
-                    <input class="form-control" value="{{ organization.website | default_if_none:'' }}" name="website" id="txt_website" maxlength="255"><font class="error">{{ form.website.errors }}</font>
+                    <input class="form-control" value="{{ organization.website | default_if_none:'' }}" name="website" id="txt_website" maxlength="255"><span class="error">{{ form.website.errors }}</span>
                 </div>
                 <div class="col-md-4">
                     <label for="txt_reference">{% trans 'reference'%}</label>
-                    <input class="form-control" value="{{ organization.reference | default_if_none:'' }}" name="reference" id="txt_reference" maxlength="30"><font class="error">{{ form.reference.errors }}</font>
+                    <input class="form-control" value="{{ organization.reference | default_if_none:'' }}" name="reference" id="txt_reference" maxlength="30"><span class="error">{{ form.reference.errors }}</span>
                 </div>
                 <div class="col-md-2">
                     <label for="slt_type">{% trans 'type'%}</label><br>

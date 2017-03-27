@@ -76,8 +76,14 @@ msgstr	 "Choisissez une spécialité pour voir vos choix déjà effectués."
 msgid	 "civility"
 msgstr	 "Civilité"
 
+msgid	 "contest"
+msgstr	 "Concours"
+
 msgid	 "create_a_speciality"
 msgstr	 "Créer une spécialité"
+
+msgid	 "current_choices"
+msgstr	 "Choix actuels"
 
 msgid	 "date_end"
 msgstr	 "Date de fin"
@@ -93,6 +99,9 @@ msgstr	 "Détails"
 
 msgid	 "email"
 msgstr	 "Email"
+
+msgid	 "edit_places"
+msgstr	 "Modifier nombres de places"
 
 msgid	 "first_choice"
 msgstr	 "Choix préféré"
@@ -132,6 +141,9 @@ msgstr	 "Les sélections de stage sont bloquées actuellement."
 
 msgid	 "internship_choice"
 msgstr	 "Choix de stage"
+
+msgid	 "internship"
+msgstr	 "Stage"
 
 msgid	 "internship_modification"
 msgstr	 "Modification du stage"
@@ -366,3 +378,19 @@ msgstr "L'étudiant n'existe pas"
 
 msgid "export_organisation_affectation_xls"
 msgstr "Fichier Excel de toutes les spécialités"
+
+msgid "priority"
+msgstr "Prioritaire"
+
+msgid "generalist"
+msgstr "Généraliste"
+
+msgid "preference"
+msgstr "Préférence"
+
+msgid "specialist"
+msgstr "Spécialiste"
+
+msgid "student_max"
+msgstr "Nombre maximum d'étudiants"
+

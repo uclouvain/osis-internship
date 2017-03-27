@@ -23,21 +23,24 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.contrib import admin
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
+from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
+from django.utils.translation import ugettext_lazy as _
 
 
-class InternshipStudentInformationAdmin(admin.ModelAdmin):
+class InternshipStudentInformationAdmin(SerializableModelAdmin):
     list_display = ('person', 'location', 'postal_code', 'city', 'country', 'latitude', 'longitude', 'email',
-                    'phone_mobile')
+                    'phone_mobile', 'contest')
     fieldsets = ((None, {'fields': ('person', 'location', 'postal_code', 'city', 'latitude', 'longitude', 'country',
-                                    'email', 'phone_mobile')}),)
+                                    'email', 'phone_mobile', 'contest')}),)
     raw_id_fields = ('person',)
     search_fields = ['person__user__username', 'person__last_name', 'person__first_name']
 
 
-class InternshipStudentInformation(models.Model):
+class InternshipStudentInformation(SerializableModel):
+    TYPE_CHOICE = (('SPECIALIST', _('specialist')),
+                   ('GENERALIST', _('generalist')))
     person = models.ForeignKey('base.Person')
     location = models.CharField(max_length=255)
     postal_code = models.CharField(max_length=20)
@@ -47,6 +50,10 @@ class InternshipStudentInformation(models.Model):
     longitude = models.FloatField(blank=True, null=True)
     email = models.EmailField(max_length=255, blank=True, null=True)
     phone_mobile = models.CharField(max_length=100, blank=True, null=True)
+    contest = models.CharField(max_length=124, choices=TYPE_CHOICE, default="GENERALIST")
+
+    def __str__(self):
+        return '{}'.format(self.person)
 
 
 def search(**kwargs):
@@ -66,3 +73,18 @@ def find_by_person(person):
         return InternshipStudentInformation.objects.get(person=person)
     except ObjectDoesNotExist:
         return None
+
+
+def get_number_of_specialists():
+    contest_specialist = "SPECIALIST"
+    return InternshipStudentInformation.objects.filter(contest=contest_specialist).count()
+
+
+def get_number_of_generalists():
+    contest_generalist = "GENERALIST"
+    return InternshipStudentInformation.objects.filter(contest=contest_generalist).count()
+
+
+def get_number_students():
+    return InternshipStudentInformation.objects.count()
+

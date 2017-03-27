@@ -1,0 +1,180 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-05-03 08:56+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "INSCRIPTION"
+msgstr "Enrollment"
+
+msgid "ADMISSION"
+msgstr "Admission"
+
+msgid "UNKNOWN"
+msgstr "Unknown"
+
+msgid "PRIMARY"
+msgstr "Primary"
+
+msgid "SECONDARY_INFERIOR"
+msgstr "Secondary inferior"
+
+msgid "SECONDARY_SUPERIOR"
+msgstr "Secondary superior"
+
+msgid "SUPERIOR_NON_UNIVERSITY"
+msgstr "Superior but not university"
+
+msgid "UNIVERSITY"
+msgstr "University"
+
+msgid "NO_PROFESSION"
+msgstr "No profession"
+
+msgid "PART_TIME"
+msgstr "Yes, at part-time"
+
+msgid "FULL_TIME"
+msgstr "Yes, at full-time"
+
+msgid "female"
+msgstr "Female"
+
+msgid "male"
+msgstr "Male"
+
+msgid "married"
+msgstr "Married"
+
+msgid "single"
+msgstr "Single"
+
+msgid "widowed"
+msgstr "Widowed"
+
+msgid "divorced"
+msgstr "Divorced"
+
+msgid "separated"
+msgstr "Separated"
+
+msgid "cohabitant"
+msgstr "Cohabitant"
+
+msgid "unknown"
+msgstr "Unknown"
+
+msgid "national_university"
+msgstr "Belgian university"
+
+msgid "foreign_university"
+msgstr "Foreign university"
+
+msgid "high_national_non_university"
+msgstr "Belgian higher non-university education"
+
+msgid "high_foreign_non_university"
+msgstr "Foreign higher non-university education"
+
+msgid "other"
+msgstr "Other"
+
+msgid "succeeded"
+msgstr "Succeeded"
+
+msgid "failed"
+msgstr "Failed"
+
+msgid "no_result"
+msgstr "No result"
+
+msgid "job"
+msgstr "Job"
+
+msgid "internship"
+msgstr "Internship"
+
+msgid "volunteering"
+msgstr "Volunteering"
+
+msgid "unemployment"
+msgstr "Unemployment"
+
+msgid "illness"
+msgstr "Illness"
+
+msgid "higher_non_university"
+msgstr "Higher non university"
+
+msgid "bachelor"
+msgstr "Bachelor"
+
+msgid "master"
+msgstr "Master"
+
+msgid "social_advancement"
+msgstr "Social advancement"
+
+msgid "full_exercise"
+msgstr "Full exercise"
+
+msgid "legal"
+msgstr "Legal"
+
+msgid "contact"
+msgstr "Contact"
+
+msgid "low_result"
+msgstr "Less than 65%"
+
+msgid "middle_result"
+msgstr "Between 65 and 75%"
+
+msgid "high_result"
+msgstr "More than 75%"
+
+msgid "baccalaureat_european"
+msgstr "European Bachelor (Schola Europaea)"
+
+msgid "baccalaureat_international"
+msgstr "International Bachelor (IBO)"
+
+msgid "baccalaureat_national"
+msgstr "National Bachelor (or government diploma, ...)"
+
+msgid "yes"
+msgstr "Yes"
+
+msgid "no"
+msgstr "No"
+
+msgid "Yes"
+msgstr "Yes"
+
+msgid "No"
+msgstr "No"
+
+msgid "demanded"
+msgstr "Demanded"
+
+msgid "demanded_result"
+msgstr "Ongoing enrolment for the mentioned session"
+
+msgid "language"
+msgstr "Language"
+
+msgid "professional"
+msgstr "Professional"

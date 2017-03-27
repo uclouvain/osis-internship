@@ -69,7 +69,7 @@ class Person(SerializableModel):
         # When person is created by another application this rule can be applied.
         if hasattr(settings, 'INTERNAL_EMAIL_SUFIX'):
             if settings.INTERNAL_EMAIL_SUFIX.strip():
-                # It limits the creation of person to external emails. The domain name is case insensitive.
+                # It limits the creation of person with external emails. The domain name is case insensitive.
                 if self.source and self.source != person_source_type.BASE \
                                and settings.INTERNAL_EMAIL_SUFIX in str(self.email).lower():
                     raise AttributeError('Invalid email for external person.')
@@ -122,7 +122,7 @@ def find_by_global_id(global_id):
 
 
 def find_by_last_name_or_email(query):
-    return Person.objects.filter(Q(email__icontains=query) | Q(last_name__icontains=query))[:50]
+    return Person.objects.filter(Q(email__icontains=query) | Q(last_name__icontains=query))
 
 
 def search_by_email(email):
