@@ -80,7 +80,7 @@
                 <div class="col-md-1">
                     <br>
                     <button type="submit" id="bt_submit_offer_year_search" class="btn btn-primary" role="button"
-                        title="{% trans 'offer_year_search' %}"
+                        title="{% trans 'offer_year_search' %}" name="action" value="search"
                         style="margin-top:4px">
                         <span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
                 </div>
@@ -90,7 +90,7 @@
             {% include "template_messages.html" %}
             
             {% if exam_enrollments %}
-            <button type="submit" class="btn btn-primary" id="bt_save_online_encoding_up">
+            <button type="submit" class="btn btn-primary" id="bt_save_online_encoding_up" name="action" value="save">
                 <span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span> {% trans 'save' %}</button>
             <table class="table table-hover">
                 <thead>
@@ -120,7 +120,9 @@
                                 value="{{ enrollment.score_final | score_display:enrollment.learning_unit_enrollment.learning_unit_year.decimal_scores}}">
 
                             <!-- Input hidden for allow decimal score -->
-                            <input id="score_{{ enrollment.id }}_can_be_decimal" type="hidden" value="{{enrollment.learning_unit_enrollment.learning_unit_year.decimal_scores}}">
+                            <input id="score_{{ enrollment.id }}_can_be_decimal" type="hidden" value="{% if enrollment.learning_unit_enrollment.learning_unit_year.decimal_scores %}true{% else %}false{% endif %}">
+                             <!-- Input hidden for checking if score have changed -->
+                            <input type="hidden" id="hdn_score_changed_{{ enrollment.id }}" name="score_changed_{{ enrollment.id }}" value="false"></td>
                         </td>
                         <td>
                             <select class="form-control" name="justification_{{ enrollment.id }}" id="slt_justification_score_{{ enrollment.id }}"
@@ -137,7 +139,7 @@
                 </tbody>
             </table>
             <br>
-            <button type="submit" class="btn btn-primary" id="bt_save_online_encoding_down">
+            <button type="submit" class="btn btn-primary" id="bt_save_online_encoding_down" name="action" value="save">
                 <span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span> {% trans 'save' %}</button>
             {% endif %}
         </form>
@@ -148,7 +150,17 @@
 
 {% block script %}
 <script>
-     var is_valid_score = function(score, is_decimal) {
+    var values = [
+        {% for enrollment in exam_enrollments %}
+            {% if is_program_manager %}
+                ['{{ enrollment.id }}', '{{ enrollment.score_final | default_if_none:'-1' }}','{{ enrollment.justification_final | default_if_none:'' }}'],
+            {% else %}
+                ['{{ enrollment.id }}', '{{ enrollment.score_draft | default_if_none:'-1' }}','{{ enrollment.justification_draft | default_if_none:'' }}'],
+            {% endif %}
+        {% endfor %}
+        ['', '', '']];
+
+    var is_valid_score = function(score, is_decimal) {
         score = score.replace(',','.');
         var regex = /^\d+$/
         if (is_decimal) {
@@ -164,20 +176,17 @@
         }
         return true;
     }
-    var validate_form = function() {
-        $("input[id^='num_score_']" ).each(function(){
-            var score_encoded = $(this).val();
-            var id = $(this).attr('id');
-            enrollmentId = id.substring(id.lastIndexOf("_") + 1);
-            var is_decimal = $("input[id^='score_" + enrollmentId + "_can_be_decimal']" ).val();
-            is_decimal = (is_decimal=="True") ? true : false;
-
-            if (score_encoded == "" || is_valid_score(score_encoded, is_decimal)) {
-                $(this).css("border", "1px solid #D3D3D3");
-            } else {
-                $(this).css("border", "1px solid #ff0000");
-            }
-        });
+    var check_is_score_changed = function(enrollmentId, score, justification) {
+         is_changed = originalValueChanged(values, enrollmentId, score, justification)
+         $("#hdn_score_changed_" + enrollmentId).val(is_changed);
+    }
+    var disable_submit = function() {
+         $("#bt_save_online_encoding_up").prop('disabled', true);
+         $("#bt_save_online_encoding_down").prop('disabled', true);
+    }
+    var enable_submit = function() {
+         $("#bt_save_online_encoding_up").prop('disabled', false);
+         $("#bt_save_online_encoding_down").prop('disabled', false);
     }
     var ensureOnlyOneInputCompleted = function(event) {
         if (!event || event == null) { return; }
@@ -185,23 +194,48 @@
         var self = $(this);
         var id = self.attr('id');
 
-        if ( id != undefined && self.val() != "" ) {
+        if ( id != undefined ) {
             var selfPrefix = id.substring(0, id.lastIndexOf("_"));
             var enrollmentId = id.substring(id.lastIndexOf("_") + 1); //Get enrollement id
 
-            //Empty the other input because we have set a value in [selfPrefix]
-            if (selfPrefix == "slt_justification_score") {
-                $("#num_score_" + enrollmentId).val("");
-            } else if (selfPrefix == "num_score") {
-                $("#slt_justification_score_" + enrollmentId).val("");
-                this.setCustomValidity('');
+            if (self.val() != "") {
+                //Empty the other input because we have set a value in [selfPrefix]
+                if (selfPrefix == "slt_justification_score") {
+                    $("#num_score_" + enrollmentId).val("");
+                } else if (selfPrefix == "num_score") {
+                    $("#slt_justification_score_" + enrollmentId).val("");
+                    this.setCustomValidity('');
+                }
             }
+            check_is_score_changed(enrollmentId, $("#num_score_" + enrollmentId).val(),
+                                                 $("#slt_justification_score_" + enrollmentId).val());
         }
         validate_form()
     }
     $("input[id^='num_score_']" ).change(ensureOnlyOneInputCompleted)
     $("select[id^='slt_justification_score_']" ).change(ensureOnlyOneInputCompleted)
+       var validate_form = function() {
+        var has_error = false;
+        $("input[id^='num_score_']" ).each(function(){
+            var score_encoded = $(this).val();
+            var id = $(this).attr('id');
+            enrollmentId = id.substring(id.lastIndexOf("_") + 1);
+            var is_decimal = $("input[id^='score_" + enrollmentId + "_can_be_decimal']" ).val();
+            is_decimal = (is_decimal=="true");
 
+            if (score_encoded == "" || is_valid_score(score_encoded, is_decimal)) {
+                $(this).css("border", "1px solid #D3D3D3");
+            } else {
+                $(this).css("border", "1px solid #ff0000");
+                has_error = true;
+            }
+        });
+        if (has_error) {
+            disable_submit();
+        }else {
+            enable_submit();
+        }
+    }
 
     var target_score = '#form_justification tbody tr td input';
     $(target_score).on('keypress',
