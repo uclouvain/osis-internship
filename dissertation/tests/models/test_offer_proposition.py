@@ -23,8 +23,8 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.contrib import admin
-from assessments.models import scores_encoding
+from dissertation.models.offer_proposition import OfferProposition
 
-admin.site.register(scores_encoding.ScoresEncoding,
-                    scores_encoding.ScoresEncodingAdmin)
+def create_offer_proposition(acronym, offer):
+    offer_proposition = OfferProposition.objects.create(acronym=acronym, offer=offer)
+    return offer_proposition
