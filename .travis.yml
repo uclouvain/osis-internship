@@ -1,6 +1,8 @@
 language: python
 python: "3.4.5"
 install: "pip install -r requirements.txt"
+addons:
+  firefox: latest
 before_script:
   - "export DISPLAY=:99.0"
   - "sh -e /etc/init.d/xvfb start"
