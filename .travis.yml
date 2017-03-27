@@ -6,8 +6,22 @@ addons:
 before_script:
   - "export DISPLAY=:99.0"
   - "sh -e /etc/init.d/xvfb start"
-  - sleep 3 # give xvfb some time to start
-script: "python3 manage.py compilemessages && python3 manage.py test"
+  - sleep 5 # give xvfb some time to start
+script: "python3 manage.py compilemessages && phantomjs base/tests/functional/test_learning_units.py"
+
+./manage.py test animals/
+
+before_script:
+  - "export DISPLAY=:99.0"
+  - "sh -e /etc/init.d/xvfb start"
+  - npm install connect
+  - sudo node test/js/server.js ../../ 80 &
+  - sleep 5
+script:  "http://localhost:80/test/index.html"
+
+
+
+
 notifications:
   slack: osisteam:2M3DtIOGE4clU1DF8r6k8NQD
 services:
