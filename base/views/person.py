@@ -64,4 +64,4 @@ def get_photo_path(a_person):
 
 @login_required
 def get_default_avatar(request):
-    return urllib.request.urlopen("http://" + request.get_host() + static('img/osis_person_unknown.png'), None, 1)
+    return urllib.request.urlopen("http://" + request.get_host() + static('img/osis_avatar_unknown.png'), None, 1)
