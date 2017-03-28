@@ -27,12 +27,10 @@ from osis_common.messaging import message_config, send_message as message_servic
 from dissertation.models.dissertation_role import get_promoteur_by_dissertation
 
 
-def get_template_de_base(dissert):
-    template_base_data = {'author': dissert.author.person.last_name +' '+dissert.author.person.first_name
-                                    +' '+dissert.author.person.global_id ,
+def get_base_template(dissert):
+    template_base_data = {'author': dissert.author,
                           'title': dissert.title,
-                          'promoteur': get_promoteur_by_dissertation(dissert).person.last_name
-                                    + ' '+get_promoteur_by_dissertation(dissert).person.first_name,
+                          'promoteur': get_promoteur_by_dissertation(dissert).person,
                           'description': dissert.description,
                           'dissertation_proposition_titre': dissert.proposition_dissertation.title}
     return template_base_data
@@ -47,7 +45,7 @@ def send_mail_to_teacher_new_dissert(dissert):
                                                 teacher_promoteur.person.email,
                                                 teacher_promoteur.person.language)]
     suject_data = None
-    template_base_data = get_template_de_base(dissert)
+    template_base_data = get_base_template(dissert)
     tables = None
     message_content = message_config.create_message_content(html_template_ref, txt_template_ref, tables, receivers,
                                                             template_base_data, suject_data)
@@ -62,7 +60,7 @@ def send_mail_dissert_accepted_by_teacher(dissert):
                                                 dissert.author.person.email,
                                                 dissert.author.person.language)]
     suject_data = None
-    template_base_data = get_template_de_base(dissert)
+    template_base_data = get_base_template(dissert)
     tables = None
     message_content = message_config.create_message_content(html_template_ref, txt_template_ref, tables, receivers,
                                                             template_base_data, suject_data)
@@ -77,7 +75,7 @@ def send_mail_dissert_refused_by_teacher(dissert):
                                                 dissert.author.person.email,
                                                 dissert.author.person.language)]
     suject_data = None
-    template_base_data = get_template_de_base(dissert)
+    template_base_data = get_base_template(dissert)
     tables = None
     message_content = message_config.create_message_content(html_template_ref, txt_template_ref, tables, receivers,
                                                             template_base_data, suject_data)
@@ -92,7 +90,7 @@ def send_mail_dissert_acknowledgement(dissert):
                                                 dissert.author.person.email,
                                                 dissert.author.person.language)]
     suject_data = None
-    template_base_data = get_template_de_base(dissert)
+    template_base_data = get_base_template(dissert)
     tables = None
     message_content = message_config.create_message_content(html_template_ref, txt_template_ref, tables, receivers,
                                                             template_base_data, suject_data)
@@ -108,7 +106,7 @@ def send_mail_dissert_refused_by_com_to_student(dissert):
                                                 dissert.author.person.language)
     receivers = [student_receiver]
     suject_data = None
-    template_base_data = get_template_de_base(dissert)
+    template_base_data = get_base_template(dissert)
     tables = None
     message_content = message_config.create_message_content(html_template_ref, txt_template_ref, tables, receivers,
                                                             template_base_data, suject_data)
@@ -126,7 +124,7 @@ def send_mail_dissert_refused_by_com_to_teacher(dissert):
                                                 teacher_promoteur.person.language)
     receivers = [teachers_receiver]
     suject_data = None
-    template_base_data = get_template_de_base(dissert)
+    template_base_data = get_base_template(dissert)
     tables = None
     message_content = message_config.create_message_content(html_template_ref, txt_template_ref, tables, receivers,
                                                             template_base_data, suject_data)
@@ -141,7 +139,7 @@ def send_mail_dissert_accepted_by_com(dissert):
                                               dissert.author.person.email,
                                               dissert.author.person.language)]
     suject_data = None
-    template_base_data = get_template_de_base(dissert)
+    template_base_data = get_base_template(dissert)
     tables = None
     message_content = message_config.create_message_content(html_template_ref, txt_template_ref, tables, receivers,
                                                             template_base_data, suject_data)
