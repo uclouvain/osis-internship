@@ -24,6 +24,7 @@
 #
 ##############################################################################
 from django.http import HttpResponseRedirect
+from django.views.decorators.http import require_POST
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
 from django.shortcuts import render
@@ -31,6 +32,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from base import models as mdl
 from internship import models as mdl_internship
+from internship.forms.form_student_information import StudentInformationForm
 
 from django.utils.translation import ugettext_lazy as _
 
@@ -80,38 +82,31 @@ def get_number_ok_student(students_list, number_selection):
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internships_student_resume(request):
-    # Get all stundents and the mandatory specialities
-    students_list = mdl_internship.internship_choice.find_by_all_student()
-    specialities = mdl_internship.internship_speciality.search(mandatory=True)
-    student_informations = mdl_internship.internship_student_information.find_all()
-
-    set_number_choices(student_informations)
-
-    # Get the required number selection (4 for each speciality)
-    # Get the number of student who have al least 4 corrects choice of internship
-    # Get the number of student who can choose their internships
-    number_selection = 4 * len (specialities)
-    student_with_internships = len(students_list)
-    students_can_have_internships = len(mdl_internship.internship_student_information.find_all())
-
-    students_ok = get_number_ok_student(students_list, number_selection)
-
+    students_with_status = get_students_with_status()
+    student_with_internships = mdl_internship.internship_choice.get_number_students()
+    students_can_have_internships = mdl_internship.internship_student_information.get_number_students()
     student_without_internship = students_can_have_internships - student_with_internships
+    number_students_ok = len([x for x in students_with_status if x[1]])
+    number_students_not_ok = len([x for x in students_with_status if x[1] is False])
+    number_generalists = mdl_internship.internship_student_information.get_number_of_generalists()
+    number_specialists = students_can_have_internships - number_generalists
     return render(request, "student_search.html", {'search_name': None,
-                                                    'search_firstname': None,
-                                                   'students': student_informations,
-                                                   'number_selection': number_selection,
-                                                   'students_ok': students_ok[0],
-                                                   'students_not_ok': students_ok[1],
+                                                   'search_firstname': None,
+                                                   'students': students_with_status,
+                                                   'students_ok': number_students_ok,
+                                                   'students_not_ok': number_students_not_ok,
                                                    'student_with_internships': student_with_internships,
                                                    'students_can_have_internships': students_can_have_internships,
                                                    'student_without_internship': student_without_internship,
+                                                   "number_generalists": number_generalists,
+                                                   "number_specialists": number_specialists
                                                    })
 
 
 @login_required
-@permission_required('internship.can_access_internship', raise_exception=True)
+@permission_required('internship.is_internship_manager', raise_exception=True)
 def internships_student_read(request, registration_id):
+    NUMBER_NON_MANDATORY_INTERNSHIPS = 6
     student_to_read = mdl.student.find_by_registration_id(registration_id)
     if not request.user.has_perm('internship.is_internship_manager'):
         person_who_read = mdl.person.find_by_user(request.user)
@@ -121,10 +116,12 @@ def internships_student_read(request, registration_id):
     if not student_to_read:
         return render(request, "student_resume.html", {'errors': ['student_not_exists']})
     information = mdl_internship.internship_student_information.search(person = student_to_read.person)
-    internship_choice = mdl_internship.internship_choice.find_by_student(student_to_read)
+    internship_choice = mdl_internship.internship_choice.find_by_student(student_to_read).\
+        order_by('internship_choice', 'choice')
     all_speciality = mdl_internship.internship_speciality.search(mandatory=True)
 
-    affectations = mdl_internship.internship_student_affectation_stat.search(student=student_to_read).order_by("period__date_start")
+    affectations = mdl_internship.internship_student_affectation_stat.search(student=student_to_read).\
+        order_by("period__date_start")
     periods = mdl_internship.period.search().order_by("date_start")
     organizations = mdl_internship.organization.search()
     set_organization_address(organizations)
@@ -156,6 +153,7 @@ def internships_student_read(request, registration_id):
                             'selectable': selectable,
                             'affectations': affectations,
                             'periods': periods,
+                            'number_internships': range(1, NUMBER_NON_MANDATORY_INTERNSHIPS+1)
                             })
 
 
@@ -163,32 +161,37 @@ def internships_student_read(request, registration_id):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internship_student_information_modification(request, registration_id):
     student = mdl.student.find_by(registration_id=registration_id)
-    information = mdl_internship.internship_student_information.search(person = student[0].person)
+    information = mdl_internship.internship_student_information.find_by_person(person=student[0].person)
+    form = StudentInformationForm()
     student = student[0]
     return render(request, "student_information_modification.html",
                            {'student': student,
-                            'information': information[0], })
+                            'information': information,
+                            "form": form})
 
 
 @login_required
+@require_POST
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def student_save_information_modification(request, registration_id):
-    student = mdl.student.find_by(registration_id=registration_id)
-    information = mdl_internship.internship_student_information.search(person = student[0].person)
+    student = mdl.student.find_by_registration_id(registration_id)
+    information = mdl_internship.internship_student_information.find_by_person(student.person)
     if not information:
         information = mdl_internship.internship_student_information.InternshipStudentInformation()
         information.person = student[0].person
-    else:
-        information = information[0]
-    information.email = request.POST.get('student_email')
-    information.phone_mobile = request.POST.get('student_phone')
-    information.location = request.POST.get('student_location')
-    information.postal_code = request.POST.get('student_postal_code')
-    information.city = request.POST.get('student_city')
-    information.country = request.POST.get('student_country')
-    information.latitude = None
-    information.longitude = None
-    information.save()
+
+    form = StudentInformationForm(request.POST)
+    if form.is_valid():
+        information.email = form.cleaned_data.get('email')
+        information.phone_mobile = form.cleaned_data.get('phone_mobile')
+        information.location = form.cleaned_data.get('location')
+        information.postal_code = form.cleaned_data.get('postal_code')
+        information.city = form.cleaned_data.get('city')
+        information.country = form.cleaned_data.get('country')
+        information.contest = form.cleaned_data.get('contest')
+        information.latitude = None
+        information.longitude = None
+        information.save()
 
     redirect_url = reverse('internships_student_read', args=[registration_id])
     return HttpResponseRedirect(redirect_url)
@@ -284,3 +287,25 @@ def student_save_affectation_modification(request, registration_id):
     else:
         redirect_url = reverse('internship_student_affectation_modification', args=[student.id])
     return HttpResponseRedirect(redirect_url)
+
+
+def get_students_with_status():
+    students_status = []
+    students_informations = mdl_internship.internship_student_information.find_all()
+    for student_info in students_informations:
+        person = student_info.person
+        student = mdl.student.find_by_person(person)
+        student_status = get_student_status(student)
+        students_status.append((student, student_status))
+    return students_status
+
+
+def get_student_status(student):
+    internships_to_make_choice = [1, 2, 3, 4]
+    internship_choices_values = mdl_internship.internship_choice.get_internship_choices_made(student)
+    if len(internship_choices_values) == 0:
+        return None
+    for internship_value in internships_to_make_choice:
+        if internship_value not in internship_choices_values:
+            return False
+    return True

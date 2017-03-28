@@ -514,6 +514,45 @@ referencing its identifier:
 
     $ git stash apply stash@{2}
 
+
+===== Reverting commits
+
+To revert the changes made in the last 4 commits and create a new commit with 
+the reverted changes:
+
+    $ git revert HEAD~3
+
+To revert the changes made between the fifth and the third (included) last 
+commits in the branch `master`, but not creating any commit for the reverted
+changes:
+
+    $ git revert -n master~5..master~2
+
+This revert only modifies the working tree and the index.
+
+To revert a sequence of commits using haches:
+
+    $ git revert --no-edit ffffffff..12345678
+
+It applies reversed parches to the working directory in sequence, working
+backwards to the known good commit. With the `--no-edit` flag, the changes to
+the working directory are automatically committed after each reversed patch is
+applied.
+
+===== DANGER ZONE
+
+In extreme cases, when on one has pushed to the target branch since the bad
+pushes or the remote branch is empty, then a `non-fast-forward` commit can be
+performed:
+
+    $ git reset --hard <last_good_commit>
+    $ git push --force
+
+It leaves the reflog intact locally and in the remote branch. The bad commits 
+may disappear from the history and don't propagate further. The removed tree
+branch remains around temporarily and can be recoveredm but it's for Git 
+experts.
+
 == Fixing the latest commit message
 
     $ git commit --amend -m "message"

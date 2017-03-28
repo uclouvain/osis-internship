@@ -77,6 +77,7 @@ def search(academic_year_id=None, acronym=None, learning_unit=None, title=None):
     return queryset
 
 
+# Cette function ne doit pas être là parce que elle depende de l'attribution.
 def find_by_tutor(tutor):
     if tutor:
         return [att.learning_unit_year for att in list(attribution.search(tutor=tutor))]
