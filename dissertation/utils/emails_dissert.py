@@ -36,89 +36,10 @@ def get_base_template(dissert):
     return template_base_data
 
 
-def send_mail_to_teacher_new_dissert(dissert):
-    html_template_ref = 'dissertation_adviser_new_project_dissertation_html'
-    txt_template_ref = 'dissertation_adviser_new_project_dissertation_txt'
-    receivers = generate_receivers(get_promoteur_by_dissertation(dissert))
-
-    suject_data = None
-    template_base_data = get_base_template(dissert)
-    tables = None
-    message_content = message_config.create_message_content(html_template_ref, txt_template_ref, tables, receivers,
-                                                            template_base_data, suject_data)
-    return message_service.send_messages(message_content)
-
-
-def send_mail_dissert_accepted_by_teacher(dissert):
-    html_template_ref = 'dissertation_accepted_by_teacher_html'
-    txt_template_ref = 'dissertation_accepted_by_teacher_txt'
-    receivers = generate_receivers(dissert.author)
-
-    suject_data = None
-    template_base_data = get_base_template(dissert)
-    tables = None
-    message_content = message_config.create_message_content(html_template_ref, txt_template_ref, tables, receivers,
-                                                            template_base_data, suject_data)
-    return message_service.send_messages(message_content)
-
-
-def send_mail_dissert_refused_by_teacher(dissert):
-    html_template_ref = 'dissertation_refused_by_teacher_html'
-    txt_template_ref = 'dissertation_refused_by_teacher_txt'
-    receivers = generate_receivers(dissert.author)
-
-    suject_data = None
-    template_base_data = get_base_template(dissert)
-    tables = None
-    message_content = message_config.create_message_content(html_template_ref, txt_template_ref, tables, receivers,
-                                                            template_base_data, suject_data)
-    return message_service.send_messages(message_content)
-
-
-def send_mail_dissert_acknowledgement(dissert):
-    html_template_ref = 'dissertation_acknowledgement_html'
-    txt_template_ref = 'dissertation_acknowledgement_txt'
-    receivers = generate_receivers(dissert.author)
-
-    suject_data = None
-    template_base_data = get_base_template(dissert)
-    tables = None
-    message_content = message_config.create_message_content(html_template_ref, txt_template_ref, tables, receivers,
-                                                            template_base_data, suject_data)
-    return message_service.send_messages(message_content)
-
-
-def send_mail_dissert_refused_by_com_to_student(dissert):
-    html_template_ref = 'dissertation_refused_by_com_to_student_html'
-    txt_template_ref = 'dissertation_refused_by_com_to_student_txt'
-    receivers = generate_receivers(dissert.author)
-
-    suject_data = None
-    template_base_data = get_base_template(dissert)
-    tables = None
-    message_content = message_config.create_message_content(html_template_ref, txt_template_ref, tables, receivers,
-                                                            template_base_data, suject_data)
-    return message_service.send_messages(message_content)
-
-
-def send_mail_dissert_refused_by_com_to_teacher(dissert):
-    html_template_ref = 'dissertation_refused_by_com_to_teacher_html'
-    txt_template_ref = 'dissertation_refused_by_com_to_teacher_txt'
-    receivers = generate_receivers(get_promoteur_by_dissertation(dissert))
-
-    suject_data = None
-    template_base_data = get_base_template(dissert)
-    tables = None
-    message_content = message_config.create_message_content(html_template_ref, txt_template_ref, tables, receivers,
-                                                            template_base_data, suject_data)
-    return message_service.send_messages(message_content)
-
-
-def send_mail_dissert_accepted_by_com(dissert):
-    html_template_ref = 'dissertation_accepted_by_com_html'
-    txt_template_ref = 'dissertation_accepted_by_com_txt'
-    receivers = generate_receivers(dissert.author)
-
+def send_email(dissert, template_ref, receivers):
+    receivers = generate_receivers(receivers)
+    html_template_ref = template_ref + '_html'
+    txt_template_ref = template_ref + '_txt'
     suject_data = None
     template_base_data = get_base_template(dissert)
     tables = None
