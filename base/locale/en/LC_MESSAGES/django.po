@@ -297,6 +297,9 @@ msgstr ""
 msgid "desc_lnk_internships"
 msgstr "This process controls students internships."
 
+msgid "desc_lnk_my_osis"
+msgstr "Your personal details, configurations and other information related to you."
+
 msgid "desc_lnk_learning_units"
 msgstr ""
 "Management of learning units, formations and others activities of the "

@@ -163,10 +163,6 @@ def search(entity=None, academic_yr=None, acronym=None):
     return out
 
 
-def find_by_academicyear_acronym(academic_yr, acronym):
-    return OfferYear.objects.filter(academic_year=academic_yr, acronym=acronym)
-
-
 def find_by_user(user, academic_yr):
     """
     :param user: User from which we get the offerYears.
