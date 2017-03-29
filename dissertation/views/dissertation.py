@@ -319,13 +319,24 @@ def manager_dissertations_search(request):
         workbook = Workbook(encoding='utf-8')
         worksheet1 = workbook.active
         worksheet1.title = "dissertation"
-        worksheet1.append(['Date_de_création', 'Students', 'Dissertation_title',
-                           'Status', 'Offer_year_start', 'offer_year_start_short', 'promoteur', 'copromoteur',
-                           'lecteur1', 'lecteur2'])
+        worksheet1.append(['Creation_date',
+                           'Student',
+                           'Title',
+                           'Status',
+                           'Year + Program Start',
+                           'Defend Year',
+                           'Promotor',
+                           'Co-promotor',
+                           'Reader 1',
+                           'Reader 2',
+                           'Description'
+                           ])
         for dissert in disserts:
             pro_name = dissertation_role.get_promoteur_by_dissertation_str(dissert)
             copro_name = dissertation_role.get_copromoteur_by_dissertation(dissert)
             reader = dissertation_role.search_by_dissertation_and_role(dissert, 'READER')
+            defend_year = dissert.defend_year if dissert.defend_year else 'not_set'
+            description = dissert.description if dissert.description else 'not_set'
 
             if reader:
                 reader1_name = str(reader[0].adviser)
@@ -341,8 +352,14 @@ def manager_dissertations_search(request):
                                str(dissert.author),
                                dissert.title,
                                dissert.status,
-                               dissert.offer_year_start.title,
-                               dissert.offer_year_start.title_short, pro_name, copro_name, reader1_name, reader2_name])
+                               str(dissert.offer_year_start),
+                               defend_year,
+                               pro_name,
+                               copro_name,
+                               reader1_name,
+                               reader2_name,
+                               description
+                               ])
 
         response = HttpResponse(save_virtual_workbook(workbook), content_type='application/vnd.ms-excel')
         response['Content-Disposition'] = "%s%s" % ("attachment; filename=", filename)
