@@ -15,7 +15,7 @@ addons:
     firefox: latest
     selenium: "3.3.1"
 
-script: "python3 manage.py compilemessages && python3 manage.py test -p test_learning_units"
+script: "python3 manage.py compilemessages && python3 manage.py test -p base.tests.functional.test_learning_units.LearningUnitsSearchTest.test_retrieve_learning_units_from_search_with_valid_acronym_only"
 
 notifications:
   slack: osisteam:2M3DtIOGE4clU1DF8r6k8NQD
