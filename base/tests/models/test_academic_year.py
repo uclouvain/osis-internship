@@ -52,8 +52,7 @@ class MultipleAcademicYearTest(TestCase):
         academic_yrs = academic_year.find_academic_years(start_date=today, end_date=today)
         current_academic_yr = academic_year.current_academic_year()
         starting_academic_yr = academic_year.starting_academic_year()
-        nb_of_academic_yrs = len(academic_yrs)
-
+        nb_of_academic_yrs = academic_yrs.count()
         if starting_academic_yr != current_academic_yr:
             self.assertEqual(nb_of_academic_yrs, 2)
         else:
