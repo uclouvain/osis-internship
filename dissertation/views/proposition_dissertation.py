@@ -121,9 +121,8 @@ def manage_proposition_dissertation_edit(request, pk):
     proposition_offers = proposition_offer.find_by_proposition_dissertation(proposition)
     if request.method == "POST":
         form = ManagerPropositionDissertationEditForm(request.POST, instance=proposition)
-        if form.is_valid() and detect_in_request(request, "txt_checkbox_", "on"):
+        if form.is_valid() and detect_in_request(request, 'txt_checkbox_', 'on'):
             proposition = form.save()
-            proposition_offers = proposition_offer.find_by_proposition_dissertation(proposition)
             for old in proposition_offers:
                 old.delete()
             for key, value in request.POST.items():
@@ -198,7 +197,7 @@ def manager_proposition_dissertation_new(request):
     if request.method == "POST":
         person = mdl.person.find_by_user(request.user)
         form = ManagerPropositionDissertationForm(request.POST)
-        if form.is_valid() and detect_in_request(request, "txt_checkbox_", "on"):
+        if form.is_valid() and detect_in_request(request, 'txt_checkbox_', 'on'):
             proposition = form.save()
             proposition.set_creator(person)
             for key, value in request.POST.items():
@@ -319,9 +318,8 @@ def proposition_dissertation_edit(request, pk):
     if proposition.author == adv or proposition.creator == adv.person:
         if request.method == "POST":
             form = PropositionDissertationForm(request.POST, instance=proposition)
-            if form.is_valid() and detect_in_request(request, "txt_checkbox_", "on"):
+            if form.is_valid() and detect_in_request(request, 'txt_checkbox_', 'on'):
                 proposition = form.save()
-                proposition_offers = proposition_offer.find_by_proposition_dissertation(proposition)
                 for old in proposition_offers:
                     old.delete()
                 for key, value in request.POST.items():
@@ -375,7 +373,7 @@ def proposition_dissertation_new(request):
     offer_propositions = offer_proposition.find_all_ordered_by_acronym()
     if request.method == "POST":
         form = PropositionDissertationForm(request.POST)
-        if form.is_valid() and detect_in_request(request, "txt_checkbox_", "on"):
+        if form.is_valid() and detect_in_request(request, 'txt_checkbox_', 'on'):
             proposition = form.save()
             proposition.set_creator(person)
             for key, value in request.POST.items():
