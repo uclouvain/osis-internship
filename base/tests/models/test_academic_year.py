@@ -48,13 +48,16 @@ class MultipleAcademicYearTest(TestCase):
                             end_date=datetime.datetime(now.year + 1, now.month, 28))
 
     def test_find_academic_years(self):
-        academic_yrs = academic_year.find_academic_years()
+        today = datetime.date.today()
+        academic_yrs = academic_year.find_academic_years(start_date=today, end_date=today)
         current_academic_yr = academic_year.current_academic_year()
         starting_academic_yr = academic_year.starting_academic_year()
+        nb_of_academic_yrs = len(academic_yrs)
+
         if starting_academic_yr != current_academic_yr:
-            self.assertEqual(len(academic_yrs), 2)
+            self.assertEqual(nb_of_academic_yrs, 2)
         else:
-            self.assertEqual(len(academic_yrs), 1)
+            self.assertEqual(nb_of_academic_yrs, 1)
 
     def test_current_academic_year(self):
         current_academic_yr = academic_year.current_academic_year()
