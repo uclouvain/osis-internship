@@ -127,7 +127,7 @@ def manage_proposition_dissertation_edit(request, pk):
             for old in proposition_offers:
                 old.delete()
             for key, value in request.POST.items():
-                if "txt_checkbox_" in key and value == 'on':
+                if 'txt_checkbox_' in key and value == 'on':
                     offer = PropositionOffer()
                     offer.proposition_dissertation = proposition
                     offer_proposition_id = key.replace("txt_checkbox_", "")
@@ -202,7 +202,7 @@ def manager_proposition_dissertation_new(request):
             proposition = form.save()
             proposition.set_creator(person)
             for key, value in request.POST.items():
-                if "txt_checkbox_" in key and value == "on":
+                if 'txt_checkbox_' in key and value == 'on':
                     offer = PropositionOffer()
                     offer.proposition_dissertation = proposition
                     offer_proposition_id = key.replace("txt_checkbox_", "")
@@ -325,7 +325,7 @@ def proposition_dissertation_edit(request, pk):
                 for old in proposition_offers:
                     old.delete()
                 for key, value in request.POST.items():
-                    if "txt_checkbox_" in key and value == 'on':
+                    if 'txt_checkbox_' in key and value == 'on':
                         offer = PropositionOffer()
                         offer.proposition_dissertation = proposition
                         offer_proposition_id = key.replace("txt_checkbox_", "")
@@ -379,7 +379,7 @@ def proposition_dissertation_new(request):
             proposition = form.save()
             proposition.set_creator(person)
             for key, value in request.POST.items():
-                if "txt_checkbox_" in key and value == 'on':
+                if 'txt_checkbox_' in key and value == 'on':
                     offer = PropositionOffer()
                     offer.proposition_dissertation = proposition
                     offer_proposition_id = key.replace("txt_checkbox_", "")
