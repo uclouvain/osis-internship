@@ -25,36 +25,16 @@
 ##############################################################################
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, permission_required
-from base import models as mdl
 from internship import models as mdl_internship
 
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internships_home(request):
-    """
-        The function of the home page :
-        check if the user is a student and if internships are selectables.
-        Also check if the students and organizations have their latitude/longitude,
-        if not, compute it (function present in the OrganizationAddress' model)
-    """
-    student = mdl.student.find_by(person_username=request.user)
-    #Check if the user is a student, if not the noma is not requiered so it's 0
-    if len(student) > 0:
-        for s in student:
-            noma = s.registration_id
-    else:
-        noma = 0
-
     blockable = mdl_internship.internship_offer.get_number_selectable() > 0
 
-    #Find all informations about students and organisation and fin the latitude and longitude of the address
-    student_informations = mdl_internship.internship_student_information.search()
-    organization_informations = mdl_internship.organization_address.search()
-    mdl_internship.organization_address.find_latitude_longitude(student_informations)
-    mdl_internship.organization_address.find_latitude_longitude(organization_informations)
-
-    return render(request, "internships_home.html", {'section': 'internship',
-                                                     'noma': noma,
-                                                     'blockable': blockable
-                                                     })
+    context = {
+        'section': 'internship',
+        'blockable': blockable,
+    }
+    return render(request, "internships_home.html", context=context)
