@@ -15,9 +15,8 @@ addons:
     selenium: "3.3.1"
 
 before_script:
-  #- "export DISPLAY=:99.0"
-  #- "sh -e /etc/init.d/xvfb start"
-  - "xvfb-run"
+  - "export DISPLAY=:99.0"
+  - "sh -e /etc/init.d/xvfb start"
   - "sleep 3"
 
 script: "python3 manage.py compilemessages && python3 manage.py test"
