@@ -19,8 +19,16 @@ Status = collections.namedtuple(
 )
 
 
+class BadCSVFormat(Exception):
+    pass
+
+
 def load_internship_students(fp_like, has_header=True):
-    dialect = csv.Sniffer().sniff(fp_like.read(1024))
+    try:
+        dialect = csv.Sniffer().sniff(fp_like.readline(), [',', ';'])
+    except csv.Error:
+        raise BadCSVFormat()
+
     fp_like.seek(0)
     reader = csv.reader(fp_like, dialect)
 
@@ -44,7 +52,6 @@ def _insert_internship_student_information(idx, row):
     if not person:
         values['not_found'] = True
     else:
-        # values = dict(person=person, **row._asdict())
         student = mdl_isi.InternshipStudentInformation()
         student.person = person
         student.location = row.location

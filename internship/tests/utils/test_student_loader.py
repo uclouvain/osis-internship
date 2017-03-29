@@ -1,12 +1,13 @@
 import csv
+import io
 from io import StringIO
 from unittest import skip
 from unittest.mock import MagicMock, Mock, patch
 
-import contextlib
 import django.db
 import factory
 import factory.fuzzy
+import faker
 from django.test import SimpleTestCase, TestCase
 
 from internship.utils import student_loader
@@ -126,7 +127,7 @@ class StudentLoaderTestCase(TestCase):
             csv.writer(strIo)
             strIo.seek(0)
 
-            with self.assertRaises(csv.Error):
+            with self.assertRaises(student_loader.BadCSVFormat):
                 # Delimiter not detected
                 student_loader.load_internship_students(strIo)
 
@@ -175,3 +176,20 @@ class StudentLoaderTestCase(TestCase):
                 mock_person_find_by_global_id.return_value = False
                 student_loader.load_internship_students(strIo)
                 self.assertEqual(mock_person_find_by_global_id.call_count, len(records))
+
+    def test_load_text_file(self):
+        fake = faker.Faker()
+
+        def row_compute():
+            return ' '.join([
+                fake.time(pattern='%Y-%m-%d %H:%M:%S'),
+                '[{}]'.format(fake.numerify(text='########')),
+                fake.random_element(elements=('ERROR', 'WARNING', 'INFO', 'DEBUG')),
+                fake.sentence(nb_words=10, variable_nb_words=True)
+            ])
+
+        text = '\n'.join(row_compute()
+                         for idx in range(fake.random_int(min=10, max=50)))
+
+        with self.assertRaises(student_loader.BadCSVFormat), io.StringIO(text) as str_io:
+            student_loader.load_internship_students(str_io)
