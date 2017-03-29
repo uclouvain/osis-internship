@@ -296,6 +296,9 @@ msgstr ""
 "Gestion des cours, des formations et d'autres activités qui composent le "
 "programme."
 
+msgid "desc_lnk_my_osis"
+msgstr "Vos données personnelles, des préférences et d'autres informations associés."
+
 msgid "desc_lnk_offers"
 msgstr "Gestion des programmes."
 
@@ -335,7 +338,7 @@ msgid "doctoral_commission"
 msgstr "Commision doctorale"
 
 msgid "documentation"
-msgstr "Justification"
+msgstr "Documentation"
 
 msgid "done_at"
 msgstr "Fait à"
