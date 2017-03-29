@@ -32,10 +32,7 @@ from selenium.common.exceptions import WebDriverException
 from base.tests.factories.academic_year import AcademicYearFakerFactory
 from base.tests.factories.learning_unit_year import LearningUnitYearFakerFactory
 import time
-
 import os
-import sys
-import dotenv
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
@@ -51,7 +48,7 @@ class LearningUnitsSearchTest(StaticLiveServerTestCase):
                                  email='superdummy@dummy.com',
                                 password='superpwd')
 
-    def setUpSauceLab(self):
+    def SauceLabSetUp(self):
         User.objects.create_superuser(username='superdummy',
                                  email='superdummy@dummy.com',
                                 password='superpwd')
@@ -73,6 +70,7 @@ class LearningUnitsSearchTest(StaticLiveServerTestCase):
         #self.browser = webdriver.Remote(
         #                command_executor='http://YOUR_SAUCE_USERNAME:YOUR_SAUCE_ACCESS_KEY@ondemand.saucelabs.com:80/wd/hub',
         #                desired_capabilities=desired_capabilities)
+
     def error_displayed(self,error_msg):
         self.wait_for(lambda: self.assertEqual(_(error_msg), self.browser.find_element_by_class_name('error').text))
 
@@ -146,3 +144,81 @@ class LearningUnitsSearchTest(StaticLiveServerTestCase):
         # She sees that this acronym already exists and the corresponding class is still valid for a particular year
         # Satisfied, she logs out.
 
+    def test_error_when_search_has_no_input_value_given_by_user(self):
+        # Sarah needs to check out an existing learning_unit
+        self.go_to_learning_units_page()
+
+        # She starts a search by pressing ENTER by mistake,
+        # without entering any input values
+        login_button= self.browser.find_element_by_id('bt_submit_learning_unit_search')
+        login_button.send_keys(Keys.ENTER)
+
+        # She sees an error when the page refreshes
+        self.error_displayed('LU_ERRORS_INVALID_SEARCH')
+
+        # Unhappy of the situation, she closes the browser...
+
+    def test_error_when_search_has_invalid_acronym_and_no_academic_year_given_by_user(self):
+        # Sarah needs to check out an existing learning_unit
+        self.go_to_learning_units_page()
+
+        # She enters a non-valid acronym and doesnt specify an academic year,
+        # to see if a learning unit exists in a particular year.
+        inputbox_acronym=self.browser.find_element_by_id('id_acronym')
+        inputbox_acronym.send_keys('ACRONYM')
+
+        # She starts a search by pressing ENTER
+        login_button= self.browser.find_element_by_id('bt_submit_learning_unit_search')
+        login_button.send_keys(Keys.ENTER)
+
+        # She sees an error when the page refreshes
+        self.error_displayed('LU_ERRORS_YEAR_WITH_ACRONYM')
+
+        # Unhappy of the situation, she closes the browser...
+
+    def test_error_when_search_has_no_acronym_and_no_academic_year_given_by_user(self):
+        # Sarah needs to check out an existing learning_unit
+        self.go_to_learning_units_page()
+
+        # She enters a keyword only and doesnt specify an academic year,
+        # to see if a learning unit exists in a particular year.
+        inputbox_keyword=self.browser.find_element_by_id('id_keyword')
+        inputbox_keyword.send_keys('KEYWORD')
+
+        # She starts a search by pressing ENTER
+        login_button= self.browser.find_element_by_id('bt_submit_learning_unit_search')
+        login_button.send_keys(Keys.ENTER)
+
+        # She sees an error when the page refreshes
+        self.error_displayed('LU_ERRORS_ACADEMIC_YEAR_REQUIRED')
+
+        # Unhappy of the situation, she closes the browser...
+
+    def test_error_when_search_has_academic_year_but_no_other_input_value_given_by_user(self):
+        ## First, lets plant some seeds..
+        academic_year_seed = AcademicYearFakerFactory()
+
+        # Sarah needs to check out an existing learning_unit
+        self.go_to_learning_units_page()
+
+        # She enters a keyword only and doesnt specify an academic year,
+        # to see if a learning unit exists in a particular year.
+        start_time = time.time()
+        while True:
+            try:
+                academic_year = Select(self.browser.find_element_by_id('slt_academic_year'))
+                academic_year.select_by_visible_text(academic_year_seed.name)
+                return
+            except (AssertionError, WebDriverException) as e:
+                if time.time() - start_time > MAX_WAIT:
+                    raise e
+                time.sleep(0.5)
+
+        # She starts a search by pressing ENTER
+        login_button= self.browser.find_element_by_id('bt_submit_learning_unit_search')
+        login_button.send_keys(Keys.ENTER)
+
+        # She sees an error when the page refreshes
+        self.error_displayed('LU_ERRORS_INVALID_SEARCH')
+
+        # Unhappy of the situation, she closes the browser...
