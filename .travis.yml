@@ -1,15 +1,15 @@
 language: python
 python: "3.4.5"
 
-before_install: "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x16"
+before_install:
+  - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x16"
+  - wget https://github.com/mozilla/geckodriver/releases/download/v0.15.0/geckodriver-v0.15.0-linux64.tar.gz
+  - mkdir geckodriver
+  - tar -xzf geckodriver-v0.15.0-linux64.tar.gz -C geckodriver
+  - export PATH=$PATH:$PWD/geckodriver
 
 install:
   - "pip install -r requirements.txt"
-  - "wget https://github.com/mozilla/geckodriver/releases/download/v0.15.0/geckodriver-v0.15.0-linux64.tar.gz"
-  - "tar -xvzf geckodriver-v0.15.0-linux64.tar.gz"
-  - "rm geckodriver-v0.15.0-linux64.tar.gz"
-  - "chmod +x geckodriver"
-  - "cp geckodriver /usr/local/bin/"
 
 addons:
     firefox: latest
