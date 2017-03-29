@@ -54,9 +54,6 @@ try:
 except ImportError:
     pass
 
-from django.conf import settings
-from django.conf.urls import include, url
-
 if settings.DEBUG:
     import debug_toolbar
     urlpatterns = [
