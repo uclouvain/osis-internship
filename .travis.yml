@@ -8,7 +8,8 @@ install: "pip install -r requirements.txt"
 before_script:
   #- "export DISPLAY=:99.0"
   #- "sh -e /etc/init.d/xvfb start"
-  - sleep 3
+  - sleep 3;
+  - FirefoxmdlsVersion= mdls -name kMDItemVersion /Applications/Firefox.app | tr -d ".";
 
 script: "python3 manage.py compilemessages && python3 manage.py test"
 
@@ -19,6 +20,6 @@ services:
   - rabbitmq
 addons:
     postgresql: "9.4"
-    firefox: "44.0"
+    firefox: "46.0"
 after_sucess:
     - CODECLIMATE_REPO_TOKEN=37a30b73c9ca86e79442503327038e6b7fe540d4cdeec8ecde1bfe9a43e19d9a codeclimate-test-reporter
