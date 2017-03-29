@@ -54,6 +54,13 @@ def is_teacher(user):
     this_adviser = adviser.search_by_person(person)
     return this_adviser.type == 'PRF' if this_adviser else False
 
+
+def detect_in_request(request, wanted_key, wanted_value):
+    for key in request.POST:
+        if wanted_key in key and request.POST[key] == wanted_value:
+            return True
+    return False
+
 ###########################
 #      MANAGER VIEWS      #
 ###########################
@@ -114,20 +121,19 @@ def manage_proposition_dissertation_edit(request, pk):
     proposition_offers = proposition_offer.find_by_proposition_dissertation(proposition)
     if request.method == "POST":
         form = ManagerPropositionDissertationEditForm(request.POST, instance=proposition)
-        if form.is_valid():
+        if form.is_valid() and detect_in_request(request, "txt_checkbox_", "on"):
             proposition = form.save()
             proposition_offers = proposition_offer.find_by_proposition_dissertation(proposition)
             for old in proposition_offers:
                 old.delete()
             for key, value in request.POST.items():
-                if "txt_checkbox_" in key:
-                    if "on" == value:
-                        offer = PropositionOffer()
-                        offer.proposition_dissertation = proposition
-                        offer_proposition_id = key.replace("txt_checkbox_", "")
-                        offer.offer_proposition = offer_proposition.find_by_id(
-                            int(offer_proposition_id))
-                        offer.save()
+                if "txt_checkbox_" in key and value == 'on':
+                    offer = PropositionOffer()
+                    offer.proposition_dissertation = proposition
+                    offer_proposition_id = key.replace("txt_checkbox_", "")
+                    offer.offer_proposition = offer_proposition.find_by_id(
+                        int(offer_proposition_id))
+                    offer.save()
             return redirect('manager_proposition_dissertation_detail', pk=proposition.pk)
     else:
         form = ManagerPropositionDissertationEditForm(instance=proposition)
@@ -192,38 +198,25 @@ def manager_proposition_dissertation_new(request):
     if request.method == "POST":
         person = mdl.person.find_by_user(request.user)
         form = ManagerPropositionDissertationForm(request.POST)
-        if form.is_valid():
+        if form.is_valid() and detect_in_request(request, "txt_checkbox_", "on"):
             proposition = form.save()
             proposition.set_creator(person)
-            proposition_offers = proposition_offer.find_by_proposition_dissertation(proposition)
-            for old in proposition_offers:
-                old.delete()
             for key, value in request.POST.items():
-                if "txt_checkbox_" in key:
-                    if "on" == value:
-                        offer = PropositionOffer()
-                        offer.proposition_dissertation = proposition
-                        offer_proposition_id = key.replace("txt_checkbox_", "")
-                        offer.offer_proposition = offer_proposition.find_by_id(int(offer_proposition_id))
-                        offer.save()
+                if "txt_checkbox_" in key and value == "on":
+                    offer = PropositionOffer()
+                    offer.proposition_dissertation = proposition
+                    offer_proposition_id = key.replace("txt_checkbox_", "")
+                    offer.offer_proposition = offer_proposition.find_by_id(int(offer_proposition_id))
+                    offer.save()
             return redirect('manager_proposition_dissertation_detail', pk=proposition.pk)
-        else:
-            form = ManagerPropositionDissertationForm(initial={'active': True})
-            return layout.render(request, 'manager_proposition_dissertation_new.html',
-                                 {'form': form,
-                                  'types_choices': PropositionDissertation.TYPES_CHOICES,
-                                  'levels_choices': PropositionDissertation.LEVELS_CHOICES,
-                                  'collaborations_choices': PropositionDissertation.COLLABORATION_CHOICES,
-                                  'offer_propositions': offer_propositions})
 
-    else:
-        form = ManagerPropositionDissertationForm(initial={'active': True})
-        return layout.render(request, 'manager_proposition_dissertation_new.html',
-                             {'form': form,
-                              'types_choices': PropositionDissertation.TYPES_CHOICES,
-                              'levels_choices': PropositionDissertation.LEVELS_CHOICES,
-                              'collaborations_choices': PropositionDissertation.COLLABORATION_CHOICES,
-                              'offer_propositions': offer_propositions})
+    form = ManagerPropositionDissertationForm(initial={'active': True})
+    return layout.render(request, 'manager_proposition_dissertation_new.html',
+                         {'form': form,
+                          'types_choices': PropositionDissertation.TYPES_CHOICES,
+                          'levels_choices': PropositionDissertation.LEVELS_CHOICES,
+                          'collaborations_choices': PropositionDissertation.COLLABORATION_CHOICES,
+                          'offer_propositions': offer_propositions})
 
 
 @login_required
@@ -326,23 +319,21 @@ def proposition_dissertation_edit(request, pk):
     if proposition.author == adv or proposition.creator == adv.person:
         if request.method == "POST":
             form = PropositionDissertationForm(request.POST, instance=proposition)
-            if form.is_valid():
+            if form.is_valid() and detect_in_request(request, "txt_checkbox_", "on"):
                 proposition = form.save()
                 proposition_offers = proposition_offer.find_by_proposition_dissertation(proposition)
                 for old in proposition_offers:
                     old.delete()
                 for key, value in request.POST.items():
-                    if "txt_checkbox_" in key:
-                        if "on" == value:
-                            offer = PropositionOffer()
-                            offer.proposition_dissertation = proposition
-                            offer_proposition_id = key.replace("txt_checkbox_", "")
-                            offer.offer_proposition = offer_proposition.find_by_id(
-                                int(offer_proposition_id))
-                            offer.save()
+                    if "txt_checkbox_" in key and value == 'on':
+                        offer = PropositionOffer()
+                        offer.proposition_dissertation = proposition
+                        offer_proposition_id = key.replace("txt_checkbox_", "")
+                        offer.offer_proposition = offer_proposition.find_by_id(int(offer_proposition_id))
+                        offer.save()
                 return redirect('proposition_dissertation_detail', pk=proposition.pk)
-        else:
-            form = PropositionDissertationForm(instance=proposition)
+
+        form = PropositionDissertationForm(instance=proposition)
         return layout.render(request, 'proposition_dissertation_edit.html',
                              {'prop_dissert': proposition,
                               'form': form,
@@ -384,24 +375,20 @@ def proposition_dissertation_new(request):
     offer_propositions = offer_proposition.find_all_ordered_by_acronym()
     if request.method == "POST":
         form = PropositionDissertationForm(request.POST)
-        if form.is_valid():
+        if form.is_valid() and detect_in_request(request, "txt_checkbox_", "on"):
             proposition = form.save()
             proposition.set_creator(person)
-            proposition_offers = proposition_offer.find_by_proposition_dissertation(proposition)
-            for old in proposition_offers:
-                old.delete()
             for key, value in request.POST.items():
-                if "txt_checkbox_" in key:
-                    if "on" == value:
-                        offer = PropositionOffer()
-                        offer.proposition_dissertation = proposition
-                        offer_proposition_id = key.replace("txt_checkbox_", "")
-                        offer.offer_proposition = offer_proposition.find_by_id(int(offer_proposition_id))
-                        offer.save()
+                if "txt_checkbox_" in key and value == 'on':
+                    offer = PropositionOffer()
+                    offer.proposition_dissertation = proposition
+                    offer_proposition_id = key.replace("txt_checkbox_", "")
+                    offer.offer_proposition = offer_proposition.find_by_id(int(offer_proposition_id))
+                    offer.save()
             return redirect('proposition_dissertation_detail', pk=proposition.pk)
-    else:
-        adv = adviser.search_by_person(person)
-        form = PropositionDissertationForm(initial={'author': adv, 'active': True})
+
+    adv = adviser.search_by_person(person)
+    form = PropositionDissertationForm(initial={'author': adv, 'active': True})
     return layout.render(request, 'proposition_dissertation_new.html',
                          {'form': form,
                           'types_choices': PropositionDissertation.TYPES_CHOICES,
