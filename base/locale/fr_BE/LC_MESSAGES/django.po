@@ -1375,8 +1375,49 @@ msgstr "Les responsables de notes peuvent soumettre des encodages partiels"
 msgid "scores_responsible_must_still_submit_scores"
 msgstr "Le responsable de notes doit toujours soumettre les notes"
 
+msgid "NONE"
+msgstr "Aucun"
+
+msgid "keyword"
+msgstr "Mot clé"
+
+msgid "VALID"
+msgstr "Valide"
+msgid "INVALID"
+msgstr "Invalide"
+
+msgid "COURSE"
+msgstr "Cours"
+msgid "MASTER_THESIS"
+msgstr "Mémoire"
+msgid "INTERNSHIP"
+msgstr "Stage"
+
+msgid "LU_ERRORS_REQUIRED"
+msgstr "Ce champ est requis."
+msgid "LU_ERRORS_INVALID"
+msgstr "'Entrez une valeur valide."
+msgid "LU_ERRORS_INVALID_SEARCH"
+msgstr "Recherche invalide - Veuillez ajouter des informations avant d'exécuter une recherche."
+msgid "LU_ERRORS_ACADEMIC_YEAR_REQUIRED"
+msgstr "Veuillez préciser une année académique."
+msgid "LU_ERRORS_YEAR_WITH_ACRONYM"
+msgstr "Veuillez préciser une année académique ou entrer un acronyme valide."
+
+msgid "ANNUAL"
+msgstr "Annuel"
+msgid "BIENNIAL_EVEN"
+msgstr "Bisannuel pair"
+msgid "BIENNIAL_ODD"
+msgstr "Bisannuel impair"
+
 msgid "no_valid_m_justification_error"
 msgstr "Vous ne pouvez pas encoder d'absence justifiée (M) via l'injection xls"
 
 msgid "abscence_justified_preserved"
 msgstr "Abscence justifiée dèjà encodée et préservée"
+
+msgid "all_years"
+msgstr "Toutes les années"
+
+

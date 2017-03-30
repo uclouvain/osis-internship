@@ -27,14 +27,15 @@ import factory
 import factory.fuzzy
 import string
 import datetime
-import operator
 from django.conf import settings
 from django.utils import timezone
-from base.enums import learning_unit_year_type
-
 from base.tests.factories.academic_year import AcademicYearFactory
+from base.tests.factories.academic_year import AcademicYearFakerFactory
 from base.tests.factories.learning_unit import LearningUnitFactory
-from base.tests.factories.learning_container_year import LearningContainerYearFactory
+from base.tests.factories.learning_unit import LearningUnitFakerFactory
+from factory.django import DjangoModelFactory
+from faker import Faker
+fake = Faker()
 
 def _get_tzinfo():
     if settings.USE_TZ:
@@ -42,7 +43,7 @@ def _get_tzinfo():
     else:
         return None
 
-class LearningUnitYearFactory(factory.django.DjangoModelFactory):
+class LearningUnitYearFactory(DjangoModelFactory):
     class Meta:
         model = "base.LearningUnitYear"
 
@@ -56,6 +57,25 @@ class LearningUnitYearFactory(factory.django.DjangoModelFactory):
     title = factory.Sequence(lambda n: 'Learning unit year - %d' % n)
     type = "C"
     credits = factory.fuzzy.FuzzyDecimal(99)
+    decimal_scores = False
+    team = False
+    vacant = False
+    in_charge = False
+
+
+class LearningUnitYearFakerFactory(DjangoModelFactory):
+    class Meta:
+        model = "base.LearningUnitYear"
+
+    external_id = factory.Sequence(lambda n: '10000000%02d' % n)
+    academic_year = factory.SubFactory(AcademicYearFakerFactory)
+    learning_unit = factory.SubFactory(LearningUnitFakerFactory)
+    learning_container_year = None
+    changed = fake.date_time_this_decade(before_now=True, after_now=True, tzinfo=_get_tzinfo())
+    acronym = factory.Sequence(lambda n: 'LUY-%d' % n)
+    title = factory.Sequence(lambda n: 'Learning unit year - %d' % n)
+    type = "C"
+    credits = factory.fuzzy.FuzzyDecimal(9)
     decimal_scores = False
     team = False
     vacant = False

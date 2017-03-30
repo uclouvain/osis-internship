@@ -32,7 +32,7 @@ from base.models.learning_component_year import LearningComponentYear
 from base.models.learning_unit_year import LearningUnitYear
 from base.models.learning_unit_component import LearningUnitComponent
 from base.models.academic_year import AcademicYear
-from base.enums import learning_unit_year_type
+from base.enums import learning_unit_year_types
 
 now = datetime.datetime.now()
 
@@ -66,7 +66,7 @@ class LearningComponentYearTest(TestCase):
                                                         learning_component=learning_component,
                                                         title="Cours magistral",
                                                         acronym="/C",
-                                                        type=learning_unit_year_type.COURSE,
+                                                        type=learning_unit_year_types.COURSE,
                                                         comment="TEST")
 
         #UE associée à un conteneur d'une année différente du composant

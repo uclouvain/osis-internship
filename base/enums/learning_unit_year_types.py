@@ -25,16 +25,15 @@
 ##############################################################################
 
 from django.utils.translation import ugettext_lazy as _
-#Eviter l'utilisation de variables pour la traduction:
-#l’utilitaire de détection des chaînes à traduire de Django, django-admin makemessages, ne sera pas capable de trouver ces chaînes.
-REQUIRED = 'This field is required'
-INVALID = 'Enter a valid value'
-ACADEMIC_YEAR_REQUIRED = 'Please specify an academic year'
-INVALID_SEARCH = 'Invalid search - Please fill some information before executing a search.'
 
-LEARNING_UNIT_YEARS_ERRORS = (
-    (REQUIRED, _('This field is required')),
-    (INVALID, _('Enter a valid value')),
-    (ACADEMIC_YEAR_REQUIRED, _('Please specify an academic year')),
-    (INVALID_SEARCH, _('Invalid search - Please fill some information before executing a search.'))
+NONE = "NONE"
+COURSE = "COURSE"
+MASTER_THESIS = "MASTER_THESIS"
+INTERNSHIP = "INTERNSHIP"
+
+LEARNING_UNIT_YEAR_TYPES = (
+    (NONE, _(NONE)),
+    (COURSE, _(COURSE)),
+    (MASTER_THESIS, _(MASTER_THESIS)),
+    (INTERNSHIP, _(INTERNSHIP))
 )
