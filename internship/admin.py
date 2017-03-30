@@ -9,8 +9,11 @@ from django.template.response import TemplateResponse
 from django.utils.html import format_html
 from django.utils.translation import ugettext_lazy as _
 
+from osis_common.models.serializable_model import SerializableModelAdmin
+
 from internship.models import *
 from internship.utils import student_loader
+
 
 admin.site.register(internship_offer.InternshipOffer,
                     internship_offer.InternshipOfferAdmin)
@@ -60,7 +63,7 @@ class StudentImportActionForm(forms.Form):
 
 
 @admin.register(cohort.Cohort)
-class CohortAdmin(admin.ModelAdmin):
+class CohortAdmin(SerializableModelAdmin):
     list_display = ('id', 'name', 'cohort_actions')
     readonly_fields = ('id', 'name', 'description', 'cohort_actions')
     fields = ('id', 'name', 'description', 'cohort_actions')
