@@ -94,8 +94,8 @@ class LearningUnitsSearchTest(StaticLiveServerTestCase):
             except (AssertionError, WebDriverException) as e:
                 if time.time() - start_time > MAX_WAIT:
                     self.browser.save_screenshot('screenshot.png')
-                    print('BROWSER_GET_LOG: '+self.browser.get_log('har'))
-                    print('BROWSER_GET_HTML: '+self.browser.execute_script("return document.getElementsByTagName('html')[0].innerHTML"))
+                    print('BROWSER_GET_LOG: '+str(self.browser.get_log('har')))
+                    print('BROWSER_GET_HTML: '+str(self.browser.execute_script("return document.getElementsByTagName('html')[0].innerHTML")))
                     raise e
                 time.sleep(0.5)
 
