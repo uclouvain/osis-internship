@@ -43,33 +43,12 @@ MAX_WAIT = 10
 class LearningUnitsSearchTest(StaticLiveServerTestCase):
 
     def setUp(self):
-        self.browser = webdriver.Firefox()
+        self.browser = webdriver.PhantomJS()
+        self.browser.set_window_size(1280, 720)
+
         User.objects.create_superuser(username='superdummy',
                                  email='superdummy@dummy.com',
                                 password='superpwd')
-
-    def SauceLabSetUp(self):
-        User.objects.create_superuser(username='superdummy',
-                                 email='superdummy@dummy.com',
-                                password='superpwd')
-
-        # The command_executor tells the test to run on Sauce, while the desired_capabilities
-        # parameter tells us which browsers and OS to spin up.
-        desired_capabilities = {
-            'platform': "Mac OS X 10.12",
-            'browserName': "firefox",
-            'version': "44.0",
-            'name' : "Test : Learning Units Search"
-        }
-        username = os.environ["SAUCE_USERNAME"]
-        access_key = os.environ["SAUCE_ACCESS_KEY"]
-        desired_capabilities["tunnel-identifier"] = os.environ["TRAVIS_JOB_NUMBER"]
-        hub_url = "%s:%s@localhost:4445" % (username, access_key)
-        self.browser = webdriver.Remote(desired_capabilities=desired_capabilities,
-                                        command_executor="http://%s/wd/hub" % hub_url)
-        #self.browser = webdriver.Remote(
-        #                command_executor='http://YOUR_SAUCE_USERNAME:YOUR_SAUCE_ACCESS_KEY@ondemand.saucelabs.com:80/wd/hub',
-        #                desired_capabilities=desired_capabilities)
 
     def error_displayed(self,error_msg):
         self.wait_for(lambda: self.assertEqual(_(error_msg), self.browser.find_element_by_class_name('error').text))
