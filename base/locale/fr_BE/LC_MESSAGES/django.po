@@ -241,6 +241,9 @@ msgid "decimal_values_ignored"
 msgstr ""
 "Les notes de ce cours ne peuvent PAS recevoir de valeurs décimales."
 
+msgid "score_have_more_than_2_decimal_places"
+msgstr "La note comporte plus de deux chiffres après la virgule"
+
 msgid "definitive_save"
 msgstr "Sauvegarde définitive (soumettre à la faculté)"
 
@@ -293,6 +296,9 @@ msgstr ""
 "Gestion des cours, des formations et d'autres activités qui composent le "
 "programme."
 
+msgid "desc_lnk_my_osis"
+msgstr "Vos données personnelles, des préférences et d'autres informations associés."
+
 msgid "desc_lnk_offers"
 msgstr "Gestion des programmes."
 
@@ -332,7 +338,7 @@ msgid "doctoral_commission"
 msgstr "Commision doctorale"
 
 msgid "documentation"
-msgstr "Justification"
+msgstr "Documentation"
 
 msgid "done_at"
 msgstr "Fait à"
@@ -996,13 +1002,16 @@ msgid "scores_injection"
 msgstr "Injection des notes"
 
 msgid "scores_responsible"
-msgstr "Responsable de notes"
+msgstr "Responsable(s) de notes"
 
 msgid "scores_saved"
 msgstr "note(s) enregistrée(s)"
 
 msgid "scores_saved_cannot_be_saved_anymore"
 msgstr "Notes sauvegardées, le bouton sauvegarder n'est plus présent"
+
+msgid "scores_must_be_between_0_and_20"
+msgstr "Les notes doivent être comprise entre 0 et 20"
 
 msgid "scores_sheet"
 msgstr "Feuille de notes"
@@ -1182,6 +1191,9 @@ msgstr "Enseignant(e)"
 msgid "tutors"
 msgstr "Enseignants"
 
+msgid "other_tutors"
+msgstr "Autre(s) Enseignant(s)"
+
 msgid "txt_message"
 msgstr "Message texte"
 
@@ -1249,9 +1261,6 @@ msgstr "Sans attribution"
 msgid "xls_columns_structure_error"
 msgstr "Votre fichier excel n'est pas bien structuré. Veuillez respecter l'ordre des colonnes fournie lors du "
        "téléchargement de votre fichier (bouton '{}')."
-
-msgid "admission_form"
-msgstr "Formulaire d'admission"
 
 msgid "order"
 msgstr "Ordonner"
@@ -1365,3 +1374,9 @@ msgstr "Les responsables de notes peuvent soumettre des encodages partiels"
 
 msgid "scores_responsible_must_still_submit_scores"
 msgstr "Le responsable de notes doit toujours soumettre les notes"
+
+msgid "no_valid_m_justification_error"
+msgstr "Vous ne pouvez pas encoder d'absence justifiée (M) via l'injection xls"
+
+msgid "abscence_justified_preserved"
+msgstr "Abscence justifiée dèjà encodée et préservée"

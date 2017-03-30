@@ -25,8 +25,7 @@
 ##############################################################################
 from django.conf.urls import url
 
-from base.views import learning_unit, offer, common, institution, organization, academic_calendar,\
-    my_osis
+from base.views import learning_unit, offer, common, institution, organization, academic_calendar, my_osis, person
 
 urlpatterns = [
     url(r'^$', common.home, name='home'),
@@ -60,6 +59,7 @@ urlpatterns = [
     url(r'^my_osis/my_messages/send_message_again/([0-9]+)/$', my_osis.send_message_again,
         name='send_message_again'),
     url(r'^my_osis/profile/$', my_osis.profile, name='profile'),
+    url(r'^my_osis/profile/([0-9]+)/$', person.get_avatar, name='avatar'),
     url(r'^my_osis/profile/lang$', my_osis.profile_lang, name='profile_lang'),
 
     url(r'^noscript/$', common.noscript, name='noscript'),
@@ -86,18 +86,6 @@ urlpatterns = [
     url(r'^academic_calendars/form(?:/(?P<academic_calendar_id>[0-9]+))?/$', academic_calendar.academic_calendar_form, name='academic_calendar_form'),
     url(r'^offer_year_calendars/([0-9]+)/$', offer.offer_year_calendar_read, name='offer_year_calendar_read'),
 
-    url(r'^offer_form/([0-9]+)/$', offer.offer_form_read, name='offer_form_read'),
-    url(r'^offer_form/(?P<offer_year_id>[0-9]+)/create/$', offer.offer_form_create, name='offer_form_create'),
-    url(r'^offer_form/edit/([0-9]+)/$', offer.offer_form_edit, name='offer_form_edit'),
-    url(r'^offer_form/save/([0-9]+)/$', offer.offer_form_save, name='offer_form_save'),
-    url(r'^offer_form/save/$', offer.offer_form_new, name='offer_form_save_new'),
-
-    url(r'^offer_question/([0-9]+)/$', offer.offer_question_read, name='offer_question_read'),
-    url(r'^offer_question/(?P<form_id>[0-9]+)/create/$', offer.offer_question_create, name='offer_question_create'),
-    url(r'^offer_question/edit/([0-9]+)/$', offer.offer_question_edit, name='offer_question_edit'),
-    url(r'^offer_question/save/(?:/([0-9]+))?/$', offer.offer_question_save, name='offer_question_save'),
-    url(r'^offer_question/save/$', offer.offer_question_new, name='offer_question_save_new'),
-
     url(r'^organization_address/read/([0-9]+)/$', organization.organization_address_read,
         name='organization_address_read'),
     url(r'^organization_address/edit/([0-9]+)/$', organization.organization_address_edit,
@@ -116,6 +104,5 @@ urlpatterns = [
     url(r'^structure/([0-9]+)/diagram/$', institution.structure_diagram, name='structure_diagram'),
     url(r'^structure/([0-9]+)/address/$', institution.structure_address, name='structure_address'),
 
-    url(r'^studies/$', common.studies, name='studies'),
-    url(r'^studies/assessments/$', common.assessments, name='assessments'),
+    url(r'^studies/$', common.studies, name='studies')
 ]

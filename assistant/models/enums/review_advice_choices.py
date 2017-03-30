@@ -24,16 +24,10 @@
 #
 ##############################################################################
 
-from django.utils.translation import ugettext_lazy as _
+FAVORABLE = 'FAVORABLE'
+CONDITIONAL = 'CONDITIONAL'
+UNFAVOURABLE = 'UNFAVOURABLE'
 
-
-NATIONAL = "NATIONAL"
-NON_NATIONAL = "NON_NATIONAL"
-EUROPEAN_UNION = "EUROPEAN_UNION"
-NON_EUROPEAN_UNION = "NON_EUROPEAN_UNION"
-
-
-COVERAGE_ACCESS_DEGREE_CHOICES = ((NATIONAL, _(NATIONAL)),
-                                  (NON_NATIONAL, _(NON_NATIONAL)),
-                                  (EUROPEAN_UNION, _(EUROPEAN_UNION)),
-                                  (NON_EUROPEAN_UNION, _(NON_EUROPEAN_UNION)))
+REVIEW_ADVICE_CHOICES = ((FAVORABLE, FAVORABLE),
+                         (CONDITIONAL, CONDITIONAL),
+                         (UNFAVOURABLE, UNFAVOURABLE))

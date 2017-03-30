@@ -248,6 +248,9 @@ msgstr ""
 "Decimal values in scores are NOT accepted. If you try to put decimal values, "
 "it will be ignored."
 
+msgid "score_have_more_than_2_decimal_places"
+msgstr "Score cannot have more than two decimal places"
+
 msgid "definitive_save"
 msgstr "Definitive submission (Submit to faculty)"
 
@@ -293,6 +296,9 @@ msgstr ""
 
 msgid "desc_lnk_internships"
 msgstr "This process controls students internships."
+
+msgid "desc_lnk_my_osis"
+msgstr "Your personal details, configurations and other information related to you."
 
 msgid "desc_lnk_learning_units"
 msgstr ""
@@ -1016,6 +1022,9 @@ msgstr "score(s) saved"
 msgid "scores_saved_cannot_be_saved_anymore"
 msgstr "Sore saved, button save not available anymore"
 
+msgid "scores_must_be_between_0_and_20"
+msgstr "Scores must be between 0 and 20"
+
 msgid "scores_sheet"
 msgstr "Scores sheet"
 
@@ -1188,6 +1197,9 @@ msgstr "Back to messages"
 msgid "tutors"
 msgstr "Tutors"
 
+msgid "other_tutors"
+msgstr "Other Tutors"
+
 msgid "txt_message"
 msgstr "Text Message"
 
@@ -1258,9 +1270,6 @@ msgstr "Your excel file isn't well structured. Please follow the structure of th
 
 msgid "you_manage"
 msgstr "You manage"
-
-msgid "admission_form"
-msgstr "Admission form"
 
 msgid "order"
 msgstr "Order"
@@ -1372,3 +1381,9 @@ msgstr "Scores responsible can submit partial encoding"
 
 msgid "the_scores_responsible_must_still_submit_scores"
 msgstr "The scores responsible must still submit the scores"
+
+msgid "no_valid_m_justification_error"
+msgstr "You can't encode a JUSTIFIED ABSENCE (M) via the XLS injection"
+
+msgid "abscence_justified_preserved"
+msgstr "Justified abscence already encoded and preserved"
