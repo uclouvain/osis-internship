@@ -67,19 +67,22 @@ class LearningUnitsSearchTest(StaticLiveServerTestCase):
 
     def the_user_logs_in(self):
         inputbox_login_usr = self.browser.find_element_by_id('id_username')
-        print(inputbox_login_usr.get_attribute('placeholder'))
         self.assertEqual(
             inputbox_login_usr.get_attribute('placeholder'),
             _('user')
         )
         inputbox_login_pwd = self.browser.find_element_by_id('id_password')
-        print(inputbox_login_pwd.get_attribute('placeholder'))
         self.assertEqual(
             inputbox_login_pwd.get_attribute('placeholder'),
             _('password')
         )
         inputbox_login_usr.send_keys('superdummy')
         inputbox_login_pwd.send_keys('superpwd')
+
+        print(User.username)
+        print(User.email)
+        print(User.password)
+
         login_button = self.browser.find_element_by_id('post_login_btn')
         login_button.send_keys(Keys.ENTER)
         ## Wait for the home_page to load on screen
