@@ -182,3 +182,26 @@ def find_by_user(user, academic_yr):
 
 def find_by_offer(offers):
     return OfferYear.objects.filter(offer__in=offers)
+
+
+def find_by_id_list(ids):
+    return OfferYear.objects.filter(id__in=ids)
+
+
+def search_offers(entity_list=None, academic_yr=None, a_grade_type=None):
+    out = None
+    queryset = OfferYear.objects
+
+    if entity_list:
+        queryset = queryset.filter(entity_management__in=entity_list)
+
+    if academic_yr:
+        queryset = queryset.filter(academic_year=academic_yr)
+
+    if a_grade_type:
+        queryset = queryset.filter(grade_type=a_grade_type)
+
+    if entity_list or academic_yr or a_grade_type:
+        out = queryset.order_by('acronym')
+
+    return out

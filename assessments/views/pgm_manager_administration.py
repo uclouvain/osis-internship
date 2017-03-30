@@ -33,7 +33,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test, per
 from django.contrib import messages
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ugettext as trans
-from psycopg2._psycopg import OperationalError as PsycopOperationalError, InterfaceError as  PsycopInterfaceError
+from psycopg2._psycopg import OperationalError as PsycopOperationalError, InterfaceError as PsycopInterfaceError
 from django.db.utils import OperationalError as DjangoOperationalError, InterfaceError as DjangoInterfaceError
 from base import models as mdl
 from assessments import models as mdl_assess
@@ -55,6 +55,7 @@ from django.http import HttpResponse
 from rest_framework import serializers
 from rest_framework.renderers import JSONRenderer
 
+
 @login_required
 def pgm_manager_administration(request):
     faculty = find_faculty('ESPO')
@@ -62,7 +63,7 @@ def pgm_manager_administration(request):
     return layout.render(request, "admin/pgm_manager.html", {
         'manager_entity': faculty,
         'entity': faculty,
-        'entities': ['1','2'],
+        'entities': ['1', '2'],
         'pgm_types': mdl_ref.grade_type.find_by_coverage(grade_type_coverage.UNIVERSITY),
         'managers': mdl.program_manager.find_by_faculty(faculty)})
 
@@ -71,19 +72,27 @@ def pgm_manager_administration(request):
 def pgm_manager_search(request):
     faculty = find_faculty('ESPO')
     entity = request.GET.get('entity', None)
+    entity_list=[]
+    if entity == "-":
+        entity_list =  list(mdl.structure.search(entity,None,structure_type.FACULTY))
+    else:
+        entity_list.append(mdl.structure.search(entity,None,None).first())
+        #entity_list.append("COMU")
     pgm_type = request.GET.get('pgm_type', None)
+    if pgm_type == "-":
+        pgm_type=None
+
     manager = request.GET.get('manager', None)
-    print('entitiy')
-    print(entity)
     academic_yr = mdl.academic_year.current_academic_year()
-    pgms = mdl.offer_year.search(entity, academic_yr, None)
-    print(pgms)
+    # pgms = mdl.offer_year.search(entity, academic_yr, None)
+    pgms = mdl.offer_year.search_offers(entity_list, academic_yr, pgm_type)
+
     # managers = mdl.program_manager.find_by_offer_year(pgm)
     managers = None
     return layout.render(request, "admin/pgm_manager.html", {
         'manager_entity': faculty,
         'entity': entity,
-        'entities': ['1','2'],
+        'entities': ['1', '2'],
         'pgm_types': mdl_ref.grade_type.find_by_coverage(grade_type_coverage.UNIVERSITY),
         'pgms': pgms,
         'managers': managers})
@@ -91,12 +100,18 @@ def pgm_manager_search(request):
 
 @login_required
 def remove_manager(request):
-    manager_to_remove_id = request.POST['to_be_removed_manager']
-    manager_to_remove_id = None
-    if manager_to_remove_id:
-        mdl.program_manager.delete_by_id(manager_to_remove_id)
-    faculty = find_faculty('ESPO')
+    pgms_to_be_removed = request.POST['pgms_to_be_removed']
+    person_to_be_removed = request.POST['person_to_be_removed']
+    print(pgms_to_be_removed)
+    list_pgms_concerned = pgms_to_be_removed.split(",")
+    offers = mdl.offer_year.find_by_id_list(list_pgms_concerned)
+
+    pgm_manager_to_delete = mdl.program_manager.find_by_offer_year_list_person(person_to_be_removed, offers)
+    for p in pgm_manager_to_delete:
+        mdl.program_manager.delete_by_id(p.id)
+
     return HttpResponseRedirect(reverse('pgm_manager_search'))
+
 
 @login_required
 def manager_form(request):
@@ -107,12 +122,12 @@ def manager_form(request):
     return layout.render(request, "admin/persons.html", {'pgms_id': list_offer_id})
 
 
-
 def find_faculty(acronym):
     faculties = mdl.structure.search(acronym, None, structure_type.FACULTY)
     if faculties:
         return faculties.first()
     return None
+
 
 @login_required
 def person_search(request):
@@ -124,11 +139,6 @@ def person_search(request):
 
 @login_required
 def add_manager(request):
-    print('b for')
-    for k, v in request.POST.items():
-        print(k,v)
-
-    print('a for')
     person_id = request.POST['person_id']
     person = mdl.person.find_by_id(person_id)
     pgms_id = request.POST['pgms_id']
@@ -155,12 +165,11 @@ def convertToList(pgms_id):
 
 
 # @login_required
-def update_managers_list(request):
+def update_managers_list_old(request):
 
     pgm_ids = request.GET['pgm_ids']
     list_offer_id = convertToList(pgm_ids)
     managers = mdl.program_manager.find_by_offer_year_list(list_offer_id)
-    managers_distinct = []
     persons = []
     for m in managers:
         if m.person not in persons:
@@ -168,6 +177,7 @@ def update_managers_list(request):
 
     serializer = ProgramManagerSerializer(managers, many=True)
     return JSONResponse(serializer.data)
+
 
 def manager_pgm_list(request):
     print('manager_pgm_list')
@@ -183,11 +193,13 @@ def manager_pgm_list(request):
     serializer = OfferYearSerializer(offers, many=True)
     return JSONResponse(serializer.data)
 
+
 class JSONResponse(HttpResponse):
     def __init__(self, data, **kwargs):
         content = JSONRenderer().render(data)
         kwargs['content_type'] = 'application/json'
         super(JSONResponse, self).__init__(content, **kwargs)
+
 
 class PersonSerializer(serializers.ModelSerializer):
 
@@ -212,12 +224,80 @@ class ProgramManagerSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class PgmManager(object):
 
-class PgmManagerSerializer(serializers.ModelSerializer):
-    person = PersonSerializer()
-    offer_year = OfferYearSerializer()
+    def __init__(self, person_id, person_last_name, person_first_name, offer_year_acronyms_on, offer_year_acronyms_off,
+                 programs):
+        self.person_id = person_id
+        self.person_last_name = person_last_name
+        self.person_first_name = person_first_name
+        self.offer_year_acronyms_on = offer_year_acronyms_on
+        self.offer_year_acronyms_off = offer_year_acronyms_off
+        self.programs = programs
 
 
-    class Meta:
-        model = mdl.program_manager.ProgramManager
-        fields = '__all__'
+class PgmManagerSerializer(serializers.Serializer):
+    person_id = serializers.IntegerField()
+    person_last_name = serializers.CharField()
+    person_first_name = serializers.CharField()
+    offer_year_acronyms_on = serializers.CharField()
+    offer_year_acronyms_off = serializers.CharField()
+    programs = serializers.CharField()
+
+
+def update_managers_list(request):
+    pgm_ids = request.GET['pgm_ids']
+    list_offer_id = convertToList(pgm_ids)
+    managers = mdl.program_manager.find_by_offer_year_list(list_offer_id)
+    managers_distinct = []
+    persons = []
+    pgmManagers = []
+
+    for m in managers:
+        if m.person not in persons:
+            persons.append(m.person)
+            acronyms_off_list = []
+            acronyms_off = ""
+            pgms = ""
+            offers = []
+
+            for s in list_offer_id:
+
+                of = mdl.offer_year.find_by_id(int(s))
+                mg = mdl.program_manager.find_by_offer_year_list_person(m.person, [of])
+                if mg:
+                    if acronyms_off == "":
+                        acronyms_off = "{0}".format(of.acronym)
+                    else:
+                        acronyms_off = "{0}, {1}".format(acronyms_off, of.acronym)
+                    if pgms == "":
+                        pgms = of.id
+                    else:
+                        pgms = "{0}, {1}".format(pgms, of.id)
+                    offers.append(of)
+                    acronyms_off_list.append(acronyms_off)
+
+            acronyms_pgm_to_manage = pgm_to_keep_managing(m.person, offers)
+            pp = PgmManager(person_id=m.person.id,
+                            person_last_name=m.person.last_name,
+                            person_first_name=m.person.first_name,
+                            offer_year_acronyms_on=acronyms_pgm_to_manage,
+                            offer_year_acronyms_off=acronyms_off,
+                            programs=pgms)
+
+            pgmManagers.append(pp)
+
+    serializer = PgmManagerSerializer(pgmManagers, many=True)
+    return JSONResponse(serializer.data)
+
+
+def pgm_to_keep_managing(a_person, offers):
+    list_program_manager_to_keep = mdl.program_manager.find_by_person_exclude_offer_list(a_person, offers)
+    ch = ""
+    for program_manager_to_keep in list_program_manager_to_keep:
+        if ch == "":
+            ch = program_manager_to_keep.offer_year.acronym
+        else:
+            ch = "{0}, {1}".format(ch, program_manager_to_keep.offer_year.acronym)
+    return ch
+

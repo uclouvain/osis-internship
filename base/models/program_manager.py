@@ -126,3 +126,9 @@ def find_by_offer_year_list(offer_yr_list):
 
 def find_by_person(a_person):
     return ProgramManager.objects.filter(person=a_person)
+
+def find_by_offer_year_list_person(a_person, offer_yr_list):
+    return ProgramManager.objects.select_related("person").filter(person=a_person, offer_year__in=offer_yr_list)
+
+def find_by_person_exclude_offer_list(a_person, offer_yr_list):
+    return ProgramManager.objects.filter(person=a_person).exclude(offer_year__in=offer_yr_list)
