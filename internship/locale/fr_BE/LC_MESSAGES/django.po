@@ -76,8 +76,14 @@ msgstr	 "Choisissez une spécialité pour voir vos choix déjà effectués."
 msgid	 "civility"
 msgstr	 "Civilité"
 
+msgid	 "contest"
+msgstr	 "Concours"
+
 msgid	 "create_a_speciality"
 msgstr	 "Créer une spécialité"
+
+msgid	 "current_choices"
+msgstr	 "Choix actuels"
 
 msgid	 "date_end"
 msgstr	 "Date de fin"
@@ -93,6 +99,9 @@ msgstr	 "Détails"
 
 msgid	 "email"
 msgstr	 "Email"
+
+msgid	 "edit_places"
+msgstr	 "Modifier nombres de places"
 
 msgid	 "first_choice"
 msgstr	 "Choix préféré"
@@ -374,7 +383,7 @@ msgid "priority"
 msgstr "Prioritaire"
 
 msgid "generalist"
-msgstr "généraliste"
+msgstr "Généraliste"
 
 msgid "preference"
 msgstr "Préférence"

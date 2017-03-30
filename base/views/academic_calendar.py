@@ -23,6 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required, permission_required
 from base.forms.academic_calendar import AcademicCalendarForm
 from base import models as mdl
@@ -66,7 +67,7 @@ def academic_calendars_search(request):
 @login_required
 @permission_required('base.can_access_academic_calendar', raise_exception=True)
 def academic_calendar_read(request, id):
-    academic_calendar = mdl.academic_calendar.find_by_id(id)
+    academic_calendar = get_object_or_404(mdl.academic_calendar.AcademicCalendar, pk=id)
     return layout.render(request, "academic_calendar.html", {'academic_calendar': academic_calendar})
 
 

@@ -58,20 +58,20 @@
             <label style="padding-top: 5px" for="{{ form.tutoring_percent.id_for_label }}">
                 {% trans 'tutoring_percent' %}</label>
             <div class="controls">{{ form.tutoring_percent }}</div>
-            <font class="error">{{ form.tutoring_percent.errors }}</font>
+            <span class="error">{{ form.tutoring_percent.errors }}</span>
             <label style="padding-top: 5px" for="{{ form.research_percent.id_for_label }}">
                 {% trans 'research_percent' %}</label>
             <div class="controls">{{ form.research_percent }}</div>
-            <font class="error">{{ form.research_percent.errors }}</font>
+            <span class="error">{{ form.research_percent.errors }}</span>
             <label style="padding-top: 5px" for="{{ form.service_activities_percent.id_for_label }}">
                 {% trans 'service_activities_percent' %}</label>
             <div class="controls">{{ form.service_activities_percent }}</div>
-            <font class="error">{{ form.service_activities_percent.errors }}</font>
+            <span class="error">{{ form.service_activities_percent.errors }}</span>
             <label style="padding-top: 5px" for="{{ form.formation_activities_percent.id_for_label }}">
                 {% trans 'formation_activities_percent' %}</label>
             <div class="controls">{{ form.formation_activities_percent }}</div>
-            <font class="error">{{ form.formation_activities_percent.errors }}</font>
-            <font class="error">{{ form.non_field_errors }}</font>
+            <span class="error">{{ form.formation_activities_percent.errors }}</span>
+            <span class="error">{{ form.non_field_errors }}</span>
         </div>
         <div class="panel-default">
             <div class="panel-heading">
@@ -82,7 +82,7 @@
             <label style="padding-top: 5px" for="{{ form.activities_report_remark.id_for_label }}">
                 {% trans 'activities_report_remark' %}</label>
             <div class="controls">{{ form.activities_report_remark }}</div>
-            <font class="error">{{ form.activities_report_remark.errors }}</font>
+            <span class="error">{{ form.activities_report_remark.errors }}</span>
         </div>
         <div class="btn-toolbar">
             <button type="submit" class="btn btn-primary btn-block"

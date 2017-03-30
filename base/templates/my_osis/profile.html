@@ -40,10 +40,7 @@
         {% if attributions and tutor %}
             <li role="presentation"><a href="#attributions" aria-controls="attributions" role="tab" data-toggle="tab">{% trans 'attributions' %}</a></li>
         {% endif %}
-        {% if student %}
-            <li role="presentation"><a href="#enrollments" aria-controls="enrollments" role="tab" data-toggle="tab">{% trans 'my_studies' %}</a></li>
-        {% endif %}
-        {% if programs_managed %}
+        {% if programs_managers %}
             <li role="presentation"><a href="#program" aria-controls="program" role="tab" data-toggle="tab">{% trans 'programs' %}</a></li>
         {% endif %}
         <li role="presentation"><a href="#preferences" aria-controls="preferences" role="tab" data-toggle="tab">{% trans 'preferences' %}</a></li>
@@ -59,7 +56,10 @@
                 </div>
                 <div class="col-md-2">
                     <label>{% trans 'firstname' %}</label><br>
-                    {{ person.first_name }} {{ person.middle_name }}
+                    {{ person.first_name }}
+                    {% if person.middle_name %}
+                        {{ person.middle_name }}
+                    {% endif %}
                 </div>
                 <div class="col-md-2">
                     <label>{% trans 'lastname' %}</label><br>
@@ -131,26 +131,7 @@
                 </table>
             </div>
         {% endif %}
-        {% if student %}
-            <div role="tabpanel" class="tab-pane" id="enrollments">
-                <br>
-                <table class="table table-striped table-hover">
-                    <thead>
-                        <tr>
-                            <th>{% trans 'program' %}</th>
-                        </tr>
-                    </thead>
-                    {% for enrollment in offer_enrollments %}
-                        <tr>
-                            <td><a href="{% url 'offer_read' enrollment.offer_year.id %}"
-                                   id="lnk_offer_enrollment_{{ enrollment.offer_year.id }}">
-                                    {{ enrollment.offer_year }} - {{ enrollment.offer_year.title }}</a></td>
-                        </tr>
-                    {% endfor %}
-                </table>
-            </div>
-        {% endif %}
-        {% if programs_managed %}
+        {% if programs_managers %}
             <div role="tabpanel" class="tab-pane" id="program">
                 <br>
                 <table class="table table-striped table-hover">
@@ -159,11 +140,11 @@
                             <th>{% trans 'managed_programs' %}</th>
                         </tr>
                     </thead>
-                    {% for program_managed in programs_managed %}
+                    {% for program_manager in programs_managers %}
                         <tr>
-                            <td><a href="{% url 'offer_read' program_managed.offer_year.id %}"
-                                   id="lnk_program_managed_{{ program_managed.offer_year.id }}">
-                                    {{ program_managed.offer_year }} - {{ program_managed.offer_year.title }}</a></td>
+                            <td><a href="{% url 'offer_read' program_manager.offer_year.id %}"
+                                   id="lnk_program_managed_{{ program_manager.offer_year.id }}">
+                                    {{ program_manager.offer_year }} - {{ program_manager.offer_year.title }}</a></td>
                         </tr>
                     {% endfor %}
                 </table>

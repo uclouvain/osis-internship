@@ -96,6 +96,13 @@
                     </div>
                 </div>
                 <br>
+                <div class="row">
+                    <div class="col-md-4">
+                        <label>{% trans 'contest' %}</label><br>
+                        {{ information.contest | default_if_none:'-' }}
+                    </div>
+                </div>
+                <br>
 
                 <div class="row">
                     <div class="col-md-9">
@@ -138,6 +145,7 @@
                                                         {% if choice.internship_choice == internship %}
                                                             <li> {% trans 'organization' %} :
                                                             {{ choice.organization.reference }} - {{ choice.organization.name }} |
+                                                            {% trans 'speciality' %} - {{ choice.speciality.name }} |
                                                             {% trans 'choice' %} : {{ choice.choice }}
                                                         {% endif %}
                                                     {% endfor %}
@@ -164,7 +172,7 @@
                                                 {% for affectation in affectations %}
                                                     {% if affectation.period == period %}
                                                         <p>{{affectation.speciality.name}} |
-                                                            {{affectation.organization.reference}} {{affectation.organization.name}}<br/>
+                                                            {{affectation.organization.reference}} {{affectation.organization.name}} ({{ affectation.speciality.name }})<br/>
                                                             {% trans 'address' %} :
                                                             {{affectation.organization.address.location}} {{affectation.organization.address.postal_code}}
                                                             {{affectation.organization.address.city}}

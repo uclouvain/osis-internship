@@ -37,6 +37,7 @@ class OrganizationAddressAdmin(SerializableModelAdmin):
     fieldsets = ((None, {'fields': ('organization', 'label', 'location', 'postal_code', 'city', 'country', 'latitude',
                                     'longitude')}),)
     raw_id_fields = ('organization',)
+    search_fields = ['organization__name', 'city']
 
 
 class OrganizationAddress(SerializableModel):
@@ -48,6 +49,9 @@ class OrganizationAddress(SerializableModel):
     latitude = models.FloatField(blank=True, null=True)
     longitude = models.FloatField(blank=True, null=True)
     country = models.CharField(max_length=255)
+
+    def __str__(self):
+        return u"%s" % self.organization
 
     def save(self, *args, **kwargs):
         has_organization = False
