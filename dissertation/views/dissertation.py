@@ -304,6 +304,54 @@ def manager_dissertations_new(request):
 
 @login_required
 @user_passes_test(is_manager)
+def generate_xls(request, disserts):
+    filename = "%s%s%s" % ('EXPORT_dissertation_', time.strftime("%Y-%m-%d %H:%M"), '.xlsx')
+    workbook = Workbook(encoding='utf-8')
+    worksheet1 = workbook.active
+    worksheet1.title = "dissertation"
+    worksheet1.append(['Creation_date',
+                       'Student',
+                       'Title',
+                       'Status',
+                       'Year + Program Start',
+                       'Defend Year',
+                       'Promotor',
+                       'Co-promotor',
+                       'Reader 1',
+                       'Reader 2',
+                       'Description'
+                       ])
+    for dissert in disserts:
+        pro_name = dissertation_role.get_promoteur_by_dissertation_str(dissert)
+        copro_name = dissertation_role.get_copromoteur_by_dissertation(dissert)
+        readers = dissertation_role.search_by_dissertation_and_role(dissert, 'READER')
+        defend_year = dissert.defend_year if dissert.defend_year else 'not_set'
+        description = dissert.description if dissert.description else 'not_set'
+
+        readers_count = readers.count()
+        reader1_name = str(readers[0].adviser) if readers_count > 0 else 'none'
+        reader2_name = str(readers[1].adviser) if readers_count > 1 else 'none'
+
+        worksheet1.append([dissert.creation_date,
+                           str(dissert.author),
+                           dissert.title,
+                           dissert.status,
+                           str(dissert.offer_year_start),
+                           defend_year,
+                           pro_name,
+                           copro_name,
+                           reader1_name,
+                           reader2_name,
+                           description
+                           ])
+
+    response = HttpResponse(save_virtual_workbook(workbook), content_type='application/vnd.ms-excel')
+    response['Content-Disposition'] = "%s%s" % ("attachment; filename=", filename)
+    return response
+
+
+@login_required
+@user_passes_test(is_manager)
 def manager_dissertations_search(request):
     disserts = dissertation.search(terms=request.GET['search'], active=True)
     person = mdl.person.find_by_user(request.user)
@@ -312,59 +360,16 @@ def manager_dissertations_search(request):
     offer_props = offer_proposition.search_by_offer(offers)
     show_validation_commission = offer_proposition.show_validation_commission(offer_props)
     show_evaluation_first_year = offer_proposition.show_evaluation_first_year(offer_props)
-    xlsx = False
 
     if 'bt_xlsx' in request.GET:
-        filename = "%s%s%s" % ('EXPORT_dissertation_', time.strftime("%Y-%m-%d %H:%M"), '.xlsx')
-        workbook = Workbook(encoding='utf-8')
-        worksheet1 = workbook.active
-        worksheet1.title = "dissertation"
-        worksheet1.append(['Creation_date',
-                           'Student',
-                           'Title',
-                           'Status',
-                           'Year + Program Start',
-                           'Defend Year',
-                           'Promotor',
-                           'Co-promotor',
-                           'Reader 1',
-                           'Reader 2',
-                           'Description'
-                           ])
-        for dissert in disserts:
-            pro_name = dissertation_role.get_promoteur_by_dissertation_str(dissert)
-            copro_name = dissertation_role.get_copromoteur_by_dissertation(dissert)
-            readers = dissertation_role.search_by_dissertation_and_role(dissert, 'READER')
-            defend_year = dissert.defend_year if dissert.defend_year else 'not_set'
-            description = dissert.description if dissert.description else 'not_set'
-
-            readers_count = readers.count()
-            reader1_name = str(readers[0].adviser) if readers_count > 0 else 'none'
-            reader2_name = str(readers[1].adviser) if readers_count > 1 else 'none'
-
-            worksheet1.append([dissert.creation_date,
-                               str(dissert.author),
-                               dissert.title,
-                               dissert.status,
-                               str(dissert.offer_year_start),
-                               defend_year,
-                               pro_name,
-                               copro_name,
-                               reader1_name,
-                               reader2_name,
-                               description
-                               ])
-
-        response = HttpResponse(save_virtual_workbook(workbook), content_type='application/vnd.ms-excel')
-        response['Content-Disposition'] = "%s%s" % ("attachment; filename=", filename)
-        return response
+        return generate_xls(request, disserts)
 
     else:
         return layout.render(request, "manager_dissertations_list.html",
                                       {'dissertations': disserts,
                                        'show_validation_commission': show_validation_commission,
-                                       'show_evaluation_first_year': show_evaluation_first_year,
-                                       'xlsx': xlsx})
+                                       'show_evaluation_first_year': show_evaluation_first_year
+                                       })
 
 
 @login_required
