@@ -86,43 +86,19 @@
                                 <label>{% trans 'status' %}</label>
                             </div>
                             <div class="col-md-9">
-                                {% if dissertation.status == 'DRAFT' %}
-                                <span class="label label-default">
-                                {% elif dissertation.status == 'DIR_SUBMIT' %}
-                                <span class="label label-primary">
-                                {% elif dissertation.status == 'DIR_OK' %}
-                                <span class="label label-success">
-                                {% elif dissertation.status == 'DIR_KO' %}
-                                <span class="label label-danger">
-                                {% elif dissertation.status == 'COM_SUBMIT' %}
-                                <span class="label label-primary">
-                                {% elif dissertation.status == 'COM_OK' %}
-                                <span class="label label-default">
-                                {% elif dissertation.status == 'COM_KO' %}
-                                <span class="label label-danger">
-                                {% elif dissertation.status == 'EVA_SUBMIT' %}
-                                <span class="label label-primary">
-                                {% elif dissertation.status == 'EVA_OK' %}
-                                <span class="label label-default">
-                                {% elif dissertation.status == 'EVA_KO' %}
-                                <span class="label label-danger">
-                                {% elif dissertation.status == 'TO_RECEIVE' %}
-                                <span class="label label-default">
-                                {% elif dissertation.status == 'TO_DEFEND' %}
-                                <span class="label label-default">
-                                {% elif dissertation.status == 'DEFENDED' %}
-                                <span class="label label-default">
-                                {% elif dissertation.status == 'ENDED' %}
-                                <span class="label label-default">
-                                {% elif dissertation.status == 'ENDED_WIN' %}
-                                <span class="label label-default">
-                                {% elif dissertation.status == 'ENDED_LOS' %}
-                                <span class="label label-danger">
-                                {% else %}
-                                <span class="label label-default">
-                                {% endif %}
-                                    {{ dissertation.get_status_display }}
-                                </span>
+                                {% with st=dissertation.status %}
+                                    {% if st == 'DIR_OK' or st == 'ENDED_WIN' %}
+                                        <span class="label label-success">
+                                    {% elif st == 'DIR_SUBMIT' or st == 'COM_SUBMIT' or st == 'EVA_SUBMIT' %}
+                                        <span class="label label-primary">
+                                    {% elif st == 'DIR_KO' or st == 'ENDED_LOS' or st == 'COM_KO' or st == 'EVA_KO' %}
+                                        <span class="label label-danger">
+                                    {% else %}
+                                        <span class="label label-default">
+                                    {% endif %}
+                                        {{ dissertation.get_status_display }}
+                                    </span>
+                                {% endwith %}
                             </div>
                         </div>
                         <div class="row">
