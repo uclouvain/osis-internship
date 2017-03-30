@@ -31,10 +31,9 @@ from selenium.webdriver.support.ui import Select
 from selenium.common.exceptions import WebDriverException
 from base.tests.factories.academic_year import AcademicYearFakerFactory
 from base.tests.factories.learning_unit_year import LearningUnitYearFakerFactory
-import time
-import os
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
+import time
 
 MAX_WAIT = 10
 
@@ -68,11 +67,13 @@ class LearningUnitsSearchTest(StaticLiveServerTestCase):
 
     def the_user_logs_in(self):
         inputbox_login_usr = self.browser.find_element_by_id('id_username')
+        print(inputbox_login_usr.get_attribute('placeholder'))
         self.assertEqual(
             inputbox_login_usr.get_attribute('placeholder'),
             _('user')
         )
         inputbox_login_pwd = self.browser.find_element_by_id('id_password')
+        print(inputbox_login_pwd.get_attribute('placeholder'))
         self.assertEqual(
             inputbox_login_pwd.get_attribute('placeholder'),
             _('password')
