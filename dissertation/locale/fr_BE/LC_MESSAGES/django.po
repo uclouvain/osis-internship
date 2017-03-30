@@ -811,6 +811,9 @@ msgstr "Le jury est actuellement visible par l'étudiant."
 msgid "student_path"
 msgstr "Parcours de l'étudiant"
 
+msgid "student_photo"
+msgstr "Photo de l'étudiant"
+
 msgid "subject_type"
 msgstr "Type de sujet"
 

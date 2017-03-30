@@ -811,6 +811,9 @@ msgstr "Jury is currently visible for the student"
 msgid "student_path"
 msgstr "Students' path"
 
+msgid "student_photo"
+msgstr "Student photo"
+
 msgid "subject_type"
 msgstr "Subject type"
 
