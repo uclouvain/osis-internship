@@ -29,6 +29,7 @@ import string
 import datetime
 import operator
 from base.enums import learning_unit_periodicity
+from base.tests.factories.learning_container import LearningContainerFactory
 from django.conf import settings
 from django.utils import timezone
 from factory.django import DjangoModelFactory
@@ -60,6 +61,7 @@ class LearningUnitFakerFactory(DjangoModelFactory):
     class Meta:
         model = "base.LearningUnit"
 
+    learning_container = factory.SubFactory(LearningContainerFactory)
     external_id = factory.fuzzy.FuzzyText(length=10, chars=string.digits)
     changed = fake.date_time_this_decade(before_now=True, after_now=True, tzinfo=_get_tzinfo())
     acronym = factory.Sequence(lambda n: 'LU-%d' % n)
