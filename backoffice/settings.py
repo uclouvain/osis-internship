@@ -61,7 +61,6 @@ INSTALLED_APPS = (
     'assistant',
     'dissertation',
     'internship',
-    'admission',
     'assessments',
     'localflavor',
 )
