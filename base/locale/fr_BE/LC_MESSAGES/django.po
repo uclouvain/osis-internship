@@ -995,6 +995,9 @@ msgstr "La note encodée est incorrecte (elle doit être comprise entre 0 et 20)
 msgid "scores_injection"
 msgstr "Injection des notes"
 
+msgid "scores_responsible"
+msgstr "Responsable de notes"
+
 msgid "scores_saved"
 msgstr "note(s) enregistrée(s)"
 
@@ -1323,3 +1326,42 @@ msgstr "CAPAES"
 
 msgid "start_date_must_be_lower_than_end_date"
 msgstr "La date de début doit être inférieure à la date de fin"
+
+msgid "DEPUTY_AUTHORITY"
+msgstr "Suppléant d'autorité"
+
+msgid "DEPUTY_SABBATICAL"
+msgstr "Suppléant sabbatique"
+
+msgid "DEPUTY_TEMPORARY"
+msgstr "Suppléant temporaire"
+
+msgid "INTERNSHIP_SUPERVISOR"
+msgstr "Directeur de stage"
+
+msgid "INTERNSHIP_CO_SUPERVISOR"
+msgstr "Co-directeur de stage"
+
+msgid "PROFESSOR"
+msgstr "Professeur"
+
+msgid "COORDINATOR"
+msgstr "Coordinateur"
+
+msgid "HOLDER"
+msgstr "Titulaire"
+
+msgid "CO_HOLDER"
+msgstr "Co-titulaire"
+
+msgid "DEPUTY"
+msgstr "Suppléant"
+
+msgid "SCORES_RESPONSIBLE"
+msgstr "Responsable de notes"
+
+msgid "scores_responsible_can_submit_partial_encoding"
+msgstr "Les responsables de notes peuvent soumettre des encodages partiels"
+
+msgid "scores_responsible_must_still_submit_scores"
+msgstr "Le responsable de notes doit toujours soumettre les notes"

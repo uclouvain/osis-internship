@@ -47,3 +47,9 @@ class TxtLabelOrderMustExitsException(Exception):
     def __init__(self, message=None, errors=None):
         super(TxtLabelOrderMustExitsException, self).__init__(message)
         self.errors = errors
+
+
+class JustificationValueException(Exception):
+    def __init__(self, message=None, errors=None):
+        super(JustificationValueException, self).__init__(message)
+        self.errors = errors

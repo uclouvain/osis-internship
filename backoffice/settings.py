@@ -62,6 +62,9 @@ INSTALLED_APPS = (
     'dissertation',
     'internship',
     'admission',
+    'assessments',
+    'localflavor',
+    'cms'
 )
 
 # check if we are testing right now
@@ -114,9 +117,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'osis_backend_dev',
-        'USER': 'osis_usr',
-        'PASSWORD': 'osis',
-        'HOST': '127.0.0.1',
+        'USER': os.environ.get("POSTGRES_USER") or "osis_usr",
+        'PASSWORD': os.environ.get("POSTGRES_PASSWORD") or "osis",
+        'HOST': os.environ.get("POSTGRES_HOST") or "127.0.0.1",
         'PORT': '5432',
     },
 }
@@ -147,6 +150,11 @@ LOGGING = {
             'level': 'DEBUG',
             'propagate': True,
         },
+        'queue_exception': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
         'django': {
             'handlers': ['console'],
             'level': 'INFO',
@@ -156,6 +164,7 @@ LOGGING = {
 }
 
 DEFAULT_LOGGER = 'default'
+QUEUE_EXCEPTION_LOGGER = 'queue_exception'
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
@@ -235,9 +244,9 @@ CKEDITOR_CONFIGS = {
 # Uncomment the configuration if you want to use the queue system
 # The queue system uses RabbitMq queues to communicate with other application (ex : osis)
 QUEUES = {
-     'QUEUE_URL': 'localhost',
-     'QUEUE_USER': 'guest',
-     'QUEUE_PASSWORD': 'guest',
+     'QUEUE_URL': os.environ.get("RABBITMQ_HOST") or 'localhost',
+     'QUEUE_USER': os.environ.get("RABBITMQ_USER") or 'guest',
+     'QUEUE_PASSWORD': os.environ.get("RABBITMQ_PASSWORD") or 'guest',
      'QUEUE_PORT': 5672,
      'QUEUE_CONTEXT_ROOT': '/',
      'QUEUES_NAME': {

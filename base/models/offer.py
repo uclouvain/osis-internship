@@ -24,11 +24,10 @@
 #
 ##############################################################################
 from django.db import models
-from django.contrib import admin
-from osis_common.models.serializable_model import SerializableModel
+from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 
 
-class OfferAdmin(admin.ModelAdmin):
+class OfferAdmin(SerializableModelAdmin):
     list_display = ('title', 'changed')
     fieldsets = ((None, {'fields': ('title',)}),)
     search_fields = ['title']
@@ -50,4 +49,7 @@ class Offer(SerializableModel):
 
 
 def find_by_id(offer_id):
-    return Offer.objects.get(pk=offer_id)
+    try:
+        return Offer.objects.get(pk=offer_id)
+    except Offer.DoesNotExist:
+        return None

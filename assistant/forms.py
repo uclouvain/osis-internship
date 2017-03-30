@@ -32,6 +32,19 @@ from base.models import structure, academic_year, person, learning_unit_year
 from django.forms.models import inlineformset_factory
 from django.core.exceptions import ValidationError
 from django.forms import widgets
+from assistant.enums import reviewer_role
+
+
+class MandateFileForm(forms.Form):
+    file = forms.FileField(error_messages={'required': _('no_file_submitted')})
+
+    def clean_file(self):
+        file = self.cleaned_data['file']
+        content_type = file.content_type.split('/')[1]
+        valid_content_type = 'vnd.openxmlformats-officedocument.spreadsheetml.sheet' in content_type
+        if ".xlsx" not in file.name or not valid_content_type:
+            self.add_error('file', forms.ValidationError(_('file_must_be_xlsx'), code='invalid'))
+        return file
 
 
 class MandateForm(ModelForm):
@@ -84,42 +97,6 @@ class HorizontalRadioRenderer(forms.RadioSelect.renderer):
 
 
 class AssistantFormPart1(ModelForm):
-    inscription = forms.ChoiceField(required=True, widget=forms.RadioSelect(renderer=HorizontalRadioRenderer, attrs={
-        "onChange": 'Hide()'}), choices=mdl.academic_assistant.AcademicAssistant.PHD_INSCRIPTION_CHOICES)
-    expected_phd_date = forms.DateField(required=False, widget=forms.DateInput(format='%d/%m/%Y',
-                                                                               attrs={'placeholder': 'dd/mm/yyyy'}),
-                                        input_formats=['%d/%m/%Y'])
-    phd_inscription_date = forms.DateField(required=False, widget=forms.DateInput(format='%d/%m/%Y',
-                                                                                  attrs={'placeholder': 'dd/mm/yyyy'}),
-                                           input_formats=['%d/%m/%Y'])
-    confirmation_test_date = forms.DateField(required=False, widget=forms.DateInput(format='%d/%m/%Y',
-                                                                                    attrs={
-                                                                                        'placeholder': 'dd/mm/yyyy'}),
-                                             input_formats=['%d/%m/%Y'])
-    thesis_date = forms.DateField(required=False, widget=forms.DateInput(format='%d/%m/%Y',
-                                                                         attrs={'placeholder': 'dd/mm/yyyy'}),
-                                  input_formats=['%d/%m/%Y'])
-    supervisor = forms.ModelChoiceField(required=False, queryset=person.Person.objects.all(),
-                                        to_field_name="email",
-                                        widget=forms.Select(attrs={"onChange": 'print_email()'}))
-    external_functions = forms.CharField(
-        required=False, widget=forms.Textarea(attrs={'cols': '40', 'rows': '2'}))
-
-    class Meta:
-        model = mdl.assistant_mandate.AssistantMandate
-        fields = ('inscription', 'expected_phd_date', 'phd_inscription_date', 'confirmation_test_date',
-                  'thesis_date', 'supervisor')
-
-    def clean(self):
-        super(AssistantFormPart1, self).clean()
-        inscription = self.cleaned_data.get("inscription")
-        expected_phd_date = self.cleaned_data.get('expected_phd_date')
-        if inscription == 'IN_PROGRESS' and not expected_phd_date:
-            msg = _("expected_phd_date_required_msg")
-            self.add_error('expected_phd_date', msg)
-
-
-class AssistantFormPart1b(ModelForm):
     external_functions = forms.CharField(
         required=False, widget=forms.Textarea(attrs={'cols': '60', 'rows': '4'}))
     external_contract = forms.CharField(
@@ -142,12 +119,20 @@ class MandatesArchivesForm(ModelForm):
 
 
 class AssistantFormPart3(ModelForm):
+    inscription = forms.ChoiceField(required=True, widget=forms.RadioSelect(renderer=HorizontalRadioRenderer, attrs={
+        "onChange": 'Hide()'}), choices=mdl.academic_assistant.AcademicAssistant.PHD_INSCRIPTION_CHOICES)
+    expected_phd_date = forms.DateField(required=False, widget=forms.DateInput(format='%d/%m/%Y',
+                                                                               attrs={'placeholder': 'dd/mm/yyyy'}),
+                                        input_formats=['%d/%m/%Y'])
+    thesis_date = forms.DateField(required=False, widget=forms.DateInput(format='%d/%m/%Y',
+                                                                         attrs={'placeholder': 'dd/mm/yyyy'}),
+                                  input_formats=['%d/%m/%Y'])
     phd_inscription_date = forms.DateField(required=False, widget=forms.DateInput(format='%d/%m/%Y',
                                                                                   attrs={'placeholder': 'dd/mm/yyyy'}),
                                            input_formats=['%d/%m/%Y'])
-    confirmation_test_date = forms.DateField(required=False, widget=forms.DateInput(format='%d/%m/%Y',
-                                                                                    attrs={
-                                                                                        'placeholder': 'dd/mm/yyyy'}),
+    confirmation_test_date = forms.DateField(required=False,
+                                             widget=forms.DateInput(format='%d/%m/%Y',
+                                                                    attrs={'placeholder': 'dd/mm/yyyy'}),
                                              input_formats=['%d/%m/%Y'])
 
     thesis_title = forms.CharField(
@@ -157,7 +142,10 @@ class AssistantFormPart3(ModelForm):
 
     class Meta:
         model = mdl.academic_assistant.AcademicAssistant
-        fields = ('phd_inscription_date', 'thesis_title', 'confirmation_test_date','remark')
+        fields = ('thesis_title', 'confirmation_test_date', 'remark', 'inscription',
+                  'expected_phd_date', 'phd_inscription_date', 'confirmation_test_date', 'thesis_date'
+                  )
+        exclude = ['supervisor']
 
 
 class AssistantFormPart4(ModelForm):
@@ -317,51 +305,29 @@ class AssistantFormPart6(ModelForm):
 
 
 class ReviewerDelegationForm(ModelForm):
-    person = forms.ModelChoiceField(required=True, queryset=person.Person.objects.all().order_by('last_name'),
-                                    to_field_name="email")
     role = forms.CharField(widget=forms.HiddenInput(), required=True)
     structure = forms.ModelChoiceField(widget=forms.HiddenInput(), required=True,
                                        queryset=structure.Structure.objects.all())
 
     class Meta:
         model = mdl.reviewer.Reviewer
-        fields = ('person', 'structure', 'role')
+        fields = ('structure', 'role')
+        exclude = ['person']
         widgets = {
             'structure': forms.HiddenInput()
         }
 
-    def clean(self):
-        super(ReviewerDelegationForm, self).clean()
-        selected_person = self.cleaned_data.get('person')
-        try:
-            mdl.reviewer.find_by_person(selected_person)
-            msg = _("person_already_reviewer_msg")
-            self.add_error('person', msg)
-        except:
-            pass
-
 
 class ReviewerForm(ModelForm):
-    person = forms.ModelChoiceField(required=True, queryset=person.Person.objects.all().order_by('last_name'),
-                                    to_field_name="email")
-    role = forms.ChoiceField(required=True, choices=mdl.reviewer.ROLE_CHOICES)
+    role = forms.ChoiceField(required=True, choices=reviewer_role.ROLE_CHOICES)
     structure = forms.ModelChoiceField(required=True, queryset=(
         structure.find_by_type('INSTITUTE') | structure.find_by_type('FACULTY') |
         structure.find_by_type('SECTOR')).order_by('type', 'acronym'))
 
     class Meta:
         model = mdl.reviewer.Reviewer
-        fields = ('person', 'structure', 'role')
-
-    def clean(self):
-        super(ReviewerForm, self).clean()
-        selected_person = self.cleaned_data.get('person')
-        try:
-            mdl.reviewer.Reviewer.objects.get(person=selected_person)
-            msg = _("person_already_reviewer_msg")
-            self.add_error('person', msg)
-        except:
-            pass
+        fields = ('structure', 'role')
+        exclude = ['person']
 
 
 class SettingsForm(ModelForm):

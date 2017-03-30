@@ -28,7 +28,7 @@ from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver, Signal
 from base.models import student as mdl_student, person as mdl_person, tutor as mdl_tutor, program_manager as mdl_pgm_manager
 from osis_common.models.serializable_model import SerializableModel
-from internship import models as mdl_internhip
+from internship.models import internship_student_information as mdl_internship
 
 
 person_created = Signal(providing_args=['person'])
@@ -98,14 +98,14 @@ def remove_from_pgm_managers_group(sender, instance, **kwargs):
         pgm_managers_group = Group.objects.get(name='program_managers')
         instance.person.user.groups.remove(pgm_managers_group)
 
-@receiver(post_save, sender=mdl_internhip.InternshipStudentInformation)
+@receiver(post_save, sender=mdl_internship.InternshipStudentInformation)
 def add_to_internship_students_group(sender, instance, **kwargs):
     if kwargs.get('created', True) and instance.person.user:
         internship_students_group = Group.objects.get(name='internship_students')
         instance.person.user.groups.add(internship_students_group)
 
 
-@receiver(post_delete, sender=mdl_internhip.InternshipStudentInformation)
+@receiver(post_delete, sender=mdl_internship.InternshipStudentInformation)
 def remove_internship_students_group(sender, instance, **kwargs):
     if instance.person.user:
         internship_students_group = Group.objects.get(name='internship_students')
@@ -123,7 +123,7 @@ def _add_person_to_group(person):
     if mdl_pgm_manager.find_by_person(person):
         _assign_group(person, 'program_managers')
     # Check if student is internship student
-    if mdl_internhip.InternshipStudentInformation.find_by_person(person):
+    if mdl_internship.find_by_person(person):
         _assign_group(person, 'internship_students')
 
 

@@ -1,0 +1,333 @@
+{% extends "layout.html" %}
+{% load l10n %}
+{% load i18n %}
+{% load percentage %}
+{% load programme_manager %}
+{% load sum %}
+{% load score_display %}
+
+{% comment "License" %}
+ * OSIS stands for Open Student Information System. It's an application
+ * designed to manage the core business of higher education institutions,
+ * such as universities, faculties, institutes and professional schools.
+ * The core business involves the administration of students, teachers,
+ * courses, programs and so on.
+ *
+ * Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * A copy of this license - GNU General Public License - is available
+ * at the root of the source code of this program.  If not,
+ * see http://www.gnu.org/licenses/.
+{% endcomment %}
+
+{% block breadcrumb %}
+<li><a href="{% url 'studies' %}" id="lnk_studies">{% trans 'studies' %}</a></li>
+<li><a href="{% url 'assessments' %}" id="lnk_assesments">{% trans 'evaluations' %}</a></li>
+<li><a href="{% url 'scores_encoding' %}?{{ request.GET.urlencode }}" id="lnk_scores_encoding">{% trans 'scores_encoding' %}</a></li>
+<li><a href="{% url 'online_encoding' learning_unit_year.id %}?{{ request.GET.urlencode }}" id="lnk_online_encoding">{% trans 'online_scores_encoding' %}</a></li>
+<li class="active">{% trans 'dubble_online_scores_encoding' %}</li>
+{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h2>{% trans 'dubble_online_scores_encoding' %}</h2>
+</div>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title" style="font-size: 150%; color: #3399CC;">{{ learning_unit_year }}</h3>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="form-group" id="pnl_responsable_name" >
+                    <label>{% trans 'scores_responsible' %}</label><br>
+                    {% if tutors %}
+                        <a role="button" data-toggle="collapse" data-target="#tutors_by_course"
+                           aria-expanded="false" class="pull-right"
+                           aria-controls="tutors_by_course"
+                           title="{% trans 'display_tutors' %}">
+                          <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+                        </a>
+                    {% endif %}
+                    {% if score_responsibles %}
+                        <ul class="list-unstyled">
+                            {% for score_responsible in score_responsibles %}
+                                <li>{{ score_responsible }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        {% trans 'none' %}
+                    {% endif %}
+                    <div class="collapse" id="tutors_by_course">
+                        <label>{% trans 'tutors' %}</label><br>
+                        <ul>
+                            {% for prof in tutors %}
+                                <li>{{ prof }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label>{% trans 'academic_year' %}</label><br>
+                    {{ academic_year }}
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label>{% trans 'number_session' %}</label><br>
+                    {{ number_session }}
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label>{% trans 'number_of_enrollments' %}</label><br>
+                    {{ count_total_enrollments }}
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="alert alert-info">
+            {% get_current_language as LANGUAGE_CODE %}
+            {% if enrollments.0.session_exam.learning_unit_year.decimal_scores %}
+              {% trans 'decimal_values_accepted' %}
+            {% else %}
+              {% trans 'decimal_values_ignored' %}
+            {% endif %}
+        </div>
+        <form class="form-inline" method="POST"
+              action="{% url 'online_double_encoding_form' learning_unit_year.id %}?{{ request.GET.urlencode }}"
+              id="form_online_double_encoding">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary" id="bt_compare_up">
+                <span class="glyphicon glyphicon-transfer" aria-hidden="true"></span> {% trans 'compare' %}</button>
+            <a class="btn btn-default" href="{% url 'online_encoding' learning_unit_year.id %}?{{ request.GET.urlencode }}" role="button" id="bt_cancel_online_double_encoding_up">
+                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> {% trans 'cancel' %}</a>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>{% trans 'offer' %}</th>
+                        <th>{% trans 'registration_number' %}</th>
+                        <th>{% trans 'lastname' %}</th>
+                        <th>{% trans 'firstname' %}</th>
+                        <th>{% trans 'score' %}</th>
+                        <th>{% trans 'justification' %}</th>
+                        <th>{% trans 'end_date' %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for enrollment in enrollments %}
+                    <tr style="background-color:
+                                  {% ifchanged enrollment.learning_unit_enrollment.offer_enrollment.offer_year.acronym %}
+                                     {% cycle "white" "#E5F2FF" as rowcolors %}
+                                  {% else %}
+                                     {{ rowcolors }}
+                                  {% endifchanged %}">
+                        <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.offer_year.acronym }}</td>
+                        <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.registration_id }}</td>
+                        <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.last_name|title }}</td>
+                        <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.first_name }}</td>
+                        <td>
+                            {% if is_program_manager %}
+                            <input type="hidden" id="hdn_score_draft_{{ enrollment.id }}"
+                                   value="{{ enrollment.score_final | score_display:enrollment.session_exam.learning_unit_year.decimal_scores }}"/>
+                            {% else %}
+                            <input type="hidden" id="hdn_score_draft_{{ enrollment.id }}"
+                                   value="{{ enrollment.score_draft | score_display:enrollment.session_exam.learning_unit_year.decimal_scores }}"/>
+                            {% endif %}
+                            <input type="text" min="0" max="20" name="score_{{ enrollment.id }}" id="num_double_score_{{ enrollment.id }}"
+                                   tabindex="{{ forloop.counter }}" class="form-control"
+                                   {% if not is_program_manager %}
+                                     {% if enrollment.score_final != None or enrollment.justification_final %}
+                                       disabled
+                                     {% endif %}
+                                   {% endif %}
+                                   {% if enrollment.session_exam.learning_unit_year.decimal_scores %}
+                                        step="any"
+                                        oninvalid="invalidScoreMsg(this,true,'{% trans 'decimal_score_not_allowed' %}','{% trans 'scores_gt_0_lt_20' %}')"
+                                   {% else %}
+                                        step="1"
+                                        oninvalid="invalidScoreMsg(this,false,'{% trans 'decimal_score_not_allowed' %}','{% trans 'scores_gt_0_lt_20' %}')"
+                                   {% endif %}>
+                        </td>
+                        <td>
+                            {% if is_program_manager %}
+                                <input type="hidden" id="hdn_justification_draft_{{ enrollment.id }}" value="{{ enrollment.justification_final | default_if_none:'' }}">
+                            {% else %}
+                                <input type="hidden" id="hdn_justification_draft_{{ enrollment.id }}" value="{{ enrollment.justification_draft | default_if_none:''}}">
+                            {% endif %}
+                            <select class="form-control" name="justification_{{ enrollment.id }}" id="slt_double_justification_score_{{ enrollment.id }}"
+                                   tabindex="{{ enrollments|length|sum:forloop.counter }}"
+                                   {% if not is_program_manager %}
+                                     {% if enrollment.score_final != None or enrollment.justification_final %}
+                                        disabled
+                                    {% endif %}
+                                   {% endif %}>
+                                <option value=""></option>
+                                {% if is_program_manager %}
+                                    <option value="ABSENCE_UNJUSTIFIED">{% trans 'ABSENCE_UNJUSTIFIED' %}</option>
+                                    <option value="ABSENCE_JUSTIFIED">{% trans 'ABSENCE_JUSTIFIED' %}</option>
+                                {% else %}
+                                    <option value="ABSENCE_UNJUSTIFIED">{% trans 'absent' %}</option>
+                                {% endif %}
+                                <option value="CHEATING">{% trans 'CHEATING' %}</option>
+                                <option value="SCORE_MISSING">{% trans 'SCORE_MISSING' %}</option>
+                            </select>
+                            <input type="hidden" id="hdn_score_changed_{{ enrollment.id }}" name="score_changed_{{ enrollment.id }}">
+                        </td>
+                        <td>{{ enrollment.session_exam.deadline | default_if_none:''|date:"j/m/Y" }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <button type="submit" class="btn btn-primary" id="bt_compare_down">
+                <span class="glyphicon glyphicon-transfer" aria-hidden="true"></span> {% trans 'compare' %}</button>
+            <a class="btn btn-default" href="{% url 'online_encoding' learning_unit_year.id %}?{{ request.GET.urlencode }}" role="button" id="bt_cancel_online_double_encoding_down">
+                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> {% trans 'cancel' %}</a>
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+<script>
+    var values = [
+        {% for enrollment in enrollments %}
+            ['{{ enrollment.id }}', '-1',''],
+        {% endfor %}
+        ['', '', '']];
+
+    $("input[id^='num_double_score_']" ).change(function(event) {
+        // Get the object that received the event.
+        var target = $(event.target);
+        var id = target.attr("id");
+        if (typeof id == 'undefined') {
+            target = target.parent();
+            id = target.attr("id");
+        }
+        var enrollmentId = id.substring(id.lastIndexOf("_") + 1);
+
+        if(target.val() != "") {
+            $("#slt_double_justification_score_" + enrollmentId).val('');
+        }
+
+        this.setCustomValidity('');
+
+        $("#hdn_score_changed_"+ enrollmentId).val(originalValueChanged(values, enrollmentId,
+                                                                    $("#num_double_score_"+ enrollmentId).val(),
+                                                                    $("#slt_double_justification_score_" + enrollmentId).val()));
+    });
+
+    $("select[id^='slt_double_justification_score_']" ).change(function(event) {
+        // Get the object that received the event.
+        var target = $(event.target);
+        var id = target.attr("id");
+        if (typeof id == 'undefined') {
+            target = target.parent();
+            id = target.attr("id");
+        }
+
+        var enrollmentId = id.substring(id.lastIndexOf("_") + 1);
+
+        // Checks whether the object contains an id.
+        if(target.val() != "") {
+            $("#num_double_score_" + enrollmentId).val('');
+        }
+
+        $("#hdn_score_changed_"+ enrollmentId).val(originalValueChanged(values, enrollmentId,
+                                                                    $("#num_double_score_"+ enrollmentId).val(),
+                                                                    $("#slt_double_justification_score_" + enrollmentId).val()));
+    });
+
+    $("input[id^='num_double_score_']" ).blur(function(event) {
+        // Get the object that received the event.
+        var target = $(event.target);
+        var id = target.attr("id");
+        if (typeof id == 'undefined') {
+            target = target.parent();
+            id = target.attr("id");
+        }
+
+        var enrollmentId = id.substring(id.lastIndexOf("_") + 1);
+        var score_draft = Number($("#hdn_score_draft_" + enrollmentId).val());
+
+        if (target.val() != score_draft) {
+            target.css("border", "1px solid #ff0000");
+        } else {
+            target.css("border", "1px solid lightgrey");
+        }
+
+        var double_justification_field = $("#slt_double_justification_score_"+ enrollmentId);
+        var justification_double = double_justification_field.val();
+        var justification_draft =  $("#hdn_justification_draft_" + enrollmentId).val();
+
+        // console.log(justification_double + " = " + justification_draft);
+
+        if ((justification_double != null || justification_draft != "") && justification_double != justification_draft) {
+            double_justification_field.css("border", "1px solid #ff0000");
+        } else {
+            double_justification_field.css("border", "1px solid lightgrey");
+        }
+    });
+
+    $("select[id^='slt_double_justification_score_']" ).blur(function(event) {
+        // Get the object that received the event.
+        var target = $(event.target);
+        var id = target.attr("id");
+        if (typeof id == 'undefined') {
+            target = target.parent();
+            id = target.attr("id");
+        }
+
+        var enrollmentId = id.substring(id.lastIndexOf("_") + 1);
+        var justification_draft =  $("#hdn_justification_draft_" + enrollmentId).val();
+
+        if (target.val() != justification_draft) {
+            target.css("border", "1px solid #ff0000");
+        } else {
+            target.css("border", "1px solid lightgrey");
+        }
+
+        var double_score_field = $("#num_double_score_"+ enrollmentId);
+        var score_double = double_score_field.val();
+        var score_draft = $("#hdn_score_draft_"+ enrollmentId).val();
+
+        if(score_double != score_draft) {
+            double_score_field.css("border", "1px solid #ff0000");
+        } else {
+            double_score_field.css("border", "1px solid lightgrey");
+        }
+    });
+
+
+    var target_score = '#form_online_double_encoding tbody tr td input';
+    $(target_score).on('keypress',
+                       { "target": target_score,
+                         "table_size": $('#form_online_double_encoding tbody tr').length,
+                         "index_increment_value": 4},
+                       select_next_input_value);
+
+
+    var target_justification = '#form_online_double_encoding tbody tr td select';
+    $(target_justification).on('keypress',
+                               { "target": target_justification,
+                                 "table_size": $('#form_online_double_encoding tbody tr').length * 2,
+                                 "index_increment_value": 1},
+                               select_next_input_value);
+
+
+    $(document).on('keypress', function(e) {
+        disable_enter(e);
+    });
+
+</script>
+{% endblock %}

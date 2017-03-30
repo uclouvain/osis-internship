@@ -24,18 +24,18 @@
 #
 ##############################################################################
 from django.db import models
-from django.contrib import admin
 from attribution.models.enums import function
-from osis_common.models.serializable_model import SerializableModel
+from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 
 
-class AttributionAdmin(admin.ModelAdmin):
+class AttributionAdmin(SerializableModelAdmin):
     list_display = ('tutor', 'function', 'score_responsible', 'learning_unit_year', 'start_year', 'end_year', 'changed')
     list_filter = ('function', 'learning_unit_year__academic_year')
     fieldsets = ((None, {'fields': ('learning_unit_year', 'tutor', 'function', 'score_responsible', 'start_year',
                                     'end_year')}),)
     raw_id_fields = ('learning_unit_year', 'tutor')
-    search_fields = ['tutor__person__first_name', 'tutor__person__last_name', 'learning_unit_year__acronym']
+    search_fields = ['tutor__person__first_name', 'tutor__person__last_name', 'learning_unit_year__acronym',
+                     'tutor__person__global_id']
 
 
 class Attribution(SerializableModel):
@@ -45,7 +45,7 @@ class Attribution(SerializableModel):
     end_date = models.DateField(auto_now=False, blank=True, null=True, auto_now_add=False)
     start_year = models.IntegerField(blank=True, null=True)
     end_year = models.IntegerField(blank=True, null=True)
-    function = models.CharField(max_length=15, blank=True, null=True, choices=function.FUNCTIONS, db_index=True)
+    function = models.CharField(max_length=35, blank=True, null=True, choices=function.FUNCTIONS, db_index=True)
     learning_unit_year = models.ForeignKey('base.LearningUnitYear', blank=True, null=True, default=None)
     tutor = models.ForeignKey('base.Tutor')
     score_responsible = models.BooleanField(default=False)
@@ -72,19 +72,17 @@ def search(tutor=None, learning_unit_year=None, score_responsible=None, list_lea
     return queryset.select_related('tutor', 'learning_unit_year')
 
 
-def find_responsible(a_learning_unit_year):
-    # If there are more than 1 coordinator, we take the first in alphabetic order
-    attribution_list = Attribution.objects.filter(learning_unit_year=a_learning_unit_year) \
+def find_all_responsibles(a_learning_unit_year):
+    attribution_list = Attribution.objects.select_related("tutor") \
+        .filter(learning_unit_year=a_learning_unit_year) \
         .filter(score_responsible=True)
+    return [attribution.tutor for attribution in attribution_list]
 
-    if attribution_list and len(attribution_list) > 0:
-        if len(attribution_list) == 1:
-            return attribution_list[0].tutor
-        else:
-            for lu_attribution in attribution_list:
-                if lu_attribution.score_responsible:
-                    return lu_attribution.tutor
-            return attribution_list[0].tutor
+
+def find_responsible(a_learning_unit_year):
+    tutors_list = find_all_responsibles(a_learning_unit_year)
+    if tutors_list:
+        return tutors_list[0]
     return None
 
 

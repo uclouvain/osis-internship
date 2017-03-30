@@ -36,15 +36,21 @@ from base.models import person as person_mdl, academic_year as academic_year_mdl
 
 
 def page_not_found(request):
-    return layout.render(request, 'page_not_found.html', {})
+    response = layout.render(request, 'page_not_found.html', {})
+    response.status_code = 404
+    return response
 
 
 def access_denied(request):
-    return layout.render(request, 'access_denied.html', {})
+    response = layout.render(request, 'access_denied.html', {})
+    response.status_code = 401
+    return response
 
 
 def server_error(request):
-    return layout.render(request, 'server_error.html', {})
+    response = layout.render(request, 'server_error.html', {})
+    response.status_code = 500
+    return response
 
 
 def noscript(request):
@@ -85,7 +91,7 @@ def home(request):
     if academic_yr:
         calendar_events = academic_calendar_mdl.find_academic_calendar_by_academic_year_with_dates(academic_yr.id)
     return layout.render(request, "home.html", {'academic_calendar': calendar_events,
-                                                'highlights': academic_calendar_mdl.find_highlight_academic_calendars()})
+                                                'highlight': academic_calendar_mdl.find_highlight_academic_calendar()})
 
 
 def log_out(request):
@@ -94,19 +100,13 @@ def log_out(request):
 
 
 def logged_out(request):
-    return layout.render(request,'logged_out.html', {})
+    return layout.render(request, 'logged_out.html', {})
 
 
 @login_required
 @permission_required('base.can_access_student_path', raise_exception=True)
 def studies(request):
     return layout.render(request, "studies.html", {'section': 'studies'})
-
-
-@login_required
-@permission_required('base.can_access_evaluation', raise_exception=True)
-def assessments(request):
-    return layout.render(request, "assessments/assessments.html", {'section': 'assessments'})
 
 
 @login_required

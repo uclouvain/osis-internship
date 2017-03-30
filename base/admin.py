@@ -57,9 +57,6 @@ admin.site.register(learning_unit_enrollment.LearningUnitEnrollment,
 admin.site.register(learning_unit_year.LearningUnitYear,
                     learning_unit_year.LearningUnitYearAdmin)
 
-admin.site.register(scores_encoding.ScoresEncoding,
-                    scores_encoding.ScoresEncodingAdmin)
-
 admin.site.register(offer_enrollment.OfferEnrollment,
                     offer_enrollment.OfferEnrollmentAdmin)
 

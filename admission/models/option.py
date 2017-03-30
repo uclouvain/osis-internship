@@ -26,6 +26,7 @@
 from django.db import models
 from django.contrib import admin
 from django.core.exceptions import ObjectDoesNotExist
+from osis_common.models.serializable_model import SerializableModel
 
 
 class OptionAdmin(admin.ModelAdmin):
@@ -33,7 +34,7 @@ class OptionAdmin(admin.ModelAdmin):
     fieldsets = ((None, {'fields': ('label', 'value', 'order', 'description', 'question')}),)
 
 
-class Option(models.Model):
+class Option(SerializableModel):
     question = models.ForeignKey('Question')
     label = models.CharField(max_length=255)
     value = models.TextField(blank=True, null=True)

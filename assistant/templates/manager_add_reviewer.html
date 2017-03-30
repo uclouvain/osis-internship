@@ -28,10 +28,12 @@
 {% block style %}
 <link rel="stylesheet" href="{% static 'css/custom.css' %}">
 <link rel="stylesheet" href="{% static 'css/dataTables.bootstrap.min.css' %}">
+<link rel="stylesheet" href="{% static 'css/jquery-ui.css' %}">
 {% endblock %}
 {% block breadcrumb %}
 <li><a href="{% url 'institution' %}" id="lnk_institution">{% trans 'institution' %}</a></li>
 <li><a href="{% url 'mandates' %}" id="lnk_mandates">{% trans 'mandates' %}</a></li>
+<li><a href="{% url 'manager_home' %}" id="lnk_manager_home">{% trans 'assistants' %}</a></li>
 <li><a href="{% url 'reviewers_list' %}" id="lnk_reviewers_list">{% trans 'reviewers_list' %}</a></li>
 <li class="active">{% trans 'add_reviewer' %}</li>
 {% endblock %}
@@ -48,53 +50,48 @@
 			    {{ hidden }}
 		    {% endfor %}
 	    <div class="form-group">
-		    <div class="row">
-			    <div class="col-md-3">
-				    <div class="controls"  onChange="print_email();">
-				        <label for="txt_person">{% trans 'person' %}</label>
-				        {{ form.person }}<font class="error">{{ form.person.errors }}</font>
-				    </div>
-				    <div class="col-md-3">
-					    <div id="email_person"></div>
-				    </div>
-                </div>
-			</div><p></p>
-		    <div class="row">
-			    <div class="col-md-4">
-				    <div class="controls">
-				        <label for="txt_structure">{% trans 'structure' %}</label>
-				        {{ form.structure }}<font class="error">{{ form.structure.errors }}</font>
-				    </div>
-			    </div>
-		    </div><p></p>
-		    <div class="row">
-			    <div class="col-md-2">
-				    <div class="controls">
-				        <label for="txt_role">{% trans 'role' %}</label>
-				        {{ form.role }}<font class="error">{{ form.role.errors }}</font>
-				    </div>
-			    </div>
-		    </div><p></p>
-            <button type="submit" class="btn btn-primary" title="{% trans 'save'%}" id="bt_add_reviewer_save"
-            onclick="return confirm('{% trans 'confirm_reviewer_addition' %}')">
-            <span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'save'%}</button>
-            <a class="btn btn-default" id="lnk_upload_cancel" href="{% url 'reviewers_list' %}">
-            <span class="glyphicon glyphicon-cancel" aria-hidden="true"></span> {% trans 'cancel'%}</a>
-        </div>
-    </form>
+		    <label for="search_persons">{% trans 'person' %}</label>
+			<div class="ui-widget"><input id="search_persons" name="search_persons" size="100"
+										  placeholder="{% trans 'search_by_email_or_last_name' %}">
+			</div>
+			<input type="hidden" name="person_id" id="person_id">
+		</div>
+		<div class="form-group">
+			<label for="{{ form.structure.auto_id }}">{% trans 'structure' %}</label>
+			<div class="controls">{{ form.structure }}<span class="error">{{ form.structure.errors }}</span></div>
+		</div>
+		<div class="form-group">
+			<label for="{{ form.role.auto_id }}">{% trans 'role' %}</label>
+			<div class="controls">{{ form.role }}<span class="error">{{ form.role.errors }}</span></div>
+		</div>
+		<button type="submit" class="btn btn-primary" title="{% trans 'save'%}" id="bt_add_reviewer_save"
+				onclick="return confirm('{% trans 'confirm_reviewer_addition' %}')">
+			<span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'save'%}</button>
+			<a class="btn btn-default" id="lnk_upload_cancel" href="{% url 'reviewers_list' %}">
+				<span class="glyphicon glyphicon-cancel" aria-hidden="true"></span> {% trans 'cancel'%}</a>
+    	</form>
     </div>
 </div>
 {% endblock %}
 {% block script %}
+<script type="text/javascript" src="{% static 'js/jquery-ui.js' %}"></script>
 <script>
-function print_email()
-{
-	var email = document.getElementById("id_person").value;
-	document.getElementById('email_person').innerHTML = email;
-}
 window.onload = function() {
-    Hide();
-    print_email();
+    $('#person_id').empty();
 };
+$(function() {
+  $("#search_persons").autocomplete({
+	source: "/assistants/api/get_persons/",
+    minLength: 3,
+    delay: 100,
+    select: function(event, ui) {
+    	var person_id = ui.item.id;
+    	$( "#person_id" ).val(person_id);
+    	$( "#search_persons" ).val( ui.item.first_name + ', ' + ui.item.last_name + ' (' + ui.item.value + ')' );
+    	$('#id_structure').focus();
+    	return False;
+    	}
+  });
+});
 </script>
 {% endblock %}

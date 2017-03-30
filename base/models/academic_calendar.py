@@ -64,10 +64,10 @@ class AcademicCalendar(SerializableModel):
         )
 
 
-def find_highlight_academic_calendars():
+def find_highlight_academic_calendar():
     return AcademicCalendar.objects.filter(start_date__lte=timezone.now(), end_date__gte=timezone.now(),
                                            highlight_title__isnull=False, highlight_description__isnull=False,
-                                           highlight_shortcut__isnull=False)
+                                           highlight_shortcut__isnull=False).order_by('end_date').first()
 
 
 def find_academic_calendar_by_academic_year(academic_year_id):
@@ -87,7 +87,7 @@ def find_academic_calendar_by_academic_year_with_dates(academic_year_id):
 def find_by_id(academic_calendar_id):
     try:
         return AcademicCalendar.objects.get(pk=academic_calendar_id)
-    except ObjectDoesNotExist:
+    except AcademicCalendar.DoesNotExist:
         return None
 
 

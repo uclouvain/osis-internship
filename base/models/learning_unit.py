@@ -24,11 +24,11 @@
 #
 ##############################################################################
 from django.db import models
-from django.contrib import admin
-from osis_common.models.serializable_model import SerializableModel
+from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
+from base.enums.learning_unit_periodicity import PERIODICITY_TYPES
 
 
-class LearningUnitAdmin(admin.ModelAdmin):
+class LearningUnitAdmin(SerializableModelAdmin):
     list_display = ('acronym', 'title', 'start_year', 'end_year', 'changed')
     fieldsets = ((None, {'fields': ('acronym','title','description','start_year','end_year')}),)
     search_fields = ['acronym']
@@ -43,9 +43,15 @@ class LearningUnit(SerializableModel):
     start_year = models.IntegerField()
     end_year = models.IntegerField(blank=True, null=True)
     progress = None
+    periodicity = models.CharField(max_length=20, blank=True, null=True, choices=PERIODICITY_TYPES)
 
     def __str__(self):
         return u"%s - %s" % (self.acronym, self.title)
+
+    def save(self, *args, **kwargs):
+        if self.end_year and self.end_year < self.start_year:
+            raise AttributeError("Start date should be before the end date")
+        super(LearningUnit, self).save(*args, **kwargs)
 
     class Meta:
         permissions = (

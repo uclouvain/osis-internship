@@ -24,13 +24,12 @@
 #
 ##############################################################################
 from django.db import models
-from django.contrib import admin
 from django.utils import timezone
 from django.core.exceptions import ObjectDoesNotExist
-from osis_common.models.serializable_model import SerializableModel
+from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 
 
-class AcademicYearAdmin(admin.ModelAdmin):
+class AcademicYearAdmin(SerializableModelAdmin):
     list_display = ('name', 'start_date', 'end_date')
     fieldsets = ((None, {'fields': ('year', 'start_date', 'end_date')}),)
 
@@ -54,6 +53,8 @@ class AcademicYear(SerializableModel):
             raise AttributeError("The start date should be in the same year of the academic year.")
         if self.start_date and self.end_date and self.start_date >= self.end_date:
             raise AttributeError("Start date should be before the end date.")
+        if find_academic_years(self.start_date, self.end_date).count() >= 2:
+            raise AttributeError("We cannot have more than two academic year in date range")
         super(AcademicYear, self).save(*args, **kwargs)
 
     def __str__(self):
@@ -69,30 +70,39 @@ def find_academic_year_by_id(academic_year_id):
     return AcademicYear.objects.get(pk=academic_year_id)
 
 
-def find_academic_years():
-    return AcademicYear.objects.all().order_by('year')
+def find_academic_year_by_year(year):
+    try:
+        return AcademicYear.objects.get(year=year)
+    except AcademicYear.DoesNotExist:
+        return None
+
+
+def find_academic_years(start_date=None, end_date=None):
+    """"Return all academic years ordered by year
+
+        Keyword arguments:
+            start_date -- (default None)
+            end_date -- (default None)
+    """
+    queryset = AcademicYear.objects.all()
+    if start_date is not None:
+        queryset = queryset.filter(start_date__lte=start_date)
+    if end_date is not None:
+        queryset = queryset.filter(end_date__gte=end_date)
+
+    return queryset.order_by('year')
 
 
 def current_academic_years():
     now = timezone.now()
-    academic_yrs = AcademicYear.objects.filter(start_date__lte=now) \
-                                       .filter(end_date__gte=now) \
-                                       .order_by('year')
-    return academic_yrs
+    return find_academic_years(start_date=now, end_date=now)
 
 
 def current_academic_year():
-    academic_yr = current_academic_years().first()
-    return academic_yr
+    """ If we have two academic year [2015-2016] [2016-2017]. It will return [2015-2016] """
+    return current_academic_years().first()
 
 
 def starting_academic_year():
-    academic_yr = current_academic_years().last()
-    return academic_yr
-
-
-def find_academic_year_by_year(year):
-    try:
-        return AcademicYear.objects.get(year=year)
-    except ObjectDoesNotExist:
-        return None
+    """ If we have two academic year [2015-2016] [2016-2017]. It will return [2016-2017] """
+    return current_academic_years().last()

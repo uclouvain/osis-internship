@@ -25,6 +25,12 @@
 ##############################################################################
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from django.contrib import admin
+
+
+class AcademicAssistantAdmin(admin.ModelAdmin):
+    list_display = ('person', 'supervisor')
+    raw_id_fields = ('person', 'supervisor',)
 
 
 class AcademicAssistant(models.Model):
@@ -42,7 +48,7 @@ class AcademicAssistant(models.Model):
     expected_phd_date = models.DateField(null=True, blank=True)
     remark = models.TextField(null=True, blank=True)
     inscription = models.CharField(max_length=12, choices=PHD_INSCRIPTION_CHOICES, default='YES')
-    
+
     def __str__(self):
         return u"%s %s" % (self.person.first_name, self.person.last_name)
 

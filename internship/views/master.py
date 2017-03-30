@@ -27,11 +27,12 @@ from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, permission_required
-from internship.models import InternshipMaster, Organization
+
+from internship import models as mdl_internship
 
 
 @login_required
-@permission_required('internship.can_access_internship', raise_exception=True)
+@permission_required('internship.is_internship_manager', raise_exception=True)
 def interships_masters(request):
     # First get the value of the 2 options for the sort
     if request.method == 'GET':
@@ -42,17 +43,17 @@ def interships_masters(request):
     # If both exist / if just speciality exist / if just organization exist / if none exist
     if speciality_sort_value and speciality_sort_value != "0":
         if organization_sort_value and organization_sort_value != "0":
-            query = InternshipMaster.search(speciality = speciality_sort_value, organization__name = organization_sort_value)
+            query = mdl_internship.internship_master.search(speciality = speciality_sort_value, organization__name = organization_sort_value)
         else:
-            query = InternshipMaster.search(speciality = speciality_sort_value)
+            query = mdl_internship.internship_master.search(speciality = speciality_sort_value)
     else:
         if organization_sort_value and organization_sort_value != "0":
-            query = InternshipMaster.search(organization__name = organization_sort_value)
+            query = mdl_internship.internship_master.search(organization__name = organization_sort_value)
         else:
-            query = InternshipMaster.find_masters()
+            query = mdl_internship.internship_master.find_masters()
 
     # Create the options for the selected list, delete dubblons
-    query_master = InternshipMaster.find_masters()
+    query_master = mdl_internship.internship_master.find_masters()
     master_specs = []
     master_organizations = []
     for master in query_master:
@@ -68,7 +69,7 @@ def interships_masters(request):
     number_ref=sorted(number_ref, key=int)
     master_organizations = []
     for i in number_ref:
-        organization = Organization.search(reference=i)
+        organization = mdl_internship.organization.search(reference=i)
         master_organizations.append(organization[0])
 
     return render(request, "interships_masters.html", {'section': 'internship',
@@ -86,5 +87,5 @@ def delete_interships_masters(request):
     name = request.POST.get("name").replace(" ", "")
     # Get the first and last name of the master send by the button of deletion
     # Get the master in the DB and delete it
-    InternshipMaster.search(first_name=first_name, last_name=name).delete()
+    mdl_internship.internship_master.search(first_name=first_name, last_name=name).delete()
     return HttpResponseRedirect(reverse('interships_masters'))

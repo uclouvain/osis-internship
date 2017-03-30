@@ -366,7 +366,7 @@ msgid "encode"
 msgstr "Encode"
 
 msgid "encode_as_coordinator"
-msgstr "Encode as coordinator"
+msgstr "Encode as scores responsible"
 
 msgid "encode_as_pgm"
 msgstr "Encode as program manager"
@@ -986,6 +986,9 @@ msgstr "Score legend: %s (0=Score of presence)"
 msgid "score_missing_pdf_legend"
 msgstr "?=Score missing"
 
+msgid "scores_responsible"
+msgstr "Scores Responsible"
+
 msgid "score_saved"
 msgstr "score Saved"
 
@@ -1330,3 +1333,42 @@ msgstr "CAPAES"
 
 msgid "start_date_must_be_lower_than_end_date"
 msgstr "Start date must be lower than end date"
+
+msgid "DEPUTY_AUTHORITY"
+msgstr "Deputy authority"
+
+msgid "DEPUTY_SABBATICAL"
+msgstr "Deputy sabbatical"
+
+msgid "DEPUTY_TEMPORARY"
+msgstr "Deputy temporary"
+
+msgid "INTERNSHIP_SUPERVISOR"
+msgstr "Internship supervisor"
+
+msgid "INTERNSHIP_CO_SUPERVISOR"
+msgstr "Internship co-supervisor"
+
+msgid "PROFESSOR"
+msgstr "Professor"
+
+msgid "COORDINATOR"
+msgstr "Coordinator"
+
+msgid "HOLDER"
+msgstr "Holder"
+
+msgid "CO_HOLDER"
+msgstr "Co-holder"
+
+msgid "DEPUTY"
+msgstr "Deputy"
+
+msgid "SCORES_RESPONSIBLE"
+msgstr "Scores responsible"
+
+msgid "scores_responsible_can_submit_partial_encoding"
+msgstr "Scores responsible can submit partial encoding"
+
+msgid "the_scores_responsible_must_still_submit_scores"
+msgstr "The scores responsible must still submit the scores"
