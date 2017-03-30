@@ -49,7 +49,8 @@ class LearningUnitsSearchTest(StaticLiveServerTestCase):
                                 password='superpassword')
 
     def error_displayed(self,error_msg):
-        self.wait_for(lambda: self.assertEqual(_(error_msg), self.browser.find_element_by_class_name('error').text))
+        #self.wait_for(lambda: self.assertEqual(_(error_msg), self.browser.find_element_by_class_name('error').text))
+        self.wait_for(lambda: self.browser.find_element_by_class_name('error').is_displayed())
 
     def go_to_learning_units_page(self):
         # She goes on the homepage to log in
@@ -63,7 +64,8 @@ class LearningUnitsSearchTest(StaticLiveServerTestCase):
         # and then 'Learning Units' to go on the search page of learning units.
         self.browser.get(self.live_server_url+'/learning_units/')
         # She notices the title of the learning units search page
-        self.wait_for(lambda: self.assertEqual(_('learning_units'),self.browser.find_element_by_tag_name('h2').text))
+        #self.wait_for(lambda: self.assertEqual(_('learning_units'),self.browser.find_element_by_tag_name('h2').text))
+        self.wait_for(lambda: self.browser.find_element_by_tag_name('h2').is_displayed())
 
     def the_user_logs_in(self):
         inputbox_login_usr = self.browser.find_element_by_id('id_username')
@@ -81,7 +83,8 @@ class LearningUnitsSearchTest(StaticLiveServerTestCase):
         login_button = self.browser.find_element_by_id('post_login_btn')
         login_button.send_keys(Keys.ENTER)
         ## Wait for the home_page to load on screen
-        self.wait_for(lambda:self.assertEqual(_('formation_catalogue'), self.browser.find_element_by_id('lnk_home_dropdown_catalog').text))
+        #self.wait_for(lambda:self.assertEqual(_('formation_catalogue'), self.browser.find_element_by_id('lnk_home_dropdown_catalog').text))
+        self.wait_for(lambda:self.browser.find_element_by_id('lnk_home_dropdown_catalog').is_displayed())
 
     def wait_for_text_in_table(self, table_id, text_to_find, row_or_col):
         self.wait_for(lambda:self.assertIn(text_to_find, [element.text for element in self.browser.find_element_by_id(table_id).find_elements_by_tag_name(row_or_col)]))
