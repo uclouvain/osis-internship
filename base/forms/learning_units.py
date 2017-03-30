@@ -28,32 +28,31 @@ from base import models as mdl
 from django.core.exceptions import ValidationError
 from base.enums import learning_unit_year_status
 from base.enums import learning_unit_year_types
-from base.enums import learning_units_errors
+
 
 class LearningUnitYearForm(forms.Form):
-
-    academic_year=forms.CharField(max_length=10, required=False)
-    acronym = forms.CharField(widget=forms.TextInput(attrs={'size':'10'}),max_length=20, required=False)
-    keyword = forms.CharField(widget=forms.TextInput(attrs={'size':'10'}),max_length=20, required=False)
+    academic_year = forms.CharField(max_length=10, required=False)
+    acronym = forms.CharField(widget=forms.TextInput(attrs={'size': '10'}), max_length=20, required=False)
+    keyword = forms.CharField(widget=forms.TextInput(attrs={'size': '10'}), max_length=20, required=False)
     type = forms.CharField(
         widget=forms.Select(choices=learning_unit_year_types.LEARNING_UNIT_YEAR_TYPES),
         required=False
     )
-    status=forms.CharField(
+    status = forms.CharField(
         widget=forms.Select(choices=learning_unit_year_status.LEARNING_UNIT_YEAR_STATUS),
         required=False
     )
 
     def clean(self):
-        minimal_inputs_satisfied=''
+        minimal_inputs_satisfied = ''
         clean_data = self.cleaned_data
         for cd_key, cd_value in clean_data.items():
-            if cd_value=='NONE' or cd_value=='0':
-                clean_data[cd_key]=''
-            minimal_inputs_satisfied=minimal_inputs_satisfied+clean_data[cd_key]
+            if cd_value == 'NONE' or cd_value == '0':
+                clean_data[cd_key] = ''
+            minimal_inputs_satisfied = minimal_inputs_satisfied+clean_data[cd_key]
 
         if not minimal_inputs_satisfied:
-            raise ValidationError(learning_units_errors.INVALID_SEARCH)
+            raise ValidationError('LU_ERRORS_INVALID_SEARCH')
         elif not clean_data.get('academic_year'):
             check_when_academic_year_is_all(clean_data.get('acronym'))
         return clean_data
@@ -78,16 +77,19 @@ class LearningUnitYearForm(forms.Form):
         academic_year = 0 if not self.cleaned_data.get('academic_year') else self.cleaned_data.get('academic_year')
         return academic_year
 
+
 def check_when_academic_year_is_all(acronym):
-    if (acronym):
-        learning_units=check_learning_units_with_acronym(acronym)
+    if acronym:
+        learning_units = check_learning_units_with_acronym(acronym)
         return learning_units
-    elif (not acronym):
-        raise ValidationError(learning_units_errors.ACADEMIC_YEAR_REQUIRED)
+    elif not acronym:
+        raise ValidationError('LU_ERRORS_ACADEMIC_YEAR_REQUIRED')
+
 
 def check_learning_units_with_acronym(acronym):
-        learning_units=mdl.learning_unit_year.find_by_acronym(acronym)
-        if not learning_units:
-            raise ValidationError(learning_units_errors.ACADEMIC_YEAR_WITH_ACRONYM)
-        else:
-            return learning_units
+    learning_units = mdl.learning_unit_year.find_by_acronym(acronym)
+
+    if not learning_units:
+        raise ValidationError('LU_ERRORS_YEAR_WITH_ACRONYM')
+
+    return learning_units
