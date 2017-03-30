@@ -334,19 +334,13 @@ def manager_dissertations_search(request):
         for dissert in disserts:
             pro_name = dissertation_role.get_promoteur_by_dissertation_str(dissert)
             copro_name = dissertation_role.get_copromoteur_by_dissertation(dissert)
-            reader = dissertation_role.search_by_dissertation_and_role(dissert, 'READER')
+            readers = dissertation_role.search_by_dissertation_and_role(dissert, 'READER')
             defend_year = dissert.defend_year if dissert.defend_year else 'not_set'
             description = dissert.description if dissert.description else 'not_set'
 
-            if reader:
-                reader1_name = str(reader[0].adviser)
-                if reader.count() > 1:
-                    reader2_name = str(reader[1].adviser)
-                else:
-                    reader2_name = 'none'
-            else:
-                reader1_name = 'none'
-                reader2_name = 'none'
+            readers_count = readers.count()
+            reader1_name = str(readers[0].adviser) if readers_count > 0 else 'none'
+            reader2_name = str(readers[1].adviser) if readers_count > 1 else 'none'
 
             worksheet1.append([dissert.creation_date,
                                str(dissert.author),
