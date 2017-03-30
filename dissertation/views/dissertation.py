@@ -302,13 +302,10 @@ def manager_dissertations_new(request):
                           'defend_periode_choices': dissertation.DEFEND_PERIODE_CHOICES})
 
 
-@login_required
-@user_passes_test(is_manager)
-def generate_xls(request, disserts):
-    filename = "%s%s%s" % ('EXPORT_dissertation_', time.strftime("%Y-%m-%d %H:%M"), '.xlsx')
+def generate_xls(disserts):
     workbook = Workbook(encoding='utf-8')
     worksheet1 = workbook.active
-    worksheet1.title = "dissertation"
+    worksheet1.title = "dissertations"
     worksheet1.append(['Creation_date',
                        'Student',
                        'Title',
@@ -344,10 +341,7 @@ def generate_xls(request, disserts):
                            reader2_name,
                            description
                            ])
-
-    response = HttpResponse(save_virtual_workbook(workbook), content_type='application/vnd.ms-excel')
-    response['Content-Disposition'] = "%s%s" % ("attachment; filename=", filename)
-    return response
+    return save_virtual_workbook(workbook)
 
 
 @login_required
@@ -362,7 +356,11 @@ def manager_dissertations_search(request):
     show_evaluation_first_year = offer_proposition.show_evaluation_first_year(offer_props)
 
     if 'bt_xlsx' in request.GET:
-        return generate_xls(request, disserts)
+        xls = generate_xls(disserts)
+        filename = "%s%s%s" % ('dissertations_', time.strftime("%Y-%m-%d %H:%M"), '.xlsx')
+        response = HttpResponse(xls, content_type='application/vnd.ms-excel')
+        response['Content-Disposition'] = "%s%s" % ("attachment; filename=", filename)
+        return response
 
     else:
         return layout.render(request, "manager_dissertations_list.html",
