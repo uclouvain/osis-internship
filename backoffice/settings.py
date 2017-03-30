@@ -61,7 +61,6 @@ INSTALLED_APPS = (
     'assistant',
     'dissertation',
     'internship',
-    'admission',
     'assessments',
     'localflavor',
 )
@@ -269,6 +268,9 @@ LOGO_INSTITUTION_URL = os.path.join(BASE_DIR, "base/static/img/logo_institution.
 LOGO_EMAIL_SIGNATURE_URL = ''
 LOGO_OSIS_URL = ''
 
+# This has to be replaced by the actual url where you institution photos can be found.
+# Used by method get_photo in model Person in app Base.
+PERSON_PHOTO_PATH = ''
 
 try:
     from backoffice.server_settings import *
