@@ -25,8 +25,7 @@
 ##############################################################################
 from django.conf.urls import url
 
-from base.views import learning_unit, offer, common, institution, organization, academic_calendar,\
-    my_osis
+from base.views import learning_unit, offer, common, institution, organization, academic_calendar, my_osis, person
 
 urlpatterns = [
     url(r'^$', common.home, name='home'),
@@ -60,6 +59,7 @@ urlpatterns = [
     url(r'^my_osis/my_messages/send_message_again/([0-9]+)/$', my_osis.send_message_again,
         name='send_message_again'),
     url(r'^my_osis/profile/$', my_osis.profile, name='profile'),
+    url(r'^my_osis/profile/([0-9]+)/$', person.get_avatar, name='avatar'),
     url(r'^my_osis/profile/lang$', my_osis.profile_lang, name='profile_lang'),
 
     url(r'^noscript/$', common.noscript, name='noscript'),
