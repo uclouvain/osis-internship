@@ -46,7 +46,7 @@ class LearningUnitsSearchTest(StaticLiveServerTestCase):
 
         User.objects.create_superuser(username='superdummy',
                                  email='superdummy@dummy.com',
-                                password='superpwd')
+                                password='superpassword')
 
     def error_displayed(self,error_msg):
         self.wait_for(lambda: self.assertEqual(_(error_msg), self.browser.find_element_by_class_name('error').text))
@@ -77,12 +77,7 @@ class LearningUnitsSearchTest(StaticLiveServerTestCase):
             _('password')
         )
         inputbox_login_usr.send_keys('superdummy')
-        inputbox_login_pwd.send_keys('superpwd')
-
-        print(User.username)
-        print(User.email)
-        print(User.password)
-
+        inputbox_login_pwd.send_keys('superpassword')
         login_button = self.browser.find_element_by_id('post_login_btn')
         login_button.send_keys(Keys.ENTER)
         ## Wait for the home_page to load on screen
@@ -98,6 +93,9 @@ class LearningUnitsSearchTest(StaticLiveServerTestCase):
                 return fct()
             except (AssertionError, WebDriverException) as e:
                 if time.time() - start_time > MAX_WAIT:
+                    self.browser.save_screenshot('screenshot.png')
+                    print('BROWSER_GET_LOG: '+self.browser.get_log('har'))
+                    print('BROWSER_GET_HTML: '+self.browser.execute_script("return document.getElementsByTagName('html')[0].innerHTML"))
                     raise e
                 time.sleep(0.5)
 
