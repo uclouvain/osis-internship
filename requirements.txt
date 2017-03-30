@@ -15,5 +15,6 @@ django-statici18n==1.1.5
 factory_boy
 django-dotenv==1.4.1
 codeclimate-test-reporter
+djangorestframework==3.3.2
 
 -r ./osis_common/requirements.txt

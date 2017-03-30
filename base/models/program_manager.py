@@ -99,3 +99,30 @@ def find_by_user(user, academic_year=None):
         queryset = queryset.filter(offer_year__academic_year=academic_year)
 
     return queryset.filter(person__user=user)
+
+
+def find_by_id(an_id):
+    try:
+        return ProgramManager.objects.get(pk=an_id)
+    except ObjectDoesNotExist:
+        return None
+
+
+def find_by_faculty(structure_faculty):
+    return ProgramManager.objects.filter(offer_year__entity_administration=structure_faculty)
+
+
+def find_by_offer_year(offer_yr):
+    return ProgramManager.objects.filter(offer_year=offer_yr)
+
+
+def delete_by_id(an_id):
+    pgm_manager = ProgramManager.objects.get(pk=an_id)
+    if pgm_manager:
+        pgm_manager.delete()
+
+def find_by_offer_year_list(offer_yr_list):
+    return ProgramManager.objects.select_related("person").filter(offer_year__in=offer_yr_list).order_by('person__last_name', 'person__first_name')
+
+def find_by_person(a_person):
+    return ProgramManager.objects.filter(person=a_person)

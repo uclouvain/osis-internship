@@ -57,3 +57,7 @@ def find_by_id(gt_id):
         return GradeType.objects.get(id=gt_id)
     except ObjectDoesNotExist:
         return None
+
+
+def find_by_coverage(a_coverage):
+    return GradeType.objects.filter(coverage=a_coverage,institutional=True).order_by('name')
