@@ -30,9 +30,10 @@ from internship.views import (affectation_statistics, home, internship, master,
                               period, place, speciality, student_resume)
 
 urlpatterns = [
-    # S'il vous plaît, organiser les urls par ordre alphabétique.
+    url(r'^$', home.view_cohort_selection, name='internship'),
+    url(r'^cohort/(?P<cohort_id>[0-9]+)$', home.internships_home, name='internships_home'),
 
-	url(r'^affectation_result/$', affectation_statistics.internship_affectation_statistics,
+    url(r'^affectation_result/$', affectation_statistics.internship_affectation_statistics,
         name='internship_affectation_statistics'),
     url(r'^affectation_result/generate/$', affectation_statistics.internship_affectation_statistics_generate,
         name='internship_affectation_statistics_generate'),
@@ -40,7 +41,6 @@ urlpatterns = [
         name='internship_affectation_statistics_generate_beta'),
     url(r'^affectation_result/sumup/$', affectation_statistics.internship_affectation_sumup, name='internship_affectation_sumup'),
 
-    url(r'^$', home.internships_home, name='internships_home'),
     url(r'^internships/$', internship.internships, name='internships'),
     url(r'^internships/([0-9]+)/students/choice/$', internship.student_choice, name='internship_detail_student_choice'),
     url(r'^internships/block/$', internship.internships_block, name='internships_block'),
@@ -61,12 +61,12 @@ urlpatterns = [
     url(r'^internships_masters/delete/$', master.delete_interships_masters, name='delete_interships_masters'),
     url(r'^internships_masters/upload/$', upload_xls.upload_masters_file, name='upload_interships_masters'),
 
-    url(r'^periods/$', period.internships_periods, name='internships_periods'),
-    url(r'^periods/create/$', period.period_create, name='periods_create'),
-    url(r'^periods/delete/([0-9]+)/$', period.period_delete, name='period_delete'),
-    url(r'^periods/modification/([0-9]+)/$', period.period_modification, name='period_modification'),
-    url(r'^periods/new/$', period.period_new, name='period_new'),
-    url(r'^periods/save/([0-9]+)/$', period.period_save, name='period_save'),
+    url(r'^cohort/(?P<cohort_id>[0-9]+)/periods/$', period.internships_periods, name='internships_periods'),
+    url(r'^cohort/(?P<cohort_id>[0-9]+)/periods/create/$', period.period_create, name='periods_create'),
+    url(r'^cohort/(?P<cohort_id>[0-9]+)/periods/delete/(?P<period_id>[0-9]+)/$', period.period_delete, name='period_delete'),
+    url(r'^cohort/(?P<cohort_id>[0-9]+)/periods/(?P<period_id>[0-9]+)/$', period.period_get, name='period_get'),
+    url(r'^cohort/(?P<cohort_id>[0-9]+)/periods/new/$', period.period_new, name='period_new'),
+    url(r'^cohort/(?P<cohort_id>[0-9]+)/periods/save/(?P<period_id>[0-9]+)/$', period.period_save, name='period_save'),
 
     url(r'^places/$', place.internships_places, name='internships_places'),
     url(r'^places/([0-9]+)/students/affectation/$', place.student_affectation, name='place_detail_student_affectation'),
