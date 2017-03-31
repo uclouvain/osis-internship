@@ -46,6 +46,7 @@ class LearningUnitFactory(DjangoModelFactory):
     class Meta:
         model = "base.LearningUnit"
 
+    learning_container = factory.SubFactory(LearningContainerFactory)
     external_id = factory.fuzzy.FuzzyText(length=10, chars=string.digits)
     changed = factory.fuzzy.FuzzyDateTime(datetime.datetime(2016, 1, 1, tzinfo=_get_tzinfo()),
                                           datetime.datetime(2017, 3, 1, tzinfo=_get_tzinfo()))
