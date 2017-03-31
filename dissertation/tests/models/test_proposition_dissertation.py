@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -23,33 +23,22 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
-from django.contrib import admin
-from django.core.exceptions import ObjectDoesNotExist
-from osis_common.models.serializable_model import SerializableModel
+from dissertation.models.proposition_dissertation import PropositionDissertation
+from dissertation.models.proposition_offer import PropositionOffer
+from dissertation.tests.models import test_proposition_role
 
+def create_proposition_dissertation(title, adviser, person, offer_proposition = None, collaboration="FORBIDDEN", type="OTH",
+                                    level="SPECIFIC", max_number_student=1 ):
+    proposition = PropositionDissertation.objects.create(title=title, author= adviser,
+                                                         collaboration=collaboration, type=type,
+                                                         level=level, max_number_student=max_number_student,
+                                                         creator=person)
+    #Assign adviser as "PROMOTEUR"
+    test_proposition_role.create_proposition_role(proposition=proposition, adviser=adviser)
 
-class FormAdmin(admin.ModelAdmin):
-    list_display = ('title', 'description', 'offer_year')
-    fieldsets = ((None, {'fields': ('title', 'description', 'offer_year')}),)
+    #Make link in many-to-many table
+    if offer_proposition is not None:
+        PropositionOffer.objects.create(proposition_dissertation=proposition, offer_proposition=offer_proposition)
 
+    return proposition
 
-class Form(SerializableModel):
-    offer_year = models.ForeignKey('base.OfferYear')
-    title = models.CharField(max_length=255)
-    description = models.TextField(blank=True, null=True)
-
-    def __str__(self):
-        return u"%s" % self.title
-
-
-def find_by_offer_year(offer_year):
-    return Form.objects.filter(offer_year=offer_year) \
-                       .order_by('title', 'description')
-
-
-def find_by_id(form_id):
-    try:
-        return Form.objects.get(pk=form_id)
-    except ObjectDoesNotExist:
-        return None

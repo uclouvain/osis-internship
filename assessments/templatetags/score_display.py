@@ -33,11 +33,13 @@ def score_display(value, decimal_option):
     if value is None or str(value) == '-':
         return ""
     else:
-        if decimal_option:
-            return "{0:.2f}".format(value)
-        else:
-            return "{0:.0f}".format(value)
-
+        try:
+            if decimal_option:
+                return "{0:.2f}".format(value)
+            else:
+                return "{0:.0f}".format(value)
+        except:
+            return value
 
 @register.filter
 def disabled(value):

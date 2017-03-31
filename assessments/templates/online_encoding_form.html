@@ -67,7 +67,7 @@
                         {% trans 'none' %}
                     {% endif %}
                     <div class="collapse" id="tutors_by_course">
-                        <label>{% trans 'tutors' %}</label><br>
+                        <label>{% trans 'other_tutors' %}</label><br>
                         <ul>
                             {% for prof in tutors %}
                                 <li>{{ prof }}</li>
@@ -184,7 +184,7 @@
                                     <option value="SCORE_MISSING" {% if enrollment.justification_draft == 'SCORE_MISSING' %}selected{% endif %}>{% trans 'SCORE_MISSING' %}</option>
                                 {% endif %}
                             </select>
-                            <input type="hidden" id="hdn_score_changed_{{ enrollment.id }}" name="score_changed_{{ enrollment.id }}"></td>
+                            <input type="hidden" id="hdn_score_changed_{{ enrollment.id }}" name="score_changed_{{ enrollment.id }}" value="false"></td>
                         <td>{{ enrollment.session_exam.deadline | default_if_none:''|date:"j/m/Y" }}</td>
                     </tr>
                 {% endfor %}
@@ -213,53 +213,80 @@ var values = [
         {% endfor %}
         ['', '', '']];
 
-$("input[id^='num_score_']" ).change(function(event) {
-    // Get the object that received the event.
-    var target = $(event.target);
-    var id = target.attr("id");
-    var is_decimal = '{{enrollment.session_exam.learning_unit_year.decimal_scores}}'
-    if (typeof id == 'undefined') {
-        target = target.parent();
-        id = target.attr("id");
+var is_valid_score = function(score) {
+    var is_decimal = {% if learning_unit_year.decimal_scores %} true {% else %} false {% endif %};
+    score = score.replace(',','.');
+    var regex = /^\d+$/
+    if (is_decimal) {
+        regex = /^\d+(\.\d{0,2})?$/
     }
-    var enrollmentId = id.substring(id.lastIndexOf("_") + 1);
-    if (!is_decimal && target.val() % 1 != 0){
-        target.css("border", "1px solid #ff0000");
-    }else{
-        if (target.val() > 20 || (target.val() < 0)) {
-            target.css("border", "1px solid #ff0000");
+    if(!regex.test(score)){
+        return false;
+    }
+    score = parseFloat(score).toFixed(2)
+    if( score > 20 || score < 0 ) {
+        return false
+    }
+    return true;
+}
+
+var validate_form = function() {
+    var has_error = false;
+    $("input[id^='num_score_']" ).each(function(){
+        var score_encoded = $(this).val();
+        if (score_encoded == "" || is_valid_score(score_encoded)) {
+            $(this).css("border", "1px solid #D3D3D3");
         } else {
-            target.css("border", "1px solid lightgrey");
+            $(this).css("border", "1px solid #ff0000");
+            has_error = true;
         }
+    });
+    if(has_error) {
+        disable_submit();
+    }else{
+        enable_submit();
     }
-    if(target.val() != "") {
-        $("#slt_justification_score_" + enrollmentId).val('');
+}
+$( document ).ready(function() { validate_form(); });
+var check_is_score_changed = function(enrollmentId, score, justification) {
+    is_changed = originalValueChanged(values, enrollmentId, score, justification)
+    $("#hdn_score_changed_" + enrollmentId).val(is_changed);
+}
+var disable_submit = function() {
+    $("#bt_save_online_encoding_up").prop('disabled', true);
+    $("#bt_save_online_encoding_down").prop('disabled', true);
+}
+var enable_submit = function() {
+    $("#bt_save_online_encoding_up").prop('disabled', false);
+    $("#bt_save_online_encoding_down").prop('disabled', false);
+}
+
+var ensureOnlyOneInputCompleted = function(event) {
+    if (!event || event == null) { return; }
+
+    var self = $(this);
+    var id = self.attr('id');
+
+    if ( id != undefined ) {
+        var selfPrefix = id.substring(0, id.lastIndexOf("_"));
+        var enrollmentId = id.substring(id.lastIndexOf("_") + 1); //Get enrollement id
+
+        //Empty the other input because we have set a value in [selfPrefix]self.val() != ""
+        if (self.val() != "") {
+            if (selfPrefix == "slt_justification_score") {
+                $("#num_score_" + enrollmentId).val("");
+            } else if (selfPrefix == "num_score") {
+                $("#slt_justification_score_" + enrollmentId).val("");
+                this.setCustomValidity('');
+            }
+        }
+        check_is_score_changed(enrollmentId, $("#num_score_" + enrollmentId).val(),
+                                             $("#slt_justification_score_" + enrollmentId).val());
     }
-    this.setCustomValidity('');
-
-    $("#hdn_score_changed_"+ enrollmentId).val(originalValueChanged(values, enrollmentId,
-                                                                    $("#num_score_"+ enrollmentId).val(),
-                                                                    $("#slt_justification_score_" + enrollmentId).val()));
-});
-
-$("select[id^='slt_justification_score_']" ).change(function(event) {
-    // Get the object that received the event.
-    var target = $(event.target);
-    var id = target.attr("id");
-    if (typeof id == 'undefined') {
-        target = target.parent();
-        id = target.attr("id");
-    }
-
-    var enrollmentId = id.substring(id.lastIndexOf("_") + 1);
-    $("#num_score_" + enrollmentId).val('');
-
-    $("#hdn_score_changed_"+ enrollmentId).val(originalValueChanged(values, enrollmentId,
-                                                                    $("#num_score_"+ enrollmentId).val(),
-                                                                    $("#slt_justification_score_" + enrollmentId).val()));
-});
-
-
+    validate_form();
+}
+$("input[id^='num_score_']" ).change(ensureOnlyOneInputCompleted)
+$("select[id^='slt_justification_score_']" ).change(ensureOnlyOneInputCompleted)
 
 var target_score = '#form_online_encoding tbody tr td input';
 $(target_score).on('keypress',
@@ -276,10 +303,6 @@ $(target_justification).on('keypress',
                              "index_increment_value": 1},
                            select_next_input_value);
 
-
-$(document).on('keypress', function(e) {
-    disable_enter(e);
-});
-
+$(document).on('keypress', function(e) { disable_enter(e); });
 </script>
 {% endblock %}

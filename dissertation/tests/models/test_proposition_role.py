@@ -1,6 +1,6 @@
 ##############################################################################
 #
-#    OSIS stands for Open Student Information System. It's an application
+# OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -23,11 +23,10 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.forms import ModelForm
-from admission.models import form
+from dissertation.models.proposition_role import PropositionRole
 
+def create_proposition_role(proposition, adviser, status="PROMOTEUR"):
+   proposition_role = PropositionRole.objects.create(proposition_dissertation=proposition, adviser=adviser,
+                                                     status=status)
+   return proposition_role
 
-class OfferFormForm(ModelForm):
-    class Meta:
-        model = form.Form
-        fields = ['offer_year', 'title', 'description']

@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -23,19 +23,3 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
-from django.contrib import admin
-from reference.enums import assimilation_criteria as assimilation_criteria_enum
-from osis_common.models.serializable_model import SerializableModel
-
-
-class ApplicationAssimilationCriteriaAdmin(admin.ModelAdmin):
-    list_display = ('application', 'criteria', 'selected')
-
-
-class ApplicationAssimilationCriteria(SerializableModel):
-    application = models.ForeignKey('Application')
-    criteria = models.CharField(max_length=50, choices=assimilation_criteria_enum.ASSIMILATION_CRITERIA_CHOICES)
-    additional_criteria = models.CharField(max_length=50, blank=True, null=True,
-                                           choices=assimilation_criteria_enum.ASSIMILATION_CRITERIA_CHOICES)
-    selected = models.NullBooleanField(null=True, blank=True)

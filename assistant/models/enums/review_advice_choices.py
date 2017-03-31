@@ -23,15 +23,11 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.contrib import admin
-from django.db import models
-from osis_common.models.serializable_model import SerializableModel
 
+FAVORABLE = 'FAVORABLE'
+CONDITIONAL = 'CONDITIONAL'
+UNFAVOURABLE = 'UNFAVOURABLE'
 
-class ApplicationDocumentFileAdmin(admin.ModelAdmin):
-    list_display = ('application', 'document_file')
-
-
-class ApplicationDocumentFile(SerializableModel):
-    application = models.ForeignKey('Application')
-    document_file = models.ForeignKey('osis_common.documentFile')
+REVIEW_ADVICE_CHOICES = ((FAVORABLE, FAVORABLE),
+                         (CONDITIONAL, CONDITIONAL),
+                         (UNFAVOURABLE, UNFAVOURABLE))

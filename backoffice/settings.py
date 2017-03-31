@@ -50,7 +50,6 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
     'django_jenkins',
     'analytical',
     'osis_common',
@@ -61,9 +60,9 @@ INSTALLED_APPS = (
     'assistant',
     'dissertation',
     'internship',
-    'admission',
     'assessments',
     'localflavor',
+    'django.contrib.staticfiles'
 )
 
 # check if we are testing right now
