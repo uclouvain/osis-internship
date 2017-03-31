@@ -71,13 +71,15 @@ def interships_masters(request):
     for i in number_ref:
         organization = mdl_internship.organization.search(reference=i)
         master_organizations.append(organization[0])
-
-    return render(request, "interships_masters.html", {'section': 'internship',
-                                                       'all_masters': query,
-                                                       'all_spec': master_specs,
-                                                       'all_organizations': master_organizations,
-                                                       'speciality_sort_value': speciality_sort_value,
-                                                       'organization_sort_value': organization_sort_value})
+    context = {
+        'section': 'internship',
+        'all_masters': query,
+        'all_spec': master_specs,
+        'all_organizations': master_organizations,
+        'speciality_sort_value': speciality_sort_value,
+        'organization_sort_value': organization_sort_value
+    }
+    return render(request, "internships_masters.html", context)
 
 
 @login_required
