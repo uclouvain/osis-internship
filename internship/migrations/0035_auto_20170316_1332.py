@@ -12,7 +12,13 @@ from internship.models.period import Period
 
 
 def create_the_first_cohort(apps, schema_editor):
-    Cohort.objects.create(name='Cohort 1')
+    Cohort.objects.create(name='2016-2017',
+                          description='Groupe 1',
+                          free_internships_number=8,
+                          mandatory_internships_number=0,
+                          publication_start_date="2017-03-27",
+                          subscription_start_date="2017-03-01",
+                          subscription_end_date="2017-03-20")
 
 
 def assign_first_cohort_to_periods(apps, schema_editor):
@@ -34,10 +40,14 @@ class Migration(migrations.Migration):
             name='Cohort',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=64)),
+                ('uuid', models.UUIDField(db_index=True, default=uuid.uuid4, null=True)),
+                ('name', models.CharField(max_length=255)),
                 ('description', models.TextField()),
-                ('students', models.ManyToManyField(to='base.Student')),
-                ('uuid', models.UUIDField(db_index=True, default=uuid.uuid4, null=True))
+                ('free_internships_number', models.IntegerField()),
+                ('mandatory_internships_number', models.IntegerField()),
+                ('publication_start_date', models.DateField()),
+                ('subscription_start_date', models.DateField()),
+                ('subscription_end_date', models.DateField()),
             ],
         ),
         migrations.RunPython(create_the_first_cohort),

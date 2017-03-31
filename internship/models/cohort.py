@@ -1,14 +1,16 @@
 from django.db import models
 
-from base.models.student import Student
 from osis_common.models.serializable_model import SerializableModel
 
 
 class Cohort(SerializableModel):
     name = models.CharField(max_length=64, null=False)
     description = models.TextField(null=False)
-
-    students = models.ManyToManyField(Student)
+    free_internships_number = models.IntegerField(blank=False)
+    mandatory_internships_number = models.IntegerField(blank=False)
+    publication_start_date = models.DateField(blank=False)
+    subscription_start_date = models.DateField(blank=False)
+    subscription_end_date = models.DateField(blank=False)
 
     def __str__(self):
         return self.name
