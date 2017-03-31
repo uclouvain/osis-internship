@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# OSIS stands for Open Student Information System. It's an application
+#    OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -23,14 +23,15 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+import operator
 import datetime
 import factory
 import factory.fuzzy
 import string
 from django.conf import settings
 from django.utils import timezone
-from base.tests.factories.academic_year import AcademicYearFactory
-
+from base.models.enums import number_session, academic_calendar_type
+from .academic_calendar import AcademicCalendarFactory
 
 def _get_tzinfo():
     if settings.USE_TZ:
@@ -39,19 +40,13 @@ def _get_tzinfo():
         return None
 
 
-class AcademicCalendarFactory(factory.DjangoModelFactory):
+class SessionExamCalendarFactory(factory.DjangoModelFactory):
     class Meta:
-        model = 'base.AcademicCalendar'
+        model = "base.SessionExamCalendar"
 
     external_id = factory.fuzzy.FuzzyText(length=10, chars=string.digits)
     changed = factory.fuzzy.FuzzyDateTime(datetime.datetime(2016, 1, 1, tzinfo=_get_tzinfo()),
                                           datetime.datetime(2017, 3, 1, tzinfo=_get_tzinfo()))
-    academic_year = factory.SubFactory(AcademicYearFactory)
-    title = factory.Sequence(lambda n: 'Academic Calendar - %d' % n)
-    start_date = factory.LazyAttribute(lambda obj: datetime.date(timezone.now().year, 1, 1))
-    end_date = factory.LazyAttribute(lambda obj: datetime.date(timezone.now().year+1, 12, 30))
-    highlight_title = factory.Sequence(lambda n: 'Highlight - %d' % n)
-    highlight_description = factory.Sequence(lambda n: 'Description - %d' % n)
-    highlight_shortcut = factory.Sequence(lambda n: 'Shortcut Highlight - %d' % n)
-    reference = None
-
+    number_session = factory.Iterator(number_session.NUMBERS_SESSION, getter=operator.itemgetter(0))
+    academic_calendar = factory.SubFactory(AcademicCalendarFactory,
+                                           reference=academic_calendar_type.SCORES_EXAM_SUBMISSION)
