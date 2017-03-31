@@ -33,10 +33,6 @@ from internship.tests.factories.period import PeriodFactory
 
 def create_period(name="P1"):
     return PeriodFactory(name=name)
-    # period = mdl_period.Period(name=name, date_start=datetime.date.today(), date_end=datetime.date.today())
-    # period.save()
-    # return period
-
 
 class TestGetByName(TestCase):
     def test_find(self):
@@ -47,7 +43,6 @@ class TestGetByName(TestCase):
         self.assertEqual(period_2, mdl_period.get_by_name("P5"))
 
         self.assertFalse(mdl_period.get_by_name("P4"))
-
 
 
 class PeriodFactoryTestCase(SimpleTestCase):
