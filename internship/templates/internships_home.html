@@ -44,7 +44,7 @@
             <div class="row">
                 <div class="col-md-1"><i class="fa fa-archive" style="font-size: 400%; color: #6699FF;"></i></div>
                 <div class="col-md-5">
-                    <h4 class="media-heading"><a href="{% url 'internships' %}">{% trans 'internships_offers' %}</a></h4>
+                    <h4 class="media-heading"><a href="{% url 'internships' cohort_id=cohort.id %}">{% trans 'internships_offers' %}</a></h4>
                 </div>
                 <div class="col-md-1"><i class="fa fa-list-ol" style="font-size: 400%; color: #6699FF;"></i></div>
                 <div class="col-md-5">
@@ -93,7 +93,7 @@
                     <div class="col-md-1"><i class="fa fa-times-circle-o" style="font-size: 400%; color: #FF6666;"></i></div>
                     <div class="col-md-5">
                         {% trans 'selection_currently_block' %}<br/>
-                        <a href="{% url 'internships_block' %}">
+                        <a href="{% url 'internships_block' cohort_id=cohort.id %}">
                             <button type="submit" class="btn btn-warning" title="{% trans 'activate'%}" id="bt_interships_save">
                                 {% trans 'activate_internship_selection' %}
                             </button>

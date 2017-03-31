@@ -34,6 +34,7 @@ from internship.tests.models import (test_internship_choice,
                                      test_internship_offer,
                                      test_internship_speciality,
                                      test_organization, test_period)
+from internship.tests.factories.cohort import CohortFactory
 
 
 class TestModifyStudentChoices(TestCase):
@@ -204,20 +205,32 @@ class TestModifyPeriods(TestCase):
             test_period.create_period("P%d" % period)
 
     def testAccessUrl(self):
-        url = reverse("edit_period_places", kwargs={"internship_id": self.offer.id})
+        cohort = CohortFactory()
+        kwargs = {
+            'internship_id': self.offer.id,
+            'cohort_id': cohort.id,
+        }
+        url = reverse("edit_period_places", kwargs=kwargs)
         response = self.client.get(url)
 
         self.assertEqual(200, response.status_code)
 
     def test_save_period_places(self):
-        url = reverse("save_period_places",  kwargs={"internship_id": self.offer.id})
+        cohort = CohortFactory()
+        kwargs = {
+            'internship_id': self.offer.id,
+            'cohort_id': cohort.id,
+        }
+
+        url = reverse("save_period_places",  kwargs=kwargs)
+
         response = self.client.post(url, data={
             "P1": 2,
             "P5": 8,
         })
 
-        period_places = list(mdl_period_places.PeriodInternshipPlaces.objects.all())
-        self.assertEqual(len(period_places), 2)
+        number_of_period_places = mdl_period_places.PeriodInternshipPlaces.objects.count()
+        self.assertEqual(number_of_period_places, 2)
 
 
 def add_permission(user, codename):

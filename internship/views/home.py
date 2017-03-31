@@ -30,11 +30,22 @@ from internship import models as mdl_internship
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
-def internships_home(request):
+def internships_home(request, cohort_id):
     blockable = mdl_internship.internship_offer.get_number_selectable() > 0
-
+    from internship.models.cohort import Cohort
+    cohort = Cohort.objects.get(pk=cohort_id)
     context = {
         'section': 'internship',
         'blockable': blockable,
+        'cohort': cohort,
     }
     return render(request, "internships_home.html", context=context)
+
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def view_cohort_selection(request):
+    from internship.models.cohort import Cohort
+
+    cohorts = Cohort.objects.all()
+    return render(request, 'cohort/selection.html', {'cohorts': cohorts})

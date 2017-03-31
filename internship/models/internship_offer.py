@@ -45,6 +45,8 @@ class InternshipOffer(SerializableModel):
     master = models.CharField(max_length=100, blank=True, null=True)
     selectable = models.BooleanField(default=True)
 
+    cohort = models.ForeignKey('internship.Cohort', null=False, on_delete=models.CASCADE)
+
     def __str__(self):
         return self.title
 

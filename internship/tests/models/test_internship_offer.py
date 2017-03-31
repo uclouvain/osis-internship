@@ -24,23 +24,42 @@
 #
 ##############################################################################
 from django.test import TestCase
+
 from internship.models import internship_offer
 from internship.tests.models import test_organization, test_internship_speciality
+from internship.tests.factories.cohort import CohortFactory
 
 
 def create_internship_offer():
     organization = test_organization.create_organization()
     speciality = test_internship_speciality.create_speciality()
-    offer = internship_offer.InternshipOffer(speciality=speciality, organization=organization, title="offer_test",
-                                             maximum_enrollments=20)
+    cohort = CohortFactory()
+
+    offer = internship_offer.InternshipOffer(
+        speciality=speciality,
+        organization=organization,
+        title="offer_test",
+        maximum_enrollments=20,
+        cohort=cohort
+    )
     offer.save()
+
     return offer
 
 
-def create_specific_internship_offer(organization, speciality, title="offer_test"):
-    offer = internship_offer.InternshipOffer(speciality=speciality, organization=organization, title=title,
-                                             maximum_enrollments=20)
+def create_specific_internship_offer(organization, speciality, title="offer_test", cohort=None):
+    if cohort is None:
+        cohort = CohortFactory()
+
+    offer = internship_offer.InternshipOffer(
+        speciality=speciality,
+        organization=organization,
+        title=title,
+        maximum_enrollments=20,
+        cohort=cohort
+    )
     offer.save()
+
     return offer
 
 
@@ -48,7 +67,7 @@ class TestInternshipOffer(TestCase):
     def setUp(self):
         self.offer = create_internship_offer()
 
-    def test_find_py_pk(self):
+    def test_find_by_pk(self):
         pk = self.offer.pk
         actual_offer = internship_offer.find_by_pk(pk)
         self.assertEquals(self.offer, actual_offer)

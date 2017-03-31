@@ -23,65 +23,99 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.http import HttpResponseRedirect
-from django.core.urlresolvers import reverse
-from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, permission_required
+from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404, render
+
 from internship import models as mdl_internship
 from internship.forms.period_form import PeriodForm
+from internship.models.cohort import Cohort
+from internship.models.period import Period
 
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
-def internships_periods(request):
-    periods = mdl_internship.period.search()
-    return render(request, "periods.html", {'section': 'internship',
-                                            'periods': periods})
+def internships_periods(request, cohort_id):
+    cohort = get_object_or_404(Cohort, pk=cohort_id)
+    periods = mdl_internship.period.Period.objects.filter(cohort_id=cohort_id)
+    context = {
+        'section': 'internship',
+        'periods': periods,
+        'cohort': cohort,
+    }
+    return render(request, "periods.html", context)
 
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
-def period_create(request):
-    period_form = PeriodForm(data=request.POST)
-    return render(request, "period_create.html", {'section': 'internship',
-                                                  'form': period_form,
-                                                  })
+def period_create(request, cohort_id):
+    cohort = get_object_or_404(Cohort, pk=cohort_id)
+    period_form = PeriodForm()
+    context = {
+        'section': 'internship',
+        'form': period_form,
+        'cohort': cohort,
+        'url_form': reverse('period_new', kwargs={'cohort_id': cohort.id}),
+    }
+    return render(request, "period_create.html", context)
 
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
-def period_save(request, period_id):
-    if period_id:
-        period = mdl_internship.period.find_by_id(period_id)
-    else:
-        period = mdl_internship.period.Period()
+def period_save(request, cohort_id, period_id):
+    cohort = get_object_or_404(Cohort, pk=cohort_id)
+    period = get_object_or_404(Period, pk=period_id, cohort_id=cohort_id)
     form = PeriodForm(data=request.POST, instance=period)
     form.save()
 
-    return HttpResponseRedirect(reverse('internships_periods'))
+    kwargs = {
+        'cohort_id': cohort.id
+    }
+    return HttpResponseRedirect(reverse('internships_periods', kwargs=kwargs))
 
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
-def period_new(request):
-    return period_save(request, None)
+def period_new(request, cohort_id):
+    cohort = get_object_or_404(Cohort, pk=cohort_id)
+    period = mdl_internship.period.Period()
+    period.cohort = cohort
+    form = PeriodForm(data=request.POST, instance=period)
+    form.save()
+    kwargs = {
+        'cohort_id': cohort.id
+    }
+    return HttpResponseRedirect(reverse('internships_periods', kwargs=kwargs))
 
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
-def period_delete(request, period_id):
-    period = mdl_internship.period.find_by_id(period_id)
+def period_delete(request, cohort_id, period_id):
+    cohort = get_object_or_404(Cohort, pk=cohort_id)
+    period = get_object_or_404(Period, pk=period_id, cohort__id=cohort_id)
     period.delete()
-    return HttpResponseRedirect(reverse('internships_periods'))
+    kwargs = {
+        'cohort_id': cohort.id
+    }
+    return HttpResponseRedirect(reverse('internships_periods', kwargs=kwargs))
 
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
-def period_modification(request, period_id):
-    period = mdl_internship.period.find_by_id(period_id)
-    period.date_start = period.date_start.strftime("%Y-%m-%d")
-    period.date_end = period.date_end.strftime("%Y-%m-%d")
+def period_get(request, cohort_id, period_id):
+    cohort = get_object_or_404(Cohort, pk=cohort_id)
+    period = get_object_or_404(Period, pk=period_id, cohort__id=cohort_id)
 
-    return render(request, "period_create.html", {'section': 'internship',
-                                                  'period': period
-                                                  })
+    kwargs = {
+        'cohort_id': cohort.id,
+        'period_id': period.id,
+    }
+    context = {
+        'section': 'internship',
+        'period': period,
+        'cohort': cohort,
+        'url_form': reverse('period_save', kwargs=kwargs)
+    }
+
+    return render(request, "period_create.html", context=context)

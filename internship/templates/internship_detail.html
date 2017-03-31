@@ -28,8 +28,8 @@
 
 {% block breadcrumb %}
     <li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
-    <li><a href="{% url 'internships_home' %}">{% trans 'internships_managment' %}</a></li>
-    <li><a href="{% url 'internships' %}">{% trans 'all_internships' %}</a></li>
+    <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{% trans 'internships_managment' %}</a></li>
+    <li><a href="{% url 'internships' cohort_id=cohort.id %}">{% trans 'all_internships' %}</a></li>
     <li class="active">{% trans 'detail_choice' %}</li>
 {% endblock %}
 {% block content %}
@@ -59,7 +59,7 @@
                         <ul>
                             {% for student in students %}
                                 {% if student.choice == forloop.parentloop.counter0 %}
-                                    <li> {{ student.student }}
+                                    <li> {{ student.student }} </li>
                                 {% endif %}
                             {% endfor %}
                         </ul>
@@ -69,7 +69,7 @@
                 <br>
             {% endfor %}
                 <div class="row">
-                    <a href="{% url 'edit_period_places' internship.id %}" class="btn btn-primary" role="button">{% trans 'edit_places' %}</a>
+                    <a href="{% url 'edit_period_places' cohort_id=cohort.id internship_id=internship.id %}" class="btn btn-primary" role="button">{% trans 'edit_places' %}</a>
                 </div>
             </div>
     </div>
