@@ -38,19 +38,112 @@
   <div class="panel panel-default">
       <table class="table table-hover">
         <tr>
-          <th style="text-align:center">{% trans 'offer_proposition'%}</th>
-          <th style="text-align:center">{% trans 'student_can_manage_readers'%}</th>
-          <th style="text-align:center">{% trans 'adviser_can_suggest_reader'%}</th>
-          <th style="text-align:center">{% trans 'evaluation_first_year'%}</th>
-          <th style="text-align:center">{% trans 'validation_commission_exists'%}</th>
+          <th>{% trans 'offer_proposition'%}</th>
+          <th>{% trans 'date_parameters'%}</th>
+          <th>{% trans 'other_parameters'%}</th>
+          <!--<th style="text-align:center">{% trans 'in_periode_jury_visibility'%}</th>-->
+          <!--<th style="text-align:center">{% trans 'in_periode_edit_title'%}</th>-->
+          <!--<th style="text-align:center">{% trans 'student_can_manage_readers'%}</th>-->
+          <!--<th style="text-align:center">{% trans 'adviser_can_suggest_reader'%}</th>-->
+          <!--<th style="text-align:center">{% trans 'evaluation_first_year'%}</th>-->
+          <!--<th style="text-align:center">{% trans 'validation_commission_exists'%}</th>-->
         </tr>
         {% for offer_proposition in offer_propositions %}
           <tr>
-            <td style="text-align:center"><a href="{% url 'manager_offer_parameters_detail' pk=offer_proposition.pk %}">{{ offer_proposition.acronym }}</a></td>
-            <td style="text-align:center">{{ offer_proposition.student_can_manage_readers|yesno:_("yes,no") }}</td>
-            <td style="text-align:center">{{ offer_proposition.adviser_can_suggest_reader|yesno:_("yes,no") }}</td>
-            <td style="text-align:center">{{ offer_proposition.evaluation_first_year|yesno:_("yes,no") }}</td>
-            <td style="text-align:center">{{ offer_proposition.validation_commission_exists|yesno:_("yes,no") }}</td>
+            <td>
+                <a href="{% url 'manager_offer_parameters_detail' pk=offer_proposition.pk %}">
+                    {{ offer_proposition.acronym }}
+                </a>
+            </td>
+            <td>
+                <table>
+                    <tr>
+                        <td style="padding-right: 1em">
+                            {% trans 'periode_visibility_proposition'%}
+                        </td>
+                        <td style="padding-right: 1em">
+                            {{ offer_proposition.start_visibility_proposition|date:"d/m/Y" }} -
+                            {{ offer_proposition.end_visibility_proposition|date:"d/m/Y" }}
+                        </td>
+                        <td style="padding-right: 1em">
+                            {{ offer_proposition.in_periode_visibility_proposition|yesno:_("yes,no") }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding-right: 1em">
+                            {% trans 'periode_visibility_dissertation'%}
+                        </td>
+                        <td style="padding-right: 1em">
+                            {{ offer_proposition.start_visibility_proposition|date:"d/m/Y" }} -
+                            {{ offer_proposition.end_visibility_proposition|date:"d/m/Y" }}
+                        </td>
+                        <td style="padding-right: 1em">
+                            {{ offer_proposition.in_periode_visibility_dissertation|yesno:_("yes,no") }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding-right: 1em">
+                            {% trans 'periode_jury_visibility'%}
+                        </td>
+                        <td style="padding-right: 1em">
+                            {{ offer_proposition.start_visibility_proposition|date:"d/m/Y" }} -
+                            {{ offer_proposition.end_visibility_proposition|date:"d/m/Y" }}
+                        </td>
+                        <td style="padding-right: 1em">
+                            {{ offer_proposition.in_periode_jury_visibility|yesno:_("yes,no") }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding-right: 1em">
+                            {% trans 'periode_edit_title'%}
+                        </td>
+                        <td style="padding-right: 1em">
+                            {{ offer_proposition.start_visibility_proposition|date:"d/m/Y" }} -
+                            {{ offer_proposition.end_visibility_proposition|date:"d/m/Y" }}
+                        </td>
+                        <td style="padding-right: 1em">
+                            {{ offer_proposition.in_periode_edit_title|yesno:_("yes,no") }}
+                        </td>
+                    </tr>
+                </table>
+            </td>
+
+            <td>
+                <table>
+                    <tr>
+                        <td style="padding-right: 1em">
+                            {% trans 'student_can_manage_readers'%}
+                        </td>
+                        <td style="padding-right: 1em">
+                            {{ offer_proposition.student_can_manage_readers|yesno:_("yes,no") }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding-right: 1em">
+                            {% trans 'adviser_can_suggest_reader'%}
+                        </td>
+                        <td style="padding-right: 1em">
+                            {{ offer_proposition.adviser_can_suggest_reader|yesno:_("yes,no") }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding-right: 1em">
+                            {% trans 'evaluation_first_year'%}
+                        </td>
+                        <td style="padding-right: 1em">
+                            {{ offer_proposition.evaluation_first_year|yesno:_("yes,no") }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding-right: 1em">
+                            {% trans 'validation_commission_exists'%}
+                        </td>
+                        <td style="padding-right: 1em">
+                            {{ offer_proposition.validation_commission_exists|yesno:_("yes,no") }}
+                        </td>
+                    </tr>
+                </table>
+            </td>
           </tr>
         {% endfor %}
       </table>
