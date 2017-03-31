@@ -59,103 +59,88 @@
 <input type="hidden" value="{{dissertation.pk | default_if_none:''}}" id="hdn_current_dissertation_id" name="dissertation_id" title="dissertation_id" >
 <div class="panel panel-default">
     <div class="panel-body">
-        <div class="row">
-            <div class="col-md-9">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">{% trans 'dissertation_informations' %}</h3>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">{% trans 'dissertation_informations' %}</h3>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-3" style="text-align: right">
+                        <label>{% trans 'author' %}</label>
                     </div>
-                    <div class="panel-body">
-                        <div class="row">
-                            <div class="col-md-3" style="text-align: right">
-                                <label>{% trans 'author' %}</label>
-                            </div>
-                            <div class="col-md-9">
-                                {{ dissertation.author }}
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-3" style="text-align: right">
-                                <label>{% trans 'title' %}</label>
-                            </div>
-                            <div class="col-md-9">
-                                {{ dissertation.title }}
-                            </div>
-                        </div>
-                        {% if filename != "" %}
-                            <div class="row">
-                                <div class="col-md-3" style="text-align:right">
-                                    <label>{% trans 'file' %}</label>
-                                </div>
-                                <div class="col-md-9">
-                                    <a href="{% url 'dissertation_download' dissertation_pk=dissertation.pk %}">{% trans 'link' %}</a>
-                                </div>
-                            </div>
-                        {% endif %}
-                        <div class="row">
-                            <div class="col-md-3" style="text-align: right">
-                                <label>{% trans 'status' %}</label>
-                            </div>
-                            <div class="col-md-9">
-                                {% with st=dissertation.status %}
-                                    {% if st == 'DIR_OK' or st == 'ENDED_WIN' %}
-                                        <span class="label label-success">
-                                    {% elif st == 'DIR_SUBMIT' or st == 'COM_SUBMIT' or st == 'EVA_SUBMIT' %}
-                                        <span class="label label-primary">
-                                    {% elif st == 'DIR_KO' or st == 'ENDED_LOS' or st == 'COM_KO' or st == 'EVA_KO' %}
-                                        <span class="label label-danger">
-                                    {% else %}
-                                        <span class="label label-default">
-                                    {% endif %}
-                                        {{ dissertation.get_status_display }}
-                                    </span>
-                                {% endwith %}
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-3" style="text-align: right">
-                                <label>{% trans 'description' %}</label>
-                            </div>
-                            <div class="col-md-9" style="text-align: justify">
-                                {{ dissertation.description|linebreaks }}
-                            </div>
-                        </div>
-                        <div class="row">
-                          <div class="col-md-3" style="text-align: right">
-                              <label>{% trans 'defend_periode' %}</label>
-                          </div>
-                          <div class="col-md-9">
-                              {{ dissertation.defend_periode|default_if_none:_("undefined") }}
-                          </div>
-                        </div>
-                        <div class="row">
-                          <div class="col-md-3" style="text-align: right">
-                              <label>{% trans 'defend_year' %}</label>
-                          </div>
-                          <div class="col-md-9">
-                              {{ dissertation.defend_year|default_if_none:_("undefined") }}
-                          </div>
-                        </div>
-                        <div class="row">
-                          <div class="col-md-3" style="text-align: right">
-                              <label>{% trans 'dissertation_location' %}</label>
-                          </div>
-                          <div class="col-md-9">
-                              {{ dissertation.location|default_if_none:_("undefined") }}
-                          </div>
-                        </div>
+                    <div class="col-md-9">
+                        {{ dissertation.author }}
                     </div>
                 </div>
-            </div>
-            <div class="col-md-3">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">{% trans 'student_photo' %}</h3>
+                <div class="row">
+                    <div class="col-md-3" style="text-align: right">
+                        <label>{% trans 'title' %}</label>
                     </div>
-                    <div class="panel-body" style="text-align: center">
-                        <img src="/my_osis/profile/{{ dissertation.author.person.id }}" class="avatar img-responsive"
-                               height="50%" width="50%"/>
+                    <div class="col-md-9">
+                        {{ dissertation.title }}
                     </div>
+                </div>
+                {% if filename != "" %}
+                    <div class="row">
+                        <div class="col-md-3" style="text-align:right">
+                            <label>{% trans 'file' %}</label>
+                        </div>
+                        <div class="col-md-9">
+                            <a href="{% url 'dissertation_download' dissertation_pk=dissertation.pk %}">{% trans 'link' %}</a>
+                        </div>
+                    </div>
+                {% endif %}
+                <div class="row">
+                    <div class="col-md-3" style="text-align: right">
+                        <label>{% trans 'status' %}</label>
+                    </div>
+                    <div class="col-md-9">
+                        {% with st=dissertation.status %}
+                            {% if st == 'DIR_OK' or st == 'ENDED_WIN' %}
+                                <span class="label label-success">
+                            {% elif st == 'DIR_SUBMIT' or st == 'COM_SUBMIT' or st == 'EVA_SUBMIT' %}
+                                <span class="label label-primary">
+                            {% elif st == 'DIR_KO' or st == 'ENDED_LOS' or st == 'COM_KO' or st == 'EVA_KO' %}
+                                <span class="label label-danger">
+                            {% else %}
+                                <span class="label label-default">
+                            {% endif %}
+                                {{ dissertation.get_status_display }}
+                            </span>
+                        {% endwith %}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3" style="text-align: right">
+                        <label>{% trans 'description' %}</label>
+                    </div>
+                    <div class="col-md-9" style="text-align: justify">
+                        {{ dissertation.description|linebreaks }}
+                    </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-3" style="text-align: right">
+                      <label>{% trans 'defend_periode' %}</label>
+                  </div>
+                  <div class="col-md-9">
+                      {{ dissertation.defend_periode|default_if_none:_("undefined") }}
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-3" style="text-align: right">
+                      <label>{% trans 'defend_year' %}</label>
+                  </div>
+                  <div class="col-md-9">
+                      {{ dissertation.defend_year|default_if_none:_("undefined") }}
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-3" style="text-align: right">
+                      <label>{% trans 'dissertation_location' %}</label>
+                  </div>
+                  <div class="col-md-9">
+                      {{ dissertation.location|default_if_none:_("undefined") }}
+                  </div>
                 </div>
             </div>
         </div>
