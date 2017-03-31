@@ -43,19 +43,17 @@
                     <input type="text" id="txt_name" name="name" class="form-control" >
                 </div>
                 <div class="col-md-8">
-                    <input type="hidden" id="hdn_pgms_id"  name="pgms_id" value="{{ pgms_id }}">
+                    <input type="text" id="hdn_pgms_id"  name="pgms_id" value="{{ pgms_id }}">
                     <button type="submit" id="bt_submit_person_search" class="btn btn-primary pull-right" role="button">
                         <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
                     </button>
                 </div>
             </form>
         </div>
-
-
         <br>
         <form method="post" action="{% url 'add_manager_person'%}">
             {% csrf_token %}
-            <input type="hidden" id="hdn_pgms_id"  name="pgms_id" value="{{ pgms_id }}">
+            <input type="text" id="hdn_pgms_id"  name="pgms_id" value="{{ pgms_id }}">
             <input type="hidden" id="hdn_person_id" name="person_id" value="">
             <div class="row">
 
@@ -80,9 +78,11 @@
                                     {{ person.last_name }}
                                 </button>
                             </td>
-                            <td>                                <button type="submit" class="btn-link" id="lnk_add_manager_firstname_{{person.id}}">
+                            <td>
+                                <button type="submit" class="btn-link" id="lnk_add_manager_firstname_{{person.id}}">
                                 {{ person.first_name }}
-                            </button></td>
+                                </button>
+                            </td>
                             <td>{{ person.middle_name | default_if_none:''  }}</td>
                             <td>{{ person.email | default_if_none:'' }}</td>
                             <td>{{ person.user | default_if_none:'' }}</td>

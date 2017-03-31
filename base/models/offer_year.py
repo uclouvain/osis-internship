@@ -134,7 +134,10 @@ def find_by_structure(struct):
 
 
 def find_by_id(offer_year_id):
-    return OfferYear.objects.get(pk=offer_year_id)
+    try:
+        return OfferYear.objects.get(pk=offer_year_id)
+    except OfferYear.DoesNotExist:
+        return None
 
 
 def find_by_acronym(acronym):

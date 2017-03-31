@@ -135,5 +135,5 @@ def count_by_email(email):
     return search_by_email(email).count()
 
 
-def find_by_last_name(a_name):
+def find_by_lastname(a_name):
     return Person.objects.filter(Q(last_name__icontains=a_name) | Q(first_name__icontains=a_name))

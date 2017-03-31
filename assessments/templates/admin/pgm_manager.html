@@ -36,13 +36,10 @@
 </div>
 <div class="panel panel-default">
     <div class="panel-body">
-        <div>
-
-        </div>
         <br>
         <div class="row">
             <form  method="get" action="{% url 'pgm_manager_search'%}" >
-                <div class="col-md-2">
+                <div class="col-md-3">
                     <label for="slt_entity" >{% trans 'entity'%}</label>
                     <select class="form-control" id="slt_entity" name="entity" >
                         <option selected value="-">{% trans 'all_hierarchy' %} {{ manager_entity.acronym }}</option>
@@ -65,15 +62,15 @@
                     </select>
                 </div>
                 <div class="col-md-4">
-                    <label for="slt_manager" >{% trans 'managers'%}</label>
-                    <select class="form-control" id="slt_manager"  name="manager">
+                    <label for="slt_manager" >{% trans 'managers'%} {{person.id}}</label>
+                    <select class="form-control" id="slt_person"  name="person">
                         <option value="-">{% trans 'all_label' %}</option>
                         {% for mgr in managers %}
-                            <option value="{{ mgr.id }}">{{ mgr }}</option>
+                            <option value="{{ mgr.person.id }}" {%if person.id == mgr.person.id %}selected{% endif %} >{{ mgr.person }}</option>
                         {% endfor %}
                     </select>
                 </div>
-                <div class="col-md-2">
+                <div class="col-md-1">
                     <br>
                     <button type="submit" id="bt_submit_pgm_manager_search" class="btn btn-primary" role="button">
                         <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
@@ -127,11 +124,13 @@
 
                            </tbody>
                        </table>
-
                        <br>
-                       <button type="submit" id="bt_add_pgm_manager" class="btn btn-primary pull-right" role="button">
+                       {% if pgms %}
+                       <button type="submit" id="bt_add_pgm_manager" class="btn btn-primary pull-right" role="button"
+                               title="{% trans 'add_manager' %}">
                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                        </button>
+                       {% endif%}
 
                    </div>
                </form>
@@ -237,7 +236,11 @@
 
     $(document).ready(function() {
         $('#bt_add_pgm_manager').attr("disabled", true);
+        data_table_init();
 
+    });
+
+    function data_table_init(){
         $('#tb_pgms').DataTable( {
             paging:   false,
             searching: false,
@@ -254,7 +257,7 @@
                 "orderable": false,
             } ]
         } );
-    });
+    }
 
     function update_manager_list(ch){
         $('#tb_managers tbody > tr').remove();
@@ -278,6 +281,7 @@
                         trHTML += '<td>' + value.person_last_name + ',' + value.person_first_name +'</td>';
                         trHTML += '<td>';
                         trHTML += '<button type="button" class="btn btn-default pull-right" data-toggle="modal" data-target="#pnl_remove_manager_modal" ';
+                        trHTML += ' title="'+gettext('remove_manager')+'"';
                         trHTML += ' id="btn_remove_manager_modal_' + value.person_id + '" ';
                         //trHTML += ' onclick="delete_manager('+value.person_id+',\''+ value.offer_year_acronyms_on+'\',\''+ value.offer_year_acronyms_off + '\',\''+ value.person_last_name+'\',\''+value.person_first_name+'\');"> ';
                         trHTML += ' onclick="delete_manager('+id_person+',\''+acronyms_on+'\',\''+acronyms_off+'\',\''+last_name+'\',\''+first_name+'\',\''+pgm_ids+'\');" ';

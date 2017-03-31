@@ -21,3 +21,5 @@ msgstr ""
 msgid "of_pgm"
 msgstr "des programmes suivants : "
 
+msgid "remove_manager"
+msgstr "Supprimer le gestionnaire"
