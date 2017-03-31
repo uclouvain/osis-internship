@@ -233,10 +233,7 @@ Install phantomjs:
 
 1. Download phantomjs from : http://phantomjs.org/download.html
 2. Move the executable file in /usr/local/bin
-3. Change the path
-
-    (venv)$ sudo ln -s /path/to/phantomjs /usr/local/bin
-
+3. Add the path to your .bash_profile or .profile
 
 Create the data structure in the database:
 
