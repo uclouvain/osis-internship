@@ -26,10 +26,10 @@
 from voluptuous import Schema, Required, Range, All, Length
 
 from django.conf import settings
-from django.core.management.commands.runserver import Command as BaseRunserverCommand
+from django.contrib.staticfiles.management.commands.runserver import Command as StaticfilesRunserverCommand
 
 
-class Command(BaseRunserverCommand):
+class Command(StaticfilesRunserverCommand):
     def add_arguments(self, parser):
         parser.add_argument('--validate-settings',
                             action='store_false',
@@ -42,7 +42,7 @@ class Command(BaseRunserverCommand):
         validate_settings = options.get('validate_settings')
         if validate_settings:
             self.check_settings()
-        super(Command, self).handle(self, *args, **options)
+        return super(Command, self).handle(*args, **options)
 
     def check_settings(self):
         is_queue_setting_valid()
