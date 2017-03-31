@@ -17,3 +17,4 @@ backoffice/server_settings.py
 *.mo
 /uploads/
 .env
+.coverage
