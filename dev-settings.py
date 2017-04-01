@@ -1,22 +1,20 @@
 from backoffice.settings import *
-
 LOGGERS = {}
 
-INSTALLED_APPS = tuple(INSTALLED_APPS) + (
-    'django_extensions',
-    'debug_toolbar',
-)
+del QUEUES
 
-MIDDLEWARE_CLASSES = tuple(MIDDLEWARE_CLASSES) + (
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
-)
+if DEBUG:
+    INSTALLED_APPS = INSTALLED_APPS + (
+        'django_extensions',
+        'debug_toolbar',
+    )
 
-DEBUG_TOOLBAR_CONFIG = {
-    'SHOW_TOOLBAR_CALLBACK': "%s.true" % __name__,
-}
+    MIDDLEWARE_CLASSES = MIDDLEWARE_CLASSES + (
+        'debug_toolbar.middleware.DebugToolbarMiddleware',
+    )
 
-def true(request):
-    return True
+    INTERNAL_IPS = ('127.0.0.1',)
 
-import django
-django.setup()
+    DEBUG_TOOLBAR_CONFIG = {
+        'INTERCEPT_REDIRECTS': False,
+    }
