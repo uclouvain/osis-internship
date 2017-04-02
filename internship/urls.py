@@ -23,7 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.conf.urls import url
+from django.conf.urls import url, include
 
 from internship.utils import upload_xls
 from internship.views import (affectation_statistics, home, internship, master,
@@ -31,72 +31,88 @@ from internship.views import (affectation_statistics, home, internship, master,
 
 urlpatterns = [
     url(r'^$', home.view_cohort_selection, name='internship'),
-    url(r'^cohort/(?P<cohort_id>[0-9]+)$', home.internships_home, name='internships_home'),
+    url(r'^cohort/(?P<cohort_id>[0-9]+)/', include([
+        url(r'^$', home.internships_home, name='internships_home'),
 
-    url(r'^affectation_result/$', affectation_statistics.internship_affectation_statistics,
-        name='internship_affectation_statistics'),
-    url(r'^affectation_result/generate/$', affectation_statistics.internship_affectation_statistics_generate,
-        name='internship_affectation_statistics_generate'),
-    url(r'^affectation_result/generate_beta/$', affectation_statistics.assign_automatically_internships,
-        name='internship_affectation_statistics_generate_beta'),
-    url(r'^affectation_result/sumup/$', affectation_statistics.internship_affectation_sumup,
-        name='internship_affectation_sumup'),
+        url(r'^offers/', include([
+            url(r'^$', internship.internships, name='internships'),
+            url(r'^(?P<offer_id>[0-9]+)/students/choice/$', internship.student_choice, name='internship_detail_student_choice'),
+            url(r'^block/$', internship.internships_block, name='internships_block'),
+            url(r'^save/$', internship.internships_save, name='internships_save'),
+            url(r'^save/modification/student/$', internship.internship_save_modification_student, name='internship_save_modification_student'),
+            url(r'^std/$', internship.internships_stud, name='internships_stud'),
+        ])),
 
-    url(r'^cohort/(?P<cohort_id>[0-9]+)/offers/$', internship.internships, name='internships'),
-    url(r'^cohort/(?P<cohort_id>[0-9]+)/offers/(?P<offer_id>[0-9]+)/students/choice/$', internship.student_choice, name='internship_detail_student_choice'),
-    url(r'^cohort/(?P<cohort_id>[0-9]+)/offers/block/$', internship.internships_block, name='internships_block'),
-    url(r'^cohort/(?P<cohort_id>[0-9]+)/offers/save/$', internship.internships_save, name='internships_save'),
-    url(r'^cohort/(?P<cohort_id>[0-9]+)/offers/save/modification/student/$', internship.internship_save_modification_student, name='internship_save_modification_student'),
-    url(r'^cohort/(?P<cohort_id>[0-9]+)/offers/std/$', internship.internships_stud, name='internships_stud'),
+        url(r'^periods/', include([
+            url(r'^$', period.internships_periods, name='internships_periods'),
+            url(r'^create/$', period.period_create, name='periods_create'),
+            url(r'^delete/(?P<period_id>[0-9]+)/$', period.period_delete, name='period_delete'),
+            url(r'^(?P<period_id>[0-9]+)/$', period.period_get, name='period_get'),
+            url(r'^new/$', period.period_new, name='period_new'),
+            url(r'^save/(?P<period_id>[0-9]+)/$', period.period_save, name='period_save')
+        ])),
 
-    url(r'^student/(?P<registration_id>[0-9]+)/modification/$',
-        internship.internships_modification_student, name='internships_modification_student'),
-    url(r'^student/(?P<registration_id>[0-9]+)/(?P<internship_id>[0-9]+)/modification/$',
-        internship.internships_modification_student, name='switch_internship'),
-    url(r'^student/(?P<registration_id>[0-9]+)/(?P<internship_id>[0-9]+)/(?P<speciality_id>[0-9]+)/modification/$',
-        internship.internships_modification_student, name='specific_internship_student_modification'),
-    url(r'^switch_speciality/(?P<registration_id>[0-9]+)/(?P<internship_id>[0-9]+)/$',
-        internship.assign_speciality_for_internship, name='switch_speciality'),
+        url(r'^period_places/', include([
+            url(r'^edit/(?P<internship_id>[0-9]+)/$', internship.edit_period_places, name='edit_period_places'),
+            url(r'^save/(?P<internship_id>[0-9]+)/$', internship.save_period_places, name='save_period_places'),
+        ])),
+    ])),
+
+    url(r'^affectation_result/', include([
+        url(r'^$', affectation_statistics.internship_affectation_statistics, name='internship_affectation_statistics'),
+        url(r'^generate/$', affectation_statistics.internship_affectation_statistics_generate, name='internship_affectation_statistics_generate'),
+        url(r'^generate_beta/$', affectation_statistics.assign_automatically_internships, name='internship_affectation_statistics_generate_beta'),
+        url(r'^sumup/$', affectation_statistics.internship_affectation_sumup, name='internship_affectation_sumup'),
+    ])),
+
+    url(r'^student/(?P<registration_id>[0-9]+)/', include([
+        url(r'^modification/$', internship.internships_modification_student, name='internships_modification_student'),
+        url(r'^(?P<internship_id>[0-9]+)/modification/$', internship.internships_modification_student, name='switch_internship'),
+        url(r'^(?P<internship_id>[0-9]+)/(?P<speciality_id>[0-9]+)/modification/$', internship.internships_modification_student, name='specific_internship_student_modification'),
+    ])),
+
+    url(r'^switch_speciality/(?P<registration_id>[0-9]+)/(?P<internship_id>[0-9]+)/$', internship.assign_speciality_for_internship, name='switch_speciality'),
     url(r'^internships/upload/$', upload_xls.upload_internships_file,name='upload_internship'),
 
-    url(r'^internships_masters/$', master.interships_masters, name='interships_masters'),
-    url(r'^internships_masters/delete/$', master.delete_interships_masters, name='delete_interships_masters'),
-    url(r'^internships_masters/upload/$', upload_xls.upload_masters_file, name='upload_interships_masters'),
+    url(r'^internships_masters/', include([
+        url(r'^$', master.interships_masters, name='interships_masters'),
+        url(r'^delete/$', master.delete_interships_masters, name='delete_interships_masters'),
+        url(r'^upload/$', upload_xls.upload_masters_file, name='upload_interships_masters'),
+    ])),
 
-    url(r'^cohort/(?P<cohort_id>[0-9]+)/periods/$', period.internships_periods, name='internships_periods'),
-    url(r'^cohort/(?P<cohort_id>[0-9]+)/periods/create/$', period.period_create, name='periods_create'),
-    url(r'^cohort/(?P<cohort_id>[0-9]+)/periods/delete/(?P<period_id>[0-9]+)/$', period.period_delete, name='period_delete'),
-    url(r'^cohort/(?P<cohort_id>[0-9]+)/periods/(?P<period_id>[0-9]+)/$', period.period_get, name='period_get'),
-    url(r'^cohort/(?P<cohort_id>[0-9]+)/periods/new/$', period.period_new, name='period_new'),
-    url(r'^cohort/(?P<cohort_id>[0-9]+)/periods/save/(?P<period_id>[0-9]+)/$', period.period_save, name='period_save'),
+    url(r'^places/', include([
+        url(r'^$', place.internships_places, name='internships_places'),
+        url(r'^([0-9]+)/students/affectation/$', place.student_affectation, name='place_detail_student_affectation'),
+        url(r'^([0-9]+)/students/choice/$', place.student_choice, name='place_detail_student_choice'),
+        url(r'^create/$', place.organization_create, name='place_create'),
+        url(r'^edit/([0-9]+)/$', place.organization_edit, name='place_edit'),
+        # url(r'^exportpdf/([0-9]+)/([0-9]+)/$', place.export_pdf, name='affectation_download_pdf'),
+        url(r'^exportxls/([0-9]+)/([0-9]+)/$', place.export_xls, name='affectation_download'),
+        url(r'^exportxls/([0-9]+)/$', place.export_organisation_affectation_as_xls, name='organisation_affectation_download'),
+        url(r'^save/([0-9]+)/([0-9]+)/$', place.place_save, name='place_save'),
+        url(r'^save/$', place.organization_new, name='place_save_new'),
+        url(r'^std/$', place.internships_places_stud, name='internships_places_stud'),
+        url(r'^upload/$', upload_xls.upload_places_file, name='upload_places'),
+    ])),
 
-    url(r'^places/$', place.internships_places, name='internships_places'),
-    url(r'^places/([0-9]+)/students/affectation/$', place.student_affectation, name='place_detail_student_affectation'),
-    url(r'^places/([0-9]+)/students/choice/$', place.student_choice, name='place_detail_student_choice'),
-    url(r'^places/create/$', place.organization_create, name='place_create'),
-    url(r'^places/edit/([0-9]+)/$', place.organization_edit, name='place_edit'),
-    #url(r'^places/exportpdf/([0-9]+)/([0-9]+)/$', place.export_pdf, name='affectation_download_pdf'),
-    url(r'^places/exportxls/([0-9]+)/([0-9]+)/$', place.export_xls, name='affectation_download'),
-    url(r'^places/exportxls/([0-9]+)/$',place.export_organisation_affectation_as_xls,name='organisation_affectation_download'),
-    url(r'^places/save/([0-9]+)/([0-9]+)/$', place.place_save, name='place_save'),
-    url(r'^places/save/$', place.organization_new, name='place_save_new'),
-    url(r'^places/std/$', place.internships_places_stud, name='internships_places_stud'),
-    url(r'^places/upload/$', upload_xls.upload_places_file, name='upload_places'),
+    url(r'^specialities/', include([
+        url(r'^$', speciality.specialities, name='internships_specialities'),
+        url(r'^create/$', speciality.speciality_create, name='speciality_create'),
+        url(r'^delete/([0-9]+)/$', speciality.speciality_delete, name='speciality_delete'),
+        url(r'^modification/([0-9]+)/$', speciality.speciality_modification, name='speciality_modification'),
+        url(r'^new/$', speciality.speciality_new, name='speciality_new'),
+        url(r'^save/([0-9]+)/$', speciality.speciality_save, name='speciality_save'),
+    ])),
 
-    url(r'^cohort/(?P<cohort_id>[0-9]+)/period_places/edit/(?P<internship_id>[0-9]+)/$', internship.edit_period_places, name='edit_period_places'),
-    url(r'^cohort/(?P<cohort_id>[0-9]+)/period_places/save/(?P<internship_id>[0-9]+)/$', internship.save_period_places, name='save_period_places'),
+    url(r'^students/', include([
+        url(r'^([0-9]+)/', include([
+            url(r'^affectation/modification/$', student_resume.internship_student_affectation_modification, name='internship_student_affectation_modification'),
+            url(r'^information/modification/$', student_resume.internship_student_information_modification, name='internship_student_information_modification'),
+            url(r'^resume/$', student_resume.internships_student_read, name='internships_student_read'),
+            url(r'^save/information/modification/$', student_resume.student_save_information_modification, name='student_save_information_modification'),
+            url(r'^save/affectation/modification/$', student_resume.student_save_affectation_modification, name='student_save_affectation_modification'),
+        ])),
 
-    url(r'^specialities/$', speciality.specialities, name='internships_specialities'),
-    url(r'^specialities/create/$', speciality.speciality_create, name='speciality_create'),
-    url(r'^specialities/delete/([0-9]+)/$', speciality.speciality_delete, name='speciality_delete'),
-    url(r'^specialities/modification/([0-9]+)/$', speciality.speciality_modification, name='speciality_modification'),
-    url(r'^specialities/new/$', speciality.speciality_new, name='speciality_new'),
-    url(r'^specialities/save/([0-9]+)/$', speciality.speciality_save, name='speciality_save'),
-
-    url(r'^students/([0-9]+)/affectation/modification/$', student_resume.internship_student_affectation_modification, name='internship_student_affectation_modification'),
-    url(r'^students/([0-9]+)/information/modification/$', student_resume.internship_student_information_modification, name='internship_student_information_modification'),
-    url(r'^students/([0-9]+)/resume/$', student_resume.internships_student_read, name='internships_student_read'),
-    url(r'^students/([0-9]+)/save/information/modification/$', student_resume.student_save_information_modification, name='student_save_information_modification'),
-    url(r'^students/([0-9]+)/save/affectation/modification/$', student_resume.student_save_affectation_modification, name='student_save_affectation_modification'),
-    url(r'^students/resume/$', student_resume.internships_student_resume, name='internships_student_resume'),
+        url(r'^resume/$', student_resume.internships_student_resume, name='internships_student_resume'),
+    ])),
 ]
