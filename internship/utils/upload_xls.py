@@ -247,17 +247,21 @@ def __save_xls_internships(request, file_name, user):
                         relation.save()
 
 
+@require_http_methods(['POST'])
 @login_required
-def upload_masters_file(request):
-    if request.method == 'POST':
-        file_name = request.FILES['file']
-        if file_name is not None:
-            if ".xls" not in str(file_name):
-                messages.add_message(request, messages.ERROR, _('file_must_be_xls'))
-            else:
-                __save_xls_masters(request, file_name, request.user)
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def upload_masters_file(request, cohort_id):
+    cohort = get_object_or_404(Cohort, pk=cohort_id)
+    file_name = request.FILES['file']
+    if file_name is not None:
+        if ".xls" not in str(file_name):
+            messages.add_message(request, messages.ERROR, _('file_must_be_xls'))
+        else:
+            __save_xls_masters(request, file_name, request.user)
 
-    return HttpResponseRedirect(reverse('interships_masters'))
+    return HttpResponseRedirect(reverse('internships_masters', kwargs={
+        'cohort_id': cohort.id
+    }))
 
 
 @login_required
