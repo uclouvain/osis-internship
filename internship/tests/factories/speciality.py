@@ -14,5 +14,5 @@ class SpecialityFactory(factory.django.DjangoModelFactory):
     mandatory = False
     order_postion = factory.Faker('random_int', min=1, max=10)
 
-    # cohort = factory.SubFactory(CohortFactory)
+    cohort = factory.SubFactory(CohortFactory)
     learning_unit = factory.SubFactory(LearningUnitFactory)

@@ -78,6 +78,16 @@ urlpatterns = [
             url(r'^upload/$', upload_xls.upload_places_file, name='upload_places'),
         ])),
 
+        url(r'^specialities/', include([
+            url(r'^$', speciality.specialities, name='internships_specialities'),
+            url(r'^create/$', speciality.speciality_create, name='speciality_create'),
+            url(r'^delete/(?P<speciality_id>[0-9]+)/$', speciality.speciality_delete, name='speciality_delete'),
+            url(r'^modification/(?P<speciality_id>[0-9]+)/$', speciality.speciality_modification,
+                name='speciality_modification'),
+            url(r'^new/$', speciality.speciality_new, name='speciality_new'),
+            url(r'^save/(?P<speciality_id>[0-9]+)/$', speciality.speciality_save, name='speciality_save'),
+        ])),
+
     ])),
 
     url(r'^affectation_result/', include([
@@ -96,14 +106,6 @@ urlpatterns = [
     url(r'^switch_speciality/(?P<registration_id>[0-9]+)/(?P<internship_id>[0-9]+)/$', internship.assign_speciality_for_internship, name='switch_speciality'),
     url(r'^internships/upload/$', upload_xls.upload_internships_file,name='upload_internship'),
 
-    url(r'^specialities/', include([
-        url(r'^$', speciality.specialities, name='internships_specialities'),
-        url(r'^create/$', speciality.speciality_create, name='speciality_create'),
-        url(r'^delete/(?P<speciality_id>[0-9]+)/$', speciality.speciality_delete, name='speciality_delete'),
-        url(r'^modification/(?P<speciality_id>[0-9]+)/$', speciality.speciality_modification, name='speciality_modification'),
-        url(r'^new/$', speciality.speciality_new, name='speciality_new'),
-        url(r'^save/(?P<speciality_id>[0-9]+)/$', speciality.speciality_save, name='speciality_save'),
-    ])),
 
     url(r'^students/', include([
         url(r'^([0-9]+)/', include([

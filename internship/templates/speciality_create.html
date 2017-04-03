@@ -28,8 +28,8 @@
 
 {% block breadcrumb %}
   <li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
-{#  <li><a href="{% url 'internships_home' %}">{% trans 'internships_managment' %}</a></li>#}
-  <li><a href="{% url 'internships_specialities' %}">{% trans 'internships_specialities' %}</a></li>
+  <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{% trans 'internships_managment' %}</a></li>
+  <li><a href="{% url 'internships_specialities' cohort_id=cohort.id %}">{% trans 'internships_specialities' %}</a></li>
   <li class="active">{% trans 'add_speciality' %}</li>
 {% endblock %}
 {% block content %}
@@ -47,8 +47,8 @@
       </thead>
       <tbody>
         <form action="{% if speciality.id%}
-        {% url 'speciality_save' speciality.id %}
-        {%else%} {% url 'speciality_new'%} {%endif%}"
+        {% url 'speciality_save' cohort_id=cohort.id speciality_id=speciality.id %}
+        {% else%} {% url 'speciality_new' cohort_id=cohort.id %} {%endif%}"
          method="post">
           {% csrf_token %}
           <tr>
@@ -75,7 +75,7 @@
     </form>
 
     <br><br>
-    <a href="{% url 'internships_specialities' %}" class="btn btn-default" title="{% trans 'return'%}"
+    <a href="{% url 'internships_specialities' cohort_id=cohort.id %}" class="btn btn-default" title="{% trans 'return'%}"
       id="lnk_internships" >{% trans 'return' %}
       <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"/>
     </a>

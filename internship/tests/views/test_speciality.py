@@ -4,6 +4,7 @@ from django.test import TestCase
 
 from base.tests.factories.learning_unit import LearningUnitFactory
 from internship.models.internship_speciality import InternshipSpeciality
+from internship.tests.factories.cohort import CohortFactory
 from internship.tests.factories.speciality import SpecialityFactory
 
 
@@ -14,47 +15,57 @@ class SpecialityViewTestCase(TestCase):
         self.user.user_permissions.add(permission)
         self.client.force_login(self.user)
 
-        # self.cohort = CohortFactory()
+        self.cohort = CohortFactory()
 
     def test_home(self):
 
-        url = reverse('internships_specialities')
+        url = reverse('internships_specialities', kwargs={
+            'cohort_id': self.cohort.id,
+        })
 
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'specialities.html')
 
     def test_create(self):
-        url = reverse('speciality_create')
+        url = reverse('speciality_create', kwargs={
+            'cohort_id': self.cohort.id,
+        })
 
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'speciality_create.html')
 
     def test_delete(self):
-        specialities = InternshipSpeciality.objects.count()
+        specialities = InternshipSpeciality.objects.filter(cohort=self.cohort).count()
         self.assertEqual(specialities, 0)
 
-        speciality = SpecialityFactory()
+        speciality = SpecialityFactory(cohort=self.cohort)
 
-        specialities = InternshipSpeciality.objects.count()
+        specialities = InternshipSpeciality.objects.filter(cohort=self.cohort).count()
         self.assertEqual(specialities, 1)
 
         url = reverse('speciality_delete', kwargs={
+            'cohort_id': self.cohort.id,
             'speciality_id': speciality.id
         })
 
         response = self.client.get(url)
 
-        specialities = InternshipSpeciality.objects.count()
+        specialities = InternshipSpeciality.objects.filter(cohort=self.cohort).count()
         self.assertEqual(specialities, 0)
 
-        self.assertRedirects(response, reverse('internships_specialities'))
+        self.assertRedirects(response, reverse('internships_specialities', kwargs={
+            'cohort_id': self.cohort.id,
+        }))
 
     def test_modification(self):
-        speciality = SpecialityFactory()
+        speciality = SpecialityFactory(cohort=self.cohort)
 
         url = reverse('speciality_modification', kwargs={
-            'speciality_id': speciality.id
+            'cohort_id': self.cohort.id,
+            'speciality_id': speciality.id,
         })
 
         response = self.client.get(url)
@@ -67,7 +78,9 @@ class SpecialityViewTestCase(TestCase):
         learning_unit = LearningUnitFactory(acronym='DEMO')
         speciality = SpecialityFactory.build(learning_unit=learning_unit)
 
-        url = reverse('speciality_new')
+        url = reverse('speciality_new', kwargs={
+            'cohort_id': self.cohort.id,
+        })
 
         response = self.client.post(url, data={
             'learning_unit': learning_unit.acronym,
@@ -76,12 +89,15 @@ class SpecialityViewTestCase(TestCase):
             'order_postion': speciality.order_postion,
             'acronym': speciality.acronym,
         })
-        self.assertRedirects(response, reverse('internships_specialities'))
+        self.assertRedirects(response, reverse('internships_specialities', kwargs={
+            'cohort_id': self.cohort.id,
+        }))
 
     def test_save(self):
-        speciality = SpecialityFactory(name='SUPERMAN')
+        speciality = SpecialityFactory(name='SUPERMAN', cohort=self.cohort)
 
         url = reverse('speciality_save', kwargs={
+            'cohort_id': self.cohort.id,
             'speciality_id': speciality.id,
         })
 
@@ -93,5 +109,7 @@ class SpecialityViewTestCase(TestCase):
             'acronym': speciality.acronym,
         })
 
-        self.assertRedirects(response, reverse('internships_specialities'))
+        self.assertRedirects(response, reverse('internships_specialities', kwargs={
+            'cohort_id': self.cohort.id,
+        }))
 
