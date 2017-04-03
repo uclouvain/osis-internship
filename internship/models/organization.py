@@ -40,6 +40,8 @@ class Organization(SerializableModel):
     reference = models.CharField(max_length=30, blank=True, null=True)
     type = models.CharField(max_length=30, blank=True, null=True, default="service partner")
 
+    cohort = models.ForeignKey('internship.Cohort', null=False, on_delete=models.CASCADE)
+
     def __str__(self):
         return self.name
 

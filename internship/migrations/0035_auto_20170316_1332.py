@@ -9,6 +9,9 @@ from django.db import migrations, models
 
 from internship.models.cohort import Cohort
 from internship.models.period import Period
+from internship.models.internship_offer import InternshipOffer
+from internship.models.internship_master import InternshipMaster
+from internship.models.organization import Organization
 
 
 def create_the_first_cohort(apps, schema_editor):
@@ -23,9 +26,11 @@ def create_the_first_cohort(apps, schema_editor):
 
 def assign_first_cohort_to_periods(apps, schema_editor):
     cohort = Cohort.objects.first()
-    for period in Period.objects.all():
-        period.cohort = cohort
-        period.save()
+
+    Period.objects.all().update(cohort=cohort)
+    InternshipOffer.objects.all().update(cohort=cohort)
+    InternshipMaster.objects.all().update(cohort=cohort)
+    Organization.objects.all().update(cohort=cohort)
 
 
 class Migration(migrations.Migration):
@@ -40,7 +45,7 @@ class Migration(migrations.Migration):
             name='Cohort',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('uuid', models.UUIDField(db_index=True, default=uuid.uuid4, null=True)),
+                ('uuid', models.UUIDField(db_index=True, default=uuid.uuid4, editable=False, unique=True, null=True)),
                 ('name', models.CharField(max_length=255)),
                 ('description', models.TextField()),
                 ('free_internships_number', models.IntegerField()),
@@ -50,16 +55,48 @@ class Migration(migrations.Migration):
                 ('subscription_end_date', models.DateField()),
             ],
         ),
-        migrations.RunPython(create_the_first_cohort),
         migrations.AddField(
-            model_name='period',
+            model_name='internshipoffer',
+            name='cohort',
+            field=models.ForeignKey(null=True, default=None, on_delete=django.db.models.deletion.CASCADE,
+                                    to='internship.Cohort'),
+            preserve_default=False,
+        ),
+        migrations.AddField(
+            model_name='internshipmaster',
             name='cohort',
             field=models.ForeignKey(null=True, default=None, on_delete=django.db.models.deletion.CASCADE, to='internship.Cohort'),
             preserve_default=False,
         ),
+        migrations.AddField(
+            model_name='organization',
+            name='cohort',
+            field=models.ForeignKey(null=True, default=None, on_delete=django.db.models.deletion.CASCADE, to='internship.Cohort'),
+            preserve_default=False,
+        ),
+        migrations.AddField(
+            model_name='period',
+            name='cohort',
+            field=models.ForeignKey(null=True, default=None, on_delete=django.db.models.deletion.CASCADE,
+                                    to='internship.Cohort'),
+            preserve_default=False,
+        ),
+        migrations.RunPython(create_the_first_cohort),
         migrations.RunPython(assign_first_cohort_to_periods),
         migrations.RunSQL(
+            "ALTER TABLE internship_internshipoffer ALTER COLUMN cohort_id SET NOT NULL",
+            reverse_sql="ALTER TABLE internship_internshipoffer ALTER COLUMN cohort_id DROP NOT NULL",
+        ),
+        migrations.RunSQL(
             "ALTER TABLE internship_period ALTER COLUMN cohort_id SET NOT NULL",
-            reverse_sql="ALTER TABLE intership_period ALTER COLUMN cohort_id DROP NOT NULL"
+            reverse_sql="ALTER TABLE internship_period ALTER COLUMN cohort_id DROP NOT NULL"
+        ),
+        migrations.RunSQL(
+            "ALTER TABLE internship_internshipmaster ALTER COLUMN cohort_id SET NOT NULL",
+            reverse_sql="ALTER TABLE internship_internshipmaster ALTER COLUMN cohort_id DROP NOT NULL"
+        ),
+        migrations.RunSQL(
+            "ALTER TABLE internship_organization ALTER COLUMN cohort_id SET NOT NULL",
+            reverse_sql="ALTER TABLE internship_organization ALTER COLUMN cohort_id DROP NOT NULL"
         ),
     ]
