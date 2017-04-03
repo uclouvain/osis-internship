@@ -27,12 +27,12 @@ from internship.models import internship_speciality as mdl_internship_speciality
 from base.tests.models import test_learning_unit
 from django.test.testcases import TestCase
 
+from internship.tests.factories.speciality import SpecialityFactory
+
 
 def create_speciality(name="chirurgie"):
     learning_unit = test_learning_unit.create_learning_unit(title="stage medecine", acronym= "WSD")
-    speciality = mdl_internship_speciality.InternshipSpeciality(learning_unit=learning_unit, name=name)
-    speciality.save()
-    return speciality
+    return SpecialityFactory(learning_unit=learning_unit, name=name)
 
 
 class TestGetById(TestCase):
