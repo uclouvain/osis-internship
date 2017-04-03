@@ -18,3 +18,5 @@ backoffice/server_settings.py
 /uploads/
 .env
 .coverage
+*.sh
+*~
