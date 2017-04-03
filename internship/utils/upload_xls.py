@@ -24,30 +24,37 @@
 #
 ##############################################################################
 from django.http import HttpResponseRedirect
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.core.urlresolvers import reverse
-from openpyxl import load_workbook
+import openpyxl
 from django.contrib import messages
 from django.utils.translation import ugettext_lazy as _
-
+from django.shortcuts import get_object_or_404
 from internship import models as mdl
+from internship.models.cohort import Cohort
+
+from django.views.decorators.http import require_http_methods
 
 
+@require_http_methods(['POST'])
 @login_required
-def upload_places_file(request):
-    if request.method == 'POST':
-        file_name = request.FILES['file']
-        if file_name is not None:
-            if ".xls" not in str(file_name):
-                messages.add_message(request, messages.ERROR, _('file_must_be_xls'))
-            else:
-                __save_xls_place(request, file_name, request.user)
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def upload_places_file(request, cohort_id):
+    cohort = get_object_or_404(Cohort, pk=cohort_id)
+    file_name = request.FILES['file']
+    if file_name is not None:
+        if ".xls" not in str(file_name):
+            messages.add_message(request, messages.ERROR, _('file_must_be_xls'))
+        else:
+            _save_xls_place(file_name, request.user, cohort)
 
-    return HttpResponseRedirect(reverse('internships_places'))
+    return HttpResponseRedirect(reverse('internships_places', kwargs={
+        'cohort_id': cohort.id
+    }))
 
 
-def __save_xls_place(request, file_name, user):
-    workbook = load_workbook(file_name, read_only=True)
+def _save_xls_place(file_name, user, cohort):
+    workbook = openpyxl.load_workbook(file_name, read_only=True)
     worksheet = workbook.active
     col_reference = 0
     col_name = 1
@@ -74,7 +81,7 @@ def __save_xls_place(request, file_name, user):
         if place:
             organization = mdl.organization.find_by_id(place[0].id)
         else:
-            organization = mdl.organization.Organization()
+            organization = mdl.organization.Organization(cohort=cohort)
 
         if row[col_reference].value:
             reference = ""
@@ -163,7 +170,7 @@ def upload_internships_file(request):
 
 
 def __save_xls_internships(request, file_name, user):
-    workbook = load_workbook(file_name, read_only=True)
+    workbook = openpyxl.load_workbook(file_name, read_only=True)
     worksheet = workbook.active
     col_reference = 0
     col_spec = 1
@@ -255,7 +262,7 @@ def upload_masters_file(request):
 
 @login_required
 def __save_xls_masters(request, file_name, user):
-    workbook = load_workbook(file_name, read_only=True)
+    workbook = openpyxl.load_workbook(file_name, read_only=True)
     worksheet = workbook.active
 
     col_reference = 2

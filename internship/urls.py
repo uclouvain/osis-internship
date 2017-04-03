@@ -56,6 +56,24 @@ urlpatterns = [
             url(r'^edit/(?P<internship_id>[0-9]+)/$', internship.edit_period_places, name='edit_period_places'),
             url(r'^save/(?P<internship_id>[0-9]+)/$', internship.save_period_places, name='save_period_places'),
         ])),
+
+        url(r'^places/', include([
+            url(r'^$', place.internships_places, name='internships_places'),
+            url(r'^([0-9]+)/students/affectation/$', place.student_affectation,
+                name='place_detail_student_affectation'),
+            url(r'^([0-9]+)/students/choice/$', place.student_choice, name='place_detail_student_choice'),
+            url(r'^create/$', place.organization_create, name='place_create'),
+            url(r'^edit/([0-9]+)/$', place.organization_edit, name='place_edit'),
+            # url(r'^exportpdf/([0-9]+)/([0-9]+)/$', place.export_pdf, name='affectation_download_pdf'),
+            url(r'^exportxls/([0-9]+)/([0-9]+)/$', place.export_xls, name='affectation_download'),
+            url(r'^exportxls/([0-9]+)/$', place.export_organisation_affectation_as_xls,
+                name='organisation_affectation_download'),
+            url(r'^save/([0-9]+)/([0-9]+)/$', place.place_save, name='place_save'),
+            url(r'^save/$', place.organization_new, name='place_save_new'),
+            url(r'^std/$', place.internships_places_stud, name='internships_places_stud'),
+            url(r'^upload/$', upload_xls.upload_places_file, name='upload_places'),
+        ])),
+
     ])),
 
     url(r'^affectation_result/', include([
@@ -78,21 +96,6 @@ urlpatterns = [
         url(r'^$', master.interships_masters, name='interships_masters'),
         url(r'^delete/$', master.delete_interships_masters, name='delete_interships_masters'),
         url(r'^upload/$', upload_xls.upload_masters_file, name='upload_interships_masters'),
-    ])),
-
-    url(r'^places/', include([
-        url(r'^$', place.internships_places, name='internships_places'),
-        url(r'^([0-9]+)/students/affectation/$', place.student_affectation, name='place_detail_student_affectation'),
-        url(r'^([0-9]+)/students/choice/$', place.student_choice, name='place_detail_student_choice'),
-        url(r'^create/$', place.organization_create, name='place_create'),
-        url(r'^edit/([0-9]+)/$', place.organization_edit, name='place_edit'),
-        # url(r'^exportpdf/([0-9]+)/([0-9]+)/$', place.export_pdf, name='affectation_download_pdf'),
-        url(r'^exportxls/([0-9]+)/([0-9]+)/$', place.export_xls, name='affectation_download'),
-        url(r'^exportxls/([0-9]+)/$', place.export_organisation_affectation_as_xls, name='organisation_affectation_download'),
-        url(r'^save/([0-9]+)/([0-9]+)/$', place.place_save, name='place_save'),
-        url(r'^save/$', place.organization_new, name='place_save_new'),
-        url(r'^std/$', place.internships_places_stud, name='internships_places_stud'),
-        url(r'^upload/$', upload_xls.upload_places_file, name='upload_places'),
     ])),
 
     url(r'^specialities/', include([
