@@ -23,6 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+import datetime
 from django.db import models
 from django.contrib import admin
 from base.models.enums import number_session

@@ -185,7 +185,7 @@
                                 {% endif %}
                             </select>
                             <input type="hidden" id="hdn_score_changed_{{ enrollment.id }}" name="score_changed_{{ enrollment.id }}" value="false"></td>
-                        <td>{{ enrollment.session_exam.deadline | default_if_none:''|date:"j/m/Y" }}</td>
+                        <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.session_exam_deadline.deadline | default_if_none:''|date:"j/m/Y" }}</td>
                     </tr>
                 {% endfor %}
                 </tbody>
