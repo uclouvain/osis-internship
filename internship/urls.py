@@ -27,20 +27,20 @@ from django.conf.urls import include, url
 
 from internship.utils import upload_xls
 from internship.views import (affectation_statistics, home, internship, master,
-                              period, place, speciality, student_resume)
+                              offer, period, place, speciality, student_resume)
 
 urlpatterns = [
     url(r'^$', home.view_cohort_selection, name='internship'),
     url(r'^cohort/(?P<cohort_id>[0-9]+)/', include([
-        url(r'^$', home.internships_home, name='internships_home'),
+        url(r'^$', home.cohort_home, name='internships_home'),
 
         url(r'^offers/', include([
-            url(r'^$', internship.internships, name='internships'),
-            url(r'^(?P<offer_id>[0-9]+)/students/choice/$', internship.student_choice, name='internship_detail_student_choice'),
-            url(r'^block/$', internship.internships_block, name='internships_block'),
-            url(r'^save/$', internship.internships_save, name='internships_save'),
-            url(r'^save/modification/student/$', internship.internship_save_modification_student, name='internship_save_modification_student'),
-            url(r'^std/$', internship.internships_stud, name='internships_stud'),
+            url(r'^$', offer.internships, name='internships'),
+            url(r'^(?P<offer_id>[0-9]+)/students/choice/$', offer.student_choice, name='internship_detail_student_choice'),
+            url(r'^block/$', offer.internships_block, name='internships_block'),
+            url(r'^save/$', offer.internships_save, name='internships_save'),
+            url(r'^save/modification/student/$', offer.internship_save_modification_student, name='internship_save_modification_student'),
+            url(r'^std/$', offer.internships_stud, name='internships_stud'),
         ])),
 
         url(r'^periods/', include([

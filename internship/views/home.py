@@ -31,7 +31,7 @@ from internship.models.cohort import Cohort
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
-def internships_home(request, cohort_id):
+def cohort_home(request, cohort_id):
     blockable = mdl_internship.internship_offer.get_number_selectable() > 0
     cohort = Cohort.objects.get(pk=cohort_id)
     context = {
