@@ -184,12 +184,7 @@ def generate_reviewer_menu_tabs(role, mandate, active_item: None):
             review_is_done = False
     else:
         latest_review_done = review.find_review_for_mandate_by_role(mandate, role)
-    if latest_review_done is None:
-        review_is_done = False
-    elif latest_review_done.status == review_status.DONE:
-        review_is_done = True
-    else:
-        review_is_done = False
+    review_is_done = latest_review_done.status == review_status.DONE
     for state, order in sorted(mandate_states.items()):
         if role == reviewer_role.PHD_SUPERVISOR and (state == 'RESEARCH' or state == 'SUPERVISION'):
             break
