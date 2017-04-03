@@ -20,3 +20,4 @@ backoffice/server_settings.py
 .coverage
 *.sh
 *~
+htmlcov/
