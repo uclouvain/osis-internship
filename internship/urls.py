@@ -31,6 +31,7 @@ from internship.views import (affectation_statistics, home, internship, master,
 
 urlpatterns = [
     url(r'^$', home.view_cohort_selection, name='internship'),
+
     url(r'^cohort/(?P<cohort_id>[0-9]+)/', include([
         url(r'^$', home.cohort_home, name='internships_home'),
 
@@ -88,6 +89,9 @@ urlpatterns = [
             url(r'^save/(?P<speciality_id>[0-9]+)/$', speciality.speciality_save, name='speciality_save'),
         ])),
 
+        url(r'^students/', include([
+            url(r'^resume/$', student_resume.internships_student_resume, name='internships_student_resume'),
+        ])),
     ])),
 
     url(r'^affectation_result/', include([
@@ -116,6 +120,6 @@ urlpatterns = [
             url(r'^save/affectation/modification/$', student_resume.student_save_affectation_modification, name='student_save_affectation_modification'),
         ])),
 
-        url(r'^resume/$', student_resume.internships_student_resume, name='internships_student_resume'),
+        # url(r'^resume/$', student_resume.internships_student_resume, name='internships_student_resume'),
     ])),
 ]

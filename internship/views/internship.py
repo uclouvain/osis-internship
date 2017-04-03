@@ -38,6 +38,7 @@ from internship.forms.form_offer_preference import (OfferPreferenceForm,
                                                     OfferPreferenceFormSet)
 from internship.forms.form_select_speciality import SpecialityForm
 from internship.models.cohort import Cohort
+from internship.models.internship_offer import InternshipOffer
 
 
 def calc_dist(lat_a, long_a, lat_b, long_b):
@@ -434,8 +435,8 @@ def is_correct_speciality(offer, speciality):
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def edit_period_places(request, cohort_id, internship_id):
-    cohort=get_object_or_404(Cohort, pk=cohort_id)
-    internship_offer = mdl_internship.internship_offer.get_by_id(internship_id)
+    cohort = get_object_or_404(Cohort, pk=cohort_id)
+    internship_offer = get_object_or_404(InternshipOffer, pk=internship_id, organization__cohort=cohort)
     period_places_values = get_current_period_places(internship_offer)
     context = {
         "internship": internship_offer,
@@ -451,7 +452,7 @@ def edit_period_places(request, cohort_id, internship_id):
 def save_period_places(request, cohort_id, internship_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
     periods_dict = get_dict_of_periods()
-    internship_offer = mdl_internship.internship_offer.get_by_id(internship_id)
+    internship_offer = get_object_or_404(InternshipOffer, pk=internship_id, organization__cohort=cohort)
     if not internship_offer:
         return redirect('edit_period_places', cohort_id=cohort.id, internship_id=internship_id)
 

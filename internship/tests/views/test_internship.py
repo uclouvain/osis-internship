@@ -30,6 +30,9 @@ from django.test import TestCase
 from base.tests.models import test_person, test_student
 from internship.models import internship_choice as mdl_internship_choice
 from internship.models import period_internship_places as mdl_period_places
+from internship.tests.factories.offer import OfferFactory
+from internship.tests.factories.organization import OrganizationFactory
+from internship.tests.factories.speciality import SpecialityFactory
 from internship.tests.models import (test_internship_choice,
                                      test_internship_offer,
                                      test_internship_speciality,
@@ -211,8 +214,13 @@ class TestModifyPeriods(TestCase):
 
     def testAccessUrl(self):
         cohort = CohortFactory()
+
+        organization = OrganizationFactory(cohort=cohort)
+        speciality = SpecialityFactory(cohort=cohort)
+        offer = OfferFactory(organization=organization, speciality=speciality)
+
         kwargs = {
-            'internship_id': self.offer.id,
+            'internship_id': offer.id,
             'cohort_id': cohort.id,
         }
         url = reverse("edit_period_places", kwargs=kwargs)
@@ -222,8 +230,13 @@ class TestModifyPeriods(TestCase):
 
     def test_save_period_places(self):
         cohort = CohortFactory()
+
+        organization = OrganizationFactory(cohort=cohort)
+        speciality = SpecialityFactory(cohort=cohort)
+        offer = OfferFactory(organization=organization, speciality=speciality)
+
         kwargs = {
-            'internship_id': self.offer.id,
+            'internship_id': offer.id,
             'cohort_id': cohort.id,
         }
 

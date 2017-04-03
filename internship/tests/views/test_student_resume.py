@@ -23,7 +23,11 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.contrib.auth.models import Permission, User
+from django.core.urlresolvers import resolve, reverse
 from django.test import TestCase
+
+from internship.tests.factories.cohort import CohortFactory
 from internship.tests.models import test_organization, test_internship_speciality, test_internship_choice, \
     test_internship_student_information
 from base.tests.models import test_student
@@ -68,9 +72,22 @@ class TestStudentResume(TestCase):
 
 
 
+class StudentResumeViewTestCase(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user('demo', 'demo@demo.org', 'passtest')
+        permission = Permission.objects.get(codename='is_internship_manager')
+        self.user.user_permissions.add(permission)
+        self.client.force_login(self.user)
 
+        self.cohort = CohortFactory()
 
-
+    def test_internships_student_resume(self):
+        from internship.views.student_resume import internships_student_resume
+        url = reverse(internships_student_resume, kwargs={
+            'cohort_id': self.cohort.id,
+        })
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
 
 
 

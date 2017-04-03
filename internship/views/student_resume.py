@@ -27,7 +27,7 @@ from django.http import HttpResponseRedirect
 from django.views.decorators.http import require_POST
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from base import models as mdl
@@ -36,6 +36,7 @@ from internship.forms.form_student_information import StudentInformationForm
 
 from django.utils.translation import ugettext_lazy as _
 
+from internship.models.cohort import Cohort
 from internship.views.place import set_organization_address, sort_organizations
 
 def set_number_choices(student_informations):
@@ -117,40 +118,10 @@ def get_students():
     return students
 
 
-
-# FIXME
-# This function is the refactoring of the internship_student_resume
-# I try to improve the speed of the queries.
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
-def internships_student_resume_refactoring(request):
-    from django.db import connection
-    students_with_status = get_students()
-    student_with_internships = mdl_internship.internship_choice.get_number_students()
-    students_can_have_internships = mdl_internship.internship_student_information.get_number_students()
-    student_without_internship = students_can_have_internships - student_with_internships
-    number_students_ok = len(students_with_status) # len([x for x in students_with_status if x[1]])
-    number_students_not_ok = len(students_with_status) #len([x for x in students_with_status if x[1] is False])
-    number_generalists = mdl_internship.internship_student_information.get_number_of_generalists()
-    number_specialists = students_can_have_internships - number_generalists
-    context = {
-        'search_name': None,
-        'search_firstname': None,
-        'students': students_with_status,
-        'students_ok': number_students_ok,
-        'students_not_ok': number_students_not_ok,
-        'student_with_internships': student_with_internships,
-        'students_can_have_internships': students_can_have_internships,
-        'student_without_internship': student_without_internship,
-        "number_generalists": number_generalists,
-        "number_specialists": number_specialists
-    }
-    return render(request, "student_search.html", context)
-
-
-@login_required
-@permission_required('internship.is_internship_manager', raise_exception=True)
-def internships_student_resume(request):
+def internships_student_resume(request, cohort_id):
+    cohort = get_object_or_404(Cohort, pk=cohort_id)
     students_with_status = get_students_with_status()
     student_with_internships = mdl_internship.internship_choice.get_number_students()
     students_can_have_internships = mdl_internship.internship_student_information.get_number_students()
@@ -169,7 +140,8 @@ def internships_student_resume(request):
         'students_can_have_internships': students_can_have_internships,
         'student_without_internship': student_without_internship,
         "number_generalists": number_generalists,
-        "number_specialists": number_specialists
+        "number_specialists": number_specialists,
+        'cohort': cohort,
     }
     return render(request, "student_search.html", context)
 
