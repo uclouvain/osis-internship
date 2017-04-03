@@ -51,24 +51,6 @@ class XlsPlaceImportTestCase(TestCase):
 
         return workbook
 
-    def test_import_xls_from_web(self):
-        self.client.force_login(self.user)
-
-        workbook = self.generate_workbook()
-
-        content_of_workbook = io.BytesIO(save_virtual_workbook(workbook))
-        content_of_workbook.name = 'demo.xls'
-
-        url = reverse('upload_places', kwargs={
-            'cohort_id': self.cohort.id,
-        })
-        response = self.client.post(url, {'file': content_of_workbook}, follow=True)
-
-        # print(response.status_code)
-        self.assertRedirects(response, reverse('internships_places', kwargs={
-            'cohort_id': self.cohort.id,
-        }))
-
     def test_import_xls_from_python_api(self):
 
         # workbook.save('/tmp/demo.xls')

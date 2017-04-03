@@ -71,7 +71,10 @@ def print_affectations(organization_id, affectations):
         """
         return build_pdf(affectations)
     else:
-        redirect_url = reverse('place_detail_student_affectation', args=[organization.reference])
+        redirect_url = reverse('place_detail_student_affectation', kwargs={
+            'cohort_id': organization.cohort_id.id,
+            'organization_id': organization.id
+        })
         return HttpResponseRedirect(redirect_url)
 
 

@@ -45,9 +45,9 @@
 
     <div class="panel panel-default">
         <div class="panel-body">
-            <form method="post" action="{% if organization.id%}
-        {% url 'place_save' organization.id organization_address.id%}
-        {%else%} {% url 'place_save_new'%} {%endif%}">
+            <form method="post" action="{% if organization.id %}
+        {% url 'place_save' cohort_id=cohort.id organization_id=organization.id organization_address_id=organization_address.id%}
+        {%else%} {% url 'place_save_new' cohort_id=cohort.id %} {%endif%}">
                 {% csrf_token %}
                 <h3>{% trans 'organization' %}</h3>
                 <div class="row">
