@@ -99,10 +99,10 @@ urlpatterns = [
     url(r'^specialities/', include([
         url(r'^$', speciality.specialities, name='internships_specialities'),
         url(r'^create/$', speciality.speciality_create, name='speciality_create'),
-        url(r'^delete/([0-9]+)/$', speciality.speciality_delete, name='speciality_delete'),
-        url(r'^modification/([0-9]+)/$', speciality.speciality_modification, name='speciality_modification'),
+        url(r'^delete/(?P<speciality_id>[0-9]+)/$', speciality.speciality_delete, name='speciality_delete'),
+        url(r'^modification/(?P<speciality_id>[0-9]+)/$', speciality.speciality_modification, name='speciality_modification'),
         url(r'^new/$', speciality.speciality_new, name='speciality_new'),
-        url(r'^save/([0-9]+)/$', speciality.speciality_save, name='speciality_save'),
+        url(r'^save/(?P<speciality_id>[0-9]+)/$', speciality.speciality_save, name='speciality_save'),
     ])),
 
     url(r'^students/', include([

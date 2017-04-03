@@ -45,7 +45,7 @@ def specialities(request):
 def speciality_create(request):
     learning_unit = mdl.learning_unit.search(acronym='WMDS2333')
     return render(request, "speciality_create.html", {'section': 'internship',
-                                                      'learning_unit': learning_unit[0],
+                                                      'learning_unit': learning_unit.first(),
                                                       })
 
 
@@ -58,7 +58,7 @@ def speciality_save(request, speciality_id):
             speciality = check_speciality
         else :
             speciality = mdl_internship.internship_speciality.InternshipSpeciality()
-    else :
+    else:
         speciality = mdl_internship.internship_speciality.InternshipSpeciality()
 
     mandatory = False
@@ -66,7 +66,7 @@ def speciality_save(request, speciality_id):
         mandatory = True
 
     learning_unit = mdl.learning_unit.search(acronym=request.POST.get('learning_unit'))
-    speciality.learning_unit = learning_unit[0]
+    speciality.learning_unit = learning_unit.first()
     speciality.name = request.POST.get('name')
     speciality.acronym = request.POST.get('acronym')
     speciality.order_postion = request.POST.get('order_postion')
@@ -89,7 +89,7 @@ def speciality_modification(request, speciality_id):
     speciality = mdl_internship.internship_speciality.find_by_id(speciality_id)
     learning_unit = mdl.learning_unit.search(acronym='WMDS2333')
     return render(request, "speciality_create.html", {'section': 'internship',
-                                                      'learning_unit': learning_unit[0],
+                                                      'learning_unit': learning_unit.first(),
                                                       'speciality': speciality
                                                       })
 
