@@ -65,7 +65,8 @@ class TestModifyStudentChoices(TestCase):
         self.offer_5 = test_internship_offer.create_specific_internship_offer(self.organization_1, self.speciality_2)
         self.offer_6 = test_internship_offer.create_specific_internship_offer(self.organization_5, self.speciality_2)
 
-    def generate_form(self, iterable):
+    @classmethod
+    def generate_form(cls, iterable):
         form = {}
         for idx, item in enumerate(iterable):
             offer, preference, priority = item
@@ -127,7 +128,8 @@ class TestModifyStudentChoices(TestCase):
             (self.offer_4, 4, False),
         ])
 
-        self.client.post(selection_url, data=data)
+        response = self.client.post(selection_url, data=data)
+        self.assertEqual(response.status_code, 200)
 
         qs = mdl_internship_choice.search_by_student_or_choice(student=self.student)
         self.assertEqual(qs.count(), 4)
@@ -159,7 +161,9 @@ class TestModifyStudentChoices(TestCase):
             (self.offer_4, 0, True),
         ])
 
-        self.client.post(selection_url, data=data)
+        response = self.client.post(selection_url, data=data)
+        self.assertEqual(response.status_code, 200)
+
         qs = mdl_internship_choice.search_by_student_or_choice(student=self.student)
         self.assertEqual(qs.count(), 1)
 
@@ -178,7 +182,8 @@ class TestModifyStudentChoices(TestCase):
             (self.offer_6, 0, False),
         ])
 
-        self.client.post(selection_url, data=data)
+        response = self.client.post(selection_url, data=data)
+        self.assertEqual(response.status_code, 200)
 
         qs = mdl_internship_choice.search_by_student_or_choice(student=self.student)
 
