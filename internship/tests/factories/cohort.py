@@ -23,7 +23,6 @@ class CohortFactory(factory.django.DjangoModelFactory):
     description = factory.fuzzy.FuzzyText()
 
     free_internships_number = 8
-    mandatory_internships_number = 0
     publication_start_date = factory.LazyAttribute(fn_publication_start_date)
     subscription_start_date = factory.LazyAttribute(fn_subscription_start_date)
     subscription_end_date = factory.LazyAttribute(fn_subscription_end_date)

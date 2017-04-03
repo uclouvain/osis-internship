@@ -16,7 +16,6 @@ def create_the_first_cohort(apps, schema_editor):
     Cohort.objects.create(name='2016-2017',
                           description='Groupe 1',
                           free_internships_number=8,
-                          mandatory_internships_number=0,
                           publication_start_date="2017-03-27",
                           subscription_start_date="2017-03-01",
                           subscription_end_date="2017-03-20")
@@ -45,7 +44,6 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=255)),
                 ('description', models.TextField()),
                 ('free_internships_number', models.IntegerField()),
-                ('mandatory_internships_number', models.IntegerField()),
                 ('publication_start_date', models.DateField()),
                 ('subscription_start_date', models.DateField()),
                 ('subscription_end_date', models.DateField()),
