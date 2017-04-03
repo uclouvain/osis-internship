@@ -28,7 +28,7 @@
 
 {% block breadcrumb %}
     <li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
-    <li><a href="{% url 'internships_home' %}">{% trans 'internships_managment' %}</a></li>
+    <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{% trans 'internships_managment' %}</a></li>
     <li class="active">{% trans 'all_internships' %}</li>
 {% endblock %}
 {% block content %}
@@ -67,7 +67,7 @@
                 <ul class="nav nav-tabs">
                     {% for luy in all_speciality %}
                         <li {% if forloop.first %}class="active"{% endif %}><a data-toggle="tab" href="#tab_{{luy.tab}}">{{luy.name}}
-                            {%if luy.size = 4 %}
+                            {%if luy.size == 4 %}
                                 <span class="glyphicon glyphicon-ok" style="color:green"></span>
                             {%else%}
                                 <span class="glyphicon glyphicon-remove" style="color:red"></span>
@@ -79,7 +79,7 @@
                         {% endif %}
                     {%endfor%}
                 </ul>
-                <form  method="post" action="{% url 'internships_save' %}" >
+                <form  method="post" action="{% url 'internships_save' cohort_id=cohort.id %}" >
                     <input type="hidden" name="organization_sort" value="{{ organization.name }}"/>
                     {% csrf_token %}
                     <div class="tab-content">
@@ -167,7 +167,7 @@
                                                     {%endif%}
                                                 {% endfor %}
                                                 {% trans 'select_speciality_change_internships' %}:<br/>
-                                                <form action="{%url 'internships_stud' %}" method="get">
+                                                <form action="{%url 'internships_stud' cohort_id=cohort.id %}" method="get">
                                                     <select name="speciality_sort{{ forloop.counter0 }}" onChange="javascript: this.form.submit();">
                                                         <option value="0">--</option>
                                                         {% for spec in non_mandatory_speciality %}

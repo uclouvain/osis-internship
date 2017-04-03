@@ -272,15 +272,17 @@ def internships_modification_student(request, registration_id, internship_id="1"
                                         internship_id)
     information = mdl_internship.internship_student_information.find_by_person(student.person)
 
-    return render(request, "internship_modification_student.html",
-                  {"number_non_mandatory_internships": range(1, NUMBER_NON_MANDATORY_INTERNSHIPS + 1),
-                   "speciality_form": SpecialityForm(),
-                   "formset": formset,
-                   "offers_forms": zipped_data,
-                   "intern_id": int(internship_id),
-                   "speciality_id": int(speciality_id),
-                   "student": student,
-                   "information": information})
+    context = {
+        "number_non_mandatory_internships": range(1, NUMBER_NON_MANDATORY_INTERNSHIPS + 1),
+        "speciality_form": SpecialityForm(),
+        "formset": formset,
+        "offers_forms": zipped_data,
+        "intern_id": int(internship_id),
+        "speciality_id": int(speciality_id),
+        "student": student,
+        "information": information,
+    }
+    return render(request, "internship_modification_student.html", context)
 
 
 def prepare_template_data(formset, current_choices, internships_offers, speciality, student, internship_id):

@@ -2,6 +2,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
+from django.views.decorators.http import require_http_methods
 
 from base import models as mdl
 from internship import models as mdl_internship
@@ -95,23 +96,28 @@ def student_choice(request, cohort_id, offer_id):
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
-def internships_block(request):
-    number_offers_selectable = mdl_internship.internship_offer.get_number_selectable()
-    all_internship_offers = mdl_internship.internship_offer.find_all()
+def internships_block(request, cohort_id):
+    cohort = get_object_or_404(Cohort, pk=cohort_id)
+    number_offers_selectable = mdl_internship.internship_offer.get_number_selectable(cohort_id)
+    all_internship_offers = mdl_internship.internship_offer.find_all().filter(cohort_id=cohort_id)
     new_selectable_state = number_offers_selectable == 0
 
     for internship_offer in all_internship_offers:
         internship_offer.selectable = new_selectable_state
         internship_offer.save()
 
-    return HttpResponseRedirect(reverse('internships_home'))
+    return HttpResponseRedirect(reverse('internships_home', kwargs={
+        'cohort_id': cohort.id,
+    }))
 
 
+@require_http_methods(['POST'])
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
-def internships_save(request):
+def internships_save(request, cohort_id):
     # Check if the internships are selectable, if yes students can save their choices
-    all_internships = mdl_internship.internship_offer.search()
+    cohort = get_object_or_404(Cohort, pk=cohort_id)
+    all_internships = mdl_internship.internship_offer.search(cohort_id=cohort_id)
     selectable = get_selectable(all_internships)
 
     if selectable :
@@ -123,6 +129,7 @@ def internships_save(request):
         #Build the list of the organizations and specialities get by the POST request
         organization_list = list()
         speciality_list = list()
+        internship_choice_tab = []
         if request.POST.get('organization'):
             organization_list = request.POST.getlist('organization')
         if request.POST.get('speciality'):
@@ -209,12 +216,15 @@ def internships_save(request):
             new_choice.priority = False
             new_choice.save()
 
-    return HttpResponseRedirect(reverse('internships_stud'))
+    return HttpResponseRedirect(reverse('internships_stud', kwargs={
+        'cohort_id': cohort.id,
+    }))
 
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
-def internship_save_modification_student(request):
+def internship_save_modification_student(request, cohort_id):
+    cohort = get_object_or_404(Cohort, pk=cohort_id)
     # Get the student
     registration_id = request.POST.getlist('registration_id')
     student = mdl.student.find_by(registration_id=registration_id[0], full_registration = True)
@@ -318,7 +328,8 @@ def internship_save_modification_student(request):
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
-def internships_stud(request):
+def internships_stud(request, cohort_id):
+    cohort = get_object_or_404(Cohort, pk=cohort_id)
     # Set the number of non mandatory internship and the sort array depending
     size_non_mandatory = 5
     speciality_sort_value = [None] * size_non_mandatory
@@ -334,6 +345,7 @@ def internships_stud(request):
     # Get the student base on the user
     student = mdl.student.find_by(person_username=request.user)
     # Get in descending order the student's choices in first lines
+    # FIXME: Add the cohort in the sort.
     student_choice = mdl_internship.internship_choice.find_by_student_desc(student)
 
     # Select all Internship Offer
@@ -373,12 +385,15 @@ def internships_stud(request):
             all_non_mandatory_internships[x] = None
         all_non_mandatory_selected_internships[x]=mdl_internship.internship_choice.search(internship_choice=x+1)
 
-    return render(request, "internships_stud.html", {'section': 'internship',
-                                                     'all_internships': query,
-                                                     'non_mandatory_speciality': all_non_mandatory_speciality,
-                                                     'all_non_mandatory_internships': all_non_mandatory_internships,
-                                                     'all_non_mandatory_selected_internships': all_non_mandatory_selected_internships,
-                                                     'speciality_sort_value': speciality_sort_value,
-                                                     'all_speciality': all_speciality,
-                                                     'selectable': selectable,
-                                                     })
+    context = {
+        'section': 'internship',
+        'all_internships': query,
+        'non_mandatory_speciality': all_non_mandatory_speciality,
+        'all_non_mandatory_internships': all_non_mandatory_internships,
+        'all_non_mandatory_selected_internships': all_non_mandatory_selected_internships,
+        'speciality_sort_value': speciality_sort_value,
+        'all_speciality': all_speciality,
+        'selectable': selectable,
+        'cohort': cohort,
+    }
+    return render(request, "internships_stud.html", context)

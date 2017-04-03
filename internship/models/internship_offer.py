@@ -71,7 +71,6 @@ def find_non_mandatory_internships(**kwargs):
 
 
 def search(**kwargs):
-    kwargs = {k: v for k, v in kwargs.items() if v}
     return InternshipOffer.objects.filter(**kwargs) \
         .select_related("organization", "speciality").order_by('speciality__acronym', 'speciality__name',
                                                                'organization__reference')
@@ -107,8 +106,11 @@ def find_by_pk(a_pk):
         return None
 
 
-def get_number_selectable():
-    return InternshipOffer.objects.filter(selectable=True).count()
+def get_number_selectable(cohort_id=None):
+    if cohort_id is None:
+        return InternshipOffer.objects.filter(selectable=True).count()
+    else:
+        return InternshipOffer.objects.filter(selectable=True, cohort_id=cohort_id).count()
 
 
 def find_all():
