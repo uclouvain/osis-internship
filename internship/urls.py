@@ -34,6 +34,12 @@ urlpatterns = [
     url(r'^cohort/(?P<cohort_id>[0-9]+)/', include([
         url(r'^$', home.cohort_home, name='internships_home'),
 
+        url(r'^masters/', include([
+            url(r'^$', master.internships_masters, name='internships_masters'),
+            url(r'^delete/$', master.delete_internships_masters, name='delete_internships_masters'),
+            url(r'^upload/$', upload_xls.upload_masters_file, name='upload_internships_masters'),
+        ])),
+
         url(r'^offers/', include([
             url(r'^$', offer.internships, name='internships'),
             url(r'^(?P<offer_id>[0-9]+)/students/choice/$', offer.student_choice, name='internship_detail_student_choice'),
@@ -90,12 +96,6 @@ urlpatterns = [
 
     url(r'^switch_speciality/(?P<registration_id>[0-9]+)/(?P<internship_id>[0-9]+)/$', internship.assign_speciality_for_internship, name='switch_speciality'),
     url(r'^internships/upload/$', upload_xls.upload_internships_file,name='upload_internship'),
-
-    url(r'^masters/', include([
-        url(r'^$', master.interships_masters, name='interships_masters'),
-        url(r'^delete/$', master.delete_interships_masters, name='delete_interships_masters'),
-        url(r'^upload/$', upload_xls.upload_masters_file, name='upload_interships_masters'),
-    ])),
 
     url(r'^specialities/', include([
         url(r'^$', speciality.specialities, name='internships_specialities'),

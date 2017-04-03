@@ -23,17 +23,19 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.http import HttpResponseRedirect
-from django.core.urlresolvers import reverse
-from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, permission_required
+from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404, render
 
 from internship import models as mdl_internship
+from internship.models.cohort import Cohort
 
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
-def interships_masters(request):
+def internships_masters(request, cohort_id):
+    cohort = get_object_or_404(Cohort, pk=cohort_id)
     # First get the value of the 2 options for the sort
     if request.method == 'GET':
         speciality_sort_value = request.GET.get('speciality_sort')
@@ -77,17 +79,21 @@ def interships_masters(request):
         'all_spec': master_specs,
         'all_organizations': master_organizations,
         'speciality_sort_value': speciality_sort_value,
-        'organization_sort_value': organization_sort_value
+        'organization_sort_value': organization_sort_value,
+        'cohort': cohort,
     }
     return render(request, "internships_masters.html", context)
 
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
-def delete_interships_masters(request):
+def delete_internships_masters(request, cohort_id):
+    cohort = get_object_or_404(Cohort, pk=cohort_id)
     first_name = request.POST.get("first_name").replace(" ", "")
     name = request.POST.get("name").replace(" ", "")
     # Get the first and last name of the master send by the button of deletion
     # Get the master in the DB and delete it
     mdl_internship.internship_master.search(first_name=first_name, last_name=name).delete()
-    return HttpResponseRedirect(reverse('interships_masters'))
+    return HttpResponseRedirect(reverse('internships_masters', kwargs={
+        'cohort_id': cohort_id,
+    }))
