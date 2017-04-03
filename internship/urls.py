@@ -59,11 +59,10 @@ urlpatterns = [
 
         url(r'^places/', include([
             url(r'^$', place.internships_places, name='internships_places'),
-            url(r'^([0-9]+)/students/affectation/$', place.student_affectation,
-                name='place_detail_student_affectation'),
-            url(r'^([0-9]+)/students/choice/$', place.student_choice, name='place_detail_student_choice'),
+            url(r'^(?P<organization_id>[0-9]+)/students/affectation/$', place.student_affectation, name='place_detail_student_affectation'),
+            url(r'^(?P<organization_id>[0-9]+)/students/choice/$', place.student_choice, name='place_detail_student_choice'),
             url(r'^create/$', place.organization_create, name='place_create'),
-            url(r'^edit/([0-9]+)/$', place.organization_edit, name='place_edit'),
+            url(r'^edit/(?P<organization_id>[0-9]+)/$', place.organization_edit, name='place_edit'),
             # url(r'^exportpdf/([0-9]+)/([0-9]+)/$', place.export_pdf, name='affectation_download_pdf'),
             url(r'^exportxls/([0-9]+)/([0-9]+)/$', place.export_xls, name='affectation_download'),
             url(r'^exportxls/([0-9]+)/$', place.export_organisation_affectation_as_xls,

@@ -30,8 +30,8 @@
 
 {% block breadcrumb %}
     <li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
-    <li><a href="{% url 'internships_home' %}">{% trans 'internships_managment' %}</a></li>
-    <li><a href="{% url 'internships_places' %}">{% trans 'all_places' %}</a></li>
+    <li><a href="{% url 'internship' %}">{% trans 'internships_managment' %}</a></li>
+    <li><a href="{% url 'internships_places' cohort_id=cohort.id %}">{% trans 'all_places' %}</a></li>
     <li class="active">{% trans 'new_place' %}</li>
 {% endblock %}
 {% block content %}
@@ -96,7 +96,7 @@
                 <br>
                 <button type="submit" class="btn btn-primary" title="{% trans 'save'%}" id="bt_organization_save">
                     <span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'save'%}</button>
-                <a class="btn btn-default" id="lnk_organization_cancel" href="{% url 'internships_places' %}">
+                <a class="btn btn-default" id="lnk_organization_cancel" href="{% url 'internships_places' cohort_id=cohort.id  %}">
                     <span class="glyphicon glyphicon-cancel" aria-hidden="true"></span> {% trans 'return'%}</a>
             </form>
         </div>

@@ -35,6 +35,8 @@ from internship.models.organization import Organization
 from internship.models.organization_address import OrganizationAddress
 from internship.utils import export_utils, export_utils_pdf
 from internship.views.internship import get_all_specialities, set_tabs_name
+from internship.models.cohort import Cohort
+from django.shortcuts import get_object_or_404
 
 
 def sort_organizations(sort_organizations):
@@ -138,7 +140,8 @@ def set_speciality_unique(specialities):
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
-def internships_places(request):
+def internships_places(request, cohort_id):
+    cohort = get_object_or_404(Cohort, pk=cohort_id)
     # Get the value of the option for the sort
     city_sort_get = "0"
     if request.method == 'GET':
@@ -160,7 +163,8 @@ def internships_places(request):
         'section': 'internship',
         'all_organizations': organizations,
         'all_addresses': cities,
-        'city_sort_get': city_sort_get
+        'city_sort_get': city_sort_get,
+        'cohort': cohort,
     }
     return render(request, "places.html", context)
 
@@ -249,7 +253,7 @@ def organization_create(request):
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def student_choice(request, organization_id):
-    organization = mdl_internship.organization.find_by_id(organization_id)
+    organization = get_object_or_404(Organization, pk=organization_id)
     organization_choice = mdl_internship.internship_choice.search(organization__reference=organization.reference)
 
     all_offers = mdl_internship.internship_offer.search(organization=organization)
@@ -264,17 +268,22 @@ def student_choice(request, organization_id):
         al.number_first_choice = number_first_choice
         al.number_all_choice = number_all_choice
 
-    return render(request, "place_detail.html", {'organization': organization,
-                                                 'organization_choice': organization_choice,
-                                                 'offers': all_offers,
-                                                 'specialities': all_speciality,
-                                                 })
+    context = {
+        'organization': organization,
+        'organization_choice': organization_choice,
+        'offers': all_offers,
+        'specialities': all_speciality,
+    }
+    return render(request, "place_detail.html", context)
 
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
-def student_affectation(request, organization_id):
-    organization = mdl_internship.organization.find_by_id(organization_id)
+def student_affectation(request, cohort_id, organization_id):
+    cohort = get_object_or_404(Cohort, pk=cohort_id)
+    # TODO: get_object_or_404(Organization, pk=organization_id, cohort__id=cohort_id)
+    organization = get_object_or_404(Organization, pk=organization_id)
+
     affectations = mdl_internship.internship_student_affectation_stat.search(organization=organization).order_by("student__person__last_name","student__person__first_name")
 
     for a in affectations:
@@ -293,11 +302,14 @@ def student_affectation(request, organization_id):
     all_speciality = get_all_specialities(internships)
     all_speciality = set_speciality_unique(all_speciality)
     set_tabs_name(all_speciality)
-    return render(request, "place_detail_affectation.html", {'organization': organization,
-                                                             'affectations': affectations,
-                                                             'specialities': all_speciality,
-                                                             'periods': periods,
-                                                             })
+    context = {
+        'organization': organization,
+        'affectations': affectations,
+        'specialities': all_speciality,
+        'periods': periods,
+        'cohort': cohort,
+    }
+    return render(request, "place_detail_affectation.html", context)
 
 
 @login_required

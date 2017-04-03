@@ -28,8 +28,8 @@
 
 {% block breadcrumb %}
     <li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
-    <li><a href="{% url 'internships_home' %}">{% trans 'internships_managment' %}</a></li>
-    <li><a href="{% url 'internships_places' %}">{% trans 'places' %}</a></li>
+    <li><a href="{% url 'internship' %}">{% trans 'internships_managment' %}</a></li>
+    <li><a href="{% url 'internships_places' cohort_id=cohort.id  %}">{% trans 'places' %}</a></li>
     <li class="active">{{ organization.name }}</li>
 {% endblock %}
 {% block content %}
