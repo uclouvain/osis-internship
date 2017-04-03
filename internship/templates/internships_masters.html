@@ -100,7 +100,7 @@
                         <tr>
                             <td>
                                 {% if perms.internship.is_internship_manager %}
-                                    <form method="post" action="{% url 'delete_internships_masters' %}">
+                                    <form method="post" action="{% url 'delete_internships_masters' cohort_id=cohort.id %}">
                                         {% csrf_token %}
                                         <input type="hidden" name="first_name" value={{ master.first_name }}>
                                         <input type="hidden" name="name" value={{ master.last_name }}>

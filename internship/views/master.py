@@ -56,6 +56,10 @@ def internships_masters(request, cohort_id):
 
     # Create the options for the selected list, delete dubblons
     query_master = mdl_internship.internship_master.find_masters()
+
+    query = query.filter(organization__cohort=cohort)
+    query_master = query_master.filter(organization__cohort=cohort)
+
     master_specs = []
     master_organizations = []
     for master in query_master:
@@ -73,6 +77,7 @@ def internships_masters(request, cohort_id):
     for i in number_ref:
         organization = mdl_internship.organization.search(reference=i)
         master_organizations.append(organization[0])
+
     context = {
         'section': 'internship',
         'all_masters': query,
@@ -93,7 +98,7 @@ def delete_internships_masters(request, cohort_id):
     name = request.POST.get("name").replace(" ", "")
     # Get the first and last name of the master send by the button of deletion
     # Get the master in the DB and delete it
-    mdl_internship.internship_master.search(first_name=first_name, last_name=name).delete()
+    mdl_internship.internship_master.search(first_name=first_name, last_name=name, organization__cohort=cohort).delete()
     return HttpResponseRedirect(reverse('internships_masters', kwargs={
         'cohort_id': cohort_id,
     }))

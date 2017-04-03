@@ -57,8 +57,6 @@ class InternshipMaster(SerializableModel):
     type_mastery = models.CharField(max_length=50, blank=True, null=True)
     speciality = models.CharField(max_length=50, blank=True, null=True)
 
-    cohort = models.ForeignKey('internship.Cohort', null=False, on_delete=models.CASCADE)
-
     def __str__(self):
         return u"%s" % self.reference
 

@@ -4,25 +4,10 @@ from django.contrib.auth.models import Permission, User
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 
-import factory
-import factory.django
-
 from internship.tests.factories.cohort import CohortFactory
+from internship.tests.factories.offer import OfferFactory
 from internship.tests.factories.organization import OrganizationFactory
-from internship.tests.factories.speciality import SpecialityFactory
 
-
-class OfferFactory(factory.django.DjangoModelFactory):
-    class Meta:
-        model = 'internship.InternshipOffer'
-
-    organization = factory.SubFactory(OrganizationFactory)
-    speciality = factory.SubFactory(SpecialityFactory)
-
-    title = factory.Faker('sentence', nb_words=6, variable_nb_words=True)
-    maximum_enrollments = factory.Faker('random_int', min=3, max=8)
-    master = factory.Faker('name')
-    selectable = factory.Faker('random_int')
 
 class OfferViewTestCase(TestCase):
     def setUp(self):
