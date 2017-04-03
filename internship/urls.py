@@ -91,7 +91,7 @@ urlpatterns = [
     url(r'^switch_speciality/(?P<registration_id>[0-9]+)/(?P<internship_id>[0-9]+)/$', internship.assign_speciality_for_internship, name='switch_speciality'),
     url(r'^internships/upload/$', upload_xls.upload_internships_file,name='upload_internship'),
 
-    url(r'^internships_masters/', include([
+    url(r'^masters/', include([
         url(r'^$', master.interships_masters, name='interships_masters'),
         url(r'^delete/$', master.delete_interships_masters, name='delete_interships_masters'),
         url(r'^upload/$', upload_xls.upload_masters_file, name='upload_interships_masters'),
