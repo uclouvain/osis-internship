@@ -26,41 +26,34 @@
 from django.test import TestCase
 
 from internship.models import internship_offer
-from internship.tests.models import test_organization, test_internship_speciality
 from internship.tests.factories.cohort import CohortFactory
+from internship.tests.factories.offer import OfferFactory
+from internship.tests.models import test_organization, test_internship_speciality
 
 
-def create_internship_offer():
-    organization = test_organization.create_organization()
-    speciality = test_internship_speciality.create_speciality()
-    cohort = CohortFactory()
+def create_internship_offer(cohort=None):
+    if cohort is None:
+        cohort = CohortFactory()
+    organization = test_organization.create_organization(cohort=cohort)
+    speciality = test_internship_speciality.create_speciality(cohort=cohort)
 
-    offer = internship_offer.InternshipOffer(
-        speciality=speciality,
+    offer = OfferFactory(speciality=speciality,
         organization=organization,
         title="offer_test",
         maximum_enrollments=20,
-        cohort=cohort
     )
     offer.save()
 
     return offer
 
 
-def create_specific_internship_offer(organization, speciality, title="offer_test", cohort=None):
-    if cohort is None:
-        cohort = CohortFactory()
-
-    offer = internship_offer.InternshipOffer(
+def create_specific_internship_offer(organization, speciality, title="offer_test"):
+    return OfferFactory(
         speciality=speciality,
         organization=organization,
         title=title,
-        maximum_enrollments=20,
-        cohort=cohort
+        maximum_enrollments=20
     )
-    offer.save()
-
-    return offer
 
 
 class TestInternshipOffer(TestCase):

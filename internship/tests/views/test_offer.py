@@ -7,6 +7,7 @@ from django.test import TestCase
 from internship.tests.factories.cohort import CohortFactory
 from internship.tests.factories.offer import OfferFactory
 from internship.tests.factories.organization import OrganizationFactory
+from internship.tests.factories.speciality import SpecialityFactory
 
 
 class OfferViewTestCase(TestCase):
@@ -27,9 +28,23 @@ class OfferViewTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'internships.html')
 
+    def test_home_with_offer(self):
+        organization = OrganizationFactory(cohort=self.cohort)
+        speciality = SpecialityFactory(cohort=self.cohort)
+
+        offer = OfferFactory(organization=organization, speciality=speciality)
+
+        url = reverse('internships', kwargs={
+            'cohort_id': self.cohort.id,
+        })
+
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'internships.html')
+
     def test_internship_detail_student_choice(self):
-        offer = OfferFactory(organization=OrganizationFactory(cohort=self.cohort),
-                             cohort=self.cohort)
+        offer = OfferFactory(organization=OrganizationFactory(cohort=self.cohort))
+
         url = reverse('internship_detail_student_choice', kwargs={
             'cohort_id': self.cohort.id,
             'offer_id': offer.id,
@@ -39,6 +54,8 @@ class OfferViewTestCase(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'internship_detail.html')
+
+        self.assertEqual(response.context['internship'], offer)
 
     def test_block(self):
         url = reverse('internships_block', kwargs={

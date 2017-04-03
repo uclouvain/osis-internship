@@ -7,6 +7,7 @@ from django.views.decorators.http import require_http_methods
 from base import models as mdl
 from internship import models as mdl_internship
 from internship.models.cohort import Cohort
+from internship.models.internship_offer import InternshipOffer
 from internship.views.internship import (get_all_organizations,
                                          get_all_specialities,
                                          get_number_choices, get_selectable,
@@ -18,6 +19,8 @@ from internship.views.internship import (get_all_organizations,
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internships(request, cohort_id):
+    # import ipdb
+    # ipdb.set_trace()
     cohort = get_object_or_404(Cohort, pk=cohort_id)
 
     # First get the value of the option's value for the sort
@@ -33,13 +36,15 @@ def internships(request, cohort_id):
     else:
         query = mdl_internship.internship_offer.find_internships()
 
+    query = query.filter(organization__cohort=cohort)
+
     # Sort the internships by the organization's reference
     query = sort_internships(query)
 
     # Get The number of differents choices for the internships
     get_number_choices(query)
 
-    all_internships = mdl_internship.internship_offer.find_internships()
+    all_internships = mdl_internship.internship_offer.find_internships().filter(organization__cohort=cohort)
     all_organizations = get_all_organizations(all_internships)
     all_specialities = get_all_specialities(all_internships)
     set_tabs_name(all_specialities)
@@ -48,6 +53,10 @@ def internships(request, cohort_id):
         all_non_mandatory_internships = mdl_internship.internship_offer.find_non_mandatory_internships(speciality__name=speciality_sort_value)
     else:
         all_non_mandatory_internships = mdl_internship.internship_offer.find_non_mandatory_internships(speciality__mandatory=0)
+
+    all_non_mandatory_internships = all_non_mandatory_internships.filter(organization__cohort=cohort)
+    all_non_mandatory_speciality = all_non_mandatory_speciality.filter(cohort=cohort)
+
     get_number_choices(all_non_mandatory_internships)
 
     context = {
@@ -69,7 +78,8 @@ def internships(request, cohort_id):
 def student_choice(request, cohort_id, offer_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
     # Get the internship by its id
-    internship = mdl_internship.internship_offer.find_intership_by_id(offer_id)
+    # TODO: Check if this algo is ok
+    internship = get_object_or_404(InternshipOffer, pk=offer_id, organization__cohort=cohort)
     # Get the students who have choosen this internship
     students = mdl_internship.internship_choice.search(organization=internship.organization,
                                                        speciality=internship.speciality)
@@ -98,13 +108,13 @@ def student_choice(request, cohort_id, offer_id):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internships_block(request, cohort_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
-    number_offers_selectable = mdl_internship.internship_offer.get_number_selectable(cohort_id)
-    all_internship_offers = mdl_internship.internship_offer.find_all().filter(cohort_id=cohort_id)
+
+    number_offers_selectable = mdl_internship.internship_offer.get_number_selectable(cohort)
+    all_internship_offers = mdl_internship.internship_offer.find_all().filter(organization__cohort=cohort)
+
     new_selectable_state = number_offers_selectable == 0
 
-    for internship_offer in all_internship_offers:
-        internship_offer.selectable = new_selectable_state
-        internship_offer.save()
+    all_internship_offers.update(selectable=new_selectable_state)
 
     return HttpResponseRedirect(reverse('internships_home', kwargs={
         'cohort_id': cohort.id,
@@ -117,7 +127,7 @@ def internships_block(request, cohort_id):
 def internships_save(request, cohort_id):
     # Check if the internships are selectable, if yes students can save their choices
     cohort = get_object_or_404(Cohort, pk=cohort_id)
-    all_internships = mdl_internship.internship_offer.search(cohort_id=cohort_id)
+    all_internships = mdl_internship.internship_offer.search(organization__cohort=cohort)
     selectable = get_selectable(all_internships)
 
     if selectable :

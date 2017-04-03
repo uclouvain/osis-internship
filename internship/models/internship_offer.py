@@ -45,8 +45,6 @@ class InternshipOffer(SerializableModel):
     master = models.CharField(max_length=100, blank=True, null=True)
     selectable = models.BooleanField(default=True)
 
-    cohort = models.ForeignKey('internship.Cohort', null=False, on_delete=models.CASCADE)
-
     def __str__(self):
         return self.title
 
@@ -106,11 +104,8 @@ def find_by_pk(a_pk):
         return None
 
 
-def get_number_selectable(cohort_id=None):
-    if cohort_id is None:
-        return InternshipOffer.objects.filter(selectable=True).count()
-    else:
-        return InternshipOffer.objects.filter(selectable=True, cohort_id=cohort_id).count()
+def get_number_selectable(cohort):
+    return InternshipOffer.objects.filter(selectable=True, organization__cohort=cohort).count()
 
 
 def find_all():

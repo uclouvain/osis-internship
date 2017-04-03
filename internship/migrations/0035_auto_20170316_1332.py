@@ -8,7 +8,6 @@ import django.db.models.deletion
 from django.db import migrations, models
 
 from internship.models.cohort import Cohort
-from internship.models.internship_offer import InternshipOffer
 from internship.models.organization import Organization
 from internship.models.period import Period
 
@@ -27,7 +26,6 @@ def assign_first_cohort_to_periods(apps, schema_editor):
     cohort = Cohort.objects.first()
 
     Period.objects.all().update(cohort=cohort)
-    InternshipOffer.objects.all().update(cohort=cohort)
     Organization.objects.all().update(cohort=cohort)
 
 
@@ -54,13 +52,6 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.AddField(
-            model_name='internshipoffer',
-            name='cohort',
-            field=models.ForeignKey(null=True, default=None, on_delete=django.db.models.deletion.CASCADE,
-                                    to='internship.Cohort'),
-            preserve_default=False,
-        ),
-        migrations.AddField(
             model_name='organization',
             name='cohort',
             field=models.ForeignKey(null=True, default=None, on_delete=django.db.models.deletion.CASCADE, to='internship.Cohort'),
@@ -75,10 +66,6 @@ class Migration(migrations.Migration):
         ),
         migrations.RunPython(create_the_first_cohort),
         migrations.RunPython(assign_first_cohort_to_periods),
-        migrations.RunSQL(
-            "ALTER TABLE internship_internshipoffer ALTER COLUMN cohort_id SET NOT NULL",
-            reverse_sql="ALTER TABLE internship_internshipoffer ALTER COLUMN cohort_id DROP NOT NULL",
-        ),
         migrations.RunSQL(
             "ALTER TABLE internship_period ALTER COLUMN cohort_id SET NOT NULL",
             reverse_sql="ALTER TABLE internship_period ALTER COLUMN cohort_id DROP NOT NULL"
