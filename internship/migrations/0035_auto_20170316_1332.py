@@ -8,10 +8,10 @@ import django.db.models.deletion
 from django.db import migrations, models
 
 from internship.models.cohort import Cohort
-from internship.models.period import Period
-from internship.models.internship_offer import InternshipOffer
 from internship.models.internship_master import InternshipMaster
+from internship.models.internship_offer import InternshipOffer
 from internship.models.organization import Organization
+from internship.models.period import Period
 
 
 def create_the_first_cohort(apps, schema_editor):

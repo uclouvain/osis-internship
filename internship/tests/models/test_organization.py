@@ -26,9 +26,8 @@
 from internship.models import organization as mdl_organization
 from internship.tests.factories.cohort import CohortFactory
 
+
 def create_organization(name="OSIS", acronym="OSIS", reference="01", cohort=None):
     if cohort is None:
         cohort = CohortFactory()
     return mdl_organization.Organization.objects.create(name=name, acronym=acronym, reference=reference, cohort=cohort)
-
-

@@ -23,17 +23,17 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.http import HttpResponseRedirect
-from django.contrib.auth.decorators import login_required, permission_required
-from django.core.urlresolvers import reverse
 import openpyxl
 from django.contrib import messages
-from django.utils.translation import ugettext_lazy as _
+from django.contrib.auth.decorators import login_required, permission_required
+from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
+from django.utils.translation import ugettext_lazy as _
+from django.views.decorators.http import require_http_methods
+
 from internship import models as mdl
 from internship.models.cohort import Cohort
-
-from django.views.decorators.http import require_http_methods
 
 
 @require_http_methods(['POST'])

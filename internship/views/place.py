@@ -26,17 +26,16 @@
 import operator
 
 from django.contrib.auth.decorators import login_required, permission_required
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 
 from internship import models as mdl_internship
 from internship.forms.organization_address_form import OrganizationAddressForm
 from internship.forms.organization_form import OrganizationForm
+from internship.models.cohort import Cohort
 from internship.models.organization import Organization
 from internship.models.organization_address import OrganizationAddress
 from internship.utils import export_utils, export_utils_pdf
 from internship.views.internship import get_all_specialities, set_tabs_name
-from internship.models.cohort import Cohort
-from django.shortcuts import get_object_or_404
 
 
 def sort_organizations(sort_organizations):

@@ -23,7 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.conf.urls import url, include
+from django.conf.urls import include, url
 
 from internship.utils import upload_xls
 from internship.views import (affectation_statistics, home, internship, master,

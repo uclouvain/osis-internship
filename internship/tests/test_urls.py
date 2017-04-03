@@ -1,7 +1,7 @@
-from unittest.mock import Mock, MagicMock, patch
+from unittest.mock import MagicMock, Mock, patch
+
+from django.core.urlresolvers import resolve, reverse
 from django.test import TestCase
-from django.core.urlresolvers import reverse
-from django.core.urlresolvers import resolve
 
 
 def test_paths(routes_to_test):

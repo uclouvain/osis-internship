@@ -25,7 +25,9 @@
 ##############################################################################
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
+
+from osis_common.models.serializable_model import (SerializableModel,
+                                                   SerializableModelAdmin)
 
 
 class InternshipMasterAdmin(SerializableModelAdmin):
