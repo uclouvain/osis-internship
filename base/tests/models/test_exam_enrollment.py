@@ -23,9 +23,11 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+import datetime
 from base.models import exam_enrollment, exceptions
 from base.tests.models import test_student, test_offer_enrollment, test_learning_unit_enrollment, \
-    test_offer_year_calendar, test_session_exam, test_academic_year, test_offer_year, test_learning_unit_year
+                              test_session_exam, test_academic_year, test_offer_year, test_learning_unit_year
+from base.tests.factories.session_exam_deadline import SessionExamDeadlineFactory
 from django.test import TestCase
 
 
@@ -41,8 +43,7 @@ def create_exam_enrollment_with_student(num_id, registration_id, offer_year, lea
     offer_enrollment = test_offer_enrollment.create_offer_enrollment(student, offer_year)
     learning_unit_enrollment = test_learning_unit_enrollment.create_learning_unit_enrollment(learning_unit_year,
                                                                                              offer_enrollment)
-    offer_year_calendar = test_offer_year_calendar.create_offer_year_calendar(offer_year, academic_year)
-    session_exam = test_session_exam.create_session_exam(1, learning_unit_year, offer_year_calendar)
+    session_exam = test_session_exam.create_session_exam(1, learning_unit_year)
     return create_exam_enrollment(session_exam, learning_unit_enrollment)
 
 
@@ -53,8 +54,7 @@ class ExamEnrollmentTest(TestCase):
         self.learn_unit_year = test_learning_unit_year.create_learning_unit_year('LSINF1010',
                                                                                  'Introduction to algorithmic',
                                                                                  self.academic_year)
-        self.off_year_cal = test_offer_year_calendar.create_offer_year_calendar(self.offer_year, self.academic_year)
-        self.session_exam = test_session_exam.create_session_exam(1, self.learn_unit_year, self.off_year_cal)
+        self.session_exam = test_session_exam.create_session_exam(1, self.learn_unit_year)
         self.student = test_student.create_student('Pierre', 'Lacazette', '12345678')
         self.offer_enrollment = test_offer_enrollment.create_offer_enrollment(self.student, self.offer_year)
         self.learn_unit_enrol = test_learning_unit_enrollment.create_learning_unit_enrollment(self.learn_unit_year,
@@ -85,3 +85,49 @@ class ExamEnrollmentTest(TestCase):
         ex_enrol = [self.exam_enrollment]
         progress = exam_enrollment.calculate_exam_enrollment_progress(ex_enrol)
         self.assertTrue(0 <= progress <= 100)
+
+    def test_is_deadline_reached(self):
+        self.exam_enrollment.save()
+        SessionExamDeadlineFactory(deadline=datetime.date.today() - datetime.timedelta(days=1),
+                                   number_session=self.session_exam.number_session,
+                                   offer_enrollment=self.offer_enrollment)
+        self.assertTrue(exam_enrollment.is_deadline_reached(self.exam_enrollment))
+
+    def test_is_deadline_not_reached(self):
+        self.exam_enrollment.save()
+        SessionExamDeadlineFactory(deadline=datetime.date.today() + datetime.timedelta(days=2),
+                                                           number_session=self.session_exam.number_session,
+                                                           offer_enrollment=self.offer_enrollment)
+        self.assertFalse(exam_enrollment.is_deadline_reached(self.exam_enrollment))
+
+    def test_is_deadline_tutor_reached(self):
+        self.exam_enrollment.save()
+        SessionExamDeadlineFactory(deadline=datetime.date.today() + datetime.timedelta(days=3),
+                                   deadline_tutor=5,
+                                   number_session=self.session_exam.number_session,
+                                   offer_enrollment=self.offer_enrollment)
+        self.assertTrue(exam_enrollment.is_deadline_tutor_reached(self.exam_enrollment))
+
+    def test_is_deadline_tutor_not_reached(self):
+        self.exam_enrollment.save()
+        SessionExamDeadlineFactory(deadline=datetime.date.today() + datetime.timedelta(days=3),
+                                   deadline_tutor=2,
+                                   number_session=self.session_exam.number_session,
+                                   offer_enrollment=self.offer_enrollment)
+        self.assertFalse(exam_enrollment.is_deadline_tutor_reached(self.exam_enrollment))
+
+    def test_is_deadline_tutor_not_set_not_reached(self):
+        self.exam_enrollment.save()
+        SessionExamDeadlineFactory(deadline=datetime.date.today() + datetime.timedelta(days=3),
+                                   deadline_tutor=None,
+                                   number_session=self.session_exam.number_session,
+                                   offer_enrollment=self.offer_enrollment)
+        self.assertFalse(exam_enrollment.is_deadline_tutor_reached(self.exam_enrollment))
+
+    def test_is_deadline_tutor_not_set_reached(self):
+        self.exam_enrollment.save()
+        SessionExamDeadlineFactory(deadline=datetime.date.today() - datetime.timedelta(days=1),
+                                   deadline_tutor=None,
+                                   number_session=self.session_exam.number_session,
+                                   offer_enrollment=self.offer_enrollment)
+        self.assertTrue(exam_enrollment.is_deadline_tutor_reached(self.exam_enrollment))

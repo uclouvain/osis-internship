@@ -158,11 +158,11 @@ def get_session_exam_deadline(enrollment):
         Return the session exam related to the exam enrollment, return None if not found
         :param enrollment
     """
-    session_exam_deadline = ExamEnrollment.objects.prefetch_related(
-        models.Prefetch('learning_unit_enrollment__offer_enrollment',
-                        queryset=SessionExamDeadline.objects.select_related('offer_enrollment'))
-    ).get(pk=enrollment.id)
-    return session_exam_deadline[0] if session_exam_deadline else None
+    offer_enrollment = enrollment.learning_unit_enrollment.offer_enrollment
+    try :
+        return SessionExamDeadline.objects.get(offer_enrollment=offer_enrollment.id)
+    except SessionExamDeadline.DoesNotExist:
+        return None
 
 
 def is_deadline_reached(enrollment):
@@ -172,7 +172,7 @@ def is_deadline_reached(enrollment):
     """
     session_exam_deadline = get_session_exam_deadline(enrollment)
     if session_exam_deadline:
-        return session_exam_deadline.deadline.end_date > datetime.date.today()
+        return session_exam_deadline.deadline < datetime.date.today()
     return False
 
 
@@ -184,9 +184,9 @@ def is_deadline_tutor_reached(enrollment):
     session_exam_deadline = get_session_exam_deadline(enrollment)
     if session_exam_deadline:
         if session_exam_deadline.deadline_tutor:
-            deadline_tutor = session_exam_deadline.deadline.end_date - datetime.timedelta(
+            deadline_tutor = session_exam_deadline.deadline - datetime.timedelta(
                 days=session_exam_deadline.deadline_tutor)
-            return deadline_tutor > datetime.date.today()
+            return deadline_tutor < datetime.date.today()
         else:
             return is_deadline_reached(enrollment)
     return False
@@ -299,9 +299,8 @@ def find_for_score_encodings(session_exam_number,
                                               are returned.
     :return: All filtered examEnrollments.
     """
-    queryset = ExamEnrollment.objects.filter(session_exam__number_session=session_exam_number)
-    queryset = queryset.filter(enrollment_state=enrollment_states.ENROLLED)
-
+    queryset = ExamEnrollment.objects.filter(session_exam__number_session=session_exam_number,
+                                             enrollment_state=enrollment_states.ENROLLED)
     if learning_unit_year_id:
         queryset = queryset.filter(learning_unit_enrollment__learning_unit_year_id=learning_unit_year_id)
     elif learning_unit_year_ids:
