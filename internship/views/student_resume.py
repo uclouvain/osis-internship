@@ -123,12 +123,12 @@ def get_students():
 def internships_student_resume(request, cohort_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
     students_with_status = get_students_with_status()
-    student_with_internships = mdl_internship.internship_choice.get_number_students()
-    students_can_have_internships = mdl_internship.internship_student_information.get_number_students()
+    student_with_internships = mdl_internship.internship_choice.get_number_students(cohort)
+    students_can_have_internships = mdl_internship.internship_student_information.get_number_students(cohort)
     student_without_internship = students_can_have_internships - student_with_internships
     number_students_ok = len([x for x in students_with_status if x[1]])
     number_students_not_ok = len([x for x in students_with_status if x[1] is False])
-    number_generalists = mdl_internship.internship_student_information.get_number_of_generalists()
+    number_generalists = mdl_internship.internship_student_information.get_number_of_generalists(cohort)
     number_specialists = students_can_have_internships - number_generalists
     context = {
         'search_name': None,

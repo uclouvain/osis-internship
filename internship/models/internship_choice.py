@@ -107,8 +107,8 @@ def get_internship_choices_made(student):
         values_list("internship_choice", flat=True).distinct()
 
 
-def get_number_students():
-    return InternshipChoice.objects.filter(internship_choice__gt=0).distinct("student").count()
+def get_number_students(cohort):
+    return InternshipChoice.objects.filter(organization__cohort=cohort, internship_choice__gt=0).distinct("student").count()
 
 
 def get_number_first_choice_by_organization(speciality):

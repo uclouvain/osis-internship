@@ -77,16 +77,16 @@ def find_by_person(person):
         return None
 
 
-def get_number_of_specialists():
+def get_number_of_specialists(cohort):
     contest_specialist = "SPECIALIST"
-    return InternshipStudentInformation.objects.filter(contest=contest_specialist).count()
+    return InternshipStudentInformation.objects.filter(contest=contest_specialist, cohort=cohort).count()
 
 
-def get_number_of_generalists():
+def get_number_of_generalists(cohort):
     contest_generalist = "GENERALIST"
-    return InternshipStudentInformation.objects.filter(contest=contest_generalist).count()
+    return InternshipStudentInformation.objects.filter(contest=contest_generalist, cohort=cohort).count()
 
 
-def get_number_students():
-    return InternshipStudentInformation.objects.count()
+def get_number_students(cohort):
+    return InternshipStudentInformation.objects.filter(cohort=cohort).count()
 

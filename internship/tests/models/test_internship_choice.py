@@ -82,7 +82,7 @@ class TestSearchByStudentOrChoice(TestCase):
 
     def test_get_number_students(self):
         expected = 1
-        actual = mdl_internship_choice.get_number_students()
+        actual = mdl_internship_choice.get_number_students(self.organization.cohort)
         self.assertEqual(expected, actual)
 
 
