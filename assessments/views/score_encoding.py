@@ -995,6 +995,6 @@ def get_json_data_scores_sheets(tutor_global_id):
         return None
 
 
-#@login_required
+@login_required
 def scores_responsible(request):
-    return layout.render(request, 'scores_responsibles.html', {})
+    return layout.render(request, 'scores_responsible.html', {})

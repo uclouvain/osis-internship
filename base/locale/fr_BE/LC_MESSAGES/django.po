@@ -1004,6 +1004,9 @@ msgstr "Injection des notes"
 msgid "scores_responsible"
 msgstr "Responsable(s) de notes"
 
+msgid "scores_responsibles_administration"
+msgstr "Administration des Responsables de notes pour les cours de la faculté"
+
 msgid "scores_saved"
 msgstr "note(s) enregistrée(s)"
 
