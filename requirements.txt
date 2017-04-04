@@ -15,7 +15,6 @@ django-statici18n==1.1.5
 factory_boy
 django-dotenv==1.4.1
 pendulum
-django-debug-toolbar
 codeclimate-test-reporter
 
 -r ./osis_common/requirements.txt
