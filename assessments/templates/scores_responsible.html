@@ -35,10 +35,69 @@
 <div class="page-header">
     <h2>{% trans 'scores_responsibles_administration' %}</h2>
 </div>
-
 <div class="panel panel-default">
     <div class="panel-body">
-
+        <form method="get" action="{% url 'manager_dissertations_search'%}">
+            <div class="row">
+                <div class="col-md-1 form-group">
+                    <label for="txt_entities">{% trans 'entities' %}</label>
+                    <select class="form-control" id="txt_entities"  name="entities">
+                        {% for entitie in entities %}
+                            <option ></option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-2 form-group">
+                    <label for="txt_course_code">{% trans 'course_code' %}</label>
+                    <input class="form-control" id="txt_course_code"  name="course_code">
+                </div>
+                <div class="col-md-2 form-group">
+                    <label for="txt_learning_unit_title">{% trans 'learning_unit_title' %}</label>
+                    <input class="form-control" id="txt_learning_unit_title"  name="learning_unit_title">
+                </div>
+                <div class="col-md-2 form-group">
+                    <label for="txt_professor">{% trans 'professor' %}</label>
+                    <select class="form-control" id="txt_professor"  name="professor">
+                        {% for professor in professors %}
+                            <option></option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3 form-group">
+                    <label for="txt_scores_responsible">{% trans 'scores_responsible' %}</label>
+                    <select class="form-control" id="txt_scores_responsible"  name="scores_responsible">
+                        {% for scores_responsible in scores_responsibles %}
+                            <option ></option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-1 form-group" style="margin-top:25px">
+                    <button type="submit" id="bt_submit_manager_information_search" class="btn btn-primary" role="button"
+                            title="{% trans 'search' %}">{% trans 'search' %}</button>
+                </div>
+            </div>
+        </form>
+        <br>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>{% trans 'entities' %}</th>
+                    <th>{% trans 'course_code' %}</th>
+                    <th>{% trans 'learning_unit_title' %}</th>
+                    <th>{% trans 'holder_number' %}</th>
+                    <th>{% trans 'scores_responsible' %}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{% trans 'entities' %}</td>
+                    <td>{% trans 'course_code' %}</td>
+                    <td>{% trans 'learning_unit_title' %}</td>
+                    <td>{% trans 'holder_number' %}</td>
+                    <td>{% trans 'scores_responsible' %}</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </div>
 {% endblock %}

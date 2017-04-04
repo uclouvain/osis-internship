@@ -1151,6 +1151,9 @@ msgstr "The coordinator must still submit the scores"
 msgid "title"
 msgstr "Title"
 
+msgid "learning_unit_title"
+msgstr "Learning unit title"
+
 msgid "too_many_results"
 msgstr "Too many results! Please be more specific."
 
@@ -1369,6 +1372,9 @@ msgstr "Coordinator"
 
 msgid "HOLDER"
 msgstr "Holder"
+
+msgid "holder_number"
+msgstr "Holders number"
 
 msgid "CO_HOLDER"
 msgstr "Co-holder"

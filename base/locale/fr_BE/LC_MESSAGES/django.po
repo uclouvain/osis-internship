@@ -1139,6 +1139,9 @@ msgstr "Le coordinateur doit toujours soumettre les notes"
 msgid "title"
 msgstr "Intitulé"
 
+msgid "learning_unit_title"
+msgstr "Intitulé du cours"
+
 msgid "too_many_results"
 msgstr "Votre recherche retourne trop de résultats, veuillez spécifier la recherche."
 
@@ -1362,6 +1365,9 @@ msgstr "Coordinateur"
 
 msgid "HOLDER"
 msgstr "Titulaire"
+
+msgid "holder_number"
+msgstr "Nb titulaires"
 
 msgid "CO_HOLDER"
 msgstr "Co-titulaire"
