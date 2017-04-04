@@ -7,7 +7,7 @@ from base.models.person import Person
 from internship.models.internship_student_information import InternshipStudentInformation
 
 
-def import_csv(self, csvfile):
+def import_csv(cohort, csvfile):
     reader = csv.reader(csvfile)
     next(reader)
     for row in reader:
@@ -44,9 +44,10 @@ def import_csv(self, csvfile):
             'email': email,
             'phone_mobile': phone,
             'city': city,
+            'cohort': cohort,
         }
         student_info = InternshipStudentInformation.objects.create(**info)
-        # print(student_info.id)
+
         if person.user:
             group = Group.objects.get(name='internship_students')
             person.user.groups.add(group)

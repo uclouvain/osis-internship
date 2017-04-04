@@ -52,6 +52,8 @@ class InternshipStudentInformation(SerializableModel):
     phone_mobile = models.CharField(max_length=100, blank=True, null=True)
     contest = models.CharField(max_length=124, choices=TYPE_CHOICE, default="GENERALIST")
 
+    cohort = models.ForeignKey('internship.Cohort', null=False, blank=False, default=None)
+
     def __str__(self):
         return '{}'.format(self.person)
 
