@@ -93,7 +93,7 @@ def can_delegate_to_structure(reviewer, structure):
     - Il doit avoir ce rôle pour la structure passée en argument ou cette dernière doit faire partie
     d'une structure pour laquelle le reviewer a ce rôle.
     """
-    if reviewer.role != "SUPERVISION" and reviewer.role != "RESEARCH":
+    if reviewer.role != reviewer_role.SUPERVISION and reviewer.role != reviewer_role.RESEARCH:
         return False
     if structure == reviewer.structure:
         return True
@@ -104,7 +104,7 @@ def can_delegate_to_structure(reviewer, structure):
 
 
 def can_delegate(reviewer):
-    if reviewer.role != "SUPERVISION" and reviewer.role != "RESEARCH":
+    if reviewer.role != reviewer_role.SUPERVISION and reviewer.role != reviewer_role.RESEARCH:
         return False
     else:
         return True
