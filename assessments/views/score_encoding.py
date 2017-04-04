@@ -267,8 +267,8 @@ def bulk_send_messages_to_notify_encoding_progress(request, updated_enrollments,
             if learning_unit_year in mail_already_sent_by_learning_unit:
                 continue
             all_enrollments = _get_exam_enrollments(request.user,
-                                                    learning_unit_year_id = learning_unit_year.id,
-                                                    is_program_manager = is_program_manager)
+                                                    learning_unit_year_id=learning_unit_year.id,
+                                                    is_program_manager=is_program_manager)
             send_messages_to_notify_encoding_progress(request, all_enrollments, learning_unit_year, is_program_manager,
                                                       updated_enrollments)
             mail_already_sent_by_learning_unit.add(learning_unit_year)
@@ -326,11 +326,11 @@ def set_score_and_justification_for_exam_enrollment(is_pgm, enrollment, new_just
         enrollment.score_final = new_score
         enrollment.justification_final = new_justification
 
-    #Validation
+    # Validation
     enrollment.full_clean()
     enrollment.save()
 
-    #Add History change
+    # Add History change
     if is_pgm:
         mdl.exam_enrollment.create_exam_enrollment_historic(user, enrollment,
                                                             enrollment.score_final,
@@ -417,7 +417,6 @@ def online_double_encoding_form(request, learning_unit_year_id=None):
                 enrollment.save()
             data['enrollments'] = mdl.exam_enrollment.sort_for_encodings(reencoded_exam_enrollments)
             return layout.render(request, "online_double_encoding_validation.html", data)
-
 
 
 @login_required
@@ -872,9 +871,9 @@ def specific_criteria_submission(request):
                 messages.add_message(request, messages.ERROR, _(e.args[0]))
                 continue
         else:
-            score_encoded=None
+            score_encoded = None
         if not justification_encoded:
-            justification_encoded=None
+            justification_encoded = None
 
         # Ignore all enrollment changed
         if not is_enrollment_changed(request, enrollment, score_encoded, justification_encoded, is_program_manager):
@@ -994,3 +993,8 @@ def get_json_data_scores_sheets(tutor_global_id):
             log_trace = traceback.format_exc()
             logger.warning('Error during queue logging :\n {}'.format(log_trace))
         return None
+
+
+#@login_required
+def scores_responsible(request):
+    return layout.render(request, 'scores_responsibles.html', {})
