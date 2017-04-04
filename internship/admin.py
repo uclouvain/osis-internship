@@ -1,5 +1,3 @@
-from io import StringIO
-
 from django import forms
 from django.conf.urls import url
 from django.contrib import admin
@@ -8,11 +6,12 @@ from django.http import HttpResponseRedirect
 from django.template.response import TemplateResponse
 from django.utils.html import format_html
 from django.utils.translation import ugettext_lazy as _
-
-from osis_common.models.serializable_model import SerializableModelAdmin
+from io import StringIO
 
 from internship.models import *
 from internship.utils import student_loader
+from internship.utils.import_students import import_csv
+from osis_common.models.serializable_model import SerializableModelAdmin
 
 
 admin.site.register(internship_offer.InternshipOffer,
@@ -79,8 +78,8 @@ class CohortAdmin(SerializableModelAdmin):
             if form.is_valid():
                 file_upload = form.cleaned_data['file_upload']
                 try:
-                    with StringIO(file_upload.read().decode('utf-8')) as strIO:
-                        result = student_loader.load_internship_students(strIO)
+                    with StringIO(file_upload.read().decode('utf-8')) as str_io:
+                        result = import_csv(current_cohort, str_io)
                     self.message_user(request, _('Success'))
                 except student_loader.BadCSVFormat as ex:
                     self.message_user(request, _('Unable to import the CSV file'))

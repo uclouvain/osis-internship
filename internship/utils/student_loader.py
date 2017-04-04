@@ -9,8 +9,8 @@ from internship.models import internship_student_information as mdl_isi
 
 CSVRow = collections.namedtuple(
     'CSVRow',
-    ['ignored', 'global_id', 'location', 'postal_code', 'city',
-     'country', 'phone_mobile', 'email']
+    ['name', 'gender', 'birthdate', 'birthplace', 'nationality', 'noma',
+     'fgs', 'street', 'postal_code', 'city', 'country', 'phone_mobile', 'email']
 )
 
 Status = collections.namedtuple(
@@ -48,13 +48,13 @@ def _insert_internship_student_information(idx, row):
     values = dict.fromkeys(['not_found', 'imported', 'duplicated', 'error'], False)
     values['idx'] = idx
 
-    person = mdl_person.find_by_global_id(row.global_id)
+    person = mdl_person.find_by_global_id(row.noma)
     if not person:
         values['not_found'] = True
     else:
         student = mdl_isi.InternshipStudentInformation()
         student.person = person
-        student.location = row.location
+        student.location = row.street
         student.postal_code = row.postal_code
         student.city = row.city
         student.country = row.country

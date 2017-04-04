@@ -1,4 +1,5 @@
 import io
+import unittest
 
 import faker
 from django.contrib.auth.models import Permission, User
@@ -44,6 +45,7 @@ class CohortAdminTestCase(TestCase):
                                  args=[cohort.id])
             self.assertRedirects(response, cohort_url)
 
+    @unittest.skip('Remove this test, useless, because we are sure we will receive .csv file')
     def test_cohort_upload_text_file(self):
         cohort = CohortFactory()
 

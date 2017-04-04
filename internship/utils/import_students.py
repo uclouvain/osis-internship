@@ -11,7 +11,8 @@ def import_csv(cohort, csvfile):
     reader = csv.reader(csvfile)
     next(reader)
     for row in reader:
-        name, gender, birthdate, birthplace, nationality, noma, fgs, street, zipcode, city, country, phone, email = row
+        name, gender, birthdate, birthplace, nationality, noma, \
+            fgs, street, zipcode, city, country, phone, email = row
 
         person = Person.objects.filter(global_id=noma).first()
 
