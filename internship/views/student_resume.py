@@ -148,20 +148,23 @@ def internships_student_resume(request, cohort_id):
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
-def internships_student_read(request, registration_id):
-    NUMBER_NON_MANDATORY_INTERNSHIPS = 6
-    student_to_read = mdl.student.find_by_registration_id(registration_id)
+def internships_student_read(request, cohort_id, student_id):
+    cohort = Cohort.objects.get(pk=cohort_id)
+
+    student_to_read = mdl.student.find_by_id(student_id)
+
     if not request.user.has_perm('internship.is_internship_manager'):
         person_who_read = mdl.person.find_by_user(request.user)
         student_who_read = mdl.student.find_by_person(person_who_read)
         if not student_who_read or not student_to_read or student_who_read.pk != student_to_read.pk:
             raise PermissionDenied(request)
+
     if not student_to_read:
         return render(request, "student_resume.html", {'errors': ['student_not_exists']})
-    information = mdl_internship.internship_student_information.search(person = student_to_read.person)
-    internship_choice = mdl_internship.internship_choice.find_by_student(student_to_read).\
-        order_by('internship_choice', 'choice')
-    all_speciality = mdl_internship.internship_speciality.search(mandatory=True)
+    information = mdl_internship.internship_student_information.search(person = student_to_read.person).first()
+    internship_choices = mdl_internship.internship_choice.get_internship_choices_made(cohort=cohort, student=student_to_read).order_by('choice')
+    all_speciality = mdl_internship.internship_speciality.search(mandatory=True, cohort=cohort)
+    internships = mdl_internship.internship.Internship.objects.filter(cohort=cohort, pk__gte=1)
 
     affectations = mdl_internship.internship_student_affectation_stat.search(student=student_to_read).\
         order_by("period__date_start")
@@ -177,11 +180,11 @@ def internships_student_read(request, registration_id):
                 for o in organization.address:
                     affectation.organization.address = o
 
-    internships = mdl_internship.internship_offer.find_internships()
+    internship_offers = mdl_internship.internship_offer.find_internships()
     #Check if there is a internship offers in data base. If not, the internships
     #can be block, but there is no effect
-    if len(internships) > 0:
-        if internships[0].selectable:
+    if len(internship_offers) > 0:
+        if internship_offers[0].selectable:
             selectable = True
         else:
             selectable = False
@@ -190,13 +193,14 @@ def internships_student_read(request, registration_id):
 
     return render(request, "student_resume.html",
                            {'student': student_to_read,
-                            'information': information[0],
-                            'internship_choice': internship_choice,
+                            'information': information,
+                            'internship_choices': internship_choices,
                             'specialities': all_speciality,
                             'selectable': selectable,
                             'affectations': affectations,
                             'periods': periods,
-                            'number_internships': range(1, NUMBER_NON_MANDATORY_INTERNSHIPS+1)
+                            'cohort': cohort,
+                            'internships': internships
                             })
 
 

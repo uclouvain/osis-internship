@@ -99,15 +99,14 @@ def search_by_student_or_choice(student=None, internship=None):
 
 
 def get_non_mandatory_internship_choices(cohort):
-    internships = internship.Internship.objects.filter(cohort=cohort, speciality=None)
+    internships = internship.Internship.objects.filter(cohort=cohort, speciality=None, pk__gte=1)
     return InternshipChoice.objects.filter(internship_id__in=internships.values_list("id", flat=True)).\
         select_related("student", "organization", "speciality", "internship")
 
 
 def get_internship_choices_made(cohort, student):
-    internships = internship.Internship.objects.filter(cohort=cohort, speciality=None)
-    return InternshipChoice.objects.filter(internship_id__in=internships.values_list("id", flat=True), student=student).\
-        values_list("internship_id", flat=True).distinct()
+    internships = internship.Internship.objects.filter(cohort=cohort, pk__gte=1)
+    return InternshipChoice.objects.filter(internship_id__in=internships.values_list("id", flat=True), student=student).distinct()
 
 
 def get_number_students(cohort):
