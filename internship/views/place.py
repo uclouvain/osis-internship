@@ -178,6 +178,8 @@ def place_save(request, cohort_id, organization_id, organization_address_id):
         mdl_internship.organization_address.OrganizationAddress.objects.filter(organization__reference=request.POST.get('reference')).delete()
         organization = mdl_internship.organization.Organization()
 
+    organization.cohort = cohort
+
     form = OrganizationForm(data=request.POST, instance=organization)
     if form.is_valid():
         form.save()
