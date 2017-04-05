@@ -149,7 +149,7 @@ def internships_student_resume(request, cohort_id):
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internships_student_read(request, cohort_id, student_id):
-    cohort = Cohort.objects.get(pk=cohort_id)
+    cohort = get_object_or_404(Cohort, pk=cohort_id)
 
     student_to_read = mdl.student.find_by_id(student_id)
 
@@ -206,28 +206,33 @@ def internships_student_read(request, cohort_id, student_id):
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
-def internship_student_information_modification(request, registration_id):
-    student = mdl.student.find_by(registration_id=registration_id)
-    information = mdl_internship.internship_student_information.find_by_person(person=student[0].person)
+def internship_student_information_modification(request, cohort_id, student_id):
+    cohort = get_object_or_404(Cohort, pk=cohort_id)
+    student = mdl.student.find_by_id(student_id)
+    information = mdl_internship.internship_student_information.search(person=student.person, cohort=cohort).first()
     form = StudentInformationForm()
-    student = student[0]
     return render(request, "student_information_modification.html",
                            {'student': student,
                             'information': information,
+                            'cohort': cohort,
                             "form": form})
 
 
 @login_required
 @require_POST
 @permission_required('internship.is_internship_manager', raise_exception=True)
-def student_save_information_modification(request, registration_id):
-    student = mdl.student.find_by_registration_id(registration_id)
+def student_save_information_modification(request, cohort_id, student_id):
+    cohort = get_object_or_404(Cohort, pk=cohort_id)
+    student = mdl.student.find_by_id(student_id)
     information = mdl_internship.internship_student_information.find_by_person(student.person)
     if not information:
         information = mdl_internship.internship_student_information.InternshipStudentInformation()
-        information.person = student[0].person
+        information.person = student.person
 
-    form = StudentInformationForm(request.POST)
+    if information.cohort == None:
+        information.cohort = cohort
+
+    form = StudentInformationForm(request.POST, instance=information)
     if form.is_valid():
         information.email = form.cleaned_data.get('email')
         information.phone_mobile = form.cleaned_data.get('phone_mobile')
@@ -240,7 +245,7 @@ def student_save_information_modification(request, registration_id):
         information.longitude = None
         information.save()
 
-    redirect_url = reverse('internships_student_read', args=[registration_id])
+    redirect_url = reverse('internships_student_read', args=[cohort_id, student_id])
     return HttpResponseRedirect(redirect_url)
 
 

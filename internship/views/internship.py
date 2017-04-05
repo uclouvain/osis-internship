@@ -247,9 +247,14 @@ def set_student_choices_list(query,student_choice):
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
-def internships_modification_student(request, registration_id, internship_id="1", speciality_id="-1"):
-    NUMBER_NON_MANDATORY_INTERNSHIPS = 6
-    student = mdl.student.find_by_registration_id(registration_id)
+def internships_modification_student(request, cohort_id, student_id, internship_id=-1, speciality_id="-1"):
+    cohort = get_object_or_404(Cohort, pk=cohort_id)
+    student = mdl.student.find_by_id(student_id)
+
+    if int(internship_id) < 1:
+        internship = mdl_internship.internship.Internship.objects.filter(cohort=cohort, pk__gte=1).first()
+    else:
+        internship = mdl_internship.internship.Internship.objects.get(pk=internship_id)
 
     speciality = get_speciality(internship_id, speciality_id, student)
     if speciality:
@@ -263,25 +268,28 @@ def internships_modification_student(request, registration_id, internship_id="1"
     if request.method == 'POST':
         formset = offer_preference_formset(request.POST)
         if formset.is_valid():
-            remove_previous_choices(student, internship_id)
-            save_student_choices(formset, student, int(internship_id), speciality)
+            remove_previous_choices(student, internship)
+            save_student_choices(formset, student, internship, speciality)
 
     student_choices = mdl_internship.internship_choice.search_by_student_or_choice(student=student,
-                                                                                   internship_choice=internship_id)
+                                                                                   internship=internship)
+
+    internships = mdl_internship.internship.Internship.objects.filter(cohort=cohort, pk__gte=1)
 
     zipped_data = prepare_template_data(formset, student_choices, internships_offers, speciality, student,
                                         internship_id)
     information = mdl_internship.internship_student_information.find_by_person(student.person)
 
     context = {
-        "number_non_mandatory_internships": range(1, NUMBER_NON_MANDATORY_INTERNSHIPS + 1),
+        "internships": internships,
         "speciality_form": SpecialityForm(),
         "formset": formset,
         "offers_forms": zipped_data,
-        "intern_id": int(internship_id),
+        "internship_id": internship.id,
         "speciality_id": int(speciality_id),
         "student": student,
         "information": information,
+        "cohort": cohort
     }
     return render(request, "internship_modification_student.html", context)
 
@@ -374,27 +382,27 @@ def generate_elements(dict_current_choices, dict_current_enrollments, dict_offer
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
-def assign_speciality_for_internship(request, registration_id, internship_id):
+def assign_speciality_for_internship(request, cohort_id, student_id, internship_id):
     speciality_id = None
     if request.method == "POST":
         speciality_form = SpecialityForm(request.POST)
         if speciality_form.is_valid():
             speciality_selected = speciality_form.cleaned_data["speciality"]
             speciality_id = speciality_selected.id
-    return redirect("specific_internship_student_modification", registration_id=registration_id,
+    return redirect("specific_internship_student_modification", cohort_id=cohort_id, student_id=student_id,
                     internship_id=internship_id, speciality_id=speciality_id)
 
 
-def remove_previous_choices(student, internship_id):
-    previous_choices = mdl_internship.internship_choice.search_by_student_or_choice(student, internship_id)
+def remove_previous_choices(student, internship):
+    previous_choices = mdl_internship.internship_choice.search_by_student_or_choice(student=student, internship=internship)
     if previous_choices:
         previous_choices.delete()
-    previous_enrollments = mdl_internship.internship_enrollment.search_by_student_and_internship(student, internship_id)
+    previous_enrollments = mdl_internship.internship_enrollment.search_by_student_and_internship(student=student, internship=internship)
     if previous_enrollments:
         previous_enrollments.delete()
 
 
-def save_student_choices(formset, student, internship_id, speciality):
+def save_student_choices(formset, student, internship, speciality):
     for form in formset:
         if form.cleaned_data:
             offer_pk = form.cleaned_data["offer"]
@@ -406,13 +414,13 @@ def save_student_choices(formset, student, internship_id, speciality):
                                                                                       organization=offer.organization,
                                                                                       speciality=speciality,
                                                                                       choice=preference_value,
-                                                                                      internship_choice=internship_id,
+                                                                                      internship=internship,
                                                                                       priority=priority)
                 internship_choice.save()
-                save_enrollments(form, offer, student, internship_id)
+                save_enrollments(form, offer, student, internship)
 
 
-def save_enrollments(form, offer, student, internship_choice):
+def save_enrollments(form, offer, student, internship):
     periods_name = form.cleaned_data.get("periods", [])
     for period_name in periods_name:
         period = mdl_internship.period.get_by_name(period_name)
@@ -420,7 +428,7 @@ def save_enrollments(form, offer, student, internship_choice):
             continue
         enrollment = mdl_internship.internship_enrollment. \
             InternshipEnrollment(student=student, internship_offer=offer, place=offer.organization,
-                                 period=period, internship_choice=internship_choice)
+                                 period=period, internship=internship)
         enrollment.save()
 
 

@@ -102,7 +102,7 @@
                       <td>{{ student.person.first_name }}</td>
                       <td>
                         {% if student.registration_id %}
-                          <a class="btn btn-primary" target="_blank" id="lnk_students_choice{{organization.reference}}"
+                          <a class="btn btn-primary" id="lnk_students_choice{{organization.reference}}"
                             href="{% url 'internships_student_read' cohort_id=cohort.id student_id=student.id %}">
                             <span class="glyphicon glyphicon-search" aria-hidden="true">
                             </span>
