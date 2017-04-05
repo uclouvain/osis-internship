@@ -147,7 +147,7 @@ def internships_places(request, cohort_id):
         city_sort_get = request.GET.get('city_sort')
 
     organizations = Organization.objects.prefetch_related('addresses') \
-        .filter(type='service partner') \
+        .filter(type='service partner', cohort=cohort) \
         .order_by('reference')
 
     if city_sort_get and city_sort_get != '0':
@@ -166,42 +166,6 @@ def internships_places(request, cohort_id):
         'cohort': cohort,
     }
     return render(request, "places.html", context)
-
-
-@login_required
-@permission_required('internship.is_internship_manager', raise_exception=True)
-def internships_places_stud(request, cohort_id):
-    cohort = get_object_or_404(Cohort, pk=cohort_id)
-    # First get the value of the option for the sort
-    city_sort_get = "0"
-    if request.method == 'GET':
-        city_sort_get = request.GET.get('city_sort')
-
-    # Import all the organizations order by their reference and set their address
-    organizations = mdl_internship.organization.search(type="service partner")
-    organizations = sort_organizations(organizations)
-    set_organization_address(organizations)
-
-    # Next, if there is a value for the sort, browse all the organizations and put which have the same city
-    # in the address than the sort option
-    l_organizations = []
-    if city_sort_get and city_sort_get != "0":
-        l_organizations = sorted_organization(organizations, city_sort_get)
-    else:
-        l_organizations = organizations
-
-    # Create the options for the selected list, delete dubblons
-    organization_addresses = get_cities(organizations)
-
-    context = {
-        'section': 'internship',
-        'all_organizations': l_organizations,
-        'all_addresses': organization_addresses,
-        'city_sort_get': city_sort_get,
-        'cohort': cohort,
-    }
-    return render(request, "places_stud.html", context)
-
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)

@@ -95,14 +95,6 @@ class PlaceViewAndUrlTestCase(TestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
-    def test_places_stud(self):
-        url = reverse('internships_places_stud', kwargs={
-            'cohort_id': self.cohort.id,
-        })
-
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, 200)
-
     def test_upload_places_file(self):
         url = reverse('upload_places', kwargs={
             'cohort_id': self.cohort.id,

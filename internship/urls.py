@@ -75,7 +75,6 @@ urlpatterns = [
             url(r'^exportxls/(?P<organization_id>[0-9]+)/$', place.export_organisation_affectation_as_xls, name='organisation_affectation_download'),
             url(r'^save/(?P<organization_id>[0-9]+)/(?P<organization_address_id>[0-9]+)/$', place.place_save, name='place_save'),
             url(r'^save/$', place.organization_new, name='place_save_new'),
-            url(r'^std/$', place.internships_places_stud, name='internships_places_stud'),
             url(r'^upload/$', upload_xls.upload_places_file, name='upload_places'),
         ])),
 
