@@ -2,7 +2,6 @@ from django.db import models
 
 from osis_common.models.serializable_model import SerializableModel
 
-
 class Cohort(SerializableModel):
     name = models.CharField(max_length=255, null=False)
     description = models.TextField(null=False)

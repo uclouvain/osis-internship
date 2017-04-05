@@ -31,9 +31,9 @@ from django.utils.translation import ugettext_lazy as _
 
 class InternshipStudentInformationAdmin(SerializableModelAdmin):
     list_display = ('person', 'location', 'postal_code', 'city', 'country', 'latitude', 'longitude', 'email',
-                    'phone_mobile', 'contest')
+                    'phone_mobile', 'contest', 'cohort')
     fieldsets = ((None, {'fields': ('person', 'location', 'postal_code', 'city', 'latitude', 'longitude', 'country',
-                                    'email', 'phone_mobile', 'contest')}),)
+                                    'email', 'phone_mobile', 'contest', 'cohort')}),)
     raw_id_fields = ('person',)
     search_fields = ['person__user__username', 'person__last_name', 'person__first_name']
 

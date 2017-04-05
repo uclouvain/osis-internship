@@ -29,8 +29,8 @@ from django.core.exceptions import ObjectDoesNotExist
 
 
 class InternshipSpecialityAdmin(SerializableModelAdmin):
-    list_display = ('learning_unit', 'name', 'acronym', 'mandatory', 'order_postion')
-    fieldsets = ((None, {'fields': ('learning_unit', 'name', 'acronym', 'mandatory', 'order_postion')}),)
+    list_display = ('learning_unit', 'name', 'acronym', 'mandatory', 'order_postion', 'cohort')
+    fieldsets = ((None, {'fields': ('learning_unit', 'name', 'acronym', 'mandatory', 'order_postion', 'cohort')}),)
     raw_id_fields = ('learning_unit',)
 
 

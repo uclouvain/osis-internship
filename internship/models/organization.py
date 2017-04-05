@@ -30,8 +30,8 @@ from osis_common.models.serializable_model import (SerializableModel,
 
 
 class OrganizationAdmin(SerializableModelAdmin):
-    list_display = ('name', 'acronym', 'reference', 'type')
-    fieldsets = ((None, {'fields': ('name', 'acronym', 'reference', 'website', 'type')}),)
+    list_display = ('name', 'acronym', 'reference', 'type', 'cohort')
+    fieldsets = ((None, {'fields': ('name', 'acronym', 'reference', 'website', 'type', 'cohort')}),)
     search_fields = ['acronym', 'name']
 
 
