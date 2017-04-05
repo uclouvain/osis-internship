@@ -23,20 +23,31 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.db import models
+from osis_common.models.serializable_model import SerializableModelAdmin, SerializableModel
 
-from internship.models import affectation_generation_time
-from internship.models import internship_choice
-from internship.models import internship_enrollment
-from internship.models import internship_master
-from internship.models import internship_offer
-from internship.models import internship_speciality
-from internship.models import internship_speciality_group
-from internship.models import internship_speciality_group_member
-from internship.models import internship_student_affectation_stat
-from internship.models import internship_student_information
-from internship.models import organization
-from internship.models import organization_address
-from internship.models import period
-from internship.models import period_internship_places
-from internship.models import cohort
-from internship.models import internship
+
+class InternshipAdmin(SerializableModelAdmin):
+    list_display = (
+            'name',
+            'speciality',
+            'cohort',
+            'length_in_periods')
+    fieldsets = ((None, {'fields':
+        (
+            'name',
+            'speciality',
+            'cohort',
+            'length_in_periods'
+        )}),)
+
+
+class Internship(SerializableModel):
+    name = models.CharField(max_length=255, blank=False)
+    speciality = models.ForeignKey('internship.InternshipSpeciality', null=True, blank=True)
+    cohort = models.ForeignKey('internship.Cohort', null=False)
+    length_in_periods = models.IntegerField(null=False, default=1)
+
+    def __str__(self):
+        return u"%s" % self.name
+

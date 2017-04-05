@@ -13,17 +13,16 @@ from internship.models.period import Period
 
 
 def create_the_first_cohort(apps, schema_editor):
-    Cohort.objects.create(name='2016-2017',
-                          description='Groupe 1',
+    Cohort.objects.create(name='M7-2018',
+                          description='M7-2018',
                           free_internships_number=8,
                           publication_start_date="2017-03-27",
                           subscription_start_date="2017-03-01",
                           subscription_end_date="2017-03-20")
 
 
-def assign_first_cohort_to_periods(apps, schema_editor):
+def assign_first_cohort_to_periods_and_organizations(apps, schema_editor):
     cohort = Cohort.objects.first()
-
     Period.objects.all().update(cohort=cohort)
     Organization.objects.all().update(cohort=cohort)
 
@@ -40,7 +39,7 @@ class Migration(migrations.Migration):
             name='Cohort',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('uuid', models.UUIDField(db_index=True, default=uuid.uuid4, editable=False, unique=True, null=True)),
+                ('uuid', models.UUIDField(db_index=True, default=uuid.uuid4, editable=False, unique=True)),
                 ('name', models.CharField(max_length=255)),
                 ('description', models.TextField()),
                 ('free_internships_number', models.IntegerField()),
@@ -48,6 +47,9 @@ class Migration(migrations.Migration):
                 ('subscription_start_date', models.DateField()),
                 ('subscription_end_date', models.DateField()),
             ],
+            options={
+                'abstract': False,
+            },
         ),
         migrations.AddField(
             model_name='organization',
@@ -58,18 +60,21 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='period',
             name='cohort',
-            field=models.ForeignKey(null=True, default=None, on_delete=django.db.models.deletion.CASCADE,
-                                    to='internship.Cohort'),
+            field=models.ForeignKey(null=True, default=None, on_delete=django.db.models.deletion.CASCADE, to='internship.Cohort'),
             preserve_default=False,
         ),
         migrations.RunPython(create_the_first_cohort),
-        migrations.RunPython(assign_first_cohort_to_periods),
-        migrations.RunSQL(
-            "ALTER TABLE internship_period ALTER COLUMN cohort_id SET NOT NULL",
-            reverse_sql="ALTER TABLE internship_period ALTER COLUMN cohort_id DROP NOT NULL"
+        migrations.RunPython(assign_first_cohort_to_periods_and_organizations),
+        migrations.AlterField(
+            model_name="organization",
+            name="cohort",
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='internship.Cohort'),
+            preserve_default=False,
         ),
-        migrations.RunSQL(
-            "ALTER TABLE internship_organization ALTER COLUMN cohort_id SET NOT NULL",
-            reverse_sql="ALTER TABLE internship_organization ALTER COLUMN cohort_id DROP NOT NULL"
+        migrations.AlterField(
+            model_name="period",
+            name="cohort",
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='internship.Cohort'),
+            preserve_default=False,
         ),
     ]

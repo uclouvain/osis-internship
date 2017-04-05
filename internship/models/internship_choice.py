@@ -28,11 +28,11 @@ from osis_common.models.serializable_model import SerializableModel, Serializabl
 
 
 class InternshipChoiceAdmin(SerializableModelAdmin):
-    list_display = ('student', 'organization', 'speciality', 'choice', 'internship_choice', 'priority')
-    fieldsets = ((None, {'fields': ('student', 'organization', 'speciality', 'choice', 'internship_choice',
+    list_display = ('student', 'organization', 'speciality', 'choice', 'internship', 'priority')
+    fieldsets = ((None, {'fields': ('student', 'organization', 'speciality', 'choice', 'internship',
                                     'priority')}),)
     raw_id_fields = ('student', 'organization', 'speciality')
-    list_filter = ('speciality', 'choice', 'internship_choice')
+    list_filter = ('speciality', 'choice', 'internship')
     search_fields = ['student__person__first_name', 'student__person__last_name']
 
 
@@ -41,7 +41,7 @@ class InternshipChoice(SerializableModel):
     organization = models.ForeignKey('internship.Organization')
     speciality = models.ForeignKey('internship.InternshipSpeciality', null=True)
     choice = models.IntegerField()
-    internship_choice = models.IntegerField(default=0)
+    internship = models.ForeignKey('internship.Internship')
     priority = models.BooleanField()
 
     def __str__(self):

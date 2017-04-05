@@ -18,7 +18,7 @@ def assign_first_cohort_to_periods(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('internship', '0036_add_cohort_to_speciality'),
+        ('internship', '0036_cohort_internship_speciality'),
     ]
 
     operations = [
@@ -31,6 +31,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='internshipstudentinformation',
             name='cohort',
-            field=models.ForeignKey(null=False, on_delete=django.db.models.deletion.CASCADE, to='internship.Cohort'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='internship.Cohort'),
         )
     ]
