@@ -271,6 +271,9 @@ msgstr	 "Nombre de 1er choix"
 msgid	 "number_total_student"
 msgstr	 "Nombre total d'étudiant ayant choisi cet hôpital"
 
+msgid  "select_cohort"
+msgstr  "Selectionnez une cohorte"
+
 msgid "selection_currently_active"
 msgstr "La sélection des stages est actuellement active"
 
