@@ -64,13 +64,13 @@
       </div>
       <div class="col-md-2">
         <br>
-        <span type="button" class="label label-success">
+        <span class="label label-success">
           <span class="glyphicon glyphicon-ok" aria-hidden="true"> : {{students_ok}}</span>
         </span>
       </div>
       <div class="col-md-2">
         <br>
-        <span type="button" class="label label-danger">
+        <span class="label label-danger">
           <span class="glyphicon glyphicon-remove" aria-hidden="true"> : {{students_not_ok}}</span>
         </span>
       </div>
@@ -120,21 +120,21 @@
                       </td>
                       <td>
                         {% if status %}
-                          <button type="button" class="btn btn-success">
+                          <span class="label label-success">
                             <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
                             <span style="color: red; display: none;" id="notok">1</span>
-                          </button>
+                          </span>
                         {% else %}
                           {% if status == False %}
-                            <button type="button" class="btn btn-danger">
+                            <span class="label label-danger">
                               <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                               <span style="color: red; display: none;" id="notok">2</span>
                             </button>
                           {% else %}
-                            <button type="button">
+                            <span class="label label-default">
                               <span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span>
                               <span style="color: red; display: none;" id="notok">0</span>
-                            </button>
+                            </span>
                           {% endif %}
                         {% endif %}
                       </td>

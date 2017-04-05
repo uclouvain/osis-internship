@@ -64,8 +64,8 @@ def search(**kwargs):
     return queryset
 
 
-def find_all():
-    return InternshipStudentInformation.objects.all()\
+def find_all(cohort):
+    return InternshipStudentInformation.objects.filter(cohort=cohort)\
         .select_related("person")\
         .order_by('person__last_name', 'person__first_name')
 

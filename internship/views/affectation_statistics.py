@@ -373,7 +373,7 @@ def init_specialities(cohort):
     """
     # Save data directly in global variables
     global specialities_dict, emergency, internship_offer_dic
-    for speciality in mdl_internship.internship_speciality.find_all():
+    for speciality in mdl_internship.internship_speciality.find_all(cohort=cohort):
         internship_offer_dic[speciality] = mdl_internship.internship_offer.search(speciality=speciality)
         specialities_dict[speciality.name] = speciality.id
         if speciality.acronym.strip() == 'UR':
@@ -1245,13 +1245,13 @@ def internship_affectation_statistics(request, cohort_id):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internship_affectation_sumup(request, cohort_id):
     cohort = get_object_or_404(mdl_internship.cohort.Cohort, pk=cohort_id)
-    all_speciality = list(mdl_internship.internship_speciality.find_all())
+    all_speciality = list(mdl_internship.internship_speciality.find_all(cohort=cohort))
     all_speciality=set_speciality_unique(all_speciality)
     set_tabs_name(all_speciality)
-    periods = mdl_internship.period.search()
-    organizations = mdl_internship.organization.search()
+    periods = mdl_internship.period.search(cohort=cohort)
+    organizations = mdl_internship.organization.search(cohort=cohort)
     organizations = sort_organizations(organizations)
-    offers = mdl_internship.internship_offer.search()
+    offers = mdl_internship.internship_offer.search(cohort=cohort)
     informations = []
     for organization in organizations:
         for offer in offers:

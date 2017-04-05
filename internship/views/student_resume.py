@@ -122,7 +122,7 @@ def get_students():
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internships_student_resume(request, cohort_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
-    students_with_status = get_students_with_status()
+    students_with_status = get_students_with_status(cohort)
     student_with_internships = mdl_internship.internship_choice.get_number_students(cohort)
     students_can_have_internships = mdl_internship.internship_student_information.get_number_students(cohort)
     student_without_internship = students_can_have_internships - student_with_internships
@@ -332,20 +332,20 @@ def student_save_affectation_modification(request, registration_id):
     return HttpResponseRedirect(redirect_url)
 
 
-def get_students_with_status():
+def get_students_with_status(cohort):
     students_status = []
-    students_informations = mdl_internship.internship_student_information.find_all()
+    students_informations = mdl_internship.internship_student_information.find_all(cohort)
     for student_info in students_informations:
         person = student_info.person
         student = mdl.student.find_by_person(person)
-        student_status = get_student_status(student)
+        student_status = get_student_status(student, cohort)
         students_status.append((student, student_status))
     return students_status
 
 
-def get_student_status(student):
+def get_student_status(student, cohort):
     internships_to_make_choice = [1, 2, 3, 4]
-    internship_choices_values = mdl_internship.internship_choice.get_internship_choices_made(student)
+    internship_choices_values = mdl_internship.internship_choice.get_internship_choices_made(cohort=cohort, student=student)
     if len(internship_choices_values) == 0:
         return None
     for internship_value in internships_to_make_choice:

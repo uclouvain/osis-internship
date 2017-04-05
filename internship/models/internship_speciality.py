@@ -57,8 +57,8 @@ def search_order_by_position(**kwargs):
     return InternshipSpeciality.objects.filter(**kwargs).select_related("learning_unit").order_by('order_postion')
 
 
-def find_all():
-    return InternshipSpeciality.objects.all().select_related("learning_unit").order_by('acronym', 'name')
+def find_all(cohort):
+    return InternshipSpeciality.objects.filter(cohort=cohort).select_related("learning_unit").order_by('acronym', 'name')
 
 
 def find_by_id(speciality_id):
