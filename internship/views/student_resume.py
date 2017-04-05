@@ -353,11 +353,6 @@ def get_students_with_status(cohort):
 
 
 def get_student_status(student, cohort):
-    internships_to_make_choice = [1, 2, 3, 4]
-    internship_choices_values = mdl_internship.internship_choice.get_internship_choices_made(cohort=cohort, student=student)
-    if len(internship_choices_values) == 0:
-        return None
-    for internship_value in internships_to_make_choice:
-        if internship_value not in internship_choices_values:
-            return False
-    return True
+    internship_ids = mdl_internship.internship.Internship.objects.filter(cohort=cohort, pk__gte=1).values_list("pk", flat=True)
+    internship_choices_values = mdl_internship.internship_choice.get_internship_choices_made(cohort=cohort, student=student).values_list("internship_id", flat=True)
+    return len(list(set(internship_ids) - set(internship_choices_values))) == 0

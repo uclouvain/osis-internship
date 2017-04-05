@@ -209,7 +209,7 @@
         <div class="modal fade" id="pnl_upload_internship" tabindex="-1" role="dialog" aria-labelledby="uploadScoresLabel">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
-                    <form method="post" enctype="multipart/form-data" action="{% url 'upload_internship' %}">
+                    <form method="post" enctype="multipart/form-data" action="{% url 'upload_internship' cohort_id=cohort.id %}">
                         {% csrf_token %}
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="bt_close_upload_score_modal"><span aria-hidden="true">&times;</span></button>
