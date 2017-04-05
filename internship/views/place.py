@@ -153,7 +153,7 @@ def internships_places(request, cohort_id):
     if city_sort_get and city_sort_get != '0':
         organizations = organizations.filter(address__city=city_sort_get)
 
-    addresses = OrganizationAddress.objects.filter(organization__type='service partner') \
+    addresses = OrganizationAddress.objects.filter(organization__type='service partner', organization__cohort=cohort) \
                 .distinct('city').order_by('city')
 
     cities = map(operator.attrgetter('city'), addresses)
