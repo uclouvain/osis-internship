@@ -30,9 +30,9 @@ from django.core.exceptions import ObjectDoesNotExist
 
 
 class InternshipOfferAdmin(SerializableModelAdmin):
-    list_display = ('organization', 'speciality', 'title', 'maximum_enrollments', 'master', 'selectable')
+    list_display = ('organization', 'speciality', 'title', 'maximum_enrollments', 'master', 'selectable', 'internship')
     fieldsets = ((None, {'fields': ('organization', 'speciality', 'title', 'maximum_enrollments', 'master',
-                                    'selectable')}),)
+                                    'selectable', 'internship')}),)
     raw_id_fields = ('organization', 'speciality')
     search_fields = ['organization__name', 'speciality__name']
 
@@ -40,6 +40,7 @@ class InternshipOfferAdmin(SerializableModelAdmin):
 class InternshipOffer(SerializableModel):
     organization = models.ForeignKey('internship.Organization')
     speciality = models.ForeignKey('internship.InternshipSpeciality', null=True)
+    internship = models.ForeignKey('internship.Internship', null=True, blank=True)
     title = models.CharField(max_length=255)
     maximum_enrollments = models.IntegerField()
     master = models.CharField(max_length=100, blank=True, null=True)
