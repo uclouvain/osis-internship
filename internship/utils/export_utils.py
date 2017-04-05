@@ -33,13 +33,14 @@ from django.utils.translation import ugettext_lazy as _
 import re
 
 from internship.models.organization import Organization
-from internship.models.period import Period
+import internship.models as mdl_internship
 
 HEADER = [str(_('lastname')),
           str(_('firstname')),
           str(_('noma')),
           str(_('email')),
           str(_('addresses')),
+          str(_('gender')),
           str(_('birth_date')),
           str(_('mobile_phone'))]
 
@@ -52,14 +53,14 @@ def export_xls(cohort, organization, affections_by_specialities, file_name):
         })
         return HttpResponseRedirect(redirect_url)
 
-    periods = Period.search()
+    periods = mdl_internship.period.search(cohort=cohort)
 
     workbook = Workbook()
     if workbook.worksheets:
         workbook.remove_sheet(workbook.worksheets[0])
     for speciality, affectations in affections_by_specialities:
         pattern = re.compile('Stage en|Intenship in', re.IGNORECASE)
-        sheet_title = pattern.sub('', speciality.name.strip())
+        sheet_title = pattern.sub('', speciality.name.strip())[0:30]
         worksheet = workbook.create_sheet(title=sheet_title)
         worksheet.append([str(organization.name) if organization else ''])
         worksheet.append([str(speciality.name)])
@@ -87,6 +88,7 @@ def export_xls(cohort, organization, affections_by_specialities, file_name):
                                       student.registration_id,
                                       affectation.email,
                                       affectation.adress,
+                                      student.person.gender,
                                       student.person.birth_date,
                                       affectation.phone_mobile])
                     row_number += 1
@@ -117,9 +119,11 @@ def __columns_resizing(ws):
     col_academic_year = ws.column_dimensions['E']
     col_academic_year.width = 40
     col_last_name = ws.column_dimensions['F']
-    col_last_name.width = 19
+    col_last_name.width = 10
     col_first_name = ws.column_dimensions['G']
     col_first_name.width = 20
+    col_phone = ws.column_dimensions['H']
+    col_phone.width = 30
 
 def __coloring_non_editable(ws, row_number):
     """
@@ -127,7 +131,7 @@ def __coloring_non_editable(ws, row_number):
     """
     style_no_modification = Style(fill=PatternFill(patternType='solid', fgColor=Color('C1C1C1')))
     column_number = 1
-    while column_number < 8:
+    while column_number < 9:
         ws.cell(row=row_number, column=column_number).style = style_no_modification
 
         column_number += 1

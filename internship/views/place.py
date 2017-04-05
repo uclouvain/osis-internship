@@ -242,7 +242,7 @@ def student_choice(request, cohort_id, organization_id):
     organization_choice = mdl_internship.internship_choice.search(organization__reference=organization.reference)
 
     all_offers = mdl_internship.internship_offer.search(organization=organization)
-    all_speciality = mdl_internship.internship_speciality.find_all()
+    all_speciality = mdl_internship.internship_speciality.find_all(cohort)
     set_tabs_name(all_speciality)
     for al in all_offers:
         number_first_choice = len(mdl_internship.internship_choice.search(organization=al.organization,
