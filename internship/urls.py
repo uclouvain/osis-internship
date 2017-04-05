@@ -91,14 +91,15 @@ urlpatterns = [
         url(r'^students/', include([
             url(r'^resume/$', student_resume.internships_student_resume, name='internships_student_resume'),
         ])),
+
+        url(r'^affectation_result/', include([
+            url(r'^$', affectation_statistics.internship_affectation_statistics, name='internship_affectation_statistics'),
+            url(r'^generate/$', affectation_statistics.internship_affectation_statistics_generate, name='internship_affectation_statistics_generate'),
+            url(r'^generate_beta/$', affectation_statistics.assign_automatically_internships, name='internship_affectation_statistics_generate_beta'),
+            url(r'^sumup/$', affectation_statistics.internship_affectation_sumup, name='internship_affectation_sumup'),
+        ])),
     ])),
 
-    url(r'^affectation_result/', include([
-        url(r'^$', affectation_statistics.internship_affectation_statistics, name='internship_affectation_statistics'),
-        url(r'^generate/$', affectation_statistics.internship_affectation_statistics_generate, name='internship_affectation_statistics_generate'),
-        url(r'^generate_beta/$', affectation_statistics.assign_automatically_internships, name='internship_affectation_statistics_generate_beta'),
-        url(r'^sumup/$', affectation_statistics.internship_affectation_sumup, name='internship_affectation_sumup'),
-    ])),
 
     url(r'^student/(?P<registration_id>[0-9]+)/', include([
         url(r'^modification/$', internship.internships_modification_student, name='internships_modification_student'),
