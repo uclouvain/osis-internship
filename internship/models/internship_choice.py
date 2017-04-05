@@ -25,6 +25,7 @@
 ##############################################################################
 from django.db import models
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
+from internship.models import internship
 
 
 class InternshipChoiceAdmin(SerializableModelAdmin):
@@ -79,7 +80,7 @@ def search_other_choices(**kwargs):
     return queryset.exclude(choice=1)
 
 
-def search_by_student_or_choice(student=None, internship_choice=None):
+def search_by_student_or_choice(student=None, internship=None):
     has_criteria = False
     queryset = InternshipChoice.objects
 
@@ -87,28 +88,30 @@ def search_by_student_or_choice(student=None, internship_choice=None):
         queryset = queryset.filter(student=student)
         has_criteria = True
 
-    if internship_choice is not None:
-        queryset = queryset.filter(internship_choice=internship_choice)
+    if internship is not None:
+        queryset = queryset.filter(internship=internship)
         has_criteria = True
 
     if has_criteria:
-        return queryset.order_by("internship_choice", "choice")
+        return queryset.order_by("choice")
     else:
         return None
 
 
-def get_non_mandatory_internship_choices():
-    return InternshipChoice.objects.filter(internship_choice__gte=1).\
-        select_related("student", "organization", "speciality")
+def get_non_mandatory_internship_choices(cohort):
+    internships = internship.Internship.objects.filter(cohort=cohort, speciality=None)
+    return InternshipChoice.objects.filter(internship_id__in=internships.values_list("id", flat=True)).\
+        select_related("student", "organization", "speciality", "internship")
 
 
-def get_internship_choices_made(student):
-    return InternshipChoice.objects.filter(student=student, internship_choice__gt=0).\
-        values_list("internship_choice", flat=True).distinct()
+def get_internship_choices_made(cohort, student):
+    internships = internship.Internship.objects.filter(cohort=cohort, speciality=None)
+    return InternshipChoice.objects.filter(internship_id__in=internships.values_list("id", flat=True), student=student).\
+        values_list("internship_id", flat=True).distinct()
 
 
 def get_number_students(cohort):
-    return InternshipChoice.objects.filter(organization__cohort=cohort, internship_choice__gt=0).distinct("student").count()
+    return InternshipChoice.objects.filter(internship__cohort=cohort).distinct("student").count()
 
 
 def get_number_first_choice_by_organization(speciality):

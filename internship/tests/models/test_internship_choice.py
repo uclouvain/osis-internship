@@ -27,11 +27,13 @@ from django.test import TestCase
 from internship.models import internship_choice as mdl_internship_choice
 from internship.tests.models import test_organization, test_internship_speciality
 from base.tests.models import test_student
+from internship.tests.factories.internship import InternshipFactory
+from internship.tests.factories.cohort import CohortFactory
 
 
-def create_internship_choice(organization, student, speciality, internship_choice=0, choice=1):
+def create_internship_choice(organization, student, speciality, internship, choice=1):
     choice = mdl_internship_choice.InternshipChoice(organization=organization, student=student, speciality=speciality,
-                                                    choice=choice, internship_choice=internship_choice, priority=False)
+                                                    choice=choice, internship=internship, priority=False)
     choice.save()
     return choice
 
@@ -42,10 +44,13 @@ class TestSearchByStudentOrChoice(TestCase):
         self.student = test_student.create_student(first_name="first", last_name="last", registration_id="64641200")
         self.other_student = test_student.create_student(first_name="first", last_name="last", registration_id="606012")
         self.speciality = test_internship_speciality.create_speciality()
+        self.cohort = CohortFactory()
+        self.internship = InternshipFactory(cohort=self.cohort)
+        self.other_internship = InternshipFactory(cohort=self.cohort)
 
-        self.choice_1 = create_internship_choice(self.organization, self.student, self.speciality)
-        self.choice_2 = create_internship_choice(self.organization, self.student, self.speciality, internship_choice=1)
-        self.choice_3 = create_internship_choice(self.organization, self.other_student, self.speciality)
+        self.choice_1 = create_internship_choice(self.organization, self.student, self.speciality, internship=self.other_internship)
+        self.choice_2 = create_internship_choice(self.organization, self.student, self.speciality, internship=self.internship)
+        self.choice_3 = create_internship_choice(self.organization, self.other_student, self.speciality, internship=self.other_internship)
 
     def test_with_only_student(self):
         choices = list(mdl_internship_choice.search_by_student_or_choice(student=self.student))
@@ -54,41 +59,21 @@ class TestSearchByStudentOrChoice(TestCase):
         self.assertIn(self.choice_2, choices)
 
     def test_with_only_internship_choice(self):
-        choices = list(mdl_internship_choice.search_by_student_or_choice(internship_choice=0))
+        choices = list(mdl_internship_choice.search_by_student_or_choice(internship=self.other_internship))
         self.assertEqual(len(choices), 2)
         self.assertIn(self.choice_1, choices)
         self.assertIn(self.choice_3, choices)
 
     def test_with_student_and_internship_choice(self):
-        choices = list(mdl_internship_choice.search_by_student_or_choice(student=self.student, internship_choice=1))
+        choices = list(mdl_internship_choice.search_by_student_or_choice(student=self.student, internship=self.internship))
         self.assertListEqual([self.choice_2], choices)
 
     def test_get_choices_for_non_mandatory_internship(self):
-        choices = list(mdl_internship_choice.get_non_mandatory_internship_choices())
-        self.assertEqual(len(choices), 1)
-
-        self.choice_1.internship_choice = 2
-        self.choice_1.save()
-
-        choices = list(mdl_internship_choice.get_non_mandatory_internship_choices())
-        self.assertEqual(len(choices), 2)
-
-    def test_get_internship_choices_made(self):
-        expected = [1]
-        actual = mdl_internship_choice.get_internship_choices_made(self.student)
-        self.assertCountEqual(expected, actual)
-        for item_expected in expected:
-            self.assertIn(item_expected, list(actual))
+        choices = list(mdl_internship_choice.get_non_mandatory_internship_choices(self.cohort))
+        self.assertEqual(len(choices), 3)
 
     def test_get_number_students(self):
         expected = 1
         actual = mdl_internship_choice.get_number_students(self.organization.cohort)
         self.assertEqual(expected, actual)
-
-
-
-
-
-
-
 
