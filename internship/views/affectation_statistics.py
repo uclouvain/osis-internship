@@ -36,6 +36,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404
 
 from internship import models as mdl_internship
 from internship.views.internship import calc_dist, set_tabs_name
@@ -352,21 +353,21 @@ def init_solution():
         solution[internshipChoice.student] = {}
 
 
-def init_organizations():
+def init_organizations(cohort):
     """
     Retrieve addresses of all organisation and init the hospital "error".
     """
     # Save data directly in global variables
     global organizations, organization_addresses_dic
-    organizations[hospital_error] = mdl_internship.organization.Organization.objects.filter(reference=hospital_error)[0]
+    organizations[hospital_error] = mdl_internship.organization.Organization.objects.filter(reference=hospital_error).first()
     organizations[hospital_to_edit] = \
-        mdl_internship.organization.Organization.objects.filter(reference=hospital_to_edit)[0]
+        mdl_internship.organization.Organization.objects.filter(reference=hospital_to_edit).first()
 
     for organization_address in mdl_internship.organization_address.OrganizationAddress.objects.all():
         organization_addresses_dic[organization_address.organization] = organization_address
 
 
-def init_specialities():
+def init_specialities(cohort):
     """
     Retrieve all internship offers and the id of the speciality "emergency"
     """
@@ -1212,9 +1213,10 @@ def internship_affectation_statistics_generate(request):
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
-def internship_affectation_statistics(request):
-    init_organizations()
-    init_specialities()
+def internship_affectation_statistics(request, cohort_id):
+    cohort = get_object_or_404(mdl_internship.cohort.Cohort, pk=cohort_id)
+    init_organizations(cohort)
+    init_specialities(cohort)
     sol, table, stats, internship_errors = None, None, None, None
     data = mdl_internship.internship_student_affectation_stat.InternshipStudentAffectationStat.objects.all().\
         select_related("student", "organization", "speciality", "period")
@@ -1231,6 +1233,7 @@ def internship_affectation_statistics(request):
     latest_generation = mdl_internship.affectation_generation_time.get_latest()
     return render(request, "internship_affectation_statics.html",
                   {'section': 'internship',
+                   'cohort': cohort,
                    'recap_sol': sol,
                    'stats': stats,
                    'organizations': table,
@@ -1240,7 +1243,8 @@ def internship_affectation_statistics(request):
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
-def internship_affectation_sumup(request):
+def internship_affectation_sumup(request, cohort_id):
+    cohort = get_object_or_404(mdl_internship.cohort.Cohort, pk=cohort_id)
     all_speciality = list(mdl_internship.internship_speciality.find_all())
     all_speciality=set_speciality_unique(all_speciality)
     set_tabs_name(all_speciality)
@@ -1280,6 +1284,7 @@ def internship_affectation_sumup(request):
                    'periods': periods,
                    'organizations': informations,
                    'affectations': affectations,
+                   'cohort': cohort
                    })
 
 

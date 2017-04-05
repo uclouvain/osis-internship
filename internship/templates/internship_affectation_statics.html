@@ -27,7 +27,8 @@
 {% endcomment %}
 {% block breadcrumb %}
     <li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
-    <li><a href="{% url 'internships_home' %}">{% trans 'internships' %}</a></li>
+    <li><a href="{% url 'internship' %}">{% trans 'internships_managment' %}</a></li>
+    <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></li>
     <li class="active">{% trans 'affectation_result' %}</li>
 {% endblock %}
 {% block style %}
@@ -73,7 +74,7 @@
                     <h4 class="modal-title">{% trans 'generate_solution' %}</h4>
                 </div>
                 <div class="modal-body">
-                    <form  method="post" action="{% url 'internship_affectation_statistics_generate_beta' %}" id="generate_solution">
+                    <form  method="post" action="{% url 'internship_affectation_statistics_generate_beta' cohort_id=cohort.id %}" id="generate_solution">
                         <label for="executions">{% trans 'executions' %}</label>
                         <input type="number" name="executions" value=1 min=1>
                         {% csrf_token %}

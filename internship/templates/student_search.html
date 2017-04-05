@@ -29,6 +29,7 @@
 {% block breadcrumb %}
   <li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
   <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{% trans 'internships_managment' %}</a></li>
+  <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></li>
   <li class="active">{% trans 'students' %}</li>
 {% endblock %}
 {% block style %}
@@ -57,29 +58,27 @@
     <div class="row">
       <div class="col-md-3">
         <br>
-        <button class="btn btn-info" title="{% trans 'number_of_enrollments' %}">
+        <span class="label label-info" title="{% trans 'number_of_enrollments' %}">
           {% trans 'number_of_enrollments' %} : {{student_with_internships}} / {{students_can_have_internships}}
-        </button>&nbsp;&nbsp;
+        </span>
       </div>
       <div class="col-md-2">
         <br>
-        <button type="button" class="btn btn-success">
+        <span type="button" class="label label-success">
           <span class="glyphicon glyphicon-ok" aria-hidden="true"> : {{students_ok}}</span>
-        </button>
+        </span>
       </div>
       <div class="col-md-2">
         <br>
-        <button type="button" class="btn btn-danger">
+        <span type="button" class="label label-danger">
           <span class="glyphicon glyphicon-remove" aria-hidden="true"> : {{students_not_ok}}</span>
-        </button>
+        </span>
       </div>
       <div class="col-md-2">
         <br>
-        <button type="button">
+        <span class="label label-default">
           <span class="glyphicon glyphicon-ban-circle" aria-hidden="true"> : {{student_without_internship}}</span>
-        </button>
-      </div>
-      <div class="col-md-3">
+        </span>
       </div>
     </div>
     <br>
