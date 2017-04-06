@@ -41,7 +41,6 @@ from django.shortcuts import get_object_or_404
 from internship import models as mdl_internship
 from internship.views.internship import calc_dist, set_tabs_name
 from internship.views.place import sort_organizations, set_speciality_unique
-from internship.utils.student_assignment import solver
 
 # ****************** Global vars ******************
 errors = []  # List of all internship added to hospital error, as tuple (student, speciality, period)
@@ -182,10 +181,6 @@ def compute_stats(sol):
                         # Retrieve the addresses of the hospital and the student
                         addr_student = mdl_internship.internship_student_information.search(person=student.person)[0]
                         addr_organization = mdl_internship.organization_address.search(organization=internship.organization)[0]
-                        # Compute the distance between the student address
-                        # and hospital address and append it to the list
-                        # We will compute the mean distance with mean method
-                        distance_mean.append(compute_distance(addr_student, addr_organization))
                         # Increment total of imposed choices
                         imposed_choices += 1
                         # Add the student to the set "others_students",
@@ -1187,30 +1182,6 @@ def fill_periods_default_values(acronym, keys, organization, temp_internship_tab
         temp_internship_table[organization][acronym][key]['before'] = 0
         temp_internship_table[organization][acronym][key]['after'] = 0
 
-
-@login_required
-@permission_required('internship.is_internship_manager', raise_exception=True)
-def internship_affectation_statistics_generate(request):
-    """ Generate new solution, save it in the database, redirect back to the page 'internship_affectation_statistics'"""
-    if request.method == 'POST':
-        if request.POST['executions'] != "":
-            start_date_time = datetime.now()
-            cost = sys.maxsize
-            for i in range(0, int(request.POST['executions'])):
-                generate_solution()
-                new_cost = get_solution_cost()
-                if new_cost < cost:
-                    save_solution()
-                    cost = new_cost
-            end_date_time = datetime.now()
-            affectation_generatioon_time = mdl_internship.affectation_generation_time.AffectationGenerationTime()
-            affectation_generatioon_time.start_date_time = start_date_time
-            affectation_generatioon_time.end_date_time = end_date_time
-            affectation_generatioon_time.generated_by = request.user.username
-            affectation_generatioon_time.save()
-        return HttpResponseRedirect(reverse('internship_affectation_statistics'))
-
-
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internship_affectation_statistics(request, cohort_id):
@@ -1286,22 +1257,3 @@ def internship_affectation_sumup(request, cohort_id):
                    'affectations': affectations,
                    'cohort': cohort
                    })
-
-
-@login_required
-@permission_required('internship.is_internship_manager', raise_exception=True)
-def assign_automatically_internships(request):
-    """ Generate new solution, save it in the database, redirect back to the page 'internship_affectation_statistics'"""
-    if request.method == 'POST':
-        if request.POST['executions'] != "":
-            times = int(request.POST['executions'])
-            start_date_time = datetime.now()
-            mdl_internship.internship_student_affectation_stat.find_non_mandatory_affectations().delete()
-            solver.affect_student(times)
-            end_date_time = datetime.now()
-            affectation_generatioon_time = mdl_internship.affectation_generation_time.AffectationGenerationTime()
-            affectation_generatioon_time.start_date_time = start_date_time
-            affectation_generatioon_time.end_date_time = end_date_time
-            affectation_generatioon_time.generated_by = request.user.username
-            affectation_generatioon_time.save()
-        return redirect(reverse('internship_affectation_statistics'))
