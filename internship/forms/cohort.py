@@ -56,7 +56,3 @@ class CohortForm(forms.ModelForm):
             self.fields[field].widget.attrs.update({
                 'class': 'form-control'
             })
-
-        self.fields['publication_start_date'].widget.attrs.update({
-            'placeholder': "AAAA-MM-JJ",
-        })
