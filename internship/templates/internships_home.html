@@ -75,6 +75,10 @@
             </div>
             <br>
             <div class="row">
+                <div class="col-md-1"><i class="fa fa-certificate" style="font-size: 400%; color: #6699FF;"></i></div>
+                <div class="col-md-5">
+                    <h4 class="media-heading"><a href="{% url 'internship-list' cohort_id=cohort.id %}">{% trans 'internship' %}</a></h4>
+                </div>
                 <div class="col-md-1"><i class="fa fa-ticket " style="font-size: 400%; color: #6699FF;"></i></div>
                 <div class="col-md-5">
                     <h4 class="media-heading"><a href="{% url 'internship_affectation_statistics' cohort_id=cohort.id %}">{% trans 'internship_assignation' %}</a></h4>

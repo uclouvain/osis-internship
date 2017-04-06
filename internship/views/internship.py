@@ -23,13 +23,16 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from collections import OrderedDict
 from math import acos, cos, degrees, radians, sin
+
+from collections import OrderedDict
 from operator import itemgetter
 
 from django.contrib.auth.decorators import login_required, permission_required
+from django.core.urlresolvers import reverse
 from django.forms.formsets import formset_factory
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import get_object_or_404, redirect, render, get_list_or_404
+from django.utils.translation import ugettext_lazy as _
 from django.views.decorators.http import require_POST
 
 from base import models as mdl
@@ -37,9 +40,10 @@ from internship import models as mdl_internship
 from internship.forms.form_offer_preference import (OfferPreferenceForm,
                                                     OfferPreferenceFormSet)
 from internship.forms.form_select_speciality import SpecialityForm
+from internship.forms.internship import InternshipForm
 from internship.models.cohort import Cohort
-from internship.models.internship_offer import InternshipOffer
 from internship.models.internship import Internship
+from internship.models.internship_offer import InternshipOffer
 
 
 def calc_dist(lat_a, long_a, lat_b, long_b):
@@ -516,3 +520,73 @@ def get_current_period_places(internship_offer):
             number_places = period_place.number_places
         periods.append((key, number_places))
     return periods
+
+
+@login_required()
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def internship_list(request, cohort_id):
+    cohort = get_object_or_404(Cohort, pk=cohort_id)
+    internships = Internship.objects.filter(cohort_id=cohort_id)
+    context = {
+        'cohort': cohort,
+        'internships': internships,
+    }
+    return render(request, 'internship/list.html', context)
+
+
+@login_required()
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def internship_new(request, cohort_id):
+    cohort = get_object_or_404(Cohort, pk=cohort_id)
+
+    inter = Internship(cohort_id=cohort_id)
+    form = InternshipForm(request.POST or None, instance=inter)
+    if form.is_valid():
+        form.save()
+
+        return redirect(reverse('internship-list', kwargs={
+            'cohort_id': cohort.id,
+        }))
+
+    context = {
+        'form': form,
+        'page_title': _('create_internship'),
+        'cohort': cohort,
+    }
+    return render(request, 'internship/internship_form.html', context)
+
+
+@login_required()
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def internship_edit(request, cohort_id, internship_id):
+    inter = get_object_or_404(Internship, pk=internship_id, cohort_id=cohort_id)
+    cohort = get_object_or_404(Cohort, pk=cohort_id)
+
+    form = InternshipForm(data=request.POST or None, instance=inter)
+
+    if form.is_valid():
+        form.cohort_id = cohort_id
+        form.save()
+
+        return redirect(reverse('internship-list', kwargs={
+            'cohort_id': cohort.id,
+        }))
+
+    context = {
+        'form': form,
+        'page_title': _('edit_internship'),
+        'cohort': cohort,
+    }
+
+    return render(request, 'internship/internship_form.html', context)
+
+
+@login_required()
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def internship_delete(request, cohort_id, internship_id):
+    inter = get_object_or_404(Internship, pk=internship_id, cohort_id=cohort_id)
+
+    inter.delete()
+    return redirect(reverse('internship-list', kwargs={
+        'cohort_id': cohort_id,
+    }))

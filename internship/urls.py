@@ -31,14 +31,24 @@ from internship.views import (affectation_statistics, home, internship, master,
                               cohort)
 
 urlpatterns = [
+    # FIXME: Rename internship by 'home'
     url(r'^$', home.view_cohort_selection, name='internship'),
 
     url(r'^cohorts/', include([
         url(r'^new$', cohort.new, name='cohort_new'),
 
         url(r'^edit/(?P<cohort_id>[0-9]+)$', cohort.edit, name='cohort_edit'),
+
         url(r'^(?P<cohort_id>[0-9]+)/', include([
             url(r'^$', home.cohort_home, name='internships_home'),
+
+            # FIXME: Refactor the urls and the views, because we can have an ambiguity with the name
+            url(r'^internships/', include([
+                url(r'^$', internship.internship_list, name='internship-list'),
+                url(r'^new$', internship.internship_new, name='internship-new'),
+                url(r'^edit/(?P<internship_id>[0-9]+)$', internship.internship_edit, name='internship-edit'),
+                url(r'^delete/(?P<internship_id>[0-9]+)$', internship.internship_delete, name='internship-delete')
+            ])),
 
             url(r'^masters/', include([
                 url(r'^$', master.internships_masters, name='internships_masters'),
