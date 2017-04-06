@@ -640,6 +640,12 @@ msgstr "Other"
 msgid "parameters"
 msgstr "Settings"
 
+msgid "parameters_dates"
+msgstr "Dates settings"
+
+msgid "parameters_others"
+msgstr "Other settings"
+
 msgid "periode_visibility_proposition"
 msgstr "Period of visibility for dissertation subjects"
 

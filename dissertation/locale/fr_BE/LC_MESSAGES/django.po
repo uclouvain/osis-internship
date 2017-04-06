@@ -640,6 +640,12 @@ msgstr "Autre"
 msgid "parameters"
 msgstr "Paramètres"
 
+msgid "parameters_dates"
+msgstr "Paramètres de dates"
+
+msgid "parameters_others"
+msgstr "Autres paramètres"
+
 msgid "periode_visibility_proposition"
 msgstr "Période de visibilité des sujets de Mémoires"
 
