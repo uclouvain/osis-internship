@@ -355,6 +355,9 @@ msgstr "For teachers"
 msgid "forbidden"
 msgstr "Forbidden"
 
+msgid "from"
+msgstr "from"
+
 msgid "go_away"
 msgstr "Go away"
 
@@ -858,6 +861,9 @@ msgstr "Dissertations as promotor"
 
 msgid "title_chart_read"
 msgstr "Dissertations as reader"
+
+msgid "to"
+msgstr "to"
 
 msgid "to_be_defended"
 msgstr "To be defended"

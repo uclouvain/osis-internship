@@ -355,6 +355,9 @@ msgstr "Pour les enseignants"
 msgid "forbidden"
 msgstr "Interdit"
 
+msgid "from"
+msgstr "du"
+
 msgid "go_away"
 msgstr "Quitter"
 
@@ -858,6 +861,9 @@ msgstr "Mémoires en tant que promoteur"
 
 msgid "title_chart_read"
 msgstr "Mémoires en tant que lecteur"
+
+msgid "to"
+msgstr "au"
 
 msgid "to_be_defended"
 msgstr "À défendre"
