@@ -49,24 +49,26 @@ class TestModifyStudentChoices(TestCase):
         self.person = test_person.create_person_with_user(self.user)
         self.client.force_login(self.user)
 
+        self.cohort = CohortFactory()
+
         self.student = test_student.create_student("first", "last", "64641200")
 
-        self.speciality_1 = test_internship_speciality.create_speciality(name="urgence")
-        self.speciality_2 = test_internship_speciality.create_speciality(name="chirurgie")
+        self.speciality_1 = test_internship_speciality.create_speciality(name="urgence", cohort=self.cohort)
+        self.speciality_2 = test_internship_speciality.create_speciality(name="chirurgie", cohort=self.cohort)
 
-        self.organization_1 = test_organization.create_organization(reference="01")
-        self.organization_2 = test_organization.create_organization(reference="02")
-        self.organization_3 = test_organization.create_organization(reference="03")
-        self.organization_4 = test_organization.create_organization(reference="04")
-        self.organization_5 = test_organization.create_organization(reference="05")
+        self.organization_1 = test_organization.create_organization(reference="01", cohort=self.cohort)
+        self.organization_2 = test_organization.create_organization(reference="02", cohort=self.cohort)
+        self.organization_3 = test_organization.create_organization(reference="03", cohort=self.cohort)
+        self.organization_4 = test_organization.create_organization(reference="04", cohort=self.cohort)
+        self.organization_5 = test_organization.create_organization(reference="05", cohort=self.cohort)
 
-        self.offer_1 = test_internship_offer.create_specific_internship_offer(self.organization_1, self.speciality_1)
-        self.offer_2 = test_internship_offer.create_specific_internship_offer(self.organization_2, self.speciality_1)
-        self.offer_3 = test_internship_offer.create_specific_internship_offer(self.organization_3, self.speciality_1)
-        self.offer_4 = test_internship_offer.create_specific_internship_offer(self.organization_4, self.speciality_1)
+        self.offer_1 = test_internship_offer.create_specific_internship_offer(self.organization_1, self.speciality_1, cohort=self.cohort)
+        self.offer_2 = test_internship_offer.create_specific_internship_offer(self.organization_2, self.speciality_1, cohort=self.cohort)
+        self.offer_3 = test_internship_offer.create_specific_internship_offer(self.organization_3, self.speciality_1, cohort=self.cohort)
+        self.offer_4 = test_internship_offer.create_specific_internship_offer(self.organization_4, self.speciality_1, cohort=self.cohort)
 
-        self.offer_5 = test_internship_offer.create_specific_internship_offer(self.organization_1, self.speciality_2)
-        self.offer_6 = test_internship_offer.create_specific_internship_offer(self.organization_5, self.speciality_2)
+        self.offer_5 = test_internship_offer.create_specific_internship_offer(self.organization_1, self.speciality_2, cohort=self.cohort)
+        self.offer_6 = test_internship_offer.create_specific_internship_offer(self.organization_5, self.speciality_2, cohort=self.cohort)
 
     @classmethod
     def generate_form(cls, iterable):
@@ -202,11 +204,13 @@ class TestModifyPeriods(TestCase):
         add_permission(self.user, "is_internship_manager")
         self.person = test_person.create_person_with_user(self.user)
 
+        self.cohort = CohortFactory()
+
         self.client.force_login(self.user)
 
-        self.speciality = test_internship_speciality.create_speciality(name="urgence")
-        self.organization = test_organization.create_organization(reference="01")
-        self.offer = test_internship_offer.create_specific_internship_offer(self.organization, self.speciality)
+        self.speciality = test_internship_speciality.create_speciality(name="urgence", cohort=self.cohort)
+        self.organization = test_organization.create_organization(reference="01", cohort=self.cohort)
+        self.offer = test_internship_offer.create_specific_internship_offer(self.organization, self.speciality, cohort=self.cohort)
 
         MAX_PERIOD = 12
         for period in range(1, MAX_PERIOD + 1):
@@ -217,7 +221,7 @@ class TestModifyPeriods(TestCase):
 
         organization = OrganizationFactory(cohort=cohort)
         speciality = SpecialityFactory(cohort=cohort)
-        offer = OfferFactory(organization=organization, speciality=speciality)
+        offer = OfferFactory(organization=organization, speciality=speciality, cohort=self.cohort)
 
         kwargs = {
             'internship_id': offer.id,
@@ -233,7 +237,7 @@ class TestModifyPeriods(TestCase):
 
         organization = OrganizationFactory(cohort=cohort)
         speciality = SpecialityFactory(cohort=cohort)
-        offer = OfferFactory(organization=organization, speciality=speciality)
+        offer = OfferFactory(organization=organization, speciality=speciality, cohort=self.cohort)
 
         kwargs = {
             'internship_id': offer.id,

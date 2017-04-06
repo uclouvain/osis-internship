@@ -134,7 +134,7 @@ def internships_save(request, cohort_id):
         # Get the student
         student = mdl.student.find_by(person_username=request.user)
         # Delete all the student's choices for mandatory internships present in the DB
-        mdl_internship.internship_choice.InternshipChoice.objects.filter(student=student, internship_choice=0).delete()
+        mdl_internship.internship_choice.InternshipChoice.objects.filter(student=student, internship_id=0).delete()
 
         #Build the list of the organizations and specialities get by the POST request
         organization_list = list()

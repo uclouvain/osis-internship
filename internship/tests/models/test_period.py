@@ -31,8 +31,8 @@ from internship.models import period as mdl_period
 from internship.tests.factories.period import PeriodFactory
 
 
-def create_period(name="P1"):
-    return PeriodFactory(name=name)
+def create_period(name="P1", cohort=None):
+    return PeriodFactory(name=name, cohort=cohort)
 
 class TestGetByName(TestCase):
     def test_find(self):

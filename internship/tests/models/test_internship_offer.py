@@ -47,11 +47,12 @@ def create_internship_offer(cohort=None):
     return offer
 
 
-def create_specific_internship_offer(organization, speciality, title="offer_test"):
+def create_specific_internship_offer(organization, speciality, title="offer_test", cohort=None):
     return OfferFactory(
         speciality=speciality,
         organization=organization,
         title=title,
+        cohort=cohort,
         maximum_enrollments=20
     )
 

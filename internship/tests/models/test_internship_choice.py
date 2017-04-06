@@ -43,8 +43,8 @@ class TestSearchByStudentOrChoice(TestCase):
         self.organization = test_organization.create_organization()
         self.student = test_student.create_student(first_name="first", last_name="last", registration_id="64641200")
         self.other_student = test_student.create_student(first_name="first", last_name="last", registration_id="606012")
-        self.speciality = test_internship_speciality.create_speciality()
         self.cohort = CohortFactory()
+        self.speciality = test_internship_speciality.create_speciality(cohort=self.cohort)
         self.internship = InternshipFactory(cohort=self.cohort)
         self.other_internship = InternshipFactory(cohort=self.cohort)
 
