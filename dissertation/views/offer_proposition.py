@@ -70,8 +70,8 @@ def manager_offer_parameters_edit(request, pk):
     if request.method == "POST":
         form = ManagerOfferPropositionForm(request.POST, instance=offer_prop)
         if form.is_valid():
-            offer_prop = form.save()
-            return redirect('manager_offer_parameters_detail', pk=offer_prop.pk)
+            form.save()
+            return redirect('manager_offer_parameters')
     else:
         form = ManagerOfferPropositionForm(instance=offer_prop)
     return layout.render(request, "manager_offer_parameters_edit.html",

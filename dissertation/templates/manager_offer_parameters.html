@@ -36,24 +36,27 @@
     <h2>{% trans 'parameters' %}</h2>
   </div>
   <div class="panel panel-default">
-      <table class="table table-hover">
-        <tr>
-          <th>{% trans 'offer_proposition'%}</th>
-          <th>{% trans 'date_parameters'%}</th>
-          <th>{% trans 'other_parameters'%}</th>
-        </tr>
+      <table class="table .table-hover">
+        <thead>
+            <tr>
+              <th>{% trans 'offer_proposition'%}</th>
+              <th>{% trans 'date_parameters'%}</th>
+              <th>{% trans 'other_parameters'%}</th>
+            </tr>
+        </thead>
+        <tbody>
         {% for offer_proposition in offer_propositions %}
           <tr>
-            <td>
-                <a href="{% url 'manager_offer_parameters_detail' pk=offer_proposition.pk %}">
+            <th scope="row">
+                <a href="{% url 'manager_offer_parameters_edit' pk=offer_proposition.pk %}">
                     {{ offer_proposition.acronym }}
                 </a>
-            </td>
+            </th>
             <td>
                 <table>
                     <tr>
                         <td style="padding-right: 1em">
-                            {% trans 'periode_visibility_proposition' %}
+                            {% trans 'in_visibility_proposition' %}
                         </td>
                         <td style="padding-right: 1em">
                             {% if offer_proposition.in_periode_visibility_proposition %}
@@ -64,7 +67,7 @@
                                       style="color: red" aria-hidden="true"></span>
                             {% endif %}
                         </td>
-                        <td style="padding-right: 1em">
+                        <td>
                             ({% trans 'from' %}
                             {{ offer_proposition.start_visibility_proposition|date:"d/m/Y" }}
                             {% trans 'to' %}
@@ -73,7 +76,7 @@
                     </tr>
                     <tr>
                         <td style="padding-right: 1em">
-                            {% trans 'periode_visibility_dissertation' %}
+                            {% trans 'in_visibility_dissertation' %}
                         </td>
                         <td style="padding-right: 1em">
                             {% if offer_proposition.in_periode_visibility_dissertation %}
@@ -84,7 +87,7 @@
                                       style="color: red" aria-hidden="true"></span>
                             {% endif %}
                         </td>
-                        <td style="padding-right: 1em">
+                        <td>
                             ({% trans 'from' %}
                             {{ offer_proposition.start_visibility_dissertation|date:"d/m/Y" }}
                             {% trans 'to' %}
@@ -93,7 +96,7 @@
                     </tr>
                     <tr>
                         <td style="padding-right: 1em">
-                            {% trans 'periode_jury_visibility' %}
+                            {% trans 'in_jury_visibility' %}
                         </td>
                         <td style="padding-right: 1em">
                             {% if offer_proposition.in_periode_jury_visibility %}
@@ -104,7 +107,7 @@
                                       style="color: red" aria-hidden="true"></span>
                             {% endif %}
                         </td>
-                        <td style="padding-right: 1em">
+                        <td>
                             ({% trans 'from' %}
                             {{ offer_proposition.start_jury_visibility|date:"d/m/Y" }}
                             {% trans 'to' %}
@@ -113,7 +116,7 @@
                     </tr>
                     <tr>
                         <td style="padding-right: 1em">
-                            {% trans 'periode_edit_title' %}
+                            {% trans 'in_edit_title' %}
                         </td>
                         <td style="padding-right: 1em">
                             {% if offer_proposition.in_periode_edit_title %}
@@ -124,7 +127,7 @@
                                       style="color: red" aria-hidden="true"></span>
                             {% endif %}
                         </td>
-                        <td style="padding-right: 1em">
+                        <td>
                             ({% trans 'from' %}
                             {{ offer_proposition.start_edit_title|date:"d/m/Y" }}
                             {% trans 'to' %}
@@ -140,7 +143,7 @@
                         <td style="padding-right: 1em">
                             {% trans 'student_can_manage_readers'%}
                         </td>
-                        <td style="padding-right: 1em">
+                        <td>
                             {% if offer_proposition.student_can_manage_readers %}
                                 <span class="glyphicon glyphicon-ok"
                                       style="color: green" aria-hidden="true"></span>
@@ -154,7 +157,7 @@
                         <td style="padding-right: 1em">
                             {% trans 'adviser_can_suggest_reader'%}
                         </td>
-                        <td style="padding-right: 1em">
+                        <td>
                             {% if offer_proposition.adviser_can_suggest_reader %}
                                 <span class="glyphicon glyphicon-ok"
                                       style="color: green" aria-hidden="true"></span>
@@ -168,7 +171,7 @@
                         <td style="padding-right: 1em">
                             {% trans 'evaluation_first_year'%}
                         </td>
-                        <td style="padding-right: 1em">
+                        <td>
                             {% if offer_proposition.evaluation_first_year %}
                                 <span class="glyphicon glyphicon-ok"
                                       style="color: green" aria-hidden="true"></span>
@@ -182,7 +185,7 @@
                         <td style="padding-right: 1em">
                             {% trans 'validation_commission_exists'%}
                         </td>
-                        <td style="padding-right: 1em">
+                        <td>
                             {% if offer_proposition.validation_commission_exists %}
                                 <span class="glyphicon glyphicon-ok"
                                       style="color: green" aria-hidden="true"></span>
@@ -196,6 +199,7 @@
             </td>
           </tr>
         {% endfor %}
+        </tbody>
       </table>
     </div>
 {% endblock %}
