@@ -58,13 +58,6 @@ def manager_offer_parameters(request):
 
 @login_required
 @user_passes_test(is_manager)
-def manager_offer_parameters_detail(request, pk):
-    offer_prop = get_object_or_404(OfferProposition, pk=pk)
-    return layout.render(request, 'manager_offer_parameters_detail.html', {'offer_proposition': offer_prop})
-
-
-@login_required
-@user_passes_test(is_manager)
 def manager_offer_parameters_edit(request, pk):
     offer_prop = get_object_or_404(OfferProposition, pk=pk)
     if request.method == "POST":
