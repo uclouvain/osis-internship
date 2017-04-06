@@ -10,5 +10,8 @@ class Cohort(SerializableModel):
     subscription_start_date = models.DateField(blank=False)
     subscription_end_date = models.DateField(blank=False)
 
+    class Meta:
+        ordering = ['name']
+
     def __str__(self):
         return self.name

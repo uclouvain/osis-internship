@@ -5,6 +5,7 @@
 {% block breadcrumb %}
     <li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
     <li class="active">{% trans 'internships_managment' %}</li>
+
 {% endblock %}
 
 {% block content %}
@@ -15,11 +16,36 @@
     <div class="panel panel-default">
         <div class="panel panel-body">
             <div class="row">
-                {% for cohort in cohorts %}
-                    <p>
-                        <a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort }}</a>
-                    </p>
-                {% endfor %}
+                <div class="col-md-12">
+                    <a href="{% url 'cohort_new' %}" id="lnk_cohort_create"
+                       class="btn btn-default" role="button" title="Create a cohort">Add a cohort
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>{% trans 'name' %}</th>
+                            <th>{% trans 'description' %}</th>
+                            <th>&nbsp;</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for cohort in cohorts %}
+                            <tr>
+                                <td><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></td>
+                                <td>{{ cohort.description|truncatechars:32 }}</td>
+                                <td align="right"><a class="btn btn-warning" id="lnk_cohort_edit"
+                                       href="{% url 'cohort_edit' cohort_id=cohort.id %}"><span class="glyphicon glyphicon-pencil" aria-hidden="true" />
+                                  </a></td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>

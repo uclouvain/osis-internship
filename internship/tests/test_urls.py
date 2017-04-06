@@ -27,17 +27,17 @@ class UrlsTestCase(TestCase):
                 pattern_name='internship',
             ),
             dict(
-                url_path = "/internships/cohort/1/",
+                url_path = "/internships/cohorts/1/",
                 pattern_name="internships_home",
                 kwargs={'cohort_id': 1}
             ),
             dict(
-                url_path='/internships/cohort/1/offers/',
+                url_path='/internships/cohorts/1/offers/',
                 pattern_name='internships',
                 kwargs={'cohort_id': 1}
             ),
             dict(
-                url_path='/internships/cohort/1/places/1/students/affectation/',
+                url_path='/internships/cohorts/1/places/1/students/affectation/',
                 pattern_name='place_detail_student_affectation',
                 kwargs={'cohort_id': 1, 'organization_id': 1}
             )

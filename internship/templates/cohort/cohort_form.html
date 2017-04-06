@@ -1,0 +1,69 @@
+{% extends "layout.html" %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% block breadcrumb %}
+    <li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
+    <li><a href="{% url 'internship' %}">{% trans 'internships_managment' %}</a></li>
+    <li class="active">{{ page_title }}</li>
+{% endblock %}
+
+{% block content %}
+    <div class="page-header">
+        <h2>{{ page_title }}</h2>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel panel-body">
+            <form method="POST" class="post-form">
+                {%  csrf_token %}
+                <div class="row">
+                    <div class="col-md-8">
+                        <label for="txt_name">{{ form.name.label }}</label>
+                        {{ form.name }}
+                        <span class="error">{{ form.name.errors }}</span>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="txt_free_internships_number">{{ form.free_internships_number.label }}</label>
+                        {{ form.free_internships_number }}
+                        <span class="error" required>{{ form.free_internships_number.errors }}</span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <label for="txt_description">{{ form.description.label }}</label>
+                        {{ form.description }}
+                        <span class="error" required>{{ form.description.errors }}</span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <label for="txt_publication_start_date">{{ form.publication_start_date.label }}</label>
+                        {{  form.publication_start_date }}<span class="error" required>{{ form.publication_start_date.errors }}</span>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="txt_subscription_start_date">{{ form.subscription_start_date.label }}</label>
+                        {{  form.subscription_start_date }}<span class="error" required>{{ form.subscription_start_date.errors }}</span>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="txt_subscription_end_date">{{ form.subscription_end_date.label }}</label>
+                        {{  form.subscription_end_date }}<span class="error" required>{{ form.subscription_end_date.errors }}</span>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-md-12">
+                        <button type="submit" class="btn btn-primary" title="{%trans 'save' %}" id="bt_cohort_save">
+                            <span class="glyphicon glyphicon-save" aria-hidden="true">{% trans 'save' %}</span>
+                        </button>
+                        <a class="btn btn-default" id="" href="{% url 'internship' %}">
+                            <span class="glyphicon glyphicon-cancel" aria-hidden="true">{% trans 'return' %}</span>
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
