@@ -69,10 +69,11 @@ def export_xls(exam_enrollments):
         offer = exam_enroll.learning_unit_enrollment.offer
         person = mdl.person.find_by_id(student.person.id)
 
-        if exam_enroll.learning_unit_enrollment.offer_enrollment.session_exam_deadline.deadline is None:
-            end_date = "-"
-        else:
-            end_date = exam_enroll.learning_unit_enrollment.offer_enrollment.session_exam_deadline.deadline.strftime('%d/%m/%Y')
+        session_exam_deadline = mdl.exam_enrollment.get_session_exam_deadline(exam_enroll)
+        end_date = "-"
+        if session_exam_deadline and session_exam_deadline.deadline_tutor:
+            end_date = session_exam_deadline.deadline_tutor.strftime('%d/%m/%Y')
+
         score = None
         if exam_enroll.score_final is not None:
             if exam_enroll.session_exam.learning_unit_year.decimal_scores:

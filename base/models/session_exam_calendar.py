@@ -28,6 +28,7 @@ import datetime
 from django.db import models
 from django.contrib import admin
 from base.models.enums import number_session, academic_calendar_type
+from base.models import offer_year_calendar
 
 
 class SessionExamCalendarAdmin(admin.ModelAdmin):
@@ -49,25 +50,23 @@ class SessionExamCalendar(models.Model):
     def __str__(self):
         return u"%s - %s" % (self.academic_calendar, self.number_session)
 
-    def save(self, *args, **kwargs):
-        # Ensure only academic calendar of type "SCORES_EXAM_SUBMISSION" can be saved
-        if self.academic_calendar.reference != academic_calendar_type.SCORES_EXAM_SUBMISSION:
-            raise ValueError('The academic calendar is not a scores exam submission type')
-
-        super(SessionExamCalendar, self).save(*args, **kwargs)
 
 def current_session_exam(date=datetime.date.today()):
     """"
+    :param date Default: today
     :return session exam, None if not in session exam [Default: Return current session exam]
     """
     try:
         return SessionExamCalendar.objects.get(academic_calendar__start_date__lte=date,
-                                           academic_calendar__end_date__gte=date)
+                                               academic_calendar__end_date__gte=date,
+                                               academic_calendar__reference=academic_calendar_type.SCORES_EXAM_SUBMISSION)
     except SessionExamCalendar.DoesNotExist:
         return None
 
+
 def find_session_exam_number(date=datetime.date.today()):
     """"
+    :param date Default: today
     :return session exam number, None if not in session exam [Default: Return current session exam]
     """
     current_session = current_session_exam(date)
@@ -75,10 +74,30 @@ def find_session_exam_number(date=datetime.date.today()):
         return current_session.number_session
     return None
 
+
 def get_latest_session_exam(date=datetime.date.today()):
     """"
-    :return latest session exam done of the current academic calendar
+    :param date Default: today
+        :return latest session exam done of the current academic calendar
     """
-    return SessionExamCalendar.objects.filter(academic_calendar__end_date__lte=date) \
+    return SessionExamCalendar.objects.filter(academic_calendar__end_date__lte=date,
+                                              academic_calendar__reference=academic_calendar_type.SCORES_EXAM_SUBMISSION) \
         .order_by('-academic_calendar__end_date') \
         .first()
+
+
+def find_deliberation_date(nb_session, offer_year):
+    """"
+    :param nb_session The number of session research
+    :param offer_year The offer year research
+    :return the deliberation date of the offer and session
+    """
+    offer_year_cals = offer_year_calendar.find_by_offer_year(offer_year, academic_calendar_type.DELIBERATION)
+    academic_cals_id = [off.academic_calendar_id for off in list(offer_year_cals)]
+
+    try:
+        session_exam_cal = SessionExamCalendar.objects.get(number_session=nb_session,
+                                                           academic_calendar_id__in=academic_cals_id)
+        return session_exam_cal.academic_calendar.start_date
+    except SessionExamCalendar.DoesNotExist:
+        return None

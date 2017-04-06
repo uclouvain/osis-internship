@@ -42,3 +42,11 @@ class SessionExamDeadline(models.Model):
     deadline_tutor = models.IntegerField(null=True)  # Delta day(s)
     number_session = models.IntegerField(choices=number_session.NUMBERS_SESSION)
     offer_enrollment = models.ForeignKey('OfferEnrollment')
+
+
+def get_by_offer_enrollment_nb_session(offer_enrollment, nb_session):
+    try:
+        return SessionExamDeadline.objects.get(offer_enrollment=offer_enrollment.id,
+                                               number_session=nb_session)
+    except SessionExamDeadline.DoesNotExist:
+        return None

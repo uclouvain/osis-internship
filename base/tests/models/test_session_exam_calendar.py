@@ -30,6 +30,7 @@ from django.core.exceptions import ValidationError
 from base.tests.factories.academic_year import AcademicYearFactory
 from base.tests.factories.academic_calendar import AcademicCalendarFactory
 from base.tests.factories.session_exam_calendar import SessionExamCalendarFactory
+from base.tests.factories.offer_year_calendar import OfferYearCalendarFactory
 from base.models import session_exam_calendar
 from base.models.enums import number_session, academic_calendar_type
 
@@ -52,9 +53,15 @@ class SessionExamCalendarTest(TestCase):
                                                                  end_date=datetime.date(2017, 12, 28),
                                                                  academic_year=tmp_academic_year,
                                                                  reference=academic_calendar_type.SCORES_EXAM_SUBMISSION)
+        self.academic_calendar_4 = AcademicCalendarFactory.build(title="Deliberation session 1",
+                                                                 start_date=datetime.date(2017, 1, 1),
+                                                                 end_date=datetime.date(2017, 1, 2),
+                                                                 academic_year=tmp_academic_year,
+                                                                 reference=academic_calendar_type.DELIBERATION)
         self.academic_calendar_1.save(functions=[])
         self.academic_calendar_2.save(functions=[])
         self.academic_calendar_3.save(functions=[])
+        self.academic_calendar_4.save(functions=[])
 
     def test_number_exam_session_out_of_range(self):
         session_exam_calendar = SessionExamCalendarFactory.build(academic_calendar=self.academic_calendar_1,
@@ -110,3 +117,12 @@ class SessionExamCalendarTest(TestCase):
         self.assertEqual(first, session_exam_calendar.get_latest_session_exam(date=datetime.date(2017, 2, 10)))
         self.assertEqual(second, session_exam_calendar.get_latest_session_exam(date=datetime.date(2017, 8, 15)))
         self.assertEqual(third, session_exam_calendar.get_latest_session_exam(date=datetime.date(2018, 2, 2)))
+
+    def test_find_deliberation_date(self):
+        SessionExamCalendarFactory(academic_calendar=self.academic_calendar_4,
+                                   number_session=number_session.ONE)
+        offer_year_cal = OfferYearCalendarFactory(academic_calendar=self.academic_calendar_4)
+
+        self.assertEqual(session_exam_calendar.find_deliberation_date(number_session.ONE,offer_year_cal.offer_year),
+                         datetime.date(2017, 1, 1))
+        self.assertIsNone(session_exam_calendar.find_deliberation_date(number_session.TWO, offer_year_cal.offer_year))
