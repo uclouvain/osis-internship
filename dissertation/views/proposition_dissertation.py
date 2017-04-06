@@ -66,20 +66,18 @@ def edit_proposition(form, proposition_offers, request):
     proposition = form.save()
     for old in proposition_offers:
         old.delete()
-    for key, value in request.POST.items():
-        if 'txt_checkbox_' in key and value == 'on':
-            offer = PropositionOffer()
-            offer.proposition_dissertation = proposition
-            offer_proposition_id = key.replace("txt_checkbox_", "")
-            offer.offer_proposition = offer_proposition.find_by_id(
-                int(offer_proposition_id))
-            offer.save()
+    generate_proposition_offers(request, proposition)
     return proposition
 
 
 def create_proposition(form, person, request):
     proposition = form.save()
     proposition.set_creator(person)
+    generate_proposition_offers(request, proposition)
+    return proposition
+
+
+def generate_proposition_offers(request, proposition):
     for key, value in request.POST.items():
         if 'txt_checkbox_' in key and value == 'on':
             offer = PropositionOffer()
@@ -87,7 +85,6 @@ def create_proposition(form, person, request):
             offer_proposition_id = key.replace("txt_checkbox_", "")
             offer.offer_proposition = offer_proposition.find_by_id(int(offer_proposition_id))
             offer.save()
-    return proposition
 
 
 ###########################
