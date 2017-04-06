@@ -47,7 +47,6 @@ urlpatterns = [
             url(r'^block/$', offer.internships_block, name='internships_block'),
             url(r'^save/$', offer.internships_save, name='internships_save'),
             url(r'^save/modification/student/$', offer.internship_save_modification_student, name='internship_save_modification_student'),
-            url(r'^std/$', offer.internships_stud, name='internships_stud'),
         ])),
 
         url(r'^periods/', include([

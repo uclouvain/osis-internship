@@ -27,6 +27,7 @@ from django.test import TestCase
 from internship.models import internship_choice as mdl_internship_choice
 from internship.tests.models import test_organization, test_internship_speciality
 from base.tests.models import test_student
+from internship.tests.models import test_internship_student_information
 from internship.tests.factories.internship import InternshipFactory
 from internship.tests.factories.cohort import CohortFactory
 
@@ -47,6 +48,8 @@ class TestSearchByStudentOrChoice(TestCase):
         self.speciality = test_internship_speciality.create_speciality(cohort=self.cohort)
         self.internship = InternshipFactory(cohort=self.cohort)
         self.other_internship = InternshipFactory(cohort=self.cohort)
+        self.student_information = test_internship_student_information.create_student_information(person=self.student.person, cohort=self.cohort)
+        self.other_student_information = test_internship_student_information.create_student_information(person=self.other_student.person, cohort=self.cohort)
 
         self.choice_1 = create_internship_choice(self.organization, self.student, self.speciality, internship=self.other_internship)
         self.choice_2 = create_internship_choice(self.organization, self.student, self.speciality, internship=self.internship)
@@ -73,7 +76,7 @@ class TestSearchByStudentOrChoice(TestCase):
         self.assertEqual(len(choices), 3)
 
     def test_get_number_students(self):
-        expected = 1
-        actual = mdl_internship_choice.get_number_students(self.organization.cohort)
+        expected = 2
+        actual = mdl_internship_choice.get_number_students(self.cohort)
         self.assertEqual(expected, actual)
 

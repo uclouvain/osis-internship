@@ -32,40 +32,48 @@ from internship.tests.models import test_organization, test_internship_specialit
     test_internship_student_information
 from base.tests.models import test_student
 from internship.views import student_resume
+from internship.tests.factories.cohort import CohortFactory
+from internship.tests.factories.internship import InternshipFactory
 
 
 class TestStudentResume(TestCase):
     def setUp(self):
-        organization = test_organization.create_organization()
+        self.cohort = CohortFactory()
+        organization = test_organization.create_organization(cohort=self.cohort)
         self.student_1 = test_student.create_student(first_name="first", last_name="last", registration_id="64641200")
         self.student_2 = test_student.create_student(first_name="first", last_name="last", registration_id="606012")
-        speciality = test_internship_speciality.create_speciality()
+        speciality = test_internship_speciality.create_speciality(cohort=self.cohort)
+
+        self.internship = InternshipFactory(cohort=self.cohort)
+        self.internship_2 = InternshipFactory(cohort=self.cohort)
+        self.internship_3 = InternshipFactory(cohort=self.cohort)
+        self.internship_4 = InternshipFactory(cohort=self.cohort)
 
         self.choice_1 = test_internship_choice.create_internship_choice(organization, self.student_1, speciality,
-                                                                        internship_choice=1)
+                                                                        internship=self.internship)
         self.choice_2 = test_internship_choice.create_internship_choice(organization, self.student_1, speciality,
-                                                                        internship_choice=2)
+                                                                        internship=self.internship_2)
         self.choice_3 = test_internship_choice.create_internship_choice(organization, self.student_1, speciality,
-                                                                        internship_choice=3)
+                                                                        internship=self.internship_3)
         self.choice_4 = test_internship_choice.create_internship_choice(organization, self.student_1, speciality,
-                                                                        internship_choice=4)
+                                                                        internship=self.internship_4)
 
         self.choice_5 = test_internship_choice.create_internship_choice(organization, self.student_2, speciality,
-                                                                        internship_choice=1)
+                                                                        internship=self.internship)
         self.choice_6 = test_internship_choice.create_internship_choice(organization, self.student_2, speciality,
-                                                                        internship_choice=2)
+                                                                        internship=self.internship_2)
         self.choice_7 = test_internship_choice.create_internship_choice(organization, self.student_2, speciality,
-                                                                        internship_choice=3)
+                                                                        internship=self.internship_3)
 
     def test_get_students_status(self):
         expected = []
-        actual = student_resume.get_students_with_status()
+        actual = student_resume.get_students_with_status(cohort=self.cohort)
         self.assertCountEqual(expected, actual)
 
-        test_internship_student_information.create_student_information(self.student_1.person, "GENERALIST")
-        test_internship_student_information.create_student_information(self.student_2.person, "GENERALIST")
+        test_internship_student_information.create_student_information(self.student_1.person, "GENERALIST", cohort=self.cohort)
+        test_internship_student_information.create_student_information(self.student_2.person, "GENERALIST", cohort=self.cohort)
         expected = [(self.student_1, True), (self.student_2, False)]
-        actual = student_resume.get_students_with_status()
+        actual = student_resume.get_students_with_status(cohort=self.cohort)
         self.assertCountEqual(expected, actual)
         for item_expected in expected:
             self.assertIn(item_expected, actual)

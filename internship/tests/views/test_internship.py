@@ -38,6 +38,7 @@ from internship.tests.models import (test_internship_choice,
                                      test_internship_speciality,
                                      test_organization, test_period)
 from internship.tests.factories.cohort import CohortFactory
+from internship.tests.factories.internship import InternshipFactory
 
 
 class TestModifyStudentChoices(TestCase):
@@ -93,10 +94,12 @@ class TestModifyStudentChoices(TestCase):
         return form
 
     def test_with_one_choice(self):
+        internship = InternshipFactory(cohort=self.cohort)
         kwargs = {
-            'internship_id': 1,
+            'cohort_id': self.cohort.id,
+            'internship_id': internship.id,
             'speciality_id': self.speciality_2.id,
-            'registration_id': self.student.registration_id
+            'student_id': self.student.id
         }
         selection_url = reverse("specific_internship_student_modification", kwargs=kwargs)
 
@@ -114,15 +117,17 @@ class TestModifyStudentChoices(TestCase):
         choice = qs.first()
         self.assertEqual(choice.organization, self.organization_1)
         self.assertEqual(choice.speciality, self.speciality_2)
-        self.assertEqual(choice.internship_choice, 1)
+        self.assertEqual(choice.internship, internship)
         self.assertEqual(choice.choice, 1)
         self.assertTrue(choice.priority)
 
     def test_with_multiple_choice(self):
+        internship = InternshipFactory(cohort=self.cohort)
         kwargs = {
-            'internship_id': 1,
+            'cohort_id': self.cohort.id,
+            'internship_id': internship.id,
             'speciality_id': self.speciality_1.id,
-            'registration_id': self.student.registration_id
+            'student_id': self.student.id
         }
         selection_url = reverse("specific_internship_student_modification", kwargs=kwargs)
 
@@ -152,10 +157,12 @@ class TestModifyStudentChoices(TestCase):
         self.assertEqual(qs.count(), 2)
 
     def test_with_incorrect_speciality(self):
+        internship = InternshipFactory(cohort=self.cohort)
         kwargs = {
-            'internship_id': 1,
+            'cohort_id': self.cohort.id,
+            'internship_id': internship.id,
             'speciality_id': self.speciality_1.id,
-            'registration_id': self.student.registration_id
+            'student_id': self.student.id
         }
         selection_url = reverse("specific_internship_student_modification", kwargs=kwargs)
 
@@ -173,12 +180,14 @@ class TestModifyStudentChoices(TestCase):
         self.assertEqual(qs.count(), 1)
 
     def test_replace_previous_choices(self):
+        internship = InternshipFactory(cohort=self.cohort)
         previous_choice = test_internship_choice.create_internship_choice(test_organization.create_organization(),
-                                                                          self.student, self.speciality_1, 2)
+                                                                          self.student, self.speciality_1, internship)
         kwargs = {
-            'internship_id': 2,
+            'cohort_id': self.cohort.id,
+            'internship_id': internship.id,
             'speciality_id': self.speciality_2.id,
-            'registration_id': self.student.registration_id
+            'student_id': self.student.id
         }
         selection_url = reverse("specific_internship_student_modification", kwargs=kwargs)
 
@@ -214,17 +223,15 @@ class TestModifyPeriods(TestCase):
 
         MAX_PERIOD = 12
         for period in range(1, MAX_PERIOD + 1):
-            test_period.create_period("P%d" % period)
+            test_period.create_period("P%d" % period, cohort=self.cohort)
 
     def testAccessUrl(self):
         cohort = CohortFactory()
 
-        organization = OrganizationFactory(cohort=cohort)
-        speciality = SpecialityFactory(cohort=cohort)
-        offer = OfferFactory(organization=organization, speciality=speciality, cohort=self.cohort)
+        internship_offer = OfferFactory(cohort=cohort)
 
         kwargs = {
-            'internship_id': offer.id,
+            'internship_id': internship_offer.id,
             'cohort_id': cohort.id,
         }
         url = reverse("edit_period_places", kwargs=kwargs)
@@ -234,13 +241,11 @@ class TestModifyPeriods(TestCase):
 
     def test_save_period_places(self):
         cohort = CohortFactory()
+        internship_offer = OfferFactory(cohort=cohort)
 
-        organization = OrganizationFactory(cohort=cohort)
-        speciality = SpecialityFactory(cohort=cohort)
-        offer = OfferFactory(organization=organization, speciality=speciality, cohort=self.cohort)
 
         kwargs = {
-            'internship_id': offer.id,
+            'internship_id': internship_offer.id,
             'cohort_id': cohort.id,
         }
 

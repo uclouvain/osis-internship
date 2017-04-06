@@ -67,16 +67,6 @@ class OfferViewTestCase(TestCase):
             'cohort_id': self.cohort.id,
         }))
 
-    def test_save(self):
-        url = reverse('internships_save', kwargs={
-            'cohort_id': self.cohort.id,
-        })
-
-        response = self.client.post(url)
-        self.assertRedirects(response, reverse('internships_stud', kwargs={
-            'cohort_id': self.cohort.id,
-        }))
-
     @unittest.skip("Refactor the code of the tested view")
     def test_save_modification_student(self):
         url = reverse('internship_save_modification_student', kwargs={
@@ -85,11 +75,3 @@ class OfferViewTestCase(TestCase):
 
         response = self.client.post(url, data={'registration_id': 0})
         self.assertRedirects(response, reverse('internships_modification_student', args=[0]))
-
-    def test_internships_stud(self):
-        url = reverse('internships_stud', kwargs={
-            'cohort_id': self.cohort.id,
-        })
-
-        response = self.client.get(url)
-        self.assertTemplateUsed(response, 'internships_stud.html')

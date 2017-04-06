@@ -30,7 +30,7 @@ from internship.models.internship_student_information import InternshipStudentIn
 from internship.tests.factories.cohort import CohortFactory
 
 
-def create_student_information(person, contest, cohort=None):
+def create_student_information(person, contest="GENERALIST", cohort=None):
     if cohort is None:
         cohort = CohortFactory()
 
