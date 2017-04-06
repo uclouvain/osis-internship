@@ -169,18 +169,6 @@ msgstr "Created by"
 msgid "current_status"
 msgstr "Current status"
 
-msgid "date_end_visibility_dissertation"
-msgstr "End of period for creation of dissertations"
-
-msgid "date_end_visibility_proposition"
-msgstr "End of period of visibility for dissertation subjects"
-
-msgid "date_start_visibility_dissertation"
-msgstr "Start of period for creation of dissertations"
-
-msgid "date_start_visibility_proposition"
-msgstr "Start of period of visibility for dissertation subjects"
-
 msgid "defend_periode"
 msgstr "Defense period"
 
@@ -309,18 +297,6 @@ msgstr "Empirical research"
 
 msgid "empty_data"
 msgstr "No data submitted"
-
-msgid "end_edit_title"
-msgstr "End of period to edit title"
-
-msgid "end_jury_visibility"
-msgstr "End of period of visibility for dissertation jury"
-
-msgid "end_visibility_dissertation"
-msgstr "End of period of creation for dissertations"
-
-msgid "end_visibility_proposition"
-msgstr "End of period of visibility for dissertation subjects"
 
 msgid "ended"
 msgstr "Ended"
@@ -664,6 +640,18 @@ msgstr "Other"
 msgid "parameters"
 msgstr "Settings"
 
+msgid "periode_visibility_proposition"
+msgstr "Period of visibility for dissertation subjects"
+
+msgid "periode_visibility_dissertation"
+msgstr "Period of possibility to create dissertations projects"
+
+msgid "periode_jury_visibility"
+msgstr "Period of visibility for dissertation jurys"
+
+msgid "periode_edit_title"
+msgstr "Period of possibility to edit dissertations titles"
+
 msgid "person"
 msgstr "Person"
 
@@ -777,18 +765,6 @@ msgstr "September"
 
 msgid "specific_subject"
 msgstr "Specific subject"
-
-msgid "start_edit_title"
-msgstr "Start of period to edit title"
-
-msgid "start_jury_visibility"
-msgstr "Start of period of visibility for the jury"
-
-msgid "start_visibility_dissertation"
-msgstr "Start of period of creation for the dissertations"
-
-msgid "start_visibility_proposition"
-msgstr "Start of period of visibility for the subjects"
 
 msgid "stats"
 msgstr "Stats"
