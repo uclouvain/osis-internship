@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -23,31 +23,40 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.http import HttpResponseRedirect
-from django.contrib.auth.decorators import login_required
-from django.core.urlresolvers import reverse
-from openpyxl import load_workbook
+import openpyxl
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required, permission_required
+from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404
 from django.utils.translation import ugettext_lazy as _
+from django.views.decorators.http import require_http_methods
 
 from internship import models as mdl
+from internship.models.cohort import Cohort
+from internship.models.internship import Internship
 
 
+from internship.models.period import Period
+@require_http_methods(['POST'])
 @login_required
-def upload_places_file(request):
-    if request.method == 'POST':
-        file_name = request.FILES['file']
-        if file_name is not None:
-            if ".xls" not in str(file_name):
-                messages.add_message(request, messages.ERROR, _('file_must_be_xls'))
-            else:
-                __save_xls_place(request, file_name, request.user)
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def upload_places_file(request, cohort_id):
+    cohort = get_object_or_404(Cohort, pk=cohort_id)
+    file_name = request.FILES['file']
+    if file_name is not None:
+        if ".xls" not in str(file_name):
+            messages.add_message(request, messages.ERROR, _('file_must_be_xls'))
+        else:
+            _save_xls_place(file_name, request.user, cohort)
 
-    return HttpResponseRedirect(reverse('internships_places'))
+    return HttpResponseRedirect(reverse('internships_places', kwargs={
+        'cohort_id': cohort.id
+    }))
 
 
-def __save_xls_place(request, file_name, user):
-    workbook = load_workbook(file_name, read_only=True)
+def _save_xls_place(file_name, user, cohort):
+    workbook = openpyxl.load_workbook(file_name, read_only=True)
     worksheet = workbook.active
     col_reference = 0
     col_name = 1
@@ -74,7 +83,7 @@ def __save_xls_place(request, file_name, user):
         if place:
             organization = mdl.organization.find_by_id(place[0].id)
         else:
-            organization = mdl.organization.Organization()
+            organization = mdl.organization.Organization(cohort=cohort)
 
         if row[col_reference].value:
             reference = ""
@@ -150,20 +159,28 @@ def _is_registration_id(registration_id):
 
 
 @login_required
-def upload_internships_file(request):
+def upload_internships_file(request, cohort_id):
+    cohort = get_object_or_404(Cohort, pk=cohort_id)
     if request.method == 'POST':
         file_name = request.FILES['file']
+        data = request.POST
+        internship_id = data["internship_id"]
+        if internship_id != "":
+            internship = Internship.objects.filter(pk=internship_id).first()
+        else:
+            internship = None
+
         if file_name is not None:
             if ".xls" not in str(file_name):
                 messages.add_message(request, messages.ERROR, _('file_must_be_xls'))
             else:
-                __save_xls_internships(request, file_name, request.user)
+                __save_xls_internships(request, file_name, request.user, cohort, internship)
 
-    return HttpResponseRedirect(reverse('internships'))
+    return HttpResponseRedirect(reverse('internships', kwargs={'cohort_id': cohort.id}))
 
 
-def __save_xls_internships(request, file_name, user):
-    workbook = load_workbook(file_name, read_only=True)
+def __save_xls_internships(request, file_name, user, cohort, internship):
+    workbook = openpyxl.load_workbook(file_name, read_only=True)
     worksheet = workbook.active
     col_reference = 0
     col_spec = 1
@@ -183,7 +200,7 @@ def __save_xls_internships(request, file_name, user):
                     reference = "0"+str(row[col_reference].value)
                 else :
                     reference = str(row[col_reference].value)
-                organization = mdl.organization.search(reference=reference)
+                organization = mdl.organization.search(reference=reference, cohort=cohort)
                 # internship.organization = organization[0]
 
             if len(organization) > 0:
@@ -194,7 +211,7 @@ def __save_xls_internships(request, file_name, user):
 
                 master_value = row[col_master].value
 
-                speciality = mdl.internship_speciality.search(acronym__icontains=spec_value)
+                speciality = mdl.internship_speciality.search(acronym__icontains=spec_value, cohort=cohort)
 
                 number_place = 0
                 for x in range(3, 7):
@@ -204,35 +221,38 @@ def __save_xls_internships(request, file_name, user):
                         number_place += int(row[x].value)
 
                 for x in range(0, len(speciality)):
-                    check_internship = mdl.internship_offer.search(speciality__name=speciality[x],
-                                                                   organization__reference=organization[0].reference)
-                    if len(check_internship) != 0:
-                        internship = mdl.internship_offer.find_intership_by_id(check_internship[0].id)
+                    check_internship_offer = mdl.internship_offer.InternshipOffer.objects.filter(speciality__name=speciality[x],
+                                                                   organization__reference=organization[0].reference, cohort=cohort)
+                    if len(check_internship_offer) != 0:
+                        internship_offer = mdl.internship_offer.find_intership_by_id(check_internship_offer.first().id)
                     else:
-                        internship = mdl.internship_offer.InternshipOffer()
+                        internship_offer = mdl.internship_offer.InternshipOffer()
 
-                    internship.organization = organization[0]
-                    internship.speciality = speciality[x]
-                    internship.title = speciality[x].name
-                    internship.maximum_enrollments = number_place
-                    internship.master = master_value
-                    internship.selectable = True
-                    internship.save()
+                    internship_offer.organization = organization[0]
+                    internship_offer.speciality = speciality[x]
+                    internship_offer.title = speciality[x].name
+                    internship_offer.maximum_enrollments = number_place
+                    internship_offer.master = master_value
+                    internship_offer.cohort = cohort
+                    internship_offer.internship = internship
+                    internship_offer.selectable = True
+                    internship_offer.save()
 
-                    number_period = 9
-                    for x in range(3, 7):
-                        period_search = "P"+str(number_period)
+                    periods = mdl.period.Period.objects.filter(cohort=cohort)
+                    number_period = 1
+                    for x in range(3, len(periods) + 3):
+                        period_search = "P" + str(number_period)
                         number_period += 1
-                        period = mdl.period.search(name=period_search)
-                        check_relation = mdl.period_internship_places.search(period=period, internship=internship)
+                        period = mdl.period.search(name=period_search, cohort=cohort).first()
+                        check_relation = mdl.period_internship_places.PeriodInternshipPlaces.objects.filter(period=period, internship_offer=internship_offer)
 
                         if len(check_relation) != 0:
-                            relation = mdl.period_internship_places.find_by_id(check_relation[0].id)
+                            relation = mdl.period_internship_places.find_by_id(check_relation.first().id)
                         else:
                             relation = mdl.period_internship_places.PeriodInternshipPlaces()
 
-                        relation.period = period[0]
-                        relation.internship = internship
+                        relation.period = period
+                        relation.internship_offer = internship_offer
                         if row[x].value is None:
                             relation.number_places = 0
                         else:
@@ -240,22 +260,26 @@ def __save_xls_internships(request, file_name, user):
                         relation.save()
 
 
+@require_http_methods(['POST'])
 @login_required
-def upload_masters_file(request):
-    if request.method == 'POST':
-        file_name = request.FILES['file']
-        if file_name is not None:
-            if ".xls" not in str(file_name):
-                messages.add_message(request, messages.ERROR, _('file_must_be_xls'))
-            else:
-                __save_xls_masters(request, file_name, request.user)
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def upload_masters_file(request, cohort_id):
+    cohort = get_object_or_404(Cohort, pk=cohort_id)
+    file_name = request.FILES['file']
+    if file_name is not None:
+        if ".xls" not in str(file_name):
+            messages.add_message(request, messages.ERROR, _('file_must_be_xls'))
+        else:
+            __save_xls_masters(request, file_name, request.user)
 
-    return HttpResponseRedirect(reverse('interships_masters'))
+    return HttpResponseRedirect(reverse('internships_masters', kwargs={
+        'cohort_id': cohort.id
+    }))
 
 
 @login_required
 def __save_xls_masters(request, file_name, user):
-    workbook = load_workbook(file_name, read_only=True)
+    workbook = openpyxl.load_workbook(file_name, read_only=True)
     worksheet = workbook.active
 
     col_reference = 2
