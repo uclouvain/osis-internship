@@ -88,9 +88,9 @@ class StudentImportActionForm(forms.Form):
 
 @admin.register(cohort.Cohort)
 class CohortAdmin(SerializableModelAdmin):
-    list_display = ('id', 'name', 'description', 'publication_start_date', 'subscription_start_date', 'subscription_end_date', 'cohort_actions')
+    list_display = ('id', 'name', 'description', 'publication_start_date', 'subscription_start_date', 'subscription_end_date', 'free_internships_number', 'cohort_actions')
     readonly_fields = ('id', 'cohort_actions')
-    fields = ('id', 'name', 'description', 'publication_start_date', 'subscription_start_date', 'subscription_end_date', 'cohort_actions')
+    fields = ('id', 'name', 'description', 'publication_start_date', 'subscription_start_date', 'subscription_end_date', 'free_internships_number', 'cohort_actions')
 
     def process_import(self, request, cohort_id):
 
