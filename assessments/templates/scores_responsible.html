@@ -37,46 +37,6 @@
 </div>
 <div class="panel panel-default">
     <div class="panel-body">
-        <form method="get" action="{% url 'manager_dissertations_search'%}">
-            <div class="row form-group">
-                <div class="form-group">
-                    <label for="slt_entities">{% trans 'entities' %}</label>
-                    <select class="form-control" id="slt_entities"  name="entities">
-                        <option></option>
-                        {% for entity in entities %}
-                            <option>{{ entity}}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="txt_course_code">{% trans 'course_code' %}</label>
-                    <input class="form-control" id="txt_course_code"  name="course_code">
-                </div>
-                <div class="form-group">
-                    <label for="txt_learning_unit_title">{% trans 'learning_unit_title' %}</label>
-                    <input class="form-control" id="txt_learning_unit_title"  name="learning_unit_title">
-                </div>
-                <div class="form-group">
-                    <label for="search_persons">{% trans 'professor' %}</label>
-                    <div class="ui-widget"><div class="ui-widget"><input id="search_persons" name="search_persons" size="100"
-										  placeholder="{% trans 'search_by_email_or_last_name' %}">
-                    <input type="hidden" name="person_id" id="person_id">
-                </div>
-                <div class="form-group">
-                    <label for="slt_scores_responsible">{% trans 'scores_responsible' %}</label>
-                    <select class="form-control" id="slt_scores_responsible"  name="scores_responsible">
-                        <option></option>
-                        {% for scores_responsible in scores_responsibles %}
-                            <option></option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="form-group" style="margin-top:25px">
-                    <button type="submit" id="bt_scores_responsibles_search" class="btn btn-primary" role="button"
-                            title="{% trans 'search' %}">{% trans 'search' %}</button>
-                </div>
-            </div>
-        </form>
         <div class="row form-group">
             <table class="table table-hover">
                 <thead>
@@ -89,56 +49,18 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class='clickable-row' data-toggle="modal" data-target="#pnl_scores_responsibles">
-                        <td class="text-center">{% trans 'entities' %}</td>
-                        <td class="text-center">{% trans 'course_code' %}</td>
-                        <td class="text-center">{% trans 'learning_unit_title' %}</td>
-                        <td class="text-center">{% trans 'holder_number' %}</td>
-                        <td class="text-center">{% trans 'scores_responsible' %}</td>
-                    </tr>
+                    {% for attribution in attributions %}
+                        <tr class='clickable-row' data-toggle="modal" data-target="#pnl_scores_responsibles">
+                            <td class="text-center">{{ attribution.learning_unit_year.acronym }}</td>
+                            <td class="text-center">{{ attribution.learning_unit_year.acronym }}</td>
+                            <td class="text-center">{{ attribution.learning_unit_year.title }}</td>
+                            <td class="text-center"></td>
+                            <td class="text-center">{{ attribution.tutor }}</td>
+                        </tr>
+                    {% endfor %}
                 </tbody>
             </table>
         </div>
     </div>
 </div>
-<div class="modal fade" id="pnl_scores_responsibles"
-     tabindex="-1" role="dialog" >
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <form method="post" enctype="multipart/form-data" >
-                {% csrf_token %}
-                <div class="modal-header">
-
-                </div>
-                <div class="modal-body" id="pnl_modal_upload">
-
-                </div>
-                <div class="modal-footer">
-
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-{% endblock %}
-{% block script %}
-<script type="text/javascript" src="{% static 'js/jquery-ui.js' %}"></script>
-<script>
-window.onload = function() {
-    $('#person_id').empty();
-};
-$(function() {
-  $("#search_persons").autocomplete({
-	source: "/assistants/api/get_persons/",
-    minLength: 3,
-    delay: 100,
-    select: function(event, ui) {
-    	var person_id = ui.item.id;
-    	$( "#person_id" ).val(person_id);
-    	$( "#search_persons" ).val( ui.item.first_name + ', ' + ui.item.last_name + ' (' + ui.item.value + ')' );
-    	return False;
-    	}
-  });
-});
-</script>
 {% endblock %}

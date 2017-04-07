@@ -24,25 +24,20 @@
 #
 ##############################################################################
 import traceback
-from collections import defaultdict
 from decimal import Decimal, Context, Inexact
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.core.exceptions import ValidationError
-from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required, user_passes_test, permission_required
 from django.contrib import messages
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ugettext as trans
-from pip._vendor.distlib.resources import Resource
 from psycopg2._psycopg import OperationalError as PsycopOperationalError, InterfaceError as  PsycopInterfaceError
 from django.db.utils import OperationalError as DjangoOperationalError, InterfaceError as DjangoInterfaceError
 from base import models as mdl
 from assessments import models as mdl_assess
 from base.enums.exam_enrollment_justification_type import JUSTIFICATION_TYPES
 from attribution import models as mdl_attr
-from base.models.learning_unit import LearningUnit
-from base.models.tutor import Tutor
 from osis_common.document import paper_sheet
 from base.utils import send_mail
 from assessments.views import export_utils
@@ -1001,7 +996,13 @@ def get_json_data_scores_sheets(tutor_global_id):
 
 @login_required
 def scores_responsible(request):
-    entities = LearningUnit.objects.all()
-    professors = Tutor.objects.all()
-    return layout.render(request, 'scores_responsible.html', {"entities": entities,
-                                                              "professors": professors})
+    attributions = mdl_attr.attribution.Attribution.objects.filter(score_responsible=True)
+    data = {}
+    for attribution in attributions:
+        learning_unit_enrollment = mdl.learning_unit_enrollment.find_by_learningunit_enrollment(attribution.learning_unit_year)
+        data = json.dumps({'entity': learning_unit_enrollment.offer_enrollment.offer_year.entity_management,
+                           'course_code': attribution.learning_unit_year.acronym,
+                           'learning_unit_title': attribution.learning_unit_year.title,
+                           'holder_number': "2",
+                           'scores_responsible': attribution.tutor})
+    return layout.render(request, 'scores_responsible.html', {"data": data})
