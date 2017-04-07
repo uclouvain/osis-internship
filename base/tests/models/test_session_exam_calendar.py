@@ -37,7 +37,7 @@ from base.models.enums import number_session, academic_calendar_type
 
 class SessionExamCalendarTest(TestCase):
     def setUp(self):
-        tmp_academic_year = AcademicYearFactory()
+        tmp_academic_year = AcademicYearFactory(year=datetime.datetime.now().year)
         self.academic_calendar_1 = AcademicCalendarFactory.build(title="Submission of score encoding - 1",
                                                                  start_date=datetime.date(2016, 10, 15),
                                                                  end_date=datetime.date(2017, 1, 1),
@@ -126,3 +126,16 @@ class SessionExamCalendarTest(TestCase):
         self.assertEqual(session_exam_calendar.find_deliberation_date(number_session.ONE,offer_year_cal.offer_year),
                          datetime.date(2017, 1, 1))
         self.assertIsNone(session_exam_calendar.find_deliberation_date(number_session.TWO, offer_year_cal.offer_year))
+
+    def get_closest_new_session_exam(self):
+        first = SessionExamCalendarFactory(academic_calendar=self.academic_calendar_1,
+                                           number_session=number_session.ONE)
+        second = SessionExamCalendarFactory(academic_calendar=self.academic_calendar_2,
+                                            number_session=number_session.TWO)
+        third = SessionExamCalendarFactory(academic_calendar=self.academic_calendar_3,
+                                           number_session=number_session.THREE)
+
+        self.assertEqual(first, session_exam_calendar.get_closest_new_session_exam(date=datetime.date(2016, 9, 15)))
+        self.assertEqual(second, session_exam_calendar.get_closest_new_session_exam(date=datetime.date(2016, 10, 17)))
+        self.assertEqual(third, session_exam_calendar.get_closest_new_session_exam(date=datetime.date(2017, 3, 16)))
+        self.assertIsNone(session_exam_calendar.get_closest_new_session_exam(date=datetime.date(2017, 10, 16)))
