@@ -52,7 +52,8 @@ class DissertationUpdate(SerializableModel):
         desc = "%s / %s >> %s / %s" % (self.dissertation.title, self.status_from, self.status_to, str(self.created))
         return desc
 
-    def get_dissertation_author(self):
+    @property
+    def author(self):
         return self.dissertation.author
 
 

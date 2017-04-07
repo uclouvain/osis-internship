@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -27,12 +27,15 @@ from internship.models import internship_speciality as mdl_internship_speciality
 from base.tests.models import test_learning_unit
 from django.test.testcases import TestCase
 
+from internship.tests.factories.cohort import CohortFactory
+from internship.tests.factories.speciality import SpecialityFactory
 
-def create_speciality(name="chirurgie"):
+
+def create_speciality(name="chirurgie", cohort=None):
+    if cohort is None:
+        cohort = CohortFactory()
     learning_unit = test_learning_unit.create_learning_unit(title="stage medecine", acronym= "WSD")
-    speciality = mdl_internship_speciality.InternshipSpeciality(learning_unit=learning_unit, name=name)
-    speciality.save()
-    return speciality
+    return SpecialityFactory(learning_unit=learning_unit, name=name, cohort=cohort)
 
 
 class TestGetById(TestCase):
