@@ -15,6 +15,7 @@ from internship.models.period import Period
 
 def create_the_first_cohort(apps, schema_editor):
     cohort = Cohort(name='M7-2018',
+                    uuid="1091eebf-e3ed-4cfd-b13e-6b9e947f14bb",
                     description='M7-2018',
                     free_internships_number=8,
                     publication_start_date="2017-03-27",
