@@ -1129,8 +1129,8 @@ def load_solution(data):
     keys = ['P1', 'P2', 'P3', 'P4', 'P5', 'P6', 'P7', 'P8', 'P9', 'P10', 'P11', 'P12']
 
     for pid in period_internship_places:
-        organization = pid.internship.organization
-        acronym = pid.internship.speciality.acronym
+        organization = pid.internship_offer.organization
+        acronym = pid.internship_offer.speciality.acronym
         period_name = pid.period.name
         if acronym not in temp_internship_table[organization]:
             temp_internship_table[organization][acronym] = OrderedDict()
