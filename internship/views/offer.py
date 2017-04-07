@@ -32,6 +32,7 @@ from django.views.decorators.http import require_http_methods
 from base import models as mdl
 from internship import models as mdl_internship
 from internship.models.cohort import Cohort
+from internship.models.internship import Internship
 from internship.models.internship_offer import InternshipOffer
 from internship.views.internship import (get_all_organizations,
                                          get_all_specialities,
@@ -69,6 +70,8 @@ def internships(request, cohort_id):
     # Get The number of differents choices for the internships
     get_number_choices(query)
 
+    internships = Internship.objects.filter(cohort=cohort)
+
     all_internships = mdl_internship.internship_offer.find_internships().filter(organization__cohort=cohort)
     all_organizations = get_all_organizations(all_internships)
     all_specialities = get_all_specialities(all_internships)
@@ -87,6 +90,7 @@ def internships(request, cohort_id):
     context = {
         'section': 'internship',
         'all_internships': query,
+        'internships': internships,
         'all_non_mandatory_internships': all_non_mandatory_internships,
         'all_organizations': all_organizations,
         'all_speciality': all_specialities,
