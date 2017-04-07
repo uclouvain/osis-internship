@@ -52,6 +52,18 @@
                         {{  form.subscription_end_date }}<span class="error" required>{{ form.subscription_end_date.errors }}</span>
                     </div>
                 </div>
+                {% if form_new %}
+                  <div class="row">
+                    <div class="col-md-6">
+                      <label for="copy_organizations_from_cohort">{{ form.copy_organizations_from_cohort.label }}</label>
+                      {{ form.copy_organizations_from_cohort }}<span class="error">{{form.copy_organizations_from_cohort.errors}}</span>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="copy_specialities_from_cohort">{{ form.copy_specialities_from_cohort.label }}</label>
+                      {{ form.copy_specialities_from_cohort }}<span class="error">{{form.copy_specialities_from_cohort.errors}}</span>
+                    </div>
+                  </div>
+                {% endif %}
                 <br />
                 <div class="row">
                     <div class="col-md-12">

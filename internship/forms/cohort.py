@@ -37,6 +37,8 @@ class CohortForm(forms.ModelForm):
     publication_start_date = forms.DateField(widget=DateInput)
     subscription_start_date = forms.DateField(widget=DateInput)
     subscription_end_date = forms.DateField(widget=DateInput)
+    copy_organizations_from_cohort = forms.ModelChoiceField(queryset=Cohort.objects.all(), empty_label="None", required=False)
+    copy_specialities_from_cohort = forms.ModelChoiceField(queryset=Cohort.objects.all(), empty_label="None", required=False)
 
     class Meta:
         model = Cohort
