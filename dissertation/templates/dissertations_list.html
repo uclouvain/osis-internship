@@ -55,7 +55,11 @@
                 </tr>
                 {% for adviser_list_dissertation in adviser_list_dissertations %}
                   <tr>
-                    <td><a href="{% url 'dissertations_detail' pk=adviser_list_dissertation.dissertation.pk %}">{{ adviser_list_dissertation.dissertation.title }}</a></td>
+                    <td>
+                        <a href="{% url 'dissertations_detail' pk=adviser_list_dissertation.dissertation.pk %}">
+                            {{ adviser_list_dissertation.dissertation.title }}
+                        </a>
+                    </td>
                     <td>{{ adviser_list_dissertation.dissertation.author }}</td>
                     <td>
                         {% if adviser_list_dissertation.dissertation.status == 'DRAFT' %}
@@ -112,7 +116,11 @@
                 </tr>
                 {% for adviser_list_dissertation in adviser_list_dissertations_copro %}
                   <tr>
-                    <td><a href="{% url 'dissertations_detail' pk=adviser_list_dissertation.dissertation.pk %}">{{ adviser_list_dissertation.dissertation.title }}</a></td>
+                    <td>
+                        <a href="{% url 'dissertations_detail' pk=adviser_list_dissertation.dissertation.pk %}">
+                            {{ adviser_list_dissertation.dissertation.title }}
+                        </a>
+                    </td>
                     <td>{{ adviser_list_dissertation.dissertation.author }}</td>
                     <td>
                         {% if adviser_list_dissertation.dissertation.status == 'DRAFT' %}
@@ -165,7 +173,11 @@
                 </tr>
                 {% for adviser_list_dissertation in adviser_list_dissertations_reader %}
                   <tr>
-                    <td><a href="{% url 'dissertations_detail' pk=adviser_list_dissertation.dissertation.pk %}">{{ adviser_list_dissertation.dissertation.title }}</a></td>
+                    <td>
+                        <a href="{% url 'dissertations_detail' pk=adviser_list_dissertation.dissertation.pk %}">
+                            {{ adviser_list_dissertation.dissertation.title }}
+                        </a>
+                    </td>
                     <td>{{ adviser_list_dissertation.dissertation.author }}</td>
                     <td>
                         {% if adviser_list_dissertation.dissertation.status == 'DRAFT' %}
@@ -218,7 +230,11 @@
                 </tr>
                 {% for adviser_list_dissertation in adviser_list_dissertations_accompanist %}
                   <tr>
-                    <td><a href="{% url 'dissertations_detail' pk=adviser_list_dissertation.dissertation.pk %}">{{ adviser_list_dissertation.dissertation.title }}</a></td>
+                    <td>
+                        <a href="{% url 'dissertations_detail' pk=adviser_list_dissertation.dissertation.pk %}">
+                            {{ adviser_list_dissertation.dissertation.title }}
+                        </a>
+                    </td>
                     <td>{{ adviser_list_dissertation.dissertation.author }}</td>
                     <td>
                         {% if adviser_list_dissertation.dissertation.status == 'DRAFT' %}
@@ -271,7 +287,11 @@
                 </tr>
                 {% for adviser_list_dissertation in adviser_list_dissertations_internship %}
                   <tr>
-                    <td><a href="{% url 'dissertations_detail' pk=adviser_list_dissertation.dissertation.pk %}">{{ adviser_list_dissertation.dissertation.title }}</a></td>
+                    <td>
+                        <a href="{% url 'dissertations_detail' pk=adviser_list_dissertation.dissertation.pk %}">
+                            {{ adviser_list_dissertation.dissertation.title }}
+                        </a>
+                    </td>
                     <td>{{ adviser_list_dissertation.dissertation.author }}</td>
                     <td>
                         {% if adviser_list_dissertation.dissertation.status == 'DRAFT' %}

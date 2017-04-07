@@ -9,7 +9,7 @@
     * The core business involves the administration of students, teachers,
     * courses, programs and so on.
     *
-    * Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+    * Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
     *
     * This program is free software: you can redistribute it and/or modify
     * it under the terms of the GNU General Public License as published by
@@ -28,8 +28,8 @@
 
 {% block breadcrumb %}
     <li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
-    <li><a href="{% url 'internships_home' %}">{% trans 'internships_managment' %}</a></li>
-    <li><a href="{% url 'internships_places' %}">{% trans 'places' %}</a></li>
+    <li><a href="{% url 'internship' %}">{% trans 'internships_managment' %}</a></li>
+    <li><a href="{% url 'internships_places' cohort_id=cohort.id  %}">{% trans 'places' %}</a></li>
     <li class="active">{{ organization.name }}</li>
 {% endblock %}
 {% block content %}
@@ -39,7 +39,7 @@
                 <h2>{{ organization.name }}</h2>
             </div>
             <div class="col-md-6">
-                <a href="{% url 'organisation_affectation_download' organization.id %}">
+                <a href="{% url 'organisation_affectation_download' cohort_id=cohort.id organization_id=organization.id %}">
                     <button type="button" class="btn btn-default" style="float: right;margin-top: 15px;">
                         <span class="glyphicon glyphicon-download" aria-hidden="true"></span> {% trans 'export_organisation_affectation_xls' %}
                     </button>
@@ -60,7 +60,7 @@
                         <div class="panel panel-default">
                             <div class="tab-content">
                                 <div role="tabpanel" class="tab-pane fade in active" id="profile">
-                                    <a href="{% url 'affectation_download' organization.id speciality.id %}">
+                                    <a href="{% url 'affectation_download' cohort_id=cohort.id organization_id=organization.id speciality_id=speciality.id %}">
                                         <button type="button" class="btn btn-default" style="float: right;">
                                             <span class="glyphicon glyphicon-download" aria-hidden="true"></span> {% trans 'download_xls_file' %}
                                         </button>
