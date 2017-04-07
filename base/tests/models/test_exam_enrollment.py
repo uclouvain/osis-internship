@@ -38,7 +38,7 @@ def create_exam_enrollment(session_exam, learning_unit_enrollment):
     return an_exam_enrollment
 
 
-def create_exam_enrollment_with_student(num_id, registration_id, offer_year, learning_unit_year, academic_year):
+def create_exam_enrollment_with_student(num_id, registration_id, offer_year, learning_unit_year, academic_year=None):
     student = test_student.create_student("Student" + str(num_id), "Etudiant" + str(num_id), registration_id)
     offer_enrollment = test_offer_enrollment.create_offer_enrollment(student, offer_year)
     learning_unit_enrollment = test_learning_unit_enrollment.create_learning_unit_enrollment(learning_unit_year,
