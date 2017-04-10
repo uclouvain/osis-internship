@@ -219,8 +219,7 @@ def online_encoding_form(request, learning_unit_year_id=None):
             if not is_enrollment_changed(request, enrollment, score_encoded, justification_encoded, is_program_manager):
                 continue
 
-            # Modification is possible only for program managers OR score has changed but justification/score final is NONE
-            if is_program_manager or (not enrollment.score_final and not enrollment.justification_final):
+            if can_modify_exam_enrollment(enrollment, is_program_manager):
                 try:
                     set_score_and_justification_for_exam_enrollment(is_program_manager, enrollment,
                                                                     justification_encoded,
@@ -335,9 +334,13 @@ def set_score_and_justification_for_exam_enrollment(is_pgm, enrollment, new_just
         mdl.exam_enrollment.create_exam_enrollment_historic(user, enrollment,
                                                             enrollment.score_final,
                                                             enrollment.justification_final)
-    # Validate enrollment before save
-    enrollment.full_clean()
-    enrollment.save()
+
+
+def can_modify_exam_enrollment(enrollment, is_program_manager) :
+    """"This function check if we can modify an exam enrollment"""
+    return (is_program_manager and not mdl.exam_enrollment.is_deadline_reached(enrollment)) or \
+           (not is_program_manager and not mdl.exam_enrollment.is_deadline_tutor_reached(enrollment) and
+            not enrollment.score_final and not enrollment.justification_final)
 
 
 def is_legible_for_modifying_exam_enrollment(score_changed, exam_enrollment):
@@ -526,7 +529,8 @@ def export_xls(request, learning_unit_year_id):
     exam_enrollments = _get_exam_enrollments(request.user,
                                              learning_unit_year_id=learning_unit_year_id,
                                              academic_year=academic_year,
-                                             is_program_manager=is_program_manager)
+                                             is_program_manager=is_program_manager,
+                                             with_closed_exam_enrollments=False)
     return export_utils.export_xls(exam_enrollments)
 
 
@@ -538,11 +542,11 @@ def get_data(request, offer_year_id=None):
     offer_year_id = int(offer_year_id) if offer_year_id else None
     academic_yr = mdl.academic_year.current_academic_year()
     tutor = mdl.tutor.find_by_user(request.user)
-    exam_enrollments = list(mdl.exam_enrollment.find_for_score_encodings(mdl.session_exam_calendar.find_session_exam_number(),
-                                                                         tutor=tutor))
+    number_session = mdl.session_exam_calendar.find_session_exam_number()
+
+    exam_enrollments = list(mdl.exam_enrollment.find_for_score_encodings(number_session,tutor=tutor))
 
     all_offers = []
-
     for exam_enrol in exam_enrollments:
         off_year = exam_enrol.learning_unit_enrollment.offer_enrollment.offer_year
         if off_year not in all_offers:
@@ -556,19 +560,15 @@ def get_data(request, offer_year_id=None):
     group_by_learn_unit_year = {}
     for exam_enrol in exam_enrollments:
         learn_unit_year = exam_enrol.session_exam.learning_unit_year
-        score_encoding = group_by_learn_unit_year.get(learn_unit_year.id)
-        if score_encoding:
-            if exam_enrol.is_final:
-                score_encoding['exam_enrollments_encoded'] += 1
-            score_encoding['total_exam_enrollments'] += 1
-        else:
-            if exam_enrol.is_final:
-                exam_enrollments_encoded = 1
-            else:
-                exam_enrollments_encoded = 0
+        if not group_by_learn_unit_year.get(learn_unit_year.id):
             group_by_learn_unit_year[learn_unit_year.id] = {'learning_unit_year': learn_unit_year,
-                                                            'exam_enrollments_encoded': exam_enrollments_encoded,
-                                                            'total_exam_enrollments': 1}
+                                                            'exam_enrollments_encoded': 0,
+                                                            'total_exam_enrollments': 0}
+        if exam_enrol.is_final:
+            group_by_learn_unit_year[learn_unit_year.id]['exam_enrollments_encoded'] += 1
+        group_by_learn_unit_year[learn_unit_year.id]['total_exam_enrollments'] += 1
+
+
     scores_list = group_by_learn_unit_year.values()
     # Adding progress for each line (progress by learningUnitYear)
     for exam_enrol_by_learn_unit in scores_list:
@@ -583,7 +583,7 @@ def get_data(request, offer_year_id=None):
                          {'tutor': tutor,
                           'academic_year': academic_yr,
                           'notes_list': scores_list,
-                          'number_session': mdl.session_exam_calendar.find_session_exam_number(),
+                          'number_session': number_session,
                           'offer_year_list': all_offers,
                           'offer_year_id': offer_year_id,
                           'active_tab': request.GET.get('active_tab', None)  # Allow keep selection
@@ -604,16 +604,12 @@ def get_data_online(learning_unit_year_id, request):
                                              learning_unit_year_id=learning_unit_year_id,
                                              academic_year=academic_yr,
                                              is_program_manager=is_program_manager)
-    number_session = exam_enrollments[0].session_exam.number_session if len(exam_enrollments) > 0 else _(
-                    'none')
+    number_session = exam_enrollments[0].session_exam.number_session if exam_enrollments else _('none')
     learning_unit_year = mdl.learning_unit_year.find_by_id(learning_unit_year_id)
-
     score_responsibles = mdl_attr.attribution.find_all_responsibles(learning_unit_year)
     tutors = mdl.tutor.find_by_learning_unit(learning_unit_year) \
-        .exclude(id__in=[score_responsible.id for score_responsible in score_responsibles])
-
+                      .exclude(id__in=[score_responsible.id for score_responsible in score_responsibles])
     progress = mdl.exam_enrollment.calculate_exam_enrollment_progress(exam_enrollments)
-
     draft_scores_not_submitted = len([exam_enrol for exam_enrol in exam_enrollments
                                       if exam_enrol.is_draft and not exam_enrol.is_final])
     return {'section': 'scores_encoding',
@@ -634,17 +630,19 @@ def get_data_online(learning_unit_year_id, request):
 
 def get_data_online_double(learning_unit_year_id, request):
     academic_yr = mdl.academic_year.current_academic_year()
+    number_session = mdl.session_exam_calendar.find_session_exam_number()
+
     if mdl.program_manager.is_program_manager(request.user):
         offer_years_managed = mdl.offer_year.find_by_user(request.user, academic_yr=academic_yr)
         total_exam_enrollments = list(mdl.exam_enrollment
-                                      .find_for_score_encodings(mdl.session_exam_calendar.find_session_exam_number(),
+                                      .find_for_score_encodings(number_session,
                                                                 learning_unit_year_id=learning_unit_year_id,
                                                                 offers_year=offer_years_managed))
         # We must know the total count of enrollments (not only the encoded one) ???
         encoded_exam_enrollments = list(filter(lambda e: e.is_final, total_exam_enrollments))
     elif mdl.tutor.is_tutor(request.user):
         total_exam_enrollments = list(mdl.exam_enrollment
-                                      .find_for_score_encodings(mdl.session_exam_calendar.find_session_exam_number(),
+                                      .find_for_score_encodings(number_session,
                                                                 learning_unit_year_id=learning_unit_year_id))
         encoded_exam_enrollments = list(filter(lambda e: e.is_draft and not e.is_final, total_exam_enrollments))
     else:
@@ -679,6 +677,7 @@ def get_data_pgmer(request,
                    incomplete_encodings_only=False):
     NOBODY = -1
     academic_yr = mdl.academic_year.current_academic_year()
+    number_session = mdl.session_exam_calendar.find_session_exam_number()
     learning_unit_year_ids = None
     if learning_unit_year_acronym:
         learning_unit_year_ids = mdl.learning_unit_year.search(acronym=learning_unit_year_acronym) \
@@ -777,7 +776,7 @@ def get_data_pgmer(request,
                           'offer_year_id': offer_year_id,
                           'tutor_id': tutor_id,
                           'academic_year': academic_yr,
-                          'number_session': mdl.session_exam_calendar.find_session_exam_number(),
+                          'number_session': number_session,
                           'learning_unit_year_acronym': learning_unit_year_acronym,
                           'incomplete_encodings_only': incomplete_encodings_only,
                           'last_synchronization': mdl.synchronization.find_last_synchronization_date(),
@@ -819,6 +818,12 @@ def get_data_specific_criteria(request):
                                                                                      offer_year_id=offer_year_id,
                                                                                      offers_year=offers_year_managed))
                 exam_enrollments = mdl.exam_enrollment.sort_by_offer_acronym_last_name_first_name(exam_enrollments)
+                for enrollment in exam_enrollments:
+                    # Get session exam deadline related to and add flag for deadline / deadline tutor
+                    enrollment.session_exam_deadline = mdl.exam_enrollment.get_session_exam_deadline(enrollment)
+                    enrollment.deadline_reached = mdl.exam_enrollment.is_deadline_reached(enrollment)
+                    enrollment.deadline_tutor_reached = mdl.exam_enrollment.is_deadline_tutor_reached(enrollment)
+
                 if len(exam_enrollments) == 0:
                     messages.add_message(request, messages.WARNING, "%s" % _('no_result'))
         else:
@@ -880,8 +885,7 @@ def specific_criteria_submission(request):
         if not is_enrollment_changed(request, enrollment, score_encoded, justification_encoded, is_program_manager):
             continue
 
-        # Modification is possible only for program managers OR score has changed but justification/score final is NONE
-        if is_program_manager or (not enrollment.score_final and not enrollment.justification_final):
+        if can_modify_exam_enrollment(enrollment, is_program_manager):
             try:
                 set_score_and_justification_for_exam_enrollment(is_program_manager, enrollment,
                                                                 justification_encoded,
@@ -908,7 +912,7 @@ def specific_criteria_submission(request):
 
 
 def _get_exam_enrollments(user, learning_unit_year_id=None, tutor_id=None, offer_year_id=None, academic_year=None,
-                          is_program_manager=False):
+                          is_program_manager=False, with_closed_exam_enrollments=True):
     """
     Args:
         user: The user who's asking for exam_enrollments (for scores' encoding).
@@ -922,6 +926,7 @@ def _get_exam_enrollments(user, learning_unit_year_id=None, tutor_id=None, offer
     """
     if not academic_year:
         academic_year = mdl.academic_year.current_academic_year()
+    number_session = mdl.session_exam_calendar.find_session_exam_number()
     # Case the user is a program manager
     if is_program_manager:
         tutor = None
@@ -934,22 +939,39 @@ def _get_exam_enrollments(user, learning_unit_year_id=None, tutor_id=None, offer
             # Get examEnrollments for all offers managed by the program manager
             offers_year = list(mdl.offer_year.find_by_user(user, academic_yr=academic_year))
         exam_enrollments = list(mdl.exam_enrollment
-                                .find_for_score_encodings(mdl.session_exam_calendar.find_session_exam_number(),
+                                .find_for_score_encodings(number_session,
                                                           learning_unit_year_id=learning_unit_year_id,
                                                           tutor=tutor,
-                                                          offers_year=offers_year))
+                                                          offers_year=offers_year,
+                                                          with_deliberated=with_closed_exam_enrollments))
+        if not with_closed_exam_enrollments:
+             exam_enrollments = [enrollment for enrollment in exam_enrollments if
+                                 not mdl.exam_enrollment.is_deadline_reached(enrollment)]
+
     # Case the user is a tutor
     elif mdl.tutor.is_tutor(user):
         # Note : The tutor can't filter by offerYear ; the offer_id is always None. Not necessary to check.
         tutor = mdl.tutor.find_by_user(user)
         exam_enrollments = list(mdl.exam_enrollment
-                                .find_for_score_encodings(mdl.session_exam_calendar.find_session_exam_number(),
+                                .find_for_score_encodings(number_session,
                                                           learning_unit_year_id=learning_unit_year_id,
-                                                          tutor=tutor))
+                                                          tutor=tutor,
+                                                          with_deliberated=with_closed_exam_enrollments))
+        if not with_closed_exam_enrollments:
+            exam_enrollments = [enrollment for enrollment in exam_enrollments if
+                                not mdl.exam_enrollment.is_deadline_tutor_reached(enrollment)]
+
     else:
         exam_enrollments = []
-    # Ordering by offerear.acronym, then person.lastname & firstname
+    # Ordering by offeryear.acronym, then person.lastname & firstname
     exam_enrollments = mdl.exam_enrollment.sort_for_encodings(exam_enrollments)
+
+    # Get session exam deadline related to and add flag for deadline / deadline tutor
+    for enrollment in exam_enrollments:
+        enrollment.session_exam_deadline = mdl.exam_enrollment.get_session_exam_deadline(enrollment)
+        enrollment.deadline_reached = mdl.exam_enrollment.is_deadline_reached(enrollment)
+        enrollment.deadline_tutor_reached = mdl.exam_enrollment.is_deadline_tutor_reached(enrollment)
+
     return exam_enrollments
 
 
@@ -957,10 +979,9 @@ def get_json_data_scores_sheets(tutor_global_id):
     try:
         person = mdl.person.find_by_global_id(tutor_global_id)
         tutor = mdl.tutor.find_by_person(person)
+        number_session = mdl.session_exam_calendar.find_session_exam_number()
         if tutor:
-            exam_enrollments = list(
-                mdl.exam_enrollment.find_for_score_encodings(mdl.session_exam_calendar.find_session_exam_number(),
-                                                             tutor=tutor))
+            exam_enrollments = list(mdl.exam_enrollment.find_for_score_encodings(number_session,tutor=tutor))
             data = mdl.exam_enrollment.scores_sheet_data(exam_enrollments, tutor=tutor)
             return json.dumps(data)
         else:

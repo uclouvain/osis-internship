@@ -761,6 +761,9 @@ msgstr "You haven't any score to encode."
 msgid "no_valid_academic_year_error"
 msgstr "No valid academic year found in your xls file. The date should be formatted like '2015-2016' or '2015'."
 
+msgid "deadline_reached"
+msgstr "Deadline reached"
+
 msgid "none"
 msgstr "None"
 

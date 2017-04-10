@@ -746,6 +746,9 @@ msgstr "Vous n'avez aucune note à encoder."
 msgid "no_valid_academic_year_error"
 msgstr "Aucune année académique au format valide n'a été trouvé dans votre fichier excel. La date doit être formatée comme suit ; '2015-2016' ou '2015'."
 
+msgid "deadline_reached"
+msgstr "Date limite atteinte"
+
 msgid "none"
 msgstr "Aucun"
 

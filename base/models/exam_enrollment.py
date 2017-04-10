@@ -281,7 +281,8 @@ def find_for_score_encodings(session_exam_number,
                              registration_id=None,
                              student_last_name=None,
                              student_first_name=None,
-                             justification=None):
+                             justification=None,
+                             with_deliberated=True):
     """
     :param session_exam_number: Integer represents the number_session of the Session_exam (1,2,3,4 or 5). It's
                                 a mandatory field to not confuse exam scores from different sessions.
@@ -294,10 +295,14 @@ def find_for_score_encodings(session_exam_number,
                                               are returned.
     :param with_justification_or_score_draft: If True, only examEnrollments with a score_draft or a justification_draft
                                               are returned.
+    :param with_deliberated: If True, return all exam enrollment even deliberated
     :return: All filtered examEnrollments.
     """
     queryset = ExamEnrollment.objects.filter(session_exam__number_session=session_exam_number,
                                              enrollment_state=enrollment_states.ENROLLED)
+    if not with_deliberated:
+        queryset = queryset.filter(session_exam__offer_year_calendar__start_date__lte=datetime.datetime.now())\
+                           .filter(session_exam__offer_year_calendar__end_date__gte=datetime.datetime.now())
     if learning_unit_year_id:
         queryset = queryset.filter(learning_unit_enrollment__learning_unit_year_id=learning_unit_year_id)
     elif learning_unit_year_ids:
