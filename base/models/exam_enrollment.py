@@ -418,7 +418,7 @@ def scores_sheet_data(exam_enrollments, tutor=None):
                 deliberation_date = _('not_passed')
 
             session_exam_deadline = get_session_exam_deadline(exam_enrollment)
-            deadline = None
+            deadline = ""
             if session_exam_deadline and session_exam_deadline.deadline_tutor:
                 deadline = session_exam_deadline.deadline_tutor.strftime('%d/%m/%Y')
 
