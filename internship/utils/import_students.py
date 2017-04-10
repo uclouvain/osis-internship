@@ -44,10 +44,10 @@ def import_csv(cohort, csvfile):
         if not person:
             if ',' in name:
                 t = name.split(',')
-                first_name, last_name = t[0].strip(), t[1].strip()
+                last_name, first_name = t[0].strip(), t[1].strip()
             else:
                 t = name.split()
-                first_name, last_name = ' '.join(t[:-1]).strip(), t[-1].strip()
+                last_name, first_name = ' '.join(t[:-1]).strip(), t[-1].strip()
 
             d = pendulum.parse(birthdate)
 
