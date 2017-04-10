@@ -28,7 +28,8 @@ from django.db import models
 from django.contrib import admin
 from django.utils.translation import ugettext as _
 from django.core.validators import MaxValueValidator, MinValueValidator
-from base.models import person, learning_unit_year, person_address, session_exam_calendar, session_exam_deadline
+from base.models import person, learning_unit_year, person_address, session_exam_calendar, session_exam_deadline, \
+                        academic_year
 from attribution.models import attribution
 from base.enums import exam_enrollment_justification_type as justification_types
 from base.enums import exam_enrollment_state as enrollment_states
@@ -157,36 +158,57 @@ def get_session_exam_deadline(enrollment):
         Return the session exam related to the exam enrollment, return None if not found
         :param enrollment
     """
-    offer_enrollment = enrollment.learning_unit_enrollment.offer_enrollment
-    nb_session = enrollment.session_exam.number_session
-    return session_exam_deadline.get_by_offer_enrollment_nb_session(offer_enrollment, nb_session)
+    if enrollment:
+        offer_enrollment = enrollment.learning_unit_enrollment.offer_enrollment
+        nb_session = enrollment.session_exam.number_session
+        return session_exam_deadline.get_by_offer_enrollment_nb_session(offer_enrollment, nb_session)
+    return None
 
 
-def is_deadline_reached(enrollment):
+def is_deadline_reached(enrollment=None, session_exam_deadline=None):
     """
         Check if the deadline of score encoding for Program Manager/Tutor/Score Responsible is reached
         :param enrollment
+        :param session_exam_deadline
     """
-    session_exam_deadline = get_session_exam_deadline(enrollment)
+    if not session_exam_deadline and enrollment:
+        session_exam_deadline = get_session_exam_deadline(enrollment)
+
     if session_exam_deadline:
         return session_exam_deadline.deadline < datetime.date.today()
     return False
 
 
-def is_deadline_tutor_reached(enrollment):
+def is_deadline_tutor_reached(enrollment=None, session_exam_deadline=None):
     """
         Check if the deadline of score encoding for tutor is reached
         :param enrollment
+        :param session_exam_deadline
     """
-    session_exam_deadline = get_session_exam_deadline(enrollment)
+    if not session_exam_deadline and enrollment:
+        session_exam_deadline = get_session_exam_deadline(enrollment)
+
     if session_exam_deadline:
-        if session_exam_deadline.deadline_tutor:
-            deadline_tutor = session_exam_deadline.deadline - datetime.timedelta(
-                days=session_exam_deadline.deadline_tutor)
+        deadline_tutor = get_deadline_tutor_computed(session_exam_deadline=session_exam_deadline)
+        if deadline_tutor:
             return deadline_tutor < datetime.date.today()
         else:
             return is_deadline_reached(enrollment)
     return False
+
+
+def get_deadline_tutor_computed(enrollment=None, session_exam_deadline=None):
+    """
+        Return the deadline tutor computed
+        :param enrollment
+        :param session_exam_deadline
+    """
+    if not session_exam_deadline and enrollment:
+        session_exam_deadline = get_session_exam_deadline(enrollment)
+
+    if session_exam_deadline and session_exam_deadline.deadline_tutor:
+        return session_exam_deadline.deadline - datetime.timedelta(days=session_exam_deadline.deadline_tutor)
+    return None
 
 
 def is_absence_justification(justification):
@@ -282,7 +304,7 @@ def find_for_score_encodings(session_exam_number,
                              student_last_name=None,
                              student_first_name=None,
                              justification=None,
-                             with_deliberated=True):
+                             academic_year=academic_year.current_academic_year()):
     """
     :param session_exam_number: Integer represents the number_session of the Session_exam (1,2,3,4 or 5). It's
                                 a mandatory field to not confuse exam scores from different sessions.
@@ -295,14 +317,11 @@ def find_for_score_encodings(session_exam_number,
                                               are returned.
     :param with_justification_or_score_draft: If True, only examEnrollments with a score_draft or a justification_draft
                                               are returned.
-    :param with_deliberated: If True, return all exam enrollment even deliberated
     :return: All filtered examEnrollments.
     """
     queryset = ExamEnrollment.objects.filter(session_exam__number_session=session_exam_number,
+                                             learning_unit_enrollment__learning_unit_year__academic_year=academic_year,
                                              enrollment_state=enrollment_states.ENROLLED)
-    if not with_deliberated:
-        queryset = queryset.filter(session_exam__offer_year_calendar__start_date__lte=datetime.datetime.now())\
-                           .filter(session_exam__offer_year_calendar__end_date__gte=datetime.datetime.now())
     if learning_unit_year_id:
         queryset = queryset.filter(learning_unit_enrollment__learning_unit_year_id=learning_unit_year_id)
     elif learning_unit_year_ids:
@@ -422,10 +441,10 @@ def scores_sheet_data(exam_enrollments, tutor=None):
             else:
                 deliberation_date = _('not_passed')
 
-            session_exam_deadline = get_session_exam_deadline(exam_enrollment)
-            deadline = ""
-            if session_exam_deadline and session_exam_deadline.deadline_tutor:
-                deadline = session_exam_deadline.deadline_tutor.strftime('%d/%m/%Y')
+            # Compute deadline score encoding
+            deadline = get_deadline_tutor_computed(exam_enrollment)
+            if deadline:
+                deadline = deadline.strftime('%d/%m/%Y')
 
             program = {'acronym': exam_enrollment.learning_unit_enrollment.offer_enrollment.offer_year.acronym,
                        'deliberation_date': deliberation_date,

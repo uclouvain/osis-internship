@@ -233,7 +233,7 @@
                                 {% endif %}
                             {% endif %}
                         </td>
-                        <td>{{ enrollment.session_exam_deadline.deadline | default_if_none:'' |date:"j/m/Y" }}</td>
+                        <td>{{ enrollment.deadline_tutor_computed | default_if_none:'' |date:"j/m/Y" }}</td>
                     </tr>
                 {% endfor %}
             </tbody>

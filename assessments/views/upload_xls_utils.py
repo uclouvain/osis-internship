@@ -228,6 +228,7 @@ def __save_xls_scores(request, file_name, is_program_manager, user, learning_uni
                 messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('enrollment_activity_not_exist') % (xls_learning_unit_acronym)))
             elif mdl.exam_enrollment.is_deadline_reached(exam_enrollment) or \
                     (not is_program_manager and mdl.exam_enrollment.is_deadline_tutor_reached(exam_enrollment)):
+                # Check if the deadline is reached
                 messages.add_message(request, messages.WARNING,
                                      "%s %s!" % (info_line, _('deadline_reached')))
                 continue

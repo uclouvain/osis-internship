@@ -544,7 +544,9 @@ def get_data(request, offer_year_id=None):
     tutor = mdl.tutor.find_by_user(request.user)
     number_session = mdl.session_exam_calendar.find_session_exam_number()
 
-    exam_enrollments = list(mdl.exam_enrollment.find_for_score_encodings(number_session,tutor=tutor))
+    exam_enrollments = list(mdl.exam_enrollment.find_for_score_encodings(number_session,
+                                                                         tutor=tutor,
+                                                                         academic_year=academic_yr))
 
     all_offers = []
     for exam_enrol in exam_enrollments:
@@ -637,13 +639,15 @@ def get_data_online_double(learning_unit_year_id, request):
         total_exam_enrollments = list(mdl.exam_enrollment
                                       .find_for_score_encodings(number_session,
                                                                 learning_unit_year_id=learning_unit_year_id,
-                                                                offers_year=offer_years_managed))
+                                                                offers_year=offer_years_managed,
+                                                                academic_year=academic_yr))
         # We must know the total count of enrollments (not only the encoded one) ???
         encoded_exam_enrollments = list(filter(lambda e: e.is_final, total_exam_enrollments))
     elif mdl.tutor.is_tutor(request.user):
         total_exam_enrollments = list(mdl.exam_enrollment
                                       .find_for_score_encodings(number_session,
-                                                                learning_unit_year_id=learning_unit_year_id))
+                                                                learning_unit_year_id=learning_unit_year_id,
+                                                                academic_year=academic_yr))
         encoded_exam_enrollments = list(filter(lambda e: e.is_draft and not e.is_final, total_exam_enrollments))
     else:
         encoded_exam_enrollments = []
@@ -816,13 +820,18 @@ def get_data_specific_criteria(request):
                                                                                      student_first_name=first_name,
                                                                                      justification=justification,
                                                                                      offer_year_id=offer_year_id,
-                                                                                     offers_year=offers_year_managed))
+                                                                                     offers_year=offers_year_managed,
+                                                                                     academic_year=academic_yr))
                 exam_enrollments = mdl.exam_enrollment.sort_by_offer_acronym_last_name_first_name(exam_enrollments)
                 for enrollment in exam_enrollments:
                     # Get session exam deadline related to and add flag for deadline / deadline tutor
-                    enrollment.session_exam_deadline = mdl.exam_enrollment.get_session_exam_deadline(enrollment)
-                    enrollment.deadline_reached = mdl.exam_enrollment.is_deadline_reached(enrollment)
-                    enrollment.deadline_tutor_reached = mdl.exam_enrollment.is_deadline_tutor_reached(enrollment)
+                    session_exam_deadline = mdl.exam_enrollment.get_session_exam_deadline(enrollment)
+                    enrollment.deadline_tutor_computed = mdl.exam_enrollment.\
+                        get_deadline_tutor_computed(session_exam_deadline=session_exam_deadline)
+                    enrollment.deadline_reached = mdl.exam_enrollment.\
+                        is_deadline_reached(session_exam_deadline=session_exam_deadline)
+                    enrollment.deadline_tutor_reached = mdl.exam_enrollment.is_deadline_tutor_reached(
+                        session_exam_deadline=session_exam_deadline)
 
                 if len(exam_enrollments) == 0:
                     messages.add_message(request, messages.WARNING, "%s" % _('no_result'))
@@ -943,7 +952,7 @@ def _get_exam_enrollments(user, learning_unit_year_id=None, tutor_id=None, offer
                                                           learning_unit_year_id=learning_unit_year_id,
                                                           tutor=tutor,
                                                           offers_year=offers_year,
-                                                          with_deliberated=with_closed_exam_enrollments))
+                                                          academic_year=academic_year))
         if not with_closed_exam_enrollments:
              exam_enrollments = [enrollment for enrollment in exam_enrollments if
                                  not mdl.exam_enrollment.is_deadline_reached(enrollment)]
@@ -956,7 +965,7 @@ def _get_exam_enrollments(user, learning_unit_year_id=None, tutor_id=None, offer
                                 .find_for_score_encodings(number_session,
                                                           learning_unit_year_id=learning_unit_year_id,
                                                           tutor=tutor,
-                                                          with_deliberated=with_closed_exam_enrollments))
+                                                          academic_year=academic_year))
         if not with_closed_exam_enrollments:
             exam_enrollments = [enrollment for enrollment in exam_enrollments if
                                 not mdl.exam_enrollment.is_deadline_tutor_reached(enrollment)]
@@ -966,11 +975,15 @@ def _get_exam_enrollments(user, learning_unit_year_id=None, tutor_id=None, offer
     # Ordering by offeryear.acronym, then person.lastname & firstname
     exam_enrollments = mdl.exam_enrollment.sort_for_encodings(exam_enrollments)
 
-    # Get session exam deadline related to and add flag for deadline / deadline tutor
     for enrollment in exam_enrollments:
-        enrollment.session_exam_deadline = mdl.exam_enrollment.get_session_exam_deadline(enrollment)
-        enrollment.deadline_reached = mdl.exam_enrollment.is_deadline_reached(enrollment)
-        enrollment.deadline_tutor_reached = mdl.exam_enrollment.is_deadline_tutor_reached(enrollment)
+        # Get session exam deadline related to and add flag for deadline / deadline tutor
+        session_exam_deadline = mdl.exam_enrollment.get_session_exam_deadline(enrollment)
+        enrollment.deadline_tutor_computed = mdl.exam_enrollment.get_deadline_tutor_computed(session_exam_deadline=
+                                                                                             session_exam_deadline)
+        enrollment.deadline_reached = mdl.exam_enrollment.is_deadline_reached(session_exam_deadline=
+                                                                              session_exam_deadline)
+        enrollment.deadline_tutor_reached = mdl.exam_enrollment.is_deadline_tutor_reached(session_exam_deadline=
+                                                                                          session_exam_deadline)
 
     return exam_enrollments
 
@@ -980,8 +993,12 @@ def get_json_data_scores_sheets(tutor_global_id):
         person = mdl.person.find_by_global_id(tutor_global_id)
         tutor = mdl.tutor.find_by_person(person)
         number_session = mdl.session_exam_calendar.find_session_exam_number()
+        academic_yr = mdl.academic_year.current_academic_year()
+
         if tutor:
-            exam_enrollments = list(mdl.exam_enrollment.find_for_score_encodings(number_session,tutor=tutor))
+            exam_enrollments = list(mdl.exam_enrollment.find_for_score_encodings(number_session,
+                                                                                 tutor=tutor,
+                                                                                 academic_year=academic_yr))
             data = mdl.exam_enrollment.scores_sheet_data(exam_enrollments, tutor=tutor)
             return json.dumps(data)
         else:

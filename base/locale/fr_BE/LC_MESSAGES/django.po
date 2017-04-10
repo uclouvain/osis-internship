@@ -433,6 +433,9 @@ msgstr "Le fichier doit être un fichier excel valide au format 'XLSX'"
 msgid "file_production_date"
 msgstr "Date de production du fichier excel"
 
+msgid "students_deliberated_are_not_shown"
+msgstr "Les étudiants déjà délibérés ne sont pas repris"
+
 msgid "files"
 msgstr "Fichiers"
 
