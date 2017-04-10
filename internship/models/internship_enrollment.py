@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -28,8 +28,8 @@ from django.contrib import admin
 
 
 class InternshipEnrollmentAdmin(admin.ModelAdmin):
-    list_display = ('student', 'internship_offer', 'place', 'period', 'internship_choice')
-    fieldsets = ((None, {'fields': ('student', 'internship_offer', 'place', 'period', 'internship_choice')}),)
+    list_display = ('student', 'internship_offer', 'place', 'period', 'internship')
+    fieldsets = ((None, {'fields': ('student', 'internship_offer', 'place', 'period', 'internship')}),)
     raw_id_fields = ('student', 'internship_offer', 'place', 'period')
 
 
@@ -38,7 +38,7 @@ class InternshipEnrollment(models.Model):
     internship_offer = models.ForeignKey('internship.InternshipOffer')
     place = models.ForeignKey('internship.Organization')
     period = models.ForeignKey('internship.Period')
-    internship_choice = models.IntegerField(default=1)
+    internship = models.ForeignKey('internship.Internship')
 
     def __str__(self):
         return u"%s - %s" % (self.student, self.internship_offer.title)
@@ -50,8 +50,8 @@ def search(**kwargs):
                                        .select_related("student", "internship_offer", "place", "period")
 
 
-def search_by_student_and_internship(student, internship_choice):
-    return InternshipEnrollment.objects.filter(student=student, internship_choice=internship_choice)
+def search_by_student_and_internship(student, internship):
+    return InternshipEnrollment.objects.filter(student=student, internship=internship)
 
 
 def find_by_student(student):
