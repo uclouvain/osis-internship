@@ -445,6 +445,8 @@ def scores_sheet_data(exam_enrollments, tutor=None):
             deadline = get_deadline_tutor_computed(exam_enrollment)
             if deadline:
                 deadline = deadline.strftime('%d/%m/%Y')
+            else:
+                deadline = ""
 
             program = {'acronym': exam_enrollment.learning_unit_enrollment.offer_enrollment.offer_year.acronym,
                        'deliberation_date': deliberation_date,
