@@ -38,6 +38,7 @@ from base import models as mdl
 from assessments import models as mdl_assess
 from base.enums.exam_enrollment_justification_type import JUSTIFICATION_TYPES
 from attribution import models as mdl_attr
+from base.models import learning_unit_enrollment
 from osis_common.document import paper_sheet
 from base.utils import send_mail
 from assessments.views import export_utils
@@ -997,12 +998,9 @@ def get_json_data_scores_sheets(tutor_global_id):
 @login_required
 def scores_responsible(request):
     attributions = mdl_attr.attribution.Attribution.objects.filter(score_responsible=True)
-    data = {}
+    dict_attribution = dict()
     for attribution in attributions:
-        learning_unit_enrollment = mdl.learning_unit_enrollment.find_by_learningunit_enrollment(attribution.learning_unit_year)
-        data = json.dumps({'entity': learning_unit_enrollment.offer_enrollment.offer_year.entity_management,
-                           'course_code': attribution.learning_unit_year.acronym,
-                           'learning_unit_title': attribution.learning_unit_year.title,
-                           'holder_number': "2",
-                           'scores_responsible': attribution.tutor})
-    return layout.render(request, 'scores_responsible.html', {"data": data})
+        tutor_number = mdl_attr.attribution.Attribution.objects.filter(learning_unit_year=attribution.learning_unit_year).count()
+        a_learning_unit_enrollment = learning_unit_enrollment.find_by_learningunit_enrollment(attribution.learning_unit_year)
+        dict_attribution.update({attribution: [a_learning_unit_enrollment[0].offer_enrollment.offer_year, attribution.learning_unit_year.acronym, attribution.learning_unit_year.title, tutor_number, attribution.tutor]})
+    return layout.render(request, 'scores_responsible.html', {"dict_attribution": dict_attribution})

@@ -49,13 +49,11 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for attribution in attributions %}
+                    {% for key, value_list in dict_attribution.items %}
                         <tr class='clickable-row' data-toggle="modal" data-target="#pnl_scores_responsibles">
-                            <td class="text-center">{{ attribution.learning_unit_year.acronym }}</td>
-                            <td class="text-center">{{ attribution.learning_unit_year.acronym }}</td>
-                            <td class="text-center">{{ attribution.learning_unit_year.title }}</td>
-                            <td class="text-center"></td>
-                            <td class="text-center">{{ attribution.tutor }}</td>
+                            {% for value in value_list %}
+                                <td class="text-center">{{ value }}</td>
+                            {% endfor %}
                         </tr>
                     {% endfor %}
                 </tbody>
