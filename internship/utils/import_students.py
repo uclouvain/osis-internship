@@ -39,9 +39,7 @@ def import_csv(cohort, csvfile):
         name, gender, birthdate, birthplace, nationality, noma, \
             fgs, street, zipcode, city, country, phone, email = row
 
-        person = Person.objects.filter(global_id=noma).first()
-
-        print(person)
+        person = Person.objects.filter(global_id=fgs).first()
 
         if not person:
             if ',' in name:
