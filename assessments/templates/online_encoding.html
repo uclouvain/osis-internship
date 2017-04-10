@@ -188,13 +188,13 @@
                     <tr style="background-color:
                                {% if enrollment.deadline_reached or enrollment.deadline_tutor_reached %}
                                     #D3D3D3
-                                {% else %}
+                               {% else %}
                                     {% ifchanged enrollment.learning_unit_enrollment.offer_enrollment.offer_year.acronym %}
                                         {% cycle 'white' '#E5F2FF' as rowcolors %}
                                     {% else %}
                                         {{ rowcolors }}
                                     {% endifchanged %}
-                                {% endif %}">
+                               {% endif %}">
                         <td style="text-align:center;">
                             {% if enrollment.deadline_reached %}
                                 <span class="glyphicon glyphicon-lock" aria-hidden="true" style="color: #8B008B;" title="{% trans 'deadline_reached' %}"></span>

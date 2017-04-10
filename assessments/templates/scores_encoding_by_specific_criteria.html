@@ -107,7 +107,9 @@
                 </thead>
                 <tbody>
                 {% for enrollment in exam_enrollments %}
-                    <tr>
+                    <tr style="{% if enrollment.deadline_reached %}
+                                    background-color:#D3D3D3;
+                               {% endif %}">
                         <td style="text-align:center;">
                             {% if enrollment.deadline_reached %}
                                 <span class="glyphicon glyphicon-lock" aria-hidden="true" style="color: #8B008B;" title="{% trans 'deadline_reached' %}"></span>
@@ -139,7 +141,10 @@
                         </td>
                         <td>
                             <select class="form-control" name="justification_{{ enrollment.id }}" id="slt_justification_score_{{ enrollment.id }}"
-                                   tabindex="{{ exam_enrollments|length|sum:forloop.counter }}">
+                                   tabindex="{{ exam_enrollments|length|sum:forloop.counter }}"
+                                    {% if enrollment.deadline_reached %}
+                                    disabled
+                                 {% endif %}>
                                 <option value=""></option>
                                 <option {% if enrollment.justification_final == "ABSENCE_UNJUSTIFIED" %} selected {% endif %} value="ABSENCE_UNJUSTIFIED">{% trans 'ABSENCE_UNJUSTIFIED' %}</option>
                                 <option {% if enrollment.justification_final == "ABSENCE_JUSTIFIED" %} selected {% endif %} value="ABSENCE_JUSTIFIED">{% trans 'ABSENCE_JUSTIFIED' %}</option>
