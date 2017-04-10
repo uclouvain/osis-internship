@@ -23,21 +23,10 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.contrib.auth.models import User
-from base.models.person import Person
-from dissertation.models.adviser import Adviser
+from dissertation.models.faculty_adviser import FacultyAdviser
 
 
-def create_adviser(person, type="PRF"):
-    adv = Adviser.objects.create(person=person, type=type)
-    return adv
-
-
-def create_adviser_from_user(user, type="PRF"):
-    person = Person.objects.create(user=user, first_name=user.username, last_name=user.username)
-    return create_adviser(person, type)
-
-
-def create_adviser_from_scratch(username, email, password, type="PRF"):
-    user = User.objects.create_user(username=username, email=email, password=password)
-    return create_adviser_from_user(user, type)
+def create_faculty_adviser(adviser, offer):
+    faculty_adviser = FacultyAdviser(adviser=adviser, offer=offer)
+    faculty_adviser.save()
+    return faculty_adviser
