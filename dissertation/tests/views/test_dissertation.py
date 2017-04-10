@@ -42,9 +42,11 @@ class DissertationViewTestCase(TestCase):
         student = test_student.create_student(first_name="Prenometu", last_name="Nometu", registration_id="321654")
 
         academic_year = test_academic_year.create_academic_year()
-        offer_year_start = test_offer_year.create_offer_year(acronym="test", title="test", academic_year=academic_year)
+        offer_year_start = test_offer_year.create_offer_year(acronym="test_offer",
+                                                             title="test_offer",
+                                                             academic_year=academic_year)
         offer = offer_year_start.offer
-        offer_proposition = test_offer_proposition.create_offer_proposition(acronym="test", offer=offer)
+        offer_proposition = test_offer_proposition.create_offer_proposition(acronym="test_offer", offer=offer)
         test_faculty_adviser.create_faculty_adviser(manager, offer)
 
         # Create 5 propositions dissertations
@@ -85,4 +87,24 @@ class DissertationViewTestCase(TestCase):
         self.client.login(username='manager', password='manager')
         url = reverse('manager_dissertations_list')
         response = self.client.get(url)
+        self.assertEqual(response.context[-1]['dissertations'].count(), 5)
+
+    def test_search_dissertations_for_manager(self):
+        self.client.login(username='manager', password='manager')
+        url = reverse('manager_dissertations_search')
+
+        response = self.client.get(url, data={"search": "no result search"})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context[-1]['dissertations'].count(), 0)
+
+        response = self.client.get(url, data={"search": "Dissertation 2"})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context[-1]['dissertations'].count(), 1)
+
+        response = self.client.get(url, data={"search": "Dissertation"})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context[-1]['dissertations'].count(), 5)
+
+        response = self.client.get(url, data={"search": "test_offer"})
+        self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context[-1]['dissertations'].count(), 5)
