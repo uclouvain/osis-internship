@@ -168,8 +168,8 @@ def internships_student_read(request, cohort_id, student_id):
 
     affectations = mdl_internship.internship_student_affectation_stat.search(student=student_to_read).\
         order_by("period__date_start")
-    periods = mdl_internship.period.search().order_by("date_start")
-    organizations = mdl_internship.organization.search()
+    periods = mdl_internship.period.search(cohort=cohort).order_by("date_start")
+    organizations = mdl_internship.organization.search(cohort=cohort)
     set_organization_address(organizations)
 
     # Set the adress of the affactation
