@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -71,7 +71,10 @@ def print_affectations(organization_id, affectations):
         """
         return build_pdf(affectations)
     else:
-        redirect_url = reverse('place_detail_student_affectation', args=[organization.reference])
+        redirect_url = reverse('place_detail_student_affectation', kwargs={
+            'cohort_id': organization.cohort_id.id,
+            'organization_id': organization.id
+        })
         return HttpResponseRedirect(redirect_url)
 
 

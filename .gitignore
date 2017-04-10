@@ -18,3 +18,7 @@ backoffice/server_settings.py
 /uploads/
 .env
 ghostdriver.log
+.coverage
+*.sh
+*~
+htmlcov/

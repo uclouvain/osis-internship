@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -23,15 +23,19 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.shortcuts import render
+import operator
+
 from django.contrib.auth.decorators import login_required, permission_required
+from django.shortcuts import get_object_or_404, render
 
 from internship import models as mdl_internship
-from internship.forms.organization_form import OrganizationForm
 from internship.forms.organization_address_form import OrganizationAddressForm
-from internship.views.internship import set_tabs_name, get_all_specialities
+from internship.forms.organization_form import OrganizationForm
+from internship.models.cohort import Cohort
+from internship.models.organization import Organization
+from internship.models.organization_address import OrganizationAddress
 from internship.utils import export_utils, export_utils_pdf
-
+from internship.views.internship import get_all_specialities, set_tabs_name
 
 
 def sort_organizations(sort_organizations):
@@ -62,14 +66,13 @@ def set_organization_address(organizations):
         Get the address in the OrganizationAddress table and put it
         Get also the number of student of choose this organization for their internship
     """
-    if organizations:
-        for organization in organizations:
-            organization.address = ""
-            organization.student_choice = 0
-            address = mdl_internship.organization_address.search(organization = organization)
-            if address:
-                organization.address = address
-            organization.student_choice = len(mdl_internship.internship_choice.search(organization=organization))
+    for organization in organizations:
+        organization.address = ""
+        organization.student_choice = 0
+        address = mdl_internship.organization_address.search(organization = organization)
+        if address:
+            organization.address = address
+        organization.student_choice = len(mdl_internship.internship_choice.search(organization=organization))
 
 
 def sorted_organization(sort_organizations, sort_city):
@@ -136,73 +139,46 @@ def set_speciality_unique(specialities):
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
-def internships_places(request):
+def internships_places(request, cohort_id):
+    cohort = get_object_or_404(Cohort, pk=cohort_id)
     # Get the value of the option for the sort
     city_sort_get = "0"
     if request.method == 'GET':
         city_sort_get = request.GET.get('city_sort')
 
-    # Import all the organizations order by their reference and set their address
-    organizations = mdl_internship.organization.search(type="service partner")
-    organizations = sort_organizations(organizations)
-    set_organization_address(organizations)
+    organizations = Organization.objects.prefetch_related('addresses') \
+        .filter(type='service partner', cohort=cohort) \
+        .order_by('reference')
 
-    # Next, if there is a value for the sort, browse all the organizations and put which have the same city
-    # in the address than the sort option
-    l_organizations = []
-    if city_sort_get and city_sort_get != "0":
-        l_organizations = sorted_organization(organizations, city_sort_get)
-    else:
-        l_organizations = organizations
+    if city_sort_get and city_sort_get != '0':
+        organizations = organizations.filter(address__city=city_sort_get)
 
-    # Create the options for the selected list, delete dubblons
-    organization_addresses = get_cities(organizations)
+    addresses = OrganizationAddress.objects.filter(organization__type='service partner', organization__cohort=cohort) \
+                .distinct('city').order_by('city')
 
-    return render(request, "places.html", {'section': 'internship',
-                                           'all_organizations': l_organizations,
-                                           'all_addresses': organization_addresses,
-                                           'city_sort_get': city_sort_get})
+    cities = map(operator.attrgetter('city'), addresses)
 
-
-@login_required
-@permission_required('internship.is_internship_manager', raise_exception=True)
-def internships_places_stud(request):
-    # First get the value of the option for the sort
-    city_sort_get = "0"
-    if request.method == 'GET':
-        city_sort_get = request.GET.get('city_sort')
-
-    # Import all the organizations order by their reference and set their address
-    organizations = mdl_internship.organization.search(type="service partner")
-    organizations = sort_organizations(organizations)
-    set_organization_address(organizations)
-
-    # Next, if there is a value for the sort, browse all the organizations and put which have the same city
-    # in the address than the sort option
-    l_organizations = []
-    if city_sort_get and city_sort_get != "0":
-        l_organizations = sorted_organization(organizations, city_sort_get)
-    else:
-        l_organizations = organizations
-
-    # Create the options for the selected list, delete dubblons
-    organization_addresses = get_cities(organizations)
-
-    return render(request, "places_stud.html", {'section': 'internship',
-                                                'all_organizations': l_organizations,
-                                                'all_addresses': organization_addresses,
-                                                'city_sort_get': city_sort_get})
-
+    context = {
+        'section': 'internship',
+        'all_organizations': organizations,
+        'all_addresses': cities,
+        'city_sort_get': city_sort_get,
+        'cohort': cohort,
+    }
+    return render(request, "places.html", context)
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
-def place_save(request, organization_id, organization_address_id):
+def place_save(request, cohort_id, organization_id, organization_address_id):
+    cohort = get_object_or_404(Cohort, pk=cohort_id)
     if organization_id:
         organization = mdl_internship.organization.find_by_id(organization_id)
     else :
         mdl_internship.organization.Organization.objects.filter(reference=request.POST.get('reference')).delete()
         mdl_internship.organization_address.OrganizationAddress.objects.filter(organization__reference=request.POST.get('reference')).delete()
         organization = mdl_internship.organization.Organization()
+
+    organization.cohort = cohort
 
     form = OrganizationForm(data=request.POST, instance=organization)
     if form.is_valid():
@@ -217,42 +193,56 @@ def place_save(request, organization_id, organization_address_id):
     if form_address.is_valid():
         form_address.save()
 
-    return render(request, "place_form.html", { 'organization': organization,
-                                                'organization_address': organization_address,
-                                                'form': form,
-                                                })
+    context = {
+        'organization': organization,
+        'organization_address': organization_address,
+        'form': form,
+        'cohort': cohort,
+    }
+    return render(request, "place_form.html", context)
 
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
-def organization_new(request):
-    return place_save(request, None, None)
+def organization_new(request, cohort_id):
+    return place_save(request, cohort_id, None, None)
 
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
-def organization_edit(request, organization_id):
+def organization_edit(request, cohort_id, organization_id):
+    cohort = get_object_or_404(Cohort, pk=cohort_id)
     organization = mdl_internship.organization.find_by_id(organization_id)
     organization_address = mdl_internship.organization_address.search(organization = organization)
-    return render(request, "place_form.html", {'organization': organization,
-                                               'organization_address': organization_address[0], })
+    context = {
+        'organization': organization,
+        'organization_address': organization_address.first(),
+        'cohort': cohort,
+    }
+    return render(request, "place_form.html", context)
 
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
-def organization_create(request):
-    organization = mdl_internship.organization.Organization()
-    return render(request, "place_form.html", {'organization': organization})
+def organization_create(request, cohort_id):
+    cohort = get_object_or_404(Cohort, pk=cohort_id)
+    organization = mdl_internship.organization.Organization(cohort=cohort)
+    context = {
+        'organization': organization,
+        'cohort': cohort
+    }
+    return render(request, "place_form.html", context)
 
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
-def student_choice(request, organization_id):
-    organization = mdl_internship.organization.find_by_id(organization_id)
+def student_choice(request, cohort_id, organization_id):
+    cohort = get_object_or_404(Cohort, pk=cohort_id)
+    organization = get_object_or_404(Organization, pk=organization_id)
     organization_choice = mdl_internship.internship_choice.search(organization__reference=organization.reference)
 
     all_offers = mdl_internship.internship_offer.search(organization=organization)
-    all_speciality = mdl_internship.internship_speciality.find_all()
+    all_speciality = mdl_internship.internship_speciality.find_all(cohort)
     set_tabs_name(all_speciality)
     for al in all_offers:
         number_first_choice = len(mdl_internship.internship_choice.search(organization=al.organization,
@@ -263,17 +253,23 @@ def student_choice(request, organization_id):
         al.number_first_choice = number_first_choice
         al.number_all_choice = number_all_choice
 
-    return render(request, "place_detail.html", {'organization': organization,
-                                                 'organization_choice': organization_choice,
-                                                 'offers': all_offers,
-                                                 'specialities': all_speciality,
-                                                 })
+    context = {
+        'organization': organization,
+        'organization_choice': organization_choice,
+        'offers': all_offers,
+        'specialities': all_speciality,
+        'cohort': cohort,
+    }
+    return render(request, "place_detail.html", context)
 
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
-def student_affectation(request, organization_id):
-    organization = mdl_internship.organization.find_by_id(organization_id)
+def student_affectation(request, cohort_id, organization_id):
+    cohort = get_object_or_404(Cohort, pk=cohort_id)
+    # TODO: get_object_or_404(Organization, pk=organization_id, cohort__id=cohort_id)
+    organization = get_object_or_404(Organization, pk=organization_id)
+
     affectations = mdl_internship.internship_student_affectation_stat.search(organization=organization).order_by("student__person__last_name","student__person__first_name")
 
     for a in affectations:
@@ -292,16 +288,21 @@ def student_affectation(request, organization_id):
     all_speciality = get_all_specialities(internships)
     all_speciality = set_speciality_unique(all_speciality)
     set_tabs_name(all_speciality)
-    return render(request, "place_detail_affectation.html", {'organization': organization,
-                                                             'affectations': affectations,
-                                                             'specialities': all_speciality,
-                                                             'periods': periods,
-                                                             })
+    context = {
+        'organization': organization,
+        'affectations': affectations,
+        'specialities': all_speciality,
+        'periods': periods,
+        'cohort': cohort,
+    }
+    return render(request, "place_detail_affectation.html", context)
 
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
-def export_xls(request, organization_id, speciality_id):
+def export_xls(request, cohort_id, organization_id, speciality_id):
+    # FIXME: use the cohort and the organization, to be sure we use the right organization and the right cohort.
+    cohort = get_object_or_404(Cohort, pk=cohort_id)
     organization = mdl_internship.organization.find_by_id(organization_id)
     speciality = mdl_internship.internship_speciality.find_by_id(speciality_id)
     if speciality:
@@ -334,12 +335,13 @@ def export_xls(request, organization_id, speciality_id):
                 offer = internship_offer.first()
                 affectation.master = offer.master
     file_name = speciality.acronym.strip().replace(' ', '_')
-    return export_utils.export_xls(organization_id, affection_by_specialities, file_name)
+    return export_utils.export_xls(cohort, organization, affection_by_specialities, file_name)
 
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
-def export_organisation_affectation_as_xls(request, organization_id):
+def export_organisation_affectation_as_xls(request, cohort_id, organization_id):
+    cohort = get_object_or_404(Cohort, pk=cohort_id)
     organization = mdl_internship.organization.find_by_id(organization_id)
     internships = mdl_internship.internship_offer.search(organization = organization)
     specialities = list({offer.speciality for offer in internships})
@@ -365,7 +367,7 @@ def export_organisation_affectation_as_xls(request, organization_id):
                 offer = internship_offer.first()
                 affectation.master = offer.master
     file_name = organization.name.strip().replace(' ', '_')
-    return export_utils.export_xls(organization_id, affection_by_specialities, file_name)
+    return export_utils.export_xls(cohort, organization, affection_by_specialities, file_name)
 
 
 @login_required
