@@ -9,7 +9,7 @@
     * The core business involves the administration of students, teachers,
     * courses, programs and so on.
     *
-    * Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+    * Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
     *
     * This program is free software: you can redistribute it and/or modify
     * it under the terms of the GNU General Public License as published by
@@ -28,7 +28,7 @@
 
 {% block breadcrumb %}
     <li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
-    <li><a href="{% url 'internships_home' %}">{% trans 'internships_managment' %}</a></li>
+    <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{% trans 'internships_managment' %}</a></li>
     <li class="active">{% trans 'edit_places' %}</li>
 {% endblock %}
 {% block content %}
@@ -38,8 +38,8 @@
 
     <div class="panel panel-default">
         <div class="panel-body">
-            <form method="post" action="{% url 'save_period_places' internship.id %}">
-            {% csrf_token %}
+            <form method="post" action="{% url 'save_period_places' cohort_id=cohort.id internship_id=internship.id %}">
+                {% csrf_token %}
                 {% for period_name, number_places in period_places%}
                 <div class="col-md-3 form-group">
                     <label for="id_{{ period_name }}">{{ period_name }}</label>:

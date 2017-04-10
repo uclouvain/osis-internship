@@ -1,0 +1,61 @@
+{% extends "layout.html" %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% block breadcrumb %}
+    <li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
+    <li><a href="{% url 'internship' %}">{% trans 'internships_managment' %}</a></li>
+    <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></li>
+
+    <li class="active">{% trans 'internship-list' %}</li>
+
+{% endblock %}
+
+{% block content %}
+    <div class="page-header">
+        <h2>{% trans 'internship-list' %}</h2>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel panel-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <a href="{% url 'internship-new' cohort_id=cohort.id %}" id="lnk_internship_create"
+                       class="btn btn-default" role="button" title="Create an internship">Add an internship
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>{% trans 'name' %}</th>
+                            <th>{% trans 'speciality' %}</th>
+                            <th>{% trans 'length_in_periods' %}</th>
+                            <th>&nbsp;</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for internship in internships %}
+                            <tr>
+                                <td>{{ internship.name }}</td>
+                                <td>{{ internship.speciality }}</td>
+                                <td align="right">
+                                    <a class="btn btn-warning" id="lnk_internship_edit"
+                                       href="{% url 'internship-edit' cohort_id=internship.cohort.id internship_id=internship.id %}"><span class="glyphicon glyphicon-pencil" aria-hidden="true" />
+                                    </a>
+                                    <a class="btn btn-warning" id="lnk_internship_delete"
+                                       href="{% url 'internship-delete' cohort_id=internship.cohort.id internship_id=internship.id %}"><span class="glyphicon glyphicon-trash" aria-hidden="true" />
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
