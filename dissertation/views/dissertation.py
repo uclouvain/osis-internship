@@ -357,7 +357,7 @@ def manager_dissertations_search(request):
 
     if 'bt_xlsx' in request.GET:
         xls = generate_xls(disserts)
-        filename = "%s%s%s" % ('dissertations_', time.strftime("%Y-%m-%d %H:%M"), '.xlsx')
+        filename = 'dissertations_{}.xlsx'.format(time.strftime("%Y-%m-%d_%H:%M"))
         response = HttpResponse(xls, content_type='application/vnd.ms-excel')
         response['Content-Disposition'] = "%s%s" % ("attachment; filename=", filename)
         return response
