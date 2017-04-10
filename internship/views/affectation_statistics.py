@@ -96,7 +96,7 @@ class StudentChoice:
 
 
 # ****************** Utils ******************
-def compute_stats(sol):
+def compute_stats(cohort, sol):
     """
     Compute the statistics of the solution
     """
@@ -114,7 +114,7 @@ def compute_stats(sol):
     others_specialities_students = {}
 
     # Retrieve all specialities
-    specialities = mdl_internship.internship_speciality.InternshipSpeciality.objects.all().select_related()
+    specialities = mdl_internship.internship_speciality.InternshipSpeciality.objects.filter(cohort=cohort).select_related()
 
     # Initialize the others_specialities and others_specialities_students
     for speciality in specialities:
@@ -200,7 +200,7 @@ def compute_stats(sol):
 
     # Get number of students socio
     students_socio = set()
-    for speciality, students in get_student_mandatory_choices(True).items():
+    for speciality, students in get_student_mandatory_choices(cohort, True).items():
         for choices in students:
             students_socio.add(choices[0].student.id)
     socio = len(mdl_internship.internship_choice.InternshipChoice.
@@ -335,14 +335,14 @@ def init_internship_table():
     return temp_internship_table
 
 
-def init_solution():
+def init_solution(cohort):
     """
     Initialize the empty solution, the solution is represented by a dictionary of students.
     Each student will have a dict with 12 periods and each period will have an 'InternshipEnrollment'
     """
     global solution
     # Retrieve all students
-    internshipChoices = mdl_internship.internship_choice.find_by_all_student()
+    internshipChoices = mdl_internship.internship_choice.find_by_all_student(cohort=cohort)
     # For each student create an empty dict
     for internshipChoice in internshipChoices:
         solution[internshipChoice.student] = {}
@@ -369,7 +369,7 @@ def init_specialities(cohort):
     # Save data directly in global variables
     global specialities_dict, emergency, internship_offer_dic
     for speciality in mdl_internship.internship_speciality.find_all(cohort=cohort):
-        internship_offer_dic[speciality] = mdl_internship.internship_offer.search(speciality=speciality)
+        internship_offer_dic[speciality] = mdl_internship.internship_offer.search(cohort=cohort, speciality=speciality)
         specialities_dict[speciality.name] = speciality.id
         if speciality.acronym.strip() == 'UR':
             emergency = speciality.id
@@ -593,7 +593,7 @@ def compute_distance(address_student, address_organization):
     return distance
 
 
-def get_student_mandatory_choices(priority):
+def get_student_mandatory_choices(cohort, priority):
     """
     Return all student's choices of given type.
     :param priority: True if we have to return the choices of priority student,
@@ -639,7 +639,7 @@ def get_student_mandatory_choices(priority):
     # Sort he dict of student (this optimize the final result)
     global specialities_dict
 
-    all_specialities = mdl_internship.internship_speciality.search_order_by_position(mandatory=True)
+    all_specialities = mdl_internship.internship_speciality.search_order_by_position(cohort=cohort, mandatory=True)
     orders = []
 
     for speciality in all_specialities:
@@ -887,12 +887,12 @@ def fill_erasmus_choices():
             decrease_available_places(enrol.place, enrol.internship_offer.speciality, enrol.period.name)
 
 
-def fill_emergency_choices(priority):
+def fill_emergency_choices(cohort, priority):
     """
     Fill the solution with emergency choices.
     :param priority: True if the student is a social student, false otherwise
     """
-    data = get_student_mandatory_choices(priority)
+    data = get_student_mandatory_choices(cohort, priority)
     if emergency in data:
         # Start with "Emergency"
         emergency_students = data.pop(emergency)
@@ -919,13 +919,13 @@ def fill_emergency_choices(priority):
                 update_scores(choice0.student)
 
 
-def fill_normal_choices(priority):
+def fill_normal_choices(cohort, priority):
     """
     Fill the solution with the choices of all specialities except emergency
     :param priority: True if the student is a social student, false otherwise
     """
     global errors
-    data = get_student_mandatory_choices(priority)
+    data = get_student_mandatory_choices(cohort, priority)
     # Remove emergency from the dict
     if emergency in data:
         data.pop(emergency)
@@ -952,7 +952,7 @@ def fill_normal_choices(priority):
                     errors.append((choice.student, choice.speciality, choice.period, choices, priority))
 
 
-def swap_empty_internships():
+def swap_empty_internships(cohort):
     """
     Try to eliminate the empty internships by finding the internship that can be swapped.
     """
@@ -970,7 +970,7 @@ def swap_empty_internships():
                             # Add the internship to list of empty internships
                             empty_internships.append((organization, speciality, period, places))
                             # Find all choices of student in the "Organization" and "speciality"
-                            choices = mdl_internship.internship_choice.search(organization=organization,
+                            choices = mdl_internship.internship_choice.search(cohort=cohort, organization=organization,
                                                                               speciality=speciality)
                             # Iterate over all choices of students
                             for choice in choices:
@@ -1062,7 +1062,7 @@ def swap_errors():
                 update_scores(choice.student)
 
 
-def generate_solution():
+def generate_solution(cohort):
     """
     Generate the new solution and save it in the database
     """
@@ -1081,20 +1081,20 @@ def generate_solution():
     organization_addresses_dic = {}
     internship_table_original = {}
 
-    init_solution()
+    init_solution(cohort)
     internship_table = init_internship_table()
-    init_organizations()
-    init_specialities()
+    init_organizations(cohort)
+    init_specialities(cohort)
     fill_erasmus_choices()
     fill_emergency_choices(True)
     fill_emergency_choices(False)
     fill_normal_choices(True)
     fill_normal_choices(False)
     swap_errors()
-    # swap_empty_internships()
+    # swap_empty_internships(cohort)
 
 
-def save_solution():
+def save_solution(cohort):
     """
     Save the solution in the database
     :return:
@@ -1102,7 +1102,7 @@ def save_solution():
     global solution, internship_table
     # Remove old result from the database
     mdl_internship.internship_student_affectation_stat.InternshipStudentAffectationStat.objects.all().delete()
-    periods = mdl_internship.period.search().order_by('id')
+    periods = mdl_internship.period.search(cohort).order_by('id')
 
     for student, internships in solution.items():
         for period, internship in internships.items():
@@ -1193,7 +1193,7 @@ def internship_affectation_statistics(request, cohort_id):
         select_related("student", "organization", "speciality", "period")
     if len(data) > 0:
         sol, table = load_solution(data)
-        stats = compute_stats(sol)
+        stats = compute_stats(cohort, sol)
         # Mange sort of the students
         sol = OrderedDict(sorted(sol.items(), key=lambda t: t[0].person.last_name))
         # Mange sort of the organizations
