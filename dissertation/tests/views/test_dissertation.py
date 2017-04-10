@@ -101,10 +101,22 @@ class DissertationViewTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context[-1]['dissertations'].count(), 1)
 
+        response = self.client.get(url, data={"search": "Proposition 3"})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context[-1]['dissertations'].count(), 1)
+
         response = self.client.get(url, data={"search": "Dissertation"})
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context[-1]['dissertations'].count(), 5)
 
         response = self.client.get(url, data={"search": "test_offer"})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context[-1]['dissertations'].count(), 5)
+
+        response = self.client.get(url, data={"search": "Nometu"})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context[-1]['dissertations'].count(), 5)
+
+        response = self.client.get(url, data={"search": "teacher"})
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context[-1]['dissertations'].count(), 5)
