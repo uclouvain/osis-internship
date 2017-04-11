@@ -65,40 +65,37 @@ class OnlineEncodingTest(TestCase):
         self.session_exam = test_session_exam.create_session_exam(number_session.ONE, self.learning_unit_year)
 
         # Create enrollment related
-        self.enrollment_value = []
+        self.enrollments = []
         for index in range(0,2):
             offer_year = OfferYearFactory(academic_year=academic_year)
-            offer_year_calendar = OfferYearCalendarFactory(academic_calendar=academic_calendar, offer_year=offer_year)
+            OfferYearCalendarFactory(academic_calendar=academic_calendar, offer_year=offer_year)
             offer_enrollment = test_offer_enrollment.create_offer_enrollment(StudentFactory(), offer_year)
             learning_unit_enrollment = test_learning_unit_enrollment.create_learning_unit_enrollment(
                                                                        offer_enrollment=offer_enrollment,
                                                                        learning_unit_year=self.learning_unit_year)
             exam_enrollment = test_exam_enrollment.create_exam_enrollment(self.session_exam, learning_unit_enrollment)
-            self.enrollment_value.append({
-                'offer_year' : offer_year,
-                'offer_year_calendar': offer_year_calendar,
-                'offer_enrollment': offer_enrollment,
-                'learning_unit_enrollment': learning_unit_enrollment,
-                'exam_enrollment' : exam_enrollment
-            })
+            self.enrollments.append(exam_enrollment)
 
         self.tutor = TutorFactory()
         test_attribution.create_attribution(tutor=self.tutor, learning_unit_year=self.learning_unit_year)
         add_permission(self.tutor.person.user, "can_access_scoreencoding")
 
-        self.program_manager_1 = ProgramManagerFactory(offer_year=self.enrollment_value[0]['offer_year'])
+        offer_year = self.enrollments[0].learning_unit_enrollment.offer_enrollment.offer_year
+        self.program_manager_1 = ProgramManagerFactory(offer_year=offer_year)
         add_permission(self.program_manager_1.person.user, "can_access_scoreencoding")
 
-        self.program_manager_2 = ProgramManagerFactory(offer_year=self.enrollment_value[1]['offer_year'])
+        offer_year = self.enrollments[1].learning_unit_enrollment.offer_enrollment.offer_year
+        self.program_manager_2 = ProgramManagerFactory(offer_year=offer_year)
         add_permission(self.program_manager_2.person.user, "can_access_scoreencoding")
 
 
 
     def test_filter_enrollments_by_offer_year(self):
-        enrollments = [self.enrollment_value[0]['exam_enrollment'], self.enrollment_value[1]['exam_enrollment']]
+        enrollments = self.enrollments
 
-        expected = [self.enrollment_value[0]['exam_enrollment']]
-        actual = score_encoding.filter_enrollments_by_offer_year(enrollments, self.enrollment_value[0]['offer_year'])
+        expected = [self.enrollments[0]]
+        offer_year = self.enrollments[0].learning_unit_enrollment.offer_enrollment.offer_year
+        actual = score_encoding.filter_enrollments_by_offer_year(enrollments, offer_year)
 
         self.assertListEqual(expected, actual, "Should only return enrollments for the first offer year")
 
@@ -108,20 +105,20 @@ class OnlineEncodingTest(TestCase):
         self.client.post(url, data=self.get_form_with_one_student_filled())
 
         self.refresh_exam_enrollments_from_db()
-        self.assert_exam_enrollments(self.enrollment_value[0]['exam_enrollment'], 15, None, None, None)
-        self.assert_exam_enrollments(self.enrollment_value[1]['exam_enrollment'], None, None, None, None)
+        self.assert_exam_enrollments(self.enrollments[0], 15, None, None, None)
+        self.assert_exam_enrollments(self.enrollments[1], None, None, None, None)
 
     def test_tutor_encoding_final_scores_for_a_student(self):
         self.client.force_login(self.tutor.person.user)
-        self.enrollment_value[0]['exam_enrollment'].score_final = 16
-        self.enrollment_value[0]['exam_enrollment'].score_draft = 16
-        self.enrollment_value[0]['exam_enrollment'].save()
+        self.enrollments[0].score_final = 16
+        self.enrollments[0].score_draft = 16
+        self.enrollments[0].save()
         url = reverse('online_encoding_form', args=[self.learning_unit_year.id])
         self.client.post(url, data=self.get_form_with_one_student_filled())
 
         self.refresh_exam_enrollments_from_db()
-        self.assert_exam_enrollments(self.enrollment_value[0]['exam_enrollment'], 16, 16, None, None)
-        self.assert_exam_enrollments(self.enrollment_value[1]['exam_enrollment'], None, None, None, None)
+        self.assert_exam_enrollments(self.enrollments[0], 16, 16, None, None)
+        self.assert_exam_enrollments(self.enrollments[1], None, None, None, None)
 
     def test_pgm_encoding_for_a_student(self):
         self.client.force_login(self.program_manager_1.person.user)
@@ -129,8 +126,8 @@ class OnlineEncodingTest(TestCase):
         self.client.post(url, data=self.get_form_with_all_students_filled())
 
         self.refresh_exam_enrollments_from_db()
-        self.assert_exam_enrollments(self.enrollment_value[0]['exam_enrollment'], 15, 15, None, None)
-        self.assert_exam_enrollments(self.enrollment_value[1]['exam_enrollment'], None, None, None, None)
+        self.assert_exam_enrollments(self.enrollments[0], 15, 15, None, None)
+        self.assert_exam_enrollments(self.enrollments[1], None, None, None, None)
 
     def test_pgm_encoding_with_justification_for_a_student(self):
         self.client.force_login(self.program_manager_2.person.user)
@@ -138,8 +135,8 @@ class OnlineEncodingTest(TestCase):
         self.client.post(url, data=self.get_form_with_all_students_filled_and_one_with_justification())
 
         self.refresh_exam_enrollments_from_db()
-        self.assert_exam_enrollments(self.enrollment_value[0]['exam_enrollment'], None, None, None, None)
-        self.assert_exam_enrollments(self.enrollment_value[1]['exam_enrollment'], None, None, "ABSENCE_JUSTIFIED", "ABSENCE_JUSTIFIED")
+        self.assert_exam_enrollments(self.enrollments[0], None, None, None, None)
+        self.assert_exam_enrollments(self.enrollments[1], None, None, "ABSENCE_JUSTIFIED", "ABSENCE_JUSTIFIED")
 
     def test_tutor_encoding_with_all_students(self):
         self.client.force_login(self.tutor.person.user)
@@ -147,19 +144,19 @@ class OnlineEncodingTest(TestCase):
         self.client.post(url, data=self.get_form_with_all_students_filled())
 
         self.refresh_exam_enrollments_from_db()
-        self.assert_exam_enrollments(self.enrollment_value[0]['exam_enrollment'], 15, None, None, None)
-        self.assert_exam_enrollments(self.enrollment_value[1]['exam_enrollment'], 18, None, None, None)
+        self.assert_exam_enrollments(self.enrollments[0], 15, None, None, None)
+        self.assert_exam_enrollments(self.enrollments[1], 18, None, None, None)
 
     def test_tutor_double_encoding_with_all_students(self):
         self.client.force_login(self.tutor.person.user)
-        prepare_exam_enrollment_for_double_encoding_validation(self.enrollment_value[0]['exam_enrollment'])
-        prepare_exam_enrollment_for_double_encoding_validation(self.enrollment_value[1]['exam_enrollment'])
+        prepare_exam_enrollment_for_double_encoding_validation(self.enrollments[0])
+        prepare_exam_enrollment_for_double_encoding_validation(self.enrollments[1])
         url = reverse('online_encoding_form', args=[self.learning_unit_year.id])
         self.client.post(url, data=self.get_form_with_all_students_filled())
 
         self.refresh_exam_enrollments_from_db()
-        self.assert_exam_enrollments(self.enrollment_value[0]['exam_enrollment'], 15, None, None, None)
-        self.assert_exam_enrollments(self.enrollment_value[1]['exam_enrollment'], 18, None, None, None)
+        self.assert_exam_enrollments(self.enrollments[0], 15, None, None, None)
+        self.assert_exam_enrollments(self.enrollments[1], 18, None, None, None)
 
     def test_tutor_encoding_with_all_students_and_a_justification(self):
         self.client.force_login(self.tutor.person.user)
@@ -167,18 +164,18 @@ class OnlineEncodingTest(TestCase):
         self.client.post(url, data=self.get_form_with_all_students_filled_and_one_with_justification())
 
         self.refresh_exam_enrollments_from_db()
-        self.assert_exam_enrollments(self.enrollment_value[0]['exam_enrollment'], 15, None, None, None)
-        self.assert_exam_enrollments(self.enrollment_value[1]['exam_enrollment'], None, None, "ABSENCE_JUSTIFIED", None)
+        self.assert_exam_enrollments(self.enrollments[0], 15, None, None, None)
+        self.assert_exam_enrollments(self.enrollments[1], None, None, "ABSENCE_JUSTIFIED", None)
 
     def test_pgm_double_encoding_for_a_student(self):
         self.client.force_login(self.program_manager_1.person.user)
         url = reverse('online_double_encoding_validation', args=[self.learning_unit_year.id])
-        prepare_exam_enrollment_for_double_encoding_validation(self.enrollment_value[0]['exam_enrollment'])
+        prepare_exam_enrollment_for_double_encoding_validation(self.enrollments[0])
         self.client.post(url, data=self.get_form_with_all_students_filled())
 
         self.refresh_exam_enrollments_from_db()
-        self.assert_exam_enrollments(self.enrollment_value[0]['exam_enrollment'], 15, 15, None, None)
-        self.assert_exam_enrollments(self.enrollment_value[1]['exam_enrollment'], None, None, None, None)
+        self.assert_exam_enrollments(self.enrollments[0], 15, 15, None, None)
+        self.assert_exam_enrollments(self.enrollments[1], None, None, None, None)
 
     def test_encoding_by_specific_criteria(self):
         self.client.force_login(self.program_manager_1.person.user)
@@ -186,8 +183,8 @@ class OnlineEncodingTest(TestCase):
         self.client.post(url, data=self.get_form_for_specific_criteria())
 
         self.refresh_exam_enrollments_from_db()
-        self.assert_exam_enrollments(self.enrollment_value[0]['exam_enrollment'], 15, 15, None, None)
-        self.assert_exam_enrollments(self.enrollment_value[1]['exam_enrollment'], None, None, None, None)
+        self.assert_exam_enrollments(self.enrollments[0], 15, 15, None, None)
+        self.assert_exam_enrollments(self.enrollments[1], None, None, None, None)
 
     @patch("base.utils.send_mail.send_message_after_all_encoded_by_manager")
     def test_email_after_encoding_all_students_for_offer_year(self, mock_send_email):
@@ -199,9 +196,10 @@ class OnlineEncodingTest(TestCase):
         self.assertTrue(mock_send_email.called)
         (persons, enrollments, learning_unit_acronym, offer_acronym), kwargs = mock_send_email.call_args
         self.assertEqual(persons, [self.tutor.person])
-        self.assertEqual(enrollments, [self.enrollment_value[0]['exam_enrollment']])
+        self.assertEqual(enrollments, [self.enrollments[0]])
         self.assertEqual(learning_unit_acronym, self.learning_unit_year.acronym)
-        self.assertEqual(offer_acronym, self.enrollment_value[0]['offer_year'].acronym)
+        offer_year = self.enrollments[0].learning_unit_enrollment.offer_enrollment.offer_year
+        self.assertEqual(offer_acronym, offer_year.acronym)
 
     @patch("base.utils.send_mail.send_message_after_all_encoded_by_manager")
     def test_email_after_encoding_all_students_for_offer_year_with_justification(self, mock_send_email):
@@ -213,9 +211,10 @@ class OnlineEncodingTest(TestCase):
         self.assertTrue(mock_send_email.called)
         (persons, enrollments, learning_unit_acronym, offer_acronym), kwargs = mock_send_email.call_args
         self.assertEqual(persons, [self.tutor.person])
-        self.assertEqual(enrollments, [self.enrollment_value[1]['exam_enrollment']])
+        self.assertEqual(enrollments, [self.enrollments[1]])
         self.assertEqual(learning_unit_acronym, self.learning_unit_year.acronym)
-        self.assertEqual(offer_acronym, self.enrollment_value[1]['offer_year'].acronym)
+        offer_year = self.enrollments[1].learning_unit_enrollment.offer_enrollment.offer_year
+        self.assertEqual(offer_acronym, offer_year.acronym)
 
     def assert_exam_enrollments(self, exam_enrollment, score_draft, score_final, justification_draft,
                                 justification_final):
@@ -225,8 +224,8 @@ class OnlineEncodingTest(TestCase):
         self.assertEqual(exam_enrollment.justification_final, justification_final)
 
     def get_form_with_one_student_filled(self):
-        exam_enrollment_1 = self.enrollment_value[0]['exam_enrollment']
-        exam_enrollment_2 = self.enrollment_value[1]['exam_enrollment']
+        exam_enrollment_1 = self.enrollments[0]
+        exam_enrollment_2 = self.enrollments[1]
 
         return {"score_" + str(exam_enrollment_1.id): "15",
                 "justification_" + str(exam_enrollment_1.id): "",
@@ -237,8 +236,8 @@ class OnlineEncodingTest(TestCase):
                 }
 
     def get_form_with_all_students_filled(self):
-        exam_enrollment_1 = self.enrollment_value[0]['exam_enrollment']
-        exam_enrollment_2 = self.enrollment_value[1]['exam_enrollment']
+        exam_enrollment_1 = self.enrollments[0]
+        exam_enrollment_2 = self.enrollments[1]
 
         return {"score_" + str(exam_enrollment_1.id): "15",
                 "justification_" + str(exam_enrollment_1.id): "",
@@ -249,8 +248,8 @@ class OnlineEncodingTest(TestCase):
                 }
 
     def get_form_with_all_students_filled_and_one_with_justification(self):
-        exam_enrollment_1 = self.enrollment_value[0]['exam_enrollment']
-        exam_enrollment_2 = self.enrollment_value[1]['exam_enrollment']
+        exam_enrollment_1 = self.enrollments[0]
+        exam_enrollment_2 = self.enrollments[1]
 
         return {"score_" + str(exam_enrollment_1.id): "15",
                 "justification_" + str(exam_enrollment_1.id): "",
@@ -261,8 +260,8 @@ class OnlineEncodingTest(TestCase):
                 }
 
     def get_form_for_specific_criteria(self):
-        exam_enrollment = self.enrollment_value[0]['exam_enrollment']
-        offer_year = self.enrollment_value[0]['offer_year']
+        exam_enrollment = self.enrollments[0]
+        offer_year = exam_enrollment.learning_unit_enrollment.offer_enrollment.offer_year
         return {"score_" + str(exam_enrollment.id): "15",
                 "justification_" + str(exam_enrollment.id): "",
                 "score_changed_" + str(exam_enrollment.id): "true",
@@ -270,8 +269,8 @@ class OnlineEncodingTest(TestCase):
                 }
 
     def refresh_exam_enrollments_from_db(self):
-        for enrollment in self.enrollment_value:
-            enrollment['exam_enrollment'].refresh_from_db()
+        for enrollment in self.enrollments:
+            enrollment.refresh_from_db()
 
 
 class OutsideEncodingPeriodTest(TestCase):
@@ -344,8 +343,25 @@ class GetScoreEncodingViewProgramManagerTest(TestCase):
         self.learning_unit_year_3 = LearningUnitYearFactory(academic_year=academic_year)
         self.first_session_exam_3 = test_session_exam.create_session_exam(number_session.ONE, self.learning_unit_year_3)
 
-        # Create students and create offer enrollment [Simulate exam enrollment]
-        self.students=[]
+        self._create_context_exam_enrollment()
+
+    def test_get_score_encoding_list_empty(self):
+        ExamEnrollment.objects.all().delete() #remove all exam enrolment [No subscription to exam]
+        url = reverse('scores_encoding')
+        response = self.client.get(url)
+        context = response.context[-1]
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(context['notes_list'])
+
+    def test_get_score_encoding(self):
+         url = reverse('scores_encoding')
+         response = self.client.get(url)
+         context = response.context[-1]
+         self.assertEqual(response.status_code, 200)
+         self.assertEqual(len(context['notes_list']), 3)
+
+    def _create_context_exam_enrollment(self):
+        self.students = []
         for index in range(0, 20):
             self.students.append(StudentFactory())
             if index < 5:
@@ -366,21 +382,6 @@ class GetScoreEncodingViewProgramManagerTest(TestCase):
                 learning_unit_enrollment = test_learning_unit_enrollment.create_learning_unit_enrollment(offer_enrollment=offer_enrollment,
                                                                                                          learning_unit_year=self.learning_unit_year_3)
                 test_exam_enrollment.create_exam_enrollment(self.first_session_exam_3, learning_unit_enrollment)
-
-    def test_get_score_encoding_list_empty(self):
-        ExamEnrollment.objects.all().delete() #remove all exam enrolment [No subscription to exam]
-        url = reverse('scores_encoding')
-        response = self.client.get(url)
-        context = response.context[-1]
-        self.assertEqual(response.status_code, 200)
-        self.assertFalse(context['notes_list'])
-
-    def test_get_score_encoding(self):
-         url = reverse('scores_encoding')
-         response = self.client.get(url)
-         context = response.context[-1]
-         self.assertEqual(response.status_code, 200)
-         self.assertEqual(len(context['notes_list']), 3)
 
 
 def prepare_exam_enrollment_for_double_encoding_validation(exam_enrollment):
