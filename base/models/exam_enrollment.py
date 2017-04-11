@@ -29,7 +29,7 @@ from django.contrib import admin
 from django.utils.translation import ugettext as _
 from django.core.validators import MaxValueValidator, MinValueValidator
 from base.models import person, learning_unit_year, person_address, session_exam_calendar, session_exam_deadline, \
-                        academic_year
+                        academic_year as academic_yr
 from attribution.models import attribution
 from base.enums import exam_enrollment_justification_type as justification_types
 from base.enums import exam_enrollment_state as enrollment_states
@@ -288,7 +288,7 @@ def find_for_score_encodings(session_exam_number,
                              student_last_name=None,
                              student_first_name=None,
                              justification=None,
-                             academic_year=academic_year.current_academic_year()):
+                             academic_year=None):
     """
     :param session_exam_number: Integer represents the number_session of the Session_exam (1,2,3,4 or 5). It's
                                 a mandatory field to not confuse exam scores from different sessions.
@@ -303,6 +303,9 @@ def find_for_score_encodings(session_exam_number,
                                               are returned.
     :return: All filtered examEnrollments.
     """
+    if not academic_year:
+        academic_year = academic_yr.current_academic_year()
+
     queryset = ExamEnrollment.objects.filter(session_exam__number_session=session_exam_number,
                                              learning_unit_enrollment__learning_unit_year__academic_year=academic_year,
                                              enrollment_state=enrollment_states.ENROLLED)
