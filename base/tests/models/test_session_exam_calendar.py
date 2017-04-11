@@ -31,32 +31,33 @@ from base.tests.factories.academic_year import AcademicYearFactory
 from base.tests.factories.academic_calendar import AcademicCalendarFactory
 from base.tests.factories.session_exam_calendar import SessionExamCalendarFactory
 from base.tests.factories.offer_year_calendar import OfferYearCalendarFactory
+from base.tests.factories.offer_year import  OfferYearFactory
 from base.models import session_exam_calendar
 from base.models.enums import number_session, academic_calendar_type
 
 
 class SessionExamCalendarTest(TestCase):
     def setUp(self):
-        tmp_academic_year = AcademicYearFactory()
+        self.academic_year = AcademicYearFactory()
         self.academic_calendar_1 = AcademicCalendarFactory.build(title="Submission of score encoding - 1",
                                                                  start_date=datetime.date(2016, 10, 15),
                                                                  end_date=datetime.date(2017, 1, 1),
-                                                                 academic_year=tmp_academic_year,
+                                                                 academic_year=self.academic_year,
                                                                  reference=academic_calendar_type.SCORES_EXAM_SUBMISSION)
         self.academic_calendar_2 = AcademicCalendarFactory.build(title="Submission of score encoding - 2",
                                                                  start_date=datetime.date(2017, 3, 15),
                                                                  end_date=datetime.date(2017, 6, 28),
-                                                                 academic_year=tmp_academic_year,
+                                                                 academic_year=self.academic_year,
                                                                  reference=academic_calendar_type.SCORES_EXAM_SUBMISSION)
         self.academic_calendar_3 = AcademicCalendarFactory.build(title="Submission of score encoding - 3",
                                                                  start_date=datetime.date(2017, 10, 15),
                                                                  end_date=datetime.date(2017, 12, 28),
-                                                                 academic_year=tmp_academic_year,
+                                                                 academic_year=self.academic_year,
                                                                  reference=academic_calendar_type.SCORES_EXAM_SUBMISSION)
         self.academic_calendar_4 = AcademicCalendarFactory.build(title="Deliberation session 1",
                                                                  start_date=datetime.date(2017, 1, 1),
                                                                  end_date=datetime.date(2017, 1, 2),
-                                                                 academic_year=tmp_academic_year,
+                                                                 academic_year=self.academic_year,
                                                                  reference=academic_calendar_type.DELIBERATION)
         self.academic_calendar_1.save(functions=[])
         self.academic_calendar_2.save(functions=[])
@@ -121,7 +122,8 @@ class SessionExamCalendarTest(TestCase):
     def test_find_deliberation_date(self):
         SessionExamCalendarFactory(academic_calendar=self.academic_calendar_4,
                                    number_session=number_session.ONE)
-        offer_year_cal = OfferYearCalendarFactory(academic_calendar=self.academic_calendar_4)
+        offer_year_cal = OfferYearCalendarFactory(academic_calendar=self.academic_calendar_4,
+                                                  offer_year= OfferYearFactory(academic_year=self.academic_year))
 
         self.assertEqual(session_exam_calendar.find_deliberation_date(number_session.ONE,offer_year_cal.offer_year),
                          datetime.date(2017, 1, 1))
