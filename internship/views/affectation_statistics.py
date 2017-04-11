@@ -1189,7 +1189,9 @@ def internship_affectation_statistics(request, cohort_id):
     init_organizations(cohort)
     init_specialities(cohort)
     sol, table, stats, internship_errors = None, None, None, None
-    data = mdl_internship.internship_student_affectation_stat.InternshipStudentAffectationStat.objects.all().\
+    periods = mdl_internship.period.Period.objects.filter(cohort=cohort)
+    period_ids = periods.values_list("id", flat=True)
+    data = mdl_internship.internship_student_affectation_stat.InternshipStudentAffectationStat.objects.filter(period_id__in=period_ids).\
         select_related("student", "organization", "speciality", "period")
     if len(data) > 0:
         sol, table = load_solution(data)
@@ -1199,7 +1201,7 @@ def internship_affectation_statistics(request, cohort_id):
         # Mange sort of the organizations
         table.sort(key=itemgetter(0))
         internship_errors = mdl_internship.internship_student_affectation_stat.InternshipStudentAffectationStat.\
-            objects.filter(organization=organizations[hospital_error])
+            objects.filter(organization=organizations[hospital_error], period_id__in=period_ids)
 
     latest_generation = mdl_internship.affectation_generation_time.get_latest()
     return render(request, "internship_affectation_statics.html",
