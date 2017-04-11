@@ -27,13 +27,13 @@ from attribution import models as mdl_attr
 from base.views import layout
 
 
-def scores_responsibles(request):
+def scores_responsible(request):
     all_tutors, attributions, attributions_list = find_data_table()
     dict_attribution = create_dictionary(attributions)
-    return layout.render(request, 'scores_responsibles.html', {"all_tutors": all_tutors,
-                                                               "attributions_list": attributions_list,
-                                                               "dict_attribution": dict_attribution,
-                                                               "attributions": attributions})
+    return layout.render(request, 'scores_responsible.html', {"all_tutors": all_tutors,
+                                                              "attributions_list": attributions_list,
+                                                              "dict_attribution": dict_attribution,
+                                                              "attributions": attributions})
 
 
 def scores_responsible_search(request):
@@ -45,10 +45,10 @@ def scores_responsible_search(request):
         scores_responsible=request.GET['scores_responsible'])
     all_tutors, attributions, attributions_list = find_data_table()
     dict_attribution = create_dictionary(attributions_searched)
-    return layout.render(request, 'scores_responsibles.html', {"all_tutors": all_tutors,
-                                                               "attributions_list": attributions_list,
-                                                               "dict_attribution": dict_attribution,
-                                                               "attributions": attributions})
+    return layout.render(request, 'scores_responsible.html', {"all_tutors": all_tutors,
+                                                              "attributions_list": attributions_list,
+                                                              "dict_attribution": dict_attribution,
+                                                              "attributions": attributions})
 
 
 def create_dictionary(attributions):
@@ -64,7 +64,7 @@ def create_dictionary(attributions):
 
 
 def find_data_table():
-    attributions = mdl_attr.attribution.find_attribution_distinct()
+    attributions = mdl_attr.attribution.find_all_responsibles()
     attributions_list = mdl_attr.attribution.find_attribution_distinct()
     all_tutors = mdl_attr.attribution.find_all_tutor().distinct("tutor")
     return all_tutors, attributions, attributions_list

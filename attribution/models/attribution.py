@@ -116,7 +116,7 @@ def search_scores_responsible(learning_unit_title, course_code, entity, professo
     if professor:
         queryset = queryset.filter(tutor__id=professor)
     if scores_responsible:
-        queryset = queryset.filter(tutor__id=scores_responsible)
+        queryset = queryset.filter(tutor__id=scores_responsible).filter(score_responsible=True)
     queryset = queryset.distinct("learning_unit_year")
     return queryset
 
