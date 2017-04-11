@@ -59,16 +59,18 @@
                 <div class="col-md-2 form-group">
                     <label for="txt_professor">{% trans 'professor' %}</label>
                     <select class="form-control" id="txt_professor"  name="professor">
-                        {% for professor in professors %}
-                            <option></option>
+                         <option value=""></option>
+                        {% for tutor in all_tutors %}
+                            <option value="{{tutor.tutor.id}}">{{tutor.tutor}}</option>
                         {% endfor %}
                     </select>
                 </div>
                 <div class="col-md-3 form-group">
                     <label for="txt_scores_responsible">{% trans 'scores_responsible' %}</label>
                     <select class="form-control" id="txt_scores_responsible"  name="scores_responsible">
-                        {% for scores_responsible in scores_responsibles %}
-                            <option ></option>
+                        <option value=""></option>
+                        {% for attribution in attributions %}
+                            <option value="{{attribution.tutor.id}}">{{attribution.tutor}}</option>
                         {% endfor %}
                     </select>
                 </div>

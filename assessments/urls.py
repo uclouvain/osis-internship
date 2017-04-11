@@ -24,12 +24,11 @@
 #
 ##############################################################################
 from django.conf.urls import url
-from assessments.views import score_encoding, upload_xls_utils
-from attribution.views import attribution
+from assessments.views import score_encoding, score_responsible, upload_xls_utils
 
 urlpatterns = [
-    url(r'^scores_responsibles/$', attribution.scores_responsibles, name='scores_responsibles'),
-    url(r'^scores_responsibles_search$', attribution.scores_responsible_search, name='scores_responsibles_search'),
+    url(r'^scores_responsibles/$', score_responsible.scores_responsibles, name='scores_responsibles'),
+    url(r'^scores_responsibles_search$', score_responsible.scores_responsible_search, name='scores_responsibles_search'),
     url(r'^scores_encoding/outside_period/$',
         score_encoding.outside_period, name='outside_scores_encodings_period'),
     url(r'^scores_encoding/$', score_encoding.scores_encoding, name='scores_encoding'),
