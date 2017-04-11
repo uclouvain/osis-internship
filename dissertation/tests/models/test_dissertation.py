@@ -27,17 +27,10 @@ from dissertation.models.dissertation import Dissertation
 from dissertation.tests.models import test_dissertation_role
 
 
-def create_dissertation(title, author, status, offer_year_start, proposition_dissertation, active, role):
-    dissertation = Dissertation.objects.create(title=title,
-                                               author=author,
-                                               status=status,
-                                               offer_year_start=offer_year_start,
-                                               proposition_dissertation=proposition_dissertation,
-                                               active=active
-                                               )
-
+def create_dissertation(adviser, dissertation_role, **kwargs):
+    dissertation = Dissertation.objects.create(**kwargs)
     test_dissertation_role.create_dissertation_role(dissertation=dissertation,
-                                                    adviser=proposition_dissertation.author,
-                                                    status=role)
+                                                    adviser=adviser,
+                                                    status=dissertation_role)
 
     return dissertation

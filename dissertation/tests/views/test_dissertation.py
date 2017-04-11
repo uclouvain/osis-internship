@@ -52,26 +52,27 @@ class DissertationViewTestCase(TestCase):
         # Create 5 propositions dissertations
         proposition_dissertations = []
         for x in range(0, 5):
-            teacher_prop = test_proposition_dissertation.create_proposition_dissertation(
+            proposition_dissertation = test_proposition_dissertation.create_proposition_dissertation(
                 title="Proposition " + str(x),
                 adviser=teacher,
                 person=teacher.person,
                 offer_proposition=offer_proposition
             )
-            proposition_dissertations.append(teacher_prop)
+            proposition_dissertations.append(proposition_dissertation)
 
         # Create 5 dissertations with different roles ans status
         roles = ['PROMOTEUR', 'CO_PROMOTEUR', 'READER', 'PROMOTEUR', 'ACCOMPANIST']
         status = ['DRAFT', 'COM_SUBMIT', 'EVA_SUBMIT', 'TO_RECEIVE', 'DIR_SUBMIT']
         for x in range(0, 5):
             test_dissertation.create_dissertation(
+                adviser=teacher,
+                dissertation_role=roles[x],
                 title="Dissertation " + str(x),
                 author=student,
                 status=status[x],
                 offer_year_start=offer_year_start,
                 proposition_dissertation=proposition_dissertations[x],
-                active=True,
-                role=roles[x]
+                active=True
                 )
 
     def test_get_dissertations_list_for_teacher(self):
