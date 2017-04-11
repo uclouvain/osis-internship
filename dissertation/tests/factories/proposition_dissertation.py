@@ -24,19 +24,24 @@
 #
 ##############################################################################
 import factory
+import factory.fuzzy
 from base.tests.factories.person import PersonFactory
+from dissertation.tests.factories.adviser import AdviserTeacherFactory
+from dissertation.models.proposition_dissertation import PropositionDissertation
 
 
-class AdviserTeacherFactory(factory.DjangoModelFactory):
+class PropositionDissertationFactory(factory.DjangoModelFactory):
     class Meta:
-        model = 'dissertation.Adviser'
+        model = 'dissertation.PropositionDissertation'
 
-    type = 'PRF'
-    available_by_email = False
-    available_by_phone = False
-    available_at_office = False
-    person = factory.SubFactory(PersonFactory)
-
-
-class AdviserManagerFactory(AdviserTeacherFactory):
-    type = 'MGR'
+    author = factory.SubFactory(AdviserTeacherFactory)
+    creator = factory.SubFactory(PersonFactory)
+    collaboration = 'POSSIBLE'
+    description = factory.Faker('text', max_nb_chars=200)
+    level = 'THEME'
+    max_number_student = factory.fuzzy.FuzzyInteger(1, 50)
+    title = factory.Sequence(lambda n: 'Proposition {}'.format(n))
+    type = 'OTH'
+    visibility = True
+    active = True
+    created_date = factory.Faker('date_time_this_year', before_now=True, after_now=False, tzinfo=None)

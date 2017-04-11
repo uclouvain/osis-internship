@@ -24,19 +24,13 @@
 #
 ##############################################################################
 import factory
-from base.tests.factories.person import PersonFactory
+from dissertation.tests.factories.proposition_dissertation import PropositionDissertationFactory
+from dissertation.tests.factories.offer_proposition import OfferPropositionFactory
 
 
-class AdviserTeacherFactory(factory.DjangoModelFactory):
+class PropositionOfferFactory(factory.DjangoModelFactory):
     class Meta:
-        model = 'dissertation.Adviser'
+        model = 'dissertation.PropositionOffer'
 
-    type = 'PRF'
-    available_by_email = False
-    available_by_phone = False
-    available_at_office = False
-    person = factory.SubFactory(PersonFactory)
-
-
-class AdviserManagerFactory(AdviserTeacherFactory):
-    type = 'MGR'
+    proposition_dissertation = factory.SubFactory(PropositionDissertationFactory)
+    offer_proposition = factory.SubFactory(OfferPropositionFactory)

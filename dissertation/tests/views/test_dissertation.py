@@ -25,10 +25,15 @@
 ##############################################################################
 from django.test import TestCase, Client
 from django.core.urlresolvers import reverse
-from dissertation.tests.models import test_proposition_dissertation, test_offer_proposition, test_adviser, \
-    test_dissertation, test_faculty_adviser
-from base.tests.models import test_student, test_offer_year, test_academic_year
+from dissertation.tests.models import test_dissertation
+from base.tests.factories.offer_year import OfferYearFactory
+from base.tests.factories.person import PersonFactory
+from base.tests.factories.student import StudentFactory
 from dissertation.tests.factories.adviser import AdviserManagerFactory, AdviserTeacherFactory
+from dissertation.tests.factories.faculty_adviser import FacultyAdviserFactory
+from dissertation.tests.factories.offer_proposition import OfferPropositionFactory
+from dissertation.tests.factories.proposition_dissertation import PropositionDissertationFactory
+from dissertation.tests.factories.proposition_offer import PropositionOfferFactory
 
 
 class DissertationViewTestCase(TestCase):
@@ -36,27 +41,25 @@ class DissertationViewTestCase(TestCase):
     def setUp(self):
         self.client = Client()
 
-        self.teacher = AdviserTeacherFactory()
         self.manager = AdviserManagerFactory()
-        student = test_student.create_student(first_name="Prenometu", last_name="Nometu", registration_id="321654")
+        a_person_teacher = PersonFactory.create(first_name='Pierre', last_name='Dupont')
+        self.teacher = AdviserTeacherFactory(person=a_person_teacher)
+        a_person_student = PersonFactory.create(last_name="Durant", user=None)
+        student = StudentFactory.create(person=a_person_student)
 
-        academic_year = test_academic_year.create_academic_year()
-        offer_year_start = test_offer_year.create_offer_year(acronym="test_offer",
-                                                             title="test_offer",
-                                                             academic_year=academic_year)
+        offer_year_start = OfferYearFactory(acronym="test_offer")
         offer = offer_year_start.offer
-        offer_proposition = test_offer_proposition.create_offer_proposition(acronym="test_offer", offer=offer)
-        test_faculty_adviser.create_faculty_adviser(self.manager, offer)
+        offer_proposition = OfferPropositionFactory(offer=offer)
+        FacultyAdviserFactory(adviser=self.manager, offer=offer)
 
         # Create 5 propositions dissertations
         proposition_dissertations = []
         for x in range(0, 5):
-            proposition_dissertation = test_proposition_dissertation.create_proposition_dissertation(
-                title="Proposition " + str(x),
-                adviser=self.teacher,
-                person=self.teacher.person,
-                offer_proposition=offer_proposition
-            )
+            proposition_dissertation = PropositionDissertationFactory(author=self.teacher,
+                                                                      creator=a_person_teacher
+                                                                      )
+            PropositionOfferFactory(proposition_dissertation=proposition_dissertation,
+                                    offer_proposition=offer_proposition)
             proposition_dissertations.append(proposition_dissertation)
 
         # Create 5 dissertations with different roles ans status
@@ -101,9 +104,9 @@ class DissertationViewTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context[-1]['dissertations'].count(), 1)
 
-        response = self.client.get(url, data={"search": "Proposition 3"})
+        response = self.client.get(url, data={"search": "Proposition"})
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.context[-1]['dissertations'].count(), 1)
+        self.assertEqual(response.context[-1]['dissertations'].count(), 5)
 
         response = self.client.get(url, data={"search": "Dissertation"})
         self.assertEqual(response.status_code, 200)
@@ -113,10 +116,10 @@ class DissertationViewTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context[-1]['dissertations'].count(), 5)
 
-        response = self.client.get(url, data={"search": "Nometu"})
+        response = self.client.get(url, data={"search": "Durant"})
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context[-1]['dissertations'].count(), 5)
 
-        response = self.client.get(url, data={"search": "teacher"})
+        response = self.client.get(url, data={"search": "Dupont"})
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context[-1]['dissertations'].count(), 5)
