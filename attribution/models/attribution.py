@@ -24,6 +24,7 @@
 #
 ##############################################################################
 from django.db import models
+from django.db.models import Q
 from attribution.models.enums import function
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 
@@ -72,15 +73,20 @@ def search(tutor=None, learning_unit_year=None, score_responsible=None, list_lea
     return queryset.select_related('tutor', 'learning_unit_year')
 
 
-def find_all_responsibles(a_learning_unit_year):
+def find_all_responsibles_by_learning_unit_year(a_learning_unit_year):
     attribution_list = Attribution.objects.select_related("tutor") \
         .filter(learning_unit_year=a_learning_unit_year) \
         .filter(score_responsible=True)
     return [attribution.tutor for attribution in attribution_list]
 
 
+def find_all_responsibles():
+    attribution_list = Attribution.objects.filter(score_responsible=True)
+    return attribution_list
+
+
 def find_responsible(a_learning_unit_year):
-    tutors_list = find_all_responsibles(a_learning_unit_year)
+    tutors_list = find_all_responsibles_by_learning_unit_year(a_learning_unit_year)
     if tutors_list:
         return tutors_list[0]
     return None
@@ -92,3 +98,18 @@ def is_score_responsible(user, learning_unit_year):
         .filter(tutor__person__user=user) \
         .count()
     return attributions > 0
+
+
+def find_tutor_number(attribution):
+    tutor_number = Attribution.objects.filter(learning_unit_year=attribution.learning_unit_year).count()
+    return tutor_number
+
+
+def search_scores_responsible(learning_unit_title, course_code):
+    queryset = Attribution.objects.filter(score_responsible=True)
+    if learning_unit_title:
+        queryset = queryset.filter(learning_unit_year__title__icontains=learning_unit_title)
+    if course_code:
+        queryset = queryset.filter(learning_unit_year__learning_unit__acronym__icontains=course_code)
+    queryset = queryset.distinct("learning_unit_year")
+    return queryset

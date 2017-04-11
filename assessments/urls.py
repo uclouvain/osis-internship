@@ -25,12 +25,13 @@
 ##############################################################################
 from django.conf.urls import url
 from assessments.views import score_encoding, upload_xls_utils
+from attribution.views import attribution
 
 urlpatterns = [
+    url(r'^scores_responsible/$', attribution.scores_responsible, name='scores_responsible'),
+    url(r'^scores_responsibles_search$', attribution.scores_responsible_search, name='scores_responsibles_search'),
     url(r'^scores_encoding/outside_period/$',
         score_encoding.outside_period, name='outside_scores_encodings_period'),
-    url(r'^scores_encoding/scores_responsible/$',
-        score_encoding.scores_responsible, name='scores_responsible'),
     url(r'^scores_encoding/$', score_encoding.scores_encoding, name='scores_encoding'),
     url(r'^scores_encoding/online/(?P<learning_unit_year_id>[0-9]+)/$',
         score_encoding.online_encoding, name='online_encoding'),

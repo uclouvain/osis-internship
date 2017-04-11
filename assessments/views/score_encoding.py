@@ -606,7 +606,7 @@ def get_data_online(learning_unit_year_id, request):
 
     learning_unit_year = mdl.learning_unit_year.find_by_id(learning_unit_year_id)
 
-    score_responsibles = mdl_attr.attribution.find_all_responsibles(learning_unit_year)
+    score_responsibles = mdl_attr.attribution.find_all_responsibles_by_learning_unit_year(learning_unit_year)
     tutors = mdl.tutor.find_by_learning_unit(learning_unit_year) \
         .exclude(id__in=[score_responsible.id for score_responsible in score_responsibles])
 
@@ -652,7 +652,7 @@ def get_data_online_double(learning_unit_year_id, request):
     learning_unit_year = mdl.learning_unit_year.find_by_id(learning_unit_year_id)
 
     nb_final_scores = get_score_encoded(encoded_exam_enrollments)
-    score_responsibles = mdl_attr.attribution.find_all_responsibles(learning_unit_year)
+    score_responsibles = mdl_attr.attribution.find_all_responsibles_by_learning_unit_year(learning_unit_year)
     tutors = mdl.tutor.find_by_learning_unit(learning_unit_year) \
         .exclude(id__in=[score_responsible.id for score_responsible in score_responsibles])
     encoded_exam_enrollments = mdl.exam_enrollment.sort_for_encodings(encoded_exam_enrollments)
@@ -993,14 +993,3 @@ def get_json_data_scores_sheets(tutor_global_id):
             log_trace = traceback.format_exc()
             logger.warning('Error during queue logging :\n {}'.format(log_trace))
         return None
-
-
-@login_required
-def scores_responsible(request):
-    attributions = mdl_attr.attribution.Attribution.objects.filter(score_responsible=True)
-    dict_attribution = dict()
-    for attribution in attributions:
-        tutor_number = mdl_attr.attribution.Attribution.objects.filter(learning_unit_year=attribution.learning_unit_year).count()
-        a_learning_unit_enrollment = learning_unit_enrollment.find_by_learningunit_enrollment(attribution.learning_unit_year)
-        dict_attribution.update({attribution: [a_learning_unit_enrollment[0].offer_enrollment.offer_year, attribution.learning_unit_year.acronym, attribution.learning_unit_year.title, tutor_number, attribution.tutor]})
-    return layout.render(request, 'scores_responsible.html', {"dict_attribution": dict_attribution})

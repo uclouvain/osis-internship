@@ -29,8 +29,8 @@ from attribution.models import attribution
 
 
 class LearningUnitYearAdmin(SerializableModelAdmin):
-    list_display = ('acronym', 'title', 'academic_year', 'credits', 'changed')
-    fieldsets = ((None, {'fields': ('academic_year', 'learning_unit', 'acronym', 'title', 'credits', 'decimal_scores')}),)
+    list_display = ('acronym', 'title', 'academic_year', 'credits', 'changed', 'structure')
+    fieldsets = ((None, {'fields': ('academic_year', 'learning_unit', 'acronym', 'title', 'credits', 'decimal_scores', 'structure')}),)
     list_filter = ('academic_year',)
     raw_id_fields = ('learning_unit',)
     search_fields = ['acronym']
