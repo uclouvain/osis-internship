@@ -46,7 +46,12 @@
             </div>
         </div>
         <div class="panel-group">
-            <label for="txt_title" {% if form.title.errors %} style="color:red;" {% endif %}>{% trans 'title' %}</label>
+            <label for="txt_title" {% if form.title.errors %} style="color:red;" {% endif %}>
+                {% trans 'title' %}
+                {% for error in form.title.errors %}
+                    <br>{{ error|escape }}
+                {% endfor %}
+            </label>
             <input class="form-control" id="txt_title"  name="title"
                 style="margin:-6px;" value="{{ form.title.value|default_if_none:'' }}">
         </div>
@@ -55,7 +60,7 @@
             <input id="txt_visibility"  name="visibility"
                    style="margin-left:6px;" type="checkbox" {% if form.visibility.value %} checked {% endif %}>
         </div>
-        <div class="panel-group {% if field.errors %}error{% endif %}">
+        <div class="panel-group">
             <label for="txt_description">{% trans 'description' %}</label>
             <textarea class="form-control" id="txt_description"  name="description" rows="10" style="margin:-6px;">{{ form.description.value|default_if_none:'' }}</textarea>
         </div>
@@ -84,7 +89,12 @@
             </select>
         </div>
         <div class="panel-group">
-            <label for="txt_max_number_student" {% if form.max_number_student.errors %} style="color:red;" {% endif %}>{% trans 'max_students_number' %}</label>
+            <label for="txt_max_number_student" {% if form.max_number_student.errors %} style="color:red;" {% endif %}>
+                {% trans 'max_students_number' %}
+                {% for error in form.max_number_student.errors %}
+                    <br>{{ error|escape }}
+                {% endfor %}
+            </label>
             <input class="form-control" id="txt_max_number_student"  name="max_number_student" value="{{ form.max_number_student.value|default_if_none:'' }}"
                 style="margin:-6px;">
         </div>
