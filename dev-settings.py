@@ -1,4 +1,4 @@
-from backoffice.settings import *
+from backoffice.settings.local import *
 LOGGERS = {}
 
 del QUEUES

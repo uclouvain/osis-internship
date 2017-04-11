@@ -23,21 +23,40 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import os, sys
-from django.core.wsgi import get_wsgi_application
-from osis_common.queue import queue_listener, callbacks
-from assessments.views.score_encoding import get_json_data_scores_sheets
+import sys
 import logging
+
+import os
+import dotenv
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+dotenv.read_dotenv(os.path.join(BASE_DIR, '.env'))
+sys.path.extend(os.environ.get('EXTRA_SYS_PATHS').split()) if os.environ.get('EXTRA_SYS_PATHS') else None
+
+from django.core.wsgi import get_wsgi_application
 from pika.exceptions import ConnectionClosed, AMQPConnectionError, ChannelClosed
 
-# The two following lines are mandatory for working with mod_wsgi on the servers
-sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/..' )
-sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/../backoffice')
+SETTINGS_FILE = os.environ.get('DJANGO_SETTINGS_MODULE', 'backoffice.settings.local')
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", SETTINGS_FILE)
 
+try:
+    application = get_wsgi_application()
+except KeyError as ke:
+    print("Error loading application.")
+    print("The following environment var is not defined : {}".format(str(ke)))
+    print("Check the following possible causes :")
+    print(" - You don't have a .env file. You can copy .env.example to .env to use default")
+    print(" - Mandatory variables are not defined in your .env file.")
+    sys.exit("SettingsKeyError")
+except ImportError as ie:
+    print("Error loading application : {}".format(str(ie)))
+    print("Check the following possible causes :")
+    print(" - The DJANGO_SETTINGS_MODULE defined in your .env doesn't exist")
+    print(" - No DJANGO_SETTINGS_MODULE is defined and the default 'backoffice.settings.local' doesn't exist ")
+    sys.exit("DjangoSettingsError")
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "backoffice.settings")
-application = get_wsgi_application()
-
+from osis_common.queue import queue_listener, callbacks
+from assessments.views.score_encoding import get_json_data_scores_sheets
 from django.conf import settings
 LOGGER = logging.getLogger(settings.DEFAULT_LOGGER)
 

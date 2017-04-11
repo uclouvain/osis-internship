@@ -23,39 +23,3 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.conf.urls import include, url
-from django.contrib import admin
-from django.conf import settings
-from base.views import common
-
-urlpatterns = [
-    url(r'^login/$', common.login, name='login'),
-    url(r'^logout/$', common.log_out, name='logout'),
-    url(r'^logged_out/$',common.logged_out,name='logged_out'),
-
-    url(r'^'+settings.ADMIN_URL, admin.site.urls),
-    url(r'', include('base.urls')),
-]
-
-if 'assistant' in settings.INSTALLED_APPS:
-    urlpatterns += (url(r'^assistants/', include('assistant.urls')), )
-if 'internship' in settings.INSTALLED_APPS:
-    urlpatterns += (url(r'^internships/', include('internship.urls')), )
-if 'dissertation' in settings.INSTALLED_APPS:
-    urlpatterns += (url(r'^dissertation/', include('dissertation.urls')), )
-if 'assessments' in settings.INSTALLED_APPS:
-    urlpatterns += (url(r'^assessments/', include('assessments.urls')), )
-
-handler404 = 'base.views.common.page_not_found'
-handler403 = 'base.views.common.access_denied'
-handler500 = 'base.views.common.server_error'
-
-admin.site.site_header = 'OSIS'
-admin.site.site_title  = 'OSIS'
-admin.site.index_title = 'Louvain'
-
-if settings.DEBUG:
-    import debug_toolbar
-    urlpatterns += [
-        url(r'^__debug__/', include(debug_toolbar.urls)),
-    ]
