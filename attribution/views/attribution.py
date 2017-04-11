@@ -27,19 +27,31 @@ from attribution import models as mdl_attr
 from base.views import layout
 
 
-def scores_responsible(request):
+def scores_responsibles(request):
+    attributions_list = mdl_attr.attribution.Attribution.objects.all()
     attributions = mdl_attr.attribution.find_all_responsibles()
     dict_attribution = dict()
     for attribution in attributions:
         tutor_number = mdl_attr.attribution.find_tutor_number(attribution)
-        dict_attribution.update({attribution: [attribution.learning_unit_year.structure.acronym, attribution.learning_unit_year.acronym, attribution.learning_unit_year.title, tutor_number, attribution.tutor]})
-    return layout.render(request, 'scores_responsible.html', {"dict_attribution": dict_attribution})
+        dict_attribution.update({attribution: [attribution.learning_unit_year.structure.acronym,
+                                               attribution.learning_unit_year.acronym,
+                                               attribution.learning_unit_year.title,
+                                               tutor_number, attribution.tutor]})
+    return layout.render(request, 'scores_responsibles.html', {"attributions_list": attributions_list,
+                                                               "dict_attribution": dict_attribution})
 
 
 def scores_responsible_search(request):
-    attributions = mdl_attr.attribution.search_scores_responsible(learning_unit_title=request.GET['learning_unit_title'], course_code=request.GET['course_code'])
+    attributions_list = mdl_attr.attribution.Attribution.objects.all().distinct("learning_unit_year")
+    attributions = mdl_attr.attribution.search_scores_responsible(learning_unit_title=request.GET['learning_unit_title'],
+                                                                  course_code=request.GET['course_code'],
+                                                                  entity=request.GET['entity'])
     dict_attribution = dict()
     for attribution in attributions:
         tutor_number = mdl_attr.attribution.find_tutor_number(attribution)
-        dict_attribution.update({attribution: [attribution.learning_unit_year.structure.acronym, attribution.learning_unit_year.acronym, attribution.learning_unit_year.title, tutor_number, attribution.tutor]})
-    return layout.render(request, 'scores_responsible.html', {"dict_attribution": dict_attribution})
+        dict_attribution.update({attribution: [attribution.learning_unit_year.structure.acronym,
+                                               attribution.learning_unit_year.acronym,
+                                               attribution.learning_unit_year.title,
+                                               tutor_number, attribution.tutor]})
+    return layout.render(request, 'scores_responsibles.html', {"attributions_list": attributions_list,
+                                                               "dict_attribution": dict_attribution})

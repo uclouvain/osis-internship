@@ -105,11 +105,13 @@ def find_tutor_number(attribution):
     return tutor_number
 
 
-def search_scores_responsible(learning_unit_title, course_code):
+def search_scores_responsible(learning_unit_title, course_code, entity):
     queryset = Attribution.objects.filter(score_responsible=True)
     if learning_unit_title:
         queryset = queryset.filter(learning_unit_year__title__icontains=learning_unit_title)
     if course_code:
         queryset = queryset.filter(learning_unit_year__learning_unit__acronym__icontains=course_code)
+    if entity:
+        queryset = queryset.filter(learning_unit_year__structure__acronym=entity)
     queryset = queryset.distinct("learning_unit_year")
     return queryset

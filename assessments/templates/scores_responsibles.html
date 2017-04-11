@@ -40,10 +40,11 @@
        <form method="get" action="{% url 'scores_responsibles_search'%}">
             <div class="row">
                 <div class="col-md-1 form-group">
-                    <label for="txt_entities">{% trans 'entities' %}</label>
-                    <select class="form-control" id="txt_entities"  name="entities">
-                        {% for entitie in entities %}
-                            <option ></option>
+                    <label for="slt_entity">{% trans 'entities' %}</label>
+                    <select class="form-control" id="slt_entity"  name="entity" value="{{ request.GET.search }}">
+                        <option value=""></option>
+                        {% for attribution_list in attributions_list %}
+                            <option value="{{attribution_list.learning_unit_year.structure.acronym}}">{{attribution_list.learning_unit_year.structure.acronym}}</option>
                         {% endfor %}
                     </select>
                 </div>
