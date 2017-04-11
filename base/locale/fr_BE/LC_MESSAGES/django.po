@@ -323,7 +323,7 @@ msgid "desc_my_messages"
 msgstr "La liste des messages qui vous ont été envoyés par l'application"
 
 msgid "desc_profile"
-msgstr "informations liées à votre profile"
+msgstr "Informations liées à votre profil"
 
 msgid "description"
 msgstr "Description"
