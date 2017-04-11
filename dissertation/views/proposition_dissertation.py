@@ -144,12 +144,16 @@ def manager_proposition_dissertation_detail(request, pk):
 def manage_proposition_dissertation_edit(request, pk):
     proposition = get_object_or_404(PropositionDissertation, pk=pk)
     offer_propositions = offer_proposition.find_all_ordered_by_acronym()
+    offer_propositions_error = None
     proposition_offers = proposition_offer.find_by_proposition_dissertation(proposition)
     if request.method == "POST":
         form = ManagerPropositionDissertationEditForm(request.POST, instance=proposition)
         if form.is_valid() and detect_in_request(request, 'txt_checkbox_', 'on'):
             proposition = edit_proposition(form, proposition_offers, request)
             return redirect('manager_proposition_dissertation_detail', pk=proposition.pk)
+        if not detect_in_request(request, 'txt_checkbox_', 'on'):
+            offer_propositions_error = 'select_at_least_one_item'
+            proposition_offers = None
     else:
         form = ManagerPropositionDissertationEditForm(instance=proposition)
     return layout.render(request, 'manager_proposition_dissertation_edit.html',
@@ -160,6 +164,7 @@ def manage_proposition_dissertation_edit(request, pk):
                           'levels_choices': PropositionDissertation.LEVELS_CHOICES,
                           'collaborations_choices': PropositionDissertation.COLLABORATION_CHOICES,
                           'offer_propositions': offer_propositions,
+                          'offer_propositions_error': offer_propositions_error,
                           'proposition_offers': proposition_offers})
 
 
@@ -327,6 +332,7 @@ def proposition_dissertation_edit(request, pk):
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
     offer_propositions = offer_proposition.find_all_ordered_by_acronym()
+    offer_propositions_error = None
     proposition_offers = proposition_offer.find_by_proposition_dissertation(proposition)
     if proposition.author == adv or proposition.creator == adv.person:
         if request.method == "POST":
@@ -334,6 +340,9 @@ def proposition_dissertation_edit(request, pk):
             if form.is_valid() and detect_in_request(request, 'txt_checkbox_', 'on'):
                 proposition = edit_proposition(form, proposition_offers, request)
                 return redirect('proposition_dissertation_detail', pk=proposition.pk)
+            if not detect_in_request(request, 'txt_checkbox_', 'on'):
+                offer_propositions_error = 'select_at_least_one_item'
+                proposition_offers = None
 
         form = PropositionDissertationForm(instance=proposition)
         return layout.render(request, 'proposition_dissertation_edit.html',
@@ -343,6 +352,7 @@ def proposition_dissertation_edit(request, pk):
                               'levels_choices': PropositionDissertation.LEVELS_CHOICES,
                               'collaborations_choices': PropositionDissertation.COLLABORATION_CHOICES,
                               'offer_propositions': offer_propositions,
+                              'offer_propositions_error': offer_propositions_error,
                               'proposition_offers': proposition_offers})
     else:
         return redirect('proposition_dissertation_detail', pk=proposition.pk)
