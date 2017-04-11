@@ -24,7 +24,6 @@
 #
 ##############################################################################
 from django.db import models
-from django.db.models import Q
 from attribution.models.enums import function
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 
@@ -129,4 +128,3 @@ def find_attribution_distinct():
 def find_all_tutor():
     all_tutors = Attribution.objects.all()
     return all_tutors
-
