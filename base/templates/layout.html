@@ -132,8 +132,10 @@
                                        id="lnk_organizations">{% trans 'organizations' %}</a></li>
                                 {% endif %}
                                 {% if perms.base.can_access_structure  %}
-                                <li><a href="{% url 'structures' %}"
-                                       id="lnk_dropdown_entities">{% trans 'entities' %}</a></li>
+                                    <li><a href="{% url 'structures' %}"
+                                           id="lnk_dropdown_entities">{% trans 'entities' %}</a></li>
+                                {% endif %}
+                                {% if perms.base.can_access_program_manager %}
                                 <li><a href="{% url 'academic_actors' %}"
                                        id="lnk_dropdown_academic actors">{% trans 'academic_actors' %}</a></li>
                                 {% endif %}

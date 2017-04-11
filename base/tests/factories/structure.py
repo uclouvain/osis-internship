@@ -31,7 +31,6 @@ import operator
 from django.conf import settings
 from django.utils import timezone
 from base.enums import structure_type
-from base.models.structure import Structure
 
 
 def _get_tzinfo():
@@ -52,8 +51,12 @@ class StructureFactory(factory.DjangoModelFactory):
 
     acronym = acronym = factory.Sequence(lambda n: 'ACR-%d' % n)
     title = factory.Sequence(lambda n: 'TITLE-%d' % n)
-    # part_of = factory.SubFactory(Structure)
-    # part_of = factory.SubFactory('base.tests.factories.Structure')
+    #part_of = factory.SubFactory(Structure)
+    #part_of = factory.SubFactory('osis.base.tests.factories.Structure')
     #part_of = factory.SubFactory('base.tests.factories.StructureFactory')
     # part_of = factory.SubFactory('base.Structure')
+    #part_of = factory.SubFactory('self')
+    #part_of = factory.SubFactory('base.tests.factories.Structure')
+    # part_of = factory.SubFactory(StructureFactory)
+    #part_of = factory.SubFactory('base.models.structure')
     type = factory.Iterator(structure_type.TYPES, getter=operator.itemgetter(0))

@@ -23,8 +23,6 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.contrib.auth.models import Group
-
 from django.db import models
 from django.contrib import admin
 from .learning_unit_enrollment import LearningUnitEnrollment
@@ -54,6 +52,9 @@ class ProgramManager(models.Model):
 
     class Meta:
         unique_together = ('person', 'offer_year',)
+        permissions = (
+            ("can_access_program_manager", "Can access program manager"),
+        )
 
 
 def find_by_person(a_person):
@@ -108,8 +109,9 @@ def find_by_id(an_id):
         return None
 
 
-def find_by_entity_administration_fac(structure_faculty):
-    return ProgramManager.objects.filter(offer_year__entity_administration_fac=structure_faculty).distinct('person')
+def find_by_entity_administration_fac(structure_faculty, academic_yr):
+    return ProgramManager.objects.filter(offer_year__entity_administration_fac=structure_faculty,
+                                         offer_year__academic_year=academic_yr).distinct('person')
 
 
 def delete_by_id(an_id):
