@@ -217,7 +217,7 @@ def manager_proposition_dissertation_new(request):
         if form.is_valid() and detect_in_request(request, 'txt_checkbox_', 'on'):
             proposition = create_proposition(form, person, request)
             return redirect('manager_proposition_dissertation_detail', pk=proposition.pk)
-        if not detect_in_request(request, 'txt_checkbox_', 'on'):
+        else:
             offer_propositions_error = 'select_at_least_one_item'
     else:
         form = ManagerPropositionDissertationForm(initial={'active': True})
@@ -381,7 +381,7 @@ def proposition_dissertation_new(request):
         if form.is_valid() and detect_in_request(request, 'txt_checkbox_', 'on'):
             proposition = create_proposition(form, person, request)
             return redirect('proposition_dissertation_detail', pk=proposition.pk)
-        if not detect_in_request(request, 'txt_checkbox_', 'on'):
+        else:
             offer_propositions_error = 'select_at_least_one_item'
     else:
         adv = adviser.search_by_person(person)
