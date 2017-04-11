@@ -28,6 +28,7 @@ from django.core.urlresolvers import reverse
 from dissertation.tests.models import test_proposition_dissertation, test_offer_proposition, test_adviser, \
     test_dissertation, test_faculty_adviser
 from base.tests.models import test_student, test_offer_year, test_academic_year
+from dissertation.tests.factories.adviser import AdviserManagerFactory, AdviserTeacherFactory
 
 
 class DissertationViewTestCase(TestCase):
@@ -35,10 +36,8 @@ class DissertationViewTestCase(TestCase):
     def setUp(self):
         self.client = Client()
 
-        teacher = test_adviser.create_adviser_from_scratch(username='teacher', email='teacher@uclouvain.be',
-                                                           password='teacher', type='PRF')
-        manager = test_adviser.create_adviser_from_scratch(username='manager', email='manager@uclouvain.be',
-                                                           password='manager', type='MGR')
+        self.teacher = AdviserTeacherFactory()
+        self.manager = AdviserManagerFactory()
         student = test_student.create_student(first_name="Prenometu", last_name="Nometu", registration_id="321654")
 
         academic_year = test_academic_year.create_academic_year()
@@ -47,15 +46,15 @@ class DissertationViewTestCase(TestCase):
                                                              academic_year=academic_year)
         offer = offer_year_start.offer
         offer_proposition = test_offer_proposition.create_offer_proposition(acronym="test_offer", offer=offer)
-        test_faculty_adviser.create_faculty_adviser(manager, offer)
+        test_faculty_adviser.create_faculty_adviser(self.manager, offer)
 
         # Create 5 propositions dissertations
         proposition_dissertations = []
         for x in range(0, 5):
             proposition_dissertation = test_proposition_dissertation.create_proposition_dissertation(
                 title="Proposition " + str(x),
-                adviser=teacher,
-                person=teacher.person,
+                adviser=self.teacher,
+                person=self.teacher.person,
                 offer_proposition=offer_proposition
             )
             proposition_dissertations.append(proposition_dissertation)
@@ -65,7 +64,7 @@ class DissertationViewTestCase(TestCase):
         status = ['DRAFT', 'COM_SUBMIT', 'EVA_SUBMIT', 'TO_RECEIVE', 'DIR_SUBMIT']
         for x in range(0, 5):
             test_dissertation.create_dissertation(
-                adviser=teacher,
+                adviser=self.teacher,
                 dissertation_role=roles[x],
                 title="Dissertation " + str(x),
                 author=student,
@@ -76,7 +75,7 @@ class DissertationViewTestCase(TestCase):
                 )
 
     def test_get_dissertations_list_for_teacher(self):
-        self.client.login(username='teacher', password='teacher')
+        self.client.force_login(self.teacher.person.user)
         url = reverse('dissertations_list')
         response = self.client.get(url)
         self.assertEqual(response.context[-1]['adviser_list_dissertations'].count(), 1)  # only 1 because 1st is DRAFT
@@ -85,13 +84,13 @@ class DissertationViewTestCase(TestCase):
         self.assertEqual(response.context[-1]['adviser_list_dissertations_accompanist'].count(), 1)
 
     def test_get_dissertations_list_for_manager(self):
-        self.client.login(username='manager', password='manager')
+        self.client.force_login(self.manager.person.user)
         url = reverse('manager_dissertations_list')
         response = self.client.get(url)
         self.assertEqual(response.context[-1]['dissertations'].count(), 5)
 
     def test_search_dissertations_for_manager(self):
-        self.client.login(username='manager', password='manager')
+        self.client.force_login(self.manager.person.user)
         url = reverse('manager_dissertations_search')
 
         response = self.client.get(url, data={"search": "no result search"})
