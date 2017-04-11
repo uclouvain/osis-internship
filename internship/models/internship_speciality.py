@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -29,8 +29,8 @@ from django.core.exceptions import ObjectDoesNotExist
 
 
 class InternshipSpecialityAdmin(SerializableModelAdmin):
-    list_display = ('learning_unit', 'name', 'acronym', 'mandatory', 'order_postion')
-    fieldsets = ((None, {'fields': ('learning_unit', 'name', 'acronym', 'mandatory', 'order_postion')}),)
+    list_display = ('learning_unit', 'name', 'acronym', 'mandatory', 'order_postion', 'cohort')
+    fieldsets = ((None, {'fields': ('learning_unit', 'name', 'acronym', 'mandatory', 'order_postion', 'cohort')}),)
     raw_id_fields = ('learning_unit',)
 
 
@@ -40,6 +40,8 @@ class InternshipSpeciality(SerializableModel):
     acronym = models.CharField(max_length=125, blank=False, null=False)
     mandatory = models.BooleanField(default=False)
     order_postion = models.IntegerField(default=0)
+
+    cohort = models.ForeignKey('internship.cohort', null=False, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
@@ -55,8 +57,8 @@ def search_order_by_position(**kwargs):
     return InternshipSpeciality.objects.filter(**kwargs).select_related("learning_unit").order_by('order_postion')
 
 
-def find_all():
-    return InternshipSpeciality.objects.all().select_related("learning_unit").order_by('acronym', 'name')
+def find_all(cohort):
+    return InternshipSpeciality.objects.filter(cohort=cohort).select_related("learning_unit").order_by('acronym', 'name')
 
 
 def find_by_id(speciality_id):

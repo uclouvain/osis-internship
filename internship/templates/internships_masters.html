@@ -9,7 +9,7 @@
     * The core business involves the administration of students, teachers,
     * courses, programs and so on.
     *
-    * Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+    * Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
     *
     * This program is free software: you can redistribute it and/or modify
     * it under the terms of the GNU General Public License as published by
@@ -28,7 +28,8 @@
 
 {% block breadcrumb %}
     <li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
-    <li><a href="{% url 'internships_home' %}">{% trans 'internships_managment' %}</a></li>
+    <li><a href="{% url 'internship' %}">{% trans 'internships_managment' %}</a></li>
+    <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></li>
     <li class="active">{% trans 'internships_masters' %}</li>
 {% endblock %}
 {% block content %}
@@ -44,7 +45,7 @@
             </tr>
             </thead>
             <tbody>
-            <form action="{%url 'interships_masters' %}" method="get">
+            <form action="{%url 'internships_masters' cohort_id=cohort.id %}" method="get">
                 <tr>
                     <td style="text-align:center; width:50%;">
                         <select name="speciality_sort" onChange="javascript: this.form.submit();">
@@ -100,7 +101,7 @@
                         <tr>
                             <td>
                                 {% if perms.internship.is_internship_manager %}
-                                    <form method="post" action="{% url 'delete_interships_masters' %}">
+                                    <form method="post" action="{% url 'delete_internships_masters' cohort_id=cohort.id %}">
                                         {% csrf_token %}
                                         <input type="hidden" name="first_name" value={{ master.first_name }}>
                                         <input type="hidden" name="name" value={{ master.last_name }}>
@@ -144,7 +145,7 @@
         <div class="modal fade" id="pnl_upload_masters" tabindex="-1" role="dialog" aria-labelledby="uploadScoresLabel">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
-                    <form method="post" enctype="multipart/form-data" action="{% url 'upload_interships_masters' %}">
+                    <form method="post" enctype="multipart/form-data" action="{% url 'upload_internships_masters' cohort_id=cohort.id %}">
                         {% csrf_token %}
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="bt_close_upload_score_modal"><span aria-hidden="true">&times;</span></button>

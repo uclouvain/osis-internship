@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -23,35 +23,31 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+import factory
+import factory.fuzzy
+import pendulum
 
 
-class InternshipWrapper:
-    def __init__(self, internship):
-        self.internship = internship
-        self.periods_places = dict()
-        self.periods_places_left = dict()
-
-    def set_period_places(self, period_places):
-        period_name = period_places.period.name
-        self.periods_places[period_name] = period_places
-        self.periods_places_left[period_name] = period_places.number_places
-
-    def period_is_not_full(self, period_name):
-        return self.periods_places_left.get(period_name, 0) > 0
-
-    def get_free_periods(self):
-        return [period_name for period_name in self.periods_places_left.keys() if self.period_is_not_full(period_name)]
-
-    def is_not_full(self):
-        return len(self.get_free_periods()) > 0
-
-    def occupy(self, period_name):
-        self.periods_places_left[period_name] -= 1
-        return self.periods_places[period_name]
-
-    def reinitialize(self):
-        self.periods_places_left = dict()
-        for period_name, period_places in self.periods_places.items():
-            self.periods_places_left[period_name] = period_places.number_places
+def fn_publication_start_date(cohort):
+    return pendulum.today().start_of('month')._datetime
 
 
+def fn_subscription_start_date(cohort):
+    return pendulum.instance(cohort.publication_start_date).add(months=1)._datetime
+
+
+def fn_subscription_end_date(cohort):
+    return pendulum.instance(cohort.subscription_start_date).add(months=2)._datetime
+
+
+class CohortFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = 'internship.Cohort'
+
+    name = factory.Sequence(lambda n: 'Cohort %d' % (n,))
+    description = factory.fuzzy.FuzzyText()
+
+    free_internships_number = 8
+    publication_start_date = factory.LazyAttribute(fn_publication_start_date)
+    subscription_start_date = factory.LazyAttribute(fn_subscription_start_date)
+    subscription_end_date = factory.LazyAttribute(fn_subscription_end_date)

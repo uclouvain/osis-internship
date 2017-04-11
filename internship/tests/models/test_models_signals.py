@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -27,6 +27,7 @@ from django.test import TestCase
 from django.contrib.auth.models import User
 from base.models.person import Person
 from internship.models.internship_student_information import InternshipStudentInformation
+from internship.tests.factories.cohort import CohortFactory
 
 
 class AddToGroupsSignalsTest(TestCase):
@@ -36,11 +37,15 @@ class AddToGroupsSignalsTest(TestCase):
         self.person_foo = Person.objects.create(user=self.user_foo)
 
     def create_internships_student_foo(self):
-        return InternshipStudentInformation.objects.create(person=self.person_foo,
-                                                           location='Location',
-                                                           postal_code='postal_code',
-                                                           city='city',
-                                                           country='country')
+        cohort = CohortFactory()
+        return InternshipStudentInformation.objects.create(
+            person=self.person_foo,
+            location='Location',
+            postal_code='postal_code',
+            city='city',
+            country='country',
+            cohort=cohort
+        )
 
     def is_member(self, group):
         return self.user_foo.groups.filter(name=group).exists()
