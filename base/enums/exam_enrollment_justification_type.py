@@ -30,16 +30,13 @@ from django.utils.translation import ugettext_lazy as _
 ABSENCE_UNJUSTIFIED = "ABSENCE_UNJUSTIFIED"
 ABSENCE_JUSTIFIED = "ABSENCE_JUSTIFIED"
 CHEATING = "CHEATING"
-SCORE_MISSING = "SCORE_MISSING"
 
 # When the user inform 'A', we have to convert it to 'ABSENCE_UNJUSTIFIED'
 # When exporting the data to EPC, we have to convert:
 #    'ABSENCE_UNJUSTIFIED' => 'S'
 #    'ABSENCE_JUSTIFIED'   => 'M'
 #    'CHEATING'            => 'T'
-#    'SCORE_MISSING'       => '?'
 JUSTIFICATION_TYPES = (
     (ABSENCE_UNJUSTIFIED, _('ABSENCE_UNJUSTIFIED')),  # A -> S
     (ABSENCE_JUSTIFIED, _('ABSENCE_JUSTIFIED')),      # M
-    (CHEATING, _('CHEATING')),                        # T
-    (SCORE_MISSING, _('SCORE_MISSING')))              # ?
+    (CHEATING, _('CHEATING')))                        # T
