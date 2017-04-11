@@ -766,6 +766,9 @@ msgstr "Rechercher un enseignant"
 msgid "see_my_waiting_dissertations"
 msgstr "Voir les mémoires en attente"
 
+msgid "select_at_least_one_item"
+msgstr "Veuillez choisir au moins un élément"
+
 msgid "select_program_first"
 msgstr "Choisissez d'abord le Programme/Année de début"
 

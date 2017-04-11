@@ -91,10 +91,15 @@
         <div class="panel-group">
             <label for="txt_max_number_student" {% if form.max_number_student.errors %} style="color:red;" {% endif %}>{% trans 'max_students_number' %}</label>
             <input class="form-control" id="txt_max_number_student"  name="max_number_student"
-                style="margin:-6px;">
+                style="margin:-6px;" value="{{ form.max_number_student.value|default_if_none:'' }}">
         </div>
         <div class="panel-group">
-            <label for="txt_level">{% trans 'offer_propositions' %}</label>
+            <label for="txt_level" {% if offer_propositions_error %} style="color:red;" {% endif %}>
+                {% trans 'offer_propositions' %}
+                {% if offer_propositions_error %}
+                    <br>{% trans offer_propositions_error %}
+                {% endif %}
+            </label>
             <br>
             {% for offer_proposition in offer_propositions %}
                 <label for="txt_checkbox_{{ offer_proposition.id }}">{{ offer_proposition.acronym }}</label>
