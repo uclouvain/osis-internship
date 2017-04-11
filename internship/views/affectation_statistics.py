@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -36,11 +36,11 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404
 
 from internship import models as mdl_internship
 from internship.views.internship import calc_dist, set_tabs_name
 from internship.views.place import sort_organizations, set_speciality_unique
-from internship.utils.student_assignment import solver
 
 # ****************** Global vars ******************
 errors = []  # List of all internship added to hospital error, as tuple (student, speciality, period)
@@ -96,7 +96,7 @@ class StudentChoice:
 
 
 # ****************** Utils ******************
-def compute_stats(sol):
+def compute_stats(cohort, sol):
     """
     Compute the statistics of the solution
     """
@@ -114,7 +114,7 @@ def compute_stats(sol):
     others_specialities_students = {}
 
     # Retrieve all specialities
-    specialities = mdl_internship.internship_speciality.InternshipSpeciality.objects.all().select_related()
+    specialities = mdl_internship.internship_speciality.InternshipSpeciality.objects.filter(cohort=cohort).select_related()
 
     # Initialize the others_specialities and others_specialities_students
     for speciality in specialities:
@@ -181,10 +181,6 @@ def compute_stats(sol):
                         # Retrieve the addresses of the hospital and the student
                         addr_student = mdl_internship.internship_student_information.search(person=student.person)[0]
                         addr_organization = mdl_internship.organization_address.search(organization=internship.organization)[0]
-                        # Compute the distance between the student address
-                        # and hospital address and append it to the list
-                        # We will compute the mean distance with mean method
-                        distance_mean.append(compute_distance(addr_student, addr_organization))
                         # Increment total of imposed choices
                         imposed_choices += 1
                         # Add the student to the set "others_students",
@@ -204,7 +200,7 @@ def compute_stats(sol):
 
     # Get number of students socio
     students_socio = set()
-    for speciality, students in get_student_mandatory_choices(True).items():
+    for speciality, students in get_student_mandatory_choices(cohort, True).items():
         for choices in students:
             students_socio.add(choices[0].student.id)
     socio = len(mdl_internship.internship_choice.InternshipChoice.
@@ -339,41 +335,41 @@ def init_internship_table():
     return temp_internship_table
 
 
-def init_solution():
+def init_solution(cohort):
     """
     Initialize the empty solution, the solution is represented by a dictionary of students.
     Each student will have a dict with 12 periods and each period will have an 'InternshipEnrollment'
     """
     global solution
     # Retrieve all students
-    internshipChoices = mdl_internship.internship_choice.find_by_all_student()
+    internshipChoices = mdl_internship.internship_choice.find_by_all_student(cohort=cohort)
     # For each student create an empty dict
     for internshipChoice in internshipChoices:
         solution[internshipChoice.student] = {}
 
 
-def init_organizations():
+def init_organizations(cohort):
     """
     Retrieve addresses of all organisation and init the hospital "error".
     """
     # Save data directly in global variables
     global organizations, organization_addresses_dic
-    organizations[hospital_error] = mdl_internship.organization.Organization.objects.filter(reference=hospital_error)[0]
+    organizations[hospital_error] = mdl_internship.organization.Organization.objects.filter(reference=hospital_error).first()
     organizations[hospital_to_edit] = \
-        mdl_internship.organization.Organization.objects.filter(reference=hospital_to_edit)[0]
+        mdl_internship.organization.Organization.objects.filter(reference=hospital_to_edit).first()
 
     for organization_address in mdl_internship.organization_address.OrganizationAddress.objects.all():
         organization_addresses_dic[organization_address.organization] = organization_address
 
 
-def init_specialities():
+def init_specialities(cohort):
     """
     Retrieve all internship offers and the id of the speciality "emergency"
     """
     # Save data directly in global variables
     global specialities_dict, emergency, internship_offer_dic
-    for speciality in mdl_internship.internship_speciality.find_all():
-        internship_offer_dic[speciality] = mdl_internship.internship_offer.search(speciality=speciality)
+    for speciality in mdl_internship.internship_speciality.find_all(cohort=cohort):
+        internship_offer_dic[speciality] = mdl_internship.internship_offer.search(cohort=cohort, speciality=speciality)
         specialities_dict[speciality.name] = speciality.id
         if speciality.acronym.strip() == 'UR':
             emergency = speciality.id
@@ -597,7 +593,7 @@ def compute_distance(address_student, address_organization):
     return distance
 
 
-def get_student_mandatory_choices(priority):
+def get_student_mandatory_choices(cohort, priority):
     """
     Return all student's choices of given type.
     :param priority: True if we have to return the choices of priority student,
@@ -643,7 +639,7 @@ def get_student_mandatory_choices(priority):
     # Sort he dict of student (this optimize the final result)
     global specialities_dict
 
-    all_specialities = mdl_internship.internship_speciality.search_order_by_position(mandatory=True)
+    all_specialities = mdl_internship.internship_speciality.search_order_by_position(cohort=cohort, mandatory=True)
     orders = []
 
     for speciality in all_specialities:
@@ -891,12 +887,12 @@ def fill_erasmus_choices():
             decrease_available_places(enrol.place, enrol.internship_offer.speciality, enrol.period.name)
 
 
-def fill_emergency_choices(priority):
+def fill_emergency_choices(cohort, priority):
     """
     Fill the solution with emergency choices.
     :param priority: True if the student is a social student, false otherwise
     """
-    data = get_student_mandatory_choices(priority)
+    data = get_student_mandatory_choices(cohort, priority)
     if emergency in data:
         # Start with "Emergency"
         emergency_students = data.pop(emergency)
@@ -923,13 +919,13 @@ def fill_emergency_choices(priority):
                 update_scores(choice0.student)
 
 
-def fill_normal_choices(priority):
+def fill_normal_choices(cohort, priority):
     """
     Fill the solution with the choices of all specialities except emergency
     :param priority: True if the student is a social student, false otherwise
     """
     global errors
-    data = get_student_mandatory_choices(priority)
+    data = get_student_mandatory_choices(cohort, priority)
     # Remove emergency from the dict
     if emergency in data:
         data.pop(emergency)
@@ -956,7 +952,7 @@ def fill_normal_choices(priority):
                     errors.append((choice.student, choice.speciality, choice.period, choices, priority))
 
 
-def swap_empty_internships():
+def swap_empty_internships(cohort):
     """
     Try to eliminate the empty internships by finding the internship that can be swapped.
     """
@@ -974,7 +970,7 @@ def swap_empty_internships():
                             # Add the internship to list of empty internships
                             empty_internships.append((organization, speciality, period, places))
                             # Find all choices of student in the "Organization" and "speciality"
-                            choices = mdl_internship.internship_choice.search(organization=organization,
+                            choices = mdl_internship.internship_choice.search(cohort=cohort, organization=organization,
                                                                               speciality=speciality)
                             # Iterate over all choices of students
                             for choice in choices:
@@ -1066,7 +1062,7 @@ def swap_errors():
                 update_scores(choice.student)
 
 
-def generate_solution():
+def generate_solution(cohort):
     """
     Generate the new solution and save it in the database
     """
@@ -1085,20 +1081,20 @@ def generate_solution():
     organization_addresses_dic = {}
     internship_table_original = {}
 
-    init_solution()
+    init_solution(cohort)
     internship_table = init_internship_table()
-    init_organizations()
-    init_specialities()
+    init_organizations(cohort)
+    init_specialities(cohort)
     fill_erasmus_choices()
     fill_emergency_choices(True)
     fill_emergency_choices(False)
     fill_normal_choices(True)
     fill_normal_choices(False)
     swap_errors()
-    # swap_empty_internships()
+    # swap_empty_internships(cohort)
 
 
-def save_solution():
+def save_solution(cohort):
     """
     Save the solution in the database
     :return:
@@ -1106,7 +1102,7 @@ def save_solution():
     global solution, internship_table
     # Remove old result from the database
     mdl_internship.internship_student_affectation_stat.InternshipStudentAffectationStat.objects.all().delete()
-    periods = mdl_internship.period.search().order_by('id')
+    periods = mdl_internship.period.search(cohort).order_by('id')
 
     for student, internships in solution.items():
         for period, internship in internships.items():
@@ -1133,8 +1129,8 @@ def load_solution(data):
     keys = ['P1', 'P2', 'P3', 'P4', 'P5', 'P6', 'P7', 'P8', 'P9', 'P10', 'P11', 'P12']
 
     for pid in period_internship_places:
-        organization = pid.internship.organization
-        acronym = pid.internship.speciality.acronym
+        organization = pid.internship_offer.organization
+        acronym = pid.internship_offer.speciality.acronym
         period_name = pid.period.name
         if acronym not in temp_internship_table[organization]:
             temp_internship_table[organization][acronym] = OrderedDict()
@@ -1186,51 +1182,31 @@ def fill_periods_default_values(acronym, keys, organization, temp_internship_tab
         temp_internship_table[organization][acronym][key]['before'] = 0
         temp_internship_table[organization][acronym][key]['after'] = 0
 
-
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
-def internship_affectation_statistics_generate(request):
-    """ Generate new solution, save it in the database, redirect back to the page 'internship_affectation_statistics'"""
-    if request.method == 'POST':
-        if request.POST['executions'] != "":
-            start_date_time = datetime.now()
-            cost = sys.maxsize
-            for i in range(0, int(request.POST['executions'])):
-                generate_solution()
-                new_cost = get_solution_cost()
-                if new_cost < cost:
-                    save_solution()
-                    cost = new_cost
-            end_date_time = datetime.now()
-            affectation_generatioon_time = mdl_internship.affectation_generation_time.AffectationGenerationTime()
-            affectation_generatioon_time.start_date_time = start_date_time
-            affectation_generatioon_time.end_date_time = end_date_time
-            affectation_generatioon_time.generated_by = request.user.username
-            affectation_generatioon_time.save()
-        return HttpResponseRedirect(reverse('internship_affectation_statistics'))
-
-
-@login_required
-@permission_required('internship.is_internship_manager', raise_exception=True)
-def internship_affectation_statistics(request):
-    init_organizations()
-    init_specialities()
+def internship_affectation_statistics(request, cohort_id):
+    cohort = get_object_or_404(mdl_internship.cohort.Cohort, pk=cohort_id)
+    init_organizations(cohort)
+    init_specialities(cohort)
     sol, table, stats, internship_errors = None, None, None, None
-    data = mdl_internship.internship_student_affectation_stat.InternshipStudentAffectationStat.objects.all().\
+    periods = mdl_internship.period.Period.objects.filter(cohort=cohort)
+    period_ids = periods.values_list("id", flat=True)
+    data = mdl_internship.internship_student_affectation_stat.InternshipStudentAffectationStat.objects.filter(period_id__in=period_ids).\
         select_related("student", "organization", "speciality", "period")
     if len(data) > 0:
         sol, table = load_solution(data)
-        stats = compute_stats(sol)
+        stats = compute_stats(cohort, sol)
         # Mange sort of the students
         sol = OrderedDict(sorted(sol.items(), key=lambda t: t[0].person.last_name))
         # Mange sort of the organizations
         table.sort(key=itemgetter(0))
         internship_errors = mdl_internship.internship_student_affectation_stat.InternshipStudentAffectationStat.\
-            objects.filter(organization=organizations[hospital_error])
+            objects.filter(organization=organizations[hospital_error], period_id__in=period_ids)
 
     latest_generation = mdl_internship.affectation_generation_time.get_latest()
     return render(request, "internship_affectation_statics.html",
                   {'section': 'internship',
+                   'cohort': cohort,
                    'recap_sol': sol,
                    'stats': stats,
                    'organizations': table,
@@ -1240,14 +1216,15 @@ def internship_affectation_statistics(request):
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
-def internship_affectation_sumup(request):
-    all_speciality = list(mdl_internship.internship_speciality.find_all())
+def internship_affectation_sumup(request, cohort_id):
+    cohort = get_object_or_404(mdl_internship.cohort.Cohort, pk=cohort_id)
+    all_speciality = list(mdl_internship.internship_speciality.find_all(cohort=cohort))
     all_speciality=set_speciality_unique(all_speciality)
     set_tabs_name(all_speciality)
-    periods = mdl_internship.period.search()
-    organizations = mdl_internship.organization.search()
+    periods = mdl_internship.period.search(cohort=cohort)
+    organizations = mdl_internship.organization.search(cohort=cohort)
     organizations = sort_organizations(organizations)
-    offers = mdl_internship.internship_offer.search()
+    offers = mdl_internship.internship_offer.search(cohort=cohort)
     informations = []
     for organization in organizations:
         for offer in offers:
@@ -1280,23 +1257,5 @@ def internship_affectation_sumup(request):
                    'periods': periods,
                    'organizations': informations,
                    'affectations': affectations,
+                   'cohort': cohort
                    })
-
-
-@login_required
-@permission_required('internship.is_internship_manager', raise_exception=True)
-def assign_automatically_internships(request):
-    """ Generate new solution, save it in the database, redirect back to the page 'internship_affectation_statistics'"""
-    if request.method == 'POST':
-        if request.POST['executions'] != "":
-            times = int(request.POST['executions'])
-            start_date_time = datetime.now()
-            mdl_internship.internship_student_affectation_stat.find_non_mandatory_affectations().delete()
-            solver.affect_student(times)
-            end_date_time = datetime.now()
-            affectation_generatioon_time = mdl_internship.affectation_generation_time.AffectationGenerationTime()
-            affectation_generatioon_time.start_date_time = start_date_time
-            affectation_generatioon_time.end_date_time = end_date_time
-            affectation_generatioon_time.generated_by = request.user.username
-            affectation_generatioon_time.save()
-        return redirect(reverse('internship_affectation_statistics'))

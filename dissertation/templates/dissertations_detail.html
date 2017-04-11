@@ -70,11 +70,12 @@
                 </div>
                 {% if filename != "" %}
                     <div class="row">
-                        <div class="col-md-2 col-lg-offset-1" style="text-align:right">
+                        <div class="col-md-3" style="text-align:right">
                             <label>{% trans 'file' %}</label>
                         </div>
-                        <div class="col-md-4">
-                            <a href="{% url 'dissertation_download' dissertation_pk=dissertation.pk %}">{% trans 'link' %}</a>
+                        <div class="col-md-9">
+                            <a href="{% url 'dissertation_download' dissertation_pk=dissertation.pk %}">
+                                {% trans 'link' %}</a>
                         </div>
                     </div>
                 {% endif %}
@@ -83,43 +84,19 @@
                         <label>{% trans 'status' %}</label>
                     </div>
                     <div class="col-md-9">
-                        {% if dissertation.status == 'DRAFT' %}
-                        <span class="label label-default">
-                        {% elif dissertation.status == 'DIR_SUBMIT' %}
-                        <span class="label label-primary">
-                        {% elif dissertation.status == 'DIR_OK' %}
-                        <span class="label label-success">
-                        {% elif dissertation.status == 'DIR_KO' %}
-                        <span class="label label-danger">
-                        {% elif dissertation.status == 'COM_SUBMIT' %}
-                        <span class="label label-primary">
-                        {% elif dissertation.status == 'COM_OK' %}
-                        <span class="label label-default">
-                        {% elif dissertation.status == 'COM_KO' %}
-                        <span class="label label-danger">
-                        {% elif dissertation.status == 'EVA_SUBMIT' %}
-                        <span class="label label-primary">
-                        {% elif dissertation.status == 'EVA_OK' %}
-                        <span class="label label-default">
-                        {% elif dissertation.status == 'EVA_KO' %}
-                        <span class="label label-danger">
-                        {% elif dissertation.status == 'TO_RECEIVE' %}
-                        <span class="label label-default">
-                        {% elif dissertation.status == 'TO_DEFEND' %}
-                        <span class="label label-default">
-                        {% elif dissertation.status == 'DEFENDED' %}
-                        <span class="label label-default">
-                        {% elif dissertation.status == 'ENDED' %}
-                        <span class="label label-default">
-                        {% elif dissertation.status == 'ENDED_WIN' %}
-                        <span class="label label-default">
-                        {% elif dissertation.status == 'ENDED_LOS' %}
-                        <span class="label label-danger">
-                        {% else %}
-                        <span class="label label-default">
-                        {% endif %}
-                            {{ dissertation.get_status_display }}
-                        </span>
+                        {% with st=dissertation.status %}
+                            {% if st == 'DIR_OK' or st == 'ENDED_WIN' %}
+                                <span class="label label-success">
+                            {% elif st == 'DIR_SUBMIT' or st == 'COM_SUBMIT' or st == 'EVA_SUBMIT' %}
+                                <span class="label label-primary">
+                            {% elif st == 'DIR_KO' or st == 'ENDED_LOS' or st == 'COM_KO' or st == 'EVA_KO' %}
+                                <span class="label label-danger">
+                            {% else %}
+                                <span class="label label-default">
+                            {% endif %}
+                                {{ dissertation.get_status_display }}
+                            </span>
+                        {% endwith %}
                     </div>
                 </div>
                 <div class="row">
@@ -216,21 +193,22 @@
                 </div>
             </div>
         </div>
-        <div style="text-align: right;">
-                {% if dissertation.status == 'DIR_SUBMIT' %}
-                <a href="{% url 'dissertations_to_dir_ok' pk=dissertation.pk %}"
-                   id="lnk_dissertations_to_dir_ok" class="btn btn-success"
-                   role="button" title="{% trans 'dissertations_to_dir_ok'%}"><span
-                        class="glyphicon glyphicon-ok-circle"
-                        aria-hidden="true"></span> {% trans 'dissertations_to_dir_ok'%}</a>
 
-                <a href="{% url 'dissertations_to_dir_ko' pk=dissertation.pk %}"
-                   id="lnk_dissertations_to_dir_ko" class="btn btn-warning"
-                   role="button" title="{% trans 'dissertations_to_dir_ko'%}"><span
-                        class="glyphicon glyphicon-remove-circle"
-                        aria-hidden="true"></span> {% trans 'dissertations_to_dir_ko'%}</a>
-                {% endif %}
+        {% if dissertation.status == 'DIR_SUBMIT' %}
+        <div style="text-align: right;">
+            <a href="{% url 'dissertations_to_dir_ok' pk=dissertation.pk %}"
+               id="lnk_dissertations_to_dir_ok" class="btn btn-success"
+               role="button" title="{% trans 'dissertations_to_dir_ok'%}"><span
+                    class="glyphicon glyphicon-ok-circle"
+                    aria-hidden="true"></span> {% trans 'dissertations_to_dir_ok'%}</a>
+
+            <a href="{% url 'dissertations_to_dir_ko' pk=dissertation.pk %}"
+               id="lnk_dissertations_to_dir_ko" class="btn btn-warning"
+               role="button" title="{% trans 'dissertations_to_dir_ko'%}"><span
+                    class="glyphicon glyphicon-remove-circle"
+                    aria-hidden="true"></span> {% trans 'dissertations_to_dir_ko'%}</a>
         </div>
+        {% endif %}
     </div>
 </div>
 {% endblock %}

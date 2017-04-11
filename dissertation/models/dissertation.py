@@ -23,11 +23,9 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
+from dissertation.utils import emails_dissert
 from dissertation.models.dissertation_role import get_promoteur_by_dissertation
-from dissertation.utils.emails_dissert import send_mail_dissert_accepted_by_teacher, \
-    send_mail_dissert_acknowledgement, send_mail_dissert_accepted_by_com, send_mail_dissert_refused_by_teacher, \
-    send_mail_dissert_refused_by_com, send_mail_to_teacher_new_dissert
+from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 from django.db import models
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
@@ -43,6 +41,7 @@ class DissertationAdmin(SerializableModelAdmin):
     search_fields = ('uuid', 'title', 'author__person__last_name', 'author__person__first_name',
                      'proposition_dissertation__title', 'proposition_dissertation__author__person__last_name',
                      'proposition_dissertation__author__person__first_name')
+
 
 STATUS_CHOICES = (
     ('DRAFT', _('draft')),
@@ -72,7 +71,7 @@ DEFEND_PERIODE_CHOICES = (
 
 
 class Dissertation(SerializableModel):
-    title = models.CharField(max_length=200)
+    title = models.CharField(max_length=500)
     author = models.ForeignKey(student.Student)
     status = models.CharField(max_length=12, choices=STATUS_CHOICES, default='DRAFT')
     defend_periode = models.CharField(max_length=12, choices=DEFEND_PERIODE_CHOICES, blank=True, null=True)
@@ -100,25 +99,31 @@ class Dissertation(SerializableModel):
 
         next_status = get_next_status(self, "go_forward")
         if self.status == 'TO_RECEIVE' and next_status == 'TO_DEFEND':
-            send_mail_dissert_acknowledgement(self.author.person)
-        if (self.status == 'DRAFT' or self.status == 'DIR_KO')and next_status == 'DIR_SUBMIT':
-            send_mail_to_teacher_new_dissert(get_promoteur_by_dissertation(self))
+            emails_dissert.send_email(self, 'dissertation_acknowledgement', self.author)
+        if (self.status == 'DRAFT' or self.status == 'DIR_KO') and next_status == 'DIR_SUBMIT':
+            emails_dissert.send_email(self,
+                                      'dissertation_adviser_new_project_dissertation',
+                                      get_promoteur_by_dissertation(self)
+                                      )
         self.set_status(next_status)
 
     def accept(self):
         next_status = get_next_status(self, "accept")
         if self.status == 'DIR_SUBMIT':
-            send_mail_dissert_accepted_by_teacher(self.author.person)
-        if self.status == 'COM_SUBMIT':
-            send_mail_dissert_accepted_by_com(self.author.person)
+            emails_dissert.send_email(self, 'dissertation_accepted_by_teacher', self.author)
+        if self.status == 'COM_SUBMIT' or self.status == 'COM_KO':
+            emails_dissert.send_email(self, 'dissertation_accepted_by_com', self.author)
         self.set_status(next_status)
 
     def refuse(self):
         next_status = get_next_status(self, "refuse")
         if self.status == 'DIR_SUBMIT':
-            send_mail_dissert_refused_by_teacher(self.author.person)
+            emails_dissert.send_email(self, 'dissertation_refused_by_teacher', self.author)
         if self.status == 'COM_SUBMIT':
-            send_mail_dissert_refused_by_com(self.author.person, get_promoteur_by_dissertation(self).person)
+            emails_dissert.send_email(self, 'dissertation_refused_by_com_to_student', self.author)
+            emails_dissert.send_email(self,
+                                      'dissertation_refused_by_com_to_teacher',
+                                      get_promoteur_by_dissertation(self))
         self.set_status(next_status)
 
     class Meta:
@@ -184,8 +189,8 @@ def get_next_status(dissert, operation):
             return 'COM_SUBMIT'
 
         elif offer_prop.evaluation_first_year and (dissert.status == 'DIR_SUBMIT' or
-                                                   dissert.status == 'COM_SUBMIT' or
-                                                   dissert.status == 'COM_KO'):
+                                                           dissert.status == 'COM_SUBMIT' or
+                                                           dissert.status == 'COM_KO'):
             return 'EVA_SUBMIT'
 
         elif dissert.status == 'EVA_SUBMIT' or dissert.status == 'EVA_KO':
