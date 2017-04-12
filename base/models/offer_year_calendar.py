@@ -123,7 +123,7 @@ def _create_from_academic_calendar(academic_calendar):
 
 def find_by_current_session_exam():
     return OfferYearCalendar.objects.filter(start_date__lte=timezone.now()) \
-                                    .filter(end_date__gte=timezone.now()).first()
+        .filter(end_date__gte=timezone.now()).first()
 
 
 def find_by_academic_calendar(academic_cal):
@@ -138,29 +138,26 @@ def find_offer_year_events(offer_yr):
 
 
 def find_offer_year_calendars_by_academic_year(academic_yr):
-    return OfferYearCalendar.objects.filter(academic_calendar__academic_year=academic_yr)\
-                                    .order_by('academic_calendar', 'offer_year__acronym')
+    return OfferYearCalendar.objects.filter(academic_calendar__academic_year=academic_yr) \
+        .order_by('academic_calendar', 'offer_year__acronym')
 
 
 def find_by_id(offer_year_calendar_id):
     return OfferYearCalendar.objects.get(pk=offer_year_calendar_id)
 
 
-def find_deliberation_date(session_exam):
-    scores_encodings_end_date = None
-    offer_year_cal = session_exam.offer_year_calendar
-    if offer_year_cal.customized: # if the date is set by EPC (from deliberation date)
-        scores_encodings_end_date = offer_year_cal.end_date
-        # The deliberation date is the end date of the scores encodings +1 day
-        scores_encodings_end_date += datetime.timedelta(days=1)
-    return scores_encodings_end_date
+def find_by_offer_year(offer_yr, academic_calendar_type=None):
+    queryset = OfferYearCalendar.objects.filter(offer_year=offer_yr)
+    if academic_calendar_type:
+        queryset = queryset.filter(academic_calendar__reference=academic_calendar_type)
+    return queryset
 
 
 def find_latest_end_date_by_academic_calendar(academic_calendar_id):
     try:
         return OfferYearCalendar.objects.filter(academic_calendar_id=academic_calendar_id) \
-                                        .filter(customized=True) \
-                                        .filter(end_date__isnull=False) \
-                                        .latest('end_date')
+            .filter(customized=True) \
+            .filter(end_date__isnull=False) \
+            .latest('end_date')
     except ObjectDoesNotExist:
         return None
