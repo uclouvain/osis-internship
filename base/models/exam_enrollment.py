@@ -51,7 +51,7 @@ class ExamEnrollmentAdmin(admin.ModelAdmin):
                      'learning_unit_enrollment__offer_enrollment__student__person__last_name',
                      'learning_unit_enrollment__offer_enrollment__student__registration_id',
                      'learning_unit_enrollment__learning_unit_year__acronym',
-                     'session_exam__offer_year_calendar__offer_year__acronym']
+                     'learning_unit_enrollment__offer_enrollment__offer_year__acronym']
 
 
 class ExamEnrollment(models.Model):
