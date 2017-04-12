@@ -7,3 +7,4 @@ ADD . /code/
 WORKDIR /code
 RUN cp .env.example .env
 RUN pip install -r requirements.txt
+RUN pip install -r requirements-dev.txt

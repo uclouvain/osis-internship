@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -31,9 +31,9 @@ from django.utils.translation import ugettext_lazy as _
 
 class InternshipStudentInformationAdmin(SerializableModelAdmin):
     list_display = ('person', 'location', 'postal_code', 'city', 'country', 'latitude', 'longitude', 'email',
-                    'phone_mobile', 'contest')
+                    'phone_mobile', 'contest', 'cohort')
     fieldsets = ((None, {'fields': ('person', 'location', 'postal_code', 'city', 'latitude', 'longitude', 'country',
-                                    'email', 'phone_mobile', 'contest')}),)
+                                    'email', 'phone_mobile', 'contest', 'cohort')}),)
     raw_id_fields = ('person',)
     search_fields = ['person__user__username', 'person__last_name', 'person__first_name']
 
@@ -52,6 +52,8 @@ class InternshipStudentInformation(SerializableModel):
     phone_mobile = models.CharField(max_length=100, blank=True, null=True)
     contest = models.CharField(max_length=124, choices=TYPE_CHOICE, default="GENERALIST")
 
+    cohort = models.ForeignKey('internship.Cohort', null=False, blank=False)
+
     def __str__(self):
         return '{}'.format(self.person)
 
@@ -62,8 +64,8 @@ def search(**kwargs):
     return queryset
 
 
-def find_all():
-    return InternshipStudentInformation.objects.all()\
+def find_all(cohort):
+    return InternshipStudentInformation.objects.filter(cohort=cohort)\
         .select_related("person")\
         .order_by('person__last_name', 'person__first_name')
 
@@ -75,16 +77,16 @@ def find_by_person(person):
         return None
 
 
-def get_number_of_specialists():
+def get_number_of_specialists(cohort):
     contest_specialist = "SPECIALIST"
-    return InternshipStudentInformation.objects.filter(contest=contest_specialist).count()
+    return InternshipStudentInformation.objects.filter(contest=contest_specialist, cohort=cohort).count()
 
 
-def get_number_of_generalists():
+def get_number_of_generalists(cohort):
     contest_generalist = "GENERALIST"
-    return InternshipStudentInformation.objects.filter(contest=contest_generalist).count()
+    return InternshipStudentInformation.objects.filter(contest=contest_generalist, cohort=cohort).count()
 
 
-def get_number_students():
-    return InternshipStudentInformation.objects.count()
+def get_number_students(cohort):
+    return InternshipStudentInformation.objects.filter(cohort=cohort).count()
 

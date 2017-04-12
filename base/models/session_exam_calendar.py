@@ -52,10 +52,6 @@ class SessionExamCalendar(models.Model):
 
 
 def current_session_exam(date=datetime.date.today()):
-    """"
-    :param date Default: today
-    :return session exam, None if not in session exam [Default: Return current session exam]
-    """
     try:
         return SessionExamCalendar.objects.get(academic_calendar__start_date__lte=date,
                                                academic_calendar__end_date__gte=date,
@@ -65,10 +61,6 @@ def current_session_exam(date=datetime.date.today()):
 
 
 def find_session_exam_number(date=datetime.date.today()):
-    """"
-    :param date Default: today
-    :return session exam number, None if not in session exam [Default: Return current session exam]
-    """
     current_session = current_session_exam(date)
     if current_session:
         return current_session.number_session
@@ -78,7 +70,7 @@ def find_session_exam_number(date=datetime.date.today()):
 def get_latest_session_exam(date=datetime.date.today()):
     """"
     :param date Default: today
-    :return latest session exam done of the current academic year
+    :return latest session exam done of the current academic calendar
     """
     current_academic_year = academic_year.current_academic_year()
     return SessionExamCalendar.objects.exclude(academic_calendar__end_date__isnull=True)\

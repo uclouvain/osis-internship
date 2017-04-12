@@ -153,20 +153,12 @@ class ExamEnrollment(models.Model):
 
 
 def get_session_exam_deadline(enrollment):
-    """
-        Return the session exam related to the exam enrollment, return None if not found
-        :param enrollment
-    """
     offer_enrollment = enrollment.learning_unit_enrollment.offer_enrollment
     nb_session = enrollment.session_exam.number_session
     return session_exam_deadline.get_by_offer_enrollment_nb_session(offer_enrollment, nb_session)
 
 
 def is_deadline_reached(enrollment):
-    """
-        Check if the deadline of score encoding for Program Manager/Tutor/Score Responsible is reached
-        :param enrollment
-    """
     session_exam_deadline = get_session_exam_deadline(enrollment)
     if session_exam_deadline:
         return session_exam_deadline.deadline < datetime.date.today()
@@ -174,10 +166,6 @@ def is_deadline_reached(enrollment):
 
 
 def is_deadline_tutor_reached(enrollment):
-    """
-        Check if the deadline of score encoding for tutor is reached
-        :param enrollment
-    """
     session_exam_deadline = get_session_exam_deadline(enrollment)
     if session_exam_deadline:
         if session_exam_deadline.deadline_tutor:
@@ -265,8 +253,8 @@ def get_progress(session_exm_list, learning_unt):
 
 def find_exam_enrollments_by_session_learningunit(session_exm, a_learning_unit_year):
     enrollments = ExamEnrollment.objects.filter(session_exam=session_exm) \
-        .filter(enrollment_state=enrollment_states.ENROLLED) \
-        .filter(learning_unit_enrollment__learning_unit_year=a_learning_unit_year)
+                                        .filter(enrollment_state=enrollment_states.ENROLLED) \
+                                        .filter(learning_unit_enrollment__learning_unit_year=a_learning_unit_year)
     return enrollments
 
 
@@ -386,7 +374,7 @@ def scores_sheet_data(exam_enrollments, tutor=None):
             'last_name': scores_responsible.person.last_name if scores_responsible else ''}
 
         learn_unit_year_dict['scores_responsible']['address'] = {'location': scores_responsible_address.location
-        if scores_responsible_address else '',
+                                                                 if scores_responsible_address else '',
                                                                  'postal_code': scores_responsible_address.postal_code
                                                                  if scores_responsible_address else '',
                                                                  'city': scores_responsible_address.city
@@ -418,7 +406,7 @@ def scores_sheet_data(exam_enrollments, tutor=None):
                 deliberation_date = _('not_passed')
 
             session_exam_deadline = get_session_exam_deadline(exam_enrollment)
-            deadline = None
+            deadline = ""
             if session_exam_deadline and session_exam_deadline.deadline_tutor:
                 deadline = session_exam_deadline.deadline_tutor.strftime('%d/%m/%Y')
 

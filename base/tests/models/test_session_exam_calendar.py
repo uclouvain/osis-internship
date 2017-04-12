@@ -31,32 +31,36 @@ from base.tests.factories.academic_year import AcademicYearFactory
 from base.tests.factories.academic_calendar import AcademicCalendarFactory
 from base.tests.factories.session_exam_calendar import SessionExamCalendarFactory
 from base.tests.factories.offer_year_calendar import OfferYearCalendarFactory
+from base.tests.factories.offer_year import  OfferYearFactory
 from base.models import session_exam_calendar
 from base.models.enums import number_session, academic_calendar_type
 
 
 class SessionExamCalendarTest(TestCase):
     def setUp(self):
-        tmp_academic_year = AcademicYearFactory(year=datetime.datetime.now().year)
+        current_year = datetime.date.today().year
+        self.academic_year = AcademicYearFactory(year=current_year,
+                                                 start_date=datetime.date(current_year, 1, 1),
+                                                 end_date= datetime.date(current_year+1, 12,31))
         self.academic_calendar_1 = AcademicCalendarFactory.build(title="Submission of score encoding - 1",
-                                                                 start_date=datetime.date(2016, 10, 15),
-                                                                 end_date=datetime.date(2017, 1, 1),
-                                                                 academic_year=tmp_academic_year,
+                                                                 start_date=datetime.date(self.academic_year.year, 10, 15),
+                                                                 end_date=datetime.date(self.academic_year.year+1, 1, 1),
+                                                                 academic_year=self.academic_year,
                                                                  reference=academic_calendar_type.SCORES_EXAM_SUBMISSION)
         self.academic_calendar_2 = AcademicCalendarFactory.build(title="Submission of score encoding - 2",
-                                                                 start_date=datetime.date(2017, 3, 15),
-                                                                 end_date=datetime.date(2017, 6, 28),
-                                                                 academic_year=tmp_academic_year,
+                                                                 start_date=datetime.date(self.academic_year.year+1, 3, 15),
+                                                                 end_date=datetime.date(self.academic_year.year+1, 6, 28),
+                                                                 academic_year=self.academic_year,
                                                                  reference=academic_calendar_type.SCORES_EXAM_SUBMISSION)
         self.academic_calendar_3 = AcademicCalendarFactory.build(title="Submission of score encoding - 3",
-                                                                 start_date=datetime.date(2017, 10, 15),
-                                                                 end_date=datetime.date(2017, 12, 28),
-                                                                 academic_year=tmp_academic_year,
+                                                                 start_date=datetime.date(self.academic_year.year+1, 10, 15),
+                                                                 end_date=datetime.date(self.academic_year.year+1, 12, 28),
+                                                                 academic_year=self.academic_year,
                                                                  reference=academic_calendar_type.SCORES_EXAM_SUBMISSION)
         self.academic_calendar_4 = AcademicCalendarFactory.build(title="Deliberation session 1",
-                                                                 start_date=datetime.date(2017, 1, 1),
-                                                                 end_date=datetime.date(2017, 1, 2),
-                                                                 academic_year=tmp_academic_year,
+                                                                 start_date=datetime.date(self.academic_year.year+1, 1, 1),
+                                                                 end_date=datetime.date(self.academic_year.year+1, 1, 2),
+                                                                 academic_year=self.academic_year,
                                                                  reference=academic_calendar_type.DELIBERATION)
         self.academic_calendar_1.save(functions=[])
         self.academic_calendar_2.save(functions=[])
@@ -84,26 +88,26 @@ class SessionExamCalendarTest(TestCase):
         session = SessionExamCalendarFactory(academic_calendar=self.academic_calendar_1,
                                              number_session=number_session.ONE)
 
-        self.assertEqual(session, session_exam_calendar.current_session_exam(date=datetime.date(2016, 11, 9)))
+        self.assertEqual(session, session_exam_calendar.current_session_exam(date=datetime.date(self.academic_year.year, 11, 9)))
 
     def test_current_session_exam_none(self):
         SessionExamCalendarFactory(academic_calendar=self.academic_calendar_1,
                                    number_session=number_session.ONE)
 
-        self.assertIsNone(session_exam_calendar.current_session_exam(date=datetime.date(2017, 1, 5)))
+        self.assertIsNone(session_exam_calendar.current_session_exam(date=datetime.date(self.academic_year.year+1, 1, 5)))
 
     def test_find_session_exam_number(self):
         SessionExamCalendarFactory(academic_calendar=self.academic_calendar_1,
                                    number_session=number_session.TWO)
 
         self.assertEqual(number_session.TWO,
-                         session_exam_calendar.find_session_exam_number(date=datetime.date(2016, 11, 9)))
+                         session_exam_calendar.find_session_exam_number(date=datetime.date(self.academic_year.year, 11, 9)))
 
     def test_find_session_exam_number_none(self):
         SessionExamCalendarFactory(academic_calendar=self.academic_calendar_1,
                                    number_session=number_session.TWO)
 
-        self.assertIsNone(session_exam_calendar.find_session_exam_number(date=datetime.date(2017, 1, 5)))
+        self.assertIsNone(session_exam_calendar.find_session_exam_number(date=datetime.date(self.academic_year.year+1, 1, 5)))
 
     def test_get_latest_session_exam(self):
         first = SessionExamCalendarFactory(academic_calendar=self.academic_calendar_1,
@@ -113,18 +117,19 @@ class SessionExamCalendarTest(TestCase):
         third = SessionExamCalendarFactory(academic_calendar=self.academic_calendar_3,
                                            number_session=number_session.THREE)
 
-        self.assertIsNone(session_exam_calendar.get_latest_session_exam(date=datetime.date(2016, 11, 15)))
-        self.assertEqual(first, session_exam_calendar.get_latest_session_exam(date=datetime.date(2017, 2, 10)))
-        self.assertEqual(second, session_exam_calendar.get_latest_session_exam(date=datetime.date(2017, 8, 15)))
-        self.assertEqual(third, session_exam_calendar.get_latest_session_exam(date=datetime.date(2018, 2, 2)))
+        self.assertIsNone(session_exam_calendar.get_latest_session_exam(date=datetime.date(self.academic_year.year, 11, 15)))
+        self.assertEqual(first, session_exam_calendar.get_latest_session_exam(date=datetime.date(self.academic_year.year+1, 2, 10)))
+        self.assertEqual(second, session_exam_calendar.get_latest_session_exam(date=datetime.date(self.academic_year.year+1, 8, 15)))
+        self.assertEqual(third, session_exam_calendar.get_latest_session_exam(date=datetime.date(self.academic_year.year+2, 2, 2)))
 
     def test_find_deliberation_date(self):
         SessionExamCalendarFactory(academic_calendar=self.academic_calendar_4,
                                    number_session=number_session.ONE)
-        offer_year_cal = OfferYearCalendarFactory(academic_calendar=self.academic_calendar_4)
+        offer_year_cal = OfferYearCalendarFactory(academic_calendar=self.academic_calendar_4,
+                                                  offer_year= OfferYearFactory(academic_year=self.academic_year))
 
         self.assertEqual(session_exam_calendar.find_deliberation_date(number_session.ONE,offer_year_cal.offer_year),
-                         datetime.date(2017, 1, 1))
+                         datetime.date(self.academic_year.year+1, 1, 1))
         self.assertIsNone(session_exam_calendar.find_deliberation_date(number_session.TWO, offer_year_cal.offer_year))
 
     def get_closest_new_session_exam(self):
@@ -135,7 +140,7 @@ class SessionExamCalendarTest(TestCase):
         third = SessionExamCalendarFactory(academic_calendar=self.academic_calendar_3,
                                            number_session=number_session.THREE)
 
-        self.assertEqual(first, session_exam_calendar.get_closest_new_session_exam(date=datetime.date(2016, 9, 15)))
-        self.assertEqual(second, session_exam_calendar.get_closest_new_session_exam(date=datetime.date(2016, 10, 17)))
-        self.assertEqual(third, session_exam_calendar.get_closest_new_session_exam(date=datetime.date(2017, 3, 16)))
-        self.assertIsNone(session_exam_calendar.get_closest_new_session_exam(date=datetime.date(2017, 10, 16)))
+        self.assertEqual(first, session_exam_calendar.get_closest_new_session_exam(date=datetime.date(self.academic_year.year, 9, 15)))
+        self.assertEqual(second, session_exam_calendar.get_closest_new_session_exam(date=datetime.date(self.academic_year.year, 10, 17)))
+        self.assertEqual(third, session_exam_calendar.get_closest_new_session_exam(date=datetime.date(self.academic_year.year+1, 3, 16)))
+        self.assertIsNone(session_exam_calendar.get_closest_new_session_exam(date=datetime.date(self.academic_year.year+1, 10, 16)))
