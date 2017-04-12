@@ -64,7 +64,7 @@ def create_dictionary(attributions):
 
 
 def find_data_table():
-    attributions = mdl_attr.attribution.find_all_responsibles()
+    attributions = mdl_attr.attribution.find_all_responsibles().distinct("tutor")
     attributions_list = mdl_attr.attribution.find_attribution_distinct()
     all_tutors = mdl_attr.attribution.find_all_tutor().distinct("tutor")
     return all_tutors, attributions, attributions_list
