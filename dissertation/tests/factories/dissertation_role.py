@@ -24,24 +24,14 @@
 #
 ##############################################################################
 import factory
-import factory.fuzzy
-from base.tests.factories.person import PersonFactory
+from dissertation.models.enums import status_types
 from dissertation.tests.factories.adviser import AdviserTeacherFactory
-from dissertation.models.proposition_dissertation import PropositionDissertation
 
 
-class PropositionDissertationFactory(factory.DjangoModelFactory):
+class DissertationRoleFactory(factory.DjangoModelFactory):
     class Meta:
-        model = 'dissertation.PropositionDissertation'
+        model = 'dissertation.DissertationRole'
 
-    author = factory.SubFactory(AdviserTeacherFactory)
-    creator = factory.SubFactory(PersonFactory)
-    collaboration = factory.Iterator(PropositionDissertation.COLLABORATION_CHOICES, getter=lambda c: c[0])
-    description = factory.Faker('text', max_nb_chars=500)
-    level = factory.Iterator(PropositionDissertation.LEVELS_CHOICES, getter=lambda c: c[0])
-    max_number_student = factory.fuzzy.FuzzyInteger(1, 50)
-    title = factory.Faker('text', max_nb_chars=150)
-    type = factory.Iterator(PropositionDissertation.TYPES_CHOICES, getter=lambda c: c[0])
-    visibility = True
-    active = True
-    created_date = factory.Faker('date_time_this_year', before_now=True, after_now=False, tzinfo=None)
+    status = factory.Iterator(status_types.STATUS_CHOICES, getter=lambda c: c[0])
+    adviser = factory.SubFactory(AdviserTeacherFactory)
+    dissertation = None

@@ -25,11 +25,11 @@
 ##############################################################################
 from django.test import TestCase, Client
 from django.core.urlresolvers import reverse
-from dissertation.tests.models import test_dissertation
 from base.tests.factories.offer_year import OfferYearFactory
 from base.tests.factories.person import PersonFactory
 from base.tests.factories.student import StudentFactory
 from dissertation.tests.factories.adviser import AdviserManagerFactory, AdviserTeacherFactory
+from dissertation.tests.factories.dissertation import DissertationFactory
 from dissertation.tests.factories.faculty_adviser import FacultyAdviserFactory
 from dissertation.tests.factories.offer_proposition import OfferPropositionFactory
 from dissertation.tests.factories.proposition_dissertation import PropositionDissertationFactory
@@ -52,30 +52,26 @@ class DissertationViewTestCase(TestCase):
         offer_proposition = OfferPropositionFactory(offer=offer)
         FacultyAdviserFactory(adviser=self.manager, offer=offer)
 
-        # Create 5 propositions dissertations
-        proposition_dissertations = []
+        roles = ['PROMOTEUR', 'CO_PROMOTEUR', 'READER', 'PROMOTEUR', 'ACCOMPANIST']
+        status = ['DRAFT', 'COM_SUBMIT', 'EVA_SUBMIT', 'TO_RECEIVE', 'DIR_SUBMIT']
+        
         for x in range(0, 5):
             proposition_dissertation = PropositionDissertationFactory(author=self.teacher,
-                                                                      creator=a_person_teacher
+                                                                      creator=a_person_teacher,
+                                                                      title='Proposition {}'.format(x)
                                                                       )
             PropositionOfferFactory(proposition_dissertation=proposition_dissertation,
                                     offer_proposition=offer_proposition)
-            proposition_dissertations.append(proposition_dissertation)
 
-        # Create 5 dissertations with different roles ans status
-        roles = ['PROMOTEUR', 'CO_PROMOTEUR', 'READER', 'PROMOTEUR', 'ACCOMPANIST']
-        status = ['DRAFT', 'COM_SUBMIT', 'EVA_SUBMIT', 'TO_RECEIVE', 'DIR_SUBMIT']
-        for x in range(0, 5):
-            test_dissertation.create_dissertation(
-                adviser=self.teacher,
-                dissertation_role=roles[x],
-                title="Dissertation " + str(x),
-                author=student,
-                status=status[x],
-                offer_year_start=offer_year_start,
-                proposition_dissertation=proposition_dissertations[x],
-                active=True
-                )
+            DissertationFactory(author=student,
+                                title='Dissertation {}'.format(x),
+                                offer_year_start=offer_year_start,
+                                proposition_dissertation=proposition_dissertation,
+                                status=status[x],
+                                active=True,
+                                dissertation_role__adviser=self.teacher,
+                                dissertation_role__status=roles[x]
+                                )
 
     def test_get_dissertations_list_for_teacher(self):
         self.client.force_login(self.teacher.person.user)
@@ -104,9 +100,9 @@ class DissertationViewTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context[-1]['dissertations'].count(), 1)
 
-        response = self.client.get(url, data={"search": "Proposition"})
+        response = self.client.get(url, data={"search": "Proposition 3"})
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.context[-1]['dissertations'].count(), 5)
+        self.assertEqual(response.context[-1]['dissertations'].count(), 1)
 
         response = self.client.get(url, data={"search": "Dissertation"})
         self.assertEqual(response.status_code, 200)
