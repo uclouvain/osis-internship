@@ -1384,3 +1384,12 @@ msgstr "You can't encode a JUSTIFIED ABSENCE (M) via the XLS injection"
 
 msgid "abscence_justified_preserved"
 msgstr "Justified abscence already encoded and preserved"
+
+msgid "academic_start_date_error"
+msgstr "The start date should be between the start/end dates of the academic year"
+
+msgid "academic_end_date_error"
+msgstr "The end date should be between the start/end dates of the academic year"
+
+msgid "end_start_date_error"
+msgstr "Start date must be lower than end date"

@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# OSIS stands for Open Student Information System. It's an application
+#    OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
@@ -46,5 +46,5 @@ class AcademicYearFactory(factory.django.DjangoModelFactory):
     changed = factory.fuzzy.FuzzyDateTime(datetime.datetime(2016, 1, 1, tzinfo=_get_tzinfo()),
                                           datetime.datetime(2017, 3, 1, tzinfo=_get_tzinfo()))
     year = factory.fuzzy.FuzzyInteger(2000, timezone.now().year)
-    start_date = factory.LazyAttribute(lambda obj: datetime.date(obj.year, 1, 1))
-    end_date = factory.LazyAttribute(lambda obj: datetime.date(obj.year+1, 12, 30))
+    start_date = factory.LazyAttribute(lambda obj: datetime.date(obj.year, 9, 15))
+    end_date = factory.LazyAttribute(lambda obj: datetime.date(obj.year+1, 9, 30))

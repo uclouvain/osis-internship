@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# OSIS stands for Open Student Information System. It's an application
+#    OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
@@ -48,8 +48,8 @@ class AcademicCalendarFactory(factory.DjangoModelFactory):
                                           datetime.datetime(2017, 3, 1, tzinfo=_get_tzinfo()))
     academic_year = factory.SubFactory(AcademicYearFactory)
     title = factory.Sequence(lambda n: 'Academic Calendar - %d' % n)
-    start_date = factory.LazyAttribute(lambda obj: datetime.date(timezone.now().year, 1, 1))
-    end_date = factory.LazyAttribute(lambda obj: datetime.date(timezone.now().year+1, 12, 30))
+    start_date = factory.LazyAttribute(lambda obj: datetime.date(timezone.now().year, 9, 30))
+    end_date = factory.LazyAttribute(lambda obj: datetime.date(timezone.now().year+1, 9, 30))
     highlight_title = factory.Sequence(lambda n: 'Highlight - %d' % n)
     highlight_description = factory.Sequence(lambda n: 'Description - %d' % n)
     highlight_shortcut = factory.Sequence(lambda n: 'Shortcut Highlight - %d' % n)

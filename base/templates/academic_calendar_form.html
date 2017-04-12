@@ -61,18 +61,13 @@
             <div class="row">
                 <div class="col-md-3">
                     <label for="slt_academic_year">{% trans 'academic_year'%}</label>
-                    <select class="form-control" id="slt_academic_year" name="academic_year">
-                        {% for ac_year in academic_years %}
-                            <option {% if ac_year.id == form.academic_year.value %} selected {% endif %}
-                                    value="{{ ac_year.id }}">{{ ac_year }}</option>
-                        {% endfor %}
-                    </select>
+                    <br>
+                    {{ form.academic_year }}
                 </div>
                 <div class="col-md-5">
                     <label for="txt_title">{% trans 'title' %}</label>
-                    <input class="form-control" value="{{ form.title.value | default_if_none:'' }}"
-                           name="title" id="txt_title">
-                        <span class="error">{{ form.title.errors }}</span>
+                    {{ form.title}}
+                    <span class="error">{{ form.title.errors }}</span>
                 </div>
                 <div class="col-md-2">
                     <label for="txt_start_date">{% trans 'start_date'%}</label>
@@ -100,15 +95,12 @@
             <div class="row">
                 <div class="col-md-6">
                     <label for="txt_highlight_title">{% trans 'highlight_title' %}</label>
-                    <input class="form-control" value="{{ form.highlight_title.value | default_if_none:'' }}"
-                           name="highlight_title" id="txt_highlight_title">
+                    {{ form.highlight_title}}
                     <span class="error">{{ form.highlight_title.errors }}</span>
                 </div>
                 <div class="col-md-6">
                     <label for="txt_highlight_shortcut">{% trans 'highlight_shortcut' %}</label>
-                    <input class="form-control"
-                           value="{{ form.highlight_shortcut.value | default_if_none:'' }}"
-                           name="highlight_shortcut" id="txt_highlight_shortcut">
+                    {{ form.highlight_shortcut}}
                     <span class="error">{{ form.highlight_shortcut.errors }}</span>
                     <p style="margin-top: 5px;">http://osis.uclouvain.be/<span id="url"></span></p>
                 </div>

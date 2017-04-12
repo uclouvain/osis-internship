@@ -27,6 +27,7 @@ from django.db import models
 from django.utils import timezone
 from base.models.exceptions import FunctionAgrumentMissingException, StartDateHigherThanEndDateException
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
+from django.utils.translation import ugettext as _
 
 FUNCTIONS = 'functions'
 
@@ -37,6 +38,9 @@ class AcademicCalendarAdmin(SerializableModelAdmin):
     readonly_fields = ('academic_year', 'title', 'start_date', 'end_date')  # The fields have to be readonly.
                                                                             # The application/synchronization
                                                                             # will update NOT THE ADMIN
+    list_filter = ('academic_year',)
+    search_fields = ['title']
+    ordering = ('start_date',)
 
     def has_add_permission(self, request, obj=None):
         return False
@@ -69,8 +73,12 @@ class AcademicCalendar(SerializableModel):
         if FUNCTIONS not in kwargs.keys():
             raise FunctionAgrumentMissingException('The kwarg "{0}" must be set.'.format(FUNCTIONS))
         functions = kwargs.pop(FUNCTIONS)
+        if self.start_date and self.academic_year.start_date and self.start_date < self.academic_year.start_date:
+            raise AttributeError(_('academic_start_date_error'))
+        if self.end_date and self.academic_year.end_date and self.end_date > self.academic_year.end_date:
+            raise AttributeError(_('academic_end_date_error'))
         if self.start_date and self.end_date and self.start_date >= self.end_date:
-            raise StartDateHigherThanEndDateException('Start date must be lower than end date')
+            raise StartDateHigherThanEndDateException(_('end_start_date_error'))
         super(AcademicCalendar, self).save(*args, **kwargs)
         for function in functions:
             function(self)

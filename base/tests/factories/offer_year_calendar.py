@@ -39,6 +39,17 @@ def _get_tzinfo():
     else:
         return None
 
+def generate_start_date(person, academic_calendar=None):
+    if academic_calendar:
+        return academic_calendar.start_date
+    else:
+        return datetime.date(2000, 1, 1)
+
+def generate_end_date(person, academic_calendar=None):
+    if academic_calendar:
+        return academic_calendar.end_date
+    else:
+        return datetime.date(2099, 1, 1)
 
 class OfferYearCalendarFactory(factory.django.DjangoModelFactory):
     class Meta:
@@ -49,8 +60,8 @@ class OfferYearCalendarFactory(factory.django.DjangoModelFactory):
                                           datetime.datetime(2017, 3, 1, tzinfo=_get_tzinfo()))
     academic_calendar = factory.SubFactory(AcademicCalendarFactory)
     offer_year = factory.SubFactory(OfferYearFactory)
-    start_date = datetime.date(2000, 1, 1)
-    end_date = datetime.date(2099, 1, 1)
+    start_date = factory.LazyAttribute(generate_start_date)
+    end_date = factory.LazyAttribute(generate_end_date)
     customized = False
 
 

@@ -29,6 +29,7 @@ from django.utils import timezone
 from django.contrib import admin
 from base.models import offer_year
 import datetime
+from django.utils.translation import ugettext as _
 
 
 class OfferYearCalendarAdmin(admin.ModelAdmin):
@@ -49,7 +50,7 @@ class OfferYearCalendar(models.Model):
     customized = models.BooleanField(default=False)
 
     def update_dates(self, start_date, end_date):
-        if self.customized: # case offerYearCalendar is already customized
+        if self.customized:  # case offerYearCalendar is already customized
             # We update the new start date
             # WARNING : this is TEMPORARY ; a solution for the sync from EPC to OSIS
             #           because the start_date for scores_encodings doesn't exist in EPC
@@ -60,15 +61,32 @@ class OfferYearCalendar(models.Model):
         self.save()
 
     def save(self, *args, **kwargs):
-        if self.academic_calendar.start_date and self.start_date and \
-                        self.start_date < self.academic_calendar.start_date:
-            raise AttributeError("The start date should be between the start/end dates of the academic year.")
-        if self.academic_calendar.end_date and self.end_date and \
-                        self.end_date > self.academic_calendar.end_date:
-            raise AttributeError("The end date should be between the start/end dates of the academic year.")
+        academic_start_date = self.get_start_date()
+        academic_end_date = self.get_end_date()
+
+        if academic_start_date and self.start_date and self.start_date < academic_start_date:
+            raise AttributeError(_('academic_start_date_error'))
+        if academic_end_date and self.end_date and self.end_date > academic_end_date:
+            raise AttributeError(_('academic_end_date_error'))
         if self.start_date and self.end_date and self.end_date < self.start_date:
-            raise AttributeError("The end date should be greather than the start date.")
+            raise AttributeError(_('end_start_date_error'))
         super(OfferYearCalendar, self).save(*args, **kwargs)
+
+    def get_end_date(self):
+        if self.academic_calendar.end_date:
+            return self.academic_calendar.end_date
+        else:
+            if self.offer_year.academic_year.end_date:
+                return self.offer_year.academic_year.end_date
+        return None
+
+    def get_start_date(self):
+        if self.academic_calendar.start_date:
+            return self.academic_calendar.start_date
+        else:
+            if self.offer_year.academic_year.start_date:
+                return self.offer_year.academic_year.start_date
+        return None
 
     def __str__(self):
         return u"%s - %s" % (self.academic_calendar, self.offer_year)
@@ -131,7 +149,7 @@ def find_by_id(offer_year_calendar_id):
 def find_deliberation_date(session_exam):
     scores_encodings_end_date = None
     offer_year_cal = session_exam.offer_year_calendar
-    if offer_year_cal.customized: # if the date is set by EPC (from deliberation date)
+    if offer_year_cal.customized:  # if the date is set by EPC (from deliberation date)
         scores_encodings_end_date = offer_year_cal.end_date
         # The deliberation date is the end date of the scores encodings +1 day
         scores_encodings_end_date += datetime.timedelta(days=1)

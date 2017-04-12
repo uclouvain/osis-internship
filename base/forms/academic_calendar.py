@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -23,16 +23,34 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.forms import ModelForm
 from base.models import academic_calendar, offer_year_calendar
 from django.utils.translation import ugettext as trans
 from base.models.offer_year_calendar import save_from_academic_calendar
+from django import forms
+from base.models import academic_year
 
 
-class AcademicCalendarForm(ModelForm):
+class BootstrapModelForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super(BootstrapModelForm, self).__init__(*args, **kwargs)
+        for field in iter(self.fields):
+            self.fields[field].widget.attrs.update({
+                'class': 'form-control'
+            })
+
+
+class AcademicCalendarForm(BootstrapModelForm):
+    academic_year = forms.ModelChoiceField(queryset=academic_year.AcademicYear.objects.all().order_by('year'),
+                                           widget=forms.Select(), empty_label=None)
+
     class Meta:
         model = academic_calendar.AcademicCalendar
+
         exclude = ['external_id', 'changed']
+        widgets = {
+            'academic_year': forms.Select()
+        }
 
     def save(self, commit=True):
         instance = super(AcademicCalendarForm, self).save(commit=False)
@@ -58,7 +76,32 @@ class AcademicCalendarForm(ModelForm):
             return False
         return True
 
+    def end_date_academic_year_end_date(self):
+        if not self.cleaned_data.get('end_date') or not self.cleaned_data.get('start_date'):
+            return True
+        ac_yr = self.instance.academic_year
+
+        if ac_yr:
+            if self.cleaned_data['start_date'] < ac_yr.start_date:
+                error_msg = "{0} ({1} - {2})".format(trans('academic_start_date_error'),
+                                                     ac_yr.start_date.strftime('%d/%m/%Y'),
+                                                     ac_yr.end_date.strftime('%d/%m/%Y'))
+                self._errors['start_date'] = error_msg
+                return False
+
+            if self.cleaned_data['end_date'] > ac_yr.end_date:
+                error_msg = "{0} ({1} - {2})".format(trans('academic_end_date_error'),
+                                                     ac_yr.start_date.strftime('%d/%m/%Y'),
+                                                     ac_yr.end_date.strftime('%d/%m/%Y'))
+                self._errors['end_date'] = error_msg
+                return False
+
+        return True
+
     def is_valid(self):
         return super(AcademicCalendarForm, self).is_valid() \
             and self.end_date_gt_last_offer_year_calendar_end_date() \
-            and self.end_date_gt_start_date()
+            and self.end_date_gt_start_date() \
+            and self.end_date_academic_year_end_date()
+
+

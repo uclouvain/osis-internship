@@ -1377,3 +1377,12 @@ msgstr "Vous ne pouvez pas encoder d'absence justifiée (M) via l'injection xls"
 
 msgid "abscence_justified_preserved"
 msgstr "Abscence justifiée dèjà encodée et préservée"
+
+msgid "academic_start_date_error"
+msgstr "La date de début doit être comprise entre les dates de début/fin de l'année académique"
+
+msgid "academic_end_date_error"
+msgstr "La date de fin doit être comprise entre les dates de début/fin de l'année académique"
+
+msgid "end_start_date_error"
+msgstr "La date de fin doit être supérieure à la date début"
