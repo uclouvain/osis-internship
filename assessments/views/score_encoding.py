@@ -338,9 +338,11 @@ def set_score_and_justification_for_exam_enrollment(is_pgm, enrollment, new_just
 
 def can_modify_exam_enrollment(enrollment, is_program_manager) :
     """"This function check if we can modify an exam enrollment"""
-    return (is_program_manager and not mdl.exam_enrollment.is_deadline_reached(enrollment)) or \
-           (not is_program_manager and not mdl.exam_enrollment.is_deadline_tutor_reached(enrollment) and
-            not enrollment.score_final and not enrollment.justification_final)
+    if is_program_manager:
+        return not mdl.exam_enrollment.is_deadline_reached(enrollment)
+    else:
+        return not mdl.exam_enrollment.is_deadline_tutor_reached(enrollment) and \
+               not enrollment.score_final and not enrollment.justification_final
 
 
 def is_legible_for_modifying_exam_enrollment(score_changed, exam_enrollment):
@@ -823,15 +825,7 @@ def get_data_specific_criteria(request):
                                                                                      offers_year=offers_year_managed,
                                                                                      academic_year=academic_yr))
                 exam_enrollments = mdl.exam_enrollment.sort_by_offer_acronym_last_name_first_name(exam_enrollments)
-                for enrollment in exam_enrollments:
-                    # Get session exam deadline related to and add flag for deadline / deadline tutor
-                    session_exam_deadline = mdl.exam_enrollment.get_session_exam_deadline(enrollment)
-                    enrollment.deadline_tutor_computed = mdl.exam_enrollment.\
-                        get_deadline_tutor_computed(session_exam_deadline=session_exam_deadline)
-                    enrollment.deadline_reached = mdl.exam_enrollment.\
-                        is_deadline_reached(session_exam_deadline=session_exam_deadline)
-                    enrollment.deadline_tutor_reached = mdl.exam_enrollment.is_deadline_tutor_reached(
-                        session_exam_deadline=session_exam_deadline)
+                _append_session_exam_deadline(exam_enrollments)
 
                 if len(exam_enrollments) == 0:
                     messages.add_message(request, messages.WARNING, "%s" % _('no_result'))
@@ -848,6 +842,18 @@ def get_data_specific_criteria(request):
             'exam_enrollments': exam_enrollments,
             'is_program_manager': is_program_manager
             }
+
+
+def _append_session_exam_deadline(exam_enrollments):
+    for enrollment in exam_enrollments:
+        session_exam_deadline = mdl.exam_enrollment.get_session_exam_deadline(enrollment)
+
+        enrollment.deadline_tutor_computed = mdl.exam_enrollment. \
+            get_deadline_tutor_computed(session_exam_deadline=session_exam_deadline)
+        enrollment.deadline_reached = mdl.exam_enrollment. \
+            is_deadline_reached(session_exam_deadline=session_exam_deadline)
+        enrollment.deadline_tutor_reached = mdl.exam_enrollment.is_deadline_tutor_reached(
+            session_exam_deadline=session_exam_deadline)
 
 
 @login_required
@@ -974,16 +980,7 @@ def _get_exam_enrollments(user, learning_unit_year_id=None, tutor_id=None, offer
         exam_enrollments = []
     # Ordering by offeryear.acronym, then person.lastname & firstname
     exam_enrollments = mdl.exam_enrollment.sort_for_encodings(exam_enrollments)
-
-    for enrollment in exam_enrollments:
-        # Get session exam deadline related to and add flag for deadline / deadline tutor
-        session_exam_deadline = mdl.exam_enrollment.get_session_exam_deadline(enrollment)
-        enrollment.deadline_tutor_computed = mdl.exam_enrollment.get_deadline_tutor_computed(session_exam_deadline=
-                                                                                             session_exam_deadline)
-        enrollment.deadline_reached = mdl.exam_enrollment.is_deadline_reached(session_exam_deadline=
-                                                                              session_exam_deadline)
-        enrollment.deadline_tutor_reached = mdl.exam_enrollment.is_deadline_tutor_reached(session_exam_deadline=
-                                                                                          session_exam_deadline)
+    _append_session_exam_deadline(exam_enrollments)
 
     return exam_enrollments
 
