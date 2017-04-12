@@ -23,31 +23,31 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import traceback
-from collections import defaultdict
-from decimal import Decimal, Context, Inexact
-from django.core.urlresolvers import reverse, reverse_lazy
-from django.core.exceptions import ValidationError
-from django.http import HttpResponseRedirect
-from django.contrib.auth.decorators import login_required, user_passes_test, permission_required
-from django.contrib import messages
-from django.utils.translation import ugettext_lazy as _
-from django.utils.translation import ugettext as trans
-from psycopg2._psycopg import OperationalError as PsycopOperationalError, InterfaceError as  PsycopInterfaceError
-from django.db.utils import OperationalError as DjangoOperationalError, InterfaceError as DjangoInterfaceError
-from base import models as mdl
-from assessments import models as mdl_assess
-from base.enums.exam_enrollment_justification_type import JUSTIFICATION_TYPES
-from attribution import models as mdl_attr
-from osis_common.document import paper_sheet
-from base.utils import send_mail
-from assessments.views import export_utils
-from base.views import layout
 import json
-from osis_common.models.queue_exception import QueueException
 import logging
+import traceback
+from decimal import Decimal, Context, Inexact
+
 from django.conf import settings
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required, user_passes_test, permission_required
+from django.core.exceptions import ValidationError
+from django.core.urlresolvers import reverse, reverse_lazy
 from django.db import connection
+from django.db.utils import OperationalError as DjangoOperationalError, InterfaceError as DjangoInterfaceError
+from django.http import HttpResponseRedirect
+from django.utils.translation import ugettext_lazy as _
+from psycopg2._psycopg import OperationalError as PsycopOperationalError, InterfaceError as  PsycopInterfaceError
+
+from assessments import models as mdl_assess
+from assessments.views import export_utils
+from attribution import models as mdl_attr
+from base import models as mdl
+from base.enums.exam_enrollment_justification_type import JUSTIFICATION_TYPES
+from base.utils import send_mail
+from base.views import layout
+from osis_common.document import paper_sheet
+from osis_common.models.queue_exception import QueueException
 
 logger = logging.getLogger(settings.DEFAULT_LOGGER)
 queue_exception_logger = logging.getLogger(settings.QUEUE_EXCEPTION_LOGGER)
@@ -72,12 +72,20 @@ def assessments(request):
 @user_passes_test(_is_not_inside_scores_encodings_period, login_url=reverse_lazy('scores_encoding'))
 def outside_period(request):
     latest_session_exam = mdl.session_exam_calendar.get_latest_session_exam()
+    closest_new_session_exam = mdl.session_exam_calendar.get_closest_new_session_exam()
+
     if latest_session_exam:
+        session_number = latest_session_exam.number_session
         str_date = latest_session_exam.academic_calendar.end_date.strftime('%d/%m/%Y')
-    else:
-        str_date = ""
-    text = trans('outside_scores_encodings_period') % str_date
-    messages.add_message(request, messages.WARNING, text)
+        messages.add_message(request, messages.WARNING, _('outside_scores_encodings_period_latest_session') % (session_number,str_date))
+
+    if closest_new_session_exam:
+        session_number = closest_new_session_exam.number_session
+        str_date = closest_new_session_exam.academic_calendar.start_date.strftime('%d/%m/%Y')
+        messages.add_message(request, messages.WARNING, _('outside_scores_encodings_period_closest_session') % (session_number,str_date))
+
+    if not messages.get_messages(request):
+        messages.add_message(request, messages.WARNING, _('score_encoding_period_not_open'))
     return layout.render(request, "outside_scores_encodings_period.html", {})
 
 
