@@ -26,7 +26,7 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.utils import timezone
-from osis_common.models.serializable_model import SerializableModel
+from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 from base.models.exceptions import FunctionAgrumentMissingException, StartDateHigherThanEndDateException
 from base.models.enums import academic_calendar_type
 from django.utils.translation import ugettext as _
