@@ -241,6 +241,9 @@ msgid "decimal_values_ignored"
 msgstr ""
 "Les notes de ce cours ne peuvent PAS recevoir de valeurs décimales."
 
+msgid "score_have_more_than_2_decimal_places"
+msgstr "La note comporte plus de deux chiffres après la virgule"
+
 msgid "definitive_save"
 msgstr "Sauvegarde définitive (soumettre à la faculté)"
 
@@ -293,6 +296,9 @@ msgstr ""
 "Gestion des cours, des formations et d'autres activités qui composent le "
 "programme."
 
+msgid "desc_lnk_my_osis"
+msgstr "Vos données personnelles, des préférences et d'autres informations associés."
+
 msgid "desc_lnk_offers"
 msgstr "Gestion des programmes."
 
@@ -317,7 +323,7 @@ msgid "desc_my_messages"
 msgstr "La liste des messages qui vous ont été envoyés par l'application"
 
 msgid "desc_profile"
-msgstr "informations liées à votre profile"
+msgstr "Informations liées à votre profil"
 
 msgid "description"
 msgstr "Description"
@@ -332,7 +338,7 @@ msgid "doctoral_commission"
 msgstr "Commision doctorale"
 
 msgid "documentation"
-msgstr "Justification"
+msgstr "Documentation"
 
 msgid "done_at"
 msgstr "Fait à"
@@ -1255,9 +1261,6 @@ msgstr "Sans attribution"
 msgid "xls_columns_structure_error"
 msgstr "Votre fichier excel n'est pas bien structuré. Veuillez respecter l'ordre des colonnes fournie lors du "
        "téléchargement de votre fichier (bouton '{}')."
-
-msgid "admission_form"
-msgstr "Formulaire d'admission"
 
 msgid "order"
 msgstr "Ordonner"

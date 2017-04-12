@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -29,29 +29,29 @@ from osis_common.models.serializable_model import SerializableModel, Serializabl
 
 
 class PeriodInternshipPlacesAdmin(SerializableModelAdmin):
-    list_display = ('period', 'internship', 'number_places')
-    fieldsets = ((None, {'fields': ('period', 'internship', 'number_places')}),)
-    raw_id_fields = ('period', 'internship')
-    search_fields = ['internship__organization__name']
+    list_display = ('period', 'internship_offer', 'number_places')
+    fieldsets = ((None, {'fields': ('period', 'internship_offer', 'number_places')}),)
+    raw_id_fields = ('period', 'internship_offer')
+    search_fields = ['internship_offer__organization__name']
 
 
 class PeriodInternshipPlaces(SerializableModel):
     period = models.ForeignKey('internship.Period')
-    internship = models.ForeignKey('internship.InternshipOffer')
+    internship_offer = models.ForeignKey('internship.InternshipOffer')
     number_places = models.IntegerField(blank=None, null=False)
 
     def __str__(self):
-        return u"%s (%s)" % (self.internship, self.period)
+        return u"%s (%s)" % (self.internship_offer, self.period)
 
 
 def search(**kwargs):
     kwargs = {k: v for k, v in kwargs.items() if v}
-    return PeriodInternshipPlaces.objects.filter(**kwargs).select_related("period", "internship")
+    return PeriodInternshipPlaces.objects.filter(**kwargs).select_related("period", "internship_offer")
 
 
 def find_by_id(id):
     return PeriodInternshipPlaces.objects.get(pk=id)
 
 
-def find_by_internship(internship):
-    return PeriodInternshipPlaces.objects.filter(internship=internship)
+def find_by_internship_offer(internship_offer):
+    return PeriodInternshipPlaces.objects.filter(internship_offer=internship_offer)

@@ -63,9 +63,10 @@ class ScoresEncoding(models.Model):
 
 
 def search(user, learning_unit_year_id=None, offer_year_id=None, learning_unit_year_ids=None):
+    current_academic_year = academic_year.current_academic_year()
     queryset = ScoresEncoding.objects.filter(enrollment_state=exam_enrollment_state.ENROLLED) \
-                                     .filter(offer_year__academic_year=academic_year.current_academic_year()) \
-                                     .filter(learning_unit_year__academic_year=academic_year.current_academic_year())
+                                     .filter(offer_year__academic_year=current_academic_year) \
+                                     .filter(learning_unit_year__academic_year=current_academic_year)
 
     if offer_year_id:
         queryset = queryset.filter(offer_year_id=offer_year_id)

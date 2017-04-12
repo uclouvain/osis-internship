@@ -248,6 +248,9 @@ msgstr ""
 "Decimal values in scores are NOT accepted. If you try to put decimal values, "
 "it will be ignored."
 
+msgid "score_have_more_than_2_decimal_places"
+msgstr "Score cannot have more than two decimal places"
+
 msgid "definitive_save"
 msgstr "Definitive submission (Submit to faculty)"
 
@@ -293,6 +296,9 @@ msgstr ""
 
 msgid "desc_lnk_internships"
 msgstr "This process controls students internships."
+
+msgid "desc_lnk_my_osis"
+msgstr "Your personal details, configurations and other information related to you."
 
 msgid "desc_lnk_learning_units"
 msgstr ""
@@ -1264,9 +1270,6 @@ msgstr "Your excel file isn't well structured. Please follow the structure of th
 
 msgid "you_manage"
 msgstr "You manage"
-
-msgid "admission_form"
-msgstr "Admission form"
 
 msgid "order"
 msgstr "Order"

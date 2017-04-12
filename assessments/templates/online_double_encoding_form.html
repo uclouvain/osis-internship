@@ -146,8 +146,8 @@
                             <input type="hidden" id="hdn_score_draft_{{ enrollment.id }}"
                                    value="{{ enrollment.score_draft | score_display:enrollment.session_exam.learning_unit_year.decimal_scores }}"/>
                             {% endif %}
-                            <input type="text" min="0" max="20" name="score_{{ enrollment.id }}" id="num_double_score_{{ enrollment.id }}"
-                                   tabindex="{{ forloop.counter }}" class="form-control"
+                            <input type="text" min="0" max="20" name="score_{{enrollment.id}}" id="num_double_score_{{ enrollment.id }}"
+                                   tabindex="{{ forloop.counter }}" class="form-control" value="{{enrollment.post_score_encoded|default_if_none:''}}"
                                    {% if not is_program_manager %}
                                      {% if enrollment.score_final != None or enrollment.justification_final %}
                                        disabled
@@ -176,16 +176,17 @@
                                    {% endif %}>
                                 <option value=""></option>
                                 {% if is_program_manager %}
-                                    <option value="ABSENCE_UNJUSTIFIED">{% trans 'ABSENCE_UNJUSTIFIED' %}</option>
-                                    <option value="ABSENCE_JUSTIFIED">{% trans 'ABSENCE_JUSTIFIED' %}</option>
+                                    <option value="ABSENCE_UNJUSTIFIED" {% if enrollment.post_justification_encoded == 'ABSENCE_UNJUSTIFIED' %}selected{% endif %} >{% trans 'ABSENCE_UNJUSTIFIED' %}</option>
+                                    <option value="ABSENCE_JUSTIFIED" {% if enrollment.post_justification_encoded == 'ABSENCE_JUSTIFIED' %}selected{% endif %} >{% trans 'ABSENCE_JUSTIFIED' %}</option>
                                 {% else %}
-                                    <option value="ABSENCE_UNJUSTIFIED">{% trans 'absent' %}</option>
+                                    <option value="ABSENCE_UNJUSTIFIED" {% if enrollment.post_justification_encoded == 'ABSENCE_UNJUSTIFIED' %}selected{% endif %}>{% trans 'absent' %}</option>
                                 {% endif %}
-                                <option value="CHEATING">{% trans 'CHEATING' %}</option>
-                                <option value="SCORE_MISSING">{% trans 'SCORE_MISSING' %}</option>
+                                <option value="CHEATING" {% if enrollment.post_justification_encoded == 'CHEATING' %}selected{% endif %}>{% trans 'CHEATING' %}</option>
+                                <option value="SCORE_MISSING" {% if enrollment.post_justification_encoded == 'SCORE_MISSING' %}selected{% endif %}>{% trans 'SCORE_MISSING' %}</option>
                             </select>
+                            <input type="hidden" id="hdn_score_changed_{{ enrollment.id }}" name="score_changed_{{ enrollment.id }}">
                         </td>
-                        <td>{{ enrollment.session_exam.deadline | default_if_none:''|date:"j/m/Y" }}</td>
+                        <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.session_exam_deadline.deadline | default_if_none:''|date:"j/m/Y" }}</td>
                     </tr>
                 {% endfor %}
                 </tbody>
@@ -200,87 +201,122 @@
 {% endblock %}
 {% block script %}
 <script>
+        var values = [
+        {% for enrollment in enrollments %}
+            ['{{ enrollment.id }}', '-1',''],
+        {% endfor %}
+        ['', '', '']];
+
+    var is_valid_score = function(score) {
+        var is_decimal = {% if learning_unit_year.decimal_scores %} true {% else %} false {% endif %};
+        score = score.replace(',','.');
+        var regex = /^\d+$/
+        if (is_decimal) {
+            regex = /^\d+(\.\d{0,2})?$/
+        }
+        if(!regex.test(score)){
+            return false;
+        }
+        score = parseFloat(score).toFixed(2)
+        if( score > 20 || score < 0 ) {
+            return false
+        }
+        return true;
+    }
+    var check_is_score_changed = function(enrollmentId, score, justification) {
+        is_changed = originalValueChanged(values, enrollmentId, score, justification)
+        $("#hdn_score_changed_" + enrollmentId).val(is_changed);
+    }
+    var disable_submit = function() {
+        $("#bt_compare_up").prop('disabled', true);
+        $("#bt_compare_down").prop('disabled', true);
+    }
+    var enable_submit = function() {
+        $("#bt_compare_up").prop('disabled', false);
+        $("#bt_compare_down").prop('disabled', false);
+    }
     var ensureOnlyOneInputCompleted = function(event) {
         if (!event || event == null) { return; }
 
         var self = $(this);
         var id = self.attr('id');
 
-        if ( id != undefined && self.val() != "" ){
+        if ( id != undefined ){
             var selfPrefix = id.substring(0, id.lastIndexOf("_"));
             var enrollmentId = id.substring(id.lastIndexOf("_") + 1); //Get enrollement id
 
-            //Empty the other input because we have set a value in [selfPrefix]
-            if (selfPrefix == "slt_double_justification_score") {
-                $("#num_double_score_" + enrollmentId).val("");
-            } else if (selfPrefix == "num_double_score") {
-                $("#slt_double_justification_score_" + enrollmentId).val("");
+            if (self.val() != "") {
+                //Empty the other input because we have set a value in [selfPrefix]
+                if (selfPrefix == "slt_double_justification_score") {
+                    $("#num_double_score_" + enrollmentId).val("");
+                } else if (selfPrefix == "num_double_score") {
+                    $("#slt_double_justification_score_" + enrollmentId).val("");
+                }
             }
+            check_is_score_changed(enrollmentId, $("#num_double_score_" + enrollmentId).val(),
+                                                 $("#slt_double_justification_score_" + enrollmentId).val());
         }
+        validate_form();
     }
     $("input[id^='num_double_score_']" ).change(ensureOnlyOneInputCompleted);
     $("select[id^='slt_double_justification_score_']" ).change(ensureOnlyOneInputCompleted);
 
-    $("input[id^='num_double_score_']" ).blur(function(event) {
-        // Get the object that received the event.
-        var target = $(event.target);
-        var id = target.attr("id");
-        if (typeof id == 'undefined') {
-            target = target.parent();
-            id = target.attr("id");
+    var validate_num_double_score = function(enrollmentId) {
+        var input = $("input[id^='num_double_score_" + enrollmentId + "']");
+        if(input.length > 0) {
+            var score_draft = Number($("#hdn_score_draft_" + enrollmentId).val());
+            var score_encoded = input.val();
+
+            if(score_encoded == "" || (is_valid_score(score_encoded) && score_encoded == score_draft) ) {
+                input.css("border", "1px solid #D3D3D3");
+            }else if (!is_valid_score(score_encoded)) {
+                input.css("border", "1px solid #ff0000");
+                return false;
+            }else if ( score_encoded != score_draft ) {
+                input.css("border", "2px solid #ff0000");
+            }
         }
-
-        var enrollmentId = id.substring(id.lastIndexOf("_") + 1);
-        var score_draft = Number($("#hdn_score_draft_" + enrollmentId).val());
-
-        if (target.val() == "" || target.val() == score_draft) {
-            target.css("border", "1px solid lightgrey");
-        } else {
-            target.css("border", "1px solid #ff0000");
+        return true;
+    }
+    var validate_double_justification_score = function(enrollmentId) {
+        var select = $("select[id^='slt_double_justification_score_" + enrollmentId + "']");
+        if(select.length > 0) {
+            var justification_draft =  $("#hdn_justification_draft_" + enrollmentId).val();
+            if (select.val() == "" || select.val() == justification_draft) {
+                select.css("border", "1px solid #D3D3D3");
+            } else {
+                select.css("border", "2px solid #ff0000");
+            }
         }
-
-        var double_justification_field = $("#slt_double_justification_score_"+ enrollmentId);
-        var justification_double = double_justification_field.val();
-        var justification_draft =  $("#hdn_justification_draft_" + enrollmentId).val();
-
-        // console.log(justification_double + " = " + justification_draft);
-
-        if ((justification_double != null || justification_draft != "") && justification_double != justification_draft) {
-            double_justification_field.css("border", "1px solid #ff0000");
-        } else {
-            double_justification_field.css("border", "1px solid lightgrey");
+    }
+    var validate_form = function() {
+        //Validation of score
+        var has_error = false;
+        $("input[id^='num_double_score_']").each(function(){
+            var self = $(this)
+            var id = self.attr("id");
+            if(id != undefined) {
+                var enrollmentId = id.substring(id.lastIndexOf("_") + 1);
+                if (!validate_num_double_score(enrollmentId)) {
+                    has_error = true;
+                }
+            }
+        });
+        //Validation of justification
+        $("select[id^='slt_double_justification_score_']").each(function(){
+            var self = $(this)
+            var id = self.attr("id");
+            if(id != undefined) {
+                var enrollmentId = id.substring(id.lastIndexOf("_") + 1);
+                validate_double_justification_score(enrollmentId)
+            }
+        });
+        if(has_error) {
+            disable_submit();
+        }else{
+            enable_submit();
         }
-    });
-
-    $("select[id^='slt_double_justification_score_']" ).blur(function(event) {
-        // Get the object that received the event.
-        var target = $(event.target);
-        var id = target.attr("id");
-        if (typeof id == 'undefined') {
-            target = target.parent();
-            id = target.attr("id");
-        }
-
-        var enrollmentId = id.substring(id.lastIndexOf("_") + 1);
-        var justification_draft =  $("#hdn_justification_draft_" + enrollmentId).val();
-
-        if (target.val() != justification_draft) {
-            target.css("border", "1px solid #ff0000");
-        } else {
-            target.css("border", "1px solid lightgrey");
-        }
-
-        var double_score_field = $("#num_double_score_"+ enrollmentId);
-        var score_double = double_score_field.val();
-        var score_draft = $("#hdn_score_draft_"+ enrollmentId).val();
-
-        if(score_double== "" || score_double == score_draft) {
-            double_score_field.css("border", "1px solid lightgrey");
-        } else {
-            double_score_field.css("border", "1px solid #ff0000");
-        }
-    });
-
+    }
 
     var target_score = '#form_online_double_encoding tbody tr td input';
     $(target_score).on('keypress',
@@ -300,5 +336,9 @@
 
     //Prevent enter key submit
     $(document).on('keypress', function(e) { disable_enter(e); });
+    //Validate form
+    $( document ).ready(function() {
+        validate_form()
+    });
 </script>
 {% endblock %}
