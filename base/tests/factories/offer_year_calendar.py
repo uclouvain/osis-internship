@@ -39,15 +39,15 @@ def _get_tzinfo():
     else:
         return None
 
-def generate_start_date(person, academic_calendar=None):
-    if academic_calendar:
-        return academic_calendar.start_date
+def generate_start_date(offer_year_calendar):
+    if offer_year_calendar.academic_calendar:
+        return offer_year_calendar.academic_calendar.start_date
     else:
         return datetime.date(2000, 1, 1)
 
-def generate_end_date(person, academic_calendar=None):
-    if academic_calendar:
-        return academic_calendar.end_date
+def generate_end_date(offer_year_calendar):
+    if offer_year_calendar.academic_calendar:
+        return offer_year_calendar.academic_calendar.end_date
     else:
         return datetime.date(2099, 1, 1)
 

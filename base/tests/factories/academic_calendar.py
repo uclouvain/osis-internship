@@ -38,6 +38,18 @@ def _get_tzinfo():
     else:
         return None
 
+def generate_start_date(academic_calendar):
+    if academic_calendar.academic_year:
+        return academic_calendar.academic_year.start_date
+    else:
+        return datetime.date(timezone.now().year, 9, 30)
+
+def generate_end_date(academic_calendar):
+    if academic_calendar.academic_year:
+        return academic_calendar.academic_year.end_date
+    else:
+        return datetime.date(timezone.now().year+1, 9, 30)
+
 
 class AcademicCalendarFactory(factory.DjangoModelFactory):
     class Meta:
@@ -48,8 +60,8 @@ class AcademicCalendarFactory(factory.DjangoModelFactory):
                                           datetime.datetime(2017, 3, 1, tzinfo=_get_tzinfo()))
     academic_year = factory.SubFactory(AcademicYearFactory)
     title = factory.Sequence(lambda n: 'Academic Calendar - %d' % n)
-    start_date = factory.LazyAttribute(lambda obj: datetime.date(timezone.now().year, 9, 30))
-    end_date = factory.LazyAttribute(lambda obj: datetime.date(timezone.now().year+1, 9, 30))
+    start_date = factory.LazyAttribute(generate_start_date)
+    end_date = factory.LazyAttribute(generate_end_date)
     highlight_title = factory.Sequence(lambda n: 'Highlight - %d' % n)
     highlight_description = factory.Sequence(lambda n: 'Description - %d' % n)
     highlight_shortcut = factory.Sequence(lambda n: 'Shortcut Highlight - %d' % n)

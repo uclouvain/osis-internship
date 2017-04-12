@@ -34,7 +34,7 @@ from base.tests.factories.offer_year_calendar import OfferYearCalendarFactory
 from base.tests.factories.offer_year import OfferYearFactory
 
 
-start_date = datetime.datetime.now()
+start_date = datetime.datetime.now().date()
 end_date = start_date.replace(year=start_date.year + 1)
 YEAR_CALENDAR = datetime.datetime.now().year
 
@@ -45,8 +45,12 @@ def create_offer_year_calendar(offer_yr, academic_year):
 
 
 def _create_academic_calendar_with_offer_year_calendars():
+    academic_yr = AcademicYearFactory(year=datetime.datetime.now().year,
+                                      start_date=start_date,
+                                      end_date=end_date)
+
     an_academic_calendar = AcademicCalendarFactory.build(
-        academic_year=AcademicYearFactory(year=datetime.datetime.now().year),
+        academic_year=academic_yr,
         title="Academic year {0} - {1}".format(start_date.year, start_date.year + 1),
         description="My offerYearCalendars are not customized (default value)",
         start_date=start_date,

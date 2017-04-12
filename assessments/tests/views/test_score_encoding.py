@@ -54,8 +54,6 @@ class OnlineEncodingTest(TestCase):
     def setUp(self):
         academic_year = AcademicYearFactory(year=datetime.datetime.now().year)
         academic_calendar = AcademicCalendarFactory.build(title="Submission of score encoding - 1",
-                                                          start_date=datetime.date.today() - datetime.timedelta(days=120),
-                                                          end_date=datetime.date.today() + datetime.timedelta(days=5),
                                                           academic_year=academic_year,
                                                           reference=academic_calendar_type.SCORES_EXAM_SUBMISSION)
         academic_calendar.save(functions=[])
@@ -280,10 +278,8 @@ class OutsideEncodingPeriodTest(TestCase):
         self.client.force_login(self.user)
 
         # Create context
-        academic_year = AcademicYearFactory(year=datetime.datetime.now().year)
+        academic_year = AcademicYearFactory(year=datetime.datetime.now().year-2)
         academic_calendar = AcademicCalendarFactory.build(title="Submission of score encoding - 1",
-                                                          start_date=datetime.date.today() - datetime.timedelta(days=120),
-                                                          end_date=datetime.date.today() + datetime.timedelta(days=5),
                                                           academic_year=academic_year,
                                                           reference=academic_calendar_type.SCORES_EXAM_SUBMISSION)
         academic_calendar.save(functions=[])
@@ -320,8 +316,6 @@ class GetScoreEncodingViewProgramManagerTest(TestCase):
 
         # Create an score submission event - with an session exam
         academic_calendar = AcademicCalendarFactory.build(title="Submission of score encoding - 1",
-                                                          start_date=datetime.date.today() - datetime.timedelta(days=120),
-                                                          end_date=datetime.date.today() + datetime.timedelta(days=5),
                                                           academic_year=academic_year,
                                                           reference=academic_calendar_type.SCORES_EXAM_SUBMISSION)
         academic_calendar.save(functions=[])

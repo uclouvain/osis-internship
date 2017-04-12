@@ -1,12 +1,12 @@
 ##############################################################################
 #
-# OSIS stands for Open Student Information System. It's an application
+#    OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -56,9 +56,10 @@ class AcademicCalendarTest(TestCase):
         self.assertRaises(FunctionAgrumentMissingException, an_academic_calendar.save)
 
     def test_start_date_higher_than_end_date(self):
-        an_academic_year = AcademicYearFactory()
-        wrong_end_date = datetime.datetime.now()
-        wrong_start_date = wrong_end_date.replace(year=datetime.datetime.now().year + 1)
+        yr = datetime.datetime.now().year
+        an_academic_year = AcademicYearFactory(year=yr)
+        wrong_end_date = an_academic_year.end_date
+        wrong_start_date = wrong_end_date.replace(year=yr + 1)
         an_academic_calendar = AcademicCalendarFactory.build(academic_year=an_academic_year,
                                                              title="A calendar event",
                                                              start_date=wrong_start_date,
@@ -66,13 +67,12 @@ class AcademicCalendarTest(TestCase):
         self.assertRaises(StartDateHigherThanEndDateException, an_academic_calendar.save, functions=[])
 
     def test_start_date_equal_to_end_date(self):
-        an_academic_year = AcademicYearFactory()
-        wrong_end_date = datetime.datetime.now()
-        wrong_start_date = wrong_end_date
+        an_academic_year = AcademicYearFactory(year=datetime.datetime.now().year)
+        wrong_start_date = an_academic_year.end_date
         an_academic_calendar = AcademicCalendarFactory.build(academic_year=an_academic_year,
                                                              title="A calendar event",
                                                              start_date=wrong_start_date,
-                                                             end_date=wrong_end_date)
+                                                             end_date=wrong_start_date)
         self.assertRaises(StartDateHigherThanEndDateException, an_academic_calendar.save, functions=[])
 
     def test_find_by_id(self):
@@ -84,13 +84,12 @@ class AcademicCalendarTest(TestCase):
         self.assertEqual(db_academic_calendar, tmp_academic_calendar)
 
     def test_find_highlight_academic_calendar(self):
-        an_academic_year = AcademicYearFactory()
-        wrong_end_date = datetime.datetime.now()
-        wrong_start_date = wrong_end_date.replace(year=datetime.datetime.now().year + 1)
+        an_academic_year = AcademicYearFactory(year=datetime.datetime.now().year,
+                                               start_date=datetime.datetime.now() - datetime.timedelta(days=10),
+                                               end_date=datetime.datetime.now() + datetime.timedelta(days=10))
+
         tmp_academic_calendar = AcademicCalendarFactory.build(academic_year=an_academic_year,
-                                                              title="A calendar event",
-                                                              start_date=wrong_end_date,
-                                                              end_date=wrong_start_date)
+                                                              title="A calendar event")
         tmp_academic_calendar.save(functions=[])
         db_academic_calendar = academic_calendar.find_highlight_academic_calendar()
         self.assertIsNotNone(db_academic_calendar)
@@ -106,10 +105,10 @@ class AcademicCalendarTest(TestCase):
         self.assertEqual(db_academic_calendar, tmp_academic_calendar)
 
     def test_find_academic_calendar_by_academic_year_with_dates(self):
-        tmp_academic_year = AcademicYearFactory()
+        tmp_academic_year = AcademicYearFactory(year=datetime.datetime.now().year)
         tmp_academic_calendar = AcademicCalendarFactory.build(academic_year=tmp_academic_year)
         tmp_academic_calendar.save(functions=[])
         db_academic_calendar = list(academic_calendar.find_academic_calendar_by_academic_year_with_dates
-                                    ([tmp_academic_year][0]))[0]
+                                    (tmp_academic_year.id))[0]
         self.assertIsNotNone(db_academic_calendar)
         self.assertEqual(db_academic_calendar, tmp_academic_calendar)
