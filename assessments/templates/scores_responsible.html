@@ -93,7 +93,7 @@
                 </thead>
                 <tbody>
                     {% for key, value_list in dict_attribution.items %}
-                        <tr class='clickable-row' data-toggle="modal" data-target="#pnl_scores_responsibles">
+                        <tr data-toggle="modal" data-id="1" data-target="#pnl_scores_responsible">
                             {% for value in value_list %}
                                 <td class="text-center">{{ value }}</td>
                             {% endfor %}
@@ -104,14 +104,14 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="pnl_scores_responsibles" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
+<div class="modal fade" id="pnl_scores_responsible">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <form method="post" enctype="multipart/form-data" >
                 {% csrf_token %}
                 <div class="modal-header">
                 </div>
-                <div class="modal-body" id="pnl_modal_upload">
+                <div class="modal-body">
                 </div>
                 <div class="modal-footer">
                 </div>
@@ -119,4 +119,9 @@
         </div>
     </div>
  </div>
+{% endblock %}
+{% block script %}
+<script>
+
+</script>
 {% endblock %}
