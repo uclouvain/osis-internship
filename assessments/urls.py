@@ -65,7 +65,7 @@ urlpatterns = [
     url(r'^pgm_manager/search$', pgm_manager_administration.pgm_manager_search, name='pgm_manager_search'),
     url(r'^pgm_manager/remove$', pgm_manager_administration.remove_manager, name='remove_manager'),
 #    url(r'^pgm_manager/person/search$', pgm_manager_administration.person_search, name='person_search'),
-    url(r'^pgm_manager/person/list/search$', pgm_manager_administration.person_list_search, name='person_list_search'),
+    url(r'^pgm_manager/person/list/search$', pgm_manager_administration.person_list_search),
 
     url(r'^pgm_manager/add/$', pgm_manager_administration.add_manager, name='add_manager_person'),
     url(r'^update_managers_list/$', pgm_manager_administration.update_managers_list),

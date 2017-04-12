@@ -167,40 +167,20 @@ def find_faculty(acronym):
     return mdl.structure.find_first(acronym, None, structure_type.FACULTY)
 
 
-# @login_required
-# @permission_required('base.add_programmanager', raise_exception=True)
-# def person_search(request):
-#     list_offer_id = request.GET['pgms_id']
-#     lastname = request.GET['name']
-#
-#
-#     entity = get_filter_value(request, 'entity')
-#     pgm_grade_type = get_filter_value(request, 'pgm_type')
-#     person = get_filter_value(request, 'person')
-#
-#     if request.method == 'POST':
-#         offers_checked_ch = request.POST['offers_checked']
-#     else:
-#         offers_checked_ch = request.GET.get('offers_checked')
-#
-#     return layout.render(request, "admin/persons.html", {
-#         'lastname': lastname,
-#         'pgms_id': list_offer_id,
-#         'persons': mdl.person.search(lastname, person_status.MAIN, [person_type.UCL_STAFF, person_type.FUCAM_STAFF ]),
-#         'entity': entity,
-#         'pgm_type': pgm_grade_type,
-#         'person': person,
-#         'offers_on':offers_checked_ch})
-
-
 @login_required
 @permission_required('base.add_programmanager', raise_exception=True)
 def person_list_search(request):
     lastname = request.GET['name']
-    persons = None
-    if lastname:
-        persons = mdl.person.search(lastname, person_status.MAIN, [person_type.UCL_STAFF, person_type.FUCAM_STAFF])
-
+    firstname = request.GET['firstname']
+    employees = None
+    if lastname or firstname:
+        employees = mdl.employee.search(lastname, firstname)
+    print('employees')
+    print(employees)
+    persons = []
+    for e in employees:
+        if e.person not in persons:
+            persons.append(e.person)
     serializer = PersonSerializer(persons, many=True)
     return JSONResponse(serializer.data)
 

@@ -39,7 +39,7 @@ class PersonAdmin(SerializableModelAdmin):
     search_fields = ['first_name', 'middle_name', 'last_name', 'user__username', 'email', 'global_id']
     fieldsets = ((None, {'fields': ('user', 'global_id', 'national_id', 'gender', 'first_name',
                                     'middle_name', 'last_name', 'birth_date', 'email', 'phone',
-                                    'phone_mobile', 'language', 'working_status', 'working_type')}),)
+                                    'phone_mobile', 'language')}),)
     raw_id_fields = ('user',)
 
 
@@ -66,8 +66,6 @@ class Person(SerializableModel):
     birth_date = models.DateField(blank=True, null=True)
     source = models.CharField(max_length=25, blank=True, null=True, choices=person_source_type.CHOICES,
                               default=person_source_type.BASE)
-    working_status = models.CharField(max_length=25, blank=True, null=True, choices=person_status.CHOICES)
-    working_type = models.CharField(max_length=30, blank=True, null=True, choices=person_type.CHOICES)
 
     def save(self, **kwargs):
         # When person is created by another application this rule can be applied.
@@ -141,19 +139,24 @@ def find_by_lastname(a_name):
     return Person.objects.filter(Q(last_name__icontains=a_name) | Q(first_name__icontains=a_name))
 
 
-def search(a_lastname_part, a_status, a_type_list):
+def search(a_lastname_part, a_first_name, a_status, a_type_list):
+
     out = None
     queryset = Person.objects
 
     if a_lastname_part:
         queryset = queryset.filter(last_name__icontains=a_lastname_part)
-    # print(a_status)
-    if a_status:
-        queryset = queryset.filter(working_status=a_status)
 
-    if a_type_list:
-        queryset = queryset.filter(working_type__in=a_type_list)
-    if a_lastname_part or a_status or a_type_list:
+    if a_first_name:
+        queryset = queryset.filter(first_name__icontains=a_first_name)
+
+    #
+    # if a_status:
+    #     queryset = queryset.filter(working_status=a_status)
+    #
+    # if a_type_list:
+    #     queryset = queryset.filter(working_type__in=a_type_list)
+    if a_lastname_part or a_first_name or a_status or a_type_list:
         out = queryset.order_by('last_name')
 
     return out

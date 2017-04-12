@@ -338,7 +338,7 @@
 
         $('#pnl_person_search_results').css('visibility', 'hidden');
         $.ajax({
-            url: "/assessments/pgm_manager/person/list/search?name=" + $('#txt_name').val()
+            url: "/assessments/pgm_manager/person/list/search?name=" + $('#txt_name').val() + "&firstname=" + $('#txt_first_name').val()
         }).then(function (data) {
             if (data.length > 0) {
                 $('#pnl_person_search_results').css('visibility', 'visible');
@@ -366,8 +366,6 @@
                     trHTML += '<td>'
                     if(value.user){
                         trHTML += value.user.username;
-                    }else{
-                        trHTML += 'dd';
                     }
                     trHTML += '</td>';
 
