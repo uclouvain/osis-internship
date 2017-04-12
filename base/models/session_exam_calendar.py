@@ -68,10 +68,6 @@ def find_session_exam_number(date=datetime.date.today()):
 
 
 def get_latest_session_exam(date=datetime.date.today()):
-    """"
-    :param date Default: today
-    :return latest session exam done of the current academic calendar
-    """
     current_academic_year = academic_year.current_academic_year()
     return SessionExamCalendar.objects.exclude(academic_calendar__end_date__isnull=True)\
                                       .filter(academic_calendar__end_date__lte=date,
@@ -82,10 +78,6 @@ def get_latest_session_exam(date=datetime.date.today()):
 
 
 def get_closest_new_session_exam(date=datetime.datetime.now().date()):
-    """"
-    :param date Default: today
-    :return closest session exam of the current academic year
-    """
     current_academic_year = academic_year.current_academic_year()
     return SessionExamCalendar.objects.exclude(academic_calendar__start_date__isnull=True) \
                                       .filter(academic_calendar__start_date__gte=date,
