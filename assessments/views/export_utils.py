@@ -24,6 +24,7 @@
 #
 ##############################################################################
 import datetime
+from base.utils import calendar_utils
 from django.http import HttpResponse
 from openpyxl import Workbook
 from openpyxl.writer.excel import save_virtual_workbook
@@ -68,11 +69,8 @@ def export_xls(exam_enrollments):
         student = exam_enroll.learning_unit_enrollment.student
         offer = exam_enroll.learning_unit_enrollment.offer
         person = mdl.person.find_by_id(student.person.id)
+        end_date = __get_session_exam_deadline(exam_enroll)
 
-        if exam_enroll.session_exam.deadline is None:
-            end_date = "-"
-        else:
-            end_date = exam_enroll.session_exam.deadline.strftime('%d/%m/%Y')
         score = None
         if exam_enroll.score_final is not None:
             if exam_enroll.session_exam.learning_unit_year.decimal_scores:
@@ -146,3 +144,10 @@ def __coloring_non_editable(ws, row_number, score, justification):
                 ws.cell(row=row_number, column=9).style = style_no_modification
 
         column_number += 1
+
+
+def __get_session_exam_deadline(exam_enroll):
+    session_exam_deadline = mdl.exam_enrollment.get_session_exam_deadline(exam_enroll)
+    if session_exam_deadline and session_exam_deadline.deadline_tutor:
+        return session_exam_deadline.deadline_tutor.strftime(calendar_utils.FORMAT)
+    return "-"

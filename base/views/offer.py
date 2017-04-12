@@ -73,7 +73,7 @@ def offers_search(request):
 @permission_required('base.can_access_offer', raise_exception=True)
 def offer_read(request, offer_year_id):
     offer_yr = mdl.offer_year.find_by_id(offer_year_id)
-    offer_yr_events = mdl.offer_year_calendar.find_by_offer_year(offer_yr)
+    offer_yr_events = mdl.offer_year_calendar.find_offer_year_events(offer_yr)
     program_managers = mdl.program_manager.find_by_offer_year(offer_yr)
     is_program_manager = mdl.program_manager.is_program_manager(request.user, offer_year=offer_yr)
     countries = mdl_ref.country.find_all()
