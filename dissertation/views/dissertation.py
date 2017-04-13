@@ -618,6 +618,7 @@ def dissertations_detail(request, pk):
     offer_prop = offer_proposition.get_by_dissertation(dissert)
     files = dissertation_document_file.find_by_dissertation(dissert)
     filename = ""
+    promotors_count = dissertation_role.count_by_status_dissertation('PROMOTEUR', dissert)
     for file in files:
         filename = file.document_file.file_name
     if count_proposition_role == 0:
@@ -640,6 +641,7 @@ def dissertations_detail(request, pk):
                           'dissertation_roles': dissertation_roles,
                           'count_dissertation_role': count_dissertation_role,
                           'offer_prop': offer_prop,
+                          'promotors_count': promotors_count,
                           'filename': filename})
 
 
@@ -726,13 +728,18 @@ def dissertations_wait_list(request):
                          {'roles_list_dissertations': roles_list_dissertations})
 
 
+def can_delete_role(dissert, dissert_role):
+    promotors_count = dissertation_role.count_by_status_dissertation('PROMOTEUR', dissert)
+    return dissert_role.status != 'PROMOTEUR' or promotors_count > 1
+
+
 @login_required
 @user_passes_test(is_teacher)
 def dissertations_role_delete(request, pk):
     dissert_role = get_object_or_404(DissertationRole, pk=pk)
     dissert = dissert_role.dissertation
     offer_prop = offer_proposition.get_by_dissertation(dissert)
-    if offer_prop.adviser_can_suggest_reader:
+    if offer_prop.adviser_can_suggest_reader and can_delete_role(dissert, dissert_role):
         justification = "%s %s" % ("teacher_delete_jury", str(dissert_role))
         dissertation_update.add(request, dissert, dissert.status, justification=justification)
         dissert_role.delete()

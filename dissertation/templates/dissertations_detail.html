@@ -155,12 +155,14 @@
                       {{ dissertation_role.adviser }}
                   </div>
                   {% if offer_prop.adviser_can_suggest_reader %}
-                    <div class="col-md-1">
-                      <a class="btn btn-warning"
-                         href="{% url 'dissertations_role_delete' pk=dissertation_role.pk %}"
-                         onclick="return confirm('{% trans 'delete_adviser_role_confirmation_message' %}')">
-                          <span class="glyphicon glyphicon-remove span2"></span></a>
-                    </div>
+                    {% if promotors_count > 1 or dissertation_role.status != 'PROMOTEUR' %}
+                        <div class="col-md-1">
+                          <a class="btn btn-warning"
+                             href="{% url 'dissertations_role_delete' pk=dissertation_role.pk %}"
+                             onclick="return confirm('{% trans 'delete_adviser_role_confirmation_message' %}')">
+                              <span class="glyphicon glyphicon-remove span2"></span></a>
+                        </div>
+                    {% endif %}
                    {% endif %}
                 </div>
                 {% endfor %}

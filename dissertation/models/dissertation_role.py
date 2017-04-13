@@ -74,6 +74,14 @@ def count_by_dissertation(dissertation):
                                    .count()
 
 
+def count_by_status_dissertation(status, dissertation):
+    return DissertationRole.objects.filter(
+                                        status=status
+                                    ).filter(
+                                        dissertation=dissertation
+                                    ).count()
+
+
 def count_by_status_adviser_dissertation(status, adviser, dissertation):
     return DissertationRole.objects.filter(
                                         adviser=adviser
