@@ -1396,3 +1396,7 @@ msgstr "The end date should be between the start/end dates of the academic year"
 
 msgid "end_start_date_error"
 msgstr "Start date must be lower than end date"
+
+msgid "dates_mandatory_error"
+msgstr "Start date and end date are mandatory"
+

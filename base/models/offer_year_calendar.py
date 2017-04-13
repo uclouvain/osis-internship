@@ -63,13 +63,22 @@ class OfferYearCalendar(models.Model):
     def save(self, *args, **kwargs):
         academic_start_date = self.get_start_date()
         academic_end_date = self.get_end_date()
-        if academic_start_date and self.start_date and self.start_date < academic_start_date:
+        if self.start_dates_set(academic_start_date) and self.start_date < academic_start_date:
             raise AttributeError(_('academic_start_date_error'))
-        if academic_end_date and self.end_date and self.end_date > academic_end_date:
+        if self.end_dates_set(academic_end_date) and self.end_date > academic_end_date:
             raise AttributeError(_('academic_end_date_error'))
-        if self.start_date and self.end_date and self.end_date < self.start_date:
+        if self.start_end_dates_set() and self.end_date < self.start_date:
             raise AttributeError(_('end_start_date_error'))
         super(OfferYearCalendar, self).save(*args, **kwargs)
+
+    def start_end_dates_set(self):
+        return self.start_date and self.end_date
+
+    def end_dates_set(self, academic_end_date):
+        return academic_end_date and self.end_date
+
+    def start_dates_set(self, academic_start_date):
+        return academic_start_date and self.start_date
 
     def get_end_date(self):
         if self.academic_calendar.end_date:

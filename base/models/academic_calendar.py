@@ -23,13 +23,13 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.utils import timezone
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 from base.models.exceptions import FunctionAgrumentMissingException, StartDateHigherThanEndDateException
 from base.models.enums import academic_calendar_type
 from django.utils.translation import ugettext as _
+from base.models.utils.model_action import delete_admin_action
 
 
 FUNCTIONS = 'functions'
@@ -52,11 +52,7 @@ class AcademicCalendarAdmin(SerializableModelAdmin):
         return False
 
     def get_actions(self, request):
-        actions = super(AcademicCalendarAdmin, self).get_actions(request)
-
-        if 'delete_selected' in actions:
-            del actions['delete_selected']
-        return actions
+        return delete_admin_action(super(AcademicCalendarAdmin, self).get_actions(request))
 
 
 class AcademicCalendar(SerializableModel):
@@ -76,6 +72,8 @@ class AcademicCalendar(SerializableModel):
         if FUNCTIONS not in kwargs.keys():
             raise FunctionAgrumentMissingException('The kwarg "{0}" must be set.'.format(FUNCTIONS))
         functions = kwargs.pop(FUNCTIONS)
+        if self.start_date is None or self.end_date is None:
+            raise AttributeError(_('dates_mandatory_error'))
         if self.start_date and self.academic_year.start_date and self.start_date < self.academic_year.start_date:
             raise AttributeError(_('academic_start_date_error'))
         if self.end_date and self.academic_year.end_date and self.end_date > self.academic_year.end_date:

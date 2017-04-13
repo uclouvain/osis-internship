@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -35,6 +35,8 @@ from base.enums import exam_enrollment_state as enrollment_states
 import datetime
 import unicodedata
 from base.models.exceptions import JustificationValueException
+from base.models.utils.model_action import delete_admin_action
+
 
 JUSTIFICATION_ABSENT_FOR_TUTOR = _('absent')
 
@@ -212,11 +214,7 @@ class ExamEnrollmentHistoryAdmin(admin.ModelAdmin):
         return False
 
     def get_actions(self, request):
-        actions = super(ExamEnrollmentHistoryAdmin, self).get_actions(request)
-
-        if 'delete_selected' in actions:
-            del actions['delete_selected']
-        return actions
+        return delete_admin_action(super(ExamEnrollmentHistoryAdmin, self).get_actions(request))
 
 
 class ExamEnrollmentHistory(models.Model):

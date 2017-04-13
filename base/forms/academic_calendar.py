@@ -30,6 +30,9 @@ from django import forms
 from base.models import academic_year
 
 
+DATE_FORMAT = '%d/%m/%Y'
+
+
 class BootstrapModelForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
@@ -46,11 +49,7 @@ class AcademicCalendarForm(BootstrapModelForm):
 
     class Meta:
         model = academic_calendar.AcademicCalendar
-
         exclude = ['external_id', 'changed']
-        widgets = {
-            'academic_year': forms.Select()
-        }
 
     def save(self, commit=True):
         instance = super(AcademicCalendarForm, self).save(commit=False)
@@ -69,30 +68,28 @@ class AcademicCalendarForm(BootstrapModelForm):
         return True
 
     def end_date_gt_start_date(self):
-        if not self.cleaned_data.get('end_date') or not self.cleaned_data.get('start_date'):
-            return True
         if self.cleaned_data['end_date'] <= self.cleaned_data['start_date']:
             self._errors['start_date'] = trans('start_date_must_be_lower_than_end_date')
             return False
         return True
 
-    def end_date_academic_year_end_date(self):
-        if not self.cleaned_data.get('end_date') or not self.cleaned_data.get('start_date'):
-            return True
+    def start_date_and_end_date_are_inside_academic_year(self):
         ac_yr = self.instance.academic_year
 
         if ac_yr:
+            error_message_template = "{0} ({1} - {2})"
+
             if self.cleaned_data['start_date'] < ac_yr.start_date:
-                error_msg = "{0} ({1} - {2})".format(trans('academic_start_date_error'),
-                                                     ac_yr.start_date.strftime('%d/%m/%Y'),
-                                                     ac_yr.end_date.strftime('%d/%m/%Y'))
+                error_msg = error_message_template.format(trans('academic_start_date_error'),
+                                                          ac_yr.start_date.strftime(DATE_FORMAT),
+                                                          ac_yr.end_date.strftime(DATE_FORMAT))
                 self._errors['start_date'] = error_msg
                 return False
 
             if self.cleaned_data['end_date'] > ac_yr.end_date:
-                error_msg = "{0} ({1} - {2})".format(trans('academic_end_date_error'),
-                                                     ac_yr.start_date.strftime('%d/%m/%Y'),
-                                                     ac_yr.end_date.strftime('%d/%m/%Y'))
+                error_msg = error_message_template.format(trans('academic_end_date_error'),
+                                                          ac_yr.start_date.strftime(DATE_FORMAT),
+                                                          ac_yr.end_date.strftime(DATE_FORMAT))
                 self._errors['end_date'] = error_msg
                 return False
 
@@ -100,8 +97,14 @@ class AcademicCalendarForm(BootstrapModelForm):
 
     def is_valid(self):
         return super(AcademicCalendarForm, self).is_valid() \
+            and self.start_date_and_end_date_are_set() \
+            and self.start_date_and_end_date_are_inside_academic_year() \
             and self.end_date_gt_last_offer_year_calendar_end_date() \
-            and self.end_date_gt_start_date() \
-            and self.end_date_academic_year_end_date()
+            and self.end_date_gt_start_date()
 
-
+    def start_date_and_end_date_are_set(self):
+        if not self.cleaned_data.get('end_date') or not self.cleaned_data.get('start_date'):
+            error_msg = "{0}".format(trans('dates_mandatory_error'))
+            self._errors['start_date'] = error_msg
+            return False
+        return True

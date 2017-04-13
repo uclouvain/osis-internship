@@ -1389,3 +1389,6 @@ msgstr "La date de fin doit être comprise entre les dates de début/fin de l'an
 
 msgid "end_start_date_error"
 msgstr "La date de fin doit être supérieure à la date début"
+
+msgid "dates_mandatory_error"
+msgstr "Start date and end date are mandatory"
