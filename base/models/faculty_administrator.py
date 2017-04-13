@@ -25,10 +25,12 @@
 ##############################################################################
 from django.db import models
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
+from base.models import person
+from base.enums import structure_type
 
 
 class FacultyAdministratorAdmin(SerializableModelAdmin):
-    list_display = ('employee', 'structure' )
+    list_display = ('employee', 'structure')
     fieldsets = ((None, {'fields': ('employee', 'structure',)}),)
     search_fields = ['employee__person__first_name', 'employee__person__last_name', 'structure__acronym']
     raw_id_fields = ('employee', 'structure')
@@ -41,4 +43,22 @@ class FacultyAdministrator(SerializableModel):
     def __str__(self):
         return u"%s" % self.employee
 
+    class Meta:
+        permissions = (
+            ("is_faculty_administrator", "Is faculty administrator"),
+        )
+
+
+def _get_perms(model):
+    return model._meta.permissions
+
+
+def find_faculty_by_user(a_user):
+    a_person = person.find_by_user(a_user)
+    if a_person:
+        faculty_administrators = FacultyAdministrator.objects.filter(employee__person=a_person,
+                                                                     structure__type=structure_type.FACULTY)
+        for f in faculty_administrators:
+            return f
+    return None
 

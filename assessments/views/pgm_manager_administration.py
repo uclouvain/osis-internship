@@ -41,7 +41,7 @@ ALL_OPTION_VALUE = "-"
 
 @login_required
 def pgm_manager_administration(request):
-    faculty = find_faculty('ESPO')
+    faculty = get_administrator_faculty(request)
     current_academic_yr = mdl.academic_year.current_academic_year()
     return layout.render(request, "admin/pgm_manager.html", {
         'academic_year': current_academic_yr,
@@ -55,8 +55,7 @@ def pgm_manager_administration(request):
 
 @login_required
 def pgm_manager_search(request):
-    faculty = find_faculty('ESPO')
-
+    faculty = get_administrator_faculty(request)
     entity = request.GET.get('entity', None)
     pgm_grade_type = get_filter_value(request, 'pgm_type')
     person = get_filter_value(request, 'person')
@@ -65,6 +64,7 @@ def pgm_manager_search(request):
 
 
 def pgm_manager_search_form(entity, faculty, person, pgm_grade_type, offers_on, request):
+    print(person)
     entity_list = get_entity_list(entity)
     current_academic_yr = mdl.academic_year.current_academic_year()
     manager_person = None
@@ -117,7 +117,7 @@ def filter_by_person(manager_person, entity_list, academic_yr, pgm_type):
 
 
 @login_required
-@permission_required('base.delete_programmanager', raise_exception=True)
+@permission_required('base.is_faculty_administrator', raise_exception=True)
 def remove_manager(request):
     pgms_to_be_removed = request.GET['pgms_to_be_removed']
     person_to_be_removed = request.GET['person_to_be_removed']
@@ -168,7 +168,7 @@ def find_faculty(acronym):
 
 
 @login_required
-@permission_required('base.add_programmanager', raise_exception=True)
+@permission_required('base.is_faculty_administrator', raise_exception=True)
 def person_list_search(request):
     lastname = request.GET['name']
     firstname = request.GET['firstname']
@@ -186,8 +186,9 @@ def person_list_search(request):
 
 
 @login_required
-@permission_required('base.add_programmanager', raise_exception=True)
+@permission_required('base.is_faculty_administrator', raise_exception=True)
 def add_manager(request):
+    print('add_manager')
     person_id = request.POST['person_id']
     person = mdl.person.find_by_id(person_id)
     pgms_id = request.POST['pgms_id']
@@ -201,10 +202,16 @@ def add_manager(request):
     pgm_grade_type = get_filter_value(request, 'pgm_type')
     person = get_filter_value(request, 'person')
 
-    faculty = find_faculty('ESPO')
+    faculty = get_administrator_faculty(request)
 
     offers_on = mdl.offer_year.find_by_id_list(list_offer_id)
     return pgm_manager_search_form(entity,  faculty, person, pgm_grade_type, offers_on, request)
+
+
+def get_administrator_faculty(request):
+    faculty_administrator = mdl.faculty_administrator.find_faculty_by_user(request.user)
+    faculty = faculty_administrator.structure
+    return faculty
 
 
 def add_program_managers(list_offer_id, person):
@@ -266,15 +273,6 @@ class OfferYearSerializer(serializers.ModelSerializer):
     class Meta:
         model = mdl.offer_year.OfferYear
         fields = '__all__'
-
-
-# class ProgramManagerSerializer(serializers.ModelSerializer):
-#     person = PersonSerializer()
-#     offer_year = OfferYearSerializer()
-#
-#     class Meta:
-#         model = mdl.program_manager.ProgramManager
-#         fields = '__all__'
 
 
 class PgmManager(object):
