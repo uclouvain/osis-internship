@@ -118,7 +118,7 @@ MEDIA_ROOT = os.environ.get('MEDIA_ROOT', os.path.join(BASE_DIR, "uploads"))
 MEDIA_URL = os.environ.get('MEDIA_URL',  '/media/')
 CONTENT_TYPES = ['application/csv', 'application/doc', 'application/pdf', 'application/xls', 'application/xml',
                  'application/zip', 'image/jpeg', 'image/gif', 'image/png', 'text/html', 'text/plain']
-MAX_UPLOAD_SIZE = os.environ.get('MAX_UPLOAD_SIZE', 5242880)
+MAX_UPLOAD_SIZE = int(os.environ.get('MAX_UPLOAD_SIZE', 5242880))
 
 # Logging settings
 # Logging framework is defined in env settings (ex: local.py)
@@ -137,13 +137,14 @@ COMMON_EMAIL_RECEIVER = os.environ.get('COMMON_EMAIL_RECEIVER', 'osis@localhost.
 EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND', 'django.core.mail.backends.filebased.EmailBackend')
 EMAIL_FILE_PATH = os.environ.get('EMAIL_FILE_PATH', os.path.join(BASE_DIR, "base/tests/sent_mails"))
 EMAIL_HOST = os.environ.get('EMAIL_HOST', 'localhost')
-EMAIL_PORT = os.environ.get('EMAIL_PORT', 25)
+EMAIL_PORT = int(os.environ.get('EMAIL_PORT', 25))
 SEND_BROKEN_LINK_EMAILS = bool(os.environ.get('SEND_BROKEN_LINK_EMAILS', True))
 
 # Authentication settings
 LOGIN_URL = os.environ.get('LOGIN_URL', reverse_lazy('login'))
 LOGIN_REDIRECT_URL = os.environ.get('LOGIN_REDIRECT_URL', reverse_lazy('home'))
 OVERRIDED_LOGOUT_URL = os.environ.get('OVERRIDED_LOGOUT_URL', '')
+SERVER_LOGOUT_URL = os.environ.get('SERVER_LOGOUT_URL', '')
 OVERRIDED_LOGIN_URL = os.environ.get('OVERRIDED_LOGIN_URL', '')
 LOGOUT_BUTTON = bool(os.environ.get('LOGOUT_BUTTON', True))
 CURRENT_URL = os.environ.get('CURRENT_URL', 'http://localhost:8000')
@@ -162,7 +163,7 @@ QUEUES = {
     'QUEUE_URL': os.environ.get('RABBITMQ_HOST', 'localhost'),
     'QUEUE_USER': os.environ.get('RABBITMQ_USER', 'guest'),
     'QUEUE_PASSWORD': os.environ.get('RABBITMQ_PASSWORD', 'guest'),
-    'QUEUE_PORT': os.environ.get('RABBITMQ_PORT', 5672),
+    'QUEUE_PORT': int(os.environ.get('RABBITMQ_PORT', 5672)),
     'QUEUE_CONTEXT_ROOT': os.environ.get('RABBITMQ_CONTEXT_ROOT', '/'),
     'QUEUES_NAME': {
         'MIGRATIONS_TO_PRODUCE': 'osis_portal',
