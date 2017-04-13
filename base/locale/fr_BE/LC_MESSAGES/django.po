@@ -1395,3 +1395,6 @@ msgstr "Abscence justifiée dèjà encodée et préservée"
 
 msgid "academic_actors"
 msgstr "Les acteurs académiques"
+
+msgid "no_structure_specified"
+msgstr "Aucune structure facultaire n'est associée à votre profilo d'administrateur facultaire"
