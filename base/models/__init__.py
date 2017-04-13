@@ -56,6 +56,8 @@ from base.models import person
 from base.models import person_address
 from base.models import program_manager
 from base.models import session_exam
+from base.models import session_exam_calendar
+from base.models import session_exam_deadline
 from base.models import structure
 from base.models import structure_address
 from base.models import student

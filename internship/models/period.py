@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -30,14 +30,16 @@ from django.core.exceptions import ObjectDoesNotExist
 
 
 class PeriodAdmin(SerializableModelAdmin):
-    list_display = ('name', 'date_start', 'date_end')
-    fieldsets = ((None, {'fields': ('name', 'date_start', 'date_end')}),)
+    list_display = ('name', 'date_start', 'date_end', 'cohort')
+    fieldsets = ((None, {'fields': ('name', 'date_start', 'date_end', 'cohort')}),)
 
 
 class Period(SerializableModel):
     name = models.CharField(max_length=255)
     date_start = models.DateField(blank=False)
     date_end = models.DateField(blank=False)
+
+    cohort = models.ForeignKey('internship.cohort', null=False, on_delete=models.CASCADE)
 
     def __str__(self):
         return u"%s" % self.name

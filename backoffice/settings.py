@@ -50,7 +50,6 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
     'django_jenkins',
     'analytical',
     'osis_common',
@@ -63,9 +62,9 @@ INSTALLED_APPS = (
     'assistant',
     'dissertation',
     'internship',
-    'admission',
     'assessments',
     'localflavor',
+    'django.contrib.staticfiles'
 )
 
 # check if we are testing right now
@@ -125,7 +124,7 @@ WSGI_APPLICATION = 'backoffice.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'osis_backend_dev',
+        'NAME': os.environ.get("POSTGRES_DB") or 'osis_backend_dev',
         'USER': os.environ.get("POSTGRES_USER") or "osis_usr",
         'PASSWORD': os.environ.get("POSTGRES_PASSWORD") or "osis",
         'HOST': os.environ.get("POSTGRES_HOST") or "127.0.0.1",

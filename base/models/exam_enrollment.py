@@ -28,7 +28,8 @@ from django.db import models
 from django.contrib import admin
 from django.utils.translation import ugettext as _
 from django.core.validators import MaxValueValidator, MinValueValidator
-from base.models import person, learning_unit_year, person_address, offer_year_calendar
+from base.models import person, learning_unit_year, person_address, session_exam_calendar, session_exam_deadline, \
+                        academic_year as academic_yr
 from attribution.models import attribution
 from base.enums import exam_enrollment_justification_type as justification_types
 from base.enums import exam_enrollment_state as enrollment_states
@@ -51,7 +52,7 @@ class ExamEnrollmentAdmin(admin.ModelAdmin):
                      'learning_unit_enrollment__offer_enrollment__student__person__last_name',
                      'learning_unit_enrollment__offer_enrollment__student__registration_id',
                      'learning_unit_enrollment__learning_unit_year__acronym',
-                     'session_exam__offer_year_calendar__offer_year__acronym']
+                     'learning_unit_enrollment__offer_enrollment__offer_year__acronym']
 
 
 class ExamEnrollment(models.Model):
@@ -152,6 +153,39 @@ class ExamEnrollment(models.Model):
             return None
 
 
+def get_session_exam_deadline(enrollment):
+    if hasattr(enrollment.learning_unit_enrollment.offer_enrollment, 'session_exam_deadlines') and\
+            enrollment.learning_unit_enrollment.offer_enrollment.session_exam_deadlines:
+        # Prefetch related
+        return enrollment.learning_unit_enrollment.offer_enrollment.session_exam_deadlines[0]
+    else:
+        # No prefetch
+        offer_enrollment = enrollment.learning_unit_enrollment.offer_enrollment
+        nb_session = enrollment.session_exam.number_session
+        return session_exam_deadline.get_by_offer_enrollment_nb_session(offer_enrollment, nb_session)
+
+
+def is_deadline_reached(enrollment):
+    exam_deadline = get_session_exam_deadline(enrollment)
+    if exam_deadline:
+        return exam_deadline.is_deadline_reached
+    return False
+
+
+def is_deadline_tutor_reached(enrollment):
+    exam_deadline = get_session_exam_deadline(enrollment)
+    if exam_deadline:
+        return exam_deadline.is_deadline_tutor_reached
+    return False
+
+
+def get_deadline_tutor_computed(enrollment):
+    exam_deadline = get_session_exam_deadline(enrollment)
+    if exam_deadline:
+        return exam_deadline.deadline_tutor_computed
+    return None
+
+
 def is_absence_justification(justification):
     return justification in [justification_types.ABSENCE_UNJUSTIFIED, justification_types.ABSENCE_JUSTIFIED]
 
@@ -244,7 +278,8 @@ def find_for_score_encodings(session_exam_number,
                              registration_id=None,
                              student_last_name=None,
                              student_first_name=None,
-                             justification=None):
+                             justification=None,
+                             academic_year=None):
     """
     :param session_exam_number: Integer represents the number_session of the Session_exam (1,2,3,4 or 5). It's
                                 a mandatory field to not confuse exam scores from different sessions.
@@ -259,11 +294,12 @@ def find_for_score_encodings(session_exam_number,
                                               are returned.
     :return: All filtered examEnrollments.
     """
-    queryset = ExamEnrollment.objects.filter(session_exam__number_session=session_exam_number)
-    queryset = queryset.filter(session_exam__offer_year_calendar__start_date__lte=datetime.datetime.now())\
-                       .filter(session_exam__offer_year_calendar__end_date__gte=datetime.datetime.now())\
-                       .filter(enrollment_state=enrollment_states.ENROLLED)
+    if not academic_year:
+        academic_year = academic_yr.current_academic_year()
 
+    queryset = ExamEnrollment.objects.filter(session_exam__number_session=session_exam_number,
+                                             learning_unit_enrollment__learning_unit_year__academic_year=academic_year,
+                                             enrollment_state=enrollment_states.ENROLLED)
     if learning_unit_year_id:
         queryset = queryset.filter(learning_unit_enrollment__learning_unit_year_id=learning_unit_year_id)
     elif learning_unit_year_ids:
@@ -301,8 +337,13 @@ def find_for_score_encodings(session_exam_number,
         queryset = queryset.filter(
             learning_unit_enrollment__offer_enrollment__student__person__first_name__icontains=student_first_name)
 
-    return queryset.select_related('learning_unit_enrollment__offer_enrollment__offer_year')\
-                   .select_related('learning_unit_enrollment__offer_enrollment__student__person')
+    return queryset.select_related('learning_unit_enrollment__offer_enrollment__offer_year') \
+                   .select_related('learning_unit_enrollment__offer_enrollment__student__person')\
+                   .prefetch_related(
+                         models.Prefetch('learning_unit_enrollment__offer_enrollment__sessionexamdeadline_set',
+                                         queryset=session_exam_deadline.filter_by_nb_session(session_exam_number),
+                                         to_attr="session_exam_deadlines")
+                   )
 
 
 def group_by_learning_unit_year_id(exam_enrollments):
@@ -331,7 +372,8 @@ def scores_sheet_data(exam_enrollments, tutor=None):
     data['justification_legend'] = _('justification_legend') % justification_label_authorized()
 
     # Will contain lists of examEnrollments splitted by learningUnitYear
-    enrollments_by_learn_unit = group_by_learning_unit_year_id(exam_enrollments)  # {<learning_unit_year_id> : [<ExamEnrollment>]}
+    enrollments_by_learn_unit = group_by_learning_unit_year_id(
+        exam_enrollments)  # {<learning_unit_year_id> : [<ExamEnrollment>]}
 
     learning_unit_years = []
     for exam_enrollments in enrollments_by_learn_unit.values():
@@ -375,15 +417,19 @@ def scores_sheet_data(exam_enrollments, tutor=None):
         for list_enrollments in enrollments_by_program.values():  # exam_enrollments by OfferYear
             exam_enrollment = list_enrollments[0]
             offer_year = exam_enrollment.learning_unit_enrollment.offer_enrollment.offer_year
-
-            deliberation_date = offer_year_calendar.find_deliberation_date(exam_enrollment.session_exam)
+            number_session = exam_enrollment.session_exam.number_session
+            deliberation_date = session_exam_calendar.find_deliberation_date(number_session, offer_year)
             if deliberation_date:
                 deliberation_date = deliberation_date.strftime("%d/%m/%Y")
             else:
                 deliberation_date = _('not_passed')
-            deadline = ""
-            if exam_enrollment.session_exam.deadline:
-                deadline = exam_enrollment.session_exam.deadline.strftime('%d/%m/%Y')
+
+            # Compute deadline score encoding
+            deadline = get_deadline_tutor_computed(exam_enrollment)
+            if deadline:
+                deadline = deadline.strftime('%d/%m/%Y')
+            else:
+                deadline = ""
 
             program = {'acronym': exam_enrollment.learning_unit_enrollment.offer_enrollment.offer_year.acronym,
                        'deliberation_date': deliberation_date,
