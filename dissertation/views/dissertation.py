@@ -612,6 +612,10 @@ def dissertations_detail(request, pk):
     dissert = get_object_or_404(Dissertation, pk=pk)
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
+
+    if dissertation_role.count_by_adviser_dissertation(adv, dissert) < 1:
+        return redirect('dissertations_list')
+    
     count_dissertation_role = dissertation_role.count_by_dissertation(dissert)
     count_proposition_role = proposition_role.count_by_dissertation(dissert)
     proposition_roles = proposition_role.search_by_dissertation(dissert)
