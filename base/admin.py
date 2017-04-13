@@ -90,6 +90,12 @@ admin.site.register(program_manager.ProgramManager,
 admin.site.register(session_exam.SessionExam,
                     session_exam.SessionExamAdmin)
 
+admin.site.register(session_exam_calendar.SessionExamCalendar,
+                    session_exam_calendar.SessionExamCalendarAdmin)
+
+admin.site.register(session_exam_deadline.SessionExamDeadline,
+                    session_exam_deadline.SessionExamDeadlineAdmin)
+
 admin.site.register(structure_address.StructureAddress,
                     structure_address.StructureAddressAdmin)
 

@@ -169,18 +169,6 @@ msgstr "Créé par"
 msgid "current_status"
 msgstr "État actuel"
 
-msgid "date_end_visibility_dissertation"
-msgstr "Date de fin de la période de création des mémoires"
-
-msgid "date_end_visibility_proposition"
-msgstr "Date de fin de la période de visibilité des sujets de mémoires"
-
-msgid "date_start_visibility_dissertation"
-msgstr "Date de début de la période de création des mémoires"
-
-msgid "date_start_visibility_proposition"
-msgstr "Date de début de la période de visibilité des sujets de mémoires"
-
 msgid "defend_periode"
 msgstr "Session de la défense"
 
@@ -310,18 +298,6 @@ msgstr "Recherche empirique"
 msgid "empty_data"
 msgstr "Pas de données introduites"
 
-msgid "end_edit_title"
-msgstr "Fin de la période de modification du titre"
-
-msgid "end_jury_visibility"
-msgstr "Fin de la période de visibilité du jury"
-
-msgid "end_visibility_dissertation"
-msgstr "Fin de la période de création des mémoires"
-
-msgid "end_visibility_proposition"
-msgstr "Fin de la période de visibilité des sujets"
-
 msgid "ended"
 msgstr "Terminé"
 
@@ -354,6 +330,9 @@ msgstr "Pour les enseignants"
 
 msgid "forbidden"
 msgstr "Interdit"
+
+msgid "from"
+msgstr "du"
 
 msgid "go_away"
 msgstr "Quitter"
@@ -661,6 +640,24 @@ msgstr "Autre"
 msgid "parameters"
 msgstr "Paramètres"
 
+msgid "parameters_dates"
+msgstr "Paramètres de dates"
+
+msgid "parameters_others"
+msgstr "Autres paramètres"
+
+msgid "periode_visibility_proposition"
+msgstr "Période de visibilité des sujets de Mémoires"
+
+msgid "periode_visibility_dissertation"
+msgstr "Période de création des projets de Mémoires"
+
+msgid "periode_jury_visibility"
+msgstr "Période de visibilité des jurys de Mémoires"
+
+msgid "periode_edit_title"
+msgstr "Période d'édition des titres des Mémoires"
+
 msgid "person"
 msgstr "Personne"
 
@@ -778,18 +775,6 @@ msgstr "Septembre"
 msgid "specific_subject"
 msgstr "Sujet précis"
 
-msgid "start_edit_title"
-msgstr "Début de la période de modification du titre"
-
-msgid "start_jury_visibility"
-msgstr "Début de la période de visibilité du jury"
-
-msgid "start_visibility_dissertation"
-msgstr "Début de la période de création des mémoires"
-
-msgid "start_visibility_proposition"
-msgstr "Début de la période de visibilité des sujets"
-
 msgid "stats"
 msgstr "Statistiques"
 
@@ -861,6 +846,9 @@ msgstr "Mémoires en tant que promoteur"
 
 msgid "title_chart_read"
 msgstr "Mémoires en tant que lecteur"
+
+msgid "to"
+msgstr "au"
 
 msgid "to_be_defended"
 msgstr "À défendre"

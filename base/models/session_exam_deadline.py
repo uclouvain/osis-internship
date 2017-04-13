@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -28,20 +28,25 @@ from django.contrib import admin
 from base.models.enums import number_session
 
 
-class SessionExamAdmin(admin.ModelAdmin):
-    list_display = ('learning_unit_year', 'number_session', 'changed')
-    list_filter = ('learning_unit_year__academic_year', 'number_session',)
-    raw_id_fields = ('learning_unit_year',)
-    fieldsets = ((None, {'fields': ('learning_unit_year', 'number_session')}),)
-    search_fields = ['learning_unit_year__acronym']
+class SessionExamDeadlineAdmin(admin.ModelAdmin):
+    list_display = ('deadline', 'deadline_tutor', 'offer_enrollment', 'number_session', 'changed')
+    list_filter = ('offer_enrollment', 'number_session',)
+    raw_id_fields = ('offer_enrollment',)
+    search_fields = ['offer_enrollment', 'number_session']
 
 
-class SessionExam(models.Model):
+class SessionExamDeadline(models.Model):
     external_id = models.CharField(max_length=100, blank=True, null=True)
     changed = models.DateTimeField(null=True)
+    deadline = models.DateField()
+    deadline_tutor = models.IntegerField(null=True)  # Delta day(s)
     number_session = models.IntegerField(choices=number_session.NUMBERS_SESSION)
-    learning_unit_year = models.ForeignKey('LearningUnitYear')
-    progress = None
+    offer_enrollment = models.ForeignKey('OfferEnrollment')
 
-    def __str__(self):
-        return u"%s - %d" % (self.learning_unit_year, self.number_session)
+
+def get_by_offer_enrollment_nb_session(offer_enrollment, nb_session):
+    try:
+        return SessionExamDeadline.objects.get(offer_enrollment=offer_enrollment.id,
+                                               number_session=nb_session)
+    except SessionExamDeadline.DoesNotExist:
+        return None
