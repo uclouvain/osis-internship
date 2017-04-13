@@ -433,6 +433,9 @@ msgstr "Le fichier doit être un fichier excel valide au format 'XLSX'"
 msgid "file_production_date"
 msgstr "Date de production du fichier excel"
 
+msgid "students_deliberated_are_not_shown"
+msgstr "Les étudiants déjà délibérés ne sont pas repris"
+
 msgid "files"
 msgstr "Fichiers"
 
@@ -745,6 +748,9 @@ msgstr "Vous n'avez aucune note à encoder."
 
 msgid "no_valid_academic_year_error"
 msgstr "Aucune année académique au format valide n'a été trouvé dans votre fichier excel. La date doit être formatée comme suit ; '2015-2016' ou '2015'."
+
+msgid "deadline_reached"
+msgstr "Date limite atteinte"
 
 msgid "none"
 msgstr "Aucun"

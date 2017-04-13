@@ -437,6 +437,9 @@ msgstr "The file must be a valid 'XLSX' excel file"
 msgid "file_production_date"
 msgstr "Excel file production date"
 
+msgid "students_deliberated_are_not_shown"
+msgstr "Students deliberated are not shown"
+
 msgid "files"
 msgstr "Files"
 
@@ -760,6 +763,9 @@ msgstr "You haven't any score to encode."
 
 msgid "no_valid_academic_year_error"
 msgstr "No valid academic year found in your xls file. The date should be formatted like '2015-2016' or '2015'."
+
+msgid "deadline_reached"
+msgstr "Deadline reached"
 
 msgid "none"
 msgstr "None"
