@@ -24,7 +24,7 @@
 #
 ##############################################################################
 import traceback
-from collections import defaultdict
+import copy
 from decimal import Decimal, Context, Inexact
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.core.exceptions import ValidationError
@@ -337,7 +337,6 @@ def set_score_and_justification_for_exam_enrollment(is_pgm, enrollment, new_just
 
 
 def can_modify_exam_enrollment(enrollment, is_program_manager) :
-    """"This function check if we can modify an exam enrollment"""
     if is_program_manager:
         return not mdl.exam_enrollment.is_deadline_reached(enrollment)
     else:
@@ -825,7 +824,7 @@ def get_data_specific_criteria(request):
                                                                                      offers_year=offers_year_managed,
                                                                                      academic_year=academic_yr))
                 exam_enrollments = mdl.exam_enrollment.sort_by_offer_acronym_last_name_first_name(exam_enrollments)
-                _append_session_exam_deadline(exam_enrollments)
+                exam_enrollments = _append_session_exam_deadline(exam_enrollments)
 
                 if len(exam_enrollments) == 0:
                     messages.add_message(request, messages.WARNING, "%s" % _('no_result'))
@@ -845,15 +844,12 @@ def get_data_specific_criteria(request):
 
 
 def _append_session_exam_deadline(exam_enrollments):
-    for enrollment in exam_enrollments:
-        session_exam_deadline = mdl.exam_enrollment.get_session_exam_deadline(enrollment)
-
-        enrollment.deadline_tutor_computed = mdl.exam_enrollment. \
-            get_deadline_tutor_computed(session_exam_deadline=session_exam_deadline)
-        enrollment.deadline_reached = mdl.exam_enrollment. \
-            is_deadline_reached(session_exam_deadline=session_exam_deadline)
-        enrollment.deadline_tutor_reached = mdl.exam_enrollment.is_deadline_tutor_reached(
-            session_exam_deadline=session_exam_deadline)
+    exam_enrollments_with_deadline = copy.deepcopy(exam_enrollments)
+    for enrollment in exam_enrollments_with_deadline:
+        enrollment.deadline_tutor_computed = mdl.exam_enrollment.get_deadline_tutor_computed(enrollment)
+        enrollment.deadline_reached = mdl.exam_enrollment.is_deadline_reached(enrollment)
+        enrollment.deadline_tutor_reached = mdl.exam_enrollment.is_deadline_tutor_reached(enrollment)
+    return exam_enrollments_with_deadline
 
 
 @login_required
@@ -980,7 +976,7 @@ def _get_exam_enrollments(user, learning_unit_year_id=None, tutor_id=None, offer
         exam_enrollments = []
     # Ordering by offeryear.acronym, then person.lastname & firstname
     exam_enrollments = mdl.exam_enrollment.sort_for_encodings(exam_enrollments)
-    _append_session_exam_deadline(exam_enrollments)
+    exam_enrollments = _append_session_exam_deadline(exam_enrollments)
 
     return exam_enrollments
 

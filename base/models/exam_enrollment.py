@@ -154,44 +154,30 @@ class ExamEnrollment(models.Model):
 
 
 def get_session_exam_deadline(enrollment):
-    offer_enrollment = enrollment.learning_unit_enrollment.offer_enrollment
-    nb_session = enrollment.session_exam.number_session
-    return session_exam_deadline.get_by_offer_enrollment_nb_session(offer_enrollment, nb_session)
+    if enrollment.learning_unit_enrollment.offer_enrollment.session_exam_deadlines:
+        # Prefetch related
+        return enrollment.learning_unit_enrollment.offer_enrollment.session_exam_deadlines[0]
+    return None
 
 
-def is_deadline_reached(enrollment=None, session_exam_deadline=None):
-    if not session_exam_deadline and enrollment:
-        session_exam_deadline = get_session_exam_deadline(enrollment)
-
-    if session_exam_deadline:
-        return session_exam_deadline.deadline < datetime.date.today()
+def is_deadline_reached(enrollment):
+    exam_deadline = get_session_exam_deadline(enrollment)
+    if exam_deadline:
+        return exam_deadline.is_deadline_reached
     return False
 
 
-def is_deadline_tutor_reached(enrollment=None, session_exam_deadline=None):
-    if not session_exam_deadline and enrollment:
-        session_exam_deadline = get_session_exam_deadline(enrollment)
-
-    if session_exam_deadline:
-        if session_exam_deadline.deadline_tutor:
-            deadline_tutor = get_deadline_tutor_computed(session_exam_deadline=session_exam_deadline)
-            return deadline_tutor < datetime.date.today()
-        else:
-            return is_deadline_reached(enrollment)
+def is_deadline_tutor_reached(enrollment):
+    exam_deadline = get_session_exam_deadline(enrollment)
+    if exam_deadline:
+        return exam_deadline.is_deadline_tutor_reached
     return False
 
 
-def get_deadline_tutor_computed(enrollment=None, session_exam_deadline=None):
-    """
-        Return the deadline tutor computed
-        :param enrollment
-        :param session_exam_deadline
-    """
-    if not session_exam_deadline and enrollment:
-        session_exam_deadline = get_session_exam_deadline(enrollment)
-
-    if session_exam_deadline and session_exam_deadline.deadline_tutor:
-        return session_exam_deadline.deadline - datetime.timedelta(days=session_exam_deadline.deadline_tutor)
+def get_deadline_tutor_computed(enrollment):
+    exam_deadline = get_session_exam_deadline(enrollment)
+    if exam_deadline:
+        return exam_deadline.deadline_tutor_computed
     return None
 
 
@@ -347,7 +333,12 @@ def find_for_score_encodings(session_exam_number,
             learning_unit_enrollment__offer_enrollment__student__person__first_name__icontains=student_first_name)
 
     return queryset.select_related('learning_unit_enrollment__offer_enrollment__offer_year') \
-                   .select_related('learning_unit_enrollment__offer_enrollment__student__person')
+                   .select_related('learning_unit_enrollment__offer_enrollment__student__person')\
+                   .prefetch_related(
+                         models.Prefetch('learning_unit_enrollment__offer_enrollment__sessionexamdeadline_set',
+                                         queryset=session_exam_deadline.filter_by_nb_session(session_exam_number),
+                                         to_attr="session_exam_deadlines")
+                   )
 
 
 def group_by_learning_unit_year_id(exam_enrollments):
