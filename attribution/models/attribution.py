@@ -128,3 +128,13 @@ def find_attribution_distinct():
 def find_all_tutor():
     all_tutors = Attribution.objects.all()
     return all_tutors
+
+
+def find_all_responsable_by_learning_unit_year(learning_unit_year):
+    all_tutors = Attribution.objects.filter(learning_unit_year=learning_unit_year).filter(score_responsible=True)
+    return all_tutors
+
+
+def find_all_tutor_by_learning_unit_year(learning_unit_year):
+    all_tutors = Attribution.objects.filter(learning_unit_year=learning_unit_year).filter(score_responsible=False)
+    return all_tutors

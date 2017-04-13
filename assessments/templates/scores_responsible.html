@@ -75,7 +75,7 @@
                     </select>
                 </div>
                 <div class="col-md-1 form-group" style="margin-top:25px">
-                    <button type="submit" id="bt_submit_manager_information_search" class="btn btn-primary" role="button"
+                    <button type="submit" id="bt_submit_search" class="btn btn-primary" role="button"
                             title="{% trans 'search' %}">{% trans 'search' %}</button>
                 </div>
            </div>
@@ -93,10 +93,17 @@
                 </thead>
                 <tbody>
                     {% for key, value_list in dict_attribution.items %}
-                        <tr data-toggle="modal" data-whatever={{ value_list.1 }} data-target="#pnl_scores_responsible">
-                            {% for value in value_list %}
-                                <td class="text-center">{{ value }}</td>
-                            {% endfor %}
+                        <tr>
+                            <td class="text-center">{{ value_list.1 }}</td>
+                            <td class="text-center">{{ value_list.2 }}</td>
+                            <td class="text-center">{{ value_list.3 }}</td>
+                            <td class="text-center">{{ value_list.4 }}</td>
+                            <td class="text-center">{{ value_list.5 }}</td>
+                            <td class="text-center">
+                                <a class="btn btn-primary pull-right" href="{% url 'scores_responsible_management' pk=value_list.0 %}" style="margin-right: 5px;">
+                                    <span class="glyphicon glyphicon-edit"></span>
+                                </a>
+                            </td>
                         </tr>
                     {% endfor %}
                 </tbody>
@@ -104,35 +111,4 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="pnl_scores_responsible">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-body">
-                <form>
-                    <div class="form-group">
-                        <label id="course_code"></label>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
- </div>
-{% endblock %}
-{% block script %}
-<script>
-$('#pnl_scores_responsible').on('show.bs.modal', function (event){
-    var button = $(event.relatedTarget)
-    var course_code = button.data('whatever')
-    var modal = $(this)
-    $.ajax({
-    url: "/assessments/scores_responsible/scores_responsible_management?course_code=" + course_code
-    }).then(function (data) {
-        if (data.length > 0) {
-            $.each(data, function (key, value) {
-                $("#course_code").text(course_code)
-            });
-        }
-    });
- }
-</script>
 {% endblock %}

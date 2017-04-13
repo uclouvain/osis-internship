@@ -99,6 +99,9 @@ msgstr "Activité"
 msgid "activity_not_exit"
 msgstr "L'activité %s n'existe pas"
 
+msgid "add"
+msgstr "Ajouter"
+
 msgid "add_an_address_to_the_organization"
 msgstr "Ajouter une adresse à l'organisation"
 
@@ -1395,3 +1398,6 @@ msgstr "Vous ne pouvez pas encoder d'absence justifiée (M) via l'injection xls"
 
 msgid "abscence_justified_preserved"
 msgstr "Abscence justifiée dèjà encodée et préservée"
+
+msgid "tutors_of_course"
+msgstr "Titulaires du cours"

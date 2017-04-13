@@ -23,7 +23,11 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.shortcuts import get_object_or_404, redirect
+
 from attribution import models as mdl_attr
+from attribution.models.attribution import Attribution
+from base.models.learning_unit_year import LearningUnitYear
 from base.views import layout
 
 
@@ -56,7 +60,8 @@ def create_dictionary(attributions):
     for attribution in attributions:
         tutor_number = mdl_attr.attribution.find_tutor_number(attribution)
         responsible = mdl_attr.attribution.find_responsible(attribution.learning_unit_year)
-        dict_attribution.update({attribution: [attribution.learning_unit_year.structure.acronym,
+        dict_attribution.update({attribution: [attribution.learning_unit_year.id,
+                                               attribution.learning_unit_year.structure.acronym,
                                                attribution.learning_unit_year.acronym,
                                                attribution.learning_unit_year.title,
                                                tutor_number, responsible]})
@@ -73,3 +78,28 @@ def find_data_table():
 def scores_responsible_list(request):
     list_course_code = request.GET['course_code']
     return list_course_code
+
+
+def scores_responsible_management(request, pk):
+    learning_unit_year = get_object_or_404(LearningUnitYear, pk=pk)
+    professors = mdl_attr.attribution.find_all_responsable_by_learning_unit_year(learning_unit_year)
+    attributions = mdl_attr.attribution.find_all_tutor_by_learning_unit_year(learning_unit_year)
+    return layout.render(request, 'scores_responsible_edit.html',
+                         {'learning_unit_year': learning_unit_year,
+                          'professors': professors,
+                          'attributions': attributions})
+
+
+def scores_responsible_delete(request, pk):
+    attribution = get_object_or_404(Attribution, pk=pk)
+    attribution.score_responsible = False
+    attribution.save()
+    return redirect('scores_responsible_management', pk=attribution.learning_unit_year.pk)
+
+
+def scores_responsible_add(request):
+    attribution = get_object_or_404(Attribution, pk=request.GET['professor'])
+    attribution.score_responsible = True
+    attribution.save()
+    return redirect('scores_responsible_management', pk=attribution.learning_unit_year.pk)
+

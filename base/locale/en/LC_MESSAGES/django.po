@@ -102,6 +102,9 @@ msgstr "The activity %s doesn't exist"
 msgid "add_an_address_to_the_organization"
 msgstr "Add an address to the organization"
 
+msgid "add"
+msgstr "Add"
+
 msgid "address(ses)"
 msgstr "Address(es)"
 
@@ -1402,3 +1405,6 @@ msgstr "You can't encode a JUSTIFIED ABSENCE (M) via the XLS injection"
 
 msgid "abscence_justified_preserved"
 msgstr "Justified abscence already encoded and preserved"
+
+msgid "tutors_of_course"
+msgstr "Tutors of the course"

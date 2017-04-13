@@ -29,6 +29,11 @@ from assessments.views import score_encoding, scores_responsible, upload_xls_uti
 urlpatterns = [
     url(r'^scores_responsible/$', scores_responsible.scores_responsible, name='scores_responsible'),
     url(r'^scores_responsible_search$', scores_responsible.scores_responsible_search, name='scores_responsible_search'),
+    url(r'^scores_responsible_management/(?P<pk>[0-9]+)/edit/$', scores_responsible.scores_responsible_management,
+        name='scores_responsible_management'),
+    url(r'^scores_responsible_delete/(?P<pk>[0-9]+)/edit/$', scores_responsible.scores_responsible_delete,
+        name='scores_responsible_delete'),
+    url(r'^scores_responsible_add', scores_responsible.scores_responsible_add, name='scores_responsible_add'),
     url(r'^scores_responsible_management$', scores_responsible.scores_responsible_list),
     url(r'^scores_encoding/outside_period/$',
         score_encoding.outside_period, name='outside_scores_encodings_period'),
