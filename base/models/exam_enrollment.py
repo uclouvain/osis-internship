@@ -154,10 +154,15 @@ class ExamEnrollment(models.Model):
 
 
 def get_session_exam_deadline(enrollment):
-    if enrollment.learning_unit_enrollment.offer_enrollment.session_exam_deadlines:
+    if hasattr(enrollment.learning_unit_enrollment.offer_enrollment, 'session_exam_deadlines') and\
+            enrollment.learning_unit_enrollment.offer_enrollment.session_exam_deadlines:
         # Prefetch related
         return enrollment.learning_unit_enrollment.offer_enrollment.session_exam_deadlines[0]
-    return None
+    else:
+        # No prefetch
+        offer_enrollment = enrollment.learning_unit_enrollment.offer_enrollment
+        nb_session = enrollment.session_exam.number_session
+        return session_exam_deadline.get_by_offer_enrollment_nb_session(offer_enrollment, nb_session)
 
 
 def is_deadline_reached(enrollment):

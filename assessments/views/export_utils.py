@@ -154,6 +154,6 @@ def __display_warning_about_students_deliberated(ws, row_number):
 
 def __get_session_exam_deadline(exam_enroll):
     session_exam_deadline = mdl.exam_enrollment.get_session_exam_deadline(exam_enroll)
-    if session_exam_deadline and session_exam_deadline.deadline_tutor:
-        return session_exam_deadline.deadline_tutor.strftime(calendar_utils.FORMAT)
+    if session_exam_deadline and session_exam_deadline.deadline_tutor_computed:
+        return session_exam_deadline.deadline_tutor_computed.strftime(calendar_utils.FORMAT)
     return "-"

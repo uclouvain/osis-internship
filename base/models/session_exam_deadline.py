@@ -63,3 +63,11 @@ class SessionExamDeadline(models.Model):
 
 def filter_by_nb_session(nb_session):
     return SessionExamDeadline.objects.filter(number_session=nb_session)
+
+
+def get_by_offer_enrollment_nb_session(offer_enrollment, nb_session):
+    try:
+        return SessionExamDeadline.objects.get(offer_enrollment=offer_enrollment.id,
+                                               number_session=nb_session)
+    except SessionExamDeadline.DoesNotExist:
+        return None
