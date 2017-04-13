@@ -45,9 +45,7 @@ class PgmManagerAdministrationTest(TestCase):
 
     def setUp(self):
         self.user = User.objects.create_user('tmp', 'tmp@gmail.com', 'tmp')
-        add_permission(self.user, "can_access_program_manager")
-        add_permission(self.user, "add_programmanager")
-        add_permission(self.user, "delete_programmanager")
+        add_permission(self.user, "is_faculty_administrator")
         self.person = PersonFactory()
 
         self.structure_root = StructureFactory()

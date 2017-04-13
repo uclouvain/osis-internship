@@ -52,9 +52,6 @@ class ProgramManager(models.Model):
 
     class Meta:
         unique_together = ('person', 'offer_year',)
-        permissions = (
-            ("can_access_program_manager", "Can access program manager"),
-        )
 
 
 def find_by_person(a_person):

@@ -53,7 +53,7 @@ def _get_perms(model):
     return model._meta.permissions
 
 
-def find_faculty_by_user(a_user):
+def find_faculty_administrator_by_user(a_user):
     a_person = person.find_by_user(a_user)
     if a_person:
         faculty_administrators = FacultyAdministrator.objects.filter(employee__person=a_person,

@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -23,39 +23,15 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
-from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
+import factory
+
+from base.tests.factories.employee import EmployeeFactory
+from base.tests.factories.structure import StructureFactory
 
 
-class EmployeeAdmin(SerializableModelAdmin):
-    list_display = ('person', )
-    fieldsets = ((None, {'fields': ('person',)}),)
-    search_fields = ['person__first_name', 'person__last_name']
-    raw_id_fields = ('person',)
+class FacultyAdministratorFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = "base.FacultyAdministrator"
 
-
-class Employee(SerializableModel):
-    external_id = models.CharField(max_length=100, blank=True, null=True)
-    changed = models.DateTimeField(null=True)
-    person = models.OneToOneField('Person')
-
-
-    def __str__(self):
-        return u"%s" % self.person
-
-
-def search(a_lastname_part, a_first_name_part):
-    out = None
-    queryset = Employee.objects
-
-    if a_lastname_part:
-        queryset = queryset.filter(person__last_name__icontains=a_lastname_part)
-
-    if a_first_name_part:
-        queryset = queryset.filter(person__first_name__icontains=a_first_name_part)
-
-    if a_lastname_part or a_first_name_part :
-        out = queryset.select_related('person').order_by('person__last_name', 'person__first_name')
-
-    return out
-
+    employee = factory.SubFactory(EmployeeFactory)
+    structure = factory.SubFactory(StructureFactory)

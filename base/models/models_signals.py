@@ -192,13 +192,12 @@ def get_or_create_group():
 
 @receiver(post_save, sender=mdl_faculty_administrator.FacultyAdministrator)
 def add_to_faculty_administrator_group(sender, instance, **kwargs):
-    print('ouou')
     if kwargs.get('created', True) and instance.employee.person.user:
         faculty_administrators_group = get_or_create_group()
         instance.employee.person.user.groups.add(faculty_administrators_group)
 
 
-@receiver(post_delete, sender=mdl_student.Student)
+@receiver(post_delete, sender=mdl_faculty_administrator.FacultyAdministrator)
 def remove_from_faculty_administrator_group(sender, instance, **kwargs):
     if instance.employee.person.user:
         faculty_administrators_group = get_or_create_group()

@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -23,39 +23,20 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
-from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
+
+import datetime
+from django.test import TestCase
+from base.models import employee
+from base.tests.factories.employee import EmployeeFactory
 
 
-class EmployeeAdmin(SerializableModelAdmin):
-    list_display = ('person', )
-    fieldsets = ((None, {'fields': ('person',)}),)
-    search_fields = ['person__first_name', 'person__last_name']
-    raw_id_fields = ('person',)
+class EmployeeTest(TestCase):
+    def setUp(self):
+        self.employee = EmployeeFactory()
 
+    def test_search_employee_with_none_argument(self):
+        self.assertIsNone(employee.search(None, None))
 
-class Employee(SerializableModel):
-    external_id = models.CharField(max_length=100, blank=True, null=True)
-    changed = models.DateTimeField(null=True)
-    person = models.OneToOneField('Person')
-
-
-    def __str__(self):
-        return u"%s" % self.person
-
-
-def search(a_lastname_part, a_first_name_part):
-    out = None
-    queryset = Employee.objects
-
-    if a_lastname_part:
-        queryset = queryset.filter(person__last_name__icontains=a_lastname_part)
-
-    if a_first_name_part:
-        queryset = queryset.filter(person__first_name__icontains=a_first_name_part)
-
-    if a_lastname_part or a_first_name_part :
-        out = queryset.select_related('person').order_by('person__last_name', 'person__first_name')
-
-    return out
+    def test_search_employee_with_lastname(self):
+        self.assertEqual(self.employee, list(employee.search(self.employee.person.last_name, None))[0])
 

@@ -209,7 +209,7 @@ def add_manager(request):
 
 
 def get_administrator_faculty(request):
-    faculty_administrator = mdl.faculty_administrator.find_faculty_by_user(request.user)
+    faculty_administrator = mdl.faculty_administrator.find_faculty_administrator_by_user(request.user)
     faculty = faculty_administrator.structure
     return faculty
 
