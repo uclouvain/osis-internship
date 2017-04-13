@@ -433,6 +433,9 @@ msgstr "Le fichier doit être un fichier excel valide au format 'XLSX'"
 msgid "file_production_date"
 msgstr "Date de production du fichier excel"
 
+msgid "students_deliberated_are_not_shown"
+msgstr "Les étudiants déjà délibérés ne sont pas repris"
+
 msgid "files"
 msgstr "Fichiers"
 
@@ -746,6 +749,9 @@ msgstr "Vous n'avez aucune note à encoder."
 msgid "no_valid_academic_year_error"
 msgstr "Aucune année académique au format valide n'a été trouvé dans votre fichier excel. La date doit être formatée comme suit ; '2015-2016' ou '2015'."
 
+msgid "deadline_reached"
+msgstr "Date limite atteinte"
+
 msgid "none"
 msgstr "Aucun"
 
@@ -832,8 +838,14 @@ msgstr "Autres finalités associées"
 msgid "other_sibling_orientations"
 msgstr "Autres orientations associées"
 
-msgid "outside_scores_encodings_period"
-msgstr "Vous êtes en dehors de la période d'encodage de notes: la dernière session d'examens est fermée depuis le %s."
+msgid "score_encoding_period_not_open"
+msgstr "La période pour l'encodage des notes n'est pas encore ouverte"
+
+msgid "outside_scores_encodings_period_latest_session"
+msgstr "La période d'encodage des notes de la session %s est fermée depuis le %s"
+
+msgid "outside_scores_encodings_period_closest_session"
+msgstr "La période d'encodage des notes pour la session %s sera ouverte à partir du %s"
 
 msgid "page_not_found"
 msgstr "Page inexistante"

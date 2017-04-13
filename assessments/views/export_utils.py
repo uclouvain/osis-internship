@@ -28,7 +28,7 @@ from base.utils import calendar_utils
 from django.http import HttpResponse
 from openpyxl import Workbook
 from openpyxl.writer.excel import save_virtual_workbook
-from openpyxl.styles import Color, Style, PatternFill
+from openpyxl.styles import Color, Style, PatternFill, Font, colors
 from django.utils.translation import ugettext_lazy as _
 
 from base import models as mdl
@@ -56,6 +56,7 @@ def export_xls(exam_enrollments):
     printing_date = datetime.datetime.now()
     printing_date = printing_date.strftime("%d/%m/%Y")
     worksheet.append([str('%s: %s' % (_('file_production_date'), printing_date))])
+    __display_warning_about_students_deliberated(worksheet, row_number=5)
     worksheet.append([str('')])
     worksheet.append([str(_('justification_legend') % mdl.exam_enrollment.justification_label_authorized())])
     worksheet.append([str(_('score_legend') % "0 - 20")])
@@ -64,7 +65,7 @@ def export_xls(exam_enrollments):
     __columns_resizing(worksheet)
     worksheet.append(HEADER)
 
-    row_number = 9
+    row_number = 10
     for exam_enroll in exam_enrollments:
         student = exam_enroll.learning_unit_enrollment.student
         offer = exam_enroll.learning_unit_enrollment.offer
@@ -146,8 +147,13 @@ def __coloring_non_editable(ws, row_number, score, justification):
         column_number += 1
 
 
+def __display_warning_about_students_deliberated(ws, row_number):
+    ws.cell(row=row_number, column=1).value = str(_('students_deliberated_are_not_shown'))
+    ws.cell(row=row_number, column=1).font = Font(color=colors.RED)
+
+
 def __get_session_exam_deadline(exam_enroll):
     session_exam_deadline = mdl.exam_enrollment.get_session_exam_deadline(exam_enroll)
-    if session_exam_deadline and session_exam_deadline.deadline_tutor:
-        return session_exam_deadline.deadline_tutor.strftime(calendar_utils.FORMAT)
+    if session_exam_deadline and session_exam_deadline.deadline_tutor_computed:
+        return session_exam_deadline.deadline_tutor_computed.strftime(calendar_utils.FORMAT)
     return "-"

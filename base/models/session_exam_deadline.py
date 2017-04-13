@@ -23,6 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+import datetime
 from django.db import models
 from django.contrib import admin
 from base.models.enums import number_session
@@ -42,6 +43,26 @@ class SessionExamDeadline(models.Model):
     deadline_tutor = models.IntegerField(null=True)  # Delta day(s)
     number_session = models.IntegerField(choices=number_session.NUMBERS_SESSION)
     offer_enrollment = models.ForeignKey('OfferEnrollment')
+
+    @property
+    def deadline_tutor_computed(self):
+        if self.deadline_tutor:
+            return self.deadline - datetime.timedelta(days=self.deadline_tutor)
+        return None
+
+    @property
+    def is_deadline_reached(self):
+        return self.deadline < datetime.date.today()
+
+    @property
+    def is_deadline_tutor_reached(self):
+        if self.deadline_tutor_computed:
+            return self.deadline_tutor_computed < datetime.date.today()
+        return self.is_deadline_reached
+
+
+def filter_by_nb_session(nb_session):
+    return SessionExamDeadline.objects.filter(number_session=nb_session)
 
 
 def get_by_offer_enrollment_nb_session(offer_enrollment, nb_session):

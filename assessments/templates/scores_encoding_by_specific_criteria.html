@@ -95,6 +95,7 @@
             <table class="table table-hover">
                 <thead>
                     <tr>
+                        <th>{% trans 'status' %}</th>
                         <th>{% trans 'offer' %}</th>
                         <th>{% trans 'learning_unit' %}</th>
                         <th>{% trans 'registration_id' %}</th>
@@ -106,7 +107,16 @@
                 </thead>
                 <tbody>
                 {% for enrollment in exam_enrollments %}
-                    <tr>
+                    <tr style="{% if enrollment.deadline_reached %}
+                                    background-color:#D3D3D3;
+                               {% endif %}">
+                        <td style="text-align:center;">
+                            {% if enrollment.deadline_reached %}
+                                <span class="glyphicon glyphicon-lock" aria-hidden="true" style="color: #8B008B;" title="{% trans 'deadline_reached' %}"></span>
+                            {% elif enrollment.score_final != None or enrollment.justification_final %}
+                                <span class="glyphicon glyphicon-send" aria-hidden="true" style="color: green;" title="{% trans 'score_submitted' %}"></span>
+                            {% endif %}
+                        </td>
                         <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.offer_year.acronym }}</td>
                         <td data-container="body" data-toggle="tooltip" title="{{ enrollment.learning_unit_enrollment.learning_unit_year.title }}" >
                             {{ enrollment.learning_unit_enrollment.learning_unit_year.acronym |add:" - " |add:enrollment.learning_unit_enrollment.learning_unit_year.title | truncatechars:22}}
@@ -117,16 +127,24 @@
                         <td>
                             <input class="form-control col-sm" type="text" name="score_{{ enrollment.id }}"
                                 id="num_score_{{ enrollment.id }}" tabindex="{{ forloop.counter }}"
-                                value="{{ enrollment.score_final | score_display:enrollment.learning_unit_enrollment.learning_unit_year.decimal_scores}}">
+                                value="{{ enrollment.score_final | score_display:enrollment.learning_unit_enrollment.learning_unit_year.decimal_scores}}"
+                                 {% if enrollment.deadline_reached %}
+                                    disabled
+                                 {% endif %}>
 
                             <!-- Input hidden for allow decimal score -->
                             <input id="score_{{ enrollment.id }}_can_be_decimal" type="hidden" value="{% if enrollment.learning_unit_enrollment.learning_unit_year.decimal_scores %}true{% else %}false{% endif %}">
-                             <!-- Input hidden for checking if score have changed -->
-                            <input type="hidden" id="hdn_score_changed_{{ enrollment.id }}" name="score_changed_{{ enrollment.id }}" value="false"></td>
+                            {% if not enrollment.deadline_reached %}
+                                <!-- Input hidden for checking if score have changed -->
+                                <input type="hidden" id="hdn_score_changed_{{ enrollment.id }}" name="score_changed_{{ enrollment.id }}" value="false">
+                            {% endif %}
                         </td>
                         <td>
                             <select class="form-control" name="justification_{{ enrollment.id }}" id="slt_justification_score_{{ enrollment.id }}"
-                                   tabindex="{{ exam_enrollments|length|sum:forloop.counter }}">
+                                   tabindex="{{ exam_enrollments|length|sum:forloop.counter }}"
+                                    {% if enrollment.deadline_reached %}
+                                    disabled
+                                 {% endif %}>
                                 <option value=""></option>
                                 <option {% if enrollment.justification_final == "ABSENCE_UNJUSTIFIED" %} selected {% endif %} value="ABSENCE_UNJUSTIFIED">{% trans 'ABSENCE_UNJUSTIFIED' %}</option>
                                 <option {% if enrollment.justification_final == "ABSENCE_JUSTIFIED" %} selected {% endif %} value="ABSENCE_JUSTIFIED">{% trans 'ABSENCE_JUSTIFIED' %}</option>
