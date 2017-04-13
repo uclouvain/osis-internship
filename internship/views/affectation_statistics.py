@@ -300,7 +300,7 @@ def create_solution_line(student, organization, speciality, period, choice, type
     return solution_line
 
 
-def init_internship_table():
+def init_internship_table(cohort):
     """
     Initialise the table of internships.
     This object store the number of available places for given organization, speciality, period
@@ -308,7 +308,9 @@ def init_internship_table():
     """
     global internship_table_mi, internship_table_original
     # Retrieve all PeriodInternshipPlaces
-    period_internship_places = mdl_internship.period_internship_places.PeriodInternshipPlaces.objects.all().select_related()
+    periods = mdl_internship.period.Period.objects.filter(cohort=cohort)
+    period_ids = periods.values_list("id", flat=True)
+    period_internship_places = mdl_internship.period_internship_places.PeriodInternshipPlaces.objects.filter(period_id__in=period_ids).select_related()
     temp_internship_table = {}
     # Put each period_internship_places in the right position
     for pid in period_internship_places:
@@ -354,11 +356,11 @@ def init_organizations(cohort):
     """
     # Save data directly in global variables
     global organizations, organization_addresses_dic
-    organizations[hospital_error] = mdl_internship.organization.Organization.objects.filter(reference=hospital_error).first()
+    organizations[hospital_error] = mdl_internship.organization.Organization.objects.filter(reference=hospital_error, cohort=cohort).first()
     organizations[hospital_to_edit] = \
-        mdl_internship.organization.Organization.objects.filter(reference=hospital_to_edit).first()
+        mdl_internship.organization.Organization.objects.filter(reference=hospital_to_edit, cohort=cohort).first()
 
-    for organization_address in mdl_internship.organization_address.OrganizationAddress.objects.all():
+    for organization_address in mdl_internship.organization_address.OrganizationAddress.objects.filter(organization__cohort=cohort):
         organization_addresses_dic[organization_address.organization] = organization_address
 
 
@@ -601,7 +603,9 @@ def get_student_mandatory_choices(cohort, priority):
     :return: A dict of dict : <speciality, <student, [choices]>>.
     """
     specialities = {}
-    choices = mdl_internship.internship_choice.InternshipChoice.objects.filter(priority=priority).\
+    internships = mdl_internship.internship.Internship.objects.filter(cohort=cohort)
+    internship_ids = internships.values_list("id", flat=True)
+    choices = mdl_internship.internship_choice.InternshipChoice.objects.filter(priority=priority, internship_id__in=internship_ids).\
         select_related("speciality", "student")
 
     if len(choices) == 0:
@@ -624,7 +628,7 @@ def get_student_mandatory_choices(cohort, priority):
                 if enrollment.student in specialities[enrollment.internship_offer.speciality.id]:
                     del specialities[enrollment.internship_offer.speciality.id][enrollment.student]
     else:
-        for choice in mdl_internship.internship_choice.InternshipChoice.objects.filter(priority=True).\
+        for choice in mdl_internship.internship_choice.InternshipChoice.objects.filter(priority=True, cohort=cohort).\
                 select_related("speciality", "student"):
             if choice.student in specialities[choice.speciality.id]:
                 del specialities[choice.speciality.id][choice.student]
@@ -1082,7 +1086,7 @@ def generate_solution(cohort):
     internship_table_original = {}
 
     init_solution(cohort)
-    internship_table = init_internship_table()
+    internship_table = init_internship_table(cohort)
     init_organizations(cohort)
     init_specialities(cohort)
     fill_erasmus_choices()
@@ -1118,10 +1122,12 @@ def save_solution(cohort):
             sol_line.save()
 
 
-def load_solution(data):
+def load_solution(data, cohort):
     """ Create the solution and internship_table from db data """
     # Initialise the table of internships.
-    period_internship_places = mdl_internship.period_internship_places.PeriodInternshipPlaces.objects.\
+    periods = mdl_internship.period.Period.objects.filter(cohort=cohort)
+    period_ids = periods.values_list("id", flat=True)
+    period_internship_places = mdl_internship.period_internship_places.PeriodInternshipPlaces.objects.filter(period_id__in=period_ids).\
         order_by("period_id").select_related()
     # This object store the number of available places for given organization, speciality, period
     temp_internship_table = defaultdict(dict)
@@ -1189,17 +1195,19 @@ def internship_affectation_statistics(request, cohort_id):
     init_organizations(cohort)
     init_specialities(cohort)
     sol, table, stats, internship_errors = None, None, None, None
-    data = mdl_internship.internship_student_affectation_stat.InternshipStudentAffectationStat.objects.all().\
+    periods = mdl_internship.period.Period.objects.filter(cohort=cohort)
+    period_ids = periods.values_list("id", flat=True)
+    data = mdl_internship.internship_student_affectation_stat.InternshipStudentAffectationStat.objects.filter(period_id__in=period_ids).\
         select_related("student", "organization", "speciality", "period")
     if len(data) > 0:
-        sol, table = load_solution(data)
+        sol, table = load_solution(data, cohort)
         stats = compute_stats(cohort, sol)
         # Mange sort of the students
         sol = OrderedDict(sorted(sol.items(), key=lambda t: t[0].person.last_name))
         # Mange sort of the organizations
         table.sort(key=itemgetter(0))
         internship_errors = mdl_internship.internship_student_affectation_stat.InternshipStudentAffectationStat.\
-            objects.filter(organization=organizations[hospital_error])
+            objects.filter(organization=organizations[hospital_error], period_id__in=period_ids)
 
     latest_generation = mdl_internship.affectation_generation_time.get_latest()
     return render(request, "internship_affectation_statics.html",
