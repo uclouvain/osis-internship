@@ -93,7 +93,7 @@
                 </thead>
                 <tbody>
                     {% for key, value_list in dict_attribution.items %}
-                        <tr data-toggle="modal" data-id="1" data-target="#pnl_scores_responsible">
+                        <tr data-toggle="modal" data-whatever={{ value_list.1 }} data-target="#pnl_scores_responsible">
                             {% for value in value_list %}
                                 <td class="text-center">{{ value }}</td>
                             {% endfor %}
@@ -107,21 +107,32 @@
 <div class="modal fade" id="pnl_scores_responsible">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <form method="post" enctype="multipart/form-data" >
-                {% csrf_token %}
-                <div class="modal-header">
-                </div>
-                <div class="modal-body">
-                </div>
-                <div class="modal-footer">
-                </div>
-            </form>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label id="course_code"></label>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
  </div>
 {% endblock %}
 {% block script %}
 <script>
-
+$('#pnl_scores_responsible').on('show.bs.modal', function (event){
+    var button = $(event.relatedTarget)
+    var course_code = button.data('whatever')
+    var modal = $(this)
+    $.ajax({
+    url: "/assessments/scores_responsible/scores_responsible_management?course_code=" + course_code
+    }).then(function (data) {
+        if (data.length > 0) {
+            $.each(data, function (key, value) {
+                $("#course_code").text(course_code)
+            });
+        }
+    });
+ }
 </script>
 {% endblock %}

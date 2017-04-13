@@ -143,7 +143,8 @@ def search(terms=None, active=True):
             Q(proposition_dissertation__author__person__middle_name__icontains=terms) |
             Q(proposition_dissertation__author__person__last_name__icontains=terms) |
             Q(status__icontains=terms) |
-            Q(title__icontains=terms)
+            Q(title__icontains=terms) |
+            Q(offer_year_start__acronym__icontains=terms)
         ).filter(active=active).distinct()
     return queryset
 

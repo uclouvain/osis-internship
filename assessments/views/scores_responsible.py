@@ -68,3 +68,8 @@ def find_data_table():
     attributions_list = mdl_attr.attribution.find_attribution_distinct()
     all_tutors = mdl_attr.attribution.find_all_tutor().distinct("tutor")
     return all_tutors, attributions, attributions_list
+
+
+def scores_responsible_list(request):
+    list_course_code = request.GET['course_code']
+    return list_course_code

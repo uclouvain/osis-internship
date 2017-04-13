@@ -44,82 +44,78 @@
             {% csrf_token %}
             <div class="row">
                 <div class="col-md-3 col-lg-offset-3">
-                  {{  form.offer }}{{  form.acronym }}
+                  {{ form.offer }}{{ form.acronym }}
                 </div>
             </div>
-            <br>
+            <h3>{% trans 'periode_visibility_proposition'%}</h3>
             <div class="row">
                 <div class="col-md-6 form-group">
-                    <label for="txt_start_visibility_proposition" {% if form.start_visibility_proposition.errors %} style="color:red;" {% endif %}>{% trans 'start_visibility_proposition'%}</label>
+                    <label for="txt_start_visibility_proposition" {% if form.start_visibility_proposition.errors %}
+                           style="color:red;" {% endif %}>{% trans 'from'%}</label>
                     <input type="text" class="form-control"
                            value="{{ form.start_visibility_proposition.value|date:'d/m/Y' }}"
                            name="start_visibility_proposition" id="txt_start_visibility_proposition">
                 </div>
-            </div>
-            <br>
-            <div class="row">
                 <div class="col-md-6 form-group">
-                    <label for="txt_end_visibility_proposition" {% if form.end_visibility_proposition.errors %} style="color:red;" {% endif %}>{% trans 'end_visibility_proposition' %}</label>
+                    <label for="txt_end_visibility_proposition" {% if form.end_visibility_proposition.errors %}
+                           style="color:red;" {% endif %}>{% trans 'to' %}</label>
                     <input type="text" class="form-control"
                            value="{{ form.end_visibility_proposition.value|date:'d/m/Y' }}"
                            name="end_visibility_proposition" id="txt_end_visibility_proposition">
                 </div>
             </div>
-            <br>
+            <h3>{% trans 'periode_visibility_dissertation'%}</h3>
             <div class="row">
                 <div class="col-md-6 form-group">
-                    <label for="txt_start_visibility_dissertation" {% if form.start_visibility_dissertation.errors %} style="color:red;" {% endif %}>{% trans 'start_visibility_dissertation'%}</label>
+                    <label for="txt_start_visibility_dissertation" {% if form.start_visibility_dissertation.errors %}
+                           style="color:red;" {% endif %}>{% trans 'from'%}</label>
                     <input type="text" class="form-control"
                            value="{{ form.start_visibility_dissertation.value|date:'d/m/Y' }}"
                            name="start_visibility_dissertation" id="txt_start_visibility_dissertation">
                 </div>
-            </div>
-            <br>
-            <div class="row">
                 <div class="col-md-6 form-group">
-                    <label for="txt_end_visibility_dissertation" {% if form.end_visibility_dissertation.errors %} style="color:red;" {% endif %}>{% trans 'end_visibility_dissertation' %}</label>
+                    <label for="txt_end_visibility_dissertation" {% if form.end_visibility_dissertation.errors %}
+                           style="color:red;" {% endif %}>{% trans 'to' %}</label>
                     <input type="text" class="form-control"
                            value="{{ form.end_visibility_dissertation.value|date:'d/m/Y' }}"
                            name="end_visibility_dissertation" id="txt_end_visibility_dissertation">
                 </div>
             </div>
-            <br>
+            <h3>{% trans 'periode_jury_visibility'%}</h3>
             <div class="row">
                 <div class="col-md-6 form-group">
-                    <label for="txt_start_jury_visibility" {% if form.start_jury_visibility.errors %} style="color:red;" {% endif %}>{% trans 'start_jury_visibility'%}</label>
+                    <label for="txt_start_jury_visibility" {% if form.start_jury_visibility.errors %}
+                           style="color:red;" {% endif %}>{% trans 'from'%}</label>
                     <input type="text" class="form-control"
                            value="{{ form.start_jury_visibility.value|date:'d/m/Y' }}"
                            name="start_jury_visibility" id="txt_start_jury_visibility">
                 </div>
-            </div>
-            <br>
-            <div class="row">
                 <div class="col-md-6 form-group">
-                    <label for="txt_end_jury_visibility" {% if form.end_jury_visibility.errors %} style="color:red;" {% endif %}>{% trans 'end_jury_visibility' %}</label>
+                    <label for="txt_end_jury_visibility" {% if form.end_jury_visibility.errors %}
+                           style="color:red;" {% endif %}>{% trans 'to' %}</label>
                     <input type="text" class="form-control"
                            value="{{ form.end_jury_visibility.value|date:'d/m/Y' }}"
                            name="end_jury_visibility" id="txt_end_jury_visibility">
                 </div>
             </div>
-            <br>
+            <h3>{% trans 'periode_edit_title'%}</h3>
             <div class="row">
                 <div class="col-md-6 form-group">
-                    <label for="txt_start_edit_title" {% if form.start_edit_title.errors %} style="color:red;" {% endif %}>{% trans 'start_edit_title'%}</label>
+                    <label for="txt_start_edit_title" {% if form.start_edit_title.errors %}
+                           style="color:red;" {% endif %}>{% trans 'from'%}</label>
                     <input type="text" class="form-control"
                            value="{{ form.start_edit_title.value|date:'d/m/Y' }}"
                            name="start_edit_title" id="txt_start_edit_title">
                 </div>
-            </div>
-            <br>
-            <div class="row">
                 <div class="col-md-6 form-group">
-                    <label for="txt_end_edit_title" {% if form.end_edit_title.errors %} style="color:red;" {% endif %}>{% trans 'end_edit_title' %}</label>
+                    <label for="txt_end_edit_title" {% if form.end_edit_title.errors %}
+                           style="color:red;" {% endif %}>{% trans 'to' %}</label>
                     <input type="text" class="form-control"
                            value="{{ form.end_edit_title.value|date:'d/m/Y' }}"
                            name="end_edit_title" id="txt_end_edit_title">
                 </div>
             </div>
-            <br>
+            <h3>{% trans 'parameters_others'%}</h3>
             <div class="row">
                 <div class="col-md-1">
                     <input class="form-control" id="txt_student_can_manage_readers"  name="student_can_manage_readers"

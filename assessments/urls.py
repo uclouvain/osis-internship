@@ -29,6 +29,7 @@ from assessments.views import score_encoding, scores_responsible, upload_xls_uti
 urlpatterns = [
     url(r'^scores_responsible/$', scores_responsible.scores_responsible, name='scores_responsible'),
     url(r'^scores_responsible_search$', scores_responsible.scores_responsible_search, name='scores_responsible_search'),
+    url(r'^scores_responsible_management$', scores_responsible.scores_responsible_list),
     url(r'^scores_encoding/outside_period/$',
         score_encoding.outside_period, name='outside_scores_encodings_period'),
     url(r'^scores_encoding/$', score_encoding.scores_encoding, name='scores_encoding'),
