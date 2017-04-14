@@ -310,9 +310,7 @@ def __save_xls_scores(request, file_name, is_program_manager, user, learning_uni
                                             exam_enrollment.justification_final = justification
                                             exam_enrollment.score_final = None
                                         mdl.exam_enrollment.create_exam_enrollment_historic(request.user,
-                                                                                            exam_enrollment,
-                                                                                            score,
-                                                                                            justification)
+                                                                                            exam_enrollment)
                                     else:
                                         if score != exam_enrollment.score_draft:
                                             new_scores_number += 1
