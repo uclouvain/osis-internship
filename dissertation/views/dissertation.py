@@ -606,6 +606,14 @@ def dissertations_search(request):
     return layout.render(request, "dissertations_list.html", {'dissertations': disserts})
 
 
+def teacher_can_see_dissertation(adv, dissert):
+    return dissertation_role.count_by_adviser_dissertation(adv, dissert) > 0
+
+
+def teacher_is_promotor(adv, dissert):
+    return dissertation_role.count_by_status_adviser_dissertation('PROMOTEUR', adv, dissert) > 0
+
+
 @login_required
 @user_passes_test(is_teacher)
 def dissertations_detail(request, pk):
@@ -613,41 +621,28 @@ def dissertations_detail(request, pk):
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
 
-    if dissertation_role.count_by_adviser_dissertation(adv, dissert) < 1:
-        return redirect('dissertations_list')
-    
-    count_dissertation_role = dissertation_role.count_by_dissertation(dissert)
-    count_proposition_role = proposition_role.count_by_dissertation(dissert)
-    proposition_roles = proposition_role.search_by_dissertation(dissert)
-    offer_prop = offer_proposition.get_by_dissertation(dissert)
-    files = dissertation_document_file.find_by_dissertation(dissert)
-    filename = ""
-    promotors_count = dissertation_role.count_by_status_dissertation('PROMOTEUR', dissert)
-    for file in files:
-        filename = file.document_file.file_name
-    if count_proposition_role == 0:
-        if count_dissertation_role == 0:
-            justification = "%s %s %s" % ("auto_add_jury", 'PROMOTEUR', str(dissert.proposition_dissertation.author))
-            dissertation_update.add(request, dissert, dissert.status, justification=justification)
-            dissertation_role.add('PROMOTEUR', dissert.proposition_dissertation.author, dissert)
+    if teacher_can_see_dissertation(adv, dissert):
+        count_dissertation_role = dissertation_role.count_by_dissertation(dissert)
+        offer_prop = offer_proposition.get_by_dissertation(dissert)
+        promotors_count = dissertation_role.count_by_status_dissertation('PROMOTEUR', dissert)
 
+        files = dissertation_document_file.find_by_dissertation(dissert)
+        filename = ""
+        for file in files:
+            filename = file.document_file.file_name
+
+        dissertation_roles = dissertation_role.search_by_dissertation(dissert)
+        return layout.render(request, 'dissertations_detail.html',
+                             {'dissertation': dissert,
+                              'adviser': adv,
+                              'dissertation_roles': dissertation_roles,
+                              'count_dissertation_role': count_dissertation_role,
+                              'offer_prop': offer_prop,
+                              'promotors_count': promotors_count,
+                              'teacher_is_promotor': teacher_is_promotor(adv, dissert),
+                              'filename': filename})
     else:
-        if count_dissertation_role == 0:
-            for role in proposition_roles:
-                justification = "%s %s %s" % ("auto_add_jury", role.status, str(role.adviser))
-                dissertation_update.add(request, dissert, dissert.status, justification=justification)
-                dissertation_role.add(role.status, role.adviser, dissert)
-
-    dissertation_roles = dissertation_role.search_by_dissertation(dissert)
-    return layout.render(request, 'dissertations_detail.html',
-                         {'dissertation': dissert,
-                          'adviser': adv,
-                          'dissertation_roles': dissertation_roles,
-                          'count_dissertation_role': count_dissertation_role,
-                          'offer_prop': offer_prop,
-                          'promotors_count': promotors_count,
-                          'filename': filename})
-
+        return redirect('dissertations_list')
 
 @login_required
 @user_passes_test(is_teacher)
@@ -666,59 +661,78 @@ def dissertations_detail_updates(request, pk):
 @user_passes_test(is_teacher)
 def dissertations_delete(request, pk):
     dissert = get_object_or_404(Dissertation, pk=pk)
-    dissert.deactivate()
-    dissertation_update.add(request, dissert, dissert.status, justification="teacher_set_active_false ")
-    return redirect('dissertations_list')
+    person = mdl.person.find_by_user(request.user)
+    adv = adviser.search_by_person(person)
+    if teacher_is_promotor(adv, dissert):
+        dissert.deactivate()
+        dissertation_update.add(request, dissert, dissert.status, justification="teacher_set_active_false ")
+        return redirect('dissertations_list')
+    else:
+        return redirect('dissertations_detail', pk=pk)
 
 
 @login_required
 @user_passes_test(is_teacher)
 def dissertations_to_dir_ok(request, pk):
     dissert = get_object_or_404(Dissertation, pk=pk)
-    old_status = dissert.status
-    new_status = dissertation.get_next_status(dissert, "accept")
-    status_dict = dict(dissertation.STATUS_CHOICES)
-    new_status_display = status_dict[new_status]
+    person = mdl.person.find_by_user(request.user)
+    adv = adviser.search_by_person(person)
 
-    if request.method == "POST":
-        form = ManagerDissertationUpdateForm(request.POST)
-        if form.is_valid():
-            dissert.accept()
-            data = form.cleaned_data
-            justification = data['justification']
-            dissertation_update.add(request, dissert, old_status, justification=justification)
-            return redirect('dissertations_detail', pk=pk)
+    if teacher_is_promotor(adv, dissert):
+        old_status = dissert.status
+        new_status = dissertation.get_next_status(dissert, "accept")
+        status_dict = dict(dissertation.STATUS_CHOICES)
+        new_status_display = status_dict[new_status]
+
+        if request.method == "POST":
+            form = ManagerDissertationUpdateForm(request.POST)
+            if form.is_valid():
+                dissert.accept()
+                data = form.cleaned_data
+                justification = data['justification']
+                dissertation_update.add(request, dissert, old_status, justification=justification)
+                return redirect('dissertations_detail', pk=pk)
+
+        else:
+            form = ManagerDissertationUpdateForm()
+
+        return layout.render(request, 'dissertations_add_justification.html',
+                             {'form': form, 'dissert': dissert, 'new_status_display': new_status_display})
 
     else:
-        form = ManagerDissertationUpdateForm()
-
-    return layout.render(request, 'dissertations_add_justification.html',
-                         {'form': form, 'dissert': dissert, 'new_status_display': new_status_display})
+        return redirect('dissertations_detail', pk=pk)
 
 
 @login_required
 @user_passes_test(is_teacher)
 def dissertations_to_dir_ko(request, pk):
     dissert = get_object_or_404(Dissertation, pk=pk)
-    old_status = dissert.status
-    new_status = dissertation.get_next_status(dissert, "refuse")
-    status_dict = dict(dissertation.STATUS_CHOICES)
-    new_status_display = status_dict[new_status]
+    person = mdl.person.find_by_user(request.user)
+    adv = adviser.search_by_person(person)
 
-    if request.method == "POST":
-        form = ManagerDissertationUpdateForm(request.POST)
-        if form.is_valid():
-            dissert.refuse()
-            data = form.cleaned_data
-            justification = data['justification']
-            dissertation_update.add(request, dissert, old_status, justification=justification)
-            return redirect('dissertations_detail', pk=pk)
+    if teacher_is_promotor(adv, dissert):
+        old_status = dissert.status
+        new_status = dissertation.get_next_status(dissert, "refuse")
+        status_dict = dict(dissertation.STATUS_CHOICES)
+        new_status_display = status_dict[new_status]
+
+        if request.method == "POST":
+            form = ManagerDissertationUpdateForm(request.POST)
+            if form.is_valid():
+                dissert.refuse()
+                data = form.cleaned_data
+                justification = data['justification']
+                dissertation_update.add(request, dissert, old_status, justification=justification)
+                return redirect('dissertations_detail', pk=pk)
+
+        else:
+            form = ManagerDissertationUpdateForm()
+
+        return layout.render(request, 'dissertations_add_justification.html',
+                             {'form': form, 'dissert': dissert, 'new_status_display': new_status_display})
 
     else:
-        form = ManagerDissertationUpdateForm()
-
-    return layout.render(request, 'dissertations_add_justification.html',
-                         {'form': form, 'dissert': dissert, 'new_status_display': new_status_display})
+        return redirect('dissertations_detail', pk=pk)
 
 
 @login_required
@@ -732,7 +746,7 @@ def dissertations_wait_list(request):
                          {'roles_list_dissertations': roles_list_dissertations})
 
 
-def can_delete_role(dissert, dissert_role):
+def role_can_be_deleted(dissert, dissert_role):
     promotors_count = dissertation_role.count_by_status_dissertation('PROMOTEUR', dissert)
     return dissert_role.status != 'PROMOTEUR' or promotors_count > 1
 
@@ -742,11 +756,16 @@ def can_delete_role(dissert, dissert_role):
 def dissertations_role_delete(request, pk):
     dissert_role = get_object_or_404(DissertationRole, pk=pk)
     dissert = dissert_role.dissertation
-    offer_prop = offer_proposition.get_by_dissertation(dissert)
-    if offer_prop.adviser_can_suggest_reader and can_delete_role(dissert, dissert_role):
-        justification = "%s %s" % ("teacher_delete_jury", str(dissert_role))
-        dissertation_update.add(request, dissert, dissert.status, justification=justification)
-        dissert_role.delete()
+    person = mdl.person.find_by_user(request.user)
+    adv = adviser.search_by_person(person)
+
+    if teacher_is_promotor(adv, dissert):
+        offer_prop = offer_proposition.get_by_dissertation(dissert)
+        if offer_prop.adviser_can_suggest_reader and role_can_be_deleted(dissert, dissert_role):
+            justification = "%s %s" % ("teacher_delete_jury", str(dissert_role))
+            dissertation_update.add(request, dissert, dissert.status, justification=justification)
+            dissert_role.delete()
+
     return redirect('dissertations_detail', pk=dissert.pk)
 
 
@@ -754,25 +773,29 @@ def dissertations_role_delete(request, pk):
 @user_passes_test(is_teacher)
 def dissertations_jury_new(request, pk):
     dissert = get_object_or_404(Dissertation, pk=pk)
-    count_dissertation_role = dissertation_role.count_by_dissertation(dissert)
-    offer_prop = offer_proposition.get_by_dissertation(dissert)
-    if count_dissertation_role < 4 and offer_prop.adviser_can_suggest_reader:
-        if request.method == "POST":
-            form = ManagerDissertationRoleForm(request.POST)
-            if form.is_valid():
-                data = form.cleaned_data
-                status = data['status']
-                adv = data['adviser']
-                diss = data['dissertation']
-                justification = "%s %s %s" % ("teacher_add_jury", str(status), str(adv))
-                dissertation_update.add(request, dissert, dissert.status, justification=justification)
-                dissertation_role.add(status, adv, diss)
-                return redirect('dissertations_detail', pk=dissert.pk)
+    person = mdl.person.find_by_user(request.user)
+    adv = adviser.search_by_person(person)
+
+    if teacher_is_promotor(adv, dissert):
+        count_dissertation_role = dissertation_role.count_by_dissertation(dissert)
+        offer_prop = offer_proposition.get_by_dissertation(dissert)
+        if count_dissertation_role < 4 and offer_prop.adviser_can_suggest_reader:
+            if request.method == "POST":
+                form = ManagerDissertationRoleForm(request.POST)
+                if form.is_valid():
+                    data = form.cleaned_data
+                    status = data['status']
+                    adv = data['adviser']
+                    diss = data['dissertation']
+                    justification = "%s %s %s" % ("teacher_add_jury", str(status), str(adv))
+                    dissertation_update.add(request, dissert, dissert.status, justification=justification)
+                    dissertation_role.add(status, adv, diss)
+                    return redirect('dissertations_detail', pk=dissert.pk)
+                else:
+                    form = ManagerDissertationRoleForm(initial={'dissertation': dissert})
             else:
                 form = ManagerDissertationRoleForm(initial={'dissertation': dissert})
-        else:
-            form = ManagerDissertationRoleForm(initial={'dissertation': dissert})
-        return layout.render(request, 'dissertations_jury_edit.html', {'form': form, 'dissert': dissert})
-    else:
-        return redirect('dissertations_detail', pk=dissert.pk)
+            return layout.render(request, 'dissertations_jury_edit.html', {'form': form, 'dissert': dissert})
+
+    return redirect('dissertations_detail', pk=dissert.pk)
 

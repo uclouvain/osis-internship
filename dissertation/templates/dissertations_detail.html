@@ -154,7 +154,7 @@
                   <div class="col-md-2">
                       {{ dissertation_role.adviser }}
                   </div>
-                  {% if offer_prop.adviser_can_suggest_reader %}
+                  {% if offer_prop.adviser_can_suggest_reader and teacher_is_promotor %}
                     {% if promotors_count > 1 or dissertation_role.status != 'PROMOTEUR' %}
                         <div class="col-md-1">
                           <a class="btn btn-warning"
@@ -166,7 +166,7 @@
                    {% endif %}
                 </div>
                 {% endfor %}
-                {% if count_dissertation_role < 4 and offer_prop.adviser_can_suggest_reader %}
+                {% if count_dissertation_role < 4 and offer_prop.adviser_can_suggest_reader and teacher_is_promotor %}
                 <br>
                 <div class="row">
                     <div class="col-md-3 pull-right" style="text-align: right">
@@ -204,7 +204,7 @@
             </div>
         </div>
 
-        {% if dissertation.status == 'DIR_SUBMIT' %}
+        {% if dissertation.status == 'DIR_SUBMIT' and teacher_is_promotor %}
         <div style="text-align: right;">
             <a href="{% url 'dissertations_to_dir_ok' pk=dissertation.pk %}"
                id="lnk_dissertations_to_dir_ok" class="btn btn-success"
