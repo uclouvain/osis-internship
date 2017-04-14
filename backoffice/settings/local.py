@@ -23,9 +23,8 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-
-
 from .base import *
+import sys
 
 INSTALLED_APPS += (
     'attribution',
@@ -40,12 +39,6 @@ TESTING = 'test' in sys.argv
 if TESTING:
     # add test packages that have specific models for tests
     INSTALLED_APPS += ('osis_common.tests', )
-
-# Selenium tests config folders
-# TODO : Check if it used anywhere
-SCREEN_SHOT_FOLDER = os.path.join(BASE_DIR, "base/tests/selenium/screenshots")
-FIREFOX_PROFILE_PATH = os.path.join(BASE_DIR, "base/tests/selenium/firefox_profile")
-JENKINS_TASKS = []
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',

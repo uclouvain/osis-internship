@@ -27,18 +27,18 @@ from django.core.urlresolvers import reverse_lazy
 import os
 
 from django.utils.translation import ugettext_lazy as _
-import sys
+
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY Settings
 # Those settings are mandatory and have to be defined in your .env file
 SECRET_KEY = os.environ['SECRET_KEY']
-DEBUG = bool(os.environ.get('DEBUG', False))
+DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'
 ALLOWED_HOSTS = os.environ['ALLOWED_HOSTS'].split()
 ADMIN_URL = os.environ['ADMIN_URL']
 ENVIRONMENT = os.environ['ENVIRONMENT']
-CSRF_COOKIE_SECURE = bool(os.environ.get('CSRF_COOKIE_SECURE', False))
+CSRF_COOKIE_SECURE = os.environ.get('CSRF_COOKIE_SECURE', 'False').lower() == 'true'
 
 
 # Base configuration
@@ -106,10 +106,9 @@ LANGUAGES = [
     ('en', _('English')),
 ]
 # You can change default values for internalizations settings in your .env file
-TIME_ZONE = os.environ.get('TIME_ZONE', 'Europe/Brussels')
-USE_I18N = bool(os.environ.get('USE_I18N', True))
-USE_L10N = bool(os.environ.get('USE_L10N', True))
-USE_TZ = bool(os.environ.get('USE_TZ', True))
+USE_I18N = os.environ.get('USE_I18N', 'True').lower() == 'true'
+USE_L10N = os.environ.get('USE_L10N', 'True').lower() == 'true'
+USE_TZ = os.environ.get('USE_TZ', 'True').lower() == 'true'
 
 # Static files (CSS, JavaScript, Images) and Media
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
@@ -132,22 +131,19 @@ QUEUE_EXCEPTION_LOGGER = os.environ.get('QUEUE_EXCEPTION_LOGGER', 'queue_excepti
 DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'osis@localhost.be')
 SERVER_EMAIL = os.environ.get('SERVER_EMAIL', DEFAULT_FROM_EMAIL)
 LOGO_EMAIL_SIGNATURE_URL = os.environ.get('LOGO_EMAIL_SIGNATURE_URL', '')
-EMAIL_PRODUCTION_SENDING = bool(os.environ.get('EMAIL_PRODUCTION_SENDING', False))
+EMAIL_PRODUCTION_SENDING = os.environ.get('EMAIL_PRODUCTION_SENDING', 'False').lower() == 'true'
 COMMON_EMAIL_RECEIVER = os.environ.get('COMMON_EMAIL_RECEIVER', 'osis@localhost.org')
 EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND', 'django.core.mail.backends.filebased.EmailBackend')
 EMAIL_FILE_PATH = os.environ.get('EMAIL_FILE_PATH', os.path.join(BASE_DIR, "base/tests/sent_mails"))
 EMAIL_HOST = os.environ.get('EMAIL_HOST', 'localhost')
 EMAIL_PORT = int(os.environ.get('EMAIL_PORT', 25))
-SEND_BROKEN_LINK_EMAILS = bool(os.environ.get('SEND_BROKEN_LINK_EMAILS', True))
+SEND_BROKEN_LINK_EMAILS = os.environ.get('SEND_BROKEN_LINK_EMAILS', 'True').lower() == 'true'
 
 # Authentication settings
 LOGIN_URL = os.environ.get('LOGIN_URL', reverse_lazy('login'))
 LOGIN_REDIRECT_URL = os.environ.get('LOGIN_REDIRECT_URL', reverse_lazy('home'))
-OVERRIDED_LOGOUT_URL = os.environ.get('OVERRIDED_LOGOUT_URL', '')
-SERVER_LOGOUT_URL = os.environ.get('SERVER_LOGOUT_URL', '')
-OVERRIDED_LOGIN_URL = os.environ.get('OVERRIDED_LOGIN_URL', '')
-LOGOUT_BUTTON = bool(os.environ.get('LOGOUT_BUTTON', True))
-CURRENT_URL = os.environ.get('CURRENT_URL', 'http://localhost:8000')
+OVERRIDED_LOGIN_URL = os.environ.get('OVERRIDED_LOGIN_URL', None)
+OVERRIDED_LOGOUT_URL = os.environ.get('OVERRIDED_LOGOUT_URL', None)
 
 # This has to be set in your .env with the actual url where you institution logo can be found.
 # Ex : LOGO_INSTITUTION_URL = 'https://www.google.be/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png'
