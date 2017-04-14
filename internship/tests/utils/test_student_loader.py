@@ -40,6 +40,9 @@ from internship.utils import student_loader
 
 class CsvRowFactory:
     name = factory.Faker('name')
+    first_name = factory.Faker('first_name')
+    last_name = factory.Faker('last_name')
+
     gender = 'F'
 
     birthdate = '2011-01-21'
@@ -76,33 +79,36 @@ class CsvRowFactoryTestCase(SimpleTestCase):
         self.assertSetEqual(headers, fields)
 
 
-def create_csv_stream(filename):
-    def generate_record(idx):
-        row = CsvRowFactory()
-        return (
-            row.name.generate({}),
-            row.gender,
-            row.birthdate,
-            row.birthplace.generate({}),
-            row.nationality,
-            row.noma.generate({}),
-            row.fgs.generate({}),
-            row.street.generate({}),
-            row.postal_code.generate({}),
-            row.city.generate({}),
-            row.country.generate({}),
-            row.phone_mobile.generate({}),
-            row.email.generate({}),
-        )
+def _generate_record():
+    row = CsvRowFactory()
+    return (
+        '{}, {}'.format(row.last_name.generate({}), row.first_name.generate({})),
+        # row.name.generate({}),
+        row.gender,
+        row.birthdate,
+        row.birthplace.generate({}),
+        row.nationality,
+        row.noma.generate({}),
+        row.fgs.generate({}),
+        row.street.generate({}),
+        row.postal_code.generate({}),
+        row.city.generate({}),
+        row.country.generate({}),
+        row.phone_mobile.generate({}),
+        row.email.generate({}),
+    )
 
+
+def create_csv_stream(filename, number=2, headers=True):
     str_io = StringIO()
     writer = csv.writer(str_io)
-    headers = student_loader.CSVRow._fields
-    writer.writerow(headers)
+    if headers:
+        headers = student_loader.CSVRow._fields
+        writer.writerow(headers)
 
     records = [
-        generate_record(idx)
-        for idx in range(0, 2)
+        _generate_record()
+        for idx in range(0, number)
     ]
 
     writer.writerows(records)
