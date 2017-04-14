@@ -30,7 +30,7 @@ from osis_common.models.serializable_model import SerializableModel, Serializabl
 class EmployeeAdmin(SerializableModelAdmin):
     list_display = ('person', )
     fieldsets = ((None, {'fields': ('person',)}),)
-    search_fields = ['person__first_name', 'person__last_name']
+    search_fields = ['person__first_name', 'person__last_name', 'person__global_id']
     raw_id_fields = ('person',)
 
 
