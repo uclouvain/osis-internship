@@ -213,17 +213,21 @@ def get_encoded_exam_enrollments(request):
     enrollments = list(mdl.exam_enrollment.find_by_ids(enrollment_ids)\
                                      .select_related('learning_unit_enrollment__learning_unit_year'))
 
-    for enrollment in enrollments:
-        enrollment.score_encoded = request.POST.get('score_' + str(enrollment.id))
-        enrollment.justification_encoded = request.POST.get('justification_' + str(enrollment.id))
-
-    return enrollments
+    return _extract_encoded_values_from_post_data(enrollments, request)
 
 
 def _extract_id_from_post_data(request):
     post_data = dict(request.POST.lists())
     return [int(param.split("_")[-1]) for param, value in post_data.items()
             if "score_changed_" in param and next(iter(value or []), None) == "true"]
+
+
+def _extract_encoded_values_from_post_data(enrollments, request):
+    enrollment_with_encoded_values = copy.deepcopy(enrollments)
+    for enrollment in enrollment_with_encoded_values:
+        enrollment.score_encoded = request.POST.get('score_' + str(enrollment.id))
+        enrollment.justification_encoded = request.POST.get('justification_' + str(enrollment.id))
+    return enrollment_with_encoded_values
 
 
 def update_enrollments_if_changed(enrollments, request):
@@ -437,27 +441,16 @@ def online_double_encoding_validation(request, learning_unit_year_id=None, tutor
                                              is_program_manager=is_program_manager)
 
     if request.method == 'POST':
-        updated_enrollments = []
-        for enrollment in exam_enrollments:
-            if not have_reencoded_score_or_justification(enrollment):
-                continue
+        exam_enrollments_reencoded = [enrollment for enrollment in exam_enrollments
+                                       if have_reencoded_score_or_justification(enrollment)]
 
-            enrollment.score_encoded = request.POST.get('score_' + str(enrollment.id), None)
-            enrollment.justification_encoded = request.POST.get('justification_' + str(enrollment.id), None)
+        exam_enrollments_reencoded = _extract_encoded_values_from_post_data(exam_enrollments_reencoded, request)
+        updated_enrollments = update_enrollments_if_changed(exam_enrollments_reencoded, request)
 
-            updated_enrollment = None
-            try:
-                updated_enrollment = update_enrollment_if_changed(enrollment, request.user, is_program_manager)
-            except ValidationError as e:
-                messages.add_message(request, messages.ERROR, _(e.messages[0]))
-            except Exception as e:
-                messages.add_message(request, messages.ERROR, _(e.args[0]))
+        if updated_enrollments:
+            send_messages_to_notify_encoding_progress(request, exam_enrollments, learning_unit_year, is_program_manager,
+                                                      updated_enrollments)
 
-            if updated_enrollment:
-                updated_enrollments.append(updated_enrollment)
-
-        send_messages_to_notify_encoding_progress(request, exam_enrollments, learning_unit_year, is_program_manager,
-                                                  updated_enrollments)
         return HttpResponseRedirect(reverse('online_encoding', args=(learning_unit_year_id,)))
 
 
