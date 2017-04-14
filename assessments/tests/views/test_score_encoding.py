@@ -123,7 +123,7 @@ class OnlineEncodingTest(TestCase):
     def test_pgm_encoding_for_a_student(self):
         self.client.force_login(self.program_manager_1.person.user)
         url = reverse('online_encoding_form', args=[self.learning_unit_year.id])
-        self.client.post(url, data=self.get_form_with_all_students_filled())
+        self.client.post(url, data=self.get_form_with_one_student_filled())
 
         self.refresh_exam_enrollments_from_db()
         self.assert_exam_enrollments(self.enrollments[0], 15, 15, None, None)
@@ -135,7 +135,7 @@ class OnlineEncodingTest(TestCase):
         self.client.post(url, data=self.get_form_with_all_students_filled_and_one_with_justification())
 
         self.refresh_exam_enrollments_from_db()
-        self.assert_exam_enrollments(self.enrollments[0], None, None, None, None)
+        self.assert_exam_enrollments(self.enrollments[0], 15, 15, None, None)
         self.assert_exam_enrollments(self.enrollments[1], None, None, "ABSENCE_JUSTIFIED", "ABSENCE_JUSTIFIED")
 
     def test_tutor_encoding_with_all_students(self):
