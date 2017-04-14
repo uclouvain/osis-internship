@@ -54,6 +54,11 @@ def is_teacher(user):
     return this_adviser.type == 'PRF' if this_adviser else False
 
 
+def role_can_be_deleted(dissert, dissert_role):
+    promotors_count = dissertation_role.count_by_status_dissertation('PROMOTEUR', dissert)
+    return dissert_role.status != 'PROMOTEUR' or promotors_count > 1
+
+
 #########################
 #      GLOBAL VIEW      #
 #########################
@@ -111,10 +116,12 @@ def manager_dissertations_detail(request, pk):
     count_proposition_role = proposition_role.count_by_dissertation(dissert)
     proposition_roles = proposition_role.search_by_dissertation(dissert)
     offer_prop = offer_proposition.get_by_dissertation(dissert)
+
     files = dissertation_document_file.find_by_dissertation(dissert)
     filename = ""
     for file in files:
         filename = file.document_file.file_name
+
     if count_proposition_role == 0:
         if count_dissertation_role == 0:
             justification = "%s %s %s" % ("auto_add_jury", 'PROMOTEUR', str(dissert.proposition_dissertation.author))
@@ -126,6 +133,7 @@ def manager_dissertations_detail(request, pk):
                 justification = "%s %s %s" % ("auto_add_jury", role.status, str(role.adviser))
                 dissertation_update.add(request, dissert, dissert.status, justification=justification)
                 dissertation_role.add(role.status, role.adviser, dissert)
+
     if dissert.status == "DRAFT":
         jury_manager_visibility = True
         jury_manager_can_edit = False
@@ -156,6 +164,9 @@ def manager_dissertations_detail(request, pk):
         else:
             jury_student_message = 'student_jury_invisible_dates'
     dissertation_roles = dissertation_role.search_by_dissertation(dissert)
+
+    promotors_count = dissertation_role.count_by_status_dissertation('PROMOTEUR', dissert)
+
     return layout.render(request, 'manager_dissertations_detail.html',
                          {'dissertation': dissert,
                           'adviser': adv,
@@ -170,6 +181,7 @@ def manager_dissertations_detail(request, pk):
                           'jury_student_visibility': jury_student_visibility,
                           'jury_student_can_edit': jury_student_can_edit,
                           'jury_student_message': jury_student_message,
+                          'promotors_count': promotors_count,
                           'filename': filename})
 
 
@@ -386,7 +398,8 @@ def manager_dissertations_delete(request, pk):
 def manager_dissertations_role_delete(request, pk):
     dissert_role = get_object_or_404(DissertationRole, pk=pk)
     dissert = dissert_role.dissertation
-    if dissert.status != 'DRAFT':
+
+    if dissert.status != 'DRAFT' and role_can_be_deleted(dissert, dissert_role):
         justification = "%s %s" % ("manager_delete_jury", str(dissert_role))
         dissertation_update.add(request, dissert, dissert.status, justification=justification)
         dissert_role.delete()
@@ -746,11 +759,6 @@ def dissertations_wait_list(request):
                          {'roles_list_dissertations': roles_list_dissertations})
 
 
-def role_can_be_deleted(dissert, dissert_role):
-    promotors_count = dissertation_role.count_by_status_dissertation('PROMOTEUR', dissert)
-    return dissert_role.status != 'PROMOTEUR' or promotors_count > 1
-
-
 @login_required
 @user_passes_test(is_teacher)
 def dissertations_role_delete(request, pk):
@@ -798,4 +806,3 @@ def dissertations_jury_new(request, pk):
             return layout.render(request, 'dissertations_jury_edit.html', {'form': form, 'dissert': dissert})
 
     return redirect('dissertations_detail', pk=dissert.pk)
-
