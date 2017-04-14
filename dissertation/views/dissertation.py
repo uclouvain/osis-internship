@@ -312,36 +312,48 @@ def generate_xls(disserts):
                        'Status',
                        'Year + Program Start',
                        'Defend Year',
-                       'Promotor',
-                       'Co-promotor',
-                       'Reader 1',
-                       'Reader 2',
+                       'Role 1',
+                       'Teacher 1',
+                       'Role 2',
+                       'Teacher 2',
+                       'Role 3',
+                       'Teacher 3',
+                       'Role 4',
+                       'Teacher 4',
                        'Description'
                        ])
     for dissert in disserts:
-        pro_name = dissertation_role.get_promoteur_by_dissertation_str(dissert)
-        copro_name = dissertation_role.get_copromoteur_by_dissertation(dissert)
-        readers = dissertation_role.search_by_dissertation_and_role(dissert, 'READER')
-        defend_year = dissert.defend_year if dissert.defend_year else 'not_set'
-        description = dissert.description if dissert.description else 'not_set'
+        line = construct_line(dissert)
+        worksheet1.append(line)
 
-        readers_count = readers.count()
-        reader1_name = str(readers[0].adviser) if readers_count > 0 else 'none'
-        reader2_name = str(readers[1].adviser) if readers_count > 1 else 'none'
-
-        worksheet1.append([dissert.creation_date,
-                           str(dissert.author),
-                           dissert.title,
-                           dissert.status,
-                           str(dissert.offer_year_start),
-                           defend_year,
-                           pro_name,
-                           copro_name,
-                           reader1_name,
-                           reader2_name,
-                           description
-                           ])
     return save_virtual_workbook(workbook)
+
+
+def construct_line(dissert):
+    defend_year = dissert.defend_year if dissert.defend_year else '---'
+    description = dissert.description if dissert.description else '---'
+
+    line = [dissert.creation_date,
+            str(dissert.author),
+            dissert.title,
+            dissert.status,
+            str(dissert.offer_year_start),
+            defend_year
+            ]
+
+    roles = []
+    for role in dissertation_role.search_by_dissertation(dissert):
+        if role.status == 'PROMOTEUR':
+            roles.insert(0, role)
+        else:
+            roles.append(role)
+    for role in roles:
+        line += [str(role.status), str(role.adviser)]
+    for x in range(4 - len(roles)):
+        line += ['---', '---']
+
+    line += [description]
+    return line
 
 
 @login_required

@@ -112,7 +112,7 @@ def add(status, adviser, dissertation):
 
 
 def search_by_dissertation(dissertation):
-    return DissertationRole.objects.filter(dissertation=dissertation).order_by('pk')
+    return DissertationRole.objects.filter(dissertation=dissertation).order_by('status')
 
 
 def search_by_dissertation_and_role(dissertation, role):
