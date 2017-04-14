@@ -78,7 +78,7 @@ urlpatterns = [
     ])),
 
     url(r'^crm_manager/', include([
-        url(r'^scores_responsible/$', scores_responsible.scores_responsible,
+        url(r'^$', scores_responsible.scores_responsible,
             name='scores_responsible'),
         url(r'^scores_responsible_search$', scores_responsible.scores_responsible_search,
             name='scores_responsible_search'),

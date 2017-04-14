@@ -23,8 +23,8 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
 from attribution import models as mdl_attr
 from attribution.models.attribution import Attribution
 from base.models.learning_unit_year import LearningUnitYear
@@ -57,7 +57,6 @@ def scores_responsible_search(request):
                                                               "attributions": attributions})
 
 
-@login_required
 def create_dictionary(attributions):
     dict_attribution = dict()
     for attribution in attributions:
@@ -71,7 +70,6 @@ def create_dictionary(attributions):
     return dict_attribution
 
 
-@login_required
 def find_data_table():
     attributions = mdl_attr.attribution.find_all_responsibles().distinct("tutor")
     attributions_list = mdl_attr.attribution.find_attribution_distinct()
@@ -79,7 +77,6 @@ def find_data_table():
     return all_tutors, attributions, attributions_list
 
 
-@login_required
 def scores_responsible_list(request):
     list_course_code = request.GET['course_code']
     return list_course_code
@@ -110,4 +107,3 @@ def scores_responsible_add(request):
     attribution.score_responsible = True
     attribution.save()
     return redirect('scores_responsible_management', pk=attribution.learning_unit_year.pk)
-
