@@ -341,19 +341,23 @@ def construct_line(dissert):
             defend_year
             ]
 
+    line += get_ordered_roles(dissert)
+    line += [description]
+    return line
+
+
+def get_ordered_roles(dissert):
     roles = []
     for role in dissertation_role.search_by_dissertation(dissert):
         if role.status == 'PROMOTEUR':
-            roles.insert(0, role)
+            roles.insert(0, str(role.adviser))
+            roles.insert(0, str(role.status))
         else:
-            roles.append(role)
-    for role in roles:
-        line += [str(role.status), str(role.adviser)]
-    for x in range(4 - len(roles)):
-        line += ['---', '---']
-
-    line += [description]
-    return line
+            roles.append(str(role.status))
+            roles.append(str(role.adviser))
+    for x in range(8 - len(roles)):
+        roles += ['---']
+    return roles
 
 
 @login_required
