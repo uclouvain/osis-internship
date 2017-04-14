@@ -186,10 +186,14 @@
                                  aria-valuenow="{{ note_detail.progress }}" aria-valuemin="0" aria-valuemax="100"
                                  style="width: {{ note_detail.progress }}%;"
                                  title="{% trans 'tooltip_scores_encodings_progress_bar' %}">
-                                    <span>{% if note_detail.scores_not_yet_submitted %}
+                                    <span>
+                                        {% if note_detail.scores_not_yet_submitted %}
                                             ({{ note_detail.scores_not_yet_submitted }})
-                                          {% endif %}
-                                          <b>{{ note_detail.exam_enrollments_encoded }} / {{ note_detail.total_exam_enrollments }}</b>
+                                        {% endif %}
+                                        <b>
+                                            {{ note_detail.exam_enrollments_encoded }}
+                                            / {{ note_detail.total_exam_enrollments }}
+                                        </b>
                                     </span>
                             </div>
                         </div>
@@ -250,10 +254,14 @@
                                  aria-valuenow="{{ note_detail.progress }}" aria-valuemin="0" aria-valuemax="100"
                                  style="width: {{ note_detail.progress }}%;"
                                  title="{% trans 'tooltip_scores_encodings_progress_bar' %}">
-                                    <span>{% if note_detail.scores_not_yet_submitted %}
+                                    <span>
+                                        {% if note_detail.scores_not_yet_submitted %}
                                             ({{ note_detail.scores_not_yet_submitted }})
-                                          {% endif %}
-                                          <b>{{ note_detail.exam_enrollments_encoded }} / {{ note_detail.total_exam_enrollments }}</b>
+                                        {% endif %}
+                                         <b>
+                                            {{ note_detail.exam_enrollments_encoded }}
+                                            / {{ note_detail.total_exam_enrollments }}
+                                         </b>
                                     </span>
                             </div>
                         </div>
@@ -332,10 +340,14 @@
                                  aria-valuenow="{{ note_detail.progress }}" aria-valuemin="0" aria-valuemax="100"
                                  style="width: {{ note_detail.progress }}%;"
                                  title="{% trans 'tooltip_scores_encodings_progress_bar' %}">
-                                    <span>{% if note_detail.scores_not_yet_submitted %}
+                                    <span>
+                                        {% if note_detail.scores_not_yet_submitted %}
                                             ({{ note_detail.scores_not_yet_submitted }})
-                                          {% endif %}
-                                          <b>{{ note_detail.exam_enrollments_encoded }} / {{ note_detail.total_exam_enrollments }}</b>
+                                        {% endif %}
+                                        <b>
+                                            {{ note_detail.exam_enrollments_encoded }}
+                                            / {{ note_detail.total_exam_enrollments }}
+                                        </b>
                                     </span>
                             </div>
                         </div>

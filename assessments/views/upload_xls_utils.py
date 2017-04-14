@@ -226,6 +226,12 @@ def __save_xls_scores(request, file_name, is_program_manager, user, learning_uni
                     count_exam_enrol_for_this_learn_unit +=1
             if not exam_enrollment:
                 messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('enrollment_activity_not_exist') % (xls_learning_unit_acronym)))
+            elif mdl.exam_enrollment.is_deadline_reached(exam_enrollment) or \
+                    (not is_program_manager and mdl.exam_enrollment.is_deadline_tutor_reached(exam_enrollment)):
+                # Check if the deadline is reached
+                messages.add_message(request, messages.WARNING,
+                                     "%s %s!" % (info_line, _('deadline_reached')))
+                continue
             elif not is_program_manager and (exam_enrollment.score_final is not None or exam_enrollment.justification_final):
                 # In case the user is not a program manager, we check if the scores are already submitted
                 # If this examEnrollment is already encoded in DataBase, nothing to do (ingnoring the line)
