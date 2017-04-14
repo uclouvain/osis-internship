@@ -169,6 +169,57 @@ msgstr "Created by"
 msgid "current_status"
 msgstr "Current status"
 
+msgid "datatable_emptytable"
+msgstr "No data available in table"
+
+msgid "datatable_info"
+msgstr "Showing _START_ to _END_ of _TOTAL_ entries"
+
+msgid "datatable_infoempty"
+msgstr "Showing 0 to 0 of 0 entries"
+
+msgid "datatable_infofiltered"
+msgstr "(filtered from _MAX_ total entries)"
+
+msgid "datatable_infopostfix"
+msgstr ""
+
+msgid "datatable_infothousands"
+msgstr ","
+
+msgid "datatable_lengthmenu"
+msgstr "Show _MENU_ entries"
+
+msgid "datatable_loadingrecords"
+msgstr "Loading..."
+
+msgid "datatable_processing"
+msgstr "Processing..."
+
+msgid "datatable_search"
+msgstr "Search:"
+
+msgid "datatable_zerorecords"
+msgstr "No matching records found"
+
+msgid "datatable_first"
+msgstr "First"
+
+msgid "datatable_last"
+msgstr "Last"
+
+msgid "datatable_next"
+msgstr "Next"
+
+msgid "datatable_previous"
+msgstr "Previous"
+
+msgid "datatable_sortascending"
+msgstr ": activate to sort column ascending"
+
+msgid "datatable_sortdescending"
+msgstr ": activate to sort column descending"
+
 msgid "date_end_visibility_dissertation"
 msgstr "End of period for creation of dissertations"
 

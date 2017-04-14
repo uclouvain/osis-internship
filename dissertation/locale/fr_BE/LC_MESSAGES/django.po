@@ -169,6 +169,57 @@ msgstr "Créé par"
 msgid "current_status"
 msgstr "État actuel"
 
+msgid "datatable_emptytable"
+msgstr "Aucune donn&eacute;e disponible dans le tableau"
+
+msgid "datatable_info"
+msgstr "Affichage de l'&eacute;l&eacute;ment _START_ &agrave; _END_ sur _TOTAL_ &eacute;l&eacute;ments"
+
+msgid "datatable_infoempty"
+msgstr "Affichage de l'&eacute;l&eacute;ment 0 &agrave; 0 sur 0 &eacute;l&eacute;ment"
+
+msgid "datatable_infofiltered"
+msgstr "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)"
+
+msgid "datatable_infopostfix"
+msgstr ""
+
+msgid "datatable_infothousands"
+msgstr ","
+
+msgid "datatable_lengthmenu"
+msgstr "Afficher _MENU_ &eacute;l&eacute;ments"
+
+msgid "datatable_loadingrecords"
+msgstr "Chargement en cours..."
+
+msgid "datatable_processing"
+msgstr "Traitement en cours..."
+
+msgid "datatable_search"
+msgstr "Rechercher&nbsp;:"
+
+msgid "datatable_zerorecords"
+msgstr "Aucun &eacute;l&eacute;ment &agrave; afficher"
+
+msgid "datatable_first"
+msgstr "Premier"
+
+msgid "datatable_last"
+msgstr "Dernier"
+
+msgid "datatable_next"
+msgstr "Suivant"
+
+msgid "datatable_previous"
+msgstr "Pr&eacute;c&eacute;dent"
+
+msgid "datatable_sortascending"
+msgstr ": activer pour trier la colonne par ordre croissant"
+
+msgid "datatable_sortdescending"
+msgstr ": activer pour trier la colonne par ordre d&eacute;croissant"
+
 msgid "date_end_visibility_dissertation"
 msgstr "Date de fin de la période de création des mémoires"
 
