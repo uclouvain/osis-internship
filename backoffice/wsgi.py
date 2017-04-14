@@ -77,6 +77,3 @@ if hasattr(settings, 'QUEUES') and settings.QUEUES:
         except (ConnectionClosed, ChannelClosed, AMQPConnectionError, ConnectionError) as e:
             LOGGER.exception("Couldn't connect to the QueueServer")
 
-from django.conf import settings
-for name in dir(settings):
-    print('{} : {}'.format(name, getattr(settings, name)))
