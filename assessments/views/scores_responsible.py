@@ -24,37 +24,50 @@
 #
 ##############################################################################
 from django.shortcuts import get_object_or_404, redirect
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from attribution import models as mdl_attr
 from attribution.models.attribution import Attribution
+from base.models import faculty_administrator
 from base.models.learning_unit_year import LearningUnitYear
 from base.views import layout
 
 
+def is_faculty_admin(user):
+    a_faculty_administrator = faculty_administrator.find_faculty_administrator_by_user(user)
+    return a_faculty_administrator if a_faculty_administrator else False
+
+
 @login_required
+@user_passes_test(is_faculty_admin)
 def scores_responsible(request):
-    all_tutors, attributions, attributions_list = find_data_table()
+    a_faculty_administrator = faculty_administrator.find_faculty_administrator_by_user(request.user)
+    all_tutors, attributions, attributions_list, responsibles_list = find_data_table(request,  a_faculty_administrator.structure)
     dict_attribution = create_dictionary(attributions)
     return layout.render(request, 'scores_responsible.html', {"all_tutors": all_tutors,
                                                               "attributions_list": attributions_list,
                                                               "dict_attribution": dict_attribution,
-                                                              "attributions": attributions})
+                                                              "attributions": attributions,
+                                                              "responsibles_list": responsibles_list})
 
 
 @login_required
+@user_passes_test(is_faculty_admin)
 def scores_responsible_search(request):
+    a_faculty_administrator = faculty_administrator.find_faculty_administrator_by_user(request.user)
     attributions_searched = mdl_attr.attribution.search_scores_responsible(
+        a_faculty_administrator.structure,
         learning_unit_title=request.GET['learning_unit_title'],
         course_code=request.GET['course_code'],
         entity=request.GET['entity'],
         professor=request.GET['professor'],
         scores_responsible=request.GET['scores_responsible'])
-    all_tutors, attributions, attributions_list = find_data_table()
+    all_tutors, attributions, attributions_list, responsibles_list = find_data_table(request, a_faculty_administrator.structure)
     dict_attribution = create_dictionary(attributions_searched)
     return layout.render(request, 'scores_responsible.html', {"all_tutors": all_tutors,
                                                               "attributions_list": attributions_list,
                                                               "dict_attribution": dict_attribution,
-                                                              "attributions": attributions})
+                                                              "attributions": attributions,
+                                                              "responsibles_list": responsibles_list})
 
 
 def create_dictionary(attributions):
@@ -70,11 +83,13 @@ def create_dictionary(attributions):
     return dict_attribution
 
 
-def find_data_table():
-    attributions = mdl_attr.attribution.find_all_responsibles().distinct("tutor")
-    attributions_list = mdl_attr.attribution.find_attribution_distinct()
-    all_tutors = mdl_attr.attribution.find_all_tutor().distinct("tutor")
-    return all_tutors, attributions, attributions_list
+def find_data_table(request, structure):
+    a_faculty_administrator = faculty_administrator.find_faculty_administrator_by_user(request.user)
+    attributions = mdl_attr.attribution.find_attributions(structure).distinct("learning_unit_year")
+    responsibles_list = mdl_attr.attribution.find_responsible_distinct(structure)
+    attributions_list = mdl_attr.attribution.find_attribution_distinct(structure)
+    all_tutors = mdl_attr.attribution.find_all_tutor(a_faculty_administrator.structure).distinct("tutor")
+    return all_tutors, attributions, attributions_list, responsibles_list
 
 
 def scores_responsible_list(request):
@@ -83,9 +98,11 @@ def scores_responsible_list(request):
 
 
 @login_required
+@user_passes_test(is_faculty_admin)
 def scores_responsible_management(request, pk):
     learning_unit_year = get_object_or_404(LearningUnitYear, pk=pk)
-    professors = mdl_attr.attribution.find_all_responsable_by_learning_unit_year(learning_unit_year)
+    a_faculty_administrator = faculty_administrator.find_faculty_administrator_by_user(request.user)
+    professors = mdl_attr.attribution.find_all_responsable_by_learning_unit_year(a_faculty_administrator.structure, learning_unit_year)
     attributions = mdl_attr.attribution.find_all_tutor_by_learning_unit_year(learning_unit_year)
     return layout.render(request, 'scores_responsible_edit.html',
                          {'learning_unit_year': learning_unit_year,
@@ -94,6 +111,7 @@ def scores_responsible_management(request, pk):
 
 
 @login_required
+@user_passes_test(is_faculty_admin)
 def scores_responsible_delete(request, pk):
     attribution = get_object_or_404(Attribution, pk=pk)
     attribution.score_responsible = False
@@ -102,6 +120,7 @@ def scores_responsible_delete(request, pk):
 
 
 @login_required
+@user_passes_test(is_faculty_admin)
 def scores_responsible_add(request):
     attribution = get_object_or_404(Attribution, pk=request.GET['professor'])
     attribution.score_responsible = True

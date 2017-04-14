@@ -79,8 +79,8 @@ def find_all_responsibles_by_learning_unit_year(a_learning_unit_year):
     return [attribution.tutor for attribution in attribution_list]
 
 
-def find_all_responsibles():
-    attribution_list = Attribution.objects.filter(score_responsible=True)
+def find_attributions(structure):
+    attribution_list = Attribution.objects.filter(learning_unit_year__structure=structure)
     return attribution_list
 
 
@@ -104,7 +104,7 @@ def find_tutor_number(attribution):
     return tutor_number
 
 
-def search_scores_responsible(learning_unit_title, course_code, entity, professor, scores_responsible):
+def search_scores_responsible(structure, learning_unit_title, course_code, entity, professor, scores_responsible):
     queryset = Attribution.objects
     if learning_unit_title:
         queryset = queryset.filter(learning_unit_year__title__icontains=learning_unit_title)
@@ -116,22 +116,29 @@ def search_scores_responsible(learning_unit_title, course_code, entity, professo
         queryset = queryset.filter(tutor__id=professor)
     if scores_responsible:
         queryset = queryset.filter(tutor__id=scores_responsible).filter(score_responsible=True)
-    queryset = queryset.distinct("learning_unit_year")
+    queryset = queryset.filter(learning_unit_year__structure=structure).distinct("learning_unit_year")
     return queryset
 
 
-def find_attribution_distinct():
-    attributions_list = Attribution.objects.all().distinct("learning_unit_year")
+def find_attribution_distinct(structure):
+    attributions_list = Attribution.objects.filter(learning_unit_year__structure=structure)\
+        .distinct("learning_unit_year")
     return attributions_list
 
 
-def find_all_tutor():
-    all_tutors = Attribution.objects.all()
+def find_responsible_distinct(structure):
+    attributions_list = Attribution.objects.filter(learning_unit_year__structure=structure)\
+        .filter(score_responsible=True).distinct("tutor")
+    return attributions_list
+
+
+def find_all_tutor(structure):
+    all_tutors = Attribution.objects.filter(learning_unit_year__structure=structure)
     return all_tutors
 
 
-def find_all_responsable_by_learning_unit_year(learning_unit_year):
-    all_tutors = Attribution.objects.filter(learning_unit_year=learning_unit_year).filter(score_responsible=True)
+def find_all_responsable_by_learning_unit_year(structure, learning_unit_year):
+    all_tutors = Attribution.objects.filter(learning_unit_year=learning_unit_year).filter(score_responsible=True).filter(learning_unit_year__structure=structure)
     return all_tutors
 
 
