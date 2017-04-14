@@ -121,14 +121,6 @@ class PlaceViewAndUrlTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_upload_places_file(self):
-        url = reverse('upload_places', kwargs={
-            'cohort_id': self.cohort.id,
-        })
-
-        response = self.client.post(url)
-        self.assertEqual(response.status_code, 200)
-
-    def test_upload_places_file(self):
         workbook = XlsPlaceImportTestCase.generate_workbook()
 
         content_of_workbook = io.BytesIO(save_virtual_workbook(workbook))
