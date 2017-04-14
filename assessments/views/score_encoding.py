@@ -182,15 +182,8 @@ def online_encoding_form(request, learning_unit_year_id=None):
         data = get_data_online(request, learning_unit_year_id)
         return layout.render(request, "online_encoding_form.html", data)
     elif request.method == 'POST':
-        updated_enrollments = []
         encoded_exam_enrollments = get_encoded_exam_enrollments(request)
-
-        try:
-            updated_enrollments = update_enrollments_if_changed(encoded_exam_enrollments, request.user)
-        except ValidationError as e:
-            messages.add_message(request, messages.ERROR, _(e.messages[0]))
-        except Exception as e:
-            messages.add_message(request, messages.ERROR, _(e.args[0]))
+        updated_enrollments = update_enrollments_if_changed(encoded_exam_enrollments, request)
 
         if messages.get_messages(request):
             data = get_data_online(request, learning_unit_year_id)
@@ -216,10 +209,7 @@ def _preserve_encoded_values(request, data):
 
 
 def get_encoded_exam_enrollments(request):
-    post_data = dict(request.POST.lists())
-    enrollment_ids = [int(param.split("_")[-1]) for param, value in post_data.items()
-                       if "score_changed_" in param and next(iter(value or []), None) == "true"]
-
+    enrollment_ids = _extract_id_from_post_data(request)
     enrollments = list(mdl.exam_enrollment.find_by_ids(enrollment_ids)\
                                      .select_related('learning_unit_enrollment__learning_unit_year'))
 
@@ -230,15 +220,28 @@ def get_encoded_exam_enrollments(request):
     return enrollments
 
 
-def update_enrollments_if_changed(enrollments, user):
-    is_program_manager = mdl.program_manager.is_program_manager(user)
-    updated_enrollments = []
-    for enrollment in enrollments:
-        enrollment_updated = update_enrollment_if_changed(enrollment, user, is_program_manager)
-        if enrollment_updated:
-            updated_enrollments.append(enrollment_updated)
+def _extract_id_from_post_data(request):
+    post_data = dict(request.POST.lists())
+    return [int(param.split("_")[-1]) for param, value in post_data.items()
+            if "score_changed_" in param and next(iter(value or []), None) == "true"]
 
-    return updated_enrollments
+
+def update_enrollments_if_changed(enrollments, request):
+    try:
+        user = request.user
+        is_program_manager = mdl.program_manager.is_program_manager(user)
+
+        updated_enrollments = []
+        for enrollment in enrollments:
+            enrollment_updated = update_enrollment_if_changed(enrollment, user, is_program_manager)
+            if enrollment_updated:
+                updated_enrollments.append(enrollment_updated)
+
+        return updated_enrollments
+    except ValidationError as e:
+        messages.add_message(request, messages.ERROR, _(e.messages[0]))
+    except Exception as e:
+        messages.add_message(request, messages.ERROR, _(e.args[0]))
 
 
 def update_enrollment_if_changed(enrollment, user, is_program_manager):
@@ -442,7 +445,7 @@ def online_double_encoding_validation(request, learning_unit_year_id=None, tutor
             enrollment.score_encoded = request.POST.get('score_' + str(enrollment.id), None)
             enrollment.justification_encoded = request.POST.get('justification_' + str(enrollment.id), None)
 
-            has_been_updated = False
+            updated_enrollment = None
             try:
                 updated_enrollment = update_enrollment_if_changed(enrollment, request.user, is_program_manager)
             except ValidationError as e:
@@ -860,15 +863,8 @@ def specific_criteria(request):
 @login_required
 @permission_required('assessments.can_access_scoreencoding', raise_exception=True)
 def specific_criteria_submission(request):
-    updated_enrollments = []
     encoded_exam_enrollments = get_encoded_exam_enrollments(request)
-
-    try:
-        updated_enrollments = update_enrollments_if_changed(encoded_exam_enrollments, request.user)
-    except ValidationError as e:
-        messages.add_message(request, messages.ERROR, _(e.messages[0]))
-    except Exception as e:
-        messages.add_message(request, messages.ERROR, _(e.args[0]))
+    updated_enrollments = update_enrollments_if_changed(encoded_exam_enrollments, request)
 
     if messages.get_messages(request):
         data = get_data_specific_criteria(request)
