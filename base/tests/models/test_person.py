@@ -62,7 +62,7 @@ class PersonTest(PersonTestCase):
         self.assertEqual(db_person.id, tmp_person.id)
         self.assertEqual(db_person.email, tmp_person.email)
 
-    @override_settings(INTERNAL_EMAIL_SUFIX='osis.org')
+    @override_settings(INTERNAL_EMAIL_SUFFIX='osis.org')
     def test_person_from_extern_source(self):
         person_email = functools.partial(generate_person_email, domain='osis.org')
         p = PersonFactory.build(email=factory.LazyAttribute(person_email),
@@ -71,14 +71,14 @@ class PersonTest(PersonTestCase):
         with self.assertRaises(AttributeError):
             p.save()
 
-    @override_settings(INTERNAL_EMAIL_SUFIX='osis.org')
+    @override_settings(INTERNAL_EMAIL_SUFFIX='osis.org')
     def test_person_from_internal_source(self):
         person_email = functools.partial(generate_person_email, domain='osis.org')
         p = PersonFactory.build(email=factory.LazyAttribute(person_email), user=None)
         with self.assertDontRaise():
             p.save()
 
-    @override_settings(INTERNAL_EMAIL_SUFIX='osis.org')
+    @override_settings(INTERNAL_EMAIL_SUFFIX='osis.org')
     def test_person_without_source(self):
         person_email = functools.partial(generate_person_email, domain='osis.org')
         p = PersonFactory.build(email=factory.LazyAttribute(person_email),

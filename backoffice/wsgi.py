@@ -55,22 +55,28 @@ except ImportError as ie:
     print(" - No DJANGO_SETTINGS_MODULE is defined and the default 'backoffice.settings.local' doesn't exist ")
     sys.exit("DjangoSettingsError")
 
-from osis_common.queue import queue_listener, callbacks
-from assessments.views.score_encoding import get_json_data_scores_sheets
 from django.conf import settings
 LOGGER = logging.getLogger(settings.DEFAULT_LOGGER)
 
-if hasattr(settings, 'QUEUES'):
-    # Queue in which are sent scores sheets json data
-    try:
-        queue_listener.listen_queue(settings.QUEUES.get('QUEUES_NAME').get('PAPER_SHEET')
-                                    , get_json_data_scores_sheets)
-    except (ConnectionClosed, ChannelClosed, AMQPConnectionError, ConnectionError) as e:
-        LOGGER.exception("Couldn't connect to the QueueServer")
-
-    # Thread in which is running the listening of the queue used to migrate data (from Osis-portal to Osis)
+if hasattr(settings, 'QUEUES') and settings.QUEUES:
+    from osis_common.queue import queue_listener, callbacks
+    # migration queue used to migrate data between osis ans osis_portal
     try:
         queue_listener.SynchronousConsumerThread(settings.QUEUES.get('QUEUES_NAME').get('MIGRATIONS_TO_CONSUME'),
                                                  callbacks.process_message).start()
     except (ConnectionClosed, ChannelClosed, AMQPConnectionError, ConnectionError) as e:
         LOGGER.exception("Couldn't connect to the QueueServer")
+
+    # Queue in which are sent scores sheets json data
+    # This queue is used only if assessments module is installed
+    if 'assessments' in settings.INSTALLED_APPS:
+        from assessments.views.score_encoding import get_json_data_scores_sheets
+        try:
+            queue_listener.listen_queue(settings.QUEUES.get('QUEUES_NAME').get('PAPER_SHEET')
+                                        , get_json_data_scores_sheets)
+        except (ConnectionClosed, ChannelClosed, AMQPConnectionError, ConnectionError) as e:
+            LOGGER.exception("Couldn't connect to the QueueServer")
+
+from django.conf import settings
+for name in dir(settings):
+    print('{} : {}'.format(name, getattr(settings, name)))

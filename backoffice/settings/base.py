@@ -29,7 +29,7 @@ import os
 from django.utils.translation import ugettext_lazy as _
 
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = os.path.dirname((os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
 # SECURITY Settings
 # Those settings are mandatory and have to be defined in your .env file
@@ -109,6 +109,7 @@ LANGUAGES = [
 USE_I18N = os.environ.get('USE_I18N', 'True').lower() == 'true'
 USE_L10N = os.environ.get('USE_L10N', 'True').lower() == 'true'
 USE_TZ = os.environ.get('USE_TZ', 'True').lower() == 'true'
+TIME_ZONE = os.environ.get('TIME_ZONE', 'Europe/Brussels')
 
 # Static files (CSS, JavaScript, Images) and Media
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
@@ -138,10 +139,12 @@ EMAIL_FILE_PATH = os.environ.get('EMAIL_FILE_PATH', os.path.join(BASE_DIR, "base
 EMAIL_HOST = os.environ.get('EMAIL_HOST', 'localhost')
 EMAIL_PORT = int(os.environ.get('EMAIL_PORT', 25))
 SEND_BROKEN_LINK_EMAILS = os.environ.get('SEND_BROKEN_LINK_EMAILS', 'True').lower() == 'true'
+INTERNAL_EMAIL_SUFFIX = os.environ.get('INTERNAL_EMAIL_SUFFIX', 'osis.org')
 
 # Authentication settings
 LOGIN_URL = os.environ.get('LOGIN_URL', reverse_lazy('login'))
 LOGIN_REDIRECT_URL = os.environ.get('LOGIN_REDIRECT_URL', reverse_lazy('home'))
+LOGOUT_URL = os.environ.get('LOGOUT_URL', reverse_lazy('logout'))
 OVERRIDED_LOGIN_URL = os.environ.get('OVERRIDED_LOGIN_URL', None)
 OVERRIDED_LOGOUT_URL = os.environ.get('OVERRIDED_LOGOUT_URL', None)
 
@@ -168,12 +171,6 @@ QUEUES = {
         'PERFORMANCE': 'performance'
     }
 }
-
-# Fixture additional directories
-# Add additionnal DIR in your environment settings file (ex: local.py)
-FIXTURE_DIRS = (
-    '/base/fixtures/',
-)
 
 # Additionnal Locale Path
 # Add local path in your environment settings (ex: local.py)
