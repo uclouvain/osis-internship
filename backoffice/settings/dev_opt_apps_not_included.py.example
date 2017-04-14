@@ -1,4 +1,4 @@
-# Development settings File where optional apps have to be defined
+# Development settings file where optional apps have to be defined
 # It use backoffice.settings.base as base file
 
 # Copy this file to sev.py and set DJANGO_SETTINGS_MODULE to 'backoffice.settings.dev' in your .env file
