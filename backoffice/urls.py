@@ -31,7 +31,7 @@ from base.views import common
 urlpatterns = [
     url(r'^login/$', common.login, name='login'),
     url(r'^logout/$', common.log_out, name='logout'),
-    url(r'^logged_out/$',common.logged_out,name='logged_out'),
+    url(r'^logged_out/$', common.logged_out, name='logged_out'),
 
     url(r'^'+settings.ADMIN_URL, admin.site.urls),
     url(r'', include('base.urls')),
@@ -54,7 +54,7 @@ admin.site.site_header = 'OSIS'
 admin.site.site_title  = 'OSIS'
 admin.site.index_title = 'Louvain'
 
-if settings.DEBUG:
+if settings.DEBUG and 'debug_toolbar' in settings.INSTALLED_APPS:
     import debug_toolbar
     urlpatterns += [
         url(r'^__debug__/', include(debug_toolbar.urls)),
