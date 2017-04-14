@@ -45,7 +45,7 @@ msgid "pgm_managers"
 msgstr "Program's managers"
 
 msgid "desc_lnk_pgm_managers"
-msgstr "?"
+msgstr "Management of the program managers"
 
 msgid "person_search"
 msgstr "Person search"
@@ -59,6 +59,11 @@ msgstr "He will keep the following program's management : "
 msgid "confirm"
 msgstr "Confirm"
 
+msgid "no_structure_specified"
+msgstr "No entity associated to your faculty administrator's profil"
+
+msgid "already_program_mgr"
+msgstr "is already program manager for"
 
 
 

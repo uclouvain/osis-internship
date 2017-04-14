@@ -69,10 +69,10 @@ urlpatterns = [
     url(r'^pgm_manager/', include([
         url(r'^$', pgm_manager_administration.pgm_manager_administration, name='pgm_manager'),
         url(r'^search$', pgm_manager_administration.pgm_manager_search, name='pgm_manager_search'),
-        url(r'^remove$', pgm_manager_administration.remove_manager, name='remove_manager'),
+        url(r'^delete', pgm_manager_administration.delete_manager, name='delete_manager'),
         url(r'^person/list/search$', pgm_manager_administration.person_list_search),
 
-        url(r'^add/$', pgm_manager_administration.add_manager, name='add_manager_person'),
+        url(r'^create$', pgm_manager_administration.create_manager, name='create_manager_person'),
 
     ])),
 

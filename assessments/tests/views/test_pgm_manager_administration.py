@@ -83,7 +83,7 @@ class PgmManagerAdministrationTest(TestCase):
 
     def test_add_pgm_manager_to_non_existing_pgm(self):
         self.client.force_login(self.user)
-        list_offer_id = [str(1)]
+        list_offer_id = []
         pgm_manager_administration.add_program_managers(list_offer_id, self.person)
         managers = program_manager.ProgramManager.objects.all()
         self.assertEqual(len(managers), 0)
@@ -91,7 +91,7 @@ class PgmManagerAdministrationTest(TestCase):
     def test_add_pgm_manager_to_one_pgm(self):
         self.client.force_login(self.user)
         offer_year1 = OfferYearFactory(academic_year=self.academic_year_current)
-        list_offer_id = [str(offer_year1.id)]
+        list_offer_id = [offer_year1]
         pgm_manager_administration.add_program_managers(list_offer_id, self.person)
         managers = program_manager.find_by_offer_year_list([offer_year1])
         self.assertEqual(len(managers), 1)
@@ -100,7 +100,7 @@ class PgmManagerAdministrationTest(TestCase):
         self.client.force_login(self.user)
         offer_year1 = OfferYearFactory(academic_year=self.academic_year_current)
         offer_year2 = OfferYearFactory(academic_year=self.academic_year_current)
-        list_offer_id = [str(offer_year1.id), str(offer_year2.id)]
+        list_offer_id = [offer_year1, offer_year2]
         pgm_manager_administration.add_program_managers(list_offer_id, self.person)
         managers = program_manager.find_by_offer_year_list([offer_year1, offer_year2])
         self.assertEqual(len(managers), 2)
@@ -110,7 +110,7 @@ class PgmManagerAdministrationTest(TestCase):
         offer_year1 = OfferYearFactory(academic_year=self.academic_year_current)
         ProgramManagerFactory(person=self.person, offer_year=offer_year1)
         managers_count_before = len(program_manager.ProgramManager.objects.all())
-        pgm_manager_administration.remove_programs_managers([offer_year1], self.person)
+        pgm_manager_administration.remove_program_mgr_from_offers([offer_year1], self.person)
         managers_count_after = len(program_manager.ProgramManager.objects.all())
         self.assertEqual(managers_count_after, managers_count_before-1)
 
@@ -122,7 +122,7 @@ class PgmManagerAdministrationTest(TestCase):
         ProgramManagerFactory(person=self.person, offer_year=offer_year2)
 
         managers_count_before = len(program_manager.ProgramManager.objects.all())
-        pgm_manager_administration.remove_programs_managers([offer_year1, offer_year2], self.person)
+        pgm_manager_administration.remove_program_mgr_from_offers([offer_year1, offer_year2], self.person)
         managers_count_after = len(program_manager.ProgramManager.objects.all())
         self.assertEqual(managers_count_after, managers_count_before-2)
 

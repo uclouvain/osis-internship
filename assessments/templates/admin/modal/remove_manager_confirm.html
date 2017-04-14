@@ -1,4 +1,3 @@
-
 {% load staticfiles %}
 {% load i18n %}
 <div class="modal fade" id="pnl_remove_manager_modal" tabindex="-1" role="dialog" >
@@ -15,8 +14,8 @@
                     <input type="hidden" id="hdn_to_be_removed_pgms" name="pgms_to_be_removed">
                     <input type="hidden" id="hdn_entity" name="entity">
                     <input type="hidden" id="hdn_pgm_type" name="pgm_type">
-                    <input type="text" id="hdn_offers_checked" name="offers_checked">
-                    <input type="text" id="hdn_manager" name="person">
+                    <input type="hidden" id="hdn_offers_checked" name="offers_checked">
+                    <input type="hidden" id="hdn_manager" name="person">
 
                     <div id="pnl_pgm_off">
                         {% trans 'remove_manager_label' %}<br>

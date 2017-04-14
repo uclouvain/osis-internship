@@ -1402,6 +1402,3 @@ msgstr "Justified abscence already encoded and preserved"
 
 msgid "academic_actors"
 msgstr "Academic actors"
-
-msgid "no_structure_specified"
-msgstr "No entity associated to your faculty administrator's profil"

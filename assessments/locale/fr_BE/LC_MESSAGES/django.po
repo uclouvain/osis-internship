@@ -45,7 +45,7 @@ msgid "pgm_managers"
 msgstr "Gestionnaires de programmes"
 
 msgid "desc_lnk_pgm_managers"
-msgstr "?"
+msgstr "Permet d'administrer la liste des gestionnaires qui ont accès à l'encodage en ligne"
 
 msgid "person_search"
 msgstr "Recherche de personne"
@@ -58,3 +58,9 @@ msgstr "Il conserve sa charge de gestionnaire sur les programmes suivants : "
 
 msgid "confirm"
 msgstr "Confirmation"
+
+msgid "no_structure_specified"
+msgstr "Aucune structure facultaire n'est associée à votre profil d'administrateur facultaire"
+
+msgid "already_program_mgr"
+msgstr "est déjà gestionnaire de programme pour"

@@ -32,8 +32,8 @@ from base.enums import structure_type
 from django.http import HttpResponse
 from rest_framework import serializers
 from rest_framework.renderers import JSONRenderer
-from base.enums import person_status, person_type
 from django.contrib.auth.models import User
+from django.utils.translation import ugettext_lazy as _
 
 
 ALL_OPTION_VALUE = "-"
@@ -48,25 +48,23 @@ def pgm_manager_administration(request):
         'person': None,
         'manager_entity': faculty,
         'entity': faculty,
-        'entities': ['1', '2'],
         'pgm_types': mdl_ref.grade_type.find_by_coverage(grade_type_coverage.UNIVERSITY),
         'managers': get_faculty_program_managers(faculty, current_academic_yr)})
 
 
 @login_required
 def pgm_manager_search(request):
-    faculty = get_administrator_faculty(request)
-    entity = request.GET.get('entity', None)
+    return pgm_manager_form(None, None, request)
+
+
+def pgm_manager_form(offers_on, error_messages, request):
+    entity = get_filter_value(request, 'entity')
     pgm_grade_type = get_filter_value(request, 'pgm_type')
     person = get_filter_value(request, 'person')
 
-    return pgm_manager_search_form(entity,  faculty, person, pgm_grade_type, None, request)
-
-
-def pgm_manager_search_form(entity, faculty, person, pgm_grade_type, offers_on, request):
-    print(person)
-    entity_list = get_entity_list(entity)
+    faculty = get_administrator_faculty(request)
     current_academic_yr = mdl.academic_year.current_academic_year()
+
     manager_person = None
     if person:
         manager_person = mdl.person.find_by_id(int(person))
@@ -75,10 +73,11 @@ def pgm_manager_search_form(entity, faculty, person, pgm_grade_type, offers_on, 
             'manager_entity': faculty,
             'entity': entity,
             'pgm_types': mdl_ref.grade_type.find_by_coverage(grade_type_coverage.UNIVERSITY),
-            'pgms': get_programs(current_academic_yr, entity_list, manager_person, pgm_grade_type),
+            'pgms': get_programs(current_academic_yr, get_entity_list(entity), manager_person, pgm_grade_type),
             'managers': get_faculty_program_managers(faculty, current_academic_yr),
             'offers_on': offers_on,
-            'pgm_type': pgm_grade_type}
+            'pgm_type': pgm_grade_type,
+            'add_errors': error_messages}
     return layout.render(request, "admin/pgm_manager.html", data)
 
 
@@ -108,63 +107,37 @@ def get_filter_value(request, value_name):
     return value
 
 
-def filter_by_person(manager_person, entity_list, academic_yr, pgm_type):
-    managers = mdl.program_manager.find_by_person_academic_year(manager_person, academic_yr, entity_list, pgm_type)
-    pgms2 = []
-    for m in managers.distinct('offer_year'):
-        pgms2.append(m.offer_year)
-    return pgms2
+def filter_by_person(person, entity_list, academic_yr, pgm_type):
+    program_managers = mdl.program_manager.find_by_person_academic_year(person,
+                                                                        academic_yr,
+                                                                        entity_list,
+                                                                        pgm_type)
+    offer_years = []
+    for manager in program_managers.distinct('offer_year'):
+        offer_years.append(manager.offer_year)
+    return offer_years
 
 
 @login_required
 @permission_required('base.is_faculty_administrator', raise_exception=True)
-def remove_manager(request):
-    pgms_to_be_removed = request.GET['pgms_to_be_removed']
-    person_to_be_removed = request.GET['person_to_be_removed']
+def delete_manager(request):
+    pgms_to_be_removed = request.GET['pgms']  # offers_id are stock in inputbox in a list format (ex = "id1, id2")
+    id_person_to_be_removed = request.GET['person']
 
-    if person_to_be_removed:
-        manager_person_to_be_removed = mdl.person.find_by_id(person_to_be_removed)
+    if id_person_to_be_removed:
+        manager_person_to_be_removed = mdl.person.find_by_id(id_person_to_be_removed)
         if manager_person_to_be_removed:
             list_pgms_concerned = pgms_to_be_removed.split(",")
             offers = mdl.offer_year.find_by_id_list(list_pgms_concerned)
-            remove_programs_managers(offers, manager_person_to_be_removed)
+            remove_program_mgr_from_offers(offers, manager_person_to_be_removed)
 
     return HttpResponse(status=204)
 
 
-def get_offer_with_checkbox_on(request):
-    if request.method == 'POST':
-        offers_checked_ch = request.POST['offers_checked']
-    else:
-        offers_checked_ch = request.GET.get('offers_checked')
-
-    offers_checked = offers_checked_ch.split(",")
-
-    offers_on = None
-    if offers_checked:
-        offers_on = mdl.offer_year.find_by_id_list(offers_checked)
-    return offers_on
-
-
-def remove_programs_managers(offers, person_to_be_removed):
-    pgm_manager_to_delete = mdl.program_manager.find_by_offer_year_list_person(person_to_be_removed, offers)
-    for p in pgm_manager_to_delete:
+def remove_program_mgr_from_offers(offers, person_to_be_removed):
+    pgm_managers_to_delete = mdl.program_manager.find_by_offer_year_list_person(person_to_be_removed, offers)
+    for p in pgm_managers_to_delete:
         mdl.program_manager.delete_by_id(p.id)
-
-
-@login_required
-def find_checked_pgms(request):
-    # If pgm checkbox is checked there is the pgm id in the hidden textbox prefix by pgm_id_
-    list_offer_id = []
-    for k, v in request.POST.items():
-        if k.startswith('pgm_id_'):
-            if v:
-                list_offer_id.append(v)
-    return list_offer_id
-
-
-def find_faculty(acronym):
-    return mdl.structure.find_first(acronym, None, structure_type.FACULTY)
 
 
 @login_required
@@ -175,37 +148,34 @@ def person_list_search(request):
     employees = None
     if lastname or firstname:
         employees = mdl.employee.search(lastname, firstname)
-    print('employees')
-    print(employees)
+
+    serializer = PersonSerializer(person_list(employees), many=True)
+    return JSONResponse(serializer.data)
+
+
+def person_list(employees):
     persons = []
     for e in employees:
         if e.person not in persons:
             persons.append(e.person)
-    serializer = PersonSerializer(persons, many=True)
-    return JSONResponse(serializer.data)
+    return persons
 
 
 @login_required
 @permission_required('base.is_faculty_administrator', raise_exception=True)
-def add_manager(request):
-    print('add_manager')
+def create_manager(request):
     person_id = request.POST['person_id']
-    person = mdl.person.find_by_id(person_id)
     pgms_id = request.POST['pgms_id']
     
     list_offer_id = convert_to_list(pgms_id)
-
+    error_messages = ""
+    person = mdl.person.find_by_id(person_id)
+    offers_on = None
     if person:
-        add_program_managers(list_offer_id, person)
+        offers_on = mdl.offer_year.find_by_id_list(list_offer_id)
+        error_messages = add_program_managers(offers_on, person)
 
-    entity = get_filter_value(request, 'entity')
-    pgm_grade_type = get_filter_value(request, 'pgm_type')
-    person = get_filter_value(request, 'person')
-
-    faculty = get_administrator_faculty(request)
-
-    offers_on = mdl.offer_year.find_by_id_list(list_offer_id)
-    return pgm_manager_search_form(entity,  faculty, person, pgm_grade_type, offers_on, request)
+    return pgm_manager_form(offers_on, error_messages, request)
 
 
 def get_administrator_faculty(request):
@@ -215,14 +185,34 @@ def get_administrator_faculty(request):
     return None
 
 
-def add_program_managers(list_offer_id, person):
-    for offer_id in list_offer_id:
-        offer_yr = mdl.offer_year.find_by_id(int(offer_id))
-        if offer_yr:
-            pgm_manage = mdl.program_manager.ProgramManager()
-            pgm_manage.person = person
-            pgm_manage.offer_year = offer_yr
-            pgm_manage.save()
+def is_already_program_manager(person, offer_yr):
+    pgm_manage = mdl.program_manager.find_by_offer_year_person(person, offer_yr)
+    if pgm_manage:
+        return True
+    return False
+
+
+def add_program_managers(offers, person):
+    error_messages = []
+    for offer_yr in offers:
+        if not add_offer_program_manager(offer_yr, person):
+            error_messages.append("{0} {1} {2}".format(person, _('already_program_mgr'), offer_yr.acronym))
+    return error_messages
+
+
+def add_offer_program_manager(offer_yr, person):
+    if offer_yr:
+        if is_already_program_manager(person, offer_yr):
+            return False
+        else:
+            add_save_program_manager(offer_yr, person)
+            return True
+
+
+def add_save_program_manager(offer_yr, person):
+    pgm_manage = mdl.program_manager.ProgramManager(person=person,
+                                                    offer_year=offer_yr)
+    pgm_manage.save()
 
 
 def convert_to_list(pgms_id):
@@ -277,18 +267,19 @@ class OfferYearSerializer(serializers.ModelSerializer):
 
 
 class PgmManager(object):
-
+    # Needed to display the confirmation modal dialog while deleting
     def __init__(self, person_id, person_last_name, person_first_name, offer_year_acronyms_on, offer_year_acronyms_off,
                  programs):
         self.person_id = person_id
         self.person_last_name = person_last_name
         self.person_first_name = person_first_name
-        self.offer_year_acronyms_on = offer_year_acronyms_on
-        self.offer_year_acronyms_off = offer_year_acronyms_off
+        self.offer_year_acronyms_on = offer_year_acronyms_on  # acronyms of the offers the pgm manager will keep
+        self.offer_year_acronyms_off = offer_year_acronyms_off  # acronyms of the offers the pgm manager will be removed from
         self.programs = programs
 
 
 class PgmManagerSerializer(serializers.Serializer):
+    # Needed to display the confirmation modal dialog while deleting
     person_id = serializers.IntegerField()
     person_last_name = serializers.CharField()
     person_first_name = serializers.CharField()
@@ -299,8 +290,9 @@ class PgmManagerSerializer(serializers.Serializer):
 
 @login_required
 def update_managers_list(request):
-    list_offer_id = convert_to_list(request.GET['pgm_ids'])
-    program_manager_list = mdl.program_manager.find_by_offer_year_list(list_offer_id)
+    # Update the manager's list after add/delete
+    list_id_offers_on = convert_to_list(request.GET['pgm_ids'])
+    program_manager_list = mdl.program_manager.find_by_offer_year_list(list_id_offers_on)
     pgm_managers = []
     persons = []
 
@@ -311,9 +303,9 @@ def update_managers_list(request):
             pgms = ""
             offers = []
 
-            for offer_year_id in list_offer_id:
+            for offer_year_id in list_id_offers_on:
                 an_offer_year = mdl.offer_year.find_by_id(int(offer_year_id))
-                mg = mdl.program_manager.find_by_offer_year_list_person(program_manager.person, [an_offer_year])
+                mg = mdl.program_manager.find_by_offer_year_person(program_manager.person, an_offer_year)
                 if mg:
                     if acronyms_off == "":
                         acronyms_off = "{0}".format(an_offer_year.acronym)
@@ -327,7 +319,6 @@ def update_managers_list(request):
                     acronyms_off_list.append(acronyms_off)
             if program_manager.person not in persons:
                 persons.append(program_manager.person)
-
                 pgm_managers.append(PgmManager(person_id=program_manager.person.id,
                                                person_last_name=program_manager.person.last_name,
                                                person_first_name=program_manager.person.first_name,

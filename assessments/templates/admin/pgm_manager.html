@@ -85,6 +85,15 @@
                 </form>
             </div>
             <br>
+            {% if add_errors %}
+                <div class="alert-warning" id="pnl_errors">
+                    <ul>
+                    {% for error in add_errors %}
+                        <li>{{ error }}</li>
+                    {% endfor%}
+                    </ul>
+                </div>
+            {% endif %}
             <div>
                <div class="row">
                    <form method="post" >
@@ -225,13 +234,18 @@
         });
         return ch;
     }
-    $("input[id^='chb_pgm_id_']").change(function() {
+
+    function check_bt_add_manager_disabling(){
         $('#bt_add_pgm_manager').attr("disabled", true);
         $("input[id^='chb_pgm_id_']").each(function(){
             if($(this).prop("checked") == true){
                 $('#bt_add_pgm_manager').attr("disabled", false);
             }
         });
+    }
+
+    $("input[id^='chb_pgm_id_']").change(function() {
+        check_bt_add_manager_disabling();
     });
 
     $("input[id='chb_pgm_id_all']").click(function(event) {
@@ -243,11 +257,11 @@
     });
 
     $(document).ready(function() {
-        $('#bt_add_pgm_manager').attr("disabled", true);
         data_table_init();
 
         var ch = get_offer_id_list_on();
         update_manager_list(ch);
+        check_bt_add_manager_disabling();
     });
 
     function data_table_init(){
@@ -290,15 +304,12 @@
                         trHTML += '<tr>';
                         trHTML += '<td>' + value.person_last_name + ',' + value.person_first_name +'</td>';
                         trHTML += '<td>';
-                        trHTML += '{% if perms.base.delete_programmanager %}';
                         trHTML += '<button type="button" class="btn btn-default pull-right" data-toggle="modal" data-target="#pnl_remove_manager_modal" ';
                         trHTML += ' title="'+gettext('remove_manager')+'"';
                         trHTML += ' id="btn_remove_manager_modal_' + value.person_id + '" ';
-                        //trHTML += ' onclick="delete_manager('+value.person_id+',\''+ value.offer_year_acronyms_on+'\',\''+ value.offer_year_acronyms_off + '\',\''+ value.person_last_name+'\',\''+value.person_first_name+'\');"> ';
                         trHTML += ' onclick="delete_manager('+id_person+',\''+acronyms_on+'\',\''+acronyms_off+'\',\''+last_name+'\',\''+first_name+'\',\''+pgm_ids+'\');" ';
                         trHTML += '><span class="glyphicon glyphicon-minus" aria-hidden="true"></span>';
                         trHTML += '</button>';
-                        trHTML += '{% endif %}';
                         trHTML += '</td>';
                         trHTML += '</tr>';
                         $('#tb_managers tbody').append(trHTML);
@@ -384,19 +395,24 @@
     function submission(id_person){
         $("#hdn_person_id").val(id_person);
         $("#hdn_pgms_id").val(get_offer_id_list_on());
-        $('#form_add_person_as_manager').submit();
+        $("#form_create_manager").submit();
     }
 
     function removal_submission(){
         $("#hdn_pgms_id").val(get_offer_id_list_on());
         //$('#form_remove_manager').submit();
         $.ajax({
-            url: "/assessments/pgm_manager/remove?person_to_be_removed=" + $('#hdn_to_be_removed_person').val() + "&pgms_to_be_removed=" + get_offer_id_list_on()
+            url: "/assessments/pgm_manager/delete?person=" + $('#hdn_to_be_removed_person').val() + "&pgms=" + get_offer_id_list_on()
         })
         //$('#form_remove_manager').submit();
         $("#bt_close_remove_manager_modal").click();
         var ch = get_offer_id_list_on();
         update_manager_list(ch);
+        $("#pnl_errors").find("ul")
+                .remove()
+                .end();
+
+
     }
 
 

@@ -1,4 +1,3 @@
-
 {% load staticfiles %}
 {% load i18n %}
 <div class="modal fade" id="pnl_add_manager_modal" tabindex="-1" role="dialog" >
@@ -29,7 +28,7 @@
                     </form>
                 </div>
                 <br>
-                <form method="post" action="{% url 'add_manager_person'%}" id="form_add_person_as_manager">
+                <form method="post" action="{% url 'create_manager_person'%}" id="form_create_manager">
                     {% csrf_token %}
                     <input type="hidden" id="hdn_entity" name="entity" class="form-control" value="{{ entity | default_if_none:''}}" >
                     <input type="hidden" id="hdn_pgm_type" name="pgm_type" class="form-control" value="{{ pgm_type | default_if_none:'' }}" >
@@ -54,21 +53,21 @@
                                     </thead>
                                     <tbody>
                                     {% for person in persons %}
-                                    <tr>
-                                        <td>
-                                            <button type="submit" class="btn-link" id="lnk_add_manager_lastname_{{person.id}}">
-                                                {{ person.last_name }}
-                                            </button>
-                                        </td>
-                                        <td>
-                                            <button type="submit" class="btn-link" id="lnk_add_manager_firstname_{{person.id}}">
-                                                {{ person.first_name }}
-                                            </button>
-                                        </td>
-                                        <td>{{ person.middle_name | default_if_none:''  }}</td>
-                                        <td>{{ person.email | default_if_none:'' }}</td>
-                                        <td>{{ person.user | default_if_none:'' }}</td>
-                                    </tr>
+                                        <tr>
+                                            <td>
+                                                <button type="submit" class="btn-link" id="lnk_add_manager_lastname_{{person.id}}">
+                                                    {{ person.last_name }}
+                                                </button>
+                                            </td>
+                                            <td>
+                                                <button type="submit" class="btn-link" id="lnk_add_manager_firstname_{{person.id}}">
+                                                    {{ person.first_name }}
+                                                </button>
+                                            </td>
+                                            <td>{{ person.middle_name | default_if_none:''  }}</td>
+                                            <td>{{ person.email | default_if_none:'' }}</td>
+                                            <td>{{ person.user | default_if_none:'' }}</td>
+                                        </tr>
                                     {% endfor %}
                                     </tbody>
                                 </table>
