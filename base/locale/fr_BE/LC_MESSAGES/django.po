@@ -1407,3 +1407,7 @@ msgstr "Abscence justifiée dèjà encodée et préservée"
 
 msgid "tutors_of_course"
 msgstr "Titulaires du cours"
+
+msgid "academic_actors"
+msgstr "Les acteurs académiques"
+

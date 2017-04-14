@@ -1414,3 +1414,6 @@ msgstr "Justified abscence already encoded and preserved"
 
 msgid "tutors_of_course"
 msgstr "Tutors of the course"
+
+msgid "academic_actors"
+msgstr "Academic actors"
