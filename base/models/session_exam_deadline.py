@@ -30,10 +30,11 @@ from base.models.enums import number_session
 
 
 class SessionExamDeadlineAdmin(admin.ModelAdmin):
-    list_display = ('deadline', 'deadline_tutor', 'offer_enrollment', 'number_session', 'changed')
-    list_filter = ('offer_enrollment', 'number_session',)
+    list_display = ('offer_enrollment', 'deadline', 'deadline_tutor', 'number_session', 'changed')
+    list_filter = ('number_session',)
     raw_id_fields = ('offer_enrollment',)
-    search_fields = ['offer_enrollment', 'number_session']
+    search_fields = ['offer_enrollment__student__person__first_name','offer_enrollment__student__person__last_name',
+                     'number_session']
 
 
 class SessionExamDeadline(models.Model):
@@ -59,6 +60,9 @@ class SessionExamDeadline(models.Model):
         if self.deadline_tutor_computed:
             return self.deadline_tutor_computed < datetime.date.today()
         return self.is_deadline_reached
+
+    def __str__(self):
+        return u"%s-%s" % (self.offer_enrollment, self.number_session)
 
 
 def filter_by_nb_session(nb_session):
