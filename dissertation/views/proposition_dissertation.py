@@ -232,9 +232,10 @@ def manager_proposition_dissertations_search(request):
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
     offers = faculty_adviser.search_by_adviser(adv)
-    proposition_offers = proposition_offer.search_manager(request.GET['search'], offers)
+    propositions_dissertations = proposition_dissertation.search(request.GET['search'], active=True, offers=offers)
+
     if 'bt_xlsx' in request.GET:
-        filename = "%s%s%s" % ('EXPORT_dissertation_', time.strftime("%Y-%m-%d %H:%M"), '.xlsx')
+        filename = "EXPORT_propositions_{}.xlsx".format(time.strftime("%Y-%m-%d_%H:%M"))
         workbook = Workbook(encoding='utf-8')
         worksheet1 = workbook.active
         worksheet1.title = "proposition_dissertation"
@@ -244,8 +245,10 @@ def manager_proposition_dissertations_search(request):
         types_choices = dict(PropositionDissertation.TYPES_CHOICES)
         levels_choices = dict(PropositionDissertation.LEVELS_CHOICES)
         collaboration_choices = dict(PropositionDissertation.COLLABORATION_CHOICES)
-        for prop_offer in proposition_offers:
-            proposition = prop_offer.proposition_dissertation
+        for proposition in propositions_dissertations:
+            offers = ""
+            for offer in proposition.propositionoffer_set.all():
+                offers += "{} ".format(str(offer))
             worksheet1.append([proposition.created_date,
                                str(proposition.author),
                                proposition.title,
@@ -255,7 +258,7 @@ def manager_proposition_dissertations_search(request):
                                proposition.max_number_student,
                                proposition.visibility,
                                proposition.active,
-                               prop_offer.offer_proposition.acronym,
+                               offers,
                                proposition.description
                                ])
         response = HttpResponse(save_virtual_workbook(workbook), content_type='application/vnd.ms-excel')
@@ -264,7 +267,7 @@ def manager_proposition_dissertations_search(request):
 
     else:
         return layout.render(request, "manager_proposition_dissertations_list.html",
-                             {'proposition_offers': proposition_offers})
+                             {'propositions_dissertations': propositions_dissertations})
 
 ###########################
 #      TEACHER VIEWS      #
