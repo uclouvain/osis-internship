@@ -274,7 +274,7 @@ def internships_modification_student(request, cohort_id, student_id, internship_
         formset = offer_preference_formset(request.POST)
         if formset.is_valid():
             remove_previous_choices(student, internship)
-            save_student_choices(formset, student, internship, speciality)
+            save_student_choices(formset, student, internship, speciality, cohort)
 
     student_choices = mdl_internship.internship_choice.search_by_student_or_choice(student=student,
                                                                                    internship=internship)
@@ -409,7 +409,7 @@ def remove_previous_choices(student, internship):
         previous_enrollments.delete()
 
 
-def save_student_choices(formset, student, internship, speciality):
+def save_student_choices(formset, student, internship, speciality, cohort):
     for form in formset:
         if form.cleaned_data:
             offer_pk = form.cleaned_data["offer"]
@@ -424,13 +424,13 @@ def save_student_choices(formset, student, internship, speciality):
                                                                                       internship=internship,
                                                                                       priority=priority)
                 internship_choice.save()
-                save_enrollments(form, offer, student, internship)
+                save_enrollments(form, offer, student, internship, cohort)
 
 
-def save_enrollments(form, offer, student, internship):
+def save_enrollments(form, offer, student, internship, cohort):
     periods_name = form.cleaned_data.get("periods", [])
     for period_name in periods_name:
-        period = mdl_internship.period.get_by_name(period_name)
+        period = mdl_internship.period.Period.objects.get(name=period_name, cohort=cohort)
         if not period:
             continue
         enrollment = mdl_internship.internship_enrollment. \
