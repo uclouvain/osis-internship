@@ -274,9 +274,11 @@ def manager_proposition_dissertations_search(request):
 @login_required
 @user_passes_test(is_teacher)
 def proposition_dissertations(request):
-    proposition_offers = proposition_offer.list_all_for_teacher()
+    person = mdl.person.find_by_user(request.user)
+    adv = adviser.search_by_person(person)
+    propositions_dissertations = proposition_dissertation.get_all_for_teacher(adv)
     return layout.render(request, 'proposition_dissertations_list.html',
-                         {'proposition_offers': proposition_offers})
+                         {'propositions_dissertations': propositions_dissertations})
 
 
 @login_required
@@ -348,10 +350,9 @@ def proposition_dissertation_edit(request, pk):
 def my_dissertation_propositions(request):
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
-    propositions = proposition_dissertation.get_mine_for_teacher(adv)
-    proposition_offers = proposition_offer.search_by_proposition_dissertations(propositions)
+    propositions_dissertations = proposition_dissertation.get_mine_for_teacher(adv)
     return layout.render(request, 'proposition_dissertations_list_my.html',
-                         {'proposition_offers': proposition_offers})
+                         {'propositions_dissertations': propositions_dissertations})
 
 
 @login_required
@@ -359,10 +360,9 @@ def my_dissertation_propositions(request):
 def proposition_dissertations_created(request):
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
-    propositions = proposition_dissertation.get_created_for_teacher(adv)
-    proposition_offers = proposition_offer.search_by_proposition_dissertations(propositions)
+    propositions_dissertations = proposition_dissertation.get_created_for_teacher(adv)
     return layout.render(request, 'proposition_dissertations_list_created.html',
-                         {'proposition_offers': proposition_offers})
+                         {'propositions_dissertations': propositions_dissertations})
 
 
 @login_required
