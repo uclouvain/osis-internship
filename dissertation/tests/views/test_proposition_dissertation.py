@@ -146,9 +146,9 @@ class PropositionDissertationViewTestCase(TestCase):
     def test_search_proposition_dissertations(self):
         self.client.login(username='teacher', password='teacher')
         url = reverse('proposition_dissertations_search')
-        response = self.client.get(url, data={ "search" : "Teacher proposition 4"})
+        response = self.client.get(url, data={"search": "Teacher proposition 4"})
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.context['proposition_offers']), 1)
+        self.assertEqual(len(response.context['propositions_dissertations']), 1)
 
     #TODO: Check if the redirection is correct because it seems strange to render a layout
     #      "proposition_dissertations_jury_edit"
