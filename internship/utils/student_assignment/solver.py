@@ -117,12 +117,8 @@ class Solver:
         self.personal_offer = None
         self.priority_students = []
         self.students = []
-        #self.generalists_students = []
-        #self.specialists_students = []
         self.students_priority_lefts_to_assign = []
         self.students_left_to_assign = []
-        #self.generalists_students_lefts_to_assign = []
-        #self.specialists_students_lefts_to_assign = []
 
     def set_students(self, student_wrappers):
         self.students_by_registration_id = student_wrappers
@@ -137,13 +133,6 @@ class Solver:
             else:
                 self.students.append(student_wrapper)
                 self.students_left_to_assign(student_wrapper)
-
-            #elif is_generalist(student_wrapper):
-            #    self.generalists_students.append(student_wrapper)
-            #    self.generalists_students_lefts_to_assign.append(student_wrapper)
-            #else:
-            #    self.specialists_students.append(student_wrapper)
-            #    self.specialists_students_lefts_to_assign.append(student_wrapper)
 
     def set_offers(self, internship_wrappers):
         self.offers_by_organization_speciality = internship_wrappers
@@ -189,8 +178,6 @@ class Solver:
     def solve(self):
         self.__assign_choices(self.students_priority_lefts_to_assign)
         self.__assign_choices(self.students_left_to_assign)
-        #self.__assign_choices(self.generalists_students_lefts_to_assign)
-        #self.__assign_choices(self.specialists_students_lefts_to_assign)
 
     def __assign_choices(self, students_list):
         min_internship = 1
@@ -248,7 +235,6 @@ class Solver:
             return True
         elif self.__assign_personal_offer(student_wrapper, 0):
             return True
-        #elif not is_generalist(student_wrapper) and self.__assign_personal_offer(student_wrapper, 1):
         elif self.__assign_personal_offer(student_wrapper, 1):
             return True
         return False
@@ -274,13 +260,7 @@ class Solver:
     def reinitialize(self):
         # Réinitialise les datas
         self.students_left_to_assign = self.students[:]
-        #self.generalists_students_lefts_to_assign = self.generalists_students[:]
-        #self.specialists_students_lefts_to_assign =  self.specialists_students[:]
         self.students_priority_lefts_to_assign = self.priority_students[:]
-        #for student_wrapper in self.specialists_students:
-        #    student_wrapper.reinitialize()
-        #for student_wrapper in self.generalists_students:
-        #    student_wrapper.reinitialize()
         for student_wrapper in self.students:
             student_wrapper.reinitialize()
         for student_wrapper in self.priority_students:
@@ -305,8 +285,6 @@ def is_permitted_offer(student_wrapper, internship_wrapper):
     # Tjs d'application ?
     if internship_wrapper.internship.speciality.acronym in UNAUTHORIZED_SPECIALITIES:
         return False
-    #if not is_generalist(student_wrapper):
-    #    return True
     if internship_wrapper.internship.speciality.acronym not in AUTHORIZED_SS_SPECIALITIES:
         return False
     return True
@@ -320,10 +298,6 @@ def get_number_personal_offers(student_wrapper):
         if student_affectation.organization.reference == str(REFERENCE_PERSONAL_ORGANIZATION):
             number_personal_offers += 1
     return number_personal_offers
-
-
-#def is_generalist(student_wrapper):
-#    return student_wrapper.get_contest() in ["SS", "GENERALIST"]
 
 
 def _occupy_offer(free_period_name, internship_wrapper, student_wrapper, internship_choice, choice):
