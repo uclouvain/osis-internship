@@ -304,7 +304,7 @@ def export_xls(request, cohort_id, organization_id, speciality_id):
     # FIXME: use the cohort and the organization, to be sure we use the right organization and the right cohort.
     cohort = get_object_or_404(Cohort, pk=cohort_id)
     organization = mdl_internship.organization.find_by_id(organization_id)
-    speciality = mdl_internship.internship_speciality.InternshipSpeciality.objects.filter(cohort=cohort, speciality_id=speciality_id)
+    speciality = mdl_internship.internship_speciality.InternshipSpeciality.objects.get(pk=speciality_id)
     if speciality:
         speciality_groups = [group_member.group for group_member
                              in mdl_internship.internship_speciality_group_member.find_by_speciality(speciality)]
