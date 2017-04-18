@@ -47,7 +47,7 @@ class SessionExamDeadline(models.Model):
 
     @property
     def deadline_tutor_computed(self):
-        if self.deadline_tutor:
+        if self.deadline_tutor is not None:
             return self.deadline - datetime.timedelta(days=self.deadline_tutor)
         return None
 

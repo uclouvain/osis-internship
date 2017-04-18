@@ -284,8 +284,6 @@ def __save_xls_scores(request, file_name, is_program_manager, user, learning_uni
                                     else:
                                         if justification == 'M':
                                             messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('no_valid_m_justification_error')))
-                                        elif justification == '?':
-                                            continue
                                         else:
                                             messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('justification_invalid')))
                                         continue
