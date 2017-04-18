@@ -394,10 +394,10 @@ def proposition_dissertation_new(request):
 def proposition_dissertations_search(request):
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
-    proposition_offers = proposition_offer.search(terms=request.GET['search'], active=True,
-                                                  visibility=True, connected_adviser=adv)
+    propositions_dissertations = proposition_dissertation.search(terms=request.GET['search'], active=True,
+                                                                 visibility=True, connected_adviser=adv)
     return layout.render(request, "proposition_dissertations_list.html",
-                         {'proposition_offers': proposition_offers})
+                         {'propositions_dissertations': propositions_dissertations})
 
 
 @login_required
