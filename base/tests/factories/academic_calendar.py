@@ -53,4 +53,5 @@ class AcademicCalendarFactory(factory.DjangoModelFactory):
     highlight_title = factory.Sequence(lambda n: 'Highlight - %d' % n)
     highlight_description = factory.Sequence(lambda n: 'Description - %d' % n)
     highlight_shortcut = factory.Sequence(lambda n: 'Shortcut Highlight - %d' % n)
+    reference = None
 
