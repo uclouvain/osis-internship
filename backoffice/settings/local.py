@@ -26,7 +26,7 @@
 from .base import *
 import sys
 
-INSTALLED_APPS += (
+OPTIONAL_APPS = (
     'attribution',
     'assistant',
     'dissertation',
@@ -34,3 +34,5 @@ INSTALLED_APPS += (
     'assessments',
 )
 
+INSTALLED_APPS += OPTIONAL_APPS
+APPS_TO_TEST += OPTIONAL_APPS

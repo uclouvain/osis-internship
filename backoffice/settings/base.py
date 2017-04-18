@@ -83,6 +83,14 @@ TESTING = 'test' in sys.argv
 if TESTING:
     # add test packages that have specific models for tests
     INSTALLED_APPS += ('osis_common.tests', )
+APPS_TO_TEST = (
+    'osis_common',
+    'reference',
+    'base',
+)
+TEST_RUNNER = os.environ.get('TEST_RUNNER', 'osis_common.tests.runner.InstalledAppsTestRunner')
+SKIP_QUEUES_TESTS = os.environ.get('SKIP_QUEUES_TESTS', 'False').lower() == 'true'
+QUEUES_TESTING_TIMEOUT = float(os.environ.get('QUEUES_TESTING_TIMEOUT', 0.1))
 
 TEMPLATES = [
     {
@@ -180,19 +188,19 @@ LOGO_OSIS_URL = os.environ.get('LOGO_OSIS_URL', '')
 
 # Queues Definition
 # The queue system uses RabbitMq queues to communicate with other application (ex : osis-portal)
-QUEUES = {
-    'QUEUE_URL': os.environ.get('RABBITMQ_HOST', 'localhost'),
-    'QUEUE_USER': os.environ.get('RABBITMQ_USER', 'guest'),
-    'QUEUE_PASSWORD': os.environ.get('RABBITMQ_PASSWORD', 'guest'),
-    'QUEUE_PORT': int(os.environ.get('RABBITMQ_PORT', 5672)),
-    'QUEUE_CONTEXT_ROOT': os.environ.get('RABBITMQ_CONTEXT_ROOT', '/'),
-    'QUEUES_NAME': {
-        'MIGRATIONS_TO_PRODUCE': 'osis_portal',
-        'MIGRATIONS_TO_CONSUME': 'osis',
-        'PAPER_SHEET': 'paper_sheet',
-        'PERFORMANCE': 'performance'
+if not TESTING or not SKIP_QUEUES_TESTS:
+    QUEUES = {
+        'QUEUE_URL': os.environ.get('RABBITMQ_HOST', 'localhost'),
+        'QUEUE_USER': os.environ.get('RABBITMQ_USER', 'guest'),
+        'QUEUE_PASSWORD': os.environ.get('RABBITMQ_PASSWORD', 'guest'),
+        'QUEUE_PORT': int(os.environ.get('RABBITMQ_PORT', 5672)),
+        'QUEUE_CONTEXT_ROOT': os.environ.get('RABBITMQ_CONTEXT_ROOT', '/'),
+        'QUEUES_NAME': {
+            'MIGRATIONS_TO_PRODUCE': 'osis_portal',
+            'MIGRATIONS_TO_CONSUME': 'osis',
+            'PAPER_SHEET': 'paper_sheet',
+        }
     }
-}
 
 # Additionnal Locale Path
 # Add local path in your environment settings (ex: local.py)
