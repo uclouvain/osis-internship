@@ -98,9 +98,9 @@ def manager_proposition_dissertations(request):
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
     offers = faculty_adviser.search_by_adviser(adv)
-    proposition_offers = proposition_offer.find_by_offers_ordered_by_proposition_dissertation(offers)
+    propositions_dissertations = proposition_dissertation.search_by_offers(offers)
     return layout.render(request, 'manager_proposition_dissertations_list.html',
-                         {'proposition_offers': proposition_offers})
+                         {'propositions_dissertations': propositions_dissertations})
 
 
 @login_required
