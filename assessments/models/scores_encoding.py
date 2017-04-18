@@ -26,7 +26,7 @@
 from django.db import models
 from django.contrib import admin
 from base.enums import exam_enrollment_state
-from base.models import academic_year
+from base.models import academic_year, session_exam_calendar
 
 
 class ScoresEncodingAdmin(admin.ModelAdmin):
@@ -46,6 +46,7 @@ class ScoresEncoding(models.Model):
     pgm_manager_person = models.ForeignKey('base.Person', related_name='pgm_manager_person', on_delete=models.DO_NOTHING)
     offer_year = models.ForeignKey('base.OfferYear', on_delete=models.DO_NOTHING)
     learning_unit_year = models.ForeignKey('base.LearningUnitYear', on_delete=models.DO_NOTHING)
+    session_exam = models.ForeignKey('base.SessionExam', on_delete=models.DO_NOTHING)
     total_exam_enrollments = models.IntegerField()
     exam_enrollments_encoded = models.IntegerField()
     scores_not_yet_submitted = models.IntegerField()
@@ -64,9 +65,12 @@ class ScoresEncoding(models.Model):
 
 def search(user, learning_unit_year_id=None, offer_year_id=None, learning_unit_year_ids=None):
     current_academic_year = academic_year.current_academic_year()
+    current_session_number = session_exam_calendar.find_session_exam_number()
+
     queryset = ScoresEncoding.objects.filter(enrollment_state=exam_enrollment_state.ENROLLED) \
                                      .filter(offer_year__academic_year=current_academic_year) \
-                                     .filter(learning_unit_year__academic_year=current_academic_year)
+                                     .filter(learning_unit_year__academic_year=current_academic_year) \
+                                     .filter(session_exam__number_session=current_session_number)
 
     if offer_year_id:
         queryset = queryset.filter(offer_year_id=offer_year_id)
