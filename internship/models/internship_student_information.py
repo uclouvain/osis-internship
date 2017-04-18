@@ -76,6 +76,11 @@ def find_by_person(person):
     except ObjectDoesNotExist:
         return None
 
+def find_by_person_and_cohort(person, cohort):
+    try:
+        return InternshipStudentInformation.objects.get(person=person, cohort=cohort)
+    except ObjectDoesNotExist:
+        return None
 
 def get_number_of_specialists(cohort):
     contest_specialist = "SPECIALIST"
