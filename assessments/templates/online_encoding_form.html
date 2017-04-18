@@ -215,14 +215,6 @@
                                     {% endif %}>
                                     {% trans 'CHEATING' %}
                                 </option>
-                                <option value="SCORE_MISSING"
-                                        {% if is_program_manager and enrollment.is_score_missing_as_program_manager %}
-                                            selected
-                                        {% elif not is_program_manager and enrollment.is_score_missing_as_tutor %}
-                                            selected
-                                        {% endif %}>
-                                    {% trans 'SCORE_MISSING' %}
-                                </option>
                             </select>
 			                {% if not enrollment.deadline_reached %}
                             	<input type="hidden" id="hdn_score_changed_{{ enrollment.id }}" name="score_changed_{{ enrollment.id }}" value="false"></td>
