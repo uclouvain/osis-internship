@@ -42,12 +42,17 @@
             <div class="row">
                 <ul class="nav nav-tabs">
                     {% for internship in internships %}
-                        <li role="presentation" {% if internship.id == internship_id %} class="active" {% endif %}><a href="{% url 'switch_internship' cohort_id=cohort.id student_id=student.id internship_id=internship.id  %}">{% trans 'internship_choice'%} {{ internship.id }}</a></li>
+                      {% if internship.speciality != None %}
+                        <li role="presentation" {% if internship.id == internship_id %} class="active" {% endif %}><a href="{% url 'specific_internship_student_modification' cohort_id=cohort.id student_id=student.id internship_id=internship.id speciality_id=internship.speciality_id %}">{{ internship.name }}</a></li>
+                      {% else %}
+                        <li role="presentation" {% if internship.id == internship_id %} class="active" {% endif %}><a href="{% url 'switch_internship' cohort_id=cohort.id student_id=student.id internship_id=internship.id %}">{{ internship.name }}</a></li>
+                      {% endif %}
                     {% endfor %}
                 </ul>
             </div>
             <br>
-            <div class="row">
+            {% if internship.speciality == None %}
+              <div class="row">
                 <form action="{% url 'switch_speciality' cohort_id=cohort.id student_id=student.id internship_id=internship_id %}"  method="post">
                     {% csrf_token %}
                     {{ speciality_form.non_field_errors }}
@@ -73,7 +78,8 @@
                         </button>
                     </div>
                 </form>
-            </div>
+              </div>
+            {% endif %}
 
             <br>
 
