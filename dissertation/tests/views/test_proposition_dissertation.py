@@ -125,13 +125,13 @@ class PropositionDissertationViewTestCase(TestCase):
         self.client.login(username='teacher', password='teacher')
         url = reverse('proposition_dissertations')
         response = self.client.get(url)
-        self.assertEqual(len(response.context['proposition_offers']), 10) #5 teachers / 5 managers
+        self.assertEqual(len(response.context['propositions_dissertations']), 10) #5 teachers / 5 managers
 
     def test_get_my_proposition_dissertations(self):
         self.client.login(username='teacher', password='teacher')
         url = reverse('my_dissertation_propositions')
         response = self.client.get(url)
-        self.assertEqual(len(response.context['proposition_offers']), 5)
+        self.assertEqual(len(response.context['propositions_dissertations']), 5)
 
     def test_delete_proposition_dissertation(self):
         self.client.login(username='teacher', password='teacher')
