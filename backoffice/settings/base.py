@@ -50,7 +50,7 @@ MESSAGE_STORAGE = os.environ.get('MESSAGE_STORAGE', 'django.contrib.messages.sto
 # Application definition
 # Common apps for all environments
 # Specific apps (all osis modules except base and reference(mandatory) + env specific apps like sentry)
-# have to be defined in environment settings (ex: local.py)
+# have to be defined in environment settings (ex: dev.py)
 INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.auth',
@@ -125,7 +125,7 @@ DATABASES = {
 # Internationalization
 # https://docs.djangoproject.com/en/1.9/topics/i18n/
 # If you want to change the default settings,
-# you have to redefine the LANGUAGE_CODE and LANGUAGES vars in environment settings (ex: local.py)
+# you have to redefine the LANGUAGE_CODE and LANGUAGES vars in environment settings (ex: dev.py)
 LANGUAGE_CODE = 'fr-be'
 LANGUAGES = [
     ('fr-be', _('French')),
@@ -147,7 +147,7 @@ CONTENT_TYPES = ['application/csv', 'application/doc', 'application/pdf', 'appli
 MAX_UPLOAD_SIZE = int(os.environ.get('MAX_UPLOAD_SIZE', 5242880))
 
 # Logging settings
-# Logging framework is defined in env settings (ex: local.py)
+# Logging framework is defined in env settings (ex: dev.py)
 DEFAULT_LOGGER = os.environ.get('DEFAULT_LOGGER', 'default')
 QUEUE_EXCEPTION_LOGGER = os.environ.get('QUEUE_EXCEPTION_LOGGER', 'queue_exception')
 
@@ -203,7 +203,7 @@ if not TESTING or not SKIP_QUEUES_TESTS:
     }
 
 # Additionnal Locale Path
-# Add local path in your environment settings (ex: local.py)
+# Add local path in your environment settings (ex: dev.py)
 LOCALE_PATHS = ()
 
 # Apps Settings
