@@ -59,11 +59,14 @@ class ExamEnrollment(models.Model):
     external_id = models.CharField(max_length=100, blank=True, null=True)
     changed = models.DateTimeField(null=True)
     score_draft = models.DecimalField(max_digits=4, decimal_places=2, blank=True, null=True,
-                                      validators=[MinValueValidator(0), MaxValueValidator(20)])
+                                      validators=[MinValueValidator(0,message="scores_must_be_between_0_and_20"),
+                                                  MaxValueValidator(20, message="scores_must_be_between_0_and_20")])
     score_reencoded = models.DecimalField(max_digits=4, decimal_places=2, blank=True, null=True,
-                                          validators=[MinValueValidator(0), MaxValueValidator(20)])
+                                          validators=[MinValueValidator(0, message="scores_must_be_between_0_and_20"),
+                                                      MaxValueValidator(20, message="scores_must_be_between_0_and_20")])
     score_final = models.DecimalField(max_digits=4, decimal_places=2, blank=True, null=True,
-                                      validators=[MinValueValidator(0), MaxValueValidator(20)])
+                                      validators=[MinValueValidator(0, message="scores_must_be_between_0_and_20"),
+                                                  MaxValueValidator(20,message="scores_must_be_between_0_and_20")])
     justification_draft = models.CharField(max_length=20, blank=True, null=True,
                                            choices=justification_types.JUSTIFICATION_TYPES)
     justification_reencoded = models.CharField(max_length=20, blank=True, null=True,
@@ -110,6 +113,10 @@ class ExamEnrollment(models.Model):
         return self.score_draft is not None or self.justification_draft
 
     @property
+    def is_score_missing_as_program_manager(self):
+        return not self.is_final
+
+    @property
     def to_validate_by_program_manager(self):
         sc_reencoded = None
         if self.score_reencoded is not None:
@@ -151,6 +158,14 @@ class ExamEnrollment(models.Model):
             return _(self.justification_reencoded)
         else:
             return None
+
+    @property
+    def is_score_missing_as_tutor(self):
+        return not self.is_final and not self.is_draft
+
+
+def find_by_ids(ids):
+    return ExamEnrollment.objects.filter(pk__in=ids)
 
 
 def get_session_exam_deadline(enrollment):
@@ -236,11 +251,11 @@ class ExamEnrollmentHistory(models.Model):
     modification_date = models.DateTimeField(auto_now=True)
 
 
-def create_exam_enrollment_historic(user, enrollment, score, justification):
+def create_exam_enrollment_historic(user, enrollment):
     exam_enrollment_history = ExamEnrollmentHistory()
     exam_enrollment_history.exam_enrollment = enrollment
-    exam_enrollment_history.score_final = score
-    exam_enrollment_history.justification_final = justification
+    exam_enrollment_history.score_final = enrollment.score_final
+    exam_enrollment_history.justification_final = enrollment.justification_final
     exam_enrollment_history.person = person.find_by_user(user)
     exam_enrollment_history.save()
 
