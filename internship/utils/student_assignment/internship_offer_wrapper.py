@@ -25,10 +25,9 @@
 ##############################################################################
 
 
-class InternshipWrapper:
-    # internship === offre
-    def __init__(self, internship):
-        self.internship = internship
+class InternshipOfferWrapper:
+    def __init__(self, offer):
+        self.internship_offer = offer
         self.periods_places = dict()
         self.periods_places_left = dict()
 
