@@ -29,4 +29,7 @@ from internship.models.internship_speciality import InternshipSpeciality
 
 
 class SpecialityForm(forms.Form):
-    speciality = forms.ModelChoiceField(queryset=InternshipSpeciality.objects.all(), empty_label=None)
+    def __init__(self,*args,**kwargs):
+        cohort = kwargs.pop("cohort")
+        super(SpecialityForm,self).__init__(*args,**kwargs)
+        self.fields["speciality"] = forms.ModelChoiceField(queryset=InternshipSpeciality.objects.filter(cohort=cohort).order_by("name"), empty_label=None)
