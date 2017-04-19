@@ -313,8 +313,8 @@ class GetScoreEncodingViewProgramManagerTest(TestCase):
         academic_year = AcademicYearFactory(year=datetime.datetime.now().year)
         self.offer_year_bio2ma = OfferYearFactory(acronym="BIO2MA", title="Master en Biologie",
                                                   academic_year=academic_year)
-        self.offer_year_bio2ba = OfferYearFactory(acronym="BIO2BAC", title="Bachelier en Biologie",
-                                                  academic_year=academic_year)
+        self.offer_year_bio2bac = OfferYearFactory(acronym="BIO2BAC", title="Bachelier en Biologie",
+                                                   academic_year=academic_year)
         ProgramManagerFactory(offer_year=self.offer_year_bio2ma, person=self.person)
         ProgramManagerFactory(offer_year=self.offer_year_bio2bac, person=self.person)
 
@@ -354,11 +354,11 @@ class GetScoreEncodingViewProgramManagerTest(TestCase):
         self.assertFalse(context['notes_list'])
 
     def test_get_score_encoding(self):
-         url = reverse('scores_encoding')
-         response = self.client.get(url)
-         context = response.context[-1]
-         self.assertEqual(response.status_code, 200)
-         self.assertEqual(len(context['notes_list']), 3)
+        url = reverse('scores_encoding')
+        response = self.client.get(url)
+        context = response.context[-1]
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(context['notes_list']), 3)
 
     def _create_context_exam_enrollment(self):
         self.students = []
