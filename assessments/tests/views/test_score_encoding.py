@@ -313,7 +313,7 @@ class GetScoreEncodingViewProgramManagerTest(TestCase):
         academic_year = AcademicYearFactory(year=datetime.datetime.now().year)
         self.offer_year_bio2ma = OfferYearFactory(acronym="BIO2MA", title="Master en Biologie",
                                                   academic_year=academic_year)
-        self.offer_year_bio2bac = OfferYearFactory(acronym="BIO2BAC", title="Bachelier en Biologie",
+        self.offer_year_bio2ba = OfferYearFactory(acronym="BIO2BAC", title="Bachelier en Biologie",
                                                   academic_year=academic_year)
         ProgramManagerFactory(offer_year=self.offer_year_bio2ma, person=self.person)
         ProgramManagerFactory(offer_year=self.offer_year_bio2bac, person=self.person)
