@@ -57,6 +57,7 @@ try:
 except Exception:
     pass
 
+
 @receiver(post_save, sender=mdl_tutor.Tutor)
 def add_to_tutors_group(sender, instance, **kwargs):
     if kwargs.get('created', True) and instance.person.user:
@@ -97,6 +98,7 @@ def remove_from_pgm_managers_group(sender, instance, **kwargs):
     if instance.person.user:
         pgm_managers_group = Group.objects.get(name='program_managers')
         instance.person.user.groups.remove(pgm_managers_group)
+
 
 @receiver(post_save, sender=mdl_internship.InternshipStudentInformation)
 def add_to_internship_students_group(sender, instance, **kwargs):
