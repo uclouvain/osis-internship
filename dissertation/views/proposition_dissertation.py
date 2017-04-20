@@ -211,15 +211,19 @@ def manager_proposition_dissertations_role_delete(request, pk):
     return redirect('manager_proposition_dissertation_detail', pk=proposition.pk)
 
 
+def is_valid(request, form):
+    return form.is_valid() and detect_in_request(request, 'txt_checkbox_', 'on')
+
+
 @login_required
 @user_passes_test(is_manager)
 def manager_proposition_dissertation_new(request):
     offer_propositions = offer_proposition.find_all_ordered_by_acronym()
     offer_propositions_error = None
     if request.method == "POST":
-        person = mdl.person.find_by_user(request.user)
         form = ManagerPropositionDissertationForm(request.POST)
-        if form.is_valid() and detect_in_request(request, 'txt_checkbox_', 'on'):
+        if is_valid(request, form):
+            person = mdl.person.find_by_user(request.user)
             proposition = create_proposition(form, person, request)
             return redirect('manager_proposition_dissertation_detail', pk=proposition.pk)
         else:
@@ -388,7 +392,7 @@ def proposition_dissertation_new(request):
     offer_propositions_error = None
     if request.method == "POST":
         form = PropositionDissertationForm(request.POST)
-        if form.is_valid() and detect_in_request(request, 'txt_checkbox_', 'on'):
+        if is_valid(request, form):
             proposition = create_proposition(form, person, request)
             return redirect('proposition_dissertation_detail', pk=proposition.pk)
         else:
