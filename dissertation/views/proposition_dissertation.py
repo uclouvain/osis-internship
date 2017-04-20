@@ -150,7 +150,7 @@ def manage_proposition_dissertation_edit(request, pk):
     proposition_offers = proposition_offer.find_by_proposition_dissertation(proposition)
     if request.method == "POST":
         form = ManagerPropositionDissertationEditForm(request.POST, instance=proposition)
-        if form.is_valid() and detect_in_request(request, 'txt_checkbox_', 'on'):
+        if is_valid(request, form):
             proposition = edit_proposition(form, proposition_offers, request)
             return redirect('manager_proposition_dissertation_detail', pk=proposition.pk)
         if not detect_in_request(request, 'txt_checkbox_', 'on'):
@@ -339,7 +339,7 @@ def proposition_dissertation_edit(request, pk):
     if proposition.author == adv or proposition.creator == adv.person:
         if request.method == "POST":
             form = PropositionDissertationForm(request.POST, instance=proposition)
-            if form.is_valid() and detect_in_request(request, 'txt_checkbox_', 'on'):
+            if is_valid(request, form):
                 proposition = edit_proposition(form, proposition_offers, request)
                 return redirect('proposition_dissertation_detail', pk=proposition.pk)
             if not detect_in_request(request, 'txt_checkbox_', 'on'):
