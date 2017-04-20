@@ -28,34 +28,35 @@ from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver, Signal
 from base.models import student as mdl_student, person as mdl_person, tutor as mdl_tutor, program_manager as mdl_pgm_manager
 from osis_common.models.serializable_model import SerializableModel
-from internship.models import internship_student_information as mdl_internship
-
+from django.conf import settings
 
 person_created = Signal(providing_args=['person'])
 
-try:
-    from osis_louvain_auth.authentication.shibboleth_auth import user_updated_signal, user_created_signal
+if settings.USER_SIGNALS_MANAGER:
 
-    @receiver(user_created_signal)
-    def update_person_after_user_creation(sender, **kwargs):
-        user = kwargs.get('user')
-        user_infos = kwargs.get('user_infos')
-        person = mdl_person.find_by_global_id(user_infos.get('USER_FGS'))
-        person = _create_update_person(user, person, user_infos)
-        _add_person_to_group(person)
-        return person
+    if settings.USER_CREATED_SIGNAL:
+        try:
+            from osis_louvain_auth.authentication.shibboleth_auth import user_created_signal, user_updated_signal
 
-    @receiver(user_updated_signal)
-    def update_person_after_user_update(sender, **kwargs):
-        user = kwargs.get('user')
-        user_infos = kwargs.get('user_infos')
-        person = mdl_person.find_by_global_id(user_infos.get('USER_FGS'))
-        person = _create_update_person(user, person, user_infos)
-        return person
+            @receiver(user_created_signal)
+            def update_person_after_user_creation(sender, **kwargs):
+                user = kwargs.get('user')
+                user_infos = kwargs.get('user_infos')
+                person = mdl_person.find_by_global_id(user_infos.get('USER_FGS'))
+                person = _create_update_person(user, person, user_infos)
+                _add_person_to_group(person)
+                return person
 
+            @receiver(user_updated_signal)
+            def update_person_after_user_update(sender, **kwargs):
+                user = kwargs.get('user')
+                user_infos = kwargs.get('user_infos')
+                person = mdl_person.find_by_global_id(user_infos.get('USER_FGS'))
+                person = _create_update_person(user, person, user_infos)
+                return person
 
-except Exception:
-    pass
+        except Exception as e:
+            logger.error(str(e))
 
 
 @receiver(post_save, sender=mdl_tutor.Tutor)
@@ -100,20 +101,6 @@ def remove_from_pgm_managers_group(sender, instance, **kwargs):
         instance.person.user.groups.remove(pgm_managers_group)
 
 
-@receiver(post_save, sender=mdl_internship.InternshipStudentInformation)
-def add_to_internship_students_group(sender, instance, **kwargs):
-    if kwargs.get('created', True) and instance.person.user:
-        internship_students_group = Group.objects.get(name='internship_students')
-        instance.person.user.groups.add(internship_students_group)
-
-
-@receiver(post_delete, sender=mdl_internship.InternshipStudentInformation)
-def remove_internship_students_group(sender, instance, **kwargs):
-    if instance.person.user:
-        internship_students_group = Group.objects.get(name='internship_students')
-        instance.person.user.groups.remove(internship_students_group)
-
-
 def _add_person_to_group(person):
     # Check Student
     if mdl_student.find_by_person(person):
@@ -124,9 +111,6 @@ def _add_person_to_group(person):
     # Check PgmManager
     if mdl_pgm_manager.find_by_person(person):
         _assign_group(person, 'program_managers')
-    # Check if student is internship student
-    if mdl_internship.find_by_person(person):
-        _assign_group(person, 'internship_students')
 
 
 def _assign_group(person, group_name):

@@ -23,11 +23,10 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-
-
 from .base import *
+import sys
 
-INSTALLED_APPS += (
+OPTIONAL_APPS = (
     'attribution',
     'assistant',
     'dissertation',
@@ -35,66 +34,5 @@ INSTALLED_APPS += (
     'assessments',
 )
 
-# check if we are testing right now
-TESTING = 'test' in sys.argv
-if TESTING:
-    # add test packages that have specific models for tests
-    INSTALLED_APPS += ('osis_common.tests', )
-
-# Selenium tests config folders
-# TODO : Check if it used anywhere
-SCREEN_SHOT_FOLDER = os.path.join(BASE_DIR, "base/tests/selenium/screenshots")
-FIREFOX_PROFILE_PATH = os.path.join(BASE_DIR, "base/tests/selenium/firefox_profile")
-JENKINS_TASKS = []
-
-MIDDLEWARE_CLASSES = (
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.locale.LocaleMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.middleware.security.SecurityMiddleware',
-)
-
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'formatters': {
-        'verbose': {
-            'format': '%(asctime)s %(levelname)s %(module)s %(process)d %(thread)d %(message)s',
-            'datefmt': '%d-%m-%Y %H:%M:%S'
-        },
-        'simple': {
-            'format': '%(asctime)s %(levelname)s %(message)s',
-            'datefmt': '%d-%m-%Y %H:%M:%S'
-        },
-    },
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
-            'formatter': 'simple',
-            'level':'DEBUG',
-        },
-    },
-    'loggers': {
-        'default': {
-            'handlers': ['console'],
-            'level': 'DEBUG',
-            'propagate': True,
-        },
-        'queue_exception': {
-            'handlers': ['console'],
-            'level': 'DEBUG',
-            'propagate': False,
-        },
-        'django': {
-            'handlers': ['console'],
-            'level': 'INFO',
-            'propagate': True,
-        }
-    },
-}
-
+INSTALLED_APPS += OPTIONAL_APPS
+APPS_TO_TEST += OPTIONAL_APPS

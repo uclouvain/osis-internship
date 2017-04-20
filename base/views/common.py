@@ -83,6 +83,8 @@ def login(request):
                 user_language = person.language
                 translation.activate(user_language)
                 request.session[translation.LANGUAGE_SESSION_KEY] = user_language
+    elif settings.OVERRIDED_LOGIN_URL:
+        return redirect(settings.OVERRIDED_LOGIN_URL)
     return django_login(request)
 
 
@@ -98,6 +100,8 @@ def home(request):
 
 def log_out(request):
     logout(request)
+    if settings.OVERRIDED_LOGOUT_URL:
+        return redirect(settings.OVERRIDED_LOGOUT_URL)
     return redirect('logged_out')
 
 
