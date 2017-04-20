@@ -33,7 +33,7 @@ from django.forms.models import inlineformset_factory
 from django.core.exceptions import ValidationError
 from django.forms import widgets
 from assistant.enums import reviewer_role
-from assistant.models.enums import review_advice_choices, review_status
+from assistant.models.enums import review_advice_choices, review_status, assistant_type, assistant_mandate_renewal
 
 
 class MandateFileForm(forms.Form):
@@ -55,9 +55,9 @@ class MandateForm(ModelForm):
         attrs={'rows': '4', 'cols': '80'}))
     other_status = forms.CharField(max_length=50, required=False)
     renewal_type = forms.ChoiceField(
-        choices=mdl.assistant_mandate.AssistantMandate.RENEWAL_TYPE_CHOICES)
+        choices=assistant_mandate_renewal.ASSISTANT_MANDATE_RENEWAL_TYPES)
     assistant_type = forms.ChoiceField(
-        choices=mdl.assistant_mandate.AssistantMandate.ASSISTANT_TYPE_CHOICES)
+        choices=assistant_type.ASSISTANT_TYPES)
     sap_id = forms.CharField(required=True, max_length=12, strip=True)
     contract_duration = forms.CharField(
         required=True, max_length=30, strip=True)
