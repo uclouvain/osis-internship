@@ -28,11 +28,9 @@ from base.models.enums import entity_type
 
 
 class EntityVersion(models.Model):
-    external_id = models.CharField(max_length=100)
+    entity = models.ForeignKey('Entity')
     title = models.CharField(max_length=255)
     acronym = models.CharField(max_length=20)
-    entity_type = models.CharField(choices=entity_type.ENTITY_TYPES, max_length=50)
-    start_date = models.DateField()
-    end_date = models.DateField()
-
-    entity = models.ForeignKey('Entity')
+    entity_type = models.CharField(choices=entity_type.ENTITY_TYPES, max_length=50, db_index=True)
+    start_date = models.DateField(db_index=True)
+    end_date = models.DateField(db_index=True)

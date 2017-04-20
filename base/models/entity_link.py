@@ -27,8 +27,7 @@ from django.db import models
 
 
 class EntityLink(models.Model):
-    external_id = models.CharField(max_length=100)
-    parent = models.OneToOneField('Entity', related_name='parent')
+    parent = models.ForeignKey('Entity', related_name='parent')
     child = models.ForeignKey('Entity', related_name='child')
-    start_date = models.DateField()
-    end_date = models.DateField()
+    start_date = models.DateField(db_index=True)
+    end_date = models.DateField(db_index=True)

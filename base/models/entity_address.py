@@ -27,11 +27,9 @@ from django.db import models
 
 
 class EntityAddress(models.Model):
-    external_id = models.CharField(max_length=100)
+    entity = models.ForeignKey('Entity')
     label = models.CharField(max_length=20, null=True)
     location = models.CharField(max_length=255, null=True)
     postal_code = models.CharField(max_length=20, null=True)
     city = models.CharField(max_length=255, null=True)
     country = models.CharField(max_length=255, null=True)
-
-    entity = models.ForeignKey('Entity')

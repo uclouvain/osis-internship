@@ -27,5 +27,4 @@ from django.db import models
 
 
 class Entity(models.Model):
-    external_id = models.CharField(max_length=100)
     organization = models.ForeignKey('Organization', null=True)
