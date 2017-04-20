@@ -34,7 +34,7 @@ from django.core.exceptions import ValidationError
 from django.forms import widgets
 from assistant.enums import reviewer_role
 from assistant.models.enums import review_advice_choices, review_status, assistant_type, assistant_mandate_renewal
-
+from assistant.models.enums import assistant_phd_inscription
 
 class MandateFileForm(forms.Form):
     file = forms.FileField(error_messages={'required': _('no_file_submitted')})
@@ -121,7 +121,7 @@ class MandatesArchivesForm(ModelForm):
 
 class AssistantFormPart3(ModelForm):
     inscription = forms.ChoiceField(required=True, widget=forms.RadioSelect(renderer=HorizontalRadioRenderer, attrs={
-        "onChange": 'Hide()'}), choices=mdl.academic_assistant.AcademicAssistant.PHD_INSCRIPTION_CHOICES)
+        "onChange": 'Hide()'}), choices=assistant_phd_inscription.PHD_INSCRIPTION_CHOICES)
     expected_phd_date = forms.DateField(required=False, widget=forms.DateInput(format='%d/%m/%Y',
                                                                                attrs={'placeholder': 'dd/mm/yyyy'}),
                                         input_formats=['%d/%m/%Y'])
