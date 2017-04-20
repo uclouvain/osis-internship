@@ -27,8 +27,8 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-<li><a href="{% url 'studies' %}" id="lnk_studies">{% trans 'student_path' %}</a></li>
-<li><a href="{% url 'assessments' %}" id="lnk_assessments">{% trans 'evaluations' %}</a></li>
+<li id="lnk_institution">{% trans 'institution' %}</li>
+<li id="lnk_studies"><a href="{% url 'academic_actors' %}">{% trans 'academic_actors' %}</a></li>
 <li class="active">{% trans 'scores_responsible' %}</li>
 {% endblock %}
 {% block content %}
