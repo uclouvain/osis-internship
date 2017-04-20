@@ -274,12 +274,15 @@ def manager_proposition_dissertations_search(request):
 ###########################
 
 
+def get_current_adviser(request):
+    person = mdl.person.find_by_user(request.user)
+    return adviser.search_by_person(person)
+
+
 @login_required
 @user_passes_test(is_teacher)
 def proposition_dissertations(request):
-    person = mdl.person.find_by_user(request.user)
-    adv = adviser.search_by_person(person)
-    propositions_dissertations = proposition_dissertation.get_all_for_teacher(adv)
+    propositions_dissertations = proposition_dissertation.get_all_for_teacher(get_current_adviser(request))
     return layout.render(request, 'proposition_dissertations_list.html',
                          {'propositions_dissertations': propositions_dissertations})
 
@@ -297,8 +300,6 @@ def proposition_dissertation_delete(request, pk):
 def proposition_dissertation_detail(request, pk):
     proposition = get_object_or_404(PropositionDissertation, pk=pk)
     offer_propositions = proposition_offer.find_by_proposition_dissertation(proposition)
-    person = mdl.person.find_by_user(request.user)
-    adv = adviser.search_by_person(person)
     count_use = dissertation.count_by_proposition(proposition)
     percent = count_use * 100 / proposition.max_number_student if proposition.max_number_student else 0
     count_proposition_role = proposition_role.count_by_proposition(proposition)
@@ -312,7 +313,7 @@ def proposition_dissertation_detail(request, pk):
     return layout.render(request, 'proposition_dissertation_detail.html',
                          {'proposition_dissertation': proposition,
                           'offer_propositions': offer_propositions,
-                          'adviser': adv,
+                          'adviser': get_current_adviser(request),
                           'count_use': count_use,
                           'percent': round(percent, 2),
                           'proposition_roles': proposition_roles,
@@ -324,8 +325,7 @@ def proposition_dissertation_detail(request, pk):
 @user_passes_test(is_teacher)
 def proposition_dissertation_edit(request, pk):
     proposition = get_object_or_404(PropositionDissertation, pk=pk)
-    person = mdl.person.find_by_user(request.user)
-    adv = adviser.search_by_person(person)
+    adv = get_current_adviser(request)
     offer_propositions = offer_proposition.find_all_ordered_by_acronym()
     proposition_offers = proposition_offer.find_by_proposition_dissertation(proposition)
     if proposition.author == adv or proposition.creator == adv.person:
@@ -351,9 +351,7 @@ def proposition_dissertation_edit(request, pk):
 @login_required
 @user_passes_test(is_teacher)
 def my_dissertation_propositions(request):
-    person = mdl.person.find_by_user(request.user)
-    adv = adviser.search_by_person(person)
-    propositions_dissertations = proposition_dissertation.get_mine_for_teacher(adv)
+    propositions_dissertations = proposition_dissertation.get_mine_for_teacher(get_current_adviser(request))
     return layout.render(request, 'proposition_dissertations_list_my.html',
                          {'propositions_dissertations': propositions_dissertations})
 
@@ -361,9 +359,7 @@ def my_dissertation_propositions(request):
 @login_required
 @user_passes_test(is_teacher)
 def proposition_dissertations_created(request):
-    person = mdl.person.find_by_user(request.user)
-    adv = adviser.search_by_person(person)
-    propositions_dissertations = proposition_dissertation.get_created_for_teacher(adv)
+    propositions_dissertations = proposition_dissertation.get_created_for_teacher(get_current_adviser(request))
     return layout.render(request, 'proposition_dissertations_list_created.html',
                          {'propositions_dissertations': propositions_dissertations})
 
@@ -379,8 +375,7 @@ def proposition_dissertation_new(request):
             proposition = create_proposition(form, person, request)
             return redirect('proposition_dissertation_detail', pk=proposition.pk)
 
-    adv = adviser.search_by_person(person)
-    form = PropositionDissertationForm(initial={'author': adv, 'active': True})
+    form = PropositionDissertationForm(initial={'author': get_current_adviser(request), 'active': True})
     return layout.render(request, 'proposition_dissertation_new.html',
                          {'form': form,
                           'types_choices': PropositionDissertation.TYPES_CHOICES,
@@ -392,10 +387,10 @@ def proposition_dissertation_new(request):
 @login_required
 @user_passes_test(is_teacher)
 def proposition_dissertations_search(request):
-    person = mdl.person.find_by_user(request.user)
-    adv = adviser.search_by_person(person)
-    propositions_dissertations = proposition_dissertation.search(terms=request.GET['search'], active=True,
-                                                                 visibility=True, connected_adviser=adv)
+    propositions_dissertations = proposition_dissertation.search(terms=request.GET['search'],
+                                                                 active=True,
+                                                                 visibility=True,
+                                                                 connected_adviser=get_current_adviser(request))
     return layout.render(request, "proposition_dissertations_list.html",
                          {'propositions_dissertations': propositions_dissertations})
 
@@ -413,8 +408,7 @@ def proposition_dissertations_jury_edit(request, pk):
 def proposition_dissertations_jury_new(request, pk):
     proposition = get_object_or_404(PropositionDissertation, pk=pk)
     count_proposition_role = PropositionRole.objects.filter(proposition_dissertation=proposition).count()
-    person = mdl.person.find_by_user(request.user)
-    adv = adviser.search_by_person(person)
+    adv = get_current_adviser(request)
     if proposition.author == adv or proposition.creator == adv.person:
         if request.method == "POST":
             form = ManagerPropositionRoleForm(request.POST)
@@ -444,8 +438,7 @@ def proposition_dissertations_jury_new(request, pk):
 def proposition_dissertations_role_delete(request, pk):
     prop_role = get_object_or_404(PropositionRole, pk=pk)
     proposition = prop_role.proposition_dissertation
-    person = mdl.person.find_by_user(request.user)
-    adv = adviser.search_by_person(person)
+    adv = get_current_adviser(request)
 
     if prop_role.status != 'PROMOTEUR' and (proposition.author == adv or proposition.creator == adv.person):
         prop_role.delete()
