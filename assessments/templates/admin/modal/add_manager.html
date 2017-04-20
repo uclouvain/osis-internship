@@ -36,8 +36,7 @@
                     <input type="hidden" id="hdn_offers_checked" name="offers_checked" class="form-control" value="{{ offers_on | default_if_none:''}}" >
                     <input type="hidden" id="hdn_pgms_id"  name="pgms_id" value="{{ pgms_id }}">
                     <input type="hidden" id="hdn_person_id" name="person_id" value="">
-                    <div class="row">
-                        <div class="col-md-12">
+
                             {% if persons|length == 0 and init == "0" %}
                             <label class="alert alert-info" style="margin:5px">{% trans 'no_result' %}</label>
                             {% endif %}
@@ -74,9 +73,6 @@
                             </div>
                             <br>
 
-                        </div>
-
-                    </div>
                 </form>
             </div>
             <div class="modal-footer">

@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -36,17 +36,14 @@ admin.site.register(application_notice.ApplicationNotice,
 admin.site.register(campus.Campus,
                     campus.CampusAdmin)
 
-admin.site.register(employee.Employee,
-                    employee.EmployeeAdmin)
+admin.site.register(entity_manager.EntityManager,
+                    entity_manager.EntityManagerAdmin)
 
 admin.site.register(exam_enrollment.ExamEnrollment,
                     exam_enrollment.ExamEnrollmentAdmin)
 
 admin.site.register(exam_enrollment.ExamEnrollmentHistory,
                     exam_enrollment.ExamEnrollmentHistoryAdmin)
-
-admin.site.register(faculty_administrator.FacultyAdministrator,
-                    faculty_administrator.FacultyAdministratorAdmin)
 
 admin.site.register(external_offer.ExternalOffer,
                     external_offer.ExternalOfferAdmin)

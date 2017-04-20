@@ -45,6 +45,7 @@
                         <label for="slt_entity" >{% trans 'entity'%}</label>
                         <select class="form-control" id="slt_entity" name="entity" >
                             <option selected value="-">{% trans 'all_hierarchy' %} {{ manager_entity.acronym }}</option>
+                            <option {%if manager_entity.acronym == entity %}selected{%endif%} value="{{manager_entity.acronym}}">{{manager_entity.acronym}}</option>
                             {% for e in manager_entity.children %}
                                 {% if e.acronym == entity %}
                                     <option selected value="{{ e.acronym }}">{{ e.acronym }}</option>
@@ -300,9 +301,14 @@
                         var last_name = value.person_last_name;
                         var first_name = value.person_first_name;
                         var pgm_ids = value.programs;
-
                         trHTML += '<tr>';
-                        trHTML += '<td>' + value.person_last_name + ',' + value.person_first_name +'</td>';
+                        trHTML += '<td>' ;
+                        if(ch == pgm_ids) {
+                            trHTML += '<strong>' + value.person_last_name + ',' + value.person_first_name + '</strong>';
+                        }else{
+                            trHTML += value.person_last_name + ',' + value.person_first_name;
+                        }
+                        trHTML += '</td>';
                         trHTML += '<td>';
                         trHTML += '<button type="button" class="btn btn-default pull-right" data-toggle="modal" data-target="#pnl_remove_manager_modal" ';
                         trHTML += ' title="'+gettext('remove_manager')+'"';
@@ -411,8 +417,6 @@
         $("#pnl_errors").find("ul")
                 .remove()
                 .end();
-
-
     }
 
 

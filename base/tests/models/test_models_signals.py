@@ -33,7 +33,7 @@ from base.models.person import Person
 from base.models.program_manager import ProgramManager
 from base.models.student import Student
 from base.models.tutor import Tutor
-from base.models.faculty_administrator import FacultyAdministrator
+from base.models.entity_manager import EntityManager
 from base.models.employee import Employee
 from base.models.structure import Structure
 from base.models import models_signals as mdl_signals, person as mdl_person
@@ -160,7 +160,7 @@ class AddToGroupsSignalsTest(TestCase):
         return ProgramManager.objects.create(offer_year=offer_year, person=self.person_foo)
 
     def create_test_faculty_administrator(self):
-        return FacultyAdministrator.objects.create(employee=Employee.objects.create(person=self.person_foo),
+        return EntityManager.objects.create(employee=Employee.objects.create(person=self.person_foo),
                                                    structure=Structure.objects.create(acronym="TEST"))
 
     def setUp(self):

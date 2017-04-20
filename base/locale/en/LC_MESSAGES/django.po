@@ -1417,3 +1417,7 @@ msgstr "Tutors of the course"
 
 msgid "academic_actors"
 msgstr "Academic actors"
+
+msgid "desc_lnk_academic_actors"
+msgstr "Academic actors management"
+

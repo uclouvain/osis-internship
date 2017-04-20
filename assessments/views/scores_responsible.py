@@ -27,20 +27,20 @@ from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
 from attribution import models as mdl_attr
 from attribution.models.attribution import Attribution
-from base.models import faculty_administrator
+from base.models import entity_manager
 from base.models.learning_unit_year import LearningUnitYear
 from base.views import layout
 
 
 def is_faculty_admin(user):
-    a_faculty_administrator = faculty_administrator.find_faculty_administrator_by_user(user)
+    a_faculty_administrator = entity_manager.find_entity_manager_by_user(user)
     return a_faculty_administrator if a_faculty_administrator else False
 
 
 @login_required
 @user_passes_test(is_faculty_admin)
 def scores_responsible(request):
-    a_faculty_administrator = faculty_administrator.find_faculty_administrator_by_user(request.user)
+    a_faculty_administrator = entity_manager.find_entity_manager_by_user(request.user)
     all_tutors, attributions, attributions_list, responsibles_list = find_data_table(request,  a_faculty_administrator.structure)
     dict_attribution = create_dictionary(attributions)
     return layout.render(request, 'scores_responsible.html', {"all_tutors": all_tutors,
@@ -53,7 +53,7 @@ def scores_responsible(request):
 @login_required
 @user_passes_test(is_faculty_admin)
 def scores_responsible_search(request):
-    a_faculty_administrator = faculty_administrator.find_faculty_administrator_by_user(request.user)
+    a_faculty_administrator = entity_manager.find_entity_manager_by_user(request.user)
     attributions_searched = mdl_attr.attribution.search_scores_responsible(
         a_faculty_administrator.structure,
         learning_unit_title=request.GET['learning_unit_title'],
@@ -84,7 +84,7 @@ def create_dictionary(attributions):
 
 
 def find_data_table(request, structure):
-    a_faculty_administrator = faculty_administrator.find_faculty_administrator_by_user(request.user)
+    a_faculty_administrator = entity_manager.find_entity_manager_by_user(request.user)
     attributions = mdl_attr.attribution.find_attributions(structure).distinct("learning_unit_year")
     responsibles_list = mdl_attr.attribution.find_responsible_distinct(structure)
     attributions_list = mdl_attr.attribution.find_attribution_distinct(structure)
@@ -101,7 +101,7 @@ def scores_responsible_list(request):
 @user_passes_test(is_faculty_admin)
 def scores_responsible_management(request, pk):
     learning_unit_year = get_object_or_404(LearningUnitYear, pk=pk)
-    a_faculty_administrator = faculty_administrator.find_faculty_administrator_by_user(request.user)
+    a_faculty_administrator = entity_manager.find_entity_manager_by_user(request.user)
     professors = mdl_attr.attribution.find_all_responsable_by_learning_unit_year(a_faculty_administrator.structure, learning_unit_year)
     attributions = mdl_attr.attribution.find_all_tutor_by_learning_unit_year(learning_unit_year)
     return layout.render(request, 'scores_responsible_edit.html',

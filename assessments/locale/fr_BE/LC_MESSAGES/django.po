@@ -66,7 +66,7 @@ msgid "confirm"
 msgstr "Confirmation"
 
 msgid "no_structure_specified"
-msgstr "Aucune structure facultaire n'est associée à votre profil d'administrateur facultaire"
+msgstr "Aucune structure n'est associée à votre profil de gestionnaire facultaire"
 
 msgid "already_program_mgr"
 msgstr "est déjà gestionnaire de programme pour"
