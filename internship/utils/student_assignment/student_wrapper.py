@@ -35,7 +35,7 @@ class StudentWrapper:
         self.choices = []
         self.assignments = dict()
         self.internship_assigned = []
-        self.specialities_by_internship = dict()
+        self.specialities_by_internship_offer = dict()
         self.priority = False
         self.enrollments = dict()
         self.cost = 0
@@ -44,7 +44,7 @@ class StudentWrapper:
     def add_choice(self, choice):
         self.choices.append(choice)
         self.choices.sort(key=lambda a_choice: a_choice.choice, reverse=False)
-        self.__update_specialities_by_internship(choice)
+        self.__update_specialities_by_internship_offer(choice)
         self.__update_priority(choice)
 
     def set_information(self, information):
@@ -56,7 +56,7 @@ class StudentWrapper:
         return None
 
     def add_enrollment(self, enrollment):
-        key = enrollment.internship_choice
+        key = enrollment.internship_id
         self.enrollments[key] = self.enrollments.get(key, [])
         self.enrollments[key].append(enrollment)
 
@@ -67,8 +67,8 @@ class StudentWrapper:
         if choice.priority:
             self.priority = True
 
-    def __update_specialities_by_internship(self, choice):
-        self.specialities_by_internship[choice.internship_choice] = choice.speciality
+    def __update_specialities_by_internship_offer(self, choice):
+        self.specialities_by_internship_offer[choice.internship_id] = choice.speciality
 
     def assign(self, period, organization, speciality, internship_choice, preference):
         period_name = period.name
@@ -89,8 +89,8 @@ class StudentWrapper:
     def has_internship_assigned(self, internship):
         return internship in self.internship_assigned
 
-    def has_all_internships_assigned(self):
-        return len(self.internship_assigned) == NUMBER_INTERNSHIPS
+    def has_all_internships_assigned(self, internships):
+        return len(set(internships) - set(internships_assigned)) == 0
 
     def has_period_assigned(self, period_name):
         return period_name in self.assignments
@@ -118,19 +118,24 @@ class StudentWrapper:
     def get_internship_with_speciality_not_assigned(self):
         internships_with_speciality_not_assigned = \
             filter(lambda intern_spec: self.has_internship_assigned(intern_spec[0]) is False,
-                   self.specialities_by_internship.items())
+                   self.specialities_by_internship_offer.items())
         return next(internships_with_speciality_not_assigned, (0, self.choices[0].speciality))
 
-    def get_choices_for_internship(self, internship):
-        return filter(lambda choice: choice.internship_choice == internship, self.choices)
+    def get_choices_for_internship_offer(self, internship_id):
+        return filter(lambda choice: choice.internship_id == internship_id, self.choices)
 
-    def get_speciality_of_internship(self, internship):
-        return self.specialities_by_internship.get(internship, None)
+    def get_speciality_of_internship_offer(self, internship_offer):
+        return self.specialities_by_internship_offer.get(internship_offer, None)
 
     def get_last_internship_assigned(self):
         if not self.internship_assigned:
             return 0
         return max(self.internship_assigned)
+
+    def next_internships_to_assign(self, internships):
+        if not self.internships_assigned:
+            return []
+        return set(internships) - set(self.internships_assigned)
 
     @staticmethod
     def __get_cost(internship_choice, preference):

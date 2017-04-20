@@ -38,6 +38,8 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.shortcuts import get_object_or_404
 
+from internship.utils.student_assignment import solver
+
 from internship import models as mdl_internship
 from internship.models.internship_student_affectation_stat import InternshipStudentAffectationStat
 from internship.views.internship import calc_dist, set_tabs_name
@@ -1190,6 +1192,26 @@ def fill_periods_default_values(acronym, keys, organization, temp_internship_tab
             'after': 0,
         }
 
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def assign_automatically_internships(request, cohort_id):
+    cohort = get_object_or_404(mdl_internship.cohort.Cohort, pk=cohort_id)
+    if request.method == 'POST':
+        if request.POST['executions'] != "":
+            times = int(request.POST['executions'])
+            start_date_time = datetime.now()
+            period_ids = mdl_internship.period.Period.objects.filter(cohort=cohort).values_list("id", flat=True)
+            mdl_internship.internship_student_affectation_stat.find_non_mandatory_affectations(period_ids=period_ids).delete()
+            solver.affect_student(times, cohort)
+            end_date_time = datetime.now()
+            affectation_generation_time = mdl_internship.affectation_generation_time.AffectationGenerationTime()
+            affectation_generation_time.cohort = cohort
+            affectation_generation_time.start_date_time = start_date_time
+            affectation_generation_time.end_date_time = end_date_time
+            affectation_generation_time.generated_by = request.user.username
+            affectation_generation_time.save()
+    return redirect(reverse('internship_affectation_statistics'))
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
