@@ -1,5 +1,6 @@
 from backoffice.settings import *
-LOGGERS = {}
+
+LOGGING = {}
 
 del QUEUES
 
