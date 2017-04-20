@@ -30,23 +30,24 @@ from base.models.enums import number_session
 
 
 class SessionExamDeadlineAdmin(admin.ModelAdmin):
-    list_display = ('deadline', 'deadline_tutor', 'offer_enrollment', 'number_session', 'changed')
-    list_filter = ('offer_enrollment', 'number_session',)
+    list_display = ('offer_enrollment', 'deadline', 'deadline_tutor', 'number_session', 'changed')
+    list_filter = ('number_session',)
     raw_id_fields = ('offer_enrollment',)
-    search_fields = ['offer_enrollment', 'number_session']
+    search_fields = ['offer_enrollment__student__person__first_name','offer_enrollment__student__person__last_name',
+                     'number_session']
 
 
 class SessionExamDeadline(models.Model):
     external_id = models.CharField(max_length=100, blank=True, null=True)
     changed = models.DateTimeField(null=True)
     deadline = models.DateField()
-    deadline_tutor = models.IntegerField(null=True)  # Delta day(s)
+    deadline_tutor = models.IntegerField(null=True, blank=True)  # Delta day(s)
     number_session = models.IntegerField(choices=number_session.NUMBERS_SESSION)
     offer_enrollment = models.ForeignKey('OfferEnrollment')
 
     @property
     def deadline_tutor_computed(self):
-        if self.deadline_tutor:
+        if self.deadline_tutor is not None:
             return self.deadline - datetime.timedelta(days=self.deadline_tutor)
         return None
 
@@ -59,6 +60,9 @@ class SessionExamDeadline(models.Model):
         if self.deadline_tutor_computed:
             return self.deadline_tutor_computed < datetime.date.today()
         return self.is_deadline_reached
+
+    def __str__(self):
+        return u"%s-%s" % (self.offer_enrollment, self.number_session)
 
 
 def filter_by_nb_session(nb_session):
