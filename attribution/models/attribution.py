@@ -69,7 +69,7 @@ def search(tutor=None, learning_unit_year=None, score_responsible=None, list_lea
     if list_learning_unit_year:
         queryset = queryset.filter(learning_unit_year__in=list_learning_unit_year)
 
-    return queryset.select_related('tutor', 'learning_unit_year')
+    return queryset.select_related('tutor__person', 'learning_unit_year')
 
 
 def find_all_responsibles(a_learning_unit_year):
