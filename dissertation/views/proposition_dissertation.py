@@ -41,14 +41,12 @@ import time
 from django.http import HttpResponse
 
 
-# Used by decorator @user_passes_test(is_manager) to secure manager views
 def is_manager(user):
     person = mdl.person.find_by_user(user)
     this_adviser = adviser.search_by_person(person)
     return this_adviser.type == 'MGR' if this_adviser else False
 
 
-# Used by decorator @user_passes_test(is_manager) to secure manager views
 def is_teacher(user):
     person = mdl.person.find_by_user(user)
     this_adviser = adviser.search_by_person(person)
@@ -85,6 +83,10 @@ def generate_proposition_offers(request, proposition):
             offer_proposition_id = key.replace("txt_checkbox_", "")
             offer.offer_proposition = offer_proposition.find_by_id(int(offer_proposition_id))
             offer.save()
+
+
+def is_valid(request, form):
+    return form.is_valid() and detect_in_request(request, 'txt_checkbox_', 'on')
 
 
 ###########################
@@ -209,10 +211,6 @@ def manager_proposition_dissertations_role_delete(request, pk):
     proposition = prop_role.proposition_dissertation
     prop_role.delete()
     return redirect('manager_proposition_dissertation_detail', pk=proposition.pk)
-
-
-def is_valid(request, form):
-    return form.is_valid() and detect_in_request(request, 'txt_checkbox_', 'on')
 
 
 @login_required
