@@ -40,6 +40,7 @@ class PersonAdmin(SerializableModelAdmin):
                                     'middle_name', 'last_name', 'birth_date', 'email', 'phone',
                                     'phone_mobile', 'language')}),)
     raw_id_fields = ('user',)
+    list_filter = ('gender', 'language')
 
 
 class Person(SerializableModel):

@@ -32,9 +32,10 @@ from base.models.enums import number_session
 class SessionExamDeadlineAdmin(admin.ModelAdmin):
     list_display = ('offer_enrollment', 'deadline', 'deadline_tutor', 'number_session', 'changed')
     list_filter = ('number_session',)
+    fieldsets = ((None, {'fields': ('deadline', 'deadline_tutor', 'number_session', 'offer_enrollment')}),)
     raw_id_fields = ('offer_enrollment',)
-    search_fields = ['offer_enrollment__student__person__first_name','offer_enrollment__student__person__last_name',
-                     'number_session']
+    search_fields = ['offer_enrollment__student__person__first_name', 'offer_enrollment__student__person__last_name',
+                     'offer_enrollment__student__registration_id', 'offer_enrollment__offer_year__acronym']
 
 
 class SessionExamDeadline(models.Model):
