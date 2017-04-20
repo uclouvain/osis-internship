@@ -29,23 +29,23 @@ from base.models import person
 from base.enums import structure_type
 
 
-class FacultyAdministratorAdmin(SerializableModelAdmin):
-    list_display = ('employee', 'structure')
+class EntityManagerAdmin(SerializableModelAdmin):
+    list_display = ('person', 'structure')
     fieldsets = ((None, {'fields': ('employee', 'structure',)}),)
-    search_fields = ['employee__person__first_name', 'employee__person__last_name', 'structure__acronym']
-    raw_id_fields = ('employee', 'structure')
+    search_fields = ['person__first_name', 'person__last_name', 'structure__acronym']
+    raw_id_fields = ('person', 'structure')
 
 
-class FacultyAdministrator(SerializableModel):
-    employee = models.ForeignKey('Employee')
+class EntityManager(SerializableModel):
+    person = models.ForeignKey('Person')
     structure = models.ForeignKey('Structure')
 
     def __str__(self):
-        return u"%s" % self.employee
+        return u"%s" % self.person
 
     class Meta:
         permissions = (
-            ("is_faculty_administrator", "Is faculty administrator"),
+            ("is_entity_manager", "Is entity manager "),
         )
 
 
@@ -53,12 +53,12 @@ def _get_perms(model):
     return model._meta.permissions
 
 
-def find_faculty_administrator_by_user(a_user):
+def find_entity_manager_by_user(a_user):
     a_person = person.find_by_user(a_user)
     if a_person:
-        faculty_administrators = FacultyAdministrator.objects.filter(employee__person=a_person,
-                                                                     structure__type=structure_type.FACULTY)
-        for f in faculty_administrators:
+        entity_administrators = EntityManager.objects.filter(person=a_person,
+                                                              structure__type=structure_type.FACULTY)
+        for f in entity_administrators:
             return f
     return None
 

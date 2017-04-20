@@ -17,4 +17,9 @@ class Migration(migrations.Migration):
             name='birth_date',
             field=models.DateField(blank=True, null=True),
         ),
+        migrations.AddField(
+            model_name='person',
+            name='employee',
+            field=models.BooleanField(default=False),
+        ),
     ]

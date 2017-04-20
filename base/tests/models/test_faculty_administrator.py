@@ -25,7 +25,7 @@
 ##############################################################################
 
 from django.test import TestCase
-from base.models import faculty_administrator
+from base.models import entity_manager
 from base.tests.factories.faculty_administrator import FacultyAdministratorFactory
 from base.tests.factories.structure import StructureFactory
 from base.tests.factories.employee import EmployeeFactory
@@ -42,17 +42,17 @@ class FacultyAdministratorTest(TestCase):
         self.user = User.objects.create_user("username", "test@test.com", "passtest",
                                              first_name='first_name', last_name='last_name')
         self.user.save()
-        add_permission(self.user, "is_faculty_administrator")
+        add_permission(self.user, "is_entity_manager")
 
 
     def test_no_faculty_administrator_for_the_user(self):
-        self.assertIsNone(faculty_administrator.find_faculty_administrator_by_user(self.user))
+        self.assertIsNone(entity_manager.find_entity_manager_by_user(self.user))
 
     def test_faculty_administrator_for_the_user(self):
         an_employee = EmployeeFactory(person=PersonFactory(user=self.user))
         fac_administrator = FacultyAdministratorFactory(employee=an_employee,
                                                         structure=StructureFactory(type=structure_type.FACULTY))
-        self.assertEqual(faculty_administrator.find_faculty_administrator_by_user(self.user), fac_administrator)
+        self.assertEqual(entity_manager.find_entity_manager_by_user(self.user), fac_administrator)
 
 
 def add_permission(user, codename):

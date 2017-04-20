@@ -119,7 +119,7 @@ def filter_by_person(person, entity_list, academic_yr, pgm_type):
 
 
 @login_required
-@permission_required('base.is_faculty_administrator', raise_exception=True)
+@permission_required('base.is_entity_manager', raise_exception=True)
 def delete_manager(request):
     pgms_to_be_removed = request.GET['pgms']  # offers_id are stock in inputbox in a list format (ex = "id1, id2")
     id_person_to_be_removed = request.GET['person']
@@ -141,7 +141,7 @@ def remove_program_mgr_from_offers(offers, person_to_be_removed):
 
 
 @login_required
-@permission_required('base.is_faculty_administrator', raise_exception=True)
+@permission_required('base.is_entity_manager', raise_exception=True)
 def person_list_search(request):
     lastname = request.GET['name']
     firstname = request.GET['firstname']
@@ -162,7 +162,7 @@ def person_list(employees):
 
 
 @login_required
-@permission_required('base.is_faculty_administrator', raise_exception=True)
+@permission_required('base.is_entity_manager', raise_exception=True)
 def create_manager(request):
     person_id = request.POST['person_id']
     pgms_id = request.POST['pgms_id']
@@ -179,7 +179,7 @@ def create_manager(request):
 
 
 def get_administrator_faculty(request):
-    faculty_administrator = mdl.faculty_administrator.find_faculty_administrator_by_user(request.user)
+    faculty_administrator = mdl.entity_manager.find_entity_manager_by_user(request.user)
     if faculty_administrator:
         return faculty_administrator.structure
     return None

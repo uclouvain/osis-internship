@@ -64,6 +64,7 @@ class Person(SerializableModel):
     birth_date = models.DateField(blank=True, null=True)
     source = models.CharField(max_length=25, blank=True, null=True, choices=person_source_type.CHOICES,
                               default=person_source_type.BASE)
+    employee = models.BooleanField(default=False)
 
     def save(self, **kwargs):
         # When person is created by another application this rule can be applied.
