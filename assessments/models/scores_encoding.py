@@ -80,4 +80,5 @@ def search(user, learning_unit_year_id=None, offer_year_id=None, learning_unit_y
     elif learning_unit_year_ids:
         queryset = queryset.filter(learning_unit_year_id__in=learning_unit_year_ids)
 
-    return queryset.filter(pgm_manager_person__user=user)
+    return queryset.filter(pgm_manager_person__user=user)\
+                   .select_related('learning_unit_year')
