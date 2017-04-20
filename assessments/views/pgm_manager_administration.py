@@ -41,15 +41,15 @@ ALL_OPTION_VALUE = "-"
 
 @login_required
 def pgm_manager_administration(request):
-    faculty = get_administrator_faculty(request)
+    entity_managed = get_administrator_faculty(request)
     current_academic_yr = mdl.academic_year.current_academic_year()
     return layout.render(request, "admin/pgm_manager.html", {
         'academic_year': current_academic_yr,
         'person': None,
-        'manager_entity': faculty,
-        'entity': faculty,
+        'manager_entity': entity_managed,
+        'entity': entity_managed,
         'pgm_types': mdl_ref.grade_type.find_by_coverage(grade_type_coverage.UNIVERSITY),
-        'managers': get_faculty_program_managers(faculty, current_academic_yr)})
+        'managers': get_faculty_program_managers(entity_managed, current_academic_yr)})
 
 
 @login_required
@@ -62,7 +62,7 @@ def pgm_manager_form(offers_on, error_messages, request):
     pgm_grade_type = get_filter_value(request, 'pgm_type')
     person = get_filter_value(request, 'person')
 
-    faculty = get_administrator_faculty(request)
+    entity_managed = get_administrator_faculty(request)
     current_academic_yr = mdl.academic_year.current_academic_year()
 
     manager_person = None
@@ -70,11 +70,11 @@ def pgm_manager_form(offers_on, error_messages, request):
         manager_person = mdl.person.find_by_id(int(person))
     data = {'academic_year': current_academic_yr,
             'person': manager_person,
-            'manager_entity': faculty,
+            'manager_entity': entity_managed,
             'entity': entity,
             'pgm_types': mdl_ref.grade_type.find_by_coverage(grade_type_coverage.UNIVERSITY),
-            'pgms': get_programs(current_academic_yr, get_entity_list(entity), manager_person, pgm_grade_type),
-            'managers': get_faculty_program_managers(faculty, current_academic_yr),
+            'pgms': get_programs(current_academic_yr, get_entity_list(entity, entity_managed), manager_person, pgm_grade_type),
+            'managers': get_faculty_program_managers(entity_managed, current_academic_yr),
             'offers_on': offers_on,
             'pgm_type': pgm_grade_type,
             'add_errors': error_messages}
@@ -85,15 +85,36 @@ def filter_by_entity_grade_type(academic_yr, entity_list, pgm_grade_type):
     return mdl.offer_year.search_offers(entity_list, academic_yr, pgm_grade_type)
 
 
-def get_entity_list(entity):
+def get_entity_list(entity, entity_managed):
+    if entity is None:
+        l = []
+        l = get_children(entity_managed,l)
+        list_children = [child.serializable_object() for child in entity_managed.children]
+        print(list_children)
+        for s in list_children:
+            print(s['acronym'])
+
+        return get_entity_children(entity_managed)
+
     if entity:
         if entity == ALL_OPTION_VALUE:
-            return list(mdl.structure.search(entity, None, structure_type.FACULTY))
+            return list(mdl.structure.search(entity, None, None))
         else:
             entity_found = mdl.structure.search(entity, None, None).first()
             if entity_found:
                 return [entity_found]
+
+
     return None
+
+
+def get_entity_children(entity_managed):
+    entities = []
+    if entity_managed:
+        for child in entity_managed.children:
+            entities.append(child)
+        entities.append(entity_managed)
+    return entities
 
 
 def get_filter_value(request, value_name):
@@ -147,18 +168,10 @@ def person_list_search(request):
     firstname = request.GET['firstname']
     employees = None
     if lastname or firstname:
-        employees = mdl.employee.search(lastname, firstname)
+        employees = mdl.person.search(lastname, firstname, True)
 
-    serializer = PersonSerializer(person_list(employees), many=True)
+    serializer = PersonSerializer(employees, many=True)
     return JSONResponse(serializer.data)
-
-
-def person_list(employees):
-    persons = []
-    for e in employees:
-        if e.person not in persons:
-            persons.append(e.person)
-    return persons
 
 
 @login_required
@@ -314,7 +327,7 @@ def update_managers_list(request):
                     if pgms == "":
                         pgms = an_offer_year.id
                     else:
-                        pgms = "{0}, {1}".format(pgms, an_offer_year.id)
+                        pgms = "{0},{1}".format(pgms, an_offer_year.id)
                     offers.append(an_offer_year)
                     acronyms_off_list.append(acronyms_off)
             if program_manager.person not in persons:
@@ -345,13 +358,24 @@ def pgm_to_keep_managing(a_person, programs):
 
 
 def get_programs(academic_yr, entity_list, manager_person, pgm_grade_type):
+    print('get_programs')
     if manager_person:
         pgms = filter_by_person(manager_person, entity_list, academic_yr, pgm_grade_type)
     else:
+        print(entity_list)
         pgms = filter_by_entity_grade_type(academic_yr, entity_list, pgm_grade_type)
     return pgms
 
 
 def get_faculty_program_managers(faculty, academic_yr):
     return mdl.program_manager.find_by_entity_administration_fac(faculty, academic_yr)
+
+def get_children(entity_managed,l):
+    print('get_children')
+    print(entity_managed.acronym)
+    for child in entity_managed.children:
+        l.append(child)
+        if child.children:
+            l = get_children(child,l)
+        return l
 

@@ -1394,4 +1394,7 @@ msgid "abscence_justified_preserved"
 msgstr "Abscence justifiée dèjà encodée et préservée"
 
 msgid "academic_actors"
-msgstr "Les acteurs académiques"
+msgstr "Acteurs académiques"
+
+msgid "desc_lnk_academic_actors"
+msgstr "Gestion des acteurs académiques"

@@ -34,11 +34,11 @@ from base.enums import person_source_type, person_status, person_type
 
 class PersonAdmin(SerializableModelAdmin):
     list_display = ('first_name', 'middle_name', 'last_name', 'username', 'email', 'gender', 'global_id',
-                    'national_id', 'changed', 'source')
+                    'national_id', 'changed', 'source', 'employee')
     search_fields = ['first_name', 'middle_name', 'last_name', 'user__username', 'email', 'global_id']
     fieldsets = ((None, {'fields': ('user', 'global_id', 'national_id', 'gender', 'first_name',
                                     'middle_name', 'last_name', 'birth_date', 'email', 'phone',
-                                    'phone_mobile', 'language')}),)
+                                    'phone_mobile', 'language','employee')}),)
     raw_id_fields = ('user',)
 
 
@@ -138,7 +138,7 @@ def find_by_lastname(a_name):
     return Person.objects.filter(Q(last_name__icontains=a_name) | Q(first_name__icontains=a_name))
 
 
-def search(a_lastname_part, a_first_name, a_status, a_type_list):
+def search(a_lastname_part, a_first_name, is_employee):
 
     out = None
     queryset = Person.objects
@@ -149,13 +149,10 @@ def search(a_lastname_part, a_first_name, a_status, a_type_list):
     if a_first_name:
         queryset = queryset.filter(first_name__icontains=a_first_name)
 
-    #
-    # if a_status:
-    #     queryset = queryset.filter(working_status=a_status)
-    #
-    # if a_type_list:
-    #     queryset = queryset.filter(working_type__in=a_type_list)
-    if a_lastname_part or a_first_name or a_status or a_type_list:
+    if is_employee:
+        queryset = queryset.filter(employee=is_employee)
+
+    if a_lastname_part or a_first_name or a_status or is_employee:
         out = queryset.order_by('last_name')
 
     return out

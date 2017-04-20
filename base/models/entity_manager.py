@@ -31,7 +31,7 @@ from base.enums import structure_type
 
 class EntityManagerAdmin(SerializableModelAdmin):
     list_display = ('person', 'structure')
-    fieldsets = ((None, {'fields': ('employee', 'structure',)}),)
+    fieldsets = ((None, {'fields': ('person', 'structure',)}),)
     search_fields = ['person__first_name', 'person__last_name', 'structure__acronym']
     raw_id_fields = ('person', 'structure')
 
@@ -56,8 +56,7 @@ def _get_perms(model):
 def find_entity_manager_by_user(a_user):
     a_person = person.find_by_user(a_user)
     if a_person:
-        entity_administrators = EntityManager.objects.filter(person=a_person,
-                                                              structure__type=structure_type.FACULTY)
+        entity_administrators = EntityManager.objects.filter(person=a_person)
         for f in entity_administrators:
             return f
     return None
