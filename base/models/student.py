@@ -39,7 +39,7 @@ class StudentAdmin(SerializableModelAdmin):
 class Student(SerializableModel):
     external_id = models.CharField(max_length=100, blank=True, null=True)
     changed = models.DateTimeField(null=True)
-    registration_id = models.CharField(max_length=10, unique=True)
+    registration_id = models.CharField(max_length=10, unique=True, db_index=True)
     person = models.ForeignKey('Person')
 
     def __str__(self):
