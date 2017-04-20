@@ -215,9 +215,8 @@ def calculate_exam_enrollment_progress(enrollments):
 
 
 def justification_label_authorized():
-    return "%s, %s, %s" % (_('absent_pdf_legend'),
-                           _('cheating_pdf_legend'),
-                           _('score_missing_pdf_legend'))
+    return "%s, %s" % (_('absent_pdf_legend'),
+                       _('cheating_pdf_legend'))
 
 
 class ExamEnrollmentHistoryAdmin(admin.ModelAdmin):
@@ -342,7 +341,12 @@ def find_for_score_encodings(session_exam_number,
         queryset = queryset.filter(learning_unit_enrollment__offer_enrollment__student__registration_id=registration_id)
 
     if justification:
-        queryset = queryset.filter(justification_final=justification)
+        if justification == justification_types.SCORE_MISSING:
+            # Show only empty values
+            queryset = queryset.filter(justification_final__isnull=True,
+                                       score_final__isnull=True)
+        else:
+            queryset = queryset.filter(justification_final=justification)
 
     if student_last_name:
         queryset = queryset.filter(
@@ -354,6 +358,7 @@ def find_for_score_encodings(session_exam_number,
 
     return queryset.select_related('learning_unit_enrollment__offer_enrollment__offer_year') \
                    .select_related('learning_unit_enrollment__offer_enrollment__student__person')\
+                   .select_related('session_exam__learning_unit_year')\
                    .prefetch_related(
                          models.Prefetch('learning_unit_enrollment__offer_enrollment__sessionexamdeadline_set',
                                          queryset=session_exam_deadline.filter_by_nb_session(session_exam_number),
