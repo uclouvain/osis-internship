@@ -24,14 +24,13 @@
 #
 ##############################################################################
 import factory
-
-from base.tests.factories.employee import EmployeeFactory
+from base.tests.factories.person import PersonFactory
 from base.tests.factories.structure import StructureFactory
 
 
-class FacultyAdministratorFactory(factory.django.DjangoModelFactory):
+class EntityManagerFactory(factory.django.DjangoModelFactory):
     class Meta:
-        model = "base.FacultyAdministrator"
+        model = "base.EntityManager"
 
-    employee = factory.SubFactory(EmployeeFactory)
+    person = factory.SubFactory(PersonFactory)
     structure = factory.SubFactory(StructureFactory)

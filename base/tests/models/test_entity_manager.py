@@ -24,19 +24,37 @@
 #
 ##############################################################################
 
-import datetime
 from django.test import TestCase
-from base.models import employee
-from base.tests.factories.employee import EmployeeFactory
+from base.models import entity_manager
+from base.tests.factories.entity_manager import EntityManagerFactory
+from base.tests.factories.structure import StructureFactory
+from base.tests.factories.person import PersonFactory
+from django.contrib.auth.models import User, Permission
 
 
-class EmployeeTest(TestCase):
+class EntityManagerTest(TestCase):
+
     def setUp(self):
-        self.employee = EmployeeFactory()
+        self.faculty_administrator = EntityManagerFactory()
 
-    def test_search_employee_with_none_argument(self):
-        self.assertIsNone(employee.search(None, None))
+        self.user = User.objects.create_user("username", "test@test.com", "passtest",
+                                             first_name='first_name', last_name='last_name')
+        self.user.save()
+        add_permission(self.user, "is_entity_manager")
 
-    def test_search_employee_with_lastname(self):
-        self.assertEqual(self.employee, list(employee.search(self.employee.person.last_name, None))[0])
+    def test_no_entity_manager_for_the_user(self):
+        self.assertIsNone(entity_manager.find_entity_manager_by_user(self.user))
 
+    def test_entity_manager_for_the_user(self):
+        a_person = PersonFactory(user=self.user)
+        entity_mgr = EntityManagerFactory(person=a_person, structure=StructureFactory())
+        self.assertEqual(entity_manager.find_entity_manager_by_user(self.user), entity_mgr)
+
+
+def add_permission(user, codename):
+    perm = get_permission(codename)
+    user.user_permissions.add(perm)
+
+
+def get_permission(codename):
+    return Permission.objects.get(codename=codename)

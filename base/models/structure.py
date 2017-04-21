@@ -55,6 +55,14 @@ class Structure(models.Model):
             'children': [child.serializable_object() for child in self.children]
         }
 
+    def serializable_acronym(self):
+        l = []
+        l.append(self.acronym)
+        for child in self.children:
+            l.append(child.acronym)
+            child.serializable_acronym()
+        return l
+
     def __str__(self):
         return u"%s - %s" % (self.acronym, self.title)
 
@@ -110,3 +118,9 @@ def find_faculty(a_structure):
 
 def find_first(acronym=None, title=None, type=None):
     return search(acronym, title, type).first()
+
+
+def find_by_acronyms(acronym_list):
+    return Structure.objects.filter(acronym__in=acronym_list).order_by("acronym")
+
+

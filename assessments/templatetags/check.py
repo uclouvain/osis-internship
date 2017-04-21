@@ -32,6 +32,5 @@ register = template.Library()
 def is_checked(offers_on, pgm_id):
     for o in offers_on:
         if o.id == pgm_id:
-            print('ch : ', o.acronym)
             return "checked"
     return ""

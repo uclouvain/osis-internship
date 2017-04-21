@@ -45,8 +45,7 @@
                         <label for="slt_entity" >{% trans 'entity'%}</label>
                         <select class="form-control" id="slt_entity" name="entity" >
                             <option selected value="-">{% trans 'all_hierarchy' %} {{ manager_entity.acronym }}</option>
-                            <option {%if manager_entity.acronym == entity %}selected{%endif%} value="{{manager_entity.acronym}}">{{manager_entity.acronym}}</option>
-                            {% for e in manager_entity.children %}
+                            {% for e in entities %}
                                 {% if e.acronym == entity %}
                                     <option selected value="{{ e.acronym }}">{{ e.acronym }}</option>
                                 {% else %}

@@ -35,7 +35,6 @@ from base.models import program_manager
 from base.tests.factories.program_manager import ProgramManagerFactory
 from base.tests.factories.person import PersonFactory
 from base.tests.factories.structure import StructureFactory
-from base.enums import structure_type
 from base.tests.factories.offer_year import OfferYearFactory
 from base.tests.factories.academic_year import AcademicYearFactory
 from reference.tests.factories.grade_type import GradeTypeFactory
@@ -48,8 +47,14 @@ class PgmManagerAdministrationTest(TestCase):
         add_permission(self.user, "is_entity_manager")
         self.person = PersonFactory()
 
-        self.structure_root = StructureFactory()
-        self.structure_faculty = StructureFactory(acronym='ESPO', type=structure_type.FACULTY)
+        self.structure_parent1 = StructureFactory(acronym='SSH')
+
+        self.structure_child1 = StructureFactory(acronym='TECO', part_of=self.structure_parent1)
+        self.structure_child11 = StructureFactory(acronym='TEBI', part_of=self.structure_child1)
+
+        self.structure_child2 = StructureFactory(acronym='ESPO', part_of=self.structure_parent1)
+        self.structure_child21 = StructureFactory(acronym='ECON', part_of=self.structure_child2)
+        self.structure_child22 = StructureFactory(acronym='COMU', part_of=self.structure_child2)
 
         a_year = datetime.now().year
         self.academic_year_previous = AcademicYearFactory(year=a_year-1)
@@ -57,25 +62,25 @@ class PgmManagerAdministrationTest(TestCase):
 
         self.Client = Client()
 
-    def test_set_find_faculty_entities(self):
-        self.assertIsNone(pgm_manager_administration.get_entity_list(None))
-        self.assertEqual(len(pgm_manager_administration.get_entity_list(self.structure_faculty.acronym)), 1)
-        self.assertIsNone(pgm_manager_administration.get_entity_list('zzzz'))
+    def test_find_children_entities_from_acronym(self):
+        self.assertIsNone(pgm_manager_administration.get_managed_entities(None))
+        self.assertEqual(len(pgm_manager_administration.get_managed_entities(self.structure_parent1)), 6)
+        self.assertEqual(len(pgm_manager_administration.get_managed_entities(self.structure_child2)), 3)
 
     def test_search_find_programs_by_entity_grade_type(self):
         a_grade_type = GradeTypeFactory()
         offer_year1 = OfferYearFactory(academic_year=self.academic_year_current,
-                                       entity_management=self.structure_faculty,
+                                       entity_management=self.structure_parent1,
                                        grade_type=a_grade_type)
         OfferYearFactory(academic_year=self.academic_year_current,
                          entity_management=StructureFactory(),
                          grade_type=a_grade_type)
         self.assertEqual(len(pgm_manager_administration.filter_by_entity_grade_type(offer_year1.academic_year,
-                                                                                    [self.structure_faculty],
+                                                                                    [self.structure_parent1],
                                                                                     a_grade_type)), 1)
 
         self.assertEqual(len(pgm_manager_administration.filter_by_entity_grade_type(offer_year1.academic_year,
-                                                                                    [self.structure_faculty],
+                                                                                    [self.structure_parent1],
                                                                                     None)), 1)
         self.assertEqual(len(pgm_manager_administration.filter_by_entity_grade_type(offer_year1.academic_year,
                                                                                     None,
@@ -156,7 +161,7 @@ class PgmManagerAdministrationTest(TestCase):
         ProgramManagerFactory(person=person_previous_year, offer_year=offer_year_previous_year)
         ProgramManagerFactory(person=person_current_year, offer_year=offer_year_current_year)
 
-        self.assertEqual(len(pgm_manager_administration.get_faculty_program_managers(an_entity_administration_fac,
+        self.assertEqual(len(pgm_manager_administration.get_entity_program_managers(an_entity_administration_fac,
                                                                                      self.academic_year_current)), 1)
 
 
