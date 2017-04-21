@@ -150,18 +150,18 @@ class PgmManagerAdministrationTest(TestCase):
     def test_pgm_manager_queried_by_academic_year(self):
         self.client.force_login(self.user)
 
-        an_entity_administration_fac = StructureFactory()
+        a_management_entity = StructureFactory()
         offer_year_previous_year = OfferYearFactory(academic_year=self.academic_year_previous,
-                                                    entity_administration_fac=an_entity_administration_fac)
+                                                    entity_management=a_management_entity)
         offer_year_current_year = OfferYearFactory(academic_year=self.academic_year_current,
-                                                   entity_administration_fac=an_entity_administration_fac)
+                                                   entity_management=a_management_entity)
         person_previous_year = PersonFactory()
         person_current_year = PersonFactory()
 
         ProgramManagerFactory(person=person_previous_year, offer_year=offer_year_previous_year)
         ProgramManagerFactory(person=person_current_year, offer_year=offer_year_current_year)
 
-        self.assertEqual(len(pgm_manager_administration.get_entity_program_managers(an_entity_administration_fac,
+        self.assertEqual(len(pgm_manager_administration.get_entity_program_managers(a_management_entity,
                                                                                      self.academic_year_current)), 1)
 
 

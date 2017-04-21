@@ -29,6 +29,7 @@ from django.dispatch import receiver, Signal
 from base.models import student as mdl_student, person as mdl_person, tutor as mdl_tutor, program_manager as mdl_pgm_manager, entity_manager as mdl_entity_manager
 from osis_common.models.serializable_model import SerializableModel
 from django.conf import settings
+from django.contrib.auth.models import Permission
 
 person_created = Signal(providing_args=['person'])
 

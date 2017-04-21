@@ -106,8 +106,8 @@ def find_by_id(an_id):
         return None
 
 
-def find_by_administration_entity(administration_entity, academic_yr):
-    return ProgramManager.objects.filter(offer_year__entity_administration_fac=administration_entity,
+def find_by_management_entity(administration_entity, academic_yr):
+    return ProgramManager.objects.filter(offer_year__entity_management__in=administration_entity,
                                          offer_year__academic_year=academic_yr).distinct('person')
 
 

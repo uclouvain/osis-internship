@@ -34,10 +34,12 @@ from base.tests.factories.academic_year import AcademicYearFactory
 from base.tests.factories.structure import StructureFactory
 from django.test import TestCase
 
+
 def create_program_manager(offer_year, person=None):
     if not person:
         person = PersonFactory(first_name="program", last_name="manager")
     return ProgramManagerFactory(offer_year=offer_year, person=person)
+
 
 class FindByOfferYearTest(TestCase):
 
@@ -74,7 +76,7 @@ class FindByOfferYearTest(TestCase):
 
     def test_is_program_manager(self):
         user = UserFactory(username="PGRM_1")
-        ProgramManagerFactory(offer_year=self.offer_year, person= PersonFactory(user=user))
+        ProgramManagerFactory(offer_year=self.offer_year, person=PersonFactory(user=user))
         self.assertTrue(program_manager.is_program_manager(user=user))
 
     def test_is_not_program_manager(self):
@@ -82,9 +84,8 @@ class FindByOfferYearTest(TestCase):
         self.assertFalse(program_manager.is_program_manager(user=user))
 
     def test_find_program_manager_by_entity_administration_fac(self):
-        entity_administration=StructureFactory()
+        a_management_entity = StructureFactory()
         offer_yr = OfferYearFactory(academic_year=self.academic_year,
-                                    entity_administration_fac=entity_administration)
+                                    entity_management=a_management_entity)
         ProgramManagerFactory(offer_year=offer_yr, person=PersonFactory())
-        self.assertEquals(len(program_manager.find_by_administration_entity(entity_administration,
-                                                                            self.academic_year)),1)
+        self.assertEquals(len(program_manager.find_by_management_entity([a_management_entity], self.academic_year)), 1)

@@ -57,7 +57,6 @@ def pgm_manager_search(request):
     return pgm_manager_form(None, None, request)
 
 
-
 def pgm_manager_form(offers_on, error_messages, request):
     entity = get_filter_value(request, 'entity')
     pgm_grade_type = get_filter_value(request, 'pgm_type')
@@ -361,7 +360,8 @@ def get_programs(academic_yr, entity_list, manager_person, pgm_grade_type):
 
 
 def get_entity_program_managers(entity, academic_yr):
-    return mdl.program_manager.find_by_administration_entity(entity, academic_yr)
+    entities = get_managed_entities(entity)
+    return mdl.program_manager.find_by_management_entity(entities, academic_yr)
 
 
 def find_values(key_value, json_repr):
