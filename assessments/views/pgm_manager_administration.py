@@ -300,9 +300,14 @@ def update_managers_list(request):
     # Update the manager's list after add/delete
     list_id_offers_on = convert_to_list(request.GET['pgm_ids'])
     program_manager_list = mdl.program_manager.find_by_offer_year_list(list_id_offers_on)
+    serializer = PgmManagerSerializer(build_program_manager_list(list_id_offers_on, program_manager_list),
+                                      many=True)
+    return JSONResponse(serializer.data)
+
+
+def build_program_manager_list(list_id_offers_on, program_manager_list):
     pgm_managers = []
     persons = []
-
     for program_manager in program_manager_list:
         if program_manager.person not in pgm_managers:
             acronyms_off = ""
@@ -326,9 +331,7 @@ def update_managers_list(request):
                                                                                            offers),
                                                offer_year_acronyms_off=acronyms_off,
                                                programs=pgms))
-
-    serializer = PgmManagerSerializer(pgm_managers, many=True)
-    return JSONResponse(serializer.data)
+    return pgm_managers
 
 
 def build_offer_ids_string(an_offer_year, pgms_in):
