@@ -1,12 +1,12 @@
 ##############################################################################
 #
-# OSIS stands for Open Student Information System. It's an application
+#    OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -25,11 +25,34 @@
 ##############################################################################
 from django.db import models
 from django.utils import timezone
-
-from osis_common.models.serializable_model import SerializableModel
+from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 from base.models.exceptions import FunctionAgrumentMissingException, StartDateHigherThanEndDateException
 from base.models.enums import academic_calendar_type
+from django.utils.translation import ugettext as _
+from base.models.utils.model_action import delete_admin_action
+
+
 FUNCTIONS = 'functions'
+
+
+class AcademicCalendarAdmin(SerializableModelAdmin):
+    list_display = ('academic_year', 'title', 'start_date', 'end_date')
+    list_display_links = None
+    readonly_fields = ('academic_year', 'title', 'start_date', 'end_date')  # The fields have to be readonly.
+                                                                            # The application/synchronization
+                                                                            # will update NOT THE ADMIN
+    list_filter = ('academic_year',)
+    search_fields = ['title']
+    ordering = ('start_date',)
+
+    def has_add_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+    def get_actions(self, request):
+        return delete_admin_action(super(AcademicCalendarAdmin, self).get_actions(request))
 
 
 class AcademicCalendar(SerializableModel):
@@ -49,8 +72,14 @@ class AcademicCalendar(SerializableModel):
         if FUNCTIONS not in kwargs.keys():
             raise FunctionAgrumentMissingException('The kwarg "{0}" must be set.'.format(FUNCTIONS))
         functions = kwargs.pop(FUNCTIONS)
+        if self.start_date is None or self.end_date is None:
+            raise AttributeError(_('dates_mandatory_error'))
+        if self.start_date and self.academic_year.start_date and self.start_date < self.academic_year.start_date:
+            raise AttributeError(_('academic_start_date_error'))
+        if self.end_date and self.academic_year.end_date and self.end_date > self.academic_year.end_date:
+            raise AttributeError(_('academic_end_date_error'))
         if self.start_date and self.end_date and self.start_date >= self.end_date:
-            raise StartDateHigherThanEndDateException('Start date must be lower than end date')
+            raise StartDateHigherThanEndDateException(_('end_start_date_error'))
         super(AcademicCalendar, self).save(*args, **kwargs)
         for function in functions:
             function(self)

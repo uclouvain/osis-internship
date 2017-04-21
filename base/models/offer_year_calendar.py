@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -29,6 +29,7 @@ from django.utils import timezone
 from django.contrib import admin
 from base.models import offer_year
 import datetime
+from django.utils.translation import ugettext as _
 
 
 class OfferYearCalendarAdmin(admin.ModelAdmin):
@@ -49,7 +50,7 @@ class OfferYearCalendar(models.Model):
     customized = models.BooleanField(default=False)
 
     def update_dates(self, start_date, end_date):
-        if self.customized: # case offerYearCalendar is already customized
+        if self.customized:  # case offerYearCalendar is already customized
             # We update the new start date
             # WARNING : this is TEMPORARY ; a solution for the sync from EPC to OSIS
             #           because the start_date for scores_encodings doesn't exist in EPC
@@ -58,6 +59,42 @@ class OfferYearCalendar(models.Model):
             self.start_date = start_date
             self.end_date = end_date
         self.save()
+
+    def save(self, *args, **kwargs):
+        academic_start_date = self.get_start_date()
+        academic_end_date = self.get_end_date()
+        if self.start_dates_set(academic_start_date) and self.start_date < academic_start_date:
+            raise AttributeError(_('academic_start_date_error'))
+        if self.end_dates_set(academic_end_date) and self.end_date > academic_end_date:
+            raise AttributeError(_('academic_end_date_error'))
+        if self.start_end_dates_set() and self.end_date < self.start_date:
+            raise AttributeError(_('end_start_date_error'))
+        super(OfferYearCalendar, self).save(*args, **kwargs)
+
+    def start_end_dates_set(self):
+        return self.start_date and self.end_date
+
+    def end_dates_set(self, academic_end_date):
+        return academic_end_date and self.end_date
+
+    def start_dates_set(self, academic_start_date):
+        return academic_start_date and self.start_date
+
+    def get_end_date(self):
+        if self.academic_calendar.end_date:
+            return self.academic_calendar.end_date
+        else:
+            if self.offer_year.academic_year.end_date:
+                return self.offer_year.academic_year.end_date
+        return None
+
+    def get_start_date(self):
+        if self.academic_calendar.start_date:
+            return self.academic_calendar.start_date
+        else:
+            if self.offer_year.academic_year.start_date:
+                return self.offer_year.academic_year.start_date
+        return None
 
     def __str__(self):
         return u"%s - %s" % (self.academic_calendar, self.offer_year)
@@ -94,7 +131,7 @@ def _create_from_academic_calendar(academic_calendar):
 
 def find_by_current_session_exam():
     return OfferYearCalendar.objects.filter(start_date__lte=timezone.now()) \
-                                    .filter(end_date__gte=timezone.now()).first()
+        .filter(end_date__gte=timezone.now()).first()
 
 
 def find_by_academic_calendar(academic_cal):
@@ -109,8 +146,8 @@ def find_offer_year_events(offer_yr):
 
 
 def find_offer_year_calendars_by_academic_year(academic_yr):
-    return OfferYearCalendar.objects.filter(academic_calendar__academic_year=academic_yr)\
-                                    .order_by('academic_calendar', 'offer_year__acronym')
+    return OfferYearCalendar.objects.filter(academic_calendar__academic_year=academic_yr) \
+        .order_by('academic_calendar', 'offer_year__acronym')
 
 
 def find_by_id(offer_year_calendar_id):
@@ -127,8 +164,8 @@ def find_by_offer_year(offer_yr, academic_calendar_type=None):
 def find_latest_end_date_by_academic_calendar(academic_calendar_id):
     try:
         return OfferYearCalendar.objects.filter(academic_calendar_id=academic_calendar_id) \
-                                        .filter(customized=True) \
-                                        .filter(end_date__isnull=False) \
-                                        .latest('end_date')
+            .filter(customized=True) \
+            .filter(end_date__isnull=False) \
+            .latest('end_date')
     except ObjectDoesNotExist:
         return None
