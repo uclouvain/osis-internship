@@ -45,8 +45,7 @@
                         <label for="slt_entity" >{% trans 'entity'%}</label>
                         <select class="form-control" id="slt_entity" name="entity" >
                             <option selected value="-">{% trans 'all_hierarchy' %} {{ manager_entity.acronym }}</option>
-                            <option {%if manager_entity.acronym == entity %}selected{%endif%} value="{{manager_entity.acronym}}">{{manager_entity.acronym}}</option>
-                            {% for e in manager_entity.children %}
+                            {% for e in entities %}
                                 {% if e.acronym == entity %}
                                     <option selected value="{{ e.acronym }}">{{ e.acronym }}</option>
                                 {% else %}
@@ -358,6 +357,7 @@
         $('#tb_persons tbody > tr').remove();
 
         $('#pnl_person_search_results').css('visibility', 'hidden');
+        $('#pnl_person_search_error').css('visibility', 'hidden');
         $.ajax({
             url: "/assessments/pgm_manager/person/list/search?name=" + $('#txt_name').val() + "&firstname=" + $('#txt_first_name').val()
         }).then(function (data) {
@@ -393,6 +393,9 @@
                     trHTML += '</tr>';
                     $('#tb_persons tbody').append(trHTML);
                 });
+
+            }else{
+                $('#pnl_person_search_error').css('visibility', 'visible');
 
             }
         });

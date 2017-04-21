@@ -34,7 +34,6 @@ from base.models.program_manager import ProgramManager
 from base.models.student import Student
 from base.models.tutor import Tutor
 from base.models.entity_manager import EntityManager
-from base.models.employee import Employee
 from base.models.structure import Structure
 from base.models import models_signals as mdl_signals, person as mdl_person
 
@@ -72,7 +71,7 @@ def get_or_create_person(user=None, first_name=None, global_id=None):
 
 def assert_person_match_user_infos(test_case, person, user_infos):
     test_case.assertEqual(person.first_name, user_infos.get('USER_FIRST_NAME'))
-    test_case.assertEqual(person.last_name,user_infos.get('USER_LAST_NAME'))
+    test_case.assertEqual(person.last_name, user_infos.get('USER_LAST_NAME'))
     test_case.assertEqual(person.global_id, user_infos.get('USER_FGS'))
     test_case.assertEqual(person.email, user_infos.get('USER_EMAIL'))
 
@@ -159,9 +158,8 @@ class AddToGroupsSignalsTest(TestCase):
         offer_year = OfferYear.objects.create(offer=offer, academic_year=academic_year, title=title, acronym=acronym)
         return ProgramManager.objects.create(offer_year=offer_year, person=self.person_foo)
 
-    def create_test_faculty_administrator(self):
-        return EntityManager.objects.create(employee=Employee.objects.create(person=self.person_foo),
-                                                   structure=Structure.objects.create(acronym="TEST"))
+    def create_test_entity_manager(self):
+        return EntityManager.objects.create(person=self.person_foo, structure=Structure.objects.create(acronym="TEST"))
 
     def setUp(self):
         self.user_foo = User.objects.create_user('user_foo')
@@ -195,13 +193,13 @@ class AddToGroupsSignalsTest(TestCase):
         self.assertFalse(self.is_member('program_managers'),
                          'user_foo should not be in program_managers group anymore')
 
-    def test_add_to_faculty_administrator_group(self):
-        self.create_test_faculty_administrator()
-        self.assertTrue(self.is_member('faculty_administrators'),
-                        'faculty_administrator_foo should be in faculty_administrators group')
+    def test_add_to_entity_manager_group(self):
+        self.create_test_entity_manager()
+        self.assertTrue(self.is_member('entity_managers'),
+                        'entity_manager_foo should be in entity_managers group')
 
-    def test_remove_from_faculty_administrator_group(self):
-        faculty_administrator_foo = self.create_test_faculty_administrator()
+    def test_remove_from_entity_manager_group(self):
+        faculty_administrator_foo = self.create_test_entity_manager()
         faculty_administrator_foo.delete()
-        self.assertFalse(self.is_member('faculty_administrators'),
-                         'faculty_administrator_foo should not be in faculty_administrators group anymore')
+        self.assertFalse(self.is_member('entity_managers'),
+                         'faculty_administrator_foo should not be in entity_managers group anymore')

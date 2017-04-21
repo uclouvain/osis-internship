@@ -184,7 +184,9 @@ def find_by_offer(offers):
 
 
 def find_by_id_list(ids):
-    return OfferYear.objects.filter(id__in=ids)
+    if ids:
+        return OfferYear.objects.filter(id__in=ids)
+    return None
 
 
 def search_offers(entity_list=None, academic_yr=None, a_grade_type=None):
