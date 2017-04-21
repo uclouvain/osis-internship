@@ -305,7 +305,6 @@ def update_managers_list(request):
 
     for program_manager in program_manager_list:
         if program_manager.person not in pgm_managers:
-            acronyms_off_list = []
             acronyms_off = ""
             pgms = ""
             offers = []
@@ -314,16 +313,10 @@ def update_managers_list(request):
                 an_offer_year = mdl.offer_year.find_by_id(int(offer_year_id))
                 mg = mdl.program_manager.find_by_offer_year_person(program_manager.person, an_offer_year)
                 if mg:
-                    if acronyms_off == "":
-                        acronyms_off = "{0}".format(an_offer_year.acronym)
-                    else:
-                        acronyms_off = "{0}, {1}".format(acronyms_off, an_offer_year.acronym)
-                    if pgms == "":
-                        pgms = an_offer_year.id
-                    else:
-                        pgms = "{0},{1}".format(pgms, an_offer_year.id)
+                    acronyms_off = build_acronyms_off_string(acronyms_off, an_offer_year)
+                    pgms = build_offer_ids_string(an_offer_year, pgms)
                     offers.append(an_offer_year)
-                    acronyms_off_list.append(acronyms_off)
+
             if program_manager.person not in persons:
                 persons.append(program_manager.person)
                 pgm_managers.append(PgmManager(person_id=program_manager.person.id,
@@ -336,6 +329,24 @@ def update_managers_list(request):
 
     serializer = PgmManagerSerializer(pgm_managers, many=True)
     return JSONResponse(serializer.data)
+
+
+def build_offer_ids_string(an_offer_year, pgms_in):
+    pgms = pgms_in
+    if pgms == "":
+        pgms = an_offer_year.id
+    else:
+        pgms = "{0},{1}".format(pgms, an_offer_year.id)
+    return pgms
+
+
+def build_acronyms_off_string(acronyms_off_in, an_offer_year):
+    acronyms_off = acronyms_off_in
+    if acronyms_off == "":
+        acronyms_off = "{0}".format(an_offer_year.acronym)
+    else:
+        acronyms_off = "{0}, {1}".format(acronyms_off, an_offer_year.acronym)
+    return acronyms_off
 
 
 def pgm_to_keep_managing(a_person, programs):
