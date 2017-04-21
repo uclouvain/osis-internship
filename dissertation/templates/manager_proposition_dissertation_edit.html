@@ -44,20 +44,25 @@
         <label for="txt_type">{% trans 'author' %}</label>
         <p>{{ author }}</p>
         <div class="panel-group">
-            <label for="txt_title" {% if form.title.errors %} style="color:red;" {% endif %}>{% trans 'title' %}</label>
+            <label for="txt_title" {% if form.title.errors %} style="color:red;" {% endif %}>
+                {% trans 'title' %}
+                {% for error in form.title.errors %}
+                    <br>{{ error|escape }}
+                {% endfor %}
+            </label>
             <input class="form-control" id="txt_title"  name="title"
                 style="margin:-6px;" value="{{ form.title.value }}">
         </div>
-        <div class="panel-group {% if field.errors %}error{% endif %}">
+        <div class="panel-group">
             <label for="txt_visibility">{% trans 'visibility' %}</label>
             <input id="txt_visibility"  name="visibility"
                    style="margin-left:6px;" type="checkbox" {% if form.visibility.value %} checked {% endif %}>
         </div>
-       <div class="panel-group {% if field.errors %}error{% endif %}">
+       <div class="panel-group">
             <label for="txt_description">{% trans 'description' %}</label>
             <textarea class="form-control" id="txt_description"  name="description" rows="10" style="margin:-6px;">{{ form.description.value }}</textarea>
        </div>
-        <div class="panel-group {% if field.errors %}error{% endif %}">
+        <div class="panel-group">
             <label for="txt_type">{% trans 'subject_type' %}</label>
             <select class="form-control" id="txt_type"  name="type" style="margin:-6px;">
                 {% for type in types_choices %}
@@ -65,7 +70,7 @@
                 {% endfor %}
             </select>
         </div>
-        <div class="panel-group {% if field.errors %}error{% endif %}">
+        <div class="panel-group">
             <label for="txt_level">{% trans 'level' %}</label>
             <select class="form-control" id="txt_level"  name="level" style="margin:-6px;">
                 {% for level in levels_choices %}
@@ -82,12 +87,22 @@
             </select>
         </div>
         <div class="panel-group">
-            <label for="txt_max_number_student" {% if form.max_number_student.errors %} style="color:red;" {% endif %}>{% trans 'max_students_number' %}</label>
+            <label for="txt_max_number_student" {% if form.max_number_student.errors %} style="color:red;" {% endif %}>
+                {% trans 'max_students_number' %}
+                {% for error in form.max_number_student.errors %}
+                    <br>{{ error|escape }}
+                {% endfor %}
+            </label>
             <input class="form-control" id="txt_max_number_student"  name="max_number_student"
                 style="margin:-6px;" value="{{ form.max_number_student.value }}">
         </div>
         <div class="panel-group">
-            <label for="txt_level">{% trans 'offer_propositions' %}</label>
+            <label for="txt_level" {% if offer_propositions_error %} style="color:red;" {% endif %}>
+                {% trans 'offer_propositions' %}
+                {% if offer_propositions_error %}
+                    <br>{% trans offer_propositions_error %}
+                {% endif %}
+            </label>
             <br>
             {% for offer_proposition in offer_propositions %}
                 <label for="txt_checkbox_{{ offer_proposition.id }}">{{ offer_proposition.acronym }}</label>
