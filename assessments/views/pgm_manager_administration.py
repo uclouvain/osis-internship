@@ -57,7 +57,7 @@ def pgm_manager_search(request):
     return pgm_manager_form(None, None, request)
 
 
-@login_required
+
 def pgm_manager_form(offers_on, error_messages, request):
     entity = get_filter_value(request, 'entity')
     pgm_grade_type = get_filter_value(request, 'pgm_type')

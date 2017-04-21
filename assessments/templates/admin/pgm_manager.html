@@ -357,6 +357,7 @@
         $('#tb_persons tbody > tr').remove();
 
         $('#pnl_person_search_results').css('visibility', 'hidden');
+        $('#pnl_person_search_error').css('visibility', 'hidden');
         $.ajax({
             url: "/assessments/pgm_manager/person/list/search?name=" + $('#txt_name').val() + "&firstname=" + $('#txt_first_name').val()
         }).then(function (data) {
@@ -392,6 +393,9 @@
                     trHTML += '</tr>';
                     $('#tb_persons tbody').append(trHTML);
                 });
+
+            }else{
+                $('#pnl_person_search_error').css('visibility', 'visible');
 
             }
         });

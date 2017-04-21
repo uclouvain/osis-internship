@@ -34,36 +34,33 @@ js_info_dict = {
     'packages': ('assessments',),
 }
 
-
-urlpatterns = [
+urlpatterns = (
     url(r'^login/$', common.login, name='login'),
     url(r'^logout/$', common.log_out, name='logout'),
-    url(r'^logged_out/$',common.logged_out,name='logged_out'),
+    url(r'^logged_out/$', common.logged_out, name='logged_out'),
 
     url(r'^'+settings.ADMIN_URL, admin.site.urls),
     url(r'', include('base.urls')),
-    url(r'^assistants/', include('assistant.urls')),
-    url(r'^internships/', include('internship.urls')),
-    url(r'^dissertation/', include('dissertation.urls')),
-    url(r'^assessments/', include('assessments.urls')),
     url(r'^jsi18n/$', javascript_catalog, js_info_dict, name='javascript-catalog'),
-]
+)
+
+if 'assistant' in settings.INSTALLED_APPS:
+    urlpatterns += (url(r'^assistants/', include('assistant.urls')), )
+if 'internship' in settings.INSTALLED_APPS:
+    urlpatterns += (url(r'^internships/', include('internship.urls')), )
+if 'dissertation' in settings.INSTALLED_APPS:
+    urlpatterns += (url(r'^dissertation/', include('dissertation.urls')), )
+if 'assessments' in settings.INSTALLED_APPS:
+    urlpatterns += (url(r'^assessments/', include('assessments.urls')), )
 
 handler404 = 'base.views.common.page_not_found'
 handler403 = 'base.views.common.access_denied'
 handler500 = 'base.views.common.server_error'
 
 admin.site.site_header = 'OSIS'
-admin.site.site_title  = 'OSIS'
+admin.site.site_title = 'OSIS'
 admin.site.index_title = 'Louvain'
 
-try:
-    from backoffice.server_urls import *
-except ImportError:
-    pass
-
-if settings.DEBUG:
+if settings.DEBUG and 'debug_toolbar' in settings.INSTALLED_APPS:
     import debug_toolbar
-    urlpatterns += [
-        url(r'^__debug__/', include(debug_toolbar.urls)),
-    ]
+    urlpatterns += (url(r'^__debug__/', include(debug_toolbar.urls)), )
