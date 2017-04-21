@@ -356,6 +356,7 @@ def find_for_score_encodings(session_exam_number,
 
     return queryset.select_related('learning_unit_enrollment__offer_enrollment__offer_year') \
                    .select_related('learning_unit_enrollment__offer_enrollment__student__person')\
+                   .select_related('session_exam__learning_unit_year')\
                    .prefetch_related(
                          models.Prefetch('learning_unit_enrollment__offer_enrollment__sessionexamdeadline_set',
                                          queryset=session_exam_deadline.filter_by_nb_session(session_exam_number),
