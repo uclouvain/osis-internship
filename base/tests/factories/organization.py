@@ -1,12 +1,12 @@
 ##############################################################################
 #
-#    OSIS stands for Open Student Information System. It's an application
+# OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -23,17 +23,18 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
+import factory
+from base.models import organization
 
 
-class EntityAddress(models.Model):
-    entity = models.ForeignKey('Entity')
-    label = models.CharField(max_length=20, null=True)
-    location = models.CharField(max_length=255, null=True)
-    postal_code = models.CharField(max_length=20, null=True)
-    city = models.CharField(max_length=255, null=True)
-    country = models.CharField(max_length=255, null=True)
+class OrganizationFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = 'base.Organization'
 
-
-def search_by_entity(entity):
-    return EntityAddress.objects.filter(entity=entity)
+    external_id = factory.Faker('text', max_nb_chars=100)
+    changed = factory.Faker('date_time_this_month')
+    name = factory.Faker('text', max_nb_chars=255)
+    acronym = factory.Faker('text', max_nb_chars=15)
+    website = factory.Faker('url')
+    reference = factory.Faker('text', max_nb_chars=30)
+    type = factory.Iterator(organization.ORGANIZATION_TYPE, getter=lambda c: c[0])

@@ -1,6 +1,6 @@
 ##############################################################################
 #
-#    OSIS stands for Open Student Information System. It's an application
+# OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -23,17 +23,17 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
+from django.test import TestCase
+from base.models import entity_address
+from base.tests.factories.entity import EntityFactory
+from base.tests.factories.entity_address import EntityAddressFactory
 
 
-class EntityAddress(models.Model):
-    entity = models.ForeignKey('Entity')
-    label = models.CharField(max_length=20, null=True)
-    location = models.CharField(max_length=255, null=True)
-    postal_code = models.CharField(max_length=20, null=True)
-    city = models.CharField(max_length=255, null=True)
-    country = models.CharField(max_length=255, null=True)
+class EntityAddressTest(TestCase):
 
+    def test_search_by_entity(self):
+        entity = EntityFactory()
+        for i in range(3):
+            self.entity_address = EntityAddressFactory(entity=entity)
 
-def search_by_entity(entity):
-    return EntityAddress.objects.filter(entity=entity)
+        self.assertEqual(len(entity_address.search_by_entity(entity)), 3)
