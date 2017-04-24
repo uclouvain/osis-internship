@@ -213,15 +213,15 @@
                         <td>
                             {% if is_program_manager %}
                                 {% if enrollment.score_final != None %}
-                                    {{ enrollment.score_final | score_display:enrollment.session_exam.learning_unit_year.decimal_scores }}
+                                    {{ enrollment.score_final | score_display:enrollment.learning_unit_enrollment.learning_unit_year.decimal_scores }}
                                 {% else %}
                                     -
                                 {% endif %}
                             {% else %}
                                 {% if enrollment.score_final != None %}
-                                    {{ enrollment.score_final | score_display:enrollment.session_exam.learning_unit_year.decimal_scores }}
+                                    {{ enrollment.score_final | score_display:enrollment.learning_unit_enrollment.learning_unit_year.decimal_scores }}
                                 {% elif enrollment.score_draft != None %}
-                                    {{ enrollment.score_draft | score_display:enrollment.session_exam.learning_unit_year.decimal_scores }}
+                                    {{ enrollment.score_draft | score_display:enrollment.learning_unit_enrollment.learning_unit_year.decimal_scores }}
                                 {% else %}
                                     -
                                 {% endif %}
