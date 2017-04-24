@@ -25,11 +25,12 @@
 ##############################################################################
 from decimal import *
 from django.db import models
+from django.db.models import When, Case, Q, Sum, Count, IntegerField, F
 from django.contrib import admin
 from django.utils.translation import ugettext as _
 from django.core.validators import MaxValueValidator, MinValueValidator
 from base.models import person, learning_unit_year, person_address, session_exam_calendar, session_exam_deadline, \
-                        academic_year as academic_yr
+                        academic_year as academic_yr, offer_year, program_manager, tutor
 from attribution.models import attribution
 from base.enums import exam_enrollment_justification_type as justification_types
 from base.enums import exam_enrollment_state as enrollment_states
@@ -279,6 +280,51 @@ def find_exam_enrollments_by_session_learningunit(session_exm, a_learning_unit_y
     return enrollments
 
 
+def get_progress_by_learning_unit_years_and_offer_years(user,
+                                                        session_exam_number,
+                                                        learning_unit_year_id=None,
+                                                        learning_unit_year_ids=None,
+                                                        offer_year_id=None,
+                                                        academic_year=None):
+    if offer_year_id:
+        offer_year_ids = [offer_year_id]
+    else:
+        offer_year_ids = offer_year.find_by_user(user).values_list('id', flat=True)
+
+    tutor_user=None
+    if not program_manager.is_program_manager(user):
+        tutor_user = tutor.find_by_user(user)
+
+    queryset = find_for_score_encodings(session_exam_number=session_exam_number,
+                                        learning_unit_year_id=learning_unit_year_id,
+                                        learning_unit_year_ids=learning_unit_year_ids,
+                                        offers_year=offer_year_ids,
+                                        tutor=tutor_user,
+                                        academic_year=academic_year,
+                                        with_session_exam_deadline=False)
+
+    return queryset.values('session_exam',
+                           'learning_unit_enrollment__learning_unit_year',
+                           'learning_unit_enrollment__offer_enrollment__offer_year')\
+                       .annotate(total_exam_enrollments=Count('id'),
+                                 learning_unit_enrollment__learning_unit_year__acronym=
+                                        F('learning_unit_enrollment__learning_unit_year__acronym'),
+                                 learning_unit_enrollment__learning_unit_year__title=
+                                                F('learning_unit_enrollment__learning_unit_year__title'),
+                                 exam_enrollments_encoded=Sum(Case(
+                                          When(Q(score_final__isnull=False)|Q(justification_final__isnull=False),then=1),
+                                          default=0,
+                                          output_field=IntegerField()
+                                 )),
+                                 scores_not_yet_submitted=Sum(Case(
+                                     When((Q(score_draft__isnull=False) & Q(score_final__isnull=False) & Q(justification_final__isnull=False)) |
+                                          (Q(justification_draft__isnull=False) & Q(score_final__isnull=False) & Q(justification_final__isnull=False))
+                                          ,then=1),
+                                          default=0,
+                                          output_field=IntegerField()
+                                 )))
+
+
 def find_for_score_encodings(session_exam_number,
                              learning_unit_year_id=None,
                              learning_unit_year_ids=None,
@@ -291,7 +337,8 @@ def find_for_score_encodings(session_exam_number,
                              student_last_name=None,
                              student_first_name=None,
                              justification=None,
-                             academic_year=None):
+                             academic_year=None,
+                             with_session_exam_deadline=True):
     """
     :param session_exam_number: Integer represents the number_session of the Session_exam (1,2,3,4 or 5). It's
                                 a mandatory field to not confuse exam scores from different sessions.
@@ -354,14 +401,17 @@ def find_for_score_encodings(session_exam_number,
         queryset = queryset.filter(
             learning_unit_enrollment__offer_enrollment__student__person__first_name__icontains=student_first_name)
 
-    return queryset.select_related('learning_unit_enrollment__offer_enrollment__offer_year') \
-                   .select_related('learning_unit_enrollment__offer_enrollment__student__person')\
-                   .select_related('session_exam__learning_unit_year')\
-                   .prefetch_related(
+    if with_session_exam_deadline:
+        queryset = queryset.prefetch_related(
                          models.Prefetch('learning_unit_enrollment__offer_enrollment__sessionexamdeadline_set',
                                          queryset=session_exam_deadline.filter_by_nb_session(session_exam_number),
                                          to_attr="session_exam_deadlines")
                    )
+
+    return queryset.select_related('learning_unit_enrollment__offer_enrollment__offer_year') \
+                   .select_related('learning_unit_enrollment__offer_enrollment__student__person')\
+                   .select_related('learning_unit_enrollment__learning_unit_year')
+
 
 
 def group_by_learning_unit_year_id(exam_enrollments):
