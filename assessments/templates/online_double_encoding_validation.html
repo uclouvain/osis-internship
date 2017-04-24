@@ -162,11 +162,12 @@
                                 </button>
                             {% endif %}
                         </td>
-                        <td style="background-color: #fcf3cf"><input type="hidden" id="hdn_score_reencoded_{{ enrollment.id }}"
+                        <td style="background-color: #fcf3cf"><input type="hidden" id="hdn_score_reencoded_{{ enrollment.id }}" name="score_reencoded_{{ enrollment.id }}"
                                    value="{{ enrollment.score_reencoded | score_display:enrollment.session_exam.learning_unit_year.decimal_scores}}">
                             {{ enrollment.score_reencoded | score_display:enrollment.session_exam.learning_unit_year.decimal_scores }}
+                            <input type="hidden" id="hdn_score_changed_{{ enrollment.id }}" name="score_changed_{{ enrollment.id }}" value="true">
                         </td>
-                        <td style="background-color: #fcf3cf"><input type="hidden" id="hdn_justification_reencoded_{{ enrollment.id }}"
+                        <td style="background-color: #fcf3cf"><input type="hidden" id="hdn_justification_reencoded_{{ enrollment.id }}" name="justification_reencoded_{{ enrollment.id }}"
                                    value="{{ enrollment.justification_reencoded | default_if_none:'' }}">
                             <div id="show_justification_reencoded_{{ enrollment.id }}">
                                 {% if is_program_manager %}

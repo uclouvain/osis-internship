@@ -359,7 +359,7 @@ def send_messages_to_notify_encoding_progress(request, all_enrollments, learning
 
 
 def online_double_encoding_get_form(request, data=None, learning_unit_year_id=None):
-    if len(data['enrollments']) > 0:
+    if data['enrollments']:
         return layout.render(request, "online_double_encoding_form.html", data)
     else:
         messages.add_message(request, messages.WARNING, "%s" % _('no_score_encoded_double_encoding_impossible'))
@@ -370,92 +370,63 @@ def online_double_encoding_get_form(request, data=None, learning_unit_year_id=No
 @user_passes_test(_is_inside_scores_encodings_period, login_url=reverse_lazy('outside_scores_encodings_period'))
 @permission_required('assessments.can_access_scoreencoding', raise_exception=True)
 def online_double_encoding_form(request, learning_unit_year_id=None):
-    data = get_data_online_double(learning_unit_year_id, request)
-
     if request.method == 'GET':
+        data = get_data_online_double(learning_unit_year_id, request)
         return online_double_encoding_get_form(request, data, learning_unit_year_id)
     elif request.method == 'POST':
-        encoded_exam_enrollments = data['enrollments']
-        decimal_scores_authorized = data['learning_unit_year'].decimal_scores
-
-        reencoded_exam_enrollments = []
-        for enrollment in encoded_exam_enrollments:
-            score_double_encoded = request.POST.get('score_' + str(enrollment.id))
-            justification_double_encoded = request.POST.get('justification_' + str(enrollment.id))
-
-            # Try to convert str recevied to a INT / FLOAT [According to decimal authorized]
-            if score_double_encoded:
-                try:
-                    score_double_encoded = _truncate_decimals(score_double_encoded, decimal_scores_authorized)
-                except Exception as e:
-                    messages.add_message(request, messages.ERROR, _(e.args[0]))
-                    continue
-            else:
-                score_double_encoded = None
-            if not justification_double_encoded:
-                justification_double_encoded = None
-
-            # Ignore all which are not changed
-            is_score_changed = request.POST.get('score_changed_' + str(enrollment.id))
-            if is_score_changed != 'true' or (score_double_encoded == enrollment.score_reencoded and
-                                              justification_double_encoded == enrollment.justification_reencoded):
-                continue
-
-            enrollment.score_reencoded = score_double_encoded
-            enrollment.justification_reencoded = justification_double_encoded
-            try:
-                enrollment.full_clean()
-                reencoded_exam_enrollments.append(enrollment)
-            except ValidationError:
-                messages.add_message(request, messages.ERROR, "%s" % _('scores_must_be_between_0_and_20'))
+        encoded_exam_enrollments = get_encoded_exam_enrollments(request)
+        reencoded_exam_enrollments = validate_rencoded_enrollments(encoded_exam_enrollments, request)
 
         if messages.get_messages(request):
-            # Error case  [Preserve selection user experience]
-            for enrollment in data['enrollments']:
-                enrollment.post_score_encoded = request.POST.get('score_' + str(enrollment.id))
-                enrollment.post_justification_encoded = request.POST.get('justification_' + str(enrollment.id))
-
+            data = get_data_online_double(learning_unit_year_id, request)
+            data = _preserve_encoded_values(request, data)
             return online_double_encoding_get_form(request, data, learning_unit_year_id)
         elif not reencoded_exam_enrollments:
             messages.add_message(request, messages.WARNING, "%s" % _('no_dubble_score_encoded_comparison_impossible'))
             return online_encoding(request, learning_unit_year_id=learning_unit_year_id)
         else:
-            # Save all value [Validation is OK]
-            for enrollment in reencoded_exam_enrollments:
-                enrollment.save()
+            data = get_data_online_double(learning_unit_year_id, request)
             data['enrollments'] = mdl.exam_enrollment.sort_for_encodings(reencoded_exam_enrollments)
             return layout.render(request, "online_double_encoding_validation.html", data)
 
+
+def validate_rencoded_enrollments(enrollments, request):
+    try:
+        reencoded_exam_enrollments = []
+        for enrollment in enrollments:
+            enrollment = _clean_score_and_justification(enrollment)
+
+            enrollment.score_reencoded = enrollment.score_encoded
+            enrollment.justification_reencoded = enrollment.justification_encoded
+            enrollment.full_clean()
+            reencoded_exam_enrollments.append(enrollment)
+        return reencoded_exam_enrollments
+    except ValidationError as e:
+        messages.add_message(request, messages.ERROR, _(e.messages[0]))
+    except Exception as e:
+        messages.add_message(request, messages.ERROR, _(e.args[0]))
 
 
 @login_required
 @user_passes_test(_is_inside_scores_encodings_period, login_url=reverse_lazy('outside_scores_encodings_period'))
 @permission_required('assessments.can_access_scoreencoding', raise_exception=True)
-def online_double_encoding_validation(request, learning_unit_year_id=None, tutor_id=None):
-    learning_unit_year = mdl.learning_unit_year.find_by_id(learning_unit_year_id)
-    academic_year = mdl.academic_year.current_academic_year()
-    is_program_manager = mdl.program_manager.is_program_manager(request.user)
-    exam_enrollments = _get_exam_enrollments(request.user,
-                                             learning_unit_year_id=learning_unit_year_id,
-                                             academic_year=academic_year,
-                                             is_program_manager=is_program_manager)
-
+def online_double_encoding_validation(request, learning_unit_year_id=None):
     if request.method == 'POST':
-        exam_enrollments_reencoded = [enrollment for enrollment in exam_enrollments
-                                       if have_reencoded_score_or_justification(enrollment)]
-
-        exam_enrollments_reencoded = _extract_encoded_values_from_post_data(exam_enrollments_reencoded, request)
-        updated_enrollments = update_enrollments_if_changed(exam_enrollments_reencoded, request)
+        academic_year = mdl.academic_year.current_academic_year()
+        is_program_manager = mdl.program_manager.is_program_manager(request.user)
+        encoded_exam_enrollments = get_encoded_exam_enrollments(request)
+        learning_unit_year = mdl.learning_unit_year.find_by_id(learning_unit_year_id)
+        updated_enrollments = update_enrollments_if_changed(encoded_exam_enrollments, request)
 
         if updated_enrollments:
+            exam_enrollments = _get_exam_enrollments(request.user,
+                                                     learning_unit_year_id=learning_unit_year_id,
+                                                     academic_year=academic_year,
+                                                     is_program_manager=is_program_manager)
             send_messages_to_notify_encoding_progress(request, exam_enrollments, learning_unit_year, is_program_manager,
-                                                      updated_enrollments)
+                                                   updated_enrollments)
+    return HttpResponseRedirect(reverse('online_encoding', args=(learning_unit_year_id,)))
 
-        return HttpResponseRedirect(reverse('online_encoding', args=(learning_unit_year_id,)))
-
-
-def have_reencoded_score_or_justification(enrollment):
-    return enrollment.score_reencoded is not None or enrollment.justification_reencoded
 
 @login_required
 @user_passes_test(_is_inside_scores_encodings_period, login_url=reverse_lazy('outside_scores_encodings_period'))
