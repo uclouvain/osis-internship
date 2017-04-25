@@ -104,5 +104,4 @@ urlpatterns = [
     url(r'^structure/([0-9]+)/address/$', institution.structure_address, name='structure_address'),
 
     url(r'^studies/$', common.studies, name='studies')
-
 ]

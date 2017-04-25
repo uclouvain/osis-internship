@@ -28,7 +28,6 @@ from django.contrib import admin
 from django.conf import settings
 from base.views import common
 
-
 urlpatterns = [
     url(r'^login/$', common.login, name='login'),
     url(r'^logout/$', common.log_out, name='logout'),

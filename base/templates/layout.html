@@ -42,7 +42,6 @@
     <link rel="stylesheet" href="{% static 'css/osis.css' %}?version={{ js }}">
     <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/tree.css' %}">
-    <link rel="stylesheet" href="{% static 'css/dataTables.bootstrap.min.css' %}">
     {% block header %}
     <noscript>
       <meta http-equiv="refresh" content="0;url={% url 'noscript' %}">
@@ -132,8 +131,8 @@
                                        id="lnk_organizations">{% trans 'organizations' %}</a></li>
                                 {% endif %}
                                 {% if perms.base.can_access_structure  %}
-                                    <li><a href="{% url 'structures' %}"
-                                           id="lnk_dropdown_entities">{% trans 'entities' %}</a></li>
+                                <li><a href="{% url 'structures' %}"
+                                       id="lnk_dropdown_entities">{% trans 'entities' %}</a></li>
                                 {% endif %}
                             </ul>
                         </li>

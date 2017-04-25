@@ -92,4 +92,3 @@ def structure_address(request, structure_id):
     else:
         data = json.dumps({'entity': u'%s - %s' % (structure.acronym, structure.title)})
     return HttpResponse(data, content_type='application/json')
-
