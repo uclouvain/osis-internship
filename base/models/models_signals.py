@@ -29,7 +29,6 @@ from django.dispatch import receiver, Signal
 from base.models import student as mdl_student, person as mdl_person, tutor as mdl_tutor, program_manager as mdl_pgm_manager
 from osis_common.models.serializable_model import SerializableModel
 from internship.models import internship_student_information as mdl_internship
-from django.contrib.auth.models import Permission
 
 
 person_created = Signal(providing_args=['person'])
@@ -178,4 +177,3 @@ def _update_person_if_necessary(person, user, global_id):
     if updated:
         super(SerializableModel, person).save()
     return updated, person
-

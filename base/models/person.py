@@ -29,7 +29,7 @@ from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
-from base.enums import person_source_type, person_status, person_type
+from base.enums import person_source_type
 
 
 class PersonAdmin(SerializableModelAdmin):
