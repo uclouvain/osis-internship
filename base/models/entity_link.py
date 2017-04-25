@@ -41,7 +41,7 @@ class EntityLink(models.Model):
             raise AttributeError('EntityLink invalid parameters')
 
     def can_save_entity_link(self):
-        return self.count_entity_links_same_child_overlapping_dates() == 0 and self.parent != self.child
+        return self.count_entity_links_same_child_overlapping_dates() == 0 and self.parent != self.childq
 
     def count_entity_links_same_child_overlapping_dates(self):
         return EntityLink.objects.filter(
@@ -55,7 +55,7 @@ class EntityLink(models.Model):
                 )
             ).count()
 
-    def get_parent(self):
+    def get_upper_entity_link(self):
         try:
             parent = EntityLink.objects.get(
                 Q(child=self.parent) &
@@ -74,7 +74,7 @@ class EntityLink(models.Model):
 
     def get_upper_hierarchy(self):
         upper_hierarchy = []
-        if self.get_parent() is not None:
-            upper_hierarchy.append(self.get_parent())
-            upper_hierarchy.extend(self.get_parent().get_upper_hierarchy())
+        if self.get_upper_entity_link() is not None:
+            upper_hierarchy.append(self.get_upper_entity_link())
+            upper_hierarchy.extend(self.get_upper_entity_link().get_upper_hierarchy())
         return upper_hierarchy
