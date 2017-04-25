@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -23,28 +23,8 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import factory
-import factory.fuzzy
-import string
-import datetime
-from django.conf import settings
-from django.utils import timezone
 
-
-def _get_tzinfo():
-    if settings.USE_TZ:
-        return timezone.get_current_timezone()
-    else:
-        return None
-
-
-class AcademicYearFactory(factory.django.DjangoModelFactory):
-    class Meta:
-        model = "base.AcademicYear"
-
-    external_id = factory.fuzzy.FuzzyText(length=10, chars=string.digits)
-    changed = factory.fuzzy.FuzzyDateTime(datetime.datetime(2016, 1, 1, tzinfo=_get_tzinfo()),
-                                          datetime.datetime(2017, 3, 1, tzinfo=_get_tzinfo()))
-    year = factory.fuzzy.FuzzyInteger(2000, timezone.now().year)
-    start_date = factory.LazyAttribute(lambda obj: datetime.date(obj.year, 9, 15))
-    end_date = factory.LazyAttribute(lambda obj: datetime.date(obj.year+1, 9, 30))
+def delete_admin_action(actions):
+    if 'delete_selected' in actions:
+        del actions['delete_selected']
+    return actions

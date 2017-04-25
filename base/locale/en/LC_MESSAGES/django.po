@@ -1402,3 +1402,16 @@ msgstr "Justified abscence already encoded and preserved"
 
 msgid "academic_actors"
 msgstr "Academic actors"
+
+msgid "academic_start_date_error"
+msgstr "The start date should be between the start/end dates of the academic year"
+
+msgid "academic_end_date_error"
+msgstr "The end date should be between the start/end dates of the academic year"
+
+msgid "end_start_date_error"
+msgstr "Start date must be lower than end date"
+
+msgid "dates_mandatory_error"
+msgstr "Start date and end date are mandatory"
+
