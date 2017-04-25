@@ -71,7 +71,7 @@ DEFEND_PERIODE_CHOICES = (
 
 
 class Dissertation(SerializableModel):
-    title = models.CharField(max_length=200)
+    title = models.CharField(max_length=500)
     author = models.ForeignKey(student.Student)
     status = models.CharField(max_length=12, choices=STATUS_CHOICES, default='DRAFT')
     defend_periode = models.CharField(max_length=12, choices=DEFEND_PERIODE_CHOICES, blank=True, null=True)
@@ -143,7 +143,8 @@ def search(terms=None, active=True):
             Q(proposition_dissertation__author__person__middle_name__icontains=terms) |
             Q(proposition_dissertation__author__person__last_name__icontains=terms) |
             Q(status__icontains=terms) |
-            Q(title__icontains=terms)
+            Q(title__icontains=terms) |
+            Q(offer_year_start__acronym__icontains=terms)
         ).filter(active=active).distinct()
     return queryset
 
