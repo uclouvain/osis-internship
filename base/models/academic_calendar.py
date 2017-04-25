@@ -25,6 +25,8 @@
 ##############################################################################
 from django.db import models
 from django.utils import timezone
+
+from base.models.enums import academic_calendar_type
 from osis_common.models.serializable_model import SerializableModel
 from base.models.exceptions import FunctionArgumentMissingException, StartDateHigherThanEndDateException
 FUNCTIONS = 'functions'

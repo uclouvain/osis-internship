@@ -23,14 +23,16 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
 from django.contrib import admin
-from .text_label import TextLabel
+from django.db import models
+
 from reference.models.language import Language
+from .text_label import TextLabel
 
 
 class TranslatedTextLabelAdmin(admin.ModelAdmin):
-    list_display = ('label', 'text_label', 'language',)
+    list_display = ('label', 'language', 'text_label',)
+    fieldsets = ((None, {'fields': ('label', 'language', 'text_label')}),)
     ordering = ('label',)
 
 
@@ -41,3 +43,11 @@ class TranslatedTextLabel(models.Model):
 
     def __str__(self):
         return self.label
+
+
+def find_by_id(id):
+    return TranslatedTextLabel.objects.get(pk=id)
+
+
+def find_by_language_code(language_code):
+    return TranslatedTextLabel.objects.filter(language__code=language_code)

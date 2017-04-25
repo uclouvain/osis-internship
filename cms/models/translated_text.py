@@ -23,10 +23,13 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
+from ckeditor.fields import RichTextField
 from django.contrib import admin
-from .text_label import TextLabel
+from django.db import models
+
+from cms.enums.entity_name import ENTITY_NAME
 from reference.models.language import Language
+from .text_label import TextLabel
 
 
 class TranslatedTextAdmin(admin.ModelAdmin):
@@ -37,9 +40,13 @@ class TranslatedTextAdmin(admin.ModelAdmin):
 class TranslatedText(models.Model):
     language = models.ForeignKey(Language)
     text_label = models.ForeignKey(TextLabel, blank=None, null=True)
-    entity = models.CharField(db_index=True, max_length=100)
+    entity = models.CharField(db_index=True, max_length=25, choices=ENTITY_NAME)
     reference = models.IntegerField(db_index=True)
-    text = models.BinaryField(null=True)
+    text = RichTextField(null=True)
 
     def __str__(self):
         return self.entity
+
+
+def find_by_id(id):
+    return TranslatedText.objects.get(pk=id)

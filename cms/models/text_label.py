@@ -23,9 +23,11 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
 from django.contrib import admin
 from django.core.validators import MinValueValidator
+from django.db import models
+
+from cms.enums.entity_name import ENTITY_NAME
 
 
 class TextLabelAdmin(admin.ModelAdmin):
@@ -41,16 +43,16 @@ class TextLabelAdmin(admin.ModelAdmin):
 
 class TextLabel(models.Model):
     parent = models.ForeignKey('self', blank=True, null=True)
-    entity = models.CharField(max_length=100)
+    entity = models.CharField(max_length=25, choices=ENTITY_NAME)
     label = models.CharField(max_length=255)
-    order = models.PositiveIntegerField(validators=[MinValueValidator(1)])
+    order = models.PositiveIntegerField(default=1, validators=[MinValueValidator(1)])
     published = models.BooleanField(default=True)
 
     class Meta:
         unique_together = ('parent', 'order')
 
     def __str__(self):
-        return self.entity
+        return "{} - {}".format(self.entity,self.order)
 
     def save(self, *args, **kwargs):
         parent_db = None
@@ -93,7 +95,7 @@ class TextLabel(models.Model):
 def get_highest_order(parent=None):
     """Return the highest order value in the context of parent"""
     query = TextLabel.objects.filter(parent=parent) \
-        .aggregate(models.Max('order'))
+                     .aggregate(models.Max('order'))
     return query.get('order__max', None)
 
 
