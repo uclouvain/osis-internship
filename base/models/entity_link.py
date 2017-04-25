@@ -41,7 +41,7 @@ class EntityLink(models.Model):
             raise AttributeError('EntityLink invalid parameters')
 
     def can_save_entity_link(self):
-        return self.count_entity_links_same_child_overlapping_dates() == 0 and self.parent != self.childq
+        return self.count_entity_links_same_child_overlapping_dates() == 0 and self.parent != self.child
 
     def count_entity_links_same_child_overlapping_dates(self):
         return EntityLink.objects.filter(
