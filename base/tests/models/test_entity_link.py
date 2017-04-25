@@ -98,6 +98,19 @@ class EntityLinkTest(TestCase):
                             child=entities[x+1],
                             start_date=self.start_date,
                             end_date=self.end_date
-                        ) for x in range(2)]
+                        )
+                        for x in range(2)]
 
         self.assertEqual(entity_links[1].get_parent(), entity_links[0])
+        self.assertEqual(entity_links[0].get_parent(), None)
+
+    def test_get_upper_hierarchy(self):
+        entities = [EntityFactory() for x in range(6)]
+        entity_links = [EntityLinkFactory(
+                            parent=entities[x],
+                            child=entities[x+1],
+                            start_date=self.start_date,
+                            end_date=self.end_date
+                        )
+                        for x in range(5)]
+        self.assertCountEqual(entity_links[4].get_upper_hierarchy(), [entity_links[x] for x in range(4)])

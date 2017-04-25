@@ -25,6 +25,7 @@
 ##############################################################################
 from django.db import models
 from django.db.models import Q
+from django.core.exceptions import ObjectDoesNotExist
 
 
 class EntityLink(models.Model):
@@ -55,13 +56,25 @@ class EntityLink(models.Model):
             ).count()
 
     def get_parent(self):
-        return EntityLink.objects.get(
-            Q(child=self.parent) &
-            (
-                Q(start_date__range=(self.start_date, self.end_date)) |
-                Q(end_date__range=(self.start_date, self.end_date)) |
+        try:
+            parent = EntityLink.objects.get(
+                Q(child=self.parent) &
                 (
-                    Q(start_date__lte=self.start_date) & Q(end_date__gte=self.end_date)
+                    Q(start_date__range=(self.start_date, self.end_date)) |
+                    Q(end_date__range=(self.start_date, self.end_date)) |
+                    (
+                        Q(start_date__lte=self.start_date) & Q(end_date__gte=self.end_date)
+                    )
                 )
             )
-        )
+        except ObjectDoesNotExist:
+            return None
+
+        return parent
+
+    def get_upper_hierarchy(self):
+        upper_hierarchy = []
+        if self.get_parent() is not None:
+            upper_hierarchy.append(self.get_parent())
+            upper_hierarchy.extend(self.get_parent().get_upper_hierarchy())
+        return upper_hierarchy
