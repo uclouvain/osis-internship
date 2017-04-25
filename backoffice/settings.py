@@ -53,7 +53,6 @@ INSTALLED_APPS = (
     'django_jenkins',
     'analytical',
     'osis_common',
-    'statici18n',
     'ckeditor',
     'reference',
     'base',
