@@ -1363,3 +1363,9 @@ msgstr "You can't encode a JUSTIFIED ABSENCE (M) via the XLS injection"
 
 msgid "abscence_justified_preserved"
 msgstr "Justified abscence already encoded and preserved"
+
+msgid "date_format"
+msgstr "%m/%d/%Y"
+
+msgid "date_format_string"
+msgstr "m/d/Y"

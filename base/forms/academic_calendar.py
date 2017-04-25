@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -27,7 +27,6 @@ from django.forms import ModelForm
 from base.models import academic_calendar, offer_year_calendar
 from django.utils.translation import ugettext as trans
 from base.models.offer_year_calendar import save_from_academic_calendar
-from django.utils import translation
 
 
 class AcademicCalendarForm(ModelForm):
@@ -43,9 +42,7 @@ class AcademicCalendarForm(ModelForm):
 
     def end_date_gt_last_offer_year_calendar_end_date(self):
         off_year_calendar_max = offer_year_calendar.find_latest_end_date_by_academic_calendar(self.instance.id)
-        date_format = '%d/%m/%Y'
-        if translation.get_language()=='en':
-            date_format = '%m/%d/%Y'
+        date_format = trans('date_format')
 
         if off_year_calendar_max and self.cleaned_data['end_date'] and \
                         self.cleaned_data['end_date'] < off_year_calendar_max.end_date:
