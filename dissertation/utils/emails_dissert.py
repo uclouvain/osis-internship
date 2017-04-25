@@ -23,103 +23,35 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from base.utils.send_mail import *
+from osis_common.messaging import message_config, send_message as message_service
+from dissertation.models.dissertation_role import get_promoteur_by_dissertation
 
 
-def send_mail_to_teacher_new_dissert(adviser):
-    """
-    Notify (for the teacher) of a new dissertation project
-    """
+def get_base_template(dissert):
+    template_base_data = {'author': dissert.author,
+                          'title': dissert.title,
+                          'promoteur': get_promoteur_by_dissertation(dissert).person,
+                          'description': dissert.description,
+                          'dissertation_proposition_titre': dissert.proposition_dissertation.title}
+    return template_base_data
 
-    html_template_ref = 'dissertation_adviser_new_project_dissertation_html'
-    txt_template_ref = 'dissertation_adviser_new_project_dissertation_txt'
-    receivers = [message_config.create_receiver(adviser.person.id, adviser.person.email, adviser.person.language)]
+
+def send_email(dissert, template_ref, receivers):
+    receivers = generate_receivers(receivers)
+    html_template_ref = template_ref + '_html'
+    txt_template_ref = template_ref + '_txt'
     suject_data = None
-    template_base_data = {'adviser': adviser, }
+    template_base_data = get_base_template(dissert)
     tables = None
     message_content = message_config.create_message_content(html_template_ref, txt_template_ref, tables, receivers,
                                                             template_base_data, suject_data)
     return message_service.send_messages(message_content)
 
 
-def send_mail_dissert_accepted_by_teacher(person):
-    """
-    Notify (for the student) dissertation accepted by teacher
-    """
-
-    html_template_ref = 'dissertation_accepted_by_teacher_html'
-    txt_template_ref = 'dissertation_accepted_by_teacher_txt'
-    receivers = [message_config.create_receiver(person.id, person.email, person.language)]
-    suject_data = None
-    template_base_data = {'person': person, }
-    tables = None
-    message_content = message_config.create_message_content(html_template_ref, txt_template_ref, tables, receivers,
-                                                            template_base_data, suject_data)
-    return message_service.send_messages(message_content)
-
-
-def send_mail_dissert_refused_by_teacher(person):
-    """
-    Notify (for the student) dissertation accepted by teacher
-    """
-
-    html_template_ref = 'dissertation_refused_by_teacher_html'
-    txt_template_ref = 'dissertation_refused_by_teacher_txt'
-    receivers = [message_config.create_receiver(person.id, person.email, person.language)]
-    suject_data = None
-    template_base_data = {'person': person, }
-    tables = None
-    message_content = message_config.create_message_content(html_template_ref, txt_template_ref, tables, receivers,
-                                                            template_base_data, suject_data)
-    return message_service.send_messages(message_content)
-
-
-def send_mail_dissert_acknowledgement(person):
-    """
-    Notify (for the student) dissertation accepted by teacher
-    """
-
-    html_template_ref = 'dissertation_acknowledgement_html'
-    txt_template_ref = 'dissertation_acknowledgement_txt'
-    receivers = [message_config.create_receiver(person.id, person.email, person.language)]
-    suject_data = None
-    template_base_data = {'person': person, }
-    tables = None
-    message_content = message_config.create_message_content(html_template_ref, txt_template_ref, tables, receivers,
-                                                            template_base_data, suject_data)
-    return message_service.send_messages(message_content)
-
-
-def send_mail_dissert_refused_by_com(person_student, person_teacher):
-    """
-    Notify (for the student) dissertation accepted by teacher
-    """
-
-    html_template_ref = 'dissertation_refused_by_com_html'
-    txt_template_ref = 'dissertation_refused_by_com_txt'
-    student_receiver = message_config.create_receiver(person_student.id, person_student.email, person_student.language)
-    teacher_receiver = message_config.create_receiver(person_teacher.id, person_teacher.email, person_teacher.language)
-    receivers = [student_receiver, teacher_receiver]
-    suject_data = None
-    template_base_data = {'persons': [person_student, person_teacher], }
-    tables = None
-    message_content = message_config.create_message_content(html_template_ref, txt_template_ref, tables, receivers,
-                                                            template_base_data, suject_data)
-    return message_service.send_messages(message_content)
-
-
-def send_mail_dissert_accepted_by_com(person_student):
-    """
-    Notify (for the student) dissertation accepted by teacher
-    """
-
-    html_template_ref = 'dissertation_accepted_by_com_html'
-    txt_template_ref = 'dissertation_accepted_by_com_txt'
-    receivers = [message_config.create_receiver(person_student.id, person_student.email, person_student.language)]
-    suject_data = None
-    template_base_data = {'persons': [person_student], }
-    tables = None
-    message_content = message_config.create_message_content(html_template_ref, txt_template_ref, tables, receivers,
-                                                            template_base_data, suject_data)
-    return message_service.send_messages(message_content)
-
+def generate_receivers(*receivers):
+    receivers_tab = []
+    for receiver in receivers:
+        receivers_tab.append(message_config.create_receiver(receiver.person.id,
+                                                            receiver.person.email,
+                                                            receiver.person.language))
+    return receivers_tab

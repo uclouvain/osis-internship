@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -41,7 +41,7 @@ class OrganizationAddressAdmin(SerializableModelAdmin):
 
 
 class OrganizationAddress(SerializableModel):
-    organization = models.ForeignKey('Organization')
+    organization = models.ForeignKey('Organization', related_name='addresses', related_query_name='address')
     label = models.CharField(max_length=20)
     location = models.CharField(max_length=255)
     postal_code = models.CharField(max_length=20)

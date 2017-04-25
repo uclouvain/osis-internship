@@ -108,12 +108,12 @@
                                aria-expanded="false" id="lnk_home_dropdown_parcours">{% trans 'student_path' %}<span
                                     class="caret"></span></a>
                             <ul class="dropdown-menu">
-                                {% if perms.base.can_access_evaluation %}
+                                {% if 'assessments' in installed_apps and perms.base.can_access_evaluation %}
                                 <li><a href="{% url 'assessments' %}"
                                        id="lnk_dropdown_evaluations">{% trans 'evaluations' %}</a></li>
                                 {% endif %}
-                                {% if perms.internship.can_access_internship %}
-                                <li><a href="{% url 'internships_home' %}"
+                                {% if 'internship' in installed_apps and perms.internship.can_access_internship %}
+                                <li><a href="{% url 'internship' %}"
                                        id="lnk_dropdown_internships">{% trans 'internships' %}</a></li>
                                 {% endif %}
                             </ul>
@@ -216,7 +216,7 @@
     <nav class="navbar navbar-default navbar-fixed-bottom">
         <div class="container">
             <p class="navbar-text pull-left"><a
-                    href="http://uclouvain.github.io/osis-louvain-documentation/doc/business/user-manual_fr.html"
+                    href="http://uclouvain.github.io/osis-documentation/doc/business/user-manual_fr.html"
                     target="_blank" id="lnk_user_manual">{% trans 'documentation' %}</a> |
                 <a href="http://uclouvain.github.io/osis/" target="_blank"
                    id="lnk_osis_website">{% trans 'website' %}</a> |

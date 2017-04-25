@@ -42,7 +42,7 @@ from osis_common.models import message_history as message_history_mdl
 
 @login_required
 def my_osis_index(request):
-    return layout.render(request, "my_osis/my_osis_home.html", {})
+    return layout.render(request, "my_osis/home.html", {})
 
 
 @login_required
@@ -104,18 +104,14 @@ def profile(request):
     addresses = mdl.person_address.find_by_person(person)
     tutor = mdl.tutor.find_by_person(person)
     attributions = mdl_attr.attribution.search(tutor=tutor)
-    student = mdl.student.find_by_person(person)
-    offer_enrollments = mdl.offer_enrollment.find_by_student(student)
-    programs_managed = mdl.program_manager.find_by_person(person)
-    return layout.render(request, "my_osis/profile.html", {'person':                person,
-                                                           'addresses':             addresses,
-                                                           'tutor':                 tutor,
-                                                           'attributions':          attributions,
-                                                           'student':               student,
-                                                           'offer_enrollments':     offer_enrollments,
-                                                           'programs_managed':      programs_managed,
-                                                           'supported_languages':   settings.LANGUAGES,
-                                                           'default_language':      settings.LANGUAGE_CODE})
+    programs_managers = mdl.program_manager.find_by_person(person)
+    return layout.render(request, "my_osis/profile.html", {'person':              person,
+                                                           'addresses':           addresses,
+                                                           'tutor':               tutor,
+                                                           'attributions':        attributions,
+                                                           'programs_managers':   programs_managers,
+                                                           'supported_languages': settings.LANGUAGES,
+                                                           'default_language':    settings.LANGUAGE_CODE})
 
 
 @login_required

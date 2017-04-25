@@ -33,6 +33,7 @@ from django.utils.translation import ugettext as _
 from assessments.forms.score_file import ScoreFileForm
 from base import models as mdl
 from attribution import models as mdl_attr
+from base.enums import exam_enrollment_justification_type as justification_types
 
 
 col_academic_year = 0
@@ -77,6 +78,7 @@ def _get_all_data(worksheet):
     registration_ids = []
     sessions = []
     academic_years = []
+
     for count, row in enumerate(worksheet.rows):
         if row[col_registration_id].value is None \
                 or len(str(row[col_registration_id].value)) == 0 \
@@ -224,6 +226,12 @@ def __save_xls_scores(request, file_name, is_program_manager, user, learning_uni
                     count_exam_enrol_for_this_learn_unit +=1
             if not exam_enrollment:
                 messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('enrollment_activity_not_exist') % (xls_learning_unit_acronym)))
+            elif mdl.exam_enrollment.is_deadline_reached(exam_enrollment) or \
+                    (not is_program_manager and mdl.exam_enrollment.is_deadline_tutor_reached(exam_enrollment)):
+                # Check if the deadline is reached
+                messages.add_message(request, messages.WARNING,
+                                     "%s %s!" % (info_line, _('deadline_reached')))
+                continue
             elif not is_program_manager and (exam_enrollment.score_final is not None or exam_enrollment.justification_final):
                 # In case the user is not a program manager, we check if the scores are already submitted
                 # If this examEnrollment is already encoded in DataBase, nothing to do (ingnoring the line)
@@ -269,19 +277,25 @@ def __save_xls_scores(request, file_name, is_program_manager, user, learning_uni
                                 justification = justification.replace(" ", "") if type(justification) == str else justification
                                 if justification:
                                     justification = str(justification).strip().upper()
-                                    if justification in ['A', 'T', '?']:
+                                    if justification in ['A', 'T']:
                                         switcher = {'A': "ABSENCE_UNJUSTIFIED",
-                                                    'T': "CHEATING",
-                                                    '?': "SCORE_MISSING"}
+                                                    'T': "CHEATING"}
                                         justification = switcher.get(justification, None)
                                     else:
-                                        messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('justification_invalid')))
+                                        if justification == 'M':
+                                            messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('no_valid_m_justification_error')))
+                                        else:
+                                            messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('justification_invalid')))
                                         continue
-
                                 if score is not None and justification:
                                     messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('constraint_score_other_score')))
 
                                 elif score == 0 or score or justification:
+                                    if (justification in [justification_types.ABSENCE_UNJUSTIFIED,
+                                                          justification_types.CHEATING]) and \
+                                                    exam_enrollment.justification_final == justification_types.ABSENCE_JUSTIFIED:
+                                        messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('abscence_justified_preserved')))
+                                        justification = justification_types.ABSENCE_JUSTIFIED
                                     if is_program_manager:
                                         if exam_enrollment.score_final != score:
                                             new_scores_number += 1
@@ -294,9 +308,7 @@ def __save_xls_scores(request, file_name, is_program_manager, user, learning_uni
                                             exam_enrollment.justification_final = justification
                                             exam_enrollment.score_final = None
                                         mdl.exam_enrollment.create_exam_enrollment_historic(request.user,
-                                                                                            exam_enrollment,
-                                                                                            score,
-                                                                                            justification)
+                                                                                            exam_enrollment)
                                     else:
                                         if score != exam_enrollment.score_draft:
                                             new_scores_number += 1

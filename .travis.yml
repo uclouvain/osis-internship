@@ -10,3 +10,5 @@ services:
   - rabbitmq
 addons:
     postgresql: "9.4"
+after_sucess:
+    - CODECLIMATE_REPO_TOKEN=37a30b73c9ca86e79442503327038e6b7fe540d4cdeec8ecde1bfe9a43e19d9a codeclimate-test-reporter

@@ -30,7 +30,7 @@ from .enums import status_types
 
 
 class DissertationRoleAdmin(SerializableModelAdmin):
-    list_display = ('adviser', 'status', 'dissertation', 'get_dissertation_author', 'get_dissertation_status')
+    list_display = ('adviser', 'status', 'dissertation', 'author', 'dissertation_status')
     raw_id_fields = ('adviser', 'dissertation')
     search_fields = ('uuid', 'dissertation__author__person__last_name', 'dissertation__author__person__first_name',
                      'dissertation__title', 'adviser__person__last_name', 'adviser__person__first_name')
@@ -45,10 +45,12 @@ class DissertationRole(SerializableModel):
         return u"%s %s" % (self.status if self.status else "",
                            self.adviser if self.adviser else "")
 
-    def get_dissertation_author(self):
+    @property
+    def author(self):
         return self.dissertation.author
 
-    def get_dissertation_status(self):
+    @property
+    def dissertation_status(self):
         return self.dissertation.status
 
 
@@ -67,19 +69,24 @@ def count_by_adviser(adviser, role=None, dissertation_status=None):
     return query
 
 
+def _find_by_dissertation(dissertation):
+    return DissertationRole.objects.filter(dissertation=dissertation)
+
+
 def count_by_dissertation(dissertation):
-    return DissertationRole.objects.filter(dissertation=dissertation)\
-                                   .count()
+    return _find_by_dissertation(dissertation).count()
+
+
+def count_by_status_dissertation(status, dissertation):
+    return _find_by_dissertation(dissertation).filter(status=status).count()
+
+
+def count_by_adviser_dissertation(adviser, dissertation):
+    return _find_by_dissertation(dissertation).filter(adviser=adviser).count()
 
 
 def count_by_status_adviser_dissertation(status, adviser, dissertation):
-    return DissertationRole.objects.filter(
-                                        adviser=adviser
-                                    ).filter(
-                                        status=status
-                                    ).filter(
-                                        dissertation=dissertation
-                                    ).count()
+    return _find_by_dissertation(dissertation).filter(adviser=adviser).filter(status=status).count()
 
 
 def search_by_adviser_and_role_stats(adviser, role):
@@ -110,7 +117,7 @@ def add(status, adviser, dissertation):
 
 
 def search_by_dissertation(dissertation):
-    return DissertationRole.objects.filter(dissertation=dissertation).order_by('pk')
+    return DissertationRole.objects.filter(dissertation=dissertation).order_by('status')
 
 
 def search_by_dissertation_and_role(dissertation, role):
@@ -159,12 +166,14 @@ def get_promoteur_by_dissertation_str(dissert):
     else:
         return 'none'
 
+
 def get_promoteur_by_dissertation(dissert):
     promoteur = search_by_dissertation_and_role(dissert, 'PROMOTEUR')
     if promoteur:
         return promoteur[0].adviser
     else:
         return 'none'
+
 
 def get_copromoteur_by_dissertation(dissert):
     copromoteur = search_by_dissertation_and_role(dissert, 'CO_PROMOTEUR')

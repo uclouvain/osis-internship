@@ -68,7 +68,7 @@
                         {% trans 'none' %}
                     {% endif %}
                     <div class="collapse" id="tutors_by_course">
-                        <label>{% trans 'tutors' %}</label><br>
+                        <label>{% trans 'other_tutors' %}</label><br>
                         <ul>
                             {% for prof in tutors %}
                                 <li>{{ prof }}</li>
@@ -100,8 +100,12 @@
             <label>{% trans 'progress' %}</label><br>
             <div class="progress">
                 <div class="progress-bar {% if progress == '100' %} progress-bar-success {% else %} progress-bar-warning {% endif %}" role="progressbar" aria-valuenow="{{ progress }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ progress }}%;">
-                    <span>{{ exam_enrollments_encoded }} / {{ total_exam_enrollments }}</span>
-                </div>
+                    <span> 
+			<b> 
+			  {{ exam_enrollments_encoded }} / {{ total_exam_enrollments }}
+			</b>
+		    </span>                
+		</div>
             </div>
         </div>
         <div class="btn-group" role="group" aria-label="Encode">
@@ -182,29 +186,50 @@
             <tbody>
                 {% for enrollment in enrollments %}
                     <tr style="background-color:
-                                {% ifchanged enrollment.learning_unit_enrollment.offer_enrollment.offer_year.acronym %}
-                                    {% cycle "white" "#E5F2FF" as rowcolors %}
-                                {% else %}
-                                    {{ rowcolors }}
-                                {% endifchanged %}">
-                        <td>{% if enrollment.score_final != None or enrollment.justification_final %}
+                               {% if not is_program_manager and enrollment.deadline_tutor_reached %}
+                                    #D3D3D3
+                               {% elif enrollment.deadline_reached %}
+                                    #D3D3D3
+                               {% else %}
+                                    {% ifchanged enrollment.learning_unit_enrollment.offer_enrollment.offer_year.acronym %}
+                                        {% cycle 'white' '#E5F2FF' as rowcolors %}
+                                    {% else %}
+                                        {{ rowcolors }}
+                                    {% endifchanged %}
+                               {% endif %}">
+                        <td style="text-align:center;">
+                            {% if enrollment.deadline_reached %}
+                                <span class="glyphicon glyphicon-lock" aria-hidden="true" style="color: #8B008B;" title="{% trans 'deadline_reached' %}"></span>
+                            {% elif enrollment.deadline_tutor_reached  and not is_program_manager %}
+                                <span class="glyphicon glyphicon-lock" aria-hidden="true" style="color: #8B008B;" title="{% trans 'deadline_reached' %}"></span>
+                            {% elif enrollment.score_final != None or enrollment.justification_final %}
                                 <span class="glyphicon glyphicon-send" aria-hidden="true" style="color: green;" title="{% trans 'score_submitted' %}"></span>
-                            {% endif %}</td>
+                            {% endif %}
+                        </td>
                         <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.offer_year.acronym }}</td>
                         <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.registration_id }}</td>
                         <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.last_name|title }}</td>
                         <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.first_name }}</td>
-                        <td>{%if is_program_manager %}
-                                {{ enrollment.score_final | score_display:enrollment.session_exam.learning_unit_year.decimal_scores }}
+                        <td>
+                            {% if is_program_manager %}
+                                {% if enrollment.score_final != None %}
+                                    {{ enrollment.score_final | score_display:enrollment.learning_unit_enrollment.learning_unit_year.decimal_scores }}
+                                {% else %}
+                                    -
+                                {% endif %}
                             {% else %}
                                 {% if enrollment.score_final != None %}
-                                    {{ enrollment.score_final | score_display:enrollment.session_exam.learning_unit_year.decimal_scores }}
-                                {% elif not enrollment.justification_final %}
-                                    {{ enrollment.score_draft | score_display:enrollment.session_exam.learning_unit_year.decimal_scores }}
-                                {%endif%}
-                            {% endif%}</td>
-                        <td>{%if is_program_manager %}
-                                {% if enrollment.justification_final%}
+                                    {{ enrollment.score_final | score_display:enrollment.learning_unit_enrollment.learning_unit_year.decimal_scores }}
+                                {% elif enrollment.score_draft != None %}
+                                    {{ enrollment.score_draft | score_display:enrollment.learning_unit_enrollment.learning_unit_year.decimal_scores }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            {% endif%}
+                        </td>
+                        <td>
+                            {% if is_program_manager %}
+                                {% if enrollment.justification_final %}
                                     {% trans enrollment.justification_final %}
                                 {% else %}
                                     -
@@ -212,14 +237,14 @@
                             {% else %}
                                 {% if enrollment.justification_final %}
                                     {{ enrollment.justification_final_display_as_tutor }}
-                                {% elif enrollment.justification_draft and enrollment.score_final == None %}
+                                {% elif enrollment.justification_draft %}
                                     {{ enrollment.justification_draft_display }}
                                 {% else %}
                                     -
                                 {% endif %}
                             {% endif %}
                         </td>
-                        <td>{{ enrollment.session_exam.deadline | default_if_none:'' |date:"j/m/Y" }}</td>
+                        <td>{{ enrollment.deadline_tutor_computed | default_if_none:'' |date:"j/m/Y" }}</td>
                     </tr>
                 {% endfor %}
             </tbody>
@@ -264,9 +289,9 @@
                     <p class="help-block">{% trans 'help_submission_scores_label' as help_submission_scores_label %}{{ help_submission_scores_label | format:draft_scores_not_submitted | safe}}</p>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-warning" href="{% url 'online_encoding_submission' learning_unit_year.id %}?{{ request.GET.urlencode }}"
+                <a class="btn btn-warning" href="{% url 'online_encoding_submission' learning_unit_year.id %}?{{ request.GET.urlencode }}"
                    role="button" id="lnk_post_scores_submission_btn" data-container="body"
-                   data-toggle="tooltip" data-placement="left" title="{% trans 'definitive_save' %}" ><span class="glyphicon glyphicon-send" aria-hidden="true"></span> {% trans 'submission' %}</button>
+                   data-toggle="tooltip" data-placement="left" title="{% trans 'definitive_save' %}" ><span class="glyphicon glyphicon-send" aria-hidden="true"></span> {% trans 'submission' %}</a>
                 <button type="button" class="btn btn-default" data-dismiss="modal" id="bt_cancel_submission_score_modal">{% trans 'cancel' %}</button>
             </div>
         </div>

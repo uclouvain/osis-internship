@@ -241,6 +241,9 @@ msgid "decimal_values_ignored"
 msgstr ""
 "Les notes de ce cours ne peuvent PAS recevoir de valeurs décimales."
 
+msgid "score_have_more_than_2_decimal_places"
+msgstr "La note comporte plus de deux chiffres après la virgule"
+
 msgid "definitive_save"
 msgstr "Sauvegarde définitive (soumettre à la faculté)"
 
@@ -293,6 +296,9 @@ msgstr ""
 "Gestion des cours, des formations et d'autres activités qui composent le "
 "programme."
 
+msgid "desc_lnk_my_osis"
+msgstr "Vos données personnelles, des préférences et d'autres informations associés."
+
 msgid "desc_lnk_offers"
 msgstr "Gestion des programmes."
 
@@ -317,7 +323,7 @@ msgid "desc_my_messages"
 msgstr "La liste des messages qui vous ont été envoyés par l'application"
 
 msgid "desc_profile"
-msgstr "informations liées à votre profile"
+msgstr "Informations liées à votre profil"
 
 msgid "description"
 msgstr "Description"
@@ -332,7 +338,7 @@ msgid "doctoral_commission"
 msgstr "Commision doctorale"
 
 msgid "documentation"
-msgstr "Justification"
+msgstr "Documentation"
 
 msgid "done_at"
 msgstr "Fait à"
@@ -426,6 +432,9 @@ msgstr "Le fichier doit être un fichier excel valide au format 'XLSX'"
 
 msgid "file_production_date"
 msgstr "Date de production du fichier excel"
+
+msgid "students_deliberated_are_not_shown"
+msgstr "Les étudiants déjà délibérés ne sont pas repris"
 
 msgid "files"
 msgstr "Fichiers"
@@ -740,6 +749,9 @@ msgstr "Vous n'avez aucune note à encoder."
 msgid "no_valid_academic_year_error"
 msgstr "Aucune année académique au format valide n'a été trouvé dans votre fichier excel. La date doit être formatée comme suit ; '2015-2016' ou '2015'."
 
+msgid "deadline_reached"
+msgstr "Date limite atteinte"
+
 msgid "none"
 msgstr "Aucun"
 
@@ -826,8 +838,14 @@ msgstr "Autres finalités associées"
 msgid "other_sibling_orientations"
 msgstr "Autres orientations associées"
 
-msgid "outside_scores_encodings_period"
-msgstr "Vous êtes en dehors de la période d'encodage de notes: la dernière session d'examens est fermée depuis le %s."
+msgid "score_encoding_period_not_open"
+msgstr "La période pour l'encodage des notes n'est pas encore ouverte"
+
+msgid "outside_scores_encodings_period_latest_session"
+msgstr "La période d'encodage des notes de la session %s est fermée depuis le %s"
+
+msgid "outside_scores_encodings_period_closest_session"
+msgstr "La période d'encodage des notes pour la session %s sera ouverte à partir du %s"
 
 msgid "page_not_found"
 msgstr "Page inexistante"
@@ -996,13 +1014,16 @@ msgid "scores_injection"
 msgstr "Injection des notes"
 
 msgid "scores_responsible"
-msgstr "Responsable de notes"
+msgstr "Responsable(s) de notes"
 
 msgid "scores_saved"
 msgstr "note(s) enregistrée(s)"
 
 msgid "scores_saved_cannot_be_saved_anymore"
 msgstr "Notes sauvegardées, le bouton sauvegarder n'est plus présent"
+
+msgid "scores_must_be_between_0_and_20"
+msgstr "Les notes doivent être comprise entre 0 et 20"
 
 msgid "scores_sheet"
 msgstr "Feuille de notes"
@@ -1182,6 +1203,9 @@ msgstr "Enseignant(e)"
 msgid "tutors"
 msgstr "Enseignants"
 
+msgid "other_tutors"
+msgstr "Autre(s) Enseignant(s)"
+
 msgid "txt_message"
 msgstr "Message texte"
 
@@ -1249,9 +1273,6 @@ msgstr "Sans attribution"
 msgid "xls_columns_structure_error"
 msgstr "Votre fichier excel n'est pas bien structuré. Veuillez respecter l'ordre des colonnes fournie lors du "
        "téléchargement de votre fichier (bouton '{}')."
-
-msgid "admission_form"
-msgstr "Formulaire d'admission"
 
 msgid "order"
 msgstr "Ordonner"
@@ -1365,3 +1386,9 @@ msgstr "Les responsables de notes peuvent soumettre des encodages partiels"
 
 msgid "scores_responsible_must_still_submit_scores"
 msgstr "Le responsable de notes doit toujours soumettre les notes"
+
+msgid "no_valid_m_justification_error"
+msgstr "Vous ne pouvez pas encoder d'absence justifiée (M) via l'injection xls"
+
+msgid "abscence_justified_preserved"
+msgstr "Abscence justifiée dèjà encodée et préservée"

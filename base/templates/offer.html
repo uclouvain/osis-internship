@@ -53,8 +53,6 @@
                 <li><a data-toggle="tab" role="tab" href="#tab_academic_calendar" id="lnk_academic_calendar">{% trans 'academic_calendar'%}</a></li>
                 <li><a data-toggle="tab" role="tab" href="#tab_program_managers" id="lnk_program_managers">{% trans 'program_managers'%}</a></li>
                 <li><a data-toggle="tab" role="tab" href="#tab_scores_encoding" id="lnk_scores_encoding">{% trans 'scores_encoding' %}</a> </li>
-                <li class="{% if displaytab == 'tab_dynamic_form' %} active {%endif%}">
-                <a data-toggle="tab" role="tab" href="#tab_dynamic_form" id="lnk_dynamic_form">{% trans 'admission_form' %}</a> </li>
             </ul>
             <div class="tab-content">
                     <div id="tab_identification" class="tab-pane fade   {% if displaytab == '' %} in active  {%endif%}">
@@ -213,30 +211,7 @@
                     {% endif %}
                     <span id="status_save"></span>
                 </div>
-                <div id="tab_dynamic_form" class="tab-pane fade  {% if displaytab == 'tab_dynamic_form' %} in active {%endif%}">
-                    <br>
-                    {% if perms.admission.add_form %}
-                        <a href="{% url 'offer_form_create' offer_year.id %}" id="lnk_form_create_{{offer_year.id}}" class="btn btn-default pull-right" role="button">
-                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                        </a>
-                    {% endif %}
-                    <table class="table table-striped table-hover">
-                        <thead>
-                            <tr>
-                                <td>{% trans 'title' %}</td>
-                                <td>{% trans 'description' %}</td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        {% for form in admission_form %}
-                            <tr>
-                                <td><a href="{% url 'offer_form_read' form.id %}" id="lnk_offer_form_read_{{form.id}}">{{ form.title| default_if_none:'' }}</a></td>
-                                <td>{{ form.description| default_if_none:'' }}</td>
-                            </tr>
-                        {% endfor%}
-                        </tbody>
-                    </table>
-                </div>
+
             </div>
             <input type="hidden" id="hdn_tab" value="{{ tab }}"/>
         </form>

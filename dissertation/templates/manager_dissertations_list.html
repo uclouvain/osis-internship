@@ -84,7 +84,11 @@
             </tr>
             {% for dissertation in dissertations %}
               <tr>
-                <td><a href="{% url 'manager_dissertations_detail' pk=dissertation.pk %}">{{ dissertation.title }}</a></td>
+                <td>
+                    <a href="{% url 'manager_dissertations_detail' pk=dissertation.pk %}">
+                        {{ dissertation.title }}
+                    </a>
+                </td>
                 <td>{{ dissertation.author }}</td>
                 <td>
                     {% if dissertation.status == 'DRAFT' %}

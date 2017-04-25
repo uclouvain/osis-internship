@@ -68,7 +68,7 @@
                         {% trans 'none' %}
                     {% endif %}
                     <div class="collapse" id="tutors_by_course">
-                        <label>{% trans 'tutors' %}</label><br>
+                        <label>{% trans 'other_tutors' %}</label><br>
                         <ul>
                             {% for prof in tutors %}
                                 <li>{{ prof }}</li>
@@ -281,8 +281,6 @@ function translate_justification(justification) {
         {% endif %}
     } else if (justification == "CHEATING") {
         return "{% trans 'CHEATING' %}";
-    } else if (justification == "SCORE_MISSING") {
-        return "{% trans 'SCORE_MISSING' %}";
     } else {
         return justification;
     }

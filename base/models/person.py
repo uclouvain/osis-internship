@@ -23,7 +23,6 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-
 from django.db import models
 from django.db.models import Q
 from django.contrib.auth.models import User
@@ -44,7 +43,6 @@ class PersonAdmin(SerializableModelAdmin):
 
 
 class Person(SerializableModel):
-
     GENDER_CHOICES = (
         ('F', _('female')),
         ('M', _('male')),
@@ -69,11 +67,11 @@ class Person(SerializableModel):
 
     def save(self, **kwargs):
         # When person is created by another application this rule can be applied.
-        if hasattr(settings, 'INTERNAL_EMAIL_SUFIX'):
-            if settings.INTERNAL_EMAIL_SUFIX.strip():
+        if hasattr(settings, 'INTERNAL_EMAIL_SUFFIX'):
+            if settings.INTERNAL_EMAIL_SUFFIX.strip():
                 # It limits the creation of person with external emails. The domain name is case insensitive.
                 if self.source and self.source != person_source_type.BASE \
-                               and settings.INTERNAL_EMAIL_SUFIX in str(self.email).lower():
+                               and settings.INTERNAL_EMAIL_SUFFIX in str(self.email).lower():
                     raise AttributeError('Invalid email for external person.')
 
         super(Person, self).save()
