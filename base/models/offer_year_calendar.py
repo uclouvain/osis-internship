@@ -28,7 +28,6 @@ from django.db import models
 from django.utils import timezone
 from django.contrib import admin
 from base.models import offer_year
-import datetime
 from django.utils.translation import ugettext as _
 
 
@@ -50,10 +49,7 @@ class OfferYearCalendar(models.Model):
     customized = models.BooleanField(default=False)
 
     def update_dates(self, start_date, end_date):
-        if self.customized:  # case offerYearCalendar is already customized
-            # We update the new start date
-            # WARNING : this is TEMPORARY ; a solution for the sync from EPC to OSIS
-            #           because the start_date for scores_encodings doesn't exist in EPC
+        if self.customized:
             self.start_date = start_date
         else:
             self.start_date = start_date
@@ -89,21 +85,21 @@ class OfferYearCalendar(models.Model):
     def start_dates_set(self, academic_start_date):
         return academic_start_date and self.start_date
 
-    def get_end_date(self):
-        if self.academic_calendar.end_date:
-            return self.academic_calendar.end_date
+    def _get_date(self, date_field):
+        date_ac = getattr(self.academic_calendar, date_field)
+        date_oyc = getattr(self.offer_year.academic_year, date_field)
+        if date_ac:
+            return date_ac
+        elif date_oyc:
+            return date_oyc
         else:
-            if self.offer_year.academic_year.end_date:
-                return self.offer_year.academic_year.end_date
-        return None
+            None
 
     def get_start_date(self):
-        if self.academic_calendar.start_date:
-            return self.academic_calendar.start_date
-        else:
-            if self.offer_year.academic_year.start_date:
-                return self.offer_year.academic_year.start_date
-        return None
+        return self._get_date('start_date')
+
+    def get_end_date(self):
+        return self._get_date('end_date')
 
     def __str__(self):
         return u"%s - %s" % (self.academic_calendar, self.offer_year)

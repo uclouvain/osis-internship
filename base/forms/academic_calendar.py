@@ -73,25 +73,25 @@ class AcademicCalendarForm(BootstrapModelForm):
             return False
         return True
 
-    def start_date_and_end_date_are_inside_academic_year(self):
+    def check_start_end_date_within_academic_year(self):
+        def check_date(field, date):
+            ac_year_dates = "({} - {})".format(ac_yr.start_date.strftime(DATE_FORMAT),
+                                               ac_yr.end_date.strftime(DATE_FORMAT))
+            if self.cleaned_data[field] < date:
+                self._errors[field] = '{} {}'.format(trans('academic_{}_error'.format(field)), ac_year_dates)
+                return False
+            return True
+
         ac_yr = self.instance.academic_year
         if ac_yr:
-            ac_year_dates = "({} - {})".format(ac_yr.start_date.strftime(DATE_FORMAT),
-                                                 ac_yr.end_date.strftime(DATE_FORMAT))
-            if self.cleaned_data['start_date'] < ac_yr.start_date:
-                error_msg = '{} {}'.format(trans('academic_start_date_error'), ac_year_dates)
-                self._errors['start_date'] = error_msg
-                return False
-            if self.cleaned_data['end_date'] > ac_yr.end_date:
-                error_msg = '{} {}'.format(trans('academic_end_date_error'), ac_year_dates)
-                self._errors['end_date'] = error_msg
-                return False
+            return check_date('start_date', ac_yr.start_date) and check_date('end_date', ac_yr.end_date)
+
         return True
 
     def is_valid(self):
         return super(AcademicCalendarForm, self).is_valid() \
             and self.start_date_and_end_date_are_set() \
-            and self.start_date_and_end_date_are_inside_academic_year() \
+            and self.check_start_end_date_within_academic_year() \
             and self.end_date_gt_last_offer_year_calendar_end_date() \
             and self.end_date_gt_start_date()
 
