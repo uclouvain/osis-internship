@@ -34,20 +34,20 @@ from base.tests.factories.entity_link import EntityLinkFactory
 class EntityLinkTest(TestCase):
 
     def setUp(self):
-        self.children = [EntityFactory() for x in range(3)]
+        self.an_entity = EntityFactory()
         self.start_date = datetime.date(2015, 1, 1)
         self.end_date = datetime.date(2015, 12, 31)
 
-        for child in self.children:
-            EntityLinkFactory(child=child,
-                              start_date=self.start_date,
-                              end_date=self.end_date
-                              )
+        EntityLinkFactory(
+            child=self.an_entity,
+            start_date=self.start_date,
+            end_date=self.end_date
+            )
 
     def test_create_entity_link_same_child_same_dates(self):
         with self.assertRaisesMessage(AttributeError, 'EntityLink invalid parameters'):
             EntityLinkFactory(
-                child=self.children[0],
+                child=self.an_entity,
                 start_date=self.start_date,
                 end_date=self.end_date
                 )
@@ -55,7 +55,7 @@ class EntityLinkTest(TestCase):
     def test_create_entity_link_same_child_overlapping_dates_end_date_in(self):
         with self.assertRaisesMessage(AttributeError, 'EntityLink invalid parameters'):
             EntityLinkFactory(
-                child=self.children[0],
+                child=self.an_entity,
                 start_date=factory.fuzzy.FuzzyDate(datetime.date(2010, 1, 1), datetime.date(2014, 12, 30)).fuzz(),
                 end_date=factory.fuzzy.FuzzyDate(datetime.date(2015, 1, 1), datetime.date(2015, 12, 30)).fuzz()
                 )
@@ -63,7 +63,7 @@ class EntityLinkTest(TestCase):
     def test_create_entity_link_same_child_overlapping_dates_start_date_in(self):
         with self.assertRaisesMessage(AttributeError, 'EntityLink invalid parameters'):
             EntityLinkFactory(
-                child=self.children[0],
+                child=self.an_entity,
                 start_date=factory.fuzzy.FuzzyDate(datetime.date(2015, 1, 1), datetime.date(2015, 12, 30)).fuzz(),
                 end_date=factory.fuzzy.FuzzyDate(datetime.date(2016, 1, 1), datetime.date(2020, 12, 30)).fuzz()
                 )
@@ -71,7 +71,7 @@ class EntityLinkTest(TestCase):
     def test_create_entity_link_same_child_overlapping_dates_both_dates_out(self):
         with self.assertRaisesMessage(AttributeError, 'EntityLink invalid parameters'):
             EntityLinkFactory(
-                child=self.children[0],
+                child=self.an_entity,
                 start_date=factory.fuzzy.FuzzyDate(datetime.date(2010, 1, 1), datetime.date(2014, 12, 30)).fuzz(),
                 end_date=factory.fuzzy.FuzzyDate(datetime.date(2016, 1, 1), datetime.date(2020, 12, 30)).fuzz()
                 )
@@ -79,15 +79,14 @@ class EntityLinkTest(TestCase):
     def test_create_entity_link_same_child_overlapping_dates_both_dates_in(self):
         with self.assertRaisesMessage(AttributeError, 'EntityLink invalid parameters'):
             EntityLinkFactory(
-                child=self.children[0],
+                child=self.an_entity,
                 start_date=factory.fuzzy.FuzzyDate(datetime.date(2015, 1, 1), datetime.date(2015, 6, 30)).fuzz(),
                 end_date=factory.fuzzy.FuzzyDate(datetime.date(2015, 7, 1), datetime.date(2015, 12, 30)).fuzz()
                 )
 
     def test_create_entity_link_child_equals_parent(self):
         with self.assertRaisesMessage(AttributeError, 'EntityLink invalid parameters'):
-            an_entity = EntityFactory()
             EntityLinkFactory(
-                child=an_entity,
-                parent=an_entity
+                child=self.an_entity,
+                parent=self.an_entity
                 )
