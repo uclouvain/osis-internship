@@ -24,6 +24,7 @@
 #
 ##############################################################################
 from django.db import models
+from django.db.models import Q
 
 
 class EntityLink(models.Model):
@@ -31,3 +32,24 @@ class EntityLink(models.Model):
     child = models.ForeignKey('Entity', related_name='child')
     start_date = models.DateField(db_index=True)
     end_date = models.DateField(db_index=True)
+
+    def save(self, *args, **kwargs):
+        if self.can_save_entity_link():
+            super(EntityLink, self).save()
+        else:
+            raise AttributeError('EntityLink invalid parameters')
+
+    def can_save_entity_link(self):
+        return count_entity_links_same_child_overlapping_dates(self) == 0 and self.parent != self.child
+
+
+def count_entity_links_same_child_overlapping_dates(entity_link):
+    return EntityLink.objects.filter(
+            child=entity_link.child
+        ).filter(
+            Q(start_date__range=(entity_link.start_date, entity_link.end_date)) |
+            Q(end_date__range=(entity_link.start_date, entity_link.end_date)) |
+            (
+                Q(start_date__lte=entity_link.start_date) & Q(end_date__gte=entity_link.end_date)
+            )
+        ).count()
