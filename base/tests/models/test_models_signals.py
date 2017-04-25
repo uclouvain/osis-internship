@@ -33,8 +33,6 @@ from base.models.person import Person
 from base.models.program_manager import ProgramManager
 from base.models.student import Student
 from base.models.tutor import Tutor
-from base.models.faculty_administrator import FacultyAdministrator
-from base.models.employee import Employee
 from base.models.structure import Structure
 from base.models import models_signals as mdl_signals, person as mdl_person
 
@@ -150,19 +148,6 @@ class AddToGroupsSignalsTest(TestCase):
     def create_test_tutor(self):
         return Tutor.objects.create(person=self.person_foo)
 
-    def create_test_pgm_manager(self):
-        title = 'Test1BA'
-        acronym = 'Test1BA'
-        offer = Offer.objects.create(title=title)
-        now = datetime.datetime.now()
-        academic_year = AcademicYear.objects.create(year=now.year)
-        offer_year = OfferYear.objects.create(offer=offer, academic_year=academic_year, title=title, acronym=acronym)
-        return ProgramManager.objects.create(offer_year=offer_year, person=self.person_foo)
-
-    def create_test_faculty_administrator(self):
-        return FacultyAdministrator.objects.create(employee=Employee.objects.create(person=self.person_foo),
-                                                   structure=Structure.objects.create(acronym="TEST"))
-
     def setUp(self):
         self.user_foo = User.objects.create_user('user_foo')
         self.person_foo = Person.objects.create(user=self.user_foo)
@@ -184,24 +169,3 @@ class AddToGroupsSignalsTest(TestCase):
         tutor_foo = self.create_test_tutor()
         tutor_foo.delete()
         self.assertFalse(self.is_member('tutors'), 'user_foo should not be in tutors group anymore')
-
-    def test_add_to_pgm_manager_group(self):
-        self.create_test_pgm_manager()
-        self.assertTrue(self.is_member('program_managers'), 'user_foo should be in program_managers group')
-
-    def test_remove_from_manager_group(self):
-        pgm_manager_foo = self.create_test_pgm_manager()
-        pgm_manager_foo.delete()
-        self.assertFalse(self.is_member('program_managers'),
-                         'user_foo should not be in program_managers group anymore')
-
-    def test_add_to_faculty_administrator_group(self):
-        self.create_test_faculty_administrator()
-        self.assertTrue(self.is_member('faculty_administrators'),
-                        'faculty_administrator_foo should be in faculty_administrators group')
-
-    def test_remove_from_faculty_administrator_group(self):
-        faculty_administrator_foo = self.create_test_faculty_administrator()
-        faculty_administrator_foo.delete()
-        self.assertFalse(self.is_member('faculty_administrators'),
-                         'faculty_administrator_foo should not be in faculty_administrators group anymore')

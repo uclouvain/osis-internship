@@ -24,7 +24,7 @@
 #
 ##############################################################################
 from django.conf.urls import url, include
-from assessments.views import score_encoding, upload_xls_utils, pgm_manager_administration
+from assessments.views import score_encoding, upload_xls_utils
 from django.views.i18n import javascript_catalog
 
 
@@ -65,19 +65,6 @@ urlpatterns = [
     ])),
 
     url(r'^jsi18n/', javascript_catalog, js_info_dict),
-
-    url(r'^pgm_manager/', include([
-        url(r'^$', pgm_manager_administration.pgm_manager_administration, name='pgm_manager'),
-        url(r'^search$', pgm_manager_administration.pgm_manager_search, name='pgm_manager_search'),
-        url(r'^delete', pgm_manager_administration.delete_manager, name='delete_manager'),
-        url(r'^person/list/search$', pgm_manager_administration.person_list_search),
-
-        url(r'^create$', pgm_manager_administration.create_manager, name='create_manager_person'),
-
-    ])),
-
-    url(r'^update_managers_list/$', pgm_manager_administration.update_managers_list),
-    url(r'^manager_pgm_list/$', pgm_manager_administration.manager_pgm_list),
 
     url(r'^$', score_encoding.assessments, name="assessments"),
 ]
