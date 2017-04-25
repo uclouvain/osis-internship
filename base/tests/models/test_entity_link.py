@@ -90,3 +90,14 @@ class EntityLinkTest(TestCase):
                 child=self.an_entity,
                 parent=self.an_entity
                 )
+
+    def test_get_parent_entity_link(self):
+        entities = [EntityFactory() for x in range(3)]
+        entity_links = [EntityLinkFactory(
+                            parent=entities[x],
+                            child=entities[x+1],
+                            start_date=self.start_date,
+                            end_date=self.end_date
+                        ) for x in range(2)]
+
+        self.assertEqual(entity_links[1].get_parent(), entity_links[0])

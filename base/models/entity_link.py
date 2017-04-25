@@ -40,16 +40,28 @@ class EntityLink(models.Model):
             raise AttributeError('EntityLink invalid parameters')
 
     def can_save_entity_link(self):
-        return count_entity_links_same_child_overlapping_dates(self) == 0 and self.parent != self.child
+        return self.count_entity_links_same_child_overlapping_dates() == 0 and self.parent != self.child
 
+    def count_entity_links_same_child_overlapping_dates(self):
+        return EntityLink.objects.filter(
+                Q(child=self.child) &
+                (
+                    Q(start_date__range=(self.start_date, self.end_date)) |
+                    Q(end_date__range=(self.start_date, self.end_date)) |
+                    (
+                        Q(start_date__lte=self.start_date) & Q(end_date__gte=self.end_date)
+                    )
+                )
+            ).count()
 
-def count_entity_links_same_child_overlapping_dates(entity_link):
-    return EntityLink.objects.filter(
-            child=entity_link.child
-        ).filter(
-            Q(start_date__range=(entity_link.start_date, entity_link.end_date)) |
-            Q(end_date__range=(entity_link.start_date, entity_link.end_date)) |
+    def get_parent(self):
+        return EntityLink.objects.get(
+            Q(child=self.parent) &
             (
-                Q(start_date__lte=entity_link.start_date) & Q(end_date__gte=entity_link.end_date)
+                Q(start_date__range=(self.start_date, self.end_date)) |
+                Q(end_date__range=(self.start_date, self.end_date)) |
+                (
+                    Q(start_date__lte=self.start_date) & Q(end_date__gte=self.end_date)
+                )
             )
-        ).count()
+        )
