@@ -178,4 +178,3 @@ def find_by_user(user, academic_yr):
 
 def find_by_offer(offers):
     return OfferYear.objects.filter(offer__in=offers)
-

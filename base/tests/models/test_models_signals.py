@@ -33,7 +33,6 @@ from base.models.person import Person
 from base.models.program_manager import ProgramManager
 from base.models.student import Student
 from base.models.tutor import Tutor
-from base.models.structure import Structure
 from base.models import models_signals as mdl_signals, person as mdl_person
 
 
