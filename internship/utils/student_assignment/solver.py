@@ -36,6 +36,52 @@ REFERENCE_PERSONAL_ORGANIZATION = 601 # Stage personnel
 
 UNAUTHORIZED_SPECIALITIES = ["SP", "SE", "MO"]
 
+
+def assign_students_to_periods(self, cohort):
+    sorted_internships = mdl_internship.internship.Internship.objects.filter(cohort=cohort).order_by("sorting_order")
+    students = mdl_internship.student_information.StudentInformation.objects.filter(cohort=cohort)
+    priority_students, regular_students = sort_students(students)
+    enrollments = []
+
+    for internship in sorted_internships:
+       enrollments += assign_students_to_periods_for_internship(priority_students, internship)
+       enrollments += assign_students_to_periods_for_internship(students, internship)
+
+    enrollments.save_all()
+
+def assign_students_to_periods_for_internship(self, students, internship):
+    offers_for_internship_with_period_places = internship.offers.include("internship_period_places") # Pseudo-code
+    students = students.shuffle() # Pseudo-code
+    enrollments = []
+    for student in students:
+        enrollments += assign_choice_to_any_available_period_for_student(student, offers_for_internship_with_period_places, internship)
+    return enrollments
+
+def assign_choice_to_any_available_period_for_student(self, student, offers_for_internship_with_period_places, internship):
+    student_choices_for_internship = mdl_internship.internship_choices.InternshipChoice.objects.filter(internship=internship, student=student)
+    period, offer = find_available_period_for_student_choices_and_offer(student, student_choices_for_internship, offers_for_internship_with_period_places, internship.length_in_periods)
+    return InternshipEnrollment.build(student=student, period=period, internship_offer=offer, internship=internship, place=offer.organization)
+
+def find_available_period_for_choices_and_offer(self, student, choices, offers_with_places, length):
+    choices = choices.order_by("choice")
+
+    for choice in choices:
+        available_period, offer = find_available_period_and_offer_for_choice(student, choice, offers_with_places, length)
+        if available_period != None:
+            return available_period, offer
+        else:
+            return first_available_period_for_any_offer(student, offers_with_places, length)
+
+def find_available_period_and_offer_for_choice(self, student, choice, offers_with_places, length):
+    periods_with_available_places = find_periods_with_places_for_offer(choice.offer, offers_with_places)
+    if len(periods_with_available_places) > 0:
+        return random.choice(periods_with_available_places), choice.offer
+    else:
+        return None, choice.offer
+
+def find_periods_with_places_for_offer(self, offer, offers_with_places, length):
+    return offers_with_places[offer.id].periods_places.select(pp.places > 0) # Pseudo-code not dealing with 2 periods internships yet
+
 # X 1. Enlever généraliste / spécialiste
 # 2. Utiliser le modèle internship
 # 3. D'abord commencer par les stages ou offre > demande
