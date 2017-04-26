@@ -32,6 +32,7 @@ from openpyxl.styles import Color, Style, PatternFill, Font, colors
 from django.utils.translation import ugettext_lazy as _
 
 from base import models as mdl
+from base.enums import exam_enrollment_justification_type
 
 HEADER = [str(_('academic_year')),
           str(_('sessionn')),
@@ -44,6 +45,12 @@ HEADER = [str(_('academic_year')),
           str(_('justification')),
           str(_('end_date')),
           str(_('ID'))]
+
+JUSTIFICATION_ALIASES = {
+    exam_enrollment_justification_type.ABSENCE_JUSTIFIED : "M",
+    exam_enrollment_justification_type.ABSENCE_UNJUSTIFIED : "S",
+    exam_enrollment_justification_type.CHEATING : "T",
+}
 
 
 def export_xls(exam_enrollments):
@@ -58,14 +65,12 @@ def export_xls(exam_enrollments):
     worksheet.append([str('%s: %s' % (_('file_production_date'), printing_date))])
     __display_warning_about_students_deliberated(worksheet, row_number=5)
     worksheet.append([str('')])
-    worksheet.append([str(_('justification_legend') % mdl.exam_enrollment.justification_label_authorized())])
-    worksheet.append([str(_('score_legend') % "0 - 20")])
+    __display_legends(worksheet)
     worksheet.append([str('')])
-
     __columns_resizing(worksheet)
     worksheet.append(HEADER)
 
-    row_number = 10
+    row_number = 11
     for exam_enroll in exam_enrollments:
         student = exam_enroll.learning_unit_enrollment.student
         offer = exam_enroll.learning_unit_enrollment.offer
@@ -78,9 +83,9 @@ def export_xls(exam_enrollments):
                 score = "{0:.2f}".format(exam_enroll.score_final)
             else:
                 score = "{0:.0f}".format(exam_enroll.score_final)
-        justification = ""
-        if exam_enroll.justification_final:
-            justification = _(exam_enroll.justification_final)
+
+        justification = JUSTIFICATION_ALIASES.get(exam_enroll.justification_final, "")
+
         worksheet.append([str(exam_enroll.learning_unit_enrollment.learning_unit_year.academic_year),
                           str(exam_enroll.session_exam.number_session),
                           exam_enroll.session_exam.learning_unit_year.acronym,
@@ -150,6 +155,26 @@ def __coloring_non_editable(ws, row_number, score, justification):
 def __display_warning_about_students_deliberated(ws, row_number):
     ws.cell(row=row_number, column=1).value = str(_('students_deliberated_are_not_shown'))
     ws.cell(row=row_number, column=1).font = Font(color=colors.RED)
+
+
+def __display_legends(ws):
+    ws.append([
+        str(_('justification')),
+        str(_('justification_values_accepted') % mdl.exam_enrollment.justification_label_authorized())
+    ])
+    ws.append([
+        str(''),
+        str(_('justification_other_values') % justification_other_values())
+    ])
+    ws.append([
+        str(_('numbered_score')),
+        str(_('score_legend') % "0 - 20")
+    ])
+
+
+def justification_other_values():
+    return "%s, %s" % (_('unjustified_absence_export_legend'),
+                       _('justified_absence_export_legend'))
 
 
 def __get_session_exam_deadline(exam_enroll):

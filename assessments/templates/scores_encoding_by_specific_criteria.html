@@ -89,7 +89,7 @@
 
             {% include "template_messages.html" %}
             
-            {% if exam_enrollments %}
+            {% if enrollments %}
             <button type="submit" class="btn btn-primary" id="bt_save_online_encoding_up" name="action" value="save">
                 <span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span> {% trans 'save' %}</button>
             <table class="table table-hover">
@@ -106,7 +106,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                {% for enrollment in exam_enrollments %}
+                {% for enrollment in enrollments %}
                     <tr style="{% if enrollment.deadline_reached %}
                                     background-color:#D3D3D3;
                                {% endif %}">
@@ -141,7 +141,7 @@
                         </td>
                         <td>
                             <select class="form-control" name="justification_{{ enrollment.id }}" id="slt_justification_score_{{ enrollment.id }}"
-                                   tabindex="{{ exam_enrollments|length|sum:forloop.counter }}"
+                                   tabindex="{{ enrollments|length|sum:forloop.counter }}"
                                     {% if enrollment.deadline_reached %}
                                     disabled
                                  {% endif %}>
@@ -168,7 +168,7 @@
 {% block script %}
 <script>
     var values = [
-        {% for enrollment in exam_enrollments %}
+        {% for enrollment in enrollments %}
             {% if is_program_manager %}
                 ['{{ enrollment.id }}', '{{ enrollment.score_final | default_if_none:'-1' }}','{{ enrollment.justification_final | default_if_none:'' }}'],
             {% else %}

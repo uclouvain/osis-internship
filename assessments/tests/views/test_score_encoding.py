@@ -88,8 +88,6 @@ class OnlineEncodingTest(TestCase):
         self.program_manager_2 = ProgramManagerFactory(offer_year=offer_year)
         add_permission(self.program_manager_2.person.user, "can_access_scoreencoding")
 
-
-
     def test_filter_enrollments_by_offer_year(self):
         enrollments = self.enrollments
 
@@ -135,7 +133,7 @@ class OnlineEncodingTest(TestCase):
         self.client.post(url, data=self.get_form_with_all_students_filled_and_one_with_justification())
 
         self.refresh_exam_enrollments_from_db()
-        self.assert_exam_enrollments(self.enrollments[0], 15, 15, None, None)
+        self.assert_exam_enrollments(self.enrollments[0], None, None, None, None)
         self.assert_exam_enrollments(self.enrollments[1], None, None, "ABSENCE_JUSTIFIED", "ABSENCE_JUSTIFIED")
 
     def test_tutor_encoding_with_all_students(self):

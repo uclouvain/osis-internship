@@ -74,7 +74,9 @@ def find_by_learning_unit(learning_unit_year):
     :return: All tutors of the learningUnit passed in parameter.
     """
     tutor_ids = attribution.search(learning_unit_year=learning_unit_year).values_list('tutor').distinct('tutor')
-    return Tutor.objects.filter(pk__in=tutor_ids).order_by('person__last_name', 'person__first_name')
+    return Tutor.objects.filter(pk__in=tutor_ids)\
+                        .select_related('person')\
+                        .order_by('person__last_name', 'person__first_name')
 
 
 def is_tutor(user):
