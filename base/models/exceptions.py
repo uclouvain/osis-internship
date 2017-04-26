@@ -31,9 +31,21 @@ class StartDateHigherThanEndDateException(Exception):
         self.errors = errors
 
 
-class FunctionAgrumentMissingException(Exception):
+class FunctionArgumentMissingException(Exception):
     def __init__(self, message=None, errors=None):
-        super(FunctionAgrumentMissingException, self).__init__(message)
+        super(FunctionArgumentMissingException, self).__init__(message)
+        self.errors = errors
+
+
+class TxtLabelOrderExitsException(Exception):
+    def __init__(self, message=None, errors=None):
+        super(TxtLabelOrderExitsException, self).__init__(message)
+        self.errors = errors
+
+
+class TxtLabelOrderMustExitsException(Exception):
+    def __init__(self, message=None, errors=None):
+        super(TxtLabelOrderMustExitsException, self).__init__(message)
         self.errors = errors
 
 
