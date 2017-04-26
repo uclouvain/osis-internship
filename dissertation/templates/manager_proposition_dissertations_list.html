@@ -61,30 +61,38 @@
         </div>
       </form>
       </div>
-          {% if proposition_offers|length == 0 %}
+          {% if propositions_dissertations|length == 0 %}
             <br>
             <label class="alert alert-info" style="margin-left:10%;width:80%;text-align:center;">{% trans 'no_result' %}</label>
           {% else %}
             <table class="table table-hover">
               <tr>
                 <th>{% trans 'title'%}</th>
-                <th>{% trans 'author'%}</th>
-                <th>{% trans 'offer_propositions'%}</th>
-                <th>{% trans 'max_students_number'%}</th>
-                <th>{% trans 'visibility'%}</th>
+                <th>{% trans 'promotor'%}</th>
+                <th>{% trans 'creator'%}</th>
+                  <th>{% trans 'visibility'%}</th>
+                  <th>{% trans 'offer_propositions'%}</th>
               </tr>
-              {% for proposition_offer in proposition_offers %}
+              {% for proposition_dissertation in propositions_dissertations %}
                 <tr>
-                  <td><a href="{% url 'manager_proposition_dissertation_detail' pk=proposition_offer.proposition_dissertation.pk %}">{{ proposition_offer.proposition_dissertation.title }}</a></td>
-                  <td>{{ proposition_offer.proposition_dissertation.author }}</td>
-                  <td><span class="label label-default">{{ proposition_offer }}</span></td>
-                  <td>{{ proposition_offer.proposition_dissertation.max_number_student }}</td>
+                  <td><a href="{% url 'manager_proposition_dissertation_detail' pk=proposition_dissertation.pk %}">{{ proposition_dissertation.title }}</a></td>
+                  <td>{{ proposition_dissertation.author }}</td>
+                  <td>{{ proposition_dissertation.creator }}</td>
                   <td>
-                      {% if proposition_offer.proposition_dissertation.visibility == True %}
+                      {% if proposition_dissertation.visibility == True %}
                       <span class="label label-success">{% trans 'visible' %}</span>
-                      {% elif proposition_offer.proposition_dissertation.visibility == False %}
+                      {% else %}
                       <span class="label label-warning">{% trans 'invisible' %}</span>
                       {% endif %}
+                  </td>
+                  <td>
+                      {% for prop_offer in proposition_dissertation.propositionoffer_set.all %}
+                        {% if forloop.last %}
+                            {{ prop_offer.offer_proposition.acronym }}
+                        {% else %}
+                            {{ prop_offer.offer_proposition.acronym }} -
+                        {% endif %}
+                      {% endfor %}
                   </td>
                 </tr>
               {% endfor %}
