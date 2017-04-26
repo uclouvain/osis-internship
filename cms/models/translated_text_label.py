@@ -23,33 +23,31 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.contrib import admin
+from django.db import models
+
+from reference.models.language import Language
+from .text_label import TextLabel
 
 
-class StartDateHigherThanEndDateException(Exception):
-    def __init__(self, message=None, errors=None):
-        super(StartDateHigherThanEndDateException, self).__init__(message)
-        self.errors = errors
+class TranslatedTextLabelAdmin(admin.ModelAdmin):
+    list_display = ('label', 'language', 'text_label',)
+    fieldsets = ((None, {'fields': ('label', 'language', 'text_label')}),)
+    ordering = ('label',)
 
 
-class FunctionArgumentMissingException(Exception):
-    def __init__(self, message=None, errors=None):
-        super(FunctionArgumentMissingException, self).__init__(message)
-        self.errors = errors
+class TranslatedTextLabel(models.Model):
+    language = models.ForeignKey(Language)
+    text_label = models.ForeignKey(TextLabel)
+    label = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.label
 
 
-class TxtLabelOrderExitsException(Exception):
-    def __init__(self, message=None, errors=None):
-        super(TxtLabelOrderExitsException, self).__init__(message)
-        self.errors = errors
+def find_by_id(id):
+    return TranslatedTextLabel.objects.get(pk=id)
 
 
-class TxtLabelOrderMustExitsException(Exception):
-    def __init__(self, message=None, errors=None):
-        super(TxtLabelOrderMustExitsException, self).__init__(message)
-        self.errors = errors
-
-
-class JustificationValueException(Exception):
-    def __init__(self, message=None, errors=None):
-        super(JustificationValueException, self).__init__(message)
-        self.errors = errors
+def find_by_language_code(language_code):
+    return TranslatedTextLabel.objects.filter(language__code=language_code)
