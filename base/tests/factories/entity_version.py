@@ -1,12 +1,12 @@
 ##############################################################################
 #
-#    OSIS stands for Open Student Information System. It's an application
+# OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -23,18 +23,18 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
-import datetime
-from base.models.entity_link import EntityLink
+import factory
+from base.models.enums import entity_type
+from base.tests.factories.entity import EntityFactory
 
 
-class Entity(models.Model):
-    organization = models.ForeignKey('Organization', null=True)
+class EntityVersionFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = 'base.EntityVersion'
 
-    def get_direct_children(self, search_date=datetime.datetime.now()):
-        queryset = EntityLink.objects.filter(parent=self,
-                                             start_date__lte=search_date,
-                                             end_date__gte=search_date
-                                             ).select_related("child")
-        return [entity_link.child for entity_link in list(queryset)]
-
+    entity = factory.SubFactory(EntityFactory)
+    title = factory.Faker('text', max_nb_chars=255)
+    acronym = factory.Faker('text', max_nb_chars=20)
+    entity_type = factory.Iterator(entity_type.ENTITY_TYPES, getter=lambda c: c[0])
+    start_date = factory.Faker('date_time_this_decade', before_now=True, after_now=False)
+    end_date = factory.Faker('date_time_this_decade', before_now=False, after_now=True)

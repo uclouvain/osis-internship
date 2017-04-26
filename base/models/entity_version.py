@@ -24,6 +24,8 @@
 #
 ##############################################################################
 from django.db import models
+from django.db.models import Q
+import datetime
 from base.models.enums import entity_type
 
 
@@ -34,3 +36,35 @@ class EntityVersion(models.Model):
     entity_type = models.CharField(choices=entity_type.ENTITY_TYPES, max_length=50, db_index=True)
     start_date = models.DateField(db_index=True)
     end_date = models.DateField(db_index=True)
+
+    def save(self, *args, **kwargs):
+        if self.can_save_entity_version():
+            super(EntityVersion, self).save()
+        else:
+            raise AttributeError('EntityVersion invalid parameters')
+
+    def can_save_entity_version(self):
+        return self.count_entity_versions_same_entity_overlapping_dates() == 0 and \
+               self.count_entity_versions_same_acronym_overlapping_dates() == 0
+
+    def search_entity_versions_with_overlapping_dates(self):
+        return EntityVersion.objects.filter(
+                Q(start_date__range=(self.start_date, self.end_date)) |
+                Q(end_date__range=(self.start_date, self.end_date)) |
+                (
+                    Q(start_date__lte=self.start_date) & Q(end_date__gte=self.end_date)
+                )
+            )
+
+    def count_entity_versions_same_entity_overlapping_dates(self):
+        return self.search_entity_versions_with_overlapping_dates().filter(entity=self.entity).count()
+
+    def count_entity_versions_same_acronym_overlapping_dates(self):
+        return self.search_entity_versions_with_overlapping_dates().filter(acronym=self.acronym).count()
+
+
+def find(acronym, date=datetime.datetime.now()):
+    return EntityVersion.objects.get(acronym=acronym,
+                                     start_date__lte=date,
+                                     end_date__gte=date
+                                     )
