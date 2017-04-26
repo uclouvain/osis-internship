@@ -239,9 +239,9 @@ def organization_create(request, cohort_id):
 def student_choice(request, cohort_id, organization_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
     organization = get_object_or_404(Organization, pk=organization_id)
-    organization_choice = mdl_internship.internship_choice.search(organization__reference=organization.reference)
+    organization_choice = mdl_internship.internship_choice.search(organization=organization)
 
-    all_offers = mdl_internship.internship_offer.search(organization=organization)
+    all_offers = mdl_internship.internship_offer.search(organization=organization, cohort=cohort)
     all_speciality = mdl_internship.internship_speciality.find_all(cohort)
     set_tabs_name(all_speciality)
     for al in all_offers:
@@ -276,15 +276,15 @@ def student_affectation(request, cohort_id, organization_id):
         a.email = ""
         a.adress = ""
         a.phone_mobile = ""
-        internship_student_information= mdl_internship.internship_student_information.search(person=a.student.person)
+        internship_student_information= mdl_internship.internship_student_information.search(person=a.student.person, cohort=cohort)
         if internship_student_information:
             informations = internship_student_information.first()
             a.email = informations.email
             a.adress = informations.location + " " + informations.postal_code + " " + informations.city
             a.phone_mobile = informations.phone_mobile
-    periods = mdl_internship.period.search()
+    periods = mdl_internship.period.search(cohort=cohort)
 
-    internships = mdl_internship.internship_offer.search(organization = organization)
+    internships = mdl_internship.internship_offer.search(organization = organization, cohort=cohort)
     all_speciality = get_all_specialities(internships)
     all_speciality = set_speciality_unique(all_speciality)
     set_tabs_name(all_speciality)

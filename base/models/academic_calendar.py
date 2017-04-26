@@ -23,12 +23,12 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.utils import timezone
-from base.models.exceptions import FunctionAgrumentMissingException, StartDateHigherThanEndDateException
-from osis_common.models.serializable_model import SerializableModel
 
+from base.models.enums import academic_calendar_type
+from osis_common.models.serializable_model import SerializableModel
+from base.models.exceptions import FunctionArgumentMissingException, StartDateHigherThanEndDateException
 FUNCTIONS = 'functions'
 
 
@@ -43,11 +43,11 @@ class AcademicCalendar(SerializableModel):
     highlight_title = models.CharField(max_length=255, blank=True, null=True)
     highlight_description = models.CharField(max_length=255, blank=True, null=True)
     highlight_shortcut = models.CharField(max_length=255, blank=True, null=True)
-    reference = models.CharField(max_length=50, blank=True, null=True)
+    reference = models.CharField(choices=academic_calendar_type.ACADEMIC_CALENDAR_TYPES, max_length=50, blank=True, null=True)
 
     def save(self, *args, **kwargs):
         if FUNCTIONS not in kwargs.keys():
-            raise FunctionAgrumentMissingException('The kwarg "{0}" must be set.'.format(FUNCTIONS))
+            raise FunctionArgumentMissingException('The kwarg "{0}" must be set.'.format(FUNCTIONS))
         functions = kwargs.pop(FUNCTIONS)
         if self.start_date and self.end_date and self.start_date >= self.end_date:
             raise StartDateHigherThanEndDateException('Start date must be lower than end date')
