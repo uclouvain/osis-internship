@@ -44,7 +44,7 @@ class MessagesViewTestCase(TestCase):
         self.factory = RequestFactory()
         self.client = Client()
         self.user = User.objects.create_user(
-            username='test', email='test@uclouvain.be', password='secret'
+            username='tests', email='tests@uclouvain.be', password='secret'
         )
         self.person = Person.objects.create(user=self.user, first_name='first_name', last_name='last_name')
         self.manager = Manager.objects.create(person=self.person)

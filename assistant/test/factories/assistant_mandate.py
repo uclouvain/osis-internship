@@ -25,10 +25,11 @@
 ##############################################################################
 import factory
 import factory.fuzzy
-from datetime import date
+import datetime
 from assistant.test.factories.academic_assistant import AcademicAssistantFactory
-from base.tests.factories.academic_year import AcademicYearFactor
-from assistant.models.enums import assistant_type
+from base.tests.factories.academic_year import AcademicYearFactory
+from assistant.models.enums import assistant_type, assistant_mandate_renewal, assistant_mandate_state
+from assistant.models.enums import assistant_mandate_appeal
 
 
 class AssistantMandateFactory(factory.DjangoModelFactory):
@@ -38,9 +39,29 @@ class AssistantMandateFactory(factory.DjangoModelFactory):
     assistant = factory.SubFactory(AcademicAssistantFactory)
     academic_year = factory.SubFactory(AcademicYearFactory)
     assistant_type = factory.Iterator(assistant_type.ASSISTANT_TYPES, getter=lambda c: c[0])
-    #fulltime_equivalent = factory.fuzzy.FuzzyDecimal(0, 1, 2)
-    fulltime_equivalent = factory.Iterator([0.25, 0.33, 0.5, 0.75, 1])
-    entry_date = factory.fuzzy.FuzzyDateTime(datetime.datetime(2000, 9, 15), force_year=date.today().year - 2)
-    end_date = factory.fuzzy.FuzzyDateTime(datetime.datetime(date.today().year, 9, 14))
-    sap_id = factory.fuzzy.FuzzyText(length=7, chars=string.ascii_numbers,prefix='')
-
+    fulltime_equivalent = factory.fuzzy.FuzzyChoice([0.25, 0.33, 0.5, 0.75, 1])
+    entry_date = datetime.datetime(datetime.date.today().year - 2, 9, 15)
+    end_date = datetime.datetime(datetime.date.today().year, 9, 14)
+    sap_id = factory.Faker('text', max_nb_chars=7)
+    grade = assistant_type
+    renewal_type = factory.Iterator(assistant_mandate_renewal.ASSISTANT_MANDATE_RENEWAL_TYPES, getter=lambda c: c[0])
+    state = factory.Iterator(assistant_mandate_state.ASSISTANT_MANDATE_STATES, getter=lambda c: c[0])
+    scale = factory.fuzzy.FuzzyChoice(['021', '502', '020', '023'])
+    research_percent = 0
+    tutoring_percent = 0
+    service_activities_percent = 0
+    formation_activities_percent = 0
+    faculty_representation = 0
+    institute_representation = 0
+    sector_representation = 0
+    governing_body_representation = 0
+    corsci_representation = 0
+    students_service = 0
+    infrastructure_mgmt_service = 0
+    events_organisation_service = 0
+    publishing_field_service = 0
+    scientific_jury_service = 0
+    appeal = assistant_mandate_appeal.NONE
+    special = False
+    contract_duration = str(int(end_date.year) - int(entry_date.year))
+    contract_duration_fte = contract_duration
