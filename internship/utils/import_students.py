@@ -25,7 +25,6 @@
 ##############################################################################
 import csv
 
-import pendulum
 from django.contrib.auth.models import Group
 
 from base.models.person import Person
@@ -42,24 +41,7 @@ def import_csv(cohort, csvfile):
         person = Person.objects.filter(global_id=fgs).first()
 
         if not person:
-            if ',' in name:
-                t = name.split(',')
-                last_name, first_name = t[0].strip(), t[1].strip()
-            else:
-                t = name.split()
-                last_name, first_name = ' '.join(t[:-1]).strip(), t[-1].strip()
-
-            d = pendulum.parse(birthdate)
-
-            birthdate = d.format('%Y-%m-%d')
-
-            person = Person.objects.create(
-                global_id=noma,
-                gender=gender,
-                first_name=first_name,
-                last_name=last_name,
-                birth_date=birthdate
-            )
+            continue
 
         info = {
             'person': person,

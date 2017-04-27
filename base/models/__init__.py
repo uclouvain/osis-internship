@@ -61,4 +61,3 @@ from base.models import structure_address
 from base.models import student
 from base.models import synchronization
 from base.models import tutor
-
