@@ -26,7 +26,9 @@
 from django.contrib.auth.decorators import user_passes_test
 from django.shortcuts import render
 from django.core.exceptions import ObjectDoesNotExist
-from assistant.models import *
+from django.core.urlresolvers import reverse
+from django.http.response import HttpResponseRedirect
+from assistant.models import review, academic_assistant, settings, assistant_mandate
 
 
 def user_is_assistant_and_procedure_is_open(user):
@@ -41,5 +43,10 @@ def user_is_assistant_and_procedure_is_open(user):
 
 @user_passes_test(user_is_assistant_and_procedure_is_open, login_url='access_denied')
 def reviews_view(request, mandate_id):
-    return render(request, 'mandate_reviews_view.html')
-
+    reviews = review.find_by_mandate(mandate_id)
+    current_academic_assistant = academic_assistant.find_by_person(request.user.person)
+    mandate = assistant_mandate.find_mandate_by_id(mandate_id)
+    if mandate.assistant != current_academic_assistant:
+        return HttpResponseRedirect(reverse("assistants_home"))
+    else:
+        return render(request, 'mandate_reviews_view.html', {'reviews': reviews})
