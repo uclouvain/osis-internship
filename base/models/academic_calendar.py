@@ -29,7 +29,7 @@ from osis_common.models.serializable_model import SerializableModel, Serializabl
 from base.models.exceptions import FunctionArgumentMissingException, StartDateHigherThanEndDateException
 from base.models.enums import academic_calendar_type
 from django.utils.translation import ugettext as _
-from base.models.utils.model_action import delete_admin_action
+from base.models.utils.admin_extentions import remove_delete_action
 
 
 FUNCTIONS = 'functions'
@@ -38,9 +38,7 @@ FUNCTIONS = 'functions'
 class AcademicCalendarAdmin(SerializableModelAdmin):
     list_display = ('academic_year', 'title', 'start_date', 'end_date')
     list_display_links = None
-    readonly_fields = ('academic_year', 'title', 'start_date', 'end_date')  # The fields have to be readonly.
-                                                                            # The application/synchronization
-                                                                            # will update NOT THE ADMIN
+    readonly_fields = ('academic_year', 'title', 'start_date', 'end_date')
     list_filter = ('academic_year',)
     search_fields = ['title']
     ordering = ('start_date',)
@@ -52,7 +50,7 @@ class AcademicCalendarAdmin(SerializableModelAdmin):
         return False
 
     def get_actions(self, request):
-        return delete_admin_action(super(AcademicCalendarAdmin, self).get_actions(request))
+        return remove_delete_action(super(AcademicCalendarAdmin, self).get_actions(request))
 
 
 class AcademicCalendar(SerializableModel):

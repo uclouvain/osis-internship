@@ -32,11 +32,11 @@ from django.utils.translation import ugettext as _
 
 
 class OfferYearCalendarAdmin(admin.ModelAdmin):
-    list_display = ('academic_calendar', 'offer_year', 'start_date', 'end_date', 'changed')
+    list_display = ('academic_calendar', 'offer_year', 'start_date', 'end_date', 'changed', 'customized')
     fieldsets = ((None, {'fields': ('offer_year', 'academic_calendar', 'start_date', 'end_date', 'customized')}),)
     raw_id_fields = ('offer_year',)
     search_fields = ['offer_year__acronym']
-    list_filter = ('academic_calendar__academic_year', 'academic_calendar__title')
+    list_filter = ('academic_calendar__academic_year', 'academic_calendar__reference', 'customized')
 
 
 class OfferYearCalendar(models.Model):

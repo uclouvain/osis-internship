@@ -270,7 +270,7 @@ class OnlineEncodingTest(TestCase):
         for enrollment in self.enrollments:
             enrollment.refresh_from_db()
 
-#
+
 class OutsideEncodingPeriodTest(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(username='score_encoding', password='score_encoding')
@@ -278,7 +278,7 @@ class OutsideEncodingPeriodTest(TestCase):
         self.client.force_login(self.user)
 
         # Create context
-        academic_year = AcademicYearFactory(year=datetime.datetime.now().year-1)
+        academic_year = AcademicYearFactory(year=datetime.datetime.now().year - 1)
         academic_calendar = AcademicCalendarFactory.build(title="Submission of score encoding - 1",
                                                           academic_year=academic_year,
                                                           reference=academic_calendar_type.SCORES_EXAM_SUBMISSION)
