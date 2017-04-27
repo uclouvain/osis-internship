@@ -72,7 +72,7 @@
                     </select>
                 </div>
                 <div class="col-md-5">
-                    <label for="txt_title">{% trans 'title' %}{{LANGUAGE_CODE}}</label>
+                    <label for="txt_title">{% trans 'title' %}</label>
                     <input class="form-control" value="{{ form.title.value | default_if_none:'' }}"
                            name="title" id="txt_title">
                         <span class="error">{{ form.title.errors }}</span>

@@ -25,7 +25,7 @@
 ##############################################################################
 from django.forms import ModelForm
 from base.models import academic_calendar, offer_year_calendar
-from django.utils.translation import ugettext as trans
+from django.utils.translation import ugettext_lazy as _
 from base.models.offer_year_calendar import save_from_academic_calendar
 
 
@@ -42,11 +42,11 @@ class AcademicCalendarForm(ModelForm):
 
     def end_date_gt_last_offer_year_calendar_end_date(self):
         off_year_calendar_max = offer_year_calendar.find_latest_end_date_by_academic_calendar(self.instance.id)
-        date_format = trans('date_format')
+        date_format = _('date_format')
 
         if off_year_calendar_max and self.cleaned_data['end_date'] and \
                         self.cleaned_data['end_date'] < off_year_calendar_max.end_date:
-            error_msg = "%s." % (trans('academic_calendar_offer_year_calendar_end_date_error')
+            error_msg = "%s." % (_('academic_calendar_offer_year_calendar_end_date_error')
                                  % (off_year_calendar_max.end_date.strftime(date_format),
                                     off_year_calendar_max.offer_year.acronym))
             self._errors['end_date'] = error_msg
@@ -57,7 +57,7 @@ class AcademicCalendarForm(ModelForm):
         if not self.cleaned_data.get('end_date') or not self.cleaned_data.get('start_date'):
             return True
         if self.cleaned_data['end_date'] <= self.cleaned_data['start_date']:
-            self._errors['start_date'] = trans('start_date_must_be_lower_than_end_date')
+            self._errors['start_date'] = _('start_date_must_be_lower_than_end_date')
             return False
         return True
 
