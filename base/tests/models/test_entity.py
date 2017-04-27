@@ -40,13 +40,13 @@ class EntityTest(TestCase):
         self.date_in_2017 = factory.fuzzy.FuzzyDate(datetime.date(2017, 1, 1), datetime.date(2017, 12, 30)).fuzz()
         self.parent = EntityFactory()
         self.children = [EntityFactory() for x in range(4)]
-        [EntityLinkFactory(
-            parent=self.parent,
-            child=self.children[x],
-            start_date=self.start_date,
-            end_date=self.end_date
-            )
-            for x in range(4)]
+        for x in range(4):
+            EntityLinkFactory(
+                parent=self.parent,
+                child=self.children[x],
+                start_date=self.start_date,
+                end_date=self.end_date
+                )
 
     def test_get_entity_direct_children_in_dates(self):
         self.assertCountEqual(self.parent.get_direct_children(date=self.date_in_2015),
@@ -57,42 +57,39 @@ class EntityTest(TestCase):
 
     def test_get_entity_direct_children_in_and_out_dates(self):
         in_2017_children = [EntityFactory() for x in range(4)]
-        [EntityLinkFactory(
-            parent=self.parent,
-            child=in_2017_children[x],
-            start_date=datetime.date(2017, 1, 1),
-            end_date=datetime.date(2017, 12, 31)
-            )
-            for x in range(4)]
+        for x in range(4):
+            EntityLinkFactory(
+                parent=self.parent,
+                child=in_2017_children[x],
+                start_date=datetime.date(2017, 1, 1),
+                end_date=datetime.date(2017, 12, 31)
+                )
         self.assertCountEqual(self.parent.get_direct_children(date=self.date_in_2017),
                               [in_2017_children[x] for x in range(4)])
 
     def test_find_descendants(self):
         grandchildren = [EntityFactory() for x in range(8)]
-        [EntityLinkFactory(
-            parent=self.children[x],
-            child=grandchildren[x*2],
-            start_date=self.start_date,
-            end_date=self.end_date
-            )
-            for x in range(4)]
-
-        [EntityLinkFactory(
-            parent=self.children[x],
-            child=grandchildren[x * 2 + 1],
-            start_date=self.start_date,
-            end_date=self.end_date
-        )
-            for x in range(4)]
-
         grandgrandchildren = [EntityFactory() for x in range(4)]
-        [EntityLinkFactory(
-            parent=grandchildren[x*2],
-            child=grandgrandchildren[x],
-            start_date=self.start_date,
-            end_date=self.end_date
-        )
-            for x in range(4)]
+
+        for x in range(4):
+            EntityLinkFactory(
+                parent=self.children[x],
+                child=grandchildren[x*2],
+                start_date=self.start_date,
+                end_date=self.end_date
+            )
+            EntityLinkFactory(
+                parent=self.children[x],
+                child=grandchildren[x * 2 + 1],
+                start_date=self.start_date,
+                end_date=self.end_date
+            )
+            EntityLinkFactory(
+                parent=grandchildren[x*2],
+                child=grandgrandchildren[x],
+                start_date=self.start_date,
+                end_date=self.end_date
+            )
 
         descendants = self.children + grandchildren + grandgrandchildren
 
