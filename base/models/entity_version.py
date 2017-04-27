@@ -23,10 +23,12 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.db.models import Q
 import datetime
 from base.models.enums import entity_type
+
 
 
 class EntityVersion(models.Model):
@@ -64,7 +66,12 @@ class EntityVersion(models.Model):
 
 
 def find(acronym, date=datetime.datetime.now()):
-    return EntityVersion.objects.get(acronym=acronym,
-                                     start_date__lte=date,
-                                     end_date__gte=date
-                                     )
+    try:
+        entity_version = EntityVersion.objects.get(acronym=acronym,
+                                                   start_date__lte=date,
+                                                   end_date__gte=date
+                                                   )
+    except ObjectDoesNotExist:
+        return None
+
+    return entity_version
