@@ -36,7 +36,7 @@
 
 <div class="panel panel-default">
     <div class="panel-body">
-        {% if perms.assessments.can_access_scoreencoding %}
+        {% if 'assessments' in installed_apps and perms.assessments.can_access_scoreencoding %}
         <div class="row">
             <div class="col-md-1"><i class="fa fa-tachometer" style="font-size: 400%; color: #6699FF;"></i></div>
             <div class="col-md-11">
@@ -46,7 +46,7 @@
         </div>
         <br>
         {% endif %}
-        {% if perms.internship.can_access_internship %}
+        {% if 'internship' in installed_apps and perms.internship.can_access_internship %}
         <div class="row">
 
                 <div class="col-md-1"><i class="fa fa-user-md" style="font-size: 400%; color: #6699FF;"></i></div>

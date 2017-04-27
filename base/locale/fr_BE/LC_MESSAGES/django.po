@@ -1378,6 +1378,9 @@ msgstr "Co-titulaire"
 msgid "DEPUTY"
 msgstr "Suppléant"
 
+msgid "format_date"
+msgstr "jj/mm/aaaa"
+
 msgid "SCORES_RESPONSIBLE"
 msgstr "Responsable de notes"
 
@@ -1392,3 +1395,9 @@ msgstr "Vous ne pouvez pas encoder d'absence justifiée (M) via l'injection xls"
 
 msgid "abscence_justified_preserved"
 msgstr "Abscence justifiée dèjà encodée et préservée"
+
+msgid "date_format"
+msgstr "%d/%m/%Y"
+
+msgid "date_format_string"
+msgstr "d/m/Y"

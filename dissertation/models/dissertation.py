@@ -145,7 +145,8 @@ def search(terms=None, active=True):
             Q(status__icontains=terms) |
             Q(title__icontains=terms) |
             Q(offer_year_start__acronym__icontains=terms)
-        ).filter(active=active).distinct()
+        )
+    queryset = queryset.filter(active=active).distinct()
     return queryset
 
 
@@ -153,8 +154,8 @@ def search_by_proposition_author(terms=None, active=True, proposition_author=Non
     return search(terms=terms, active=active).filter(proposition_dissertation__author=proposition_author)
 
 
-def search_by_offer(offers):
-    return Dissertation.objects.filter(offer_year_start__offer__in=offers)
+def search_by_offer(offers, active=True):
+    return Dissertation.objects.filter(offer_year_start__offer__in=offers).filter(active=active)
 
 
 def search_by_offer_and_status(offers, status):
