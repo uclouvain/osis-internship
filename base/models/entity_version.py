@@ -30,7 +30,6 @@ import datetime
 from base.models.enums import entity_type
 
 
-
 class EntityVersion(models.Model):
     entity = models.ForeignKey('Entity')
     title = models.CharField(max_length=255)
@@ -65,8 +64,11 @@ class EntityVersion(models.Model):
         return self.search_entity_versions_with_overlapping_dates().filter(acronym=self.acronym).count()
 
 
-def find(acronym, date=datetime.datetime.now()):
+def find(acronym, date=None):
     try:
+        if date is None:
+            date = datetime.datetime.now()
+
         entity_version = EntityVersion.objects.get(acronym=acronym,
                                                    start_date__lte=date,
                                                    end_date__gte=date
