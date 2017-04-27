@@ -97,7 +97,7 @@
         </div>
         <div class="alert alert-info">
             {% get_current_language as LANGUAGE_CODE %}
-            {% if enrollments.0.session_exam.learning_unit_year.decimal_scores %}
+            {% if enrollments.0.learning_unit_enrollment.learning_unit_year.decimal_scores %}
                 {% trans 'decimal_values_accepted' %}
             {% else %}
                 {% trans 'decimal_values_ignored' %}
@@ -128,7 +128,9 @@
                 <tbody>
                 {% for enrollment in enrollments %}
                     <tr style="background-color:
-                               {% if enrollment.deadline_reached or enrollment.deadline_tutor_reached %}
+                               {% if not is_program_manager and enrollment.deadline_tutor_reached %}
+                                    #D3D3D3
+                               {% elif enrollment.deadline_reached %}
                                     #D3D3D3
                                {% else %}
                                     {% ifchanged enrollment.learning_unit_enrollment.offer_enrollment.offer_year.acronym %}
@@ -155,15 +157,15 @@
                                 id="num_score_{{ enrollment.id }}" tabindex="{{ forloop.counter }}"
                                 class="form-control"
                                 {% if is_program_manager %}
-                                   value="{{ enrollment.score_final | score_display:enrollment.session_exam.learning_unit_year.decimal_scores}}"
+                                   value="{{ enrollment.score_final | score_display:enrollment.learning_unit_enrollment.learning_unit_year.decimal_scores}}"
                                    {% if enrollment.deadline_reached %}
                                         disabled
                                    {% endif %}
                                 {% else %}
                                    {% if enrollment.score_final != None %}
-                                        value="{{ enrollment.score_final | score_display:enrollment.session_exam.learning_unit_year.decimal_scores}}"
+                                        value="{{ enrollment.score_final | score_display:enrollment.learning_unit_enrollment.learning_unit_year.decimal_scores}}"
                                    {% elif not enrollment.justification_final %}
-                                        value="{{ enrollment.score_draft | score_display:enrollment.session_exam.learning_unit_year.decimal_scores }}"
+                                        value="{{ enrollment.score_draft | score_display:enrollment.learning_unit_enrollment.learning_unit_year.decimal_scores }}"
                                    {% endif %}
 
                                    {% if enrollment.score_final != None or enrollment.justification_final or enrollment.deadline_reached or enrollment.deadline_tutor_reached %}
@@ -214,14 +216,6 @@
                                         selected
                                     {% endif %}>
                                     {% trans 'CHEATING' %}
-                                </option>
-                                <option value="SCORE_MISSING"
-                                        {% if is_program_manager and enrollment.is_score_missing_as_program_manager %}
-                                            selected
-                                        {% elif not is_program_manager and enrollment.is_score_missing_as_tutor %}
-                                            selected
-                                        {% endif %}>
-                                    {% trans 'SCORE_MISSING' %}
                                 </option>
                             </select>
 			                {% if not enrollment.deadline_reached %}

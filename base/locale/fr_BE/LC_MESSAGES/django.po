@@ -50,7 +50,7 @@ msgid "Print scores for all activities"
 msgstr ""
 
 msgid "SCORE_MISSING"
-msgstr "? (note manquante)"
+msgstr "Note manquante"
 
 msgid "Save"
 msgstr ""
@@ -1378,6 +1378,9 @@ msgstr "Co-titulaire"
 msgid "DEPUTY"
 msgstr "Suppléant"
 
+msgid "format_date"
+msgstr "jj/mm/aaaa"
+
 msgid "SCORES_RESPONSIBLE"
 msgstr "Responsable de notes"
 
@@ -1407,3 +1410,9 @@ msgstr "La date de fin doit être supérieure à la date début"
 
 msgid "dates_mandatory_error"
 msgstr "Les dates de début et de fin sont obligatoires"
+
+msgid "date_format"
+msgstr "%d/%m/%Y"
+
+msgid "date_format_string"
+msgstr "d/m/Y"

@@ -57,16 +57,18 @@ def noscript(request):
     return layout.render(request, 'noscript.html', {})
 
 
-def environnement_request_processor(request):
+def common_context_processor(request):
     if hasattr(settings, 'ENVIRONMENT'):
         env = settings.ENVIRONMENT
     else:
-        env = 'DEV'
+        env = 'LOCAL'
     if hasattr(settings, 'SENTRY_PUBLIC_DNS'):
         sentry_dns = settings.SENTRY_PUBLIC_DNS
     else:
         sentry_dns = ''
-    return {'environment': env, 'sentry_dns': sentry_dns}
+    return {'installed_apps': settings.INSTALLED_APPS,
+            'environment': env,
+            'sentry_dns': sentry_dns}
 
 
 def login(request):
@@ -81,6 +83,8 @@ def login(request):
                 user_language = person.language
                 translation.activate(user_language)
                 request.session[translation.LANGUAGE_SESSION_KEY] = user_language
+    elif settings.OVERRIDED_LOGIN_URL:
+        return redirect(settings.OVERRIDED_LOGIN_URL)
     return django_login(request)
 
 
@@ -96,6 +100,8 @@ def home(request):
 
 def log_out(request):
     logout(request)
+    if settings.OVERRIDED_LOGOUT_URL:
+        return redirect(settings.OVERRIDED_LOGOUT_URL)
     return redirect('logged_out')
 
 

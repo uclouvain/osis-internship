@@ -26,7 +26,7 @@
 from django.db import models
 from django.utils import timezone
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
-from base.models.exceptions import FunctionAgrumentMissingException, StartDateHigherThanEndDateException
+from base.models.exceptions import FunctionArgumentMissingException, StartDateHigherThanEndDateException
 from base.models.enums import academic_calendar_type
 from django.utils.translation import ugettext as _
 from base.models.utils.model_action import delete_admin_action
@@ -70,7 +70,7 @@ class AcademicCalendar(SerializableModel):
 
     def save(self, *args, **kwargs):
         if FUNCTIONS not in kwargs.keys():
-            raise FunctionAgrumentMissingException('The kwarg "{0}" must be set.'.format(FUNCTIONS))
+            raise FunctionArgumentMissingException('The kwarg "{0}" must be set.'.format(FUNCTIONS))
         functions = kwargs.pop(FUNCTIONS)
         self.validation_mandatory_dates()
         self.validation_start_date()
