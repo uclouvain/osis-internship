@@ -36,6 +36,8 @@ from base.enums import exam_enrollment_state as enrollment_states
 import datetime
 import unicodedata
 from base.models.exceptions import JustificationValueException
+from base.models.utils.admin_extentions import remove_delete_action
+
 
 JUSTIFICATION_ABSENT_FOR_TUTOR = _('absent')
 
@@ -235,11 +237,7 @@ class ExamEnrollmentHistoryAdmin(admin.ModelAdmin):
         return False
 
     def get_actions(self, request):
-        actions = super(ExamEnrollmentHistoryAdmin, self).get_actions(request)
-
-        if 'delete_selected' in actions:
-            del actions['delete_selected']
-        return actions
+        return remove_delete_action(super(ExamEnrollmentHistoryAdmin, self).get_actions(request))
 
 
 class ExamEnrollmentHistory(models.Model):

@@ -88,8 +88,6 @@ class OnlineEncodingTest(TestCase):
         self.program_manager_2 = ProgramManagerFactory(offer_year=offer_year)
         add_permission(self.program_manager_2.person.user, "can_access_scoreencoding")
 
-
-
     def test_filter_enrollments_by_offer_year(self):
         enrollments = self.enrollments
 
@@ -280,7 +278,7 @@ class OutsideEncodingPeriodTest(TestCase):
         self.client.force_login(self.user)
 
         # Create context
-        academic_year = AcademicYearFactory(year=datetime.datetime.now().year)
+        academic_year = AcademicYearFactory(year=datetime.datetime.now().year - 1)
         academic_calendar = AcademicCalendarFactory.build(title="Submission of score encoding - 1",
                                                           start_date=datetime.date.today() - datetime.timedelta(days=120),
                                                           end_date=datetime.date.today() + datetime.timedelta(days=5),
