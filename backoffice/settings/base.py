@@ -131,22 +131,6 @@ LANGUAGES = [
     ('fr-be', _('French')),
     ('en', _('English')),
 ]
-
-TIME_ZONE = 'Europe/Brussels'
-
-USE_I18N = True
-
-USE_L10N = True
-
-USE_TZ = True
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.8/howto/static-files/
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.abspath(os.path.join(BASE_DIR, '../static'))
-MEDIA_ROOT = os.path.join(BASE_DIR, "uploads")
-MEDIA_URL = '/media/'
-
 # You can change default values for internalizations settings in your .env file
 USE_I18N = os.environ.get('USE_I18N', 'True').lower() == 'true'
 USE_L10N = os.environ.get('USE_L10N', 'True').lower() == 'true'
