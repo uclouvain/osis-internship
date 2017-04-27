@@ -25,7 +25,7 @@
 ##############################################################################
 from django import template
 from django.template.defaultfilters import date
-from django.utils import translation
+from django.utils.translation import ugettext_lazy as _
 
 
 register = template.Library()
@@ -46,9 +46,7 @@ def str_format(value, args):
 
 @register.filter
 def date_in_form_format(value):
-    pattern = 'd/m/Y'
-    if translation.get_language() == 'en':
-        pattern = 'm/d/Y'
+    pattern = _('date_format_string')
 
     if type(value).__name__ == 'str':
         return value
