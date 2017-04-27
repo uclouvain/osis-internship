@@ -23,9 +23,9 @@ class Migration(migrations.Migration):
                 ('enrollment_state', models.CharField(choices=[('ENROLLED', 'ENROLLED'), ('NOT_ENROLLED', 'NOT_ENROLLED')], default='ENROLLED', max_length=20)),
             ],
             options={
-                'permissions': (('can_access_scoreencoding', 'Can access scoreencoding'),),
                 'db_table': 'app_scores_encoding',
                 'managed': False,
+                'permissions': (('can_access_scoreencoding', 'Can access scoreencoding'),),
             },
         ),
     ]

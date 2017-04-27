@@ -437,6 +437,9 @@ msgstr "The file must be a valid 'XLSX' excel file"
 msgid "file_production_date"
 msgstr "Excel file production date"
 
+msgid "students_deliberated_are_not_shown"
+msgstr "Students deliberated are not shown"
+
 msgid "files"
 msgstr "Files"
 
@@ -709,30 +712,6 @@ msgstr "No data for this academic year"
 
 msgid "no_dubble_score_encoded_comparison_impossible"
 msgstr "No dubble score encoded ; nothing to compare."
-#~ msgid "title_btn_upload_score"
-#~ msgstr "Select your xls file from which to inject scores"
-#~ msgid "submit"
-#~ msgstr "Submit"
-#~ msgid "download_xls_file"
-#~ msgstr "Download Excel File"
-#~ msgid "not_in_choices_list"
-#~ msgstr "Invalid entry, not in the list of choices"
-#~ msgid "invalid_entry"
-#~ msgstr "Invalid entry"
-#~ msgid "please_choose_in_the_list"
-#~ msgstr "Please choose in the list"
-#~ msgid "choices_list"
-#~ msgstr "List of choices"
-#~ msgid "changes_on_offer_year_and_academic_calendar"
-#~ msgstr "Watch out - Changes has been made on %s, academic calendar (%s)"
-#~ msgid "score_injected"
-#~ msgstr "Scores injected"
-#~ msgid "scores_injected"
-#~ msgstr "Scores injected"
-#~ msgid "add_address"
-#~ msgstr "Add address"
-#~ msgid "registration_date"
-#~ msgstr "Registration date"
 
 msgid "no_exam_session_opened_for_the_moment"
 msgstr "No scores' encoding session opened for the moment."
@@ -760,6 +739,9 @@ msgstr "You haven't any score to encode."
 
 msgid "no_valid_academic_year_error"
 msgstr "No valid academic year found in your xls file. The date should be formatted like '2015-2016' or '2015'."
+
+msgid "deadline_reached"
+msgstr "Deadline reached"
 
 msgid "none"
 msgstr "None"
@@ -845,8 +827,14 @@ msgstr "Other sibling programs"
 msgid "other_sibling_orientations"
 msgstr "Other sibling orientations"
 
-msgid "outside_scores_encodings_period"
-msgstr "You're out of the period of scores' encodings : the last exams' session is closed since %s."
+msgid "score_encoding_period_not_open"
+msgstr "The period of scores' encoding is not opened"
+
+msgid "outside_scores_encodings_period_latest_session"
+msgstr "The period of scores' encoding %s is closed since %s"
+
+msgid "outside_scores_encodings_period_closest_session"
+msgstr "The period of scores' encoding %s will be open %s"
 
 msgid "page_not_found"
 msgstr "Page not found."
@@ -1373,6 +1361,9 @@ msgstr "Co-holder"
 msgid "DEPUTY"
 msgstr "Deputy"
 
+msgid "format_date"
+msgstr "mm/dd/yyyy"
+
 msgid "SCORES_RESPONSIBLE"
 msgstr "Scores responsible"
 
@@ -1426,3 +1417,24 @@ msgstr "Justified abscence already encoded and preserved"
 
 msgid "all_years"
 msgstr "All years"
+
+msgid "academic_actors"
+msgstr "Academic actors"
+
+msgid "academic_start_date_error"
+msgstr "The start date should be between the start/end dates of the academic year"
+
+msgid "academic_end_date_error"
+msgstr "The end date should be between the start/end dates of the academic year"
+
+msgid "end_start_date_error"
+msgstr "Start date must be lower than end date"
+
+msgid "dates_mandatory_error"
+msgstr "Start date and end date are mandatory"
+
+msgid "date_format"
+msgstr "%m/%d/%Y"
+
+msgid "date_format_string"
+msgstr "m/d/Y"
