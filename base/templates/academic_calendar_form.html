@@ -37,7 +37,6 @@
 <li class="active">{% trans 'academic_calendar' %}</li>
 {% endblock %}
 {% block content %}
-{% get_current_language as LANGUAGE_CODE %}
 <div class="page-header">
     {% if academic_calendar.id%}
     <h2>{{ academic_calendar.title }}</h2>
@@ -54,9 +53,6 @@
                                         {% url 'academic_calendar_form' %}
                                     {% endif %}">
             {% csrf_token %}
-            <input type="hidden"
-                   value="{{LANGUAGE_CODE}}"
-                   id="hdn_language_code" >
             <input type="hidden"
                    class="form-control"
                    value="{{ form.reference.value | default_if_none:'' }}"
@@ -140,20 +136,21 @@
 </div>
 {% endblock %}
 {% block script %}
+{% get_current_language as LANGUAGE_CODE %}
 <script src="{% static 'js/bootstrap-datepicker.min.js' %}"></script>
 <script src="{% static 'js/locales/bootstrap-datepicker.fr.js' %}"></script>
 <script>
     $("#txt_start_date").datepicker({
         autoclose: true,
         orientation: "bottom auto",
-        language: $("#hdn_language_code").val()
+        language: "{{LANGUAGE_CODE}}"
     });
     //$.extend($.datepicker.regional["fr"], { dateFormat: "d MM, y"});
 
     $("#txt_end_date").datepicker({
         autoclose: true,
         orientation: "bottom auto",
-        language: $("#hdn_language_code").val()
+        language: "{{LANGUAGE_CODE}}"
     });
 
     $("#txt_highlight_title").on('input', function() {
