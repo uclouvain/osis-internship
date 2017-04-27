@@ -35,7 +35,7 @@ from django.views.generic.edit import FormMixin
 from django.http.response import HttpResponseRedirect
 from assistant.models import tutoring_learning_unit_year
 from assistant.models import settings
-from assistant.models.enums import document_type
+from assistant.models.enums import document_type, assistant_mandate_state
 
 
 class AssistantMandatesListView(LoginRequiredMixin, UserPassesTestMixin, ListView, FormMixin):
@@ -80,9 +80,9 @@ def user_is_assistant_and_procedure_is_open(user):
 def mandate_change_state(request, mandate_id):
     mandate = assistant_mandate.find_mandate_by_id(mandate_id)
     if 'bt_mandate_accept' in request.POST:
-        mandate.state = 'TRTS'
+        mandate.state = assistant_mandate_state.TRTS
     elif 'bt_mandate_decline' in request.POST:
-        mandate.state = 'DECLINED'
+        mandate.state = assistant_mandate_state.DECLINED
     mandate.save()
     return HttpResponseRedirect(reverse('assistant_mandates'))
 
