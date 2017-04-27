@@ -36,21 +36,33 @@ class EntityTest(TestCase):
     def setUp(self):
         self.start_date = datetime.date(2015, 1, 1)
         self.end_date = datetime.date(2015, 12, 31)
+        self.date_in_2015 = factory.fuzzy.FuzzyDate(datetime.date(2015, 1, 1), datetime.date(2015, 12, 30)).fuzz()
+        self.date_in_2017 = factory.fuzzy.FuzzyDate(datetime.date(2017, 1, 1), datetime.date(2017, 12, 30)).fuzz()
         self.parent = EntityFactory()
         self.children = [EntityFactory() for x in range(4)]
-        self.entity_links = [EntityLinkFactory(
-                                parent=self.parent,
-                                child=self.children[x],
-                                start_date=self.start_date,
-                                end_date=self.end_date
-                            )
-                            for x in range(4)]
+        [EntityLinkFactory(
+            parent=self.parent,
+            child=self.children[x],
+            start_date=self.start_date,
+            end_date=self.end_date
+            )
+            for x in range(4)]
 
     def test_get_entity_direct_children_in_dates(self):
-        search_date = factory.fuzzy.FuzzyDate(datetime.date(2015, 1, 1), datetime.date(2015, 12, 30)).fuzz()
-        self.assertCountEqual(self.parent.get_direct_children(search_date=search_date),
+        self.assertCountEqual(self.parent.get_direct_children(date=self.date_in_2015),
                               [self.children[x] for x in range(4)])
 
     def test_get_entity_direct_children_out_dates(self):
-        search_date = factory.fuzzy.FuzzyDate(datetime.date(2017, 1, 1), datetime.date(2017, 12, 30)).fuzz()
-        self.assertCountEqual(self.parent.get_direct_children(search_date=search_date), [])
+        self.assertCountEqual(self.parent.get_direct_children(date=self.date_in_2017), [])
+
+    def test_get_entity_direct_children_in_and_out_dates(self):
+        in_2017_children = [EntityFactory() for x in range(4)]
+        [EntityLinkFactory(
+            parent=self.parent,
+            child=in_2017_children[x],
+            start_date=datetime.date(2017, 1, 1),
+            end_date=datetime.date(2017, 12, 31)
+            )
+            for x in range(4)]
+        self.assertCountEqual(self.parent.get_direct_children(date=self.date_in_2017),
+                              [in_2017_children[x] for x in range(4)])

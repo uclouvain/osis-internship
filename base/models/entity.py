@@ -31,13 +31,18 @@ from base.models.entity_link import EntityLink
 class Entity(models.Model):
     organization = models.ForeignKey('Organization', null=True)
 
-    def get_direct_children(self, search_date=None):
-        if search_date is None:
-            search_date = datetime.datetime.now()
+    def _direct_children(self, date=None):
+        if date is None:
+            date = datetime.datetime.now()
 
-        queryset = EntityLink.objects.filter(parent=self,
-                                             start_date__lte=search_date,
-                                             end_date__gte=search_date
-                                             ).select_related("child")
+        return EntityLink.objects.filter(parent=self,
+                                         start_date__lte=date,
+                                         end_date__gte=date
+                                         )
 
-        return [entity_link.child for entity_link in list(queryset)]
+    def get_direct_children(self, date=None):
+        qs = self._direct_children(date).select_related("child")
+        return [entity_link.child for entity_link in qs]
+
+    def count_direct_children(self, date=None):
+        return self._direct_children(date).count()
