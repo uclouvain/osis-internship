@@ -564,6 +564,9 @@ msgstr "Justification legend: %s"
 msgid "justifications"
 msgstr "Justifications"
 
+msgid "justification_invalid_value"
+msgstr "Invalid justification value"
+
 msgid "justification_values_accepted"
 msgstr "Accepted value: %s "
 

@@ -97,11 +97,26 @@ def filter_without_closed_exam_enrollments(scores_encoding_list, is_program_mana
     return scores_encoding_list
 
 
+def find_related_registration_ids(scores_encoding_list):
+    return {enrollment.learning_unit_enrollment.student.registration_id
+            for enrollment in scores_encoding_list.enrollments}
+
+
+def find_related_offer_years(scores_encoding_list):
+    return {enrollment.learning_unit_enrollment.offer_enrollment.offer_year
+            for enrollment in scores_encoding_list.enrollments}
+
+
+def find_related_learning_unit_years(scores_encoding_list):
+    return {enrollment.learning_unit_enrollment.learning_unit_year
+            for enrollment in scores_encoding_list.enrollments}
+
+
 def update_enrollments(scores_encoding_list, user):
     is_program_manager = program_manager.is_program_manager(user)
     updated_enrollments = []
     for enrollment in scores_encoding_list.enrollments:
-        enrollment_updated = updated_enrollment(enrollment, user, is_program_manager)
+        enrollment_updated = update_enrollment(enrollment, user, is_program_manager)
         if enrollment_updated:
             updated_enrollments.append(enrollment_updated)
     return updated_enrollments
@@ -120,7 +135,10 @@ def assign_encoded_to_reencoded_enrollments(scores_encoding_list):
     return scores_encoding_list
 
 
-def updated_enrollment(enrollment, user, is_program_manager):
+def update_enrollment(enrollment, user, is_program_manager=None):
+    if is_program_manager is None:
+        is_program_manager = program_manager.is_program_manager(user)
+
     enrollment = clean_score_and_justification(enrollment)
 
     if is_enrollment_changed(enrollment, is_program_manager) and \
@@ -153,23 +171,32 @@ def clean_score_and_justification(enrollment):
 
 
 def _truncate_decimals(score, decimal_scores_authorized):
-    score = score.strip().replace(',', '.')
-
-    if not score.replace('.', '').isdigit():  # Case not empty string but have alphabetic values
-        raise ValueError("scores_must_be_between_0_and_20")
+    decimal_score = _format_score_to_decimal(score)
 
     if decimal_scores_authorized:
         try:
             # Ensure that we cannot have more than 2 decimal
-            return Decimal(score).quantize(Decimal(10) ** -2, context=Context(traps=[Inexact]))
+            return decimal_score.quantize(Decimal(10) ** -2, context=Context(traps=[Inexact]))
         except:
             raise ValueError("score_have_more_than_2_decimal_places")
     else:
         try:
             # Ensure that we cannot have no decimal
-            return Decimal(score).quantize(Decimal('1.'), context=Context(traps=[Inexact]))
+            return decimal_score.quantize(Decimal('1.'), context=Context(traps=[Inexact]))
         except:
             raise ValueError("decimal_score_not_allowed")
+
+
+def _format_score_to_decimal(score):
+    if isinstance(score, str):
+        score = score.strip().replace(',', '.')
+        _check_str_score_is_digit(score)
+    return Decimal(score)
+
+
+def _check_str_score_is_digit(score_str):
+    if not score_str.replace('.', '').isdigit():  # Case not empty string but have alphabetic values
+        raise ValueError("scores_must_be_between_0_and_20")
 
 
 def is_enrollment_changed(enrollment, is_program_manager):
@@ -181,12 +208,19 @@ def is_enrollment_changed(enrollment, is_program_manager):
                (enrollment.score_final != enrollment.score_encoded)
 
 
-def can_modify_exam_enrollment(enrollment, is_program_manager) :
+def can_modify_exam_enrollment(enrollment, is_program_manager):
     if is_program_manager:
-        return not exam_enrollment.is_deadline_reached(enrollment)
+        return not is_deadline_reached(enrollment)
     else:
-        return not exam_enrollment.is_deadline_tutor_reached(enrollment) and \
+        return not is_deadline_reached(enrollment, is_program_manager) and \
                not enrollment.score_final and not enrollment.justification_final
+
+
+def is_deadline_reached(enrollment, is_program_manager=True):
+    if is_program_manager:
+        return exam_enrollment.is_deadline_reached(enrollment)
+    else:
+        return exam_enrollment.is_deadline_tutor_reached(enrollment)
 
 
 def set_score_and_justification(enrollment, is_program_manager):

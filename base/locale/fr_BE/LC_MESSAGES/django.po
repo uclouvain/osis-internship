@@ -562,6 +562,9 @@ msgstr "Légende pour le champ 'Justification': %s"
 msgid "justifications"
 msgstr "Justifications"
 
+msgid "justification_invalid_value"
+msgstr "Justification invalide"
+
 msgid "justification_values_accepted"
 msgstr "Valeurs acceptées: %s "
 
