@@ -52,10 +52,10 @@ from base.tests.factories.student import StudentFactory
 
 class OnlineEncodingTest(TestCase):
     def setUp(self):
-        academic_year = AcademicYearFactory(year=datetime.datetime.now().year)
+        academic_year = AcademicYearFactory(year=datetime.datetime.now().year - 1)
         academic_calendar = AcademicCalendarFactory.build(title="Submission of score encoding - 1",
-                                                          start_date=datetime.date.today() - datetime.timedelta(days=120),
-                                                          end_date=datetime.date.today() + datetime.timedelta(days=5),
+                                                          start_date=academic_year.start_date,
+                                                          end_date=academic_year.end_date,
                                                           academic_year=academic_year,
                                                           reference=academic_calendar_type.SCORES_EXAM_SUBMISSION)
         academic_calendar.save(functions=[])
@@ -88,8 +88,6 @@ class OnlineEncodingTest(TestCase):
         self.program_manager_2 = ProgramManagerFactory(offer_year=offer_year)
         add_permission(self.program_manager_2.person.user, "can_access_scoreencoding")
 
-
-
     def test_filter_enrollments_by_offer_year(self):
         enrollments = self.enrollments
 
@@ -102,7 +100,7 @@ class OnlineEncodingTest(TestCase):
     def test_tutor_encoding_with_a_student(self):
         self.client.force_login(self.tutor.person.user)
         url = reverse('online_encoding_form', args=[self.learning_unit_year.id])
-        self.client.post(url, data=self.get_form_with_one_student_filled())
+        response = self.client.post(url, data=self.get_form_with_one_student_filled())
 
         self.refresh_exam_enrollments_from_db()
         self.assert_exam_enrollments(self.enrollments[0], 15, None, None, None)
@@ -272,7 +270,7 @@ class OnlineEncodingTest(TestCase):
         for enrollment in self.enrollments:
             enrollment.refresh_from_db()
 
-
+#
 class OutsideEncodingPeriodTest(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(username='score_encoding', password='score_encoding')
@@ -280,10 +278,8 @@ class OutsideEncodingPeriodTest(TestCase):
         self.client.force_login(self.user)
 
         # Create context
-        academic_year = AcademicYearFactory(year=datetime.datetime.now().year)
+        academic_year = AcademicYearFactory(year=datetime.datetime.now().year-1)
         academic_calendar = AcademicCalendarFactory.build(title="Submission of score encoding - 1",
-                                                          start_date=datetime.date.today() - datetime.timedelta(days=120),
-                                                          end_date=datetime.date.today() + datetime.timedelta(days=5),
                                                           academic_year=academic_year,
                                                           reference=academic_calendar_type.SCORES_EXAM_SUBMISSION)
         academic_calendar.save(functions=[])
@@ -310,7 +306,7 @@ class GetScoreEncodingViewProgramManagerTest(TestCase):
         self.client.force_login(self.user)
 
         # Set user as program manager of two offer
-        academic_year = AcademicYearFactory(year=datetime.datetime.now().year)
+        academic_year = AcademicYearFactory(year=datetime.datetime.now().year - 1)
         self.offer_year_bio2ma = OfferYearFactory(acronym="BIO2MA", title="Master en Biologie",
                                                   academic_year=academic_year)
         self.offer_year_bio2bac = OfferYearFactory(acronym="BIO2BAC", title="Bachelier en Biologie",
@@ -320,9 +316,9 @@ class GetScoreEncodingViewProgramManagerTest(TestCase):
 
         # Create an score submission event - with an session exam
         academic_calendar = AcademicCalendarFactory.build(title="Submission of score encoding - 1",
-                                                          start_date=datetime.date.today() - datetime.timedelta(days=120),
-                                                          end_date=datetime.date.today() + datetime.timedelta(days=5),
                                                           academic_year=academic_year,
+                                                          start_date=academic_year.start_date,
+                                                          end_date=academic_year.end_date,
                                                           reference=academic_calendar_type.SCORES_EXAM_SUBMISSION)
         academic_calendar.save(functions=[])
         self.session_exam_calendar = SessionExamCalendarFactory(academic_calendar=academic_calendar,

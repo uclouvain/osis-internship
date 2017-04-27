@@ -23,14 +23,14 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+import datetime
 import factory
 import factory.fuzzy
-import datetime
 import string
+import operator
 from django.conf import settings
 from django.utils import timezone
-from base.tests.factories.academic_calendar import AcademicCalendarFactory
-from base.tests.factories.offer_year import OfferYearFactory
+from base.enums import structure_type
 
 
 def _get_tzinfo():
@@ -39,29 +39,16 @@ def _get_tzinfo():
     else:
         return None
 
-def generate_start_date(offer_year_calendar):
-    if offer_year_calendar.academic_calendar:
-        return offer_year_calendar.academic_calendar.start_date
-    else:
-        return datetime.date(2000, 1, 1)
 
-def generate_end_date(offer_year_calendar):
-    if offer_year_calendar.academic_calendar:
-        return offer_year_calendar.academic_calendar.end_date
-    else:
-        return datetime.date(2099, 1, 1)
-
-class OfferYearCalendarFactory(factory.django.DjangoModelFactory):
+class StructureFactory(factory.DjangoModelFactory):
     class Meta:
-        model = "base.OfferYearCalendar"
+        model = 'base.Structure'
+        #abstract = False
 
     external_id = factory.fuzzy.FuzzyText(length=10, chars=string.digits)
     changed = factory.fuzzy.FuzzyDateTime(datetime.datetime(2016, 1, 1, tzinfo=_get_tzinfo()),
                                           datetime.datetime(2017, 3, 1, tzinfo=_get_tzinfo()))
-    academic_calendar = factory.SubFactory(AcademicCalendarFactory)
-    offer_year = factory.SubFactory(OfferYearFactory)
-    start_date = factory.LazyAttribute(generate_start_date)
-    end_date = factory.LazyAttribute(generate_end_date)
-    customized = False
 
-
+    acronym = acronym = factory.Sequence(lambda n: 'ACR-%d' % n)
+    title = factory.Sequence(lambda n: 'TITLE-%d' % n)
+    type = factory.Iterator(structure_type.TYPES, getter=operator.itemgetter(0))
