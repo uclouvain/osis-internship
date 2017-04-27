@@ -46,3 +46,16 @@ class Entity(models.Model):
 
     def count_direct_children(self, date=None):
         return self._direct_children(date).count()
+
+    def find_descendants(self, date=None):
+        if date is None:
+            date = datetime.datetime.now()
+
+        descendants = []
+        if self.count_direct_children(date) > 0:
+            direct_children = self.get_direct_children(date)
+            descendants.extend(direct_children)
+            for child in direct_children:
+                descendants.extend(child.find_descendants(date))
+
+        return descendants

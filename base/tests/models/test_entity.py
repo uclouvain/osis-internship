@@ -66,3 +66,35 @@ class EntityTest(TestCase):
             for x in range(4)]
         self.assertCountEqual(self.parent.get_direct_children(date=self.date_in_2017),
                               [in_2017_children[x] for x in range(4)])
+
+    def test_find_descendants(self):
+        grandchildren = [EntityFactory() for x in range(8)]
+        [EntityLinkFactory(
+            parent=self.children[x],
+            child=grandchildren[x*2],
+            start_date=self.start_date,
+            end_date=self.end_date
+            )
+            for x in range(4)]
+
+        [EntityLinkFactory(
+            parent=self.children[x],
+            child=grandchildren[x * 2 + 1],
+            start_date=self.start_date,
+            end_date=self.end_date
+        )
+            for x in range(4)]
+
+        grandgrandchildren = [EntityFactory() for x in range(4)]
+        [EntityLinkFactory(
+            parent=grandchildren[x*2],
+            child=grandgrandchildren[x],
+            start_date=self.start_date,
+            end_date=self.end_date
+        )
+            for x in range(4)]
+
+        descendants = self.children + grandchildren + grandgrandchildren
+
+        self.assertCountEqual(self.parent.find_descendants(date=self.date_in_2015),
+                              descendants)
