@@ -75,22 +75,21 @@ class AcademicCalendarForm(BootstrapModelForm):
 
     def check_start_end_date_within_academic_year(self):
 
-        def build_error_message(start_date, end_date):
+        def build_error_message(start_date, end_date, field):
             date_format = str(_('date_format'))
-            return "({} - {})".format(start_date.strftime(date_format), end_date.strftime(date_format))
+
+            return '{} {}'.format(_('academic_{}_error'.format(field)),
+                                  "({} - {})".format(start_date.strftime(date_format), end_date.strftime(date_format)))
 
         def check_start_date(field, date):
-
             if self.cleaned_data[field] < date:
-                self._errors[field] = '{} {}'.format(_('academic_{}_error'.format(field)),
-                                                     build_error_message(ac_yr.start_date, ac_yr.end_date))
+                self._errors[field] = build_error_message(ac_yr.start_date, ac_yr.end_date, field)
                 return False
             return True
 
         def check_end_date(field, date):
             if self.cleaned_data[field] > date:
-                self._errors[field] = '{} {}'.format(_('academic_{}_error'.format(field)),
-                                                     build_error_message(ac_yr.start_date, ac_yr.end_date))
+                self._errors[field] = build_error_message(ac_yr.start_date, ac_yr.end_date, field)
                 return False
             return True
 
