@@ -40,7 +40,7 @@ ALL_OPTION_VALUE = "-"
 
 @login_required
 def pgm_manager_administration(request):
-    entity_managed = get_administrator_faculty(request)
+    entity_managed = get_administrator_faculty(request.user)
     current_academic_yr = mdl.academic_year.current_academic_year()
     return layout.render(request, "admin/pgm_manager.html", {
         'academic_year': current_academic_yr,
@@ -54,21 +54,17 @@ def pgm_manager_administration(request):
 
 @login_required
 def pgm_manager_search(request):
-    return pgm_manager_form(None, None, request)
+    person_id = get_filter_value(request, 'person')
+    return pgm_manager_form(None, None, request, mdl.person.find_by_id(person_id))
 
 
-def pgm_manager_form(offers_on, error_messages, request):
+def pgm_manager_form(offers_on, error_messages, request, manager_person):
     entity = get_filter_value(request, 'entity')
     pgm_grade_type = get_filter_value(request, 'pgm_type')
-    person = get_filter_value(request, 'person')
 
-    entity_managed = get_administrator_faculty(request)
+    entity_managed = get_administrator_faculty(request.user)
     current_academic_yr = mdl.academic_year.current_academic_year()
 
-    manager_person = None
-
-    if person:
-        manager_person = mdl.person.find_by_id(int(person))
     data = {'academic_year': current_academic_yr,
             'person': manager_person,
             'manager_entity': entity_managed,
@@ -182,14 +178,13 @@ def create_manager(request):
         offers_on = mdl.offer_year.find_by_id_list(list_offer_id)
         error_messages = add_program_managers(offers_on, person)
 
-    return pgm_manager_form(offers_on, error_messages, request)
+    return pgm_manager_form(offers_on, error_messages, request, person)
 
 
-@login_required
-def get_administrator_faculty(request):
-    faculty_administrator = mdl.entity_manager.find_entity_manager_by_user(request.user)
-    if faculty_administrator:
-        return faculty_administrator.structure
+def get_administrator_faculty(a_user):
+    entity_manager = mdl.entity_manager.find_entity_manager_by_user(a_user)
+    if entity_manager:
+        return entity_manager.structure
     return None
 
 
@@ -310,7 +305,7 @@ def build_program_manager_list(list_id_offers_on, program_manager_list):
     persons = []
     for program_manager in program_manager_list:
         if program_manager.person not in pgm_managers:
-            offers = get_offers_with_pgm_manager(list_id_offers_on, offers, program_manager)
+            offers = get_offers_with_pgm_manager(list_id_offers_on, program_manager)
             pgms = build_offer_ids_string(offers)
             acronyms_off = build_acronyms_off_string(offers)
             if program_manager.person not in persons:
@@ -325,7 +320,7 @@ def build_program_manager_list(list_id_offers_on, program_manager_list):
     return pgm_managers
 
 
-def get_offers_with_pgm_manager(list_id_offers_on, offers, program_manager):
+def get_offers_with_pgm_manager(list_id_offers_on, program_manager):
     offers = []
     for offer_year_id in list_id_offers_on:
         an_offer_year = mdl.offer_year.find_by_id(int(offer_year_id))
