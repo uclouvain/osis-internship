@@ -23,6 +23,8 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+import datetime
+import unicodedata
 from decimal import *
 from django.db import models
 from django.db.models import When, Case, Q, Sum, Count, IntegerField, F
@@ -34,8 +36,7 @@ from base.models import person, learning_unit_year, person_address, session_exam
 from attribution.models import attribution
 from base.enums import exam_enrollment_justification_type as justification_types
 from base.enums import exam_enrollment_state as enrollment_states
-import datetime
-import unicodedata
+
 from base.models.exceptions import JustificationValueException
 from base.models.utils.admin_extentions import remove_delete_action
 
@@ -368,7 +369,7 @@ def find_for_score_encodings(session_exam_number,
         # Filter by Tutor is like filter by a list of learningUnits
         # It's not necessary to add a filter if learningUnitYear or learningUnitYearIds are already defined
         if not learning_unit_year_id and not learning_unit_year_ids:
-            learning_unit_years = learning_unit_year.find_by_tutor(tutor)
+            learning_unit_years = attribution.find_by_tutor(tutor)
             queryset = queryset.filter(learning_unit_enrollment__learning_unit_year_id__in=learning_unit_years)
 
     if offer_year_id:
@@ -413,10 +414,8 @@ def find_for_score_encodings(session_exam_number,
                    .select_related('learning_unit_enrollment__learning_unit_year')
 
 
-
 def group_by_learning_unit_year_id(exam_enrollments):
     """
-
     :param exam_enrollments: List of examEnrollments to regroup by earningunitYear.id
     :return: A dictionary where the key is LearningUnitYear.id and the value is a list of examEnrollment
     """
@@ -573,7 +572,6 @@ def sort_for_encodings(exam_enrollments):
     :param exam_enrollments: List of examEnrollments to sort
     :return:
     """
-
     def _sort(key):
         learn_unit_acronym = key.learning_unit_enrollment.learning_unit_year.acronym
         off_enroll = key.learning_unit_enrollment.offer_enrollment

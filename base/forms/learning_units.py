@@ -49,7 +49,7 @@ class LearningUnitYearForm(forms.Form):
         for cd_key, cd_value in clean_data.items():
             if cd_value == 'NONE' or cd_value == '0':
                 clean_data[cd_key] = ''
-            minimal_inputs_satisfied = minimal_inputs_satisfied+clean_data[cd_key]
+            minimal_inputs_satisfied = minimal_inputs_satisfied + clean_data[cd_key]
 
         if not minimal_inputs_satisfied:
             raise ValidationError('LU_ERRORS_INVALID_SEARCH')
