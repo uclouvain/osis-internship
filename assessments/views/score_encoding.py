@@ -46,7 +46,7 @@ from attribution import models as mdl_attr
 from base import models as mdl
 from base.enums import exam_enrollment_justification_type
 from base.enums.exam_enrollment_justification_type import JUSTIFICATION_TYPES
-from base.utils import send_mail, calendar_utils
+from base.utils import send_mail
 from base.views import layout
 from osis_common.document import paper_sheet
 from osis_common.models.queue_exception import QueueException
@@ -54,6 +54,7 @@ from osis_common.models.queue_exception import QueueException
 
 logger = logging.getLogger(settings.DEFAULT_LOGGER)
 queue_exception_logger = logging.getLogger(settings.QUEUE_EXCEPTION_LOGGER)
+
 
 def _is_inside_scores_encodings_period(user):
     return mdl.session_exam_calendar.current_session_exam()
@@ -78,12 +79,12 @@ def outside_period(request):
 
     if latest_session_exam:
         session_number = latest_session_exam.number_session
-        str_date = latest_session_exam.academic_calendar.end_date.strftime(calendar_utils.FORMAT)
+        str_date = latest_session_exam.academic_calendar.end_date.strftime(_('date_format'))
         messages.add_message(request, messages.WARNING, _('outside_scores_encodings_period_latest_session') % (session_number,str_date))
 
     if closest_new_session_exam:
         session_number = closest_new_session_exam.number_session
-        str_date = closest_new_session_exam.academic_calendar.start_date.strftime(calendar_utils.FORMAT)
+        str_date = closest_new_session_exam.academic_calendar.start_date.strftime(_('date_format'))
         messages.add_message(request, messages.WARNING, _('outside_scores_encodings_period_closest_session') % (session_number,str_date))
 
     if not messages.get_messages(request):

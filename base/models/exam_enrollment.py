@@ -31,7 +31,7 @@ from django.db.models import When, Case, Q, Sum, Count, IntegerField, F
 from django.contrib import admin
 from django.utils.translation import ugettext as _
 from django.core.validators import MaxValueValidator, MinValueValidator
-from base.models import person, learning_unit_year, person_address, session_exam_calendar, session_exam_deadline, \
+from base.models import person, person_address, session_exam_calendar, session_exam_deadline, \
                         academic_year as academic_yr, offer_year, program_manager, tutor
 from attribution.models import attribution
 from base.enums import exam_enrollment_justification_type as justification_types
@@ -487,20 +487,12 @@ def scores_sheet_data(exam_enrollments, tutor=None):
             number_session = exam_enrollment.session_exam.number_session
             deliberation_date = session_exam_calendar.find_deliberation_date(number_session, offer_year)
             if deliberation_date:
-                deliberation_date = deliberation_date.strftime("%d/%m/%Y")
+                deliberation_date = deliberation_date.strftime(_('date_format'))
             else:
                 deliberation_date = _('not_passed')
 
-            # Compute deadline score encoding
-            deadline = get_deadline_tutor_computed(exam_enrollment)
-            if deadline:
-                deadline = deadline.strftime('%d/%m/%Y')
-            else:
-                deadline = ""
-
             program = {'acronym': exam_enrollment.learning_unit_enrollment.offer_enrollment.offer_year.acronym,
                        'deliberation_date': deliberation_date,
-                       'deadline': deadline,
                        'address': {'recipient': offer_year.recipient,
                                    'location': offer_year.location,
                                    'postal_code': offer_year.postal_code,
@@ -517,12 +509,19 @@ def scores_sheet_data(exam_enrollments, tutor=None):
                         score = str(exam_enrol.score_final)
                     else:
                         score = str(int(exam_enrol.score_final))
+
+                # Compute deadline score encoding
+                deadline = get_deadline_tutor_computed(exam_enrol)
+                if deadline:
+                    deadline = deadline.strftime(_('date_format'))
+
                 enrollments.append({
                     "registration_id": student.registration_id,
                     "last_name": student.person.last_name,
                     "first_name": student.person.first_name,
                     "score": score,
-                    "justification": _(exam_enrol.justification_final) if exam_enrol.justification_final else ''
+                    "justification": _(exam_enrol.justification_final) if exam_enrol.justification_final else '',
+                    "deadline": deadline if deadline else ''
                 })
             program['enrollments'] = enrollments
             programs.append(program)
