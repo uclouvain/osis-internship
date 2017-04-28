@@ -30,7 +30,9 @@ from django.core.exceptions import ObjectDoesNotExist
 import datetime
 
 
-def create_synchronization(date=datetime.datetime.now()):
+def create_synchronization(date=None):
+    if date is None:
+        date = datetime.datetime.now()
     sync = synchronization.Synchronization(date=date)
     sync.save()
     return sync

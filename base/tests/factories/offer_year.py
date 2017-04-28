@@ -27,6 +27,7 @@ import factory
 import factory.fuzzy
 from base.tests.factories.academic_year import AcademicYearFactory
 from base.tests.factories.offer import OfferFactory
+from base.tests.factories.structure import StructureFactory
 
 
 def generate_title(offer_year):
@@ -41,4 +42,6 @@ class OfferYearFactory(factory.django.DjangoModelFactory):
     academic_year = factory.SubFactory(AcademicYearFactory)
     acronym = factory.Sequence(lambda n: 'Offer %d' % n)
     title = factory.LazyAttribute(generate_title)
+    entity_management = factory.SubFactory(StructureFactory)
+    entity_administration_fac= factory.SubFactory(StructureFactory)
 

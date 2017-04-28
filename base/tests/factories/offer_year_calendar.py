@@ -1,12 +1,12 @@
 ##############################################################################
 #
-# OSIS stands for Open Student Information System. It's an application
+#    OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -39,6 +39,17 @@ def _get_tzinfo():
     else:
         return None
 
+def generate_start_date(offer_year_calendar):
+    if offer_year_calendar.academic_calendar:
+        return offer_year_calendar.academic_calendar.start_date
+    else:
+        return datetime.date(2000, 1, 1)
+
+def generate_end_date(offer_year_calendar):
+    if offer_year_calendar.academic_calendar:
+        return offer_year_calendar.academic_calendar.end_date
+    else:
+        return datetime.date(2099, 1, 1)
 
 class OfferYearCalendarFactory(factory.django.DjangoModelFactory):
     class Meta:
@@ -49,8 +60,8 @@ class OfferYearCalendarFactory(factory.django.DjangoModelFactory):
                                           datetime.datetime(2017, 3, 1, tzinfo=_get_tzinfo()))
     academic_calendar = factory.SubFactory(AcademicCalendarFactory)
     offer_year = factory.SubFactory(OfferYearFactory)
-    start_date = datetime.date(2000, 1, 1)
-    end_date = datetime.date(2099, 1, 1)
+    start_date = factory.LazyAttribute(generate_start_date)
+    end_date = factory.LazyAttribute(generate_end_date)
     customized = False
 
 

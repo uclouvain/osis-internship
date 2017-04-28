@@ -26,13 +26,13 @@
 from django.contrib.auth.decorators import login_required
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render
-from assistant.models import assistant_mandate, review, tutoring_learning_unit_year, mandate_structure
 from django.core.exceptions import ObjectDoesNotExist
-from assistant.enums import reviewer_role
 from django.utils import timezone
 from django.core.urlresolvers import reverse
+from assistant.models import assistant_mandate, review, tutoring_learning_unit_year, mandate_structure
 from assistant.forms import ReviewForm
-from assistant.models.enums import review_status
+from assistant.enums import reviewer_role
+from assistant.models.enums import review_status, assistant_mandate_state
 
 
 @login_required
@@ -105,11 +105,11 @@ def review_save(request, review_id, mandate_id):
             current_review.status = review_status.DONE
             current_review.save()
             if mandate_structure.find_by_mandate_and_type(mandate, 'INSTITUTE'):
-                mandate.state = "RESEARCH"
+                mandate.state = assistant_mandate_state.RESEARCH
             elif mandate_structure.find_by_mandate_and_part_of_type(mandate, 'INSTITUTE'):
-                mandate.state = "RESEARCH"
+                mandate.state = assistant_mandate_state.RESEARCH
             else:
-                mandate.state = "SUPERVISION"
+                mandate.state = assistant_mandate_state.SUPERVISION
             mandate.save()
             return HttpResponseRedirect(reverse("phd_supervisor_assistants_list"))
         elif 'save' in request.POST:
@@ -150,13 +150,17 @@ def generate_phd_supervisor_menu_tabs(mandate, active_item: None):
     except ObjectDoesNotExist:
             review_is_done = False
     if review_is_done is False:
-        if active_item == 'PHD_SUPERVISOR':
-            menu.append({'item': 'PHD_SUPERVISOR', 'class': 'active', 'action': 'edit'})
+        if active_item == assistant_mandate_state.PHD_SUPERVISOR:
+            menu.append({'item': assistant_mandate_state.PHD_SUPERVISOR, 'class': 'active',
+                         'action': 'edit'})
         else:
-            menu.append({'item': 'PHD_SUPERVISOR', 'class': '', 'action': 'edit'})
+            menu.append({'item': assistant_mandate_state.PHD_SUPERVISOR, 'class': '',
+                         'action': 'edit'})
     else:
-        if active_item == 'PHD_SUPERVISOR':
-            menu.append({'item': 'PHD_SUPERVISOR', 'class': 'active', 'action': 'view'})
+        if active_item == assistant_mandate_state.PHD_SUPERVISOR:
+            menu.append({'item': assistant_mandate_state.PHD_SUPERVISOR, 'class': 'active',
+                         'action': 'view'})
         else:
-            menu.append({'item': 'PHD_SUPERVISOR', 'class': '', 'action': 'view'})
+            menu.append({'item': assistant_mandate_state.PHD_SUPERVISOR, 'class': '',
+                         'action': 'view'})
     return menu
