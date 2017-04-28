@@ -27,8 +27,10 @@ from django.test import TestCase
 import factory
 import factory.fuzzy
 import datetime
+from base.models import entity
 from base.tests.factories.entity import EntityFactory
 from base.tests.factories.entity_link import EntityLinkFactory
+from base.tests.factories.entity_version import EntityVersionFactory
 
 
 class EntityTest(TestCase):
@@ -95,3 +97,29 @@ class EntityTest(TestCase):
 
         self.assertCountEqual(self.parent.find_descendants(date=self.date_in_2015),
                               descendants)
+
+    def test_search_entities_by_version_acronym_date_in(self):
+        for x in range(4):
+            EntityVersionFactory(
+                entity=self.children[x],
+                acronym="ENTITY_V_" + str(x),
+                start_date=self.start_date,
+                end_date=self.end_date
+            )
+
+        self.assertCountEqual(entity.search(acronym='ENTITY_V', version_date=self.date_in_2015), self.children)
+        self.assertCountEqual(entity.search(acronym='NON_EXISTING', version_date=self.date_in_2015), [])
+        self.assertCountEqual(entity.search(acronym='ENTITY_V_1', version_date=self.date_in_2015), [self.children[1]])
+
+    def test_search_entities_by_version_acronym_date_out(self):
+        for x in range(4):
+            EntityVersionFactory(
+                entity=self.children[x],
+                acronym="ENTITY_V_" + str(x),
+                start_date=self.start_date,
+                end_date=self.end_date
+            )
+
+        self.assertCountEqual(entity.search(acronym='ENTITY_V', version_date=self.date_in_2017), [])
+        self.assertCountEqual(entity.search(acronym='NON_EXISTING', version_date=self.date_in_2017), [])
+        self.assertCountEqual(entity.search(acronym='ENTITY_V_1', version_date=self.date_in_2017), [])

@@ -59,3 +59,16 @@ class Entity(models.Model):
                 descendants.extend(child.find_descendants(date))
 
         return descendants
+
+
+def search(**kwargs):
+    queryset = Entity.objects
+
+    if kwargs['acronym']:
+        queryset = queryset.filter(entityversion__acronym__icontains=kwargs['acronym'])
+
+    if kwargs['version_date']:
+        queryset = queryset.filter(entityversion__start_date__lte=kwargs['version_date'],
+                                   entityversion__end_date__gte=kwargs['version_date'])
+
+    return queryset
