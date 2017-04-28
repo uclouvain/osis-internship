@@ -26,6 +26,7 @@
 from django.db import models
 from django.contrib import admin
 
+
 class LearningComponentYearAdmin(admin.ModelAdmin):
     list_display = ('learning_container_year', 'learning_component', 'title', 'acronym', 'type', 'comment')
     fieldsets = ((None, {'fields': ('learning_container_year', 'learning_component', 'title', 'acronym',
