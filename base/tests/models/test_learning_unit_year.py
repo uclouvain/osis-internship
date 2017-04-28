@@ -25,11 +25,12 @@
 ##############################################################################
 import datetime
 from django.test import TestCase
-from base.models import learning_unit_year
+from attribution.models import attribution
 from base.tests.factories.tutor import TutorFactory
 from base.tests.factories.academic_year import AcademicYearFactory
 from base.tests.factories.learning_unit import LearningUnitFactory
 from base.tests.factories.learning_unit_year import LearningUnitYearFactory
+
 
 def create_learning_unit_year(acronym, title, academic_year):
     learning_unit = LearningUnitFactory(acronym=acronym, title=title, start_year=2010)
@@ -37,6 +38,7 @@ def create_learning_unit_year(acronym, title, academic_year):
                                    title=title,
                                    academic_year=academic_year,
                                    learning_unit=learning_unit)
+
 
 class LearningUnitYearTest(TestCase):
     def setUp(self):
@@ -46,4 +48,4 @@ class LearningUnitYearTest(TestCase):
                                                           academic_year=self.academic_year)
 
     def test_find_by_tutor_with_none_argument(self):
-        self.assertEquals(learning_unit_year.find_by_tutor(None), None)
+        self.assertEquals(attribution.find_by_tutor(None), None)

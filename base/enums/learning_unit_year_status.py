@@ -23,17 +23,15 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
-from django.contrib import admin
 
+from django.utils.translation import ugettext_lazy as _
 
-class LearningClassAdmin(admin.ModelAdmin):
-    list_display = ('learning_component',)
-    fieldsets = ((None, {'fields': ('learning_component',)}),)
+NONE = "NONE"
+VALID = "VALID"
+INVALID = "INVALID"
 
-class LearningClass(models.Model):
-    learning_component = models.ForeignKey('LearningComponent')
-
-def find_by_id(learning_class_id):
-    return LearningClass.objects.get(pk=learning_class_id)
-
+LEARNING_UNIT_YEAR_STATUS = (
+    (NONE, _(NONE)),
+    (VALID, _(VALID)),
+    (INVALID, _(INVALID))
+)
