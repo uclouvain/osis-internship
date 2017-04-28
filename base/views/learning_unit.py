@@ -27,6 +27,16 @@ from django.contrib.auth.decorators import login_required, permission_required
 from base import models as mdl
 from attribution import models as mdl_attr
 from . import layout
+from django.utils.translation import ugettext_lazy as _
+from collections import OrderedDict
+
+
+TAB_IDENTIFICATION = 0
+TAB_TRAININGS = 1
+TAB_COMPONENTS = 2
+TAB_EDUCATIONAL_INFORMATION = 3
+TAB_ATTRIBUTIONS = 4
+TAB_PROPOSAL = 5
 
 
 @login_required
@@ -79,7 +89,76 @@ def learning_unit_read(request, learning_unit_year_id):
     enrollments = mdl.learning_unit_enrollment.find_by_learningunit_enrollment(learning_unit_year)
     is_program_manager = mdl.program_manager.is_program_manager(request.user)
 
-    return layout.render(request, "learning_unit.html", {'learning_unit_year': learning_unit_year,
-                                                         'attributions': attributions,
-                                                         'enrollments': enrollments,
-                                                         'is_program_manager': is_program_manager})
+    return layout.render(request, "learning_unit/identification.html", {
+        'learning_unit_year': learning_unit_year,
+        'tab_active': TAB_IDENTIFICATION,
+        'data_tab': get_tabs()})
+
+
+def detail(request, learning_unit_year_id, tab):
+    learning_unit_year = mdl.learning_unit_year.find_by_id(learning_unit_year_id)
+    data = {'learning_unit_year': learning_unit_year,
+            'tab_active': tab,
+            'data_tab': get_tabs()}
+
+    if tab == str(TAB_IDENTIFICATION):
+        return identification_detail(request, data)
+
+    if tab == str(TAB_TRAININGS):
+        return training_detail(request, data)
+
+    if tab == str(TAB_COMPONENTS):
+        return components_detail(request, data)
+
+    if tab == str(TAB_EDUCATIONAL_INFORMATION):
+        return educational_information_detail(request, data)
+
+    if tab == str(TAB_ATTRIBUTIONS):
+        return attributions_detail(request, data, learning_unit_year)
+
+    if tab == str(TAB_PROPOSAL):
+        return proposal_detail(request, data)
+
+    return layout.render(request, "learning_unit/identification.html", data)
+
+
+def identification_detail(request, data):
+    return layout.render(request, "learning_unit/identification.html", data)
+
+
+def training_detail(request, data):
+    return layout.render(request, "learning_unit/trainings.html", data)
+
+
+def components_detail(request, data):
+    return layout.render(request, "learning_unit/components.html", data)
+
+
+def educational_information_detail(request, data):
+    return layout.render(request, "learning_unit/educational_information.html", data)
+
+
+def attributions_detail(request, data, learning_unit_year):
+    attributions = mdl_attr.attribution.search(learning_unit_year=learning_unit_year)
+    data.update({'attributions': attributions})
+    return layout.render(request, "learning_unit/attributions.html", data)
+
+
+def proposal_detail(request, data):
+    return layout.render(request, "learning_unit/proposal.html", data)
+
+
+def get_tabs():
+    #  Helps to construct tab pannel
+    tabs_order_and_label = {'0': _('identification'),
+                            '1': _('trainings'),
+                            '2': _('components'),
+                            '3': _('educational_information'),
+                            '4': _('tutor_attributions'),
+                            '5': _('proposal')}
+
+    return OrderedDict(sorted(tabs_order_and_label.items(), key=lambda t: t[0]))
+
+
+
+

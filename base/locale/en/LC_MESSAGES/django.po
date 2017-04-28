@@ -1399,3 +1399,19 @@ msgstr "%m/%d/%Y"
 
 msgid "date_format_string"
 msgstr "m/d/Y"
+
+msgid "trainings"
+msgstr "Trainings"
+
+msgid "components"
+msgstr "Component and classes"
+
+msgid "educational_information"
+msgstr "Educational information"
+
+msgid "tutor_attributions"
+msgstr "Tutors - attributions"
+
+msgid "proposal"
+msgstr "Proposal"
+

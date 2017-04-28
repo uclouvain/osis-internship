@@ -49,6 +49,7 @@ urlpatterns = [
     url(r'^learning_units/$', learning_unit.learning_units, name='learning_units'),
     url(r'^learning_units/search$', learning_unit.learning_units_search, name='learning_units_search'),
     url(r'^learning_units/([0-9]+)/$', learning_unit.learning_unit_read, name='learning_unit_read'),
+    url(r'^learning_units/detail/([0-9]+)/([0-9]+)/$', learning_unit.detail, name="lu_detail"),
 
     url(r'^my_osis/$', my_osis.my_osis_index, name="my_osis"),
     url(r'^my_osis/management_tasks/messages_templates', my_osis.messages_templates_index, name="messages_templates"),
