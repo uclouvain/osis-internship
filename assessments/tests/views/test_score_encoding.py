@@ -31,8 +31,8 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 
-from base.tests.models import test_exam_enrollment, test_offer_enrollment,\
-                              test_learning_unit_enrollment, test_session_exam
+from base.tests.models import test_exam_enrollment, test_offer_enrollment, \
+    test_learning_unit_enrollment, test_session_exam, test_offer_year
 from attribution.tests.models import test_attribution
 from assessments.views import score_encoding
 from base.models.enums import number_session, academic_calendar_type
@@ -62,7 +62,9 @@ class OnlineEncodingTest(TestCase):
         SessionExamCalendarFactory(academic_calendar=academic_calendar, number_session=number_session.ONE)
 
         self.learning_unit_year = LearningUnitYearFactory(academic_year=academic_year)
-        self.session_exam = test_session_exam.create_session_exam(number_session.ONE, self.learning_unit_year)
+        self.offer_year = test_offer_year.create_offer_year('SINF1BA', 'Bachelor in informatica', academic_year)
+        self.session_exam = test_session_exam.create_session_exam(number_session.ONE, self.learning_unit_year,
+                                                                  self.offer_year)
 
         # Create enrollment related
         self.enrollments = []
@@ -330,14 +332,20 @@ class GetScoreEncodingViewProgramManagerTest(TestCase):
 
         self.learning_unit_year = LearningUnitYearFactory(academic_year=academic_year)
         self.learning_unit_year_2 = LearningUnitYearFactory(academic_year=academic_year)
-        self.first_session_exam = test_session_exam.create_session_exam(number_session.ONE, self.learning_unit_year)
-        self.first_session_exam_2 = test_session_exam.create_session_exam(number_session.ONE, self.learning_unit_year_2)
+        self.first_session_exam = test_session_exam.create_session_exam(number_session.ONE,
+                                                                        self.learning_unit_year,
+                                                                        self.offer_year_bio2ma)
+        self.first_session_exam_2 = test_session_exam.create_session_exam(number_session.ONE,
+                                                                          self.learning_unit_year_2,
+                                                                          self.offer_year_bio2ma)
 
         # Offer: BIO2BAC - 1 learning unit with exam
         self.offer_year_calendar_bio2bac = OfferYearCalendarFactory(offer_year=self.offer_year_bio2ma,
                                                                     academic_calendar=academic_calendar)
         self.learning_unit_year_3 = LearningUnitYearFactory(academic_year=academic_year)
-        self.first_session_exam_3 = test_session_exam.create_session_exam(number_session.ONE, self.learning_unit_year_3)
+        self.first_session_exam_3 = test_session_exam.create_session_exam(number_session.ONE,
+                                                                          self.learning_unit_year_3,
+                                                                          self.offer_year_bio2bac)
 
         self._create_context_exam_enrollment()
 
