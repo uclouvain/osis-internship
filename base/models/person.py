@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -34,12 +34,13 @@ from base.enums import person_source_type
 
 class PersonAdmin(SerializableModelAdmin):
     list_display = ('first_name', 'middle_name', 'last_name', 'username', 'email', 'gender', 'global_id',
-                    'national_id', 'changed', 'source')
+                    'national_id', 'changed', 'source', 'employee')
     search_fields = ['first_name', 'middle_name', 'last_name', 'user__username', 'email', 'global_id']
     fieldsets = ((None, {'fields': ('user', 'global_id', 'national_id', 'gender', 'first_name',
                                     'middle_name', 'last_name', 'birth_date', 'email', 'phone',
-                                    'phone_mobile', 'language')}),)
+                                    'phone_mobile', 'language','employee')}),)
     raw_id_fields = ('user',)
+    list_filter = ('gender', 'language')
 
 
 class Person(SerializableModel):
@@ -51,7 +52,7 @@ class Person(SerializableModel):
     external_id = models.CharField(max_length=100, blank=True, null=True)
     changed = models.DateTimeField(null=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
-    global_id = models.CharField(max_length=10, blank=True, null=True)
+    global_id = models.CharField(max_length=10, blank=True, null=True, db_index=True)
     gender = models.CharField(max_length=1, blank=True, null=True, choices=GENDER_CHOICES, default='U')
     national_id = models.CharField(max_length=25, blank=True, null=True)
     first_name = models.CharField(max_length=50, blank=True, null=True, db_index=True)
@@ -64,14 +65,15 @@ class Person(SerializableModel):
     birth_date = models.DateField(blank=True, null=True)
     source = models.CharField(max_length=25, blank=True, null=True, choices=person_source_type.CHOICES,
                               default=person_source_type.BASE)
+    employee = models.BooleanField(default=False)
 
     def save(self, **kwargs):
         # When person is created by another application this rule can be applied.
-        if hasattr(settings, 'INTERNAL_EMAIL_SUFIX'):
-            if settings.INTERNAL_EMAIL_SUFIX.strip():
+        if hasattr(settings, 'INTERNAL_EMAIL_SUFFIX'):
+            if settings.INTERNAL_EMAIL_SUFFIX.strip():
                 # It limits the creation of person with external emails. The domain name is case insensitive.
                 if self.source and self.source != person_source_type.BASE \
-                               and settings.INTERNAL_EMAIL_SUFIX in str(self.email).lower():
+                               and settings.INTERNAL_EMAIL_SUFFIX in str(self.email).lower():
                     raise AttributeError('Invalid email for external person.')
 
         super(Person, self).save()
@@ -131,3 +133,39 @@ def search_by_email(email):
 
 def count_by_email(email):
     return search_by_email(email).count()
+
+
+def search(a_lastname, a_firstname, is_employee):
+
+    out = None
+    queryset = Person.objects
+
+    queryset = lastname_parameter(a_lastname, queryset)
+
+    queryset = firstname_parameter(a_firstname, queryset)
+
+    queryset = employee_parameter(is_employee, queryset)
+
+    if a_lastname or a_firstname or a_status or is_employee:
+        out = queryset.order_by('last_name')
+
+    return out
+
+
+def employee_parameter(is_employee, queryset):
+    if is_employee:
+        queryset = queryset.filter(employee=is_employee)
+    return queryset
+
+
+def firstname_parameter(a_first_name, queryset):
+    if a_first_name:
+        queryset = queryset.filter(first_name__icontains=a_first_name)
+    return queryset
+
+
+def lastname_parameter(a_lastname_part, queryset):
+    if a_lastname_part:
+        queryset = queryset.filter(last_name__icontains=a_lastname_part)
+    return queryset
+

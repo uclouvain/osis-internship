@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -25,6 +25,8 @@
 ##############################################################################
 from django import template
 from django.template.defaultfilters import date
+from django.utils.translation import ugettext_lazy as _
+
 
 register = template.Library()
 
@@ -41,8 +43,11 @@ def str_format(value, args):
     args_list = args.split('|')
     return value.format(*args_list)
 
+
 @register.filter
-def date_in_form_format(value, pattern):
+def date_in_form_format(value):
+    pattern = _('date_format_string')
+
     if type(value).__name__ == 'str':
         return value
     else:

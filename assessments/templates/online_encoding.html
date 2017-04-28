@@ -186,7 +186,9 @@
             <tbody>
                 {% for enrollment in enrollments %}
                     <tr style="background-color:
-                               {% if enrollment.deadline_reached or enrollment.deadline_tutor_reached %}
+                               {% if not is_program_manager and enrollment.deadline_tutor_reached %}
+                                    #D3D3D3
+                               {% elif enrollment.deadline_reached %}
                                     #D3D3D3
                                {% else %}
                                     {% ifchanged enrollment.learning_unit_enrollment.offer_enrollment.offer_year.acronym %}
@@ -208,17 +210,26 @@
                         <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.registration_id }}</td>
                         <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.last_name|title }}</td>
                         <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.first_name }}</td>
-                        <td>{%if is_program_manager %}
-                                {{ enrollment.score_final | score_display:enrollment.session_exam.learning_unit_year.decimal_scores }}
+                        <td>
+                            {% if is_program_manager %}
+                                {% if enrollment.score_final != None %}
+                                    {{ enrollment.score_final | score_display:enrollment.learning_unit_enrollment.learning_unit_year.decimal_scores }}
+                                {% else %}
+                                    -
+                                {% endif %}
                             {% else %}
                                 {% if enrollment.score_final != None %}
-                                    {{ enrollment.score_final | score_display:enrollment.session_exam.learning_unit_year.decimal_scores }}
-                                {% elif not enrollment.justification_final %}
-                                    {{ enrollment.score_draft | score_display:enrollment.session_exam.learning_unit_year.decimal_scores }}
-                                {%endif%}
-                            {% endif%}</td>
-                        <td>{%if is_program_manager %}
-                                {% if enrollment.justification_final%}
+                                    {{ enrollment.score_final | score_display:enrollment.learning_unit_enrollment.learning_unit_year.decimal_scores }}
+                                {% elif enrollment.score_draft != None %}
+                                    {{ enrollment.score_draft | score_display:enrollment.learning_unit_enrollment.learning_unit_year.decimal_scores }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            {% endif%}
+                        </td>
+                        <td>
+                            {% if is_program_manager %}
+                                {% if enrollment.justification_final %}
                                     {% trans enrollment.justification_final %}
                                 {% else %}
                                     -
@@ -226,7 +237,7 @@
                             {% else %}
                                 {% if enrollment.justification_final %}
                                     {{ enrollment.justification_final_display_as_tutor }}
-                                {% elif enrollment.justification_draft and enrollment.score_final == None %}
+                                {% elif enrollment.justification_draft %}
                                     {{ enrollment.justification_draft_display }}
                                 {% else %}
                                     -

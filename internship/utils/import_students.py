@@ -25,7 +25,6 @@
 ##############################################################################
 import csv
 
-import pendulum
 from django.contrib.auth.models import Group
 
 from base.models import person as mdl_person

@@ -167,7 +167,7 @@ def __save_xls_scores(request, file_name, is_program_manager, user, learning_uni
         exam_enrollments_managed_by_user = list(mdl.exam_enrollment.find_for_score_encodings(data_xls['session'],
                                                                                              tutor=tutor,
                                                                                              learning_unit_year_id=learning_unit_year_id))
-        learning_unit_years = list(mdl.learning_unit_year.find_by_tutor(tutor.id))
+        learning_unit_years = list(mdl_attr.attribution.find_by_tutor(tutor.id))
         # Set of all LearningUnit.acronym managed by the user
         learn_unit_acronyms_managed_by_user = {learning_unit_year.acronym for learning_unit_year in learning_unit_years}
         # Set of all OfferYear.acronym managed by the user
@@ -277,14 +277,12 @@ def __save_xls_scores(request, file_name, is_program_manager, user, learning_uni
                                 justification = justification.replace(" ", "") if type(justification) == str else justification
                                 if justification:
                                     justification = str(justification).strip().upper()
-                                    if justification in ['A', 'T', '?']:
+                                    if justification in ['A', 'T']:
                                         switcher = {'A': "ABSENCE_UNJUSTIFIED",
-                                                    'T': "CHEATING",
-                                                    '?': "SCORE_MISSING"}
+                                                    'T': "CHEATING"}
                                         justification = switcher.get(justification, None)
                                     else:
-
-                                        if justification=='M':
+                                        if justification == 'M':
                                             messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('no_valid_m_justification_error')))
                                         else:
                                             messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('justification_invalid')))
@@ -293,11 +291,8 @@ def __save_xls_scores(request, file_name, is_program_manager, user, learning_uni
                                     messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('constraint_score_other_score')))
 
                                 elif score == 0 or score or justification:
-                                    print('ici')
-                                    print(justification)
                                     if (justification in [justification_types.ABSENCE_UNJUSTIFIED,
-                                                          justification_types.CHEATING,
-                                                          justification_types.SCORE_MISSING]) and \
+                                                          justification_types.CHEATING]) and \
                                                     exam_enrollment.justification_final == justification_types.ABSENCE_JUSTIFIED:
                                         messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('abscence_justified_preserved')))
                                         justification = justification_types.ABSENCE_JUSTIFIED
@@ -313,9 +308,7 @@ def __save_xls_scores(request, file_name, is_program_manager, user, learning_uni
                                             exam_enrollment.justification_final = justification
                                             exam_enrollment.score_final = None
                                         mdl.exam_enrollment.create_exam_enrollment_historic(request.user,
-                                                                                            exam_enrollment,
-                                                                                            score,
-                                                                                            justification)
+                                                                                            exam_enrollment)
                                     else:
                                         if score != exam_enrollment.score_draft:
                                             new_scores_number += 1

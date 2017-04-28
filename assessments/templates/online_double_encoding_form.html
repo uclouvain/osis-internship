@@ -100,7 +100,7 @@
         <hr>
         <div class="alert alert-info">
             {% get_current_language as LANGUAGE_CODE %}
-            {% if enrollments.0.session_exam.learning_unit_year.decimal_scores %}
+            {% if enrollments.0.learning_unit_enrollment.learning_unit_year.decimal_scores %}
               {% trans 'decimal_values_accepted' %}
             {% else %}
               {% trans 'decimal_values_ignored' %}
@@ -141,10 +141,10 @@
                         <td>
                             {% if is_program_manager %}
                             <input type="hidden" id="hdn_score_draft_{{ enrollment.id }}"
-                                   value="{{ enrollment.score_final | score_display:enrollment.session_exam.learning_unit_year.decimal_scores }}"/>
+                                   value="{{ enrollment.score_final | score_display:enrollment.learning_unit_enrollment.learning_unit_year.decimal_scores }}"/>
                             {% else %}
                             <input type="hidden" id="hdn_score_draft_{{ enrollment.id }}"
-                                   value="{{ enrollment.score_draft | score_display:enrollment.session_exam.learning_unit_year.decimal_scores }}"/>
+                                   value="{{ enrollment.score_draft | score_display:enrollment.learning_unit_enrollment.learning_unit_year.decimal_scores }}"/>
                             {% endif %}
                             <input type="text" min="0" max="20" name="score_{{enrollment.id}}" id="num_double_score_{{ enrollment.id }}"
                                    tabindex="{{ forloop.counter }}" class="form-control" value="{{enrollment.post_score_encoded|default_if_none:''}}"
@@ -152,13 +152,6 @@
                                      {% if enrollment.score_final != None or enrollment.justification_final %}
                                        disabled
                                      {% endif %}
-                                   {% endif %}
-                                   {% if enrollment.session_exam.learning_unit_year.decimal_scores %}
-                                        step="any"
-                                        oninvalid="invalidScoreMsg(this,true,'{% trans 'decimal_score_not_allowed' %}','{% trans 'scores_gt_0_lt_20' %}')"
-                                   {% else %}
-                                        step="1"
-                                        oninvalid="invalidScoreMsg(this,false,'{% trans 'decimal_score_not_allowed' %}','{% trans 'scores_gt_0_lt_20' %}')"
                                    {% endif %}>
                         </td>
                         <td>
@@ -182,7 +175,6 @@
                                     <option value="ABSENCE_UNJUSTIFIED" {% if enrollment.post_justification_encoded == 'ABSENCE_UNJUSTIFIED' %}selected{% endif %}>{% trans 'absent' %}</option>
                                 {% endif %}
                                 <option value="CHEATING" {% if enrollment.post_justification_encoded == 'CHEATING' %}selected{% endif %}>{% trans 'CHEATING' %}</option>
-                                <option value="SCORE_MISSING" {% if enrollment.post_justification_encoded == 'SCORE_MISSING' %}selected{% endif %}>{% trans 'SCORE_MISSING' %}</option>
                             </select>
                             <input type="hidden" id="hdn_score_changed_{{ enrollment.id }}" name="score_changed_{{ enrollment.id }}">
                         </td>

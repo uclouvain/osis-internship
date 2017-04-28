@@ -21,3 +21,5 @@ backoffice/server_settings.py
 *.sh
 *~
 htmlcov/
+dev.py
+ghostdriver.log
