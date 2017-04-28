@@ -1394,7 +1394,28 @@ msgid "abscence_justified_preserved"
 msgstr "Abscence justifiée dèjà encodée et préservée"
 
 msgid "academic_actors"
-msgstr "Acteurs académiques"
+msgstr "Les acteurs académiques"
+
+msgid "academic_start_date_error"
+msgstr "La date de début doit être comprise entre les dates de début/fin de l'année académique"
+
+msgid "academic_end_date_error"
+msgstr "La date de fin doit être comprise entre les dates de début/fin de l'année académique"
+
+msgid "end_start_date_error"
+msgstr "La date de fin doit être supérieure à la date début"
+
+msgid "dates_mandatory_error"
+msgstr "Les dates de début et de fin sont obligatoires"
+
+msgid "date_format"
+msgstr "%d/%m/%Y"
+
+msgid "date_format_string"
+msgstr "d/m/Y"
+
+msgid "format_date"
+msgstr "jj/mm/aaaa"
 
 msgid "desc_lnk_academic_actors"
 msgstr "Gestion des acteurs académiques"

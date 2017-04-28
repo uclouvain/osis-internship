@@ -28,8 +28,9 @@ from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver, Signal
 from base.models import student as mdl_student, person as mdl_person, tutor as mdl_tutor, program_manager as mdl_pgm_manager, entity_manager as mdl_entity_manager
 from osis_common.models.serializable_model import SerializableModel
-from django.conf import settings
+from internship.models import internship_student_information as mdl_internship
 from django.contrib.auth.models import Permission
+from django.conf import settings
 
 person_created = Signal(providing_args=['person'])
 

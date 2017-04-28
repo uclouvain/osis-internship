@@ -97,3 +97,4 @@ def structure_address(request, structure_id):
 @login_required
 def academic_actors(request):
     return layout.render(request, "academic_actors.html", {})
+

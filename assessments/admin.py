@@ -23,8 +23,3 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.contrib import admin
-from assessments.models import scores_encoding
-
-admin.site.register(scores_encoding.ScoresEncoding,
-                    scores_encoding.ScoresEncodingAdmin)

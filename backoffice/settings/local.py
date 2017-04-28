@@ -24,7 +24,6 @@
 #
 ##############################################################################
 from .base import *
-import sys
 
 OPTIONAL_APPS = (
     'attribution',
@@ -32,6 +31,7 @@ OPTIONAL_APPS = (
     'dissertation',
     'internship',
     'assessments',
+    'cms'
 )
 
 INSTALLED_APPS += OPTIONAL_APPS
