@@ -1,12 +1,12 @@
 ##############################################################################
 #
-# OSIS stands for Open Student Information System. It's an application
+#    OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -24,24 +24,13 @@
 #
 ##############################################################################
 import factory
-import factory.fuzzy
-from base.tests.factories.academic_year import AcademicYearFactory
-from base.tests.factories.offer import OfferFactory
+from base.tests.factories.person import PersonFactory
 from base.tests.factories.structure import StructureFactory
 
 
-def generate_title(offer_year):
-    return '{obj.academic_year} {obj.acronym}'.format(obj=offer_year).lower()
-
-
-class OfferYearFactory(factory.django.DjangoModelFactory):
+class EntityManagerFactory(factory.django.DjangoModelFactory):
     class Meta:
-        model = "base.OfferYear"
+        model = "base.EntityManager"
 
-    offer = factory.SubFactory(OfferFactory)
-    academic_year = factory.SubFactory(AcademicYearFactory)
-    acronym = factory.Sequence(lambda n: 'Offer %d' % n)
-    title = factory.LazyAttribute(generate_title)
-    entity_management = factory.SubFactory(StructureFactory)
-    entity_administration_fac= factory.SubFactory(StructureFactory)
-
+    person = factory.SubFactory(PersonFactory)
+    structure = factory.SubFactory(StructureFactory)

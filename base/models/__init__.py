@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -31,6 +31,7 @@ from base.models import application_notice
 from base.models import campus
 from base.models import exam_enrollment
 from base.models import external_offer
+from base.models import entity_manager
 from base.models import learning_class
 from base.models import learning_class_year
 from base.models import learning_component
@@ -61,3 +62,4 @@ from base.models import structure_address
 from base.models import student
 from base.models import synchronization
 from base.models import tutor
+
