@@ -16,6 +16,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='learningunit',
             name='learning_container',
-            field=models.ForeignKey(default=None, on_delete=django.db.models.deletion.CASCADE, to='base.LearningContainer'),
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='base.LearningContainer'),
         ),
     ]
