@@ -31,10 +31,9 @@ from django.db.models import When, Case, Q, Sum, Count, IntegerField, F
 from django.contrib import admin
 from django.utils.translation import ugettext as _
 from django.core.validators import MaxValueValidator, MinValueValidator
-from base.models import person, learning_unit_year, person_address, session_exam_calendar, session_exam_deadline, \
+from base.models import person, person_address, session_exam_calendar, session_exam_deadline, \
                         academic_year as academic_yr, offer_year, program_manager, tutor
 from attribution.models import attribution
-from base.utils import calendar_utils
 from base.enums import exam_enrollment_justification_type as justification_types
 from base.enums import exam_enrollment_state as enrollment_states
 
@@ -488,7 +487,7 @@ def scores_sheet_data(exam_enrollments, tutor=None):
             number_session = exam_enrollment.session_exam.number_session
             deliberation_date = session_exam_calendar.find_deliberation_date(number_session, offer_year)
             if deliberation_date:
-                deliberation_date = deliberation_date.strftime(calendar_utils.FORMAT)
+                deliberation_date = deliberation_date.strftime(_('date_format'))
             else:
                 deliberation_date = _('not_passed')
 
@@ -514,7 +513,7 @@ def scores_sheet_data(exam_enrollments, tutor=None):
                 # Compute deadline score encoding
                 deadline = get_deadline_tutor_computed(exam_enrol)
                 if deadline:
-                    deadline = deadline.strftime(calendar_utils.FORMAT)
+                    deadline = deadline.strftime(_('date_format'))
 
                 enrollments.append({
                     "registration_id": student.registration_id,
