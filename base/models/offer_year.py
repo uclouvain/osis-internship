@@ -193,16 +193,31 @@ def search_offers(entity_list=None, academic_yr=None, a_grade_type=None):
     out = None
     queryset = OfferYear.objects
 
-    if entity_list:
-        queryset = queryset.filter(entity_management__in=entity_list)
+    queryset = entity_list_parameter(entity_list, queryset)
 
-    if academic_yr:
-        queryset = queryset.filter(academic_year=academic_yr)
+    queryset = academic_year_parameter(academic_yr, queryset)
 
-    if a_grade_type:
-        queryset = queryset.filter(grade_type=a_grade_type)
+    queryset = grade_type_parameter(a_grade_type, queryset)
 
     if entity_list or academic_yr or a_grade_type:
         out = queryset.order_by('acronym')
 
     return out
+
+
+def grade_type_parameter(a_grade_type, queryset):
+    if a_grade_type:
+        queryset = queryset.filter(grade_type=a_grade_type)
+    return queryset
+
+
+def academic_year_parameter(academic_yr, queryset):
+    if academic_yr:
+        queryset = queryset.filter(academic_year=academic_yr)
+    return queryset
+
+
+def entity_list_parameter(entity_list, queryset):
+    if entity_list:
+        queryset = queryset.filter(entity_management__in=entity_list)
+    return queryset

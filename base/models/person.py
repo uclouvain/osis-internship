@@ -134,26 +134,37 @@ def count_by_email(email):
     return search_by_email(email).count()
 
 
-def find_by_lastname(a_name):
-    return Person.objects.filter(Q(last_name__icontains=a_name) | Q(first_name__icontains=a_name))
-
-
-def search(a_lastname_part, a_first_name, is_employee):
+def search(a_lastname, a_firstname, is_employee):
 
     out = None
     queryset = Person.objects
 
-    if a_lastname_part:
-        queryset = queryset.filter(last_name__icontains=a_lastname_part)
+    queryset = lastname_parameter(a_lastname, queryset)
 
-    if a_first_name:
-        queryset = queryset.filter(first_name__icontains=a_first_name)
+    queryset = firstname_parameter(a_firstname, queryset)
 
-    if is_employee:
-        queryset = queryset.filter(employee=is_employee)
+    queryset = employee_parameter(is_employee, queryset)
 
-    if a_lastname_part or a_first_name or a_status or is_employee:
+    if a_lastname or a_firstname or a_status or is_employee:
         out = queryset.order_by('last_name')
 
     return out
+
+
+def employee_parameter(is_employee, queryset):
+    if is_employee:
+        queryset = queryset.filter(employee=is_employee)
+    return queryset
+
+
+def firstname_parameter(a_first_name, queryset):
+    if a_first_name:
+        queryset = queryset.filter(first_name__icontains=a_first_name)
+    return queryset
+
+
+def lastname_parameter(a_lastname_part, queryset):
+    if a_lastname_part:
+        queryset = queryset.filter(last_name__icontains=a_lastname_part)
+    return queryset
 
