@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -25,14 +25,15 @@
 ##############################################################################
 from django.db import models
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
+from internship.models import internship
 
 
 class InternshipChoiceAdmin(SerializableModelAdmin):
-    list_display = ('student', 'organization', 'speciality', 'choice', 'internship_choice', 'priority')
-    fieldsets = ((None, {'fields': ('student', 'organization', 'speciality', 'choice', 'internship_choice',
+    list_display = ('student', 'organization', 'speciality', 'choice', 'internship', 'priority')
+    fieldsets = ((None, {'fields': ('student', 'organization', 'speciality', 'choice', 'internship',
                                     'priority')}),)
     raw_id_fields = ('student', 'organization', 'speciality')
-    list_filter = ('speciality', 'choice', 'internship_choice')
+    list_filter = ('speciality', 'choice', 'internship')
     search_fields = ['student__person__first_name', 'student__person__last_name']
 
 
@@ -41,7 +42,7 @@ class InternshipChoice(SerializableModel):
     organization = models.ForeignKey('internship.Organization')
     speciality = models.ForeignKey('internship.InternshipSpeciality', null=True)
     choice = models.IntegerField()
-    internship_choice = models.IntegerField(default=0)
+    internship = models.ForeignKey('internship.Internship')
     priority = models.BooleanField()
 
     def __str__(self):
@@ -79,7 +80,7 @@ def search_other_choices(**kwargs):
     return queryset.exclude(choice=1)
 
 
-def search_by_student_or_choice(student=None, internship_choice=None):
+def search_by_student_or_choice(student=None, internship=None):
     has_criteria = False
     queryset = InternshipChoice.objects
 
@@ -87,28 +88,29 @@ def search_by_student_or_choice(student=None, internship_choice=None):
         queryset = queryset.filter(student=student)
         has_criteria = True
 
-    if internship_choice is not None:
-        queryset = queryset.filter(internship_choice=internship_choice)
+    if internship is not None:
+        queryset = queryset.filter(internship=internship)
         has_criteria = True
 
     if has_criteria:
-        return queryset.order_by("internship_choice", "choice")
+        return queryset.order_by("choice")
     else:
         return None
 
 
-def get_non_mandatory_internship_choices():
-    return InternshipChoice.objects.filter(internship_choice__gte=1).\
-        select_related("student", "organization", "speciality")
+def get_non_mandatory_internship_choices(cohort):
+    internships = internship.Internship.objects.filter(cohort=cohort, speciality=None, pk__gte=1)
+    return InternshipChoice.objects.filter(internship_id__in=internships.values_list("id", flat=True)).\
+        select_related("student", "organization", "speciality", "internship")
 
 
-def get_internship_choices_made(student):
-    return InternshipChoice.objects.filter(student=student, internship_choice__gt=0).\
-        values_list("internship_choice", flat=True).distinct()
+def get_internship_choices_made(cohort, student):
+    internships = internship.Internship.objects.filter(cohort=cohort, pk__gte=1)
+    return InternshipChoice.objects.filter(internship_id__in=internships.values_list("id", flat=True), student=student).distinct()
 
 
-def get_number_students():
-    return InternshipChoice.objects.filter(internship_choice__gt=0).distinct("student").count()
+def get_number_students(cohort):
+    return InternshipChoice.objects.filter(internship__cohort=cohort).distinct("student").count()
 
 
 def get_number_first_choice_by_organization(speciality):

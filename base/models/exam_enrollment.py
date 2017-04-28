@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -25,16 +25,20 @@
 ##############################################################################
 from decimal import *
 from django.db import models
+from django.db.models import When, Case, Q, Sum, Count, IntegerField, F
 from django.contrib import admin
 from django.utils.translation import ugettext as _
 from django.core.validators import MaxValueValidator, MinValueValidator
-from base.models import person, learning_unit_year, person_address, offer_year_calendar
+from base.models import person, learning_unit_year, person_address, session_exam_calendar, session_exam_deadline, \
+                        academic_year as academic_yr, offer_year, program_manager, tutor
 from attribution.models import attribution
 from base.enums import exam_enrollment_justification_type as justification_types
 from base.enums import exam_enrollment_state as enrollment_states
 import datetime
 import unicodedata
 from base.models.exceptions import JustificationValueException
+from base.models.utils.admin_extentions import remove_delete_action
+
 
 JUSTIFICATION_ABSENT_FOR_TUTOR = _('absent')
 
@@ -51,18 +55,21 @@ class ExamEnrollmentAdmin(admin.ModelAdmin):
                      'learning_unit_enrollment__offer_enrollment__student__person__last_name',
                      'learning_unit_enrollment__offer_enrollment__student__registration_id',
                      'learning_unit_enrollment__learning_unit_year__acronym',
-                     'session_exam__offer_year_calendar__offer_year__acronym']
+                     'learning_unit_enrollment__offer_enrollment__offer_year__acronym']
 
 
 class ExamEnrollment(models.Model):
     external_id = models.CharField(max_length=100, blank=True, null=True)
     changed = models.DateTimeField(null=True)
     score_draft = models.DecimalField(max_digits=4, decimal_places=2, blank=True, null=True,
-                                      validators=[MinValueValidator(0), MaxValueValidator(20)])
+                                      validators=[MinValueValidator(0,message="scores_must_be_between_0_and_20"),
+                                                  MaxValueValidator(20, message="scores_must_be_between_0_and_20")])
     score_reencoded = models.DecimalField(max_digits=4, decimal_places=2, blank=True, null=True,
-                                          validators=[MinValueValidator(0), MaxValueValidator(20)])
+                                          validators=[MinValueValidator(0, message="scores_must_be_between_0_and_20"),
+                                                      MaxValueValidator(20, message="scores_must_be_between_0_and_20")])
     score_final = models.DecimalField(max_digits=4, decimal_places=2, blank=True, null=True,
-                                      validators=[MinValueValidator(0), MaxValueValidator(20)])
+                                      validators=[MinValueValidator(0, message="scores_must_be_between_0_and_20"),
+                                                  MaxValueValidator(20,message="scores_must_be_between_0_and_20")])
     justification_draft = models.CharField(max_length=20, blank=True, null=True,
                                            choices=justification_types.JUSTIFICATION_TYPES)
     justification_reencoded = models.CharField(max_length=20, blank=True, null=True,
@@ -109,6 +116,10 @@ class ExamEnrollment(models.Model):
         return self.score_draft is not None or self.justification_draft
 
     @property
+    def is_score_missing_as_program_manager(self):
+        return not self.is_final
+
+    @property
     def to_validate_by_program_manager(self):
         sc_reencoded = None
         if self.score_reencoded is not None:
@@ -151,6 +162,47 @@ class ExamEnrollment(models.Model):
         else:
             return None
 
+    @property
+    def is_score_missing_as_tutor(self):
+        return not self.is_final and not self.is_draft
+
+
+def find_by_ids(ids):
+    return ExamEnrollment.objects.filter(pk__in=ids)
+
+
+def get_session_exam_deadline(enrollment):
+    if hasattr(enrollment.learning_unit_enrollment.offer_enrollment, 'session_exam_deadlines') and\
+            enrollment.learning_unit_enrollment.offer_enrollment.session_exam_deadlines:
+        # Prefetch related
+        return enrollment.learning_unit_enrollment.offer_enrollment.session_exam_deadlines[0]
+    else:
+        # No prefetch
+        offer_enrollment = enrollment.learning_unit_enrollment.offer_enrollment
+        nb_session = enrollment.session_exam.number_session
+        return session_exam_deadline.get_by_offer_enrollment_nb_session(offer_enrollment, nb_session)
+
+
+def is_deadline_reached(enrollment):
+    exam_deadline = get_session_exam_deadline(enrollment)
+    if exam_deadline:
+        return exam_deadline.is_deadline_reached
+    return False
+
+
+def is_deadline_tutor_reached(enrollment):
+    exam_deadline = get_session_exam_deadline(enrollment)
+    if exam_deadline:
+        return exam_deadline.is_deadline_tutor_reached
+    return False
+
+
+def get_deadline_tutor_computed(enrollment):
+    exam_deadline = get_session_exam_deadline(enrollment)
+    if exam_deadline:
+        return exam_deadline.deadline_tutor_computed
+    return None
+
 
 def is_absence_justification(justification):
     return justification in [justification_types.ABSENCE_UNJUSTIFIED, justification_types.ABSENCE_JUSTIFIED]
@@ -166,9 +218,8 @@ def calculate_exam_enrollment_progress(enrollments):
 
 
 def justification_label_authorized():
-    return "%s, %s, %s" % (_('absent_pdf_legend'),
-                           _('cheating_pdf_legend'),
-                           _('score_missing_pdf_legend'))
+    return "%s, %s" % (_('absent_pdf_legend'),
+                       _('cheating_pdf_legend'))
 
 
 class ExamEnrollmentHistoryAdmin(admin.ModelAdmin):
@@ -187,11 +238,7 @@ class ExamEnrollmentHistoryAdmin(admin.ModelAdmin):
         return False
 
     def get_actions(self, request):
-        actions = super(ExamEnrollmentHistoryAdmin, self).get_actions(request)
-
-        if 'delete_selected' in actions:
-            del actions['delete_selected']
-        return actions
+        return remove_delete_action(super(ExamEnrollmentHistoryAdmin, self).get_actions(request))
 
 
 class ExamEnrollmentHistory(models.Model):
@@ -202,11 +249,11 @@ class ExamEnrollmentHistory(models.Model):
     modification_date = models.DateTimeField(auto_now=True)
 
 
-def create_exam_enrollment_historic(user, enrollment, score, justification):
+def create_exam_enrollment_historic(user, enrollment):
     exam_enrollment_history = ExamEnrollmentHistory()
     exam_enrollment_history.exam_enrollment = enrollment
-    exam_enrollment_history.score_final = score
-    exam_enrollment_history.justification_final = justification
+    exam_enrollment_history.score_final = enrollment.score_final
+    exam_enrollment_history.justification_final = enrollment.justification_final
     exam_enrollment_history.person = person.find_by_user(user)
     exam_enrollment_history.save()
 
@@ -233,6 +280,51 @@ def find_exam_enrollments_by_session_learningunit(session_exm, a_learning_unit_y
     return enrollments
 
 
+def get_progress_by_learning_unit_years_and_offer_years(user,
+                                                        session_exam_number,
+                                                        learning_unit_year_id=None,
+                                                        learning_unit_year_ids=None,
+                                                        offer_year_id=None,
+                                                        academic_year=None):
+    if offer_year_id:
+        offer_year_ids = [offer_year_id]
+    else:
+        offer_year_ids = offer_year.find_by_user(user).values_list('id', flat=True)
+
+    tutor_user=None
+    if not program_manager.is_program_manager(user):
+        tutor_user = tutor.find_by_user(user)
+
+    queryset = find_for_score_encodings(session_exam_number=session_exam_number,
+                                        learning_unit_year_id=learning_unit_year_id,
+                                        learning_unit_year_ids=learning_unit_year_ids,
+                                        offers_year=offer_year_ids,
+                                        tutor=tutor_user,
+                                        academic_year=academic_year,
+                                        with_session_exam_deadline=False)
+
+    return queryset.values('session_exam',
+                           'learning_unit_enrollment__learning_unit_year',
+                           'learning_unit_enrollment__offer_enrollment__offer_year')\
+                       .annotate(total_exam_enrollments=Count('id'),
+                                 learning_unit_enrollment__learning_unit_year__acronym=
+                                        F('learning_unit_enrollment__learning_unit_year__acronym'),
+                                 learning_unit_enrollment__learning_unit_year__title=
+                                                F('learning_unit_enrollment__learning_unit_year__title'),
+                                 exam_enrollments_encoded=Sum(Case(
+                                          When(Q(score_final__isnull=False)|Q(justification_final__isnull=False),then=1),
+                                          default=0,
+                                          output_field=IntegerField()
+                                 )),
+                                 scores_not_yet_submitted=Sum(Case(
+                                     When((Q(score_draft__isnull=False) & Q(score_final__isnull=False) & Q(justification_final__isnull=False)) |
+                                          (Q(justification_draft__isnull=False) & Q(score_final__isnull=False) & Q(justification_final__isnull=False))
+                                          ,then=1),
+                                          default=0,
+                                          output_field=IntegerField()
+                                 )))
+
+
 def find_for_score_encodings(session_exam_number,
                              learning_unit_year_id=None,
                              learning_unit_year_ids=None,
@@ -244,7 +336,9 @@ def find_for_score_encodings(session_exam_number,
                              registration_id=None,
                              student_last_name=None,
                              student_first_name=None,
-                             justification=None):
+                             justification=None,
+                             academic_year=None,
+                             with_session_exam_deadline=True):
     """
     :param session_exam_number: Integer represents the number_session of the Session_exam (1,2,3,4 or 5). It's
                                 a mandatory field to not confuse exam scores from different sessions.
@@ -259,11 +353,12 @@ def find_for_score_encodings(session_exam_number,
                                               are returned.
     :return: All filtered examEnrollments.
     """
-    queryset = ExamEnrollment.objects.filter(session_exam__number_session=session_exam_number)
-    queryset = queryset.filter(session_exam__offer_year_calendar__start_date__lte=datetime.datetime.now())\
-                       .filter(session_exam__offer_year_calendar__end_date__gte=datetime.datetime.now())\
-                       .filter(enrollment_state=enrollment_states.ENROLLED)
+    if not academic_year:
+        academic_year = academic_yr.current_academic_year()
 
+    queryset = ExamEnrollment.objects.filter(session_exam__number_session=session_exam_number,
+                                             learning_unit_enrollment__learning_unit_year__academic_year=academic_year,
+                                             enrollment_state=enrollment_states.ENROLLED)
     if learning_unit_year_id:
         queryset = queryset.filter(learning_unit_enrollment__learning_unit_year_id=learning_unit_year_id)
     elif learning_unit_year_ids:
@@ -291,7 +386,12 @@ def find_for_score_encodings(session_exam_number,
         queryset = queryset.filter(learning_unit_enrollment__offer_enrollment__student__registration_id=registration_id)
 
     if justification:
-        queryset = queryset.filter(justification_final=justification)
+        if justification == justification_types.SCORE_MISSING:
+            # Show only empty values
+            queryset = queryset.filter(justification_final__isnull=True,
+                                       score_final__isnull=True)
+        else:
+            queryset = queryset.filter(justification_final=justification)
 
     if student_last_name:
         queryset = queryset.filter(
@@ -301,8 +401,17 @@ def find_for_score_encodings(session_exam_number,
         queryset = queryset.filter(
             learning_unit_enrollment__offer_enrollment__student__person__first_name__icontains=student_first_name)
 
-    return queryset.select_related('learning_unit_enrollment__offer_enrollment__offer_year')\
-                   .select_related('learning_unit_enrollment__offer_enrollment__student__person')
+    if with_session_exam_deadline:
+        queryset = queryset.prefetch_related(
+                         models.Prefetch('learning_unit_enrollment__offer_enrollment__sessionexamdeadline_set',
+                                         queryset=session_exam_deadline.filter_by_nb_session(session_exam_number),
+                                         to_attr="session_exam_deadlines")
+                   )
+
+    return queryset.select_related('learning_unit_enrollment__offer_enrollment__offer_year') \
+                   .select_related('learning_unit_enrollment__offer_enrollment__student__person')\
+                   .select_related('learning_unit_enrollment__learning_unit_year')
+
 
 
 def group_by_learning_unit_year_id(exam_enrollments):
@@ -331,7 +440,8 @@ def scores_sheet_data(exam_enrollments, tutor=None):
     data['justification_legend'] = _('justification_legend') % justification_label_authorized()
 
     # Will contain lists of examEnrollments splitted by learningUnitYear
-    enrollments_by_learn_unit = group_by_learning_unit_year_id(exam_enrollments)  # {<learning_unit_year_id> : [<ExamEnrollment>]}
+    enrollments_by_learn_unit = group_by_learning_unit_year_id(
+        exam_enrollments)  # {<learning_unit_year_id> : [<ExamEnrollment>]}
 
     learning_unit_years = []
     for exam_enrollments in enrollments_by_learn_unit.values():
@@ -375,15 +485,19 @@ def scores_sheet_data(exam_enrollments, tutor=None):
         for list_enrollments in enrollments_by_program.values():  # exam_enrollments by OfferYear
             exam_enrollment = list_enrollments[0]
             offer_year = exam_enrollment.learning_unit_enrollment.offer_enrollment.offer_year
-
-            deliberation_date = offer_year_calendar.find_deliberation_date(exam_enrollment.session_exam)
+            number_session = exam_enrollment.session_exam.number_session
+            deliberation_date = session_exam_calendar.find_deliberation_date(number_session, offer_year)
             if deliberation_date:
                 deliberation_date = deliberation_date.strftime("%d/%m/%Y")
             else:
                 deliberation_date = _('not_passed')
-            deadline = ""
-            if exam_enrollment.session_exam.deadline:
-                deadline = exam_enrollment.session_exam.deadline.strftime('%d/%m/%Y')
+
+            # Compute deadline score encoding
+            deadline = get_deadline_tutor_computed(exam_enrollment)
+            if deadline:
+                deadline = deadline.strftime('%d/%m/%Y')
+            else:
+                deadline = ""
 
             program = {'acronym': exam_enrollment.learning_unit_enrollment.offer_enrollment.offer_year.acronym,
                        'deliberation_date': deliberation_date,

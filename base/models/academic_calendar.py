@@ -1,12 +1,12 @@
 ##############################################################################
 #
-# OSIS stands for Open Student Information System. It's an application
+#    OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -23,13 +23,34 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.utils import timezone
-from base.models.exceptions import FunctionAgrumentMissingException, StartDateHigherThanEndDateException
-from osis_common.models.serializable_model import SerializableModel
+from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
+from base.models.exceptions import FunctionArgumentMissingException, StartDateHigherThanEndDateException
+from base.models.enums import academic_calendar_type
+from django.utils.translation import ugettext as _
+from base.models.utils.admin_extentions import remove_delete_action
+
 
 FUNCTIONS = 'functions'
+
+
+class AcademicCalendarAdmin(SerializableModelAdmin):
+    list_display = ('academic_year', 'title', 'start_date', 'end_date')
+    list_display_links = None
+    readonly_fields = ('academic_year', 'title', 'start_date', 'end_date')
+    list_filter = ('academic_year',)
+    search_fields = ['title']
+    ordering = ('start_date',)
+
+    def has_add_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+    def get_actions(self, request):
+        return remove_delete_action(super(AcademicCalendarAdmin, self).get_actions(request))
 
 
 class AcademicCalendar(SerializableModel):
@@ -43,17 +64,35 @@ class AcademicCalendar(SerializableModel):
     highlight_title = models.CharField(max_length=255, blank=True, null=True)
     highlight_description = models.CharField(max_length=255, blank=True, null=True)
     highlight_shortcut = models.CharField(max_length=255, blank=True, null=True)
-    reference = models.CharField(max_length=50, blank=True, null=True)
+    reference = models.CharField(choices=academic_calendar_type.ACADEMIC_CALENDAR_TYPES, max_length=50, blank=True, null=True)
 
     def save(self, *args, **kwargs):
         if FUNCTIONS not in kwargs.keys():
-            raise FunctionAgrumentMissingException('The kwarg "{0}" must be set.'.format(FUNCTIONS))
+            raise FunctionArgumentMissingException('The kwarg "{0}" must be set.'.format(FUNCTIONS))
         functions = kwargs.pop(FUNCTIONS)
-        if self.start_date and self.end_date and self.start_date >= self.end_date:
-            raise StartDateHigherThanEndDateException('Start date must be lower than end date')
+        self.validation_mandatory_dates()
+        self.validation_start_date()
+        self.validation_end_date()
+        self.validation_start_end_dates()
         super(AcademicCalendar, self).save(*args, **kwargs)
         for function in functions:
             function(self)
+
+    def validation_start_end_dates(self):
+        if self.start_date and self.end_date and self.start_date >= self.end_date:
+            raise StartDateHigherThanEndDateException(_('end_start_date_error'))
+
+    def validation_end_date(self):
+        if self.end_date and self.academic_year.end_date and self.end_date > self.academic_year.end_date:
+            raise AttributeError(_('academic_end_date_error'))
+
+    def validation_start_date(self):
+        if self.start_date and self.academic_year.start_date and self.start_date < self.academic_year.start_date:
+            raise AttributeError(_('academic_start_date_error'))
+
+    def validation_mandatory_dates(self):
+        if self.start_date is None or self.end_date is None:
+            raise AttributeError(_('dates_mandatory_error'))
 
     def __str__(self):
         return u"%s %s" % (self.academic_year, self.title)

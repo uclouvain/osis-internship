@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -24,31 +24,44 @@
 #
 ##############################################################################
 from django.test import TestCase
+
 from internship.models import internship_offer
+from internship.tests.factories.cohort import CohortFactory
+from internship.tests.factories.offer import OfferFactory
 from internship.tests.models import test_organization, test_internship_speciality
 
 
-def create_internship_offer():
-    organization = test_organization.create_organization()
-    speciality = test_internship_speciality.create_speciality()
-    offer = internship_offer.InternshipOffer(speciality=speciality, organization=organization, title="offer_test",
-                                             maximum_enrollments=20)
+def create_internship_offer(cohort=None):
+    if cohort is None:
+        cohort = CohortFactory()
+    organization = test_organization.create_organization(cohort=cohort)
+    speciality = test_internship_speciality.create_speciality(cohort=cohort)
+
+    offer = OfferFactory(speciality=speciality,
+        organization=organization,
+        title="offer_test",
+        maximum_enrollments=20,
+    )
     offer.save()
+
     return offer
 
 
-def create_specific_internship_offer(organization, speciality, title="offer_test"):
-    offer = internship_offer.InternshipOffer(speciality=speciality, organization=organization, title=title,
-                                             maximum_enrollments=20)
-    offer.save()
-    return offer
+def create_specific_internship_offer(organization, speciality, title="offer_test", cohort=None):
+    return OfferFactory(
+        speciality=speciality,
+        organization=organization,
+        title=title,
+        cohort=cohort,
+        maximum_enrollments=20
+    )
 
 
 class TestInternshipOffer(TestCase):
     def setUp(self):
         self.offer = create_internship_offer()
 
-    def test_find_py_pk(self):
+    def test_find_by_pk(self):
         pk = self.offer.pk
         actual_offer = internship_offer.find_by_pk(pk)
         self.assertEquals(self.offer, actual_offer)

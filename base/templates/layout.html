@@ -108,12 +108,12 @@
                                aria-expanded="false" id="lnk_home_dropdown_parcours">{% trans 'student_path' %}<span
                                     class="caret"></span></a>
                             <ul class="dropdown-menu">
-                                {% if perms.base.can_access_evaluation %}
+                                {% if 'assessments' in installed_apps and perms.base.can_access_evaluation %}
                                 <li><a href="{% url 'assessments' %}"
                                        id="lnk_dropdown_evaluations">{% trans 'evaluations' %}</a></li>
                                 {% endif %}
-                                {% if perms.internship.can_access_internship %}
-                                <li><a href="{% url 'internships_home' %}"
+                                {% if 'internship' in installed_apps and perms.internship.can_access_internship %}
+                                <li><a href="{% url 'internship' %}"
                                        id="lnk_dropdown_internships">{% trans 'internships' %}</a></li>
                                 {% endif %}
                             </ul>

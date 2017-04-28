@@ -33,6 +33,7 @@ class CountryAdmin(SerializableModelAdmin):
                     'continent')
     fieldsets = ((None, {'fields': ('iso_code', 'name', 'nationality', 'european_union', 'dialing_code', 'cref_code',
                                     'currency', 'continent')}),)
+    list_filter = ('european_union',)
     ordering = ('name',)
     search_fields = ['name']
 

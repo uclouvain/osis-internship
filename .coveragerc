@@ -1,0 +1,11 @@
+[run]
+branch = True
+source = genericmodels
+omit =
+    */migrations/*
+
+[report]
+fail_under = 100
+precision = 2
+sort = Cover
+skip_covered=True

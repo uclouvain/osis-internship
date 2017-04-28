@@ -9,7 +9,7 @@
     * The core business involves the administration of students, teachers,
     * courses, programs and so on.
     *
-    * Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+    * Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
     *
     * This program is free software: you can redistribute it and/or modify
     * it under the terms of the GNU General Public License as published by
@@ -28,7 +28,8 @@
 
 {% block breadcrumb %}
     <li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
-    <li><a href="{% url 'internships_home' %}">{% trans 'internships_managment' %}</a></li>
+    <li><a href="{% url 'internship' %}">{% trans 'internships_managment' %}</a></li>
+    <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></li>
     <li class="active">{% trans 'all_internships' %}</li>
 {% endblock %}
 {% block content %}
@@ -42,7 +43,7 @@
         </tr>
         </thead>
         <tbody>
-        <form action="{%url 'internships' %}" method="get">
+        <form action="{%url 'internships' cohort_id=cohort.id %}" method="get">
             <tr>
                 <td style="text-align:center; width:50%;">
                     <select name="organization_sort" onChange="javascript: this.form.submit();">
@@ -123,7 +124,7 @@
                                                     </td>
                                                     <td align="center">
                                                         <a class="btn btn-info" target="_blank" id="lnk_students_choice{{internship.id}}"
-                                                           href="{% url 'internship_detail_student_choice' internship.id %}">
+                                                           href="{% url 'internship_detail_student_choice' cohort_id=cohort.id offer_id=internship.id %}">
                                   <span class="glyphicon glyphicon-search" aria-hidden="true">
                                   </span>
                                                         </a>
@@ -146,12 +147,11 @@
                         <div class="tab-content">
                             <div role="tabpanel" class="tab-pane fade in active" id="profile">
                                 <table class="table table-hover">
-                                    <form action="{%url 'internships' %}" method="get">
+                                    <form action="{% url 'internships' cohort_id=cohort.id %}" method="get">
                                         <select name="speciality_sort" onChange="javascript: this.form.submit();">
                                             <option value="0">--</option>
                                             {% for spec in non_mandatory_speciality %}
-                                                <option value="{{ spec.name }}"
-                                                        {% if spec.name == speciality_sort_value %}selected{% endif %}>
+                                                <option value="{{ spec.name }}" {% if spec.name == speciality_sort_value %}selected{% endif %}>
                                                     {{ spec.name }}
                                                 </option>
                                             {% endfor %}
@@ -161,7 +161,7 @@
                                     <thead>
                                     <tr>
                                         {% if not speciality_sort_value %}
-                                            <th align="center">{% trans 'speciality' %}</th>
+                                        <th align="center">{% trans 'speciality' %}</th>
                                         {% endif %}
                                         <th align="center">{% trans 'organization' %}</th>
                                         <th align="center">{% trans 'student_max' %}</th>
@@ -190,7 +190,7 @@
                                             </td>
                                             <td align="center">
                                                 <a class="btn btn-info" target="_blank" id="lnk_students_choice{{internship.id}}"
-                                                   href="{% url 'internship_detail_student_choice' internship.id %}">
+                                                   href="{% url 'internship_detail_student_choice' cohort_id=cohort.id offer_id=internship.id %}">
                                 <span class="glyphicon glyphicon-search" aria-hidden="true">
                                 </span>
                                                 </a>
@@ -209,15 +209,28 @@
         <div class="modal fade" id="pnl_upload_internship" tabindex="-1" role="dialog" aria-labelledby="uploadScoresLabel">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
-                    <form method="post" enctype="multipart/form-data" action="{% url 'upload_internship' %}">
+                    <form method="post" enctype="multipart/form-data" action="{% url 'upload_internship' cohort_id=cohort.id %}">
                         {% csrf_token %}
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="bt_close_upload_score_modal"><span aria-hidden="true">&times;</span></button>
                             <h4 class="modal-title" id="uploadScroresLabel">{% trans 'internships_injection' %}</h4>
                         </div>
                         <div class="modal-body">
-                            <label for="fle_scores_input_file" class="btn btn-default" >{% trans 'choose_file' %}</label>
-                            <input type="file" id="fle_scores_input_file" name="file" style="display:none" />
+                            <label for="internship_id">{% trans "select_internship "%}</label>
+                            <div class="form-group">
+                              <select name="internship_id">
+                                <option value="">{% trans 'non_mandatory' %}</option>
+                                {% for internship in internships %}
+                                  <option value="{{ internship.id }}">
+                                    {{ internship.name }}
+                                  </option>
+                                {% endfor %}
+                              </select>
+                            </div>
+                            <div class="form-group">
+                              <label for="fle_scores_input_file" class="btn btn-default" >{% trans 'choose_file' %}</label>
+                              <input type="file" id="fle_scores_input_file" name="file" style="display:none" />
+                            </div>
                             <div id="pnl_selectedFiles"></div>
                             <p class="help-block">{% trans 'help_pnl_selectedfiles_internships' %}</p>
                         </div>

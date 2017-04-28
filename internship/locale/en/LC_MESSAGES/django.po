@@ -65,7 +65,7 @@ msgid	 "choice_receive_by_administration"
 msgstr	 "Choice receive by administration"
 
 msgid	 "choose_a_hospital"
-msgstr	 "Choose a hospital"
+msgstr  "Choose a hospital"
 
 msgid	 "choose_internships"
 msgstr	 "Choose your internship"
@@ -267,6 +267,9 @@ msgstr	 "capacity"
 
 msgid	 "number_total_student"
 msgstr	 "Number of student who choose this organization"
+
+msgid  "select_cohort"
+msgstr  "Select a student cohort"
 
 msgid "selection_currently_active"
 msgstr "The internships' selection is currently active"

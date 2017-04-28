@@ -35,7 +35,7 @@ class OfferYearAdmin(SerializableModelAdmin):
                                     'entity_management', 'entity_management_fac', 'acronym', 'title', 'parent',
                                     'title_international', 'title_short', 'title_printable', 'grade', 'recipient',
                                     'location', 'postal_code', 'city', 'country', 'phone', 'fax', 'email', 'campus')}),)
-    list_filter = ('academic_year',)
+    list_filter = ('academic_year', 'grade', 'campus')
     raw_id_fields = ('offer', 'parent')
     search_fields = ['acronym']
 
@@ -137,6 +137,10 @@ def find_by_id(offer_year_id):
     return OfferYear.objects.get(pk=offer_year_id)
 
 
+def find_by_ids(offer_year_ids):
+    return OfferYear.objects.filter(pk__in=offer_year_ids)
+
+
 def find_by_acronym(acronym):
     return OfferYear.objects.filter(acronym=acronym)
 
@@ -163,7 +167,7 @@ def search(entity=None, academic_yr=None, acronym=None):
     return out
 
 
-def find_by_user(user, academic_yr):
+def find_by_user(user, academic_yr=None):
     """
     :param user: User from which we get the offerYears.
     :param academic_yr: The academic year (takes the current academic year by default).

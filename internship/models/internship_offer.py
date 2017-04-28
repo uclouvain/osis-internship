@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -30,9 +30,9 @@ from django.core.exceptions import ObjectDoesNotExist
 
 
 class InternshipOfferAdmin(SerializableModelAdmin):
-    list_display = ('organization', 'speciality', 'title', 'maximum_enrollments', 'master', 'selectable')
+    list_display = ('organization', 'speciality', 'title', 'maximum_enrollments', 'master', 'selectable', 'internship')
     fieldsets = ((None, {'fields': ('organization', 'speciality', 'title', 'maximum_enrollments', 'master',
-                                    'selectable')}),)
+                                    'selectable', 'internship')}),)
     raw_id_fields = ('organization', 'speciality')
     search_fields = ['organization__name', 'speciality__name']
 
@@ -40,10 +40,12 @@ class InternshipOfferAdmin(SerializableModelAdmin):
 class InternshipOffer(SerializableModel):
     organization = models.ForeignKey('internship.Organization')
     speciality = models.ForeignKey('internship.InternshipSpeciality', null=True)
+    internship = models.ForeignKey('internship.Internship', null=True, blank=True)
     title = models.CharField(max_length=255)
     maximum_enrollments = models.IntegerField()
     master = models.CharField(max_length=100, blank=True, null=True)
     selectable = models.BooleanField(default=True)
+    cohort = models.ForeignKey('internship.cohort', null=False, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.title
@@ -69,7 +71,6 @@ def find_non_mandatory_internships(**kwargs):
 
 
 def search(**kwargs):
-    kwargs = {k: v for k, v in kwargs.items() if v}
     return InternshipOffer.objects.filter(**kwargs) \
         .select_related("organization", "speciality").order_by('speciality__acronym', 'speciality__name',
                                                                'organization__reference')
@@ -105,8 +106,8 @@ def find_by_pk(a_pk):
         return None
 
 
-def get_number_selectable():
-    return InternshipOffer.objects.filter(selectable=True).count()
+def get_number_selectable(cohort):
+    return InternshipOffer.objects.filter(selectable=True, organization__cohort=cohort).count()
 
 
 def find_all():

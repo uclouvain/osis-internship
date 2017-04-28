@@ -1,0 +1,55 @@
+{% extends "layout.html" %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% block breadcrumb %}
+    <li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
+    <li><a href="{% url 'internship' %}">{% trans 'internships_managment' %}</a></li>
+    <li class="active">{{ page_title }}</li>
+{% endblock %}
+
+{% block content %}
+    <div class="page-header">
+        <h2>{{ page_title }}</h2>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel panel-body">
+            <form method="POST" class="post-form">
+                {%  csrf_token %}
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="txt_name">{{ form.name.label }}</label>
+                        {{ form.name }}
+                        <span class="error">{{ form.name.errors }}</span>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="txt_speciality">{{ form.speciality.label }}</label>
+                        {{ form.speciality }}
+                        <span class="error" required>{{ form.speciality.errors }}</span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="txt_length_in_periods">{{ form.length_in_periods.label }}</label>
+                        {{ form.length_in_periods }}
+                        <span class="error" required>{{ form.length_in_periods.errors }}</span>
+                    </div>
+                </div>
+
+                <br />
+                <div class="row">
+                    <div class="col-md-12">
+                        <button type="submit" class="btn btn-primary" title="{%trans 'save' %}" id="bt_internship_save">
+                            <span class="glyphicon glyphicon-save" aria-hidden="true">{% trans 'save' %}</span>
+                        </button>
+                        <a class="btn btn-default" id="bt_internship_delete" href="{% url 'internship-list' cohort_id=cohort.id %}">
+                            <span class="glyphicon glyphicon-cancel" aria-hidden="true">{% trans 'return' %}</span>
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

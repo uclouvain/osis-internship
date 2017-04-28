@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -23,12 +23,15 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.test import SimpleTestCase
+from django.test import TestCase
+
 from internship.forms import form_student_information
+from internship.tests.factories.cohort import CohortFactory
 
 
-class TestFormStudentInformation(SimpleTestCase):
+class TestFormStudentInformation(TestCase):
     def test_valid_form(self):
+        cohort = CohortFactory()
         data = {
             "email": "test@test.com",
             "phone_mobile": "046486313",
@@ -36,7 +39,8 @@ class TestFormStudentInformation(SimpleTestCase):
             "postal_code": "postal",
             "city": "city",
             "country": "country",
-            "contest": "GENERALIST"
+            "contest": "GENERALIST",
+            'cohort': cohort.id,
         }
         form = form_student_information.StudentInformationForm(data)
         self.assertTrue(form.is_valid())

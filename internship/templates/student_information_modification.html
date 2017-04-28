@@ -9,7 +9,7 @@
     * The core business involves the administration of students, teachers,
     * courses, programs and so on.
     *
-    * Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+    * Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
     *
     * This program is free software: you can redistribute it and/or modify
     * it under the terms of the GNU General Public License as published by
@@ -28,9 +28,9 @@
 
 {% block breadcrumb %}
     <li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
-    <li><a href="{% url 'internships_home' %}">{% trans 'internships_managment' %}</a></li>
-    <li><a href="{% url 'internships_student_resume' %}">{% trans 'student_sumup' %}</a></li>
-    <li class="active"><a href="{% url 'internships_student_read' student.id %}">
+    <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{% trans 'internships_managment' %}</a></li>
+    <li><a href="{% url 'internships_student_resume' cohort_id=cohort.id  %}">{% trans 'student_sumup' %}</a></li>
+    <li class="active"><a href="{% url 'internships_student_read' cohort_id=cohort.id student_id=student.id %}">
         {{ student.person.last_name }} {{ student.person.first_name }}</a></li>
 {% endblock %}
 {% block content %}
@@ -63,7 +63,7 @@
                 </div>
             </div>
             <br>
-            <form method="post" action="{% url 'student_save_information_modification' student.registration_id %}">
+            <form method="post" action="{% url 'student_save_information_modification' cohort_id=cohort.id student_id=student.id %}">
                 {% csrf_token %}
                 <div class="row">
                     <div class="col-md-4">

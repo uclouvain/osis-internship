@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -29,4 +29,7 @@ from internship.models.internship_speciality import InternshipSpeciality
 
 
 class SpecialityForm(forms.Form):
-    speciality = forms.ModelChoiceField(queryset=InternshipSpeciality.objects.all(), empty_label=None)
+    def __init__(self,*args,**kwargs):
+        cohort = kwargs.pop("cohort")
+        super(SpecialityForm,self).__init__(*args,**kwargs)
+        self.fields["speciality"] = forms.ModelChoiceField(queryset=InternshipSpeciality.objects.filter(cohort=cohort).order_by("name"), empty_label=None)

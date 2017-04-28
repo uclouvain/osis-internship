@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -24,12 +24,14 @@
 #
 ##############################################################################
 from django.db import models
-from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
+
+from osis_common.models.serializable_model import (SerializableModel,
+                                                   SerializableModelAdmin)
 
 
 class OrganizationAdmin(SerializableModelAdmin):
-    list_display = ('name', 'acronym', 'reference', 'type')
-    fieldsets = ((None, {'fields': ('name', 'acronym', 'reference', 'website', 'type')}),)
+    list_display = ('name', 'acronym', 'reference', 'type', 'cohort')
+    fieldsets = ((None, {'fields': ('name', 'acronym', 'reference', 'website', 'type', 'cohort')}),)
     search_fields = ['acronym', 'name']
 
 
@@ -39,6 +41,8 @@ class Organization(SerializableModel):
     website = models.URLField(max_length=255, blank=True, null=True)
     reference = models.CharField(max_length=30, blank=True, null=True)
     type = models.CharField(max_length=30, blank=True, null=True, default="service partner")
+
+    cohort = models.ForeignKey('internship.Cohort', null=False, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
