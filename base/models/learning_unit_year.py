@@ -25,16 +25,13 @@
 ##############################################################################
 from django.db import models
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
-from attribution.models import attribution
-from base.enums import learning_unit_year_status
-from base.enums import learning_unit_year_types
+from base.enums import learning_unit_year_status, learning_unit_year_types
 
 
 class LearningUnitYearAdmin(SerializableModelAdmin):
     list_display = ('acronym', 'title', 'academic_year', 'credits', 'changed')
-    fieldsets = ((None, {'fields': ('academic_year', 'learning_unit', 'acronym', 'title', 'credits', 'decimal_scores',
-                                    'status', 'type')}),)
-    list_filter = ('academic_year',)
+    fieldsets = ((None, {'fields': ('academic_year', 'learning_unit', 'acronym', 'title', 'credits', 'decimal_scores')}),)
+    list_filter = ('academic_year', 'vacant', 'in_charge', 'decimal_scores')
     raw_id_fields = ('learning_unit',)
     search_fields = ['acronym']
 
@@ -91,11 +88,3 @@ def search(academic_year_id=None, acronym=None, learning_unit=None, title=None, 
         queryset = queryset.filter(status=status)
 
     return queryset
-
-
-# Cette function ne doit pas être là parce que elle depende de l'attribution.
-def find_by_tutor(tutor):
-    if tutor:
-        return [att.learning_unit_year for att in list(attribution.search(tutor=tutor))]
-    else:
-        return None

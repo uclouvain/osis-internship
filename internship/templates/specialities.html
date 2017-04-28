@@ -37,6 +37,9 @@
         <h2>{% trans 'internships_specialities' %}</h2>
     </div>
 
+    <a href="{% url 'speciality_create' cohort_id=cohort.id %}" id="lnk_period_create" class="btn btn-default"
+      role="button" title="{% trans 'create_a_speciality'%}">{% trans 'add_speciality' %}
+        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
     <div class="panel panel-default">
         <div class="tab-content">
             <div role="tabpanel" class="tab-pane fade in active" id="profile">
@@ -87,7 +90,4 @@
             </div>
         </div>
     </div>
-    <a href="{% url 'speciality_create' cohort_id=cohort.id %}" id="lnk_period_create" class="btn btn-default"
-       role="button" title="{% trans 'create_a_speciality'%}">{% trans 'add_speciality' %}
-        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
 {% endblock %}

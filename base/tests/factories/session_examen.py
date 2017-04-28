@@ -30,7 +30,6 @@ import string
 from django.conf import settings
 from django.utils import timezone
 from base.models.learning_unit_year import LearningUnitYear
-from base.models.offer_year_calendar import OfferYearCalendar
 
 
 def _get_tzinfo():
@@ -49,5 +48,3 @@ class SessionExamFactory(factory.DjangoModelFactory):
                                           datetime.datetime(2017, 3, 1, tzinfo=_get_tzinfo()))
     number_session = factory.fuzzy.FuzzyInteger(1000)
     learning_unit_year = factory.SubFactory(LearningUnitYear)
-    offer_year_calendar = factory.SubFactory(OfferYearCalendar)
-    deadline = factory.LazyAttribute(lambda obj: datetime.date(timezone.now().year+1, 12, 30))

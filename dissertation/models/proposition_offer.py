@@ -40,6 +40,9 @@ class PropositionOffer(SerializableModel):
     proposition_dissertation = models.ForeignKey('PropositionDissertation')
     offer_proposition = models.ForeignKey('OfferProposition')
 
+    class Meta:
+        ordering = ['offer_proposition__acronym']
+
     def __str__(self):
         return str(self.offer_proposition)
 

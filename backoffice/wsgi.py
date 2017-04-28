@@ -23,35 +23,59 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import os, sys
-from django.core.wsgi import get_wsgi_application
-from osis_common.queue import queue_listener, callbacks
-from assessments.views.score_encoding import get_json_data_scores_sheets
+import sys
 import logging
+
+import os
+import dotenv
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if 'test' in sys.argv:
+    os.environ.setdefault('TESTING', 'True')
+dotenv.read_dotenv(os.path.join(BASE_DIR, '.env'))
+sys.path.extend(os.environ.get('EXTRA_SYS_PATHS').split()) if os.environ.get('EXTRA_SYS_PATHS') else None
+
+from django.core.wsgi import get_wsgi_application
 from pika.exceptions import ConnectionClosed, AMQPConnectionError, ChannelClosed
 
-# The two following lines are mandatory for working with mod_wsgi on the servers
-sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/..' )
-sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/../backoffice')
+SETTINGS_FILE = os.environ.get('DJANGO_SETTINGS_MODULE', 'backoffice.settings.local')
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", SETTINGS_FILE)
 
-
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "backoffice.settings")
-application = get_wsgi_application()
+try:
+    application = get_wsgi_application()
+except KeyError as ke:
+    print("Error loading application.")
+    print("The following environment var is not defined : {}".format(str(ke)))
+    print("Check the following possible causes :")
+    print(" - You don't have a .env file. You can copy .env.example to .env to use default")
+    print(" - Mandatory variables are not defined in your .env file.")
+    sys.exit("SettingsKeyError")
+except ImportError as ie:
+    print("Error loading application : {}".format(str(ie)))
+    print("Check the following possible causes :")
+    print(" - The DJANGO_SETTINGS_MODULE defined in your .env doesn't exist")
+    print(" - No DJANGO_SETTINGS_MODULE is defined and the default 'backoffice.settings.local' doesn't exist ")
+    sys.exit("DjangoSettingsError")
 
 from django.conf import settings
 LOGGER = logging.getLogger(settings.DEFAULT_LOGGER)
 
-if hasattr(settings, 'QUEUES'):
-    # Queue in which are sent scores sheets json data
-    try:
-        queue_listener.listen_queue(settings.QUEUES.get('QUEUES_NAME').get('PAPER_SHEET')
-                                    , get_json_data_scores_sheets)
-    except (ConnectionClosed, ChannelClosed, AMQPConnectionError, ConnectionError) as e:
-        LOGGER.exception("Couldn't connect to the QueueServer")
-
-    # Thread in which is running the listening of the queue used to migrate data (from Osis-portal to Osis)
+if hasattr(settings, 'QUEUES') and settings.QUEUES:
+    from osis_common.queue import queue_listener, callbacks
+    # migration queue used to migrate data between osis ans osis_portal
     try:
         queue_listener.SynchronousConsumerThread(settings.QUEUES.get('QUEUES_NAME').get('MIGRATIONS_TO_CONSUME'),
                                                  callbacks.process_message).start()
     except (ConnectionClosed, ChannelClosed, AMQPConnectionError, ConnectionError) as e:
         LOGGER.exception("Couldn't connect to the QueueServer")
+
+    # Queue in which are sent scores sheets json data
+    # This queue is used only if assessments module is installed
+    if 'assessments' in settings.INSTALLED_APPS:
+        from assessments.views.score_encoding import get_json_data_scores_sheets
+        try:
+            queue_listener.listen_queue(settings.QUEUES.get('QUEUES_NAME').get('PAPER_SHEET')
+                                        , get_json_data_scores_sheets)
+        except (ConnectionClosed, ChannelClosed, AMQPConnectionError, ConnectionError) as e:
+            LOGGER.exception("Couldn't connect to the QueueServer")
+

@@ -40,6 +40,7 @@ class PersonAdmin(SerializableModelAdmin):
                                     'middle_name', 'last_name', 'birth_date', 'email', 'phone',
                                     'phone_mobile', 'language')}),)
     raw_id_fields = ('user',)
+    list_filter = ('gender', 'language')
 
 
 class Person(SerializableModel):
@@ -51,7 +52,7 @@ class Person(SerializableModel):
     external_id = models.CharField(max_length=100, blank=True, null=True)
     changed = models.DateTimeField(null=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
-    global_id = models.CharField(max_length=10, blank=True, null=True)
+    global_id = models.CharField(max_length=10, blank=True, null=True, db_index=True)
     gender = models.CharField(max_length=1, blank=True, null=True, choices=GENDER_CHOICES, default='U')
     national_id = models.CharField(max_length=25, blank=True, null=True)
     first_name = models.CharField(max_length=50, blank=True, null=True, db_index=True)
@@ -67,11 +68,11 @@ class Person(SerializableModel):
 
     def save(self, **kwargs):
         # When person is created by another application this rule can be applied.
-        if hasattr(settings, 'INTERNAL_EMAIL_SUFIX'):
-            if settings.INTERNAL_EMAIL_SUFIX.strip():
+        if hasattr(settings, 'INTERNAL_EMAIL_SUFFIX'):
+            if settings.INTERNAL_EMAIL_SUFFIX.strip():
                 # It limits the creation of person with external emails. The domain name is case insensitive.
                 if self.source and self.source != person_source_type.BASE \
-                               and settings.INTERNAL_EMAIL_SUFIX in str(self.email).lower():
+                               and settings.INTERNAL_EMAIL_SUFFIX in str(self.email).lower():
                     raise AttributeError('Invalid email for external person.')
 
         super(Person, self).save()

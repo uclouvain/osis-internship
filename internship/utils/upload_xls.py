@@ -211,18 +211,23 @@ def __save_xls_internships(request, file_name, user, cohort, internship):
 
                 master_value = row[col_master].value
 
-                speciality = mdl.internship_speciality.search(acronym__icontains=spec_value, cohort=cohort)
+                if internship != None and internship.speciality != None:
+                    speciality = mdl.internship_speciality.search(pk=internship.speciality_id)
+                else:
+                    speciality = mdl.internship_speciality.search(acronym__exact=spec_value, cohort=cohort)
 
                 number_place = 0
-                for x in range(3, 7):
+                periods = mdl.period.Period.objects.filter(cohort=cohort)
+                number_period = 1
+                for x in range(3, len(periods) + 3):
                     if row[x].value is None:
                         number_place += 0
                     else:
                         number_place += int(row[x].value)
 
                 for x in range(0, len(speciality)):
-                    check_internship_offer = mdl.internship_offer.InternshipOffer.objects.filter(speciality__name=speciality[x],
-                                                                   organization__reference=organization[0].reference, cohort=cohort)
+                    check_internship_offer = mdl.internship_offer.InternshipOffer.objects.filter(speciality=speciality[x],
+                                                                    organization__reference=organization[0].reference, cohort=cohort)
                     if len(check_internship_offer) != 0:
                         internship_offer = mdl.internship_offer.find_intership_by_id(check_internship_offer.first().id)
                     else:
@@ -238,12 +243,11 @@ def __save_xls_internships(request, file_name, user, cohort, internship):
                     internship_offer.selectable = True
                     internship_offer.save()
 
-                    periods = mdl.period.Period.objects.filter(cohort=cohort)
                     number_period = 1
                     for x in range(3, len(periods) + 3):
                         period_search = "P" + str(number_period)
                         number_period += 1
-                        period = mdl.period.search(name=period_search, cohort=cohort).first()
+                        period = mdl.period.search(name__exact=period_search, cohort=cohort).first()
                         check_relation = mdl.period_internship_places.PeriodInternshipPlaces.objects.filter(period=period, internship_offer=internship_offer)
 
                         if len(check_relation) != 0:
