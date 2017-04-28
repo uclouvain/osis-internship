@@ -167,7 +167,7 @@ def __save_xls_scores(request, file_name, is_program_manager, user, learning_uni
         exam_enrollments_managed_by_user = list(mdl.exam_enrollment.find_for_score_encodings(data_xls['session'],
                                                                                              tutor=tutor,
                                                                                              learning_unit_year_id=learning_unit_year_id))
-        learning_unit_years = list(mdl.learning_unit_year.find_by_tutor(tutor.id))
+        learning_unit_years = list(mdl_attr.attribution.find_by_tutor(tutor.id))
         # Set of all LearningUnit.acronym managed by the user
         learn_unit_acronyms_managed_by_user = {learning_unit_year.acronym for learning_unit_year in learning_unit_years}
         # Set of all OfferYear.acronym managed by the user
@@ -284,8 +284,6 @@ def __save_xls_scores(request, file_name, is_program_manager, user, learning_uni
                                     else:
                                         if justification == 'M':
                                             messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('no_valid_m_justification_error')))
-                                        elif justification == '?':
-                                            continue
                                         else:
                                             messages.add_message(request, messages.ERROR, "%s %s!" % (info_line, _('justification_invalid')))
                                         continue
