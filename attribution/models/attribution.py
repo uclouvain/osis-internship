@@ -30,7 +30,7 @@ from osis_common.models.serializable_model import SerializableModel, Serializabl
 
 class AttributionAdmin(SerializableModelAdmin):
     list_display = ('tutor', 'function', 'score_responsible', 'learning_unit_year', 'start_year', 'end_year', 'changed')
-    list_filter = ('function', 'learning_unit_year__academic_year')
+    list_filter = ('function', 'learning_unit_year__academic_year', 'score_responsible')
     fieldsets = ((None, {'fields': ('learning_unit_year', 'tutor', 'function', 'score_responsible', 'start_year',
                                     'end_year')}),)
     raw_id_fields = ('learning_unit_year', 'tutor')
@@ -92,3 +92,10 @@ def is_score_responsible(user, learning_unit_year):
         .filter(tutor__person__user=user) \
         .count()
     return attributions > 0
+
+
+def find_by_tutor(tutor):
+    if tutor:
+        return [att.learning_unit_year for att in list(search(tutor=tutor))]
+    else:
+        return None

@@ -46,3 +46,7 @@ input[type=number] {
     width: 100%;
     color: black;
  }
+
+#pnl_add_manager_modal .modal-dialog  {
+    width:90%;
+}
