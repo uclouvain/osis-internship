@@ -41,7 +41,7 @@ class SessionExam(models.Model):
     changed = models.DateTimeField(null=True)
     number_session = models.IntegerField(choices=number_session.NUMBERS_SESSION)
     learning_unit_year = models.ForeignKey('LearningUnitYear')
-    offer_year = models.ForeignKey('OfferYear')
+    offer_year = models.ForeignKey('OfferYear', blank=True, null=True)
     progress = None
 
     def __str__(self):
