@@ -101,26 +101,18 @@ def detail(request, learning_unit_year_id, tab):
             'tab_active': tab,
             'data_tab': get_tabs()}
 
-    if tab == str(TAB_IDENTIFICATION):
-        return identification_detail(request, data)
+    mapping = {TAB_IDENTIFICATION: identification_detail,
+               TAB_TRAININGS:training_detail,
+               TAB_COMPONENTS: components_detail,
+               TAB_EDUCATIONAL_INFORMATION: educational_information_detail,
+               TAB_ATTRIBUTIONS: attributions_detail,
+               TAB_PROPOSAL: proposal_detail}
 
-    if tab == str(TAB_TRAININGS):
-        return training_detail(request, data)
-
-    if tab == str(TAB_COMPONENTS):
-        return components_detail(request, data)
-
-    if tab == str(TAB_EDUCATIONAL_INFORMATION):
-        return educational_information_detail(request, data)
-
-    if tab == str(TAB_ATTRIBUTIONS):
-        return attributions_detail(request, data, learning_unit_year)
-
-    if tab == str(TAB_PROPOSAL):
-        return proposal_detail(request, data)
+    function = mapping.get(int(tab))
+    if function:
+        return function(request, data)
 
     return layout.render(request, "learning_unit/identification.html", data)
-
 
 def identification_detail(request, data):
     return layout.render(request, "learning_unit/identification.html", data)
@@ -138,7 +130,8 @@ def educational_information_detail(request, data):
     return layout.render(request, "learning_unit/educational_information.html", data)
 
 
-def attributions_detail(request, data, learning_unit_year):
+def attributions_detail(request, data):
+    learning_unit_year = data['learning_unit_year']
     attributions = mdl_attr.attribution.search(learning_unit_year=learning_unit_year)
     data.update({'attributions': attributions})
     return layout.render(request, "learning_unit/attributions.html", data)
