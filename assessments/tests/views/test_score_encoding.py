@@ -169,7 +169,7 @@ class OnlineEncodingTest(TestCase):
         self.client.force_login(self.program_manager_1.person.user)
         url = reverse('online_double_encoding_validation', args=[self.learning_unit_year.id])
         prepare_exam_enrollment_for_double_encoding_validation(self.enrollments[0])
-        self.client.post(url, data=self.get_form_with_all_students_filled())
+        self.client.post(url, data=self.get_form_with_one_student_filled())
 
         self.refresh_exam_enrollments_from_db()
         self.assert_exam_enrollments(self.enrollments[0], 15, 15, None, None)
