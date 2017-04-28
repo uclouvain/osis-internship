@@ -24,7 +24,6 @@
 #
 ##############################################################################
 from django.db import models
-from base.enums.learning_unit_year_type import YEAR_TYPES
 from django.contrib import admin
 
 class LearningComponentYearAdmin(admin.ModelAdmin):
@@ -45,7 +44,6 @@ class LearningComponentYear(models.Model):
     def save(self, *args, **kwargs):
         if self.learning_container_year.learning_container != self.learning_component.learning_container:
             raise AttributeError("Learning container year and learning component have different learning containers.")
-
         super(LearningComponentYear, self).save()
 
     def __str__(self):

@@ -92,3 +92,10 @@ def is_score_responsible(user, learning_unit_year):
         .filter(tutor__person__user=user) \
         .count()
     return attributions > 0
+
+
+def find_by_tutor(tutor):
+    if tutor:
+        return [att.learning_unit_year for att in list(search(tutor=tutor))]
+    else:
+        return None

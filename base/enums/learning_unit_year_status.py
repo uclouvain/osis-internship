@@ -23,19 +23,15 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
-from django.contrib import admin
 
+from django.utils.translation import ugettext_lazy as _
 
-class LearningContainerAdmin(admin.ModelAdmin):
-    list_display = ('title',)
-    fieldsets = ((None, {'fields': ('title',)}),)
+NONE = "NONE"
+VALID = "VALID"
+INVALID = "INVALID"
 
-class LearningContainer(models.Model):
-    title = models.CharField(max_length=255)
-
-    def __str__(self):
-        return u"%s" % self.title
-
-def find_by_id(learning_container_id):
-    return LearningContainer.objects.get(pk=learning_container_id)
+LEARNING_UNIT_YEAR_STATUS = (
+    (NONE, _(NONE)),
+    (VALID, _(VALID)),
+    (INVALID, _(INVALID))
+)
