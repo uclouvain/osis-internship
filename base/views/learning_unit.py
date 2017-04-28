@@ -95,6 +95,8 @@ def learning_unit_read(request, learning_unit_year_id):
         'data_tab': get_tabs()})
 
 
+@login_required
+@permission_required('base.can_access_learningunit', raise_exception=True)
 def detail(request, learning_unit_year_id, tab):
     learning_unit_year = mdl.learning_unit_year.find_by_id(learning_unit_year_id)
     data = {'learning_unit_year': learning_unit_year,
