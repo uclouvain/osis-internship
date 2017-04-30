@@ -30,24 +30,44 @@ import uuid
 from internship.models.internship_choice import InternshipChoice
 
 class InternshipChoiceSynchronizer:
-    def __init__(self, choices_file):
+    def __init__(self, choices_file=None):
         self.choices_file = choices_file
 
-    def run(self):
+    def sync(self):
         with open(self.choices_file, 'rt') as csvfile:
             rows = csv.reader(csvfile)
             next(rows, None)
             uuids = list(map(lambda x: x[-1], rows))
             self.sync_choices_by_uuids(uuids)
 
+    def clean(self):
+        self.remove_duplicates()
+
     def sync_choices_by_uuids(self, uuids):
         print("%s choices to sync..." % len(uuids))
         choices_to_destroy = InternshipChoice.objects.exclude(uuid__in=uuids).all()
-        print("About to delete %s choices. This cannot be reversed. Are you sure?" % len(choices_to_destroy))
+        self.__destroy_prompt(choices_to_destroy)
+
+    def remove_duplicates(self):
+        print("Looking for duplicates.")
+        ids_to_destroy = InternshipChoice.objects.raw("\
+            SELECT id\
+                FROM internship_internshipchoice\
+                WHERE\
+                id NOT IN (\
+                    SELECT MAX(id)\
+                        FROM internship_internshipchoice\
+                        GROUP BY student_id, internship_id, choice\
+                );")
+        choices_to_destroy = InternshipChoice.objects.filter(pk__in=list(map(lambda x: x.id, ids_to_destroy)))
+        self.__destroy_prompt(choices_to_destroy)
+
+    def __destroy_prompt(self, choices_to_destroy):
+        print("About to delete %s choices. This cannot be reversed. Are you sure?" % len(list(choices_to_destroy)))
         while True:
             confirm = input('[c]continue or [x]exit: ')
             if confirm == 'c':
-                print("Deleting %s out-of-sync choices..." % len(choices_to_destroy))
+                print("Deleting %s out-of-sync choices..." % len(list(choices_to_destroy)))
                 choices_to_destroy.delete()
                 print("Done")
                 return confirm
