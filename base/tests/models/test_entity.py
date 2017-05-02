@@ -123,3 +123,13 @@ class EntityTest(TestCase):
         self.assertCountEqual(entity.search(acronym='ENTITY_V', version_date=self.date_in_2017), [])
         self.assertCountEqual(entity.search(acronym='NON_EXISTING', version_date=self.date_in_2017), [])
         self.assertCountEqual(entity.search(acronym='ENTITY_V_1', version_date=self.date_in_2017), [])
+
+    def test_find_entity_descendants_from_entity_version_and_date(self):
+        EntityVersionFactory(
+            entity=self.parent,
+            acronym="ENTITY_PARENT",
+            start_date=self.start_date,
+            end_date=self.end_date
+        )
+        for ent in entity.search(acronym='ENTITY_PARENT', version_date=self.date_in_2015):
+            self.assertCountEqual(ent.find_descendants(date=self.date_in_2015), self.children)
