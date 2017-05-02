@@ -43,30 +43,21 @@ class EntityLink(models.Model):
     def can_save_entity_link(self):
         return self.count_entity_links_same_child_overlapping_dates() == 0 and self.parent != self.child
 
-    def count_entity_links_same_child_overlapping_dates(self):
+    def _entity_links_overlapping_dates(self):
         return EntityLink.objects.filter(
-                Q(child=self.child) &
-                (
-                    Q(start_date__range=(self.start_date, self.end_date)) |
-                    Q(end_date__range=(self.start_date, self.end_date)) |
-                    (
-                        Q(start_date__lte=self.start_date) & Q(end_date__gte=self.end_date)
-                    )
-                )
-            ).count()
+            Q(start_date__range=(self.start_date, self.end_date)) |
+            Q(end_date__range=(self.start_date, self.end_date)) |
+            (
+                Q(start_date__lte=self.start_date) & Q(end_date__gte=self.end_date)
+            )
+        )
+
+    def count_entity_links_same_child_overlapping_dates(self):
+        return self._entity_links_overlapping_dates().filter(child=self.child).count()
 
     def get_upper_entity_link(self):
         try:
-            parent = EntityLink.objects.get(
-                Q(child=self.parent) &
-                (
-                    Q(start_date__range=(self.start_date, self.end_date)) |
-                    Q(end_date__range=(self.start_date, self.end_date)) |
-                    (
-                        Q(start_date__lte=self.start_date) & Q(end_date__gte=self.end_date)
-                    )
-                )
-            )
+            parent = self._entity_links_overlapping_dates().get(child=self.parent)
         except ObjectDoesNotExist:
             return None
 
