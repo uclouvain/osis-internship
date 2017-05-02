@@ -24,7 +24,13 @@
 #
 ##############################################################################
 from django.conf.urls import url, include
-from assessments.views import score_encoding, upload_xls_utils
+from assessments.views import score_encoding, upload_xls_utils, pgm_manager_administration
+from django.views.i18n import javascript_catalog
+
+
+js_info_dict = {
+    'packages': ('assessments', )
+}
 
 
 urlpatterns = [
@@ -41,7 +47,7 @@ urlpatterns = [
             score_encoding.online_encoding_submission, name='online_encoding_submission'),
         url(r'^online/(?P<learning_unit_year_id>[0-9]+)/double_form$',
             score_encoding.online_double_encoding_form, name='online_double_encoding_form'),
-        url(r'^online/(?P<learning_unit_year_id>[0-9]+)(?:/(?P<tutor_id>[0-9]+))?/double_validation$',
+        url(r'^online/(?P<learning_unit_year_id>[0-9]+)/double_validation$',
             score_encoding.online_double_encoding_validation, name='online_double_encoding_validation'),
         url(r'^specific_criteria/$',
             score_encoding.specific_criteria, name='specific_criteria'),
@@ -58,6 +64,21 @@ urlpatterns = [
         url(r'^upload/(?P<learning_unit_year_id>[0-9]+)/$',
             upload_xls_utils.upload_scores_file, name='upload_encoding'),
     ])),
+
+    url(r'^jsi18n/', javascript_catalog, js_info_dict),
+
+    url(r'^pgm_manager/', include([
+        url(r'^$', pgm_manager_administration.pgm_manager_administration, name='pgm_manager'),
+        url(r'^search$', pgm_manager_administration.pgm_manager_search, name='pgm_manager_search'),
+        url(r'^delete', pgm_manager_administration.delete_manager, name='delete_manager'),
+        url(r'^person/list/search$', pgm_manager_administration.person_list_search),
+
+        url(r'^create$', pgm_manager_administration.create_manager, name='create_manager_person'),
+
+    ])),
+
+    url(r'^update_managers_list/$', pgm_manager_administration.update_managers_list),
+    url(r'^manager_pgm_list/$', pgm_manager_administration.manager_pgm_list),
 
     url(r'^$', score_encoding.assessments, name="assessments"),
 ]

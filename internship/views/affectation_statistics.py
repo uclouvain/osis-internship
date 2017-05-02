@@ -39,6 +39,7 @@ from django.shortcuts import render, redirect
 from django.shortcuts import get_object_or_404
 
 from internship import models as mdl_internship
+from internship.models.internship_student_affectation_stat import InternshipStudentAffectationStat
 from internship.views.internship import calc_dist, set_tabs_name
 from internship.views.place import sort_organizations, set_speciality_unique
 
@@ -1184,9 +1185,11 @@ def load_solution(data, cohort):
 
 def fill_periods_default_values(acronym, keys, organization, temp_internship_table):
     for key in keys:
-        temp_internship_table[organization][acronym][key] = {}
-        temp_internship_table[organization][acronym][key]['before'] = 0
-        temp_internship_table[organization][acronym][key]['after'] = 0
+        temp_internship_table[organization][acronym][key] = {
+            'before': 0,
+            'after': 0,
+        }
+
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
@@ -1197,27 +1200,36 @@ def internship_affectation_statistics(request, cohort_id):
     sol, table, stats, internship_errors = None, None, None, None
     periods = mdl_internship.period.Period.objects.filter(cohort=cohort)
     period_ids = periods.values_list("id", flat=True)
-    data = mdl_internship.internship_student_affectation_stat.InternshipStudentAffectationStat.objects.filter(period_id__in=period_ids).\
-        select_related("student", "organization", "speciality", "period")
-    if len(data) > 0:
-        sol, table = load_solution(data, cohort)
+
+    student_affectations = InternshipStudentAffectationStat.objects\
+        .filter(period_id__in=period_ids)\
+        .select_related("student", "organization", "speciality", "period")
+
+    if student_affectations.count() > 0:
+        sol, table = load_solution(student_affectations, cohort)
         stats = compute_stats(cohort, sol)
         # Mange sort of the students
         sol = OrderedDict(sorted(sol.items(), key=lambda t: t[0].person.last_name))
         # Mange sort of the organizations
         table.sort(key=itemgetter(0))
-        internship_errors = mdl_internship.internship_student_affectation_stat.InternshipStudentAffectationStat.\
-            objects.filter(organization=organizations[hospital_error], period_id__in=period_ids)
+
+        internship_errors = InternshipStudentAffectationStat.objects \
+            .filter(organization=organizations[hospital_error],
+                    period_id__in=period_ids)
 
     latest_generation = mdl_internship.affectation_generation_time.get_latest()
-    return render(request, "internship_affectation_statics.html",
-                  {'section': 'internship',
-                   'cohort': cohort,
-                   'recap_sol': sol,
-                   'stats': stats,
-                   'organizations': table,
-                   'errors': internship_errors,
-                   'latest_generation': latest_generation })
+
+    context = {
+        'section': 'internship',
+        'cohort': cohort,
+        'recap_sol': sol,
+        'stats': stats,
+        'organizations': table,
+        'errors': internship_errors,
+        'latest_generation': latest_generation
+    }
+
+    return render(request, "internship_affectation_statics.html", context)
 
 
 @login_required
@@ -1225,7 +1237,7 @@ def internship_affectation_statistics(request, cohort_id):
 def internship_affectation_sumup(request, cohort_id):
     cohort = get_object_or_404(mdl_internship.cohort.Cohort, pk=cohort_id)
     all_speciality = list(mdl_internship.internship_speciality.find_all(cohort=cohort))
-    all_speciality=set_speciality_unique(all_speciality)
+    all_speciality = set_speciality_unique(all_speciality)
     set_tabs_name(all_speciality)
     periods = mdl_internship.period.search(cohort=cohort)
     organizations = mdl_internship.organization.search(cohort=cohort)
@@ -1257,11 +1269,12 @@ def internship_affectation_sumup(request, cohort_id):
             temp_affectations[period.name] = temp_temp_affectations
         affectations[speciality.name] = temp_affectations
 
-    return render(request, "internship_affectation_sumup.html",
-                  {'section': 'internship',
-                   'specialities': all_speciality,
-                   'periods': periods,
-                   'organizations': informations,
-                   'affectations': affectations,
-                   'cohort': cohort
-                   })
+    context = {
+        'section': 'internship',
+        'specialities': all_speciality,
+        'periods': periods,
+        'organizations': informations,
+        'affectations': affectations,
+        'cohort': cohort
+    }
+    return render(request, "internship_affectation_sumup.html", context)

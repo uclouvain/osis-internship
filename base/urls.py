@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -103,5 +103,7 @@ urlpatterns = [
     url(r'^structure/([0-9]+)/diagram/$', institution.structure_diagram, name='structure_diagram'),
     url(r'^structure/([0-9]+)/address/$', institution.structure_address, name='structure_address'),
 
-    url(r'^studies/$', common.studies, name='studies')
+    url(r'^studies/$', common.studies, name='studies'),
+
+    url(r'^academic_actors/$', institution.academic_actors, name='academic_actors')
 ]

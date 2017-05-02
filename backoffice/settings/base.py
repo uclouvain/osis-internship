@@ -63,7 +63,8 @@ INSTALLED_APPS = (
     'ckeditor',
     'osis_common',
     'reference',
-    'base'
+    'base',
+    'statici18n',
 )
 
 MIDDLEWARE_CLASSES = (

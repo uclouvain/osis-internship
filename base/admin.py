@@ -39,6 +39,9 @@ admin.site.register(application_notice.ApplicationNotice,
 admin.site.register(campus.Campus,
                     campus.CampusAdmin)
 
+admin.site.register(entity_manager.EntityManager,
+                    entity_manager.EntityManagerAdmin)
+
 admin.site.register(exam_enrollment.ExamEnrollment,
                     exam_enrollment.ExamEnrollmentAdmin)
 
@@ -47,6 +50,24 @@ admin.site.register(exam_enrollment.ExamEnrollmentHistory,
 
 admin.site.register(external_offer.ExternalOffer,
                     external_offer.ExternalOfferAdmin)
+
+admin.site.register(learning_class.LearningClass,
+                    learning_class.LearningClassAdmin)
+
+admin.site.register(learning_class_year.LearningClassYear,
+                    learning_class_year.LearningClassYearAdmin)
+
+admin.site.register(learning_component.LearningComponent,
+                    learning_component.LearningComponentAdmin)
+
+admin.site.register(learning_component_year.LearningComponentYear,
+                    learning_component_year.LearningComponentYearAdmin)
+
+admin.site.register(learning_container.LearningContainer,
+                    learning_container.LearningContainerAdmin)
+
+admin.site.register(learning_container_year.LearningContainerYear,
+                    learning_container_year.LearningContainerYearAdmin)
 
 admin.site.register(learning_unit.LearningUnit,
                     learning_unit.LearningUnitAdmin)

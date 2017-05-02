@@ -229,6 +229,12 @@ Start the virtual environment and install the dependencies:
     $ source venv/bin/activate
     (venv)$ pip install -r requirements.txt
 
+Install phantomjs:
+
+1. Download phantomjs from : http://phantomjs.org/download.html
+2. Move the executable file in /usr/local/bin
+3. Add the path to your .bash_profile or .profile
+
 Create the data structure in the database:
 
     (venv)$ python manage.py migrate
