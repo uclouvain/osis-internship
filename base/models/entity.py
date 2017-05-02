@@ -64,10 +64,13 @@ class Entity(models.Model):
 def search(**kwargs):
     queryset = Entity.objects
 
-    if kwargs['acronym']:
+    if 'acronym' in kwargs:
         queryset = queryset.filter(entityversion__acronym__icontains=kwargs['acronym'])
 
-    if kwargs['version_date']:
+    if 'entity_type' in kwargs:
+        queryset = queryset.filter(entityversion__entity_type__icontains=kwargs['entity_type'])
+
+    if 'version_date' in kwargs:
         queryset = queryset.filter(entityversion__start_date__lte=kwargs['version_date'],
                                    entityversion__end_date__gte=kwargs['version_date'])
 

@@ -28,6 +28,7 @@ import factory
 import factory.fuzzy
 import datetime
 from base.models import entity
+from base.models.enums import entity_type
 from base.tests.factories.entity import EntityFactory
 from base.tests.factories.entity_link import EntityLinkFactory
 from base.tests.factories.entity_version import EntityVersionFactory
@@ -133,3 +134,21 @@ class EntityTest(TestCase):
         )
         for ent in entity.search(acronym='ENTITY_PARENT', version_date=self.date_in_2015):
             self.assertCountEqual(ent.find_descendants(date=self.date_in_2015), self.children)
+
+    def test_search_entities_by_version_type(self):
+        types_dict = dict(entity_type.ENTITY_TYPES)
+        types = [types_dict['SECTOR'],
+                 types_dict['FACULTY'],
+                 types_dict['SCHOOL'],
+                 types_dict['FACULTY']]
+        for x in range(4):
+            EntityVersionFactory(
+                entity=self.children[x],
+                acronym="ENTITY_V_" + str(x),
+                start_date=self.start_date,
+                end_date=self.end_date,
+                entity_type=types[x]
+            )
+
+        self.assertCountEqual(entity.search(entity_type='FACULTY'), [self.children[1], self.children[3]])
+        self.assertCountEqual(entity.search(entity_type='NON_EXISTING'), [])
