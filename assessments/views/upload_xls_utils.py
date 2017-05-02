@@ -23,20 +23,19 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.core.exceptions import ValidationError
-from django.http import HttpResponseRedirect
-from django.contrib.auth.decorators import login_required
-from django.core.urlresolvers import reverse
-from openpyxl import load_workbook
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ValidationError
+from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect
 from django.utils.translation import ugettext as _
+from openpyxl import load_workbook
 
-from assessments.forms.score_file import ScoreFileForm
 from assessments.business import score_encoding_list
-from base import models as mdl
+from assessments.forms.score_file import ScoreFileForm
 from attribution import models as mdl_attr
+from base import models as mdl
 from base.enums import exam_enrollment_justification_type as justification_types
-
 
 col_academic_year = 0
 col_session = 1
@@ -259,16 +258,14 @@ def _check_intergity_data(row, **kwargs):
         elif learning_unit_year.acronym != xls_learning_unit_acronym:
             # ... if it is because the user has multiple learningUnit in his excel file
             # (the data from the DataBase are filtered by LearningUnitYear because excel file is build by learningUnit)
-            raise UploadValueError("%s" % _('more_than_one_learning_unit_error'),
-                                   messages.ERROR)
+            raise UploadValueError("%s" % _('more_than_one_learning_unit_error'), messages.ERROR)
         elif xls_offer_year_acronym not in offer_acronyms_managed:
             # ... if it is because the user haven't access rights to the offerYear
             raise UploadValueError("'%s' %s!" % (xls_offer_year_acronym, _('offer_year_not_access_or_not_exist')),
                                    messages.ERROR)
         else:
             # ... if it's beacause the registration id doesn't exist
-            raise UploadValueError("%s" % _('registration_id_not_access_or_not_exist'),
-                                   messages.ERROR)
+            raise UploadValueError("%s" % _('registration_id_not_access_or_not_exist'), messages.ERROR)
 
 
 def _update_row(user, row, enrollments_managed_grouped, is_program_manager):
