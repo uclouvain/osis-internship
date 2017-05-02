@@ -168,6 +168,12 @@ msgstr "Président du jury"
 msgid "cheating_pdf_legend"
 msgstr "T=Tricherie"
 
+msgid "unjustified_absence_export_legend"
+msgstr "S=Absence injustifiée"
+
+msgid "justified_absence_export_legend"
+msgstr "M=Absence justifiée"
+
 msgid "child_entities"
 msgstr "Entités 'enfant'"
 
@@ -555,6 +561,15 @@ msgstr "Légende pour le champ 'Justification': %s"
 
 msgid "justifications"
 msgstr "Justifications"
+
+msgid "justification_invalid_value"
+msgstr "Justification invalide"
+
+msgid "justification_values_accepted"
+msgstr "Valeurs acceptées: %s "
+
+msgid "justification_other_values"
+msgstr "D'autres valeurs: %s "
 
 msgid "label"
 msgstr "Label"
@@ -987,7 +1002,7 @@ msgid "score_invalid"
 msgstr "Note invalide"
 
 msgid "score_legend"
-msgstr "Légende pour le champ 'Note chiffrée': %s (0=Cote de présence)"
+msgstr "%s (0=Cote de présence)"
 
 msgid "score_missing_pdf_legend"
 msgstr "?=Note manquante"
