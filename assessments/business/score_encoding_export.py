@@ -138,7 +138,8 @@ def __coloring_non_editable(ws, row_number, score, justification):
     """
     Coloring of the non-editable columns
     """
-    style_no_modification = Style(fill=PatternFill(patternType='solid', fgColor=Color('C1C1C1')))
+    pattern_fill_grey = PatternFill(patternType='solid', fgColor=Color('C1C1C1'))
+    style_no_modification = Style(fill=pattern_fill_grey)
     column_number = 1
     while column_number < 12:
         if column_number < 8 or column_number > 9:

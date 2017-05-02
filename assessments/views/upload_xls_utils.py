@@ -177,12 +177,11 @@ def __save_xls_scores(request, file_name, learning_unit_year_id):
             updated_row = _update_row(request.user, row, enrollments_grouped, is_program_manager)
             if updated_row:
                 new_scores_number+=1
-        except ValidationError as e:
-            messages.add_message(request, messages.ERROR, "%s %s" % (info_line,_(e.messages[0])))
         except UploadValueError as e:
             messages.add_message(request, e.message, "%s %s" % (info_line,_(e.value)))
         except Exception as e:
-            messages.add_message(request, messages.ERROR, "%s %s" % (info_line, _(e.args[0])))
+            error_msg = e.messages[0] if isinstance(e, ValidationError) else e.args[0]
+            messages.add_message(request, messages.ERROR, "%s %s" % (info_line, _(error_msg)))
 
     if new_scores_number:
         messages.add_message(request, messages.SUCCESS, '%s %s' % (str(new_scores_number), _('score_saved')))

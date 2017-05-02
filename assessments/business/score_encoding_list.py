@@ -141,8 +141,8 @@ def update_enrollment(enrollment, user, is_program_manager=None):
 
     enrollment = clean_score_and_justification(enrollment)
 
-    if is_enrollment_changed(enrollment, is_program_manager) and \
-       can_modify_exam_enrollment(enrollment, is_program_manager):
+    if can_modify_exam_enrollment(enrollment, is_program_manager) and \
+            is_enrollment_changed(enrollment, is_program_manager):
 
         enrollment_updated = set_score_and_justification(enrollment, is_program_manager)
 
@@ -200,12 +200,12 @@ def _check_str_score_is_digit(score_str):
 
 
 def is_enrollment_changed(enrollment, is_program_manager):
-    if not is_program_manager and (not enrollment.score_final or enrollment.justification_final):
-        return (enrollment.justification_draft != enrollment.justification_encoded) or \
-               (enrollment.score_draft != enrollment.score_encoded)
-    else:
+    if is_program_manager:
         return (enrollment.justification_final != enrollment.justification_encoded) or \
                (enrollment.score_final != enrollment.score_encoded)
+    else:
+        return (enrollment.justification_draft != enrollment.justification_encoded) or \
+               (enrollment.score_draft != enrollment.score_encoded)
 
 
 def can_modify_exam_enrollment(enrollment, is_program_manager):

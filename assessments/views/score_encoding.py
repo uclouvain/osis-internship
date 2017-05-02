@@ -210,10 +210,9 @@ def online_encoding_form(request, learning_unit_year_id=None):
             updated_enrollments = score_encoding_list.update_enrollments(
                 scores_encoding_list=scores_list_encoded,
                 user=request.user)
-        except ValidationError as e:
-            messages.add_message(request, messages.ERROR, _(e.messages[0]))
         except Exception as e:
-            messages.add_message(request, messages.ERROR, _(e.args[0]))
+            error_msg = e.messages[0] if isinstance(e, ValidationError) else e.args[0]
+            messages.add_message(request, messages.ERROR, _(error_msg))
 
         context = _get_common_encoding_context(request, learning_unit_year_id)
         if messages.get_messages(request):
@@ -294,10 +293,9 @@ def specific_criteria_submission(request):
         updated_enrollments = score_encoding_list.update_enrollments(
             scores_encoding_list=scores_list_encoded,
             user=request.user)
-    except ValidationError as e:
-        messages.add_message(request, messages.ERROR, _(e.messages[0]))
     except Exception as e:
-        messages.add_message(request, messages.ERROR, _(e.args[0]))
+        error_msg = e.messages[0] if isinstance(e, ValidationError) else e.args[0]
+        messages.add_message(request, messages.ERROR, _(error_msg))
 
     if messages.get_messages(request):
         context = _get_specific_criteria_context(request)
@@ -323,10 +321,9 @@ def online_double_encoding_form(request, learning_unit_year_id=None):
 
         try:
             scores_list =  score_encoding_list.assign_encoded_to_reencoded_enrollments(scores_list)
-        except ValidationError as e:
-            messages.add_message(request, messages.ERROR, _(e.messages[0]))
         except Exception as e:
-            messages.add_message(request, messages.ERROR, _(e.args[0]))
+            error_msg = e.messages[0] if isinstance(e, ValidationError) else e.args[0]
+            messages.add_message(request, messages.ERROR, _(error_msg))
 
         if messages.get_messages(request):
             context = _get_double_encoding_context(request, learning_unit_year_id)
@@ -353,10 +350,9 @@ def online_double_encoding_validation(request, learning_unit_year_id=None):
             updated_enrollments = score_encoding_list.update_enrollments(
                 scores_encoding_list=scores_list_encoded,
                 user=request.user)
-        except ValidationError as e:
-            messages.add_message(request, messages.ERROR, _(e.messages[0]))
         except Exception as e:
-            messages.add_message(request, messages.ERROR, _(e.args[0]))
+            error_msg = e.messages[0] if isinstance(e, ValidationError) else e.args[0]
+            messages.add_message(request, messages.ERROR, _(error_msg))
 
         if updated_enrollments:
             is_program_manager = mdl.program_manager.is_program_manager(request.user)
@@ -541,11 +537,12 @@ def _get_common_encoding_context(request, learning_unit_year_id):
 
 
 def _get_specific_criteria_context(request):
-    registration_id = request.POST.get('registration_id')
-    last_name = request.POST.get('last_name')
-    first_name = request.POST.get('first_name')
-    justification = request.POST.get('justification')
-    offer_year_id = request.POST.get('program')
+    post_data = request.POST
+    registration_id = post_data.get('registration_id')
+    last_name = post_data.get('last_name')
+    first_name = post_data.get('first_name')
+    justification = post_data.get('justification')
+    offer_year_id = post_data.get('program')
     current_academic_year = mdl.academic_year.current_academic_year()
     offers_year_managed = mdl.offer_year.find_by_user(request.user, current_academic_year)
     is_program_manager = mdl.program_manager.is_program_manager(request.user)
