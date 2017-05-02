@@ -34,5 +34,8 @@ class LearningContainerAdmin(admin.ModelAdmin):
 class LearningContainer(models.Model):
     title = models.CharField(max_length=255)
 
+    def __str__(self):
+        return u"%s" % self.title
+
 def find_by_id(learning_container_id):
     return LearningContainer.objects.get(pk=learning_container_id)

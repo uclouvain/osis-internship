@@ -22,5 +22,3 @@ msgstr "of the following program: "
 
 msgid "remove_manager"
 msgstr "Remove the manager"
-
-

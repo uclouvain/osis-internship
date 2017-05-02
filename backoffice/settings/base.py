@@ -64,6 +64,7 @@ INSTALLED_APPS = (
     'osis_common',
     'reference',
     'base',
+    'statici18n',
 )
 
 MIDDLEWARE_CLASSES = (

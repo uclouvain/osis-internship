@@ -30,10 +30,10 @@ from django.core.exceptions import ObjectDoesNotExist
 
 
 class ProgramManagerAdmin(admin.ModelAdmin):
-    list_display = ('person', 'offer_year')
+    list_display = ('person', 'offer_year', 'changed')
     raw_id_fields = ('person', 'offer_year')
     fieldsets = ((None, {'fields': ('person', 'offer_year')}),)
-    search_fields = ['person__first_name', 'person__last_name', 'offer_year__acronym']
+    search_fields = ['person__first_name', 'person__last_name', 'person__global_id', 'offer_year__acronym']
     list_filter = ('offer_year__academic_year',)
 
 
@@ -107,8 +107,10 @@ def find_by_id(an_id):
 
 
 def find_by_management_entity(administration_entity, academic_yr):
-    return ProgramManager.objects.filter(offer_year__entity_management__in=administration_entity,
-                                         offer_year__academic_year=academic_yr).distinct('person')
+    if administration_entity and academic_yr:
+        return ProgramManager.objects.filter(offer_year__entity_management__in=administration_entity,
+                                             offer_year__academic_year=academic_yr).distinct('person')
+    return None
 
 
 def delete_by_id(an_id):

@@ -33,7 +33,7 @@ from django.forms.models import inlineformset_factory
 from django.core.exceptions import ValidationError
 from django.forms import widgets
 from assistant.enums import reviewer_role
-from assistant.models.enums import review_advice_choices, review_status
+from assistant.models.enums import review_advice_choices, review_status, assistant_type, assistant_mandate_renewal
 
 
 class MandateFileForm(forms.Form):
@@ -55,9 +55,9 @@ class MandateForm(ModelForm):
         attrs={'rows': '4', 'cols': '80'}))
     other_status = forms.CharField(max_length=50, required=False)
     renewal_type = forms.ChoiceField(
-        choices=mdl.assistant_mandate.AssistantMandate.RENEWAL_TYPE_CHOICES)
+        choices=assistant_mandate_renewal.ASSISTANT_MANDATE_RENEWAL_TYPES)
     assistant_type = forms.ChoiceField(
-        choices=mdl.assistant_mandate.AssistantMandate.ASSISTANT_TYPE_CHOICES)
+        choices=assistant_type.ASSISTANT_TYPES)
     sap_id = forms.CharField(required=True, max_length=12, strip=True)
     contract_duration = forms.CharField(
         required=True, max_length=30, strip=True)
@@ -120,21 +120,16 @@ class MandatesArchivesForm(ModelForm):
 
 
 class AssistantFormPart3(ModelForm):
+
+    PARAMETERS = dict(required=False, widget=forms.DateInput(format='%d/%m/%Y', attrs={'placeholder': 'dd/mm/yyyy'}),
+                      input_formats=['%d/%m/%Y'])
+
     inscription = forms.ChoiceField(required=True, widget=forms.RadioSelect(renderer=HorizontalRadioRenderer, attrs={
         "onChange": 'Hide()'}), choices=mdl.academic_assistant.AcademicAssistant.PHD_INSCRIPTION_CHOICES)
-    expected_phd_date = forms.DateField(required=False, widget=forms.DateInput(format='%d/%m/%Y',
-                                                                               attrs={'placeholder': 'dd/mm/yyyy'}),
-                                        input_formats=['%d/%m/%Y'])
-    thesis_date = forms.DateField(required=False, widget=forms.DateInput(format='%d/%m/%Y',
-                                                                         attrs={'placeholder': 'dd/mm/yyyy'}),
-                                  input_formats=['%d/%m/%Y'])
-    phd_inscription_date = forms.DateField(required=False, widget=forms.DateInput(format='%d/%m/%Y',
-                                                                                  attrs={'placeholder': 'dd/mm/yyyy'}),
-                                           input_formats=['%d/%m/%Y'])
-    confirmation_test_date = forms.DateField(required=False,
-                                             widget=forms.DateInput(format='%d/%m/%Y',
-                                                                    attrs={'placeholder': 'dd/mm/yyyy'}),
-                                             input_formats=['%d/%m/%Y'])
+    expected_phd_date = forms.DateField(**PARAMETERS)
+    thesis_date = forms.DateField(**PARAMETERS)
+    phd_inscription_date = forms.DateField(**PARAMETERS)
+    confirmation_test_date = forms.DateField(**PARAMETERS)
 
     thesis_title = forms.CharField(
         required=False, widget=forms.Textarea(attrs={'cols': '80', 'rows': '2'}))
