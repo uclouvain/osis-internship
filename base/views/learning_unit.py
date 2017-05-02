@@ -27,49 +27,38 @@ from django.contrib.auth.decorators import login_required, permission_required
 from base import models as mdl
 from attribution import models as mdl_attr
 from . import layout
-
+from base.forms.learning_units import LearningUnitYearForm
 
 @login_required
 @permission_required('base.can_access_learningunit', raise_exception=True)
 def learning_units(request):
-    academic_yr = None
-    code = ""
 
+    form = LearningUnitYearForm()
     academic_years = mdl.academic_year.find_academic_years()
-    academic_yr_calendar = mdl.academic_year.current_academic_year()
-
-    if academic_yr_calendar:
-        academic_yr = academic_yr_calendar.id
-    return layout.render(request, "learning_units.html", {'academic_year': academic_yr,
-                                                          'code': code,
-                                                          'academic_years': academic_years,
+    return layout.render(request, "learning_units.html", {
+                                                          'form':form,
                                                           'learning_units': [],
-                                                          'init': "1"})
-
-
+                                                          'academic_years': academic_years,
+                                                          'init': 1})
 @login_required
 @permission_required('base.can_access_learningunit', raise_exception=True)
 def learning_units_search(request):
-    """
-    Learning units search
-    """
-    # criteria
-    academic_year = request.GET['academic_year']
-    code = request.GET['code']
-    if academic_year is None:
-        academic_year_calendar = mdl.academic_year.current_academic_year()
-        if academic_year_calendar:
-            academic_year = academic_year_calendar.id
-
-    learning_unts = mdl.learning_unit_year.search(academic_year_id=academic_year,acronym=code)
     academic_years = mdl.academic_year.find_academic_years()
+    form = LearningUnitYearForm(request.GET)
+    if form.is_valid():
+        learning_units = form.get_learning_units()
+    else:
+        learning_units = None
 
-    return layout.render(request, "learning_units.html", {'academic_year': int(academic_year),
-                                                          'code': code,
+    academic_year_selected_before_search = form.get_academic_year()
+    academic_years_all=form.set_academic_years_all()
+
+    return layout.render(request, "learning_units.html", {'academic_year': int(academic_year_selected_before_search),
                                                           'academic_years': academic_years,
-                                                          'learning_units': learning_unts,
+                                                          'academic_year_all' : academic_years_all,
+                                                          'learning_units': learning_units,
+                                                          'form':form,
                                                           'init': "0"})
-
 
 @login_required
 @permission_required('base.can_access_learningunit', raise_exception=True)

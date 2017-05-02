@@ -33,8 +33,9 @@ from osis_common.models import serializable_model
 class TutorAdmin(serializable_model.SerializableModelAdmin):
     list_display = ('person', 'changed')
     fieldsets = ((None, {'fields': ('person',)}),)
+    list_filter = ('person__gender', 'person__language')
     raw_id_fields = ('person', )
-    search_fields = ['person__first_name', 'person__last_name']
+    search_fields = ['person__first_name', 'person__last_name', 'person__global_id']
 
 
 class Tutor(serializable_model.SerializableModel):

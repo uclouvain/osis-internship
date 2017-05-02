@@ -23,8 +23,10 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required, permission_required
+from django.views.decorators import http
+
 from internship import models as mdl_internship
 from internship.models.cohort import Cohort
 
@@ -32,7 +34,7 @@ from internship.models.cohort import Cohort
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def cohort_home(request, cohort_id):
-    cohort = Cohort.objects.get(pk=cohort_id)
+    cohort = get_object_or_404(Cohort, pk=cohort_id)
     blockable = mdl_internship.internship_offer.get_number_selectable(cohort) > 0
     context = {
         'section': 'internship',
@@ -42,6 +44,7 @@ def cohort_home(request, cohort_id):
     return render(request, "internships_home.html", context=context)
 
 
+@http.require_http_methods(['GET'])
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def view_cohort_selection(request):

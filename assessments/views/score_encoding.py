@@ -42,7 +42,7 @@ from psycopg2._psycopg import OperationalError as PsycopOperationalError, Interf
 from assessments.business import score_encoding_progress, score_encoding_list, score_encoding_export
 from attribution import models as mdl_attr
 from base import models as mdl
-from base.utils import send_mail, calendar_utils
+from base.utils import send_mail
 from base.views import layout
 from osis_common.document import paper_sheet
 from osis_common.models.queue_exception import QueueException
@@ -69,17 +69,18 @@ def assessments(request):
 @permission_required('assessments.can_access_scoreencoding', raise_exception=True)
 @user_passes_test(_is_not_inside_scores_encodings_period, login_url=reverse_lazy('scores_encoding'))
 def outside_period(request):
+    date_format = str(_('date_format'))
     latest_session_exam = mdl.session_exam_calendar.get_latest_session_exam()
     closest_new_session_exam = mdl.session_exam_calendar.get_closest_new_session_exam()
 
     if latest_session_exam:
         session_number = latest_session_exam.number_session
-        str_date = latest_session_exam.academic_calendar.end_date.strftime(calendar_utils.FORMAT)
+        str_date = latest_session_exam.academic_calendar.end_date.strftime(date_format)
         messages.add_message(request, messages.WARNING, _('outside_scores_encodings_period_latest_session') % (session_number,str_date))
 
     if closest_new_session_exam:
         session_number = closest_new_session_exam.number_session
-        str_date = closest_new_session_exam.academic_calendar.start_date.strftime(calendar_utils.FORMAT)
+        str_date = closest_new_session_exam.academic_calendar.start_date.strftime(date_format)
         messages.add_message(request, messages.WARNING, _('outside_scores_encodings_period_closest_session') % (session_number,str_date))
 
     if not messages.get_messages(request):

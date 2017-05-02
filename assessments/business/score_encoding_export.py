@@ -24,7 +24,6 @@
 #
 ##############################################################################
 import datetime
-from base.utils import calendar_utils
 from django.http import HttpResponse
 from openpyxl import Workbook
 from openpyxl.writer.excel import save_virtual_workbook
@@ -178,7 +177,9 @@ def justification_other_values():
 
 
 def __get_session_exam_deadline(exam_enroll):
+    date_format = str(_('date_format'))
+
     session_exam_deadline = mdl.exam_enrollment.get_session_exam_deadline(exam_enroll)
     if session_exam_deadline and session_exam_deadline.deadline_tutor_computed:
-        return session_exam_deadline.deadline_tutor_computed.strftime(calendar_utils.FORMAT)
+        return session_exam_deadline.deadline_tutor_computed.strftime(date_format)
     return "-"
