@@ -55,7 +55,10 @@ def pgm_manager_administration(request):
 @login_required
 def pgm_manager_search(request):
     person_id = get_filter_value(request, 'person')
-    return pgm_manager_form(None, None, request, mdl.person.find_by_id(person_id))
+    person = None
+    if person_id:
+        person =  mdl.person.find_by_id(person_id)
+    return pgm_manager_form(None, None, request, person)
 
 
 def pgm_manager_form(offers_on, error_messages, request, manager_person):
@@ -113,7 +116,7 @@ def get_filter_value(request, value_name):
     else:
         value = request.GET.get(value_name, None)
 
-    if value == ALL_OPTION_VALUE:
+    if value == ALL_OPTION_VALUE or value == '':
         return None
     return value
 
@@ -167,18 +170,22 @@ def person_list_search(request):
 @login_required
 @permission_required('base.is_entity_manager', raise_exception=True)
 def create_manager(request):
+
+    person_selected = get_filter_selected_person(request)
+
     person_id = request.POST['person_id']
     pgms_id = request.POST['pgms_id']
     
     list_offer_id = convert_to_list(pgms_id)
     error_messages = ""
     person = mdl.person.find_by_id(person_id)
+
     offers_on = None
     if person:
         offers_on = mdl.offer_year.find_by_id_list(list_offer_id)
         error_messages = add_program_managers(offers_on, person)
 
-    return pgm_manager_form(offers_on, error_messages, request, person)
+    return pgm_manager_form(offers_on, error_messages, request, person_selected)
 
 
 def get_administrator_faculty(a_user):
@@ -392,3 +399,10 @@ def find_values(key_value, json_repr):
 
     json.loads(json_repr, object_hook=_decode_dict)  # return value ignored
     return results
+
+
+def get_filter_selected_person(request):
+    person_selected_id = get_filter_value(request, 'person')
+    if person_selected_id:
+        return mdl.person.find_by_id(int(person_selected_id))
+    return None
