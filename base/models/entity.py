@@ -24,7 +24,7 @@
 #
 ##############################################################################
 from django.db import models
-import datetime
+from django.utils import timezone
 from base.models.entity_link import EntityLink
 
 
@@ -33,7 +33,7 @@ class Entity(models.Model):
 
     def _direct_children(self, date=None):
         if date is None:
-            date = datetime.datetime.now()
+            date = timezone.now()
 
         return EntityLink.objects.filter(parent=self,
                                          start_date__lte=date,
@@ -49,7 +49,7 @@ class Entity(models.Model):
 
     def find_descendants(self, date=None):
         if date is None:
-            date = datetime.datetime.now()
+            date = timezone.now()
 
         descendants = []
         if self.count_direct_children(date) > 0:

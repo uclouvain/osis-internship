@@ -26,7 +26,7 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.db.models import Q
-import datetime
+from django.utils import timezone
 from base.models.enums import entity_type
 
 
@@ -67,7 +67,7 @@ class EntityVersion(models.Model):
 def find(acronym, date=None):
     try:
         if date is None:
-            date = datetime.datetime.now()
+            date = timezone.now()
 
         entity_version = EntityVersion.objects.get(acronym=acronym,
                                                    start_date__lte=date,

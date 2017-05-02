@@ -24,6 +24,7 @@
 #
 ##############################################################################
 from django.test import TestCase
+from django.utils import timezone
 import factory
 import factory.fuzzy
 import datetime
@@ -35,8 +36,8 @@ class EntityLinkTest(TestCase):
 
     def setUp(self):
         self.an_entity = EntityFactory()
-        self.start_date = datetime.date(2015, 1, 1)
-        self.end_date = datetime.date(2015, 12, 31)
+        self.start_date = timezone.make_aware(datetime.datetime(2015, 1, 1))
+        self.end_date = timezone.make_aware(datetime.datetime(2015, 12, 31))
 
         EntityLinkFactory(
             child=self.an_entity,
@@ -56,32 +57,40 @@ class EntityLinkTest(TestCase):
         with self.assertRaisesMessage(AttributeError, 'EntityLink invalid parameters'):
             EntityLinkFactory(
                 child=self.an_entity,
-                start_date=factory.fuzzy.FuzzyDate(datetime.date(2010, 1, 1), datetime.date(2014, 12, 30)).fuzz(),
-                end_date=factory.fuzzy.FuzzyDate(datetime.date(2015, 1, 1), datetime.date(2015, 12, 30)).fuzz()
+                start_date=factory.fuzzy.FuzzyDate(timezone.make_aware(datetime.datetime(2010, 1, 1)),
+                                                   timezone.make_aware(datetime.datetime(2014, 12, 30))).fuzz(),
+                end_date=factory.fuzzy.FuzzyDate(timezone.make_aware(datetime.datetime(2015, 1, 1)),
+                                                 timezone.make_aware(datetime.datetime(2015, 12, 30))).fuzz()
                 )
 
     def test_create_entity_link_same_child_overlapping_dates_start_date_in(self):
         with self.assertRaisesMessage(AttributeError, 'EntityLink invalid parameters'):
             EntityLinkFactory(
                 child=self.an_entity,
-                start_date=factory.fuzzy.FuzzyDate(datetime.date(2015, 1, 1), datetime.date(2015, 12, 30)).fuzz(),
-                end_date=factory.fuzzy.FuzzyDate(datetime.date(2016, 1, 1), datetime.date(2020, 12, 30)).fuzz()
+                start_date=factory.fuzzy.FuzzyDate(timezone.make_aware(datetime.datetime(2015, 1, 1)),
+                                                   timezone.make_aware(datetime.datetime(2015, 12, 30))).fuzz(),
+                end_date=factory.fuzzy.FuzzyDate(timezone.make_aware(datetime.datetime(2016, 1, 1)),
+                                                 timezone.make_aware(datetime.datetime(2020, 12, 30))).fuzz()
                 )
 
     def test_create_entity_link_same_child_overlapping_dates_both_dates_out(self):
         with self.assertRaisesMessage(AttributeError, 'EntityLink invalid parameters'):
             EntityLinkFactory(
                 child=self.an_entity,
-                start_date=factory.fuzzy.FuzzyDate(datetime.date(2010, 1, 1), datetime.date(2014, 12, 30)).fuzz(),
-                end_date=factory.fuzzy.FuzzyDate(datetime.date(2016, 1, 1), datetime.date(2020, 12, 30)).fuzz()
+                start_date=factory.fuzzy.FuzzyDate(timezone.make_aware(datetime.datetime(2010, 1, 1)),
+                                                   timezone.make_aware(datetime.datetime(2014, 12, 30))).fuzz(),
+                end_date=factory.fuzzy.FuzzyDate(timezone.make_aware(datetime.datetime(2016, 1, 1)),
+                                                 timezone.make_aware(datetime.datetime(2020, 12, 30))).fuzz()
                 )
 
     def test_create_entity_link_same_child_overlapping_dates_both_dates_in(self):
         with self.assertRaisesMessage(AttributeError, 'EntityLink invalid parameters'):
             EntityLinkFactory(
                 child=self.an_entity,
-                start_date=factory.fuzzy.FuzzyDate(datetime.date(2015, 1, 1), datetime.date(2015, 6, 30)).fuzz(),
-                end_date=factory.fuzzy.FuzzyDate(datetime.date(2015, 7, 1), datetime.date(2015, 12, 30)).fuzz()
+                start_date=factory.fuzzy.FuzzyDate(timezone.make_aware(datetime.datetime(2015, 1, 1)),
+                                                   timezone.make_aware(datetime.datetime(2015, 6, 30))).fuzz(),
+                end_date=factory.fuzzy.FuzzyDate(timezone.make_aware(datetime.datetime(2015, 7, 1)),
+                                                 timezone.make_aware(datetime.datetime(2015, 12, 30))).fuzz()
                 )
 
     def test_create_entity_link_child_equals_parent(self):

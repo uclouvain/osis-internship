@@ -27,6 +27,7 @@ from django.test import TestCase
 import factory
 import factory.fuzzy
 import datetime
+from django.utils import timezone
 from base.models import entity
 from base.models.enums import entity_type
 from base.tests.factories.entity import EntityFactory
@@ -37,10 +38,13 @@ from base.tests.factories.entity_version import EntityVersionFactory
 class EntityTest(TestCase):
 
     def setUp(self):
-        self.start_date = datetime.date(2015, 1, 1)
-        self.end_date = datetime.date(2015, 12, 31)
-        self.date_in_2015 = factory.fuzzy.FuzzyDate(datetime.date(2015, 1, 1), datetime.date(2015, 12, 30)).fuzz()
-        self.date_in_2017 = factory.fuzzy.FuzzyDate(datetime.date(2017, 1, 1), datetime.date(2017, 12, 30)).fuzz()
+        self.start_date = timezone.make_aware(datetime.datetime(2015, 1, 1))
+        self.end_date = timezone.make_aware(datetime.datetime(2015, 12, 31))
+        self.end_date = timezone.make_aware(datetime.datetime(2015, 12, 31))
+        self.date_in_2015 = factory.fuzzy.FuzzyDate(timezone.make_aware(datetime.datetime(2015, 1, 1)),
+                                                    timezone.make_aware(datetime.datetime(2015, 12, 30))).fuzz()
+        self.date_in_2017 = factory.fuzzy.FuzzyDate(timezone.make_aware(datetime.datetime(2017, 1, 1)),
+                                                    timezone.make_aware(datetime.datetime(2017, 12, 30))).fuzz()
         self.parent = EntityFactory()
         self.children = [EntityFactory() for x in range(4)]
         for x in range(4):
@@ -64,8 +68,8 @@ class EntityTest(TestCase):
             EntityLinkFactory(
                 parent=self.parent,
                 child=in_2017_children[x],
-                start_date=datetime.date(2017, 1, 1),
-                end_date=datetime.date(2017, 12, 31)
+                start_date=timezone.make_aware(datetime.datetime(2017, 1, 1)),
+                end_date=timezone.make_aware(datetime.datetime(2017, 12, 31))
                 )
         self.assertCountEqual(self.parent.get_direct_children(date=self.date_in_2017),
                               [in_2017_children[x] for x in range(4)])

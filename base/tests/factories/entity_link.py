@@ -24,7 +24,16 @@
 #
 ##############################################################################
 import factory
+from django.conf import settings
+from django.utils import timezone
 from base.tests.factories.entity import EntityFactory
+
+
+def _get_tzinfo():
+    if settings.USE_TZ:
+        return timezone.get_current_timezone()
+    else:
+        return None
 
 
 class EntityLinkFactory(factory.DjangoModelFactory):
@@ -33,5 +42,5 @@ class EntityLinkFactory(factory.DjangoModelFactory):
 
     parent = factory.SubFactory(EntityFactory)
     child = factory.SubFactory(EntityFactory)
-    start_date = factory.Faker('date_time_this_decade', before_now=True, after_now=False)
-    end_date = factory.Faker('date_time_this_decade', before_now=False, after_now=True)
+    start_date = factory.Faker('date_time_this_decade', before_now=True, after_now=False, tzinfo=_get_tzinfo())
+    end_date = factory.Faker('date_time_this_decade', before_now=False, after_now=True, tzinfo=_get_tzinfo())
