@@ -23,12 +23,12 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import datetime
 from django.http import HttpResponse
 from openpyxl import Workbook
 from openpyxl.writer.excel import save_virtual_workbook
 from openpyxl.styles import Color, Style, PatternFill, Font, colors
 from django.utils.translation import ugettext_lazy as _
+from django.utils import timezone
 
 from base import models as mdl
 
@@ -52,8 +52,9 @@ def export_xls(exam_enrollments):
     worksheet.append([str(exam_enrollments[0].learning_unit_enrollment.learning_unit_year)])
     worksheet.append([str('Session: %s' % exam_enrollments[0].session_exam.number_session)])
     worksheet.append([str('')])
-    printing_date = datetime.datetime.now()
-    printing_date = printing_date.strftime("%d/%m/%Y")
+    date_format = str(_('date_format'))
+    printing_date = timezone.now()
+    printing_date = printing_date.strftime(date_format)
     worksheet.append([str('%s: %s' % (_('file_production_date'), printing_date))])
     __display_warning_about_students_deliberated(worksheet, row_number=5)
     worksheet.append([str('')])

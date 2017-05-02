@@ -24,15 +24,17 @@
 #
 ##############################################################################
 import datetime
-from django.test import TestCase
-from base.models import synchronization
+
 from django.core.exceptions import ObjectDoesNotExist
-import datetime
+from django.utils import timezone
+from django.test import TestCase
+
+from base.models import synchronization
 
 
 def create_synchronization(date=None):
     if date is None:
-        date = datetime.datetime.now()
+        date = timezone.now()
     sync = synchronization.Synchronization(date=date)
     sync.save()
     return sync
@@ -41,10 +43,16 @@ def create_synchronization(date=None):
 class MultipleSynchronizationTest(TestCase):
 
     def setUp(self):
-        self.current_year = datetime.datetime.now().year
-        create_synchronization(date=datetime.datetime(self.current_year, 10, 28, 20, 00, 59, 99999))
-        self.latest_sync_id = create_synchronization(date=datetime.datetime(self.current_year, 10, 28, 20, 1, 0, 0)).id
-        create_synchronization(date=datetime.datetime(self.current_year, 10, 27, 23, 59, 59, 99999))
+        self.current_year = timezone.now().year
+        sync_date = datetime.datetime(self.current_year, 10, 28, 20, 00, 59, 99999,
+                                      tzinfo=timezone.get_current_timezone())
+        create_synchronization(date=sync_date)
+        sync_date = datetime.datetime(self.current_year, 10, 28, 20, 1, 0, 0,
+                                      tzinfo=timezone.get_current_timezone())
+        self.latest_sync_id = create_synchronization(date=sync_date).id
+        sync_date = datetime.datetime(self.current_year, 10, 27, 23, 59, 59, 99999,
+                                      tzinfo=timezone.get_current_timezone())
+        create_synchronization(date=sync_date)
 
     def test_find_last_synchronization_date(self):
         sync = synchronization.Synchronization.objects.get(pk=self.latest_sync_id)

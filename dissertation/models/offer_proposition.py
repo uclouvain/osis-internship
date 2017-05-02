@@ -27,7 +27,7 @@ from osis_common.models.serializable_model import SerializableModel, Serializabl
 from django.db import models
 from django.utils import timezone
 from base.models import offer
-from datetime import datetime
+from datetime import date
 
 
 class OfferPropositionAdmin(SerializableModelAdmin):
@@ -54,35 +54,35 @@ class OfferProposition(SerializableModel):
 
     @property
     def in_periode_visibility_proposition(self):
-        now = datetime.date(datetime.now())
+        today = date.today()
         start = self.start_visibility_proposition
         end = self.end_visibility_proposition
 
-        return start <= now <= end
+        return start <= today <= end
 
     @property
     def in_periode_visibility_dissertation(self):
-        now = datetime.date(datetime.now())
+        today = date.today()
         start = self.start_visibility_dissertation
         end = self.end_visibility_dissertation
 
-        return start <= now <= end
+        return start <= today <= end
 
     @property
     def in_periode_jury_visibility(self):
-        now = datetime.date(datetime.now())
+        today = date.today()
         start = self.start_jury_visibility
         end = self.end_jury_visibility
 
-        return start <= now <= end
+        return start <= today <= end
 
     @property
     def in_periode_edit_title(self):
-        now = datetime.date(datetime.now())
+        today = date.today()
         start = self.start_edit_title
         end = self.end_edit_title
 
-        return start <= now <= end
+        return start <= today <= end
 
     def __str__(self):
         return self.acronym
