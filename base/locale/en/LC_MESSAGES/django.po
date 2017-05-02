@@ -177,6 +177,12 @@ msgstr "Chair of the exam board"
 msgid "cheating_pdf_legend"
 msgstr "T=Cheating"
 
+msgid "unjustified_absence_export_legend"
+msgstr "S=Unjustified Absence"
+
+msgid "justified_absence_export_legend"
+msgstr "M=Justified Absence"
+
 msgid "child_entities"
 msgstr "Child entities"
 
@@ -560,6 +566,15 @@ msgstr "Justification legend: %s"
 
 msgid "justifications"
 msgstr "Justifications"
+
+msgid "justification_invalid_value"
+msgstr "Invalid justification value"
+
+msgid "justification_values_accepted"
+msgstr "Accepted value: %s "
+
+msgid "justification_other_values"
+msgstr "Other values: %s "
 
 msgid "label"
 msgstr "Label"
@@ -978,7 +993,7 @@ msgid "score_invalid"
 msgstr "Score invalid"
 
 msgid "score_legend"
-msgstr "Score legend: %s (0=Score of presence)"
+msgstr "%s (0=Score of presence)"
 
 msgid "score_missing_pdf_legend"
 msgstr "?=Score missing"
