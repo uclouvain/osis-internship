@@ -150,5 +150,5 @@ class EntityTest(TestCase):
                 entity_type=types[x]
             )
 
-        self.assertCountEqual(entity.search(entity_type='FACULTY'), [self.children[1], self.children[3]])
+        self.assertCountEqual(entity.search(entity_type=types_dict['FACULTY']), [self.children[1], self.children[3]])
         self.assertCountEqual(entity.search(entity_type='NON_EXISTING'), [])
