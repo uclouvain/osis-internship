@@ -32,7 +32,7 @@ from django.forms.models import inlineformset_factory
 from django.core.exceptions import ValidationError
 from django.forms import widgets
 from assistant.enums import reviewer_role
-from assistant.models.enums import review_advice_choices, assistant_type, assistant_mandate_renewal
+from assistant.models.enums import review_advice_choices, review_status, assistant_type, assistant_mandate_renewal
 from assistant.models.enums import assistant_phd_inscription
 from base.enums import structure_type
 
@@ -123,7 +123,6 @@ class MandatesArchivesForm(ModelForm):
 
 
 class AssistantFormPart3(ModelForm):
-
     PARAMETERS = dict(required=False, widget=forms.DateInput(format='%d/%m/%Y', attrs={'placeholder': 'dd/mm/yyyy'}),
                       input_formats=['%d/%m/%Y'])
 
@@ -133,7 +132,6 @@ class AssistantFormPart3(ModelForm):
     thesis_date = forms.DateField(**PARAMETERS)
     phd_inscription_date = forms.DateField(**PARAMETERS)
     confirmation_test_date = forms.DateField(**PARAMETERS)
-
     thesis_title = forms.CharField(
         required=False, widget=forms.Textarea(attrs={'cols': '80', 'rows': '2'}))
     remark = forms.CharField(

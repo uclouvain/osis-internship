@@ -1,12 +1,12 @@
 ##############################################################################
 #
-#    OSIS stands for Open Student Information System. It's an application
+# OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -23,11 +23,16 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+import factory
+from django.test import TestCase
+from assistant.test.factories import review
+from assistant.models.enums import review_advice_choices
+from assistant.models.review import find_by_reviewer_for_mandate
 
-YES = 'YES'
-NO = 'NO'
-IN_PROGRESS = 'IN_PROGRESS'
+class TestReviewFactory(TestCase):
 
-PHD_INSCRIPTION_CHOICES = ((YES, YES),
-                           (NO, NO),
-                           (IN_PROGRESS, IN_PROGRESS))
+    def setUp(self):
+        self.review = review.ReviewFactory()
+
+    def test_review_by_reviewer_for_mandate(self):
+        self.assertEqual(self.review, find_by_reviewer_for_mandate(self.review.reviewer, self.review.mandate))
