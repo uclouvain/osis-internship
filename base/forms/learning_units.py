@@ -30,10 +30,8 @@ from django.core.exceptions import ValidationError
 
 class LearningUnitYearForm(forms.Form):
     academic_year = forms.CharField(max_length=10, required=False)
-    acronym = forms.CharField(widget=forms.TextInput(attrs={'size': '10', 'class': 'form-control'}),
-                              max_length=20, required=False)
-    keyword = forms.CharField(widget=forms.TextInput(attrs={'size': '10', 'class': 'form-control'}),
-                              max_length=20, required=False)
+    acronym = keyword = forms.CharField(widget=forms.TextInput(attrs={'size': '10', 'class': 'form-control'}),
+                                        max_length=20, required=False)
 
     def clean_acronym(self):
         MIN_ACRONYM_LENGTH = 3
