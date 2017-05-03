@@ -32,6 +32,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import messages
 from django.utils.translation import ugettext as _
 from assistant.forms import MandateFileForm
+from assistant.utils import manager_access
 
 COLS_NUMBER = 23
 ASSISTANTS_IMPORTED = 0
@@ -45,18 +46,7 @@ COLS_TITLES = ['SECTOR', 'FACULTY', 'PROGRAM_COMMISSION', 'INSTITUTE', 'POLE', '
                'EMAIL', 'FGS']
 
 
-def user_is_manager(user):
-    """Use with a ``user_passes_test`` decorator to restrict access to
-    authenticated users who are manager."""
-
-    try:
-        if user.is_authenticated():
-            return assistant_mdl.manager.Manager.objects.get(person=user.person)
-    except ObjectDoesNotExist:
-        return False
-
-
-@user_passes_test(user_is_manager, login_url='assistants_home')
+@user_passes_test(manager_access.user_is_manager, login_url='assistants_home')
 def upload_mandates_file(request):
     global ASSISTANTS_IMPORTED, ASSISTANTS_UPDATED, MANDATES_IMPORTED, MANDATES_UPDATED, PERSONS_NOT_FOUND
     ASSISTANTS_UPDATED = 0
@@ -80,7 +70,7 @@ def upload_mandates_file(request):
         return show_import_result(request)
 
 
-@user_passes_test(user_is_manager, login_url='assistants_home')
+@user_passes_test(manager_access.user_is_manager, login_url='assistants_home')
 def read_xls_mandates(request, file_name):
     try:
         workbook = load_workbook(file_name, read_only=True, data_only=True)

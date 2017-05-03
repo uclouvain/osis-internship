@@ -103,6 +103,10 @@ def find_by_type(type):
     return Structure.objects.filter(type__icontains=type)
 
 
+def find_by_types(types):
+    return Structure.objects.filter(type__in=types).order_by('type', 'acronym')
+
+
 def find_faculty(a_structure):
     if a_structure.type == structure_type.FACULTY:
         return a_structure
