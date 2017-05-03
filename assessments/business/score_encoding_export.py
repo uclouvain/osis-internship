@@ -23,15 +23,15 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import datetime
-from base.utils import calendar_utils
 from django.http import HttpResponse
 from openpyxl import Workbook
 from openpyxl.writer.excel import save_virtual_workbook
 from openpyxl.styles import Color, Style, PatternFill, Font, colors
 from django.utils.translation import ugettext_lazy as _
+from django.utils import timezone
 
 from base import models as mdl
+from base.enums import exam_enrollment_justification_type
 
 HEADER = [str(_('academic_year')),
           str(_('sessionn')),
@@ -45,6 +45,12 @@ HEADER = [str(_('academic_year')),
           str(_('end_date')),
           str(_('ID'))]
 
+JUSTIFICATION_ALIASES = {
+    exam_enrollment_justification_type.ABSENCE_JUSTIFIED : "M",
+    exam_enrollment_justification_type.ABSENCE_UNJUSTIFIED : "S",
+    exam_enrollment_justification_type.CHEATING : "T",
+}
+
 
 def export_xls(exam_enrollments):
     workbook = Workbook()
@@ -53,19 +59,18 @@ def export_xls(exam_enrollments):
     worksheet.append([str(exam_enrollments[0].learning_unit_enrollment.learning_unit_year)])
     worksheet.append([str('Session: %s' % exam_enrollments[0].session_exam.number_session)])
     worksheet.append([str('')])
-    printing_date = datetime.datetime.now()
-    printing_date = printing_date.strftime("%d/%m/%Y")
+    date_format = str(_('date_format'))
+    printing_date = timezone.now()
+    printing_date = printing_date.strftime(date_format)
     worksheet.append([str('%s: %s' % (_('file_production_date'), printing_date))])
     __display_warning_about_students_deliberated(worksheet, row_number=5)
     worksheet.append([str('')])
-    worksheet.append([str(_('justification_legend') % mdl.exam_enrollment.justification_label_authorized())])
-    worksheet.append([str(_('score_legend') % "0 - 20")])
+    __display_legends(worksheet)
     worksheet.append([str('')])
-
     __columns_resizing(worksheet)
     worksheet.append(HEADER)
 
-    row_number = 10
+    row_number = 11
     for exam_enroll in exam_enrollments:
         student = exam_enroll.learning_unit_enrollment.student
         offer = exam_enroll.learning_unit_enrollment.offer
@@ -78,9 +83,9 @@ def export_xls(exam_enrollments):
                 score = "{0:.2f}".format(exam_enroll.score_final)
             else:
                 score = "{0:.0f}".format(exam_enroll.score_final)
-        justification = ""
-        if exam_enroll.justification_final:
-            justification = _(exam_enroll.justification_final)
+
+        justification = JUSTIFICATION_ALIASES.get(exam_enroll.justification_final, "")
+
         worksheet.append([str(exam_enroll.learning_unit_enrollment.learning_unit_year.academic_year),
                           str(exam_enroll.session_exam.number_session),
                           exam_enroll.session_exam.learning_unit_year.acronym,
@@ -134,7 +139,8 @@ def __coloring_non_editable(ws, row_number, score, justification):
     """
     Coloring of the non-editable columns
     """
-    style_no_modification = Style(fill=PatternFill(patternType='solid', fgColor=Color('C1C1C1')))
+    pattern_fill_grey = PatternFill(patternType='solid', fgColor=Color('C1C1C1'))
+    style_no_modification = Style(fill=pattern_fill_grey)
     column_number = 1
     while column_number < 12:
         if column_number < 8 or column_number > 9:
@@ -152,8 +158,30 @@ def __display_warning_about_students_deliberated(ws, row_number):
     ws.cell(row=row_number, column=1).font = Font(color=colors.RED)
 
 
+def __display_legends(ws):
+    ws.append([
+        str(_('justification')),
+        str(_('justification_values_accepted') % mdl.exam_enrollment.justification_label_authorized())
+    ])
+    ws.append([
+        str(''),
+        str(_('justification_other_values') % justification_other_values())
+    ])
+    ws.append([
+        str(_('numbered_score')),
+        str(_('score_legend') % "0 - 20")
+    ])
+
+
+def justification_other_values():
+    return "%s, %s" % (_('unjustified_absence_export_legend'),
+                       _('justified_absence_export_legend'))
+
+
 def __get_session_exam_deadline(exam_enroll):
+    date_format = str(_('date_format'))
+
     session_exam_deadline = mdl.exam_enrollment.get_session_exam_deadline(exam_enroll)
     if session_exam_deadline and session_exam_deadline.deadline_tutor_computed:
-        return session_exam_deadline.deadline_tutor_computed.strftime(calendar_utils.FORMAT)
+        return session_exam_deadline.deadline_tutor_computed.strftime(date_format)
     return "-"

@@ -29,5 +29,5 @@ NO = 'NO'
 IN_PROGRESS = 'IN_PROGRESS'
 
 PHD_INSCRIPTION_CHOICES = ((YES, YES),
-                         (NO, NO),
-                         (IN_PROGRESS, IN_PROGRESS))
+                           (NO, NO),
+                           (IN_PROGRESS, IN_PROGRESS))

@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -55,6 +55,14 @@ class Structure(models.Model):
             'children': [child.serializable_object() for child in self.children]
         }
 
+    def serializable_acronym(self):
+        l = []
+        l.append(self.acronym)
+        for child in self.children:
+            l.append(child.acronym)
+            child.serializable_acronym()
+        return l
+
     def __str__(self):
         return u"%s - %s" % (self.acronym, self.title)
 
@@ -95,6 +103,10 @@ def find_by_type(type):
     return Structure.objects.filter(type__icontains=type)
 
 
+def find_by_types(types):
+    return Structure.objects.filter(type__in=types).order_by('type', 'acronym')
+
+
 def find_faculty(a_structure):
     if a_structure.type == structure_type.FACULTY:
         return a_structure
@@ -106,4 +118,13 @@ def find_faculty(a_structure):
             else:
                 return parent
         return None
+
+
+def find_first(acronym=None, title=None, type=None):
+    return search(acronym, title, type).first()
+
+
+def find_by_acronyms(acronym_list):
+    return Structure.objects.filter(acronym__in=acronym_list).order_by("acronym")
+
 

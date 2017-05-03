@@ -30,7 +30,7 @@ from osis_common.models.serializable_model import SerializableModel, Serializabl
 
 class AttributionAdmin(SerializableModelAdmin):
     list_display = ('tutor', 'function', 'score_responsible', 'learning_unit_year', 'start_year', 'end_year', 'changed')
-    list_filter = ('function', 'learning_unit_year__academic_year')
+    list_filter = ('function', 'learning_unit_year__academic_year', 'score_responsible')
     fieldsets = ((None, {'fields': ('learning_unit_year', 'tutor', 'function', 'score_responsible', 'start_year',
                                     'end_year')}),)
     raw_id_fields = ('learning_unit_year', 'tutor')
@@ -72,15 +72,20 @@ def search(tutor=None, learning_unit_year=None, score_responsible=None, list_lea
     return queryset.select_related('tutor__person', 'learning_unit_year')
 
 
-def find_all_responsibles(a_learning_unit_year):
+def find_all_responsibles_by_learning_unit_year(a_learning_unit_year):
     attribution_list = Attribution.objects.select_related("tutor") \
         .filter(learning_unit_year=a_learning_unit_year) \
         .filter(score_responsible=True)
     return [attribution.tutor for attribution in attribution_list]
 
 
+def find_attributions(structure):
+    attribution_list = Attribution.objects.filter(learning_unit_year__structure=structure)
+    return attribution_list
+
+
 def find_responsible(a_learning_unit_year):
-    tutors_list = find_all_responsibles(a_learning_unit_year)
+    tutors_list = find_all_responsibles_by_learning_unit_year(a_learning_unit_year)
     if tutors_list:
         return tutors_list[0]
     return None
@@ -92,3 +97,59 @@ def is_score_responsible(user, learning_unit_year):
         .filter(tutor__person__user=user) \
         .count()
     return attributions > 0
+
+
+def find_tutor_number(attribution):
+    tutor_number = Attribution.objects.filter(learning_unit_year=attribution.learning_unit_year).count()
+    return tutor_number
+
+
+def search_scores_responsible(structure, learning_unit_title, course_code, entity, professor, scores_responsible):
+    queryset = Attribution.objects
+    if learning_unit_title:
+        queryset = queryset.filter(learning_unit_year__title__icontains=learning_unit_title)
+    if course_code:
+        queryset = queryset.filter(learning_unit_year__learning_unit__acronym__icontains=course_code)
+    if entity:
+        queryset = queryset.filter(learning_unit_year__structure__acronym=entity)
+    if professor:
+        queryset = queryset.filter(tutor__id=professor)
+    if scores_responsible:
+        queryset = queryset.filter(tutor__id=scores_responsible).filter(score_responsible=True)
+    queryset = queryset.filter(learning_unit_year__structure=structure).distinct("learning_unit_year")
+    return queryset
+
+
+def find_attribution_distinct(structure):
+    attributions_list = Attribution.objects.filter(learning_unit_year__structure=structure)\
+        .distinct("learning_unit_year")
+    return attributions_list
+
+
+def find_responsible_distinct(structure):
+    attributions_list = Attribution.objects.filter(learning_unit_year__structure=structure)\
+        .filter(score_responsible=True).distinct("tutor")
+    return attributions_list
+
+
+def find_all_tutor(structure):
+    all_tutors = Attribution.objects.filter(learning_unit_year__structure=structure)
+    return all_tutors
+
+
+def find_all_responsable_by_learning_unit_year(structure, learning_unit_year):
+    all_tutors = Attribution.objects.filter(learning_unit_year=learning_unit_year)\
+        .filter(score_responsible=True).filter(learning_unit_year__structure=structure)
+    return all_tutors
+
+
+def find_all_tutor_by_learning_unit_year(learning_unit_year):
+    all_tutors = Attribution.objects.filter(learning_unit_year=learning_unit_year).filter(score_responsible=False)
+    return all_tutors
+
+
+def find_by_tutor(tutor):
+    if tutor:
+        return [att.learning_unit_year for att in list(search(tutor=tutor))]
+    else:
+        return None

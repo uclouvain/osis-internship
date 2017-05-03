@@ -26,22 +26,12 @@
 from django.contrib.auth.decorators import user_passes_test
 from assistant.forms import SettingsForm
 from base.views import layout
-from assistant.models import settings, manager
+from assistant.models import settings
 from base.models import academic_year
-from django.core.exceptions import ObjectDoesNotExist
+from assistant.utils import manager_access
 
 
-def user_is_manager(user):
-    """Use with a ``user_passes_test`` decorator to restrict access to
-    authenticated users who are manager."""
-    try:
-        if user.is_authenticated():
-            return manager.Manager.objects.get(person=user.person)
-    except ObjectDoesNotExist:
-        return False
-
-
-@user_passes_test(user_is_manager, login_url='assistants_home')
+@user_passes_test(manager_access.user_is_manager, login_url='assistants_home')
 def settings_edit(request):
     """Use to edit app settings."""
     global_settings = settings.get_settings()
@@ -57,7 +47,7 @@ def settings_edit(request):
                                                     })
 
 
-@user_passes_test(user_is_manager, login_url='assistants_home')
+@user_passes_test(manager_access.user_is_manager, login_url='assistants_home')
 def settings_save(request):
     global_settings = settings.get_settings()
     form = SettingsForm(data=request.POST, instance=global_settings, prefix='set')

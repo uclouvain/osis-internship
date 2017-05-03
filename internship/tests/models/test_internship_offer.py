@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# OSIS stands for Open Student Information System. It's an application
+#    OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
@@ -37,14 +37,13 @@ def create_internship_offer(cohort=None):
     organization = test_organization.create_organization(cohort=cohort)
     speciality = test_internship_speciality.create_speciality(cohort=cohort)
 
-    offer = OfferFactory(speciality=speciality,
+    return OfferFactory(
+        speciality=speciality,
         organization=organization,
         title="offer_test",
         maximum_enrollments=20,
+        cohort=cohort,
     )
-    offer.save()
-
-    return offer
 
 
 def create_specific_internship_offer(organization, speciality, title="offer_test", cohort=None):

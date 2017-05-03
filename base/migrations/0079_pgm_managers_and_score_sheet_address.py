@@ -56,21 +56,20 @@ def copy_program_managers(apps, schema_editor):
 
 def _find_program_managers():
     return list(ProgramManager.objects.filter(offer_year__academic_year__year=origin_year)
-                .select_related("offer_year")
-                .select_related("person"))
+                .select_related("offer_year"))
 
 
 def _create_new_manager(manager, new_offer_years):
     new_offer_year = new_offer_years.get(manager.offer_year.acronym)
-    if new_offer_year and not _program_manager_exists(new_offer_year, manager.person):
-        new_manager = ProgramManager(person=manager.person,
+    if new_offer_year and not _program_manager_exists(new_offer_year, manager.person.id):
+        new_manager = ProgramManager(person_id=manager.person.id,
                                      offer_year_id=new_offer_year['id'])
         new_manager.save()
 
 
 def _program_manager_exists(new_offer_year, person):
     return ProgramManager.objects.filter(offer_year_id=new_offer_year['id']) \
-                                 .filter(person=person) \
+                                 .filter(person_id=person) \
                                  .exists()
 
 
