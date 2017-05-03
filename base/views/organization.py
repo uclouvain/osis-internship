@@ -74,30 +74,11 @@ def organization_save(request, organization_id):
         organization = mdl.organization.Organization()
 
     # get the screen modifications
-    if request.POST['acronym']:
-        organization.acronym = request.POST['acronym']
-    else:
-        organization.acronym = None
-
-    if request.POST['name']:
-        organization.name = request.POST['name']
-    else:
-        organization.name = None
-
-    if request.POST['website']:
-        organization.website = request.POST['website']
-    else:
-        organization.website = None
-
-    if request.POST['reference']:
-        organization.reference = request.POST['reference']
-    else:
-        organization.reference = None
-
-    if request.POST['type_choices']:
-        organization.type = request.POST['type_choices']
-    else:
-        organization.type = None
+    organization.acronym = request.POST.get('acronym')
+    organization.name = request.POST.get('name')
+    organization.website = request.POST.get('website')
+    organization.reference = request.POST.get('reference')
+    organization.type = request.POST.get('type_choices')
 
     if form.is_valid():
         organization.save()
