@@ -49,7 +49,7 @@ class LearningUnitsSearchTest(StaticLiveServerTestCase):
                                 password='superpassword')
 
     def error_displayed(self,error_msg):
-        self.wait_for(lambda: self.browser.find_element_by_class_name('error').is_displayed())
+        self.wait_for(lambda: self.browser.find_element_by_class_name('alert-danger').is_displayed())
 
     def go_to_learning_units_page(self):
         # She goes on the homepage to log in
@@ -142,17 +142,17 @@ class LearningUnitsSearchTest(StaticLiveServerTestCase):
         # Sarah needs to check out an existing learning_unit
         self.go_to_learning_units_page()
 
-        # She enters a non-valid acronym and doesnt specify an academic year,
+        # She enters a non-valid acronym [< 3 CHAR] and doesnt specify an academic year,
         # to see if a learning unit exists in a particular year.
         inputbox_acronym=self.browser.find_element_by_id('id_acronym')
-        inputbox_acronym.send_keys('ACRONYM')
+        inputbox_acronym.send_keys('AC')
 
         # She starts a search by pressing ENTER
         login_button= self.browser.find_element_by_id('bt_submit_learning_unit_search')
         login_button.send_keys(Keys.ENTER)
 
         # She sees an error when the page refreshes
-        self.error_displayed('LU_ERRORS_YEAR_WITH_ACRONYM')
+        self.error_displayed('LU_ERRORS_INVALID_SEARCH')
 
         # Unhappy of the situation, she closes the browser...
 

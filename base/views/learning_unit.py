@@ -23,42 +23,46 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+import datetime
+
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
-from base import models as mdl
+from django.utils.translation import ugettext_lazy as _
+
 from attribution import models as mdl_attr
-from . import layout
+from base import models as mdl
 from base.forms.learning_units import LearningUnitYearForm
+from . import layout
 
 @login_required
 @permission_required('base.can_access_learningunit', raise_exception=True)
 def learning_units(request):
+    template_name = "learning_units.html"
+    context = _get_common_context_list_learning_unit_years()
+    context.update({
+        'form': LearningUnitYearForm(),
+        'current_academic_year': mdl.academic_year.current_academic_year()
+    })
+    return layout.render(request, template_name, context)
 
-    form = LearningUnitYearForm()
-    academic_years = mdl.academic_year.find_academic_years()
-    return layout.render(request, "learning_units.html", {
-                                                          'form':form,
-                                                          'learning_units': [],
-                                                          'academic_years': academic_years,
-                                                          'init': 1})
 @login_required
 @permission_required('base.can_access_learningunit', raise_exception=True)
 def learning_units_search(request):
-    academic_years = mdl.academic_year.find_academic_years()
+    template_name = "learning_units.html"
     form = LearningUnitYearForm(request.GET)
+    learning_units = None
     if form.is_valid():
         learning_units = form.get_learning_units()
-    else:
-        learning_units = None
+        _check_if_display_message(request, learning_units)
 
-    academic_year_selected_before_search = form.get_academic_year()
-    academic_years_all=form.set_academic_years_all()
+    context = _get_common_context_list_learning_unit_years()
+    context.update({
+        'form': form,
+        'academic_years': mdl.academic_year.find_academic_years(),
+        'learning_units': learning_units
+    })
+    return layout.render(request, template_name, context)
 
-    return layout.render(request, "learning_units.html", {'academic_year': int(academic_year_selected_before_search),
-                                                          'academic_years': academic_years,
-                                                          'academic_year_all' : academic_years_all,
-                                                          'learning_units': learning_units,
-                                                          'form':form,
-                                                          'init': "0"})
 
 @login_required
 @permission_required('base.can_access_learningunit', raise_exception=True)
@@ -72,3 +76,20 @@ def learning_unit_read(request, learning_unit_year_id):
                                                          'attributions': attributions,
                                                          'enrollments': enrollments,
                                                          'is_program_manager': is_program_manager})
+
+
+def _check_if_display_message(request, learning_units):
+    if not learning_units:
+        messages.add_message(request, messages.WARNING, _('no_result'))
+
+
+def _get_common_context_list_learning_unit_years():
+    today = datetime.date.today()
+    date_ten_years_before = today.replace(year=today.year-10)
+    academic_years = mdl.academic_year.find_academic_years()\
+                                      .filter(start_date__gte=date_ten_years_before)
+
+    context = {
+        'academic_years': academic_years
+    }
+    return context
