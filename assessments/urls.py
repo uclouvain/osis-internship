@@ -27,6 +27,7 @@ from django.conf.urls import url, include
 from assessments.views import score_encoding, upload_xls_utils, pgm_manager_administration
 from django.views.i18n import javascript_catalog
 
+from assessments.views import scores_responsible
 
 js_info_dict = {
     'packages': ('assessments', )
@@ -75,6 +76,20 @@ urlpatterns = [
 
         url(r'^create$', pgm_manager_administration.create_manager, name='create_manager_person'),
 
+    ])),
+
+    url(r'^srm_manager/', include([
+        url(r'^$', scores_responsible.scores_responsible,
+            name='scores_responsible'),
+        url(r'^scores_responsible_search$', scores_responsible.scores_responsible_search,
+            name='scores_responsible_search'),
+        url(r'^scores_responsible_management/(?P<pk>[0-9]+)/edit/$', scores_responsible.scores_responsible_management,
+            name='scores_responsible_management'),
+        url(r'^scores_responsible_delete/(?P<pk>[0-9]+)/edit/$', scores_responsible.scores_responsible_delete,
+            name='scores_responsible_delete'),
+        url(r'^scores_responsible_add', scores_responsible.scores_responsible_add,
+            name='scores_responsible_add'),
+        url(r'^scores_responsible_management$', scores_responsible.scores_responsible_list),
     ])),
 
     url(r'^update_managers_list/$', pgm_manager_administration.update_managers_list),
