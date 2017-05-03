@@ -35,7 +35,7 @@ class OfferYearAdmin(SerializableModelAdmin):
                                     'entity_management', 'entity_management_fac', 'acronym', 'title', 'parent',
                                     'title_international', 'title_short', 'title_printable', 'grade', 'recipient',
                                     'location', 'postal_code', 'city', 'country', 'phone', 'fax', 'email', 'campus')}),)
-    list_filter = ('academic_year', 'grade', 'campus')
+    list_filter = ('academic_year', 'grade', 'grade_type', 'campus')
     raw_id_fields = ('offer', 'parent')
     search_fields = ['acronym']
 
