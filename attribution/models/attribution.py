@@ -104,13 +104,7 @@ def find_tutor_number(attribution):
     return tutor_number
 
 
-def search_scores_responsible(**kwargs):
-    learning_unit_title = kwargs.get("learning_unit_title")
-    course_code = kwargs.get("course_code")
-    entity = kwargs.get("entity")
-    professor = kwargs.get("professor")
-    scores_responsible = kwargs.get("scores_responsible")
-    structure = kwargs.get("structure")
+def search_scores_responsible(structure, learning_unit_title, course_code, entity, professor, scores_responsible):
     queryset = Attribution.objects
     if learning_unit_title:
         queryset = queryset.filter(learning_unit_year__title__icontains=learning_unit_title)
@@ -127,13 +121,13 @@ def search_scores_responsible(**kwargs):
 
 
 def find_attribution_distinct(structure):
-    attributions_list = Attribution.objects.filter(learning_unit_year__structure=structure) \
+    attributions_list = Attribution.objects.filter(learning_unit_year__structure=structure)\
         .distinct("learning_unit_year")
     return attributions_list
 
 
 def find_responsible_distinct(structure):
-    attributions_list = Attribution.objects.filter(learning_unit_year__structure=structure) \
+    attributions_list = Attribution.objects.filter(learning_unit_year__structure=structure)\
         .filter(score_responsible=True).distinct("tutor")
     return attributions_list
 
@@ -144,8 +138,7 @@ def find_all_tutor(structure):
 
 
 def find_all_responsable_by_learning_unit_year(structure, learning_unit_year):
-    all_tutors = Attribution.objects.filter(learning_unit_year=learning_unit_year).filter(
-        score_responsible=True).filter(learning_unit_year__structure=structure)
+    all_tutors = Attribution.objects.filter(learning_unit_year=learning_unit_year).filter(score_responsible=True).filter(learning_unit_year__structure=structure)
     return all_tutors
 
 
