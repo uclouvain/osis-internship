@@ -33,8 +33,9 @@ class OfferYearAdmin(SerializableModelAdmin):
     list_display = ('acronym', 'title', 'academic_year', 'offer', 'parent', 'changed')
     fieldsets = ((None, {'fields': ('offer', 'academic_year', 'entity_administration', 'entity_administration_fac',
                                     'entity_management', 'entity_management_fac', 'acronym', 'title', 'parent',
-                                    'title_international', 'title_short', 'title_printable', 'grade', 'recipient',
-                                    'location', 'postal_code', 'city', 'country', 'phone', 'fax', 'email', 'campus')}),)
+                                    'title_international', 'title_short', 'title_printable', 'grade', 'grade_type',
+                                    'recipient', 'location', 'postal_code', 'city', 'country', 'phone', 'fax', 'email',
+                                    'campus')}),)
     list_filter = ('academic_year', 'grade', 'grade_type', 'campus')
     raw_id_fields = ('offer', 'parent')
     search_fields = ['acronym']
