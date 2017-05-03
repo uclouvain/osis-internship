@@ -26,7 +26,6 @@
 from django import forms
 from base import models as mdl
 from django.core.exceptions import ValidationError
-from base.enums import learning_unit_year_status
 
 
 class LearningUnitYearForm(forms.Form):
@@ -35,11 +34,6 @@ class LearningUnitYearForm(forms.Form):
                               max_length=20, required=False)
     keyword = forms.CharField(widget=forms.TextInput(attrs={'size': '10', 'class': 'form-control'}),
                               max_length=20, required=False)
-    status = forms.CharField(
-        widget=forms.Select(choices=learning_unit_year_status.LEARNING_UNIT_YEAR_STATUS,
-                            attrs={'class': 'form-control'}),
-        required=False
-    )
 
     def clean_acronym(self):
         MIN_ACRONYM_LENGTH = 3
@@ -59,8 +53,7 @@ class LearningUnitYearForm(forms.Form):
 
         return mdl.learning_unit_year.search(academic_year_id=clean_data.get('academic_year'),
                                              acronym=clean_data.get('acronym'),
-                                             title=clean_data.get('keyword'),
-                                             status=clean_data.get('status'))\
+                                             title=clean_data.get('keyword'))\
                                      .select_related('academic_year')\
                                      .order_by('academic_year__year', 'acronym')
 

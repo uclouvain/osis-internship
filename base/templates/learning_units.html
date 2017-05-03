@@ -42,10 +42,18 @@
                 <div class="col-md-2">
                     <label for="slt_academic_year">{% trans 'academic_year'%}</label>
                     <select class="form-control" id="slt_academic_year" name="academic_year">
-                        <option value="">{% trans 'all_years'%}</option>
+                        <option value=""></option>
                         {% for ac_year in academic_years %}
-                        <option {% if ac_year.id == request.GET.academic_year|add:"0" %} selected {% endif %}
-                                value="{{ ac_year.id }}">{{ ac_year }}</option>
+
+                        <option
+                            {% if request.GET.academic_year and ac_year.id == request.GET.academic_year|add:"0" %}
+                                selected
+                            {% endif %}
+                            {% if not request.GET.academic_year and ac_year.id == current_academic_year.id %}
+                                selected
+                            {% endif %}
+                            value="{{ ac_year.id }}">{{ ac_year }}
+                        </option>
                         {% endfor %}
                     </select>
                 </div>
@@ -55,19 +63,15 @@
                     {{ form.acronym }}
                 </div>
 
-                <div class="col-md-2 col-md-offset-2">
-                    <label for="id_status">{% trans 'status' %}</label>
-                    {{ form.status }}
-                </div>
-
-                <div class="col-md-3">
+                <div class="col-md-3 col-md-offset-4">
                     <label for="id_keyword">{% trans 'keyword' %}</label>
                     {{ form.keyword }}
                 </div>
 
                 <div class="col-md-1">
-                    <button type="submit" id="bt_submit_learning_unit_search" class="btn btn-primary pull-rigth"
-                            style="margin-top:23px;" role="button" title="{% trans 'learning_unit_search' %}">
+                    <button type="submit" id="bt_submit_learning_unit_search"
+                            class="btn btn-primary pull-rigth" style="margin-top:23px;" role="button"
+                            title="{% trans 'learning_unit_search' %}">
                         <span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
                 </div>
             </div>
@@ -92,7 +96,6 @@
             <th>{% trans 'title'%}</th>
             <th>{% trans 'credits'%}</th>
             <th>{% trans 'academic_year'%}</th>
-            <th>{% trans 'status'%}</th>
             </thead>
             {% for learning_unit in learning_units %}
             <tr>
@@ -102,7 +105,6 @@
                 <td>{{ learning_unit.title }}</td>
                 <td>{% if learning_unit.credits %}{{ learning_unit.credits }}{% endif %}</td>
                 <td>{{ learning_unit.academic_year }}</td>
-                <td>{{ learning_unit.status }}</td>
             </tr>
             {% endfor %}
         </table>
