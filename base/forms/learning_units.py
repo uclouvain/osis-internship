@@ -27,7 +27,6 @@ from django import forms
 from base import models as mdl
 from django.core.exceptions import ValidationError
 from base.enums import learning_unit_year_status
-from base.enums import learning_unit_year_types
 
 
 class LearningUnitYearForm(forms.Form):
@@ -36,19 +35,22 @@ class LearningUnitYearForm(forms.Form):
                               max_length=20, required=False)
     keyword = forms.CharField(widget=forms.TextInput(attrs={'size': '10', 'class': 'form-control'}),
                               max_length=20, required=False)
-    type = forms.CharField(
-        widget=forms.Select(choices=learning_unit_year_types.LEARNING_UNIT_YEAR_TYPES,
-                            attrs={'class' : 'form-control'}),
-        required=False
-    )
     status = forms.CharField(
         widget=forms.Select(choices=learning_unit_year_status.LEARNING_UNIT_YEAR_STATUS,
                             attrs={'class': 'form-control'}),
         required=False
     )
 
+    def clean_acronym(self):
+        MIN_ACRONYM_LENGTH = 3
+        data_cleaned = self.cleaned_data.get('acronym')
+        data_cleaned = _treat_empty_or_str_none_as_none(data_cleaned)
+        if data_cleaned and len(data_cleaned) < MIN_ACRONYM_LENGTH:
+            raise ValidationError('LU_ERRORS_INVALID_SEARCH')
+        return data_cleaned
+
     def clean(self):
-        clean_data = self.cleaned_data
+        clean_data = _clean_data(self.cleaned_data)
         is_valid_search(**clean_data)
         return clean_data
 
@@ -58,18 +60,30 @@ class LearningUnitYearForm(forms.Form):
         return mdl.learning_unit_year.search(academic_year_id=clean_data.get('academic_year'),
                                              acronym=clean_data.get('acronym'),
                                              title=clean_data.get('keyword'),
-                                             type=clean_data.get('type'),
-                                             status=clean_data.get('status'))
+                                             status=clean_data.get('status'))\
+                                     .select_related('academic_year')\
+                                     .order_by('academic_year__year', 'acronym')
 
 
-def is_valid_search(**filter):
-    # Must have a least one filter full
-    nb_filter_set = sum(1 for value in filter.values() if value and value != 'NONE')
-    if not nb_filter_set:
-        raise ValidationError('LU_ERRORS_INVALID_SEARCH')
+def is_valid_search(**search_filter):
+    academic_year = search_filter.get('academic_year')
+    learning_unit_acronym = search_filter.get('acronym')
+    keyword = search_filter.get('keyword')
 
-    # Academic year or learning unit acronym must be fill in
-    academic_year = filter.get('academic_year')
-    learning_unit_acronym = filter.get('acronym')
-    if not academic_year and not learning_unit_acronym:
-        raise ValidationError('LU_ERRORS_ACADEMIC_YEAR_REQUIRED')
+    if academic_year and learning_unit_acronym:
+        return True
+    elif academic_year and keyword:
+        return True
+    elif learning_unit_acronym:
+        return True
+
+    raise ValidationError('LU_ERRORS_INVALID_SEARCH')
+
+
+def _clean_data(datas_to_clean):
+    return {key: _treat_empty_or_str_none_as_none(value) for (key, value) in datas_to_clean.items()}
+
+
+def _treat_empty_or_str_none_as_none(data):
+    return None if not data or data == "NONE" else data
+

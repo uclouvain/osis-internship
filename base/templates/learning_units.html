@@ -55,25 +55,19 @@
                     {{ form.acronym }}
                 </div>
 
-                <div class="col-md-2">
-                    <label for="id_keyword">{% trans 'keyword' %}</label>
-                    {{ form.keyword }}
-                </div>
-
-                <div class="col-md-2">
-                    <label for="id_type">{% trans 'type' %}</label>
-                    {{ form.type }}
-                </div>
-
-                <div class="col-md-2">
+                <div class="col-md-2 col-md-offset-2">
                     <label for="id_status">{% trans 'status' %}</label>
                     {{ form.status }}
                 </div>
 
-                <div class="col-md-2">
-                    <br>
-                    <button type="submit" id="bt_submit_learning_unit_search" class="btn btn-primary" role="button"
-                            title="{% trans 'learning_unit_search' %}">
+                <div class="col-md-3">
+                    <label for="id_keyword">{% trans 'keyword' %}</label>
+                    {{ form.keyword }}
+                </div>
+
+                <div class="col-md-1">
+                    <button type="submit" id="bt_submit_learning_unit_search" class="btn btn-primary pull-rigth"
+                            style="margin-top:23px;" role="button" title="{% trans 'learning_unit_search' %}">
                         <span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
                 </div>
             </div>
@@ -97,8 +91,7 @@
             <th>{% trans 'acronym'%}</th>
             <th>{% trans 'title'%}</th>
             <th>{% trans 'credits'%}</th>
-            <th>{% trans 'type'%}</th>
-            <th>{% trans 'last_active_year'%}</th>
+            <th>{% trans 'academic_year'%}</th>
             <th>{% trans 'status'%}</th>
             </thead>
             {% for learning_unit in learning_units %}
@@ -108,7 +101,6 @@
                     {{ learning_unit.acronym }}</a></td>
                 <td>{{ learning_unit.title }}</td>
                 <td>{% if learning_unit.credits %}{{ learning_unit.credits }}{% endif %}</td>
-                <td>{{ learning_unit.type }}</td>
                 <td>{{ learning_unit.academic_year }}</td>
                 <td>{{ learning_unit.status }}</td>
             </tr>
