@@ -36,7 +36,8 @@ class OfferPreferenceForm(forms.Form):
         ('3', _('third_choice')),
         ('4', _('fourth_choice'))
     )
-    PERIODS = (
+
+    PERIODS_CHOICES = (
         ("P1", "P1"),
         ("P2", "P2"),
         ("P3", "P3"),
@@ -51,9 +52,10 @@ class OfferPreferenceForm(forms.Form):
         ("P12", "P12"),
 
     )
+
     offer = forms.IntegerField()
     preference = forms.ChoiceField(choices=PREFERENCE_CHOICES, required=True)
-    periods = forms.MultipleChoiceField(choices=PERIODS, required=False)
+    periods = forms.MultipleChoiceField(choices=PERIODS_CHOICES, required=False)
     priority = forms.BooleanField(required=False)
 
 
