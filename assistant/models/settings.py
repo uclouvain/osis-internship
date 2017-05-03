@@ -24,8 +24,8 @@
 #
 ##############################################################################
 from django.db import models
-from datetime import datetime
 from django.contrib import admin
+from django.utils import timezone
 
 
 class SettingsAdmin(admin.ModelAdmin):
@@ -45,7 +45,7 @@ def get_settings():
 
 
 def access_to_procedure_is_open():
-    if not Settings.objects.filter(starting_date__lt=datetime.now(), ending_date__gt=datetime.now()):
+    if not Settings.objects.filter(starting_date__lt=timezone.now(), ending_date__gt=timezone.now()):
         return False
     else:
         return True

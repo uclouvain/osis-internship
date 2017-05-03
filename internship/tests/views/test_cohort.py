@@ -26,6 +26,7 @@
 from django.contrib.auth.models import User, Permission
 from django.core.urlresolvers import reverse
 from django.test import TestCase
+from django.utils import timezone
 
 from internship.forms.cohort import CohortForm
 from internship.models.cohort import Cohort
@@ -80,7 +81,7 @@ class ViewCohortTestCase(TestCase):
 
         speciality = SpecialityFactory(cohort=cohort)
 
-        copy_cohort_name = 'Copy of {} {}'.format(cohort.name, datetime.datetime.now())
+        copy_cohort_name = 'Copy of {} {}'.format(cohort.name, timezone.now())
 
         form_data = {
             'name': copy_cohort_name,

@@ -25,6 +25,7 @@
 ##############################################################################
 import datetime
 from django.test import TestCase
+from django.utils import timezone
 from base.models import offer_year_calendar, offer_year
 from base.tests.models import test_academic_calendar
 
@@ -34,9 +35,9 @@ from base.tests.factories.offer_year_calendar import OfferYearCalendarFactory
 from base.tests.factories.offer_year import OfferYearFactory
 
 
-start_date = datetime.datetime.now().date()
+start_date = timezone.now().date()
 end_date = start_date.replace(year=start_date.year + 1)
-YEAR_CALENDAR = datetime.datetime.now().year
+YEAR_CALENDAR = timezone.now().year
 
 
 def create_offer_year_calendar(offer_yr, academic_year):
@@ -45,7 +46,7 @@ def create_offer_year_calendar(offer_yr, academic_year):
 
 
 def _create_academic_calendar_with_offer_year_calendars():
-    academic_yr = AcademicYearFactory(year=datetime.datetime.now().year,
+    academic_yr = AcademicYearFactory(year=timezone.now().year,
                                       start_date=start_date,
                                       end_date=end_date)
 
@@ -94,16 +95,18 @@ class AcademicCalendarWithOfferYearCalendarsCustomized(TestCase):
             filter(academic_calendar=self.academic_calendar)
         for off_cal in offer_year_calendars:
             off_cal.customized = True
-            off_cal.start_date = datetime.datetime(2010, 4, 1, 16, 8, 18)
-            off_cal.end_date = datetime.datetime(2011, 4, 1, 16, 8, 18)
+            off_cal.start_date = timezone.make_aware(datetime.datetime(2010, 4, 1, 16, 8, 18))
+            off_cal.end_date = timezone.make_aware(datetime.datetime(2011, 4, 1, 16, 8, 18))
             off_cal.save()
 
     def test_save_from_academic_calendar(self):
         offer_year_calendars = offer_year_calendar.OfferYearCalendar.objects.\
             filter(academic_calendar=self.academic_calendar, customized=True)
         for off_y_cal in offer_year_calendars:
-            self.assertEquals(off_y_cal.start_date, datetime.datetime(2010, 4, 1, 16, 8, 18))
-            self.assertNotEquals(off_y_cal.end_date, datetime.datetime(2011, 4, 1, 16, 8, 18))
+            date_aware = timezone.make_aware(datetime.datetime(2010, 4, 1, 16, 8, 18))
+            self.assertEquals(off_y_cal.start_date, date_aware)
+            date_aware = timezone.make_aware(datetime.datetime(2011, 4, 1, 16, 8, 18))
+            self.assertNotEquals(off_y_cal.end_date, date_aware)
 
 
 class AcademicCalendarWithOfferYearCalendarsNotCustomized(TestCase):
@@ -133,26 +136,26 @@ class OfferYearCalendarsAttributesValidation(TestCase):
 
     def setUp(self):
         self.academic_year = AcademicYearFactory(year=YEAR_CALENDAR,
-                                                 start_date=datetime.datetime(YEAR_CALENDAR, 9, 1),
-                                                 end_date=datetime.datetime(YEAR_CALENDAR+1, 10, 30))
+                                                 start_date=datetime.date(YEAR_CALENDAR, 9, 1),
+                                                 end_date=datetime.date(YEAR_CALENDAR+1, 10, 30))
         self.academic_calendar = AcademicCalendarFactory.build(academic_year=self.academic_year,
-                                                               start_date=datetime.datetime(YEAR_CALENDAR, 9, 1),
-                                                               end_date=datetime.datetime(YEAR_CALENDAR+1, 10, 30))
+                                                               start_date=datetime.date(YEAR_CALENDAR, 9, 1),
+                                                               end_date=datetime.date(YEAR_CALENDAR+1, 10, 30))
         self.academic_calendar.save(functions=[])
         self.offer_year = OfferYearFactory(academic_year=self.academic_year)
 
     def test_end_date_lower_than_start_date(self):
         self.offer_year_calendar = OfferYearCalendarFactory.build(offer_year=self.offer_year,
                                                                   academic_calendar=self.academic_calendar)
-        self.offer_year_calendar.start_date = datetime.datetime(YEAR_CALENDAR, 9, 1)
-        self.offer_year_calendar.end_date = datetime.datetime(YEAR_CALENDAR, 8, 1)
+        self.offer_year_calendar.start_date = datetime.date(YEAR_CALENDAR, 9, 1)
+        self.offer_year_calendar.end_date = datetime.date(YEAR_CALENDAR, 8, 1)
         with self.assertRaises(AttributeError):
             self.offer_year_calendar.save()
 
     def test_end_date_greather_than_academic_calendar_end_date(self):
         self.offer_year_calendar = OfferYearCalendarFactory.build(offer_year=self.offer_year,
                                                                   academic_calendar=self.academic_calendar)
-        self.offer_year_calendar.start_date = datetime.datetime(YEAR_CALENDAR, 9, 1)
+        self.offer_year_calendar.start_date = datetime.date(YEAR_CALENDAR, 9, 1)
         self.offer_year_calendar.end_date = self.academic_calendar.end_date + datetime.timedelta(days=2)
         with self.assertRaises(AttributeError):
             self.offer_year_calendar.save()
@@ -160,7 +163,7 @@ class OfferYearCalendarsAttributesValidation(TestCase):
     def test_start_date_lower_than_academic_calendar_start_date(self):
         self.offer_year_calendar = OfferYearCalendarFactory.build(offer_year=self.offer_year,
                                                                   academic_calendar=self.academic_calendar)
-        self.offer_year_calendar.end_date = datetime.datetime(YEAR_CALENDAR+2, 8, 1)
+        self.offer_year_calendar.end_date = datetime.date(YEAR_CALENDAR+2, 8, 1)
         self.offer_year_calendar.start_date = self.academic_calendar.start_date - datetime.timedelta(days=2)
         with self.assertRaises(AttributeError):
             self.offer_year_calendar.save()
