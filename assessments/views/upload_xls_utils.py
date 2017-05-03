@@ -321,7 +321,7 @@ def __warn_that_score_responsibles_must_submit_scores(request, learning_unit_yea
 
 
 def _get_justification_from_aliases(enrollment, justification_encoded):
-    justification = AUTHORIZED_JUSTIFICATION_ALIASES.get(justification_encoded)
+    justification = AUTHORIZED_JUSTIFICATION_ALIASES.get(justification_encoded.upper())
     if justification:
         # When absence justified no change
         return justification_types.ABSENCE_JUSTIFIED if _is_remain_justified_absence(enrollment, justification) \
