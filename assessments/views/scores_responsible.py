@@ -55,7 +55,7 @@ def scores_responsible(request):
 def scores_responsible_search(request):
     a_faculty_administrator = entity_manager.find_entity_manager_by_user(request.user)
     attributions_searched = mdl_attr.attribution.search_scores_responsible(
-        a_faculty_administrator.structure,
+        structure=a_faculty_administrator.structure,
         learning_unit_title=request.GET['learning_unit_title'],
         course_code=request.GET['course_code'],
         entity=request.GET['entity'],

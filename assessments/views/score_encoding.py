@@ -487,7 +487,7 @@ def bulk_send_messages_to_notify_encoding_progress(request, updated_enrollments,
             if learning_unit_year in mail_already_sent_by_learning_unit:
                 continue
             scores_list = score_encoding_list.get_scores_encoding_list(user=request.user,
-                                                                           learning_unit_year_id=learning_unit_year.id)
+                                                                       learning_unit_year_id=learning_unit_year.id)
             send_messages_to_notify_encoding_progress(request, scores_list.enrollments,
                                                       learning_unit_year, is_program_manager, updated_enrollments)
             mail_already_sent_by_learning_unit.add(learning_unit_year)
@@ -514,7 +514,7 @@ def online_double_encoding_get_form(request, data=None, learning_unit_year_id=No
 def _get_common_encoding_context(request, learning_unit_year_id):
     scores_list = score_encoding_list.get_scores_encoding_list(user=request.user,
                                                                learning_unit_year_id=learning_unit_year_id)
-    score_responsibles = mdl_attr.attribution.find_all_responsibles(scores_list.learning_unit_year)
+    score_responsibles = mdl_attr.attribution.find_all_responsibles_by_learning_unit_year(scores_list.learning_unit_year)
     tutors = mdl.tutor.find_by_learning_unit(scores_list.learning_unit_year) \
                       .exclude(id__in=[score_responsible.id for score_responsible in score_responsibles])
     is_coordinator = mdl_attr.attribution.is_score_responsible(request.user, scores_list.learning_unit_year)
