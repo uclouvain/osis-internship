@@ -29,23 +29,12 @@ from assistant.models import assistant_mandate, settings, manager, reviewer
 from django.shortcuts import redirect
 from assistant.models.message import Message
 from django.utils import timezone
-from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import user_passes_test
 from assistant.enums import message_type
+from assistant.utils import manager_access
 
 
-def user_is_manager(user):
-    """Use with a ``user_passes_test`` decorator to restrict access to
-    authenticated users who are manager."""
-
-    try:
-        if user.is_authenticated():
-            return manager.find_by_person(user.person)
-    except ObjectDoesNotExist:
-        return False
-
-
-@user_passes_test(user_is_manager, login_url='assistants_home')
+@user_passes_test(manager_access.user_is_manager, login_url='assistants_home')
 def send_message_to_assistants(request):
     mandates_for_current_academic_year = assistant_mandate.find_by_academic_year(
         academic_year.current_academic_year())
@@ -61,7 +50,7 @@ def send_message_to_assistants(request):
     return redirect('messages_history')
 
 
-@user_passes_test(user_is_manager, login_url='assistants_home')
+@user_passes_test(manager_access.user_is_manager, login_url='assistants_home')
 def send_message_to_deans(request):
     html_template_ref = 'assistant_deans_startup__html'
     txt_template_ref = 'assistant_deans_startup_txt'
@@ -72,7 +61,7 @@ def send_message_to_deans(request):
     return redirect('messages_history')
 
 
-@user_passes_test(user_is_manager, login_url='assistants_home')
+@user_passes_test(manager_access.user_is_manager, login_url='assistants_home')
 def save_message_history(request, type):
     message = Message.objects.create(sender=manager.Manager.objects.get(person=request.user.person),
                                      date=timezone.now(),
