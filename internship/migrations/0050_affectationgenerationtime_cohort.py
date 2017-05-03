@@ -16,7 +16,7 @@ def assign_first_cohort_to_periods(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('internship', '0047_auto_20170410_1601'),
+        ('internship', '0049_prevent_multiple_choices_for_preference'),
     ]
 
     operations = [
