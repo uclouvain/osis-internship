@@ -41,7 +41,8 @@ def is_faculty_admin(user):
 @user_passes_test(is_faculty_admin)
 def scores_responsible(request):
     a_faculty_administrator = entity_manager.find_entity_manager_by_user(request.user)
-    all_tutors, attributions, attributions_list, responsibles_list = find_data_table(request,  a_faculty_administrator.structure)
+    all_tutors, attributions, attributions_list, responsibles_list = find_data_table(request,
+                                                                                     a_faculty_administrator.structure)
     dict_attribution = create_dictionary(attributions)
     return layout.render(request, 'scores_responsible.html', {"all_tutors": all_tutors,
                                                               "attributions_list": attributions_list,
@@ -61,7 +62,8 @@ def scores_responsible_search(request):
         entity=request.GET['entity'],
         professor=request.GET['professor'],
         scores_responsible=request.GET['scores_responsible'])
-    all_tutors, attributions, attributions_list, responsibles_list = find_data_table(request, a_faculty_administrator.structure)
+    all_tutors, attributions, attributions_list, responsibles_list = find_data_table(request,
+                                                                                     a_faculty_administrator.structure)
     dict_attribution = create_dictionary(attributions_searched)
     return layout.render(request, 'scores_responsible.html', {"all_tutors": all_tutors,
                                                               "attributions_list": attributions_list,
@@ -102,7 +104,8 @@ def scores_responsible_list(request):
 def scores_responsible_management(request, pk):
     learning_unit_year = get_object_or_404(LearningUnitYear, pk=pk)
     a_faculty_administrator = entity_manager.find_entity_manager_by_user(request.user)
-    professors = mdl_attr.attribution.find_all_responsable_by_learning_unit_year(a_faculty_administrator.structure, learning_unit_year)
+    professors = mdl_attr.attribution.find_all_responsable_by_learning_unit_year(a_faculty_administrator.structure,
+                                                                                 learning_unit_year)
     attributions = mdl_attr.attribution.find_all_tutor_by_learning_unit_year(learning_unit_year)
     return layout.render(request, 'scores_responsible_edit.html',
                          {'learning_unit_year': learning_unit_year,

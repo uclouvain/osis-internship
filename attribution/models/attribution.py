@@ -138,7 +138,8 @@ def find_all_tutor(structure):
 
 
 def find_all_responsable_by_learning_unit_year(structure, learning_unit_year):
-    all_tutors = Attribution.objects.filter(learning_unit_year=learning_unit_year).filter(score_responsible=True).filter(learning_unit_year__structure=structure)
+    all_tutors = Attribution.objects.filter(learning_unit_year=learning_unit_year)\
+        .filter(score_responsible=True).filter(learning_unit_year__structure=structure)
     return all_tutors
 
 

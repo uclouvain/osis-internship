@@ -320,7 +320,7 @@ def online_double_encoding_form(request, learning_unit_year_id=None):
         scores_list = _get_score_encoding_list_with_only_enrollment_modified(request, learning_unit_year_id)
 
         try:
-            scores_list =  score_encoding_list.assign_encoded_to_reencoded_enrollments(scores_list)
+            scores_list = score_encoding_list.assign_encoded_to_reencoded_enrollments(scores_list)
         except Exception as e:
             error_msg = e.messages[0] if isinstance(e, ValidationError) else e.args[0]
             messages.add_message(request, messages.ERROR, _(error_msg))
@@ -487,7 +487,7 @@ def bulk_send_messages_to_notify_encoding_progress(request, updated_enrollments,
             if learning_unit_year in mail_already_sent_by_learning_unit:
                 continue
             scores_list = score_encoding_list.get_scores_encoding_list(user=request.user,
-                                                                           learning_unit_year_id=learning_unit_year.id)
+                                                                       learning_unit_year_id=learning_unit_year.id)
             send_messages_to_notify_encoding_progress(request, scores_list.enrollments,
                                                       learning_unit_year, is_program_manager, updated_enrollments)
             mail_already_sent_by_learning_unit.add(learning_unit_year)
@@ -560,7 +560,7 @@ def _get_specific_criteria_context(request):
     if request.method == 'POST':
         # Make a search
         if not registration_id and not last_name and not first_name and not justification and not offer_year_id:
-             messages.add_message(request, messages.WARNING, "%s" % _('minimum_one_criteria'))
+            messages.add_message(request, messages.WARNING, "%s" % _('minimum_one_criteria'))
         else:
             _append_search_to_specific_criteria_context(request, context)
     return context
@@ -577,7 +577,7 @@ def _append_search_to_specific_criteria_context(request, context):
     )
     context.update(scores_list.__dict__)
     if not scores_list.enrollments:
-        messages.add_message(request, messages.WARNING,_('no_result'))
+        messages.add_message(request, messages.WARNING, _('no_result'))
 
 
 def _get_double_encoding_context(request, learning_unit_year_id):
