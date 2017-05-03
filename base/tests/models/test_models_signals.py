@@ -23,9 +23,9 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import datetime
 from django.contrib.auth.models import User
 from django.test import TestCase
+from django.utils import timezone
 from base.models.academic_year import AcademicYear
 from base.models.offer import Offer
 from base.models.offer_year import OfferYear
@@ -153,7 +153,7 @@ class AddToGroupsSignalsTest(TestCase):
         title = 'Test1BA'
         acronym = 'Test1BA'
         offer = Offer.objects.create(title=title)
-        now = datetime.datetime.now()
+        now = timezone.now()
         academic_year = AcademicYear.objects.create(year=now.year)
         offer_year = OfferYear.objects.create(offer=offer, academic_year=academic_year, title=title, acronym=acronym)
         return ProgramManager.objects.create(offer_year=offer_year, person=self.person_foo)

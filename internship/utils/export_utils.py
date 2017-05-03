@@ -23,13 +23,13 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import datetime
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from openpyxl import Workbook
 from openpyxl.writer.excel import save_virtual_workbook
 from openpyxl.styles import Color, Style, PatternFill
 from django.utils.translation import ugettext_lazy as _
+from django.utils import timezone
 import re
 
 from internship.models.organization import Organization
@@ -65,8 +65,9 @@ def export_xls(cohort, organization, affections_by_specialities, file_name):
         worksheet.append([str(organization.name) if organization else ''])
         worksheet.append([str(speciality.name)])
         worksheet.append([str('')])
-        printing_date = datetime.datetime.now()
-        printing_date = printing_date.strftime("%d/%m/%Y")
+        date_format = str(_('date_format'))
+        printing_date = timezone.now()
+        printing_date = printing_date.strftime(date_format)
         worksheet.append([str('%s: %s' % (_('file_production_date'), printing_date))])
         worksheet.append([str('')])
         worksheet.append([str(affectations[0].master) if affectations else ''])

@@ -23,13 +23,13 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import datetime
 import unicodedata
 from decimal import *
 from django.db import models
 from django.db.models import When, Case, Q, Sum, Count, IntegerField, F
 from django.contrib import admin
 from django.utils.translation import ugettext as _
+from django.utils import timezone
 from django.core.validators import MaxValueValidator, MinValueValidator
 from base.models import person, person_address, session_exam_calendar, session_exam_deadline, \
                         academic_year as academic_yr, offer_year, program_manager, tutor
@@ -434,7 +434,7 @@ def scores_sheet_data(exam_enrollments, tutor=None):
     date_format = str(_('date_format'))
     exam_enrollments = sort_for_encodings(exam_enrollments)
     data = {'tutor_global_id': tutor.person.global_id if tutor else ''}
-    now = datetime.datetime.now()
+    now = timezone.now()
     data['publication_date'] = '%s/%s/%s' % (now.day, now.month, now.year)
     data['institution'] = str(_('ucl_denom_location'))
     data['link_to_regulation'] = str(_('link_to_RGEE'))

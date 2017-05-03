@@ -25,19 +25,19 @@
 ##############################################################################
 import datetime
 from django.test import TestCase
+from django.utils import timezone
 from base.models.learning_container import LearningContainer
 from base.models.learning_container_year import LearningContainerYear
 from base.models.learning_component import LearningComponent
 from base.models.learning_component_year import LearningComponentYear
 from base.models.learning_unit_year import LearningUnitYear
 from base.models.learning_unit_component import LearningUnitComponent
-from base.models.learning_unit_component_class import LearningUnitComponentClass
 from base.models.learning_class_year import LearningClassYear
 from base.models.learning_class import LearningClass
 from base.models.academic_year import AcademicYear
 from base.enums import learning_unit_year_types
 
-now = datetime.datetime.now()
+now = timezone.now()
 
 
 class LearningComponentYearTest(TestCase):
@@ -46,13 +46,13 @@ class LearningComponentYearTest(TestCase):
 
     def setUp(self):
         self.current_academic_year = AcademicYear(year=(now.year),
-                                     start_date=datetime.datetime(now.year, now.month, 15),
-                                     end_date=datetime.datetime(now.year + 1, now.month, 28))
+                                     start_date=datetime.date(now.year, now.month, 15),
+                                     end_date=datetime.date(now.year + 1, now.month, 28))
         self.current_academic_year.save()
 
         self.current_academic_year_different = AcademicYear(year=(now.year)-1,
-                                     start_date=datetime.datetime(now.year-1, now.month, 15),
-                                     end_date=datetime.datetime(now.year + 2, now.month, 28))
+                                     start_date=datetime.date(now.year-1, now.month, 15),
+                                     end_date=datetime.date(now.year + 2, now.month, 28))
         self.current_academic_year_different.save()
 
     def test_creation_learning_unit_component_class_with_different_year(self):
