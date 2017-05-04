@@ -23,13 +23,13 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import datetime
 import unicodedata
 from decimal import *
 from django.db import models
 from django.db.models import When, Case, Q, Sum, Count, IntegerField, F
 from django.contrib import admin
 from django.utils.translation import ugettext as _
+from django.utils import timezone
 from django.core.validators import MaxValueValidator, MinValueValidator
 from base.models import person, person_address, session_exam_calendar, session_exam_deadline, \
                         academic_year as academic_yr, offer_year, program_manager, tutor
@@ -410,6 +410,7 @@ def find_for_score_encodings(session_exam_number,
                    )
 
     return queryset.select_related('learning_unit_enrollment__offer_enrollment__offer_year') \
+                   .select_related('session_exam')\
                    .select_related('learning_unit_enrollment__offer_enrollment__student__person')\
                    .select_related('learning_unit_enrollment__learning_unit_year')
 
@@ -430,9 +431,10 @@ def group_by_learning_unit_year_id(exam_enrollments):
 
 
 def scores_sheet_data(exam_enrollments, tutor=None):
+    date_format = str(_('date_format'))
     exam_enrollments = sort_for_encodings(exam_enrollments)
     data = {'tutor_global_id': tutor.person.global_id if tutor else ''}
-    now = datetime.datetime.now()
+    now = timezone.now()
     data['publication_date'] = '%s/%s/%s' % (now.day, now.month, now.year)
     data['institution'] = str(_('ucl_denom_location'))
     data['link_to_regulation'] = str(_('link_to_RGEE'))
@@ -487,7 +489,7 @@ def scores_sheet_data(exam_enrollments, tutor=None):
             number_session = exam_enrollment.session_exam.number_session
             deliberation_date = session_exam_calendar.find_deliberation_date(number_session, offer_year)
             if deliberation_date:
-                deliberation_date = deliberation_date.strftime(_('date_format'))
+                deliberation_date = deliberation_date.strftime(date_format)
             else:
                 deliberation_date = _('not_passed')
 
@@ -513,7 +515,7 @@ def scores_sheet_data(exam_enrollments, tutor=None):
                 # Compute deadline score encoding
                 deadline = get_deadline_tutor_computed(exam_enrol)
                 if deadline:
-                    deadline = deadline.strftime(_('date_format'))
+                    deadline = deadline.strftime(date_format)
 
                 enrollments.append({
                     "registration_id": student.registration_id,

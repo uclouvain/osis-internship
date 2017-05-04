@@ -102,6 +102,9 @@ msgstr "The activity %s doesn't exist"
 msgid "add_an_address_to_the_organization"
 msgstr "Add an address to the organization"
 
+msgid "add"
+msgstr "Add"
+
 msgid "address(ses)"
 msgstr "Address(es)"
 
@@ -173,6 +176,12 @@ msgstr "Chair of the exam board"
 
 msgid "cheating_pdf_legend"
 msgstr "T=Cheating"
+
+msgid "unjustified_absence_export_legend"
+msgstr "S=Unjustified Absence"
+
+msgid "justified_absence_export_legend"
+msgstr "M=Justified Absence"
 
 msgid "child_entities"
 msgstr "Child entities"
@@ -557,6 +566,15 @@ msgstr "Justification legend: %s"
 
 msgid "justifications"
 msgstr "Justifications"
+
+msgid "justification_invalid_value"
+msgstr "Invalid justification value"
+
+msgid "justification_values_accepted"
+msgstr "Accepted value: %s "
+
+msgid "justification_other_values"
+msgstr "Other values: %s "
 
 msgid "label"
 msgstr "Label"
@@ -975,13 +993,16 @@ msgid "score_invalid"
 msgstr "Score invalid"
 
 msgid "score_legend"
-msgstr "Score legend: %s (0=Score of presence)"
+msgstr "%s (0=Score of presence)"
 
 msgid "score_missing_pdf_legend"
 msgstr "?=Score missing"
 
 msgid "scores_responsible"
 msgstr "Scores Responsible"
+
+msgid "scores_responsibles_administration"
+msgstr "Administration of the scores responsibles"
 
 msgid "score_saved"
 msgstr "score Saved"
@@ -1135,6 +1156,9 @@ msgstr "The coordinator must still submit the scores"
 
 msgid "title"
 msgstr "Title"
+
+msgid "learning_unit_title"
+msgstr "Learning unit title"
 
 msgid "too_many_results"
 msgstr "Too many results! Please be more specific."
@@ -1355,6 +1379,9 @@ msgstr "Coordinator"
 msgid "HOLDER"
 msgstr "Holder"
 
+msgid "holder_number"
+msgstr "Holders number"
+
 msgid "CO_HOLDER"
 msgstr "Co-holder"
 
@@ -1421,6 +1448,9 @@ msgstr "You can't encode a JUSTIFIED ABSENCE (M) via the XLS injection"
 msgid "abscence_justified_preserved"
 msgstr "Justified abscence already encoded and preserved"
 
+msgid "tutors_of_course"
+msgstr "Tutors of the course"
+
 msgid "academic_actors"
 msgstr "Academic actors"
 
@@ -1465,4 +1495,3 @@ msgstr "Tutors - attributions"
 
 msgid "proposal"
 msgstr "Proposal"
-

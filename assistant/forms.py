@@ -25,15 +25,16 @@
 ##############################################################################
 from django import forms
 from django.utils.translation import ugettext as _
-from django.db.models import Q
 from django.forms import ModelForm, Textarea
 from assistant import models as mdl
-from base.models import structure, academic_year, person, learning_unit_year
+from base.models import structure, academic_year, learning_unit_year
 from django.forms.models import inlineformset_factory
 from django.core.exceptions import ValidationError
 from django.forms import widgets
 from assistant.enums import reviewer_role
 from assistant.models.enums import review_advice_choices, review_status, assistant_type, assistant_mandate_renewal
+from assistant.models.enums import assistant_phd_inscription
+from base.enums import structure_type
 
 
 class MandateFileForm(forms.Form):
@@ -79,9 +80,11 @@ class MandateStructureForm(ModelForm):
 
 def get_field_qs(field, **kwargs):
     if field.name == 'structure':
-        return forms.ModelChoiceField(queryset=structure.Structure.objects.filter(
-            Q(type='INSTITUTE') | Q(type='POLE') | Q(type='PROGRAM_COMMISSION') |
-            Q(type='FACULTY')).order_by('acronym'))
+        return forms.ModelChoiceField(queryset=structure.find_by_types([structure_type.INSTITUTE,
+                                                                        structure_type.POLE,
+                                                                        structure_type.PROGRAM_COMMISSION,
+                                                                        structure_type.FACULTY
+                                                                        ]))
     return field.formfield(**kwargs)
 
 
@@ -120,17 +123,15 @@ class MandatesArchivesForm(ModelForm):
 
 
 class AssistantFormPart3(ModelForm):
-
     PARAMETERS = dict(required=False, widget=forms.DateInput(format='%d/%m/%Y', attrs={'placeholder': 'dd/mm/yyyy'}),
                       input_formats=['%d/%m/%Y'])
 
     inscription = forms.ChoiceField(required=True, widget=forms.RadioSelect(renderer=HorizontalRadioRenderer, attrs={
-        "onChange": 'Hide()'}), choices=mdl.academic_assistant.AcademicAssistant.PHD_INSCRIPTION_CHOICES)
+        "onChange": 'Hide()'}), choices=assistant_phd_inscription.PHD_INSCRIPTION_CHOICES)
     expected_phd_date = forms.DateField(**PARAMETERS)
     thesis_date = forms.DateField(**PARAMETERS)
     phd_inscription_date = forms.DateField(**PARAMETERS)
     confirmation_test_date = forms.DateField(**PARAMETERS)
-
     thesis_title = forms.CharField(
         required=False, widget=forms.Textarea(attrs={'cols': '80', 'rows': '2'}))
     remark = forms.CharField(
@@ -303,7 +304,7 @@ class AssistantFormPart6(ModelForm):
 class ReviewerDelegationForm(ModelForm):
     role = forms.CharField(widget=forms.HiddenInput(), required=True)
     structure = forms.ModelChoiceField(widget=forms.HiddenInput(), required=True,
-                                       queryset=structure.Structure.objects.all())
+                                       queryset=structure.find_structures())
 
     class Meta:
         model = mdl.reviewer.Reviewer
@@ -317,8 +318,9 @@ class ReviewerDelegationForm(ModelForm):
 class ReviewerForm(ModelForm):
     role = forms.ChoiceField(required=True, choices=reviewer_role.ROLE_CHOICES)
     structure = forms.ModelChoiceField(required=True, queryset=(
-        structure.find_by_type('INSTITUTE') | structure.find_by_type('FACULTY') |
-        structure.find_by_type('SECTOR')).order_by('type', 'acronym'))
+        structure.find_by_types([structure_type.INSTITUTE,
+                                 structure_type.FACULTY,
+                                 structure_type.SECTOR])))
 
     class Meta:
         model = mdl.reviewer.Reviewer

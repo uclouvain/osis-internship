@@ -23,13 +23,13 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import datetime
 from unittest.mock import patch
 
 from django.contrib.auth.models import Permission
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.test import TestCase
+from django.utils import timezone
 
 from base.tests.models import test_exam_enrollment, test_offer_enrollment, \
     test_learning_unit_enrollment, test_session_exam, test_offer_year
@@ -52,7 +52,7 @@ from base.tests.factories.student import StudentFactory
 
 class OnlineEncodingTest(TestCase):
     def setUp(self):
-        academic_year = AcademicYearFactory(year=datetime.datetime.now().year - 1)
+        academic_year = AcademicYearFactory(year=timezone.now().year - 1)
         academic_calendar = AcademicCalendarFactory.build(title="Submission of score encoding - 1",
                                                           start_date=academic_year.start_date,
                                                           end_date=academic_year.end_date,
@@ -135,7 +135,7 @@ class OnlineEncodingTest(TestCase):
         self.client.post(url, data=self.get_form_with_all_students_filled_and_one_with_justification())
 
         self.refresh_exam_enrollments_from_db()
-        self.assert_exam_enrollments(self.enrollments[0], 15, 15, None, None)
+        self.assert_exam_enrollments(self.enrollments[0], None, None, None, None)
         self.assert_exam_enrollments(self.enrollments[1], None, None, "ABSENCE_JUSTIFIED", "ABSENCE_JUSTIFIED")
 
     def test_tutor_encoding_with_all_students(self):
@@ -280,7 +280,7 @@ class OutsideEncodingPeriodTest(TestCase):
         self.client.force_login(self.user)
 
         # Create context
-        academic_year = AcademicYearFactory(year=datetime.datetime.now().year - 1)
+        academic_year = AcademicYearFactory(year=timezone.now().year - 1)
         academic_calendar = AcademicCalendarFactory.build(title="Submission of score encoding - 1",
                                                           academic_year=academic_year,
                                                           reference=academic_calendar_type.SCORES_EXAM_SUBMISSION)
@@ -308,11 +308,11 @@ class GetScoreEncodingViewProgramManagerTest(TestCase):
         self.client.force_login(self.user)
 
         # Set user as program manager of two offer
-        academic_year = AcademicYearFactory(year=datetime.datetime.now().year - 1)
+        academic_year = AcademicYearFactory(year=timezone.now().year - 1)
         self.offer_year_bio2ma = OfferYearFactory(acronym="BIO2MA", title="Master en Biologie",
                                                   academic_year=academic_year)
         self.offer_year_bio2bac = OfferYearFactory(acronym="BIO2BAC", title="Bachelier en Biologie",
-                                                  academic_year=academic_year)
+                                                   academic_year=academic_year)
         ProgramManagerFactory(offer_year=self.offer_year_bio2ma, person=self.person)
         ProgramManagerFactory(offer_year=self.offer_year_bio2bac, person=self.person)
 
@@ -358,11 +358,11 @@ class GetScoreEncodingViewProgramManagerTest(TestCase):
         self.assertFalse(context['notes_list'])
 
     def test_get_score_encoding(self):
-         url = reverse('scores_encoding')
-         response = self.client.get(url)
-         context = response.context[-1]
-         self.assertEqual(response.status_code, 200)
-         self.assertEqual(len(context['notes_list']), 3)
+        url = reverse('scores_encoding')
+        response = self.client.get(url)
+        context = response.context[-1]
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(context['notes_list']), 3)
 
     def _create_context_exam_enrollment(self):
         self.students = []

@@ -26,70 +26,55 @@
 from django import forms
 from base import models as mdl
 from django.core.exceptions import ValidationError
-from base.enums import learning_unit_year_status
-from base.enums import learning_unit_year_types
 
 
 class LearningUnitYearForm(forms.Form):
     academic_year = forms.CharField(max_length=10, required=False)
-    acronym = forms.CharField(widget=forms.TextInput(attrs={'size': '10'}), max_length=20, required=False)
-    keyword = forms.CharField(widget=forms.TextInput(attrs={'size': '10'}), max_length=20, required=False)
-    type = forms.CharField(
-        widget=forms.Select(choices=learning_unit_year_types.LEARNING_UNIT_YEAR_TYPES),
-        required=False
-    )
-    status = forms.CharField(
-        widget=forms.Select(choices=learning_unit_year_status.LEARNING_UNIT_YEAR_STATUS),
-        required=False
-    )
+    acronym = keyword = forms.CharField(widget=forms.TextInput(attrs={'size': '10', 'class': 'form-control'}),
+                                        max_length=20, required=False)
+
+    def clean_acronym(self):
+        MIN_ACRONYM_LENGTH = 3
+        data_cleaned = self.cleaned_data.get('acronym')
+        data_cleaned = _treat_empty_or_str_none_as_none(data_cleaned)
+        if data_cleaned and len(data_cleaned) < MIN_ACRONYM_LENGTH:
+            raise ValidationError('LU_ERRORS_INVALID_SEARCH')
+        return data_cleaned
 
     def clean(self):
-        minimal_inputs_satisfied = ''
-        clean_data = self.cleaned_data
-        for cd_key, cd_value in clean_data.items():
-            if cd_value == 'NONE' or cd_value == '0':
-                clean_data[cd_key] = ''
-            minimal_inputs_satisfied = minimal_inputs_satisfied + clean_data[cd_key]
-
-        if not minimal_inputs_satisfied:
-            raise ValidationError('LU_ERRORS_INVALID_SEARCH')
-        elif not clean_data.get('academic_year'):
-            check_when_academic_year_is_all(clean_data.get('acronym'))
+        clean_data = _clean_data(self.cleaned_data)
+        is_valid_search(**clean_data)
         return clean_data
-
-    def set_academic_years_all(self):
-        academic_years_all = True if not self.cleaned_data.get('academic_year') else False
-        return academic_years_all
 
     def get_learning_units(self):
         clean_data = self.cleaned_data
-        if not clean_data.get('academic_year'):
-            learning_units = check_when_academic_year_is_all(clean_data.get('acronym'))
-        else:
-            learning_units = mdl.learning_unit_year.search(academic_year_id=clean_data.get('academic_year'),
-                                                           acronym=clean_data.get('acronym'),
-                                                           title=clean_data.get('keyword'),
-                                                           type=clean_data.get('type'),
-                                                           status=clean_data.get('status'))
-        return learning_units
 
-    def get_academic_year(self):
-        academic_year = 0 if not self.cleaned_data.get('academic_year') else self.cleaned_data.get('academic_year')
-        return academic_year
+        return mdl.learning_unit_year.search(academic_year_id=clean_data.get('academic_year'),
+                                             acronym=clean_data.get('acronym'),
+                                             title=clean_data.get('keyword'))\
+                                     .select_related('academic_year')\
+                                     .order_by('academic_year__year', 'acronym')
 
 
-def check_when_academic_year_is_all(acronym):
-    if acronym:
-        learning_units = check_learning_units_with_acronym(acronym)
-        return learning_units
-    elif not acronym:
-        raise ValidationError('LU_ERRORS_ACADEMIC_YEAR_REQUIRED')
+def is_valid_search(**search_filter):
+    academic_year = search_filter.get('academic_year')
+    learning_unit_acronym = search_filter.get('acronym')
+    keyword = search_filter.get('keyword')
+
+    if academic_year and learning_unit_acronym:
+        return True
+    elif academic_year and keyword:
+        return True
+    elif learning_unit_acronym:
+        return True
+
+    raise ValidationError('LU_ERRORS_INVALID_SEARCH')
 
 
-def check_learning_units_with_acronym(acronym):
-    learning_units = mdl.learning_unit_year.find_by_acronym(acronym)
+def _clean_data(datas_to_clean):
+    return {key: _treat_empty_or_str_none_as_none(value) for (key, value) in datas_to_clean.items()}
 
-    if not learning_units:
-        raise ValidationError('LU_ERRORS_YEAR_WITH_ACRONYM')
 
-    return learning_units
+def _treat_empty_or_str_none_as_none(data):
+    return None if not data or data == "NONE" else data
+
