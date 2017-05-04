@@ -46,7 +46,15 @@ def find_related_tutors(score_encoding_progress_list):
     tutors = set()
     for score_encoding_progress in score_encoding_progress_list:
         tutors |= {tutor for tutor in score_encoding_progress.tutors} if score_encoding_progress.tutors else set()
-    return sorted(tutors, key=lambda tutor: (tutor.person.last_name, tutor.person.first_name))
+    return sorted(tutors, key=_order_by_last_name_and_first_name)
+
+
+def _order_by_last_name_and_first_name(tutor):
+    # Somebody person must be first on list
+    SOMEBODY_GID='99999998'
+    if tutor.person.global_id == SOMEBODY_GID:
+        return ('_', '_')
+    return (tutor.person.last_name.lower(), tutor.person.first_name.lower())
 
 
 def group_by_learning_unit_year(score_encoding_progress_list):
