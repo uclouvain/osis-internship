@@ -36,7 +36,7 @@ class SessionExamCalendarAdmin(admin.ModelAdmin):
     list_filter = ('academic_calendar__academic_year', 'number_session', 'academic_calendar__reference')
     fieldsets = ((None, {'fields': ('number_session', 'academic_calendar')}),)
     raw_id_fields = ('academic_calendar',)
-    search_fields = ['academic_calendar']
+    search_fields = ['academic_calendar__title']
 
 
 class SessionExamCalendar(models.Model):
