@@ -35,7 +35,7 @@ from django.utils import timezone
 from django.core.exceptions import ObjectDoesNotExist
 from assistant.enums import reviewer_role
 from base.enums import structure_type
-from assistant.models.enums import review_status
+from assistant.models.enums import review_status, assistant_mandate_state
 import re
 
 
@@ -112,19 +112,19 @@ def review_save(request, review_id, mandate_id):
         if 'validate_and_submit' in request.POST:
             current_review.status = review_status.DONE
             current_review.save()
-            if mandate.state == "PHD_SUPERVISOR":
+            if mandate.state == assistant_mandate_state.PHD_SUPERVISOR:
                 if mandate_structure.find_by_mandate_and_type(mandate, 'INSTITUTE'):
-                    mandate.state = "RESEARCH"
+                    mandate.state = assistant_mandate_state.RESEARCH
                 elif mandate_structure.find_by_mandate_and_part_of_type(mandate, 'INSTITUTE'):
-                    mandate.state = "RESEARCH"
+                    mandate.state = assistant_mandate_state.RESEARCH
                 else:
-                    mandate.state = "SUPERVISION"
-            elif mandate.state == "RESEARCH":
-                mandate.state = "SUPERVISION"
-            elif mandate.state == "SUPERVISION":
-                mandate.state = "VICE_RECTOR"
-            elif mandate.state == "VICE_RECTOR":
-                mandate.state = "DONE"
+                    mandate.state = assistant_mandate_state.SUPERVISION
+            elif mandate.state == assistant_mandate_state.RESEARCH:
+                mandate.state = assistant_mandate_state.SUPERVISION
+            elif mandate.state == assistant_mandate_state.SUPERVISION:
+                mandate.state = assistant_mandate_state.VICE_RECTOR
+            elif mandate.state == assistant_mandate_state.VICE_RECTOR:
+                mandate.state = assistant_mandate_state.DONE
             mandate.save()
             if current_review.reviewer is not None:
                 return HttpResponseRedirect(reverse("reviewer_mandates_list"))
@@ -168,11 +168,14 @@ def generate_reviewer_menu_tabs(role, mandate, active_item: None):
     menu = []
     mandate_states = {}
     if mandate.assistant.supervisor:
-        mandate_states.update({'PHD_SUPERVISOR': 1})
+        mandate_states.update({assistant_mandate_state.PHD_SUPERVISOR: 1})
     if mandate_structure.find_by_mandate_and_type(mandate, structure_type.INSTITUTE):
-        mandate_states.update({'RESEARCH': 2, 'SUPERVISION': 3, 'VICE_RECTOR': 4})
+        mandate_states.update({assistant_mandate_state.RESEARCH: 2,
+                               assistant_mandate_state.SUPERVISION: 3,
+                               assistant_mandate_state.VICE_RECTOR: 4})
     else:
-        mandate_states.update({'SUPERVISION': 3, 'VICE_RECTOR': 4})
+        mandate_states.update({assistant_mandate_state.SUPERVISION: 3,
+                               assistant_mandate_state.VICE_RECTOR: 4})
     if role == reviewer_role.PHD_SUPERVISOR:
         try:
             latest_review_done = review.find_done_by_supervisor_for_mandate(mandate)
@@ -186,7 +189,9 @@ def generate_reviewer_menu_tabs(role, mandate, active_item: None):
         latest_review_done = review.find_review_for_mandate_by_role(mandate, role)
     review_is_done = latest_review_done.status == review_status.DONE
     for state, order in sorted(mandate_states.items()):
-        if role == reviewer_role.PHD_SUPERVISOR and (state == 'RESEARCH' or state == 'SUPERVISION'):
+        if role == reviewer_role.PHD_SUPERVISOR \
+                and (state == assistant_mandate_state.RESEARCH
+                     or state == assistant_mandate_state.SUPERVISION):
             break
         if state == role and review_is_done is False:
             if active_item == state:

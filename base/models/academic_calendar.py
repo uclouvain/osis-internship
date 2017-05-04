@@ -26,10 +26,10 @@
 from django.db import models
 from django.utils import timezone
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
-from base.models.exceptions import FunctionAgrumentMissingException, StartDateHigherThanEndDateException
+from base.models.exceptions import FunctionArgumentMissingException, StartDateHigherThanEndDateException
 from base.models.enums import academic_calendar_type
 from django.utils.translation import ugettext as _
-from base.models.utils.model_action import delete_admin_action
+from base.models.utils.admin_extentions import remove_delete_action
 
 
 FUNCTIONS = 'functions'
@@ -38,9 +38,7 @@ FUNCTIONS = 'functions'
 class AcademicCalendarAdmin(SerializableModelAdmin):
     list_display = ('academic_year', 'title', 'start_date', 'end_date')
     list_display_links = None
-    readonly_fields = ('academic_year', 'title', 'start_date', 'end_date')  # The fields have to be readonly.
-                                                                            # The application/synchronization
-                                                                            # will update NOT THE ADMIN
+    readonly_fields = ('academic_year', 'title', 'start_date', 'end_date')
     list_filter = ('academic_year',)
     search_fields = ['title']
     ordering = ('start_date',)
@@ -52,7 +50,7 @@ class AcademicCalendarAdmin(SerializableModelAdmin):
         return False
 
     def get_actions(self, request):
-        return delete_admin_action(super(AcademicCalendarAdmin, self).get_actions(request))
+        return remove_delete_action(super(AcademicCalendarAdmin, self).get_actions(request))
 
 
 class AcademicCalendar(SerializableModel):
@@ -70,19 +68,31 @@ class AcademicCalendar(SerializableModel):
 
     def save(self, *args, **kwargs):
         if FUNCTIONS not in kwargs.keys():
-            raise FunctionAgrumentMissingException('The kwarg "{0}" must be set.'.format(FUNCTIONS))
+            raise FunctionArgumentMissingException('The kwarg "{0}" must be set.'.format(FUNCTIONS))
         functions = kwargs.pop(FUNCTIONS)
-        if self.start_date is None or self.end_date is None:
-            raise AttributeError(_('dates_mandatory_error'))
-        if self.start_date and self.academic_year.start_date and self.start_date < self.academic_year.start_date:
-            raise AttributeError(_('academic_start_date_error'))
-        if self.end_date and self.academic_year.end_date and self.end_date > self.academic_year.end_date:
-            raise AttributeError(_('academic_end_date_error'))
-        if self.start_date and self.end_date and self.start_date >= self.end_date:
-            raise StartDateHigherThanEndDateException(_('end_start_date_error'))
+        self.validation_mandatory_dates()
+        self.validation_start_date()
+        self.validation_end_date()
+        self.validation_start_end_dates()
         super(AcademicCalendar, self).save(*args, **kwargs)
         for function in functions:
             function(self)
+
+    def validation_start_end_dates(self):
+        if self.start_date and self.end_date and self.start_date >= self.end_date:
+            raise StartDateHigherThanEndDateException(_('end_start_date_error'))
+
+    def validation_end_date(self):
+        if self.end_date and self.academic_year.end_date and self.end_date > self.academic_year.end_date:
+            raise AttributeError(_('academic_end_date_error'))
+
+    def validation_start_date(self):
+        if self.start_date and self.academic_year.start_date and self.start_date < self.academic_year.start_date:
+            raise AttributeError(_('academic_start_date_error'))
+
+    def validation_mandatory_dates(self):
+        if self.start_date is None or self.end_date is None:
+            raise AttributeError(_('dates_mandatory_error'))
 
     def __str__(self):
         return u"%s %s" % (self.academic_year, self.title)

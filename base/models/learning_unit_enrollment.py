@@ -28,11 +28,14 @@ from osis_common.models.serializable_model import SerializableModel, Serializabl
 
 
 class LearningUnitEnrollmentAdmin(SerializableModelAdmin):
-    list_display = ('student', 'learning_unit_year', 'date_enrollment', 'changed')
-    fieldsets = ((None, {'fields': ('offer_enrollment','learning_unit_year','date_enrollment')}),)
+    list_display = ('student', 'learning_unit_year', 'offer', 'date_enrollment', 'changed')
+    fieldsets = ((None, {'fields': ('offer_enrollment', 'learning_unit_year', 'date_enrollment')}),)
     list_filter = ('learning_unit_year__academic_year',)
     raw_id_fields = ('offer_enrollment', 'learning_unit_year')
-    search_fields = ['learning_unit_year__acronym']
+    search_fields = ['learning_unit_year__acronym', 'offer_enrollment__offer_year__acronym',
+                     'offer_enrollment__student__registration_id',
+                     'offer_enrollment__student__person__first_name',
+                     'offer_enrollment__student__person__last_name']
 
 
 class LearningUnitEnrollment(SerializableModel):

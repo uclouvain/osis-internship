@@ -33,8 +33,9 @@ from osis_common.models import serializable_model
 class TutorAdmin(serializable_model.SerializableModelAdmin):
     list_display = ('person', 'changed')
     fieldsets = ((None, {'fields': ('person',)}),)
+    list_filter = ('person__gender', 'person__language')
     raw_id_fields = ('person', )
-    search_fields = ['person__first_name', 'person__last_name']
+    search_fields = ['person__first_name', 'person__last_name', 'person__global_id']
 
 
 class Tutor(serializable_model.SerializableModel):
@@ -74,7 +75,9 @@ def find_by_learning_unit(learning_unit_year):
     :return: All tutors of the learningUnit passed in parameter.
     """
     tutor_ids = attribution.search(learning_unit_year=learning_unit_year).values_list('tutor').distinct('tutor')
-    return Tutor.objects.filter(pk__in=tutor_ids).order_by('person__last_name', 'person__first_name')
+    return Tutor.objects.filter(pk__in=tutor_ids)\
+                        .select_related('person')\
+                        .order_by('person__last_name', 'person__first_name')
 
 
 def is_tutor(user):

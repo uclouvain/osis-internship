@@ -33,9 +33,10 @@ class OfferYearAdmin(SerializableModelAdmin):
     list_display = ('acronym', 'title', 'academic_year', 'offer', 'parent', 'changed')
     fieldsets = ((None, {'fields': ('offer', 'academic_year', 'entity_administration', 'entity_administration_fac',
                                     'entity_management', 'entity_management_fac', 'acronym', 'title', 'parent',
-                                    'title_international', 'title_short', 'title_printable', 'grade', 'recipient',
-                                    'location', 'postal_code', 'city', 'country', 'phone', 'fax', 'email', 'campus')}),)
-    list_filter = ('academic_year',)
+                                    'title_international', 'title_short', 'title_printable', 'grade', 'grade_type',
+                                    'recipient', 'location', 'postal_code', 'city', 'country', 'phone', 'fax', 'email',
+                                    'campus')}),)
+    list_filter = ('academic_year', 'grade', 'grade_type', 'campus')
     raw_id_fields = ('offer', 'parent')
     search_fields = ['acronym']
 
@@ -134,7 +135,10 @@ def find_by_structure(struct):
 
 
 def find_by_id(offer_year_id):
-    return OfferYear.objects.get(pk=offer_year_id)
+    try:
+        return OfferYear.objects.get(pk=offer_year_id)
+    except OfferYear.DoesNotExist:
+        return None
 
 
 def find_by_ids(offer_year_ids):
@@ -182,3 +186,43 @@ def find_by_user(user, academic_yr=None):
 
 def find_by_offer(offers):
     return OfferYear.objects.filter(offer__in=offers)
+
+
+def find_by_id_list(ids):
+    if ids:
+        return OfferYear.objects.filter(id__in=ids)
+    return None
+
+
+def search_offers(entity_list=None, academic_yr=None, a_grade_type=None):
+    out = None
+    queryset = OfferYear.objects
+
+    queryset = entity_list_parameter(entity_list, queryset)
+
+    queryset = academic_year_parameter(academic_yr, queryset)
+
+    queryset = grade_type_parameter(a_grade_type, queryset)
+
+    if entity_list or academic_yr or a_grade_type:
+        out = queryset.order_by('acronym')
+
+    return out
+
+
+def grade_type_parameter(a_grade_type, queryset):
+    if a_grade_type:
+        queryset = queryset.filter(grade_type=a_grade_type)
+    return queryset
+
+
+def academic_year_parameter(academic_yr, queryset):
+    if academic_yr:
+        queryset = queryset.filter(academic_year=academic_yr)
+    return queryset
+
+
+def entity_list_parameter(entity_list, queryset):
+    if entity_list:
+        queryset = queryset.filter(entity_management__in=entity_list)
+    return queryset

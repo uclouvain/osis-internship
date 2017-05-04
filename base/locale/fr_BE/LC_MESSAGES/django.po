@@ -99,6 +99,9 @@ msgstr "Activité"
 msgid "activity_not_exit"
 msgstr "L'activité %s n'existe pas"
 
+msgid "add"
+msgstr "Ajouter"
+
 msgid "add_an_address_to_the_organization"
 msgstr "Ajouter une adresse à l'organisation"
 
@@ -167,6 +170,12 @@ msgstr "Président du jury"
 
 msgid "cheating_pdf_legend"
 msgstr "T=Tricherie"
+
+msgid "unjustified_absence_export_legend"
+msgstr "S=Absence injustifiée"
+
+msgid "justified_absence_export_legend"
+msgstr "M=Absence justifiée"
 
 msgid "child_entities"
 msgstr "Entités 'enfant'"
@@ -555,6 +564,15 @@ msgstr "Légende pour le champ 'Justification': %s"
 
 msgid "justifications"
 msgstr "Justifications"
+
+msgid "justification_invalid_value"
+msgstr "Justification invalide"
+
+msgid "justification_values_accepted"
+msgstr "Valeurs acceptées: %s "
+
+msgid "justification_other_values"
+msgstr "D'autres valeurs: %s "
 
 msgid "label"
 msgstr "Label"
@@ -987,7 +1005,7 @@ msgid "score_invalid"
 msgstr "Note invalide"
 
 msgid "score_legend"
-msgstr "Légende pour le champ 'Note chiffrée': %s (0=Cote de présence)"
+msgstr "%s (0=Cote de présence)"
 
 msgid "score_missing_pdf_legend"
 msgstr "?=Note manquante"
@@ -1015,6 +1033,9 @@ msgstr "Injection des notes"
 
 msgid "scores_responsible"
 msgstr "Responsable(s) de notes"
+
+msgid "scores_responsibles_administration"
+msgstr "Administration des Responsables de notes pour les cours de la faculté"
 
 msgid "scores_saved"
 msgstr "note(s) enregistrée(s)"
@@ -1147,6 +1168,9 @@ msgstr "Le coordinateur doit toujours soumettre les notes"
 
 msgid "title"
 msgstr "Intitulé"
+
+msgid "learning_unit_title"
+msgstr "Intitulé du cours"
 
 msgid "too_many_results"
 msgstr "Votre recherche retourne trop de résultats, veuillez spécifier la recherche."
@@ -1372,6 +1396,9 @@ msgstr "Coordinateur"
 msgid "HOLDER"
 msgstr "Titulaire"
 
+msgid "holder_number"
+msgstr "Nb titulaires"
+
 msgid "CO_HOLDER"
 msgstr "Co-titulaire"
 
@@ -1387,11 +1414,62 @@ msgstr "Les responsables de notes peuvent soumettre des encodages partiels"
 msgid "scores_responsible_must_still_submit_scores"
 msgstr "Le responsable de notes doit toujours soumettre les notes"
 
+msgid "NONE"
+msgstr "Aucun"
+
+msgid "keyword"
+msgstr "Mot clé"
+
+msgid "VALID"
+msgstr "Valide"
+
+msgid "INVALID"
+msgstr "Invalide"
+
+msgid "COURSE"
+msgstr "Cours"
+
+msgid "MASTER_THESIS"
+msgstr "Mémoire"
+
+msgid "INTERNSHIP"
+msgstr "Stage"
+
+msgid "LU_ERRORS_REQUIRED"
+msgstr "Ce champ est requis."
+
+msgid "LU_ERRORS_INVALID"
+msgstr "'Entrez une valeur valide."
+
+msgid "LU_ERRORS_INVALID_SEARCH"
+msgstr "Recherche invalide - Veuillez ajouter des informations avant d'exécuter une recherche."
+
+msgid "LU_ERRORS_ACADEMIC_YEAR_REQUIRED"
+msgstr "Veuillez préciser une année académique."
+
+msgid "LU_ERRORS_YEAR_WITH_ACRONYM"
+msgstr "Veuillez préciser une année académique ou entrer un acronyme valide."
+
+msgid "ANNUAL"
+msgstr "Annuel"
+
+msgid "BIENNIAL_EVEN"
+msgstr "Bisannuel pair"
+
+msgid "BIENNIAL_ODD"
+msgstr "Bisannuel impair"
+
 msgid "no_valid_m_justification_error"
 msgstr "Vous ne pouvez pas encoder d'absence justifiée (M) via l'injection xls"
 
 msgid "abscence_justified_preserved"
 msgstr "Abscence justifiée dèjà encodée et préservée"
+
+msgid "tutors_of_course"
+msgstr "Titulaires du cours"
+
+msgid "academic_actors"
+msgstr "Les acteurs académiques"
 
 msgid "academic_start_date_error"
 msgstr "La date de début doit être comprise entre les dates de début/fin de l'année académique"
@@ -1403,4 +1481,19 @@ msgid "end_start_date_error"
 msgstr "La date de fin doit être supérieure à la date début"
 
 msgid "dates_mandatory_error"
-msgstr "Start date and end date are mandatory"
+msgstr "Les dates de début et de fin sont obligatoires"
+
+msgid "date_format"
+msgstr "%d/%m/%Y"
+
+msgid "date_format_string"
+msgstr "d/m/Y"
+
+msgid "format_date"
+msgstr "jj/mm/aaaa"
+
+msgid "desc_lnk_academic_actors"
+msgstr "Gestion des acteurs académiques"
+
+msgid "all_years"
+msgstr "Toutes les années"

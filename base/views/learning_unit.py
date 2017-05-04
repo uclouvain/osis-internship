@@ -23,52 +23,45 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.contrib.auth.decorators import login_required, permission_required
-from base import models as mdl
-from attribution import models as mdl_attr
-from . import layout
+import datetime
 
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required, permission_required
+from django.utils.translation import ugettext_lazy as _
+
+from attribution import models as mdl_attr
+from base import models as mdl
+from base.forms.learning_units import LearningUnitYearForm
+from . import layout
 
 @login_required
 @permission_required('base.can_access_learningunit', raise_exception=True)
 def learning_units(request):
-    academic_yr = None
-    code = ""
-
-    academic_years = mdl.academic_year.find_academic_years()
-    academic_yr_calendar = mdl.academic_year.current_academic_year()
-
-    if academic_yr_calendar:
-        academic_yr = academic_yr_calendar.id
-    return layout.render(request, "learning_units.html", {'academic_year': academic_yr,
-                                                          'code': code,
-                                                          'academic_years': academic_years,
-                                                          'learning_units': [],
-                                                          'init': "1"})
-
+    template_name = "learning_units.html"
+    context = _get_common_context_list_learning_unit_years()
+    context.update({
+        'form': LearningUnitYearForm(),
+        'current_academic_year': mdl.academic_year.current_academic_year()
+    })
+    return layout.render(request, template_name, context)
 
 @login_required
 @permission_required('base.can_access_learningunit', raise_exception=True)
 def learning_units_search(request):
-    """
-    Learning units search
-    """
-    # criteria
-    academic_year = request.GET['academic_year']
-    code = request.GET['code']
-    if academic_year is None:
-        academic_year_calendar = mdl.academic_year.current_academic_year()
-        if academic_year_calendar:
-            academic_year = academic_year_calendar.id
+    template_name = "learning_units.html"
+    form = LearningUnitYearForm(request.GET)
+    learning_units = None
+    if form.is_valid():
+        learning_units = form.get_learning_units()
+        _check_if_display_message(request, learning_units)
 
-    learning_unts = mdl.learning_unit_year.search(academic_year_id=academic_year,acronym=code)
-    academic_years = mdl.academic_year.find_academic_years()
-
-    return layout.render(request, "learning_units.html", {'academic_year': int(academic_year),
-                                                          'code': code,
-                                                          'academic_years': academic_years,
-                                                          'learning_units': learning_unts,
-                                                          'init': "0"})
+    context = _get_common_context_list_learning_unit_years()
+    context.update({
+        'form': form,
+        'academic_years': mdl.academic_year.find_academic_years(),
+        'learning_units': learning_units
+    })
+    return layout.render(request, template_name, context)
 
 
 @login_required
@@ -83,3 +76,20 @@ def learning_unit_read(request, learning_unit_year_id):
                                                          'attributions': attributions,
                                                          'enrollments': enrollments,
                                                          'is_program_manager': is_program_manager})
+
+
+def _check_if_display_message(request, learning_units):
+    if not learning_units:
+        messages.add_message(request, messages.WARNING, _('no_result'))
+
+
+def _get_common_context_list_learning_unit_years():
+    today = datetime.date.today()
+    date_ten_years_before = today.replace(year=today.year-10)
+    academic_years = mdl.academic_year.find_academic_years()\
+                                      .filter(start_date__gte=date_ten_years_before)
+
+    context = {
+        'academic_years': academic_years
+    }
+    return context

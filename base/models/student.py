@@ -31,6 +31,7 @@ from osis_common.models.serializable_model import SerializableModel, Serializabl
 class StudentAdmin(SerializableModelAdmin):
     list_display = ('person', 'registration_id', 'changed')
     fieldsets = ((None, {'fields': ('registration_id', 'person')}),)
+    list_filter = ('person__gender', 'person__language')
     raw_id_fields = ('person', )
     search_fields = ['person__first_name', 'person__last_name', 'registration_id']
 
@@ -38,7 +39,7 @@ class StudentAdmin(SerializableModelAdmin):
 class Student(SerializableModel):
     external_id = models.CharField(max_length=100, blank=True, null=True)
     changed = models.DateTimeField(null=True)
-    registration_id = models.CharField(max_length=10, unique=True)
+    registration_id = models.CharField(max_length=10, unique=True, db_index=True)
     person = models.ForeignKey('Person')
 
     def __str__(self):

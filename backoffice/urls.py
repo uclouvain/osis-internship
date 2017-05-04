@@ -27,6 +27,12 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from django.conf import settings
 from base.views import common
+from django.views.i18n import javascript_catalog
+
+js_info_dict = {
+    'domain': 'djangojs',
+    'packages': ('assessments',),
+}
 
 urlpatterns = (
     url(r'^login/$', common.login, name='login'),
@@ -35,6 +41,7 @@ urlpatterns = (
 
     url(r'^'+settings.ADMIN_URL, admin.site.urls),
     url(r'', include('base.urls')),
+    url(r'^jsi18n/$', javascript_catalog, js_info_dict, name='javascript-catalog'),
 )
 
 if 'assistant' in settings.INSTALLED_APPS:

@@ -28,16 +28,15 @@ from django.db import models
 from django.utils import timezone
 from django.contrib import admin
 from base.models import offer_year
-import datetime
 from django.utils.translation import ugettext as _
 
 
 class OfferYearCalendarAdmin(admin.ModelAdmin):
-    list_display = ('academic_calendar', 'offer_year', 'start_date', 'end_date', 'changed')
+    list_display = ('academic_calendar', 'offer_year', 'start_date', 'end_date', 'changed', 'customized')
     fieldsets = ((None, {'fields': ('offer_year', 'academic_calendar', 'start_date', 'end_date', 'customized')}),)
     raw_id_fields = ('offer_year',)
     search_fields = ['offer_year__acronym']
-    list_filter = ('academic_calendar__academic_year', 'academic_calendar__title')
+    list_filter = ('academic_calendar__academic_year', 'academic_calendar__reference', 'customized')
 
 
 class OfferYearCalendar(models.Model):
@@ -50,10 +49,7 @@ class OfferYearCalendar(models.Model):
     customized = models.BooleanField(default=False)
 
     def update_dates(self, start_date, end_date):
-        if self.customized:  # case offerYearCalendar is already customized
-            # We update the new start date
-            # WARNING : this is TEMPORARY ; a solution for the sync from EPC to OSIS
-            #           because the start_date for scores_encodings doesn't exist in EPC
+        if self.customized:
             self.start_date = start_date
         else:
             self.start_date = start_date
@@ -63,13 +59,22 @@ class OfferYearCalendar(models.Model):
     def save(self, *args, **kwargs):
         academic_start_date = self.get_start_date()
         academic_end_date = self.get_end_date()
-        if self.start_dates_set(academic_start_date) and self.start_date < academic_start_date:
-            raise AttributeError(_('academic_start_date_error'))
-        if self.end_dates_set(academic_end_date) and self.end_date > academic_end_date:
-            raise AttributeError(_('academic_end_date_error'))
+        self.start_date_validation(academic_start_date)
+        self.end_date_validation(academic_end_date)
+        self.end_start_dates_validation()
+        super(OfferYearCalendar, self).save(*args, **kwargs)
+
+    def end_start_dates_validation(self):
         if self.start_end_dates_set() and self.end_date < self.start_date:
             raise AttributeError(_('end_start_date_error'))
-        super(OfferYearCalendar, self).save(*args, **kwargs)
+
+    def end_date_validation(self, academic_end_date):
+        if self.end_dates_set(academic_end_date) and self.end_date > academic_end_date:
+            raise AttributeError(_('academic_end_date_error'))
+
+    def start_date_validation(self, academic_start_date):
+        if self.start_dates_set(academic_start_date) and self.start_date < academic_start_date:
+            raise AttributeError(_('academic_start_date_error'))
 
     def start_end_dates_set(self):
         return self.start_date and self.end_date
@@ -80,21 +85,21 @@ class OfferYearCalendar(models.Model):
     def start_dates_set(self, academic_start_date):
         return academic_start_date and self.start_date
 
-    def get_end_date(self):
-        if self.academic_calendar.end_date:
-            return self.academic_calendar.end_date
+    def _get_date(self, date_field):
+        date_ac = getattr(self.academic_calendar, date_field)
+        date_oyc = getattr(self.offer_year.academic_year, date_field)
+        if date_ac:
+            return date_ac
+        elif date_oyc:
+            return date_oyc
         else:
-            if self.offer_year.academic_year.end_date:
-                return self.offer_year.academic_year.end_date
-        return None
+            None
 
     def get_start_date(self):
-        if self.academic_calendar.start_date:
-            return self.academic_calendar.start_date
-        else:
-            if self.offer_year.academic_year.start_date:
-                return self.offer_year.academic_year.start_date
-        return None
+        return self._get_date('start_date')
+
+    def get_end_date(self):
+        return self._get_date('end_date')
 
     def __str__(self):
         return u"%s - %s" % (self.academic_calendar, self.offer_year)
@@ -130,7 +135,7 @@ def _create_from_academic_calendar(academic_calendar):
 
 
 def find_by_current_session_exam():
-    return OfferYearCalendar.objects.filter(start_date__lte=timezone.now()) \
+    return OfferYearCalendar.objects.filter(start_date__lte=timezone.now())\
         .filter(end_date__gte=timezone.now()).first()
 
 

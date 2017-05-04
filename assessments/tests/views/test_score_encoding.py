@@ -23,16 +23,16 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import datetime
 from unittest.mock import patch
 
 from django.contrib.auth.models import Permission
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.test import TestCase
+from django.utils import timezone
 
-from base.tests.models import test_exam_enrollment, test_offer_enrollment,\
-                              test_learning_unit_enrollment, test_session_exam
+from base.tests.models import test_exam_enrollment, test_offer_enrollment, \
+    test_learning_unit_enrollment, test_session_exam, test_offer_year
 from attribution.tests.models import test_attribution
 from assessments.views import score_encoding
 from base.models.enums import number_session, academic_calendar_type
@@ -52,7 +52,7 @@ from base.tests.factories.student import StudentFactory
 
 class OnlineEncodingTest(TestCase):
     def setUp(self):
-        academic_year = AcademicYearFactory(year=datetime.datetime.now().year - 1)
+        academic_year = AcademicYearFactory(year=timezone.now().year - 1)
         academic_calendar = AcademicCalendarFactory.build(title="Submission of score encoding - 1",
                                                           start_date=academic_year.start_date,
                                                           end_date=academic_year.end_date,
@@ -62,7 +62,9 @@ class OnlineEncodingTest(TestCase):
         SessionExamCalendarFactory(academic_calendar=academic_calendar, number_session=number_session.ONE)
 
         self.learning_unit_year = LearningUnitYearFactory(academic_year=academic_year)
-        self.session_exam = test_session_exam.create_session_exam(number_session.ONE, self.learning_unit_year)
+        self.offer_year = test_offer_year.create_offer_year('SINF1BA', 'Bachelor in informatica', academic_year)
+        self.session_exam = test_session_exam.create_session_exam(number_session.ONE, self.learning_unit_year,
+                                                                  self.offer_year)
 
         # Create enrollment related
         self.enrollments = []
@@ -133,7 +135,7 @@ class OnlineEncodingTest(TestCase):
         self.client.post(url, data=self.get_form_with_all_students_filled_and_one_with_justification())
 
         self.refresh_exam_enrollments_from_db()
-        self.assert_exam_enrollments(self.enrollments[0], 15, 15, None, None)
+        self.assert_exam_enrollments(self.enrollments[0], None, None, None, None)
         self.assert_exam_enrollments(self.enrollments[1], None, None, "ABSENCE_JUSTIFIED", "ABSENCE_JUSTIFIED")
 
     def test_tutor_encoding_with_all_students(self):
@@ -169,7 +171,7 @@ class OnlineEncodingTest(TestCase):
         self.client.force_login(self.program_manager_1.person.user)
         url = reverse('online_double_encoding_validation', args=[self.learning_unit_year.id])
         prepare_exam_enrollment_for_double_encoding_validation(self.enrollments[0])
-        self.client.post(url, data=self.get_form_with_all_students_filled())
+        self.client.post(url, data=self.get_form_with_one_student_filled())
 
         self.refresh_exam_enrollments_from_db()
         self.assert_exam_enrollments(self.enrollments[0], 15, 15, None, None)
@@ -270,7 +272,7 @@ class OnlineEncodingTest(TestCase):
         for enrollment in self.enrollments:
             enrollment.refresh_from_db()
 
-#
+
 class OutsideEncodingPeriodTest(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(username='score_encoding', password='score_encoding')
@@ -278,7 +280,7 @@ class OutsideEncodingPeriodTest(TestCase):
         self.client.force_login(self.user)
 
         # Create context
-        academic_year = AcademicYearFactory(year=datetime.datetime.now().year-1)
+        academic_year = AcademicYearFactory(year=timezone.now().year - 1)
         academic_calendar = AcademicCalendarFactory.build(title="Submission of score encoding - 1",
                                                           academic_year=academic_year,
                                                           reference=academic_calendar_type.SCORES_EXAM_SUBMISSION)
@@ -306,11 +308,11 @@ class GetScoreEncodingViewProgramManagerTest(TestCase):
         self.client.force_login(self.user)
 
         # Set user as program manager of two offer
-        academic_year = AcademicYearFactory(year=datetime.datetime.now().year - 1)
+        academic_year = AcademicYearFactory(year=timezone.now().year - 1)
         self.offer_year_bio2ma = OfferYearFactory(acronym="BIO2MA", title="Master en Biologie",
                                                   academic_year=academic_year)
         self.offer_year_bio2bac = OfferYearFactory(acronym="BIO2BAC", title="Bachelier en Biologie",
-                                                  academic_year=academic_year)
+                                                   academic_year=academic_year)
         ProgramManagerFactory(offer_year=self.offer_year_bio2ma, person=self.person)
         ProgramManagerFactory(offer_year=self.offer_year_bio2bac, person=self.person)
 
@@ -330,14 +332,20 @@ class GetScoreEncodingViewProgramManagerTest(TestCase):
 
         self.learning_unit_year = LearningUnitYearFactory(academic_year=academic_year)
         self.learning_unit_year_2 = LearningUnitYearFactory(academic_year=academic_year)
-        self.first_session_exam = test_session_exam.create_session_exam(number_session.ONE, self.learning_unit_year)
-        self.first_session_exam_2 = test_session_exam.create_session_exam(number_session.ONE, self.learning_unit_year_2)
+        self.first_session_exam = test_session_exam.create_session_exam(number_session.ONE,
+                                                                        self.learning_unit_year,
+                                                                        self.offer_year_bio2ma)
+        self.first_session_exam_2 = test_session_exam.create_session_exam(number_session.ONE,
+                                                                          self.learning_unit_year_2,
+                                                                          self.offer_year_bio2ma)
 
         # Offer: BIO2BAC - 1 learning unit with exam
         self.offer_year_calendar_bio2bac = OfferYearCalendarFactory(offer_year=self.offer_year_bio2ma,
                                                                     academic_calendar=academic_calendar)
         self.learning_unit_year_3 = LearningUnitYearFactory(academic_year=academic_year)
-        self.first_session_exam_3 = test_session_exam.create_session_exam(number_session.ONE, self.learning_unit_year_3)
+        self.first_session_exam_3 = test_session_exam.create_session_exam(number_session.ONE,
+                                                                          self.learning_unit_year_3,
+                                                                          self.offer_year_bio2bac)
 
         self._create_context_exam_enrollment()
 
@@ -350,11 +358,11 @@ class GetScoreEncodingViewProgramManagerTest(TestCase):
         self.assertFalse(context['notes_list'])
 
     def test_get_score_encoding(self):
-         url = reverse('scores_encoding')
-         response = self.client.get(url)
-         context = response.context[-1]
-         self.assertEqual(response.status_code, 200)
-         self.assertEqual(len(context['notes_list']), 3)
+        url = reverse('scores_encoding')
+        response = self.client.get(url)
+        context = response.context[-1]
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(context['notes_list']), 3)
 
     def _create_context_exam_enrollment(self):
         self.students = []

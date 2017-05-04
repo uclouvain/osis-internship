@@ -34,6 +34,7 @@ from django.contrib.auth.decorators import user_passes_test
 from django.shortcuts import render, redirect
 from base.models import academic_year, person
 from django.utils.translation import ugettext as _
+from assistant.utils import manager_access
 
 
 class ReviewersListView(LoginRequiredMixin, UserPassesTestMixin, ListView, FormMixin):
@@ -42,11 +43,8 @@ class ReviewersListView(LoginRequiredMixin, UserPassesTestMixin, ListView, FormM
     form_class = MandatesArchivesForm
 
     def test_func(self):
-        try:
-            return user_is_manager(self.request.user)
-        except ObjectDoesNotExist:
-            return False
-    
+        return manager_access.user_is_manager(self.request.user)
+
     def get_login_url(self):
         return reverse('assistants_home')
 
@@ -59,24 +57,14 @@ class ReviewersListView(LoginRequiredMixin, UserPassesTestMixin, ListView, FormM
         return context
 
 
-def user_is_manager(user):
-    """Use with a ``user_passes_test`` decorator to restrict access to
-    authenticated users who are manager."""
-
-    try:
-        if user.is_authenticated():
-            return manager.Manager.objects.get(person=user.person)
-    except ObjectDoesNotExist:
-        return False
-
-
-@user_passes_test(user_is_manager, login_url='assistants_home')
+@user_passes_test(manager_access.user_is_manager, login_url='assistants_home')
 def reviewer_delete(request, reviewer_id):
     reviewer_to_delete = reviewer.find_by_id(reviewer_id)
     reviewer_to_delete.delete()
     return redirect('reviewers_list')
 
 
+@user_passes_test(manager_access.user_is_manager, login_url='assistants_home')
 def reviewer_add(request):
     year = academic_year.current_academic_year().year
     if request.POST:
