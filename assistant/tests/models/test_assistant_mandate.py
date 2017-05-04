@@ -25,7 +25,7 @@
 ##############################################################################
 import factory
 from django.test import TestCase
-from assistant.test.factories.assistant_mandate import AssistantMandateFactory
+from assistant.tests.factories.assistant_mandate import AssistantMandateFactory
 from assistant.models import assistant_mandate
 
 class TestAssistantMandateFactory(TestCase):

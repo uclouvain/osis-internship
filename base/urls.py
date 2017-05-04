@@ -23,7 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.conf.urls import url
+from django.conf.urls import url, include
 
 from base.views import learning_unit, offer, common, institution, organization, academic_calendar, my_osis
 
@@ -46,9 +46,15 @@ urlpatterns = [
     url(r'^institution/$', institution.institution, name='institution'),
     url(r'^institution/mandates/$', institution.mandates, name='mandates'),
 
-    url(r'^learning_units/$', learning_unit.learning_units, name='learning_units'),
-    url(r'^learning_units/search$', learning_unit.learning_units_search, name='learning_units_search'),
-    url(r'^learning_units/([0-9]+)/$', learning_unit.learning_unit_read, name='learning_unit_read'),
+    url(r'^learning_units/', include([
+        url(r'^$', learning_unit.learning_units, name='learning_units'),
+        url(r'^([0-9]+)/$', learning_unit.learning_unit_identification, name='learning_unit'),
+        url(r'^([0-9]+)/formations/$', learning_unit.learning_unit_formations, name="learning_unit_formations"),
+        url(r'^([0-9]+)/components/$', learning_unit.learning_unit_components, name="learning_unit_components"),
+        url(r'^([0-9]+)/pedagogy/$', learning_unit.learning_unit_pedagogy, name="learning_unit_pedagogy"),
+        url(r'^([0-9]+)/attributions/$', learning_unit.learning_unit_attributions, name="learning_unit_attributions"),
+        url(r'^([0-9]+)/proposals/$', learning_unit.learning_unit_proposals, name="learning_unit_proposals"),
+    ])),
 
     url(r'^my_osis/$', my_osis.my_osis_index, name="my_osis"),
     url(r'^my_osis/management_tasks/messages_templates', my_osis.messages_templates_index, name="messages_templates"),
