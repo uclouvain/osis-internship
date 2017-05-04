@@ -453,13 +453,16 @@ def scores_sheet_data(exam_enrollments, tutor=None):
         learning_unit_yr = exam_enrollments[0].session_exam.learning_unit_year
         scores_responsible = attribution.find_responsible(learning_unit_yr.id)
         scores_responsible_address = None
+        person = None
         if scores_responsible:
+            person = scores_responsible.person
             scores_responsible_address = person_address.find_by_person_label(scores_responsible.person, 'PROFESSIONAL')
 
         learn_unit_year_dict['academic_year'] = str(learning_unit_yr.academic_year)
+
         learn_unit_year_dict['scores_responsible'] = {
-            'first_name': scores_responsible.person.first_name if scores_responsible else '',
-            'last_name': scores_responsible.person.last_name if scores_responsible else ''}
+            'first_name': person.first_name if person and person.first_name else '',
+            'last_name': person.last_name if person and person.last_name else ''}
 
         learn_unit_year_dict['scores_responsible']['address'] = {'location': scores_responsible_address.location
                                                                  if scores_responsible_address else '',
