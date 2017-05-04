@@ -26,6 +26,7 @@
 from django.test import TestCase
 from django.core.urlresolvers import reverse
 from base.tests.factories.organization import OrganizationFactory
+from base.tests.factories.organization_address import OrganizationAddressFactory
 from base.tests.factories.user import SuperUserFactory
 
 
@@ -43,9 +44,6 @@ class OrganizationViewTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(self.organization.acronym, "NYU")
         self.assertEqual(self.organization.name, "NEW-YORK UNIVERSITY")
-
-    def test_organization_address_save(self):
-        pass
 
 
 def get_form_organization_save():
