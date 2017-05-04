@@ -39,7 +39,7 @@
     <form method="get" action="{% url 'learning_units'%}" id="form_learning_units" name="search">
         <div class="panel-body">
             <div class="row">
-                <div class="col-md-2">
+                <div class="col-md-3">
                     <label for="slt_academic_year">{% trans 'academic_year'%}</label>
                     <select class="form-control" id="slt_academic_year" name="academic_year">
                         <option value=""></option>
@@ -58,12 +58,12 @@
                     </select>
                 </div>
 
-                <div class="col-md-2">
+                <div class="col-md-3">
                     <label for="id_acronym">{% trans 'acronym'%}</label>
                     {{ form.acronym }}
                 </div>
 
-                <div class="col-md-3 col-md-offset-4">
+                <div class="col-md-3">
                     <label for="id_keyword">{% trans 'keyword' %}</label>
                     {{ form.keyword }}
                 </div>
