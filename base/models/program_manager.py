@@ -108,8 +108,11 @@ def find_by_id(an_id):
 
 def find_by_management_entity(administration_entity, academic_yr):
     if administration_entity and academic_yr:
-        return ProgramManager.objects.filter(offer_year__entity_management__in=administration_entity,
-                                             offer_year__academic_year=academic_yr).distinct('person')
+        return ProgramManager.objects\
+            .filter(offer_year__entity_management__in=administration_entity, offer_year__academic_year=academic_yr)\
+            .order_by('person')\
+            .distinct('person')
+
     return None
 
 
