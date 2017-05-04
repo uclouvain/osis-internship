@@ -163,14 +163,13 @@ def __save_xls_scores(request, file_name, learning_unit_year_id):
     registration_ids_managed_by_user = score_encoding_list.find_related_registration_ids(score_list)
 
     enrollments_grouped = _group_exam_enrollments_by_registration_id_and_learning_unit_year(score_list.enrollments)
-
+    errors_list = {}
     # Iterates over the lines of the spreadsheet.
     for count, row in enumerate(worksheet.rows):
         if _row_can_be_ignored(row):
             continue
 
-        xls_registration_id = _extract_registration_id(row)
-        info_line = "%s %d (NOMA %s):" % (_('Line'), count + 1 , xls_registration_id)
+        row_number = count + 1
         try:
             _check_intergity_data(row,
                                   offer_acronyms_managed=offer_acronyms_managed_by_user,
@@ -180,11 +179,10 @@ def __save_xls_scores(request, file_name, learning_unit_year_id):
             updated_row = _update_row(request.user, row, enrollments_grouped, is_program_manager)
             if updated_row:
                 new_scores_number+=1
-        except UploadValueError as e:
-            messages.add_message(request, e.message, "%s %s" % (info_line,_(e.value)))
         except Exception as e:
-            error_msg = e.messages[0] if isinstance(e, ValidationError) else e.args[0]
-            messages.add_message(request, messages.ERROR, "%s %s" % (info_line, _(error_msg)))
+            errors_list[row_number] = e
+
+    _show_error_messages(request, errors_list)
 
     if new_scores_number:
         messages.add_message(request, messages.SUCCESS, '%s %s' % (str(new_scores_number), _('score_saved')))
@@ -255,7 +253,7 @@ def _check_intergity_data(row, **kwargs):
         # In case the xls registration_id is not in the list, we check...
         if xls_learning_unit_acronym not in learn_unit_acronyms_managed:
             # ... if it is because the user doesn't have access to the learningUnit
-            raise UploadValueError("'%s' %s!" % (xls_learning_unit_acronym, _('learning_unit_not_access_or_not_exist')),
+            raise UploadValueError("'%s' %s" % (xls_learning_unit_acronym, _('learning_unit_not_access_or_not_exist')),
                                    messages.ERROR)
         elif learning_unit_year.acronym != xls_learning_unit_acronym:
             # ... if it is because the user has multiple learningUnit in his excel file
@@ -263,7 +261,7 @@ def _check_intergity_data(row, **kwargs):
             raise UploadValueError("%s" % _('more_than_one_learning_unit_error'), messages.ERROR)
         elif xls_offer_year_acronym not in offer_acronyms_managed:
             # ... if it is because the user haven't access rights to the offerYear
-            raise UploadValueError("'%s' %s!" % (xls_offer_year_acronym, _('offer_year_not_access_or_not_exist')),
+            raise UploadValueError("'%s' %s" % (xls_offer_year_acronym, _('offer_year_not_access_or_not_exist')),
                                    messages.ERROR)
         else:
             # ... if it's beacause the registration id doesn't exist
@@ -285,13 +283,13 @@ def _update_row(user, row, enrollments_managed_grouped, is_program_manager):
     enrollment = enrollments[0]
 
     if score_encoding_list.is_deadline_reached(enrollment, is_program_manager):
-        raise UploadValueError("%s!" % _('deadline_reached'), messages.ERROR)
+        raise UploadValueError("%s" % _('deadline_reached'), messages.ERROR)
 
     if not is_program_manager and enrollment.is_final:
-        raise UploadValueError("%s!" %  _('score_already_submitted'), messages.WARNING)
+        raise UploadValueError("%s" %  _('score_already_submitted'), messages.WARNING)
 
     if xls_score is not None and xls_justification:
-        raise UploadValueError("%s!" %  _('constraint_score_other_score'), messages.ERROR)
+        raise UploadValueError("%s" %  _('constraint_score_other_score'), messages.ERROR)
 
     if xls_justification and _is_informative_justification(enrollment, xls_justification, is_program_manager):
        return False
@@ -321,7 +319,9 @@ def __warn_that_score_responsibles_must_submit_scores(request, learning_unit_yea
 
 
 def _get_justification_from_aliases(enrollment, justification_encoded):
-    justification = AUTHORIZED_JUSTIFICATION_ALIASES.get(justification_encoded.upper())
+    justification_encoded = justification_encoded.upper() if isinstance(justification_encoded, str) \
+                            else justification_encoded
+    justification = AUTHORIZED_JUSTIFICATION_ALIASES.get(justification_encoded)
     if justification:
         # When absence justified no change
         return justification_types.ABSENCE_JUSTIFIED if _is_remain_justified_absence(enrollment, justification) \
@@ -333,6 +333,39 @@ def _get_justification_from_aliases(enrollment, justification_encoded):
 def _is_remain_justified_absence(enrollment, justification):
     return justification == justification_types.ABSENCE_UNJUSTIFIED and \
            enrollment.justification_final == justification_types.ABSENCE_JUSTIFIED
+
+
+def _show_error_messages(request, errors_list):
+    errors_list_grouped = _errors_list_group_by_message(errors_list)
+    for message, error in errors_list_grouped.items():
+        str_rows_number_formated = ', '.join(error.get('str_rows_number'))
+        messages.add_message(request, error.get('level'), "%s : %s" % (message, str_rows_number_formated))
+
+
+def _errors_list_group_by_message(errors_list):
+    errors_grouped_by_message = {}
+    for row_number, error in errors_list.items():
+        str_row_number = "%s %s" % (_('Line'), str(row_number))
+        message = _extract_error_message(error)
+        level = _extract_level_error(error)
+        errors_grouped_by_message.setdefault(message, {'level': level, 'str_rows_number': []})
+        errors_grouped_by_message[message]['str_rows_number'].append(str_row_number)
+
+    return errors_grouped_by_message
+
+
+def _extract_error_message(error):
+    if isinstance(error, UploadValueError):
+        return _(error.value)
+    elif isinstance(error, ValidationError):
+        return _(error.messages[0])
+    return _(error.args[0])
+
+
+def _extract_level_error(error):
+    if isinstance(error, UploadValueError):
+        return error.message
+    return messages.ERROR
 
 
 class UploadValueError(ValueError):
