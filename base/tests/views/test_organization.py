@@ -45,6 +45,18 @@ class OrganizationViewTestCase(TestCase):
         self.assertEqual(self.organization.acronym, "NYU")
         self.assertEqual(self.organization.name, "NEW-YORK UNIVERSITY")
 
+    def test_organization_address_save(self):
+        address = OrganizationAddressFactory(organization=self.organization)
+        country = address.country
+        url = reverse('organization_address_save', args=[address.id])
+        response = self.client.post(url, data=get_form_organization_address_save())
+        address.refresh_from_db()
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(address.location, "476 5th Ave")
+        self.assertEqual(address.postal_code, "10018")
+        self.assertEqual(address.city, "New York")
+        self.assertEqual(address.country, country)
+
 
 def get_form_organization_save():
     return {
@@ -52,4 +64,13 @@ def get_form_organization_save():
         "name": "NEW-YORK UNIVERSITY",
         "website": "www.nyu.edu",
         "reference": "REFERENCE"
+    }
+
+
+def get_form_organization_address_save():
+    return {
+        "organization_address_label": "Building",
+        "organization_address_location": "476 5th Ave",
+        "organization_address_postal_code": "10018",
+        "organization_address_city": "New York"
     }

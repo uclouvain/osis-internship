@@ -28,12 +28,12 @@ import factory
 
 class CountryFactory(factory.DjangoModelFactory):
     class Meta:
-        model = 'base.OrganizationAddress'
+        model = 'reference.Country'
 
     external_id = factory.Faker('text', max_nb_chars=100)
-    iso_code = factory.Faker('text', max_nb_chars=2)
+    iso_code = factory.Faker('lexify', text="??")
     name = factory.Faker('country')
     nationality = factory.Faker('text', max_nb_chars=80)
     european_union = factory.Faker('boolean', chance_of_getting_true=50)
-    dialing_code = factory.Faker('text', max_nb_chars=3)
-    cref_code = factory.Faker('text', max_nb_chars=3)
+    dialing_code = factory.Faker('random_element', elements=('+32', '+33', '+1'))
+    cref_code = factory.Faker('random_element', elements=('ABC', 'D3F', 'K-M'))

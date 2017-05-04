@@ -133,36 +133,20 @@ def organization_address_save(request, organization_address_id):
     else:
         organization_address = mdl.organization_address.OrganizationAddress()
 
-    if request.POST['organization_address_label']:
-        organization_address.label = request.POST['organization_address_label']
-    else:
-        organization_address.label = None
+    organization_address.label = request.POST.get('organization_address_label')
+    organization_address.location = request.POST.get('organization_address_location')
+    organization_address.postal_code = request.POST.get('organization_address_postal_code')
+    organization_address.city = request.POST.get('organization_address_city')
 
-    if request.POST['organization_address_location']:
-        organization_address.location = request.POST['organization_address_location']
-    else:
-        organization_address.location = None
+    country = request.POST.get('country')
+    if country is not None:
+        organization_address.country = mdlref.country.find_by_id(int(country))
 
-    if request.POST['organization_address_postal_code']:
-        organization_address.postal_code = request.POST['organization_address_postal_code']
-    else:
-        organization_address.postal_code = None
-
-    if request.POST['organization_address_city']:
-        organization_address.city = request.POST['organization_address_city']
-    else:
-        organization_address.city = None
-
-    if request.POST['country']:
-        organization_address.country = mdlref.country.find_by_id(int(request.POST['country']))
-    else:
-        organization_address.country = None
-
-    if request.POST['organization_id']:
-        organization_address.organization = mdl.organization.find_by_id(int(request.POST['organization_id']))
+    organization_id = request.POST.get('organization_id')
+    if organization_id is not None:
+        organization_address.organization = mdl.organization.find_by_id(int(organization_id))
 
     organization_address.save()
-
     return organization_read(request, organization_address.organization.id)
 
 
