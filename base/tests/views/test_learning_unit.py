@@ -36,12 +36,12 @@ class LearningUnitViewTestCase(TestCase):
         mock_decorators.permission_required = lambda *args, **kwargs: lambda func: func
 
         request_factory = RequestFactory()
-        request = request_factory.get(reverse('learning_units_search'))
+        request = request_factory.get(reverse('learning_units'))
         request.user = mock.Mock()
 
-        from base.views.learning_unit import learning_units_search
+        from base.views.learning_unit import learning_units
 
-        learning_units_search(request)
+        learning_units(request)
 
         self.assertTrue(mock_render.called)
 
@@ -62,18 +62,16 @@ class LearningUnitViewTestCase(TestCase):
         learning_unit_year = LearningUnitYearFactory()
 
         request_factory = RequestFactory()
-        request = request_factory.get(reverse('learning_unit_read', args=[learning_unit_year.id]))
+        request = request_factory.get(reverse('learning_unit', args=[learning_unit_year.id]))
         request.user = mock.Mock()
 
-        from base.views.learning_unit import learning_unit_read
+        from base.views.learning_unit import learning_unit_identification
 
-        learning_unit_read(request, learning_unit_year.id)
+        learning_unit_identification(request, learning_unit_year.id)
 
         self.assertTrue(mock_render.called)
 
         request, template, context = mock_render.call_args[0]
 
-        self.assertEqual(template, 'learning_unit.html')
+        self.assertEqual(template, 'learning_unit/identification.html')
         self.assertEqual(context['learning_unit_year'], learning_unit_year)
-        self.assertEqual(context['attributions'].count(), 0)
-        self.assertEqual(context['enrollments'].count(), 0)
