@@ -25,14 +25,14 @@
 ##############################################################################
 import factory
 from django.test import TestCase
-from assistant.test.factories import review
-from assistant.models.enums import review_advice_choices
-from assistant.models.review import find_by_reviewer_for_mandate
+from assistant.tests.factories.reviewer import ReviewerFactory
+from assistant.enums import reviewer_role
+from assistant.models import reviewer
 
-class TestReviewFactory(TestCase):
+class TestReviewerFactory(TestCase):
 
     def setUp(self):
-        self.review = review.ReviewFactory()
+        self.reviewer = ReviewerFactory(role=reviewer_role.VICE_RECTOR)
 
-    def test_review_by_reviewer_for_mandate(self):
-        self.assertEqual(self.review, find_by_reviewer_for_mandate(self.review.reviewer, self.review.mandate))
+    def test_find_by_person(self):
+        self.assertEqual(self.reviewer, reviewer.find_by_person(self.reviewer.person))

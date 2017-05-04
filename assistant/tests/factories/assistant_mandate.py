@@ -26,7 +26,7 @@
 import factory
 import factory.fuzzy
 import datetime
-from assistant.test.factories.academic_assistant import AcademicAssistantFactory
+from assistant.tests.factories.academic_assistant import AcademicAssistantFactory
 from base.tests.factories.academic_year import AcademicYearFactory
 from assistant.models.enums import assistant_type, assistant_mandate_renewal, assistant_mandate_state
 from assistant.models.enums import assistant_mandate_appeal
