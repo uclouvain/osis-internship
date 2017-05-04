@@ -1497,3 +1497,18 @@ msgstr "Gestion des acteurs académiques"
 
 msgid "all_years"
 msgstr "Toutes les années"
+
+msgid "trainings"
+msgstr "Formations"
+
+msgid "components"
+msgstr "Composants et classes"
+
+msgid "educational_information"
+msgstr "Infos pédagogiques"
+
+msgid "tutor_attributions"
+msgstr "Enseignants - attributions"
+
+msgid "proposal"
+msgstr "Proposition"
