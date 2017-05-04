@@ -570,6 +570,9 @@ msgstr "Justifications"
 msgid "justification_invalid_value"
 msgstr "Invalid justification value"
 
+msgid "absence_justified_to_unjustified_invalid"
+msgstr "Absence justified cannot be remplaced by absence unjustified"
+
 msgid "justification_values_accepted"
 msgstr "Accepted value: %s "
 
@@ -1480,3 +1483,18 @@ msgstr "Academic actors management"
 
 msgid "all_years"
 msgstr "All years"
+
+msgid "trainings"
+msgstr "Trainings"
+
+msgid "components"
+msgstr "Component and classes"
+
+msgid "educational_information"
+msgstr "Educational information"
+
+msgid "tutor_attributions"
+msgstr "Tutors - attributions"
+
+msgid "proposal"
+msgstr "Proposal"

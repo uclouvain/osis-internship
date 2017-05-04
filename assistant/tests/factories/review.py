@@ -24,15 +24,25 @@
 #
 ##############################################################################
 import factory
-from django.test import TestCase
-from assistant.test.factories.reviewer import ReviewerFactory
-from assistant.enums import reviewer_role
-from assistant.models import reviewer
+import datetime
+from django.utils import timezone
+from base.tests.factories.person import PersonFactory
+from assistant.tests.factories.reviewer import ReviewerFactory
+from assistant.tests.factories.assistant_mandate import AssistantMandateFactory
+from assistant.models.enums import review_advice_choices
+from assistant.models.enums import review_status
 
-class TestReviewerFactory(TestCase):
+class ReviewFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = 'assistant.Review'
 
-    def setUp(self):
-        self.reviewer = ReviewerFactory(role=reviewer_role.VICE_RECTOR)
+    reviewer = factory.SubFactory(ReviewerFactory)
+    mandate =  factory.SubFactory(AssistantMandateFactory)
+    advice = factory.Iterator(review_advice_choices.REVIEW_ADVICE_CHOICES, getter=lambda c: c[0])
+    status = review_status.DONE
+    if advice == review_advice_choices.CONDITIONAL:
+        justification = factory.Faker('text', max_nb_chars=50)
+    changed = datetime.date.today()
+    confidential = factory.Faker('text', max_nb_chars=50)
+    remark = factory.Faker('text', max_nb_chars=50)
 
-    def test_find_by_person(self):
-        self.assertEqual(self.reviewer, reviewer.find_by_person(self.reviewer.person))

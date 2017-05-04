@@ -324,16 +324,16 @@ def _get_justification_from_aliases(enrollment, justification_encoded):
                             else justification_encoded
     justification = AUTHORIZED_JUSTIFICATION_ALIASES.get(justification_encoded)
     if justification:
-        # When absence justified no change
-        return justification_types.ABSENCE_JUSTIFIED if _is_remain_justified_absence(enrollment, justification) \
-                                                     else justification
+        _check_is_user_try_change_justified_to_unjustified_absence(enrollment, justification)
+        return justification
     else:
         raise UploadValueError('%s' % _('justification_invalid_value'), messages.ERROR)
 
 
-def _is_remain_justified_absence(enrollment, justification):
-    return justification == justification_types.ABSENCE_UNJUSTIFIED and \
-           enrollment.justification_final == justification_types.ABSENCE_JUSTIFIED
+def _check_is_user_try_change_justified_to_unjustified_absence(enrollment, justification):
+    if justification == justification_types.ABSENCE_UNJUSTIFIED and \
+       enrollment.justification_final == justification_types.ABSENCE_JUSTIFIED:
+            raise UploadValueError('%s' % _('absence_justified_to_unjustified_invalid'), messages.ERROR)
 
 
 def _show_error_messages(request, errors_list):
