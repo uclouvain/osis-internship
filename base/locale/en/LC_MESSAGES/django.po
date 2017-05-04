@@ -570,6 +570,9 @@ msgstr "Justifications"
 msgid "justification_invalid_value"
 msgstr "Invalid justification value"
 
+msgid "absence_justified_to_unjustified_invalid"
+msgstr "Absence justified cannot be remplaced by absence unjustified"
+
 msgid "justification_values_accepted"
 msgstr "Accepted value: %s "
 
