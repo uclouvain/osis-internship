@@ -29,8 +29,8 @@ from base.enums import learning_unit_year_status, learning_unit_year_types
 
 
 class LearningUnitYearAdmin(SerializableModelAdmin):
-    list_display = ('acronym', 'title', 'academic_year', 'credits', 'changed')
-    fieldsets = ((None, {'fields': ('academic_year', 'learning_unit', 'acronym', 'title', 'credits', 'decimal_scores')}),)
+    list_display = ('acronym', 'title', 'academic_year', 'credits', 'changed', 'structure')
+    fieldsets = ((None, {'fields': ('academic_year', 'learning_unit', 'acronym', 'title', 'credits', 'decimal_scores', 'structure')}),)
     list_filter = ('academic_year', 'vacant', 'in_charge', 'decimal_scores')
     raw_id_fields = ('learning_unit',)
     search_fields = ['acronym']
@@ -51,8 +51,10 @@ class LearningUnitYear(SerializableModel):
     team = models.BooleanField(default=False)
     vacant = models.BooleanField(default=False)
     in_charge = models.BooleanField(default=False)
+    structure = models.ForeignKey('Structure', blank=True, null=True)
     status = models.CharField(max_length=20, blank=True, null=True,
                               choices=learning_unit_year_status.LEARNING_UNIT_YEAR_STATUS)
+
 
     def __str__(self):
         return u"%s - %s" % (self.academic_year, self.acronym)

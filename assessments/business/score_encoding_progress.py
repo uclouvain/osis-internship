@@ -46,7 +46,7 @@ def find_related_tutors(score_encoding_progress_list):
     tutors = set()
     for score_encoding_progress in score_encoding_progress_list:
         tutors |= {tutor for tutor in score_encoding_progress.tutors} if score_encoding_progress.tutors else set()
-    return tutors
+    return sorted(tutors, key=lambda tutor: (tutor.person.last_name, tutor.person.first_name))
 
 
 def group_by_learning_unit_year(score_encoding_progress_list):

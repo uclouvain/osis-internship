@@ -99,6 +99,9 @@ msgstr "Activité"
 msgid "activity_not_exit"
 msgstr "L'activité %s n'existe pas"
 
+msgid "add"
+msgstr "Ajouter"
+
 msgid "add_an_address_to_the_organization"
 msgstr "Ajouter une adresse à l'organisation"
 
@@ -1031,6 +1034,9 @@ msgstr "Injection des notes"
 msgid "scores_responsible"
 msgstr "Responsable(s) de notes"
 
+msgid "scores_responsibles_administration"
+msgstr "Administration des Responsables de notes pour les cours de la faculté"
+
 msgid "scores_saved"
 msgstr "note(s) enregistrée(s)"
 
@@ -1162,6 +1168,9 @@ msgstr "Le coordinateur doit toujours soumettre les notes"
 
 msgid "title"
 msgstr "Intitulé"
+
+msgid "learning_unit_title"
+msgstr "Intitulé du cours"
 
 msgid "too_many_results"
 msgstr "Votre recherche retourne trop de résultats, veuillez spécifier la recherche."
@@ -1387,6 +1396,9 @@ msgstr "Coordinateur"
 msgid "HOLDER"
 msgstr "Titulaire"
 
+msgid "holder_number"
+msgstr "Nb titulaires"
+
 msgid "CO_HOLDER"
 msgstr "Co-titulaire"
 
@@ -1452,6 +1464,9 @@ msgstr "Vous ne pouvez pas encoder d'absence justifiée (M) via l'injection xls"
 
 msgid "abscence_justified_preserved"
 msgstr "Abscence justifiée dèjà encodée et préservée"
+
+msgid "tutors_of_course"
+msgstr "Titulaires du cours"
 
 msgid "academic_actors"
 msgstr "Les acteurs académiques"

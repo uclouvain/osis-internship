@@ -23,30 +23,30 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-
-from django.shortcuts import get_object_or_404
-from django.contrib.auth.decorators import login_required
-from base.models.student import find_by_offer_year
-from base.models.offer_year import OfferYear
 from django.contrib.auth.decorators import user_passes_test
-from dissertation.models.adviser import is_manager
-from django.http import JsonResponse
+from django.shortcuts import render
+from django.core.exceptions import ObjectDoesNotExist
+from django.core.urlresolvers import reverse
+from django.http.response import HttpResponseRedirect
+from assistant.models import review, academic_assistant, settings, assistant_mandate
 
 
-@login_required
-@user_passes_test(is_manager)
-def get_students_list_in_offer_year(request, offer_year_start_id):
-    offer_year_start = get_object_or_404(OfferYear, pk=offer_year_start_id)
-    students_list = find_by_offer_year(offer_year_start)
-    data=[]
-    if students_list:
-        for student in students_list:
-            data.append({'person_id': student.id,
-                         'first_name': student.person.first_name,
-                         'last_name': student.person.last_name,
-                         'registration_id': student.registration_id})
+def user_is_assistant_and_procedure_is_open(user):
+    try:
+        if user.is_authenticated() and settings.access_to_procedure_is_open():
+            return academic_assistant.find_by_person(user.person)
+        else:
+            return False
+    except ObjectDoesNotExist:
+        return False
 
+
+@user_passes_test(user_is_assistant_and_procedure_is_open, login_url='access_denied')
+def reviews_view(request, mandate_id):
+    reviews = review.find_by_mandate(mandate_id)
+    current_academic_assistant = academic_assistant.find_by_person(request.user.person)
+    mandate = assistant_mandate.find_mandate_by_id(mandate_id)
+    if mandate.assistant != current_academic_assistant:
+        return HttpResponseRedirect(reverse("assistants_home"))
     else:
-        data = False
-
-    return JsonResponse({'res': data})
+        return render(request, 'mandate_reviews_view.html', {'reviews': reviews})

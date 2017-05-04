@@ -23,30 +23,14 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-
-from django.shortcuts import get_object_or_404
-from django.contrib.auth.decorators import login_required
-from base.models.student import find_by_offer_year
-from base.models.offer_year import OfferYear
-from django.contrib.auth.decorators import user_passes_test
-from dissertation.models.adviser import is_manager
-from django.http import JsonResponse
+from django.core.exceptions import ObjectDoesNotExist
+from assistant.models import manager
 
 
-@login_required
-@user_passes_test(is_manager)
-def get_students_list_in_offer_year(request, offer_year_start_id):
-    offer_year_start = get_object_or_404(OfferYear, pk=offer_year_start_id)
-    students_list = find_by_offer_year(offer_year_start)
-    data=[]
-    if students_list:
-        for student in students_list:
-            data.append({'person_id': student.id,
-                         'first_name': student.person.first_name,
-                         'last_name': student.person.last_name,
-                         'registration_id': student.registration_id})
+def user_is_manager(user):
 
-    else:
-        data = False
-
-    return JsonResponse({'res': data})
+    try:
+        if user.is_authenticated():
+            return manager.find_by_person(person=user.person)
+    except ObjectDoesNotExist:
+        return False
