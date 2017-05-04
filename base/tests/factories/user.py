@@ -31,3 +31,13 @@ class UserFactory(factory.DjangoModelFactory):
         model = 'auth.User'
 
     username = factory.Faker('user_name')
+
+
+class SuperUserFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = 'auth.User'
+
+    username = factory.Faker('user_name')
+    is_superuser = True
+    is_staff = True
+    is_active = True
