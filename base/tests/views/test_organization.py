@@ -32,17 +32,20 @@ from base.tests.factories.user import SuperUserFactory
 class OrganizationViewTestCase(TestCase):
 
     def setUp(self):
-        self.a_superuser = SuperUserFactory()
         self.organization = OrganizationFactory()
+        self.a_superuser = SuperUserFactory()
+        self.client.force_login(self.a_superuser)
 
     def test_organization_save(self):
-        self.client.force_login(self.a_superuser)
         url = reverse('organization_save', args=[self.organization.id])
         response = self.client.post(url, data=get_form_organization_save())
         self.organization.refresh_from_db()
         self.assertEqual(response.status_code, 200)
         self.assertEqual(self.organization.acronym, "NYU")
         self.assertEqual(self.organization.name, "NEW-YORK UNIVERSITY")
+
+    def test_organization_address_save(self):
+        pass
 
 
 def get_form_organization_save():
