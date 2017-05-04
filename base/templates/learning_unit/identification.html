@@ -34,16 +34,12 @@
 {% include "learning_unit/header.html" %}
 
 <div class="panel panel-default" >
-
     <div class="panel-body" id="tabs" >
         {% include "learning_unit/tabs.html" %}
-        <div class="tab-content" id="tab_content">
-            <br>
-            <div class="row">
-                <div class="col-md-3">
-                    <label for="txt_acronym">{% trans 'code' %}</label>
-                    <input class="form-control" value="{{ learning_unit_year.acronym| default_if_none:'' }}" name="acronym" id="txt_acronym" maxlength="15" readonly>
-                </div>
+
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="identification">
+
             </div>
         </div>
     </div>

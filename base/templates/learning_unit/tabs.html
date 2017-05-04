@@ -1,4 +1,3 @@
-
 {% load staticfiles %}
 {% load i18n %}
 {% comment "License" %}
@@ -25,13 +24,23 @@
 * see http://www.gnu.org/licenses/.
 {% endcomment %}
 
-<ul class="nav nav-tabs">
-    {% for key, value in data_tab.items %}
-        {% if key == tab_active%}
-            <li class="active"><a href="#">{{value}}</a></li>
-        {% else %}
-            <li><a href="{% url 'lu_detail' learning_unit_year.id key %}" id="lnk_tab_{{key}}" >{{value}}</a></li>
-        {% endif %}
-
-    {% endfor %}
+<ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" {% if tab_active == 'identification' %} class="active" {% endif %}>
+        <a href="{% url 'learning_unit' learning_unit_year.id %}" role="tab">Identification</a>
+    </li>
+    <li role="presentation" {% if tab_active == 'formations' %} class="active" {% endif %}>
+        <a href="{% url 'learning_unit_formations' learning_unit_year.id %}" role="tab" >Formations</a>
+    </li>
+    <li role="presentation" {% if tab_active == 'components' %} class="active" {% endif %}>
+        <a href="{% url 'learning_unit_components' learning_unit_year.id %}" role="tab">Composants et classes</a>
+    </li>
+    <li role="presentation" {% if tab_active == 'pedagogy' %} class="active" {% endif %}>
+        <a href="{% url 'learning_unit_pedagogy' learning_unit_year.id %}" role="tab">Infos dédagogiques</a>
+    </li>
+    <li role="presentation" {% if tab_active == 'attributions' %} class="active" {% endif %}>
+        <a href="{% url 'learning_unit_attributions' learning_unit_year.id %}" role="tab">Enseignants</a>
+    </li>
+    <li role="presentation" {% if tab_active == 'proposals' %} class="active" {% endif %}>
+        <a href="{% url 'learning_unit_proposals' learning_unit_year.id %}" role="tab">Propositions</a>
+    </li>
 </ul>

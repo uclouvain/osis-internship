@@ -35,27 +35,11 @@
 <div class="panel panel-default" >
     <div class="panel-body" id="tabs" >
         {% include "learning_unit/tabs.html" %}
+
         <div class="tab-content" id="tab_content">
-            <br>
-            {% if attributions %}
-                <br>
-                <table class="table table-striped table-hover">
-                    <thead>
-                    <tr>
-                        <th>{% trans 'tutor' %}</th>
-                        <th>{% trans 'function'%}</th>
-                    </tr>
-                    </thead>
-                    {% for attribution in attributions %}
-                    <tr>
-                        <td>{{ attribution.tutor.person }}</td>
-                        <td>{% trans attribution.function %}</td>
-                    </tr>
-                    {% endfor %}
-                </table>
+            <div role="tabpanel" class="tab-pane active" id="attributions">
 
-            {% endif %}
-
+            </div>
         </div>
     </div>
 </div>
