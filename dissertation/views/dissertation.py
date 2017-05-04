@@ -40,20 +40,6 @@ from django.http import HttpResponse
 import time
 
 
-# Used by decorator @user_passes_test(is_manager) to secure manager views
-def is_manager(user):
-    person = mdl.person.find_by_user(user)
-    this_adviser = adviser.search_by_person(person)
-    return this_adviser.type == 'MGR' if this_adviser else False
-
-
-# Used by decorator @user_passes_test(is_manager) to secure manager views
-def is_teacher(user):
-    person = mdl.person.find_by_user(user)
-    this_adviser = adviser.search_by_person(person)
-    return this_adviser.type == 'PRF' if this_adviser else False
-
-
 def role_can_be_deleted(dissert, dissert_role):
     promotors_count = dissertation_role.count_by_status_dissertation('PROMOTEUR', dissert)
     return dissert_role.status != 'PROMOTEUR' or promotors_count > 1
@@ -107,7 +93,7 @@ def dissertations(request):
 ###########################
 
 @login_required
-@user_passes_test(is_manager)
+@user_passes_test(adviser.is_manager)
 def manager_dissertations_detail(request, pk):
     dissert = get_object_or_404(Dissertation, pk=pk)
     person = mdl.person.find_by_user(request.user)
@@ -186,7 +172,7 @@ def manager_dissertations_detail(request, pk):
 
 
 @login_required
-@user_passes_test(is_manager)
+@user_passes_test(adviser.is_manager)
 def manager_dissertations_detail_updates(request, pk):
     dissert = get_object_or_404(Dissertation, pk=pk)
     person = mdl.person.find_by_user(request.user)
@@ -200,7 +186,7 @@ def manager_dissertations_detail_updates(request, pk):
 
 
 @login_required
-@user_passes_test(is_manager)
+@user_passes_test(adviser.is_manager)
 def manager_dissertations_edit(request, pk):
     dissert = get_object_or_404(Dissertation, pk=pk)
     person = mdl.person.find_by_user(request.user)
@@ -231,7 +217,7 @@ def manager_dissertations_edit(request, pk):
 
 
 @login_required
-@user_passes_test(is_manager)
+@user_passes_test(adviser.is_manager)
 def manager_dissertations_jury_edit(request, pk):
     dissert_role = get_object_or_404(DissertationRole, pk=pk)
     if request.method == "POST":
@@ -245,7 +231,7 @@ def manager_dissertations_jury_edit(request, pk):
 
 
 @login_required
-@user_passes_test(is_manager)
+@user_passes_test(adviser.is_manager)
 def manager_dissertations_jury_new(request, pk):
     dissert = get_object_or_404(Dissertation, pk=pk)
     count_dissertation_role = dissertation_role.count_by_dissertation(dissert)
@@ -271,7 +257,7 @@ def manager_dissertations_jury_new(request, pk):
 
 
 @login_required
-@user_passes_test(is_manager)
+@user_passes_test(adviser.is_manager)
 def manager_dissertations_list(request):
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
@@ -287,7 +273,7 @@ def manager_dissertations_list(request):
 
 
 @login_required
-@user_passes_test(is_manager)
+@user_passes_test(adviser.is_manager)
 def manager_dissertations_new(request):
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
@@ -373,7 +359,7 @@ def get_ordered_roles(dissert):
 
 
 @login_required
-@user_passes_test(is_manager)
+@user_passes_test(adviser.is_manager)
 def manager_dissertations_search(request):
     disserts = dissertation.search(terms=request.GET['search'], active=True)
     person = mdl.person.find_by_user(request.user)
@@ -399,7 +385,7 @@ def manager_dissertations_search(request):
 
 
 @login_required
-@user_passes_test(is_manager)
+@user_passes_test(adviser.is_manager)
 def manager_dissertations_delete(request, pk):
     dissert = get_object_or_404(Dissertation, pk=pk)
 
@@ -410,7 +396,7 @@ def manager_dissertations_delete(request, pk):
 
 
 @login_required
-@user_passes_test(is_manager)
+@user_passes_test(adviser.is_manager)
 def manager_dissertations_role_delete(request, pk):
     dissert_role = get_object_or_404(DissertationRole, pk=pk)
     dissert = dissert_role.dissertation
@@ -423,7 +409,7 @@ def manager_dissertations_role_delete(request, pk):
 
 
 @login_required
-@user_passes_test(is_manager)
+@user_passes_test(adviser.is_manager)
 def manager_dissertations_to_dir_submit(request, pk):
     dissert = get_object_or_404(Dissertation, pk=pk)
     old_status = dissert.status
@@ -448,7 +434,7 @@ def manager_dissertations_to_dir_submit(request, pk):
 
 
 @login_required
-@user_passes_test(is_manager)
+@user_passes_test(adviser.is_manager)
 def manager_dissertations_to_dir_submit_list(request, pk):
     dissert = get_object_or_404(Dissertation, pk=pk)
     old_status = dissert.status
@@ -459,7 +445,7 @@ def manager_dissertations_to_dir_submit_list(request, pk):
 
 
 @login_required
-@user_passes_test(is_manager)
+@user_passes_test(adviser.is_manager)
 def manager_dissertations_to_dir_ok(request, pk):
     dissert = get_object_or_404(Dissertation, pk=pk)
     old_status = dissert.status
@@ -484,7 +470,7 @@ def manager_dissertations_to_dir_ok(request, pk):
 
 
 @login_required
-@user_passes_test(is_manager)
+@user_passes_test(adviser.is_manager)
 def manager_dissertations_accept_comm_list(request, pk):
     dissert = get_object_or_404(Dissertation, pk=pk)
     old_status = dissert.status
@@ -495,7 +481,7 @@ def manager_dissertations_accept_comm_list(request, pk):
 
 
 @login_required
-@user_passes_test(is_manager)
+@user_passes_test(adviser.is_manager)
 def manager_dissertations_accept_eval_list(request, pk):
     dissert = get_object_or_404(Dissertation, pk=pk)
     old_status = dissert.status
@@ -506,7 +492,7 @@ def manager_dissertations_accept_eval_list(request, pk):
 
 
 @login_required
-@user_passes_test(is_manager)
+@user_passes_test(adviser.is_manager)
 def manager_dissertations_to_dir_ko(request, pk):
     dissert = get_object_or_404(Dissertation, pk=pk)
     old_status = dissert.status
@@ -531,7 +517,7 @@ def manager_dissertations_to_dir_ko(request, pk):
 
 
 @login_required
-@user_passes_test(is_manager)
+@user_passes_test(adviser.is_manager)
 def manager_dissertations_wait_list(request):
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
@@ -548,7 +534,7 @@ def manager_dissertations_wait_list(request):
 
 
 @login_required
-@user_passes_test(is_manager)
+@user_passes_test(adviser.is_manager)
 def manager_dissertations_wait_comm_list(request):
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
@@ -565,7 +551,7 @@ def manager_dissertations_wait_comm_list(request):
 
 
 @login_required
-@user_passes_test(is_manager)
+@user_passes_test(adviser.is_manager)
 def manager_dissertations_wait_eval_list(request):
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
@@ -582,7 +568,7 @@ def manager_dissertations_wait_eval_list(request):
 
 
 @login_required
-@user_passes_test(is_manager)
+@user_passes_test(adviser.is_manager)
 def manager_dissertations_wait_recep_list(request):
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
@@ -603,7 +589,7 @@ def manager_dissertations_wait_recep_list(request):
 ###########################
 
 @login_required
-@user_passes_test(is_teacher)
+@user_passes_test(adviser.is_teacher)
 def dissertations_list(request):
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
@@ -625,7 +611,7 @@ def dissertations_list(request):
 
 
 @login_required
-@user_passes_test(is_teacher)
+@user_passes_test(adviser.is_teacher)
 def dissertations_search(request):
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
@@ -644,7 +630,7 @@ def teacher_is_promotor(adv, dissert):
 
 
 @login_required
-@user_passes_test(is_teacher)
+@user_passes_test(adviser.is_teacher)
 def dissertations_detail(request, pk):
     dissert = get_object_or_404(Dissertation, pk=pk)
     person = mdl.person.find_by_user(request.user)
@@ -673,8 +659,9 @@ def dissertations_detail(request, pk):
     else:
         return redirect('dissertations_list')
 
+
 @login_required
-@user_passes_test(is_teacher)
+@user_passes_test(adviser.is_teacher)
 def dissertations_detail_updates(request, pk):
     dissert = get_object_or_404(Dissertation, pk=pk)
     person = mdl.person.find_by_user(request.user)
@@ -687,7 +674,7 @@ def dissertations_detail_updates(request, pk):
 
 
 @login_required
-@user_passes_test(is_teacher)
+@user_passes_test(adviser.is_teacher)
 def dissertations_delete(request, pk):
     dissert = get_object_or_404(Dissertation, pk=pk)
     person = mdl.person.find_by_user(request.user)
@@ -701,7 +688,7 @@ def dissertations_delete(request, pk):
 
 
 @login_required
-@user_passes_test(is_teacher)
+@user_passes_test(adviser.is_teacher)
 def dissertations_to_dir_ok(request, pk):
     dissert = get_object_or_404(Dissertation, pk=pk)
     person = mdl.person.find_by_user(request.user)
@@ -733,7 +720,7 @@ def dissertations_to_dir_ok(request, pk):
 
 
 @login_required
-@user_passes_test(is_teacher)
+@user_passes_test(adviser.is_teacher)
 def dissertations_to_dir_ko(request, pk):
     dissert = get_object_or_404(Dissertation, pk=pk)
     person = mdl.person.find_by_user(request.user)
@@ -765,7 +752,7 @@ def dissertations_to_dir_ko(request, pk):
 
 
 @login_required
-@user_passes_test(is_teacher)
+@user_passes_test(adviser.is_teacher)
 def dissertations_wait_list(request):
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
@@ -776,7 +763,7 @@ def dissertations_wait_list(request):
 
 
 @login_required
-@user_passes_test(is_teacher)
+@user_passes_test(adviser.is_teacher)
 def dissertations_role_delete(request, pk):
     dissert_role = get_object_or_404(DissertationRole, pk=pk)
     dissert = dissert_role.dissertation
@@ -794,7 +781,7 @@ def dissertations_role_delete(request, pk):
 
 
 @login_required
-@user_passes_test(is_teacher)
+@user_passes_test(adviser.is_teacher)
 def dissertations_jury_new(request, pk):
     dissert = get_object_or_404(Dissertation, pk=pk)
     person = mdl.person.find_by_user(request.user)

@@ -44,6 +44,12 @@ msgstr "Select/deselect all"
 msgid "pgm_managers"
 msgstr "Program's managers"
 
+msgid "srm_managers"
+msgstr "Scores Responsible managers"
+
+msgid "desc_lnk_srm_managers"
+msgstr "Management of the scores responsibles managers"
+
 msgid "desc_lnk_pgm_managers"
 msgstr "Management of the program managers"
 

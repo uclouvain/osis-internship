@@ -25,12 +25,13 @@
 ##############################################################################
 import datetime
 from django.test import TestCase
+from django.utils import timezone
 from base.models import academic_calendar
 from base.models.exceptions import FunctionArgumentMissingException, StartDateHigherThanEndDateException
 from base.tests.factories.academic_calendar import AcademicCalendarFactory
 from base.tests.factories.academic_year import AcademicYearFactory
 
-start_date = datetime.datetime.now()
+start_date = timezone.now()
 end_date = start_date.replace(year=start_date.year + 1)
 
 
@@ -56,7 +57,7 @@ class AcademicCalendarTest(TestCase):
         self.assertRaises(FunctionArgumentMissingException, an_academic_calendar.save)
 
     def test_start_date_higher_than_end_date(self):
-        yr = datetime.datetime.now().year
+        yr = timezone.now().year
         an_academic_year = AcademicYearFactory(year=yr)
         wrong_end_date = an_academic_year.end_date
         wrong_start_date = wrong_end_date.replace(year=yr + 1)
@@ -67,7 +68,7 @@ class AcademicCalendarTest(TestCase):
         self.assertRaises(StartDateHigherThanEndDateException, an_academic_calendar.save, functions=[])
 
     def test_start_date_equal_to_end_date(self):
-        an_academic_year = AcademicYearFactory(year=datetime.datetime.now().year)
+        an_academic_year = AcademicYearFactory(year=timezone.now().year)
         wrong_start_date = an_academic_year.end_date
         an_academic_calendar = AcademicCalendarFactory.build(academic_year=an_academic_year,
                                                              title="A calendar event",
@@ -84,9 +85,9 @@ class AcademicCalendarTest(TestCase):
         self.assertEqual(db_academic_calendar, tmp_academic_calendar)
 
     def test_find_highlight_academic_calendar(self):
-        an_academic_year = AcademicYearFactory(year=datetime.datetime.now().year,
-                                               start_date=datetime.datetime.now() - datetime.timedelta(days=10),
-                                               end_date=datetime.datetime.now() + datetime.timedelta(days=10))
+        an_academic_year = AcademicYearFactory(year=timezone.now().year,
+                                               start_date=timezone.now() - datetime.timedelta(days=10),
+                                               end_date=timezone.now() + datetime.timedelta(days=10))
 
         tmp_academic_calendar = AcademicCalendarFactory.build(academic_year=an_academic_year,
                                                               title="A calendar event")
@@ -105,7 +106,7 @@ class AcademicCalendarTest(TestCase):
         self.assertEqual(db_academic_calendar, tmp_academic_calendar)
 
     def test_find_academic_calendar_by_academic_year_with_dates(self):
-        tmp_academic_year = AcademicYearFactory(year=datetime.datetime.now().year)
+        tmp_academic_year = AcademicYearFactory(year=timezone.now().year)
         tmp_academic_calendar = AcademicCalendarFactory.build(academic_year=tmp_academic_year)
         tmp_academic_calendar.save(functions=[])
         db_academic_calendar = list(academic_calendar.find_academic_calendar_by_academic_year_with_dates

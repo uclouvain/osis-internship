@@ -29,6 +29,7 @@ from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 from .dissertation_role import DissertationRole
+from base import models as mdl
 
 
 class AdviserAdmin(SerializableModelAdmin):
@@ -182,3 +183,15 @@ def add(person, type_arg, available_by_email, available_by_phone, available_at_o
                   comment=comment)
     adv.save()
     return adv
+
+
+def is_manager(user):
+    person = mdl.person.find_by_user(user)
+    this_adviser = search_by_person(person)
+    return this_adviser.type == 'MGR' if this_adviser else False
+
+
+def is_teacher(user):
+    person = mdl.person.find_by_user(user)
+    this_adviser = search_by_person(person)
+    return this_adviser.type == 'PRF' if this_adviser else False

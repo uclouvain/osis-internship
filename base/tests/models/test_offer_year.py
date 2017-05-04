@@ -23,12 +23,12 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import datetime
 from base.models import offer_year
 from base.tests.models import test_offer
 from base.tests.factories.academic_year import AcademicYearFactory
 from base.tests.factories.offer_year import OfferYearFactory
 from django.test import TestCase
+from django.utils import timezone
 
 
 def create_offer_year(acronym, title, academic_year):
@@ -48,12 +48,12 @@ class OfferYearTest(TestCase):
         self.assertIsNone(offer_year.find_by_id_list([]))
 
     def test_search_offers(self):
-        academic_year = AcademicYearFactory(year=datetime.datetime.now().year)
+        academic_year = AcademicYearFactory(year=timezone.now().year)
         self.assertFalse(offer_year.search_offers(None, academic_year, None).exists())
 
         offer_yr = OfferYearFactory(academic_year=academic_year)
         self.assertEqual(offer_year.search_offers([offer_yr.entity_management], academic_year, None)[0], offer_yr)
 
-        previous_academic_year = AcademicYearFactory(year=datetime.datetime.now().year-1)
+        previous_academic_year = AcademicYearFactory(year=timezone.now().year-1)
         self.assertFalse(offer_year.search_offers([offer_yr.entity_management], previous_academic_year, None).exists())
 

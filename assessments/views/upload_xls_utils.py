@@ -52,7 +52,10 @@ AUTHORIZED_JUSTIFICATION_ALIASES = {
     'A': justification_types.ABSENCE_UNJUSTIFIED
 }
 
-INFORMATIVE_JUSTIFICATION_ALIASES = ['S', 'M']
+INFORMATIVE_JUSTIFICATION_ALIASES = {
+    'S': justification_types.ABSENCE_UNJUSTIFIED,
+    'M': justification_types.ABSENCE_JUSTIFIED
+}
 
 @login_required
 def upload_scores_file(request, learning_unit_year_id=None):
@@ -290,6 +293,9 @@ def _update_row(user, row, enrollments_managed_grouped, is_program_manager):
     if xls_score is not None and xls_justification:
         raise UploadValueError("%s!" %  _('constraint_score_other_score'), messages.ERROR)
 
+    if xls_justification and _is_informative_justification(enrollment, xls_justification, is_program_manager):
+       return False
+
     enrollment.score_encoded = xls_score
     enrollment.justification_encoded = None
     if xls_justification:
@@ -301,6 +307,13 @@ def _update_row(user, row, enrollments_managed_grouped, is_program_manager):
     )
 
 
+def _is_informative_justification(enrollment, xls_justification, is_program_manager):
+    justification = enrollment.justification_final if is_program_manager else enrollment.justification_draft
+    justification_informative = INFORMATIVE_JUSTIFICATION_ALIASES.get(xls_justification)
+
+    return justification and justification_informative and justification == justification_informative
+
+
 def __warn_that_score_responsibles_must_submit_scores(request, learning_unit_year):
     tutor = mdl.tutor.find_by_user(request.user)
     if tutor and not mdl_attr.attribution.is_score_responsible(request.user, learning_unit_year):
@@ -308,19 +321,18 @@ def __warn_that_score_responsibles_must_submit_scores(request, learning_unit_yea
 
 
 def _get_justification_from_aliases(enrollment, justification_encoded):
-    # When absence justified no change
-    if enrollment.justification_final == justification_types.ABSENCE_JUSTIFIED:
-        return justification_types.ABSENCE_JUSTIFIED
-
-    # Don't care about S/M
-    if justification_encoded in INFORMATIVE_JUSTIFICATION_ALIASES:
-        return None
-
-    justification = AUTHORIZED_JUSTIFICATION_ALIASES.get(justification_encoded)
+    justification = AUTHORIZED_JUSTIFICATION_ALIASES.get(justification_encoded.upper())
     if justification:
-        return justification
+        # When absence justified no change
+        return justification_types.ABSENCE_JUSTIFIED if _is_remain_justified_absence(enrollment, justification) \
+                                                     else justification
     else:
         raise UploadValueError('%s' % _('justification_invalid_value'), messages.ERROR)
+
+
+def _is_remain_justified_absence(enrollment, justification):
+    return justification == justification_types.ABSENCE_UNJUSTIFIED and \
+           enrollment.justification_final == justification_types.ABSENCE_JUSTIFIED
 
 
 class UploadValueError(ValueError):

@@ -23,8 +23,8 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import datetime
 from django.test import TestCase
+from django.utils import timezone
 from attribution.models import attribution
 from base.tests.factories.tutor import TutorFactory
 from base.tests.factories.academic_year import AcademicYearFactory
@@ -43,7 +43,7 @@ def create_learning_unit_year(acronym, title, academic_year):
 class LearningUnitYearTest(TestCase):
     def setUp(self):
         self.tutor = TutorFactory()
-        self.academic_year = AcademicYearFactory(year=datetime.datetime.now().year)
+        self.academic_year = AcademicYearFactory(year=timezone.now().year)
         self.learning_unit_year = LearningUnitYearFactory(acronym="LDROI1004", title="Juridic law courses",
                                                           academic_year=self.academic_year)
 

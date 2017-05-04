@@ -32,9 +32,9 @@ import json
 class GetPersonsTestCase(TestCase):
     def setUp(self):
         self.client = Client()
-        self.person = Person.objects.create(first_name='person1', last_name='test', email='person1@test.com')
+        self.person = Person.objects.create(first_name='person1', last_name='tests', email='person1@tests.com')
         self.person.save()
-        self.person = Person.objects.create(first_name='person2', last_name='test', email='person2@test.com')
+        self.person = Person.objects.create(first_name='person2', last_name='tests', email='person2@tests.com')
         self.person.save()
 
 
@@ -42,10 +42,10 @@ class GetPersonsTestCase(TestCase):
         response = self.client.generic(method='get', path='/assistants/api/get_persons/?term=on2',
                                        HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         data = json.loads(response.content.decode("utf-8"))
-        self.assertEqual(data[0]['value'], 'person2@test.com')
+        self.assertEqual(data[0]['value'], 'person2@tests.com')
         self.assertEqual(len(data), 1)
 
-        response = self.client.generic(method='get', path='/assistants/api/get_persons/?term=test',
+        response = self.client.generic(method='get', path='/assistants/api/get_persons/?term=tests',
                                        HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         data = json.loads(response.content.decode("utf-8"))
         self.assertEqual(len(data), 2)
