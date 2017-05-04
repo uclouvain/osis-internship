@@ -75,14 +75,14 @@ class PgmManagerAdministrationTest(TestCase):
         OfferYearFactory(academic_year=self.academic_year_current,
                          entity_management=StructureFactory(),
                          grade_type=a_grade_type)
-        self.assertEqual(len(pgm_manager_administration.filter_by_entity_grade_type(offer_year1.academic_year,
+        self.assertEqual(len(pgm_manager_administration.filter_by_entity_offer_type(offer_year1.academic_year,
                                                                                     [self.structure_parent1],
                                                                                     a_grade_type)), 1)
 
-        self.assertEqual(len(pgm_manager_administration.filter_by_entity_grade_type(offer_year1.academic_year,
+        self.assertEqual(len(pgm_manager_administration.filter_by_entity_offer_type(offer_year1.academic_year,
                                                                                     [self.structure_parent1],
                                                                                     None)), 1)
-        self.assertEqual(len(pgm_manager_administration.filter_by_entity_grade_type(offer_year1.academic_year,
+        self.assertEqual(len(pgm_manager_administration.filter_by_entity_offer_type(offer_year1.academic_year,
                                                                                     None,
                                                                                     None)), 2)
 

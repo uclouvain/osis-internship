@@ -135,7 +135,7 @@ def find_by_person_exclude_offer_list(a_person, offer_yr_list):
     return ProgramManager.objects.filter(person=a_person).exclude(offer_year__in=offer_yr_list)
 
 
-def find_by_person_academic_year(a_person=None, an_academic_yr=None, entity_list=None, a_grade_type=None):
+def find_by_person_academic_year(a_person=None, an_academic_yr=None, entity_list=None, an_offer_type=None):
     queryset = ProgramManager.objects
 
     if a_person:
@@ -147,10 +147,11 @@ def find_by_person_academic_year(a_person=None, an_academic_yr=None, entity_list
     if entity_list:
         queryset = queryset.filter(offer_year__entity_administration__in=entity_list)
 
-    if a_grade_type:
-        queryset = queryset.filter(offer_year__grade_type=a_grade_type)
+    if an_offer_type:
+        queryset = queryset.filter(offer_year__offer_type=an_offer_type)
 
     return queryset.select_related("offer_year")
+
 
 def find_by_offer_year_person(a_person, offer_yr):
     return ProgramManager.objects.select_related("person").filter(person=a_person, offer_year=offer_yr)

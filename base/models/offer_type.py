@@ -28,21 +28,19 @@ from osis_common.models.serializable_model import SerializableModel, Serializabl
 
 
 class OfferTypeAdmin(SerializableModelAdmin):
-    list_display = ('name', 'offer_year')
-    fieldsets = ((None, {'fields': ('name', 'offer_year')}),)
-    list_filter = ('name', 'offer_year')
-    raw_id_fields = ('offer_year',)
-    search_fields = ['name', 'offer_year']
+    list_display = ('name', )
+    fieldsets = ((None, {'fields': ('name', )}),)
+    list_filter = ('name', )
+    search_fields = ['name']
 
 
 class OfferType(SerializableModel):
     external_id = models.CharField(max_length=100, blank=True, null=True)
     name = models.CharField(max_length=255)
-    offer_year = models.ForeignKey('OfferYear')
 
     def __str__(self):
-        return u"%s - %s" % (self.name, self.offer_year)
+        return u"%s" % self.name
 
 
-def find_by_academic_year(academic_yr):
-    return OfferType.objects.filter(offer_year__academic_year=academic_yr).distinct('name').order_by('name')
+def find_all():
+    return OfferType.objects.distinct('name').order_by('name')
