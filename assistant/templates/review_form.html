@@ -86,7 +86,12 @@
 </ul>
 <div class="panel panel-default">
     <div class="panel-body">
-        <form method="post" action=" {% url 'review_save' review_id=review.id mandate_id=mandate_id %} ">
+        {% if menu_type == 'phd_supervisor_menu' %}
+            <form method="post" action=
+                    "{% url 'phd_supervisor_review_save' review_id=review.id mandate_id=mandate_id %} ">
+        {% else %}
+            <form method="post" action=" {% url 'review_save' review_id=review.id mandate_id=mandate_id %} ">
+        {% endif %}
         {% csrf_token %}
         {% for hidden in form.hidden_fields %}
             {{ hidden }}
@@ -146,8 +151,13 @@
                     </span> {% trans 'save'%}</button>
                 </div>
                 <div class="col-md-6" align="left">
-		            <a class="btn btn-default btn-block" id="lnk_mandate_cancel"
-                       href="{% url 'reviewer_mandates_list' %}">
+                    {% if menu_type == 'phd_supervisor_menu' %}
+                        <a class="btn btn-default btn-block" id="lnk_mandate_cancel"
+                       href="{% url 'phd_supervisor_assistants_list' %}">
+                    {% else %}
+		                <a class="btn btn-default btn-block" id="lnk_mandate_cancel"
+                           href="{% url 'reviewer_mandates_list' %}">
+                    {% endif %}
 		            <span class="glyphicon glyphicon-cancel" aria-hidden="true"></span> {% trans 'cancel'%}</a>
                 </div>
             </div>

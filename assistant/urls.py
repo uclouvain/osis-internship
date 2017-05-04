@@ -58,6 +58,8 @@ urlpatterns = [
         name='phd_supervisor_pst_form_view'),
     url(r'^phd_supervisor/review/edit/(?P<mandate_id>\d+)/$', phd_supervisor_review.review_edit,
         name='phd_supervisor_review_edit'),
+    url(r'^phd_supervisor/review/save/(?P<review_id>\d+)/(?P<mandate_id>\d+)/$', phd_supervisor_review.review_save,
+        name='phd_supervisor_review_save'),
     url(r'^phd_supervisor/review/view/(?P<mandate_id>\d+)/$', phd_supervisor_review.review_view,
         name='phd_supervisor_review_view'),
     url(r'^pst/access_denied$', home.access_denied, name='access_denied'),
