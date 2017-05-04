@@ -40,7 +40,9 @@
 <li><a href="{% url 'assistant_mandates' %}">{% trans 'my_mandates' %}</a></li>
 <li><a href="{% url 'form_part1_edit' mandate_id %}">{% trans 'assistant_form_part1' %}</a></li>
 <li class="active"><a href="{% url 'mandate_learning_units' mandate_id %}">{% trans 'assistant_form_part2' %}</a></li>
-<li><a href="{% url 'form_part3_edit' mandate_id %}">{% trans 'assistant_form_part3' %}</a></li>
+{% if assistant_type == "ASSISTANT" %}
+    <li><a href="{% url 'form_part3_edit' mandate_id %}">{% trans 'assistant_form_part3' %}</a></li>
+{% endif %}
 <li><a href="{% url 'form_part4_edit' mandate_id %}">{% trans 'assistant_form_part4' %}</a></li>
 <li><a href="{% url 'form_part5_edit' mandate_id %}">{% trans 'assistant_form_part5' %}</a></li>
 <li><a href="{% url 'form_part6_edit' mandate_id %}">{% trans 'assistant_form_part6' %}</a></li>
@@ -56,7 +58,7 @@
             <table id="myTable" class="table table-hover table-condensed table-bordered" cellspacing="0" width="100%">
             <thead>
             <tr>
-            <th>{% trans 'academic_year' %}</th>
+            <th>{{ assistant_type }}{% trans 'academic_year' %}</th>
             <th>{% trans 'acronym' %}</th>
             <th>{% trans 'title' %}</th>
             <th>{% trans 'edit' %}</th>

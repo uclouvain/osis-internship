@@ -83,10 +83,12 @@ def form_part1_save(request, mandate_id):
 
 @login_required
 def tutoring_learning_unit_add(request, mandate_id):
+    mandate = assistant_mandate.find_mandate_by_id(mandate_id)
     form = TutoringLearningUnitForm(initial={'mandate_id': mandate_id,
                                              'tutoring_learning_unit_year_id': None
                                              })
     return render(request, "tutoring_learning_unit_year.html", {'form': form,
+                                                                'assistant_type': mandate.assistant_type,
                                                                 'mandate_id': mandate_id
                                                                 })
 
@@ -96,6 +98,7 @@ def tutoring_learning_unit_edit(request, tutoring_learning_unit_id=None):
     edited_learning_unit_year = mdl.tutoring_learning_unit_year.find_by_id(tutoring_learning_unit_id)
     this_academic_year = edited_learning_unit_year.learning_unit_year.academic_year
     mandate_id = edited_learning_unit_year.mandate_id
+    mandate = assistant_mandate.find_mandate_by_id(mandate_id)
     form = TutoringLearningUnitForm(initial={'mandate_id': edited_learning_unit_year.mandate_id,
                                              'tutoring_learning_unit_year_id': edited_learning_unit_year.id,
                                              'learning_unit_year': edited_learning_unit_year.learning_unit_year.acronym,
@@ -110,6 +113,7 @@ def tutoring_learning_unit_edit(request, tutoring_learning_unit_id=None):
                                              'others_delivery': edited_learning_unit_year.others_delivery,
                                              'academic_year': this_academic_year.id})
     return render(request, "tutoring_learning_unit_year.html", {'form': form,
+                                                                'assistant_type': mandate.assistant_type,
                                                                 'mandate_id': mandate_id})
 
 
