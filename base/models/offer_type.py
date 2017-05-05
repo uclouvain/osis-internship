@@ -24,17 +24,17 @@
 #
 ##############################################################################
 from django.db import models
-from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
+from django.contrib import admin
 
 
-class OfferTypeAdmin(SerializableModelAdmin):
+class OfferTypeAdmin(admin.ModelAdmin):
     list_display = ('name', )
     fieldsets = ((None, {'fields': ('name', )}),)
     list_filter = ('name', )
     search_fields = ['name']
 
 
-class OfferType(SerializableModel):
+class OfferType(models.Model):
     external_id = models.CharField(max_length=100, blank=True, null=True)
     name = models.CharField(max_length=255)
 
