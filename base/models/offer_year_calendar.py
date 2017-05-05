@@ -135,11 +135,6 @@ def _create_from_academic_calendar(academic_calendar):
         offer_yr_calendar.save()
 
 
-def find_by_current_session_exam():
-    return OfferYearCalendar.objects.filter(start_date__lte=timezone.now())\
-        .filter(end_date__gte=timezone.now()).first()
-
-
 def find_by_academic_calendar(academic_cal):
     return OfferYearCalendar.objects.filter(academic_calendar=academic_cal.id)
 
