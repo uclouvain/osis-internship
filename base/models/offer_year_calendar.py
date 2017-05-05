@@ -50,17 +50,20 @@ class OfferYearCalendar(models.Model):
 
     def update_dates(self, start_date, end_date):
         if self.customized:
-            self.start_date = start_date
+            if start_date < self.end_date:
+                self.start_date = start_date
+                self.save()
+            else:
+                print('Impossible de modifier les dates pour {} car la nouvelle date de début {} serait supérieure à la date de fin existant {}'.format(self.offer_year.acronym, start_date, self.end_date))
         else:
-            self.start_date = start_date
-            self.end_date = end_date
-        self.save()
+            if start_date < end_date:
+                self.start_date = start_date
+                self.end_date = end_date
+                self.save()
+            else:
+                print('Impossible de modifier les dates pour {} car les nouvelles dates sont invalides ({}-{})'.format(self.offer_year.acronym, start_date, end_date))
 
     def save(self, *args, **kwargs):
-        academic_start_date = self.get_start_date()
-        academic_end_date = self.get_end_date()
-        self.start_date_validation(academic_start_date)
-        self.end_date_validation(academic_end_date)
         self.end_start_dates_validation()
         super(OfferYearCalendar, self).save(*args, **kwargs)
 
