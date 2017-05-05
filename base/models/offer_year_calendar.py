@@ -50,12 +50,16 @@ class OfferYearCalendar(models.Model):
 
     def update_dates(self, start_date, end_date):
         if self.customized:
-            self.start_date = start_date
+            if start_date < self.end_date:
+                #  Test needed to prevent error when erroneous data are detected
+                self.start_date = start_date
+                self.save()
         else:
-            self.start_date = start_date
-            self.end_date = end_date
-
-        self.save()
+            if start_date < end_date:
+                #  Test needed to prevent error when erroneous data are detected
+                self.start_date = start_date
+                self.end_date = end_date
+                self.save()
 
     def save(self, *args, **kwargs):
         self.end_start_dates_validation()
@@ -172,13 +176,4 @@ def find_latest_end_date_by_academic_calendar(academic_calendar_id):
     except ObjectDoesNotExist:
         return None
 
-
-def find_earliest_end_date_by_academic_calendar(academic_calendar_id):
-    try:
-        return OfferYearCalendar.objects.filter(academic_calendar_id=academic_calendar_id) \
-            .filter(customized=True) \
-            .filter(end_date__isnull=False) \
-            .earliest('end_date')
-    except ObjectDoesNotExist:
-        return None
 

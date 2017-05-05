@@ -69,20 +69,6 @@ class AcademicCalendarForm(BootstrapModelForm):
             return False
         return True
 
-    def end_date_gt_earliest_offer_year_calendar_end_date(self):
-        off_year_calendar_min = offer_year_calendar.find_earliest_end_date_by_academic_calendar(self.instance.id)
-        date_format = str(_('date_format'))
-
-        if off_year_calendar_min and self.cleaned_data['start_date'] \
-                and self.cleaned_data['start_date'] > off_year_calendar_min.end_date:
-            error_msg = "%s." % (_('academic_calendar_offer_year_calendar_start_date_end_date_error')
-                                 % (self.instance.title,
-                                    off_year_calendar_min.end_date.strftime(date_format),
-                                    self.instance.title,
-                                    off_year_calendar_min.offer_year.acronym))
-            self._errors['start_date'] = error_msg
-            return False
-        return True
 
     def end_date_gt_start_date(self):
         if self.cleaned_data['end_date'] <= self.cleaned_data['start_date']:
@@ -94,7 +80,6 @@ class AcademicCalendarForm(BootstrapModelForm):
         return super(AcademicCalendarForm, self).is_valid() \
             and self.start_date_and_end_date_are_set() \
             and self.end_date_gt_last_offer_year_calendar_end_date() \
-            and self.end_date_gt_earliest_offer_year_calendar_end_date() \
             and self.end_date_gt_start_date()
 
     def start_date_and_end_date_are_set(self):
