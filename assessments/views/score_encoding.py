@@ -603,15 +603,6 @@ def _get_score_encoding_list_with_only_enrollment_modified(request, learning_uni
     return scores_list_encoded
 
 
-def _append_session_exam_deadline(exam_enrollments):
-    exam_enrollments_with_deadline = copy.deepcopy(exam_enrollments)
-    for enrollment in exam_enrollments_with_deadline:
-        enrollment.deadline_tutor_computed = mdl.exam_enrollment.get_deadline_tutor_computed(enrollment)
-        enrollment.deadline_reached = mdl.exam_enrollment.is_deadline_reached(enrollment)
-        enrollment.deadline_tutor_reached = mdl.exam_enrollment.is_deadline_tutor_reached(enrollment)
-    return exam_enrollments_with_deadline
-
-
 def get_json_data_scores_sheets(tutor_global_id):
     try:
         person = mdl.person.find_by_global_id(tutor_global_id)

@@ -198,10 +198,11 @@ def is_deadline_tutor_reached(enrollment):
     return False
 
 
-def get_deadline_tutor_computed(enrollment):
+def get_deadline(enrollment):
     exam_deadline = get_session_exam_deadline(enrollment)
     if exam_deadline:
-        return exam_deadline.deadline_tutor_computed
+        return exam_deadline.deadline_tutor_computed if exam_deadline.deadline_tutor_computed else \
+               exam_deadline.deadline
     return None
 
 
@@ -516,7 +517,7 @@ def scores_sheet_data(exam_enrollments, tutor=None):
                         score = str(int(exam_enrol.score_final))
 
                 # Compute deadline score encoding
-                deadline = get_deadline_tutor_computed(exam_enrol)
+                deadline = get_deadline(exam_enrol)
                 if deadline:
                     deadline = deadline.strftime(date_format)
 
