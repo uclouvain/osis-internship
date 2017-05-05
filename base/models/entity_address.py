@@ -24,6 +24,13 @@
 #
 ##############################################################################
 from django.db import models
+from django.contrib import admin
+
+
+class EntityAddressAdmin(admin.ModelAdmin):
+    list_display = ('entity', 'label', 'location', 'postal_code', 'city', 'country', )
+    search_fields = ['entity', 'label', 'location', 'postal_code', 'city', 'country']
+    raw_id_fields = ('entity', )
 
 
 class EntityAddress(models.Model):
@@ -33,6 +40,9 @@ class EntityAddress(models.Model):
     postal_code = models.CharField(max_length=20, null=True)
     city = models.CharField(max_length=255, null=True)
     country = models.CharField(max_length=255, null=True)
+
+    class Meta:
+        verbose_name_plural = "entity adresses"
 
 
 def search_by_entity(entity):

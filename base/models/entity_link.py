@@ -24,8 +24,15 @@
 #
 ##############################################################################
 from django.db import models
+from django.contrib import admin
 from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
+
+
+class EntityLinkAdmin(admin.ModelAdmin):
+    list_display = ('id', 'parent', 'child', 'start_date', 'end_date',)
+    search_fields = ['parent', 'child', 'start_date', 'end_date']
+    raw_id_fields = ('parent', 'child',)
 
 
 class EntityLink(models.Model):

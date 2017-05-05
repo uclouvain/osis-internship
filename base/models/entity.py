@@ -24,12 +24,25 @@
 #
 ##############################################################################
 from django.db import models
+from django.contrib import admin
 from django.utils import timezone
 from base.models.entity_link import EntityLink
 
 
+class EntityAdmin(admin.ModelAdmin):
+    list_display = ('id', 'organization',)
+    search_fields = ['organization']
+    raw_id_fields = ('organization',)
+
+
 class Entity(models.Model):
     organization = models.ForeignKey('Organization', null=True)
+
+    class Meta:
+        verbose_name_plural = "entities"
+
+    def __str__(self):
+        return "{0} ({1})".format(self.id, self.organization.acronym)
 
     def _direct_children(self, date=None):
         if date is None:
