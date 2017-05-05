@@ -87,6 +87,9 @@ admin.site.register(offer_enrollment.OfferEnrollment,
 admin.site.register(offer.Offer,
                     offer.OfferAdmin)
 
+admin.site.register(offer_type.OfferType,
+                    offer_type.OfferTypeAdmin)
+
 admin.site.register(offer_year.OfferYear,
                     offer_year.OfferYearAdmin)
 
