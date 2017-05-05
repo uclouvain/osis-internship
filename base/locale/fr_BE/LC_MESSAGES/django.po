@@ -68,8 +68,8 @@ msgid "academic_calendar_management"
 msgstr "Gestion du calendrier académique"
 
 msgid "academic_calendar_offer_year_calendar_end_date_error"
-msgstr "La date de fermeture de l'encodage des notes du calendrier académique ne peut pas être inférieure au %s "
-       "(date de fin de l'encodage des notes du programme '%s')"
+msgstr "La date de fermeture de '%s' du calendrier académique ne peut pas être inférieure au %s "
+       "(date de fin de '%s' du programme '%s')"
 
 msgid "academic_calendar_offer_year_calendar_start_date_error"
 msgstr "La date d'ouverture de l'encodage des notes du calendrier académique ne peut pas être supérieure au %s "
@@ -1516,3 +1516,7 @@ msgstr "Enseignants - attributions"
 
 msgid "proposal"
 msgstr "Proposition"
+
+msgid "academic_calendar_offer_year_calendar_start_date_end_date_error"
+msgstr "La date d'ouverture de '%s' du calendrier académique ne peut pas être supérieure au %s "
+       "(date de fin de '%s' du programme '%s')"
