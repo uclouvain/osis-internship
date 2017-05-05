@@ -18,7 +18,6 @@ class Migration(migrations.Migration):
             name='OfferType',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('uuid', models.UUIDField(db_index=True, default=uuid.uuid4, editable=False, unique=True)),
                 ('external_id', models.CharField(blank=True, max_length=100, null=True)),
                 ('name', models.CharField(max_length=255)),
             ],
