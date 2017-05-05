@@ -318,8 +318,8 @@ def get_progress_by_learning_unit_years_and_offer_years(user,
                                           output_field=IntegerField()
                                  )),
                                  scores_not_yet_submitted=Sum(Case(
-                                     When((Q(score_draft__isnull=False) & Q(score_final__isnull=False) & Q(justification_final__isnull=False)) |
-                                          (Q(justification_draft__isnull=False) & Q(score_final__isnull=False) & Q(justification_final__isnull=False))
+                                     When((Q(score_draft__isnull=False) & Q(score_final__isnull=True) & Q(justification_final__isnull=True)) |
+                                          (Q(justification_draft__isnull=False) & Q(score_final__isnull=True) & Q(justification_final__isnull=True))
                                           ,then=1),
                                           default=0,
                                           output_field=IntegerField()
