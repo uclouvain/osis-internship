@@ -23,30 +23,15 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
-from osis_common.models.serializable_model import SerializableModelAdmin, SerializableModel
 
-class InternshipAdmin(SerializableModelAdmin):
-    list_display = (
-            'name',
-            'speciality',
-            'cohort',
-            'length_in_periods')
-    fieldsets = ((None, {'fields':
-        (
-            'name',
-            'speciality',
-            'cohort',
-            'length_in_periods'
-        )}),)
+def group_periods_by_consecutives(periods, length=1):
+    if length==1:
+        for period in periods:
+            yield [period]
+    else:
+        for i in xrange(len(periods) - (length - 1)):
+            if all(map(lambda period: int(periods[i].name[1:]) + 1 == int(periods[i + 1].name[1:]), periods[i: i + length])):
+                yield periods[i: i + length]
 
-
-class Internship(SerializableModel):
-    name = models.CharField(max_length=255, blank=False)
-    speciality = models.ForeignKey('internship.InternshipSpeciality', null=True, blank=True)
-    cohort = models.ForeignKey('internship.Cohort', null=False)
-    length_in_periods = models.IntegerField(null=False, default=1)
-
-    def __str__(self):
-        return u"%s" % self.name
-
+def map_period_ids(periods):
+    return list(map(lambda period: period.id, periods))

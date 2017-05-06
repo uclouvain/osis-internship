@@ -23,30 +23,25 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
-from osis_common.models.serializable_model import SerializableModelAdmin, SerializableModel
 
-class InternshipAdmin(SerializableModelAdmin):
-    list_display = (
-            'name',
-            'speciality',
-            'cohort',
-            'length_in_periods')
-    fieldsets = ((None, {'fields':
-        (
-            'name',
-            'speciality',
-            'cohort',
-            'length_in_periods'
-        )}),)
+def get_period_places_for_offer_ids(offer_ids, period_places):
+    return list(filter(lambda period_place: period_place["internship_offer_id"] in offer_ids, period_places))
 
+def get_period_places_for_period_ids(period_ids, period_places):
+    return list(filter(lambda period_place: period_place["period_id"] in period_ids, period_places))
 
-class Internship(SerializableModel):
-    name = models.CharField(max_length=255, blank=False)
-    speciality = models.ForeignKey('internship.InternshipSpeciality', null=True, blank=True)
-    cohort = models.ForeignKey('internship.Cohort', null=False)
-    length_in_periods = models.IntegerField(null=False, default=1)
+def get_period_place_for_offer_and_period(offer, period, period_places):
+    return list(filter(lambda period_place: period_place["internship_offer_id"] == offer.id \
+            and period_place["period_id"] == period.id, period_places))[0]
 
-    def __str__(self):
-        return u"%s" % self.name
+def get_period_ids_from_period_places(period_places):
+    return list(map(lambda period_place: period_place["period_id"], period_places))
 
+def sort_period_places(period_places):
+    unordered_period_places = list(filter(lambda period_place: period_place["number_places"] > 0, period_places))
+    return list(sorted(unordered_period_places, key=lambda period_place: period_place["number_places"], reverse=True))
+
+def replace_period_place_in_dictionnary(period_place, period_places_dictionnary, new_count):
+    for period_place_dict in period_places_dictionnary:
+        if period_place_dict["id"] == period_place["id"]:
+            period_place_dict["number_places"] = new_count
