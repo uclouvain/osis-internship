@@ -81,18 +81,16 @@ class AssignmentSolver:
             affectation = self.build_student_affectation(enrollment.place, enrollment.student, enrollment.period, \
                             enrollment.internship_offer.speciality)
             if enrollment.student.id == 16331:
-                print(enrollment.period)
+                print(affectation)
 
             self.update_period_places_for_affectation(affectation)
             self.affectations.append(affectation)
 
     def assign_priority_choices_to_students(self, internship):
-        priority_choices = InternshipChoice.objects.filter(internship=internship, priority=True).order_by("choice")
-        for choice in priority_choices:
-            student = choice.student
-            if self.student_has_no_current_affectation_to_internship(student, internship, self.affectations):
-                periods = self.find_first_student_available_periods_for_internship_choice(student, internship, choice)
-                self.affectations.extend(self.build_affectation_for_periods(student, choice.organization, periods, choice.speciality))
+        priority_student_ids = InternshipChoice.objects.filter(internship=internship, priority=True).values("student").distinct()
+        for student_id in priority_student_ids:
+            student = Student.objects.get(pk=student_id["student"])
+            self.assign_offer_to_student(student, internship)
 
     def assign_best_offer_for_student_choices(self, student_informations, internship):
         for student_information in student_informations:
@@ -103,16 +101,17 @@ class AssignmentSolver:
                 print("WARNING: No student associated with student information %s", student_information.id)
 
     def assign_offer_to_student(self, student, internship):
-        choices     = InternshipChoice.objects.filter(student=student, internship=internship).order_by("choice")
+        choices = InternshipChoice.objects.filter(student=student, internship=internship).order_by("choice")
         if self.student_has_no_current_affectation_to_internship(student, internship, self.affectations):
-            self.affectations.extend(self.assign_choices_to_student(student, choices, internship))
+            affectation = self.assign_choices_to_student(student, choices, internship)
+            if student.id == 16331:
+                print(affectation)
+            self.affectations.extend(affectation)
 
     def assign_choices_to_student(self, student, choices, internship):
         affectations = []
         for choice in choices:
             periods = self.find_first_student_available_periods_for_internship_choice(student, internship, choice)
-            if student.id == 16331:
-                print(periods)
             if len(periods) > 0:
                 affectations.extend(self.build_affectation_for_periods(student, choice.organization, periods, choice.speciality))
                 break
@@ -130,8 +129,6 @@ class AssignmentSolver:
 
     def find_best_affectation_outside_of_choices(self, student, internship, choices):
         student_periods = self.find_first_student_available_periods_for_internship(student, internship)
-        if student.id == 16331:
-            print(student_periods)
 
         if len(student_periods) == 0:
             student_periods = self.find_first_student_available_periods_regardless_of_internship(student, internship)
@@ -154,8 +151,6 @@ class AssignmentSolver:
         grouped_periods      = list(group_periods_by_consecutives(available_periods, length=internship.length_in_periods))
 
         if len(grouped_periods) > 0:
-            if student.id == 16331:
-                print(grouped_periods)
             return random.choice(grouped_periods)
         else:
             return grouped_periods
@@ -251,6 +246,6 @@ class AssignmentSolver:
                     speciality = choice.speciality, \
                     organization = choice.organization)
 
-#cohort = Cohort.objects.get(pk=2)
-#solver = AssignmentSolver(cohort)
-#solver.solve()
+cohort = Cohort.objects.get(pk=2)
+solver = AssignmentSolver(cohort)
+solver.solve()
