@@ -55,8 +55,8 @@ class AssignmentSolver:
                                         .exclude(reference="00").filter(cohort=cohort, reference_length=3)
         self.default_speciality      = InternshipSpeciality.objects.filter(cohort=cohort, acronym="MO").first()
         self.offers                  = InternshipOffer.objects.filter(cohort=cohort)
-        self.periods                 = Period.objects.extra({"period_number": "CAST(substr(name, 2) AS INTEGER)"}) \
-                                        .filter(cohort=cohort).order_by("period_number")
+        self.periods                 = Period.objects.extra(select={"period_number": "CAST(substr(name, 2) AS INTEGER)"}) \
+                                        .exclude(name="P12").filter(cohort=cohort).order_by("period_number")
         self.offer_ids               = self.offers.values_list("id", flat=True)
         self.available_places        = PeriodInternshipPlaces.objects.filter(internship_offer_id__in=self.offer_ids).values()
         self.errors_count            = 0
@@ -68,7 +68,8 @@ class AssignmentSolver:
             print("----------")
             self.assign_enrollments_to_students(internship)
             if internship.speciality:
-                self.assign_best_offer_to_student_choices(self.student_informations, internship)
+                self.assign_priority_choices_to_students(internship)
+                self.assign_best_offer_for_student_choices(self.student_informations, internship)
             else:
                 print("Non mandatory internship")
             print(self.errors_count)
@@ -85,7 +86,15 @@ class AssignmentSolver:
             self.update_period_places_for_affectation(affectation)
             self.affectations.append(affectation)
 
-    def assign_best_offer_to_student_choices(self, student_informations, internship):
+    def assign_priority_choices_to_students(self, internship):
+        priority_choices = InternshipChoice.objects.filter(internship=internship, priority=True).order_by("choice")
+        for choice in priority_choices:
+            student = choice.student
+            if self.student_has_no_current_affectation_to_internship(student, internship, self.affectations):
+                periods = self.find_first_student_available_periods_for_internship_choice(student, internship, choice)
+                self.affectations.extend(self.build_affectation_for_periods(student, choice.organization, periods, choice.speciality))
+
+    def assign_best_offer_for_student_choices(self, student_informations, internship):
         for student_information in student_informations:
             student = Student.objects.filter(person_id=student_information.person_id).first()
             if student:
@@ -179,7 +188,7 @@ class AssignmentSolver:
 
     def find_available_periods_for_offers(self, offers):
         offer_ids                    = offers.values_list("id", flat=True)
-        period_places_for_offers = get_period_places_for_offer_ids(offer_ids, self.available_places)
+        period_places_for_offers     = get_period_places_for_offer_ids(offer_ids, self.available_places)
         available_period_places      = sort_period_places(period_places_for_offers)
         period_ids                   = get_period_ids_from_period_places(available_period_places)
         return self.periods.filter(pk__in=period_ids).order_by("id")
@@ -189,8 +198,6 @@ class AssignmentSolver:
         offer            = self.find_offer_for_affectation(affectation)
         period_place     = get_period_place_for_offer_and_period(offer, period, self.available_places)
         new_places_count = period_place["number_places"] - 1
-        if new_places_count < 0:
-            print(period_place)
         replace_period_place_in_dictionnary(period_place, self.available_places, new_places_count)
 
     def build_affectation_for_periods(self, student, organization, periods, speciality):
@@ -203,10 +210,10 @@ class AssignmentSolver:
 
     def build_student_affectation(self, organization, student, period, speciality):
             return InternshipStudentAffectationStat(
-                    organization=organization,
-                    student=student,
-                    period=period,
-                    speciality=speciality
+                    organization = organization,
+                    student = student,
+                    period = period,
+                    speciality = speciality
             )
 
     def get_student_affectations(self, student, affectations):
@@ -244,6 +251,6 @@ class AssignmentSolver:
                     speciality = choice.speciality, \
                     organization = choice.organization)
 
-cohort = Cohort.objects.get(pk=2)
-solver = AssignmentSolver(cohort)
-solver.solve()
+#cohort = Cohort.objects.get(pk=2)
+#solver = AssignmentSolver(cohort)
+#solver.solve()
