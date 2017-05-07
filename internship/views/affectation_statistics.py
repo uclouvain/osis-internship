@@ -206,8 +206,9 @@ def compute_stats(cohort, sol):
     for speciality, students in get_student_mandatory_choices(cohort, True).items():
         for choices in students:
             students_socio.add(choices[0].student.id)
+    internships = mdl_internship.internship.Internship.objects.filter(cohort=cohort)
     socio = len(mdl_internship.internship_choice.InternshipChoice.
-                objects.filter(priority=True).distinct('student').values('student'))
+                objects.filter(internship__in=internships, priority=True).distinct('student').values('student'))
 
     total_n_internships = first_n + second_n + third_n + fourth_n + imposed_choices
     total_s_internships = first_s + second_s + third_s + fourth_s
@@ -216,8 +217,9 @@ def compute_stats(cohort, sol):
     stats['tot_stud'] = len(sol)
     stats['erasmus'] = erasmus
     stats['erasmus_pc'] = round(erasmus / total_internships * 100, 2)
-    stats['erasmus_students'] = len(mdl_internship.internship_enrollment.InternshipEnrollment.
-                                    objects.distinct('student').values('student'))
+    period_ids = mdl_internship.period.Period.objects.filter(cohort=cohort).values_list("id", flat=True)
+    stats['erasmus_students'] = len(mdl_internship.internship_enrollment.InternshipEnrollment.objects.
+                                    filter(period_id__in=period_ids).distinct('student').values('student'))
     stats['erasmus_students_pc'] = round(stats['erasmus_students'] / stats['tot_stud'] * 100, 2)
     stats['socio'] = socio
     stats['socio_pc'] = round(socio / total_internships * 100, 2)
@@ -607,8 +609,7 @@ def get_student_mandatory_choices(cohort, priority):
     """
     specialities = {}
     internships = mdl_internship.internship.Internship.objects.filter(cohort=cohort)
-    internship_ids = internships.values_list("id", flat=True)
-    choices = mdl_internship.internship_choice.InternshipChoice.objects.filter(priority=priority, internship_id__in=internship_ids).\
+    choices = mdl_internship.internship_choice.InternshipChoice.objects.filter(priority=priority, internship__in=internships).\
         select_related("speciality", "student")
 
     if len(choices) == 0:
@@ -626,12 +627,13 @@ def get_student_mandatory_choices(cohort, priority):
 
     # Remove erasmus choices
     if priority:
-        for enrollment in mdl_internship.internship_enrollment.InternshipEnrollment.objects.all():
+        periods = mdl_internship.period.Period.objects.filter(cohort=cohort)
+        for enrollment in mdl_internship.internship_enrollment.InternshipEnrollment.objects.filter(period__in=periods):
             if enrollment.internship_offer.speciality.id in specialities:
                 if enrollment.student in specialities[enrollment.internship_offer.speciality.id]:
                     del specialities[enrollment.internship_offer.speciality.id][enrollment.student]
     else:
-        for choice in mdl_internship.internship_choice.InternshipChoice.objects.filter(priority=True, cohort=cohort).\
+        for choice in mdl_internship.internship_choice.InternshipChoice.objects.filter(priority=True, internship__in=internships).\
                 select_related("speciality", "student"):
             if choice.student in specialities[choice.speciality.id]:
                 del specialities[choice.speciality.id][choice.student]
@@ -873,13 +875,14 @@ def get_best_choice(choices, priority):
         return choice(best_solutions_filtered)
 
 
-def fill_erasmus_choices():
+def fill_erasmus_choices(cohort):
     """
     Fill the solution with all erasmus internships
     :return:
     """
     # Retrieve all students
-    erasmus_enrollments = mdl_internship.internship_enrollment.InternshipEnrollment.objects.all().\
+    periods = mdl_internship.period.Period.objects.filter(cohort=cohort)
+    erasmus_enrollments = mdl_internship.internship_enrollment.InternshipEnrollment.objects.filter(period__in=periods).\
         select_related("student", "period", "internship_offer")
     for enrol in erasmus_enrollments:
         # Check if the internship is available
@@ -1092,7 +1095,7 @@ def generate_solution(cohort):
     internship_table = init_internship_table(cohort)
     init_organizations(cohort)
     init_specialities(cohort)
-    fill_erasmus_choices()
+    fill_erasmus_choices(cohort)
     fill_emergency_choices(True)
     fill_emergency_choices(False)
     fill_normal_choices(True)
@@ -1146,7 +1149,6 @@ def load_solution(data, cohort):
             fill_periods_default_values(acronym, keys, organization, temp_internship_table)
 
         speciality_occurences = len(mdl_internship.internship_speciality.InternshipSpeciality.objects.filter(cohort=cohort, acronym=acronym))
-        print(speciality_occurences)
         temp_internship_table[organization][acronym][period_name]['before'] = pid.number_places * speciality_occurences
         temp_internship_table[organization][acronym][period_name]['after'] = pid.number_places * speciality_occurences
 
