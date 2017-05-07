@@ -38,7 +38,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.shortcuts import get_object_or_404
 
-from internship.utils.student_assignment import solver
+from internship.utils.student_assignment.solver import AssignmentSolver
 
 from internship import models as mdl_internship
 from internship.models.internship_student_affectation_stat import InternshipStudentAffectationStat
@@ -1145,8 +1145,10 @@ def load_solution(data, cohort):
             temp_internship_table[organization][acronym] = OrderedDict()
             fill_periods_default_values(acronym, keys, organization, temp_internship_table)
 
-        temp_internship_table[organization][acronym][period_name]['before'] = pid.number_places
-        temp_internship_table[organization][acronym][period_name]['after'] = pid.number_places
+        speciality_occurences = len(mdl_internship.internship_speciality.InternshipSpeciality.objects.filter(cohort=cohort, acronym=acronym))
+        print(speciality_occurences)
+        temp_internship_table[organization][acronym][period_name]['before'] = pid.number_places * speciality_occurences
+        temp_internship_table[organization][acronym][period_name]['after'] = pid.number_places * speciality_occurences
 
 
 
@@ -1198,12 +1200,13 @@ def fill_periods_default_values(acronym, keys, organization, temp_internship_tab
 def assign_automatically_internships(request, cohort_id):
     cohort = get_object_or_404(mdl_internship.cohort.Cohort, pk=cohort_id)
     if request.method == 'POST':
-        if request.POST['executions'] != "":
-            times = int(request.POST['executions'])
+            times = 1
             start_date_time = datetime.now()
             period_ids = mdl_internship.period.Period.objects.filter(cohort=cohort).values_list("id", flat=True)
             mdl_internship.internship_student_affectation_stat.find_non_mandatory_affectations(period_ids=period_ids).delete()
-            solver.affect_student(times, cohort)
+            solver = AssignmentSolver(cohort)
+            solver.solve()
+            solver.persist_solution()
             end_date_time = datetime.now()
             affectation_generation_time = mdl_internship.affectation_generation_time.AffectationGenerationTime()
             affectation_generation_time.cohort = cohort
@@ -1211,7 +1214,7 @@ def assign_automatically_internships(request, cohort_id):
             affectation_generation_time.end_date_time = end_date_time
             affectation_generation_time.generated_by = request.user.username
             affectation_generation_time.save()
-    return redirect(reverse('internship_affectation_statistics'))
+    return redirect(reverse('internship_affectation_statistics',  kwargs={'cohort_id': cohort.id}))
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
