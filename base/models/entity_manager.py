@@ -54,10 +54,7 @@ def _get_perms(model):
 
 
 def find_entity_manager_by_user(a_user):
-    a_person = person.find_by_user(a_user)
-    if a_person:
-        entity_administrators = EntityManager.objects.filter(person=a_person)
-        for f in entity_administrators:
-            return f
-    return None
+    return EntityManager.objects.filter(person__user=a_user)\
+        .select_related('person')\
+        .select_related('structure').first()  #  For the moment we suppose that one person is only manager for 1 structure
 
