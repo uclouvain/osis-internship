@@ -359,7 +359,8 @@ def build_acronyms_off_string(offers):
 
 
 def pgm_to_keep_managing(a_person, programs):
-    list_program_manager_to_keep = mdl.program_manager.find_by_person_exclude_offer_list(a_person, programs)
+    current_academic_yr = mdl.academic_year.current_academic_year()
+    list_program_manager_to_keep = mdl.program_manager.find_by_person_exclude_offer_list(a_person, programs, current_academic_yr)
     # Concatenation of offers acronym to be used in the html page
     offer_acronym_concatenation = ""
     for program_manager_to_keep in list_program_manager_to_keep:
