@@ -116,6 +116,8 @@ urlpatterns = [
             url(r'^affectation_result/', include([
                 url(r'^$', affectation_statistics.internship_affectation_statistics,
                     name='internship_affectation_statistics'),
+                url(r'^generate/$', affectation_statistics.assign_automatically_internships,
+                    name='internship_affectation_statistics_generate'),
                 url(r'^sumup/$', affectation_statistics.internship_affectation_sumup,
                     name='internship_affectation_sumup'),
             ])),

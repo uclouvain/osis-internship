@@ -29,14 +29,15 @@ from django.db import models
 
 
 class AffectationGenerationTimeAdmin(admin.ModelAdmin):
-    list_display = ('start_date_time', 'end_date_time', 'generated_by')
-    fieldsets = ((None, {'fields': ('start_date_time', 'end_date_time', 'generated_by')}),)
+    list_display = ('start_date_time', 'end_date_time', 'generated_by', 'cohort')
+    fieldsets = ((None, {'fields': ('start_date_time', 'end_date_time', 'generated_by', 'cohort')}),)
 
 
 class AffectationGenerationTime(models.Model):
     start_date_time = models.DateTimeField()
     end_date_time = models.DateTimeField()
     generated_by = models.CharField(max_length=255, default='None')
+    cohort = models.ForeignKey('internship.cohort', null=False, on_delete=models.CASCADE)
 
     def __str__(self):
         return u"%s - %s" % (self.start_date_time, self.end_date_time)
