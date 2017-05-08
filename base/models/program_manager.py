@@ -135,8 +135,10 @@ def find_by_offer_year_list_person(a_person, offer_yr_list):
     return ProgramManager.objects.select_related("person").filter(person=a_person, offer_year__in=offer_yr_list)
 
 
-def find_by_person_exclude_offer_list(a_person, offer_yr_list):
-    return ProgramManager.objects.filter(person=a_person).exclude(offer_year__in=offer_yr_list).select_related('person').select_related('offer_year')
+def find_by_person_exclude_offer_list(a_person, offer_yr_list, academic_yr):
+    return ProgramManager.objects.filter(person=a_person, offer_year__academic_year=academic_yr)\
+        .exclude(offer_year__in=offer_yr_list)\
+        .select_related('person').select_related('offer_year')
 
 
 def find_by_person_academic_year(a_person=None, an_academic_yr=None, entity_list=None, an_offer_type=None):

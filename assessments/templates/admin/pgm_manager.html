@@ -341,21 +341,19 @@
     }
 
     function clean_on_off_pannels(){
-        $("#pnl_pgm_on").find("label")
-                .remove()
-                .end();
+        $("#pnl_pgm_on").find("label").remove().end();
 
-        $("#pnl_pgm_off").find("label")
-                .remove()
-                .end();
+        $("#pnl_pgm_off").find("label").remove().end();
+
+        $("#pnl_pgm_off").find("span").remove().end();
     }
 
     function set_off_pannel(person_off, person_off_first_name, acronym_off){
-        $("#pnl_pgm_off").append("<label>"+person_off+" "+ person_off_first_name +"</label>");
-        $("#pnl_pgm_off").append("<br>");
-        $("#pnl_pgm_off").append(gettext('of_pgm'));
-        $("#pnl_pgm_off").append("<label>"+acronym_off+"</label>");
-        $("#pnl_pgm_off").append("<br>");
+        $("#pnl_pgm_off").append("<label>"+ person_off +" "+ person_off_first_name +"</label>");
+        $("#pnl_pgm_off").append("<span><br></span>");
+        $("#pnl_pgm_off").append("<span>"+ gettext('of_pgm') +"</span>");
+        $("#pnl_pgm_off").append("<label>"+ acronym_off +"</label>");
+        $("#pnl_pgm_off").append("<span><br></span>");
     }
 
     function set_on_pannel(managerId, acronym_on) {
