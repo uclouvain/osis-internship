@@ -81,7 +81,7 @@ def get_scores_encoding_list(user, **kwargs):
 
 def _append_session_exam_deadline(enrollments):
     for enrollment in enrollments:
-        enrollment.deadline_tutor_computed = exam_enrollment.get_deadline_tutor_computed(enrollment)
+        enrollment.deadline = exam_enrollment.get_deadline(enrollment)
         enrollment.deadline_reached = exam_enrollment.is_deadline_reached(enrollment)
         enrollment.deadline_tutor_reached = exam_enrollment.is_deadline_tutor_reached(enrollment)
     return enrollments

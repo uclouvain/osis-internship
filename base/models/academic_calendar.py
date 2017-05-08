@@ -71,8 +71,6 @@ class AcademicCalendar(SerializableModel):
             raise FunctionArgumentMissingException('The kwarg "{0}" must be set.'.format(FUNCTIONS))
         functions = kwargs.pop(FUNCTIONS)
         self.validation_mandatory_dates()
-        self.validation_start_date()
-        self.validation_end_date()
         self.validation_start_end_dates()
         super(AcademicCalendar, self).save(*args, **kwargs)
         for function in functions:
@@ -81,14 +79,6 @@ class AcademicCalendar(SerializableModel):
     def validation_start_end_dates(self):
         if self.start_date and self.end_date and self.start_date >= self.end_date:
             raise StartDateHigherThanEndDateException(_('end_start_date_error'))
-
-    def validation_end_date(self):
-        if self.end_date and self.academic_year.end_date and self.end_date > self.academic_year.end_date:
-            raise AttributeError(_('academic_end_date_error'))
-
-    def validation_start_date(self):
-        if self.start_date and self.academic_year.start_date and self.start_date < self.academic_year.start_date:
-            raise AttributeError(_('academic_start_date_error'))
 
     def validation_mandatory_dates(self):
         if self.start_date is None or self.end_date is None:

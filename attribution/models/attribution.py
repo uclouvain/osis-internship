@@ -122,7 +122,7 @@ def search_scores_responsible(structure, learning_unit_title, course_code, entit
 
 def find_attribution_distinct(structure):
     attributions_list = Attribution.objects.filter(learning_unit_year__structure=structure)\
-        .distinct("learning_unit_year")
+        .distinct("learning_unit_year__structure__acronym")
     return attributions_list
 
 

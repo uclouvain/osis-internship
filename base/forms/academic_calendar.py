@@ -61,11 +61,14 @@ class AcademicCalendarForm(BootstrapModelForm):
         if off_year_calendar_max and self.cleaned_data['end_date'] \
                 and self.cleaned_data['end_date'] < off_year_calendar_max.end_date:
             error_msg = "%s." % (_('academic_calendar_offer_year_calendar_end_date_error')
-                                 % (off_year_calendar_max.end_date.strftime(date_format),
+                                 % (self.instance.title,
+                                    off_year_calendar_max.end_date.strftime(date_format),
+                                    self.instance.title,
                                     off_year_calendar_max.offer_year.acronym))
             self._errors['end_date'] = error_msg
             return False
         return True
+
 
     def end_date_gt_start_date(self):
         if self.cleaned_data['end_date'] <= self.cleaned_data['start_date']:
@@ -73,36 +76,9 @@ class AcademicCalendarForm(BootstrapModelForm):
             return False
         return True
 
-    def check_start_end_date_within_academic_year(self):
-
-        def build_error_message(start_date, end_date, field):
-            date_format = str(_('date_format'))
-
-            return '{} {}'.format(_('academic_{}_error'.format(field)),
-                                  "({} - {})".format(start_date.strftime(date_format), end_date.strftime(date_format)))
-
-        def check_start_date(field, date):
-            if self.cleaned_data[field] < date:
-                self._errors[field] = build_error_message(ac_yr.start_date, ac_yr.end_date, field)
-                return False
-            return True
-
-        def check_end_date(field, date):
-            if self.cleaned_data[field] > date:
-                self._errors[field] = build_error_message(ac_yr.start_date, ac_yr.end_date, field)
-                return False
-            return True
-
-        ac_yr = self.instance.academic_year
-        if ac_yr:
-            return check_start_date('start_date', ac_yr.start_date) and check_end_date('end_date', ac_yr.end_date)
-
-        return True
-
     def is_valid(self):
         return super(AcademicCalendarForm, self).is_valid() \
             and self.start_date_and_end_date_are_set() \
-            and self.check_start_end_date_within_academic_year() \
             and self.end_date_gt_last_offer_year_calendar_end_date() \
             and self.end_date_gt_start_date()
 

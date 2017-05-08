@@ -59,10 +59,7 @@ def export_xls(exam_enrollments):
     worksheet.append([str(exam_enrollments[0].learning_unit_enrollment.learning_unit_year)])
     worksheet.append([str('Session: %s' % exam_enrollments[0].session_exam.number_session)])
     worksheet.append([str('')])
-    date_format = str(_('date_format'))
-    printing_date = timezone.now()
-    printing_date = printing_date.strftime(date_format)
-    worksheet.append([str('%s: %s' % (_('file_production_date'), printing_date))])
+    __display_creation_date_with_message_about_state(worksheet, row_number=4)
     __display_warning_about_students_deliberated(worksheet, row_number=5)
     worksheet.append([str('')])
     __display_legends(worksheet)
@@ -153,6 +150,15 @@ def __coloring_non_editable(ws, row_number, score, justification):
         column_number += 1
 
 
+def __display_creation_date_with_message_about_state(ws, row_number):
+    date_format = str(_('date_format'))
+    printing_date = timezone.now()
+    printing_date = printing_date.strftime(date_format)
+
+    ws.cell(row=row_number, column=1).value = str('%s' % (_('warn_user_data_can_change') % printing_date))
+    ws.cell(row=row_number, column=1).font = Font(color=colors.RED)
+
+
 def __display_warning_about_students_deliberated(ws, row_number):
     ws.cell(row=row_number, column=1).value = str(_('students_deliberated_are_not_shown'))
     ws.cell(row=row_number, column=1).font = Font(color=colors.RED)
@@ -180,8 +186,11 @@ def justification_other_values():
 
 def __get_session_exam_deadline(exam_enroll):
     date_format = str(_('date_format'))
+    deadline = None
 
     session_exam_deadline = mdl.exam_enrollment.get_session_exam_deadline(exam_enroll)
-    if session_exam_deadline and session_exam_deadline.deadline_tutor_computed:
-        return session_exam_deadline.deadline_tutor_computed.strftime(date_format)
-    return "-"
+    if session_exam_deadline:
+        deadline = session_exam_deadline.deadline_tutor_computed if session_exam_deadline.deadline_tutor_computed else\
+                   session_exam_deadline.deadline
+
+    return deadline.strftime(date_format) if deadline else "-"

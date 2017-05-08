@@ -382,7 +382,11 @@ def export_xls(request, learning_unit_year_id):
     scores_list = score_encoding_list.get_scores_encoding_list(request.user,
                                                                learning_unit_year_id=learning_unit_year_id)
     scores_list = score_encoding_list.filter_without_closed_exam_enrollments(scores_list, is_program_manager)
-    return score_encoding_export.export_xls(scores_list.enrollments)
+    if scores_list.enrollments:
+        return score_encoding_export.export_xls(scores_list.enrollments)
+    else:
+        messages.add_message(request, messages.WARNING, _('no_student_to_encode_xls'))
+        return HttpResponseRedirect(reverse('online_encoding', args=(learning_unit_year_id,)))
 
 
 @login_required
@@ -601,15 +605,6 @@ def _get_score_encoding_list_with_only_enrollment_modified(request, learning_uni
         scores_list_encoded.enrollments)
 
     return scores_list_encoded
-
-
-def _append_session_exam_deadline(exam_enrollments):
-    exam_enrollments_with_deadline = copy.deepcopy(exam_enrollments)
-    for enrollment in exam_enrollments_with_deadline:
-        enrollment.deadline_tutor_computed = mdl.exam_enrollment.get_deadline_tutor_computed(enrollment)
-        enrollment.deadline_reached = mdl.exam_enrollment.is_deadline_reached(enrollment)
-        enrollment.deadline_tutor_reached = mdl.exam_enrollment.is_deadline_tutor_reached(enrollment)
-    return exam_enrollments_with_deadline
 
 
 def get_json_data_scores_sheets(tutor_global_id):
