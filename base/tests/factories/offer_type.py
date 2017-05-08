@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# OSIS stands for Open Student Information System. It's an application
+#    OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
@@ -24,15 +24,17 @@
 #
 ##############################################################################
 import factory
-from django.test import TestCase
-from assistant.test.factories.reviewer import ReviewerFactory
-from assistant.enums import reviewer_role
-from assistant.models import reviewer
+import factory.fuzzy
+import string
 
-class TestReviewerFactory(TestCase):
 
-    def setUp(self):
-        self.reviewer = ReviewerFactory(role=reviewer_role.VICE_RECTOR)
+class OfferTypeFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = "base.OfferType"
 
-    def test_find_by_person(self):
-        self.assertEqual(self.reviewer, reviewer.find_by_person(self.reviewer.person))
+    external_id = factory.fuzzy.FuzzyText(length=10, chars=string.digits)
+    name = factory.Sequence(lambda n: 'OfferType %d' % n)
+
+
+
+

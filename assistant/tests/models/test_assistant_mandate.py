@@ -24,20 +24,14 @@
 #
 ##############################################################################
 import factory
+from django.test import TestCase
+from assistant.tests.factories.assistant_mandate import AssistantMandateFactory
+from assistant.models import assistant_mandate
 
+class TestAssistantMandateFactory(TestCase):
 
-class UserFactory(factory.DjangoModelFactory):
-    class Meta:
-        model = 'auth.User'
+    def setUp(self):
+        self.mandate = AssistantMandateFactory()
 
-    username = factory.Sequence(lambda n: 'username_{0}'.format(n))
-
-
-class SuperUserFactory(factory.DjangoModelFactory):
-    class Meta:
-        model = 'auth.User'
-
-    username = factory.Faker('user_name')
-    is_superuser = True
-    is_staff = True
-    is_active = True
+    def test_find_mandate_by_id(self):
+        self.assertEqual(self.mandate, assistant_mandate.find_mandate_by_id(self.mandate.id))

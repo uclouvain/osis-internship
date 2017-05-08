@@ -47,7 +47,6 @@
 
 <div class="panel panel-default">
     <div class="panel-body">
-        {{form.errors}}
         <form method="post" action="{% if form.instance.id %}
                                         {% url 'academic_calendar_form' academic_calendar_id=form.instance.id %}
                                     {% else %}

@@ -28,7 +28,7 @@ import datetime
 from django.db import models
 from django.contrib import admin
 from base.models.enums import number_session, academic_calendar_type
-from base.models import offer_year_calendar, academic_year
+from base.models import offer_year_calendar, academic_year, academic_calendar
 
 
 class SessionExamCalendarAdmin(admin.ModelAdmin):
@@ -36,7 +36,7 @@ class SessionExamCalendarAdmin(admin.ModelAdmin):
     list_filter = ('academic_calendar__academic_year', 'number_session', 'academic_calendar__reference')
     fieldsets = ((None, {'fields': ('number_session', 'academic_calendar')}),)
     raw_id_fields = ('academic_calendar',)
-    search_fields = ['academic_calendar']
+    search_fields = ['academic_calendar__title']
 
 
 class SessionExamCalendar(models.Model):
@@ -102,12 +102,15 @@ def find_deliberation_date(nb_session, offer_year):
     :param offer_year The offer year research
     :return the deliberation date of the offer and session
     """
-    offer_year_cals = offer_year_calendar.find_by_offer_year(offer_year, academic_calendar_type.DELIBERATION)
-    academic_cals_id = [off.academic_calendar_id for off in list(offer_year_cals)]
+    session_exam_cals = SessionExamCalendar.objects.filter(number_session=nb_session,
+                                                           academic_calendar__reference=academic_calendar_type.DELIBERATION)
+    academic_cals_id = [session_exam.academic_calendar_id for session_exam in list(session_exam_cals)]
 
-    try:
-        session_exam_cal = SessionExamCalendar.objects.get(number_session=nb_session,
-                                                           academic_calendar_id__in=academic_cals_id)
-        return session_exam_cal.academic_calendar.start_date
-    except SessionExamCalendar.DoesNotExist:
-        return None
+    if academic_cals_id:
+        offer_year_cal = offer_year_calendar.find_by_offer_year(offer_yr=offer_year)\
+                       .filter(academic_calendar__in=academic_cals_id)\
+                       .first()
+        return offer_year_cal.start_date if offer_year_cal.start_date else \
+                                            offer_year_cal.academic_calendar.start_date
+
+    return None

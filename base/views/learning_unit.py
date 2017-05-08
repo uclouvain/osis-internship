@@ -34,48 +34,76 @@ from base import models as mdl
 from base.forms.learning_units import LearningUnitYearForm
 from . import layout
 
-@login_required
-@permission_required('base.can_access_learningunit', raise_exception=True)
-def learning_units(request):
-    template_name = "learning_units.html"
-    context = _get_common_context_list_learning_unit_years()
-    context.update({
-        'form': LearningUnitYearForm(),
-        'current_academic_year': mdl.academic_year.current_academic_year()
-    })
-    return layout.render(request, template_name, context)
 
 @login_required
 @permission_required('base.can_access_learningunit', raise_exception=True)
-def learning_units_search(request):
-    template_name = "learning_units.html"
-    form = LearningUnitYearForm(request.GET)
-    learning_units = None
+def learning_units(request):
+    if request.GET.get('academic_year'):
+        form = LearningUnitYearForm(request.GET)
+    else:
+        form = LearningUnitYearForm()
+    found_learning_units = None
     if form.is_valid():
-        learning_units = form.get_learning_units()
+        found_learning_units = form.get_learning_units()
         _check_if_display_message(request, learning_units)
 
     context = _get_common_context_list_learning_unit_years()
     context.update({
         'form': form,
         'academic_years': mdl.academic_year.find_academic_years(),
-        'learning_units': learning_units
+        'learning_units': found_learning_units,
+        'current_academic_year': mdl.academic_year.current_academic_year()
     })
-    return layout.render(request, template_name, context)
+    return layout.render(request, "learning_units.html", context)
 
 
 @login_required
 @permission_required('base.can_access_learningunit', raise_exception=True)
-def learning_unit_read(request, learning_unit_year_id):
+def learning_unit_identification(request, learning_unit_year_id):
+    learning_unit_year = mdl.learning_unit_year.find_by_id(learning_unit_year_id)
+    tab_active = 'identification'
+    return layout.render(request, "learning_unit/identification.html", locals())
+
+
+@login_required
+@permission_required('base.can_access_learningunit', raise_exception=True)
+def learning_unit_formations(request, learning_unit_year_id):
+    learning_unit_year = mdl.learning_unit_year.find_by_id(learning_unit_year_id)
+    tab_active = 'formations'
+    return layout.render(request, "learning_unit/formations.html", locals())
+
+
+@login_required
+@permission_required('base.can_access_learningunit', raise_exception=True)
+def learning_unit_components(request, learning_unit_year_id):
+    learning_unit_year = mdl.learning_unit_year.find_by_id(learning_unit_year_id)
+    tab_active = 'components'
+    return layout.render(request, "learning_unit/components.html", locals())
+
+
+@login_required
+@permission_required('base.can_access_learningunit', raise_exception=True)
+def learning_unit_pedagogy(request, learning_unit_year_id):
+    learning_unit_year = mdl.learning_unit_year.find_by_id(learning_unit_year_id)
+    tab_active = 'pedagogy'
+    return layout.render(request, "learning_unit/pedagogy.html", locals())
+
+
+@login_required
+@permission_required('base.can_access_learningunit', raise_exception=True)
+def learning_unit_attributions(request, learning_unit_year_id):
     learning_unit_year = mdl.learning_unit_year.find_by_id(learning_unit_year_id)
     attributions = mdl_attr.attribution.search(learning_unit_year=learning_unit_year)
-    enrollments = mdl.learning_unit_enrollment.find_by_learningunit_enrollment(learning_unit_year)
-    is_program_manager = mdl.program_manager.is_program_manager(request.user)
+    tab_active = 'attributions'
+    return layout.render(request, "learning_unit/attributions.html", locals())
 
-    return layout.render(request, "learning_unit.html", {'learning_unit_year': learning_unit_year,
-                                                         'attributions': attributions,
-                                                         'enrollments': enrollments,
-                                                         'is_program_manager': is_program_manager})
+
+@login_required
+@permission_required('base.can_access_learningunit', raise_exception=True)
+def learning_unit_proposals(request, learning_unit_year_id):
+    learning_unit_year = mdl.learning_unit_year.find_by_id(learning_unit_year_id)
+    tab_active = 'proposals'
+    return layout.render(request, "learning_unit/proposals.html", locals())
 
 
 def _check_if_display_message(request, learning_units):

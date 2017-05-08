@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# OSIS stands for Open Student Information System. It's an application
+#    OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -23,16 +23,31 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import factory
+from base.models import offer_type
+
+from base.tests.factories.offer_type import OfferTypeFactory
 from django.test import TestCase
-from assistant.test.factories import review
-from assistant.models.enums import review_advice_choices
-from assistant.models.review import find_by_reviewer_for_mandate
+from django.utils import timezone
 
-class TestReviewFactory(TestCase):
 
-    def setUp(self):
-        self.review = review.ReviewFactory()
+class OfferTypeTest(TestCase):
 
-    def test_review_by_reviewer_for_mandate(self):
-        self.assertEqual(self.review, find_by_reviewer_for_mandate(self.review.reviewer, self.review.mandate))
+    def test_find_all_result_none(self):
+        self.assertEqual(len(offer_type.find_all()), 0)
+
+    def test_find_all_existing_results(self):
+        an_offer_type_1 = offer_type.OfferType(name="Bachelier")
+        an_offer_type_1.save()
+        an_offer_type_2 = offer_type.OfferType(name="Doctorat")
+        an_offer_type_2.save()
+
+        self.assertEqual(len(offer_type.find_all()), 2)
+
+
+    def test_find_all_distinct_existing_results(self):
+        an_offer_type_1 = offer_type.OfferType(name="Bachelier")
+        an_offer_type_1.save()
+        an_offer_type_2 = offer_type.OfferType(name="Bachelier")
+        an_offer_type_2.save()
+
+        self.assertEqual(len(offer_type.find_all()), 1)

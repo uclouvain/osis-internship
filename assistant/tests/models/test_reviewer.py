@@ -24,20 +24,15 @@
 #
 ##############################################################################
 import factory
+from django.test import TestCase
+from assistant.tests.factories.reviewer import ReviewerFactory
+from assistant.enums import reviewer_role
+from assistant.models import reviewer
 
+class TestReviewerFactory(TestCase):
 
-class UserFactory(factory.DjangoModelFactory):
-    class Meta:
-        model = 'auth.User'
+    def setUp(self):
+        self.reviewer = ReviewerFactory(role=reviewer_role.VICE_RECTOR)
 
-    username = factory.Sequence(lambda n: 'username_{0}'.format(n))
-
-
-class SuperUserFactory(factory.DjangoModelFactory):
-    class Meta:
-        model = 'auth.User'
-
-    username = factory.Faker('user_name')
-    is_superuser = True
-    is_staff = True
-    is_active = True
+    def test_find_by_person(self):
+        self.assertEqual(self.reviewer, reviewer.find_by_person(self.reviewer.person))

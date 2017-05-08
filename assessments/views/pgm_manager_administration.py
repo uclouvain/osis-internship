@@ -27,7 +27,6 @@ from django.contrib.auth.decorators import login_required, permission_required
 from base import models as mdl
 from reference import models as mdl_ref
 from base.views import layout
-from reference.enums import grade_type_coverage
 from django.http import HttpResponse
 from rest_framework import serializers
 from rest_framework.renderers import JSONRenderer
@@ -48,7 +47,7 @@ def pgm_manager_administration(request):
         'manager_entity': entity_managed,
         'entity': entity_managed,
         'entities': get_managed_entities(entity_managed),
-        'pgm_types': mdl_ref.grade_type.find_by_coverage(grade_type_coverage.UNIVERSITY),
+        'offer_types': get_offer_types(),
         'managers': get_entity_program_managers(entity_managed, current_academic_yr)})
 
 
@@ -57,13 +56,13 @@ def pgm_manager_search(request):
     person_id = get_filter_value(request, 'person')
     person = None
     if person_id:
-        person =  mdl.person.find_by_id(person_id)
+        person = mdl.person.find_by_id(person_id)
     return pgm_manager_form(None, None, request, person)
 
 
 def pgm_manager_form(offers_on, error_messages, request, manager_person):
     entity = get_filter_value(request, 'entity')
-    pgm_grade_type = get_filter_value(request, 'pgm_type')
+    pgm_offer_type = get_filter_value(request, 'offer_type')
 
     entity_managed = get_administrator_faculty(request.user)
     current_academic_yr = mdl.academic_year.current_academic_year()
@@ -73,20 +72,20 @@ def pgm_manager_form(offers_on, error_messages, request, manager_person):
             'manager_entity': entity_managed,
             'entity': entity,
             'entities': get_managed_entities(entity_managed),
-            'pgm_types': mdl_ref.grade_type.find_by_coverage(grade_type_coverage.UNIVERSITY),
+            'offer_types': get_offer_types(),
             'pgms': get_programs(current_academic_yr,
                                  get_entity_list(entity, entity_managed),
                                  manager_person,
-                                 pgm_grade_type),
+                                 pgm_offer_type),
             'managers': get_entity_program_managers(entity_managed, current_academic_yr),
             'offers_on': offers_on,
-            'pgm_type': pgm_grade_type,
+            'offer_type': pgm_offer_type,
             'add_errors': error_messages}
     return layout.render(request, "admin/pgm_manager.html", data)
 
 
-def filter_by_entity_grade_type(academic_yr, entity_list, pgm_grade_type):
-    return mdl.offer_year.search_offers(entity_list, academic_yr, pgm_grade_type)
+def filter_by_entity_offer_type(academic_yr, entity_list, pgm_offer_type):
+    return mdl.offer_year.search_offers(entity_list, academic_yr, pgm_offer_type)
 
 
 def get_managed_entities(entity_managed):
@@ -121,11 +120,11 @@ def get_filter_value(request, value_name):
     return value
 
 
-def filter_by_person(person, entity_list, academic_yr, pgm_type):
+def filter_by_person(person, entity_list, academic_yr, an_offer_type):
     program_managers = mdl.program_manager.find_by_person_academic_year(person,
                                                                         academic_yr,
                                                                         entity_list,
-                                                                        pgm_type)
+                                                                        an_offer_type)
     offer_years = []
     for manager in program_managers.distinct('offer_year'):
         offer_years.append(manager.offer_year)
@@ -374,11 +373,11 @@ def pgm_to_keep_managing(a_person, programs):
     return offer_acronym_concatenation
 
 
-def get_programs(academic_yr, entity_list, manager_person, pgm_grade_type):
+def get_programs(academic_yr, entity_list, manager_person, an_offer_type):
     if manager_person:
-        pgms = filter_by_person(manager_person, entity_list, academic_yr, pgm_grade_type)
+        pgms = filter_by_person(manager_person, entity_list, academic_yr, an_offer_type)
     else:
-        pgms = filter_by_entity_grade_type(academic_yr, entity_list, pgm_grade_type)
+        pgms = filter_by_entity_offer_type(academic_yr, entity_list, an_offer_type)
     return pgms
 
 
@@ -406,3 +405,8 @@ def get_filter_selected_person(request):
     if person_selected_id:
         return mdl.person.find_by_id(int(person_selected_id))
     return None
+
+
+def get_offer_types():
+    return mdl.offer_type.find_all()
+

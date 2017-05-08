@@ -50,6 +50,7 @@ from base.models import learning_unit_year
 from base.models import native
 from base.models import offer
 from base.models import offer_enrollment
+from base.models import offer_type
 from base.models import offer_year
 from base.models import offer_year_calendar
 from base.models import offer_year_domain
