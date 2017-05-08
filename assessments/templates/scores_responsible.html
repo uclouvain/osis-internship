@@ -99,9 +99,13 @@
                             <td class="text-center">{{ value_list.3 }}</td>
                             <td class="text-center">{{ value_list.4 }}</td>
                             <td class="text-center">
-                                {% for value in value_list.5 %}
-                                    {{ value }}|
-                                {% endfor %}
+                                {% if value_list.5 %}
+                                    {% for value in value_list.5 %}
+                                        {{ value }}<br>
+                                    {% endfor %}
+                                {% else %}
+                                    {% trans 'without_attribution' %}
+                                {% endif %}
                             </td>
                             <td class="text-center">
                                 <a class="btn btn-primary pull-right" href="{% url 'scores_responsible_management' pk=value_list.0 %}" style="margin-right: 5px;">
