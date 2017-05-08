@@ -7,7 +7,6 @@ from internship.models.internship_choice import InternshipChoice
 from internship.models.internship import Internship
 
 def cleanup_old_choices(apps, schema_editor):
-    InternshipChoice.objects.filter(internship_id=0).delete()
     Internship.objects.filter(pk=0).delete()
 
 class Migration(migrations.Migration):
