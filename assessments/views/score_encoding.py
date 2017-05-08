@@ -382,7 +382,7 @@ def export_xls(request, learning_unit_year_id):
     scores_list = score_encoding_list.get_scores_encoding_list(request.user,
                                                                learning_unit_year_id=learning_unit_year_id)
     scores_list = score_encoding_list.filter_without_closed_exam_enrollments(scores_list, is_program_manager)
-    if scores_list:
+    if scores_list.enrollments:
         return score_encoding_export.export_xls(scores_list.enrollments)
     else:
         messages.add_message(request, messages.WARNING, _('no_student_to_encode_xls'))
