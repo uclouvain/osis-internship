@@ -26,7 +26,7 @@
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404, render
+from django import shortcuts
 
 from internship import models as mdl_internship
 from internship.models.cohort import Cohort
@@ -35,11 +35,10 @@ from internship.models.cohort import Cohort
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internships_masters(request, cohort_id):
-    cohort = get_object_or_404(Cohort, pk=cohort_id)
+    cohort = shortcuts.get_object_or_404(Cohort, pk=cohort_id)
     # First get the value of the 2 options for the sort
-    if request.method == 'GET':
-        speciality_sort_value = request.GET.get('speciality_sort')
-        organization_sort_value = request.GET.get('organization_sort')
+    speciality_sort_value = request.GET.get('speciality_sort')
+    organization_sort_value = request.GET.get('organization_sort')
 
     # Then select Internship Master depending of the options
     # If both exist / if just speciality exist / if just organization exist / if none exist
@@ -87,13 +86,13 @@ def internships_masters(request, cohort_id):
         'organization_sort_value': organization_sort_value,
         'cohort': cohort,
     }
-    return render(request, "internships_masters.html", context)
+    return shortcuts.render(request, "internships_masters.html", context)
 
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def delete_internships_masters(request, cohort_id):
-    cohort = get_object_or_404(Cohort, pk=cohort_id)
+    cohort = shortcuts.get_object_or_404(Cohort, pk=cohort_id)
     first_name = request.POST.get("first_name").replace(" ", "")
     name = request.POST.get("name").replace(" ", "")
     # Get the first and last name of the master send by the button of deletion

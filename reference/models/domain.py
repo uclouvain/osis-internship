@@ -32,6 +32,7 @@ from osis_common.models.serializable_model import SerializableModel, Serializabl
 class DomainAdmin(SerializableModelAdmin):
     list_display = ('name', 'parent', 'decree', 'type')
     fieldsets = ((None, {'fields': ('name', 'parent', 'decree', 'type')}),)
+    list_filter = ('type', 'national', 'adhoc')
     search_fields = ['name']
 
 

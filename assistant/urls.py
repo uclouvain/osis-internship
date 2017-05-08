@@ -29,6 +29,7 @@ from assistant.views import manager_settings, reviewers_management, upload_assis
 from assistant.views import mandates_list, reviewer_mandates_list, reviewer_review, reviewer_delegation
 from assistant.utils import get_persons
 from assistant.views import messages, phd_supervisor_assistants_list
+from assistant.views import assistant_mandate_reviews
 from assistant.utils import send_email, import_xls_file_data
 
 urlpatterns = [
@@ -57,6 +58,8 @@ urlpatterns = [
         name='phd_supervisor_pst_form_view'),
     url(r'^phd_supervisor/review/edit/(?P<mandate_id>\d+)/$', phd_supervisor_review.review_edit,
         name='phd_supervisor_review_edit'),
+    url(r'^phd_supervisor/review/save/(?P<review_id>\d+)/(?P<mandate_id>\d+)/$', phd_supervisor_review.review_save,
+        name='phd_supervisor_review_save'),
     url(r'^phd_supervisor/review/view/(?P<mandate_id>\d+)/$', phd_supervisor_review.review_view,
         name='phd_supervisor_review_view'),
     url(r'^pst/access_denied$', home.access_denied, name='access_denied'),
@@ -89,6 +92,8 @@ urlpatterns = [
         assistant_form.tutoring_learning_unit_save, name='tutoring_learning_unit_save'),
     url(r'^pst/mandate/tutoring_learning_units/(?P<mandate_id>\d+)/$',
         assistant.AssistantLearningUnitsListView.as_view(), name='mandate_learning_units'),
+    url(r'^pst/mandate/reviews/view/(?P<mandate_id>\d+)/$', assistant_mandate_reviews.reviews_view,
+        name='assistant_mandate_reviews'),
     url(r'^reviewer/delegation/$', reviewer_delegation.StructuresListView.as_view(), name='reviewer_delegation'),
     url(r'^reviewer/pst_form/view/(?P<mandate_id>\d+)/$', reviewer_review.pst_form_view, name='pst_form_view'),
     url(r'^reviewer/structure/(?P<structure_id>\d+)/add_reviewer$',

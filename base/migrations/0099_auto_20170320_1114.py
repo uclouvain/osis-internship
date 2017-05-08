@@ -28,4 +28,4 @@ class Migration(migrations.Migration):
             name='score_reencoded',
             field=models.DecimalField(blank=True, decimal_places=2, max_digits=4, null=True, validators=[django.core.validators.MinValueValidator(0), django.core.validators.MaxValueValidator(20)]),
         ),
-    ]
+]

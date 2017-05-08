@@ -68,8 +68,8 @@ msgid "academic_calendar_management"
 msgstr "Academic calendar management"
 
 msgid "academic_calendar_offer_year_calendar_end_date_error"
-msgstr "The closure's date of scores' encodings of the academic calendar can't be lower than %s "
-       "(end date of scores' encodings of the program '%s')"
+msgstr "The closure's date of '%s' of the academic calendar can't be lower than %s "
+       "(end date of '%s' of the program '%s')"
 
 msgid "academic_calendar_offer_year_calendar_start_date_error"
 msgstr "The opening's date of scores' encodings of the academic calendar can't be greater than %s "
@@ -101,6 +101,9 @@ msgstr "The activity %s doesn't exist"
 
 msgid "add_an_address_to_the_organization"
 msgstr "Add an address to the organization"
+
+msgid "add"
+msgstr "Add"
 
 msgid "address(ses)"
 msgstr "Address(es)"
@@ -173,6 +176,12 @@ msgstr "Chair of the exam board"
 
 msgid "cheating_pdf_legend"
 msgstr "T=Cheating"
+
+msgid "unjustified_absence_export_legend"
+msgstr "S=Unjustified Absence"
+
+msgid "justified_absence_export_legend"
+msgstr "M=Justified Absence"
 
 msgid "child_entities"
 msgstr "Child entities"
@@ -558,6 +567,18 @@ msgstr "Justification legend: %s"
 msgid "justifications"
 msgstr "Justifications"
 
+msgid "justification_invalid_value"
+msgstr "Invalid justification value"
+
+msgid "absence_justified_to_unjustified_invalid"
+msgstr "Absence justified cannot be remplaced by absence unjustified"
+
+msgid "justification_values_accepted"
+msgstr "Accepted value: %s "
+
+msgid "justification_other_values"
+msgstr "Other values: %s "
+
 msgid "label"
 msgstr "Label"
 
@@ -712,33 +733,12 @@ msgstr "No data for this academic year"
 
 msgid "no_dubble_score_encoded_comparison_impossible"
 msgstr "No dubble score encoded ; nothing to compare."
-#~ msgid "title_btn_upload_score"
-#~ msgstr "Select your xls file from which to inject scores"
-#~ msgid "submit"
-#~ msgstr "Submit"
-#~ msgid "download_xls_file"
-#~ msgstr "Download Excel File"
-#~ msgid "not_in_choices_list"
-#~ msgstr "Invalid entry, not in the list of choices"
-#~ msgid "invalid_entry"
-#~ msgstr "Invalid entry"
-#~ msgid "please_choose_in_the_list"
-#~ msgstr "Please choose in the list"
-#~ msgid "choices_list"
-#~ msgstr "List of choices"
-#~ msgid "changes_on_offer_year_and_academic_calendar"
-#~ msgstr "Watch out - Changes has been made on %s, academic calendar (%s)"
-#~ msgid "score_injected"
-#~ msgstr "Scores injected"
-#~ msgid "scores_injected"
-#~ msgstr "Scores injected"
-#~ msgid "add_address"
-#~ msgstr "Add address"
-#~ msgid "registration_date"
-#~ msgstr "Registration date"
 
 msgid "no_exam_session_opened_for_the_moment"
 msgstr "No scores' encoding session opened for the moment."
+
+msgid "no_student_to_encode_xls"
+msgstr "No students to encode by excel"
 
 msgid "no_file_submitted"
 msgstr "You have to select a file to upload."
@@ -999,13 +999,16 @@ msgid "score_invalid"
 msgstr "Score invalid"
 
 msgid "score_legend"
-msgstr "Score legend: %s (0=Score of presence)"
+msgstr "%s (0=Score of presence)"
 
 msgid "score_missing_pdf_legend"
 msgstr "?=Score missing"
 
 msgid "scores_responsible"
 msgstr "Scores Responsible"
+
+msgid "scores_responsibles_administration"
+msgstr "Administration of the scores responsibles"
 
 msgid "score_saved"
 msgstr "score Saved"
@@ -1159,6 +1162,9 @@ msgstr "The coordinator must still submit the scores"
 
 msgid "title"
 msgstr "Title"
+
+msgid "learning_unit_title"
+msgstr "Learning unit title"
 
 msgid "too_many_results"
 msgstr "Too many results! Please be more specific."
@@ -1379,6 +1385,9 @@ msgstr "Coordinator"
 msgid "HOLDER"
 msgstr "Holder"
 
+msgid "holder_number"
+msgstr "Holders number"
+
 msgid "CO_HOLDER"
 msgstr "Co-holder"
 
@@ -1394,8 +1403,108 @@ msgstr "Scores responsible can submit partial encoding"
 msgid "the_scores_responsible_must_still_submit_scores"
 msgstr "The scores responsible must still submit the scores"
 
+msgid "NONE"
+msgstr "NONE"
+
+msgid "keyword"
+msgstr "keyword"
+
+msgid "VALID"
+msgstr "Valid"
+
+msgid "INVALID"
+msgstr "Invalid"
+
+msgid "COURSE"
+msgstr "Course"
+
+msgid "MASTER_THESIS"
+msgstr "Master thesis"
+
+msgid "INTERNSHIP"
+msgstr "Internship"
+
+msgid "ANNUAL"
+msgstr "Annual"
+
+msgid "BIENNIAL_EVEN"
+msgstr "Biennial even"
+
+msgid "BIENNIAL_ODD"
+msgstr "Biennial odd"
+
+msgid "LU_ERRORS_REQUIRED"
+msgstr "This field is required."
+
+msgid "LU_ERRORS_INVALID"
+msgstr "'Enter a valid value."
+
+msgid "LU_ERRORS_INVALID_SEARCH"
+msgstr "Invalid search - Please fill some information before executing a search."
+
+msgid "LU_ERRORS_ACADEMIC_YEAR_REQUIRED"
+msgstr "Please specify an academic year"
+
+msgid "LU_ERRORS_YEAR_WITH_ACRONYM"
+msgstr "Please specify an academic year or enter a valid acronym."
+
 msgid "no_valid_m_justification_error"
 msgstr "You can't encode a JUSTIFIED ABSENCE (M) via the XLS injection"
 
 msgid "abscence_justified_preserved"
 msgstr "Justified abscence already encoded and preserved"
+
+msgid "tutors_of_course"
+msgstr "Tutors of the course"
+
+msgid "academic_actors"
+msgstr "Academic actors"
+
+msgid "academic_start_date_error"
+msgstr "The start date should be between the start/end dates of the academic year"
+
+msgid "academic_end_date_error"
+msgstr "The end date should be between the start/end dates of the academic year"
+
+msgid "end_start_date_error"
+msgstr "Start date must be lower than end date"
+
+msgid "dates_mandatory_error"
+msgstr "Start date and end date are mandatory"
+
+msgid "date_format"
+msgstr "%m/%d/%Y"
+
+msgid "date_format_string"
+msgstr "m/d/Y"
+
+msgid "format_date"
+msgstr "mm/dd/yyyy"
+
+msgid "desc_lnk_academic_actors"
+msgstr "Academic actors management"
+
+msgid "all_years"
+msgstr "All years"
+
+msgid "trainings"
+msgstr "Trainings"
+
+msgid "components"
+msgstr "Component and classes"
+
+msgid "educational_information"
+msgstr "Educational information"
+
+msgid "propositions"
+msgstr "Propositions"
+
+msgid "tutor_attributions"
+msgstr "Tutors - attributions"
+
+msgid "proposal"
+msgstr "Proposal"
+
+msgid "academic_calendar_offer_year_calendar_start_date_end_date_error"
+msgstr "The start's date of '%s' of the academic calendar can't be higher than %s "
+       "(end date of '%s' of the program '%s')"

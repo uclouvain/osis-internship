@@ -23,14 +23,14 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from assistant.models import assistant_mandate, manager
+from assistant.models import assistant_mandate
 from django.core.urlresolvers import reverse
 from base.models import academic_year
 from assistant.forms import MandatesArchivesForm
 from django.views.generic import ListView
 from django.views.generic.edit import FormMixin
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.core.exceptions import ObjectDoesNotExist
+from assistant.utils import manager_access
 
 
 class MandatesListView(LoginRequiredMixin, UserPassesTestMixin, ListView, FormMixin):
@@ -39,11 +39,8 @@ class MandatesListView(LoginRequiredMixin, UserPassesTestMixin, ListView, FormMi
     form_class = MandatesArchivesForm
 
     def test_func(self):
-        try:
-            return manager.Manager.objects.get(person=self.request.user.person)
-        except ObjectDoesNotExist:
-            return False
-    
+        return manager_access.user_is_manager(self.request.user)
+
     def get_login_url(self):
         return reverse('assistants_home')
 

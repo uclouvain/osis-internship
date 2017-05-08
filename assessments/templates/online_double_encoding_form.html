@@ -100,7 +100,7 @@
         <hr>
         <div class="alert alert-info">
             {% get_current_language as LANGUAGE_CODE %}
-            {% if enrollments.0.session_exam.learning_unit_year.decimal_scores %}
+            {% if enrollments.0.learning_unit_enrollment.learning_unit_year.decimal_scores %}
               {% trans 'decimal_values_accepted' %}
             {% else %}
               {% trans 'decimal_values_ignored' %}
@@ -141,10 +141,10 @@
                         <td>
                             {% if is_program_manager %}
                             <input type="hidden" id="hdn_score_draft_{{ enrollment.id }}"
-                                   value="{{ enrollment.score_final | score_display:enrollment.session_exam.learning_unit_year.decimal_scores }}"/>
+                                   value="{{ enrollment.score_final | score_display:enrollment.learning_unit_enrollment.learning_unit_year.decimal_scores }}"/>
                             {% else %}
                             <input type="hidden" id="hdn_score_draft_{{ enrollment.id }}"
-                                   value="{{ enrollment.score_draft | score_display:enrollment.session_exam.learning_unit_year.decimal_scores }}"/>
+                                   value="{{ enrollment.score_draft | score_display:enrollment.learning_unit_enrollment.learning_unit_year.decimal_scores }}"/>
                             {% endif %}
                             <input type="text" min="0" max="20" name="score_{{enrollment.id}}" id="num_double_score_{{ enrollment.id }}"
                                    tabindex="{{ forloop.counter }}" class="form-control" value="{{enrollment.post_score_encoded|default_if_none:''}}"
@@ -178,7 +178,7 @@
                             </select>
                             <input type="hidden" id="hdn_score_changed_{{ enrollment.id }}" name="score_changed_{{ enrollment.id }}">
                         </td>
-                        <td>{{ enrollment.deadline_tutor_computed | default_if_none:''|date:"j/m/Y" }}</td>
+                        <td>{{ enrollment.deadline | default_if_none:''|date:"j/m/Y" }}</td>
                     </tr>
                 {% endfor %}
                 </tbody>

@@ -17,4 +17,4 @@ class Migration(migrations.Migration):
             name='periodicity',
             field=models.CharField(blank=True, choices=[('ANNUAL', 'ANNUAL'), ('BIENNIAL_EVEN', 'BIENNIAL_EVEN'), ('BIENNIAL_ODD', 'BIENNIAL_ODD')], max_length=20, null=True),
         ),
-    ]
+]

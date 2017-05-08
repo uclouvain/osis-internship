@@ -106,6 +106,10 @@ def get_non_mandatory_internship_choices(cohort):
     return InternshipChoice.objects.filter(internship_id__in=internships.values_list("id", flat=True)).\
         select_related("student", "organization", "speciality", "internship")
 
+def find_internship_choices(cohort):
+    internships = internship.Internship.objects.filter(cohort=cohort, pk__gte=1)
+    return InternshipChoice.objects.filter(internship_id__in=internships.values_list("id", flat=True)).\
+        select_related("student", "organization", "speciality", "internship")
 
 def get_internship_choices_made(cohort, student):
     internships = internship.Internship.objects.filter(cohort=cohort, pk__gte=1)
