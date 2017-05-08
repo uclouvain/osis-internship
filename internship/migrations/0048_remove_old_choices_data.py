@@ -3,7 +3,6 @@
 from __future__ import unicode_literals
 
 from django.db import migrations
-from internship.models.internship_choice import InternshipChoice
 from internship.models.internship import Internship
 
 def cleanup_old_choices(apps, schema_editor):
