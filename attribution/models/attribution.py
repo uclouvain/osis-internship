@@ -107,21 +107,20 @@ def find_tutor_number(attribution):
     return tutor_number
 
 
-def search_scores_responsible(structure, learning_unit_title, course_code, entity, professor, scores_responsible):
+def search_scores_responsible(learning_unit_title, course_code, entity, professor, scores_responsible):
     queryset = Attribution.objects
     if learning_unit_title:
-        queryset = queryset.filter(learning_unit_year__title__icontains=learning_unit_title)
+        queryset = queryset.filter(learning_unit_year__title__icontains=learning_unit_title).distinct("learning_unit_year")
     if course_code:
-        queryset = queryset.filter(learning_unit_year__learning_unit__acronym__icontains=course_code)
+        queryset = queryset.filter(learning_unit_year__acronym__icontains=course_code).distinct("learning_unit_year")
     if entity:
-        queryset = queryset.filter(learning_unit_year__structure__acronym=entity)
+        queryset = queryset.filter(learning_unit_year__structure__acronym=entity).distinct("learning_unit_year")
+        attributions_list = find_all_children(queryset[0])
+        queryset = list(chain(queryset, attributions_list))
     if professor:
-        queryset = queryset.filter(tutor__id=professor)
+        queryset = queryset.filter(tutor__id=professor).distinct("learning_unit_year")
     if scores_responsible:
-        queryset = queryset.filter(tutor__id=scores_responsible).filter(score_responsible=True)
-    queryset = queryset.distinct("learning_unit_year")
-    attributions_list = find_all_children(queryset[0])
-    queryset = list(chain(queryset, attributions_list))
+        queryset = queryset.filter(tutor__id=scores_responsible).filter(score_responsible=True).distinct("learning_unit_year")
     return queryset
 
 
