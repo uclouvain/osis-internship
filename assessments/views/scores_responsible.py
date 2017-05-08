@@ -91,7 +91,7 @@ def find_data_table(request, structure):
     attributions_list = mdl_attr.attribution.find_all_children(attribution[0])
     learning_unit_year_list = list(chain(attribution, attributions_list))
     entities_list = list(chain(entity, attributions_list))
-    all_tutors = mdl_attr.attribution.find_all_tutor(a_faculty_administrator.structure).distinct("tutor")
+    all_tutors = mdl_attr.attribution.find_all_tutor(a_faculty_administrator.structure)
     return all_tutors, entities_list, learning_unit_year_list, responsibles_list
 
 
