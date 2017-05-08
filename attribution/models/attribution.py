@@ -23,6 +23,9 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+import operator
+from itertools import chain
+
 from django.db import models
 from attribution.models.enums import function
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
@@ -116,13 +119,24 @@ def search_scores_responsible(structure, learning_unit_title, course_code, entit
         queryset = queryset.filter(tutor__id=professor)
     if scores_responsible:
         queryset = queryset.filter(tutor__id=scores_responsible).filter(score_responsible=True)
-    queryset = queryset.filter(learning_unit_year__structure=structure).distinct("learning_unit_year")
+    queryset = queryset.distinct("learning_unit_year")
+    attributions_list = find_all_children(queryset[0])
+    queryset = list(chain(queryset, attributions_list))
     return queryset
 
 
 def find_attribution_distinct(structure):
-    attributions_list = Attribution.objects.filter(learning_unit_year__structure=structure)\
+    attribution = Attribution.objects.filter(learning_unit_year__structure=structure)\
         .distinct("learning_unit_year__structure__acronym")
+    return attribution
+
+
+def find_all_children(attribution):
+    attributions_list = Attribution.objects.filter(learning_unit_year__structure__part_of=attribution.learning_unit_year.structure)\
+        .distinct("learning_unit_year__structure__acronym")
+    for attribution in attributions_list:
+        if attribution.learning_unit_year.structure.part_of:
+            attributions_list = list(chain(attributions_list, find_all_children(attribution)))
     return attributions_list
 
 

@@ -23,6 +23,8 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from itertools import chain
+
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
 from attribution import models as mdl_attr
@@ -41,13 +43,12 @@ def is_faculty_admin(user):
 @user_passes_test(is_faculty_admin)
 def scores_responsible(request):
     a_faculty_administrator = entity_manager.find_entity_manager_by_user(request.user)
-    all_tutors, attributions, attributions_list, responsibles_list = find_data_table(request,
-                                                                                     a_faculty_administrator.structure)
-    dict_attribution = create_dictionary(attributions)
+    all_tutors, entities_list, learning_unit_year_list, responsibles_list = find_data_table(request, a_faculty_administrator.structure)
+    dict_attribution = create_dictionary(learning_unit_year_list)
     return layout.render(request, 'scores_responsible.html', {"all_tutors": all_tutors,
-                                                              "attributions_list": attributions_list,
+                                                              "learning_unit_year_list": learning_unit_year_list,
+                                                              "entities_list": entities_list,
                                                               "dict_attribution": dict_attribution,
-                                                              "attributions": attributions,
                                                               "responsibles_list": responsibles_list})
 
 
@@ -62,13 +63,11 @@ def scores_responsible_search(request):
         entity=request.GET['entity'],
         professor=request.GET['professor'],
         scores_responsible=request.GET['scores_responsible'])
-    all_tutors, attributions, attributions_list, responsibles_list = find_data_table(request,
-                                                                                     a_faculty_administrator.structure)
+    all_tutors, entities_list, learning_unit_year_list, responsibles_list = find_data_table(request, a_faculty_administrator.structure)
     dict_attribution = create_dictionary(attributions_searched)
     return layout.render(request, 'scores_responsible.html', {"all_tutors": all_tutors,
-                                                              "attributions_list": attributions_list,
+                                                              "entities_list": entities_list,
                                                               "dict_attribution": dict_attribution,
-                                                              "attributions": attributions,
                                                               "responsibles_list": responsibles_list})
 
 
@@ -87,11 +86,14 @@ def create_dictionary(attributions):
 
 def find_data_table(request, structure):
     a_faculty_administrator = entity_manager.find_entity_manager_by_user(request.user)
-    attributions = mdl_attr.attribution.find_attributions(structure).distinct("learning_unit_year")
     responsibles_list = mdl_attr.attribution.find_responsible_distinct(structure)
-    attributions_list = mdl_attr.attribution.find_attribution_distinct(structure)
+    entity = mdl_attr.attribution.find_attribution_distinct(structure)
+    attribution = mdl_attr.attribution.find_attributions(structure)
+    attributions_list = mdl_attr.attribution.find_all_children(attribution[0])
+    learning_unit_year_list = list(chain(attribution, attributions_list))
+    entities_list = list(chain(entity, attributions_list))
     all_tutors = mdl_attr.attribution.find_all_tutor(a_faculty_administrator.structure).distinct("tutor")
-    return all_tutors, attributions, attributions_list, responsibles_list
+    return all_tutors, entities_list, learning_unit_year_list, responsibles_list
 
 
 def scores_responsible_list(request):

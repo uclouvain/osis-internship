@@ -43,8 +43,8 @@
                     <label for="slt_entity">{% trans 'entities' %}</label>
                     <select class="form-control" id="slt_entity"  name="entity" value="{{ request.GET.search }}">
                         <option value=""></option>
-                        {% for attribution_list in attributions_list %}
-                            <option value="{{attribution_list.learning_unit_year.structure.acronym}}">{{attribution_list.learning_unit_year.structure.acronym}}</option>
+                        {% for entity in entities_list %}
+                            <option value="{{entity.learning_unit_year.structure.acronym}}">{{entity.learning_unit_year.structure.acronym}}</option>
                         {% endfor %}
                     </select>
                 </div>
