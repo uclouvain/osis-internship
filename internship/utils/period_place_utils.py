@@ -23,32 +23,25 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.contrib import admin
-from django.db import models
 
+def get_period_places_for_offer_ids(offer_ids, period_places):
+    return list(filter(lambda period_place: period_place["internship_offer_id"] in offer_ids, period_places))
 
-class InternshipSpecialityGroupMemberAdmin(admin.ModelAdmin):
-    list_display = ('group', 'speciality')
-    fieldsets = ((None, {'fields': ('group', 'speciality')}),)
-    raw_id_fields = ('group', 'speciality')
+def get_period_places_for_period_ids(period_ids, period_places):
+    return list(filter(lambda period_place: period_place["period_id"] in period_ids, period_places))
 
+def get_period_place_for_offer_and_period(offer, period, period_places):
+    return list(filter(lambda period_place: period_place["internship_offer_id"] == offer.id \
+            and period_place["period_id"] == period.id, period_places))[0]
 
-class InternshipSpecialityGroupMember(models.Model):
-    speciality = models.ForeignKey('internship.InternshipSpeciality')
-    group = models.ForeignKey('internship.InternshipSpecialityGroup')
+def get_period_ids_from_period_places(period_places):
+    return list(map(lambda period_place: period_place["period_id"], period_places))
 
-    def __str__(self):
-        return u"%s - %s" % (self.speciality.name, self.group.name)
+def sort_period_places(period_places):
+    unordered_period_places = list(filter(lambda period_place: period_place["number_places"] > 0, period_places))
+    return list(sorted(unordered_period_places, key=lambda period_place: period_place["number_places"], reverse=True))
 
-
-def search_by_group_name(group_name):
-    return InternshipSpecialityGroupMember.objects.filter(group__name=group_name)
-
-
-def find_by_speciality(speciality):
-    return InternshipSpecialityGroupMember.objects.filter(speciality=speciality)\
-        .order_by('speciality__order_position')
-
-
-def find_distinct_specialities_by_groups(groups):
-    return InternshipSpecialityGroupMember.objects.filter(group__in=groups).distinct('speciality')
+def replace_period_place_in_dictionnary(period_place, period_places_dictionnary, new_count):
+    for period_place_dict in period_places_dictionnary:
+        if period_place_dict["id"] == period_place["id"]:
+            period_place_dict["number_places"] = new_count
