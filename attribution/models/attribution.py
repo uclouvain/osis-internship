@@ -87,7 +87,7 @@ def find_attributions(structure):
 def find_responsible(a_learning_unit_year):
     tutors_list = find_all_responsibles_by_learning_unit_year(a_learning_unit_year)
     if tutors_list:
-        return tutors_list[0]
+        return tutors_list
     return None
 
 
