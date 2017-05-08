@@ -35,7 +35,7 @@
         <a href="{% url 'learning_unit_components' learning_unit_year.id %}" role="tab">Composants et classes</a>
     </li>
     <li role="presentation" {% if tab_active == 'pedagogy' %} class="active" {% endif %}>
-        <a href="{% url 'learning_unit_pedagogy' learning_unit_year.id %}" role="tab">Infos dédagogiques</a>
+        <a href="{% url 'learning_unit_pedagogy' learning_unit_year.id %}" role="tab">Infos pédagogiques</a>
     </li>
     <li role="presentation" {% if tab_active == 'attributions' %} class="active" {% endif %}>
         <a href="{% url 'learning_unit_attributions' learning_unit_year.id %}" role="tab">Enseignants</a>

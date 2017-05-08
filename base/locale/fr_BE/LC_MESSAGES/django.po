@@ -762,8 +762,8 @@ msgstr ""
  "Le double encodage n'est pas accessible car il n'y a pas de nouvelles notes encodés."
 
 msgid "no_score_injected"
-msgstr "Aucune note injectée (NB: les notes de votre fichier excel ne sont injectées que si elles sont différentes "
-       "de celles déjà enregistrées précédemment)."
+msgstr "Aucune note injectée (NB: les notes de votre fichier Excel ne sont injectées que si elles sont différentes "
+       "de celles déjà sauvegardées précédemment)."
 
 msgid "no_score_to_encode"
 msgstr "Vous n'avez aucune note à encoder."
