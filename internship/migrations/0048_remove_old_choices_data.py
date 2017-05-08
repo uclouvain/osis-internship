@@ -3,10 +3,6 @@
 from __future__ import unicode_literals
 
 from django.db import migrations
-from internship.models.internship import Internship
-
-def cleanup_old_choices(apps, schema_editor):
-    Internship.objects.filter(pk=0).delete()
 
 class Migration(migrations.Migration):
 
@@ -14,6 +10,4 @@ class Migration(migrations.Migration):
         ('internship', '0047_auto_20170410_1601'),
     ]
 
-    operations = [
-        migrations.RunPython(cleanup_old_choices),
-    ]
+    operations = []
