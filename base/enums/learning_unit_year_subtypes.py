@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# OSIS stands for Open Student Information System. It's an application
+#    OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -23,21 +23,21 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import operator
-import factory
-import factory.fuzzy
-from django.conf import settings
-from django.utils import timezone
-from base.enums import learning_container_types
+from django.utils.translation import ugettext_lazy as _
 
-def _get_tzinfo():
-    if settings.USE_TZ:
-        return timezone.get_current_timezone()
-    else:
-        return None
+DISSERTATION = "DISSERTATION"
+FULL = "FULL"
+MOBILITY = "MOBILITY"
+OTHER = "OTHER"
+PARTIM = "PARTIM"
+THESIS = "THESIS"
 
-class LearningContainerFactory(factory.django.DjangoModelFactory):
-    class Meta:
-        model = "base.LearningContainer"
+LEARNING_UNIT_YEAR_SUBTYPES = (
+    (DISSERTATION, _(DISSERTATION)),
+    (FULL, _(FULL)),
+    (MOBILITY, _(MOBILITY)),
+    (OTHER, _(OTHER)),
+    (PARTIM, _(PARTIM)),
+    (THESIS, _(THESIS))
+)
 
-    container_type = factory.Iterator(learning_container_types.LEARNING_CONTAINER_TYPES, getter=operator.itemgetter(0))

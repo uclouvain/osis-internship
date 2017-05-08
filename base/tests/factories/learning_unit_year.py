@@ -23,6 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+import operator
 import factory
 import factory.fuzzy
 import string
@@ -33,6 +34,7 @@ from base.tests.factories.academic_year import AcademicYearFactory
 from base.tests.factories.academic_year import AcademicYearFakerFactory
 from base.tests.factories.learning_unit import LearningUnitFactory
 from base.tests.factories.learning_unit import LearningUnitFakerFactory
+from base.enums import learning_unit_year_subtypes
 from factory.django import DjangoModelFactory
 from faker import Faker
 fake = Faker()
@@ -55,7 +57,7 @@ class LearningUnitYearFactory(DjangoModelFactory):
                                           datetime.datetime(2017, 3, 1, tzinfo=_get_tzinfo()))
     acronym = factory.Sequence(lambda n: 'LUY-%d' % n)
     title = factory.Sequence(lambda n: 'Learning unit year - %d' % n)
-    type = "C"
+    subtype = factory.Iterator(learning_unit_year_subtypes.LEARNING_UNIT_YEAR_SUBTYPES, getter=operator.itemgetter(0))
     credits = factory.fuzzy.FuzzyDecimal(99)
     decimal_scores = False
     team = False
@@ -74,7 +76,7 @@ class LearningUnitYearFakerFactory(DjangoModelFactory):
     changed = fake.date_time_this_decade(before_now=True, after_now=True, tzinfo=_get_tzinfo())
     acronym = factory.Sequence(lambda n: 'LUY-%d' % n)
     title = factory.Sequence(lambda n: 'Learning unit year - %d' % n)
-    type = "C"
+    subtype = factory.Iterator(learning_unit_year_subtypes.LEARNING_UNIT_YEAR_SUBTYPES, getter=operator.itemgetter(0))
     credits = factory.fuzzy.FuzzyDecimal(9)
     decimal_scores = False
     team = False

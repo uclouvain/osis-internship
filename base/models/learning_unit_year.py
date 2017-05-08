@@ -25,7 +25,7 @@
 ##############################################################################
 from django.db import models
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
-from base.enums import learning_unit_year_status, learning_unit_year_types
+from base.enums import learning_unit_year_subtypes
 
 
 class LearningUnitYearAdmin(SerializableModelAdmin):
@@ -44,17 +44,15 @@ class LearningUnitYear(SerializableModel):
     changed = models.DateTimeField(null=True)
     acronym = models.CharField(max_length=15, db_index=True)
     title = models.CharField(max_length=255)
-    type = models.CharField(max_length=20, blank=True, null=True,
-                            choices=learning_unit_year_types.LEARNING_UNIT_YEAR_TYPES)
+    subtype = models.CharField(max_length=20, blank=True, null=True,
+                              choices=learning_unit_year_subtypes.LEARNING_UNIT_YEAR_SUBTYPES)
     credits = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
     decimal_scores = models.BooleanField(default=False)
     team = models.BooleanField(default=False)
     vacant = models.BooleanField(default=False)
     in_charge = models.BooleanField(default=False)
     structure = models.ForeignKey('Structure', blank=True, null=True)
-    status = models.CharField(max_length=20, blank=True, null=True,
-                              choices=learning_unit_year_status.LEARNING_UNIT_YEAR_STATUS)
-
+    status = models.BooleanField(default=False)
 
     def __str__(self):
         return u"%s - %s" % (self.academic_year, self.acronym)
@@ -68,7 +66,7 @@ def find_by_acronym(acronym):
     return LearningUnitYear.objects.filter(acronym=acronym)
 
 
-def search(academic_year_id=None, acronym=None, learning_unit=None, title=None, type=None, status=None):
+def search(academic_year_id=None, acronym=None, learning_unit=None, title=None, subtype=None, status=None):
     queryset = LearningUnitYear.objects
 
     if academic_year_id:
@@ -83,8 +81,8 @@ def search(academic_year_id=None, acronym=None, learning_unit=None, title=None, 
     if title:
         queryset = queryset.filter(title__icontains=title)
 
-    if type:
-        queryset = queryset.filter(type=type)
+    if subtype:
+        queryset = queryset.filter(type=subtype)
 
     if status:
         queryset = queryset.filter(status=status)

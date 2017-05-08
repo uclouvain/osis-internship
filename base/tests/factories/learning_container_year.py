@@ -43,5 +43,5 @@ class LearningContainerYearFactory(factory.django.DjangoModelFactory):
 
     academic_year = factory.SubFactory(AcademicYearFactory)
     learning_container = factory.SubFactory(LearningContainerFactory)
-    title = factory.LazyAttribute(lambda obj: obj.learning_container.title)
+    title = factory.Sequence(lambda n: 'Learning container year - %d' % n)
     acronym = factory.Sequence(lambda n: 'LCY-%d' % n)

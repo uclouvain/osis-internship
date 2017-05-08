@@ -29,12 +29,6 @@ from base.tests.factories.learning_container_year import LearningContainerYearFa
 from django.test import TestCase
 
 class LearningContainerYearTest(TestCase):
-    def test_title_learning_container_different_from_title_learning_container_year(self):
-        l_container = LearningContainerFactory(title="LC-98998")
-        l_container_year = LearningContainerYearFactory.build(title="LC-DIFFERENT", learning_container=l_container)
-        with self.assertRaises(AttributeError):
-            l_container_year.save()
-
     def test_find_by_id_with_id(self):
         l_container_year = LearningContainerYearFactory()
         self.assertEqual(l_container_year, learning_container_year.find_by_id(l_container_year.id))

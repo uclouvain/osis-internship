@@ -26,16 +26,21 @@
 from django.db import models
 from django.contrib import admin
 
+from base.enums import learning_container_types
+
 
 class LearningContainerAdmin(admin.ModelAdmin):
-    list_display = ('title',)
-    fieldsets = ((None, {'fields': ('title',)}),)
+    list_display = ('container_type',)
+    fieldsets = ((None, {'fields': ('container_type',)}),)
+
 
 class LearningContainer(models.Model):
-    title = models.CharField(max_length=255)
+    container_type = models.CharField(max_length=20, blank=True, null=True,
+                                      choices=learning_container_types.LEARNING_CONTAINER_TYPES)
 
     def __str__(self):
-        return u"%s" % self.title
+        return u"%s" % self.container_type
+
 
 def find_by_id(learning_container_id):
     return LearningContainer.objects.get(pk=learning_container_id)
