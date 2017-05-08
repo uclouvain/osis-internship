@@ -17,7 +17,7 @@ class Migration(migrations.Migration):
             name='cohort',
             field=models.ForeignKey(default=None, null=True, on_delete=django.db.models.deletion.CASCADE, to='internship.Cohort'),
         ),
-        migrations.runSQL("UPDATE internship_affectationgenerationtime SET cohort_id = (SELECT min(id) FROM internship_cohort)"),
+        migrations.RunSQL("UPDATE internship_affectationgenerationtime SET cohort_id = (SELECT min(id) FROM internship_cohort)"),
         migrations.AlterField(
             model_name='affectationgenerationtime',
             name='cohort',
