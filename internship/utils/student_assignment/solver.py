@@ -59,6 +59,7 @@ class AssignmentSolver:
         self.forbidden_organizations   = Organization.objects.annotate(reference_length=Length('reference')) \
                                           .exclude(reference="00").filter(cohort=self.cohort, reference_length=3)
         self.default_speciality        = InternshipSpeciality.objects.filter(cohort=self.cohort, acronym="MO").first()
+        self.pending_organization      = Organization.objects.filter(cohort=self.cohort, reference="604").first()
         self.offers                    = InternshipOffer.objects.filter(cohort=self.cohort)
         self.periods                   = Period.objects.extra(select={"period_number": "CAST(substr(name, 2) AS INTEGER)"}) \
                                           .exclude(name="P12").filter(cohort=self.cohort).order_by("period_number")
@@ -73,6 +74,7 @@ class AssignmentSolver:
         for internship in self.internships:
             self.assign_priority_choices_to_students(internship)
             self.assign_best_offer_for_student_choices(self.student_informations, internship)
+        self.assign_default_speciality_and_organization_for_students_with_empty_periods(self.default_speciality, self.pending_organization, self.students, self.periods)
 
     def persist_solution(self):
         for affectation in self.affectations:
@@ -107,8 +109,6 @@ class AssignmentSolver:
 
     def assign_choices_to_student(self, student, choices, internship):
         affectations = []
-        if not internship.speciality:
-            choices = InternshipChoice.objects.filter(student=student, internship__in=self.non_mandatory_internships)
 
         for choice in choices:
             periods = self.find_first_student_available_periods_for_internship_choice(student, internship, choice)
@@ -118,14 +118,19 @@ class AssignmentSolver:
 
         if len(affectations) == 0 and internship.speciality: # None of student choices available?
             affectations.extend(self.find_best_affectation_outside_of_choices(student, internship, choices))
+
         return affectations
 
+    def assign_default_speciality_and_organization_for_students_with_empty_periods(self, speciality, organization, students, periods):
+        for student in students:
+            if self.student_has_empty_periods(student, self.affectations):
+                periods      = self.all_available_periods(student, self.non_mandatory_internships[0], self.periods)
+                affectations = self.build_affectation_for_periods(student, organization, periods, speciality, "I", False)
+                self.affectations.extend(affectations)
+
     def find_first_student_available_periods_for_internship_choice(self, student, internship, choice):
-        if internship:
-            periods_with_places = self.find_available_periods_for_internship_choice(internship, choice)
-            return self.first_relevant_periods(student, internship, periods_with_places)
-        else:
-            periods_with_places = self.find_available_periods_for_internship_choice
+        periods_with_places = self.find_available_periods_for_internship_choice(internship, choice)
+        return self.first_relevant_periods(student, internship, periods_with_places)
 
     def find_best_affectation_outside_of_choices(self, student, internship, choices):
         student_periods = self.find_first_student_available_periods_for_internship(student, internship)
@@ -152,15 +157,19 @@ class AssignmentSolver:
         return periods
 
     def first_relevant_periods(self, student, internship, periods):
-        student_affectations = self.get_student_affectations(student, self.affectations)
-        unavailable_periods  = self.get_periods_from_affectations(student_affectations)
-        available_periods    = difference(periods, unavailable_periods)
+        available_periods    = self.all_available_periods(student, internship, periods)
         grouped_periods      = list(group_periods_by_consecutives(available_periods, length=internship.length_in_periods))
 
         if len(grouped_periods) > 0:
             return random.choice(grouped_periods)
         else:
             return grouped_periods
+
+    def all_available_periods(self, student, internship, periods):
+        student_affectations = self.get_student_affectations(student, self.affectations)
+        unavailable_periods  = self.get_periods_from_affectations(student_affectations)
+        available_periods    = difference(periods, unavailable_periods)
+        return available_periods
 
     def find_best_available_offer_for_internship_periods(self, internship, choices, periods):
         unavailable_organizations = list(map(lambda choice: choice.organization, choices))
@@ -247,26 +256,10 @@ class AssignmentSolver:
     def get_student_affectations(self, student, affectations):
         return list(filter(lambda affectation: affectation.student_id == student.id, affectations))
 
-    def get_students_with_empty_periods(self, affectations, students, periods):
-        students_with_empty_periods = []
-        for student in students:
-            if len(self.get_student_affectations(student, affectations)) != len(periods):
-                students_with_empty_periods.append(student)
-        return students_with_empty_periods
-
-    def get_student_ids_with_empty_periods(self, affectations):
-        return []
-
     def student_has_no_current_affectation_to_internship(self, student, internship, affectations):
         student_affectations = self.get_student_affectations(student, affectations)
         student_affectations_for_internship = \
             filter(lambda affectation: affectation.speciality_id == internship.speciality_id, student_affectations)
-        return len(list(student_affectations_for_internship)) == 0
-
-    def student_has_no_current_affectation_to_speciality(self, student, speciality, affectations):
-        student_affectations = self.get_student_affectations(student, affectations)
-        student_affectations_for_speciality = \
-            filter(lambda affectation: affectation.speciality_id == speciality, student_affectations)
         return len(list(student_affectations_for_internship)) == 0
 
     def student_has_empty_periods(self, student, affectations):
@@ -304,6 +297,3 @@ class AssignmentSolver:
                     speciality = choice.speciality, \
                     organization = choice.organization)
 
-#cohort = Cohort.objects.get(pk=2)
-#solver = AssignmentSolver(cohort)
-#solver.solve()
