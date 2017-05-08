@@ -1496,6 +1496,9 @@ msgstr "Component and classes"
 msgid "educational_information"
 msgstr "Educational information"
 
+msgid "propositions"
+msgstr "Propositions"
+
 msgid "tutor_attributions"
 msgstr "Tutors - attributions"
 

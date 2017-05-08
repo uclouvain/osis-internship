@@ -1514,6 +1514,9 @@ msgstr "Composants et classes"
 msgid "educational_information"
 msgstr "Infos pédagogiques"
 
+msgid "propositions"
+msgstr "Propositions"
+
 msgid "tutor_attributions"
 msgstr "Enseignants - attributions"
 
