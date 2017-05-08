@@ -68,8 +68,8 @@ msgid "academic_calendar_management"
 msgstr "Gestion du calendrier académique"
 
 msgid "academic_calendar_offer_year_calendar_end_date_error"
-msgstr "La date de fermeture de l'encodage des notes du calendrier académique ne peut pas être inférieure au %s "
-       "(date de fin de l'encodage des notes du programme '%s')"
+msgstr "La date de fermeture de '%s' du calendrier académique ne peut pas être inférieure au %s "
+       "(date de fin de '%s' du programme '%s')"
 
 msgid "academic_calendar_offer_year_calendar_start_date_error"
 msgstr "La date d'ouverture de l'encodage des notes du calendrier académique ne peut pas être supérieure au %s "
@@ -767,6 +767,9 @@ msgstr "Aucune note injectée (NB: les notes de votre fichier excel ne sont inje
 
 msgid "no_score_to_encode"
 msgstr "Vous n'avez aucune note à encoder."
+
+msgid "no_student_to_encode_xls"
+msgstr "Aucun étudiant à encoder via excel"
 
 msgid "no_valid_academic_year_error"
 msgstr "Aucune année académique au format valide n'a été trouvé dans votre fichier excel. La date doit être formatée comme suit ; '2015-2016' ou '2015'."
@@ -1516,3 +1519,7 @@ msgstr "Enseignants - attributions"
 
 msgid "proposal"
 msgstr "Proposition"
+
+msgid "academic_calendar_offer_year_calendar_start_date_end_date_error"
+msgstr "La date d'ouverture de '%s' du calendrier académique ne peut pas être supérieure au %s "
+       "(date de fin de '%s' du programme '%s')"

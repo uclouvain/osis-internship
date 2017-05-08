@@ -198,10 +198,11 @@ def is_deadline_tutor_reached(enrollment):
     return False
 
 
-def get_deadline_tutor_computed(enrollment):
+def get_deadline(enrollment):
     exam_deadline = get_session_exam_deadline(enrollment)
     if exam_deadline:
-        return exam_deadline.deadline_tutor_computed
+        return exam_deadline.deadline_tutor_computed if exam_deadline.deadline_tutor_computed else \
+               exam_deadline.deadline
     return None
 
 
@@ -318,8 +319,8 @@ def get_progress_by_learning_unit_years_and_offer_years(user,
                                           output_field=IntegerField()
                                  )),
                                  scores_not_yet_submitted=Sum(Case(
-                                     When((Q(score_draft__isnull=False) & Q(score_final__isnull=False) & Q(justification_final__isnull=False)) |
-                                          (Q(justification_draft__isnull=False) & Q(score_final__isnull=False) & Q(justification_final__isnull=False))
+                                     When((Q(score_draft__isnull=False) & Q(score_final__isnull=True) & Q(justification_final__isnull=True)) |
+                                          (Q(justification_draft__isnull=False) & Q(score_final__isnull=True) & Q(justification_final__isnull=True))
                                           ,then=1),
                                           default=0,
                                           output_field=IntegerField()
@@ -453,13 +454,16 @@ def scores_sheet_data(exam_enrollments, tutor=None):
         learning_unit_yr = exam_enrollments[0].session_exam.learning_unit_year
         scores_responsible = attribution.find_responsible(learning_unit_yr.id)
         scores_responsible_address = None
+        person = None
         if scores_responsible:
+            person = scores_responsible.person
             scores_responsible_address = person_address.find_by_person_label(scores_responsible.person, 'PROFESSIONAL')
 
         learn_unit_year_dict['academic_year'] = str(learning_unit_yr.academic_year)
+
         learn_unit_year_dict['scores_responsible'] = {
-            'first_name': scores_responsible.person.first_name if scores_responsible else '',
-            'last_name': scores_responsible.person.last_name if scores_responsible else ''}
+            'first_name': person.first_name if person and person.first_name else '',
+            'last_name': person.last_name if person and person.last_name else ''}
 
         learn_unit_year_dict['scores_responsible']['address'] = {'location': scores_responsible_address.location
                                                                  if scores_responsible_address else '',
@@ -513,7 +517,7 @@ def scores_sheet_data(exam_enrollments, tutor=None):
                         score = str(int(exam_enrol.score_final))
 
                 # Compute deadline score encoding
-                deadline = get_deadline_tutor_computed(exam_enrol)
+                deadline = get_deadline(exam_enrol)
                 if deadline:
                     deadline = deadline.strftime(date_format)
 

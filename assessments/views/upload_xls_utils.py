@@ -23,6 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+import decimal
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ValidationError
@@ -338,18 +339,19 @@ def _check_is_user_try_change_justified_to_unjustified_absence(enrollment, justi
 def _show_error_messages(request, errors_list):
     errors_list_grouped = _errors_list_group_by_message(errors_list)
     for message, error in errors_list_grouped.items():
-        str_rows_number_formated = ', '.join(error.get('str_rows_number'))
-        messages.add_message(request, error.get('level'), "%s : %s" % (message, str_rows_number_formated))
+        rows_number = sorted(error.get('rows_number', []))
+        str_rows_number_formated = ', '.join([str(nb) for nb in rows_number])
+        messages.add_message(request, error.get('level'), "%s : %s %s" % (message,_('Line'),
+                                                                          str_rows_number_formated))
 
 
 def _errors_list_group_by_message(errors_list):
     errors_grouped_by_message = {}
     for row_number, error in errors_list.items():
-        str_row_number = "%s %s" % (_('Line'), str(row_number))
         message = _extract_error_message(error)
         level = _extract_level_error(error)
-        errors_grouped_by_message.setdefault(message, {'level': level, 'str_rows_number': []})
-        errors_grouped_by_message[message]['str_rows_number'].append(str_row_number)
+        errors_grouped_by_message.setdefault(message, {'level': level, 'rows_number': []})
+        errors_grouped_by_message[message]['rows_number'].append(row_number)
 
     return errors_grouped_by_message
 
@@ -359,6 +361,8 @@ def _extract_error_message(error):
         return _(error.value)
     elif isinstance(error, ValidationError):
         return _(error.messages[0])
+    elif isinstance(error, decimal.InvalidOperation):
+        return _('scores_must_be_between_0_and_20')
     return _(error.args[0])
 
 

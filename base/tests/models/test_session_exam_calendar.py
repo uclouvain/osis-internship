@@ -144,6 +144,23 @@ class SessionExamCalendarTest(TestCase):
                          datetime.date(self.current_academic_yr.year+1, 1, 1))
         self.assertIsNone(session_exam_calendar.find_deliberation_date(number_session.TWO, offer_year_cal.offer_year))
 
+    def test_find_deliberation_date_offer_year_cals(self):
+        SessionExamCalendarFactory(academic_calendar=self.academic_calendar_4,
+                                   number_session=number_session.ONE)
+        offer_yr = OfferYearFactory(academic_year=self.current_academic_yr)
+        global_date = self.academic_calendar_4.start_date
+        delibe_date = datetime.date(self.current_academic_yr.year+1, 6, 10)
+
+        offer_year_cal = OfferYearCalendarFactory(academic_calendar=self.academic_calendar_4,
+                                                  offer_year=offer_yr,
+                                                  start_date=delibe_date,
+                                                  end_date=delibe_date)
+        self.assertEqual(session_exam_calendar.find_deliberation_date(number_session.ONE, offer_yr), delibe_date)
+
+        offer_year_cal.start_date = offer_year_cal.end_date = None
+        offer_year_cal.save()
+        self.assertEqual(session_exam_calendar.find_deliberation_date(number_session.ONE, offer_yr), global_date)
+
     def get_closest_new_session_exam(self):
         first = SessionExamCalendarFactory(academic_calendar=self.academic_calendar_1,
                                            number_session=number_session.ONE)

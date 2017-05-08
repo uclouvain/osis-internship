@@ -24,37 +24,23 @@
 #
 ##############################################################################
 from django.db import models
-from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
-from base.models import person
-from base.enums import structure_type
+from django.contrib import admin
 
 
-class EntityManagerAdmin(SerializableModelAdmin):
-    list_display = ('person', 'structure')
-    fieldsets = ((None, {'fields': ('person', 'structure',)}),)
-    search_fields = ['person__first_name', 'person__last_name', 'structure__acronym']
-    raw_id_fields = ('person', 'structure')
+class OfferTypeAdmin(admin.ModelAdmin):
+    list_display = ('name', )
+    fieldsets = ((None, {'fields': ('name', )}),)
+    list_filter = ('name', )
+    search_fields = ['name']
 
 
-class EntityManager(SerializableModel):
-    person = models.ForeignKey('Person')
-    structure = models.ForeignKey('Structure')
+class OfferType(models.Model):
+    external_id = models.CharField(max_length=100, blank=True, null=True)
+    name = models.CharField(max_length=255)
 
     def __str__(self):
-        return u"%s" % self.person
-
-    class Meta:
-        permissions = (
-            ("is_entity_manager", "Is entity manager "),
-        )
+        return u"%s" % self.name
 
 
-def _get_perms(model):
-    return model._meta.permissions
-
-
-def find_entity_manager_by_user(a_user):
-    return EntityManager.objects.filter(person__user=a_user)\
-        .select_related('person')\
-        .select_related('structure').first()  #  For the moment we suppose that one person is only manager for 1 structure
-
+def find_all():
+    return OfferType.objects.distinct('name').order_by('name')
