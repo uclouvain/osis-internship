@@ -129,6 +129,11 @@
                            {% endif %}
                        </div>
                        <div class="col-md-6" id="pnl_managers">
+                           {% if pgms|length > 0 %}
+                           <div id="wait" >
+                               <img src="{% static 'img/loading.gif' %}" alt="Loading..." />
+                           </div>
+                           {% endif%}
                            {% if managers|length == 0 and init == "0" %}
                             <label class="alert alert-info" style="margin:5px">{% trans 'no_result' %}</label>
                            {% endif %}
@@ -259,6 +264,7 @@
     });
 
     $(document).ready(function() {
+        $('#wait').hide();
         data_table_init();
 
         update_manager_list();
@@ -290,7 +296,14 @@
 
         if (ch != "") {
             $.ajax({
+                beforeSend: function(){
+                    $('#wait').show();
+                },
+                complete: function(){
+                    $('#wait').hide();
+                },
                 url: "/assessments/update_managers_list?pgm_ids=" + ch
+
             }).then(function (data) {
                 if (data.length > 0) {
                     var trHTML = '';
