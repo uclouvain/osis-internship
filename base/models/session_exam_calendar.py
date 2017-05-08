@@ -28,14 +28,15 @@ import datetime
 from django.db import models
 from django.contrib import admin
 from base.models.enums import number_session, academic_calendar_type
-from base.models import offer_year_calendar, academic_year
+from base.models import offer_year_calendar, academic_year, academic_calendar
 
 
 class SessionExamCalendarAdmin(admin.ModelAdmin):
     list_display = ('academic_calendar', 'number_session', 'changed')
-    list_filter = ('academic_calendar', 'number_session',)
+    list_filter = ('academic_calendar__academic_year', 'number_session', 'academic_calendar__reference')
+    fieldsets = ((None, {'fields': ('number_session', 'academic_calendar')}),)
     raw_id_fields = ('academic_calendar',)
-    search_fields = ['academic_calendar', 'number_session']
+    search_fields = ['academic_calendar__title']
 
 
 class SessionExamCalendar(models.Model):
@@ -51,8 +52,10 @@ class SessionExamCalendar(models.Model):
         return u"%s - %s" % (self.academic_calendar, self.number_session)
 
 
-def current_session_exam(date=datetime.date.today()):
+def current_session_exam(date=None):
     try:
+        if date is None:
+            date = datetime.date.today()
         return SessionExamCalendar.objects.get(academic_calendar__start_date__lte=date,
                                                academic_calendar__end_date__gte=date,
                                                academic_calendar__reference=academic_calendar_type.SCORES_EXAM_SUBMISSION)
@@ -60,14 +63,18 @@ def current_session_exam(date=datetime.date.today()):
         return None
 
 
-def find_session_exam_number(date=datetime.date.today()):
+def find_session_exam_number(date=None):
+    if date is None:
+        date = datetime.date.today()
     current_session = current_session_exam(date)
     if current_session:
         return current_session.number_session
     return None
 
 
-def get_latest_session_exam(date=datetime.date.today()):
+def get_latest_session_exam(date=None):
+    if date is None:
+        date = datetime.date.today()
     current_academic_year = academic_year.current_academic_year()
     return SessionExamCalendar.objects.exclude(academic_calendar__end_date__isnull=True)\
                                       .filter(academic_calendar__end_date__lte=date,
@@ -77,7 +84,9 @@ def get_latest_session_exam(date=datetime.date.today()):
                                       .first()
 
 
-def get_closest_new_session_exam(date=datetime.datetime.now().date()):
+def get_closest_new_session_exam(date=None):
+    if date is None:
+        date = datetime.date.today()
     current_academic_year = academic_year.current_academic_year()
     return SessionExamCalendar.objects.exclude(academic_calendar__start_date__isnull=True) \
                                       .filter(academic_calendar__start_date__gte=date,
@@ -93,12 +102,15 @@ def find_deliberation_date(nb_session, offer_year):
     :param offer_year The offer year research
     :return the deliberation date of the offer and session
     """
-    offer_year_cals = offer_year_calendar.find_by_offer_year(offer_year, academic_calendar_type.DELIBERATION)
-    academic_cals_id = [off.academic_calendar_id for off in list(offer_year_cals)]
+    session_exam_cals = SessionExamCalendar.objects.filter(number_session=nb_session,
+                                                           academic_calendar__reference=academic_calendar_type.DELIBERATION)
+    academic_cals_id = [session_exam.academic_calendar_id for session_exam in list(session_exam_cals)]
 
-    try:
-        session_exam_cal = SessionExamCalendar.objects.get(number_session=nb_session,
-                                                           academic_calendar_id__in=academic_cals_id)
-        return session_exam_cal.academic_calendar.start_date
-    except SessionExamCalendar.DoesNotExist:
-        return None
+    if academic_cals_id:
+        offer_year_cal = offer_year_calendar.find_by_offer_year(offer_yr=offer_year)\
+                       .filter(academic_calendar__in=academic_cals_id)\
+                       .first()
+        return offer_year_cal.start_date if offer_year_cal.start_date else \
+                                            offer_year_cal.academic_calendar.start_date
+
+    return None

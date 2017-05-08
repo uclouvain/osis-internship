@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -27,6 +27,9 @@ from base.models import *
 from django.contrib import admin
 
 
+admin.site.register(academic_calendar.AcademicCalendar,
+                    academic_calendar.AcademicCalendarAdmin)
+
 admin.site.register(academic_year.AcademicYear,
                     academic_year.AcademicYearAdmin)
 
@@ -36,6 +39,9 @@ admin.site.register(application_notice.ApplicationNotice,
 admin.site.register(campus.Campus,
                     campus.CampusAdmin)
 
+admin.site.register(entity_manager.EntityManager,
+                    entity_manager.EntityManagerAdmin)
+
 admin.site.register(exam_enrollment.ExamEnrollment,
                     exam_enrollment.ExamEnrollmentAdmin)
 
@@ -44,6 +50,24 @@ admin.site.register(exam_enrollment.ExamEnrollmentHistory,
 
 admin.site.register(external_offer.ExternalOffer,
                     external_offer.ExternalOfferAdmin)
+
+admin.site.register(learning_class.LearningClass,
+                    learning_class.LearningClassAdmin)
+
+admin.site.register(learning_class_year.LearningClassYear,
+                    learning_class_year.LearningClassYearAdmin)
+
+admin.site.register(learning_component.LearningComponent,
+                    learning_component.LearningComponentAdmin)
+
+admin.site.register(learning_component_year.LearningComponentYear,
+                    learning_component_year.LearningComponentYearAdmin)
+
+admin.site.register(learning_container.LearningContainer,
+                    learning_container.LearningContainerAdmin)
+
+admin.site.register(learning_container_year.LearningContainerYear,
+                    learning_container_year.LearningContainerYearAdmin)
 
 admin.site.register(learning_unit.LearningUnit,
                     learning_unit.LearningUnitAdmin)
@@ -62,6 +86,9 @@ admin.site.register(offer_enrollment.OfferEnrollment,
 
 admin.site.register(offer.Offer,
                     offer.OfferAdmin)
+
+admin.site.register(offer_type.OfferType,
+                    offer_type.OfferTypeAdmin)
 
 admin.site.register(offer_year.OfferYear,
                     offer_year.OfferYearAdmin)

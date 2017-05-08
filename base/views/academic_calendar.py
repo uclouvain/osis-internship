@@ -1,12 +1,12 @@
 ##############################################################################
 #
-# OSIS stands for Open Student Information System. It's an application
+#    OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -39,10 +39,10 @@ def academic_calendars(request):
     academic_year_calendar = mdl.academic_year.current_academic_year()
     if academic_year_calendar:
         academic_year = academic_year_calendar.id
-    academic_calendars = mdl.academic_calendar.find_academic_calendar_by_academic_year(academic_year)
+    academic_calendar_list = mdl.academic_calendar.find_academic_calendar_by_academic_year(academic_year)
     return layout.render(request, "academic_calendars.html", {'academic_year': academic_year,
                                                               'academic_years': academic_years,
-                                                              'academic_calendars': academic_calendars})
+                                                              'academic_calendars': academic_calendar_list})
 
 
 @login_required
@@ -74,15 +74,14 @@ def academic_calendar_read(request, id):
 @login_required
 @permission_required('base.can_access_academic_calendar', raise_exception=True)
 def academic_calendar_form(request, academic_calendar_id):
-    academic_years = mdl.academic_year.find_academic_years()
     academic_calendar = mdl.academic_calendar.find_by_id(academic_calendar_id)
     if request.method == 'GET':
         academic_cal_form = AcademicCalendarForm(instance=academic_calendar)
     else:
-        academic_cal_form = AcademicCalendarForm(request.POST, instance=academic_calendar)
+        academic_cal_form = AcademicCalendarForm(data=request.POST, instance=academic_calendar)
+
         if academic_cal_form.is_valid():
             academic_cal_form.save()
             return academic_calendar_read(request, academic_cal_form.instance.id)
-    return layout.render(request, "academic_calendar_form.html", {'academic_years': academic_years,
-                                                                  'form': academic_cal_form})
+    return layout.render(request, "academic_calendar_form.html", {'form': academic_cal_form})
 

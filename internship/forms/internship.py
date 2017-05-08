@@ -35,12 +35,14 @@ class InternshipForm(forms.ModelForm):
         fields = [
             'name',
             'speciality',
+            'alternate_speciality',
             'length_in_periods',
         ]
 
     def __init__(self, *args, **kwargs):
         super(forms.ModelForm, self).__init__(*args, **kwargs)
         self.fields['speciality'].queryset = self.fields['speciality'].queryset.filter(cohort_id=kwargs['instance'].cohort_id)
+        self.fields['alternate_speciality'].queryset = self.fields['alternate_speciality'].queryset.filter(cohort_id=kwargs['instance'].cohort_id)
 
         for field in self.fields:
             self.fields[field].widget.attrs.update({

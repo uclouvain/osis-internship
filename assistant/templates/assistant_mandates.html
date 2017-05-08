@@ -54,8 +54,8 @@
       	</tr>
     	</thead>
     	<tbody>
-      	<tr>
-		{% for mandate in object_list %}
+      	{% for mandate in object_list %}
+			<tr>
 			<form method="post" action=" {% url 'mandate_change_state' mandate.id %} ">
 			{% csrf_token %}
 			<td>{{ mandate.academic_year }}</td>	
@@ -68,29 +68,15 @@
                 <li>{% trans struct.structure.type|lower %} : {{ struct.structure.acronym }}</li>
                 {% endif %}
             {% endfor %}
-            </ul> </td>
-			<td>{{ mandate.fulltime_equivalent }}</td>	
-			{% if mandate.state == "TO_DO" %}
-				<td>{% trans 'pending' %}</td>
-			{% elif mandate.state == "DECLINED" %}
-				<td>{% trans 'declined' %}</td>
-			{% elif mandate.state == "TRTS" %}
-				<td>{% trans 'assistant' %}</td>
-			{% elif mandate.state == "PHD_SUPERVISOR" %}
-				<td>{% trans 'phd_supervisor' %}</td>
-			{% elif mandate.state == "RESEARCH" %}
-				<td>{% trans 'research' %}</td>
-			{% elif mandate.state == "SUPERVISION" %}
-				<td>{% trans 'supervision' %}</td>
-			{% elif mandate.state == "VICE_RECTOR" %}
-				<td>{% trans 'sector_vice_rector' %}</td>
-			{% endif %}
+            </ul></td>
+			<td>{{ mandate.fulltime_equivalent }}</td>
+            <td>{% trans mandate.state %}</td>
 			<td align="left">
 			{% if mandate.state == "TO_DO" %}
-				<button type="submit" class="btn btn-success" title="{% trans 'accept'%}" id="bt_mandate_accept" 
+				<button type="submit" class="btn btn-success" title="{% trans 'accept'%}" id="bt_mandate_accept"
 				name="bt_mandate_accept" onclick="return confirm('{% trans 'confirm_accept' %}')">
 				<span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span> {% trans 'accept'%}</button>
-				<button type="submit" class="btn btn-danger" title="{% trans 'decline'%}" 
+				<button type="submit" class="btn btn-danger" title="{% trans 'decline'%}"
 				id="bt_mandate_decline" name="bt_mandate_decline" onclick="return confirm('{% trans 'confirm_decline' %}')">
 				<span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span> {% trans 'decline'%}</button>
 			{% elif mandate.state == "TRTS" %}
@@ -98,21 +84,20 @@
                     <button type="button" class="btn btn-link btn-lg" title="{% trans 'edit'%}" id="bt_mandate_edit">
                     <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
                     </button>{% trans 'edit'%}</a>
+            {% elif mandate.state == "DONE" %}
+                <a href="{% url 'assistant_mandate_reviews' mandate.id %}">
+                <button type="button" class="btn btn-link btn-lg" title="{% trans 'view'%}" id="bt_view_view">
+                <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+                </button>{% trans 'view'%}</a>
 			{% endif %}
-			</td></tr>
+			</td>
 			</form>
+			</tr>
 		{% endfor %}
 		</tbody></table>
+		</div>
 	</div>
 </div>
 {% endblock %}
 {% block script %}
 {% endblock %}
-
-
-
-
-
-
-
-

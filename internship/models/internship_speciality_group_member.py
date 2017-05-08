@@ -47,7 +47,7 @@ def search_by_group_name(group_name):
 
 def find_by_speciality(speciality):
     return InternshipSpecialityGroupMember.objects.filter(speciality=speciality)\
-        .order_by('speciality__order_postion')
+        .order_by('speciality__order_position')
 
 
 def find_distinct_specialities_by_groups(groups):

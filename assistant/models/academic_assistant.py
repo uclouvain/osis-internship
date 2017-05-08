@@ -26,6 +26,7 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.contrib import admin
+from assistant.models.enums import assistant_phd_inscription
 
 
 class AcademicAssistantAdmin(admin.ModelAdmin):
@@ -34,11 +35,7 @@ class AcademicAssistantAdmin(admin.ModelAdmin):
 
 
 class AcademicAssistant(models.Model):
-    PHD_INSCRIPTION_CHOICES = (
-        ('YES', _('Yes')),
-        ('NO', _('No')),
-        ('IN_PROGRESS', _('In progress')))
-
+    
     person = models.ForeignKey('base.Person')
     supervisor = models.ForeignKey('base.Person', blank=True, null=True, related_name='person_supervisor')
     thesis_title = models.CharField(max_length=255, null=True, blank=True)
@@ -47,7 +44,8 @@ class AcademicAssistant(models.Model):
     thesis_date = models.DateField(null=True, blank=True)
     expected_phd_date = models.DateField(null=True, blank=True)
     remark = models.TextField(null=True, blank=True)
-    inscription = models.CharField(max_length=12, choices=PHD_INSCRIPTION_CHOICES, default='YES')
+    inscription = models.CharField(max_length=12, choices=assistant_phd_inscription.PHD_INSCRIPTION_CHOICES,
+                                   default=assistant_phd_inscription.YES)
 
     def __str__(self):
         return u"%s %s" % (self.person.first_name, self.person.last_name)
