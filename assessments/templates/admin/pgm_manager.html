@@ -129,6 +129,9 @@
                            {% endif %}
                        </div>
                        <div class="col-md-6" id="pnl_managers">
+                           <div id="wait" >
+                               <img src="{% static 'img/ajax-loader.gif' %}" alt="Loading..." />
+                           </div>
                            {% if managers|length == 0 and init == "0" %}
                             <label class="alert alert-info" style="margin:5px">{% trans 'no_result' %}</label>
                            {% endif %}
@@ -263,6 +266,15 @@
 
         update_manager_list();
         check_bt_add_manager_disabling();
+        $(document).ajaxStart(function () {
+            $('#wait').show();
+        });
+        $(document).ajaxStop(function () {
+            $('#wait').hide();
+        });
+        $(document).ajaxError(function () {
+            $('#wait').hide();
+        });
     });
 
     function data_table_init(){
@@ -290,6 +302,7 @@
 
         if (ch != "") {
             $.ajax({
+
                 url: "/assessments/update_managers_list?pgm_ids=" + ch
             }).then(function (data) {
                 if (data.length > 0) {

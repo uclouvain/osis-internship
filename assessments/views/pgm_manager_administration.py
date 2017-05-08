@@ -195,8 +195,7 @@ def get_administrator_faculty(a_user):
 
 
 def is_already_program_manager(person, offer_yr):
-    pgm_manage = mdl.program_manager.find_by_offer_year_person(person, offer_yr)
-    if pgm_manage:
+    if mdl.program_manager.find_by_offer_year_person(person, offer_yr):
         return True
     return False
 
@@ -309,29 +308,28 @@ def update_managers_list(request):
 def build_program_manager_list(list_id_offers_on, program_manager_list):
     pgm_managers = []
     persons = []
-    for program_manager in program_manager_list:
-        if program_manager.person not in pgm_managers:
-            offers = get_offers_with_pgm_manager(list_id_offers_on, program_manager)
+    for a_program_manager in program_manager_list:
+        if a_program_manager.person not in pgm_managers:
+            offers = get_offers_with_pgm_manager(list_id_offers_on, a_program_manager.person)
             pgms = build_offer_ids_string(offers)
             acronyms_off = build_acronyms_off_string(offers)
-            if program_manager.person not in persons:
-                persons.append(program_manager.person)
-                pgm_managers.append(PgmManager(person_id=program_manager.person.id,
-                                               person_last_name=program_manager.person.last_name,
-                                               person_first_name=program_manager.person.first_name,
-                                               offer_year_acronyms_on=pgm_to_keep_managing(program_manager.person,
+            if a_program_manager.person not in persons:
+                persons.append(a_program_manager.person)
+                pgm_managers.append(PgmManager(person_id=a_program_manager.person.id,
+                                               person_last_name=a_program_manager.person.last_name,
+                                               person_first_name=a_program_manager.person.first_name,
+                                               offer_year_acronyms_on=pgm_to_keep_managing(a_program_manager.person,
                                                                                            offers),
                                                offer_year_acronyms_off=acronyms_off,
                                                programs=pgms))
     return pgm_managers
 
 
-def get_offers_with_pgm_manager(list_id_offers_on, program_manager):
+def get_offers_with_pgm_manager(list_id_offers_on, a_person):
     offers = []
     for offer_year_id in list_id_offers_on:
         an_offer_year = mdl.offer_year.find_by_id(int(offer_year_id))
-        mg = mdl.program_manager.find_by_offer_year_person(program_manager.person, an_offer_year)
-        if mg:
+        if mdl.program_manager.find_by_offer_year_person(a_person, an_offer_year):
             offers.append(an_offer_year)
     return offers
 
