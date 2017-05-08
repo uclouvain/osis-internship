@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# OSIS stands for Open Student Information System. It's an application
+#    OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -23,15 +23,24 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import factory
-from django.test import TestCase
-from assistant.test.factories.assistant_mandate import AssistantMandateFactory
-from assistant.models import assistant_mandate
+from django.db import models
+from django.contrib import admin
 
-class TestAssistantMandateFactory(TestCase):
 
-    def setUp(self):
-        self.mandate = AssistantMandateFactory()
+class OfferTypeAdmin(admin.ModelAdmin):
+    list_display = ('name', )
+    fieldsets = ((None, {'fields': ('name', )}),)
+    list_filter = ('name', )
+    search_fields = ['name']
 
-    def test_find_mandate_by_id(self):
-        self.assertEqual(self.mandate, assistant_mandate.find_mandate_by_id(self.mandate.id))
+
+class OfferType(models.Model):
+    external_id = models.CharField(max_length=100, blank=True, null=True)
+    name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return u"%s" % self.name
+
+
+def find_all():
+    return OfferType.objects.distinct('name').order_by('name')

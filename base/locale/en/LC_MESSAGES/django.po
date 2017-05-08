@@ -68,8 +68,8 @@ msgid "academic_calendar_management"
 msgstr "Academic calendar management"
 
 msgid "academic_calendar_offer_year_calendar_end_date_error"
-msgstr "The closure's date of scores' encodings of the academic calendar can't be lower than %s "
-       "(end date of scores' encodings of the program '%s')"
+msgstr "The closure's date of '%s' of the academic calendar can't be lower than %s "
+       "(end date of '%s' of the program '%s')"
 
 msgid "academic_calendar_offer_year_calendar_start_date_error"
 msgstr "The opening's date of scores' encodings of the academic calendar can't be greater than %s "
@@ -569,6 +569,9 @@ msgstr "Justifications"
 
 msgid "justification_invalid_value"
 msgstr "Invalid justification value"
+
+msgid "absence_justified_to_unjustified_invalid"
+msgstr "Absence justified cannot be remplaced by absence unjustified"
 
 msgid "justification_values_accepted"
 msgstr "Accepted value: %s "
@@ -1480,3 +1483,22 @@ msgstr "Academic actors management"
 
 msgid "all_years"
 msgstr "All years"
+
+msgid "trainings"
+msgstr "Trainings"
+
+msgid "components"
+msgstr "Component and classes"
+
+msgid "educational_information"
+msgstr "Educational information"
+
+msgid "tutor_attributions"
+msgstr "Tutors - attributions"
+
+msgid "proposal"
+msgstr "Proposal"
+
+msgid "academic_calendar_offer_year_calendar_start_date_end_date_error"
+msgstr "The start's date of '%s' of the academic calendar can't be higher than %s "
+       "(end date of '%s' of the program '%s')"

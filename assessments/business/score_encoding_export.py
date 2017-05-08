@@ -180,8 +180,11 @@ def justification_other_values():
 
 def __get_session_exam_deadline(exam_enroll):
     date_format = str(_('date_format'))
+    deadline = None
 
     session_exam_deadline = mdl.exam_enrollment.get_session_exam_deadline(exam_enroll)
-    if session_exam_deadline and session_exam_deadline.deadline_tutor_computed:
-        return session_exam_deadline.deadline_tutor_computed.strftime(date_format)
-    return "-"
+    if session_exam_deadline:
+        deadline = session_exam_deadline.deadline_tutor_computed if session_exam_deadline.deadline_tutor_computed else\
+                   session_exam_deadline.deadline
+
+    return deadline.strftime(date_format) if deadline else "-"

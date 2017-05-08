@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -24,26 +24,15 @@
 #
 ##############################################################################
 import factory
-import factory.fuzzy
-from base.tests.factories.academic_year import AcademicYearFactory
-from base.tests.factories.offer import OfferFactory
-from base.tests.factories.structure import StructureFactory
-from base.tests.factories.offer_type import OfferTypeFactory
+from django.test import TestCase
+from assistant.tests.factories.reviewer import ReviewerFactory
+from assistant.enums import reviewer_role
+from assistant.models import reviewer
 
+class TestReviewerFactory(TestCase):
 
-def generate_title(offer_year):
-    return '{obj.academic_year} {obj.acronym}'.format(obj=offer_year).lower()
+    def setUp(self):
+        self.reviewer = ReviewerFactory(role=reviewer_role.VICE_RECTOR)
 
-
-class OfferYearFactory(factory.django.DjangoModelFactory):
-    class Meta:
-        model = "base.OfferYear"
-
-    offer = factory.SubFactory(OfferFactory)
-    academic_year = factory.SubFactory(AcademicYearFactory)
-    acronym = factory.Sequence(lambda n: 'Offer %d' % n)
-    title = factory.LazyAttribute(generate_title)
-    entity_management = factory.SubFactory(StructureFactory)
-    entity_administration_fac= factory.SubFactory(StructureFactory)
-    offer_type = factory.SubFactory(OfferTypeFactory)
-
+    def test_find_by_person(self):
+        self.assertEqual(self.reviewer, reviewer.find_by_person(self.reviewer.person))

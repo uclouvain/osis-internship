@@ -27,8 +27,8 @@ import factory
 import datetime
 from django.utils import timezone
 from base.tests.factories.person import PersonFactory
-from assistant.test.factories.reviewer import ReviewerFactory
-from assistant.test.factories.assistant_mandate import AssistantMandateFactory
+from assistant.tests.factories.reviewer import ReviewerFactory
+from assistant.tests.factories.assistant_mandate import AssistantMandateFactory
 from assistant.models.enums import review_advice_choices
 from assistant.models.enums import review_status
 

@@ -74,7 +74,6 @@ def academic_calendar_read(request, id):
 @login_required
 @permission_required('base.can_access_academic_calendar', raise_exception=True)
 def academic_calendar_form(request, academic_calendar_id):
-    academic_years = mdl.academic_year.find_academic_years()
     academic_calendar = mdl.academic_calendar.find_by_id(academic_calendar_id)
     if request.method == 'GET':
         academic_cal_form = AcademicCalendarForm(instance=academic_calendar)

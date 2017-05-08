@@ -75,7 +75,10 @@
                             <option value="">{% trans 'all' %}</option>
                             <option value="-1" {%if tutor_id == -1 %}selected{%endif%}>{% trans 'without_attribution' %} (NOBODY)</option>
                             {%for t in tutor_list%}
-                                <option value="{{t.id}}" {% if tutor_id == t.id %}selected{%endif%}>{{t.person.last_name}} {{t.person.first_name}}</option>
+                                <option value="{{t.id}}" {% if tutor_id == t.id %}selected{%endif%}>
+                                    {{t.person.last_name|default_if_none:""}}
+                                    {{t.person.first_name|default_if_none:""}}
+                                </option>
                             {%endfor%}
                         </select>
                     </div>
@@ -174,7 +177,8 @@
                     </td>
                     <td>
                         {% if note_detail.score_responsibles %}
-                            {{ note_detail.score_responsibles.0.person.last_name }} {{ note_detail.score_responsibles.0.person.first_name }}
+                            {{ note_detail.score_responsibles.0.person.last_name|default_if_none:"" }}
+                            {{ note_detail.score_responsibles.0.person.first_name|default_if_none:"" }}
                         {% else %}
                             -
                         {% endif %}
@@ -244,7 +248,8 @@
                            id="lnk_online_encoding_messages_{{note_detail.learning_unit_year_id}}">{{ note_detail.learning_unit_year_title }}</a></td>
                     <td>
                         {% if note_detail.score_responsibles %}
-                            {{ note_detail.score_responsibles.0.person.last_name }} {{ note_detail.score_responsibles.0.person.first_name }}
+                            {{ note_detail.score_responsibles.0.person.last_name|default_if_none:"" }}
+                            {{ note_detail.score_responsibles.0.person.first_name|default_if_none:"" }}
                         {% else %}
                             -
                         {% endif %}
@@ -330,7 +335,8 @@
                            id="lnk_paper_encoding_messages_{{note_detail.learning_unit_year_id}}">{{ note_detail.learning_unit_year_title }}</a></td>
                     <td>
                         {% if note_detail.score_responsibles %}
-                            {{ note_detail.score_responsibles.0.person.last_name }} {{ note_detail.score_responsibles.0.person.first_name }}
+                            {{ note_detail.score_responsibles.0.person.last_name|default_if_none:"" }}
+                            {{ note_detail.score_responsibles.0.person.first_name|default_if_none:"" }}
                         {% else %}
                             -
                         {% endif %}
