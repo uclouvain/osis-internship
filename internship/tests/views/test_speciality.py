@@ -111,7 +111,7 @@ class SpecialityViewTestCase(TestCase):
             'learning_unit': learning_unit.acronym,
             'mandatory': True,
             'name': speciality.name,
-            'order_poistion': speciality.order_position,
+            'order_position': speciality.order_position,
             'acronym': speciality.acronym,
         })
         self.assertRedirects(response, reverse('internships_specialities', kwargs={
