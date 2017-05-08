@@ -5,14 +5,6 @@ from __future__ import unicode_literals
 from django.db import migrations, models
 import django.db.models.deletion
 
-from internship.models.cohort import Cohort
-from internship.models.affectation_generation_time import AffectationGenerationTime
-
-def assign_first_cohort_to_periods(apps, schema_editor):
-    cohort = Cohort.objects.first()
-
-    AffectationGenerationTime.objects.all().update(cohort=cohort)
-
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -25,7 +17,7 @@ class Migration(migrations.Migration):
             name='cohort',
             field=models.ForeignKey(default=None, null=True, on_delete=django.db.models.deletion.CASCADE, to='internship.Cohort'),
         ),
-        migrations.RunPython(assign_first_cohort_to_periods),
+        migrations.runSQL("UPDATE internship_affectationgenerationtime SET cohort_id = (SELECT min(id) FROM internship_cohort)"),
         migrations.AlterField(
             model_name='affectationgenerationtime',
             name='cohort',
