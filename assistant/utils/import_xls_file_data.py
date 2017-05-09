@@ -33,15 +33,17 @@ from django.contrib import messages
 from django.utils.translation import ugettext as _
 from assistant.forms import MandateFileForm
 from assistant.utils import manager_access
+from assistant.models.enums import assistant_type
+from base.enums import structure_type
 
-COLS_NUMBER = 23
+COLS_NUMBER = 22
 ASSISTANTS_IMPORTED = 0
 MANDATES_IMPORTED = 0
 ASSISTANTS_UPDATED = 0
 MANDATES_UPDATED = 0
 PERSONS_NOT_FOUND = 0
 COLS_TITLES = ['SECTOR', 'FACULTY', 'PROGRAM_COMMISSION', 'INSTITUTE', 'POLE', 'SAP_ID', 'GLOBAL_ID', 'LAST_NAME',
-               'FIRST_NAME', 'FULLTIME_EQUIVALENT', 'ENTRY_DATE', 'END_DATE', 'ASSISTANT_TYPE_CODE', 'GRADE', 'SCALE',
+               'FIRST_NAME', 'FULLTIME_EQUIVALENT', 'ENTRY_DATE', 'END_DATE', 'ASSISTANT_TYPE_CODE', 'SCALE',
                'CONTRACT_DURATION', 'CONTRACT_DURATION_FTE', 'RENEWAL_TYPE', 'ABSENCES', 'COMMENT', 'OTHER_STATUS',
                'EMAIL', 'FGS']
 
@@ -91,18 +93,20 @@ def read_xls_mandates(request, file_name):
             assistant = create_academic_assistant_if_not_exists(current_record)
             if assistant:
                 mandate = create_assistant_mandate_if_not_exists(current_record, assistant)
-                institute = search_structure_by_acronym_and_type(current_record.get('INSTITUTE'), 'INSTITUTE')
+                institute = search_structure_by_acronym_and_type(current_record.get('INSTITUTE'),
+                                                                 structure_type.INSTITUTE)
                 if institute:
                     link_mandate_to_structure(mandate, institute)
-                faculty = search_structure_by_acronym_and_type(current_record.get('FACULTY'), 'FACULTY')
+                faculty = search_structure_by_acronym_and_type(current_record.get('FACULTY'),
+                                                               structure_type.FACULTY)
                 if faculty:
                     link_mandate_to_structure(mandate, faculty)
                     link_mandate_to_structure(mandate, faculty.part_of)
-                pole = search_structure_by_acronym_and_type(current_record.get('POLE'), 'POLE')
+                pole = search_structure_by_acronym_and_type(current_record.get('POLE'), structure_type.POLE)
                 if pole:
                     link_mandate_to_structure(mandate, pole)
                 program_commission = search_structure_by_acronym_and_type(current_record.get('PROGRAM_COMMISSION'),
-                                                                          'PROGRAM_COMMISSION')
+                                                                          structure_type.PROGRAM_COMMISSION)
                 if program_commission:
                     link_mandate_to_structure(mandate, program_commission)
         current_row += 1
@@ -178,8 +182,10 @@ def create_assistant_mandate_if_not_exists(record, assistant):
     mandate.absences = record.get('ABSENCES')
     mandate.comment = record.get('COMMENT')
     mandate.other_status = record.get('OTHER_STATUS')
-    mandate.assistant_type = record.get('ASSISTANT_TYPE_CODE')
-    mandate.grade = record.get('GRADE')
+    if record.get('ASSISTANT_TYPE_CODE') == 'ST':
+        mandate.assistant_type = assistant_type.ASSISTANT
+    elif record.get('ASSISTANT_TYPE_CODE') == 'AS':
+        mandate.assistant_type = assistant_type.TEACHING_ASSISTANT
     mandate.scale = record.get('SCALE')
     mandate.save()
     return mandate

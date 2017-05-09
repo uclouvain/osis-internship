@@ -43,7 +43,6 @@ class AssistantMandateFactory(factory.DjangoModelFactory):
     entry_date = datetime.datetime(datetime.date.today().year - 2, 9, 15)
     end_date = datetime.datetime(datetime.date.today().year, 9, 14)
     sap_id = factory.Faker('text', max_nb_chars=7)
-    grade = assistant_type
     renewal_type = factory.Iterator(assistant_mandate_renewal.ASSISTANT_MANDATE_RENEWAL_TYPES, getter=lambda c: c[0])
     state = factory.Iterator(assistant_mandate_state.ASSISTANT_MANDATE_STATES, getter=lambda c: c[0])
     scale = factory.fuzzy.FuzzyChoice(['021', '502', '020', '023'])

@@ -73,9 +73,10 @@ def search(tutor=None, learning_unit_year=None, score_responsible=None, list_lea
 
 
 def find_all_responsibles_by_learning_unit_year(a_learning_unit_year):
-    attribution_list = Attribution.objects.select_related("tutor") \
-        .filter(learning_unit_year=a_learning_unit_year) \
-        .filter(score_responsible=True)
+    attribution_list = Attribution.objects.filter(learning_unit_year=a_learning_unit_year,
+                                                  score_responsible=True)\
+                                          .distinct("tutor")\
+                                          .select_related("tutor")
     return [attribution.tutor for attribution in attribution_list]
 
 

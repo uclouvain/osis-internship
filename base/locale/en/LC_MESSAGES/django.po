@@ -737,6 +737,9 @@ msgstr "No dubble score encoded ; nothing to compare."
 msgid "no_exam_session_opened_for_the_moment"
 msgstr "No scores' encoding session opened for the moment."
 
+msgid "no_student_to_encode_xls"
+msgstr "No students to encode by excel"
+
 msgid "no_file_submitted"
 msgstr "You have to select a file to upload."
 
@@ -1492,6 +1495,9 @@ msgstr "Component and classes"
 
 msgid "educational_information"
 msgstr "Educational information"
+
+msgid "propositions"
+msgstr "Propositions"
 
 msgid "tutor_attributions"
 msgstr "Tutors - attributions"

@@ -23,32 +23,15 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.contrib import admin
-from django.db import models
 
+def group_periods_by_consecutives(periods, length=1):
+    if length==1:
+        for period in periods:
+            yield [period]
+    else:
+        for i in xrange(len(periods) - (length - 1)):
+            if all(map(lambda period: int(periods[i].name[1:]) + 1 == int(periods[i + 1].name[1:]), periods[i: i + length])):
+                yield periods[i: i + length]
 
-class InternshipSpecialityGroupMemberAdmin(admin.ModelAdmin):
-    list_display = ('group', 'speciality')
-    fieldsets = ((None, {'fields': ('group', 'speciality')}),)
-    raw_id_fields = ('group', 'speciality')
-
-
-class InternshipSpecialityGroupMember(models.Model):
-    speciality = models.ForeignKey('internship.InternshipSpeciality')
-    group = models.ForeignKey('internship.InternshipSpecialityGroup')
-
-    def __str__(self):
-        return u"%s - %s" % (self.speciality.name, self.group.name)
-
-
-def search_by_group_name(group_name):
-    return InternshipSpecialityGroupMember.objects.filter(group__name=group_name)
-
-
-def find_by_speciality(speciality):
-    return InternshipSpecialityGroupMember.objects.filter(speciality=speciality)\
-        .order_by('speciality__order_position')
-
-
-def find_distinct_specialities_by_groups(groups):
-    return InternshipSpecialityGroupMember.objects.filter(group__in=groups).distinct('speciality')
+def map_period_ids(periods):
+    return list(map(lambda period: period.id, periods))
