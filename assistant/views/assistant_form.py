@@ -28,12 +28,13 @@ from django.core.urlresolvers import reverse
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render
 from django.core.exceptions import ObjectDoesNotExist
+from django.utils.translation import ugettext as _
 from assistant.models import *
 from assistant.utils.send_email import send_message
 from assistant.forms import *
 from assistant.models.enums import document_type
 from base.models import person_address, person
-from assistant.models.enums import assistant_mandate_state
+from assistant.models.enums import assistant_mandate_state, assistant_phd_inscription
 
 
 def user_is_assistant_and_procedure_is_open(user):
@@ -170,8 +171,18 @@ def form_part3_save(request, mandate_id):
     elif request.method == 'POST':
         form = AssistantFormPart3(data=request.POST, instance=assistant, prefix='mand')
         if form.is_valid():
+            current_assistant = form.save(commit=False)
+            if current_assistant.inscription == assistant_phd_inscription.YES and not request.POST.get('person_id'):
+                msg = _("must_enter_supervisor_if_registered")
+                form.add_error('inscription', msg)
+                return render(request, "assistant_form_part3.html", {'assistant': assistant, 'mandate': mandate,
+                                                                     'files': files, 'form': form})
+            if current_assistant.inscription is None:
+                msg = _("phd_inscription_choice_required")
+                form.add_error('inscription', msg)
+                return render(request, "assistant_form_part3.html", {'assistant': assistant, 'mandate': mandate,
+                                                                     'files': files, 'form': form})
             if request.POST.get('person_id'):
-                current_assistant = form.save(commit=False)
                 current_assistant.supervisor = person.find_by_id(request.POST.get('person_id'))
                 current_assistant.save()
             else:
@@ -244,7 +255,6 @@ def form_part6_edit(request, mandate_id):
 
 @user_passes_test(user_is_assistant_and_procedure_is_open, login_url='access_denied')
 def form_part6_save(request, mandate_id):
-    """Use to save an assistant form part6."""
     mandate = assistant_mandate.find_mandate_by_id(mandate_id)
     assistant = mandate.assistant
     person = request.user.person
@@ -254,6 +264,13 @@ def form_part6_save(request, mandate_id):
         form = AssistantFormPart6(data=request.POST, instance=mandate, prefix='mand')
         if form.is_valid():
             if 'validate_and_submit' in request.POST:
+                current_mandate = form.save(commit=False)
+                if assistant.inscription is None:
+                    msg = _("phd_inscription_choice_required")
+                    form.add_error(None, msg)
+                    current_mandate.save()
+                    return render(request, "assistant_form_part6.html", {'assistant': assistant, 'mandate': mandate,
+                                                                         'form': form})
                 if assistant.supervisor:
                     mandate.state = assistant_mandate_state.PHD_SUPERVISOR
                     html_template_ref = 'assistant_phd_supervisor_html'
@@ -264,7 +281,7 @@ def form_part6_save(request, mandate_id):
                     mandate.state = assistant_mandate_state.SUPERVISION
                 else:
                     mandate.state = assistant_mandate_state.RESEARCH
-                form.save()
+                current_mandate.save()
                 return HttpResponseRedirect(reverse('assistant_mandates'))
             else:
                 form.save()

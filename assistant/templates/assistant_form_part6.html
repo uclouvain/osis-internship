@@ -47,7 +47,11 @@
 <div class="panel panel-default">
     <div class="panel-body">
         <form id="pst-form-part6" method="POST" action="{% url 'form_part6_save' mandate.id %}">
-        {% csrf_token %}
+        <span class="error">{{ form.non_field_errors }}</span>
+ 		{% csrf_token %}
+ 		{% for hidden in form.hidden_fields %}
+			{{ hidden }}
+		{% endfor %}
         <div class="panel-default">
             <div class="panel-heading">
                 <h4>{% trans 'summary' %}</h4>
@@ -73,7 +77,6 @@
                 {% trans 'formation_activities_percent' %}</label>
             <div class="controls">{{ form.formation_activities_percent }}</div>
             <span class="error">{{ form.formation_activities_percent.errors }}</span>
-            <span class="error">{{ form.non_field_errors }}</span>
         </div>
         <div class="panel-default">
             <div class="panel-heading">
