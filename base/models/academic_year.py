@@ -58,7 +58,7 @@ class AcademicYear(SerializableModel):
         super(AcademicYear, self).save(*args, **kwargs)
 
     def __str__(self):
-        return u"%s-%s" % (self.year, self.year + 1)
+        return u"%s-%s" % (self.year, str(self.year + 1)[-2:])
 
     class Meta:
         permissions = (

@@ -37,7 +37,9 @@
 <li><a href="{% url 'assistant_mandates' %}">{% trans 'my_mandates' %}</a></li>
 <li><a href="{% url 'form_part1_edit' mandate.id %}">{% trans 'assistant_form_part1' %}</a></li>
 <li><a href="{% url 'mandate_learning_units' mandate.id %}">{% trans 'assistant_form_part2' %}</a></li>
-<li><a href="{% url 'form_part3_edit' mandate.id %}">{% trans 'assistant_form_part3' %}</a></li>
+{% if mandate.assistant_type == "ASSISTANT" %}
+    <li><a href="{% url 'form_part3_edit' mandate.id %}">{% trans 'assistant_form_part3' %}</a></li>
+{% endif %}
 <li><a href="{% url 'form_part4_edit' mandate.id %}">{% trans 'assistant_form_part4' %}</a></li>
 <li><a href="{% url 'form_part5_edit' mandate.id %}">{% trans 'assistant_form_part5' %}</a></li>
 <li class="active"><a href="{% url 'form_part6_edit' mandate.id %}">{% trans 'assistant_form_part6' %}</a></li>
@@ -45,7 +47,11 @@
 <div class="panel panel-default">
     <div class="panel-body">
         <form id="pst-form-part6" method="POST" action="{% url 'form_part6_save' mandate.id %}">
-        {% csrf_token %}
+        <span class="error">{{ form.non_field_errors }}</span>
+ 		{% csrf_token %}
+ 		{% for hidden in form.hidden_fields %}
+			{{ hidden }}
+		{% endfor %}
         <div class="panel-default">
             <div class="panel-heading">
                 <h4>{% trans 'summary' %}</h4>
@@ -71,7 +77,6 @@
                 {% trans 'formation_activities_percent' %}</label>
             <div class="controls">{{ form.formation_activities_percent }}</div>
             <span class="error">{{ form.formation_activities_percent.errors }}</span>
-            <span class="error">{{ form.non_field_errors }}</span>
         </div>
         <div class="panel-default">
             <div class="panel-heading">

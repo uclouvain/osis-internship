@@ -43,7 +43,6 @@ class AssistantMandate(models.Model):
     end_date = models.DateField()
     position_id = models.CharField(max_length=12)
     sap_id = models.CharField(max_length=12)
-    grade = models.CharField(max_length=40)
     assistant_type = models.CharField(max_length=20, choices=assistant_type.ASSISTANT_TYPES,
                                       default=assistant_type.ASSISTANT)
     scale = models.CharField(max_length=3)
