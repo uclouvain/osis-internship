@@ -111,6 +111,7 @@ class AssistantLearningUnitsListView(LoginRequiredMixin, UserPassesTestMixin, Li
         context = super(AssistantLearningUnitsListView, self).get_context_data(**kwargs)
         context['mandate_id'] = self.kwargs['mandate_id']
         mandate = assistant_mandate.find_mandate_by_id(context['mandate_id'])
+        context['assistant_type'] = mandate.assistant_type
         files = assistant_document_file.find_by_assistant_mandate_and_description(mandate,
                                                                                   document_type.TUTORING_DOCUMENT)
         context['files'] = files
