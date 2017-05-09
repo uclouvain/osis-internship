@@ -42,7 +42,7 @@ class EntityAddress(models.Model):
     country = models.CharField(max_length=255, null=True)
 
     class Meta:
-        verbose_name_plural = "entity adresses"
+        verbose_name_plural = "entity addresses"
 
 
 def search_by_entity(entity):
