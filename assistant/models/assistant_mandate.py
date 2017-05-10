@@ -70,7 +70,6 @@ class AssistantMandate(models.Model):
     awards = models.TextField(null=True, blank=True)
     framing = models.TextField(null=True, blank=True)
     remark = models.TextField(null=True, blank=True)
-    degrees = models.TextField(null=True, blank=True)
     formations = models.TextField(null=True, blank=True)
     faculty_representation = models.PositiveIntegerField(default=0)
     institute_representation = models.PositiveIntegerField(default=0)
