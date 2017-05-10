@@ -69,7 +69,7 @@
                 <tr><td>{{ mandate.sap_id }}</td>
                 <td><a href="{% url 'mandate_read' mandate.id %}">{{ mandate.assistant.person }}</a></td>
                 <td><ul>
-                {% for struct in mandate.mandatestructure_set.all|dictsort:"structure.type" %}
+                {% for struct in mandate.mandatestructure_set.all %}
                     <li>{% trans struct.structure.type|lower %} : {{ struct.structure.acronym }}</li>
                 {% endfor %}
                 </ul></td>
@@ -79,17 +79,10 @@
                 <td>ST</td>
                 {% endif %}
                 <td>{% trans mandate.state|lower %}</td>
-                {% if mandate.assistant.inscription == "YES" %}
-                    {% if mandate.assistant.phd_inscription_date %}
-                    <td>{{ mandate.assistant.phd_inscription_date }}</td>
-                    {% else %}
-                    <td>{% trans 'yes' %}</td>
+                <td>{% if mandate.assistant.inscription %}
+                        {% trans mandate.assistant.inscription %}
                     {% endif %}
-                {% elif mandate.assistant.inscription == "NO" %}
-                <td>{% trans 'no' %}</td>
-                {% elif mandate.assistant.inscription == "IN_PROGRESS" %}
-                <td>{% trans 'in_progress' %}</td>
-                {% endif %}
+                </td>
                 <td>{{ mandate.contract_duration }}</td>
                 <td>{{ mandate.contract_duration_fte }}</td>
                 <td>{{ mandate.fulltime_equivalent }}</td>
