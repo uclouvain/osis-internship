@@ -70,12 +70,7 @@
                 <td><a href="{% url 'mandate_read' mandate.id %}">{{ mandate.assistant.person }}</a></td>
                 <td><ul>
                 {% for struct in mandate.mandatestructure_set.all|dictsort:"structure.type" %}
-                    {% if struct.structure.part_of %}
-                    <li>{% trans struct.structure.type|lower %} :
-                    {{ struct.structure.acronym }} ({{ struct.structure.part_of.acronym }})</li>
-                    {% else %}
                     <li>{% trans struct.structure.type|lower %} : {{ struct.structure.acronym }}</li>
-                    {% endif %}
                 {% endfor %}
                 </ul></td>
                 {% if mandate.assistant_type == "TEACHING_ASSISTANT" %}
