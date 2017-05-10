@@ -1113,6 +1113,9 @@ msgstr "Stages"
 msgid "start_date"
 msgstr "Date de début"
 
+msgid "state"
+msgstr "État"
+
 msgid "status"
 msgstr "Statut"
 
