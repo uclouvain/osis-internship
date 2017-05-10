@@ -33,7 +33,7 @@ from django.contrib import messages
 from django.utils.translation import ugettext as _
 from assistant.forms import MandateFileForm
 from assistant.utils import manager_access
-from assistant.models.enums import assistant_type
+from assistant.models.enums import assistant_type, assistant_phd_inscription
 from base.enums import structure_type
 
 COLS_NUMBER = 22
@@ -152,7 +152,9 @@ def create_academic_assistant_if_not_exists(record):
             assistant = assistant_mdl.academic_assistant.AcademicAssistant()
             ASSISTANTS_IMPORTED += 1
             assistant.person = person
-            assistant.save()
+        if record.get('ASSISTANT_TYPE_CODE') == 'AS':
+            assistant.inscription=assistant_phd_inscription.NO
+        assistant.save()
         return assistant
     else:
         PERSONS_NOT_FOUND += 1
