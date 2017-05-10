@@ -1100,6 +1100,9 @@ msgstr "Stages"
 msgid "start_date"
 msgstr "Start date"
 
+msgid "state"
+msgstr "State"
+
 msgid "status"
 msgstr "Status"
 
