@@ -24,10 +24,9 @@
 #
 ##############################################################################
 from assistant.models import reviewer, mandate_structure
-from base.models import academic_year, structure
+from base.models import academic_year
 from assistant.forms import MandatesArchivesForm
 from django.views.generic import ListView
-from django.db.models import Q
 from django.core.urlresolvers import reverse
 from django.views.generic.edit import FormMixin
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
