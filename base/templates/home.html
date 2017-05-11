@@ -86,7 +86,7 @@
             {% endifchanged %}
             <dd>{{ academic_event.start_date| default_if_none:''|date:"d/m/Y" }} -
                 {{ academic_event.end_date| default_if_none:''|date:"d/m/Y" }} :
-                <a href="{% url 'academic_calendar_read' academic_event.id %}"
+                <a href="{% url 'academic_calendar_read' academic_calendar_id=academic_event.id %}"
                    id="lnk_academic_calendar_edit_{{academic_event.id}}">{% trans academic_event.title %}</a></dd>
             <br>
           {% endfor %}
