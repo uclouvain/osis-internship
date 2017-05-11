@@ -34,7 +34,7 @@ from django.utils.translation import ugettext as _
 from assistant.forms import MandateFileForm
 from assistant.utils import manager_access
 from assistant.models.enums import assistant_type
-from base.enums import structure_type
+from base.models.enums import structure_type
 
 COLS_NUMBER = 22
 ASSISTANTS_IMPORTED = 0

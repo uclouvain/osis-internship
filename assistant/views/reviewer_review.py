@@ -34,7 +34,7 @@ from django.core.urlresolvers import reverse
 from django.utils import timezone
 from django.core.exceptions import ObjectDoesNotExist
 from assistant.enums import reviewer_role
-from base.enums import structure_type
+from base.models.enums import structure_type
 from assistant.models.enums import review_status, assistant_mandate_state
 import re
 

@@ -25,7 +25,7 @@
 ##############################################################################
 from django.db import models
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
-from base.enums.learning_unit_periodicity import PERIODICITY_TYPES
+from base.models.enums.learning_unit_periodicity import PERIODICITY_TYPES
 
 
 class LearningUnitAdmin(SerializableModelAdmin):

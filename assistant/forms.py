@@ -32,9 +32,9 @@ from django.forms.models import inlineformset_factory
 from django.core.exceptions import ValidationError
 from django.forms import widgets
 from assistant.enums import reviewer_role
-from assistant.models.enums import review_advice_choices, review_status, assistant_type, assistant_mandate_renewal
+from assistant.models.enums import review_advice_choices, assistant_type, assistant_mandate_renewal
 from assistant.models.enums import assistant_phd_inscription
-from base.enums import structure_type
+from base.models.enums import structure_type
 
 
 class MandateFileForm(forms.Form):

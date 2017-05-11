@@ -35,7 +35,7 @@ from base.models.learning_unit_component import LearningUnitComponent
 from base.models.learning_class_year import LearningClassYear
 from base.models.learning_class import LearningClass
 from base.models.academic_year import AcademicYear
-from base.enums import learning_unit_year_types
+from base.models.enums import learning_unit_year_types
 
 now = timezone.now()
 
