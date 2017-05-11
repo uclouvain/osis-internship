@@ -46,6 +46,10 @@ COLS_TITLES = ['SECTOR', 'FACULTY', 'PROGRAM_COMMISSION', 'INSTITUTE', 'POLE', '
                'FIRST_NAME', 'FULLTIME_EQUIVALENT', 'ENTRY_DATE', 'END_DATE', 'ASSISTANT_TYPE_CODE', 'SCALE',
                'CONTRACT_DURATION', 'CONTRACT_DURATION_FTE', 'RENEWAL_TYPE', 'ABSENCES', 'COMMENT', 'OTHER_STATUS',
                'EMAIL', 'FGS']
+ASSISTANT_TYPES_ALIASES = {
+    'ST': assistant_type.ASSISTANT,
+    'AS': assistant_type.TEACHING_ASSISTANT
+}
 
 
 @user_passes_test(manager_access.user_is_manager, login_url='assistants_home')
@@ -153,7 +157,7 @@ def create_academic_assistant_if_not_exists(record):
             ASSISTANTS_IMPORTED += 1
             assistant.person = person
         if record.get('ASSISTANT_TYPE_CODE') == 'AS':
-            assistant.inscription=assistant_phd_inscription.NO
+            assistant.inscription = assistant_phd_inscription.NO
         assistant.save()
         return assistant
     else:
