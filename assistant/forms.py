@@ -24,17 +24,18 @@
 #
 ##############################################################################
 from django import forms
-from django.utils.translation import ugettext as _
-from django.forms import ModelForm, Textarea
-from assistant import models as mdl
-from base.models import structure, academic_year, learning_unit_year
-from django.forms.models import inlineformset_factory
 from django.core.exceptions import ValidationError
+from django.forms import ModelForm, Textarea
 from django.forms import widgets
-from assistant.enums import reviewer_role
-from assistant.models.enums import review_advice_choices, review_status, assistant_type, assistant_mandate_renewal
+from django.forms.models import inlineformset_factory
+from django.utils.translation import ugettext as _
+
+from assistant import models as mdl
 from assistant.models.enums import assistant_phd_inscription
+from assistant.models.enums import review_advice_choices, assistant_type, assistant_mandate_renewal, \
+    reviewer_role
 from base.enums import structure_type
+from base.models import structure, academic_year, learning_unit_year
 
 
 class MandateFileForm(forms.Form):

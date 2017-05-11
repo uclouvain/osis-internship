@@ -23,12 +23,13 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
 from django.contrib import admin
-from base.models import structure
+from django.db import models
 from django.db.models import Q
+
 from assistant.models import mandate_structure, assistant_mandate
-from assistant.enums import reviewer_role
+from assistant.models.enums import reviewer_role
+from base.models import structure
 
 
 class ReviewerAdmin(admin.ModelAdmin):
