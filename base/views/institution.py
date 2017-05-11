@@ -71,8 +71,8 @@ def structure_read(request, structure_id):
                                                      'offers_years': offers_years})
 
 @login_required
-def structure_diagram(request, parent_id):
-    structure = mdl.structure.find_by_id(parent_id)
+def structure_diagram(request, structure_id):
+    structure = mdl.structure.find_by_id(structure_id)
     return layout.render(request, "structure_organogram.html", {'structure': structure,
                                                                 'structure_as_json': json.dumps(structure.serializable_object())})
 
