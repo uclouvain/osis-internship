@@ -25,7 +25,7 @@
 ##############################################################################
 from django.db import models
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
-from base.enums import learning_unit_year_status, learning_unit_year_types
+from base.models.enums import learning_unit_year_status, learning_unit_year_types
 
 
 class LearningUnitYearAdmin(SerializableModelAdmin):

@@ -24,11 +24,10 @@
 #
 ##############################################################################
 import json
-from django.core import serializers
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required, permission_required
 from base import models as mdl
-from base.enums import structure_type
+from base.models.enums import structure_type
 from . import layout
 
 
