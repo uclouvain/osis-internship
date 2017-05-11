@@ -23,15 +23,14 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-
 from django.utils.translation import ugettext_lazy as _
 
-NONE = "NONE"
-VALID = "VALID"
-INVALID = "INVALID"
+ACTIVE = "ACTIVE"
+PASSIVE = "PASSIVE"
+INACTIVE = "INACTIVE"
 
-LEARNING_UNIT_YEAR_STATUS = (
-    (NONE, _(NONE)),
-    (VALID, _(VALID)),
-    (INVALID, _(INVALID))
+LEARNING_UNIT_YEAR_ACTIVITY_STATUS = (
+    (ACTIVE, _(ACTIVE)),
+    (PASSIVE, _(PASSIVE)),
+    (INACTIVE, _(INACTIVE))
 )

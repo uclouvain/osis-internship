@@ -4,7 +4,6 @@ from __future__ import unicode_literals
 
 from django.db import migrations, models
 
-
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -13,26 +12,56 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RemoveField(
-            model_name='learningcontainer',
-            name='title',
-        ),
-        migrations.RemoveField(
             model_name='learningunityear',
             name='type',
         ),
         migrations.AddField(
-            model_name='learningcontainer',
-            name='container_type',
-            field=models.CharField(blank=True, choices=[('COURSE', 'COURSE'), ('MASTER_THESIS', 'MASTER_THESIS'), ('INTERNSHIP', 'INTERNSHIP')], max_length=20, null=True),
+            model_name='learningunityear',
+            name='subtype',
+            field=models.CharField(blank=True,
+                                   choices=[('MASTER_DISSERTATION', 'MASTER_DISSERTATION'), ('FULL', 'FULL'),
+                                            ('MOBILITY', 'MOBILITY'), ('OTHER', 'OTHER'), ('PARTIM', 'PARTIM'),
+                                            ('PHD_THESIS', 'PHD_THESIS')], max_length=20, null=True),
+        ),
+        migrations.RemoveField(
+            model_name='learningunityear',
+            name='status',
         ),
         migrations.AddField(
             model_name='learningunityear',
-            name='subtype',
-            field=models.CharField(blank=True, choices=[('DISSERTATION', 'DISSERTATION'), ('FULL', 'FULL'), ('MOBILITY', 'MOBILITY'), ('OTHER', 'OTHER'), ('PARTIM', 'PARTIM'), ('THESIS', 'THESIS')], max_length=20, null=True),
+            name='activity_status',
+            field=models.CharField(blank=True,
+                                   choices=[('ACTIVE', 'ACTIVE'), ('PASSIVE', 'PASSIVE'), ('INACTIVE', 'INACTIVE')],
+                                   max_length=20, null=True),
         ),
-        migrations.AlterField(
-            model_name='learningunityear',
-            name='status',
-            field=models.BooleanField(default=False),
+        migrations.RemoveField(
+            model_name='learningcontainer',
+            name='title',
+        ),
+        migrations.AddField(
+            model_name='learningcontainer',
+            name='changed',
+            field=models.DateTimeField(null=True),
+        ),
+        migrations.AddField(
+            model_name='learningcontainer',
+            name='external_id',
+            field=models.CharField(blank=True, max_length=100, null=True),
+        ),
+        migrations.AddField(
+            model_name='learningcontaineryear',
+            name='changed',
+            field=models.DateTimeField(null=True),
+        ),
+        migrations.AddField(
+            model_name='learningcontaineryear',
+            name='external_id',
+            field=models.CharField(blank=True, max_length=100, null=True),
+        ),
+        migrations.AddField(
+            model_name='learningcontaineryear',
+            name='container_type',
+            field=models.CharField(blank=True, choices=[('COURSE', 'COURSE'), ('DISSERTATION', 'DISSERTATION'),
+                                                        ('INTERNSHIP', 'INTERNSHIP')], max_length=20, null=True),
         ),
     ]

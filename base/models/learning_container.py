@@ -26,20 +26,15 @@
 from django.db import models
 from django.contrib import admin
 
-from base.enums import learning_container_types
-
 
 class LearningContainerAdmin(admin.ModelAdmin):
-    list_display = ('container_type',)
-    fieldsets = ((None, {'fields': ('container_type',)}),)
+    list_display = ('external_id',)
+    fieldsets = ((None, {'fields': ('external_id',)}),)
 
 
 class LearningContainer(models.Model):
-    container_type = models.CharField(max_length=20, blank=True, null=True,
-                                      choices=learning_container_types.LEARNING_CONTAINER_TYPES)
-
-    def __str__(self):
-        return u"%s" % self.container_type
+    external_id = models.CharField(max_length=100, blank=True, null=True)
+    changed = models.DateTimeField(null=True)
 
 
 def find_by_id(learning_container_id):

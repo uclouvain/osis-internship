@@ -1505,3 +1505,18 @@ msgstr "Proposal"
 msgid "academic_calendar_offer_year_calendar_start_date_end_date_error"
 msgstr "The start's date of '%s' of the academic calendar can't be higher than %s "
        "(end date of '%s' of the program '%s')"
+
+msgid "learning_unit_code"
+msgstr "Learning unit code"
+
+msgid "partims"
+msgstr "Partims"
+
+msgid "learning_unit_type"
+msgstr "Learning unit type"
+
+msgid "learning_unit_subtype"
+msgstr "Learning unit subtype"
+
+msgid "periodicity"
+msgstr "Periodicity"

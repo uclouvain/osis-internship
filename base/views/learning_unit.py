@@ -60,50 +60,47 @@ def learning_units(request):
 @login_required
 @permission_required('base.can_access_learningunit', raise_exception=True)
 def learning_unit_identification(request, learning_unit_year_id):
-    learning_unit_year = mdl.learning_unit_year.find_by_id(learning_unit_year_id)
-    tab_active = 'identification'
-    return layout.render(request, "learning_unit/identification.html", locals())
+    context = _get_common_context_learning_unit_year(learning_unit_year_id)
+    learning_unit_year = context['learning_unit_year']
+    context['learning_container_year_partims'] = _get_formated_partims_related(learning_unit_year)
+
+    return layout.render(request, "learning_unit/identification.html", context)
 
 
 @login_required
 @permission_required('base.can_access_learningunit', raise_exception=True)
 def learning_unit_formations(request, learning_unit_year_id):
-    learning_unit_year = mdl.learning_unit_year.find_by_id(learning_unit_year_id)
-    tab_active = 'formations'
-    return layout.render(request, "learning_unit/formations.html", locals())
+    context = _get_common_context_learning_unit_year(learning_unit_year_id)
+    return layout.render(request, "learning_unit/formations.html", context)
 
 
 @login_required
 @permission_required('base.can_access_learningunit', raise_exception=True)
 def learning_unit_components(request, learning_unit_year_id):
-    learning_unit_year = mdl.learning_unit_year.find_by_id(learning_unit_year_id)
-    tab_active = 'components'
-    return layout.render(request, "learning_unit/components.html", locals())
+    context = _get_common_context_learning_unit_year(learning_unit_year_id)
+    return layout.render(request, "learning_unit/components.html", context)
 
 
 @login_required
 @permission_required('base.can_access_learningunit', raise_exception=True)
 def learning_unit_pedagogy(request, learning_unit_year_id):
-    learning_unit_year = mdl.learning_unit_year.find_by_id(learning_unit_year_id)
-    tab_active = 'pedagogy'
-    return layout.render(request, "learning_unit/pedagogy.html", locals())
+    context = _get_common_context_learning_unit_year(learning_unit_year_id)
+    return layout.render(request, "learning_unit/pedagogy.html", context)
 
 
 @login_required
 @permission_required('base.can_access_learningunit', raise_exception=True)
 def learning_unit_attributions(request, learning_unit_year_id):
-    learning_unit_year = mdl.learning_unit_year.find_by_id(learning_unit_year_id)
-    attributions = mdl_attr.attribution.search(learning_unit_year=learning_unit_year)
-    tab_active = 'attributions'
-    return layout.render(request, "learning_unit/attributions.html", locals())
+    context = _get_common_context_learning_unit_year(learning_unit_year_id)
+    context['attributions'] = mdl_attr.attribution.search(learning_unit_year=learning_unit_year_id)
+    return layout.render(request, "learning_unit/attributions.html", context)
 
 
 @login_required
 @permission_required('base.can_access_learningunit', raise_exception=True)
 def learning_unit_proposals(request, learning_unit_year_id):
-    learning_unit_year = mdl.learning_unit_year.find_by_id(learning_unit_year_id)
-    tab_active = 'proposals'
-    return layout.render(request, "learning_unit/proposals.html", locals())
+    context = _get_common_context_learning_unit_year(learning_unit_year_id)
+    return layout.render(request, "learning_unit/proposals.html", context)
 
 
 def _check_if_display_message(request, learning_units):
@@ -121,3 +118,19 @@ def _get_common_context_list_learning_unit_years():
         'academic_years': academic_years
     }
     return context
+
+
+def _get_common_context_learning_unit_year(learning_unit_year_id):
+    learning_unit_year = mdl.learning_unit_year.find_by_id(learning_unit_year_id)
+
+    context = {
+        'learning_unit_year': learning_unit_year
+    }
+    return context
+
+
+def _get_formated_partims_related(learning_unit_year):
+    learning_container_year = learning_unit_year.learning_container_year
+    all_partims_related = mdl.learning_container_year.find_all_partims(learning_container_year)
+    all_partims_related = {partim.subdivision for partim in all_partims_related}
+    return ", ".join(all_partims_related)

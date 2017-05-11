@@ -25,19 +25,19 @@
 ##############################################################################
 from django.utils.translation import ugettext_lazy as _
 
-DISSERTATION = "DISSERTATION"
+MASTER_DISSERTATION = "MASTER_DISSERTATION"
 FULL = "FULL"
 MOBILITY = "MOBILITY"
 OTHER = "OTHER"
 PARTIM = "PARTIM"
-THESIS = "THESIS"
+PHD_THESIS = "PHD_THESIS"
 
 LEARNING_UNIT_YEAR_SUBTYPES = (
-    (DISSERTATION, _(DISSERTATION)),
+    (MASTER_DISSERTATION, _(MASTER_DISSERTATION)),
     (FULL, _(FULL)),
     (MOBILITY, _(MOBILITY)),
     (OTHER, _(OTHER)),
     (PARTIM, _(PARTIM)),
-    (THESIS, _(THESIS))
+    (PHD_THESIS, _(PHD_THESIS))
 )
 

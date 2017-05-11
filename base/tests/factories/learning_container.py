@@ -28,7 +28,7 @@ import factory
 import factory.fuzzy
 from django.conf import settings
 from django.utils import timezone
-from base.enums import learning_container_types
+from base.enums import learning_container_year_types
 
 def _get_tzinfo():
     if settings.USE_TZ:
@@ -40,4 +40,4 @@ class LearningContainerFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = "base.LearningContainer"
 
-    container_type = factory.Iterator(learning_container_types.LEARNING_CONTAINER_TYPES, getter=operator.itemgetter(0))
+    container_type = factory.Iterator(learning_container_year_types.LEARNING_CONTAINER_YEAR_TYPES, getter=operator.itemgetter(0))
