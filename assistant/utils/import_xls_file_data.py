@@ -188,10 +188,10 @@ def create_assistant_mandate_if_not_exists(record, assistant):
     mandate.absences = record.get('ABSENCES')
     mandate.comment = record.get('COMMENT')
     mandate.other_status = record.get('OTHER_STATUS')
-    if record.get('ASSISTANT_TYPE_CODE') == 'ST':
-        mandate.assistant_type = assistant_type.ASSISTANT
-    elif record.get('ASSISTANT_TYPE_CODE') == 'AS':
+    if ASSISTANT_TYPES_ALIASES.get(record.get('ASSISTANT_TYPE_CODE')) == assistant_type.TEACHING_ASSISTANT:
         mandate.assistant_type = assistant_type.TEACHING_ASSISTANT
+    else:
+        mandate.assistant_type = assistant_type.ASSISTANT
     mandate.scale = record.get('SCALE')
     mandate.save()
     return mandate
