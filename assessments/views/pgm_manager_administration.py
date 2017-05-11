@@ -25,7 +25,6 @@
 ##############################################################################
 from django.contrib.auth.decorators import login_required, permission_required
 from base import models as mdl
-from reference import models as mdl_ref
 from base.views import layout
 from django.http import HttpResponse
 from rest_framework import serializers
@@ -33,7 +32,6 @@ from rest_framework.renderers import JSONRenderer
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 import json
-from django.utils import timezone
 
 ALL_OPTION_VALUE = "-"
 
@@ -276,13 +274,14 @@ class OfferYearSerializer(serializers.ModelSerializer):
 
 class PgmManager(object):
     # Needed to display the confirmation modal dialog while deleting
-    def __init__(self, person_id, person_last_name, person_first_name, programs, offer_year_acronyms_on=None, offer_year_acronyms_off=None
-                 ):
+    def __init__(self, person_id, person_last_name, person_first_name, programs, offer_year_acronyms_on=None,
+                 offer_year_acronyms_off=None):
         self.person_id = person_id
         self.person_last_name = person_last_name
         self.person_first_name = person_first_name
         self.offer_year_acronyms_on = offer_year_acronyms_on  # acronyms of the offers the pgm manager will keep
-        self.offer_year_acronyms_off = offer_year_acronyms_off  # acronyms of the offers the pgm manager will be removed from
+        self.offer_year_acronyms_off = offer_year_acronyms_off  # acronyms of the offers the pgm manager will be
+                                                                # removed from
         self.programs = programs
 
 
@@ -307,8 +306,6 @@ def update_managers_list(request):
 
 
 def build_program_manager_list(list_id_offers_on, program_manager_list, detail):
-    print('build_program_manager_list')
-    print(timezone.now())
     pgm_managers = []
     persons = []
     for a_program_manager in program_manager_list:
@@ -333,7 +330,6 @@ def build_program_manager_list(list_id_offers_on, program_manager_list, detail):
                                                    person_first_name=a_program_manager.person.first_name,
                                                    programs=pgms
                                                    ))
-    print(timezone.now())
     return pgm_managers
 
 
@@ -372,7 +368,9 @@ def build_acronyms_off_string(offers):
 
 def pgm_to_keep_managing(a_person, programs):
     current_academic_yr = mdl.academic_year.current_academic_year()
-    list_program_manager_to_keep = mdl.program_manager.find_by_person_exclude_offer_list(a_person, programs, current_academic_yr)
+    list_program_manager_to_keep = mdl.program_manager.find_by_person_exclude_offer_list(a_person,
+                                                                                         programs,
+                                                                                         current_academic_yr)
     # Concatenation of offers acronym to be used in the html page
     offer_acronym_concatenation = ""
     for program_manager_to_keep in list_program_manager_to_keep:
@@ -421,6 +419,7 @@ def get_filter_selected_person(request):
 def get_offer_types():
     return mdl.offer_type.find_all()
 
+
 @login_required
 def delete_manager_information(request):
     print('delete_manager_information')
@@ -433,6 +432,4 @@ def delete_manager_information(request):
     program_manager_list = mdl.program_manager.find_by_offer_year_list_person(a_person, offers_on)
     serializer = PgmManagerSerializer(build_program_manager_list(list_id_offers_on, program_manager_list, True),
                                       many=True)
-
-
     return JSONResponse(serializer.data)
