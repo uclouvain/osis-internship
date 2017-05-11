@@ -1113,6 +1113,9 @@ msgstr "Stages"
 msgid "start_date"
 msgstr "Date de début"
 
+msgid "state"
+msgstr "État"
+
 msgid "status"
 msgstr "Statut"
 
@@ -1513,6 +1516,9 @@ msgstr "Composants et classes"
 
 msgid "educational_information"
 msgstr "Infos pédagogiques"
+
+msgid "propositions"
+msgstr "Propositions"
 
 msgid "tutor_attributions"
 msgstr "Enseignants - attributions"
