@@ -57,7 +57,7 @@ msgid "person_search"
 msgstr "Recherche de personne"
 
 msgid "remove_manager_label"
-msgstr "Etes-vous sur de vouloir enlever le gestionnaire ci-dessous?"
+msgstr "Etes-vous sûr de vouloir enlever le gestionnaire ci-dessous"
 
 msgid "stay_manager_label"
 msgstr "Il conserve sa charge de gestionnaire sur les programmes suivants : "
