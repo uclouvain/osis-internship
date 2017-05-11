@@ -25,7 +25,7 @@
 ##############################################################################
 from django.db import models
 from django.core import serializers
-from reference.enums import domain_type
+from reference.models.enums import domain_type
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 
 
