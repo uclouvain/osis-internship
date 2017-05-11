@@ -187,21 +187,6 @@
         $("#hdn_offers_checked").val(ch); // to keep the possibility to check the offers checked while starting the
         // removal
     }
-    function delete_manager(personId, acronym_on, acronym_off, person_off_last_name ,person_off_first_name,pgm_ids){
-
-        $("#hdn_to_be_removed_person").val(personId);
-        $("#hdn_to_be_removed_pgms").val(pgm_ids);
-        save_selected_values()    ;
-        //--------------------------------------------------------------
-        // To display information on the effects of the removal.
-        //--------------------------------------------------------------
-        clean_on_off_pannels(); // initialize
-        set_off_pannel(person_off_last_name,person_off_first_name, acronym_off);// name of the pgm manager
-                                                                               // offers removed from
-        set_on_pannel(personId, acronym_on);// offers still managed
-        //--------------------------------------------------------------
-
-    }
 
     $("input[id^='chb_pgm_id_']").click(function(event) {
         var target = $(event.target);
@@ -334,10 +319,9 @@
                         }
                         trHTML += '</td>';
                         trHTML += '<td>';
-                        trHTML += '<button type="button" class="btn btn-default pull-right" data-toggle="modal" data-target="#pnl_remove_manager_modal" ';
+                        trHTML += '<button type="button" class="btn btn-default pull-right"  ';
                         trHTML += ' title="'+gettext('remove_manager')+'"';
                         trHTML += ' id="btn_remove_manager_modal_' + value.person_id + '" ';
-                        trHTML += ' onclick="delete_manager('+id_person+',\''+acronyms_on+'\',\''+acronyms_off+'\',\''+last_name+'\',\''+first_name+'\',\''+pgm_ids+'\');" ';
                         trHTML += '><span class="glyphicon glyphicon-minus" aria-hidden="true"></span>';
                         trHTML += '</button>';
                         trHTML += '</td>';
@@ -371,7 +355,7 @@
         $("#pnl_pgm_off").append("<span><br></span>");
     }
 
-    function set_on_pannel(managerId, acronym_on) {
+    function set_on_pannel(acronym_on) {
         if (acronym_on) {
             $("#pnl_pgm_on").append("<label>" + acronym_on + "</label>");
         }else{
@@ -436,6 +420,7 @@
     }
 
     function removal_submission(){
+        alert('removal_submission');
         $("#hdn_pgms_id").val(get_offer_id_list_on());
         //$('#form_remove_manager').submit();
         $.ajax({
@@ -449,6 +434,38 @@
                 .remove()
                 .end();
     }
+
+    $(function() {
+        $(document).on("click", "button[id^='btn_remove_manager_modal_']", function(e) {
+            var id = $(this).attr("id");
+            var person_id = id.substring(id.lastIndexOf("_") + 1);
+            var ch = get_offer_id_list_on();
+
+            $("#hdn_to_be_removed_person").val(person_id);
+            $("#hdn_to_be_removed_pgms").val(ch);
+            save_selected_values();
+
+            clean_on_off_pannels(); // initialize
+            $.ajax({
+                url: "/assessments/delete_manager_information?pgm_ids=" + ch + "&person_id=" + person_id
+
+            }).then(function (data) {
+
+                    $.each(data, function (key, value) {
+                        //--------------------------------------------------------------
+                        // To display information on the effects of the removal.
+                        //--------------------------------------------------------------
+                        set_off_pannel(value.person_last_name,value.person_first_name, value.offer_year_acronyms_off);// name of the pgm manager
+                        // offers removed from
+                        set_on_pannel(value.offer_year_acronyms_on);// offers still managed
+                        //--------------------------------------------------------------
+                        $('#pnl_remove_manager_modal').modal('show');
+                    });
+
+
+            });
+        });
+    });
 
 </script>
 {% endblock %}

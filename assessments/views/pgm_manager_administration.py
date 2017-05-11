@@ -33,6 +33,7 @@ from rest_framework.renderers import JSONRenderer
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 import json
+from django.utils import timezone
 
 ALL_OPTION_VALUE = "-"
 
@@ -275,8 +276,8 @@ class OfferYearSerializer(serializers.ModelSerializer):
 
 class PgmManager(object):
     # Needed to display the confirmation modal dialog while deleting
-    def __init__(self, person_id, person_last_name, person_first_name, offer_year_acronyms_on, offer_year_acronyms_off,
-                 programs):
+    def __init__(self, person_id, person_last_name, person_first_name, programs, offer_year_acronyms_on=None, offer_year_acronyms_off=None
+                 ):
         self.person_id = person_id
         self.person_last_name = person_last_name
         self.person_first_name = person_first_name
@@ -300,12 +301,14 @@ def update_managers_list(request):
     # Update the manager's list after add/delete
     list_id_offers_on = convert_to_list(request.GET['pgm_ids'])
     program_manager_list = mdl.program_manager.find_by_offer_year_list(list_id_offers_on)
-    serializer = PgmManagerSerializer(build_program_manager_list(list_id_offers_on, program_manager_list),
+    serializer = PgmManagerSerializer(build_program_manager_list(list_id_offers_on, program_manager_list, False),
                                       many=True)
     return JSONResponse(serializer.data)
 
 
-def build_program_manager_list(list_id_offers_on, program_manager_list):
+def build_program_manager_list(list_id_offers_on, program_manager_list, detail):
+    print('build_program_manager_list')
+    print(timezone.now())
     pgm_managers = []
     persons = []
     for a_program_manager in program_manager_list:
@@ -315,13 +318,22 @@ def build_program_manager_list(list_id_offers_on, program_manager_list):
             acronyms_off = build_acronyms_off_string(offers)
             if a_program_manager.person not in persons:
                 persons.append(a_program_manager.person)
-                pgm_managers.append(PgmManager(person_id=a_program_manager.person.id,
-                                               person_last_name=a_program_manager.person.last_name,
-                                               person_first_name=a_program_manager.person.first_name,
-                                               offer_year_acronyms_on=pgm_to_keep_managing(a_program_manager.person,
-                                                                                           offers),
-                                               offer_year_acronyms_off=acronyms_off,
-                                               programs=pgms))
+                if detail:
+                    pgm_managers.append(PgmManager(person_id=a_program_manager.person.id,
+                                                   person_last_name=a_program_manager.person.last_name,
+                                                   person_first_name=a_program_manager.person.first_name,
+                                                   programs=pgms,
+                                                   offer_year_acronyms_on=pgm_to_keep_managing(a_program_manager.person,
+                                                                                               offers),
+                                                   offer_year_acronyms_off=acronyms_off
+                                                   ))
+                else:
+                    pgm_managers.append(PgmManager(person_id=a_program_manager.person.id,
+                                                   person_last_name=a_program_manager.person.last_name,
+                                                   person_first_name=a_program_manager.person.first_name,
+                                                   programs=pgms
+                                                   ))
+    print(timezone.now())
     return pgm_managers
 
 
@@ -409,3 +421,18 @@ def get_filter_selected_person(request):
 def get_offer_types():
     return mdl.offer_type.find_all()
 
+@login_required
+def delete_manager_information(request):
+    print('delete_manager_information')
+    # Update the manager's list after add/delete
+    list_id_offers_on = convert_to_list(request.GET['pgm_ids'])
+    offers_on = mdl.offer_year.find_by_id_list(list_id_offers_on)
+    person_id = request.GET['person_id']
+    a_person = mdl.person.find_by_id(int(person_id))
+    print(a_person)
+    program_manager_list = mdl.program_manager.find_by_offer_year_list_person(a_person, offers_on)
+    serializer = PgmManagerSerializer(build_program_manager_list(list_id_offers_on, program_manager_list, True),
+                                      many=True)
+
+
+    return JSONResponse(serializer.data)
