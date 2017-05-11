@@ -75,7 +75,7 @@
                                    name="{{ my_message_form.selected.html_name }}"
                                    id="chk_selected_{{ my_message_form.id.value }}"/>
                         </td>
-                        <td><a href="{% url 'read_my_message' my_message_form.id.value %}"
+                        <td><a href="{% url 'read_my_message' message_id=my_message_form.id.value %}"
                                id="lnk_my_message_read_{{ my_message_form.id.value }}"
                                data-toggle="tooltip" data-placement="bottom"
                                title="{% trans 'tooltip_my_message_read' %}">{{ my_message_form.subject.value }}</a></td>

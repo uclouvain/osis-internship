@@ -41,7 +41,7 @@
 
 <div class="panel panel-default">
     <div class="panel-body">
-        <form method="post" action="{% if organization.id%} {% url 'organization_save' organization.id %} {%else%} {% url 'organization_save_new'%} {%endif%}">
+        <form method="post" action="{% if organization.id%} {% url 'organization_save' organization_id=organization.id %} {%else%} {% url 'organization_save_new'%} {%endif%}">
             {% csrf_token %}
             <div class="row">
                 <div class="col-md-3">
