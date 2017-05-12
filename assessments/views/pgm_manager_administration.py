@@ -46,7 +46,7 @@ def pgm_manager_administration(request):
         'manager_entity': entity_managed,
         'entity': entity_managed,
         'entities': get_managed_entities(entity_managed),
-        'offer_types': get_offer_types(current_academic_yr),
+        'offer_types': get_offer_types(),
         'managers': get_entity_program_managers(entity_managed, current_academic_yr)})
 
 
@@ -71,7 +71,7 @@ def pgm_manager_form(offers_on, error_messages, request, manager_person):
             'manager_entity': entity_managed,
             'entity': entity,
             'entities': get_managed_entities(entity_managed),
-            'offer_types': get_offer_types(current_academic_yr),
+            'offer_types': get_offer_types(),
             'pgms': get_programs(current_academic_yr,
                                  get_entity_list(entity, entity_managed),
                                  manager_person,
@@ -415,11 +415,8 @@ def get_filter_selected_person(request):
     return None
 
 
-def get_offer_types(academic_yr):
-    if academic_yr.year > 2014:
-        return mdl.offer_type.find_all_after_2014()
-    else:
-        return mdl.offer_type.find_all_before_2014()
+def get_offer_types():
+    return mdl.offer_type.find_all()
 
 
 @login_required

@@ -26,9 +26,6 @@
 from django.db import models
 from django.contrib import admin
 
-MASTER_MC = 'Master de spécialisation'
-MASTER_MC_BEFORE_2014 = 'Master complémentaire'
-
 
 class OfferTypeAdmin(admin.ModelAdmin):
     list_display = ('name', )
@@ -45,9 +42,5 @@ class OfferType(models.Model):
         return u"%s" % self.name
 
 
-def find_all_after_2014():
-    return OfferType.objects.exclude(name__icontains=MASTER_MC_BEFORE_2014).distinct('name').order_by('name')
-
-
-def find_all_before_2014():
-    return OfferType.objects.exclude(name__icontains=MASTER_MC).distinct('name').order_by('name')
+def find_all():
+    return OfferType.objects.distinct('name').order_by('name')

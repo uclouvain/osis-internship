@@ -33,18 +33,15 @@ from django.utils import timezone
 class OfferTypeTest(TestCase):
 
     def test_find_all_result_none(self):
-        self.assertEqual(len(offer_type.find_all_after_2014()), 0)
+        self.assertEqual(len(offer_type.find_all()), 0)
 
     def test_find_all_existing_results(self):
         an_offer_type_1 = offer_type.OfferType(name="Bachelier")
         an_offer_type_1.save()
         an_offer_type_2 = offer_type.OfferType(name="Doctorat")
         an_offer_type_2.save()
-        an_offer_type_3 = offer_type.OfferType(name=offer_type.MASTER_MC)
-        an_offer_type_3.save()
-        an_offer_type_4 = offer_type.OfferType(name=offer_type.MASTER_MC_BEFORE_2014)
-        an_offer_type_4.save()
-        self.assertEqual(len(offer_type.find_all_after_2014()), 3)
+
+        self.assertEqual(len(offer_type.find_all()), 2)
 
 
     def test_find_all_distinct_existing_results(self):
@@ -52,8 +49,5 @@ class OfferTypeTest(TestCase):
         an_offer_type_1.save()
         an_offer_type_2 = offer_type.OfferType(name="Bachelier")
         an_offer_type_2.save()
-        an_offer_type_3 = offer_type.OfferType(name=offer_type.MASTER_MC)
-        an_offer_type_3.save()
-        an_offer_type_4 = offer_type.OfferType(name=offer_type.MASTER_MC_BEFORE_2014)
-        an_offer_type_4.save()
-        self.assertEqual(len(offer_type.find_all_before_2014()), 2)
+
+        self.assertEqual(len(offer_type.find_all()), 1)
