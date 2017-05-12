@@ -52,7 +52,7 @@
                         </div>
                         <div class="col-md-3">
                             <label>{% trans 'learning_unit_type' %}</label><br>
-                            {% trans learning_unit_year.learning_container_year.type %}
+                            {% trans learning_unit_year.learning_container_year.container_type %}
                         </div>
                         <div class="col-md-3">
                             <label>{% trans 'learning_unit_subtype' %}</label><br>
@@ -61,12 +61,16 @@
                     </div>
                     <div class="row" style="margin-top:10px;">
                         <div class="col-md-3">
+                            <label>{% trans 'nominal_credits' %}</label><br>
+                            {{ learning_unit_year.credits }}
+                        </div>
+                        <div class="col-md-3">
                             <label>{% trans 'periodicity' %}</label><br>
                             {% trans learning_unit_year.learning_unit.periodicity %}
                         </div>
                          <div class="col-md-3">
                             <label>{% trans 'status' %}</label><br>
-                            {{ learning_unit_year.status }}
+                            {% trans learning_unit_year.activity_status %}
                         </div>
                     </div>
                 </div>

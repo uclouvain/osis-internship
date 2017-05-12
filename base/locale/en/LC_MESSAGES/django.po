@@ -1520,3 +1520,33 @@ msgstr "Learning unit subtype"
 
 msgid "periodicity"
 msgstr "Periodicity"
+
+msgid "nominal_credits"
+msgstr "Nominal credits"
+
+msgid "ACTIVE"
+msgstr "Active"
+
+msgid "PASSIVE"
+msgstr "Passive"
+
+msgid "INACTIVE"
+msgstr "Inactive"
+
+msgid "MASTER_DISSERTATION"
+msgstr "Master Dissertation"
+
+msgid "FULL"
+msgstr "Full"
+
+msgid "MOBILITY"
+msgstr "Mobility"
+
+msgid "OTHER"
+msgstr "Other"
+
+msgid "PARTIM"
+msgstr "Partim"
+
+msgid "PHD_THESIS"
+msgstr "PhD Thesis"

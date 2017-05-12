@@ -60,7 +60,9 @@ class LearningUnitYear(SerializableModel):
 
     @property
     def subdivision(self):
-        return self.learning_unit.acronym.replace(self.learning_container_year.acronym, "")
+        if self.acronym and self.learning_container_year:
+            return self.acronym.replace(self.learning_container_year.acronym, "")
+        return None
 
 
 def find_by_id(learning_unit_year_id):

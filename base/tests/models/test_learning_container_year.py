@@ -23,8 +23,11 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+import datetime
 from base.models import learning_container_year
-from base.tests.factories.learning_container import LearningContainerFactory
+from base.enums import learning_unit_year_subtypes
+from base.tests.factories.academic_year import AcademicYearFactory
+from base.tests.factories.learning_unit_year import LearningUnitYearFactory
 from base.tests.factories.learning_container_year import LearningContainerYearFactory
 from django.test import TestCase
 
@@ -36,3 +39,24 @@ class LearningContainerYearTest(TestCase):
     def test_find_by_id_with_wrong_value(self):
         with self.assertRaises(ValueError):
             learning_container_year.find_by_id("BAD VALUE")
+
+    def test_find_all_partims(self):
+        current_year = datetime.date.today().year
+        academic_year = AcademicYearFactory(year=current_year)
+        l_container_year = LearningContainerYearFactory(academic_year=academic_year)
+        l_container_year_2 = LearningContainerYearFactory(academic_year=academic_year)
+        # Create learning unit year attached to learning container year
+        LearningUnitYearFactory(academic_year=academic_year, learning_container_year=l_container_year,
+                                subtype=learning_unit_year_subtypes.FULL)
+        LearningUnitYearFactory(academic_year=academic_year, learning_container_year=l_container_year,
+                                subtype=learning_unit_year_subtypes.PARTIM)
+        LearningUnitYearFactory(academic_year=academic_year, learning_container_year=l_container_year,
+                                subtype=learning_unit_year_subtypes.PARTIM)
+        LearningUnitYearFactory(academic_year=academic_year, learning_container_year=l_container_year_2,
+                                subtype=learning_unit_year_subtypes.FULL)
+        LearningUnitYearFactory(academic_year=academic_year, learning_container_year=None)
+
+        all_partims_container_year_1 = learning_container_year.find_all_partims(l_container_year)
+        self.assertEqual(len(all_partims_container_year_1), 2)
+        all_partims_container_year_2 = learning_container_year.find_all_partims(l_container_year_2)
+        self.assertEqual(len(all_partims_container_year_2), 0)

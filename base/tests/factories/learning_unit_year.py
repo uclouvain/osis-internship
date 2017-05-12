@@ -34,7 +34,7 @@ from base.tests.factories.academic_year import AcademicYearFactory
 from base.tests.factories.academic_year import AcademicYearFakerFactory
 from base.tests.factories.learning_unit import LearningUnitFactory
 from base.tests.factories.learning_unit import LearningUnitFakerFactory
-from base.enums import learning_unit_year_subtypes
+from base.enums import learning_unit_year_subtypes, learning_unit_year_activity_status
 from factory.django import DjangoModelFactory
 from faker import Faker
 fake = Faker()
@@ -63,6 +63,7 @@ class LearningUnitYearFactory(DjangoModelFactory):
     team = False
     vacant = False
     in_charge = False
+    activity_status = learning_unit_year_activity_status.ACTIVE
 
 
 class LearningUnitYearFakerFactory(DjangoModelFactory):
@@ -82,3 +83,4 @@ class LearningUnitYearFakerFactory(DjangoModelFactory):
     team = False
     vacant = False
     in_charge = False
+    activity_status = learning_unit_year_activity_status.ACTIVE

@@ -1538,3 +1538,33 @@ msgstr "Sous-type d'UE"
 
 msgid "periodicity"
 msgstr "Périodicité"
+
+msgid "nominal_credits"
+msgstr "Credits nominaux"
+
+msgid "ACTIVE"
+msgstr "Actif"
+
+msgid "PASSIVE"
+msgstr "Passif"
+
+msgid "INACTIVE"
+msgstr "Inactif"
+
+msgid "MASTER_DISSERTATION"
+msgstr "Mémoire"
+
+msgid "FULL"
+msgstr "Complet"
+
+msgid "MOBILITY"
+msgstr "Mobilité"
+
+msgid "OTHER"
+msgstr "Autre"
+
+msgid "PARTIM"
+msgstr "Partim"
+
+msgid "PHD_THESIS"
+msgstr "Thèse"
