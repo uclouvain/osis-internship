@@ -133,5 +133,5 @@ def get_components(learning_unit_year):
     for learning_component_year in learning_component_years_list:
         print('for')
         learning_class_year_list = mdl.learning_class_year.find_by_learning_component_year(learning_component_year)
-        components.append({'learning_component_year': learning_component_year, 'classes': len(learning_class_year_list)})
+        components.append({'learning_component_year': learning_component_year, 'classes': learning_class_year_list})
     return components

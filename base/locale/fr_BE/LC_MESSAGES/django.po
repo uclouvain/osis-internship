@@ -1533,7 +1533,7 @@ msgstr "La date d'ouverture de '%s' du calendrier académique ne peut pas être 
 msgid "component_type"
 msgstr "Type de composant"
 
-msgid "nominal_quadrimester"
+msgid "nominal_quater"
 msgstr "Quadri. nominal "
 
 msgid "vol_q1"
@@ -1550,3 +1550,6 @@ msgstr "Conform. horaires"
 
 msgid "planned_classrooms"
 msgstr "Classes prévues"
+
+msgid "classes"
+msgstr "Classes"

@@ -1532,3 +1532,6 @@ msgstr "Sched. conform. "
 
 msgid "planned_classrooms"
 msgstr "Planned classrooms"
+
+msgid "classes"
+msgstr "Classes"
