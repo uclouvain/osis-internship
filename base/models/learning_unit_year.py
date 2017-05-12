@@ -25,7 +25,7 @@
 ##############################################################################
 from django.db import models
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
-from base.enums import learning_unit_year_subtypes, learning_unit_year_activity_status
+from base.models.enums import learning_unit_year_activity_status, learning_unit_year_subtypes
 
 
 class LearningUnitYearAdmin(SerializableModelAdmin):
@@ -45,7 +45,7 @@ class LearningUnitYear(SerializableModel):
     acronym = models.CharField(max_length=15, db_index=True)
     title = models.CharField(max_length=255)
     subtype = models.CharField(max_length=20, blank=True, null=True,
-                              choices=learning_unit_year_subtypes.LEARNING_UNIT_YEAR_SUBTYPES)
+                               choices=learning_unit_year_subtypes.LEARNING_UNIT_YEAR_SUBTYPES)
     credits = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
     decimal_scores = models.BooleanField(default=False)
     team = models.BooleanField(default=False)
@@ -54,6 +54,7 @@ class LearningUnitYear(SerializableModel):
     structure = models.ForeignKey('Structure', blank=True, null=True)
     activity_status = models.CharField(max_length=20, blank=True, null=True,
                                        choices=learning_unit_year_activity_status.LEARNING_UNIT_YEAR_ACTIVITY_STATUS)
+
 
     def __str__(self):
         return u"%s - %s" % (self.academic_year, self.acronym)
@@ -64,19 +65,17 @@ class LearningUnitYear(SerializableModel):
             return self.acronym.replace(self.learning_container_year.acronym, "")
         return None
 
-
 def find_by_id(learning_unit_year_id):
     return LearningUnitYear.objects.get(pk=learning_unit_year_id)
 
 
 def find_by_acronym(acronym):
     return LearningUnitYear.objects.filter(acronym=acronym)\
-                                   .select_related('learning_unit')
+                                   .select_related('learning_container_year')
 
 
 def search(academic_year_id=None, acronym=None, learning_container_year_id=None, learning_unit=None,
            title=None, subtype=None, activity_status=None):
-
     queryset = LearningUnitYear.objects
 
     if academic_year_id:
@@ -100,4 +99,4 @@ def search(academic_year_id=None, acronym=None, learning_container_year_id=None,
     if activity_status:
         queryset = queryset.filter(activity_status=activity_status)
 
-    return queryset.select_related('learning_unit')
+    return queryset.select_related('learning_container_year')

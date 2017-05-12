@@ -30,7 +30,7 @@ import string
 import operator
 from django.conf import settings
 from django.utils import timezone
-from reference.enums import grade_type_coverage, institutional_grade_type as enum_institutional_grade_type
+from reference.models.enums import grade_type_coverage, institutional_grade_type as enum_institutional_grade_type
 
 
 def _get_tzinfo():

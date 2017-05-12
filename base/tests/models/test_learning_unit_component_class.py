@@ -35,7 +35,6 @@ from base.models.learning_unit_component import LearningUnitComponent
 from base.models.learning_class_year import LearningClassYear
 from base.models.learning_class import LearningClass
 from base.models.academic_year import AcademicYear
-from base.enums import learning_container_year_types
 
 now = timezone.now()
 
@@ -70,7 +69,6 @@ class LearningComponentYearTest(TestCase):
                                                         learning_component=learning_component,
                                                         title="Cours magistral",
                                                         acronym="/C",
-                                                        type=learning_container_year_types.COURSE,
                                                         comment="TEST")
         #Classe annualisée est associée à son composant et à son conteneur annualisé
         learning_class_year = LearningClassYear(learning_component_year=learning_component_year,

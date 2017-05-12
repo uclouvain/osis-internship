@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -32,9 +32,9 @@ from django.forms.models import inlineformset_factory
 from django.core.exceptions import ValidationError
 from django.forms import widgets
 from assistant.enums import reviewer_role
-from assistant.models.enums import review_advice_choices, review_status, assistant_type, assistant_mandate_renewal
+from assistant.models.enums import review_advice_choices, assistant_type, assistant_mandate_renewal
 from assistant.models.enums import assistant_phd_inscription
-from base.enums import structure_type
+from base.models.enums import structure_type
 
 
 class MandateFileForm(forms.Form):

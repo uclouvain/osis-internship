@@ -1,12 +1,12 @@
 ##############################################################################
 #
-# OSIS stands for Open Student Information System. It's an application
+#    OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -23,20 +23,23 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+import datetime
 import operator
+import string
+
 import factory
 import factory.fuzzy
-import string
-import datetime
 from django.conf import settings
 from django.utils import timezone
+from factory.django import DjangoModelFactory
+from faker import Faker
+
+from base.models.enums import learning_unit_year_activity_status, learning_unit_year_subtypes
 from base.tests.factories.academic_year import AcademicYearFactory
 from base.tests.factories.academic_year import AcademicYearFakerFactory
 from base.tests.factories.learning_unit import LearningUnitFactory
 from base.tests.factories.learning_unit import LearningUnitFakerFactory
-from base.enums import learning_unit_year_subtypes, learning_unit_year_activity_status
-from factory.django import DjangoModelFactory
-from faker import Faker
+
 fake = Faker()
 
 def _get_tzinfo():

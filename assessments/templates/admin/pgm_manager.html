@@ -129,6 +129,11 @@
                            {% endif %}
                        </div>
                        <div class="col-md-6" id="pnl_managers">
+                           {% if pgms|length > 0 %}
+                           <div id="wait" >
+                               <img src="{% static 'img/loading.gif' %}" alt="Loading..." />
+                           </div>
+                           {% endif%}
                            {% if managers|length == 0 and init == "0" %}
                             <label class="alert alert-info" style="margin:5px">{% trans 'no_result' %}</label>
                            {% endif %}
@@ -259,6 +264,7 @@
     });
 
     $(document).ready(function() {
+        $('#wait').hide();
         data_table_init();
 
         update_manager_list();
@@ -290,7 +296,14 @@
 
         if (ch != "") {
             $.ajax({
+                beforeSend: function(){
+                    $('#wait').show();
+                },
+                complete: function(){
+                    $('#wait').hide();
+                },
                 url: "/assessments/update_managers_list?pgm_ids=" + ch
+
             }).then(function (data) {
                 if (data.length > 0) {
                     var trHTML = '';
@@ -328,21 +341,19 @@
     }
 
     function clean_on_off_pannels(){
-        $("#pnl_pgm_on").find("label")
-                .remove()
-                .end();
+        $("#pnl_pgm_on").find("label").remove().end();
 
-        $("#pnl_pgm_off").find("label")
-                .remove()
-                .end();
+        $("#pnl_pgm_off").find("label").remove().end();
+
+        $("#pnl_pgm_off").find("span").remove().end();
     }
 
     function set_off_pannel(person_off, person_off_first_name, acronym_off){
-        $("#pnl_pgm_off").append("<label>"+person_off+" "+ person_off_first_name +"</label>");
-        $("#pnl_pgm_off").append("<br>");
-        $("#pnl_pgm_off").append(gettext('of_pgm'));
-        $("#pnl_pgm_off").append("<label>"+acronym_off+"</label>");
-        $("#pnl_pgm_off").append("<br>");
+        $("#pnl_pgm_off").append("<label>"+ person_off +" "+ person_off_first_name +"</label>");
+        $("#pnl_pgm_off").append("<span><br></span>");
+        $("#pnl_pgm_off").append("<span>"+ gettext('of_pgm') +"</span>");
+        $("#pnl_pgm_off").append("<label>"+ acronym_off +"</label>");
+        $("#pnl_pgm_off").append("<span><br></span>");
     }
 
     function set_on_pannel(managerId, acronym_on) {

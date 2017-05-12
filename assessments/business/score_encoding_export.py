@@ -31,7 +31,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 
 from base import models as mdl
-from base.enums import exam_enrollment_justification_type
+from base.models.enums import exam_enrollment_justification_type
 
 HEADER = [str(_('academic_year')),
           str(_('sessionn')),

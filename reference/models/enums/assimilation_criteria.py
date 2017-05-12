@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -23,8 +23,23 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-BASE = 'BASE'
-DISSERTATION = 'DISSERTATION'
 
-CHOICES = ((BASE, BASE),
-           (DISSERTATION, DISSERTATION))
+from django.utils.translation import ugettext_lazy as _
+
+CRITERIA_1 = "CRITERIA_1"
+CRITERIA_2 = "CRITERIA_2"
+CRITERIA_3 = "CRITERIA_3"
+CRITERIA_4 = "CRITERIA_4"
+CRITERIA_5 = "CRITERIA_5"
+CRITERIA_6 = "CRITERIA_6"
+CRITERIA_7 = "CRITERIA_7"
+
+ASSIMILATION_CRITERIA_CHOICES = (
+    (CRITERIA_1, _(CRITERIA_1)),
+    (CRITERIA_2, _(CRITERIA_2)),
+    (CRITERIA_3, _(CRITERIA_3)),
+    (CRITERIA_4, _(CRITERIA_4)),
+    (CRITERIA_5, _(CRITERIA_5)),
+    (CRITERIA_6, _(CRITERIA_6)),
+    (CRITERIA_7, _(CRITERIA_7)),
+)
