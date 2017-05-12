@@ -621,7 +621,7 @@ msgid "learning_units_without_inscription_must_not_be_shown"
 msgstr "Les cours qui ne possèdent pas d'inscriptions ne devraient pas être présents"
 
 msgid "link_to_RGEE"
-msgstr "https://www.uclouvain.be/enseignement-reglements.html"
+msgstr "https://uclouvain.be/fr/decouvrir/rgee.html"
 
 msgid "lnk_message_history_read_title"
 msgstr "Afficher le message"
