@@ -256,7 +256,7 @@ class AssistantFormPart5(ModelForm):
 
 
 class ReviewForm(ModelForm):
-    justification = forms.CharField(help_text=_("justification_required_if_conditional"),
+    justification = forms.CharField(help_text=_("justification_required_if_conditional_or_negative"),
                                     required=False, widget=forms.Textarea(attrs={'cols': '80', 'rows': '5'}))
     remark = forms.CharField(required=False, widget=forms.Textarea(attrs={'cols': '80', 'rows': '5'}))
     confidential = forms.CharField(help_text=_("information_not_provided_to_assistant"),
@@ -275,8 +275,8 @@ class ReviewForm(ModelForm):
         super(ReviewForm, self).clean()
         advice = self.cleaned_data.get("advice")
         justification = self.cleaned_data.get('justification')
-        if advice == review_advice_choices.CONDITIONAL and not justification:
-            msg = _("justification_required_if_conditional")
+        if advice != review_advice_choices.FAVORABLE and not justification:
+            msg = _("justification_required_if_conditional_or_negative")
             self.add_error('justification', msg)
 
 
