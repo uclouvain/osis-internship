@@ -1494,7 +1494,7 @@ msgid "trainings"
 msgstr "Trainings"
 
 msgid "components"
-msgstr "Component and classes"
+msgstr "Components"
 
 msgid "educational_information"
 msgstr "Educational information"

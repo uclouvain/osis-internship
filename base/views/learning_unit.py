@@ -77,7 +77,7 @@ def learning_unit_formations(request, learning_unit_year_id):
 @permission_required('base.can_access_learningunit', raise_exception=True)
 def learning_unit_components(request, learning_unit_year_id):
     learning_unit_year = mdl.learning_unit_year.find_by_id(learning_unit_year_id)
-    components = get_components(learning_unit_year)# components = [{'id':1, 'name': 'name 1'},{'id':2, 'name': 'name 2'}]
+    components = get_components(learning_unit_year.learning_container_year)  # components = [{'id':1, 'name': 'name 1'},{'id':2, 'name': 'name 2'}]
     tab_active = 'components'
     return layout.render(request, "learning_unit/components.html", locals())
 
@@ -107,8 +107,8 @@ def learning_unit_proposals(request, learning_unit_year_id):
     return layout.render(request, "learning_unit/proposals.html", locals())
 
 
-def _check_if_display_message(request, learning_units):
-    if not learning_units:
+def _check_if_display_message(request, learning_unit_list):
+    if not learning_unit_list:
         messages.add_message(request, messages.WARNING, _('no_result'))
 
 
@@ -124,14 +124,11 @@ def _get_common_context_list_learning_unit_years():
     return context
 
 
-def get_components(learning_unit_year):
-    print('get_components')
-    print(learning_unit_year.learning_container_year.id)
-    learning_component_years_list = mdl.learning_component_year.find_by_learning_container_year(learning_unit_year.learning_container_year)
-    print(learning_component_years_list)
+def get_components(a_learning_container_yr):
+    learning_component_year_list = mdl.learning_component_year.find_by_learning_container_year(a_learning_container_yr)
     components = []
-    for learning_component_year in learning_component_years_list:
-        print('for')
+    for learning_component_year in learning_component_year_list:
         learning_class_year_list = mdl.learning_class_year.find_by_learning_component_year(learning_component_year)
-        components.append({'learning_component_year': learning_component_year, 'classes': learning_class_year_list})
+        components.append({'learning_component_year': learning_component_year,
+                           'classes': learning_class_year_list})
     return components

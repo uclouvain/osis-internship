@@ -1512,7 +1512,7 @@ msgid "trainings"
 msgstr "Formations"
 
 msgid "components"
-msgstr "Composants et classes"
+msgstr "Composants"
 
 msgid "educational_information"
 msgstr "Infos pédagogiques"
