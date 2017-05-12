@@ -1,6 +1,6 @@
 ##############################################################################
 #
-#    OSIS stands for Open Student Information System. It's an application
+# OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
@@ -24,20 +24,26 @@
 #
 ##############################################################################
 import factory
+from django.conf import settings
+from django.utils import timezone
+from base.models import organization
 
 
-class UserFactory(factory.DjangoModelFactory):
+def _get_tzinfo():
+    if settings.USE_TZ:
+        return timezone.get_current_timezone()
+    else:
+        return None
+
+
+class OrganizationFactory(factory.DjangoModelFactory):
     class Meta:
-        model = 'auth.User'
+        model = 'base.Organization'
 
-    username = factory.Sequence(lambda n: 'username_{0}'.format(n))
-
-
-class SuperUserFactory(factory.DjangoModelFactory):
-    class Meta:
-        model = 'auth.User'
-
-    username = factory.Sequence(lambda n: 'username_{0}'.format(n))
-    is_superuser = True
-    is_staff = True
-    is_active = True
+    external_id = factory.Faker('text', max_nb_chars=100)
+    changed = factory.Faker('date_time_this_month', tzinfo=_get_tzinfo())
+    name = factory.Faker('text', max_nb_chars=255)
+    acronym = factory.Faker('text', max_nb_chars=15)
+    website = factory.Faker('url')
+    reference = factory.Faker('text', max_nb_chars=30)
+    type = factory.Iterator(organization.ORGANIZATION_TYPE, getter=lambda c: c[0])

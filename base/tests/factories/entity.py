@@ -1,6 +1,6 @@
 ##############################################################################
 #
-#    OSIS stands for Open Student Information System. It's an application
+# OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
@@ -24,20 +24,11 @@
 #
 ##############################################################################
 import factory
+from base.tests.factories.organization import OrganizationFactory
 
 
-class UserFactory(factory.DjangoModelFactory):
+class EntityFactory(factory.DjangoModelFactory):
     class Meta:
-        model = 'auth.User'
+        model = 'base.Entity'
 
-    username = factory.Sequence(lambda n: 'username_{0}'.format(n))
-
-
-class SuperUserFactory(factory.DjangoModelFactory):
-    class Meta:
-        model = 'auth.User'
-
-    username = factory.Sequence(lambda n: 'username_{0}'.format(n))
-    is_superuser = True
-    is_staff = True
-    is_active = True
+    organization = factory.SubFactory(OrganizationFactory)

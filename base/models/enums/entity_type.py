@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -23,21 +23,25 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import factory
+SECTOR = "SECTOR"
+FACULTY = "FACULTY"
+SCHOOL = "SCHOOL"
+INSTITUTE = "INSTITUTE"
+POLE = "POLE"
+DOCTORAL_COMMISSION = "DOCTORAL_COMMISSION"
+PLATFORM = "PLATFORM"
+LOGISTICS_ENTITY = "LOGISTICS_ENTITY"
+UNDEFINED = "UNDEFINED"
 
 
-class UserFactory(factory.DjangoModelFactory):
-    class Meta:
-        model = 'auth.User'
-
-    username = factory.Sequence(lambda n: 'username_{0}'.format(n))
-
-
-class SuperUserFactory(factory.DjangoModelFactory):
-    class Meta:
-        model = 'auth.User'
-
-    username = factory.Sequence(lambda n: 'username_{0}'.format(n))
-    is_superuser = True
-    is_staff = True
-    is_active = True
+ENTITY_TYPES = (
+    (SECTOR, SECTOR),
+    (FACULTY, FACULTY),
+    (SCHOOL, SCHOOL),
+    (INSTITUTE, INSTITUTE),
+    (POLE, POLE),
+    (DOCTORAL_COMMISSION, DOCTORAL_COMMISSION),
+    (PLATFORM, PLATFORM),
+    (LOGISTICS_ENTITY, LOGISTICS_ENTITY),
+    (UNDEFINED, UNDEFINED),
+)
