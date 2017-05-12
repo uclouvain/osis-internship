@@ -125,10 +125,12 @@ def _get_common_context_list_learning_unit_years():
 
 
 def get_components(a_learning_container_yr):
-    learning_component_year_list = mdl.learning_component_year.find_by_learning_container_year(a_learning_container_yr)
     components = []
-    for learning_component_year in learning_component_year_list:
-        learning_class_year_list = mdl.learning_class_year.find_by_learning_component_year(learning_component_year)
-        components.append({'learning_component_year': learning_component_year,
-                           'classes': learning_class_year_list})
+    if a_learning_container_yr:
+        learning_component_year_list = mdl.learning_component_year.find_by_learning_container_year(a_learning_container_yr)
+
+        for learning_component_year in learning_component_year_list:
+            learning_class_year_list = mdl.learning_class_year.find_by_learning_component_year(learning_component_year)
+            components.append({'learning_component_year': learning_component_year,
+                               'classes': learning_class_year_list})
     return components
