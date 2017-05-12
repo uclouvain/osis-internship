@@ -50,9 +50,13 @@
                     {% for professor in professors %}
                         <tr>
                             <th class="text-center">{{ professor.tutor }}</th>
-                            <th class="text-center">{{ professor.function }}</th>
                             <th class="text-center">
-                            <a class="btn btn-primary" href="{% url 'scores_responsible_delete' pk=professor.pk %}">
+                                {% with st=professor.function %}
+                                    {{ professor.get_function_display }}
+                                {% endwith %}
+                            </th>
+                            <th class="text-center">
+                            <a class="btn btn-warning" href="{% url 'scores_responsible_delete' pk=professor.pk %}">
                                 <span class="glyphicon glyphicon-minus"></span></a>
                             </th>
                         </tr>
