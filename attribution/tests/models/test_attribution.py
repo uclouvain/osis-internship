@@ -53,7 +53,7 @@ class AttributionTest(TestCase):
 
         responsible = attribution.find_responsible(learning_unit_year)
 
-        self.assertEqual(responsible.person.first_name, first_coordinator.person.first_name)
+        self.assertEqual(responsible[0].person.first_name, first_coordinator.person.first_name)
 
     def test_find_responsible_without_attribution(self):
         academic_year = test_academic_year.create_academic_year()
