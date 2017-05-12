@@ -25,7 +25,7 @@
 ##############################################################################
 from django.db import models
 from django.contrib import admin
-from base.enums import structure_type
+from base.models.enums import structure_type
 
 
 class StructureAdmin(admin.ModelAdmin):

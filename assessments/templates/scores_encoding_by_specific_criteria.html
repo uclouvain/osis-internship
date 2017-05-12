@@ -59,7 +59,7 @@
                     <input type="text" class="form-control" id="txt_first_name" name="first_name" placeholder="{% trans 'firstname' %}" value="{{first_name | default_if_none:''}}">
                 </div>
                 <div class="col-md-3">
-                    <label>{% trans 'justification' %}</label>
+                    <label>{% trans 'state' %}</label>
                     <select class="form-control" name="justification" id="slt_justification">
                         <option value="">{% trans 'all' %}</option>
                         <option {% if justification == "ABSENCE_UNJUSTIFIED" %} selected {% endif %} value="ABSENCE_UNJUSTIFIED">{% trans 'ABSENCE_UNJUSTIFIED' %}</option>
@@ -255,7 +255,7 @@
     }
 
     var target_score = '#form_justification tbody tr td input';
-    $(target_score).on('keypress',
+    $(target_score).on('keydown',
                        { "target": target_score,
                          "table_size": $('#form_justification tbody tr').length,
                          "index_increment_value": 2},
@@ -263,7 +263,7 @@
 
 
     var target_justification = '#form_justification tbody tr td select';
-    $(target_justification).on('keypress',
+    $(target_justification).on('keydown',
                                { "target": target_justification,
                                  "table_size": $('#form_justification tbody tr').length * 2,
                                  "index_increment_value": 1},

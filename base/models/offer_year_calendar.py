@@ -28,6 +28,7 @@ from django.db import models
 from django.utils import timezone
 from django.contrib import admin
 from base.models import offer_year
+from base.models.enums import academic_calendar_type
 from django.utils.translation import ugettext as _
 
 
@@ -108,12 +109,16 @@ class OfferYearCalendar(models.Model):
 
 def save_from_academic_calendar(academic_calendar):
     _raise_if_parameter_not_conform(academic_calendar)
-    offer_year_calendars = find_by_academic_calendar(academic_calendar)
-    if offer_year_calendars:
-        for offer_year_calendar in offer_year_calendars:
-            offer_year_calendar.update_dates(academic_calendar.start_date, academic_calendar.end_date)
-    else:
-        _create_from_academic_calendar(academic_calendar)
+    if academic_calendar.reference in (academic_calendar_type.DELIBERATION,
+                                       academic_calendar_type.EXAM_ENROLLMENTS,
+                                       academic_calendar_type.SCORES_EXAM_DIFFUSION,
+                                       academic_calendar_type.SCORES_EXAM_SUBMISSION):
+        offer_year_calendars = find_by_academic_calendar(academic_calendar)
+        if offer_year_calendars:
+            for offer_year_calendar in offer_year_calendars:
+                offer_year_calendar.update_dates(academic_calendar.start_date, academic_calendar.end_date)
+        else:
+            _create_from_academic_calendar(academic_calendar)
 
 
 def _raise_if_parameter_not_conform(academic_calendar):

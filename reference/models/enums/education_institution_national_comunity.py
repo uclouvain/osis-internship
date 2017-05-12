@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -24,20 +24,12 @@
 #
 ##############################################################################
 
-from django.utils.translation import ugettext_lazy as _
+FRENCH = "FRENCH"
+GERMAN = "GERMAN"
+DUTCH = "DUTCH"
 
-
-ABSENCE_UNJUSTIFIED = "ABSENCE_UNJUSTIFIED"
-ABSENCE_JUSTIFIED = "ABSENCE_JUSTIFIED"
-CHEATING = "CHEATING"
-SCORE_MISSING = "SCORE_MISSING"
-
-# When the user inform 'A', we have to convert it to 'ABSENCE_UNJUSTIFIED'
-# When exporting the data to EPC, we have to convert:
-#    'ABSENCE_UNJUSTIFIED' => 'S'
-#    'ABSENCE_JUSTIFIED'   => 'M'
-#    'CHEATING'            => 'T'
-JUSTIFICATION_TYPES = (
-    (ABSENCE_UNJUSTIFIED, _('ABSENCE_UNJUSTIFIED')),  # A -> S
-    (ABSENCE_JUSTIFIED, _('ABSENCE_JUSTIFIED')),      # M
-    (CHEATING, _('CHEATING')))                        # T
+NATIONAL_COMMUNITY_TYPES = (
+    (FRENCH, FRENCH),
+    (GERMAN, GERMAN),
+    (DUTCH, DUTCH),
+)

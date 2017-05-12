@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -26,12 +26,30 @@
 
 from django.utils.translation import ugettext_lazy as _
 
-NONE = "NONE"
-VALID = "VALID"
-INVALID = "INVALID"
+BACHELOR = "BACHELOR"
+MASTER_60 = "MASTER_60"
+MASTER_120 = "MASTER_120"
+MASTER_180_OR_240 = "MASTER_180_OR_240"
+ADVANCED_MASTER = "ADVANCED_MASTER"
+TRAINING_CERTIFICATE = "TRAINING_CERTIFICATE"
+CERTIFICATE = "CERTIFICATE"
+DOCTORATE = "DOCTORATE"
+CAPAES = "CAPAES"
 
-LEARNING_UNIT_YEAR_STATUS = (
-    (NONE, _(NONE)),
-    (VALID, _(VALID)),
-    (INVALID, _(INVALID))
-)
+INSTITUTIONAL_GRADE_CHOICES = (
+    ('BACHELOR', BACHELOR),
+    ('MASTER_60', MASTER_60),
+    ('MASTER_120', MASTER_120),
+    ('MASTER_180_OR_240', MASTER_180_OR_240),
+    ('ADVANCED_MASTER', ADVANCED_MASTER),
+    ('TRAINING_CERTIFICATE', TRAINING_CERTIFICATE),
+    ('CERTIFICATE', CERTIFICATE),
+    ('DOCTORATE', DOCTORATE),
+    ('CAPAES',CAPAES))
+
+
+def translate_by_key(key_to_trans):
+    for key, value in INSTITUTIONAL_GRADE_CHOICES:
+        if key_to_trans == key:
+            return _(value)
+    return None

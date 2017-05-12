@@ -18,8 +18,12 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 
-msgid "of_pgm"
+msgid "of_pgms"
 msgstr "des programmes suivants : "
 
 msgid "remove_manager"
 msgstr "Supprimer le gestionnaire"
+
+
+msgid "of_pgm"
+msgstr "du programme suivant : "

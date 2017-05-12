@@ -13,15 +13,16 @@
                 <div class="row">
                     <form method="post">
                         <div class="col-md-4">
-                            <label for="txt_name" >{% trans 'name'%}</label>
-                            <input type="text" id="txt_name" name="name" class="form-control" value="{{ lastname }}" >
+                            <label for="txt_name_manager_search" >{% trans 'name'%}</label>
+                            <input type="text" id="txt_name_manager_search" name="name" class="form-control" value="{{ lastname }}" >
                         </div>
                         <div class="col-md-4">
-                            <label for="txt_first_name" >{% trans 'first_name'%}</label>
-                            <input type="text" id="txt_first_name" name="firstname" class="form-control" value="{{ firstname }}" >
+                            <label for="txt_first_name_manager_search" >{% trans 'first_name'%}</label>
+                            <input type="text" id="txt_first_name_manager_search" name="firstname" class="form-control" value="{{ firstname }}" >
                         </div>
                         <div class="col-md-4">
-                            <button type="button" id="bt_submit_person_search" class="btn btn-primary pull-right" role="button">
+                            <br>
+                            <button type="button" id="bt_submit_person_search" class="btn btn-primary" role="button">
                                 <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
                             </button>
                         </div>

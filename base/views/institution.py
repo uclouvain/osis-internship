@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -24,11 +24,10 @@
 #
 ##############################################################################
 import json
-from django.core import serializers
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required, permission_required
 from base import models as mdl
-from base.enums import structure_type
+from base.models.enums import structure_type
 from . import layout
 
 
@@ -72,8 +71,8 @@ def structure_read(request, structure_id):
 
 
 @login_required
-def structure_diagram(request, parent_id):
-    structure = mdl.structure.find_by_id(parent_id)
+def structure_diagram(request, structure_id):
+    structure = mdl.structure.find_by_id(structure_id)
     return layout.render(request, "structure_organogram.html", {'structure': structure,
                                                                 'structure_as_json': json.dumps(structure.serializable_object())})
 

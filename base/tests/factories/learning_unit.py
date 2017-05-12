@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# OSIS stands for Open Student Information System. It's an application
+#    OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
@@ -28,7 +28,7 @@ import factory.fuzzy
 import string
 import datetime
 import operator
-from base.enums import learning_unit_periodicity
+from base.models.enums import learning_unit_periodicity
 from base.tests.factories.learning_container import LearningContainerFactory
 from django.conf import settings
 from django.utils import timezone

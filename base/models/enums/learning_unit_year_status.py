@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -23,24 +23,15 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-SECTOR = 'SECTOR'
-FACULTY = 'FACULTY'
-INSTITUTE = 'INSTITUTE'
-POLE = 'POLE'
-DOCTORAL_COMMISSION = 'DOCTORAL_COMMISSION'
-PROGRAM_COMMISSION = 'PROGRAM_COMMISSION'
-LOGISTIC = 'LOGISTIC'
-RESEARCH_CENTER = 'RESEARCH_CENTER'
-TECHNOLOGIC_PLATFORM = 'TECHNOLOGIC_PLATFORM'
-UNDEFINED = 'UNDEFINED'
 
-TYPES = ((SECTOR, SECTOR),
-         (FACULTY, FACULTY),
-         (INSTITUTE, INSTITUTE),
-         (POLE, POLE),
-         (DOCTORAL_COMMISSION, DOCTORAL_COMMISSION),
-         (PROGRAM_COMMISSION, PROGRAM_COMMISSION),
-         (LOGISTIC, LOGISTIC),
-         (RESEARCH_CENTER, RESEARCH_CENTER),
-         (TECHNOLOGIC_PLATFORM, TECHNOLOGIC_PLATFORM),
-         (UNDEFINED, UNDEFINED))
+from django.utils.translation import ugettext_lazy as _
+
+NONE = "NONE"
+VALID = "VALID"
+INVALID = "INVALID"
+
+LEARNING_UNIT_YEAR_STATUS = (
+    (NONE, _(NONE)),
+    (VALID, _(VALID)),
+    (INVALID, _(INVALID))
+)
