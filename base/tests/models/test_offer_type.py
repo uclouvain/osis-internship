@@ -56,4 +56,4 @@ class OfferTypeTest(TestCase):
         an_offer_type_3.save()
         an_offer_type_4 = offer_type.OfferType(name=offer_type.MASTER_MC_BEFORE_2014)
         an_offer_type_4.save()
-        self.assertEqual(len(offer_type.find_all_before_2014()), 3)
+        self.assertEqual(len(offer_type.find_all_before_2014()), 2)
