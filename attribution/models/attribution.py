@@ -23,9 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import operator
 from itertools import chain
-
 from django.db import models
 from attribution.models.enums import function
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
@@ -110,7 +108,8 @@ def find_tutor_number(attribution):
 def search_scores_responsible(learning_unit_title, course_code, entity, professor, scores_responsible):
     queryset = Attribution.objects
     if learning_unit_title:
-        queryset = queryset.filter(learning_unit_year__title__icontains=learning_unit_title).distinct("learning_unit_year")
+        queryset = queryset.filter(learning_unit_year__title__icontains=learning_unit_title)\
+            .distinct("learning_unit_year")
     if course_code:
         queryset = queryset.filter(learning_unit_year__acronym__icontains=course_code).distinct("learning_unit_year")
     if entity:
@@ -120,7 +119,8 @@ def search_scores_responsible(learning_unit_title, course_code, entity, professo
     if professor:
         queryset = queryset.filter(tutor__id=professor).distinct("learning_unit_year")
     if scores_responsible:
-        queryset = queryset.filter(tutor__id=scores_responsible).filter(score_responsible=True).distinct("learning_unit_year")
+        queryset = queryset.filter(tutor__id=scores_responsible).filter(score_responsible=True)\
+            .distinct("learning_unit_year")
     return queryset
 
 
@@ -131,7 +131,8 @@ def find_attribution_distinct(structure):
 
 
 def find_all_children(attribution):
-    attributions_list = Attribution.objects.filter(learning_unit_year__structure__part_of=attribution.learning_unit_year.structure)\
+    attributions_list = Attribution.objects\
+        .filter(learning_unit_year__structure__part_of=attribution.learning_unit_year.structure)\
         .distinct("learning_unit_year__structure__acronym")
     for attribution in attributions_list:
         if attribution.learning_unit_year.structure.part_of:
@@ -140,7 +141,8 @@ def find_all_children(attribution):
 
 
 def find_all_responsible_children(attribution):
-    attributions_list = Attribution.objects.filter(learning_unit_year__structure__part_of=attribution.learning_unit_year.structure) \
+    attributions_list = Attribution.objects\
+        .filter(learning_unit_year__structure__part_of=attribution.learning_unit_year.structure) \
         .filter(score_responsible=True) \
         .distinct("tutor")
     for attribution in attributions_list:
