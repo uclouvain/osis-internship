@@ -46,7 +46,7 @@ def pgm_manager_administration(request):
         'manager_entity': entity_managed,
         'entity': entity_managed,
         'entities': get_managed_entities(entity_managed),
-        'offer_types': get_offer_types(),
+        'offer_types': get_offer_types(current_academic_yr),
         'managers': get_entity_program_managers(entity_managed, current_academic_yr)})
 
 
@@ -71,7 +71,7 @@ def pgm_manager_form(offers_on, error_messages, request, manager_person):
             'manager_entity': entity_managed,
             'entity': entity,
             'entities': get_managed_entities(entity_managed),
-            'offer_types': get_offer_types(),
+            'offer_types': get_offer_types(current_academic_yr),
             'pgms': get_programs(current_academic_yr,
                                  get_entity_list(entity, entity_managed),
                                  manager_person,
@@ -280,8 +280,7 @@ class PgmManager(object):
         self.person_last_name = person_last_name
         self.person_first_name = person_first_name
         self.offer_year_acronyms_on = offer_year_acronyms_on  # acronyms of the offers the pgm manager will keep
-        self.offer_year_acronyms_off = offer_year_acronyms_off  # acronyms of the offers the pgm manager will be
-                                                                # removed from
+        self.offer_year_acronyms_off = offer_year_acronyms_off  # acronyms of the offers the pgm manager will be removed from
         self.programs = programs
 
 
@@ -416,19 +415,20 @@ def get_filter_selected_person(request):
     return None
 
 
-def get_offer_types():
-    return mdl.offer_type.find_all()
+def get_offer_types(academic_yr):
+    if academic_yr.year > 2014:
+        return mdl.offer_type.find_all_after_2014()
+    else:
+        return mdl.offer_type.find_all_before_2014()
 
 
 @login_required
 def delete_manager_information(request):
-    print('delete_manager_information')
     # Update the manager's list after add/delete
     list_id_offers_on = convert_to_list(request.GET['pgm_ids'])
     offers_on = mdl.offer_year.find_by_id_list(list_id_offers_on)
     person_id = request.GET['person_id']
     a_person = mdl.person.find_by_id(int(person_id))
-    print(a_person)
     program_manager_list = mdl.program_manager.find_by_offer_year_list_person(a_person, offers_on)
     serializer = PgmManagerSerializer(build_program_manager_list(list_id_offers_on, program_manager_list, True),
                                       many=True)

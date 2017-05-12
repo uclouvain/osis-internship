@@ -244,8 +244,6 @@
         });
         check_bt_add_manager_disabling();
         update_manager_list();
-
-
     });
 
     $(document).ready(function() {
@@ -258,8 +256,6 @@
         $("input[id$='_manager_search']").keypress(function(e) {
             //To submit the form on key enter pressed
             if (e.which == 13) {
-                //e.preventDefault();
-                //alert('login pressed');
                 $("#bt_submit_person_search").trigger( "click" );
             }
         });
@@ -275,7 +271,6 @@
                 search: gettext('search'),
                 infoEmpty: gettext('no_record'),
                 zeroRecords: gettext('no_record'),
-
             },
             "columnDefs": [ {
                 "targets": 'no-sort',
@@ -302,7 +297,7 @@
                 if (data.length > 0) {
                     var trHTML = '';
                     $.each(data, function (key, value) {
-                        var trHTML=''
+                        var trHTML='';
                         var id_person = value.person_id;
                         var acronyms_on = value.offer_year_acronyms_on;
                         var acronyms_off = value.offer_year_acronyms_off;
@@ -351,7 +346,7 @@
             $("#pnl_pgm_off").append("<span>"+ gettext('of_pgms') +"</span>");
         }
 
-        $("#pnl_pgm_off").append("<label style='color:red;'>"+ acronym_off +"</label><label> ?</label>");
+        $("#pnl_pgm_off").append("<label style='color:red;'>"+ acronym_off +"</label><label>&nbsp; ?</label>");
         $("#pnl_pgm_off").append("<span><br></span>");
     }
 
@@ -396,7 +391,7 @@
                         trHTML += value.email;
                     }
                     trHTML += '</td>';
-                    trHTML += '<td>'
+                    trHTML += '<td>';
                     if(value.user){
                         trHTML += value.user.username;
                     }
@@ -420,7 +415,6 @@
     }
 
     function removal_submission(){
-        alert('removal_submission');
         $("#hdn_pgms_id").val(get_offer_id_list_on());
         //$('#form_remove_manager').submit();
         $.ajax({
