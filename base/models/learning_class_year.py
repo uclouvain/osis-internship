@@ -43,5 +43,6 @@ class LearningClassYear(models.Model):
             ("can_access_learningclassyear", "Can access learning class year"),
         )
 
+
 def find_by_id(learning_class_year_id):
     return LearningClassYear.objects.get(pk=learning_class_year_id)

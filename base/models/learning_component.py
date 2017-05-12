@@ -25,15 +25,16 @@
 ##############################################################################
 from django.db import models
 from django.contrib import admin
-from django.utils import timezone
 
-#Doit devenir Learning_unit_component
+
 class LearningComponentAdmin(admin.ModelAdmin):
     list_display = ('learning_container',)
     fieldsets = ((None, {'fields': ('learning_container',)}),)
 
+
 class LearningComponent(models.Model):
     learning_container = models.ForeignKey('LearningContainer')
+
 
 def find_by_id(learning_component_id):
     return LearningComponent.objects.get(pk=learning_component_id)

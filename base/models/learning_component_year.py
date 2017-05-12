@@ -55,5 +55,6 @@ class LearningComponentYear(models.Model):
             ("can_access_learningunitcomponentyear", "Can access learning unit component year"),
         )
 
+
 def find_by_id(learning_component_year_id):
     return LearningComponentYear.objects.get(pk=learning_component_year_id)
