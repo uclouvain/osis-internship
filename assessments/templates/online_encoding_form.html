@@ -327,7 +327,7 @@ $("input[id^='num_score_']" ).change(ensureOnlyOneInputCompleted)
 $("select[id^='slt_justification_score_']" ).change(ensureOnlyOneInputCompleted)
 
 var target_score = '#form_online_encoding tbody tr td input';
-$(target_score).on('keypress',
+$(target_score).on('keydown',
                    { "target": target_score,
                      "table_size": $('#form_online_encoding tbody tr').length,
                      "index_increment_value": 2},
@@ -335,7 +335,7 @@ $(target_score).on('keypress',
 
 
 var target_justification = '#form_online_encoding tbody tr td select';
-$(target_justification).on('keypress',
+$(target_justification).on('keydown',
                            { "target": target_justification,
                              "table_size": $('#form_online_encoding tbody tr').length * 2,
                              "index_increment_value": 1},
