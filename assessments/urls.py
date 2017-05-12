@@ -94,6 +94,8 @@ urlpatterns = [
 
     url(r'^update_managers_list/$', pgm_manager_administration.update_managers_list),
     url(r'^manager_pgm_list/$', pgm_manager_administration.manager_pgm_list),
+    url(r'^delete_manager_information/$', pgm_manager_administration.delete_manager_information),
+
 
     url(r'^$', score_encoding.assessments, name="assessments"),
 ]
