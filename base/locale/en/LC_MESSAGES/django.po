@@ -616,7 +616,7 @@ msgid "learning_units_in"
 msgstr "learning units in"
 
 msgid "link_to_RGEE"
-msgstr "https://www.uclouvain.be/enseignement-reglements.html"
+msgstr "https://uclouvain.be/fr/decouvrir/rgee.html"
 
 msgid "lnk_message_history_read_title"
 msgstr "See the message"
