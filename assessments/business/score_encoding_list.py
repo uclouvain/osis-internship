@@ -157,7 +157,7 @@ def clean_score_and_justification(enrollment):
     is_decimal_scores_authorized = enrollment.learning_unit_enrollment.learning_unit_year.decimal_scores
 
     score_clean = None
-    if enrollment.score_encoded:
+    if enrollment.score_encoded is not None and enrollment.score_encoded != "":
         score_clean = _truncate_decimals(enrollment.score_encoded, is_decimal_scores_authorized)
 
     justification_clean = None if not enrollment.justification_encoded else enrollment.justification_encoded
