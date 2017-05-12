@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -73,9 +73,10 @@ def search(tutor=None, learning_unit_year=None, score_responsible=None, list_lea
 
 
 def find_all_responsibles_by_learning_unit_year(a_learning_unit_year):
-    attribution_list = Attribution.objects.select_related("tutor") \
-        .filter(learning_unit_year=a_learning_unit_year) \
-        .filter(score_responsible=True)
+    attribution_list = Attribution.objects.filter(learning_unit_year=a_learning_unit_year,
+                                                  score_responsible=True)\
+                                          .distinct("tutor")\
+                                          .select_related("tutor")
     return [attribution.tutor for attribution in attribution_list]
 
 

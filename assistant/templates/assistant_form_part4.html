@@ -10,7 +10,7 @@
 * The core business involves the administration of students, teachers,
 * courses, programs and so on.
 *
-* Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+* Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 *
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -37,7 +37,9 @@
 <li><a href="{% url 'assistant_mandates' %}">{% trans 'my_mandates' %}</a></li>
 <li><a href="{% url 'form_part1_edit' mandate.id %}">{% trans 'assistant_form_part1' %}</a></li>
 <li><a href="{% url 'mandate_learning_units' mandate.id %}">{% trans 'assistant_form_part2' %}</a></li>
-<li><a href="{% url 'form_part3_edit' mandate.id %}">{% trans 'assistant_form_part3' %}</a></li>
+{% if mandate.assistant_type == "ASSISTANT" %}
+    <li><a href="{% url 'form_part3_edit' mandate.id %}">{% trans 'assistant_form_part3' %}</a></li>
+{% endif %}
 <li class="active"><a href="{% url 'form_part4_edit' mandate.id %}">{% trans 'assistant_form_part4' %}</a></li>
 <li><a href="{% url 'form_part5_edit' mandate.id %}">{% trans 'assistant_form_part5' %}</a></li>
 <li><a href="{% url 'form_part6_edit' mandate.id %}">{% trans 'assistant_form_part6' %}</a></li>

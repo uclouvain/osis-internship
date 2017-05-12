@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -43,7 +43,6 @@ class AssistantMandate(models.Model):
     end_date = models.DateField()
     position_id = models.CharField(max_length=12)
     sap_id = models.CharField(max_length=12)
-    grade = models.CharField(max_length=40)
     assistant_type = models.CharField(max_length=20, choices=assistant_type.ASSISTANT_TYPES,
                                       default=assistant_type.ASSISTANT)
     scale = models.CharField(max_length=3)

@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -24,11 +24,14 @@
 #
 ##############################################################################
 
-SECONDARY = "SECONDARY"
-UNIVERSITY = "UNIVERSITY"
-HIGHER_NON_UNIVERSITY = "HIGHER_NON_UNIVERSITY"
+from django.utils.translation import ugettext_lazy as _
 
+ANNUAL = "ANNUAL"
+BIENNIAL_EVEN = "BIENNIAL_EVEN"
+BIENNIAL_ODD = "BIENNIAL_ODD"
 
-INSTITUTION_TYPE = ((SECONDARY, SECONDARY),
-                    (UNIVERSITY, UNIVERSITY),
-                    (HIGHER_NON_UNIVERSITY, HIGHER_NON_UNIVERSITY))
+PERIODICITY_TYPES = (
+    (ANNUAL,  _(ANNUAL)),
+    (BIENNIAL_EVEN,  _(BIENNIAL_EVEN)),
+    (BIENNIAL_ODD,  _(BIENNIAL_ODD))
+)
