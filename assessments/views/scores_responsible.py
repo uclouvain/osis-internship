@@ -43,7 +43,7 @@ def is_faculty_admin(user):
 @user_passes_test(is_faculty_admin)
 def scores_responsible(request):
     a_faculty_administrator = entity_manager.find_entity_manager_by_user(request.user)
-    all_tutors, entities_list, learning_unit_year_list, responsibles_list = find_data_table(request, a_faculty_administrator.structure)
+    all_tutors, entities_list, learning_unit_year_list, responsibles_list = find_data_filter(request, a_faculty_administrator.structure)
     dict_attribution = create_dictionary(learning_unit_year_list)
     return layout.render(request, 'scores_responsible.html', {"all_tutors": all_tutors,
                                                               "learning_unit_year_list": learning_unit_year_list,
@@ -62,7 +62,7 @@ def scores_responsible_search(request):
         entity=request.GET['entity'],
         professor=request.GET['professor'],
         scores_responsible=request.GET['scores_responsible'])
-    all_tutors, entities_list, learning_unit_year_list, responsibles_list = find_data_table(request, a_faculty_administrator.structure)
+    all_tutors, entities_list, learning_unit_year_list, responsibles_list = find_data_filter(request, a_faculty_administrator.structure)
     dict_attribution = create_dictionary(attributions_searched)
     return layout.render(request, 'scores_responsible.html', {"all_tutors": all_tutors,
                                                               "entities_list": entities_list,
@@ -83,13 +83,13 @@ def create_dictionary(attributions):
     return dict_attribution
 
 
-def find_data_table(request, structure):
+def find_data_filter(request, structure):
     a_faculty_administrator = entity_manager.find_entity_manager_by_user(request.user)
     responsibles_list = mdl_attr.attribution.find_responsible_distinct(structure)
     entity = mdl_attr.attribution.find_attribution_distinct(structure)
-    attribution = mdl_attr.attribution.find_attributions(structure)
-    attributions_list = mdl_attr.attribution.find_all_children(attribution[0])
-    learning_unit_year_list = list(chain(attribution, attributions_list))
+    attributions = mdl_attr.attribution.find_attributions(structure)
+    attributions_list = mdl_attr.attribution.find_all_children(attributions[0])
+    learning_unit_year_list = list(chain(attributions, attributions_list))
     entities_list = list(chain(entity, attributions_list))
     all_tutors = mdl_attr.attribution.find_all_tutor(a_faculty_administrator.structure)
     return all_tutors, entities_list, learning_unit_year_list, responsibles_list
