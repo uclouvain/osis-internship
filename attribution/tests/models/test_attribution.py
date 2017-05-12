@@ -1,12 +1,12 @@
 ##############################################################################
 #
-# OSIS stands for Open Student Information System. It's an application
+#    OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -48,12 +48,12 @@ class AttributionTest(TestCase):
 
         create_attribution(first_coordinator, learning_unit_year, True)
         create_attribution(second_coordinator, learning_unit_year, True)
-        third_attribution = create_attribution(third_coordinator, learning_unit_year, True)
+        create_attribution(third_coordinator, learning_unit_year, True)
         create_attribution(teacher, learning_unit_year)
 
         responsible = attribution.find_responsible(learning_unit_year)
 
-        self.assertEqual(responsible.person.first_name, third_attribution.tutor.person.first_name)
+        self.assertEqual(responsible.person.first_name, first_coordinator.person.first_name)
 
     def test_find_responsible_without_attribution(self):
         academic_year = test_academic_year.create_academic_year()

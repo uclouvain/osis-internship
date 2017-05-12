@@ -26,6 +26,7 @@
 from django.db import models
 from django.contrib import admin
 
+from internship.models.internship import Internship
 
 class InternshipEnrollmentAdmin(admin.ModelAdmin):
     list_display = ('student', 'internship_offer', 'place', 'period', 'internship')
@@ -61,3 +62,8 @@ def find_by_student(student):
 def find_for_non_mandatory_internship():
     return InternshipEnrollment.objects.filter(internship_choice__gte=1).\
         select_related("student", "internship_offer", "place", "period")
+
+def find_for_internships_for_cohort(cohort):
+    internship_ids = Internship.objects.filter(cohort=cohort).values_list("id", flat=True)
+    return InternshipEnrollment.objects.filter(internship_id__in=internship_ids).\
+        select_related("student", "internship_offer", "internship", "place", "period")

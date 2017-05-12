@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# OSIS stands for Open Student Information System. It's an application
+#    OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
@@ -382,7 +382,11 @@ def export_xls(request, learning_unit_year_id):
     scores_list = score_encoding_list.get_scores_encoding_list(request.user,
                                                                learning_unit_year_id=learning_unit_year_id)
     scores_list = score_encoding_list.filter_without_closed_exam_enrollments(scores_list, is_program_manager)
-    return score_encoding_export.export_xls(scores_list.enrollments)
+    if scores_list.enrollments:
+        return score_encoding_export.export_xls(scores_list.enrollments)
+    else:
+        messages.add_message(request, messages.WARNING, _('no_student_to_encode_xls'))
+        return HttpResponseRedirect(reverse('online_encoding', args=(learning_unit_year_id,)))
 
 
 @login_required

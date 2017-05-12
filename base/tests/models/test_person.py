@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# OSIS stands for Open Student Information System. It's an application
+#    OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
@@ -29,7 +29,7 @@ import factory
 from django.test import TestCase
 from django.test import override_settings
 from base.models import person
-from base.enums import person_source_type
+from base.models.enums import person_source_type
 from base.tests.factories.person import PersonFactory, generate_person_email
 
 

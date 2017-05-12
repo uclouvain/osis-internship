@@ -31,7 +31,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 
 from base import models as mdl
-from base.enums import exam_enrollment_justification_type
+from base.models.enums import exam_enrollment_justification_type
 
 HEADER = [str(_('academic_year')),
           str(_('sessionn')),
@@ -59,10 +59,7 @@ def export_xls(exam_enrollments):
     worksheet.append([str(exam_enrollments[0].learning_unit_enrollment.learning_unit_year)])
     worksheet.append([str('Session: %s' % exam_enrollments[0].session_exam.number_session)])
     worksheet.append([str('')])
-    date_format = str(_('date_format'))
-    printing_date = timezone.now()
-    printing_date = printing_date.strftime(date_format)
-    worksheet.append([str('%s: %s' % (_('file_production_date'), printing_date))])
+    __display_creation_date_with_message_about_state(worksheet, row_number=4)
     __display_warning_about_students_deliberated(worksheet, row_number=5)
     worksheet.append([str('')])
     __display_legends(worksheet)
@@ -151,6 +148,15 @@ def __coloring_non_editable(ws, row_number, score, justification):
                 ws.cell(row=row_number, column=9).style = style_no_modification
 
         column_number += 1
+
+
+def __display_creation_date_with_message_about_state(ws, row_number):
+    date_format = str(_('date_format'))
+    printing_date = timezone.now()
+    printing_date = printing_date.strftime(date_format)
+
+    ws.cell(row=row_number, column=1).value = str('%s' % (_('warn_user_data_can_change') % printing_date))
+    ws.cell(row=row_number, column=1).font = Font(color=colors.RED)
 
 
 def __display_warning_about_students_deliberated(ws, row_number):

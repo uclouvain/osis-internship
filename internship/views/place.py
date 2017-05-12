@@ -310,7 +310,7 @@ def export_xls(request, cohort_id, organization_id, speciality_id):
                              in mdl_internship.internship_speciality_group_member.find_by_speciality(speciality)]
         specialities = [group_member.speciality for group_member in
                         mdl_internship.internship_speciality_group_member.find_distinct_specialities_by_groups(speciality_groups)]
-        specialities = sorted(specialities, key=lambda spec: spec.order_postion)
+        specialities = sorted(specialities, key=lambda spec: spec.order_position)
         affection_by_specialities = [(internship_speciality,
                                       mdl_internship.internship_student_affectation_stat.search(organization=organization,
                                                                               speciality=internship_speciality))
@@ -345,7 +345,7 @@ def export_organisation_affectation_as_xls(request, cohort_id, organization_id):
     organization = mdl_internship.organization.find_by_id(organization_id)
     internships = mdl_internship.internship_offer.search(organization = organization)
     specialities = list({offer.speciality for offer in internships})
-    specialities = sorted(specialities, key=lambda spec: spec.order_postion)
+    specialities = sorted(specialities, key=lambda spec: spec.order_position)
     affection_by_specialities = [(internship_speciality,
                                   list(mdl_internship.internship_student_affectation_stat.search(organization=organization,
                                                                           speciality=internship_speciality)))

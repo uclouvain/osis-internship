@@ -1,12 +1,12 @@
 ##############################################################################
 #
-# OSIS stands for Open Student Information System. It's an application
+#    OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -35,7 +35,7 @@ from base.models.learning_unit_component import LearningUnitComponent
 from base.models.learning_class_year import LearningClassYear
 from base.models.learning_class import LearningClass
 from base.models.academic_year import AcademicYear
-from base.enums import learning_unit_year_types
+from base.models.enums import learning_unit_year_types
 
 now = timezone.now()
 

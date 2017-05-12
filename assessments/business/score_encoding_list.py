@@ -27,7 +27,7 @@ import copy
 from decimal import Decimal, Context, Inexact
 from base.models import academic_year, session_exam_calendar, exam_enrollment, program_manager, tutor, offer_year, \
                         learning_unit_year
-from base.enums import exam_enrollment_justification_type
+from base.models.enums import exam_enrollment_justification_type
 
 
 def get_scores_encoding_list(user, **kwargs):
