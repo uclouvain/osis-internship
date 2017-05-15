@@ -260,8 +260,10 @@
         check_bt_add_manager_disabling();
 
         $("input[id$='_manager_search']").keypress(function(e) {
+
             //To submit the form on key enter pressed
             if (e.which == 13) {
+                e.preventDefault();
                 $("#bt_submit_person_search").trigger( "click" );
             }
         });
@@ -287,7 +289,6 @@
 
     function update_manager_list(){
         var ch = get_offer_id_list_on();
-        $('"#nb_selected').empty();
 
         $('#tb_managers tbody > tr').remove();
 
@@ -374,7 +375,7 @@
         $('#pnl_person_search_results').css('visibility', 'hidden');
         $('#pnl_person_search_error').css('visibility', 'hidden');
         $.ajax({
-            url: "/assessments/pgm_manager/person/list/search?name=" + $('#txt_name_manager_search').val() + "&firstname=" + $('#txt_first_name_manager_search').val()
+            url: "/assessments/pgm_manager/person/list/search?fullname=" + $('#txt_fullname_manager_search').val()
         }).then(function (data) {
             if (data.length > 0) {
                 $('#pnl_person_search_results').css('visibility', 'visible');

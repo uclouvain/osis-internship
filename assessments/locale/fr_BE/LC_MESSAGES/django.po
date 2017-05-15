@@ -70,3 +70,18 @@ msgstr "Aucune structure n'est associée à votre profil de gestionnaire faculta
 
 msgid "already_program_mgr"
 msgstr "est déjà gestionnaire de programme pour"
+
+msgid "remove"
+msgstr "Supprimer"
+
+msgid "hlp_employee_search"
+msgstr "Veuillez saisir un nom et optionnellement un prénom"
+
+msgid "lastname"
+msgstr "Nom"
+
+msgid "firstname"
+msgstr "Prénom"
+
+msgid "middlename"
+msgstr "Autres prénoms"
