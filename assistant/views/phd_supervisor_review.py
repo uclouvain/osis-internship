@@ -24,15 +24,15 @@
 #
 ##############################################################################
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ObjectDoesNotExist
+from django.core.urlresolvers import reverse
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render
-from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
-from django.core.urlresolvers import reverse
-from assistant.models import assistant_mandate, review, tutoring_learning_unit_year, mandate_structure
+
 from assistant.forms import ReviewForm
-from assistant.enums import reviewer_role
-from assistant.models.enums import review_status, assistant_mandate_state
+from assistant.models import assistant_mandate, review, tutoring_learning_unit_year, mandate_structure
+from assistant.models.enums import review_status, assistant_mandate_state, reviewer_role
 
 
 @login_required

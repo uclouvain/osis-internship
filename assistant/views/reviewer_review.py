@@ -23,21 +23,19 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.http.response import HttpResponseRedirect
+import re
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ObjectDoesNotExist
+from django.core.urlresolvers import reverse
+from django.http.response import HttpResponseRedirect
 from django.shortcuts import render
+from django.utils import timezone
+from assistant.forms import ReviewForm
 from assistant.models import assistant_mandate, review, mandate_structure, tutoring_learning_unit_year
 from assistant.models import reviewer
+from assistant.models.enums import review_status, assistant_mandate_state, reviewer_role
 from base.models import person
-from assistant.forms import ReviewForm
-from django.core.urlresolvers import reverse
-from django.utils import timezone
-from django.core.exceptions import ObjectDoesNotExist
-from assistant.enums import reviewer_role
 from base.models.enums import structure_type
-from assistant.models.enums import review_status, assistant_mandate_state
-import re
-
 
 
 @login_required

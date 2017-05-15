@@ -23,20 +23,21 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.shortcuts import render, redirect
-from assistant.models import reviewer
-from base.models import academic_year, structure, person
-from assistant.forms import ReviewerDelegationForm
-from django.views.generic import ListView
-from django.db.models import Q
-from django.core.urlresolvers import reverse
+from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import ObjectDoesNotExist
-from django.contrib.auth.decorators import user_passes_test
-from assistant.models import settings
+from django.core.urlresolvers import reverse
+from django.db.models import Q
+from django.shortcuts import render, redirect
 from django.utils.translation import ugettext as _
+from django.views.generic import ListView
+
+from assistant.forms import ReviewerDelegationForm
 from assistant.models import assistant_mandate
-from assistant.enums import reviewer_role
+from assistant.models import reviewer
+from assistant.models import settings
+from assistant.models.enums import reviewer_role
+from base.models import academic_year, structure, person
 
 
 class StructuresListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
@@ -78,7 +79,7 @@ def user_is_reviewer_and_can_delegate(user):
     try:
         if user.is_authenticated() and settings.access_to_procedure_is_open():
             return reviewer.Reviewer.objects.get(Q(person=user.person) &
-                                                   (Q(role=reviewer_role.SUPERVISION) | Q(role=reviewer_role.RESEARCH)))
+                                                 (Q(role=reviewer_role.SUPERVISION) | Q(role=reviewer_role.RESEARCH)))
     except ObjectDoesNotExist:
         return False
 
