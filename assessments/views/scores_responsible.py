@@ -43,13 +43,10 @@ def is_faculty_admin(user):
 @user_passes_test(is_faculty_admin)
 def scores_responsible(request):
     a_faculty_administrator = entity_manager.find_entity_manager_by_user(request.user)
-    all_tutors, entities_list, learning_unit_year_list, responsibles_list = find_data_filter(request, a_faculty_administrator.structure)
+    entities_list, learning_unit_year_list = find_data_filter(request, a_faculty_administrator.structure)
     dict_attribution = create_dictionary(learning_unit_year_list)
-    return layout.render(request, 'scores_responsible.html', {"all_tutors": all_tutors,
-                                                              "learning_unit_year_list": learning_unit_year_list,
-                                                              "entities_list": entities_list,
-                                                              "dict_attribution": dict_attribution,
-                                                              "responsibles_list": responsibles_list})
+    return layout.render(request, 'scores_responsible.html', {"entities_list": entities_list,
+                                                              "dict_attribution": dict_attribution})
 
 
 @login_required
@@ -62,12 +59,14 @@ def scores_responsible_search(request):
         entity=request.GET['entity'],
         professor=request.GET['professor'],
         scores_responsible=request.GET['scores_responsible'])
-    all_tutors, entities_list, learning_unit_year_list, responsibles_list = find_data_filter(request, a_faculty_administrator.structure)
+    entities_list, learning_unit_year_list = find_data_filter(request, a_faculty_administrator.structure)
     dict_attribution = create_dictionary(attributions_searched)
-    return layout.render(request, 'scores_responsible.html', {"all_tutors": all_tutors,
-                                                              "entities_list": entities_list,
+    return layout.render(request, 'scores_responsible.html', {"entities_list": entities_list,
                                                               "dict_attribution": dict_attribution,
-                                                              "responsibles_list": responsibles_list})
+                                                              "learning_unit_title": request.GET['learning_unit_title'],
+                                                              "course_code": request.GET['course_code'],
+                                                              "professor": request.GET['professor'],
+                                                              "scores_responsible": request.GET['scores_responsible']})
 
 
 def create_dictionary(attributions):
@@ -84,15 +83,13 @@ def create_dictionary(attributions):
 
 
 def find_data_filter(request, structure):
-    a_faculty_administrator = entity_manager.find_entity_manager_by_user(request.user)
-    responsibles_list = mdl_attr.attribution.find_responsible_distinct(structure)
     entity = mdl_attr.attribution.find_attribution_distinct(structure)
     attributions = mdl_attr.attribution.find_attributions(structure)
+    entities = mdl_attr.attribution.find_all_distinct_children(attributions[0])
     attributions_list = mdl_attr.attribution.find_all_children(attributions[0])
     learning_unit_year_list = list(chain(attributions, attributions_list))
-    entities_list = list(chain(entity, attributions_list))
-    all_tutors = mdl_attr.attribution.find_all_tutor(a_faculty_administrator.structure)
-    return all_tutors, entities_list, learning_unit_year_list, responsibles_list
+    entities_list = list(chain(entity, entities))
+    return entities_list, learning_unit_year_list
 
 
 def scores_responsible_list(request):
@@ -104,29 +101,21 @@ def scores_responsible_list(request):
 @user_passes_test(is_faculty_admin)
 def scores_responsible_management(request, pk):
     learning_unit_year = get_object_or_404(LearningUnitYear, pk=pk)
-    a_faculty_administrator = entity_manager.find_entity_manager_by_user(request.user)
-    professors = mdl_attr.attribution.find_all_responsable_by_learning_unit_year(a_faculty_administrator.structure,
-                                                                                 learning_unit_year)
-    attributions = mdl_attr.attribution.find_all_tutor_by_learning_unit_year(learning_unit_year)
+    attributions = mdl_attr.attribution.find_all_responsible_by_learning_unit_year(learning_unit_year)
     return layout.render(request, 'scores_responsible_edit.html',
                          {'learning_unit_year': learning_unit_year,
-                          'professors': professors,
                           'attributions': attributions})
 
 
 @login_required
 @user_passes_test(is_faculty_admin)
-def scores_responsible_delete(request, pk):
-    attribution = get_object_or_404(Attribution, pk=pk)
-    attribution.score_responsible = False
-    attribution.save()
-    return redirect('scores_responsible_management', pk=attribution.learning_unit_year.pk)
-
-
-@login_required
-@user_passes_test(is_faculty_admin)
-def scores_responsible_add(request):
-    attribution = get_object_or_404(Attribution, pk=request.GET['professor'])
-    attribution.score_responsible = True
-    attribution.save()
-    return redirect('scores_responsible_management', pk=attribution.learning_unit_year.pk)
+def scores_responsible_add(request, pk):
+    mdl_attr.attribution.clear_responsible_by_learning_unit_year(pk)
+    if request.GET:
+        for professor in request.GET:
+            prf_id = professor.strip('prf_')
+            attribution = get_object_or_404(Attribution, pk=prf_id)
+            if request.GET[professor]:
+                attribution.score_responsible = True
+                attribution.save()
+    return redirect('scores_responsible')
