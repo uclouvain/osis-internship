@@ -71,6 +71,20 @@ msgstr "No entity associated to your entity manager's profil"
 msgid "already_program_mgr"
 msgstr "is already program manager for"
 
+msgid "remove"
+msgstr "Remove"
+
+msgid "hlp_employee_search"
+msgstr "Please enter a lastname, and optionnally a firstname"
+
+msgid "lastname"
+msgstr "Lastname"
+
+msgid "firstname"
+msgstr "Firstname"
+
+msgid "middlename"
+msgstr "Middlename"
 
 
 

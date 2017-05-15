@@ -32,12 +32,50 @@
 {% block content %}
 
 {% include "learning_unit/header.html" %}
-<div class="panel panel-default" >
-    <div class="panel-body" id="tabs" >
+<div class="panel panel-default">
+    <div class="panel-body" id="tabs">
         {% include "learning_unit/tabs.html" %}
 
         <div class="tab-content" id="tab_content">
             <div role="tabpanel" class="tab-pane active" id="components">
+                <table class="table">
+                    <thead>
+                    <th>{% trans 'components'%}</th>
+                    <th>{% trans 'code'%}</th>
+                    <th>{% trans 'description'%}</th>
+                    <th>{% trans 'planned_classrooms'%}</th>
+                    </thead>
+                    <tbody>
+                    {% for component in components%}
+                    <tr>
+                        <td>{{component.learning_component_year.type}}</td>
+                        <td>/{{component.learning_component_year.acronym}}</td>
+                        <td>{{component.learning_component_year.title}}</td>
+                        <td>{{ component.learning_component_year.planned_classes| default_if_none:'0'}}</td>
+                    </tr>
+                    {% if component.classes%}
+                    <tr>
+                        <td colspan="4">
+                            <div style="margin-left: 25px;">
+                                <table class="table" style="background-color: #caeced; ">
+                                    <thead>
+                                    <th>{% trans 'classes'%}</th>
+                                    </thead>
+                                    <tbody>
+                                    {% for classe in component.classes %}
+                                    <tr>
+                                        <td>/{{classe.acronym}}</td>
+                                    </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endif %}
+                    {% endfor %}
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

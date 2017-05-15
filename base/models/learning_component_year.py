@@ -30,7 +30,7 @@ from django.contrib import admin
 class LearningComponentYearAdmin(admin.ModelAdmin):
     list_display = ('learning_container_year', 'learning_component', 'title', 'acronym', 'type', 'comment')
     fieldsets = ((None, {'fields': ('learning_container_year', 'learning_component', 'title', 'acronym',
-                                    'type', 'comment')}),)
+                                    'type', 'comment', 'planned_classes')}),)
     search_fields = ['acronym']
 
 
@@ -41,6 +41,7 @@ class LearningComponentYear(models.Model):
     acronym = models.CharField(max_length=3)
     type = models.CharField(max_length=20)
     comment = models.CharField(max_length=255)
+    planned_classes = models.IntegerField(blank=True, null=True)
 
     def save(self, *args, **kwargs):
         if self.learning_container_year.learning_container != self.learning_component.learning_container:
@@ -58,3 +59,7 @@ class LearningComponentYear(models.Model):
 
 def find_by_id(learning_component_year_id):
     return LearningComponentYear.objects.get(pk=learning_component_year_id)
+
+
+def find_by_learning_container_year(a_learning_container_year):
+    return LearningComponentYear.objects.filter(learning_container_year=a_learning_container_year).order_by('type')
