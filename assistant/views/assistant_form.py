@@ -55,14 +55,12 @@ def user_is_assistant_and_procedure_is_open(user):
 def form_part1_edit(request, mandate_id):
     mandate = assistant_mandate.find_mandate_by_id(mandate_id)
     assistant = mandate.assistant
-    addresses = person_address.find_by_person(person.find_by_id(assistant.person.id))
     form = AssistantFormPart1(initial={'external_functions': mandate.external_functions,
                                        'external_contract': mandate.external_contract,
                                        'justification': mandate.justification})
 
     return render(request, "assistant_form_part1.html", {'assistant': assistant,
                                                          'mandate': mandate,
-                                                         'addresses': addresses,
                                                          'form': form,
                                                          'supervisor': assistant.supervisor})
 
@@ -172,7 +170,8 @@ def form_part3_save(request, mandate_id):
         form = AssistantFormPart3(data=request.POST, instance=assistant, prefix='mand')
         if form.is_valid():
             current_assistant = form.save(commit=False)
-            if current_assistant.inscription == assistant_phd_inscription.YES and not request.POST.get('person_id'):
+            if current_assistant.inscription == assistant_phd_inscription.YES \
+                    and (not request.POST.get('person_id') and current_assistant.supervisor is None):
                 msg = _("must_enter_supervisor_if_registered")
                 form.add_error('inscription', msg)
                 return render(request, "assistant_form_part3.html", {'assistant': assistant, 'mandate': mandate,
@@ -308,7 +307,6 @@ def form_part5_edit(request, mandate_id):
                                        'events_organisation_service': mandate.events_organisation_service,
                                        'publishing_field_service': mandate.publishing_field_service,
                                        'scientific_jury_service': mandate.scientific_jury_service,
-                                       'degrees': mandate.degrees,
                                        'formations': mandate.formations
                                        }, prefix='mand')
     return render(request, "assistant_form_part5.html", {'assistant': assistant,

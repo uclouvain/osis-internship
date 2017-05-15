@@ -94,3 +94,25 @@ class PersonTest(PersonTestCase):
         dupplicated_person.save()
         found_person = person.find_by_global_id("1234")
         return self.assertEqual(found_person, None, "find_by_global_id should return None if a record is not found.")
+
+    def test_search_employee(self):
+        a_lastname = "Dupont"
+        a_firstname = "Marcel"
+        a_person = person.Person(last_name=a_lastname,
+                                 first_name=a_firstname,
+                                 employee=True)
+        a_person.save()
+        self.assertEqual(person.search_employee(a_lastname)[0], a_person)
+        self.assertEqual(len(person.search_employee("{}{}".format(a_lastname, a_firstname))), 0)
+        self.assertEqual(person.search_employee("{} {}".format(a_lastname, a_firstname))[0], a_person)
+        self.assertIsNone(person.search_employee(None))
+        self.assertEqual(len(person.search_employee("zzzzzz")), 0)
+
+        a_person_2 = person.Person(last_name=a_lastname,
+                                   first_name="Hervé",
+                                   employee=True)
+        a_person_2.save()
+        self.assertEqual(len(person.search_employee(a_lastname)), 2)
+        self.assertEqual(len(person.search_employee("{} {}".format(a_lastname, a_firstname))), 1)
+
+

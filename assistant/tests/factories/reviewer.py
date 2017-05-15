@@ -24,8 +24,9 @@
 #
 ##############################################################################
 import factory
+
+from assistant.models.enums import reviewer_role
 from base.tests.factories.person import PersonFactory
-from assistant.enums import reviewer_role
 
 
 class ReviewerFactory(factory.DjangoModelFactory):
