@@ -1411,7 +1411,7 @@ msgid "trainings"
 msgstr "Trainings"
 
 msgid "components"
-msgstr "Component and classes"
+msgstr "Components"
 
 msgid "educational_information"
 msgstr "Educational information"
@@ -1429,7 +1429,30 @@ msgid "academic_calendar_offer_year_calendar_start_date_end_date_error"
 msgstr "The start's date of '%s' of the academic calendar can't be higher than %s "
        "(end date of '%s' of the program '%s')"
 
-<<<<<<< HEAD
+msgid "component_type"
+msgstr "Component type"
+
+msgid "nominal_quater"
+msgstr "Nominal quater"
+
+msgid "vol_q1"
+msgstr "Vol. q1"
+
+msgid "vol_q2"
+msgstr "Vol. q2"
+
+msgid "nominal_volume"
+msgstr "Nominal volume"
+
+msgid "schedules_conformity"
+msgstr "Sched. conform. "
+
+msgid "planned_classrooms"
+msgstr "Planned classrooms"
+
+msgid "classes"
+msgstr "Classes"
+
 msgid "learning_unit_code"
 msgstr "Learning unit code"
 
@@ -1474,7 +1497,6 @@ msgstr "Partim"
 
 msgid "PHD_THESIS"
 msgstr "PhD Thesis"
-=======
+
 msgid "selected"
 msgstr "selected"
->>>>>>> abbd789d4ecedb9a50c1ebdb8b77114c0a233a0c

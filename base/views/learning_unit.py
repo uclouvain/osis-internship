@@ -77,8 +77,10 @@ def learning_unit_formations(request, learning_unit_year_id):
 @login_required
 @permission_required('base.can_access_learningunit', raise_exception=True)
 def learning_unit_components(request, learning_unit_year_id):
-    context = _get_common_context_learning_unit_year(learning_unit_year_id)
-    return layout.render(request, "learning_unit/components.html", context)
+    learning_unit_year = mdl.learning_unit_year.find_by_id(learning_unit_year_id)
+    components = get_components(learning_unit_year.learning_container_year)  # components = [{'id':1, 'name': 'name 1'},{'id':2, 'name': 'name 2'}]
+    tab_active = 'components'
+    return layout.render(request, "learning_unit/components.html", locals())
 
 
 @login_required
@@ -127,6 +129,18 @@ def _get_common_context_learning_unit_year(learning_unit_year_id):
         'learning_unit_year': learning_unit_year
     }
     return context
+
+
+def get_components(a_learning_container_yr):
+    components = []
+    if a_learning_container_yr:
+        learning_component_year_list = mdl.learning_component_year.find_by_learning_container_year(a_learning_container_yr)
+
+        for learning_component_year in learning_component_year_list:
+            learning_class_year_list = mdl.learning_class_year.find_by_learning_component_year(learning_component_year)
+            components.append({'learning_component_year': learning_component_year,
+                               'classes': learning_class_year_list})
+    return components
 
 
 def _get_formated_partims_related(learning_unit_year):
