@@ -23,22 +23,18 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
-from django.contrib import admin
-from base.models.enums import learning_component_type
+
+CMAG = "CMAG"
+STAGE = "STAGE"
+TFE = "TFE"
+TP = "TP"
 
 
-class LearningComponentAdmin(admin.ModelAdmin):
-    list_display = ('learning_container',)
-    fieldsets = ((None, {'fields': ('learning_container',)}),)
+LEARNING_COMPONENT_TYPES = (
+    (CMAG, CMAG),
+    (STAGE, STAGE)
+    (TFE, TFE)
+    (TP, TP))
 
 
-class LearningComponent(models.Model):
-    learning_container = models.ForeignKey('LearningContainer')
-    type = models.CharField(max_length=20, choices=learning_component_type.LEARNING_COMPONENT_TYPES, blank=True, null=True)
-    acronym = models.CharField(max_length=20, blank=True, null=True)
-    description = models.CharField(max_length=20, blank=True, null=True)
 
-
-def find_by_id(learning_component_id):
-    return LearningComponent.objects.get(pk=learning_component_id)
