@@ -55,14 +55,12 @@ def user_is_assistant_and_procedure_is_open(user):
 def form_part1_edit(request, mandate_id):
     mandate = assistant_mandate.find_mandate_by_id(mandate_id)
     assistant = mandate.assistant
-    addresses = person_address.find_by_person(person.find_by_id(assistant.person.id))
     form = AssistantFormPart1(initial={'external_functions': mandate.external_functions,
                                        'external_contract': mandate.external_contract,
                                        'justification': mandate.justification})
 
     return render(request, "assistant_form_part1.html", {'assistant': assistant,
                                                          'mandate': mandate,
-                                                         'addresses': addresses,
                                                          'form': form,
                                                          'supervisor': assistant.supervisor})
 
