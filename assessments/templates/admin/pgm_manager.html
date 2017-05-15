@@ -187,21 +187,6 @@
         $("#hdn_offers_checked").val(ch); // to keep the possibility to check the offers checked while starting the
         // removal
     }
-    function delete_manager(personId, acronym_on, acronym_off, person_off_last_name ,person_off_first_name,pgm_ids){
-
-        $("#hdn_to_be_removed_person").val(personId);
-        $("#hdn_to_be_removed_pgms").val(pgm_ids);
-        save_selected_values()    ;
-        //--------------------------------------------------------------
-        // To display information on the effects of the removal.
-        //--------------------------------------------------------------
-        clean_on_off_pannels(); // initialize
-        set_off_pannel(person_off_last_name,person_off_first_name, acronym_off);// name of the pgm manager
-                                                                               // offers removed from
-        set_on_pannel(personId, acronym_on);// offers still managed
-        //--------------------------------------------------------------
-
-    }
 
     $("input[id^='chb_pgm_id_']").click(function(event) {
         var target = $(event.target);
@@ -259,8 +244,6 @@
         });
         check_bt_add_manager_disabling();
         update_manager_list();
-
-
     });
 
     $(document).ready(function() {
@@ -269,6 +252,13 @@
 
         update_manager_list();
         check_bt_add_manager_disabling();
+
+        $("input[id$='_manager_search']").keypress(function(e) {
+            //To submit the form on key enter pressed
+            if (e.which == 13) {
+                $("#bt_submit_person_search").trigger( "click" );
+            }
+        });
     });
 
     function data_table_init(){
@@ -281,7 +271,6 @@
                 search: gettext('search'),
                 infoEmpty: gettext('no_record'),
                 zeroRecords: gettext('no_record'),
-
             },
             "columnDefs": [ {
                 "targets": 'no-sort',
@@ -308,7 +297,7 @@
                 if (data.length > 0) {
                     var trHTML = '';
                     $.each(data, function (key, value) {
-                        var trHTML=''
+                        var trHTML='';
                         var id_person = value.person_id;
                         var acronyms_on = value.offer_year_acronyms_on;
                         var acronyms_off = value.offer_year_acronyms_off;
@@ -317,17 +306,17 @@
                         var pgm_ids = value.programs;
                         trHTML += '<tr>';
                         trHTML += '<td>' ;
+                        var manager_name = value.person_last_name + ', ' + value.person_first_name;
                         if(ch == pgm_ids) {
-                            trHTML += '<strong>' + value.person_last_name + ',' + value.person_first_name + '</strong>';
+                            trHTML += '<strong>' + manager_name + '</strong>';
                         }else{
-                            trHTML += value.person_last_name + ',' + value.person_first_name;
+                            trHTML += manager_name;
                         }
                         trHTML += '</td>';
                         trHTML += '<td>';
-                        trHTML += '<button type="button" class="btn btn-default pull-right" data-toggle="modal" data-target="#pnl_remove_manager_modal" ';
+                        trHTML += '<button type="button" class="btn btn-default pull-right"  ';
                         trHTML += ' title="'+gettext('remove_manager')+'"';
                         trHTML += ' id="btn_remove_manager_modal_' + value.person_id + '" ';
-                        trHTML += ' onclick="delete_manager('+id_person+',\''+acronyms_on+'\',\''+acronyms_off+'\',\''+last_name+'\',\''+first_name+'\',\''+pgm_ids+'\');" ';
                         trHTML += '><span class="glyphicon glyphicon-minus" aria-hidden="true"></span>';
                         trHTML += '</button>';
                         trHTML += '</td>';
@@ -351,12 +340,17 @@
     function set_off_pannel(person_off, person_off_first_name, acronym_off){
         $("#pnl_pgm_off").append("<label>"+ person_off +" "+ person_off_first_name +"</label>");
         $("#pnl_pgm_off").append("<span><br></span>");
-        $("#pnl_pgm_off").append("<span>"+ gettext('of_pgm') +"</span>");
-        $("#pnl_pgm_off").append("<label>"+ acronym_off +"</label>");
+        if(acronym_off && acronym_off.indexOf(',') == -1) {
+            $("#pnl_pgm_off").append("<span>" + gettext('of_pgm') + "</span>");
+        }else{
+            $("#pnl_pgm_off").append("<span>"+ gettext('of_pgms') +"</span>");
+        }
+
+        $("#pnl_pgm_off").append("<label style='color:red;'>"+ acronym_off +"</label><label>&nbsp; ?</label>");
         $("#pnl_pgm_off").append("<span><br></span>");
     }
 
-    function set_on_pannel(managerId, acronym_on) {
+    function set_on_pannel(acronym_on) {
         if (acronym_on) {
             $("#pnl_pgm_on").append("<label>" + acronym_on + "</label>");
         }else{
@@ -372,7 +366,7 @@
         $('#pnl_person_search_results').css('visibility', 'hidden');
         $('#pnl_person_search_error').css('visibility', 'hidden');
         $.ajax({
-            url: "/assessments/pgm_manager/person/list/search?name=" + $('#txt_name').val() + "&firstname=" + $('#txt_first_name').val()
+            url: "/assessments/pgm_manager/person/list/search?name=" + $('#txt_name_manager_search').val() + "&firstname=" + $('#txt_first_name_manager_search').val()
         }).then(function (data) {
             if (data.length > 0) {
                 $('#pnl_person_search_results').css('visibility', 'visible');
@@ -397,7 +391,7 @@
                         trHTML += value.email;
                     }
                     trHTML += '</td>';
-                    trHTML += '<td>'
+                    trHTML += '<td>';
                     if(value.user){
                         trHTML += value.user.username;
                     }
@@ -434,6 +428,38 @@
                 .remove()
                 .end();
     }
+
+    $(function() {
+        $(document).on("click", "button[id^='btn_remove_manager_modal_']", function(e) {
+            var id = $(this).attr("id");
+            var person_id = id.substring(id.lastIndexOf("_") + 1);
+            var ch = get_offer_id_list_on();
+
+            $("#hdn_to_be_removed_person").val(person_id);
+            $("#hdn_to_be_removed_pgms").val(ch);
+            save_selected_values();
+
+            clean_on_off_pannels(); // initialize
+            $.ajax({
+                url: "/assessments/delete_manager_information?pgm_ids=" + ch + "&person_id=" + person_id
+
+            }).then(function (data) {
+
+                    $.each(data, function (key, value) {
+                        //--------------------------------------------------------------
+                        // To display information on the effects of the removal.
+                        //--------------------------------------------------------------
+                        set_off_pannel(value.person_last_name,value.person_first_name, value.offer_year_acronyms_off);// name of the pgm manager
+                        // offers removed from
+                        set_on_pannel(value.offer_year_acronyms_on);// offers still managed
+                        //--------------------------------------------------------------
+                        $('#pnl_remove_manager_modal').modal('show');
+                    });
+
+
+            });
+        });
+    });
 
 </script>
 {% endblock %}

@@ -400,4 +400,4 @@ def add_permission(user, codename):
 
 
 def get_permission(codename):
-    return Permission.objects.get(codename=codename)
+    return Permission.objects.filter(codename=codename).first()

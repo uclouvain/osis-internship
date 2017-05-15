@@ -28,7 +28,6 @@ from django.db import models
 from base.models import learning_unit_year
 from base.models.enums import learning_unit_year_subtypes, learning_container_year_types
 
-
 class LearningContainerYearAdmin(admin.ModelAdmin):
     list_display = ('learning_container', 'academic_year', 'container_type', 'acronym', 'title')
     fieldsets = ((None, {'fields': ('learning_container', 'academic_year', 'container_type', 'acronym', 'title')}),)

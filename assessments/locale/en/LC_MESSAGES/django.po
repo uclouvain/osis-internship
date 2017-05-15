@@ -57,7 +57,7 @@ msgid "person_search"
 msgstr "Person search"
 
 msgid "remove_manager_label"
-msgstr "Are you sure you want to remove the following manager?"
+msgstr "Are you sure you want to remove the following manager"
 
 msgid "stay_manager_label"
 msgstr "He will keep the following program's management : "

@@ -1,6 +1,6 @@
 ##############################################################################
 #
-#    OSIS stands for Open Student Information System. It's an application
+# OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -24,22 +24,11 @@
 #
 ##############################################################################
 import factory
-import factory.django
-
-from internship.tests.factories.organization import OrganizationFactory
-from internship.tests.factories.speciality import SpecialityFactory
-from internship.tests.factories.cohort import CohortFactory
+from base.tests.factories.entity import EntityFactory
 
 
-class OfferFactory(factory.django.DjangoModelFactory):
+class EntityAddressFactory(factory.DjangoModelFactory):
     class Meta:
-        model = 'internship.InternshipOffer'
+        model = 'base.EntityAddress'
 
-    organization = factory.SubFactory(OrganizationFactory)
-    speciality = factory.SubFactory(SpecialityFactory)
-    cohort = factory.SubFactory(CohortFactory)
-
-    title = factory.Faker('sentence', nb_words=6, variable_nb_words=True)
-    maximum_enrollments = factory.Faker('random_int', min=3, max=8)
-    master = factory.Faker('name')
-    selectable = factory.Faker('boolean', chance_of_getting_true=50)
+    entity = factory.SubFactory(EntityFactory)

@@ -55,7 +55,6 @@ class LearningUnitYear(SerializableModel):
     activity_status = models.CharField(max_length=20, blank=True, null=True,
                                        choices=learning_unit_year_activity_status.LEARNING_UNIT_YEAR_ACTIVITY_STATUS)
 
-
     def __str__(self):
         return u"%s - %s" % (self.academic_year, self.acronym)
 

@@ -32,9 +32,11 @@ class LearningContainerAdmin(admin.ModelAdmin):
     fieldsets = ((None, {'fields': ('external_id',)}),)
 
 
+
 class LearningContainer(models.Model):
     external_id = models.CharField(max_length=100, blank=True, null=True)
     changed = models.DateTimeField(null=True)
+
 
 
 def find_by_id(learning_container_id):

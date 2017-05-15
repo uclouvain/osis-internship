@@ -1,6 +1,6 @@
 ##############################################################################
 #
-#    OSIS stands for Open Student Information System. It's an application
+# OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -24,22 +24,26 @@
 #
 ##############################################################################
 import factory
-import factory.django
+from django.conf import settings
+from django.utils import timezone
+from base.models.enums import entity_type
+from base.tests.factories.entity import EntityFactory
 
-from internship.tests.factories.organization import OrganizationFactory
-from internship.tests.factories.speciality import SpecialityFactory
-from internship.tests.factories.cohort import CohortFactory
+
+def _get_tzinfo():
+    if settings.USE_TZ:
+        return timezone.get_current_timezone()
+    else:
+        return None
 
 
-class OfferFactory(factory.django.DjangoModelFactory):
+class EntityVersionFactory(factory.DjangoModelFactory):
     class Meta:
-        model = 'internship.InternshipOffer'
+        model = 'base.EntityVersion'
 
-    organization = factory.SubFactory(OrganizationFactory)
-    speciality = factory.SubFactory(SpecialityFactory)
-    cohort = factory.SubFactory(CohortFactory)
-
-    title = factory.Faker('sentence', nb_words=6, variable_nb_words=True)
-    maximum_enrollments = factory.Faker('random_int', min=3, max=8)
-    master = factory.Faker('name')
-    selectable = factory.Faker('boolean', chance_of_getting_true=50)
+    entity = factory.SubFactory(EntityFactory)
+    title = factory.Faker('text', max_nb_chars=255)
+    acronym = factory.Faker('text', max_nb_chars=20)
+    entity_type = factory.Iterator(entity_type.ENTITY_TYPES, getter=lambda c: c[0])
+    start_date = factory.Faker('date_time_this_decade', before_now=True, after_now=False, tzinfo=_get_tzinfo())
+    end_date = factory.Faker('date_time_this_decade', before_now=False, after_now=True, tzinfo=_get_tzinfo())

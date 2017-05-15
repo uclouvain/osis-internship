@@ -117,8 +117,10 @@ def scores_encoding(request):
         # Manage filter
         learning_unit_year_ids = None
         if learning_unit_year_acronym:
+            learning_unit_year_acronym = learning_unit_year_acronym.strip() if isinstance(learning_unit_year_acronym, str)\
+                                         else learning_unit_year_acronym
             learning_unit_year_ids = mdl.learning_unit_year.search(acronym=learning_unit_year_acronym) \
-                .values_list('id', flat=True)
+                                                           .values_list('id', flat=True)
         if tutor_id and tutor_id != NOBODY:
             learning_unit_year_ids_filter_by_tutor = mdl_attr.attribution.search(tutor=tutor_id) \
                 .distinct('learning_unit_year') \
