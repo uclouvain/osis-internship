@@ -195,22 +195,17 @@
             }
         }
     });
-    </script>
-    <script>
     $("#pst-form-part4 :input").change(function() {
         $("#pst-form-part4").data("changed",true);
     });
     $('a').on('click', function(e) {
-	    var hrefLoc = $(this).attr('href');
 	    if ($("#pst-form-part4").data("changed")) {
 		    var choice = confirm("{% trans 'save_before_link' %}");
 		    if (choice == true) {
 			    e.preventDefault();
 			    $('form#pst-form-part4').submit();
-		    } else {
-			    window.location.href = hrefLoc;
-		    }
+		   }
 	    }
     });
-</script>
+    </script>
 {% endblock %}
