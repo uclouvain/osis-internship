@@ -25,8 +25,6 @@
 ##############################################################################
 from django.db import models
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
-from base.models import person
-from base.enums import structure_type
 
 
 class EntityManagerAdmin(SerializableModelAdmin):

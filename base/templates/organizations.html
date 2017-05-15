@@ -89,7 +89,7 @@
             </thead>
             {% for organization in organizations %}
             <tr>
-                <td><a href="{% url 'organization_read' organization.id %}"
+                <td><a href="{% url 'organization_read' organization_id=organization.id %}"
                        id="lnk_organization_read_{{organization.id}}">{{ organization.acronym }}</a></td>
                 <td>{{ organization.name }}</td>
                 <td>{{ organization.type }}</td>

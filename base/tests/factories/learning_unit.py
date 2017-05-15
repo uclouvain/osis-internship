@@ -28,7 +28,7 @@ import factory.fuzzy
 import string
 import datetime
 import operator
-from base.enums import learning_unit_periodicity
+from base.models.enums import learning_unit_periodicity
 from base.tests.factories.learning_container import LearningContainerFactory
 from django.conf import settings
 from django.utils import timezone

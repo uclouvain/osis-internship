@@ -34,7 +34,7 @@ from dissertation.forms import AdviserForm, ManagerAdviserForm, ManagerAddAdvise
     ManagerAddAdviserPerson, AddAdviserForm
 from django.contrib.auth.decorators import user_passes_test
 from base.views import layout
-from base.enums import person_source_type
+from base.models.enums import person_source_type
 
 
 ###########################

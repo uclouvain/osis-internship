@@ -6,7 +6,7 @@ from django.conf import settings
 from django.db import migrations, models, connection
 from django.utils import translation
 from reference.models import grade_type as mdl_grade_type
-from reference.enums import institutional_grade_type as instit_grade_type_enum
+from reference.models.enums import institutional_grade_type as instit_grade_type_enum
 from django.utils.translation import ugettext_lazy as _
 
 

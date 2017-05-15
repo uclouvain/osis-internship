@@ -25,7 +25,7 @@
 ##############################################################################
 from django.db import models
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
-from base.enums import learning_unit_year_status, learning_unit_year_types
+from base.models.enums import learning_unit_year_status, learning_unit_year_types
 
 
 class LearningUnitYearAdmin(SerializableModelAdmin):
@@ -54,7 +54,6 @@ class LearningUnitYear(SerializableModel):
     structure = models.ForeignKey('Structure', blank=True, null=True)
     status = models.CharField(max_length=20, blank=True, null=True,
                               choices=learning_unit_year_status.LEARNING_UNIT_YEAR_STATUS)
-
 
     def __str__(self):
         return u"%s - %s" % (self.academic_year, self.acronym)

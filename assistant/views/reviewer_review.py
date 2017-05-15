@@ -34,8 +34,8 @@ from assistant.forms import ReviewForm
 from assistant.models import assistant_mandate, review, mandate_structure, tutoring_learning_unit_year
 from assistant.models import reviewer
 from assistant.models.enums import review_status, assistant_mandate_state, reviewer_role
-from base.enums import structure_type
 from base.models import person
+from base.models.enums import structure_type
 
 
 @login_required

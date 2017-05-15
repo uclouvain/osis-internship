@@ -24,11 +24,10 @@
 #
 ##############################################################################
 import json
-from django.core import serializers
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required, permission_required
 from base import models as mdl
-from base.enums import structure_type
+from base.models.enums import structure_type
 from . import layout
 
 
@@ -70,11 +69,13 @@ def structure_read(request, structure_id):
     return layout.render(request, "structure.html", {'structure': structure,
                                                      'offers_years': offers_years})
 
+
 @login_required
-def structure_diagram(request, parent_id):
-    structure = mdl.structure.find_by_id(parent_id)
+def structure_diagram(request, structure_id):
+    structure = mdl.structure.find_by_id(structure_id)
     return layout.render(request, "structure_organogram.html", {'structure': structure,
                                                                 'structure_as_json': json.dumps(structure.serializable_object())})
+
 
 @login_required
 def structure_address(request, structure_id):

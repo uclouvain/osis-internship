@@ -25,7 +25,7 @@
 ##############################################################################
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
-from reference.enums import grade_type_coverage, institutional_grade_type as enum_institutional_grade_type
+from reference.models.enums import grade_type_coverage, institutional_grade_type as enum_institutional_grade_type
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 
 

@@ -33,8 +33,8 @@ from django.contrib import messages
 from django.utils.translation import ugettext as _
 from assistant.forms import MandateFileForm
 from assistant.utils import manager_access
-from assistant.models.enums import assistant_type
-from base.enums import structure_type
+from assistant.models.enums import assistant_type, assistant_phd_inscription
+from base.models.enums import structure_type
 
 COLS_NUMBER = 22
 ASSISTANTS_IMPORTED = 0
@@ -46,6 +46,10 @@ COLS_TITLES = ['SECTOR', 'FACULTY', 'PROGRAM_COMMISSION', 'INSTITUTE', 'POLE', '
                'FIRST_NAME', 'FULLTIME_EQUIVALENT', 'ENTRY_DATE', 'END_DATE', 'ASSISTANT_TYPE_CODE', 'SCALE',
                'CONTRACT_DURATION', 'CONTRACT_DURATION_FTE', 'RENEWAL_TYPE', 'ABSENCES', 'COMMENT', 'OTHER_STATUS',
                'EMAIL', 'FGS']
+ASSISTANT_TYPES_ALIASES = {
+    'ST': assistant_type.ASSISTANT,
+    'AS': assistant_type.TEACHING_ASSISTANT
+}
 
 
 @user_passes_test(manager_access.user_is_manager, login_url='assistants_home')
@@ -152,7 +156,9 @@ def create_academic_assistant_if_not_exists(record):
             assistant = assistant_mdl.academic_assistant.AcademicAssistant()
             ASSISTANTS_IMPORTED += 1
             assistant.person = person
-            assistant.save()
+        if record.get('ASSISTANT_TYPE_CODE') == 'AS':
+            assistant.inscription = assistant_phd_inscription.NO
+        assistant.save()
         return assistant
     else:
         PERSONS_NOT_FOUND += 1
@@ -182,10 +188,10 @@ def create_assistant_mandate_if_not_exists(record, assistant):
     mandate.absences = record.get('ABSENCES')
     mandate.comment = record.get('COMMENT')
     mandate.other_status = record.get('OTHER_STATUS')
-    if record.get('ASSISTANT_TYPE_CODE') == 'ST':
-        mandate.assistant_type = assistant_type.ASSISTANT
-    elif record.get('ASSISTANT_TYPE_CODE') == 'AS':
+    if ASSISTANT_TYPES_ALIASES.get(record.get('ASSISTANT_TYPE_CODE')) == assistant_type.TEACHING_ASSISTANT:
         mandate.assistant_type = assistant_type.TEACHING_ASSISTANT
+    else:
+        mandate.assistant_type = assistant_type.ASSISTANT
     mandate.scale = record.get('SCALE')
     mandate.save()
     return mandate

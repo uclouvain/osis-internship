@@ -22,9 +22,6 @@ msgstr "(for the 2nd renewal)"
 msgid "absences"
 msgstr "Absences"
 
-msgid "academic_year"
-msgstr "Academic year"
-
 msgid "action"
 msgstr "Action"
 
@@ -124,9 +121,6 @@ msgstr "Delete"
 msgid "doctorate"
 msgstr "Doctorate"
 
-msgid "email"
-msgstr "Email"
-
 msgid "equivalent_full_time"
 msgstr "EFT"
 
@@ -159,9 +153,6 @@ msgstr "Faculty representation activities"
 
 msgid "field"
 msgstr "Field"
-
-msgid "firstname"
-msgstr "First name"
 
 msgid "formation_activities"
 msgstr "Formation activities"
@@ -213,9 +204,6 @@ msgstr "Institute representation activities"
 
 msgid "institution"
 msgstr "Institution"
-
-msgid "lastname"
-msgstr "Last name"
 
 msgid "mandate"
 msgstr "Mandate"

@@ -29,13 +29,11 @@ from django.forms import ModelForm, Textarea
 from django.forms import widgets
 from django.forms.models import inlineformset_factory
 from django.utils.translation import ugettext as _
-
-from assistant import models as mdl
-from assistant.models.enums import assistant_phd_inscription
-from assistant.models.enums import review_advice_choices, assistant_type, assistant_mandate_renewal, \
-    reviewer_role
-from base.enums import structure_type
 from base.models import structure, academic_year, learning_unit_year
+from base.models.enums import structure_type
+from assistant import models as mdl
+from assistant.models.enums import review_advice_choices, assistant_type, assistant_mandate_renewal, \
+    reviewer_role, assistant_phd_inscription
 
 
 class MandateFileForm(forms.Form):
@@ -243,8 +241,6 @@ class TutoringLearningUnitForm(forms.Form):
 
 
 class AssistantFormPart5(ModelForm):
-    degrees = forms.CharField(
-        required=False, widget=forms.Textarea(attrs={'cols': '80', 'rows': '4'}))
     formations = forms.CharField(
         required=False, widget=forms.Textarea(attrs={'cols': '80', 'rows': '4'}))
 
@@ -253,7 +249,7 @@ class AssistantFormPart5(ModelForm):
         fields = ('faculty_representation', 'institute_representation', 'sector_representation',
                   'governing_body_representation', 'corsci_representation', 'students_service',
                   'infrastructure_mgmt_service', 'events_organisation_service', 'publishing_field_service',
-                  'scientific_jury_service', 'degrees', 'formations')
+                  'scientific_jury_service', 'formations')
 
 
 class ReviewForm(ModelForm):

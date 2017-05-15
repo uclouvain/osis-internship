@@ -172,7 +172,8 @@ def form_part3_save(request, mandate_id):
         form = AssistantFormPart3(data=request.POST, instance=assistant, prefix='mand')
         if form.is_valid():
             current_assistant = form.save(commit=False)
-            if current_assistant.inscription == assistant_phd_inscription.YES and not request.POST.get('person_id'):
+            if current_assistant.inscription == assistant_phd_inscription.YES \
+                    and (not request.POST.get('person_id') and current_assistant.supervisor is None):
                 msg = _("must_enter_supervisor_if_registered")
                 form.add_error('inscription', msg)
                 return render(request, "assistant_form_part3.html", {'assistant': assistant, 'mandate': mandate,
@@ -308,7 +309,6 @@ def form_part5_edit(request, mandate_id):
                                        'events_organisation_service': mandate.events_organisation_service,
                                        'publishing_field_service': mandate.publishing_field_service,
                                        'scientific_jury_service': mandate.scientific_jury_service,
-                                       'degrees': mandate.degrees,
                                        'formations': mandate.formations
                                        }, prefix='mand')
     return render(request, "assistant_form_part5.html", {'assistant': assistant,
