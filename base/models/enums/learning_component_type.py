@@ -32,8 +32,8 @@ TP = "TP"
 
 LEARNING_COMPONENT_TYPES = (
     (CMAG, CMAG),
-    (STAGE, STAGE)
-    (TFE, TFE)
+    (STAGE, STAGE),
+    (TFE, TFE),
     (TP, TP))
 
 
