@@ -23,29 +23,17 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
-from django.contrib import admin
+import factory
+import factory.fuzzy
+
+from base.tests.factories.learning_component_year import LearningComponentYearFactory
+from base.tests.factories.learning_class import LearningClassFactory
 
 
-class LearningClassYearAdmin(admin.ModelAdmin):
-    list_display = ('learning_component_year', 'learning_class', 'acronym')
-    fieldsets = ((None, {'fields': ('learning_component_year', 'learning_class', 'acronym')}),)
-    search_fields = ['acronym']
-
-
-class LearningClassYear(models.Model):
-    learning_component_year = models.ForeignKey('LearningComponentYear')
-    learning_class = models.ForeignKey('LearningClass')
-    acronym = models.CharField(max_length=3)
-
+class LearningClassYearFactory(factory.django.DjangoModelFactory):
     class Meta:
-        permissions = (
-            ("can_access_learningclassyear", "Can access learning class year"),
-        )
+        model = "base.LearningClassYear"
 
-
-def find_by_id(learning_class_year_id):
-    return LearningClassYear.objects.get(pk=learning_class_year_id)
-
-def find_by_learning_component_year(a_learning_component_year):
-    return LearningClassYear.objects.filter(learning_component_year=a_learning_component_year)
+    learning_component_year = factory.SubFactory(LearningComponentYearFactory)
+    learning_class = factory.SubFactory(LearningClassFactory)
+    acronym = factory.Sequence(lambda n: 'C-%d' % n)
