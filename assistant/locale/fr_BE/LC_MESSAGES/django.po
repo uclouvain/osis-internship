@@ -22,9 +22,6 @@ msgstr "(pour le 2ème renouvellement)"
 msgid "absences"
 msgstr "Absences"
 
-msgid "academic_year"
-msgstr "Année académique"
-
 msgid "action"
 msgstr "Action"
 
@@ -124,9 +121,6 @@ msgstr "Supprimer"
 msgid "doctorate"
 msgstr "Doctorat"
 
-msgid "email"
-msgstr "Email"
-
 msgid "equivalent_full_time"
 msgstr "ETP"
 
@@ -159,9 +153,6 @@ msgstr "Au sein de la faculté (commissions de programme, bureau de faculté, co
 
 msgid "field"
 msgstr "Filière"
-
-msgid "firstname"
-msgstr "Prénom"
 
 msgid "formation_activities"
 msgstr "Activités de formation"
@@ -214,9 +205,6 @@ msgstr "Au sein de l’institut (bureau d’institut, conseil d’institut...)"
 
 msgid "institution"
 msgstr "Institution"
-
-msgid "lastname"
-msgstr "Nom"
 
 msgid "mandate"
 msgstr "Mandat"

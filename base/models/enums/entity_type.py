@@ -23,21 +23,25 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
-from django.contrib import admin
+SECTOR = "SECTOR"
+FACULTY = "FACULTY"
+SCHOOL = "SCHOOL"
+INSTITUTE = "INSTITUTE"
+POLE = "POLE"
+DOCTORAL_COMMISSION = "DOCTORAL_COMMISSION"
+PLATFORM = "PLATFORM"
+LOGISTICS_ENTITY = "LOGISTICS_ENTITY"
+UNDEFINED = "UNDEFINED"
 
 
-class LearningContainerAdmin(admin.ModelAdmin):
-    list_display = ('title',)
-    fieldsets = ((None, {'fields': ('title',)}),)
-
-
-class LearningContainer(models.Model):
-    title = models.CharField(max_length=255)
-
-    def __str__(self):
-        return u"%s" % self.title
-
-
-def find_by_id(learning_container_id):
-    return LearningContainer.objects.get(pk=learning_container_id)
+ENTITY_TYPES = (
+    (SECTOR, SECTOR),
+    (FACULTY, FACULTY),
+    (SCHOOL, SCHOOL),
+    (INSTITUTE, INSTITUTE),
+    (POLE, POLE),
+    (DOCTORAL_COMMISSION, DOCTORAL_COMMISSION),
+    (PLATFORM, PLATFORM),
+    (LOGISTICS_ENTITY, LOGISTICS_ENTITY),
+    (UNDEFINED, UNDEFINED),
+)

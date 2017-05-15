@@ -1,6 +1,6 @@
 ##############################################################################
 #
-#    OSIS stands for Open Student Information System. It's an application
+# OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -23,21 +23,17 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
-from django.contrib import admin
+import factory
 
 
-class LearningContainerAdmin(admin.ModelAdmin):
-    list_display = ('title',)
-    fieldsets = ((None, {'fields': ('title',)}),)
+class CountryFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = 'reference.Country'
 
-
-class LearningContainer(models.Model):
-    title = models.CharField(max_length=255)
-
-    def __str__(self):
-        return u"%s" % self.title
-
-
-def find_by_id(learning_container_id):
-    return LearningContainer.objects.get(pk=learning_container_id)
+    external_id = factory.Faker('text', max_nb_chars=100)
+    iso_code = factory.Faker('lexify', text="??")
+    name = factory.Faker('country')
+    nationality = factory.Faker('text', max_nb_chars=80)
+    european_union = factory.Faker('boolean', chance_of_getting_true=50)
+    dialing_code = factory.Faker('random_element', elements=('+32', '+33', '+1'))
+    cref_code = factory.Faker('random_element', elements=('ABC', 'D3F', 'K-M'))

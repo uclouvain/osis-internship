@@ -1,6 +1,6 @@
 ##############################################################################
 #
-#    OSIS stands for Open Student Information System. It's an application
+# OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -23,21 +23,27 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
-from django.contrib import admin
+import factory
+from django.conf import settings
+from django.utils import timezone
+from base.models.enums import entity_type
+from base.tests.factories.entity import EntityFactory
 
 
-class LearningContainerAdmin(admin.ModelAdmin):
-    list_display = ('title',)
-    fieldsets = ((None, {'fields': ('title',)}),)
+def _get_tzinfo():
+    if settings.USE_TZ:
+        return timezone.get_current_timezone()
+    else:
+        return None
 
 
-class LearningContainer(models.Model):
-    title = models.CharField(max_length=255)
+class EntityVersionFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = 'base.EntityVersion'
 
-    def __str__(self):
-        return u"%s" % self.title
-
-
-def find_by_id(learning_container_id):
-    return LearningContainer.objects.get(pk=learning_container_id)
+    entity = factory.SubFactory(EntityFactory)
+    title = factory.Faker('text', max_nb_chars=255)
+    acronym = factory.Faker('text', max_nb_chars=20)
+    entity_type = factory.Iterator(entity_type.ENTITY_TYPES, getter=lambda c: c[0])
+    start_date = factory.Faker('date_time_this_decade', before_now=True, after_now=False, tzinfo=_get_tzinfo())
+    end_date = factory.Faker('date_time_this_decade', before_now=False, after_now=True, tzinfo=_get_tzinfo())

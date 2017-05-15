@@ -1,6 +1,6 @@
 ##############################################################################
 #
-#    OSIS stands for Open Student Information System. It's an application
+# OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -23,21 +23,24 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
-from django.contrib import admin
+import factory
+from django.conf import settings
+from django.utils import timezone
+from base.tests.factories.entity import EntityFactory
 
 
-class LearningContainerAdmin(admin.ModelAdmin):
-    list_display = ('title',)
-    fieldsets = ((None, {'fields': ('title',)}),)
+def _get_tzinfo():
+    if settings.USE_TZ:
+        return timezone.get_current_timezone()
+    else:
+        return None
 
 
-class LearningContainer(models.Model):
-    title = models.CharField(max_length=255)
+class EntityLinkFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = 'base.EntityLink'
 
-    def __str__(self):
-        return u"%s" % self.title
-
-
-def find_by_id(learning_container_id):
-    return LearningContainer.objects.get(pk=learning_container_id)
+    parent = factory.SubFactory(EntityFactory)
+    child = factory.SubFactory(EntityFactory)
+    start_date = factory.Faker('date_time_this_decade', before_now=True, after_now=False, tzinfo=_get_tzinfo())
+    end_date = factory.Faker('date_time_this_decade', before_now=False, after_now=True, tzinfo=_get_tzinfo())
