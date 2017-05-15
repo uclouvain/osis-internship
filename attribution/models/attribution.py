@@ -25,6 +25,7 @@
 ##############################################################################
 from itertools import chain
 from django.db import models
+from django.db.models import Q
 from django.shortcuts import get_object_or_404
 
 from attribution.models.enums import function
@@ -116,12 +117,14 @@ def search_scores_responsible(learning_unit_title, course_code, entity, professo
     if course_code:
         queryset = queryset.filter(learning_unit_year__acronym__icontains=course_code).distinct("learning_unit_year")
     if professor:
-        queryset = queryset\
-            .filter(tutor__person__last_name__icontains=professor)\
+        queryset = queryset \
+            .filter(Q(tutor__person__first_name__icontains=professor) |
+                    Q(tutor__person__last_name__icontains=professor)) \
             .distinct("learning_unit_year")
     if scores_responsible:
         queryset = queryset\
-            .filter(tutor__person__last_name__icontains=scores_responsible)\
+            .filter(Q(tutor__person__first_name__icontains=scores_responsible) |
+                    Q(tutor__person__last_name__icontains=scores_responsible))\
             .filter(score_responsible=True)\
             .distinct("learning_unit_year")
     if entity:
@@ -214,7 +217,7 @@ def find_by_tutor(tutor):
 
 
 def clear_responsible_by_learning_unit_year(learning_unit_year):
-    learning_unit_year = get_object_or_404(LearningUnitYear, pk=learning_unit_year)
+    learning_unit_year = LearningUnitYear.objects.get(id=learning_unit_year)
     attributions = Attribution.objects.filter(learning_unit_year=learning_unit_year,
                                               score_responsible=True,
                                               learning_unit_year__academic_year=current_academic_years())
