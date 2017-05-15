@@ -40,7 +40,6 @@ class EntityTest(TestCase):
     def setUp(self):
         self.start_date = timezone.make_aware(datetime.datetime(2015, 1, 1))
         self.end_date = timezone.make_aware(datetime.datetime(2015, 12, 31))
-        self.end_date = timezone.make_aware(datetime.datetime(2015, 12, 31))
         self.date_in_2015 = factory.fuzzy.FuzzyDate(timezone.make_aware(datetime.datetime(2015, 1, 1)),
                                                     timezone.make_aware(datetime.datetime(2015, 12, 30))).fuzz()
         self.date_in_2017 = factory.fuzzy.FuzzyDate(timezone.make_aware(datetime.datetime(2017, 1, 1)),

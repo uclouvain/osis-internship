@@ -32,3 +32,8 @@ class EntityAddressFactory(factory.DjangoModelFactory):
         model = 'base.EntityAddress'
 
     entity = factory.SubFactory(EntityFactory)
+    label = factory.Faker('text', max_nb_chars=20)
+    location = factory.Faker('street_address')
+    postal_code = factory.Faker('zipcode')
+    city = factory.Faker('city')
+    country = factory.Faker('country')

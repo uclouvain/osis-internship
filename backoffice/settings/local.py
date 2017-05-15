@@ -31,8 +31,16 @@ OPTIONAL_APPS = (
     'dissertation',
     'internship',
     'assessments',
-    'cms'
+    'cms',
+    'rest_framework'
 )
 
 INSTALLED_APPS += OPTIONAL_APPS
 APPS_TO_TEST += OPTIONAL_APPS
+
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [],
+    'TEST_REQUEST_DEFAULT_FORMAT': 'json'
+}
