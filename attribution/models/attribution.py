@@ -35,7 +35,7 @@ from osis_common.models.serializable_model import SerializableModel, Serializabl
 
 class AttributionAdmin(SerializableModelAdmin):
     list_display = ('tutor', 'function', 'score_responsible', 'learning_unit_year', 'start_year', 'end_year', 'changed')
-    list_filter = ('function', 'learning_unit_year__academic_year', 'score_responsible', 'learning_unit_year__structure')
+    list_filter = ('function', 'learning_unit_year__academic_year', 'score_responsible')
     fieldsets = ((None, {'fields': ('learning_unit_year', 'tutor', 'function', 'score_responsible', 'start_year',
                                     'end_year')}),)
     raw_id_fields = ('learning_unit_year', 'tutor')
@@ -60,7 +60,7 @@ class Attribution(SerializableModel):
 
 
 def search(tutor=None, learning_unit_year=None, score_responsible=None, list_learning_unit_year=None):
-    queryset = Attribution.objects.filter(learning_unit_year__academic_year=current_academic_years())
+    queryset = Attribution.objects
     if tutor:
         queryset = queryset.filter(tutor=tutor)
     if learning_unit_year:
