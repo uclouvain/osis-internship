@@ -18,24 +18,24 @@ class Migration(migrations.Migration):
 
     dependencies = []
 
-    # migrate_app_label = migrations.RunSQL(
-    #     """DO $$
-    #     BEGIN
-    #         IF EXISTS (select * from pg_class where relname='django_content_type') THEN
-    #             UPDATE django_content_type SET app_label='base' WHERE app_label='core';
-    #         END IF;
-    #     END;
-    #     $$;"""
-    # )
-    #
-    # update_migration_table = migrations.RunSQL(
-    #     """DO $$
-    #     BEGIN
-    #         IF EXISTS (select * from pg_class where relname='django_migrations') THEN
-    #             UPDATE django_migrations SET app='base' WHERE app='core';
-    #         END IF;
-    #     END;
-    #     $$;"""
-    # )
-    #
-    # operations = [migrate_app_label] + migrate_table_name() + [update_migration_table]
+    migrate_app_label = migrations.RunSQL(
+        """DO $$
+        BEGIN
+            IF EXISTS (select * from pg_class where relname='django_content_type') THEN
+                UPDATE django_content_type SET app_label='base' WHERE app_label='core';
+            END IF;
+        END;
+        $$;"""
+    )
+
+    update_migration_table = migrations.RunSQL(
+        """DO $$
+        BEGIN
+            IF EXISTS (select * from pg_class where relname='django_migrations') THEN
+                UPDATE django_migrations SET app='base' WHERE app='core';
+            END IF;
+        END;
+        $$;"""
+    )
+
+    operations = [migrate_app_label] + migrate_table_name() + [update_migration_table]
