@@ -155,12 +155,10 @@ def remove_program_mgr_from_offers(offers, person_to_be_removed):
 @login_required
 @permission_required('base.is_entity_manager', raise_exception=True)
 def person_list_search(request):
-    lastname = request.GET['name']
-    firstname = request.GET['firstname']
+    fullname = request.GET['fullname']
     employees = None
-    if lastname or firstname:
-        employees = mdl.person.search(lastname, firstname, True)
-
+    if fullname:
+        employees = mdl.person.search_employee(fullname)
     serializer = PersonSerializer(employees, many=True)
     return JSONResponse(serializer.data)
 
@@ -296,7 +294,7 @@ class PgmManagerSerializer(serializers.Serializer):
 
 @login_required
 def update_managers_list(request):
-    # Update the manager's list after add/delete
+    # Update the manager's list after add/delete/check
     list_id_offers_on = convert_to_list(request.GET['pgm_ids'])
     program_manager_list = mdl.program_manager.find_by_offer_year_list(list_id_offers_on)
     serializer = PgmManagerSerializer(build_program_manager_list(list_id_offers_on, program_manager_list, False),
@@ -311,10 +309,10 @@ def build_program_manager_list(list_id_offers_on, program_manager_list, detail):
         if a_program_manager.person not in pgm_managers:
             offers = get_offers_with_pgm_manager(list_id_offers_on, a_program_manager.person)
             pgms = build_offer_ids_string(offers)
-            acronyms_off = build_acronyms_off_string(offers)
             if a_program_manager.person not in persons:
                 persons.append(a_program_manager.person)
                 if detail:
+                    acronyms_off = build_acronyms_off_string(offers)
                     pgm_managers.append(PgmManager(person_id=a_program_manager.person.id,
                                                    person_last_name=a_program_manager.person.last_name,
                                                    person_first_name=a_program_manager.person.first_name,

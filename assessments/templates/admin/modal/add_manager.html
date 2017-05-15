@@ -11,17 +11,16 @@
             </div>
             <div class="modal-body">
                 <div class="row">
-                    <form method="post">
+                    <form method="get">
                         <div class="col-md-4">
-                            <label for="txt_name_manager_search" >{% trans 'name'%}</label>
-                            <input type="text" id="txt_name_manager_search" name="name" class="form-control" value="{{ lastname }}" >
+                            <input type="text"
+                                   id="txt_fullname_manager_search"
+                                   name="fullname"
+                                   class="form-control"
+                                   value="{{fullname}}"
+                                   title="{% trans 'hlp_employee_search' %}" >
                         </div>
                         <div class="col-md-4">
-                            <label for="txt_first_name_manager_search" >{% trans 'first_name'%}</label>
-                            <input type="text" id="txt_first_name_manager_search" name="firstname" class="form-control" value="{{ firstname }}" >
-                        </div>
-                        <div class="col-md-4">
-                            <br>
                             <button type="button" id="bt_submit_person_search" class="btn btn-primary" role="button">
                                 <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
                             </button>
