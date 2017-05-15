@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -26,7 +26,6 @@
 from django.db import models
 from django.contrib import admin
 from base.models import academic_year
-
 
 
 class LearningContainerYearAdmin(admin.ModelAdmin):
@@ -53,6 +52,7 @@ class LearningContainerYear(models.Model):
         permissions = (
             ("can_access_learningcontaineryear", "Can access learning container year"),
         )
+
 
 def find_by_id(learning_container_year_id):
     return LearningContainerYear.objects.get(pk=learning_container_year_id)

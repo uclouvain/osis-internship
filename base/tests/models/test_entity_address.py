@@ -1,6 +1,6 @@
 ##############################################################################
 #
-#    OSIS stands for Open Student Information System. It's an application
+# OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -23,21 +23,17 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.test import TestCase
+from base.models import entity_address
+from base.tests.factories.entity import EntityFactory
+from base.tests.factories.entity_address import EntityAddressFactory
 
-from django.utils.translation import ugettext_lazy as _
 
+class EntityAddressTest(TestCase):
 
-ABSENCE_UNJUSTIFIED = "ABSENCE_UNJUSTIFIED"
-ABSENCE_JUSTIFIED = "ABSENCE_JUSTIFIED"
-CHEATING = "CHEATING"
-SCORE_MISSING = "SCORE_MISSING"
+    def test_search_by_entity(self):
+        entity = EntityFactory()
+        for i in range(3):
+            EntityAddressFactory(entity=entity)
 
-# When the user inform 'A', we have to convert it to 'ABSENCE_UNJUSTIFIED'
-# When exporting the data to EPC, we have to convert:
-#    'ABSENCE_UNJUSTIFIED' => 'S'
-#    'ABSENCE_JUSTIFIED'   => 'M'
-#    'CHEATING'            => 'T'
-JUSTIFICATION_TYPES = (
-    (ABSENCE_UNJUSTIFIED, _('ABSENCE_UNJUSTIFIED')),  # A -> S
-    (ABSENCE_JUSTIFIED, _('ABSENCE_JUSTIFIED')),      # M
-    (CHEATING, _('CHEATING')))                        # T
+        self.assertEqual(len(entity_address.search_by_entity(entity)), 3)

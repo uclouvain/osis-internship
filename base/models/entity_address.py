@@ -23,13 +23,27 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.db import models
+from django.contrib import admin
 
-from django.utils.translation import ugettext_lazy as _
+
+class EntityAddressAdmin(admin.ModelAdmin):
+    list_display = ('entity', 'label', 'location', 'postal_code', 'city', 'country', )
+    search_fields = ['entity', 'label', 'location', 'postal_code', 'city', 'country']
+    raw_id_fields = ('entity', )
 
 
-ENROLLED = "ENROLLED"
-NOT_ENROLLED = "NOT_ENROLLED"
+class EntityAddress(models.Model):
+    entity = models.ForeignKey('Entity')
+    label = models.CharField(max_length=20, null=True)
+    location = models.CharField(max_length=255, null=True)
+    postal_code = models.CharField(max_length=20, null=True)
+    city = models.CharField(max_length=255, null=True)
+    country = models.CharField(max_length=255, null=True)
 
-STATES = (
-    (ENROLLED, _('ENROLLED')),
-    (NOT_ENROLLED, _('NOT_ENROLLED')))
+    class Meta:
+        verbose_name_plural = "entity addresses"
+
+
+def search_by_entity(entity):
+    return EntityAddress.objects.filter(entity=entity)

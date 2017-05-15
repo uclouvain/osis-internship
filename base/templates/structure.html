@@ -9,7 +9,7 @@
 * The core business involves the administration of students, teachers,
 * courses, programs and so on.
 *
-* Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+* Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 *
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -34,7 +34,7 @@
 {% block content %}
 <div class="page-header">
     <h3>{%if structure.part_of %}
-        <a href="{% url 'structure_read' structure.part_of.id %}" id="lnk_structure_read_{{structure.part_of.id}}"
+        <a href="{% url 'structure_read' structure_id=structure.part_of.id %}" id="lnk_structure_read_{{structure.part_of.id}}"
            title="{{structure.part_of.acronym}}">{{structure.part_of.title}}</a>
         {%else%}
         {{ structure.title }}
@@ -95,7 +95,7 @@
                                     </thead>
                                     {% for s in structure.children %}
                                     <tr>
-                                        <td><a href="{% url 'structure_read' s.id %}" id="lnk_structure_read_{{s.id}}">
+                                        <td><a href="{% url 'structure_read' structure_id=s.id %}" id="lnk_structure_read_{{s.id}}">
                                             {{s.acronym }}</a></td>
                                         <td>{{ s.title }}</td>
                                     </tr>
@@ -126,7 +126,7 @@
                             </tr>
                             {% endifchanged %}
                             <tr>
-                                <td><a href="{% url 'offer_read' oy.id %}" id="lnk_offer_read_{{oy.id}}">
+                                <td><a href="{% url 'offer_read' offer_year_id=oy.id %}" id="lnk_offer_read_{{oy.id}}">
                                     {{ oy.acronym}}</a></td>
                                 <td>{{ oy.title }}</td>
                             </tr>
@@ -139,7 +139,7 @@
             {% endif %}
             <div id="tab_structure" class="tab-pane fade">
                 {%if structure%}
-                <iframe src="{%url 'structure_diagram' structure.id %}" width="1100px" height="600px"
+                <iframe src="{%url 'structure_diagram' structure_id=structure.id %}" width="1100px" height="600px"
                         frameborder="0"></iframe>
                 {%endif%}
             </div>

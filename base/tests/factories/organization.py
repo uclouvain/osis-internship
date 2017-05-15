@@ -1,12 +1,12 @@
 ##############################################################################
 #
-#    OSIS stands for Open Student Information System. It's an application
+# OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -23,15 +23,27 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+import factory
+from django.conf import settings
+from django.utils import timezone
+from base.models import organization
 
-from django.utils.translation import ugettext_lazy as _
 
-ANNUAL = "ANNUAL"
-BIENNIAL_EVEN = "BIENNIAL_EVEN"
-BIENNIAL_ODD = "BIENNIAL_ODD"
+def _get_tzinfo():
+    if settings.USE_TZ:
+        return timezone.get_current_timezone()
+    else:
+        return None
 
-PERIODICITY_TYPES = (
-    (ANNUAL,  _(ANNUAL)),
-    (BIENNIAL_EVEN,  _(BIENNIAL_EVEN)),
-    (BIENNIAL_ODD,  _(BIENNIAL_ODD))
-)
+
+class OrganizationFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = 'base.Organization'
+
+    external_id = factory.Faker('text', max_nb_chars=100)
+    changed = factory.Faker('date_time_this_month', tzinfo=_get_tzinfo())
+    name = factory.Faker('text', max_nb_chars=255)
+    acronym = factory.Faker('text', max_nb_chars=15)
+    website = factory.Faker('url')
+    reference = factory.Faker('text', max_nb_chars=30)
+    type = factory.Iterator(organization.ORGANIZATION_TYPE, getter=lambda c: c[0])
