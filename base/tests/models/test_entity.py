@@ -155,3 +155,25 @@ class EntityTest(TestCase):
 
         self.assertCountEqual(entity.search(entity_type=types_dict['FACULTY']), [self.children[1], self.children[3]])
         self.assertCountEqual(entity.search(entity_type='NON_EXISTING'), [])
+
+    def test_get_most_recent_acronym(self):
+        start_dates = [
+            timezone.make_aware(datetime.datetime(2015, 1, 1)),
+            timezone.make_aware(datetime.datetime(2016, 1, 1)),
+            timezone.make_aware(datetime.datetime(2017, 1, 1))
+        ]
+        end_dates = [
+            timezone.make_aware(datetime.datetime(2015, 12, 31)),
+            timezone.make_aware(datetime.datetime(2016, 12, 31)),
+            timezone.make_aware(datetime.datetime(2017, 12, 31))
+        ]
+
+        for x in range(3):
+            EntityVersionFactory(
+                entity=self.parent,
+                acronym="ENTITY_V_" + str(x),
+                start_date=start_dates[x],
+                end_date=end_dates[x]
+            )
+
+        self.assertEqual(self.parent.most_recent_acronym(), "ENTITY_V_2")

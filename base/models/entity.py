@@ -27,10 +27,11 @@ from django.db import models
 from django.contrib import admin
 from django.utils import timezone
 from base.models.entity_link import EntityLink
+from base.models.entity_version import EntityVersion
 
 
 class EntityAdmin(admin.ModelAdmin):
-    list_display = ('id', 'organization',)
+    list_display = ('id', 'most_recent_acronym', 'organization')
     search_fields = ['organization']
     raw_id_fields = ('organization',)
 
@@ -42,7 +43,7 @@ class Entity(models.Model):
         verbose_name_plural = "entities"
 
     def __str__(self):
-        return "{0} ({1})".format(self.id, self.organization.acronym)
+        return "{0} ({1})".format(self.id, self.most_recent_acronym())
 
     def _direct_children(self, date=None):
         if date is None:
@@ -72,6 +73,13 @@ class Entity(models.Model):
                 descendants.extend(child.find_descendants(date))
 
         return descendants
+
+    def most_recent_acronym(self):
+        queryset = EntityVersion.objects.filter(entity=self).order_by('-start_date')
+        if queryset.exists():
+            return queryset.first().acronym
+        else:
+            return None
 
 
 def search(**kwargs):
