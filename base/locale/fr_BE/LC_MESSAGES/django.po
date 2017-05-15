@@ -1445,3 +1445,6 @@ msgstr "Proposition"
 msgid "academic_calendar_offer_year_calendar_start_date_end_date_error"
 msgstr "La date d'ouverture de '%s' du calendrier académique ne peut pas être supérieure au %s "
        "(date de fin de '%s' du programme '%s')"
+
+msgid "selected"
+msgstr "sélectionné(s)"
