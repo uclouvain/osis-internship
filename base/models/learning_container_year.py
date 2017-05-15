@@ -28,7 +28,6 @@ from django.contrib import admin
 from base.models import academic_year
 
 
-
 class LearningContainerYearAdmin(admin.ModelAdmin):
     list_display = ('learning_container', 'academic_year', 'acronym', 'title')
     fieldsets = ((None, {'fields': ('learning_container', 'academic_year', 'acronym', 'title')}),)
@@ -53,6 +52,7 @@ class LearningContainerYear(models.Model):
         permissions = (
             ("can_access_learningcontaineryear", "Can access learning container year"),
         )
+
 
 def find_by_id(learning_container_year_id):
     return LearningContainerYear.objects.get(pk=learning_container_year_id)

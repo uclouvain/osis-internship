@@ -17,8 +17,11 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-msgid "of_pgm"
-msgstr "of the following program: "
+msgid "of_pgms"
+msgstr "of the following programs: "
 
 msgid "remove_manager"
 msgstr "Remove the manager"
+
+msgid "of_pgm"
+msgstr "of the following program: "

@@ -31,8 +31,10 @@ class LearningClassAdmin(admin.ModelAdmin):
     list_display = ('learning_component',)
     fieldsets = ((None, {'fields': ('learning_component',)}),)
 
+
 class LearningClass(models.Model):
     learning_component = models.ForeignKey('LearningComponent')
+
 
 def find_by_id(learning_class_id):
     return LearningClass.objects.get(pk=learning_class_id)

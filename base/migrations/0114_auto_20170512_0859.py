@@ -8,7 +8,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('base', '0112_offeryear_offer_type'),
+        ('base', '0113_entity_entityaddress_entitylink_entityversion'),
     ]
 
     operations = [

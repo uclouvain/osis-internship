@@ -151,7 +151,7 @@ def find_by_person_academic_year(a_person=None, an_academic_yr=None, entity_list
         queryset = queryset.filter(offer_year__academic_year=an_academic_yr)
 
     if entity_list:
-        queryset = queryset.filter(offer_year__entity_administration__in=entity_list)
+        queryset = queryset.filter(offer_year__entity_management__in=entity_list)
 
     if an_offer_type:
         queryset = queryset.filter(offer_year__offer_type=an_offer_type)

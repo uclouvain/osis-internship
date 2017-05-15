@@ -24,10 +24,9 @@
 #
 ##############################################################################
 from django.db import models
-from django.contrib import admin
 from django.utils import timezone
-from django.utils.translation import ugettext_lazy as _
-from assistant.enums import message_type
+
+from assistant.models.enums import message_type
 
 
 class Message(models.Model):
