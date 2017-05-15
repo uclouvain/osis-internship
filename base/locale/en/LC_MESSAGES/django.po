@@ -1429,9 +1429,6 @@ msgid "academic_calendar_offer_year_calendar_start_date_end_date_error"
 msgstr "The start's date of '%s' of the academic calendar can't be higher than %s "
        "(end date of '%s' of the program '%s')"
 
-msgid "selected"
-msgstr "selected"
-
 msgid "component_type"
 msgstr "Component type"
 
@@ -1455,3 +1452,6 @@ msgstr "Planned classrooms"
 
 msgid "classes"
 msgstr "Classes"
+
+msgid "selected"
+msgstr "selected"
