@@ -38,6 +38,7 @@ class EntityAdmin(admin.ModelAdmin):
 
 class Entity(models.Model):
     organization = models.ForeignKey('Organization', null=True)
+    external_id = models.CharField(max_length=255, null=True)
 
     class Meta:
         verbose_name_plural = "entities"
@@ -75,11 +76,10 @@ class Entity(models.Model):
         return descendants
 
     def most_recent_acronym(self):
-        queryset = EntityVersion.objects.filter(entity=self).order_by('-start_date')
-        if queryset.exists():
-            return queryset.first().acronym
-        else:
-            return None
+        first_entity = EntityVersion.objects.filter(entity=self).order_by('-start_date').first()
+        if first_entity:
+            return first_entity.acronym
+        return None
 
 
 def search(**kwargs):

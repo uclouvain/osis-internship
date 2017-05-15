@@ -30,8 +30,8 @@ from base.models.entity import Entity
 from base.serializers import EntitySerializer
 
 
-@api_view(['GET', 'DELETE', 'PUT'])
-def get_delete_update_entity(request, pk):
+@api_view(['GET'])
+def get_entity(request, pk):
     try:
         entity = Entity.objects.get(pk=pk)
     except Entity.DoesNotExist:

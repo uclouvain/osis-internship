@@ -52,14 +52,14 @@ class EntityViewTestCase(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_get_valid_single_entity(self):
-        response = self.client.get(reverse('get_delete_update_entity', kwargs={'pk': self.entities[0].pk}))
+        response = self.client.get(reverse('get_entity', kwargs={'pk': self.entities[0].pk}))
         entity = Entity.objects.get(pk=self.entities[0].pk)
         serializer = EntitySerializer(entity)
         self.assertEqual(response.data, serializer.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_get_invalid_single_entity(self):
-        response = self.client.get(reverse('get_delete_update_entity', kwargs={'pk': 65465465}))
+        response = self.client.get(reverse('get_entity', kwargs={'pk': 65465465}))
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_create_valid_entity(self):
