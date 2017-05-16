@@ -23,6 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.utils.translation import ugettext_lazy as _
 
 COORDINATOR = "COORDINATOR"
 HOLDER = "HOLDER"
@@ -35,14 +36,14 @@ PROFESSOR = "PROFESSOR"  # To remove afterwards.
 INTERNSHIP_SUPERVISOR = "INTERNSHIP_SUPERVISOR"
 INTERNSHIP_CO_SUPERVISOR = "INTERNSHIP_CO_SUPERVISOR"
 
-FUNCTIONS = ((COORDINATOR, COORDINATOR),
-             (HOLDER, HOLDER),
-             (CO_HOLDER, CO_HOLDER),
-             (DEPUTY, DEPUTY),
-             (DEPUTY_AUTHORITY, DEPUTY_AUTHORITY),
-             (DEPUTY_SABBATICAL, DEPUTY_SABBATICAL),
-             (DEPUTY_TEMPORARY, DEPUTY_TEMPORARY),
-             (PROFESSOR, PROFESSOR),
-             (INTERNSHIP_SUPERVISOR, INTERNSHIP_SUPERVISOR),
-             (INTERNSHIP_CO_SUPERVISOR, INTERNSHIP_CO_SUPERVISOR),)
+FUNCTIONS = ((COORDINATOR, _(COORDINATOR)),
+             (HOLDER, _(HOLDER)),
+             (CO_HOLDER, _(CO_HOLDER)),
+             (DEPUTY, _(DEPUTY)),
+             (DEPUTY_AUTHORITY, _(DEPUTY_AUTHORITY)),
+             (DEPUTY_SABBATICAL, _(DEPUTY_SABBATICAL)),
+             (DEPUTY_TEMPORARY, _(DEPUTY_TEMPORARY)),
+             (PROFESSOR, _(PROFESSOR)),
+             (INTERNSHIP_SUPERVISOR, _(INTERNSHIP_SUPERVISOR)),
+             (INTERNSHIP_CO_SUPERVISOR, _(INTERNSHIP_CO_SUPERVISOR)),)
 

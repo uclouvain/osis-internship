@@ -23,17 +23,21 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.utils.translation import ugettext_lazy as _
 
-from assistant.models import academic_assistant
-from assistant.models import assistant_document_file
-from assistant.models import assistant_mandate
-from assistant.models import manager
-from assistant.models import mandate_structure
-from assistant.models import message
-from assistant.models import review
-from assistant.models import reviewer
-from assistant.models import settings
-from assistant.models import tutoring_learning_unit_year
+MASTER_DISSERTATION = "MASTER_DISSERTATION"
+FULL = "FULL"
+MOBILITY = "MOBILITY"
+OTHER = "OTHER"
+PARTIM = "PARTIM"
+PHD_THESIS = "PHD_THESIS"
 
-
+LEARNING_UNIT_YEAR_SUBTYPES = (
+    (MASTER_DISSERTATION, _(MASTER_DISSERTATION)),
+    (FULL, _(FULL)),
+    (MOBILITY, _(MOBILITY)),
+    (OTHER, _(OTHER)),
+    (PARTIM, _(PARTIM)),
+    (PHD_THESIS, _(PHD_THESIS))
+)
 

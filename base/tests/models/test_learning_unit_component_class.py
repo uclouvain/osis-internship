@@ -1,6 +1,6 @@
 ##############################################################################
 #
-#    OSIS stands for Open Student Information System. It's an application
+# OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
@@ -35,7 +35,6 @@ from base.models.learning_unit_component import LearningUnitComponent
 from base.models.learning_class_year import LearningClassYear
 from base.models.learning_class import LearningClass
 from base.models.academic_year import AcademicYear
-from base.models.enums import learning_unit_year_types
 
 now = timezone.now()
 
@@ -70,7 +69,6 @@ class LearningComponentYearTest(TestCase):
                                                         learning_component=learning_component,
                                                         title="Cours magistral",
                                                         acronym="/C",
-                                                        type=learning_unit_year_types.COURSE,
                                                         comment="TEST")
         #Classe annualisée est associée à son composant et à son conteneur annualisé
         learning_class_year = LearningClassYear(learning_component_year=learning_component_year,
