@@ -1500,3 +1500,6 @@ msgstr "PhD Thesis"
 
 msgid "selected"
 msgstr "selected"
+
+msgid "learning_unit_specifications"
+msgstr "Specifications"

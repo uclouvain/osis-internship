@@ -37,6 +37,8 @@ class TranslatedTextLabelAdmin(admin.ModelAdmin):
 
 
 class TranslatedTextLabel(models.Model):
+    external_id = models.CharField(max_length=100, blank=True, null=True)
+    changed = models.DateTimeField(null=True)
     language = models.ForeignKey(Language)
     text_label = models.ForeignKey(TextLabel)
     label = models.CharField(max_length=255)

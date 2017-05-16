@@ -38,6 +38,8 @@ class TranslatedTextAdmin(admin.ModelAdmin):
 
 
 class TranslatedText(models.Model):
+    external_id = models.CharField(max_length=100, blank=True, null=True)
+    changed = models.DateTimeField(null=True)
     language = models.ForeignKey(Language)
     text_label = models.ForeignKey(TextLabel, blank=None, null=True)
     entity = models.CharField(db_index=True, max_length=25, choices=ENTITY_NAME)

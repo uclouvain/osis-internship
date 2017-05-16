@@ -1517,3 +1517,6 @@ msgstr "Thèse"
 
 msgid "selected"
 msgstr "sélectionné(s)"
+
+msgid "learning_unit_specifications"
+msgstr "Cahier de charges"

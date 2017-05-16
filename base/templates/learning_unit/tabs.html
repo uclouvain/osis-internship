@@ -30,6 +30,7 @@
 {% url 'learning_unit_pedagogy' learning_unit_year_id=learning_unit_year.id as url_pedagogy %}
 {% url 'learning_unit_attributions' learning_unit_year_id=learning_unit_year.id as url_attributions %}
 {% url 'learning_unit_proposals' learning_unit_year_id=learning_unit_year.id as url_proposals %}
+{% url 'learning_unit_specifications' learning_unit_year_id=learning_unit_year.id as url_specifications %}
 
 
 <ul class="nav nav-tabs" role="tablist">
@@ -53,6 +54,11 @@
 		 {% trans 'educational_information' %}
 	</a>
     </li>
+    <li role="presentation" {% if request.path == url_specifications %} class="active" {% endif %}>
+        <a href="{{url_specifications}}" role="tab">
+            {% trans 'learning_unit_specifications' %}
+        </a>
+    </li>
     <li role="presentation" {% if request.path == url_attributions %} class="active" {% endif %}>
         <a href="{{url_attributions}}" role="tab">
 		 {% trans 'tutors' %}
@@ -60,7 +66,7 @@
     </li>
     <li role="presentation" {% if request.path == url_proposals %} class="active" {% endif %}>
         <a href="{{url_proposals}}" role="tab">
-		 {% trans 'propositions' %}
-	</a>
+        {% trans 'propositions' %}
+        </a>
     </li>
 </ul>

@@ -23,38 +23,28 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
-from django.core import serializers
-from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
+from django import forms
 
 
-class LanguageAdmin(SerializableModelAdmin):
-    list_display = ('code', 'name', 'recognized')
-    list_filter = ('recognized',)
-    ordering = ('code',)
-    search_fields = ['code', 'name']
-    fieldsets = ((None, {'fields': ('code', 'name', 'recognized')}),)
+class LearningUnitSpecificationsForm(forms.Form):
+    learning_unit_year_id = forms.CharField(widget=forms.HiddenInput(), required=True)
+    language = forms.CharField(widget=forms.HiddenInput(), required=True)
+    themes = forms.CharField(widget=forms.Textarea())
+    skills_to_be_acquired = forms.CharField(widget=forms.Textarea())
+    prerequisite = forms.CharField(widget=forms.Textarea())
 
+    def __init__(self, learning_unit_year, language, *args, **kwargs):
+        super(LearningUnitSpecificationsForm, self).__init__(*args, **kwargs)
+        self.fields['learning_unit_year_id'].initial = learning_unit_year.id
+        self.fields['language'].initial = language
+        self.refresh_data(learning_unit_year, language)
+        self._all_field_read_only()
 
-class Language(SerializableModel):
-    external_id = models.CharField(max_length=100, blank=True, null=True)
-    code = models.CharField(max_length=4, unique=True)
-    name = models.CharField(max_length=80, unique=True)
-    recognized = models.BooleanField(default=False)
+    def refresh_data(self, learning_unit_year, language):
+       pass
 
-    def __str__(self):
-        return self.name
+    def _all_field_read_only(self):
+        # Actually it is read only screen
+        for field in self.fields.values():
+            field.widget.attrs.update({'readonly':True, 'style': 'border:0;outline-style:none;'})
 
-
-def find_by_code(code):
-    return Language.objects.get(code=code)
-
-
-def serialize_list(list_languages):
-    """
-    Serialize a list of "Language" objects using the json format.
-    Use to send data to osis-portal.
-    :param list_languages: a list of "Language" objects
-    :return: the serialized list (a json)
-    """
-    return serializers.serialize("json", list_languages)
