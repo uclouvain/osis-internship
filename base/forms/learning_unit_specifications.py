@@ -32,9 +32,9 @@ from django.utils.safestring import mark_safe
 class LearningUnitSpecificationsForm(forms.Form):
     learning_unit_year = language = None
 
-    def __init__(self, learning_unit_year, language, *args, **kwargs):
+    def __init__(self, learning_unit_year, iso, *args, **kwargs):
         self.learning_unit_year = learning_unit_year
-        self.language = language
+        self.language = iso
         self.refresh_data()
         super(LearningUnitSpecificationsForm, self).__init__(*args, **kwargs)
 

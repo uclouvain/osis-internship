@@ -114,6 +114,14 @@ def find_by_user(user):
     return person
 
 
+def get_user_interface_language(user):
+    user_language = settings.LANGUAGE_CODE
+    person = find_by_user(user)
+    if person:
+        user_language = person.language
+    return user_language
+
+
 def change_language(user, new_language):
     if new_language:
         person = Person.objects.get(user=user)

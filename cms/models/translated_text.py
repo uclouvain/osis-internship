@@ -61,4 +61,4 @@ def search(entity, reference, text_labels=None, language=None):
     if text_labels:
         queryset = queryset.filter(text_label__in=text_labels)
 
-    return queryset.select_related('language', 'text_label')
+    return queryset.select_related('text_label')
