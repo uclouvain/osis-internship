@@ -27,7 +27,7 @@ import datetime
 from itertools import chain
 from django.contrib.auth.models import User
 from django.test import TestCase
-from assessments.views.scores_responsible import is_faculty_admin, create_dictionary
+from assessments.views import scores_responsible
 from attribution.models import attribution
 from attribution.tests.models import test_attribution
 from base.tests.factories.academic_year import AcademicYearFactory
@@ -63,12 +63,22 @@ class ScoresResponsibleViewTestCase(TestCase):
                                             score_responsible=True)
 
     def test_is_faculty_admin(self):
-        a_faculty_administrator = is_faculty_admin(self.user)
+        a_faculty_administrator = scores_responsible.is_faculty_admin(self.user)
         self.assertTrue(a_faculty_administrator)
 
     def test_create_dictionary(self):
         attributions = attribution.find_attributions(self.structure)
         attributions_children = attribution.find_all_distinct_children(attributions[0])
         attributions_list = list(chain(attributions, attributions_children))
-        dictionary = create_dictionary(attributions_list)
+        dictionary = scores_responsible.create_dictionary(attributions_list)
         self.assertIsNotNone(dictionary)
+
+    def test_find_entities_list(self):
+        entities_list = scores_responsible.find_entities_list(self.structure)
+        self.assertIsNotNone(entities_list)
+
+    def test_find_learning_unit_year_list(self):
+        entities_list = scores_responsible.find_learning_unit_year_list(self.structure)
+        self.assertIsNotNone(entities_list)
+
+    

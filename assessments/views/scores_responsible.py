@@ -64,6 +64,7 @@ def scores_responsible_search(request):
     dict_attribution = create_dictionary(attributions_searched)
     return layout.render(request, 'scores_responsible.html', {"entities_list": entities_list,
                                                               "dict_attribution": dict_attribution,
+                                                              "acronym": request.GET['entity'],
                                                               "learning_unit_title": request.GET['learning_unit_title'],
                                                               "course_code": request.GET['course_code'],
                                                               "professor": request.GET['professor'],

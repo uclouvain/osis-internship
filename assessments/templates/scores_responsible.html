@@ -43,7 +43,9 @@
                     <label for="slt_entity">{% trans 'entities' %}</label>
                     <select class="form-control" id="slt_entity"  name="entity" value="{{ request.GET.search }}">
                         {% for entity in entities_list %}
-                            <option value="{{entity.learning_unit_year.structure.acronym}}">{{entity.learning_unit_year.structure.acronym}}</option>
+                            <option value="{{entity.learning_unit_year.structure.acronym}}"
+                                    {% if entity.learning_unit_year.structure.acronym == acronym %}selected{% endif %}>
+                                {{entity.learning_unit_year.structure.acronym}}</option>
                         {% endfor %}
                     </select>
                 </div>
