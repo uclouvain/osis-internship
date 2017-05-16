@@ -78,7 +78,7 @@ def learning_unit_formations(request, learning_unit_year_id):
 @permission_required('base.can_access_learningunit', raise_exception=True)
 def learning_unit_components(request, learning_unit_year_id):
     learning_unit_year = mdl.learning_unit_year.find_by_id(learning_unit_year_id)
-    components = get_components(learning_unit_year.learning_container_year)  # components = [{'id':1, 'name': 'name 1'},{'id':2, 'name': 'name 2'}]
+    components = get_components(learning_unit_year.learning_container_year)
     tab_active = 'components'
     return layout.render(request, "learning_unit/components.html", locals())
 
