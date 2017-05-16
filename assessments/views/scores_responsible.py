@@ -24,12 +24,11 @@
 #
 ##############################################################################
 from itertools import chain
-
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
 from attribution import models as mdl_attr
 from attribution.models.attribution import Attribution
-from base.models import entity_manager
+from base.models import entity_manager, learning_unit_year
 from base.models.learning_unit_year import LearningUnitYear
 from base.views import layout
 
@@ -45,7 +44,7 @@ def scores_responsible(request):
     a_faculty_administrator = entity_manager.find_entity_manager_by_user(request.user)
     learning_unit_year_list = find_learning_unit_year_list(a_faculty_administrator.structure)
     entities_list = find_entities_list(a_faculty_administrator.structure)
-    dict_attribution = create_dictionary(learning_unit_year_list)
+    dict_attribution = create_attributions_list(learning_unit_year_list)
     return layout.render(request, 'scores_responsible.html', {"entities_list": entities_list,
                                                               "dict_attribution": dict_attribution})
 
@@ -61,7 +60,7 @@ def scores_responsible_search(request):
         professor=request.GET.get('professor'),
         scores_responsible=request.GET.get('scores_responsible'))
     entities_list = find_entities_list(a_faculty_administrator.structure)
-    dict_attribution = create_dictionary(attributions_searched)
+    dict_attribution = create_attributions_list(attributions_searched)
     return layout.render(request, 'scores_responsible.html', {"entities_list": entities_list,
                                                               "dict_attribution": dict_attribution,
                                                               "acronym": request.GET.get('entity'),
@@ -71,7 +70,7 @@ def scores_responsible_search(request):
                                                               "scores_responsible": request.GET.get('scores_responsible')})
 
 
-def create_dictionary(attributions):
+def create_attributions_list(attributions):
     dict_attribution = dict()
     for attribution in attributions:
         tutor_number = mdl_attr.attribution.find_tutor_number(attribution)
@@ -117,7 +116,8 @@ def scores_responsible_management(request, pk):
 @login_required
 @user_passes_test(is_faculty_admin)
 def scores_responsible_add(request, pk):
-    mdl_attr.attribution.clear_responsible_by_learning_unit_year(pk)
+    a_learning_unit_year = learning_unit_year.find_by_id(pk)
+    mdl_attr.attribution.clear_responsible_by_learning_unit_year(a_learning_unit_year)
     if request.GET:
         for professor in request.GET:
             prf_id = professor.strip('prf_')

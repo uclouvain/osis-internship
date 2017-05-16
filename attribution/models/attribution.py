@@ -217,7 +217,6 @@ def find_by_tutor(tutor):
 
 
 def clear_responsible_by_learning_unit_year(learning_unit_year):
-    learning_unit_year = LearningUnitYear.objects.get(id=learning_unit_year)
     attributions = Attribution.objects.filter(learning_unit_year=learning_unit_year,
                                               score_responsible=True,
                                               learning_unit_year__academic_year=current_academic_years())
