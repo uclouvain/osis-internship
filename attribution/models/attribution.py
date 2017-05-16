@@ -26,11 +26,8 @@
 from itertools import chain
 from django.db import models
 from django.db.models import Q
-from django.shortcuts import get_object_or_404
-
 from attribution.models.enums import function
 from base.models.academic_year import current_academic_years
-from base.models.learning_unit_year import LearningUnitYear
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 
 
@@ -109,17 +106,17 @@ def find_tutor_number(attribution):
     return tutor_number
 
 
-def search_scores_responsible(learning_unit_title, course_code, entity, professor, scores_responsible):
+def search_scores_responsible(learning_unit_title, course_code, entity, tutor, scores_responsible):
     queryset = Attribution.objects.filter(learning_unit_year__academic_year=current_academic_years())
     if learning_unit_title:
         queryset = queryset.filter(learning_unit_year__title__icontains=learning_unit_title)\
             .distinct("learning_unit_year")
     if course_code:
         queryset = queryset.filter(learning_unit_year__acronym__icontains=course_code).distinct("learning_unit_year")
-    if professor:
+    if tutor:
         queryset = queryset \
-            .filter(Q(tutor__person__first_name__icontains=professor) |
-                    Q(tutor__person__last_name__icontains=professor)) \
+            .filter(Q(tutor__person__first_name__icontains=tutor) |
+                    Q(tutor__person__last_name__icontains=tutor)) \
             .distinct("learning_unit_year")
     if scores_responsible:
         queryset = queryset\
@@ -128,7 +125,7 @@ def search_scores_responsible(learning_unit_title, course_code, entity, professo
             .filter(score_responsible=True)\
             .distinct("learning_unit_year")
     if entity:
-        if learning_unit_title or course_code or professor or scores_responsible:
+        if learning_unit_title or course_code or tutor or scores_responsible:
             queryset = queryset.filter(learning_unit_year__structure__acronym=entity).distinct("learning_unit_year")
         else:
             queryset = queryset.filter(learning_unit_year__structure__acronym=entity).distinct("learning_unit_year")
@@ -223,3 +220,7 @@ def clear_responsible_by_learning_unit_year(learning_unit_year):
     for attribution in attributions:
         attribution.score_responsible = False
         attribution.save()
+
+
+def find_by_id(attribution_id):
+    return Attribution.objects.get(pk=attribution_id)

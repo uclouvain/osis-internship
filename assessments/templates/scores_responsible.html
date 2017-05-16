@@ -60,9 +60,9 @@
                            value="{% if course_code %}{{ learning_unit_title }}{% else %}{{ request.GET.search }}{% endif %}">
                 </div>
                 <div class="col-md-2 form-group">
-                    <label for="txt_professor">{% trans 'professor' %}</label>
-                    <input class="form-control" id="txt_professor"  name="professor"
-                           value="{% if course_code %}{{ professor }}{% else %}{{ request.GET.search }}{% endif %}">
+                    <label for="txt_tutor">{% trans 'tutor' %}</label>
+                    <input class="form-control" id="txt_tutor"  name="tutor"
+                           value="{% if course_code %}{{ tutor }}{% else %}{{ request.GET.search }}{% endif %}">
                 </div>
                 <div class="col-md-3 form-group">
                     <label for="txt_scores_responsible">{% trans 'scores_responsible' %}</label>

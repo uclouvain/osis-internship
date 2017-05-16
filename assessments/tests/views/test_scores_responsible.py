@@ -70,7 +70,7 @@ class ScoresResponsibleViewTestCase(TestCase):
         attributions = attribution.find_attributions(self.structure)
         attributions_children = attribution.find_all_distinct_children(attributions[0])
         attributions_list = list(chain(attributions, attributions_children))
-        dictionary = scores_responsible.create_attributions_list(attributions_list)
+        dictionary = scores_responsible.create_dictionary(attributions_list)
         self.assertIsNotNone(dictionary)
 
     def test_find_entities_list(self):
