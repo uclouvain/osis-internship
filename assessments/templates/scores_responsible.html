@@ -39,44 +39,39 @@
     <div class="panel-body">
        <form method="get" action="{% url 'scores_responsible_search'%}">
             <div class="row">
-                <div class="col-md-1 form-group">
+                <div class="col-md-2 form-group">
                     <label for="slt_entity">{% trans 'entities' %}</label>
                     <select class="form-control" id="slt_entity"  name="entity" value="{{ request.GET.search }}">
-                        <option value=""></option>
-                        {% for attribution_list in attributions_list %}
-                            <option value="{{attribution_list.learning_unit_year.structure.acronym}}">{{attribution_list.learning_unit_year.structure.acronym}}</option>
+                        {% for entity in entities_list %}
+                            <option value="{{entity.learning_unit_year.structure.acronym}}"
+                                    {% if entity.learning_unit_year.structure.acronym == acronym %}selected{% endif %}>
+                                {{entity.learning_unit_year.structure.acronym}}</option>
                         {% endfor %}
                     </select>
                 </div>
                 <div class="col-md-2 form-group">
                     <label for="txt_course_code">{% trans 'course_code' %}</label>
-                    <input class="form-control" id="txt_course_code"  name="course_code" value="{{ request.GET.search }}">
+                    <input class="form-control" id="txt_course_code"  name="course_code"
+                           value="{% if course_code %}{{ course_code }}{% else %}{% endif %}">
                 </div>
                 <div class="col-md-2 form-group">
                     <label for="txt_learning_unit_title">{% trans 'learning_unit_title' %}</label>
-                    <input class="form-control" id="txt_learning_unit_title"  name="learning_unit_title" value="{{ request.GET.search }}">
+                    <input class="form-control" id="txt_learning_unit_title"  name="learning_unit_title"
+                           value="{% if course_code %}{{ learning_unit_title }}{% else %}{{ request.GET.search }}{% endif %}">
                 </div>
                 <div class="col-md-2 form-group">
-                    <label for="txt_professor">{% trans 'professor' %}</label>
-                    <select class="form-control" id="txt_professor"  name="professor">
-                         <option value=""></option>
-                        {% for tutor in all_tutors %}
-                            <option value="{{tutor.tutor.id}}">{{tutor.tutor}}</option>
-                        {% endfor %}
-                    </select>
+                    <label for="txt_tutor">{% trans 'tutor' %}</label>
+                    <input class="form-control" id="txt_tutor"  name="tutor"
+                           value="{% if course_code %}{{ tutor }}{% else %}{{ request.GET.search }}{% endif %}">
                 </div>
                 <div class="col-md-3 form-group">
                     <label for="txt_scores_responsible">{% trans 'scores_responsible' %}</label>
-                    <select class="form-control" id="txt_scores_responsible"  name="scores_responsible">
-                        <option value=""></option>
-                        {% for responsible in responsibles_list %}
-                            <option value="{{responsible.tutor.id}}">{{responsible.tutor}}</option>
-                        {% endfor %}
-                    </select>
+                    <input class="form-control" id="txt_scores_responsible"  name="scores_responsible"
+                           value="{% if course_code %}{{ scores_responsible }}{% else %}{{ request.GET.search }}{% endif %}">
                 </div>
                 <div class="col-md-1 form-group" style="margin-top:25px">
                     <button type="submit" id="bt_submit_search" class="btn btn-primary" role="button"
-                            title="{% trans 'search' %}">{% trans 'search' %}</button>
+                            title="{% trans 'search' %}"><span class="glyphicon glyphicon-search"></span></button>
                 </div>
            </div>
        </form>
@@ -98,9 +93,17 @@
                             <td class="text-center">{{ value_list.2 }}</td>
                             <td class="text-center">{{ value_list.3 }}</td>
                             <td class="text-center">{{ value_list.4 }}</td>
-                            <td class="text-center">{{ value_list.5 }}</td>
                             <td class="text-center">
-                                <a class="btn btn-primary pull-right" href="{% url 'scores_responsible_management' pk=value_list.0 %}" style="margin-right: 5px;">
+                                {% if value_list.5 %}
+                                    {% for value in value_list.5 %}
+                                        {{ value }}<br>
+                                    {% endfor %}
+                                {% else %}
+                                    {% trans 'without_attribution' %}
+                                {% endif %}
+                            </td>
+                            <td class="text-center">
+                                <a class="btn btn-default pull-right" href="{% url 'scores_responsible_management' pk=value_list.0 %}" style="margin-right: 5px;">
                                     <span class="glyphicon glyphicon-edit"></span>
                                 </a>
                             </td>

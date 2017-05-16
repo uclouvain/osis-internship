@@ -39,7 +39,45 @@
 
         <div class="tab-content">
             <div role="tabpanel" class="tab-pane active" id="identification">
+                <br/>
+                <div class="col-md-8">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label>{% trans 'learning_unit_code'%}</label><br>
+                            {{ learning_unit_year.acronym }}
+                        </div>
+                        <div class="col-md-3">
+                            <label>{% trans 'partims' %}</label><br>
+                            {{ learning_container_year_partims }}
+                        </div>
+                        <div class="col-md-3">
+                            <label>{% trans 'learning_unit_type' %}</label><br>
+                            {% trans learning_unit_year.learning_container_year.container_type %}
+                        </div>
+                        <div class="col-md-3">
+                            <label>{% trans 'learning_unit_subtype' %}</label><br>
+                            {% trans learning_unit_year.subtype %}
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:10px;">
+                        <div class="col-md-3">
+                            <label>{% trans 'nominal_credits' %}</label><br>
+                            {{ learning_unit_year.credits }}
+                        </div>
+                        <div class="col-md-3">
+                            <label>{% trans 'periodicity' %}</label><br>
+                            {% trans learning_unit_year.learning_unit.periodicity %}
+                        </div>
+                         <div class="col-md-3">
+                            <label>{% trans 'status' %}</label><br>
+                            {% trans learning_unit_year.activity_status %}
+                        </div>
+                    </div>
+                </div>
 
+                <div class="col-md-4">
+
+                </div>
             </div>
         </div>
     </div>

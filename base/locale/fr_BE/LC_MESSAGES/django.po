@@ -1470,6 +1470,50 @@ msgstr "Classes prévues"
 msgid "classes"
 msgstr "Classes"
 
+msgid "learning_unit_code"
+msgstr "Code de l'UE"
+
+msgid "partims"
+msgstr "Partims"
+
+msgid "learning_unit_type"
+msgstr "Type d'UE"
+
+msgid "learning_unit_subtype"
+msgstr "Sous-type d'UE"
+
+msgid "periodicity"
+msgstr "Périodicité"
+
+msgid "nominal_credits"
+msgstr "Credits nominaux"
+
+msgid "ACTIVE"
+msgstr "Actif"
+
+msgid "PASSIVE"
+msgstr "Passif"
+
+msgid "INACTIVE"
+msgstr "Inactif"
+
+msgid "MASTER_DISSERTATION"
+msgstr "Mémoire"
+
+msgid "FULL"
+msgstr "Complet"
+
+msgid "MOBILITY"
+msgstr "Mobilité"
+
+msgid "OTHER"
+msgstr "Autre"
+
+msgid "PARTIM"
+msgstr "Partim"
+
+msgid "PHD_THESIS"
+msgstr "Thèse"
+
 msgid "selected"
 msgstr "sélectionné(s)"
-
