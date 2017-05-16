@@ -48,17 +48,17 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for tutor in attributions %}
+                            {% for attribution in attributions %}
                                 <tr>
-                                    <th class="text-center">{{ tutor.tutor }}</th>
+                                    <th class="text-center">{{ attribution.tutor }}</th>
                                     <th class="text-center">
-                                        {% with st=tutor.function %}
+                                        {% with st=attribution.function %}
                                             {{ tutor.get_function_display }}
                                         {% endwith %}
                                     </th>
                                     <th class="text-center">
-                                        <input id="txt_tutors"  name="prf_{{ tutor.id }}"
-                                               type="checkbox" {% if tutor.score_responsible == True %} checked {% endif %} >
+                                        <input id="txt_tutors"  name="prf_{{ attribution.id }}"
+                                               type="checkbox" {% if attribution.score_responsible == True %} checked {% endif %} >
                                     </th>
                                 </tr>
                             {% endfor%}
