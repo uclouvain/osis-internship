@@ -24,35 +24,43 @@
 * see http://www.gnu.org/licenses/.
 {% endcomment %}
 
+{% url 'learning_unit' learning_unit_year_id=learning_unit_year.id as url_identification %}
+{% url 'learning_unit_formations' learning_unit_year_id=learning_unit_year.id as url_formations %}
+{% url 'learning_unit_components' learning_unit_year_id=learning_unit_year.id as url_components %}
+{% url 'learning_unit_pedagogy' learning_unit_year_id=learning_unit_year.id as url_pedagogy %}
+{% url 'learning_unit_attributions' learning_unit_year_id=learning_unit_year.id as url_attributions %}
+{% url 'learning_unit_proposals' learning_unit_year_id=learning_unit_year.id as url_proposals %}
+
+
 <ul class="nav nav-tabs" role="tablist">
-    <li role="presentation" {% if tab_active == 'identification' %} class="active" {% endif %}>
-        <a href="{% url 'learning_unit' learning_unit_year_id=learning_unit_year.id %}" role="tab">
-            {% trans 'identification'%}
-        </a>
+    <li role="presentation" {% if request.path == url_identification %} class="active" {% endif %}>
+        <a href="{% url 'learning_unit' learning_unit_year.id %}" role="tab">
+		{% trans 'identification'%}
+	</a>
     </li>
-    <li role="presentation" {% if tab_active == 'formations' %} class="active" {% endif %}>
-        <a href="{% url 'learning_unit_formations' learning_unit_year_id=learning_unit_year.id %}" role="tab" >
-            {% trans 'trainings' %}
-        </a>
+    <li role="presentation" {% if request.path == url_formations %} class="active" {% endif %}>
+        <a href="{{url_formations}}" role="tab" >
+		{% trans 'trainings' %}
+	</a>
     </li>
-    <li role="presentation" {% if tab_active == 'components' %} class="active" {% endif %}>
-        <a href="{% url 'learning_unit_components' learning_unit_year_id=learning_unit_year.id %}" role="tab">
-            {% trans 'components' %}
-        </a>
+    <li role="presentation" {% if request.path == url_components %} class="active" {% endif %}>
+        <a href="{{url_components}}" role="tab">
+	 	{% trans 'components' %}
+	</a>
     </li>
-    <li role="presentation" {% if tab_active == 'pedagogy' %} class="active" {% endif %}>
-        <a href="{% url 'learning_unit_pedagogy' learning_unit_year_id=learning_unit_year.id %}" role="tab">
-            {% trans 'educational_information' %}
-        </a>
+    <li role="presentation" {% if request.path == url_pedagogy %} class="active" {% endif %}>
+        <a href="{{url_pedagogy}}" role="tab">
+		 {% trans 'educational_information' %}
+	</a>
     </li>
-    <li role="presentation" {% if tab_active == 'attributions' %} class="active" {% endif %}>
-        <a href="{% url 'learning_unit_attributions' learning_unit_year_id=learning_unit_year.id %}" role="tab">
-             {% trans 'tutors' %}
-        </a>
+    <li role="presentation" {% if request.path == url_attributions %} class="active" {% endif %}>
+        <a href="{{url_attributions}}" role="tab">
+		 {% trans 'tutors' %}
+	</a>
     </li>
-    <li role="presentation" {% if tab_active == 'proposals' %} class="active" {% endif %}>
-        <a href="{% url 'learning_unit_proposals' learning_unit_year_id=learning_unit_year.id %}" role="tab">
-             {% trans 'propositions' %}
-        </a>
+    <li role="presentation" {% if request.path == url_proposals %} class="active" {% endif %}>
+        <a href="{{url_proposals}}" role="tab">
+		 {% trans 'propositions' %}
+	</a>
     </li>
 </ul>

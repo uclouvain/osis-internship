@@ -23,36 +23,21 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
-from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
+from django.utils.translation import ugettext_lazy as _
 
+MASTER_DISSERTATION = "MASTER_DISSERTATION"
+FULL = "FULL"
+MOBILITY = "MOBILITY"
+OTHER = "OTHER"
+PARTIM = "PARTIM"
+PHD_THESIS = "PHD_THESIS"
 
-class EntityManagerAdmin(SerializableModelAdmin):
-    list_display = ('person', 'structure')
-    fieldsets = ((None, {'fields': ('person', 'structure',)}),)
-    search_fields = ['person__first_name', 'person__last_name', 'structure__acronym']
-    raw_id_fields = ('person', 'structure')
-
-
-class EntityManager(SerializableModel):
-    person = models.ForeignKey('Person')
-    structure = models.ForeignKey('Structure')
-
-    def __str__(self):
-        return u"%s" % self.person
-
-    class Meta:
-        permissions = (
-            ("is_entity_manager", "Is entity manager "),
-        )
-
-
-def _get_perms(model):
-    return model._meta.permissions
-
-
-def find_entity_manager_by_user(a_user):
-    return EntityManager.objects.filter(person__user=a_user)\
-        .select_related('person')\
-        .select_related('structure').first()
+LEARNING_UNIT_YEAR_SUBTYPES = (
+    (MASTER_DISSERTATION, _(MASTER_DISSERTATION)),
+    (FULL, _(FULL)),
+    (MOBILITY, _(MOBILITY)),
+    (OTHER, _(OTHER)),
+    (PARTIM, _(PARTIM)),
+    (PHD_THESIS, _(PHD_THESIS))
+)
 

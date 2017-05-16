@@ -23,10 +23,12 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+import datetime
 import factory
 import factory.fuzzy
 from django.conf import settings
 from django.utils import timezone
+
 
 def _get_tzinfo():
     if settings.USE_TZ:
@@ -34,8 +36,11 @@ def _get_tzinfo():
     else:
         return None
 
+
 class LearningContainerFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = "base.LearningContainer"
 
-    title = factory.Sequence(lambda n: 'Learning container %d' % n)
+    external_id = factory.Sequence(lambda n: '10000000%02d' % n)
+    changed = factory.fuzzy.FuzzyDateTime(datetime.datetime(2016, 1, 1, tzinfo=_get_tzinfo()),
+                                          datetime.datetime(2017, 3, 1, tzinfo=_get_tzinfo()))
