@@ -39,7 +39,7 @@
 	</a>
     </li>
     <li role="presentation" {% if request.path == url_formations %} class="active" {% endif %}>
-        <a href="{{url_formations}}" role="tab" >
+        <a role="tab" >
 		{% trans 'trainings' %}
 	</a>
     </li>
@@ -49,17 +49,17 @@
 	</a>
     </li>
     <li role="presentation" {% if request.path == url_pedagogy %} class="active" {% endif %}>
-        <a href="{{url_pedagogy}}" role="tab">
+        <a role="tab">
 		 {% trans 'educational_information' %}
 	</a>
     </li>
     <li role="presentation" {% if request.path == url_attributions %} class="active" {% endif %}>
-        <a href="{{url_attributions}}" role="tab">
+        <a role="tab">
 		 {% trans 'tutors' %}
 	</a>
     </li>
     <li role="presentation" {% if request.path == url_proposals %} class="active" {% endif %}>
-        <a href="{{url_proposals}}" role="tab">
+        <a role="tab">
 		 {% trans 'propositions' %}
 	</a>
     </li>
