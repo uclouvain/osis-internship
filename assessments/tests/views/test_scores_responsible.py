@@ -80,5 +80,3 @@ class ScoresResponsibleViewTestCase(TestCase):
     def test_find_learning_unit_year_list(self):
         entities_list = scores_responsible.find_learning_unit_year_list(self.structure)
         self.assertIsNotNone(entities_list)
-
-    
