@@ -8,18 +8,10 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('base', '0114_auto_20170512_0859'),
+        ('base', '0116_auto_20170516_1000'),
     ]
 
     operations = [
-        migrations.AlterModelOptions(
-            name='entity',
-            options={'verbose_name_plural': 'entities'},
-        ),
-        migrations.AlterModelOptions(
-            name='entityaddress',
-            options={'verbose_name_plural': 'entity addresses'},
-        ),
         migrations.AddField(
             model_name='learningcomponent',
             name='acronym',
