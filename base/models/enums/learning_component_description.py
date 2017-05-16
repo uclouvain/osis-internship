@@ -23,14 +23,15 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import factory
-import factory.fuzzy
-from base.tests.factories.learning_container import LearningContainerFactory
+
+LECTURING_COMPLETE = "LECTURING_COMPLETE"
+LECTURING_INCOMPLETE = "LECTURING_INCOMPLETE"
+PRACTICAL_EXERCISES_COMPLETE = "PRACTICAL_EXERCISES_COMPLETE"
+PRACTICAL_EXERCISES_INCOMPLETE = "PRACTICAL_EXERCISES_INCOMPLETE"
 
 
-class LearningComponentFactory(factory.django.DjangoModelFactory):
-    class Meta:
-        model = "base.LearningComponent"
-
-    learning_container = factory.SubFactory(LearningContainerFactory)
-    acronym = factory.Sequence(lambda n: 'L-%d' % n)
+LEARNING_COMPONENT_DESCRIPTIONS = (
+    (LECTURING_COMPLETE, LECTURING_COMPLETE),
+    (LECTURING_INCOMPLETE, LECTURING_INCOMPLETE),
+    (PRACTICAL_EXERCISES_COMPLETE, PRACTICAL_EXERCISES_COMPLETE),
+    (PRACTICAL_EXERCISES_INCOMPLETE, PRACTICAL_EXERCISES_INCOMPLETE))
