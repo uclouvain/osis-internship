@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -23,17 +23,22 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.test import TestCase
+import factory
+import factory.fuzzy
 
-from assistant.models import reviewer
-from assistant.models.enums import reviewer_role
-from assistant.tests.factories.reviewer import ReviewerFactory
+from base.tests.factories.learning_container_year import LearningContainerYearFactory
+from base.tests.factories.learning_component import LearningComponentFactory
 
 
-class TestReviewerFactory(TestCase):
+class LearningComponentYearFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = "base.LearningComponentYear"
 
-    def setUp(self):
-        self.reviewer = ReviewerFactory(role=reviewer_role.VICE_RECTOR)
+    learning_container_year = factory.SubFactory(LearningContainerYearFactory)
+    learning_component = factory.SubFactory(LearningComponentFactory)
+    title = factory.Sequence(lambda n: 'title-%d' % n)
+    acronym = factory.Sequence(lambda n: 'A-%d' % n)
+    type = factory.Sequence(lambda n: 'Type-%d' % n)
+    comment = factory.Sequence(lambda n: 'Comment-%d' % n)
+    planned_classes = factory.fuzzy.FuzzyInteger(10)
 
-    def test_find_by_person(self):
-        self.assertEqual(self.reviewer, reviewer.find_by_person(self.reviewer.person))

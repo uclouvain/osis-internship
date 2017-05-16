@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -23,17 +23,17 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.test import TestCase
+import factory
+import factory.fuzzy
 
-from assistant.models import reviewer
-from assistant.models.enums import reviewer_role
-from assistant.tests.factories.reviewer import ReviewerFactory
+from base.tests.factories.learning_component_year import LearningComponentYearFactory
+from base.tests.factories.learning_class import LearningClassFactory
 
 
-class TestReviewerFactory(TestCase):
+class LearningClassYearFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = "base.LearningClassYear"
 
-    def setUp(self):
-        self.reviewer = ReviewerFactory(role=reviewer_role.VICE_RECTOR)
-
-    def test_find_by_person(self):
-        self.assertEqual(self.reviewer, reviewer.find_by_person(self.reviewer.person))
+    learning_component_year = factory.SubFactory(LearningComponentYearFactory)
+    learning_class = factory.SubFactory(LearningClassFactory)
+    acronym = factory.Sequence(lambda n: 'C-%d' % n)

@@ -181,14 +181,13 @@
 {% block script %}
 <script>
 function Hide() {
-    if(document.getElementById('id_rev-advice_1').checked == true)
-     {
-         document.getElementById('id_rev-justification').style.display = '';
-
-    } else
+    if(document.getElementById('id_rev-advice_0').checked == true)
      {
         document.getElementById('id_rev-justification').style.display = 'none';
         document.getElementById('id_rev-justification').value='';
+    } else
+     {
+        document.getElementById('id_rev-justification').style.display = '';
     }
 }
 window.onload = function() {

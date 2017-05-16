@@ -37,7 +37,8 @@ class OfferYearAdmin(SerializableModelAdmin):
                                     'recipient', 'location', 'postal_code', 'city', 'country', 'phone', 'fax', 'email',
                                     'campus', 'offer_type')}),)
     list_filter = ('academic_year', 'grade', 'offer_type', 'campus')
-    raw_id_fields = ('offer', 'parent')
+    raw_id_fields = ('offer', 'parent', 'offer_type', 'grade_type','campus','country','entity_administration',
+                     'entity_administration_fac', 'entity_management', 'entity_management_fac', 'academic_year')
     search_fields = ['acronym']
 
 
@@ -214,6 +215,8 @@ def search_offers(entity_list=None, academic_yr=None, an_offer_type=None):
 def offer_type_parameter(an_offer_type, queryset):
     if an_offer_type:
         queryset = queryset.filter(offer_type=an_offer_type)
+    else:
+        queryset = queryset.filter(offer_type__isnull=False)
     return queryset
 
 

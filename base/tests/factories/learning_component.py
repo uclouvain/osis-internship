@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -23,17 +23,13 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.test import TestCase
-
-from assistant.models import reviewer
-from assistant.models.enums import reviewer_role
-from assistant.tests.factories.reviewer import ReviewerFactory
+import factory
+import factory.fuzzy
+from base.tests.factories.learning_container import LearningContainerFactory
 
 
-class TestReviewerFactory(TestCase):
+class LearningComponentFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = "base.LearningComponent"
 
-    def setUp(self):
-        self.reviewer = ReviewerFactory(role=reviewer_role.VICE_RECTOR)
-
-    def test_find_by_person(self):
-        self.assertEqual(self.reviewer, reviewer.find_by_person(self.reviewer.person))
+    learning_container = factory.SubFactory(LearningContainerFactory)
