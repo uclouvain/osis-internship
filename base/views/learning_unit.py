@@ -29,10 +29,12 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.utils.translation import ugettext_lazy as _
 
-from attribution import models as mdl_attr
 from base import models as mdl
-from base.forms.learning_units import LearningUnitYearForm
+from attribution import models as mdl_attr
 from reference import models as mdl_ref
+from cms import models as mdl_cms
+from cms.enums import entity_name
+from base.forms.learning_units import LearningUnitYearForm
 from base.forms.learning_unit_specifications import LearningUnitSpecificationsForm
 
 from . import layout
@@ -112,14 +114,20 @@ def learning_unit_proposals(request, learning_unit_year_id):
 def learning_unit_specifications(request, learning_unit_year_id):
     context = _get_common_context_learning_unit_year(learning_unit_year_id)
     learning_unit_year = context['learning_unit_year']
-    ## Load form for french part
     language_french = mdl_ref.language.find_by_code('FR')
-    form_french = LearningUnitSpecificationsForm(learning_unit_year, language_french)
-    ## Load form for english part
     language_english = mdl_ref.language.find_by_code('EN')
-    from_english = LearningUnitSpecificationsForm(learning_unit_year, language_english)
 
-    context.update({'form_french': form_french, 'form_english': from_english})
+    CMS_LABEL = ['themes_discussed', 'skills_to_be_acquired', 'prerequisite']
+    translated_labels = mdl_cms.translated_text_label.search(text_entity=entity_name.LEARNING_UNIT_YEAR,
+                                                             labels=CMS_LABEL)
+    for trans_label in translated_labels:
+        label_name = trans_label.text_label.label
+        context[label_name] = trans_label.label
+
+    context.update({
+        'form_french': LearningUnitSpecificationsForm(learning_unit_year, language_french),
+        'form_english': LearningUnitSpecificationsForm(learning_unit_year, language_english)
+    })
     return layout.render(request, "learning_unit/specifications.html", context)
 
 

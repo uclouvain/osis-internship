@@ -24,27 +24,24 @@
 #
 ##############################################################################
 from django import forms
+from cms.models import translated_text
+from cms.enums import entity_name
+from django.utils.safestring import mark_safe
 
 
 class LearningUnitSpecificationsForm(forms.Form):
-    learning_unit_year_id = forms.CharField(widget=forms.HiddenInput(), required=True)
-    language = forms.CharField(widget=forms.HiddenInput(), required=True)
-    themes = forms.CharField(widget=forms.Textarea())
-    skills_to_be_acquired = forms.CharField(widget=forms.Textarea())
-    prerequisite = forms.CharField(widget=forms.Textarea())
+    learning_unit_year = language = None
 
     def __init__(self, learning_unit_year, language, *args, **kwargs):
+        self.learning_unit_year = learning_unit_year
+        self.language = language
+        self.refresh_data()
         super(LearningUnitSpecificationsForm, self).__init__(*args, **kwargs)
-        self.fields['learning_unit_year_id'].initial = learning_unit_year.id
-        self.fields['language'].initial = language
-        self.refresh_data(learning_unit_year, language)
-        self._all_field_read_only()
 
-    def refresh_data(self, learning_unit_year, language):
-       pass
-
-    def _all_field_read_only(self):
-        # Actually it is read only screen
-        for field in self.fields.values():
-            field.widget.attrs.update({'readonly':True, 'style': 'border:0;outline-style:none;'})
-
+    def refresh_data(self):
+        texts_list = translated_text.search(entity=entity_name.LEARNING_UNIT_YEAR,
+                                            reference=self.learning_unit_year.id,
+                                            language=self.language)
+        for trans_txt in texts_list:
+            text_label = trans_txt.text_label.label
+            setattr(self, text_label, mark_safe(trans_txt.text))
