@@ -102,7 +102,10 @@ def is_score_responsible(user, learning_unit_year):
 
 
 def find_tutor_number(attribution):
-    tutor_number = Attribution.objects.filter(learning_unit_year=attribution.learning_unit_year).count()
+    tutor_number = Attribution.objects\
+        .filter(learning_unit_year=attribution.learning_unit_year)\
+        .filter(learning_unit_year__academic_year=current_academic_years())\
+        .count()
     return tutor_number
 
 
