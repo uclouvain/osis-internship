@@ -32,7 +32,8 @@ OPTIONAL_APPS = (
     'internship',
     'assessments',
     'cms',
-    'rest_framework'
+    'rest_framework',
+    'rest_framework.authtoken'
 )
 
 INSTALLED_APPS += OPTIONAL_APPS
@@ -42,10 +43,10 @@ REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
+        'rest_framework.permissions.IsAdminUser',
     ),
     'TEST_REQUEST_DEFAULT_FORMAT': 'json'
 }

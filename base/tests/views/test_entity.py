@@ -25,24 +25,29 @@
 ##############################################################################
 import datetime
 import json
-from rest_framework import status
-from django.test import TestCase, Client
-from django.utils import timezone
-from django.core.urlresolvers import reverse
 from base.models.entity import Entity
+from base.serializers import EntitySerializer
 from base.tests.factories.entity import EntityFactory
 from base.tests.factories.entity_address import EntityAddressFactory
-from base.tests.factories.entity_link import EntityLinkFactory
 from base.tests.factories.entity_version import EntityVersionFactory
-from base.serializers import EntitySerializer
 from base.tests.factories.organization import OrganizationFactory
+from base.tests.factories.user import SuperUserFactory
+from django.core.urlresolvers import reverse
+from rest_framework import status
+from rest_framework.authtoken.models import Token
+from rest_framework.reverse import reverse
+from rest_framework.test import APIClient
+from rest_framework.test import APITestCase
 
 
-class EntityViewTestCase(TestCase):
+class EntityViewTestCase(APITestCase):
 
     def setUp(self):
-        self.client = Client()
         self.entities = [EntityFactory() for x in range(3)]
+        user = SuperUserFactory()
+        token = Token.objects.create(user=user)
+        self.client = APIClient()
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + token.key)
 
     def test_get_all_entities(self):
         response = self.client.get(reverse('get_post_entities'))
