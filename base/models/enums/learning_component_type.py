@@ -24,17 +24,17 @@
 #
 ##############################################################################
 
-CMAG = "CMAG"
+LECTURING = "LECTURING"
 STAGE = "STAGE"
-TFE = "TFE"
-TP = "TP"
+DISSERTATION = "DISSERTATION"
+PRACTICAL_EXERCISES = "PRACTICAL_EXERCISES"
 
 
 LEARNING_COMPONENT_TYPES = (
-    (CMAG, CMAG),
+    (LECTURING, LECTURING),
     (STAGE, STAGE),
-    (TFE, TFE),
-    (TP, TP))
+    (DISSERTATION, DISSERTATION),
+    (PRACTICAL_EXERCISES, PRACTICAL_EXERCISES))
 
 
 

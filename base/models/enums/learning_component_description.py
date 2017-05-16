@@ -23,25 +23,18 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
-from django.contrib import admin
-from base.models.enums import learning_component_type, learning_component_description
+
+LECTURING_COMPLETE = "LECTURING_COMPLETE"
+LECTURING_INCOMPLETE = "LECTURING_INCOMPLETE"
+PRACTICAL_EXERCISES_COMPLETE = "PRACTICAL_EXERCISES_COMPLETE"
+PRACTICAL_EXERCISES_INCOMPLETE = "PRACTICAL_EXERCISES_INCOMPLETE"
 
 
-class LearningComponentAdmin(admin.ModelAdmin):
-    list_display = ('learning_container',)
-    fieldsets = ((None, {'fields': ('learning_container','type', 'acronym', 'description')}),)
+LEARNING_COMPONENT_DESCRIPTIONS = (
+    (LECTURING_COMPLETE, LECTURING_COMPLETE),
+    (LECTURING_INCOMPLETE, LECTURING_INCOMPLETE),
+    (PRACTICAL_EXERCISES_COMPLETE, PRACTICAL_EXERCISES_COMPLETE),
+    (PRACTICAL_EXERCISES_INCOMPLETE, PRACTICAL_EXERCISES_INCOMPLETE))
 
 
-class LearningComponent(models.Model):
-    learning_container = models.ForeignKey('LearningContainer')
-    type = models.CharField(max_length=20, choices=learning_component_type.LEARNING_COMPONENT_TYPES,
-                            blank=True, null=True)
-    acronym = models.CharField(max_length=3, blank=True, null=True)
-    description = models.CharField(max_length=20,
-                                   choices=learning_component_description.LEARNING_COMPONENT_DESCRIPTIONS,
-                                   blank=True, null=True)
 
-
-def find_by_id(learning_component_id):
-    return LearningComponent.objects.get(pk=learning_component_id)

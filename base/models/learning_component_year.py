@@ -30,7 +30,7 @@ from django.contrib import admin
 class LearningComponentYearAdmin(admin.ModelAdmin):
     list_display = ('learning_container_year', 'learning_component', 'title', 'acronym', 'type', 'comment')
     fieldsets = ((None, {'fields': ('learning_container_year', 'learning_component', 'title', 'acronym',
-                                    'type', 'comment')}),)
+                                    'type', 'comment', 'planned_classes', 'hourly_volume_total', 'hourly_volume_Q1')}),)
     search_fields = ['acronym']
 
 
