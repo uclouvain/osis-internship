@@ -34,6 +34,7 @@ class LearningComponentAdmin(admin.ModelAdmin):
 
 
 class LearningComponent(models.Model):
+    external_id = models.CharField(max_length=100, blank=True, null=True)
     learning_container = models.ForeignKey('LearningContainer')
     type = models.CharField(max_length=30, choices=learning_component_type.LEARNING_COMPONENT_TYPES,
                             blank=True, null=True)

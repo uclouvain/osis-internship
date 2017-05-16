@@ -35,6 +35,7 @@ class LearningComponentYearAdmin(admin.ModelAdmin):
 
 
 class LearningComponentYear(models.Model):
+    external_id = models.CharField(max_length=100, blank=True, null=True)
     learning_container_year = models.ForeignKey('LearningContainerYear')
     learning_component = models.ForeignKey('LearningComponent')
     title = models.CharField(max_length=255)
