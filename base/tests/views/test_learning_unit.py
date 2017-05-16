@@ -91,10 +91,10 @@ class LearningUnitViewTestCase(TestCase):
 
     def test_get_components_with_classes(self):
         an_academic_year = AcademicYearFactory(year=timezone.now().year)
-        l_container = LearningContainerFactory(title="LC-98998")
+        l_container = LearningContainerFactory()
         l_container.save()
         l_container_year = LearningContainerYearFactory.build(academic_year=an_academic_year,
-                                                              title=l_container.title,
+                                                              title="LC-98998",
                                                               learning_container=l_container)
         l_container_year.save()
         l_component = LearningComponentFactory(learning_container=l_container)
