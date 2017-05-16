@@ -55,20 +55,20 @@ def scores_responsible(request):
 def scores_responsible_search(request):
     a_faculty_administrator = entity_manager.find_entity_manager_by_user(request.user)
     attributions_searched = mdl_attr.attribution.search_scores_responsible(
-        learning_unit_title=request.GET['learning_unit_title'],
-        course_code=request.GET['course_code'],
-        entity=request.GET['entity'],
-        professor=request.GET['professor'],
-        scores_responsible=request.GET['scores_responsible'])
+        learning_unit_title=request.GET.get('learning_unit_title'),
+        course_code=request.GET.get('course_code'),
+        entity=request.GET.get('entity'),
+        professor=request.GET.get('professor'),
+        scores_responsible=request.GET.get('scores_responsible'))
     entities_list = find_entities_list(a_faculty_administrator.structure)
     dict_attribution = create_dictionary(attributions_searched)
     return layout.render(request, 'scores_responsible.html', {"entities_list": entities_list,
                                                               "dict_attribution": dict_attribution,
-                                                              "acronym": request.GET['entity'],
-                                                              "learning_unit_title": request.GET['learning_unit_title'],
-                                                              "course_code": request.GET['course_code'],
-                                                              "professor": request.GET['professor'],
-                                                              "scores_responsible": request.GET['scores_responsible']})
+                                                              "acronym": request.GET.get('entity'),
+                                                              "learning_unit_title": request.GET.get('learning_unit_title'),
+                                                              "course_code": request.GET.get('course_code'),
+                                                              "professor": request.GET.get('professor'),
+                                                              "scores_responsible": request.GET.get('scores_responsible')})
 
 
 def create_dictionary(attributions):
