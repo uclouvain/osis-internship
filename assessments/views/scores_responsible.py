@@ -42,7 +42,7 @@ def scores_responsible(request):
     a_faculty_administrator = entity_manager.find_entity_manager_by_user(request.user)
     learning_unit_year_list = find_learning_unit_year_list(a_faculty_administrator.structure)
     entities_list = find_entities_list(a_faculty_administrator.structure)
-    dict_attribution = create_dictionary(learning_unit_year_list)
+    dict_attribution = create_attributions_list(learning_unit_year_list)
     return layout.render(request, 'scores_responsible.html', {"entities_list": entities_list,
                                                               "dict_attribution": dict_attribution})
 
@@ -58,7 +58,7 @@ def scores_responsible_search(request):
         tutor=request.GET.get('tutor'),
         scores_responsible=request.GET.get('scores_responsible'))
     entities_list = find_entities_list(a_faculty_administrator.structure)
-    dict_attribution = create_dictionary(attributions_searched)
+    dict_attribution = create_attributions_list(attributions_searched)
     return layout.render(request, 'scores_responsible.html', {"entities_list": entities_list,
                                                               "dict_attribution": dict_attribution,
                                                               "acronym": request.GET.get('entity'),
@@ -68,7 +68,7 @@ def scores_responsible_search(request):
                                                               "scores_responsible": request.GET.get('scores_responsible')})
 
 
-def create_dictionary(attributions):
+def create_attributions_list(attributions):
     dict_attribution = dict()
     for attribution in attributions:
         tutor_number = mdl_attr.attribution.find_tutor_number(attribution)
