@@ -35,10 +35,10 @@ class LearningComponentAdmin(admin.ModelAdmin):
 
 class LearningComponent(models.Model):
     learning_container = models.ForeignKey('LearningContainer')
-    type = models.CharField(max_length=20, choices=learning_component_type.LEARNING_COMPONENT_TYPES,
+    type = models.CharField(max_length=30, choices=learning_component_type.LEARNING_COMPONENT_TYPES,
                             blank=True, null=True)
     acronym = models.CharField(max_length=3, blank=True, null=True)
-    description = models.CharField(max_length=20,
+    description = models.CharField(max_length=30,
                                    choices=learning_component_description.LEARNING_COMPONENT_DESCRIPTIONS,
                                    blank=True, null=True)
 

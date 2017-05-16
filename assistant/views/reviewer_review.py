@@ -104,7 +104,12 @@ def review_edit(request, mandate_id):
 def review_save(request, review_id, mandate_id):
     rev = review.find_by_id(review_id)
     mandate = assistant_mandate.find_mandate_by_id(mandate_id)
+    current_reviewer = reviewer.can_edit_review(reviewer.find_by_person(person.find_by_user(request.user)).id,
+                                                mandate_id)
     form = ReviewForm(data=request.POST, instance=rev, prefix='rev')
+    previous_mandates = assistant_mandate.find_before_year_for_assistant(mandate.academic_year.year, mandate.assistant)
+    role = current_reviewer.role
+    menu = generate_reviewer_menu_tabs(role, mandate, role)
     if form.is_valid():
         current_review = form.save(commit=False)
         if 'validate_and_submit' in request.POST:
@@ -133,10 +138,17 @@ def review_save(request, review_id, mandate_id):
             current_review.save()
             return review_edit(request, mandate_id)
     else:
-        return render(request, "review_form.html", {'review': rev, 'role': mandate.state,
+        return render(request, "review_form.html", {'review': rev,
+                                                    'role': mandate.state,
                                                     'year': mandate.academic_year.year + 1,
-                                                    'absences': mandate.absences, 'comment': mandate.comment,
-                                                    'mandate_id': mandate.id, 'form': form})
+                                                    'absences': mandate.absences,
+                                                    'comment': mandate.comment,
+                                                    'mandate_id': mandate.id,
+                                                    'previous_mandates': previous_mandates,
+                                                    'assistant': mandate.assistant,
+                                                    'menu': menu,
+                                                    'menu_type': 'reviewer_menu',
+                                                    'form': form})
 
 
 @login_required

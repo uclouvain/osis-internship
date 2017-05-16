@@ -1428,7 +1428,7 @@ msgid "trainings"
 msgstr "Formations"
 
 msgid "components"
-msgstr "Composants et classes"
+msgstr "Composants"
 
 msgid "educational_information"
 msgstr "Infos pédagogiques"
@@ -1445,3 +1445,31 @@ msgstr "Proposition"
 msgid "academic_calendar_offer_year_calendar_start_date_end_date_error"
 msgstr "La date d'ouverture de '%s' du calendrier académique ne peut pas être supérieure au %s "
        "(date de fin de '%s' du programme '%s')"
+
+msgid "component_type"
+msgstr "Type de composant"
+
+msgid "nominal_quater"
+msgstr "Quadri. nominal "
+
+msgid "vol_q1"
+msgstr "Vol. q1"
+
+msgid "vol_q2"
+msgstr "Vol. q2"
+
+msgid "nominal_volume"
+msgstr "Volume nominal"
+
+msgid "schedules_conformity"
+msgstr "Conform. horaires"
+
+msgid "planned_classrooms"
+msgstr "Classes prévues"
+
+msgid "classes"
+msgstr "Classes"
+
+msgid "selected"
+msgstr "sélectionné(s)"
+
