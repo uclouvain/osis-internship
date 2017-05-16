@@ -55,7 +55,7 @@ class EntitySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Entity
-        fields = ('id', 'organization', 'entityaddress_set', 'link_to_parent', 'entityversion_set')
+        fields = ('id', 'organization', 'external_id', 'entityaddress_set', 'link_to_parent', 'entityversion_set')
 
     def create(self, validated_data):
         addresses_data = validated_data.pop('entityaddress_set')

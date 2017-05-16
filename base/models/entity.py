@@ -31,9 +31,9 @@ from base.models.entity_version import EntityVersion
 
 
 class EntityAdmin(admin.ModelAdmin):
-    list_display = ('id', 'most_recent_acronym', 'organization')
-    search_fields = ['organization']
-    raw_id_fields = ('organization',)
+    list_display = ('id', 'most_recent_acronym', 'external_id', 'organization')
+    search_fields = ['external_id']
+    readonly_fields = ('organization', 'external_id', 'most_recent_acronym', 'find_descendants')
 
 
 class Entity(models.Model):
@@ -44,7 +44,7 @@ class Entity(models.Model):
         verbose_name_plural = "entities"
 
     def __str__(self):
-        return "{0} ({1})".format(self.id, self.most_recent_acronym())
+        return "{0} ({1} - {2})".format(self.id, self.most_recent_acronym(), self.external_id)
 
     def _direct_children(self, date=None):
         if date is None:

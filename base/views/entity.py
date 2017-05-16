@@ -61,6 +61,7 @@ def get_post_entities(request):
     elif request.method == 'POST':
         entity_data = {
             'organization': request.data.get('organization'),
+            'external_id': request.data.get('external_id'),
             'entityaddress_set': request.data.get('entityaddress_set'),
             'link_to_parent': request.data.get('link_to_parent'),
             'entityversion_set': request.data.get('entityversion_set'),
