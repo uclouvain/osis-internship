@@ -74,7 +74,7 @@ class ScoresResponsibleViewTestCase(TestCase):
         self.assertIsNotNone(dictionary)
 
     def test_find_entities_list(self):
-        entities_list = scores_responsible.find_entities_list(self.structure)
+        entities_list = scores_responsible.find_attributions_list(self.structure)
         self.assertIsNotNone(entities_list)
 
     def test_find_learning_unit_year_list(self):
