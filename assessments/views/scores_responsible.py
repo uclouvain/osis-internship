@@ -72,7 +72,7 @@ def create_attributions_list(attributions):
     dict_attribution = dict()
     for attribution in attributions:
         tutor_number = mdl_attr.attribution.find_tutor_number(attribution)
-        responsible = mdl_attr.attribution.find_responsible(attribution.learning_unit_year)
+        responsible = mdl_attr.attribution.find_all_responsibles_by_learning_unit_year(attribution.learning_unit_year)
         dict_attribution.update({attribution: [attribution.learning_unit_year.id,
                                                attribution.learning_unit_year.structure.acronym,
                                                attribution.learning_unit_year.acronym,

@@ -451,11 +451,10 @@ def scores_sheet_data(exam_enrollments, tutor=None):
         # We can take the first element of the list 'exam_enrollments' to get the learning_unit_yr
         # because all exam_enrollments have the same learningUnitYear
         learning_unit_yr = exam_enrollments[0].session_exam.learning_unit_year
-        scores_responsibles_list = attribution.find_responsible(learning_unit_yr.id)
+        scores_responsible = attribution.find_responsible(learning_unit_yr.id)
         scores_responsible_address = None
         person = None
-        if scores_responsibles_list:
-            scores_responsible = scores_responsibles_list[0]
+        if scores_responsible:
             person = scores_responsible.person
             scores_responsible_address = person_address.find_by_person_label(scores_responsible.person, 'PROFESSIONAL')
 
