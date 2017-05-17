@@ -37,49 +37,22 @@ person_created = Signal(providing_args=['person'])
 
 @receiver(user_created_signal)
 def update_person_after_user_creation(sender, **kwargs):
-    user = kwargs.get('user')
-    user_infos = kwargs.get('user_infos')
-    person = mdl.person.find_by_global_id(user_infos.get('USER_FGS'))
-    person = _create_update_person(user, person, user_infos)
+    person = _update_person(sender, kwargs)
     _add_person_to_group(person)
     return person
 
 
 @receiver(user_updated_signal)
 def update_person_after_user_update(sender, **kwargs):
+    return _update_person(sender, kwargs)
+
+
+def _update_person(sender, **kwargs):
     user = kwargs.get('user')
     user_infos = kwargs.get('user_infos')
     person = mdl.person.find_by_global_id(user_infos.get('USER_FGS'))
     person = _create_update_person(user, person, user_infos)
     return person
-
-
-@receiver(post_save, sender=mdl.tutor.Tutor)
-def add_to_tutors_group(sender, instance, **kwargs):
-    if kwargs.get('created', True) and instance.person.user:
-            tutors_group = Group.objects.get(name='tutors')
-            instance.person.user.groups.add(tutors_group)
-
-
-@receiver(post_delete, sender=mdl.tutor.Tutor)
-def remove_from_tutor_group(sender, instance, **kwargs):
-    if instance.person.user:
-        tutors_group = Group.objects.get(name='tutors')
-        instance.person.user.groups.remove(tutors_group)
-
-
-@receiver(post_save, sender=mdl.program_manager.ProgramManager)
-def add_to_pgm_managers_group(sender, instance, **kwargs):
-    if kwargs.get('created', True) and instance.person.user:
-        pgm_managers_group = Group.objects.get(name='program_managers')
-        instance.person.user.groups.add(pgm_managers_group)
-
-
-@receiver(post_delete, sender=mdl.program_manager.ProgramManager)
-def remove_from_pgm_managers_group(sender, instance, **kwargs):
-    if instance.person.user:
-        pgm_managers_group = Group.objects.get(name='program_managers')
-        instance.person.user.groups.remove(pgm_managers_group)
 
 
 def _add_person_to_group(person):
@@ -153,6 +126,20 @@ def get_or_create_group():
     return entity_managers_group
 
 
+@receiver(post_save, sender=mdl.tutor.Tutor)
+def add_to_tutors_group(sender, instance, **kwargs):
+    if kwargs.get('created', True) and instance.person.user:
+            tutors_group = Group.objects.get(name='tutors')
+            instance.person.user.groups.add(tutors_group)
+
+
+@receiver(post_save, sender=mdl.program_manager.ProgramManager)
+def add_to_pgm_managers_group(sender, instance, **kwargs):
+    if kwargs.get('created', True) and instance.person.user:
+        pgm_managers_group = Group.objects.get(name='program_managers')
+        instance.person.user.groups.add(pgm_managers_group)
+
+
 @receiver(post_save, sender=mdl.entity_manager.EntityManager)
 def add_to_entity_manager_group(sender, instance, **kwargs):
     if kwargs.get('created', True) and instance.person.user:
@@ -160,8 +147,22 @@ def add_to_entity_manager_group(sender, instance, **kwargs):
         instance.person.user.groups.add(entity_managers_group)
 
 
+@receiver(post_delete, sender=mdl.tutor.Tutor)
+def remove_from_tutor_group(sender, instance, **kwargs):
+    if instance.person.user:
+        tutors_group = Group.objects.get(name='tutors')
+        instance.person.user.groups.remove(tutors_group)
+
+
 @receiver(post_delete, sender=mdl.entity_manager.EntityManager)
 def remove_from_entity_manager_group(sender, instance, **kwargs):
     if instance.person.user:
         entity_managers_group = get_or_create_group()
         instance.person.user.groups.remove(entity_managers_group)
+
+
+@receiver(post_delete, sender=mdl.program_manager.ProgramManager)
+def remove_from_pgm_managers_group(sender, instance, **kwargs):
+    if instance.person.user:
+        pgm_managers_group = Group.objects.get(name='program_managers')
+        instance.person.user.groups.remove(pgm_managers_group)
