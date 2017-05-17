@@ -66,10 +66,10 @@ def import_csv_row(cohort, row):
         'cohort': cohort,
     }
 
-    student_info = mdl_isi.InternshipStudentInformation.objects.create(**info)
-    if person.user:
-        group = Group.objects.get(name='internship_students')
-        person.user.groups.add(group)
+    mdl_isi.InternshipStudentInformation.objects.create(**info)
+    #if person.user:
+    #    group = Group.objects.get(name='internship_students')
+    #    person.user.groups.add(group)
 
 
 def import_csv(cohort, csvfile):
