@@ -904,7 +904,7 @@ msgid "registration_id"
 msgstr "Registration ID"
 
 msgid "registration_id_not_access_or_not_exist"
-msgstr "You don't have access rights for this student or he doesn't exist in our database"
+msgstr "Student not registered for exam"
 
 msgid "research_center"
 msgstr "Research center"
