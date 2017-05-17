@@ -37,14 +37,14 @@ person_created = Signal(providing_args=['person'])
 
 @receiver(user_created_signal)
 def update_person_after_user_creation(sender, **kwargs):
-    person = _update_person(sender, kwargs)
+    person = _update_person(sender, **kwargs)
     _add_person_to_group(person)
     return person
 
 
 @receiver(user_updated_signal)
 def update_person_after_user_update(sender, **kwargs):
-    return _update_person(sender, kwargs)
+    return _update_person(sender, **kwargs)
 
 
 def _update_person(sender, **kwargs):
