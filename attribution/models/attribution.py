@@ -127,13 +127,14 @@ def search_scores_responsible(learning_unit_title, course_code, entities, entity
                     Q(tutor__person__last_name__icontains=scores_responsible))\
             .filter(score_responsible=True)\
             .distinct("learning_unit_year")
-    if entity == "all_entities":
+    if entities is None:
+        queryset = queryset.filter(learning_unit_year__structure__acronym=entity).distinct("learning_unit_year")
+    else:
         entities_list = []
         for attribution in entities:
             entities_list.append(attribution.learning_unit_year.structure.acronym)
-        queryset = queryset.filter(learning_unit_year__structure__acronym__in=entities_list).distinct("learning_unit_year")
-    else:
-        queryset = queryset.filter(learning_unit_year__structure__acronym=entity).distinct("learning_unit_year")
+        queryset = queryset.filter(learning_unit_year__structure__acronym__in=entities_list).distinct(
+            "learning_unit_year")
     return queryset
 
 
