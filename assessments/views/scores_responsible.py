@@ -41,10 +41,10 @@ def is_faculty_admin(user):
 def scores_responsible(request):
     a_faculty_administrator = entity_manager.find_entity_manager_by_user(request.user)
     learning_unit_year_list = find_learning_unit_year_list(a_faculty_administrator.structure)
-    attributions_list = find_attributions_list(a_faculty_administrator.structure)
+    attributions = find_attributions_list(a_faculty_administrator.structure)
     dict_attribution = create_attributions_list(learning_unit_year_list)
     return layout.render(request, 'scores_responsible.html', {"learning_unit_year_acronym": a_faculty_administrator.structure.acronym,
-                                                              "attributions_list": attributions_list,
+                                                              "attributions": attributions,
                                                               "dict_attribution": dict_attribution})
 
 
