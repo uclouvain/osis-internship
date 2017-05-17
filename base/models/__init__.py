@@ -24,7 +24,6 @@
 #
 ##############################################################################
 
-# Statements in alphabetic order.
 from base.models import academic_calendar
 from base.models import academic_year
 from base.models import application_notice

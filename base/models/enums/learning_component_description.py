@@ -24,16 +24,14 @@
 #
 ##############################################################################
 
-from assistant.models import academic_assistant
-from assistant.models import assistant_document_file
-from assistant.models import assistant_mandate
-from assistant.models import manager
-from assistant.models import mandate_structure
-from assistant.models import message
-from assistant.models import review
-from assistant.models import reviewer
-from assistant.models import settings
-from assistant.models import tutoring_learning_unit_year
+LECTURING_COMPLETE = "LECTURING_COMPLETE"
+LECTURING_INCOMPLETE = "LECTURING_INCOMPLETE"
+PRACTICAL_EXERCISES_COMPLETE = "PRACTICAL_EXERCISES_COMPLETE"
+PRACTICAL_EXERCISES_INCOMPLETE = "PRACTICAL_EXERCISES_INCOMPLETE"
 
 
-
+LEARNING_COMPONENT_DESCRIPTIONS = (
+    (LECTURING_COMPLETE, LECTURING_COMPLETE),
+    (LECTURING_INCOMPLETE, LECTURING_INCOMPLETE),
+    (PRACTICAL_EXERCISES_COMPLETE, PRACTICAL_EXERCISES_COMPLETE),
+    (PRACTICAL_EXERCISES_INCOMPLETE, PRACTICAL_EXERCISES_INCOMPLETE))

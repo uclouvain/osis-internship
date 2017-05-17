@@ -33,3 +33,4 @@ class LearningComponentFactory(factory.django.DjangoModelFactory):
         model = "base.LearningComponent"
 
     learning_container = factory.SubFactory(LearningContainerFactory)
+    acronym = factory.Sequence(lambda n: 'L-%d' % n)
