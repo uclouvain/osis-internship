@@ -1,7 +1,7 @@
 {% load staticfiles %}
 {% load i18n %}
 <div class="modal fade" id="pnl_add_manager_modal" tabindex="-1" role="dialog" >
-    <div class="modal-dialog modal-lg" >
+    <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="bt_close_add_manager_modal">
@@ -18,7 +18,8 @@
                                    name="fullname"
                                    class="form-control"
                                    value="{{fullname}}"
-                                   title="{% trans 'hlp_employee_search' %}" >
+                                   title="{% trans 'hlp_employee_search' %}"
+                                   autofocus="autofocus">
                         </div>
                         <div class="col-md-4">
                             <button type="button" id="bt_submit_person_search" class="btn btn-primary" role="button">
