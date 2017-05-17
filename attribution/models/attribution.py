@@ -109,7 +109,7 @@ def find_tutor_number(attribution):
     return tutor_number
 
 
-def search_scores_responsible(learning_unit_title, course_code, entities, entity, tutor, scores_responsible):
+def search_scores_responsible(learning_unit_title, course_code, attributions_list, entity, tutor, scores_responsible):
     queryset = Attribution.objects.filter(learning_unit_year__academic_year=current_academic_years())
     if learning_unit_title:
         queryset = queryset.filter(learning_unit_year__title__icontains=learning_unit_title)\
@@ -127,14 +127,13 @@ def search_scores_responsible(learning_unit_title, course_code, entities, entity
                     Q(tutor__person__last_name__icontains=scores_responsible))\
             .filter(score_responsible=True)\
             .distinct("learning_unit_year")
-    if entities is None:
-        queryset = queryset.filter(learning_unit_year__structure__acronym=entity).distinct("learning_unit_year")
-    else:
-        entities_list = []
-        for attribution in entities:
+    if attributions_list:
+        entities_list = [attribution for attribution in attributions_list]
+        for attribution in attributions_list:
             entities_list.append(attribution.learning_unit_year.structure.acronym)
-        queryset = queryset.filter(learning_unit_year__structure__acronym__in=entities_list).distinct(
-            "learning_unit_year")
+        queryset = queryset.filter(learning_unit_year__structure__acronym__in=entities_list).distinct("learning_unit_year")
+    else:
+        queryset = queryset.filter(learning_unit_year__structure__acronym=entity).distinct("learning_unit_year")
     return queryset
 
 

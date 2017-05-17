@@ -43,10 +43,10 @@
                     <label for="slt_entity">{% trans 'entities' %}</label>
                     <select class="form-control" id="slt_entity"  name="entity" value="{{ request.GET.search }}">
                         <option value="all_entities">{% trans 'all_hierarchy' %} {{ learning_unit_year_acronym }}</option>
-                        {% for entity in entities_list %}
-                            <option value="{{entity.learning_unit_year.structure.acronym}}"
-                                    {% if entity.learning_unit_year.structure.acronym == acronym %}selected{% endif %}>
-                                {{entity.learning_unit_year.structure.acronym}}</option>
+                        {% for attribution in attributions_list %}
+                            <option value="{{attribution.learning_unit_year.structure.acronym}}"
+                                    {% if attribution.learning_unit_year.structure.acronym == acronym %}selected{% endif %}>
+                                {{attribution.learning_unit_year.structure.acronym}}</option>
                         {% endfor %}
                     </select>
                 </div>
