@@ -44,12 +44,13 @@
                             <label> {% trans 'language'%} </label>
                         </div>
                         <div class="col-md-5">
-                            {{ form_french.language }}
+                            {{ form_french.language.1 }}
                         </div>
                         <div class="col-md-5">
-                           {{ form_english.language }}
+                           {{ form_english.language.1 }}
                         </div>
                     </div>
+                    <hr/>
                     <div class="row" style="margin-top:10px;">
                         <div class="col-md-2">
                             <label> {{ themes_discussed }} </label>
@@ -61,6 +62,7 @@
                             {{ form_english.themes_discussed }}
                         </div>
                     </div>
+                    <hr/>
                     <div class="row" style="margin-top:10px;">
                         <div class="col-md-2">
                             <label> {{ skills_to_be_acquired }} </label>
@@ -72,6 +74,7 @@
                             {{ form_english.skills_to_be_acquired }}
                         </div>
                     </div>
+                    <hr/>
                     <div class="row" style="margin-top:10px;">
                         <div class="col-md-2">
                             <label> {{ prerequisite }} </label>

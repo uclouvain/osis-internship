@@ -120,13 +120,16 @@ def learning_unit_specifications(request, learning_unit_year_id):
     translated_labels = mdl_cms.translated_text_label.search(text_entity=entity_name.LEARNING_UNIT_YEAR,
                                                              labels=CMS_LABEL,
                                                              language=user_language)
+
+    fr_language = next((lang for lang in settings.LANGUAGES if lang[0] == 'fr-be'), None)
+    en_language = next((lang for lang in settings.LANGUAGES if lang[0] == 'en'), None)
     for trans_label in translated_labels:
         label_name = trans_label.text_label.label
         context[label_name] = trans_label.label
 
     context.update({
-        'form_french': LearningUnitSpecificationsForm(learning_unit_year, 'fr-be'),
-        'form_english': LearningUnitSpecificationsForm(learning_unit_year, 'en')
+        'form_french': LearningUnitSpecificationsForm(learning_unit_year, fr_language),
+        'form_english': LearningUnitSpecificationsForm(learning_unit_year, en_language)
     })
     return layout.render(request, "learning_unit/specifications.html", context)
 
