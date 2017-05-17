@@ -33,7 +33,7 @@
 {% endblock %}
 {% block content %}
 <div class="page-header">
-    <h2>{% trans 'scores_responsibles_administration' %}</h2>
+    <h2>{% trans 'scores_responsibles_administration' %} {{learning_unit_year_acronym}}</h2>
 </div>
 <div class="panel panel-default">
     <div class="panel-body">
@@ -42,6 +42,7 @@
                 <div class="col-md-2 form-group">
                     <label for="slt_entity">{% trans 'entities' %}</label>
                     <select class="form-control" id="slt_entity"  name="entity" value="{{ request.GET.search }}">
+                        <option value="all_entities">{% trans 'all_hierarchy' %} {{ learning_unit_year_acronym }}</option>
                         {% for entity in entities_list %}
                             <option value="{{entity.learning_unit_year.structure.acronym}}"
                                     {% if entity.learning_unit_year.structure.acronym == acronym %}selected{% endif %}>
