@@ -23,46 +23,35 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import logging
 from django.contrib.auth.models import Group
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver, Signal
 from base import models as mdl
 from osis_common.models.serializable_model import SerializableModel
 from django.contrib.auth.models import Permission
-from django.conf import settings
+from osis_common.models.signals.authentication import user_created_signal, user_updated_signal
+
 
 person_created = Signal(providing_args=['person'])
 
-if settings.USER_SIGNALS_MANAGER:
 
-    if settings.USER_CREATED_SIGNAL:
-        try:
-            user_created_signal = Signal(providing_args=['user', 'user_infos'])
-
-            @receiver(user_created_signal)
-            def update_person_after_user_creation(sender, **kwargs):
-                user = kwargs.get('user')
-                user_infos = kwargs.get('user_infos')
-                person = mdl.person.find_by_global_id(user_infos.get('USER_FGS'))
-                person = _create_update_person(user, person, user_infos)
-                _add_person_to_group(person)
-                return person
+@receiver(user_created_signal)
+def update_person_after_user_creation(sender, **kwargs):
+    user = kwargs.get('user')
+    user_infos = kwargs.get('user_infos')
+    person = mdl.person.find_by_global_id(user_infos.get('USER_FGS'))
+    person = _create_update_person(user, person, user_infos)
+    _add_person_to_group(person)
+    return person
 
 
-            user_updated_signal = Signal(providing_args=['user', 'user_infos'])
-
-            @receiver(user_updated_signal)
-            def update_person_after_user_update(sender, **kwargs):
-                user = kwargs.get('user')
-                user_infos = kwargs.get('user_infos')
-                person = mdl.person.find_by_global_id(user_infos.get('USER_FGS'))
-                person = _create_update_person(user, person, user_infos)
-                return person
-
-        except Exception as e:
-            logger = logging.getLogger(settings.DEFAULT_LOGGER)
-            logger.error(str(e))
+@receiver(user_updated_signal)
+def update_person_after_user_update(sender, **kwargs):
+    user = kwargs.get('user')
+    user_infos = kwargs.get('user_infos')
+    person = mdl.person.find_by_global_id(user_infos.get('USER_FGS'))
+    person = _create_update_person(user, person, user_infos)
+    return person
 
 
 @receiver(post_save, sender=mdl.tutor.Tutor)
