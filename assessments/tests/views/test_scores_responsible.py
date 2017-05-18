@@ -68,7 +68,7 @@ class ScoresResponsibleViewTestCase(TestCase):
 
     def test_create_dictionary(self):
         attributions = attribution.find_attributions(self.structure)
-        attributions_children = attribution.find_all_distinct_children(attributions[0])
+        attributions_children = attribution.find_all_distinct_children(self.structure)
         attributions_list = list(chain(attributions, attributions_children))
         dictionary = scores_responsible.create_attributions_list(attributions_list)
         self.assertIsNotNone(dictionary)
