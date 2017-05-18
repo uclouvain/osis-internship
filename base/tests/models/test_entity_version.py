@@ -43,6 +43,8 @@ class EntityVersionTest(TestCase):
         self.entity_versions = [EntityVersionFactory(
                                 entity=self.entities[x],
                                 acronym="ENTITY_V_"+str(x),
+                                title="This is the entity version 0",
+                                entity_type="FACULTY",
                                 start_date=self.start_date,
                                 end_date=self.end_date
                                 )
@@ -136,9 +138,49 @@ class EntityVersionTest(TestCase):
                                                  timezone.make_aware(datetime.datetime(2015, 12, 30))).fuzz()
                 )
 
-    def test_search_entity_version(self):
+    def test_find_entity_version(self):
         search_date = factory.fuzzy.FuzzyDate(timezone.make_aware(datetime.datetime(2015, 1, 1)),
                                               timezone.make_aware(datetime.datetime(2015, 12, 30))).fuzz()
         self.assertEqual(entity_version.find("ENTITY_V_0", search_date), self.entity_versions[0])
         self.assertEqual(entity_version.find("ENTITY_V_1", search_date), self.entity_versions[1])
         self.assertEqual(entity_version.find("NOT_EXISTING_ENTITY", search_date), None)
+
+    def test_search_matching_entity_version(self):
+        self.assertCountEqual(
+            entity_version.search(
+                entity=self.entities[0].id,
+                acronym="ENTITY_V_0",
+                title="This is the entity version 0",
+                entity_type="FACULTY",
+                start_date=self.start_date,
+                end_date=self.end_date
+            ),
+            [self.entity_versions[0]]
+        )
+
+    def test_search_not_matching_entity_versions(self):
+        self.assertCountEqual(
+            entity_version.search(
+                entity=self.entities[0].id,
+                acronym="FNVABAB",
+                title="There is no version matching this search",
+                entity_type="FACULTY",
+                start_date=self.start_date,
+                end_date=self.end_date
+            ),
+            []
+        )
+
+        self.assertCountEqual(
+            entity_version.search(
+                entity=self.entities[0].id,
+                acronym="ENTITY_V_0",
+                title="This is the entity version 0",
+                entity_type="FACULTY",
+                start_date=factory.fuzzy.FuzzyDate(timezone.make_aware(datetime.datetime(2010, 1, 1)),
+                                                   timezone.make_aware(datetime.datetime(2014, 12, 30))).fuzz(),
+                end_date=factory.fuzzy.FuzzyDate(timezone.make_aware(datetime.datetime(2010, 1, 1)),
+                                                   timezone.make_aware(datetime.datetime(2014, 12, 30))).fuzz(),
+            ),
+            []
+        )

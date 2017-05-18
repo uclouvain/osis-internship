@@ -36,4 +36,9 @@ class Migration(migrations.Migration):
             name='parent',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='links_to_children', to='base.Entity'),
         ),
+        migrations.AlterField(
+            model_name='entity',
+            name='external_id',
+            field=models.CharField(max_length=255, unique=True),
+        ),
     ]

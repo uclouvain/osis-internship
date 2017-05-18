@@ -177,3 +177,8 @@ class EntityTest(TestCase):
             )
 
         self.assertEqual(self.parent.most_recent_acronym(), "ENTITY_V_2")
+
+    def test_get_by_external_id(self):
+        an_entity = EntityFactory(external_id="1234567")
+        self.assertEqual(entity.get_by_external_id("1234567"), an_entity)
+        self.assertEqual(entity.get_by_external_id("321"), None)

@@ -27,6 +27,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from base.models.entity import Entity
+from base.models import entity
 from base.serializers import EntitySerializer
 
 
@@ -59,16 +60,24 @@ def get_post_entities(request):
 
     # insert a new record for an entity
     elif request.method == 'POST':
-        entity_data = {
-            'organization': request.data.get('organization'),
-            'external_id': request.data.get('external_id'),
-            'entityaddress_set': request.data.get('entityaddress_set'),
-            'link_to_parent': request.data.get('link_to_parent'),
-            'entityversion_set': request.data.get('entityversion_set'),
-        }
-        entity_serializer = EntitySerializer(data=entity_data)
+        same_entity = entity.get_by_external_id(request.data.get('external_id'))
 
-        if entity_serializer.is_valid():
-            entity_serializer.save()
-            return Response(entity_serializer.data, status=status.HTTP_201_CREATED)
-        return Response(entity_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        if same_entity is None:
+            entity_data = {
+                'organization': request.data.get('organization'),
+                'external_id': request.data.get('external_id'),
+                'entityaddress_set': request.data.get('entityaddress_set'),
+                'link_to_parent': request.data.get('link_to_parent'),
+                'entityversion_set': request.data.get('entityversion_set'),
+            }
+            entity_serializer = EntitySerializer(data=entity_data)
+            if entity_serializer.is_valid():
+                entity_serializer.save()
+                return Response(entity_serializer.data, status=status.HTTP_201_CREATED)
+            return Response(entity_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        else:
+            link_to_parent_data = request.data.get('link_to_parent')
+            entityversion_set_data = request.data.get('entityversion_set')
+            entity_serializer = EntitySerializer(same_entity)
+            return Response(entity_serializer.data, status=status.HTTP_200_OK)

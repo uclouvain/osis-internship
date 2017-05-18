@@ -23,8 +23,9 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
 from django.contrib import admin
+from django.core.exceptions import ObjectDoesNotExist
+from django.db import models
 from django.utils import timezone
 from base.models.entity_link import EntityLink
 from base.models.entity_version import EntityVersion
@@ -38,7 +39,7 @@ class EntityAdmin(admin.ModelAdmin):
 
 class Entity(models.Model):
     organization = models.ForeignKey('Organization', null=True)
-    external_id = models.CharField(max_length=255, null=True)
+    external_id = models.CharField(max_length=255, unique=True)
 
     class Meta:
         verbose_name_plural = "entities"
@@ -96,3 +97,11 @@ def search(**kwargs):
                                    entityversion__end_date__gte=kwargs['version_date'])
 
     return queryset
+
+
+def get_by_external_id(external_id):
+    try:
+        entity = Entity.objects.get(external_id__exact=external_id)
+    except ObjectDoesNotExist:
+        return None
+    return entity

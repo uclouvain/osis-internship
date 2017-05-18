@@ -72,10 +72,9 @@ class EntityVersion(models.Model):
 
 
 def find(acronym, date=None):
+    if date is None:
+        date = timezone.now()
     try:
-        if date is None:
-            date = timezone.now()
-
         entity_version = EntityVersion.objects.get(acronym=acronym,
                                                    start_date__lte=date,
                                                    end_date__gte=date
@@ -84,3 +83,27 @@ def find(acronym, date=None):
         return None
 
     return entity_version
+
+
+def search(**kwargs):
+    queryset = EntityVersion.objects
+
+    if 'entity' in kwargs:
+        queryset = queryset.filter(entity__exact=kwargs['entity'])
+
+    if 'title' in kwargs:
+        queryset = queryset.filter(title__exact=kwargs['title'])
+
+    if 'acronym' in kwargs:
+        queryset = queryset.filter(acronym__exact=kwargs['acronym'])
+
+    if 'entity_type' in kwargs:
+        queryset = queryset.filter(entity_type__exact=kwargs['entity_type'])
+
+    if 'start_date' in kwargs:
+            queryset = queryset.filter(start_date__exact=kwargs['start_date'])
+
+    if 'end_date' in kwargs:
+            queryset = queryset.filter(end_date__exact=kwargs['end_date'])
+
+    return queryset
