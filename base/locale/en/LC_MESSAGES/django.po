@@ -1527,6 +1527,3 @@ msgstr "Practical exercises"
 
 msgid "subtype"
 msgstr "Subtype"
-
-msgid "remove"
-msgstr "Remove"

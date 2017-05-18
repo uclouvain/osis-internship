@@ -1544,6 +1544,3 @@ msgstr "Travaux pratiques"
 
 msgid "subtype"
 msgstr "Sous-type"
-
-msgid "remove"
-msgstr "Enlever"

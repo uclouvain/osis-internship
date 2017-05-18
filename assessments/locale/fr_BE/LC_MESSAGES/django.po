@@ -72,7 +72,7 @@ msgid "already_program_mgr"
 msgstr "est déjà gestionnaire de programme pour"
 
 msgid "remove"
-msgstr "Supprimer"
+msgstr "Enlever"
 
 msgid "hlp_employee_search"
 msgstr "Veuillez saisir un nom et optionnellement un prénom"
