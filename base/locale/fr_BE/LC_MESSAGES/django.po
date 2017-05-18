@@ -1517,3 +1517,27 @@ msgstr "Thèse"
 
 msgid "selected"
 msgstr "sélectionné(s)"
+
+msgid "LECTURING_COMPLETE"
+msgstr "Cours magistral complet"
+
+msgid "LECTURING_INCOMPLETE"
+msgstr "Cours magistral partiel"
+
+msgid "PRACTICAL_EXERCISES_COMPLETE"
+msgstr "Travaux pratiques complets"
+
+msgid "PRACTICAL_EXERCISES_INCOMPLETE"
+msgstr "Travaux pratiques partiels"
+
+msgid "LECTURING"
+msgstr "Cours magistral"
+
+msgid "STAGE"
+msgstr "Stage"
+
+msgid "DISSERTATION"
+msgstr "Mémoire"
+
+msgid "PRACTICAL_EXERCISES"
+msgstr "Travaux pratiques"

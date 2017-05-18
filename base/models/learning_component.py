@@ -29,9 +29,9 @@ from base.models.enums import learning_component_type, learning_component_descri
 
 
 class LearningComponentAdmin(admin.ModelAdmin):
-    list_display = ('learning_container',)
+    list_display = ('acronym', 'type')
     fieldsets = ((None, {'fields': ('learning_container','type', 'acronym', 'description')}),)
-
+    search_fields = ['acronym']
 
 class LearningComponent(models.Model):
     external_id = models.CharField(max_length=100, blank=True, null=True)
