@@ -72,7 +72,3 @@ class ScoresResponsibleViewTestCase(TestCase):
         attributions_list = list(chain(attributions, attributions_children))
         dictionary = scores_responsible.create_attributions_list(attributions_list)
         self.assertIsNotNone(dictionary)
-
-    def test_find_entities_list(self):
-        entities_list = scores_responsible.find_attributions_list(self.structure)
-        self.assertIsNotNone(entities_list)
