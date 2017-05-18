@@ -33,44 +33,40 @@
 {% endblock %}
 {% block content %}
 <div class="page-header">
-    <h4>{% trans 'tutors_of_course' %} {{ learning_unit_year.acronym }}</h4>
+    <h2>{% trans 'tutors_of_course' %} {{ learning_unit_year.acronym }}</h2>
 </div>
 <div class="panel panel-default">
-        <div class="panel-body">
             <form method="get" action="{% url 'scores_responsible_add' pk=learning_unit_year.id %}">
-                <div class="row form-group">
-                    <table class="table table-hover">
-                        <thead>
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th class="text-center">{% trans 'tutor' %}(s)</th>
+                            <th class="text-center">{% trans 'status' %}</th>
+                            <th class="text-center">{% trans 'scores_responsible' %}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for attribution in attributions %}
                             <tr>
-                                <th class="text-center">{% trans 'tutor' %}(s)</th>
-                                <th class="text-center">{% trans 'status' %}</th>
-                                <th class="text-center">{% trans 'scores_responsible' %}</th>
+                                <td class="text-center">{{ attribution.tutor }}</td>
+                                <td class="text-center">
+                                    {% with st=attribution.function %}
+                                        {{ attribution.get_function_display }}
+                                    {% endwith %}
+                                </td>
+                                <td class="text-center">
+                                    <input id="txt_tutors"  name="prf_{{ attribution.id }}"
+                                           type="checkbox" {% if attribution.score_responsible == True %} checked {% endif %} >
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            {% for attribution in attributions %}
-                                <tr>
-                                    <th class="text-center">{{ attribution.tutor }}</th>
-                                    <th class="text-center">
-                                        {% with st=attribution.function %}
-                                            {{ attribution.get_function_display }}
-                                        {% endwith %}
-                                    </th>
-                                    <th class="text-center">
-                                        <input id="txt_tutors"  name="prf_{{ attribution.id }}"
-                                               type="checkbox" {% if attribution.score_responsible == True %} checked {% endif %} >
-                                    </th>
-                                </tr>
-                            {% endfor%}
-                        </tbody>
-                    </table>
-                    <div class="pull-right form-group">
-                        <button type="submit" id="scores_responsible_add" class="btn btn-primary" role="button"
-                                title="{% trans 'add' %}">{% trans 'save' %}</button>
-                    </div>
+                        {% endfor%}
+                    </tbody>
+                </table>
+                <div class="panel-body">
+                    <button type="submit" id="scores_responsible_add" class="btn btn-primary" role="button"
+                            title="{% trans 'add' %}">{% trans 'save' %}</button>
                 </div>
             </form>
-        </div>
     </div>
 </div>
 {% endblock %}

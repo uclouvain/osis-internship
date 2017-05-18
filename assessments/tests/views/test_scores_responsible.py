@@ -68,17 +68,7 @@ class ScoresResponsibleViewTestCase(TestCase):
 
     def test_create_dictionary(self):
         attributions = attribution.find_attributions(self.structure)
-        attributions_children = attribution.find_all_distinct_children(attributions[0])
+        attributions_children = attribution.find_all_distinct_children(self.structure)
         attributions_list = list(chain(attributions, attributions_children))
         dictionary = scores_responsible.create_attributions_list(attributions_list)
         self.assertIsNotNone(dictionary)
-
-    def test_find_entities_list(self):
-        entities_list = scores_responsible.find_attributions_list(self.structure)
-        self.assertIsNotNone(entities_list)
-
-    def test_find_learning_unit_year_list(self):
-        entities_list = scores_responsible.find_learning_unit_year_list(self.structure)
-        self.assertIsNotNone(entities_list)
-
-
