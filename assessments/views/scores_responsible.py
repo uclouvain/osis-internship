@@ -50,24 +50,15 @@ def scores_responsible(request):
 def scores_responsible_search(request):
     a_faculty_administrator = entity_manager.find_entity_manager_by_user(request.user)
     attributions = attribution.find_all_distinct_children(a_faculty_administrator.structure)
-    if request.GET.get('entity') == "all_entities":
-        attributions_searched = mdl_attr.attribution.search_scores_responsible(
-            learning_unit_title=request.GET.get('learning_unit_title'),
-            course_code=request.GET.get('course_code'),
-            attributions=attributions,
-            entity=request.GET.get('entity'),
-            tutor=request.GET.get('tutor'),
-            scores_responsible=request.GET.get('scores_responsible'))
-    else:
-        attributions_searched = mdl_attr.attribution.search_scores_responsible(
-            learning_unit_title=request.GET.get('learning_unit_title'),
-            course_code=request.GET.get('course_code'),
-            attributions=None,
-            entity=request.GET.get('entity'),
-            tutor=request.GET.get('tutor'),
-            scores_responsible=request.GET.get('scores_responsible'))
+    attributions_searched = mdl_attr.attribution.search_scores_responsible(
+        learning_unit_title=request.GET.get('learning_unit_title'),
+        course_code=request.GET.get('course_code'),
+        attributions=attributions,
+        tutor=request.GET.get('tutor'),
+        scores_responsible=request.GET.get('scores_responsible'))
     dict_attribution = create_attributions_list(attributions_searched)
-    return layout.render(request, 'scores_responsible.html', {"attributions": attributions,
+    return layout.render(request, 'scores_responsible.html', {"learning_unit_year_acronym": a_faculty_administrator.structure.acronym,
+                                                              "attributions": attributions,
                                                               "dict_attribution": dict_attribution,
                                                               "acronym": request.GET.get('entity'),
                                                               "learning_unit_title": request.GET.get('learning_unit_title'),
@@ -79,13 +70,12 @@ def scores_responsible_search(request):
 def create_attributions_list(attributions):
     dict_attribution = dict()
     for attribution in attributions:
-        tutor_number = mdl_attr.attribution.find_tutor_number(attribution)
-        responsible = mdl_attr.attribution.find_all_responsibles_by_learning_unit_year(attribution.learning_unit_year)
+        tutors = mdl_attr.attribution.find_all_tutors_by_learning_unit_year(attribution.learning_unit_year)
         dict_attribution.update({attribution: [attribution.learning_unit_year.id,
                                                attribution.learning_unit_year.structure.acronym,
                                                attribution.learning_unit_year.acronym,
                                                attribution.learning_unit_year.title,
-                                               tutor_number, responsible]})
+                                               tutors]})
     return dict_attribution
 
 
@@ -109,11 +99,10 @@ def scores_responsible_management(request, pk):
 def scores_responsible_add(request, pk):
     a_learning_unit_year = learning_unit_year.find_by_id(pk)
     mdl_attr.attribution.clear_responsible_by_learning_unit_year(a_learning_unit_year)
-    if request.GET:
-        for tutor in request.GET:
-            prf_id = tutor.strip('prf_')
-            attribution = mdl_attr.attribution.find_by_id(prf_id)
-            if request.GET.get(tutor):
-                attribution.score_responsible = True
-                attribution.save()
+    if request.GET.get('tutor'):
+        prf_id = request.get('tutor').strip('prf_')
+        attribution = mdl_attr.attribution.find_by_id(prf_id)
+        if attribution:
+            attribution.score_responsible = True
+            attribution.save()
     return redirect('scores_responsible')

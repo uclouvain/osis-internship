@@ -1326,7 +1326,7 @@ msgid "HOLDER"
 msgstr "Titulaire"
 
 msgid "holder_number"
-msgstr "Nb titulaires"
+msgstr "Nb Enseignant(s)"
 
 msgid "CO_HOLDER"
 msgstr "Co-titulaire"
@@ -1392,7 +1392,7 @@ msgid "abscence_justified_preserved"
 msgstr "Abscence justifiée dèjà encodée et préservée"
 
 msgid "tutors_of_course"
-msgstr "Titulaires du cours"
+msgstr "Enseignant(e)(s) du cours"
 
 msgid "academic_actors"
 msgstr "Les acteurs académiques"
