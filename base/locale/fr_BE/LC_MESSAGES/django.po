@@ -1541,3 +1541,6 @@ msgstr "Mémoire"
 
 msgid "PRACTICAL_EXERCISES"
 msgstr "Travaux pratiques"
+
+msgid "subtype"
+msgstr "Sous-type"
