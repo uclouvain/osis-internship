@@ -74,6 +74,7 @@ class EntityViewTestCase(APITestCase):
         parent = EntityFactory()
         valid_entity = {
             'organization': organization.id,
+            'external_id': "01234567",
             'link_to_parent': [
                 {
                     "parent": parent.id,
