@@ -49,25 +49,9 @@
                             <th>{% trans 'middlename'%}</th>
                             <th>{% trans 'email'%}</th>
                             <th>{% trans 'username'%}</th>
+                            <th></th>
                             </thead>
                             <tbody>
-                            {% for person in persons %}
-                                <tr>
-                                    <td>
-                                        <button type="submit" class="btn-link" id="lnk_add_manager_lastname_{{person.id}}">
-                                            {{ person.last_name }}
-                                        </button>
-                                    </td>
-                                    <td>
-                                        <button type="submit" class="btn-link" id="lnk_add_manager_firstname_{{person.id}}">
-                                            {{ person.first_name }}
-                                        </button>
-                                    </td>
-                                    <td>{{ person.middle_name | default_if_none:''  }}</td>
-                                    <td>{{ person.email | default_if_none:'' }}</td>
-                                    <td>{{ person.user | default_if_none:'' }}</td>
-                                </tr>
-                            {% endfor %}
                             </tbody>
                         </table>
                     </div>
