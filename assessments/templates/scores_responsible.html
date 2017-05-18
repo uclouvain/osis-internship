@@ -76,7 +76,7 @@
                 </div>
            </div>
        </form>
-       <div class="row form-group">
+       <div class="row form-group"  {% if dict_attribution|length > 0 %}style="visibility:visible;display:block;"{%else%}style="visibility:hidden;display:none;"{% endif %}>
             <table class="table table-hover">
                 <thead>
                     <tr>
@@ -97,7 +97,11 @@
                             <td class="text-center">
                                 {% if value_list.5 %}
                                     {% for value in value_list.5 %}
-                                        {{ value }}<br>
+                                        {% if forloop.last %}
+                                            {{ value }}
+                                        {% else %}
+                                            {{ value }};<br>
+                                        {% endif %}
                                     {% endfor %}
                                 {% else %}
                                     {% trans 'without_attribution' %}
