@@ -121,12 +121,10 @@ urlpatterns = [
         url(r'^review/', include([
             url(r'^(?P<mandate_id>\d+)/$', phd_supervisor_review.review_view, name='phd_supervisor_review_view'),
             url(r'^edit/(?P<mandate_id>\d+)/$', phd_supervisor_review.review_edit, name='phd_supervisor_review_edit'),
-        url(r'^save/(?P<review_id>\d+)/(?P<mandate_id>\d+)/$', phd_supervisor_review.review_save,
-            name='phd_supervisor_review_save'),
+            url(r'^save/(?P<review_id>\d+)/(?P<mandate_id>\d+)/$', phd_supervisor_review.review_save,
+                name='phd_supervisor_review_save'),
         ])),
     ])),
-
-
 
     url(r'^reviewer/', include([
         url(r'^$', reviewer_mandates_list.MandatesListView.as_view(), name='reviewer_mandates_list'),
