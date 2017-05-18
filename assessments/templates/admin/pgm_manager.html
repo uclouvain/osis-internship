@@ -372,13 +372,13 @@
 
         $('#tb_persons tbody > tr').remove();
 
-        $('#pnl_person_search_results').css('visibility', 'hidden');
+        $('#pnl_person_search_results').css('visibility', 'hidden').css('display', 'none');
         $('#pnl_person_search_error').css('visibility', 'hidden');
         $.ajax({
             url: "/assessments/pgm_manager/person/list/search?fullname=" + $('#txt_fullname_manager_search').val()
         }).then(function (data) {
             if (data.length > 0) {
-                $('#pnl_person_search_results').css('visibility', 'visible');
+                $('#pnl_person_search_results').css('visibility', 'visible').css('display', 'block');
 
                 var trHTML = '';
                 $.each(data, function (key, value) {
