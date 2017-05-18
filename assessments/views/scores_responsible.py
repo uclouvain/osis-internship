@@ -100,9 +100,12 @@ def scores_responsible_add(request, pk):
     a_learning_unit_year = learning_unit_year.find_by_id(pk)
     mdl_attr.attribution.clear_responsible_by_learning_unit_year(a_learning_unit_year)
     if request.GET.get('tutor'):
-        prf_id = request.get('tutor').strip('prf_')
+        prf_id = request.GET.get('tutor').strip('prf_')
         attribution = mdl_attr.attribution.find_by_id(prf_id)
-        if attribution:
-            attribution.score_responsible = True
-            attribution.save()
+        attributions = mdl_attr.attribution.Attribution.objects \
+            .filter(learning_unit_year=attribution.learning_unit_year) \
+            .filter(tutor=attribution.tutor)
+        for a_attribution in attributions:
+            a_attribution.score_responsible = True
+            a_attribution.save()
     return redirect('scores_responsible')
