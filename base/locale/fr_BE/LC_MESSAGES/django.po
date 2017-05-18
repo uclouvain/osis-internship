@@ -1325,9 +1325,6 @@ msgstr "Coordinateur"
 msgid "HOLDER"
 msgstr "Titulaire"
 
-msgid "holder_number"
-msgstr "Nb Enseignant(s)"
-
 msgid "CO_HOLDER"
 msgstr "Co-titulaire"
 
