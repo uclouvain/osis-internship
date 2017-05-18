@@ -1500,3 +1500,28 @@ msgstr "PhD Thesis"
 
 msgid "selected"
 msgstr "selected"
+
+msgid "LECTURING_COMPLETE"
+msgstr "Complete lecturing"
+
+msgid "LECTURING_INCOMPLETE"
+msgstr "Incomplete lecturing"
+
+msgid "PRACTICAL_EXERCISES_COMPLETE"
+msgstr "Complete practical exercises"
+
+msgid "PRACTICAL_EXERCISES_INCOMPLETE"
+msgstr "Incomplete practical exercises"
+
+msgid "LECTURING"
+msgstr "Lecturing"
+
+msgid "STAGE"
+msgstr "Stage"
+
+msgid "DISSERTATION"
+msgstr "Dissertation"
+
+msgid "PRACTICAL_EXERCISES"
+msgstr "Practical exercises"
+

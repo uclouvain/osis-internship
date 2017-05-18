@@ -31,7 +31,7 @@ class LearningComponentYearAdmin(admin.ModelAdmin):
     list_display = ('learning_container_year', 'learning_component', 'title', 'acronym', 'type', 'comment')
     fieldsets = ((None, {'fields': ('learning_container_year', 'learning_component', 'title', 'acronym',
                                     'type', 'comment', 'planned_classes', 'hourly_volume_total', 'hourly_volume_Q1')}),)
-    search_fields = ['acronym']
+    search_fields = ['acronym','learning_component']
 
 
 class LearningComponentYear(models.Model):
@@ -44,7 +44,7 @@ class LearningComponentYear(models.Model):
     comment = models.CharField(max_length=255, blank=True, null=True)
     planned_classes = models.IntegerField(blank=True, null=True)
     hourly_volume_total = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
-    hourly_volume_Q1 = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
+    hourly_volume_partial = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
 
     def save(self, *args, **kwargs):
         if self.learning_container_year.learning_container != self.learning_component.learning_container:
@@ -59,10 +59,21 @@ class LearningComponentYear(models.Model):
             ("can_access_learningunitcomponentyear", "Can access learning unit component year"),
         )
 
+    @property
+    def hourly_volume_partial_q2(self):
+        if self.hourly_volume_total:
+            if self.hourly_volume_partial:
+                q2 = self.hourly_volume_total - self.hourly_volume_partial
+                if q2 <= 0:
+                    return None
+                else:
+                    return q2
+        return None
+
 
 def find_by_id(learning_component_year_id):
     return LearningComponentYear.objects.get(pk=learning_component_year_id)
 
 
 def find_by_learning_container_year(a_learning_container_year):
-    return LearningComponentYear.objects.filter(learning_container_year=a_learning_container_year).order_by('type')
+    return LearningComponentYear.objects.filter(learning_container_year=a_learning_container_year).order_by('type','learning_component__acronym')
