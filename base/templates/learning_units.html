@@ -80,12 +80,10 @@
     <div>
         {% include "template_messages.html" %}
         {% if form.non_field_errors %}
-        <div id="pnl_error_messages" class="alert alert-danger" role="alert">
-           <ul>
-               {% for error in form.non_field_errors %}
-                  <li>{% trans error %}</li>
-               {% endfor %}
-           </ul>
+        <div id="pnl_error_messages" class="alert alert-warning" role="alert">
+            {% for error in form.non_field_errors %}
+                {% trans error|escape %}<br>
+            {% endfor %}
         </div>
         {% endif %}
 

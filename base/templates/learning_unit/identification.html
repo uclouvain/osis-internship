@@ -43,19 +43,26 @@
                 <div class="col-md-8">
                     <div class="row">
                         <div class="col-md-3">
-                            <label>{% trans 'learning_unit_code'%}</label><br>
+                            <label>{% trans 'code'%}</label><br>
                             {{ learning_unit_year.acronym }}
                         </div>
                         <div class="col-md-3">
                             <label>{% trans 'partims' %}</label><br>
-                            {{ learning_container_year_partims }}
+                            <div>
+                            {% for partim in learning_container_year_partims %}
+                                {% if forloop.counter > 1 %}
+                                    ,
+                                {% endif%}
+                                <a href="{% url 'learning_unit' partim.id %}">{{ partim.subdivision}}</a>
+                            {% endfor %}
+                            </div>
                         </div>
                         <div class="col-md-3">
-                            <label>{% trans 'learning_unit_type' %}</label><br>
+                            <label>{% trans 'type' %}</label><br>
                             {% trans learning_unit_year.learning_container_year.container_type %}
                         </div>
                         <div class="col-md-3">
-                            <label>{% trans 'learning_unit_subtype' %}</label><br>
+                            <label>{% trans 'subtype' %}</label><br>
                             {% trans learning_unit_year.subtype %}
                         </div>
                     </div>
@@ -66,7 +73,9 @@
                         </div>
                         <div class="col-md-3">
                             <label>{% trans 'periodicity' %}</label><br>
-                            {% trans learning_unit_year.learning_unit.periodicity %}
+                            {% if learning_unit_year.learning_unit.periodicity %}
+                                {% trans learning_unit_year.learning_unit.periodicity %}
+                            {% endif %}
                         </div>
                          <div class="col-md-3">
                             <label>{% trans 'status' %}</label><br>

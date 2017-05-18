@@ -138,7 +138,12 @@ def count_by_email(email):
 
 
 def search_employee(full_name):
-    queryset = Person.objects.annotate(search_name=Concat('last_name', Value(' '), 'first_name'))
+    queryset = Person.objects.annotate(begin_by_first_name=Concat('first_name', Value(' '), 'last_name'))
+    queryset = queryset.annotate(begin_by_last_name=Concat('last_name', Value(' '), 'first_name'))
     if full_name:
-        return queryset.filter(employee=True, search_name__icontains='{}'.format(full_name))
+        return queryset.filter(employee=True)\
+            .filter(Q(begin_by_first_name='{}'.format(full_name)) |
+                    Q(begin_by_last_name='{}'.format(full_name)) |
+                    Q(first_name__icontains=full_name) |
+                    Q(last_name__icontains=full_name))
     return None
