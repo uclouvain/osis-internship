@@ -30,13 +30,14 @@ from django.contrib import admin
 class LearningContainerAdmin(admin.ModelAdmin):
     list_display = ('external_id',)
     fieldsets = ((None, {'fields': ('external_id',)}),)
-
-
+    search_fields = ['external_id']
 
 class LearningContainer(models.Model):
     external_id = models.CharField(max_length=100, blank=True, null=True)
     changed = models.DateTimeField(null=True)
 
+    def __str__(self):
+        return u"%s" % (self.external_id)
 
 
 def find_by_id(learning_container_id):

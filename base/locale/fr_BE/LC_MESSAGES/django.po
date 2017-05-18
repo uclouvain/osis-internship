@@ -915,7 +915,7 @@ msgid "registration_id"
 msgstr "NOMA"
 
 msgid "registration_id_not_access_or_not_exist"
-msgstr "Vous n'avez pas des droits accès pour cet étudiant ou il n'existe pas en base de données"
+msgstr "Étudiant non inscrit à l'examen"
 
 msgid "research_center"
 msgstr "Centre de recherche"
@@ -979,7 +979,7 @@ msgid "scores_responsible"
 msgstr "Responsable(s) de notes"
 
 msgid "scores_responsibles_administration"
-msgstr "Administration des Responsables de notes pour les cours de la faculté"
+msgstr "Administration des responsables de notes de programmes"
 
 msgid "scores_saved"
 msgstr "note(s) enregistrée(s)"
