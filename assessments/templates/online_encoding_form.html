@@ -150,8 +150,8 @@
                         </td>
                         <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.offer_year.acronym }}</td>
                         <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.registration_id }}</td>
-                        <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.last_name|title }}</td>
-                        <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.first_name }}</td>
+                        <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.last_name|default_if_none:""|title }}</td>
+                        <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.first_name|default_if_none:"" }}</td>
                         <td>
 			                <input type="text" min="0" max="20" name="score_{{ enrollment.id }}"
                                 id="num_score_{{ enrollment.id }}" tabindex="{{ forloop.counter }}"
@@ -327,7 +327,7 @@ $("input[id^='num_score_']" ).change(ensureOnlyOneInputCompleted)
 $("select[id^='slt_justification_score_']" ).change(ensureOnlyOneInputCompleted)
 
 var target_score = '#form_online_encoding tbody tr td input';
-$(target_score).on('keypress',
+$(target_score).on('keydown',
                    { "target": target_score,
                      "table_size": $('#form_online_encoding tbody tr').length,
                      "index_increment_value": 2},
@@ -335,7 +335,7 @@ $(target_score).on('keypress',
 
 
 var target_justification = '#form_online_encoding tbody tr td select';
-$(target_justification).on('keypress',
+$(target_justification).on('keydown',
                            { "target": target_justification,
                              "table_size": $('#form_online_encoding tbody tr').length * 2,
                              "index_increment_value": 1},

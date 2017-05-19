@@ -10,7 +10,7 @@
 * The core business involves the administration of students, teachers,
 * courses, programs and so on.
 *
-* Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+* Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 *
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -37,7 +37,9 @@
 	<li><a href="{% url 'assistant_mandates' %}">{% trans 'my_mandates' %}</a></li>
 	<li class="active"><a href="#">{% trans 'assistant_form_part1' %}</a></li>
 	<li><a href="{% url 'mandate_learning_units' mandate.id %}">{% trans 'assistant_form_part2' %}</a></li>
-	<li><a href="{% url 'form_part3_edit' mandate.id %}">{% trans 'assistant_form_part3' %}</a></li>
+	{% if mandate.assistant_type == "ASSISTANT" %}
+		<li><a href="{% url 'form_part3_edit' mandate.id %}">{% trans 'assistant_form_part3' %}</a></li>
+	{% endif %}
 	<li><a href="{% url 'form_part4_edit' mandate.id %}">{% trans 'assistant_form_part4' %}</a></li>
 	<li><a href="{% url 'form_part5_edit' mandate.id %}">{% trans 'assistant_form_part5' %}</a></li>
 	<li><a href="{% url 'form_part6_edit' mandate.id %}">{% trans 'assistant_form_part6' %}</a></li>
@@ -53,14 +55,8 @@
   			</div>
   		</div>
 		<div class="form-group" style="padding-top: 15px;">
-    		<label style="padding-top: 5px" for="person">{% trans 'name' %}</label>
-			<div class="controls" id="person">{{assistant.person}}</div>
-    		<label  style="padding-top: 15px" for="adresses">{% trans 'address' %}</label>
-			<div class="controls" id="adresses">
-				{% for address in addresses  %}
-					{{address.location}} - {{address.postal_code}} {{address.city}}<br>{{address.country}}
-				{% endfor %}
-			</div>
+    		<div class="controls" id="person">{{assistant.person}}</div>
+			<p  style="margin-top: 10px;">{% trans 'verify_address_message' %}</p>
     	</div>
 		<div class="panel-default">
   			<div class="panel-heading">
@@ -71,11 +67,7 @@
 			<label style="padding-top: 5px" for="renewal_type">{% trans 'renewal_type' %}
 			</label>
 			<div class="controls" id="renewal_type">
-				{% if mandate.renewal_type == 'EXCEPTIONAL' %}
-					{% trans 'exceptional' %}
-				{% else %}
-					{% trans 'normal' %}
-				{% endif %}
+				{{ mandate.renewal_type }}
 			</div>
 			{% for structure in mandate.mandatestructure_set.all|dictsort:"structure.type" %}
 				<label style="padding-top: 15px" for="structures">
@@ -90,11 +82,7 @@
       		<div class="controls" id="date_of_first_nomination">{{mandate.entry_date}}</div>
       		<label  style="padding-top: 15px" for="field">{% trans 'field' %}</label>
 			<div class="controls" id="field">
-				{% if mandate.assistant_type == 'ASSISTANT' %}
-					{% trans 'assistant' %}
-				{% else %}
-				{% trans 'teaching_assistant' %}
-      				{% endif %}
+				{{ mandate.assistant_type }}
 			</div>
       	</div>
     	<div class="panel-default">

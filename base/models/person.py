@@ -29,7 +29,9 @@ from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
-from base.enums import person_source_type
+from base.models.enums import person_source_type
+from django.db.models import Value
+from django.db.models.functions import Concat, Lower
 
 
 class PersonAdmin(SerializableModelAdmin):
@@ -135,37 +137,13 @@ def count_by_email(email):
     return search_by_email(email).count()
 
 
-def search(a_lastname, a_firstname, is_employee):
-
-    out = None
-    queryset = Person.objects
-
-    queryset = lastname_parameter(a_lastname, queryset)
-
-    queryset = firstname_parameter(a_firstname, queryset)
-
-    queryset = employee_parameter(is_employee, queryset)
-
-    if a_lastname or a_firstname or a_status or is_employee:
-        out = queryset.order_by('last_name')
-
-    return out
-
-
-def employee_parameter(is_employee, queryset):
-    if is_employee:
-        queryset = queryset.filter(employee=is_employee)
-    return queryset
-
-
-def firstname_parameter(a_first_name, queryset):
-    if a_first_name:
-        queryset = queryset.filter(first_name__icontains=a_first_name)
-    return queryset
-
-
-def lastname_parameter(a_lastname_part, queryset):
-    if a_lastname_part:
-        queryset = queryset.filter(last_name__icontains=a_lastname_part)
-    return queryset
-
+def search_employee(full_name):
+    queryset = Person.objects.annotate(begin_by_first_name=Lower(Concat('first_name', Value(' '), 'last_name')))
+    queryset = queryset.annotate(begin_by_last_name=Lower(Concat('last_name', Value(' '), 'first_name')))
+    if full_name:
+        return queryset.filter(employee=True)\
+            .filter(Q(begin_by_first_name__iexact='{}'.format(full_name.lower())) |
+                    Q(begin_by_last_name__iexact='{}'.format(full_name.lower())) |
+                    Q(first_name__icontains=full_name) |
+                    Q(last_name__icontains=full_name))
+    return None

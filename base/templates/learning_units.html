@@ -9,7 +9,7 @@
 * The core business involves the administration of students, teachers,
 * courses, programs and so on.
 *
-* Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+* Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 *
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -80,12 +80,10 @@
     <div>
         {% include "template_messages.html" %}
         {% if form.non_field_errors %}
-        <div id="pnl_error_messages" class="alert alert-danger" role="alert">
-           <ul>
-               {% for error in form.non_field_errors %}
-                  <li>{% trans error %}</li>
-               {% endfor %}
-           </ul>
+        <div id="pnl_error_messages" class="alert alert-warning" role="alert">
+            {% for error in form.non_field_errors %}
+                {% trans error|escape %}<br>
+            {% endfor %}
         </div>
         {% endif %}
 

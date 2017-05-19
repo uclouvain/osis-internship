@@ -117,7 +117,7 @@ def create_csv_stream(filename, number=2, headers=True):
     return str_io
 
 
-#@unittest.skip("Skip")
+@unittest.skip("Skip")
 class StudentLoaderTestCase(TestCase):
     @patch('base.models.person.find_by_global_id')
     def test_insert_internship_student_information_not_found(self,

@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -23,21 +23,19 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.http.response import HttpResponseRedirect
+import re
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ObjectDoesNotExist
+from django.core.urlresolvers import reverse
+from django.http.response import HttpResponseRedirect
 from django.shortcuts import render
+from django.utils import timezone
+from assistant.forms import ReviewForm
 from assistant.models import assistant_mandate, review, mandate_structure, tutoring_learning_unit_year
 from assistant.models import reviewer
+from assistant.models.enums import review_status, assistant_mandate_state, reviewer_role
 from base.models import person
-from assistant.forms import ReviewForm
-from django.core.urlresolvers import reverse
-from django.utils import timezone
-from django.core.exceptions import ObjectDoesNotExist
-from assistant.enums import reviewer_role
-from base.enums import structure_type
-from assistant.models.enums import review_status, assistant_mandate_state
-import re
-
+from base.models.enums import structure_type
 
 
 @login_required
@@ -106,7 +104,12 @@ def review_edit(request, mandate_id):
 def review_save(request, review_id, mandate_id):
     rev = review.find_by_id(review_id)
     mandate = assistant_mandate.find_mandate_by_id(mandate_id)
+    current_reviewer = reviewer.can_edit_review(reviewer.find_by_person(person.find_by_user(request.user)).id,
+                                                mandate_id)
     form = ReviewForm(data=request.POST, instance=rev, prefix='rev')
+    previous_mandates = assistant_mandate.find_before_year_for_assistant(mandate.academic_year.year, mandate.assistant)
+    role = current_reviewer.role
+    menu = generate_reviewer_menu_tabs(role, mandate, role)
     if form.is_valid():
         current_review = form.save(commit=False)
         if 'validate_and_submit' in request.POST:
@@ -135,10 +138,17 @@ def review_save(request, review_id, mandate_id):
             current_review.save()
             return review_edit(request, mandate_id)
     else:
-        return render(request, "review_form.html", {'review': rev, 'role': mandate.state,
+        return render(request, "review_form.html", {'review': rev,
+                                                    'role': mandate.state,
                                                     'year': mandate.academic_year.year + 1,
-                                                    'absences': mandate.absences, 'comment': mandate.comment,
-                                                    'mandate_id': mandate.id, 'form': form})
+                                                    'absences': mandate.absences,
+                                                    'comment': mandate.comment,
+                                                    'mandate_id': mandate.id,
+                                                    'previous_mandates': previous_mandates,
+                                                    'assistant': mandate.assistant,
+                                                    'menu': menu,
+                                                    'menu_type': 'reviewer_menu',
+                                                    'form': form})
 
 
 @login_required

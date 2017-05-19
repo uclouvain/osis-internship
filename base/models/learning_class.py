@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -31,8 +31,10 @@ class LearningClassAdmin(admin.ModelAdmin):
     list_display = ('learning_component',)
     fieldsets = ((None, {'fields': ('learning_component',)}),)
 
+
 class LearningClass(models.Model):
     learning_component = models.ForeignKey('LearningComponent')
+
 
 def find_by_id(learning_class_id):
     return LearningClass.objects.get(pk=learning_class_id)

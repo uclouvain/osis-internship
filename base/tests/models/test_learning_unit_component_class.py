@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -35,7 +35,6 @@ from base.models.learning_unit_component import LearningUnitComponent
 from base.models.learning_class_year import LearningClassYear
 from base.models.learning_class import LearningClass
 from base.models.academic_year import AcademicYear
-from base.enums import learning_unit_year_types
 
 now = timezone.now()
 
@@ -70,7 +69,6 @@ class LearningComponentYearTest(TestCase):
                                                         learning_component=learning_component,
                                                         title="Cours magistral",
                                                         acronym="/C",
-                                                        type=learning_unit_year_types.COURSE,
                                                         comment="TEST")
         #Classe annualisée est associée à son composant et à son conteneur annualisé
         learning_class_year = LearningClassYear(learning_component_year=learning_component_year,

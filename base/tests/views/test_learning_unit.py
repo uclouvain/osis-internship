@@ -1,9 +1,19 @@
+from django.utils import timezone
 from unittest import mock
 
 from django.core.urlresolvers import reverse
 from django.test import TestCase, RequestFactory
 
+from base.tests.factories.academic_year import AcademicYearFactory
 from base.tests.factories.learning_unit_year import LearningUnitYearFactory
+from base.tests.factories.learning_class import LearningClassFactory
+from base.tests.factories.learning_class_year import LearningClassYearFactory
+from base.tests.factories.learning_component import LearningComponentFactory
+from base.tests.factories.learning_component_year import LearningComponentYearFactory
+from base.tests.factories.learning_container import LearningContainerFactory
+from base.tests.factories.learning_container_year import LearningContainerYearFactory
+
+from base.views import learning_unit as learning_unit_view
 
 
 class LearningUnitViewTestCase(TestCase):
@@ -75,3 +85,26 @@ class LearningUnitViewTestCase(TestCase):
 
         self.assertEqual(template, 'learning_unit/identification.html')
         self.assertEqual(context['learning_unit_year'], learning_unit_year)
+
+    def test_get_components_no_learning_container_yr(self):
+        self.assertEqual(len(learning_unit_view.get_components(None)), 0)
+
+    def test_get_components_with_classes(self):
+        an_academic_year = AcademicYearFactory(year=timezone.now().year)
+        l_container = LearningContainerFactory()
+        l_container.save()
+        l_container_year = LearningContainerYearFactory.build(academic_year=an_academic_year,
+                                                              title="LC-98998",
+                                                              learning_container=l_container)
+        l_container_year.save()
+        l_component = LearningComponentFactory(learning_container=l_container)
+        l_component.save()
+        l_component_year = LearningComponentYearFactory(learning_container_year=l_container_year,
+                                                        learning_component=l_component)
+        l_class = LearningClassFactory(learning_component=l_component)
+        LearningClassYearFactory(learning_component_year=l_component_year, learning_class=l_class)
+        LearningClassYearFactory(learning_component_year=l_component_year, learning_class=l_class)
+
+        components = learning_unit_view.get_components(l_container_year)
+        self.assertEqual(len(components), 1)
+        self.assertEqual(len(components[0]['classes']), 2)

@@ -30,7 +30,7 @@ import string
 import operator
 from django.conf import settings
 from django.utils import timezone
-from base.enums import structure_type
+from base.models.enums import structure_type
 
 
 def _get_tzinfo():

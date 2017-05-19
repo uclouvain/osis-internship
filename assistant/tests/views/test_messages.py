@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -23,19 +23,21 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.test import TestCase, RequestFactory, Client
-from django.core.urlresolvers import reverse
-from django.utils import timezone
-from django.contrib.auth.models import User
-from assistant.views.messages import show_history
-from django.db.models.query import QuerySet
-from assistant.models.message import Message
-from assistant.models.manager import Manager
-from base.models.person import Person
-from base.models.academic_year import AcademicYear
-from base.models import academic_year
 from datetime import date
-from assistant.enums import message_type
+
+from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
+from django.db.models.query import QuerySet
+from django.test import TestCase, RequestFactory, Client
+from django.utils import timezone
+
+from assistant.models.enums import message_type
+from assistant.models.manager import Manager
+from assistant.models.message import Message
+from assistant.views.messages import show_history
+from base.models import academic_year
+from base.models.academic_year import AcademicYear
+from base.models.person import Person
 
 
 class MessagesViewTestCase(TestCase):
