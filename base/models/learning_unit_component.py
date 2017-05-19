@@ -59,3 +59,5 @@ def find_by_learning_year_type(a_learning_unit_year=None, a_type=None):
         except ObjectDoesNotExist:
             return None
     return None
+
+
