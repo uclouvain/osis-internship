@@ -59,7 +59,6 @@ class Attribution(SerializableModel):
     def __str__(self):
         return u"%s - %s" % (self.tutor.person, self.function)
 
-
     @property
     def duration(self):
         if self.start_year and self.end_year:

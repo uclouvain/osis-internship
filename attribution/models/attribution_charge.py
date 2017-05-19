@@ -46,7 +46,6 @@ class AttributionCharge(SerializableModel):
         return u"%s" % str(self.attribution)
 
 
-
 def search(attribution=None, learning_unit_component=None):
 
     queryset = AttributionCharge.objects
