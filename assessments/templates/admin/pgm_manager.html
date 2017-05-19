@@ -32,9 +32,9 @@
 <li class="active" id="lnk_pgm_manager_management">{% trans 'pgm_mgr_administration' %}</li>
 {% endblock %}
 {% block content %}
-{% if manager_entity %}
+{% if administrator_entities_string %}
     <div class="page-header">
-        <h2>{% trans 'pgm_mgr_administration' %} <label>{{ manager_entity.acronym }} </label>({{ academic_year }})</h2>
+        <h2>{% trans 'pgm_mgr_administration' %} <label>{{ administrator_entities_string }} </label>({{ academic_year }})</h2>
     </div>
     <div class="panel panel-default">
         <div class="panel-body">
@@ -44,12 +44,14 @@
                     <div class="col-md-3">
                         <label for="slt_entity" >{% trans 'entity'%}</label>
                         <select class="form-control" id="slt_entity" name="entity" >
-                            <option selected value="-">{% trans 'all_hierarchy' %} {{ manager_entity.acronym }}</option>
-                            {% for e in entities %}
-                                {% if e.acronym == entity %}
-                                    <option selected value="{{ e.acronym }}">{{ e.acronym }}</option>
+                            {% for e in entities_managed_root %}
+                                <option  value="all_{{e.structure.id}}" {% if e.structure.id|slugify == entity_root_selected %} selected {% endif %}>{% trans 'all_hierarchy' %} {{ e.structure.acronym }}</option>
+                            {% endfor %}
+                            {% for e in entities_managed %}
+                                {% if e.id|slugify == entity_selected %}
+                                    <option selected value="{{ e.id }}">{{ e.acronym }}</option>
                                 {% else %}
-                                    <option value="{{ e.acronym }}">{{ e.acronym }}</option>
+                                    <option value="{{ e.id }}">{{ e.acronym }}</option>
                                 {% endif %}
                             {% endfor %}
                         </select>
@@ -99,8 +101,8 @@
                    <form method="post" >
                        {% csrf_token %}
                        <div class="col-md-6">
-                           {% if pgms|length == 0 and init == "0" %}
-                           <label class="alert alert-info" style="margin:5px">{% trans 'no_result' %}</label>
+                           {% if pgms|length == 0 and init != "1" %}
+                           <div class="alert alert-info" style="margin:5px">{% trans 'no_result' %}</div>
                            {% endif %}
                            <input type="hidden" id="hdn_entity" name="entity">
                            <input type="hidden" id="hdn_offer_type" name="offer_type">
@@ -135,9 +137,6 @@
                                <img src="{% static 'img/loading.gif' %}" alt="Loading..." />
                            </div>
                            {% endif%}
-                           {% if managers|length == 0 and init == "0" %}
-                            <label class="alert alert-info" style="margin:5px">{% trans 'no_result' %}</label>
-                           {% endif %}
 
                            <table class="table table-striped table-hover" id="tb_managers" style="visibility:{% if pgms|length > 0 %}visibility{%else%}hidden{%endif%}">
                                <thead>

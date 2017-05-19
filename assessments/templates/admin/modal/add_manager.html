@@ -30,7 +30,8 @@
                 </div>
                 <form method="post" action="{% url 'create_manager_person'%}" id="form_create_manager">
                     {% csrf_token %}
-                    <input type="hidden" id="hdn_entity" name="entity" class="form-control" value="{{ entity | default_if_none:''}}" >
+                    <input type="hidden" id="hdn_entity" name="entity" class="form-control" value="{{ entity_selected | default_if_none:''}}" >
+                    <input type="hidden" id="hdn_entity_root" name="entity_root" class="form-control" value="{{ entity_root_selected  | default_if_none:''}}" >
                     <input type="hidden" id="hdn_offer_type" name="offer_type" class="form-control" value="{{ offer_type | default_if_none:'' }}" >
                     <input type="hidden" id="hdn_person" name="person" class="form-control" value="{{ person.id | default_if_none:''}}" >
                     <input type="hidden" id="hdn_offers_checked" name="offers_checked" class="form-control" value="{{ offers_on | default_if_none:''}}" >
