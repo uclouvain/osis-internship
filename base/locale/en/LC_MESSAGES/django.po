@@ -1527,3 +1527,9 @@ msgstr "Practical exercises"
 
 msgid "subtype"
 msgstr "Subtype"
+
+msgid "start"
+msgstr "Start"
+
+msgid "duration"
+msgstr "Duration"
