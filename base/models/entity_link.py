@@ -76,3 +76,25 @@ class EntityLink(models.Model):
             upper_hierarchy.append(self.get_upper_entity_link())
             upper_hierarchy.extend(self.get_upper_entity_link().get_upper_hierarchy())
         return upper_hierarchy
+
+
+def search(**kwargs):
+    queryset = EntityLink.objects
+
+    if 'parent' in kwargs:
+        queryset = queryset.filter(parent__exact=kwargs['parent'])
+
+    if 'child' in kwargs:
+        queryset = queryset.filter(child__exact=kwargs['child'])
+
+    if 'start_date' in kwargs:
+            queryset = queryset.filter(start_date__exact=kwargs['start_date'])
+
+    if 'end_date' in kwargs:
+            queryset = queryset.filter(end_date__exact=kwargs['end_date'])
+
+    return queryset
+
+
+def count(**kwargs):
+    return search(**kwargs).count()

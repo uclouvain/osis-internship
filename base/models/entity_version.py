@@ -107,3 +107,7 @@ def search(**kwargs):
             queryset = queryset.filter(end_date__exact=kwargs['end_date'])
 
     return queryset
+
+
+def count(**kwargs):
+    return search(**kwargs).count()

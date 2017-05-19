@@ -28,56 +28,102 @@ from rest_framework.response import Response
 from rest_framework import status
 from base.models.entity import Entity
 from base.models import entity
+from base.models import entity_link
+from base.models import entity_version
 from base.serializers import EntitySerializer
 
 
 @api_view(['GET'])
 def get_entity(request, pk):
     try:
-        entity = Entity.objects.get(pk=pk)
+        an_entity = Entity.objects.get(pk=pk)
     except Entity.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-    # get details of a single entity
     if request.method == 'GET':
-        serializer = EntitySerializer(entity)
+        serializer = EntitySerializer(an_entity)
         return Response(serializer.data)
-    # delete a single entity
+
     elif request.method == 'DELETE':
         return Response({})
-    # update details of a single entity
     elif request.method == 'PUT':
         return Response({})
 
 
 @api_view(['GET', 'POST'])
 def get_post_entities(request):
-    # get all entities
     if request.method == 'GET':
         entities = Entity.objects.all()
         serializer = EntitySerializer(entities, many=True)
         return Response(serializer.data)
 
-    # insert a new record for an entity
     elif request.method == 'POST':
-        same_entity = entity.get_by_external_id(request.data.get('external_id'))
+        existing_entity = entity.get_by_external_id(request.data.get('external_id'))
 
-        if same_entity is None:
-            entity_data = {
-                'organization': request.data.get('organization'),
-                'external_id': request.data.get('external_id'),
-                'entityaddress_set': request.data.get('entityaddress_set'),
-                'link_to_parent': request.data.get('link_to_parent'),
-                'entityversion_set': request.data.get('entityversion_set'),
-            }
-            entity_serializer = EntitySerializer(data=entity_data)
-            if entity_serializer.is_valid():
-                entity_serializer.save()
-                return Response(entity_serializer.data, status=status.HTTP_201_CREATED)
-            return Response(entity_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        if existing_entity is None:
+            return create_full_entity(request)
 
         else:
-            link_to_parent_data = request.data.get('link_to_parent')
-            entityversion_set_data = request.data.get('entityversion_set')
-            entity_serializer = EntitySerializer(same_entity)
+            create_versions_of_existing_entity(request, existing_entity)
+            create_links_of_existing_entity(request, existing_entity)
+            entity_serializer = EntitySerializer(existing_entity)
             return Response(entity_serializer.data, status=status.HTTP_200_OK)
+
+
+def create_full_entity(request):
+    entity_data = {
+        'organization': request.data.get('organization'),
+        'external_id': request.data.get('external_id'),
+        'entityaddress_set': request.data.get('entityaddress_set'),
+        'link_to_parent': request.data.get('link_to_parent'),
+        'entityversion_set': request.data.get('entityversion_set'),
+    }
+    entity_serializer = EntitySerializer(data=entity_data)
+    if entity_serializer.is_valid():
+        entity_serializer.save()
+        return Response(entity_serializer.data, status=status.HTTP_201_CREATED)
+    return Response(entity_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+def create_versions_of_existing_entity(request, same_entity):
+    entityversion_data = request.data.get('entityversion_set')
+    for version in entityversion_data:
+        versions_count = entity_version.count(entity=same_entity,
+                                              title=version.get('title'),
+                                              acronym=version.get('acronym'),
+                                              entity_type=version.get('entity_type'),
+                                              start_date=version.get('start_date'),
+                                              end_date=version.get('end_date')
+                                              )
+        if not versions_count:
+            create_version(version, same_entity)
+
+
+def create_version(version, same_entity):
+        try:
+            new_version = entity_version.EntityVersion.objects.create(entity=same_entity, **version)
+        except AttributeError:
+            new_version = None
+        return new_version
+
+
+def create_links_of_existing_entity(request, same_entity):
+    link_to_parent_data = request.data.get('link_to_parent')
+    for link in link_to_parent_data:
+        links_count = entity_link.count(child=same_entity,
+                                        parent=link.get('parent'),
+                                        start_date=link.get('start_date'),
+                                        end_date=link.get('end_date')
+                                        )
+        if not links_count:
+            create_link(link, same_entity)
+
+
+def create_link(link, same_entity):
+        try:
+            parent_id = link.pop('parent')
+            parent = entity.get_by_internal_id(parent_id)
+            new_link = entity_link.EntityLink.objects.create(child=same_entity, parent=parent, **link)
+        except AttributeError:
+            new_link = None
+        return new_link

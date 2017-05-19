@@ -182,3 +182,8 @@ class EntityTest(TestCase):
         an_entity = EntityFactory(external_id="1234567")
         self.assertEqual(entity.get_by_external_id("1234567"), an_entity)
         self.assertEqual(entity.get_by_external_id("321"), None)
+
+    def test_get_by_internal_id(self):
+        an_entity = EntityFactory()
+        self.assertEqual(entity.get_by_internal_id(an_entity.id), an_entity)
+        self.assertEqual(entity.get_by_internal_id(an_entity.id+1), None)

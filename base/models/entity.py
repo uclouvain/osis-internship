@@ -99,6 +99,14 @@ def search(**kwargs):
     return queryset
 
 
+def get_by_internal_id(internal_id):
+    try:
+        entity = Entity.objects.get(id__exact=internal_id)
+    except ObjectDoesNotExist:
+        return None
+    return entity
+
+
 def get_by_external_id(external_id):
     try:
         entity = Entity.objects.get(external_id__exact=external_id)
