@@ -120,17 +120,26 @@ def search_scores_responsible(learning_unit_title, course_code, attributions, tu
             .distinct("learning_unit_year")
     if course_code:
         queryset = queryset.filter(learning_unit_year__acronym__icontains=course_code).distinct("learning_unit_year")
-    if tutor:
+    if tutor and scores_responsible:
         queryset = queryset \
             .filter(Q(tutor__person__first_name__icontains=tutor) |
-                    Q(tutor__person__last_name__icontains=tutor)) \
+                    Q(tutor__person__last_name__icontains=tutor) |
+                    Q(tutor__person__first_name__icontains=scores_responsible) |
+                    Q(tutor__person__last_name__icontains=scores_responsible)) \
+            .filter(score_responsible=True) \
             .distinct("learning_unit_year")
-    if scores_responsible:
-        queryset = queryset\
-            .filter(Q(tutor__person__first_name__icontains=scores_responsible) |
-                    Q(tutor__person__last_name__icontains=scores_responsible))\
-            .filter(score_responsible=True)\
-            .distinct("learning_unit_year")
+    else:
+        if tutor:
+            queryset = queryset \
+                .filter(Q(tutor__person__first_name__icontains=tutor) |
+                        Q(tutor__person__last_name__icontains=tutor))\
+                .distinct("learning_unit_year")
+        if scores_responsible:
+            queryset = queryset\
+                .filter(Q(tutor__person__first_name__icontains=scores_responsible) |
+                        Q(tutor__person__last_name__icontains=scores_responsible))\
+                .filter(score_responsible=True)\
+                .distinct("learning_unit_year")
     if attributions:
         entities_list = [attribution.learning_unit_year.structure.acronym for attribution in attributions]
         queryset = queryset.filter(learning_unit_year__structure__acronym__in=entities_list).distinct("learning_unit_year")
