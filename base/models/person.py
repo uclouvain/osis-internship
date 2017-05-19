@@ -31,7 +31,7 @@ from django.conf import settings
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 from base.models.enums import person_source_type
 from django.db.models import Value
-from django.db.models.functions import Concat
+from django.db.models.functions import Concat, Lower
 
 
 class PersonAdmin(SerializableModelAdmin):
@@ -138,12 +138,12 @@ def count_by_email(email):
 
 
 def search_employee(full_name):
-    queryset = Person.objects.annotate(begin_by_first_name=Concat('first_name', Value(' '), 'last_name'))
-    queryset = queryset.annotate(begin_by_last_name=Concat('last_name', Value(' '), 'first_name'))
+    queryset = Person.objects.annotate(begin_by_first_name=Lower(Concat('first_name', Value(' '), 'last_name')))
+    queryset = queryset.annotate(begin_by_last_name=Lower(Concat('last_name', Value(' '), 'first_name')))
     if full_name:
         return queryset.filter(employee=True)\
-            .filter(Q(begin_by_first_name='{}'.format(full_name)) |
-                    Q(begin_by_last_name='{}'.format(full_name)) |
+            .filter(Q(begin_by_first_name__iexact='{}'.format(full_name.lower())) |
+                    Q(begin_by_last_name__iexact='{}'.format(full_name.lower())) |
                     Q(first_name__icontains=full_name) |
                     Q(last_name__icontains=full_name))
     return None
