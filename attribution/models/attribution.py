@@ -62,28 +62,31 @@ class Attribution(SerializableModel):
     @property
     def duration(self):
         if self.start_year and self.end_year:
-            return (self.end_year - self.start_year) +1
+            return (self.end_year - self.start_year) + 1
         return None
 
     @property
-    def volume1(self):
-        print('volume1')
-        a_learning_unit_component = learning_unit_component.find_by_learning_year_type(self.learning_unit_year, component_type.LECTURING)
-        attribution_lecturing = attribution_charge.find_first_by_learning_unit_component(self, a_learning_unit_component)
-        if attribution_lecturing:
-            print('if')
-            return attribution_lecturing.allocation_charge
-        return None
+    def volume_lecturing(self):
+        return self.get_attribution(component_type.LECTURING)
+
+
+
 
     @property
-    def volume2(self):
-        print('volume2')
-        a_learning_unit_component = learning_unit_component.find_by_learning_year_type(self.learning_unit_year, component_type.PRACTICAL_EXERCISES)
-        attribution_lecturing = attribution_charge.find_first_by_learning_unit_component(self, a_learning_unit_component)
-        if attribution_lecturing:
-            print('if')
-            return attribution_lecturing.allocation_charge
-        return None
+    def volume_practical(self):
+        return self.get_attribution(component_type.PRACTICAL_EXERCISES)
+
+
+
+    def get_attribution(self, a_component_type):
+        a_learning_unit_component = learning_unit_component.find_by_learning_year_type(self.learning_unit_year,
+                                                                                       a_component_type)
+        if a_learning_unit_component:
+            attribution= attribution_charge.find_first_by_learning_unit_component(self,
+                                                                            a_learning_unit_component)
+            if attribution:
+                return attribution.allocation_charge
+        return "{0:.2f}".format(float(0))
 
 def search(tutor=None, learning_unit_year=None, score_responsible=None, list_learning_unit_year=None):
     queryset = Attribution.objects
