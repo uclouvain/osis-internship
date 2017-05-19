@@ -1308,9 +1308,6 @@ msgstr "Coordinator"
 msgid "HOLDER"
 msgstr "Holder"
 
-msgid "holder_number"
-msgstr "Holders number"
-
 msgid "CO_HOLDER"
 msgstr "Co-holder"
 
