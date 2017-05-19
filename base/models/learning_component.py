@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -25,15 +25,24 @@
 ##############################################################################
 from django.db import models
 from django.contrib import admin
-from django.utils import timezone
+from base.models.enums import learning_component_type, learning_component_description
 
-#Doit devenir Learning_unit_component
+
 class LearningComponentAdmin(admin.ModelAdmin):
-    list_display = ('learning_container',)
-    fieldsets = ((None, {'fields': ('learning_container',)}),)
+    list_display = ('acronym', 'type')
+    fieldsets = ((None, {'fields': ('learning_container','type', 'acronym', 'description')}),)
+    search_fields = ['acronym']
 
 class LearningComponent(models.Model):
+    external_id = models.CharField(max_length=100, blank=True, null=True)
     learning_container = models.ForeignKey('LearningContainer')
+    type = models.CharField(max_length=30, choices=learning_component_type.LEARNING_COMPONENT_TYPES,
+                            blank=True, null=True)
+    acronym = models.CharField(max_length=3)
+    description = models.CharField(max_length=30,
+                                   choices=learning_component_description.LEARNING_COMPONENT_DESCRIPTIONS,
+                                   blank=True, null=True)
+
 
 def find_by_id(learning_component_id):
     return LearningComponent.objects.get(pk=learning_component_id)

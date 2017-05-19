@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -45,7 +45,7 @@ class AcademicAssistant(models.Model):
     expected_phd_date = models.DateField(null=True, blank=True)
     remark = models.TextField(null=True, blank=True)
     inscription = models.CharField(max_length=12, choices=assistant_phd_inscription.PHD_INSCRIPTION_CHOICES,
-                                   default=assistant_phd_inscription.YES)
+                                   null=True, default=None)
 
     def __str__(self):
         return u"%s %s" % (self.person.first_name, self.person.last_name)

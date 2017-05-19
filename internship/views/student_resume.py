@@ -30,14 +30,13 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import render, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
+from django.utils.translation import ugettext_lazy as _
 from base import models as mdl
 from internship import models as mdl_internship
 from internship.forms.form_student_information import StudentInformationForm
-
-from django.utils.translation import ugettext_lazy as _
-
 from internship.models.cohort import Cohort
 from internship.views.place import set_organization_address, sort_organizations
+
 
 def set_number_choices(student_informations):
     """
@@ -229,7 +228,7 @@ def student_save_information_modification(request, cohort_id, student_id):
         information = mdl_internship.internship_student_information.InternshipStudentInformation()
         information.person = student.person
 
-    if information.cohort == None:
+    if information.cohort is None:
         information.cohort = cohort
 
     form = StudentInformationForm(request.POST, instance=information)
@@ -280,7 +279,6 @@ def internship_student_affectation_modification(request, cohort_id, student_id):
                    })
 
 
-
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def student_save_affectation_modification(request, cohort_id, student_id):
@@ -288,6 +286,9 @@ def student_save_affectation_modification(request, cohort_id, student_id):
     student = mdl.student.find_by_id(student_id)
     if request.POST.get('period'):
         period_list = request.POST.getlist('period')
+    else:
+        period_list = []
+
     if request.POST.get('organization'):
         organization_list = request.POST.getlist('organization')
     if request.POST.get('speciality'):

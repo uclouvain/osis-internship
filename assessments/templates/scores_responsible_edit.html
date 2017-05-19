@@ -33,51 +33,40 @@
 {% endblock %}
 {% block content %}
 <div class="page-header">
-    <h4>{% trans 'tutors_of_course' %} {{ learning_unit_year.acronym }}</h4>
+    <h2>{% trans 'tutors_of_course' %} {{ learning_unit_year.acronym }}</h2>
 </div>
 <div class="panel panel-default">
-    <div class="panel-body">
-        <div class="row form-group">
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th class="text-center">{% trans 'professor' %}</th>
-                        <th class="text-center">{% trans 'status' %}</th>
-                        <th class="text-center">{% trans 'scores_responsible' %}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for professor in professors %}
+            <form method="get" action="{% url 'scores_responsible_add' pk=learning_unit_year.id %}">
+                <table class="table table-hover">
+                    <thead>
                         <tr>
-                            <th class="text-center">{{ professor.tutor }}</th>
-                            <th class="text-center">{{ professor.function }}</th>
-                            <th class="text-center">
-                            <a class="btn btn-primary" href="{% url 'scores_responsible_delete' pk=professor.pk %}">
-                                <span class="glyphicon glyphicon-minus"></span></a>
-                            </th>
+                            <th class="text-center">{% trans 'tutor' %}(s)</th>
+                            <th class="text-center">{% trans 'status' %}</th>
+                            <th class="text-center">{% trans 'scores_responsible' %}</th>
                         </tr>
-                    {% endfor%}
-                </tbody>
-            </table>
-        </div>
-        {% if attributions %}
-            <div class="row form-group">
-                <form method="get" action="{% url 'scores_responsible_add'%}">
-                    <div class="form-group">
-                        <select class="form-control" id="slt_professor"  name="professor">
-                             <option value=""></option>
-                            {% for attribution in attributions %}
-                                <option value="{{attribution.id}}">{{attribution.tutor}}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="pull-right form-group">
-                        <button type="submit" id="scores_responsible_add" class="btn btn-primary" role="button"
-                                title="{% trans 'add' %}">{% trans 'add' %}</button>
-                    </div>
-                </form>
-            </div>
-        {% endif %}
+                    </thead>
+                    <tbody>
+                        {% for attribution in attributions %}
+                            <tr>
+                                <td>{{ attribution.tutor }}</td>
+                                <td>
+                                    {% with st=attribution.function %}
+                                        {{ attribution.get_function_display }}
+                                    {% endwith %}
+                                </td>
+                                <td>
+                                    <input id="txt_tutors"  name="tutor" value="prf_{{ attribution.id }}"
+                                           type="radio" {% if attribution.score_responsible == True %} checked {% endif %} >
+                                </td>
+                            </tr>
+                        {% endfor%}
+                    </tbody>
+                </table>
+                <div class="panel-body">
+                    <button type="submit" id="scores_responsible_add" class="btn btn-primary" role="button"
+                            title="{% trans 'add' %}">{% trans 'save' %}</button>
+                </div>
+            </form>
     </div>
 </div>
 {% endblock %}

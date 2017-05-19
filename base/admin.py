@@ -39,8 +39,20 @@ admin.site.register(application_notice.ApplicationNotice,
 admin.site.register(campus.Campus,
                     campus.CampusAdmin)
 
+admin.site.register(entity.Entity,
+                    entity.EntityAdmin)
+
+admin.site.register(entity_address.EntityAddress,
+                    entity_address.EntityAddressAdmin)
+
+admin.site.register(entity_link.EntityLink,
+                    entity_link.EntityLinkAdmin)
+
 admin.site.register(entity_manager.EntityManager,
                     entity_manager.EntityManagerAdmin)
+
+admin.site.register(entity_version.EntityVersion,
+                    entity_version.EntityVersionAdmin)
 
 admin.site.register(exam_enrollment.ExamEnrollment,
                     exam_enrollment.ExamEnrollmentAdmin)

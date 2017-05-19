@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -131,12 +131,12 @@ def messages_templates_index(request):
 
 @login_required
 @user_passes_test(lambda u: u.is_superuser)
-def send_message_again(request, message_history_id):
-    message_history = message_history_mdl.find_by_id(message_history_id)
+def send_message_again(request, message_id):
+    message_history = message_history_mdl.find_by_id(message_id)
     if not message_history.person.email:
         messages.add_message(request, messages.ERROR, _('message_not_resent_no_email'))
     else:
-        send_mail.send_again(message_history_id)
+        send_mail.send_again(message_id)
         messages.add_message(request, messages.INFO, _('message_resent_ok'))
     return HttpResponseRedirect(reverse('admin:base_messagehistory_changelist'))
 

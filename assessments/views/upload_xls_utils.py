@@ -36,7 +36,7 @@ from assessments.business import score_encoding_list
 from assessments.forms.score_file import ScoreFileForm
 from attribution import models as mdl_attr
 from base import models as mdl
-from base.enums import exam_enrollment_justification_type as justification_types
+from base.models.enums import exam_enrollment_justification_type as justification_types
 
 col_academic_year = 0
 col_session = 1

@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# OSIS stands for Open Student Information System. It's an application
+#    OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
@@ -23,11 +23,12 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import factory
 from django.test import TestCase
-from assistant.tests.factories.reviewer import ReviewerFactory
-from assistant.enums import reviewer_role
+
 from assistant.models import reviewer
+from assistant.models.enums import reviewer_role
+from assistant.tests.factories.reviewer import ReviewerFactory
+
 
 class TestReviewerFactory(TestCase):
 

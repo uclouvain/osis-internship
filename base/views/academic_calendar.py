@@ -66,8 +66,8 @@ def academic_calendars_search(request):
 
 @login_required
 @permission_required('base.can_access_academic_calendar', raise_exception=True)
-def academic_calendar_read(request, id):
-    academic_calendar = get_object_or_404(mdl.academic_calendar.AcademicCalendar, pk=id)
+def academic_calendar_read(request, academic_calendar_id):
+    academic_calendar = get_object_or_404(mdl.academic_calendar.AcademicCalendar, pk=academic_calendar_id)
     return layout.render(request, "academic_calendar.html", {'academic_calendar': academic_calendar})
 
 

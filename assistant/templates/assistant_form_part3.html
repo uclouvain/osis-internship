@@ -10,7 +10,7 @@
 * The core business involves the administration of students, teachers,
 * courses, programs and so on.
 *
-* Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+* Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 *
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -48,8 +48,11 @@
 <div class="panel panel-default">
 	<div class="panel-body">
  		<form id="pst-form-part3" method="POST" enctype="multipart/form-data" action="{% url 'form_part3_save' mandate.id %}">
- 		{% csrf_token %}
  		{{ form.non_field_errors }}
+ 		{% csrf_token %}
+ 		{% for hidden in form.hidden_fields %}
+			{{ hidden }}
+		{% endfor %}
  		<div class="panel-default">
   			<div class="panel-heading">
   				<h4>{% trans 'doctorate' %}</h4>
@@ -182,17 +185,14 @@ window.onload = function() {
    		$("#pst-form-part3").data("changed",true);
 	});
 	$('a').on('click', function(e) {
-		var hrefLoc = $(this).attr('href');
-		if ($("#pst-form-part3").data("changed")) {
-			var choice = confirm("{% trans 'save_before_link' %}");
-			if (choice == true) {
-				e.preventDefault();
-				$('form#pst-form-part3').submit();
-			} else {
-				window.location.href = hrefLoc;
-			}
-		}
-	});
+	    if ($("#pst-form-part3").data("changed")) {
+		    var choice = confirm("{% trans 'save_before_link' %}");
+		    if (choice == true) {
+			    e.preventDefault();
+			    $('form#pst-form-part3').submit();
+		   }
+	    }
+    });
     //***************************
     //File upload
     //***************************

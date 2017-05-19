@@ -57,7 +57,7 @@ msgid "person_search"
 msgstr "Recherche de personne"
 
 msgid "remove_manager_label"
-msgstr "Etes-vous sur de vouloir enlever le gestionnaire ci-dessous?"
+msgstr "Etes-vous sûr de vouloir enlever le gestionnaire ci-dessous"
 
 msgid "stay_manager_label"
 msgstr "Il conserve sa charge de gestionnaire sur les programmes suivants : "
@@ -70,3 +70,18 @@ msgstr "Aucune structure n'est associée à votre profil de gestionnaire faculta
 
 msgid "already_program_mgr"
 msgstr "est déjà gestionnaire de programme pour"
+
+msgid "remove"
+msgstr "Enlever"
+
+msgid "hlp_employee_search"
+msgstr "Veuillez saisir un nom et optionnellement un prénom"
+
+msgid "lastname"
+msgstr "Nom"
+
+msgid "firstname"
+msgstr "Prénom"
+
+msgid "middlename"
+msgstr "Autres prénoms"
