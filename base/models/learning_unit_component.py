@@ -42,7 +42,6 @@ class LearningUnitComponent(SerializableModel):
     type = models.CharField(max_length=25, blank=True, null=True, choices=component_type.COMPONENT_TYPES, db_index=True)
     duration = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
 
-
     def __str__(self):
         return u"%s - %s" % (self.type, self.learning_unit_year)
 

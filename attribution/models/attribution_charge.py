@@ -56,7 +56,6 @@ def search(attribution=None, learning_unit_component=None):
     if learning_unit_component:
         queryset = queryset.filter(learning_unit_component=learning_unit_component)
 
-
     return queryset
 
 
