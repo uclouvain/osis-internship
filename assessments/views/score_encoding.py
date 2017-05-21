@@ -634,11 +634,11 @@ def get_json_data_scores_sheets(tutor_global_id):
                                              exception=trace)
             queue_exception_logger.error(queue_exception.to_exception_log())
         except Exception:
+            logger.warning('Error during queue logging')
             logger.error(trace)
-            log_trace = traceback.format_exc()
-            logger.warning('Error during queue logging :\n {}'.format(log_trace))
-        connection.close()
-        get_json_data_scores_sheets(tutor_global_id)
+        finally:
+            connection.close()
+            get_json_data_scores_sheets(tutor_global_id)
     except Exception as e:
         trace = traceback.format_exc()
         try:
@@ -649,7 +649,7 @@ def get_json_data_scores_sheets(tutor_global_id):
                                              exception=trace)
             queue_exception_logger.error(queue_exception.to_exception_log())
         except Exception:
+            logger.warning('Error during queue logging')
             logger.error(trace)
-            log_trace = traceback.format_exc()
-            logger.warning('Error during queue logging :\n {}'.format(log_trace))
-        return None
+        finally:
+            return json.dumps({})
