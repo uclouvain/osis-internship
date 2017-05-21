@@ -38,7 +38,7 @@ class AttributionAdmin(SerializableModelAdmin):
                                     'end_year')}),)
     raw_id_fields = ('learning_unit_year', 'tutor')
     search_fields = ['tutor__person__first_name', 'tutor__person__last_name', 'learning_unit_year__acronym',
-                     'tutor__person__global_id']
+                     'tutor__person__global_id', 'external_id']
 
 
 class Attribution(SerializableModel):
