@@ -126,8 +126,6 @@ def delete_by_id(an_id):
 def find_by_offer_year_list(offer_yr_list):
     return ProgramManager.objects.filter(offer_year__in=offer_yr_list) \
         .select_related('person') \
-        .select_related('offer_year__entity_administration') \
-        .select_related('offer_year__offer_type') \
         .order_by('person__last_name', 'person__first_name')
 
 

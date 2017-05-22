@@ -33,6 +33,7 @@ from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 import json
 
+
 ALL_OPTION_VALUE = "-"
 ALL_OPTION_VALUE_ENTITY = "all_"
 
@@ -115,7 +116,7 @@ def get_managed_entities(entity_managed_list):
         for entity_managed in entity_managed_list:
             children_acronyms = find_values('acronym', json.dumps(entity_managed.structure.serializable_object()))
             structures.extend(mdl.structure.find_by_acronyms(children_acronyms))
-        return structures
+        return sorted(structures, key=lambda a_structure: a_structure.acronym)
 
     return None
 
@@ -317,6 +318,7 @@ def update_managers_list(request):
     list_id_offers_on = convert_to_list(request.GET['pgm_ids'])
     program_manager_list = mdl.program_manager.find_by_offer_year_list(list_id_offers_on)
     serializer = PgmManagerSerializer(build_program_manager_list(list_id_offers_on, program_manager_list, False),
+                                      read_only=True,
                                       many=True)
     return JSONResponse(serializer.data)
 
@@ -325,25 +327,26 @@ def build_program_manager_list(list_id_offers_on, program_manager_list, detail):
     pgm_managers = []
     persons = []
     for a_program_manager in program_manager_list:
-        if a_program_manager.person not in pgm_managers:
-            offers = get_offers_with_pgm_manager(list_id_offers_on, a_program_manager.person)
+        a_person = a_program_manager.person
+        if a_person not in pgm_managers:
+            offers = get_offers_with_pgm_manager(list_id_offers_on, a_person)
             pgms = build_offer_ids_string(offers)
-            if a_program_manager.person not in persons:
-                persons.append(a_program_manager.person)
+            if a_person not in persons:
+                persons.append(a_person)
                 if detail:
                     acronyms_off = build_acronyms_off_string(offers)
-                    pgm_managers.append(PgmManager(person_id=a_program_manager.person.id,
-                                                   person_last_name=a_program_manager.person.last_name,
-                                                   person_first_name=a_program_manager.person.first_name,
+                    pgm_managers.append(PgmManager(person_id=a_person.id,
+                                                   person_last_name=a_person.last_name,
+                                                   person_first_name=a_person.first_name,
                                                    programs=pgms,
-                                                   offer_year_acronyms_on=pgm_to_keep_managing(a_program_manager.person,
+                                                   offer_year_acronyms_on=pgm_to_keep_managing(a_person,
                                                                                                offers),
                                                    offer_year_acronyms_off=acronyms_off
                                                    ))
                 else:
-                    pgm_managers.append(PgmManager(person_id=a_program_manager.person.id,
-                                                   person_last_name=a_program_manager.person.last_name,
-                                                   person_first_name=a_program_manager.person.first_name,
+                    pgm_managers.append(PgmManager(person_id=a_person.id,
+                                                   person_last_name=a_person.last_name,
+                                                   person_first_name=a_person.first_name,
                                                    programs=pgms
                                                    ))
     return pgm_managers
