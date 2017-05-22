@@ -45,14 +45,14 @@
                         <label for="slt_entity" >{% trans 'entity'%}</label>
                         <select class="form-control" id="slt_entity" name="entity" >
                             {% for e in entities_managed_root %}
-                                <option  value="all_{{e.structure.id}}" {% if e.structure.id|slugify == entity_root_selected %} selected {% endif %}>{% trans 'all_hierarchy' %} {{ e.structure.acronym }}</option>
-                            {% endfor %}
-                            {% for e in entities_managed %}
-                                {% if e.id|slugify == entity_selected %}
+                                <option  value="all_{{e.root.id}}" {% if e.root.id|slugify == entity_root_selected %} selected {% endif %}>{% trans 'all_hierarchy' %} {{ e.root.acronym }}</option>
+                                {% for e in e.structures %}
+                                    {% if e.id|slugify == entity_selected %}
                                     <option selected value="{{ e.id }}">{{ e.acronym }}</option>
-                                {% else %}
+                                    {% else %}
                                     <option value="{{ e.id }}">{{ e.acronym }}</option>
-                                {% endif %}
+                                    {% endif %}
+                                {% endfor %}
                             {% endfor %}
                         </select>
                     </div>

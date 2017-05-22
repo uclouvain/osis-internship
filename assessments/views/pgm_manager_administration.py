@@ -46,7 +46,6 @@ def pgm_manager_administration(request):
         'academic_year': current_academic_yr,
         'administrator_entities_string': _get_administrator_entities_acronym_list(administrator_entities),
         'entities_managed_root': administrator_entities,
-        'entities_managed': get_managed_entities(administrator_entities),
         'offer_types': _get_offer_types(),
         'managers': _get_entity_program_managers(administrator_entities, current_academic_yr),
         'init': '1'})
@@ -80,7 +79,6 @@ def pgm_manager_form(offers_on, error_messages, request, manager_person):
             'entities_managed_root': entity_managed_list,
             'entity_selected': entity_selected,
             'entity_root_selected': entity_root_selected,
-            'entities_managed': get_managed_entities(entity_managed_list),
             'offer_types': _get_offer_types(),
             'pgms': _get_programs(current_academic_yr,
                                   get_entity_list(entity_selected, get_entity_root(entity_root_selected)),
@@ -114,7 +112,7 @@ def get_managed_entities(entity_managed_list):
     if entity_managed_list:
         structures = []
         for entity_managed in entity_managed_list:
-            children_acronyms = find_values('acronym', json.dumps(entity_managed.structure.serializable_object()))
+            children_acronyms = find_values('acronym', json.dumps(entity_managed['root'].serializable_object()))
             structures.extend(mdl.structure.find_by_acronyms(children_acronyms))
         return sorted(structures, key=lambda a_structure: a_structure.acronym)
 
@@ -208,7 +206,12 @@ def create_manager(request):
 
 
 def get_administrator_entities(a_user):
-    return mdl.entity_manager.find_by_user(a_user)
+    structures = []
+    for entity_managed in mdl.entity_manager.find_by_user(a_user):
+        children_acronyms = find_values('acronym', json.dumps(entity_managed.structure.serializable_object()))
+        structures.append({'root': entity_managed.structure,
+                           'structures': mdl.structure.find_by_acronyms(children_acronyms)})
+    return structures
 
 
 def is_already_program_manager(person, offer_yr):
@@ -474,4 +477,5 @@ def _get_administrator_entities_acronym_list(administrator_entities):
     :param administrator_entities:
     :return:
     """
-    return ', '.join(str(entity_manager.structure.acronym) for entity_manager in administrator_entities)
+    return ', '.join(str(entity_manager['root'].acronym) for entity_manager in administrator_entities)
+
