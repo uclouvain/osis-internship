@@ -51,6 +51,7 @@ def scores_responsible(request):
 def scores_responsible_search(request):
     a_faculty_administrator = mdl_base.entity_manager.find_entity_manager_by_user(request.user)
     attributions = mdl_attr.attribution.find_all_distinct_children(a_faculty_administrator.structure)
+    academic_year = mdl_base.academic_year.current_academic_year()
     attributions_searched = mdl_attr.attribution.search_scores_responsible(
         learning_unit_title=request.POST.get('learning_unit_title'),
         course_code=request.POST.get('course_code'),
@@ -60,6 +61,7 @@ def scores_responsible_search(request):
     dict_attribution = create_attributions_list(attributions_searched)
     return layout.render(request, 'scores_responsible.html', {"learning_unit_year_acronym": a_faculty_administrator.structure.acronym,
                                                               "attributions": attributions,
+                                                              "academic_year": academic_year,
                                                               "dict_attribution": dict_attribution,
                                                               "learning_unit_title": request.POST.get('learning_unit_title'),
                                                               "course_code": request.POST.get('course_code'),
@@ -90,10 +92,12 @@ def scores_responsible_list(request):
 def scores_responsible_management(request, pk):
     a_learning_unit_year = mdl_base.learning_unit_year.find_by_id(pk)
     attributions = mdl_attr.attribution.find_all_responsible_by_learning_unit_year(a_learning_unit_year)
+    academic_year = mdl_base.academic_year.current_academic_year()
     if request.POST:
         return layout.render(request, 'scores_responsible_edit.html',
                              {'learning_unit_year': a_learning_unit_year,
                               'attributions': attributions,
+                              "academic_year": academic_year,
                               'course_code': request.POST.get('course_code'),
                               'learning_unit_title': request.POST.get('learning_unit_title'),
                               'tutor': request.POST.get('tutor'),
