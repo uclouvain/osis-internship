@@ -27,7 +27,7 @@ import csv
 import sys
 import operator
 import uuid
-from internship.models.internship_choice import InternshipChoice
+from django.db import connection
 
 class InternshipChoiceSynchronizer:
     def __init__(self, choices_file=None):
@@ -45,12 +45,15 @@ class InternshipChoiceSynchronizer:
 
     def sync_choices_by_uuids(self, uuids):
         print("%s choices to sync..." % len(uuids))
-        choices_to_destroy = InternshipChoice.objects.exclude(uuid__in=uuids).all()
+        cursor = connection.cursor()
+        cursor.execute("SELECT id FROM internship_internshipchoice where uuid NOT IN %s" % str(tuple(uuids)))
+        choices_to_destroy = cursor.fetchall()
         self.__destroy_prompt(choices_to_destroy)
 
     def remove_duplicates(self):
         print("Looking for duplicates.")
-        ids_to_destroy = InternshipChoice.objects.raw("\
+        cursor = connection.cursor()
+        cursor.execute("\
             SELECT id\
                 FROM internship_internshipchoice\
                 WHERE\
@@ -59,20 +62,31 @@ class InternshipChoiceSynchronizer:
                         FROM internship_internshipchoice\
                         GROUP BY student_id, internship_id, choice\
                 );")
-        choices_to_destroy = InternshipChoice.objects.filter(pk__in=list(map(lambda x: x.id, ids_to_destroy)))
-        self.__destroy_prompt(choices_to_destroy)
+        ids_to_destroy = cursor.fetchall()
+        self.__destroy_prompt(ids_to_destroy)
 
     def __destroy_prompt(self, choices_to_destroy):
         print("About to delete %s choices. This cannot be reversed. Are you sure?" % len(list(choices_to_destroy)))
-        while True:
-            confirm = input('[c]continue or [x]exit: ')
-            if confirm == 'c':
-                print("Deleting %s out-of-sync choices..." % len(list(choices_to_destroy)))
-                choices_to_destroy.delete()
-                print("Done")
-                return confirm
-            elif confirm == 'x':
-                print("Got it! Come back when your mind is made up.")
-                break
-            else:
-                print("Invalid Option. Please Enter a Valid Option.")
+        if len(choices_to_destroy) > 0:
+            while True:
+                confirm = input('[c]continue or [x]exit: ')
+                if confirm == 'c':
+                    print("Deleting %s out-of-sync choices..." % len(list(choices_to_destroy)))
+                    self.__destroy_ids(choices_to_destroy)
+                    print("Done")
+                    return confirm
+                elif confirm == 'x':
+                    print("Got it! Come back when your mind is made up.")
+                    break
+                else:
+                    print("Invalid Option. Please Enter a Valid Option.")
+        else:
+            print("Nothing to do here... Moving on.")
+
+    def __destroy_ids(self, ids_to_destroy):
+        cursor = connection.cursor()
+        format_strings = ','.join(['%s'] * len(ids_to_destroy))
+        cursor.execute("\
+            DELETE\
+                FROM internship_internshipchoice\
+                WHERE id IN (%s)" % format_strings, tuple(ids_to_destroy))
