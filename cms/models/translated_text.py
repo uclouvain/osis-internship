@@ -53,12 +53,12 @@ def find_by_id(id):
     return TranslatedText.objects.get(pk=id)
 
 
-def search(entity, reference, text_labels=None, language=None):
+def search(entity, reference, text_labels_name=None, language=None):
     queryset = TranslatedText.objects.filter(entity=entity, reference=reference)
 
     if language:
         queryset = queryset.filter(language=language)
-    if text_labels:
-        queryset = queryset.filter(text_label__in=text_labels)
+    if text_labels_name:
+        queryset = queryset.filter(text_label__label__in=text_labels_name)
 
     return queryset.select_related('text_label')

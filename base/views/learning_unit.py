@@ -36,6 +36,7 @@ from cms import models as mdl_cms
 from cms.enums import entity_name
 from base.forms.learning_units import LearningUnitYearForm
 from base.forms.learning_unit_specifications import LearningUnitSpecificationsForm
+from base.forms.learning_unit_pedagogy import LearningUnitPedagogyForm
 
 from . import layout
 
@@ -91,6 +92,25 @@ def learning_unit_components(request, learning_unit_year_id):
 @permission_required('base.can_access_learningunit', raise_exception=True)
 def learning_unit_pedagogy(request, learning_unit_year_id):
     context = _get_common_context_learning_unit_year(learning_unit_year_id)
+    learning_unit_year = context['learning_unit_year']
+    user_language = mdl.person.get_user_interface_language(request.user)
+
+    CMS_LABEL = ['resume', 'bibliography', 'teaching_methods', 'evaluation_methods',
+                 'other_informations', 'online_resources']
+    translated_labels = mdl_cms.translated_text_label.search(text_entity=entity_name.LEARNING_UNIT_YEAR,
+                                                             labels=CMS_LABEL,
+                                                             language=user_language)
+
+    fr_language = next((lang for lang in settings.LANGUAGES if lang[0] == 'fr-be'), None)
+    en_language = next((lang for lang in settings.LANGUAGES if lang[0] == 'en'), None)
+    for trans_label in translated_labels:
+        label_name = trans_label.text_label.label
+        context[label_name] = trans_label.label
+
+    context.update({
+        'form_french': LearningUnitPedagogyForm(learning_unit_year, fr_language),
+        'form_english': LearningUnitPedagogyForm(learning_unit_year, en_language)
+    })
     return layout.render(request, "learning_unit/pedagogy.html", context)
 
 
