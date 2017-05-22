@@ -26,12 +26,17 @@
 import datetime
 
 from django.contrib import messages
+from django.conf import settings
 from django.contrib.auth.decorators import login_required, permission_required
 from django.utils.translation import ugettext_lazy as _
 
-from attribution import models as mdl_attr
 from base import models as mdl
+from attribution import models as mdl_attr
+from cms import models as mdl_cms
+from cms.enums import entity_name
 from base.forms.learning_units import LearningUnitYearForm
+from base.forms.learning_unit_specifications import LearningUnitSpecificationsForm
+
 from . import layout
 
 
@@ -102,6 +107,30 @@ def learning_unit_attributions(request, learning_unit_year_id):
 def learning_unit_proposals(request, learning_unit_year_id):
     context = _get_common_context_learning_unit_year(learning_unit_year_id)
     return layout.render(request, "learning_unit/proposals.html", context)
+
+@login_required
+@permission_required('base.can_access_learningunit', raise_exception=True)
+def learning_unit_specifications(request, learning_unit_year_id):
+    context = _get_common_context_learning_unit_year(learning_unit_year_id)
+    learning_unit_year = context['learning_unit_year']
+    user_language = mdl.person.get_user_interface_language(request.user)
+
+    CMS_LABEL = ['themes_discussed', 'skills_to_be_acquired', 'prerequisite']
+    translated_labels = mdl_cms.translated_text_label.search(text_entity=entity_name.LEARNING_UNIT_YEAR,
+                                                             labels=CMS_LABEL,
+                                                             language=user_language)
+
+    fr_language = next((lang for lang in settings.LANGUAGES if lang[0] == 'fr-be'), None)
+    en_language = next((lang for lang in settings.LANGUAGES if lang[0] == 'en'), None)
+    for trans_label in translated_labels:
+        label_name = trans_label.text_label.label
+        context[label_name] = trans_label.label
+
+    context.update({
+        'form_french': LearningUnitSpecificationsForm(learning_unit_year, fr_language),
+        'form_english': LearningUnitSpecificationsForm(learning_unit_year, en_language)
+    })
+    return layout.render(request, "learning_unit/specifications.html", context)
 
 
 def _check_if_display_message(request, learning_units):

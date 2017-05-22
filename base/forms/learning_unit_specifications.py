@@ -23,6 +23,26 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from cms.models import text_label
+from django import forms
 from cms.models import translated_text
-from cms.models import translated_text_label
+from cms.enums import entity_name
+from django.utils.safestring import mark_safe
+
+
+class LearningUnitSpecificationsForm(forms.Form):
+    learning_unit_year = language = None
+
+    def __init__(self, learning_unit_year, language, *args, **kwargs):
+        self.learning_unit_year = learning_unit_year
+        self.language = language
+        self.refresh_data()
+        super(LearningUnitSpecificationsForm, self).__init__(*args, **kwargs)
+
+    def refresh_data(self):
+        language_iso = self.language[0]
+        texts_list = translated_text.search(entity=entity_name.LEARNING_UNIT_YEAR,
+                                            reference=self.learning_unit_year.id,
+                                            language=language_iso)
+        for trans_txt in texts_list:
+            text_label = trans_txt.text_label.label
+            setattr(self, text_label, mark_safe(trans_txt.text))

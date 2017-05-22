@@ -25,8 +25,7 @@
 ##############################################################################
 from django.contrib import admin
 from django.db import models
-
-from reference.models.language import Language
+from django.conf import settings
 from .text_label import TextLabel
 
 
@@ -37,7 +36,9 @@ class TranslatedTextLabelAdmin(admin.ModelAdmin):
 
 
 class TranslatedTextLabel(models.Model):
-    language = models.ForeignKey(Language)
+    external_id = models.CharField(max_length=100, blank=True, null=True)
+    changed = models.DateTimeField(null=True)
+    language = models.CharField(max_length=30, null=True, choices=settings.LANGUAGES, default=settings.LANGUAGE_CODE)
     text_label = models.ForeignKey(TextLabel)
     label = models.CharField(max_length=255)
 
@@ -49,5 +50,11 @@ def find_by_id(id):
     return TranslatedTextLabel.objects.get(pk=id)
 
 
-def find_by_language_code(language_code):
-    return TranslatedTextLabel.objects.filter(language__code=language_code)
+def search(text_entity, labels=None, language=None):
+    queryset = TranslatedTextLabel.objects.filter(text_label__entity=text_entity)
+    if labels:
+        queryset = queryset.filter(text_label__label__in=labels)
+    if language:
+        queryset = queryset.filter(language=language)
+
+    return queryset.select_related('text_label')
