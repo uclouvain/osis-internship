@@ -38,6 +38,7 @@ from django.db.utils import OperationalError as DjangoOperationalError, Interfac
 from django.http import HttpResponseRedirect
 from django.utils.translation import ugettext_lazy as _
 from psycopg2._psycopg import OperationalError as PsycopOperationalError, InterfaceError as  PsycopInterfaceError
+import time
 
 from assessments.business import score_encoding_progress, score_encoding_list, score_encoding_export
 from attribution import models as mdl_attr
@@ -629,7 +630,8 @@ def get_json_data_scores_sheets(tutor_global_id):
         trace = traceback.format_exc()
         queue_exception_logger.error(trace)
         connection.close()
-        get_json_data_scores_sheets(tutor_global_id)
+        time.sleep(1)
+        return get_json_data_scores_sheets(tutor_global_id)
     except Exception:
         logger.warning('(Not PostgresError) during get_json_data_scores_sheets on global_id {}'.format(tutor_global_id))
         trace = traceback.format_exc()
