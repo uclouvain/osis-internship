@@ -38,10 +38,8 @@ def is_faculty_admin(user):
 @user_passes_test(is_faculty_admin)
 def scores_responsible(request):
     a_faculty_administrator = mdl_base.entity_manager.find_entity_manager_by_user(request.user)
-    attributions = mdl_attr.attribution.find_all_distinct_children(a_faculty_administrator.structure)
     academic_year = mdl_base.academic_year.current_academic_year()
     return layout.render(request, 'scores_responsible.html', {"learning_unit_year_acronym": a_faculty_administrator.structure.acronym,
-                                                              "attributions": attributions,
                                                               "academic_year": academic_year,
                                                               "init": "0"})
 
@@ -50,7 +48,7 @@ def scores_responsible(request):
 @user_passes_test(is_faculty_admin)
 def scores_responsible_search(request):
     a_faculty_administrator = mdl_base.entity_manager.find_entity_manager_by_user(request.user)
-    attributions = mdl_attr.attribution.find_all_distinct_children(a_faculty_administrator.structure)
+    attributions = mdl_attr.attribution.find_all_distinct_parents(a_faculty_administrator.structure)
     academic_year = mdl_base.academic_year.current_academic_year()
     attributions_searched = mdl_attr.attribution.search_scores_responsible(
         learning_unit_title=request.POST.get('learning_unit_title'),
@@ -60,7 +58,6 @@ def scores_responsible_search(request):
         scores_responsible=request.POST.get('scores_responsible'))
     dict_attribution = create_attributions_list(attributions_searched)
     return layout.render(request, 'scores_responsible.html', {"learning_unit_year_acronym": a_faculty_administrator.structure.acronym,
-                                                              "attributions": attributions,
                                                               "academic_year": academic_year,
                                                               "dict_attribution": dict_attribution,
                                                               "learning_unit_title": request.POST.get('learning_unit_title'),
@@ -80,11 +77,6 @@ def create_attributions_list(attributions):
                                                attribution.learning_unit_year.title,
                                                tutors]})
     return dict_attribution
-
-
-def scores_responsible_list(request):
-    list_course_code = request.GET['course_code']
-    return list_course_code
 
 
 @login_required
