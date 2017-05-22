@@ -69,14 +69,14 @@ def pgm_manager_form(offers_on, error_messages, request, manager_person):
 
     pgm_offer_type = get_filter_value(request, 'offer_type')
 
-    entity_managed_list = get_administrator_entities(request.user)
+    administrator_entities = get_administrator_entities(request.user)
 
     current_academic_yr = mdl.academic_year.current_academic_year()
 
     data = {'academic_year': current_academic_yr,
             'person': manager_person,
-            'administrator_entities_string': _get_administrator_entities_acronym_list(entity_managed_list),
-            'entities_managed_root': entity_managed_list,
+            'administrator_entities_string': _get_administrator_entities_acronym_list(administrator_entities),
+            'entities_managed_root': administrator_entities,
             'entity_selected': entity_selected,
             'entity_root_selected': entity_root_selected,
             'offer_types': _get_offer_types(),
@@ -84,7 +84,7 @@ def pgm_manager_form(offers_on, error_messages, request, manager_person):
                                   get_entity_list(entity_selected, get_entity_root(entity_root_selected)),
                                   manager_person,
                                   pgm_offer_type),
-            'managers': _get_entity_program_managers(entity_managed_list, current_academic_yr),
+            'managers': _get_entity_program_managers(administrator_entities, current_academic_yr),
             'offers_on': offers_on,
             'offer_type': pgm_offer_type,
             'add_errors': error_messages}
