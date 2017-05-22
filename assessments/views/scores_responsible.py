@@ -103,15 +103,16 @@ def scores_responsible_management(request, pk):
 @login_required
 @user_passes_test(is_faculty_admin)
 def scores_responsible_add(request, pk):
-    a_learning_unit_year = mdl_base.learning_unit_year.find_by_id(pk)
-    mdl_attr.attribution.clear_responsible_by_learning_unit_year(a_learning_unit_year)
-    if request.POST.get('a_tutor'):
-        prf_id = request.POST.get('a_tutor').strip('prf_')
-        attribution = mdl_attr.attribution.find_by_id(prf_id)
-        attributions = mdl_attr.attribution.Attribution.objects \
-            .filter(learning_unit_year=attribution.learning_unit_year) \
-            .filter(tutor=attribution.tutor)
-        for a_attribution in attributions:
-            a_attribution.score_responsible = True
-            a_attribution.save()
+    if request.POST.get('action') == "add":
+        a_learning_unit_year = mdl_base.learning_unit_year.find_by_id(pk)
+        mdl_attr.attribution.clear_responsible_by_learning_unit_year(a_learning_unit_year)
+        if request.POST.get('a_tutor'):
+            prf_id = request.POST.get('a_tutor').strip('prf_')
+            attribution = mdl_attr.attribution.find_by_id(prf_id)
+            attributions = mdl_attr.attribution.Attribution.objects \
+                .filter(learning_unit_year=attribution.learning_unit_year) \
+                .filter(tutor=attribution.tutor)
+            for a_attribution in attributions:
+                a_attribution.score_responsible = True
+                a_attribution.save()
     return scores_responsible_search(request)

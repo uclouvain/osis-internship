@@ -65,10 +65,10 @@
                 </tbody>
             </table>
             <div class="panel-body">
-                <button type="submit" id="scores_responsible_add" class="btn btn-primary" role="button"
+                <button type="submit" id="scores_responsible_add" class="btn btn-primary" name="action" value="add" role="button"
                         title="{% trans 'add' %}">{% trans 'save' %}</button>
-                <a class="btn btn-default" id="lnk_cancel" href="{% url 'scores_responsible' %}">
-                <span class="glyphicon glyphicon-cancel" aria-hidden="true"></span> {% trans 'cancel'%}</a>
+                <button type="submit" id="scores_responsible_cancel" class="btn btn-default" role="button"
+                        title="{% trans 'cancel' %}">{% trans 'cancel' %}</button>
             </div>
             <input type="hidden" id="hdn_course_code" name="course_code" value="{{ course_code }}">
             <input type="hidden" id="hdn_learning_unit_title" name="learning_unit_title" value="{{ learning_unit_title }}">

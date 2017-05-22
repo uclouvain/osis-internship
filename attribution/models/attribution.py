@@ -25,7 +25,7 @@
 ##############################################################################
 from itertools import chain
 from django.db import models
-from django.db.models import Q, Count
+from django.db.models import Q
 from attribution.models.enums import function
 from base.models.academic_year import current_academic_years
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
@@ -142,7 +142,9 @@ def search_scores_responsible(learning_unit_title, course_code, attributions, tu
                 .distinct("learning_unit_year")
     if attributions:
         entities_list = [attribution.learning_unit_year.structure.acronym for attribution in attributions]
-        queryset = queryset.filter(learning_unit_year__structure__acronym__in=entities_list).distinct("learning_unit_year")
+        queryset = queryset\
+            .filter(learning_unit_year__structure__acronym__in=entities_list)\
+            .distinct("learning_unit_year")
     return queryset
 
 
@@ -154,7 +156,8 @@ def find_all_distinct_children(structure):
         .distinct("learning_unit_year__structure__acronym")
     for attribution in attributions_list:
         if attribution.learning_unit_year.structure.part_of:
-            attributions_list = list(chain(attributions_list, find_all_distinct_children(attribution.learning_unit_year.structure)))
+            attributions_list = list(chain(attributions_list,
+                                           find_all_distinct_children(attribution.learning_unit_year.structure)))
     return attributions_list
 
 
