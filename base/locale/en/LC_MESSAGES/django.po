@@ -1311,9 +1311,6 @@ msgstr "Coordinator"
 msgid "HOLDER"
 msgstr "Holder"
 
-msgid "holder_number"
-msgstr "Holders number"
-
 msgid "CO_HOLDER"
 msgstr "Co-holder"
 
@@ -1462,12 +1459,6 @@ msgstr "Learning unit code"
 msgid "partims"
 msgstr "Partims"
 
-msgid "learning_unit_type"
-msgstr "Learning unit type"
-
-msgid "learning_unit_subtype"
-msgstr "Learning unit subtype"
-
 msgid "periodicity"
 msgstr "Periodicity"
 
@@ -1503,6 +1494,9 @@ msgstr "PhD Thesis"
 
 msgid "selected"
 msgstr "selected"
+
+msgid "learning_unit_specifications"
+msgstr "Specifications"
 
 msgid "LECTURING_COMPLETE"
 msgstr "Complete lecturing"

@@ -1392,7 +1392,7 @@ msgid "abscence_justified_preserved"
 msgstr "Abscence justifiée dèjà encodée et préservée"
 
 msgid "tutors_of_course"
-msgstr "Titulaires du cours"
+msgstr "Enseignant(e)(s) du cours"
 
 msgid "academic_actors"
 msgstr "Les acteurs académiques"
@@ -1476,12 +1476,6 @@ msgstr "Code de l'UE"
 msgid "partims"
 msgstr "Partims"
 
-msgid "learning_unit_type"
-msgstr "Type d'UE"
-
-msgid "learning_unit_subtype"
-msgstr "Sous-type d'UE"
-
 msgid "periodicity"
 msgstr "Périodicité"
 
@@ -1518,30 +1512,6 @@ msgstr "Thèse"
 msgid "selected"
 msgstr "sélectionné(s)"
 
-msgid "LECTURING_COMPLETE"
-msgstr "Cours magistral complet"
-
-msgid "LECTURING_INCOMPLETE"
-msgstr "Cours magistral partiel"
-
-msgid "PRACTICAL_EXERCISES_COMPLETE"
-msgstr "Travaux pratiques complets"
-
-msgid "PRACTICAL_EXERCISES_INCOMPLETE"
-msgstr "Travaux pratiques partiels"
-
-msgid "LECTURING"
-msgstr "Cours magistral"
-
-msgid "STAGE"
-msgstr "Stage"
-
-msgid "DISSERTATION"
-msgstr "Mémoire"
-
-msgid "PRACTICAL_EXERCISES"
-msgstr "Travaux pratiques"
-
 msgid "subtype"
 msgstr "Sous-type"
 
@@ -1550,3 +1520,6 @@ msgstr "Début"
 
 msgid "duration"
 msgstr "Durée"
+
+msgid "learning_unit_specifications"
+msgstr "Cahier de charges"

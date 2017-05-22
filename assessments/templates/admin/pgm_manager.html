@@ -179,6 +179,10 @@
         save_selected_values();
     });
 
+    $('#pnl_add_manager_modal').on('shown.bs.modal', function() {
+        $(this).find('input:first').focus();
+    });
+
     function save_selected_values(){
         //Necessary to keep the list selection
         $("#hdn_entity").val($('#slt_entity').val());

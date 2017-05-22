@@ -37,8 +37,8 @@
         {% include "learning_unit/tabs.html" %}
 
         <div class="tab-content" id="tab_content">
-            <div role="tabpanel" class="tab-pane active" id="pedagogy">
-                 <form>
+            <div role="tabpanel" class="tab-pane active" id="specifications">
+                <form>
                     <div class="row" style="margin-top:10px;">
                         <div class="col-md-2">
                             <label> {% trans 'language'%} </label>
@@ -53,73 +53,37 @@
                     <hr/>
                     <div class="row" style="margin-top:10px;">
                         <div class="col-md-2">
-                            <label> {{ resume }} </label>
+                            <label> {{ themes_discussed }} </label>
                         </div>
                         <div class="col-md-5">
-                            {{ form_french.resume }}
+                            {{ form_french.themes_discussed }}
                         </div>
                         <div class="col-md-5">
-                            {{ form_english.resume }}
+                            {{ form_english.themes_discussed }}
                         </div>
                     </div>
                     <hr/>
                     <div class="row" style="margin-top:10px;">
                         <div class="col-md-2">
-                            <label> {{ bibliography }} </label>
+                            <label> {{ skills_to_be_acquired }} </label>
                         </div>
                         <div class="col-md-5">
-                            {{ form_french.bibliography }}
+                            {{ form_french.skills_to_be_acquired }}
                         </div>
                         <div class="col-md-5">
-                            {{ form_english.bibliography }}
+                            {{ form_english.skills_to_be_acquired }}
                         </div>
                     </div>
                     <hr/>
                     <div class="row" style="margin-top:10px;">
                         <div class="col-md-2">
-                            <label> {{ teaching_methods }} </label>
+                            <label> {{ prerequisite }} </label>
                         </div>
                         <div class="col-md-5">
-                            {{ form_french.teaching_methods }}
+                            {{ form_french.prerequisite }}
                         </div>
                         <div class="col-md-5">
-                            {{ form_english.teaching_methods }}
-                        </div>
-                    </div>
-                    <hr/>
-                    <div class="row" style="margin-top:10px;">
-                        <div class="col-md-2">
-                            <label> {{ evaluation_methods }} </label>
-                        </div>
-                        <div class="col-md-5">
-                            {{ form_french.evaluation_methods }}
-                        </div>
-                        <div class="col-md-5">
-                            {{ form_english.evaluation_methods }}
-                        </div>
-                    </div>
-                    <hr/>
-                    <div class="row" style="margin-top:10px;">
-                        <div class="col-md-2">
-                            <label> {{ other_informations }} </label>
-                        </div>
-                        <div class="col-md-5">
-                            {{ form_french.other_informations }}
-                        </div>
-                        <div class="col-md-5">
-                            {{ form_english.other_informations }}
-                        </div>
-                    </div>
-                    <hr/>
-                    <div class="row" style="margin-top:10px;">
-                        <div class="col-md-2">
-                            <label> {{ online_resources }} </label>
-                        </div>
-                        <div class="col-md-5">
-                            {{ form_french.online_resources }}
-                        </div>
-                        <div class="col-md-5">
-                            {{ form_english.online_resources }}
+                            {{ form_english.prerequisite }}
                         </div>
                     </div>
                 </form>
