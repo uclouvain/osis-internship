@@ -179,6 +179,10 @@
         save_selected_values();
     });
 
+    $('#pnl_add_manager_modal').on('shown.bs.modal', function() {
+        $(this).find('input:first').focus();
+    });
+
     function save_selected_values(){
         //Necessary to keep the list selection
         $("#hdn_entity").val($('#slt_entity').val());
@@ -347,7 +351,7 @@
     }
 
     function set_off_pannel(person_off, person_off_first_name, acronym_off){
-        $("#pnl_pgm_off").append("<label>"+ person_off +" "+ person_off_first_name +"</label>");
+        $("#pnl_pgm_off").append("<label>"+ person_off +", "+ person_off_first_name +"</label>");
         $("#pnl_pgm_off").append("<span><br></span>");
         if(acronym_off && acronym_off.indexOf(',') == -1) {
             $("#pnl_pgm_off").append("<span>" + gettext('of_pgm') + "</span>");
@@ -372,13 +376,13 @@
 
         $('#tb_persons tbody > tr').remove();
 
-        $('#pnl_person_search_results').css('visibility', 'hidden');
+        $('#pnl_person_search_results').css('visibility', 'hidden').css('display', 'none');
         $('#pnl_person_search_error').css('visibility', 'hidden');
         $.ajax({
             url: "/assessments/pgm_manager/person/list/search?fullname=" + $('#txt_fullname_manager_search').val()
         }).then(function (data) {
             if (data.length > 0) {
-                $('#pnl_person_search_results').css('visibility', 'visible');
+                $('#pnl_person_search_results').css('visibility', 'visible').css('display', 'block');
 
                 var trHTML = '';
                 $.each(data, function (key, value) {
@@ -388,8 +392,8 @@
                     var first_name = value.first_name;
 
                     trHTML += '<tr>';
-                    trHTML += '<td><button type="submit" class="btn-link" id="lnk_add_manager_last_name_' + id_person + '" onclick="submission('+ id_person+');">' + last_name +'</button></td>';
-                    trHTML += '<td><button type="submit" class="btn-link" id="lnk_add_manager_first_name_' + id_person + '" onclick="submission('+ id_person+');">' + first_name +'</button></td>';
+                    trHTML += '<td>' + last_name +'</td>';
+                    trHTML += '<td>' + first_name +'</td>';
                     trHTML += '<td>';
                     if(value.middle_name){
                         trHTML += value.middle_name;
@@ -405,7 +409,7 @@
                         trHTML += value.user.username;
                     }
                     trHTML += '</td>';
-
+                    trHTML += '<td><button type="submit" class="btn btn-primary" id="lnk_add_manager_first_name_' + id_person + '" onclick="submission('+ id_person+');"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button></td>';
                     trHTML += '</tr>';
                     $('#tb_persons tbody').append(trHTML);
                 });

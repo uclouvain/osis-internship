@@ -67,8 +67,7 @@ def learning_units(request):
 def learning_unit_identification(request, learning_unit_year_id):
     context = _get_common_context_learning_unit_year(learning_unit_year_id)
     learning_unit_year = context['learning_unit_year']
-    context['learning_container_year_partims'] = _get_formated_partims_related(learning_unit_year)
-
+    context['learning_container_year_partims'] = _get_partims_related(learning_unit_year)
     return layout.render(request, "learning_unit/identification.html", context)
 
 
@@ -172,8 +171,7 @@ def get_components(a_learning_container_yr):
     return components
 
 
-def _get_formated_partims_related(learning_unit_year):
+def _get_partims_related(learning_unit_year):
     learning_container_year = learning_unit_year.learning_container_year
-    all_partims_related = mdl.learning_container_year.find_all_partims(learning_container_year)
-    all_partims_related = {partim.subdivision for partim in all_partims_related}
-    return ", ".join(all_partims_related)
+    return mdl.learning_container_year.find_all_partims(learning_container_year)
+
