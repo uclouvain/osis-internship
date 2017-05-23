@@ -42,7 +42,7 @@ def get_entity(request, pk):
 
     if request.method == 'GET':
         serializer = EntitySerializer(an_entity)
-        return Response(serializer.data)
+        return Response(data=serializer.data)
 
     elif request.method == 'DELETE':
         return Response({})
@@ -55,7 +55,7 @@ def get_post_entities(request):
     if request.method == 'GET':
         entities = Entity.objects.all()
         serializer = EntitySerializer(entities, many=True)
-        return Response(serializer.data)
+        return Response(data=serializer.data)
 
     elif request.method == 'POST':
         existing_entity = entity.get_by_external_id(request.data.get('external_id'))
@@ -64,10 +64,7 @@ def get_post_entities(request):
             return create_full_entity(request)
 
         else:
-            create_versions_of_existing_entity(request, existing_entity)
-            create_links_of_existing_entity(request, existing_entity)
-            entity_serializer = EntitySerializer(existing_entity)
-            return Response(entity_serializer.data, status=status.HTTP_200_OK)
+            return update_existing_entity(existing_entity, request)
 
 
 def create_full_entity(request):
@@ -81,22 +78,36 @@ def create_full_entity(request):
     entity_serializer = EntitySerializer(data=entity_data)
     if entity_serializer.is_valid():
         entity_serializer.save()
-        return Response(entity_serializer.data, status=status.HTTP_201_CREATED)
-    return Response(entity_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(data=entity_serializer.data, status=status.HTTP_201_CREATED)
+    return Response(data=entity_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+def update_existing_entity(existing_entity, request):
+    new_versions_count = create_versions_of_existing_entity(request, existing_entity)
+    new_links_count = create_links_of_existing_entity(request, existing_entity)
+    entity_serializer = EntitySerializer(existing_entity)
+    data = entity_serializer.data
+    data['new_versions_count'] = new_versions_count
+    data['new_links_count'] = new_links_count
+    return Response(data=data, status=status.HTTP_200_OK)
 
 
 def create_versions_of_existing_entity(request, same_entity):
+    new_versions_count = 0
     entityversion_data = request.data.get('entityversion_set')
     for version in entityversion_data:
-        versions_count = entity_version.count(entity=same_entity,
-                                              title=version.get('title'),
-                                              acronym=version.get('acronym'),
-                                              entity_type=version.get('entity_type'),
-                                              start_date=version.get('start_date'),
-                                              end_date=version.get('end_date')
-                                              )
-        if not versions_count:
-            create_version(version, same_entity)
+        same_versions_count = entity_version.count(entity=same_entity,
+                                                   title=version.get('title'),
+                                                   acronym=version.get('acronym'),
+                                                   entity_type=version.get('entity_type'),
+                                                   start_date=version.get('start_date'),
+                                                   end_date=version.get('end_date')
+                                                   )
+        if not same_versions_count:
+            if create_version(version, same_entity) is not None:
+                new_versions_count += 1
+
+    return new_versions_count
 
 
 def create_version(version, same_entity):
@@ -108,15 +119,19 @@ def create_version(version, same_entity):
 
 
 def create_links_of_existing_entity(request, same_entity):
+    new_links_count = 0
     link_to_parent_data = request.data.get('link_to_parent')
     for link in link_to_parent_data:
-        links_count = entity_link.count(child=same_entity,
-                                        parent=link.get('parent'),
-                                        start_date=link.get('start_date'),
-                                        end_date=link.get('end_date')
-                                        )
-        if not links_count:
-            create_link(link, same_entity)
+        same_links_count = entity_link.count(child=same_entity,
+                                             parent=link.get('parent'),
+                                             start_date=link.get('start_date'),
+                                             end_date=link.get('end_date')
+                                             )
+        if not same_links_count:
+            if create_link(link, same_entity) is not None:
+                new_links_count += 1
+
+    return new_links_count
 
 
 def create_link(link, same_entity):
