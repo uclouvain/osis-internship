@@ -1515,5 +1515,11 @@ msgstr "sélectionné(s)"
 msgid "subtype"
 msgstr "Sous-type"
 
+msgid "start"
+msgstr "Début"
+
+msgid "duration"
+msgstr "Durée"
+
 msgid "learning_unit_specifications"
 msgstr "Cahier de charges"

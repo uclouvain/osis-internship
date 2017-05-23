@@ -42,7 +42,6 @@ class LearningUnitComponent(SerializableModel):
     type = models.CharField(max_length=25, blank=True, null=True, choices=component_type.COMPONENT_TYPES, db_index=True)
     duration = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
 
-
     def __str__(self):
         return u"%s - %s" % (self.type, self.learning_unit_year)
 
@@ -50,3 +49,13 @@ class LearningUnitComponent(SerializableModel):
         permissions = (
             ("can_access_learningunit", "Can access learning unit"),
         )
+
+
+def find_by_learning_year_type(a_learning_unit_year=None, a_type=None):
+    if a_learning_unit_year and a_type:
+        try:
+            return LearningUnitComponent.objects.get(learning_unit_year=a_learning_unit_year,
+                                                     type=a_type)
+        except ObjectDoesNotExist:
+            return None
+    return None
