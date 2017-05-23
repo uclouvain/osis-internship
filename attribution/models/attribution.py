@@ -25,7 +25,7 @@
 ##############################################################################
 from itertools import chain
 from django.db import models
-from django.db.models import Q
+from django.db.models import Q, Count
 from attribution.models.enums import function
 from base.models.academic_year import current_academic_years
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
@@ -38,7 +38,7 @@ class AttributionAdmin(SerializableModelAdmin):
                                     'end_year')}),)
     raw_id_fields = ('learning_unit_year', 'tutor')
     search_fields = ['tutor__person__first_name', 'tutor__person__last_name', 'learning_unit_year__acronym',
-                     'tutor__person__global_id']
+                     'tutor__person__global_id', 'external_id']
 
 
 class Attribution(SerializableModel):
@@ -78,18 +78,30 @@ def find_all_responsibles_by_learning_unit_year(a_learning_unit_year):
     return [attribution.tutor for attribution in attribution_list]
 
 
-def find_attributions(structure):
-    attribution_list = Attribution.objects\
-        .filter(learning_unit_year__academic_year=current_academic_years())\
-        .filter(learning_unit_year__structure=structure)\
-        .distinct("learning_unit_year")
-    return attribution_list
+def find_all_tutors_by_learning_unit_year(a_learning_unit_year):
+    attribution_list = Attribution.objects.filter(learning_unit_year=a_learning_unit_year) \
+        .distinct("tutor").values_list('id', flat=True)
+    result = Attribution.objects.filter(id__in=attribution_list).order_by("-score_responsible", "tutor__person")
+    return [[attribution.tutor, attribution.score_responsible] for attribution in result]
+
+
+def find_attribution_distinct(structure):
+    attribution = Attribution.objects.filter(learning_unit_year__structure=structure)\
+        .distinct("learning_unit_year__structure__acronym")
+    return attribution
 
 
 def find_responsible(a_learning_unit_year):
     tutors_list = find_all_responsibles_by_learning_unit_year(a_learning_unit_year)
     if tutors_list:
-        return tutors_list
+        return tutors_list[0]
+    return None
+
+
+def find_tutor(a_learning_unit_year):
+    tutors_list = find_all_tutors_by_learning_unit_year(a_learning_unit_year)
+    if tutors_list:
+        return tutors_list[0]
     return None
 
 
@@ -101,15 +113,7 @@ def is_score_responsible(user, learning_unit_year):
     return attributions > 0
 
 
-def find_tutor_number(attribution):
-    tutor_number = Attribution.objects\
-        .filter(learning_unit_year=attribution.learning_unit_year)\
-        .filter(learning_unit_year__academic_year=current_academic_years())\
-        .count()
-    return tutor_number
-
-
-def search_scores_responsible(learning_unit_title, course_code, entity, tutor, scores_responsible):
+def search_scores_responsible(learning_unit_title, course_code, attributions, tutor, scores_responsible):
     queryset = Attribution.objects.filter(learning_unit_year__academic_year=current_academic_years())
     if learning_unit_title:
         queryset = queryset.filter(learning_unit_year__title__icontains=learning_unit_title)\
@@ -127,86 +131,29 @@ def search_scores_responsible(learning_unit_title, course_code, entity, tutor, s
                     Q(tutor__person__last_name__icontains=scores_responsible))\
             .filter(score_responsible=True)\
             .distinct("learning_unit_year")
-    if entity:
-        if learning_unit_title or course_code or tutor or scores_responsible:
-            queryset = queryset.filter(learning_unit_year__structure__acronym=entity).distinct("learning_unit_year")
-        else:
-            queryset = queryset.filter(learning_unit_year__structure__acronym=entity).distinct("learning_unit_year")
-            attributions_list = find_all_children(queryset[0])
-            queryset = list(chain(queryset, attributions_list))
+    if attributions:
+        entities_list = [attribution.learning_unit_year.structure.acronym for attribution in attributions]
+        queryset = queryset.filter(learning_unit_year__structure__acronym__in=entities_list).distinct("learning_unit_year")
     return queryset
 
 
-def find_attribution_distinct(structure):
-    attribution = Attribution.objects.filter(learning_unit_year__structure=structure)\
-        .distinct("learning_unit_year__structure__acronym")
-    return attribution
-
-
-def find_all_distinct_children(attribution):
+def find_all_distinct_children(structure):
     attributions_list = Attribution.objects\
-        .filter(learning_unit_year__structure__part_of=attribution.learning_unit_year.structure)\
+        .filter(learning_unit_year__structure__part_of=structure)\
         .filter(learning_unit_year__academic_year=current_academic_years())\
+        .select_related("learning_unit_year__structure")\
         .distinct("learning_unit_year__structure__acronym")
     for attribution in attributions_list:
         if attribution.learning_unit_year.structure.part_of:
-            attributions_list = list(chain(attributions_list, find_all_distinct_children(attribution)))
+            attributions_list = list(chain(attributions_list, find_all_distinct_children(attribution.learning_unit_year.structure)))
     return attributions_list
-
-
-def find_all_children(attribution):
-    attributions_list = Attribution.objects\
-        .filter(learning_unit_year__structure__part_of=attribution.learning_unit_year.structure)\
-        .filter(learning_unit_year__academic_year=current_academic_years())\
-        .distinct("learning_unit_year__acronym")
-    for attribution in attributions_list:
-        if attribution.learning_unit_year.structure.part_of:
-            attributions_list = list(chain(attributions_list, find_all_children(attribution)))
-    return attributions_list
-
-
-def find_all_responsible_children(attribution):
-    attributions_list = Attribution.objects\
-        .filter(learning_unit_year__structure__part_of=attribution.learning_unit_year.structure) \
-        .filter(score_responsible=True) \
-        .filter(learning_unit_year__academic_year=current_academic_years()) \
-        .distinct("tutor")\
-        .select_related("learning_unit_year__structure__part_of")
-    for attribution in attributions_list:
-        if attribution.learning_unit_year.structure.part_of:
-            attributions_list = list(chain(attributions_list, find_all_responsible_children(attribution)))
-    return attributions_list
-
-
-def find_responsible_distinct(structure):
-    attributions_list = Attribution.objects\
-        .filter(learning_unit_year__structure=structure)\
-        .filter(score_responsible=True) \
-        .filter(learning_unit_year__academic_year=current_academic_years()) \
-        .distinct("tutor")
-    if attributions_list:
-        for attribution in attributions_list:
-            attributions = find_responsible_distinct(attribution)
-            attributions_list = list(chain(attributions_list, attributions))
-    return attributions_list
-
-
-def find_all_tutor(structure):
-    all_tutors = Attribution.objects\
-        .filter(learning_unit_year__structure=structure) \
-        .filter(learning_unit_year__academic_year=current_academic_years()) \
-        .distinct("tutor")\
-        .select_related("learning_unit_year__structure")
-    if all_tutors:
-        for tutor in all_tutors:
-            tutors = find_all_children(tutor)
-            all_tutors = list(chain(all_tutors, tutors))
-    return all_tutors
 
 
 def find_all_responsible_by_learning_unit_year(learning_unit_year):
-    all_tutors = Attribution.objects.filter(learning_unit_year=learning_unit_year).distinct("tutor")
-    return all_tutors
+    all_tutors = Attribution.objects.filter(learning_unit_year=learning_unit_year) \
+        .distinct("tutor").values_list('id', flat=True)
+    result = Attribution.objects.filter(id__in=all_tutors).order_by("tutor__person")
+    return result
 
 
 def find_by_tutor(tutor):

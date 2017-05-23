@@ -915,7 +915,7 @@ msgid "registration_id"
 msgstr "NOMA"
 
 msgid "registration_id_not_access_or_not_exist"
-msgstr "Vous n'avez pas des droits accès pour cet étudiant ou il n'existe pas en base de données"
+msgstr "Étudiant non inscrit à l'examen"
 
 msgid "research_center"
 msgstr "Centre de recherche"
@@ -979,7 +979,7 @@ msgid "scores_responsible"
 msgstr "Responsable(s) de notes"
 
 msgid "scores_responsibles_administration"
-msgstr "Administration des Responsables de notes pour les cours de la faculté"
+msgstr "Administration des responsables de notes de programmes"
 
 msgid "scores_saved"
 msgstr "note(s) enregistrée(s)"
@@ -1392,7 +1392,7 @@ msgid "abscence_justified_preserved"
 msgstr "Abscence justifiée dèjà encodée et préservée"
 
 msgid "tutors_of_course"
-msgstr "Titulaires du cours"
+msgstr "Enseignant(e)(s) du cours"
 
 msgid "academic_actors"
 msgstr "Les acteurs académiques"
@@ -1476,12 +1476,6 @@ msgstr "Code de l'UE"
 msgid "partims"
 msgstr "Partims"
 
-msgid "learning_unit_type"
-msgstr "Type d'UE"
-
-msgid "learning_unit_subtype"
-msgstr "Sous-type d'UE"
-
 msgid "periodicity"
 msgstr "Périodicité"
 
@@ -1517,3 +1511,9 @@ msgstr "Thèse"
 
 msgid "selected"
 msgstr "sélectionné(s)"
+
+msgid "subtype"
+msgstr "Sous-type"
+
+msgid "learning_unit_specifications"
+msgstr "Cahier de charges"

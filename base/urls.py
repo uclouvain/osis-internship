@@ -67,7 +67,8 @@ urlpatterns = [
             url(r'^pedagogy/$', learning_unit.learning_unit_pedagogy, name="learning_unit_pedagogy"),
             url(r'^attributions/$', learning_unit.learning_unit_attributions,
                 name="learning_unit_attributions"),
-            url(r'^proposals/$', learning_unit.learning_unit_proposals, name="learning_unit_proposals")
+            url(r'^proposals/$', learning_unit.learning_unit_proposals, name="learning_unit_proposals"),
+            url(r'^specifications/$', learning_unit.learning_unit_specifications, name="learning_unit_specifications")
         ]))
     ])),
 

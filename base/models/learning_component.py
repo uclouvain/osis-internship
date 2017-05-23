@@ -25,15 +25,23 @@
 ##############################################################################
 from django.db import models
 from django.contrib import admin
+from base.models.enums import learning_component_type, learning_component_description
 
 
 class LearningComponentAdmin(admin.ModelAdmin):
-    list_display = ('learning_container',)
-    fieldsets = ((None, {'fields': ('learning_container',)}),)
-
+    list_display = ('acronym', 'type')
+    fieldsets = ((None, {'fields': ('learning_container','type', 'acronym', 'description')}),)
+    search_fields = ['acronym']
 
 class LearningComponent(models.Model):
+    external_id = models.CharField(max_length=100, blank=True, null=True)
     learning_container = models.ForeignKey('LearningContainer')
+    type = models.CharField(max_length=30, choices=learning_component_type.LEARNING_COMPONENT_TYPES,
+                            blank=True, null=True)
+    acronym = models.CharField(max_length=3)
+    description = models.CharField(max_length=30,
+                                   choices=learning_component_description.LEARNING_COMPONENT_DESCRIPTIONS,
+                                   blank=True, null=True)
 
 
 def find_by_id(learning_component_id):

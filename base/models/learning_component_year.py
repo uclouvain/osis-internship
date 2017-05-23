@@ -30,18 +30,21 @@ from django.contrib import admin
 class LearningComponentYearAdmin(admin.ModelAdmin):
     list_display = ('learning_container_year', 'learning_component', 'title', 'acronym', 'type', 'comment')
     fieldsets = ((None, {'fields': ('learning_container_year', 'learning_component', 'title', 'acronym',
-                                    'type', 'comment', 'planned_classes')}),)
-    search_fields = ['acronym']
+                                    'type', 'comment', 'planned_classes', 'hourly_volume_total', 'hourly_volume_Q1')}),)
+    search_fields = ['acronym','learning_component']
 
 
 class LearningComponentYear(models.Model):
+    external_id = models.CharField(max_length=100, blank=True, null=True)
     learning_container_year = models.ForeignKey('LearningContainerYear')
     learning_component = models.ForeignKey('LearningComponent')
-    title = models.CharField(max_length=255)
-    acronym = models.CharField(max_length=3)
-    type = models.CharField(max_length=20)
-    comment = models.CharField(max_length=255)
+    title = models.CharField(max_length=255, blank=True, null=True)
+    acronym = models.CharField(max_length=3, blank=True, null=True)
+    type = models.CharField(max_length=20, blank=True, null=True)
+    comment = models.CharField(max_length=255, blank=True, null=True)
     planned_classes = models.IntegerField(blank=True, null=True)
+    hourly_volume_total = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
+    hourly_volume_partial = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
 
     def save(self, *args, **kwargs):
         if self.learning_container_year.learning_container != self.learning_component.learning_container:
@@ -56,10 +59,21 @@ class LearningComponentYear(models.Model):
             ("can_access_learningunitcomponentyear", "Can access learning unit component year"),
         )
 
+    @property
+    def hourly_volume_partial_q2(self):
+        if self.hourly_volume_total:
+            if self.hourly_volume_partial:
+                q2 = self.hourly_volume_total - self.hourly_volume_partial
+                if q2 <= 0:
+                    return None
+                else:
+                    return q2
+        return None
+
 
 def find_by_id(learning_component_year_id):
     return LearningComponentYear.objects.get(pk=learning_component_year_id)
 
 
 def find_by_learning_container_year(a_learning_container_year):
-    return LearningComponentYear.objects.filter(learning_container_year=a_learning_container_year).order_by('type')
+    return LearningComponentYear.objects.filter(learning_container_year=a_learning_container_year).order_by('type','learning_component__acronym')

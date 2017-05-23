@@ -23,10 +23,10 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from itertools import chain
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
 from attribution import models as mdl_attr
+from attribution.models import attribution
 from base.models import entity_manager, learning_unit_year
 from base.views import layout
 
@@ -40,26 +40,25 @@ def is_faculty_admin(user):
 @user_passes_test(is_faculty_admin)
 def scores_responsible(request):
     a_faculty_administrator = entity_manager.find_entity_manager_by_user(request.user)
-    learning_unit_year_list = find_learning_unit_year_list(a_faculty_administrator.structure)
-    entities_list = find_entities_list(a_faculty_administrator.structure)
-    dict_attribution = create_attributions_list(learning_unit_year_list)
-    return layout.render(request, 'scores_responsible.html', {"entities_list": entities_list,
-                                                              "dict_attribution": dict_attribution})
+    attributions = attribution.find_all_distinct_children(a_faculty_administrator.structure)
+    return layout.render(request, 'scores_responsible.html', {"learning_unit_year_acronym": a_faculty_administrator.structure.acronym,
+                                                              "attributions": attributions})
 
 
 @login_required
 @user_passes_test(is_faculty_admin)
 def scores_responsible_search(request):
     a_faculty_administrator = entity_manager.find_entity_manager_by_user(request.user)
+    attributions = attribution.find_all_distinct_children(a_faculty_administrator.structure)
     attributions_searched = mdl_attr.attribution.search_scores_responsible(
         learning_unit_title=request.GET.get('learning_unit_title'),
         course_code=request.GET.get('course_code'),
-        entity=request.GET.get('entity'),
+        attributions=attributions,
         tutor=request.GET.get('tutor'),
         scores_responsible=request.GET.get('scores_responsible'))
-    entities_list = find_entities_list(a_faculty_administrator.structure)
     dict_attribution = create_attributions_list(attributions_searched)
-    return layout.render(request, 'scores_responsible.html', {"entities_list": entities_list,
+    return layout.render(request, 'scores_responsible.html', {"learning_unit_year_acronym": a_faculty_administrator.structure.acronym,
+                                                              "attributions": attributions,
                                                               "dict_attribution": dict_attribution,
                                                               "acronym": request.GET.get('entity'),
                                                               "learning_unit_title": request.GET.get('learning_unit_title'),
@@ -71,29 +70,13 @@ def scores_responsible_search(request):
 def create_attributions_list(attributions):
     dict_attribution = dict()
     for attribution in attributions:
-        tutor_number = mdl_attr.attribution.find_tutor_number(attribution)
-        responsible = mdl_attr.attribution.find_responsible(attribution.learning_unit_year)
+        tutors = mdl_attr.attribution.find_all_tutors_by_learning_unit_year(attribution.learning_unit_year)
         dict_attribution.update({attribution: [attribution.learning_unit_year.id,
                                                attribution.learning_unit_year.structure.acronym,
                                                attribution.learning_unit_year.acronym,
                                                attribution.learning_unit_year.title,
-                                               tutor_number, responsible]})
+                                               tutors]})
     return dict_attribution
-
-
-def find_entities_list(structure):
-    attributions = mdl_attr.attribution.find_attributions(structure)
-    entity = mdl_attr.attribution.find_attribution_distinct(structure)
-    entities = mdl_attr.attribution.find_all_distinct_children(attributions[0])
-    entities_list = list(chain(entity, entities))
-    return entities_list
-
-
-def find_learning_unit_year_list(structure):
-    attributions = mdl_attr.attribution.find_attributions(structure)
-    attributions_list = mdl_attr.attribution.find_all_children(attributions[0])
-    learning_unit_year_list = list(chain(attributions, attributions_list))
-    return learning_unit_year_list
 
 
 def scores_responsible_list(request):
@@ -116,11 +99,13 @@ def scores_responsible_management(request, pk):
 def scores_responsible_add(request, pk):
     a_learning_unit_year = learning_unit_year.find_by_id(pk)
     mdl_attr.attribution.clear_responsible_by_learning_unit_year(a_learning_unit_year)
-    if request.GET:
-        for tutor in request.GET:
-            prf_id = tutor.strip('prf_')
-            attribution = mdl_attr.attribution.find_by_id(prf_id)
-            if request.GET.get(tutor):
-                attribution.score_responsible = True
-                attribution.save()
+    if request.GET.get('tutor'):
+        prf_id = request.GET.get('tutor').strip('prf_')
+        attribution = mdl_attr.attribution.find_by_id(prf_id)
+        attributions = mdl_attr.attribution.Attribution.objects \
+            .filter(learning_unit_year=attribution.learning_unit_year) \
+            .filter(tutor=attribution.tutor)
+        for a_attribution in attributions:
+            a_attribution.score_responsible = True
+            a_attribution.save()
     return redirect('scores_responsible')

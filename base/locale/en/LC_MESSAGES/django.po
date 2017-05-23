@@ -904,7 +904,7 @@ msgid "registration_id"
 msgstr "Registration ID"
 
 msgid "registration_id_not_access_or_not_exist"
-msgstr "You don't have access rights for this student or he doesn't exist in our database"
+msgstr "Student not registered for exam"
 
 msgid "research_center"
 msgstr "Research center"
@@ -1308,9 +1308,6 @@ msgstr "Coordinator"
 msgid "HOLDER"
 msgstr "Holder"
 
-msgid "holder_number"
-msgstr "Holders number"
-
 msgid "CO_HOLDER"
 msgstr "Co-holder"
 
@@ -1459,12 +1456,6 @@ msgstr "Learning unit code"
 msgid "partims"
 msgstr "Partims"
 
-msgid "learning_unit_type"
-msgstr "Learning unit type"
-
-msgid "learning_unit_subtype"
-msgstr "Learning unit subtype"
-
 msgid "periodicity"
 msgstr "Periodicity"
 
@@ -1500,3 +1491,33 @@ msgstr "PhD Thesis"
 
 msgid "selected"
 msgstr "selected"
+
+msgid "learning_unit_specifications"
+msgstr "Specifications"
+
+msgid "LECTURING_COMPLETE"
+msgstr "Complete lecturing"
+
+msgid "LECTURING_INCOMPLETE"
+msgstr "Incomplete lecturing"
+
+msgid "PRACTICAL_EXERCISES_COMPLETE"
+msgstr "Complete practical exercises"
+
+msgid "PRACTICAL_EXERCISES_INCOMPLETE"
+msgstr "Incomplete practical exercises"
+
+msgid "LECTURING"
+msgstr "Lecturing"
+
+msgid "STAGE"
+msgstr "Stage"
+
+msgid "DISSERTATION"
+msgstr "Dissertation"
+
+msgid "PRACTICAL_EXERCISES"
+msgstr "Practical exercises"
+
+msgid "subtype"
+msgstr "Subtype"

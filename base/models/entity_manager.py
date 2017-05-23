@@ -47,7 +47,7 @@ class EntityManager(SerializableModel):
         )
 
 
-def _get_perms(model):
+def get_perms(model):
     return model._meta.permissions
 
 
