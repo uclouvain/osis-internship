@@ -1141,6 +1141,9 @@ msgstr "Select an excel file to inject scores."
 msgid "tooltip_to_my_messages"
 msgstr "Back to messages"
 
+msgid "tutor"
+msgstr "Tutor"
+
 msgid "tutors"
 msgstr "Tutors"
 
@@ -1521,3 +1524,9 @@ msgstr "Practical exercises"
 
 msgid "subtype"
 msgstr "Subtype"
+
+msgid "start"
+msgstr "Start"
+
+msgid "duration"
+msgstr "Duration"
