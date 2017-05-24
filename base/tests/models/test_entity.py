@@ -187,3 +187,28 @@ class EntityTest(TestCase):
         an_entity = EntityFactory()
         self.assertEqual(entity.get_by_internal_id(an_entity.id), an_entity)
         self.assertEqual(entity.get_by_internal_id(an_entity.id+1), None)
+
+    def test_find_formatted_versions(self):
+        start_dates = [
+            timezone.make_aware(datetime.datetime(2015, 1, 1)),
+            timezone.make_aware(datetime.datetime(2016, 1, 1)),
+            timezone.make_aware(datetime.datetime(2017, 1, 1))
+        ]
+        end_dates = [
+            timezone.make_aware(datetime.datetime(2015, 12, 31)),
+            timezone.make_aware(datetime.datetime(2016, 12, 31)),
+            timezone.make_aware(datetime.datetime(2017, 12, 31))
+        ]
+
+        for x in range(3):
+            EntityVersionFactory(
+                entity=self.parent,
+                acronym="ENTITY_V_" + str(x),
+                start_date=start_dates[x],
+                end_date=end_dates[x]
+            )
+
+        self.assertCountEqual(self.parent.find_formatted_versions(), ["ENTITY_V_0 (2015-01-01 -> 2015-12-31)",
+                                                                      "ENTITY_V_1 (2016-01-01 -> 2016-12-31)",
+                                                                      "ENTITY_V_2 (2017-01-01 -> 2017-12-31)"
+                                                                      ])
