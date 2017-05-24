@@ -34,7 +34,7 @@ from base.models.entity_version import EntityVersion
 class EntityAdmin(admin.ModelAdmin):
     list_display = ('id', 'most_recent_acronym', 'external_id', 'organization')
     search_fields = ['external_id', 'entityversion__acronym']
-    readonly_fields = ('organization', 'external_id', 'most_recent_acronym', 'find_descendants')
+    readonly_fields = ('organization', 'external_id', 'most_recent_acronym', 'find_descendants', 'find_versions')
 
 
 class Entity(models.Model):
@@ -81,6 +81,14 @@ class Entity(models.Model):
         if last_version:
             return last_version.acronym
         return None
+
+    def find_versions(self):
+        versions = EntityVersion.objects.filter(entity=self).order_by('start_date')
+        return ["{} ({} -> {})".format(version.acronym,
+                                      str(version.start_date),
+                                      str(version.end_date)
+                                      )
+                for version in versions]
 
 
 def search(**kwargs):
