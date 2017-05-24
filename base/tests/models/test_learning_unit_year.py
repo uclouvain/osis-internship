@@ -52,7 +52,7 @@ class LearningUnitYearTest(TestCase):
         self.assertEquals(attribution.find_by_tutor(None), None)
 
     def test_subdivision_computation(self):
-        l_container_year = LearningContainerYearFactory(acronym="LBIR1212")
+        l_container_year = LearningContainerYearFactory(acronym="LBIR1212", academic_year=self.academic_year)
         l_unit_1 = LearningUnitYearFactory(acronym="LBIR1212", learning_container_year= l_container_year,
                                 academic_year=self.academic_year)
         l_unit_2 = LearningUnitYearFactory(acronym="LBIR1212A", learning_container_year= l_container_year,

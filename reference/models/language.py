@@ -46,6 +46,10 @@ class Language(SerializableModel):
         return self.name
 
 
+def find_by_code(code):
+    return Language.objects.get(code=code)
+
+
 def serialize_list(list_languages):
     """
     Serialize a list of "Language" objects using the json format.

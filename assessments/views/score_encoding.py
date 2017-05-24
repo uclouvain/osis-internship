@@ -38,6 +38,7 @@ from django.db.utils import OperationalError as DjangoOperationalError, Interfac
 from django.http import HttpResponseRedirect
 from django.utils.translation import ugettext_lazy as _
 from psycopg2._psycopg import OperationalError as PsycopOperationalError, InterfaceError as  PsycopInterfaceError
+import time
 
 from assessments.business import score_encoding_progress, score_encoding_list, score_encoding_export
 from attribution import models as mdl_attr
@@ -624,32 +625,15 @@ def get_json_data_scores_sheets(tutor_global_id):
             return json.dumps(data)
         else:
             return json.dumps({})
-    except (PsycopOperationalError, PsycopInterfaceError, DjangoOperationalError, DjangoInterfaceError) as ep:
+    except (PsycopOperationalError, PsycopInterfaceError, DjangoOperationalError, DjangoInterfaceError):
+        queue_exception_logger.error('Postgres Error during get_json_data_scores_sheets on global_id {} => retried'.format(tutor_global_id))
         trace = traceback.format_exc()
-        try:
-            data = json.dumps({'tutor_global_id': tutor_global_id})
-            queue_exception = QueueException(queue_name=settings.QUEUES.get('QUEUES_NAME').get('PAPER_SHEET'),
-                                             message=data,
-                                             exception_title='[Catched and retried] - {}'.format(type(ep).__name__),
-                                             exception=trace)
-            queue_exception_logger.error(queue_exception.to_exception_log())
-        except Exception:
-            logger.error(trace)
-            log_trace = traceback.format_exc()
-            logger.warning('Error during queue logging :\n {}'.format(log_trace))
+        queue_exception_logger.error(trace)
         connection.close()
-        get_json_data_scores_sheets(tutor_global_id)
-    except Exception as e:
+        time.sleep(1)
+        return get_json_data_scores_sheets(tutor_global_id)
+    except Exception:
+        logger.warning('(Not PostgresError) during get_json_data_scores_sheets on global_id {}'.format(tutor_global_id))
         trace = traceback.format_exc()
-        try:
-            data = json.dumps({'tutor_global_id': tutor_global_id})
-            queue_exception = QueueException(queue_name=settings.QUEUES.get('QUEUES_NAME').get('PAPER_SHEET'),
-                                             message=data,
-                                             exception_title=type(e).__name__,
-                                             exception=trace)
-            queue_exception_logger.error(queue_exception.to_exception_log())
-        except Exception:
-            logger.error(trace)
-            log_trace = traceback.format_exc()
-            logger.warning('Error during queue logging :\n {}'.format(log_trace))
-        return None
+        logger.error(trace)
+        return json.dumps({})
