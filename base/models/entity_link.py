@@ -31,7 +31,8 @@ from django.core.exceptions import ObjectDoesNotExist
 
 class EntityLinkAdmin(admin.ModelAdmin):
     list_display = ('id', 'parent', 'child', 'start_date', 'end_date',)
-    search_fields = ['parent', 'child', 'start_date', 'end_date']
+    search_fields = ['parent__id', 'parent__external_id', 'parent__entityversion__acronym',
+                     'child__id', 'child__external_id', 'child__entityversion__acronym', 'start_date', 'end_date']
     raw_id_fields = ('parent', 'child',)
 
 

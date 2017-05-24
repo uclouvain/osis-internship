@@ -33,7 +33,7 @@ from base.models.entity_version import EntityVersion
 
 class EntityAdmin(admin.ModelAdmin):
     list_display = ('id', 'most_recent_acronym', 'external_id', 'organization')
-    search_fields = ['external_id']
+    search_fields = ['external_id', 'entityversion__acronym']
     readonly_fields = ('organization', 'external_id', 'most_recent_acronym', 'find_descendants')
 
 
@@ -77,9 +77,9 @@ class Entity(models.Model):
         return descendants
 
     def most_recent_acronym(self):
-        first_entity = EntityVersion.objects.filter(entity=self).order_by('-start_date').first()
-        if first_entity:
-            return first_entity.acronym
+        last_version = EntityVersion.objects.filter(entity=self).order_by('-start_date').first()
+        if last_version:
+            return last_version.acronym
         return None
 
 

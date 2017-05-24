@@ -33,7 +33,7 @@ from base.models.enums import entity_type
 
 class EntityVersionAdmin(admin.ModelAdmin):
     list_display = ('id', 'entity', 'acronym', 'title', 'entity_type', 'start_date', 'end_date',)
-    search_fields = ['entity', 'title', 'acronym', 'entity_type', 'start_date', 'end_date']
+    search_fields = ['entity__id', 'entity__external_id', 'title', 'acronym', 'entity_type', 'start_date', 'end_date']
     raw_id_fields = ('entity',)
 
 
