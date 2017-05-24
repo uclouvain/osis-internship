@@ -6,9 +6,7 @@ from django.test import TestCase, RequestFactory
 
 from base.tests.factories.academic_year import AcademicYearFactory
 from base.tests.factories.learning_unit_year import LearningUnitYearFactory
-from base.tests.factories.learning_class import LearningClassFactory
 from base.tests.factories.learning_class_year import LearningClassYearFactory
-from base.tests.factories.learning_component import LearningComponentFactory
 from base.tests.factories.learning_component_year import LearningComponentYearFactory
 from base.tests.factories.learning_container import LearningContainerFactory
 from base.tests.factories.learning_container_year import LearningContainerYearFactory
@@ -97,13 +95,9 @@ class LearningUnitViewTestCase(TestCase):
                                                               title="LC-98998",
                                                               learning_container=l_container)
         l_container_year.save()
-        l_component = LearningComponentFactory(learning_container=l_container)
-        l_component.save()
-        l_component_year = LearningComponentYearFactory(learning_container_year=l_container_year,
-                                                        learning_component=l_component)
-        l_class = LearningClassFactory(learning_component=l_component)
-        LearningClassYearFactory(learning_component_year=l_component_year, learning_class=l_class)
-        LearningClassYearFactory(learning_component_year=l_component_year, learning_class=l_class)
+        l_component_year = LearningComponentYearFactory(learning_container_year=l_container_year)
+        LearningClassYearFactory(learning_component_year=l_component_year)
+        LearningClassYearFactory(learning_component_year=l_component_year)
 
         components = learning_unit_view.get_components(l_container_year)
         self.assertEqual(len(components), 1)
