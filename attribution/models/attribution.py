@@ -29,6 +29,9 @@ from django.db.models import Q
 from attribution.models.enums import function
 from base.models.academic_year import current_academic_years
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
+from attribution.models import attribution_charge
+from base.models import learning_unit_component
+from base.models.enums import component_type
 
 
 class AttributionAdmin(SerializableModelAdmin):
@@ -55,6 +58,30 @@ class Attribution(SerializableModel):
 
     def __str__(self):
         return u"%s - %s" % (self.tutor.person, self.function)
+
+    @property
+    def duration(self):
+        if self.start_year and self.end_year:
+            return (self.end_year - self.start_year) + 1
+        return None
+
+    @property
+    def volume_lecturing(self):
+        return self.get_attribution(component_type.LECTURING)
+
+    @property
+    def volume_practical(self):
+        return self.get_attribution(component_type.PRACTICAL_EXERCISES)
+
+    def get_attribution(self, a_component_type):
+        a_learning_unit_component = learning_unit_component.find_by_learning_year_type(self.learning_unit_year,
+                                                                                       a_component_type)
+        if a_learning_unit_component:
+            attribution = attribution_charge.find_first_by_learning_unit_component(self,
+                                                                                  a_learning_unit_component)
+            if attribution:
+                return attribution.allocation_charge
+        return "{0:.2f}".format(float(0))
 
 
 def search(tutor=None, learning_unit_year=None, score_responsible=None, list_learning_unit_year=None):

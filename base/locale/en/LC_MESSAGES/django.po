@@ -1141,6 +1141,9 @@ msgstr "Select an excel file to inject scores."
 msgid "tooltip_to_my_messages"
 msgstr "Back to messages"
 
+msgid "tutor"
+msgstr "Tutor"
+
 msgid "tutors"
 msgstr "Tutors"
 
@@ -1456,12 +1459,6 @@ msgstr "Learning unit code"
 msgid "partims"
 msgstr "Partims"
 
-msgid "learning_unit_type"
-msgstr "Learning unit type"
-
-msgid "learning_unit_subtype"
-msgstr "Learning unit subtype"
-
 msgid "periodicity"
 msgstr "Periodicity"
 
@@ -1498,6 +1495,9 @@ msgstr "PhD Thesis"
 msgid "selected"
 msgstr "selected"
 
+msgid "learning_unit_specifications"
+msgstr "Specifications"
+
 msgid "LECTURING_COMPLETE"
 msgstr "Complete lecturing"
 
@@ -1524,3 +1524,9 @@ msgstr "Practical exercises"
 
 msgid "subtype"
 msgstr "Subtype"
+
+msgid "start"
+msgstr "Start"
+
+msgid "duration"
+msgstr "Duration"
