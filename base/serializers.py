@@ -68,15 +68,9 @@ class EntitySerializer(serializers.ModelSerializer):
             EntityAddress.objects.create(entity=entity, **address_data)
 
         for link_data in link_to_parent_data:
-            try:
-                EntityLink.objects.create(child=entity, **link_data)
-            except AttributeError:  # TODO : Décider que faire en cas d'erreur (link non-créé)
-                pass
+            EntityLink.objects.create(child=entity, **link_data)
 
         for version_data in versions_data:
-            try:
-                EntityVersion.objects.create(entity=entity, **version_data)
-            except AttributeError:  # TODO : Décider que faire en cas d'erreur (version non-créée)
-                pass
+            EntityVersion.objects.create(entity=entity, **version_data)
 
         return entity

@@ -51,8 +51,6 @@ class EntityViewTestCase(APITestCase):
 
     def test_create_valid_entity(self):
         organization = OrganizationFactory()
-        addresses = [EntityAddressFactory() for x in range(2)]
-        version = EntityVersionFactory()
         parent = EntityFactory()
         valid_entity = {
             'organization': organization.id,
@@ -64,27 +62,12 @@ class EntityViewTestCase(APITestCase):
                     "end_date": datetime.date(2015, 12, 31).isoformat()
                 },
             ],
-            'entityaddress_set': [
-                {
-                    "label": addresses[0].label,
-                    "location": addresses[0].location,
-                    "postal_code": addresses[0].postal_code,
-                    "city": addresses[0].city,
-                    "country": addresses[0].country
-                },
-                {
-                    "label": addresses[1].label,
-                    "location": addresses[1].location,
-                    "postal_code": addresses[1].postal_code,
-                    "city": addresses[1].city,
-                    "country": addresses[1].country
-                }
-            ],
+            'entityaddress_set': [],
             'entityversion_set': [
                 {
-                    "title": version.title,
-                    "acronym": version.acronym,
-                    "entity_type": version.entity_type,
+                    "title": "test",
+                    "acronym": "TST",
+                    "entity_type": "FACULTY",
                     "start_date": datetime.date(2015, 1, 1).isoformat(),
                     "end_date": datetime.date(2015, 12, 31).isoformat()
                 }
@@ -95,6 +78,7 @@ class EntityViewTestCase(APITestCase):
             data=json.dumps(valid_entity),
             content_type='application/json'
         )
+
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_create_invalid_entity(self):

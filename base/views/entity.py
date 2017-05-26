@@ -60,7 +60,10 @@ def create_full_entity(request):
     }
     entity_serializer = EntitySerializer(data=entity_data)
     if entity_serializer.is_valid():
-        entity_serializer.save()
+        try:
+            entity_serializer.save()
+        except AttributeError:
+            return Response(data=entity_serializer.errors, status=status.HTTP_406_NOT_ACCEPTABLE)
         return Response(data=entity_serializer.data, status=status.HTTP_201_CREATED)
     return Response(data=entity_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
