@@ -28,7 +28,7 @@ from base import models as mdl_base
 from attribution.models.enums import function
 
 
-def update_attributions_responsibles(request):
+def update_attributions_responsibles():
     academic_year = mdl_base.academic_year.current_academic_year()
     attributions = mdl_attr.attribution.Attribution.objects\
         .select_related('learning_unit_year')\
@@ -42,44 +42,27 @@ def update_attributions_responsibles(request):
         if len(responsibles) == 0:
             coordinators = [coordinator for coordinator in attributions if coordinator.function == function.COORDINATOR]
             if len(coordinators) == 0:
-                for attribution in attributions:
-                    if attribution.tutor == attributions[0].tutor:
-                        attribution.score_responsible = True
-                        attribution.save()
-                    else:
-                        attribution.score_responsible = False
-                        attribution.save()
+                select_default_responsible(attributions, attributions)
             else:
-                for attribution in attributions:
-                    if attribution.tutor == coordinators[0].tutor:
-                        attribution.score_responsible = True
-                        attribution.save()
-                    else:
-                        attribution.score_responsible = False
-                        attribution.save()
+                select_default_responsible(attributions, coordinators)
         elif len(responsibles) == 1:
-            for attribution in attributions:
-                if attribution.tutor == responsibles[0].tutor:
-                    attribution.score_responsible = True
-                    attribution.save()
-                else:
-                    attribution.score_responsible = False
-                    attribution.save()
+            select_default_responsible(attributions, responsibles)
         else:
             coordinators = [coordinator for coordinator in responsibles if coordinator.function == function.COORDINATOR]
             if len(coordinators) == 0:
-                for attribution in attributions:
-                    if attribution.tutor == responsibles[0].tutor:
-                        attribution.score_responsible = True
-                        attribution.save()
-                    else:
-                        attribution.score_responsible = False
-                        attribution.save()
+                select_default_responsible(attributions, responsibles)
             else:
-                for attribution in attributions:
-                    if attribution.tutor == coordinators[0].tutor:
-                        attribution.score_responsible = True
-                        attribution.save()
-                    else:
-                        attribution.score_responsible = False
-                        attribution.save()
+                select_default_responsible(attributions, coordinators)
+
+
+def select_default_responsible(attributions, coordinators):
+    for attribution in attributions:
+        if attribution.tutor == coordinators[0].tutor:
+            attribution.score_responsible = True
+            attribution.save()
+        else:
+            attribution.score_responsible = False
+            attribution.save()
+
+
+update_attributions_responsibles()
