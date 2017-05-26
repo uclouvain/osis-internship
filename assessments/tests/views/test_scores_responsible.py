@@ -29,6 +29,7 @@ from django.test import TestCase
 from assessments.views import scores_responsible
 from attribution.models import attribution
 from attribution.tests.models import test_attribution
+from base import models as mdl_base
 from base.tests.factories import academic_year, entity_manager, learning_unit_year, structure, tutor, user
 from base.tests.models.test_person import create_person_with_user
 
@@ -58,8 +59,8 @@ class ScoresResponsibleViewTestCase(TestCase):
                                                                         score_responsible=True)
 
     def test_is_faculty_admin(self):
-        a_faculty_administrator = scores_responsible.is_faculty_admin(self.user)
-        self.assertTrue(a_faculty_administrator)
+        entities_manager = scores_responsible.is_faculty_admin(self.user)
+        self.assertTrue(entities_manager)
 
     def test_scores_responsible(self):
         self.client.force_login(self.user)
@@ -83,7 +84,8 @@ class ScoresResponsibleViewTestCase(TestCase):
         self.assertEqual(len(response.context[-1]['dict_attribution']), 2)
 
     def test_create_attributions_list(self):
-        attributions_list = attribution.find_all_distinct_parents(self.structure)
+        entities_manager = mdl_base.entity_manager.find_all_entity_manager_by_user(self.user)
+        attributions_list = attribution.find_all_distinct_parents(entities_manager)
         dictionary = scores_responsible.create_attributions_list(attributions_list)
         self.assertIsNotNone(dictionary)
 

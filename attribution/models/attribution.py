@@ -169,16 +169,19 @@ def search_scores_responsible(learning_unit_title, course_code, attributions, tu
     return queryset.distinct("learning_unit_year")
 
 
-def find_all_distinct_parents(structure):
-    attributions_list = Attribution.objects \
-        .filter(learning_unit_year__structure=structure) \
-        .filter(learning_unit_year__academic_year=current_academic_years()) \
-        .select_related("learning_unit_year__structure") \
-        .distinct("learning_unit_year__structure")
-    for attribution in attributions_list:
-        attributions_list = list(chain(attributions_list,
-                                       find_all_distinct_children(attribution.learning_unit_year.structure)))
-    return attributions_list
+def find_all_distinct_parents(entities_manager):
+    attributions = list()
+    for entity_manager in entities_manager:
+        attributions_list = Attribution.objects \
+            .filter(learning_unit_year__structure=entity_manager.structure) \
+            .filter(learning_unit_year__academic_year=current_academic_years()) \
+            .select_related("learning_unit_year__structure") \
+            .distinct("learning_unit_year__structure")
+        for attribution in attributions_list:
+            attributions_list = list(chain(attributions_list,
+                                           find_all_distinct_children(attribution.learning_unit_year.structure)))
+        attributions = list(chain(attributions, attributions_list))
+    return attributions
 
 
 def find_all_distinct_children(structure):

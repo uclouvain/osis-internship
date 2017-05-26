@@ -30,16 +30,16 @@ from base.views import layout
 
 
 def is_faculty_admin(user):
-    a_faculty_administrator = mdl_base.entity_manager.find_entity_manager_by_user(user)
-    return a_faculty_administrator if a_faculty_administrator else False
+    entities_manager = mdl_base.entity_manager.find_entity_manager_by_user(user)
+    return entities_manager if entities_manager else False
 
 
 @login_required
 @user_passes_test(is_faculty_admin)
 def scores_responsible(request):
-    a_faculty_administrator = mdl_base.entity_manager.find_entity_manager_by_user(request.user)
+    entities_manager = mdl_base.entity_manager.find_all_entity_manager_by_user(request.user)
     academic_year = mdl_base.academic_year.current_academic_year()
-    return layout.render(request, 'scores_responsible.html', {"learning_unit_year_acronym": a_faculty_administrator.structure.acronym,
+    return layout.render(request, 'scores_responsible.html', {"entities_manager": entities_manager,
                                                               "academic_year": academic_year,
                                                               "init": "0"})
 
@@ -47,8 +47,8 @@ def scores_responsible(request):
 @login_required
 @user_passes_test(is_faculty_admin)
 def scores_responsible_search(request):
-    a_faculty_administrator = mdl_base.entity_manager.find_entity_manager_by_user(request.user)
-    attributions = mdl_attr.attribution.find_all_distinct_parents(a_faculty_administrator.structure)
+    entities_manager = mdl_base.entity_manager.find_all_entity_manager_by_user(request.user)
+    attributions = mdl_attr.attribution.find_all_distinct_parents(entities_manager)
     academic_year = mdl_base.academic_year.current_academic_year()
     attributions_searched = mdl_attr.attribution.search_scores_responsible(
         learning_unit_title=request.POST.get('learning_unit_title'),
@@ -57,7 +57,7 @@ def scores_responsible_search(request):
         tutor=request.POST.get('tutor'),
         scores_responsible=request.POST.get('scores_responsible'))
     dict_attribution = create_attributions_list(attributions_searched)
-    return layout.render(request, 'scores_responsible.html', {"learning_unit_year_acronym": a_faculty_administrator.structure.acronym,
+    return layout.render(request, 'scores_responsible.html', {"entities_manager": entities_manager,
                                                               "academic_year": academic_year,
                                                               "dict_attribution": dict_attribution,
                                                               "learning_unit_title": request.POST.get('learning_unit_title'),
