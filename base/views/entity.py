@@ -33,25 +33,8 @@ from base.models import entity_version
 from base.serializers import EntitySerializer
 
 
-@api_view(['GET'])
-def get_entity(request, pk):
-    try:
-        an_entity = Entity.objects.get(pk=pk)
-    except Entity.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-
-    if request.method == 'GET':
-        serializer = EntitySerializer(an_entity)
-        return Response(data=serializer.data)
-
-    elif request.method == 'DELETE':
-        return Response({})
-    elif request.method == 'PUT':
-        return Response({})
-
-
-@api_view(['GET', 'POST'])
-def get_post_entities(request):
+@api_view(['POST'])
+def post_entities(request):
     if request.method == 'GET':
         entities = Entity.objects.all()
         serializer = EntitySerializer(entities, many=True)

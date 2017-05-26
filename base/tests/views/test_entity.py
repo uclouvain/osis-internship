@@ -49,24 +49,6 @@ class EntityViewTestCase(APITestCase):
         self.client = APIClient()
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + token.key)
 
-    def test_get_all_entities(self):
-        response = self.client.get(reverse('get_post_entities'))
-        entities = Entity.objects.all()
-        serializer = EntitySerializer(entities, many=True)
-        self.assertEqual(response.data, serializer.data)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-    def test_get_valid_single_entity(self):
-        response = self.client.get(reverse('get_entity', kwargs={'pk': self.entities[0].pk}))
-        entity = Entity.objects.get(pk=self.entities[0].pk)
-        serializer = EntitySerializer(entity)
-        self.assertEqual(response.data, serializer.data)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-    def test_get_invalid_single_entity(self):
-        response = self.client.get(reverse('get_entity', kwargs={'pk': 65465465}))
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-
     def test_create_valid_entity(self):
         organization = OrganizationFactory()
         addresses = [EntityAddressFactory() for x in range(2)]
@@ -109,7 +91,7 @@ class EntityViewTestCase(APITestCase):
             ]
         }
         response = self.client.post(
-            reverse('get_post_entities'),
+            reverse('post_entities'),
             data=json.dumps(valid_entity),
             content_type='application/json'
         )
@@ -120,7 +102,7 @@ class EntityViewTestCase(APITestCase):
             'organization': 'zfeinvzepn',
         }
         response = self.client.post(
-            reverse('get_post_entities'),
+            reverse('post_entities'),
             data=json.dumps(invalid_entity),
             content_type='application/json'
         )
