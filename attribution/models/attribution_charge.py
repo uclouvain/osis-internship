@@ -63,7 +63,7 @@ def find_first_by_learning_unit_component(attribution=None, learning_unit_compon
     return search(attribution, learning_unit_component).first()
 
 
-def find_by_learning_unit_component(an_attribution=None, a_learning_unit_component_type=None):
+def find_by_component_type(an_attribution=None, a_learning_unit_component_type=None):
     return AttributionCharge.objects.filter(attribution=an_attribution,
                                             learning_unit_component__learning_unit_year=an_attribution.learning_unit_year,
                                             learning_unit_component__type=a_learning_unit_component_type).first()

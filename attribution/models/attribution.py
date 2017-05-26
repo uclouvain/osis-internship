@@ -74,7 +74,7 @@ class Attribution(SerializableModel):
         return self.get_attribution(component_type.PRACTICAL_EXERCISES)
 
     def get_attribution(self, a_component_type):
-        attribution = attribution_charge.find_by_learning_unit_component(self, a_component_type)
+        attribution = attribution_charge.find_by_component_type(self, a_component_type)
         if attribution:
             return attribution.allocation_charge
         return "{0:.2f}".format(float(0))
