@@ -85,7 +85,7 @@ class Entity(models.Model):
 
     def find_versions(self):
         versions = EntityVersion.objects.filter(entity=self).order_by('start_date')
-        return [v for v in versions]
+        return versions
 
 
 def search(**kwargs):
