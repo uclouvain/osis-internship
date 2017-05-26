@@ -55,11 +55,11 @@ class EntityTest(TestCase):
                 )
 
     def test_get_entity_direct_children_in_dates(self):
-        self.assertCountEqual(self.parent.get_direct_children(date=self.date_in_2015),
+        self.assertCountEqual(self.parent.find_direct_children(date=self.date_in_2015),
                               [self.children[x] for x in range(4)])
 
     def test_get_entity_direct_children_out_dates(self):
-        self.assertCountEqual(self.parent.get_direct_children(date=self.date_in_2017), [])
+        self.assertCountEqual(self.parent.find_direct_children(date=self.date_in_2017), [])
 
     def test_get_entity_direct_children_in_and_out_dates(self):
         in_2017_children = [EntityFactory() for x in range(4)]
@@ -70,7 +70,7 @@ class EntityTest(TestCase):
                 start_date=timezone.make_aware(datetime.datetime(2017, 1, 1)),
                 end_date=timezone.make_aware(datetime.datetime(2017, 12, 31))
                 )
-        self.assertCountEqual(self.parent.get_direct_children(date=self.date_in_2017),
+        self.assertCountEqual(self.parent.find_direct_children(date=self.date_in_2017),
                               [in_2017_children[x] for x in range(4)])
 
     def test_find_descendants(self):

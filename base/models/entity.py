@@ -34,7 +34,7 @@ from base.models.entity_version import EntityVersion
 class EntityAdmin(admin.ModelAdmin):
     list_display = ('id', 'most_recent_acronym', 'external_id', 'organization')
     search_fields = ['external_id', 'entityversion__acronym']
-    readonly_fields = ('organization', 'external_id', 'most_recent_acronym', 'find_descendants',
+    readonly_fields = ('organization', 'external_id', 'most_recent_acronym', 'find_direct_children', 'find_descendants',
                        'find_versions')
 
 
@@ -57,7 +57,7 @@ class Entity(models.Model):
                                          end_date__gte=date
                                          )
 
-    def get_direct_children(self, date=None):
+    def find_direct_children(self, date=None):
         qs = self._direct_children(date).select_related("child")
         return [entity_link.child for entity_link in qs]
 
@@ -70,7 +70,7 @@ class Entity(models.Model):
 
         descendants = []
         if self.count_direct_children(date) > 0:
-            direct_children = self.get_direct_children(date)
+            direct_children = self.find_direct_children(date)
             descendants.extend(direct_children)
             for child in direct_children:
                 descendants.extend(child.find_descendants(date))

@@ -42,6 +42,14 @@ class EntityLink(models.Model):
     start_date = models.DateField(db_index=True)
     end_date = models.DateField(db_index=True)
 
+    def __str__(self):
+        return "Parent : {} - Child : {} - {} to {}".format(
+            self.parent,
+            self.child,
+            self.start_date,
+            self.end_date
+        )
+
     def save(self, *args, **kwargs):
         if self.can_save_entity_link():
             super(EntityLink, self).save()
