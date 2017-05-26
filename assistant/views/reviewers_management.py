@@ -23,15 +23,18 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from assistant.models import manager, reviewer
+from assistant.models import manager, reviewer, review
 from django.core.urlresolvers import reverse
-from assistant.forms import MandatesArchivesForm, ReviewerForm
+from assistant.forms import MandatesArchivesForm, ReviewersFormset, ReviewerForm
 from django.views.generic import ListView
+from django.template import RequestContext
+from django.http import HttpResponseRedirect
+from django.forms.formsets import formset_factory
 from django.views.generic.edit import FormMixin
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import user_passes_test
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, render_to_response
 from base.models import academic_year, person
 from django.utils.translation import ugettext as _
 from assistant.utils import manager_access
@@ -56,12 +59,45 @@ class ReviewersListView(LoginRequiredMixin, UserPassesTestMixin, ListView, FormM
         context = super(ReviewersListView, self).get_context_data(**kwargs)
         return context
 
+@user_passes_test(manager_access.user_is_manager, login_url='assistants_home')
+def reviewers_index(request ):
+    all_reviewers = reviewer.find_reviewers()
+    initial_formset_content = [{'action': None,
+                                'structure': rev.structure,
+                                'role': rev.role,
+                                'person': rev.person,
+                                'id': rev.id,
+                                } for rev in all_reviewers]
+    reviewers_formset = formset_factory(ReviewersFormset, extra=0)(initial=initial_formset_content)
+    return render(request, "reviewers_list.html", {'reviewers_formset': reviewers_formset
+                                                   })
+
+
+@user_passes_test(manager_access.user_is_manager, login_url='assistants_home')
+def reviewer_action(request):
+    if request.POST:
+        reviewers_formset = formset_factory(ReviewersFormset)(request.POST, request.FILES)
+        if reviewers_formset.is_valid():
+            for reviewer_form in reviewers_formset:
+                action = reviewer_form.cleaned_data.get('action')
+                if  action == 'DELETE':
+                    reviewer_delete(request, reviewer_form.cleaned_data.get('id'))
+                elif action == 'REPLACE':
+                    reviewer_id = reviewer_form.cleaned_data.get('id')
+                    action = reviewer_form.cleaned_data.get('action')
+
+    return HttpResponseRedirect(reverse('reviewers_list'))
+
 
 @user_passes_test(manager_access.user_is_manager, login_url='assistants_home')
 def reviewer_delete(request, reviewer_id):
     reviewer_to_delete = reviewer.find_by_id(reviewer_id)
-    reviewer_to_delete.delete()
-    return redirect('reviewers_list')
+    reviews_number = review.find_by_reviewer(reviewer_to_delete).count()
+    if reviews_number == 0:
+        reviewer_to_delete.delete()
+    else :
+        msg = _("reviewer_already_made_reviews")
+    return HttpResponseRedirect(reverse('reviewers_list'))
 
 
 @user_passes_test(manager_access.user_is_manager, login_url='assistants_home')

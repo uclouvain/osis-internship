@@ -325,6 +325,27 @@ class ReviewerForm(ModelForm):
         exclude = ['person']
 
 
+class ReviewersFormset(ModelForm):
+    """
+    def __init__(self, *args, **kwargs):
+        super(ReviewersFormset, self).__init__(*args, **kwargs)
+        for key in self.fields.keys():
+            self.fields[key].widget.attrs['readonly'] = True
+    """
+    role = forms.ChoiceField(required=False)
+    structure = forms.ChoiceField(required=False)
+    person = forms.ChoiceField(required=False)
+    id = forms.IntegerField()
+
+    ACTIONS = (('-----', _('-----')),('DELETE', _('delete_reviewer')), ('REPLACE', _('replace_reviewer')))
+    action = forms.ChoiceField(required=False, choices=ACTIONS, initial=None,
+                               widget=forms.Select(attrs={'onchange': 'this.form.submit();'}))
+
+    class Meta:
+        model = mdl.reviewer.Reviewer
+        exclude = ('structure', 'role', 'person')
+
+
 class SettingsForm(ModelForm):
     starting_date = forms.DateField(required=True, widget=widgets.SelectDateWidget)
     ending_date = forms.DateField(required=True, widget=widgets.SelectDateWidget)
