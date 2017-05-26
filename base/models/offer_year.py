@@ -215,8 +215,6 @@ def search_offers(entity_list=None, academic_yr=None, an_offer_type=None):
 def offer_type_parameter(an_offer_type, queryset):
     if an_offer_type:
         queryset = queryset.filter(offer_type=an_offer_type)
-    else:
-        queryset = queryset.filter(offer_type__isnull=False)
     return queryset
 
 
