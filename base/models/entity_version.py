@@ -45,6 +45,15 @@ class EntityVersion(models.Model):
     start_date = models.DateField(db_index=True)
     end_date = models.DateField(db_index=True)
 
+    def __str__(self):
+        return "{} ({} - {} - {} to {})".format(
+            self.acronym,
+            self.title,
+            self.entity_type,
+            self.start_date,
+            self.end_date
+        )
+
     def save(self, *args, **kwargs):
         if self.can_save_entity_version():
             super(EntityVersion, self).save()
