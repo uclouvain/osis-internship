@@ -27,7 +27,7 @@ msgid "all_label"
 msgstr "All"
 
 msgid "pgm_mgr_administration"
-msgstr "Program managers administration"
+msgstr "Program managers"
 
 msgid "all_hierarchy"
 msgstr "All hierarchy of "

@@ -405,6 +405,7 @@ def pgm_to_keep_managing(a_person, programs):
 
 
 def _get_programs(academic_yr, entity_list, manager_person, an_offer_type):
+    print('_get_programs')
     if manager_person:
         pgms = _filter_by_person(manager_person, entity_list, academic_yr, an_offer_type)
     else:
