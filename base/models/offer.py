@@ -25,12 +25,14 @@
 ##############################################################################
 from django.db import models
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
+from base.models import offer_year
 
 
 class OfferAdmin(SerializableModelAdmin):
-    list_display = ('title', 'changed')
-    fieldsets = ((None, {'fields': ('title',)}),)
+    list_display = ('id', 'title', 'most_recent_offer_year', 'changed')
+    fieldsets = ((None, {'fields': ['title', 'most_recent_offer_year']}),)
     search_fields = ['title']
+    readonly_fields = ('most_recent_offer_year',)
 
 
 class Offer(SerializableModel):
@@ -46,6 +48,12 @@ class Offer(SerializableModel):
             ("can_access_offer", "Can access offer"),
             ("can_access_catalog", "Can access catalog"),
         )
+
+    def most_recent_offer_year(self):
+        last_offer_year = offer_year.OfferYear.objects.filter(offer=self).order_by('-academic_year__start_date').first()
+        if last_offer_year:
+            return "{} ({})".format(str(last_offer_year), last_offer_year.title)
+        return None
 
 
 def find_by_id(offer_id):
