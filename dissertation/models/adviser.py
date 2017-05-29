@@ -103,11 +103,10 @@ class Adviser(SerializableModel):
         list_stat[2] = advisers_copro.count()
         tab_offer_count_copro = {}
         for dissertaion_role_copro in advisers_copro:
-            if dissertaion_role_copro.dissertation.offer_year_start.offer.title in tab_offer_count_copro:
-                tab_offer_count_copro[dissertaion_role_copro.dissertation.offer_year_start.offer.title] = \
-                    tab_offer_count_copro[str(dissertaion_role_copro.dissertation.offer_year_start.offer.title)] + 1
+            if dissertaion_role_copro.dissertation.offer_year_start.offer in tab_offer_count_copro:
+                tab_offer_count_copro[dissertaion_role_copro.dissertation.offer_year_start.offer] += 1
             else:
-                tab_offer_count_copro[dissertaion_role_copro.dissertation.offer_year_start.offer.title] = 1
+                tab_offer_count_copro[dissertaion_role_copro.dissertation.offer_year_start.offer] = 1
 
         advisers_reader = queryset.filter(Q(adviser=self) &
                                           Q(status='READER') &
@@ -119,11 +118,10 @@ class Adviser(SerializableModel):
         list_stat[3] = advisers_reader.count()
         tab_offer_count_read = {}
         for dissertation_role_read in advisers_reader:
-            if dissertation_role_read.dissertation.offer_year_start.offer.title in tab_offer_count_read:
-                tab_offer_count_read[dissertation_role_read.dissertation.offer_year_start.offer.title] = \
-                    tab_offer_count_read[str(dissertation_role_read.dissertation.offer_year_start.offer.title)] + 1
+            if dissertation_role_read.dissertation.offer_year_start.offer in tab_offer_count_read:
+                tab_offer_count_read[dissertation_role_read.dissertation.offer_year_start.offer] += 1
             else:
-                tab_offer_count_read[dissertation_role_read.dissertation.offer_year_start.offer.title] = 1
+                tab_offer_count_read[dissertation_role_read.dissertation.offer_year_start.offer] = 1
 
         advisers_pro = queryset.filter(status='PROMOTEUR')\
                                .filter(Q(dissertation__active=True)) \
@@ -133,11 +131,10 @@ class Adviser(SerializableModel):
 
         tab_offer_count_pro = {}
         for dissertation_role_read in advisers_pro:
-            if dissertation_role_read.dissertation.offer_year_start.offer.title in tab_offer_count_pro:
-                tab_offer_count_pro[dissertation_role_read.dissertation.offer_year_start.offer.title] = \
-                    tab_offer_count_pro[str(dissertation_role_read.dissertation.offer_year_start.offer.title)] + 1
+            if dissertation_role_read.dissertation.offer_year_start.offer in tab_offer_count_pro:
+                tab_offer_count_pro[dissertation_role_read.dissertation.offer_year_start.offer] += 1
             else:
-                tab_offer_count_pro[dissertation_role_read.dissertation.offer_year_start.offer.title] = 1
+                tab_offer_count_pro[dissertation_role_read.dissertation.offer_year_start.offer] = 1
         return list_stat, tab_offer_count_read, tab_offer_count_copro, tab_offer_count_pro
 
     class Meta:
