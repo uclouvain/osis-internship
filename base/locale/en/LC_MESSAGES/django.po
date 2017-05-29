@@ -1532,10 +1532,16 @@ msgid "duration"
 msgstr "Duration"
 
 msgid "title_official_1"
-msgstr "Official title (part 1)"
+msgstr "Official title (Part 1, common with partims)"
 
 msgid "title_official_2"
-msgstr "Official title (part 2)"
+msgstr "Official title (Part 2, specific to each partim)"
 
 msgid "title_in_english"
-msgstr "Title in english"
+msgstr "Title in English"
+
+msgid "title_in_english_1"
+msgstr "(Part 1, common with partims)"
+
+msgid "title_in_english_2"
+msgstr "(Part 2, specific to each partim)"

@@ -91,19 +91,23 @@
                 <div class="col-md-8">
                     <br>
                     <label>{% trans 'title_official_1' %}</label><br>
-                    {% trans learning_unit_year.learning_container_year.title_official_1 %}title_official_1
+                    {{ learning_unit_year.learning_container_year.title | default_if_none:'' }}
                     <br><br>
                     <label>{% trans 'title_official_2' %}</label><br>
-                    {% trans learning_unit_year.title_official_2 %}title_official_2
+                    {% if learning_unit_year.subtype == 'PARTIM'%}
+                        {{learning_unit_year.title | default_if_none:''}}
+                    {% endif%}
                     <br><br>
-                    <label>{% trans 'title' %}</label><br>
-                    {% trans learning_unit_year.title %}title
+                    <label>{% trans 'title_in_english' %}{% trans 'title_in_english_1' %}</label><br>
+                    {{learning_unit_year.learning_container_year.title_english | default_if_none:'' }}
                     <br><br>
-                    <label>{% trans 'title_in_english' %}</label><br>
-                    {% trans learning_unit_year.title_in_english %}title_in_english
+                    <label>{% trans 'title_in_english' %}{% trans 'title_in_english_2' %}</label><br>
+                    {% if learning_unit_year.subtype == 'PARTIM'%}
+                        {{learning_unit_year.title_english | default_if_none:'' }}
+                    {% endif%}
                     <br><br>
                     <label>{% trans 'language' %}</label><br>
-                    {% trans learning_unit_year.language %}language
+                    {{learning_unit_year.learning_container_year.language | default_if_none:'' }}
                 </div>
                 <div class="col-md-4">
 

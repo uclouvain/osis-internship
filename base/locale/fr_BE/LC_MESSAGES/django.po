@@ -1531,4 +1531,10 @@ msgid "title_official_2"
 msgstr "Intitulé officiel (partie 2 propre au partim)"
 
 msgid "title_in_english"
-msgstr "Titre en anglais"
+msgstr "Intitulé en anglais"
+
+msgid "title_in_english_1"
+msgstr "(partie 1 commune aux partims)"
+
+msgid "title_in_english_2"
+msgstr "(partie 2 propre au partim)"
