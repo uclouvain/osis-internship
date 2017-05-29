@@ -74,13 +74,9 @@ class Attribution(SerializableModel):
         return self.get_attribution(component_type.PRACTICAL_EXERCISES)
 
     def get_attribution(self, a_component_type):
-        a_learning_unit_component = learning_unit_component.find_by_learning_year_type(self.learning_unit_year,
-                                                                                       a_component_type)
-        if a_learning_unit_component:
-            attribution = attribution_charge.find_first_by_learning_unit_component(self,
-                                                                                  a_learning_unit_component)
-            if attribution:
-                return attribution.allocation_charge
+        attribution = attribution_charge.find_by_component_type(self, a_component_type)
+        if attribution:
+            return attribution.allocation_charge
         return "{0:.2f}".format(float(0))
 
 
@@ -201,3 +197,11 @@ def clear_responsible_by_learning_unit_year(learning_unit_year):
 
 def find_by_id(attribution_id):
     return Attribution.objects.get(pk=attribution_id)
+
+
+def find_by_learning_unit_year(learning_unit_year=None):
+    queryset = Attribution.objects
+    if learning_unit_year:
+        queryset = queryset.filter(learning_unit_year=learning_unit_year)
+    return queryset.select_related('tutor__person', 'learning_unit_year')\
+        .order_by('tutor__person__last_name', 'tutor__person__first_name')
