@@ -35,9 +35,7 @@ from base.models import entity_version
 from base.models import exam_enrollment
 from base.models import external_offer
 from base.models import entity_manager
-from base.models import learning_class
 from base.models import learning_class_year
-from base.models import learning_component
 from base.models import learning_component_year
 from base.models import learning_container
 from base.models import learning_container_year
