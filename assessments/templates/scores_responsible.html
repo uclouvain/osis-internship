@@ -38,28 +38,28 @@
 </div>
 <div class="panel panel-default">
     <div class="panel-body">
-        <form method="post" action="{% url 'scores_responsible_search'%}">
+        <form method="get" action="{% url 'scores_responsible_search'%}">
             {% csrf_token %}
             <div class="row">
                 <div class="col-md-2 form-group">
                     <label for="txt_course_code">{% trans 'course_code' %}</label>
                     <input class="form-control" id="txt_course_code"  name="course_code"
-                           value="{{ course_code }}">
+                           value="{{ course_code|default_if_none:'' }}">
                 </div>
                 <div class="col-md-3 form-group">
                     <label for="txt_learning_unit_title">{% trans 'learning_unit_title' %}</label>
                     <input class="form-control" id="txt_learning_unit_title"  name="learning_unit_title"
-                           value="{{ learning_unit_title }}">
+                           value="{{ learning_unit_title|default_if_none:'' }}">
                 </div>
                 <div class="col-md-3 form-group">
                     <label for="txt_tutor">{% trans 'tutor' %}</label>
                     <input class="form-control" id="txt_tutor"  name="tutor"
-                           value="{{ tutor }}">
+                           value="{{ tutor|default_if_none:'' }}">
                 </div>
                 <div class="col-md-3 form-group">
                     <label for="txt_scores_responsible">{% trans 'scores_responsible' %}</label>
                     <input class="form-control" id="txt_scores_responsible"  name="scores_responsible"
-                           value="{{ scores_responsible }}">
+                           value="{{ scores_responsible|default_if_none:'' }}">
                 </div>
                 <div class="col-md-1 form-group" style="margin-top:25px">
                     <button type="submit" id="bt_submit_search" class="btn btn-primary" role="button"
@@ -67,7 +67,7 @@
                 </div>
             </div>
         </form>
-        <form method="post" action="{% url 'scores_responsible_management'%}">
+        <form method="get" action="{% url 'scores_responsible_management'%}">
             {% if dict_attribution|length == 0 and init == "1" %}
                 <label class="alert alert-info" style="margin:5px">{% trans 'no_result' %}</label>
             {% endif %}

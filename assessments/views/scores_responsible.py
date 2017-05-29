@@ -24,6 +24,8 @@
 #
 ##############################################################################
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.shortcuts import redirect
+
 from attribution import models as mdl_attr
 from base import models as mdl_base
 from base.views import layout
@@ -50,21 +52,40 @@ def scores_responsible_search(request):
     entities_manager = mdl_base.entity_manager.find_all_entity_manager_by_user(request.user)
     attributions = mdl_attr.attribution.find_all_distinct_parents(entities_manager)
     academic_year = mdl_base.academic_year.current_academic_year()
-    attributions_searched = mdl_attr.attribution.search_scores_responsible(
-        learning_unit_title=request.POST.get('learning_unit_title'),
-        course_code=request.POST.get('course_code'),
-        attributions=attributions,
-        tutor=request.POST.get('tutor'),
-        scores_responsible=request.POST.get('scores_responsible'))
-    dict_attribution = create_attributions_list(attributions_searched)
-    return layout.render(request, 'scores_responsible.html', {"entities_manager": entities_manager,
-                                                              "academic_year": academic_year,
-                                                              "dict_attribution": dict_attribution,
-                                                              "learning_unit_title": request.POST.get('learning_unit_title'),
-                                                              "course_code": request.POST.get('course_code'),
-                                                              "tutor": request.POST.get('tutor'),
-                                                              "scores_responsible": request.POST.get('scores_responsible'),
-                                                              "init": "1"})
+    if request.GET:
+        attributions_searched = mdl_attr.attribution.search_scores_responsible(
+            learning_unit_title=request.GET.get('learning_unit_title'),
+            course_code=request.GET.get('course_code'),
+            attributions=attributions,
+            tutor=request.GET.get('tutor'),
+            scores_responsible=request.GET.get('scores_responsible'))
+        dict_attribution = create_attributions_list(attributions_searched)
+        return layout.render(request, 'scores_responsible.html', {"entities_manager": entities_manager,
+                                                                  "academic_year": academic_year,
+                                                                  "dict_attribution": dict_attribution,
+                                                                  "learning_unit_title": request.GET.get('learning_unit_title'),
+                                                                  "course_code": request.GET.get('course_code'),
+                                                                  "tutor": request.GET.get('tutor'),
+                                                                  "scores_responsible": request.GET.get('scores_responsible'),
+                                                                  "init": "1"})
+    if request.POST:
+        attributions_searched = mdl_attr.attribution.search_scores_responsible(
+            learning_unit_title=request.POST.get('learning_unit_title'),
+            course_code=request.POST.get('course_code'),
+            attributions=attributions,
+            tutor=request.POST.get('tutor'),
+            scores_responsible=request.POST.get('scores_responsible'))
+        dict_attribution = create_attributions_list(attributions_searched)
+        return layout.render(request, 'scores_responsible.html', {"entities_manager": entities_manager,
+                                                                  "academic_year": academic_year,
+                                                                  "dict_attribution": dict_attribution,
+                                                                  "learning_unit_title": request.POST.get(
+                                                                      'learning_unit_title'),
+                                                                  "course_code": request.POST.get('course_code'),
+                                                                  "tutor": request.POST.get('tutor'),
+                                                                  "scores_responsible": request.POST.get(
+                                                                      'scores_responsible'),
+                                                                  "init": "1"})
 
 
 def create_attributions_list(attributions):
@@ -82,8 +103,8 @@ def create_attributions_list(attributions):
 @login_required
 @user_passes_test(is_faculty_admin)
 def scores_responsible_management(request):
-    if request.POST.get('action'):
-        list_id = request.POST.get('action').strip('list_')
+    if request.GET.get('action'):
+        list_id = request.GET.get('action').strip('list_')
         a_learning_unit_year = mdl_base.learning_unit_year.find_by_id(list_id)
         attributions = mdl_attr.attribution.find_all_responsible_by_learning_unit_year(a_learning_unit_year)
         academic_year = mdl_base.academic_year.current_academic_year()
@@ -91,20 +112,20 @@ def scores_responsible_management(request):
                              {'learning_unit_year': a_learning_unit_year,
                               'attributions': attributions,
                               "academic_year": academic_year,
-                              'course_code': request.POST.get('course_code'),
-                              'learning_unit_title': request.POST.get('learning_unit_title'),
-                              'tutor': request.POST.get('tutor'),
-                              'scores_responsible': request.POST.get('scores_responsible')})
+                              'course_code': request.GET.get('course_code'),
+                              'learning_unit_title': request.GET.get('learning_unit_title'),
+                              'tutor': request.GET.get('tutor'),
+                              'scores_responsible': request.GET.get('scores_responsible')})
 
 
 @login_required
 @user_passes_test(is_faculty_admin)
 def scores_responsible_add(request, pk):
-    if request.POST.get('action') == "add":
+    if request.GET.get('action') == "add":
         a_learning_unit_year = mdl_base.learning_unit_year.find_by_id(pk)
         mdl_attr.attribution.clear_responsible_by_learning_unit_year(a_learning_unit_year)
-        if request.POST.get('a_tutor'):
-            prf_id = request.POST.get('a_tutor').strip('prf_')
+        if request.GET.get('a_tutor'):
+            prf_id = request.GET.get('a_tutor').strip('prf_')
             attribution = mdl_attr.attribution.find_by_id(prf_id)
             attributions = mdl_attr.attribution.Attribution.objects \
                 .filter(learning_unit_year=attribution.learning_unit_year) \
