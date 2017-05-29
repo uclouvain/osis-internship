@@ -36,6 +36,7 @@ from dissertation.forms import ManagerDissertationForm, ManagerDissertationEditF
     ManagerDissertationUpdateForm, AdviserForm
 from openpyxl.writer.excel import save_virtual_workbook
 from openpyxl import Workbook
+from openpyxl.utils.exceptions import IllegalCharacterError
 from django.http import HttpResponse
 import time
 
@@ -324,19 +325,24 @@ def generate_xls(disserts):
                        'Description'
                        ])
     for dissert in disserts:
-        line = construct_line(dissert)
-        worksheet1.append(line)
+        try:
+            line = construct_line(dissert, include_description=True)
+            worksheet1.append(line)
+        except IllegalCharacterError:
+            line = construct_line(dissert, include_description=False)
+            worksheet1.append(line)
 
     return save_virtual_workbook(workbook)
 
 
-def construct_line(dissert):
+def construct_line(dissert, include_description=True):
     defend_year = dissert.defend_year if dissert.defend_year else '---'
-    description = dissert.description if dissert.description else '---'
+    description = dissert.description.encode('utf8', 'ignore') if dissert.description and include_description else '---'
+    title = dissert.title.encode('utf8', 'ignore')
 
     line = [dissert.creation_date,
             str(dissert.author),
-            dissert.title,
+            title,
             dissert.status,
             str(dissert.offer_year_start),
             defend_year
