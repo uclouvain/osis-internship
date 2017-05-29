@@ -23,14 +23,16 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import factory
-import factory.fuzzy
-from base.tests.factories.learning_container import LearningContainerFactory
+
+LECTURING = "LECTURING"
+STAGE = "STAGE"
+DISSERTATION = "DISSERTATION"
+PRACTICAL_EXERCISES = "PRACTICAL_EXERCISES"
 
 
-class LearningComponentFactory(factory.django.DjangoModelFactory):
-    class Meta:
-        model = "base.LearningComponent"
-
-    learning_container = factory.SubFactory(LearningContainerFactory)
-    acronym = factory.Sequence(lambda n: 'L-%d' % n)
+LEARNING_COMPONENT_YEAR_TYPES = (
+    (LECTURING, LECTURING),
+    (STAGE, STAGE),
+    (DISSERTATION, DISSERTATION),
+    (PRACTICAL_EXERCISES, PRACTICAL_EXERCISES),
+)
