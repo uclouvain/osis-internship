@@ -103,6 +103,9 @@ def manager_dissertations_detail(request, pk):
     proposition_roles = proposition_role.search_by_dissertation(dissert)
     offer_prop = offer_proposition.get_by_dissertation(dissert)
 
+    if offer_prop is None:
+        return redirect('manager_dissertations_list')
+
     files = dissertation_document_file.find_by_dissertation(dissert)
     filename = ""
     for file in files:
@@ -639,6 +642,9 @@ def dissertations_detail(request, pk):
     if teacher_can_see_dissertation(adv, dissert):
         count_dissertation_role = dissertation_role.count_by_dissertation(dissert)
         offer_prop = offer_proposition.get_by_dissertation(dissert)
+        if offer_prop is None:
+            return redirect('dissertations_list')
+
         promotors_count = dissertation_role.count_by_status_dissertation('PROMOTEUR', dissert)
 
         files = dissertation_document_file.find_by_dissertation(dissert)
@@ -769,9 +775,8 @@ def dissertations_role_delete(request, pk):
     dissert = dissert_role.dissertation
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
-
-    if teacher_is_promotor(adv, dissert):
-        offer_prop = offer_proposition.get_by_dissertation(dissert)
+    offer_prop = offer_proposition.get_by_dissertation(dissert)
+    if offer_prop is not None and teacher_is_promotor(adv, dissert):
         if offer_prop.adviser_can_suggest_reader and role_can_be_deleted(dissert, dissert_role):
             justification = "%s %s" % ("teacher_delete_jury", str(dissert_role))
             dissertation_update.add(request, dissert, dissert.status, justification=justification)
@@ -786,10 +791,9 @@ def dissertations_jury_new(request, pk):
     dissert = get_object_or_404(Dissertation, pk=pk)
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
-
-    if teacher_is_promotor(adv, dissert):
+    offer_prop = offer_proposition.get_by_dissertation(dissert)
+    if offer_prop is not None and teacher_is_promotor(adv, dissert):
         count_dissertation_role = dissertation_role.count_by_dissertation(dissert)
-        offer_prop = offer_proposition.get_by_dissertation(dissert)
         if count_dissertation_role < 4 and offer_prop.adviser_can_suggest_reader:
             if request.method == "POST":
                 form = ManagerDissertationRoleForm(request.POST)
