@@ -188,7 +188,7 @@ def generate_reviewer_menu_tabs(role, mandate, active_item: None):
     except:
         review_is_done = False
     for state, order in sorted(mandate_states.items()):
-        if state == role and review_is_done is False:
+        if state in role and review_is_done is False:
             if active_item == state:
                 menu.append({'item': state, 'class': 'active', 'action': 'edit'})
             else:
