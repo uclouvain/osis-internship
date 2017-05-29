@@ -32,7 +32,8 @@ def update_attributions_responsibles():
     academic_year = mdl_base.academic_year.current_academic_year()
     attributions = mdl_attr.attribution.Attribution.objects\
         .select_related('learning_unit_year')\
-        .filter(learning_unit_year__academic_year=academic_year).order_by('learning_unit_year__id', 'tutor__person__last_name', 'tutor__person__first_name')
+        .filter(learning_unit_year__academic_year=academic_year)\
+        .order_by('learning_unit_year__id', 'tutor__person__last_name', 'tutor__person__first_name')
     dict_attribution = dict()
     for attribution in attributions:
         key = attribution.learning_unit_year.id
@@ -48,6 +49,12 @@ def update_attributions_responsibles():
         elif len(responsibles) == 1:
             select_default_responsible(attributions, responsibles)
         else:
+            for attribution in attributions:
+                for responsible in responsibles:
+                    if attribution.tutor == responsible.tutor:
+                        attribution.score_responsible = True
+                        attribution.save()
+            responsibles = [responsible for responsible in attributions if responsible.score_responsible]
             coordinators = [coordinator for coordinator in responsibles if coordinator.function == function.COORDINATOR]
             if len(coordinators) == 0:
                 select_default_responsible(attributions, responsibles)
@@ -55,9 +62,9 @@ def update_attributions_responsibles():
                 select_default_responsible(attributions, coordinators)
 
 
-def select_default_responsible(attributions, coordinators):
+def select_default_responsible(attributions, attributions_list):
     for attribution in attributions:
-        if attribution.tutor == coordinators[0].tutor:
+        if attribution.tutor == attributions_list[0].tutor:
             attribution.score_responsible = True
             attribution.save()
         else:
