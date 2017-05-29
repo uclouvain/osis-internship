@@ -52,8 +52,6 @@ if 'dissertation' in settings.INSTALLED_APPS:
     urlpatterns += (url(r'^dissertation/', include('dissertation.urls')), )
 if 'assessments' in settings.INSTALLED_APPS:
     urlpatterns += (url(r'^assessments/', include('assessments.urls')), )
-if 'rest_framework' in settings.INSTALLED_APPS:
-    urlpatterns += (url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),)
 
 handler404 = 'base.views.common.page_not_found'
 handler403 = 'base.views.common.access_denied'
