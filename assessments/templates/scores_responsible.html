@@ -39,7 +39,6 @@
 <div class="panel panel-default">
     <div class="panel-body">
         <form method="get" action="{% url 'scores_responsible_search'%}">
-            {% csrf_token %}
             <div class="row">
                 <div class="col-md-2 form-group">
                     <label for="txt_course_code">{% trans 'course_code' %}</label>

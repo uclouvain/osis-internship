@@ -24,6 +24,8 @@
 #
 ##############################################################################
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
 
 from attribution import models as mdl_attr
@@ -68,24 +70,6 @@ def scores_responsible_search(request):
                                                                   "tutor": request.GET.get('tutor'),
                                                                   "scores_responsible": request.GET.get('scores_responsible'),
                                                                   "init": "1"})
-    if request.POST:
-        attributions_searched = mdl_attr.attribution.search_scores_responsible(
-            learning_unit_title=request.POST.get('learning_unit_title'),
-            course_code=request.POST.get('course_code'),
-            attributions=attributions,
-            tutor=request.POST.get('tutor'),
-            scores_responsible=request.POST.get('scores_responsible'))
-        dict_attribution = create_attributions_list(attributions_searched)
-        return layout.render(request, 'scores_responsible.html', {"entities_manager": entities_manager,
-                                                                  "academic_year": academic_year,
-                                                                  "dict_attribution": dict_attribution,
-                                                                  "learning_unit_title": request.POST.get(
-                                                                      'learning_unit_title'),
-                                                                  "course_code": request.POST.get('course_code'),
-                                                                  "tutor": request.POST.get('tutor'),
-                                                                  "scores_responsible": request.POST.get(
-                                                                      'scores_responsible'),
-                                                                  "init": "1"})
 
 
 def create_attributions_list(attributions):
@@ -121,11 +105,11 @@ def scores_responsible_management(request):
 @login_required
 @user_passes_test(is_faculty_admin)
 def scores_responsible_add(request, pk):
-    if request.GET.get('action') == "add":
+    if request.POST.get('action') == "add":
         a_learning_unit_year = mdl_base.learning_unit_year.find_by_id(pk)
         mdl_attr.attribution.clear_responsible_by_learning_unit_year(a_learning_unit_year)
-        if request.GET.get('a_tutor'):
-            prf_id = request.GET.get('a_tutor').strip('prf_')
+        if request.POST.get('a_tutor'):
+            prf_id = request.POST.get('a_tutor').strip('prf_')
             attribution = mdl_attr.attribution.find_by_id(prf_id)
             attributions = mdl_attr.attribution.Attribution.objects \
                 .filter(learning_unit_year=attribution.learning_unit_year) \
@@ -133,4 +117,6 @@ def scores_responsible_add(request, pk):
             for a_attribution in attributions:
                 a_attribution.score_responsible = True
                 a_attribution.save()
-    return scores_responsible_search(request)
+    url = reverse('scores_responsible_search')
+    return HttpResponseRedirect(url + "?course_code=%s&learning_unit_title=%s&tutor=%s&scores_responsible=%s" % (request.POST.get('course_code'), request.POST.get('learning_unit_title'), request.POST.get('tutor'), request.POST.get('scores_responsible')))
+

@@ -37,7 +37,7 @@
 </div>
 <div class="panel panel-default">
     <div class="panel-body">
-        <form method="get" action="{% url 'scores_responsible_add' pk=learning_unit_year.id %}">
+        <form method="post" action="{% url 'scores_responsible_add' pk=learning_unit_year.id %}">
             {% csrf_token %}
             <table class="table table-hover">
                 <thead>
