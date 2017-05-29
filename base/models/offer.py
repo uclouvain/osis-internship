@@ -49,11 +49,14 @@ class Offer(SerializableModel):
             ("can_access_catalog", "Can access catalog"),
         )
 
-    def most_recent_offer_year(self):
+    def get_most_recent_offer_year(self):
         last_offer_year = offer_year.OfferYear.objects.filter(offer=self).order_by('-academic_year__start_date').first()
         if last_offer_year:
-            return "{} ({})".format(str(last_offer_year), last_offer_year.title)
+            return last_offer_year
         return None
+
+    def most_recent_offer_year(self):
+        return "{} ({})".format(str(self.get_most_recent_offer_year()), self.get_most_recent_offer_year().title)
 
 
 def find_by_id(offer_id):
