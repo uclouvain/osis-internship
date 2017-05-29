@@ -47,6 +47,7 @@ class LearningComponentYear(models.Model):
     planned_classes = models.IntegerField(blank=True, null=True)
     hourly_volume_total = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
     hourly_volume_partial = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
+    deleted = models.BooleanField(default=False)
 
     def __str__(self):
         return u"%s - %s" % (self.acronym, self.title)
