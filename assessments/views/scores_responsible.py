@@ -81,11 +81,12 @@ def create_attributions_list(attributions):
 
 @login_required
 @user_passes_test(is_faculty_admin)
-def scores_responsible_management(request, pk):
-    a_learning_unit_year = mdl_base.learning_unit_year.find_by_id(pk)
-    attributions = mdl_attr.attribution.find_all_responsible_by_learning_unit_year(a_learning_unit_year)
-    academic_year = mdl_base.academic_year.current_academic_year()
-    if request.POST:
+def scores_responsible_management(request):
+    if request.POST.get('action'):
+        list_id = request.POST.get('action').strip('list_')
+        a_learning_unit_year = mdl_base.learning_unit_year.find_by_id(list_id)
+        attributions = mdl_attr.attribution.find_all_responsible_by_learning_unit_year(a_learning_unit_year)
+        academic_year = mdl_base.academic_year.current_academic_year()
         return layout.render(request, 'scores_responsible_edit.html',
                              {'learning_unit_year': a_learning_unit_year,
                               'attributions': attributions,
