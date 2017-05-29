@@ -35,12 +35,7 @@ from base.serializers import EntitySerializer
 
 @api_view(['POST'])
 def post_entities(request):
-    if request.method == 'GET':
-        entities = Entity.objects.all()
-        serializer = EntitySerializer(entities, many=True)
-        return Response(data=serializer.data)
-
-    elif request.method == 'POST':
+    if request.method == 'POST':
         existing_entity = entity.get_by_external_id(request.data.get('external_id'))
 
         if existing_entity is None:
@@ -48,6 +43,8 @@ def post_entities(request):
 
         else:
             return update_existing_entity(existing_entity, request)
+    else:
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
 def create_full_entity(request):
