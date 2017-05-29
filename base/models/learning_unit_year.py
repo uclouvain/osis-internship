@@ -54,6 +54,8 @@ class LearningUnitYear(SerializableModel):
     structure = models.ForeignKey('Structure', blank=True, null=True)
     activity_status = models.CharField(max_length=20, blank=True, null=True,
                                        choices=learning_unit_year_activity_status.LEARNING_UNIT_YEAR_ACTIVITY_STATUS)
+    title_official_2 = models.CharField(max_length=250, blank=True, null=True)
+    title_in_english= models.CharField(max_length=250, blank=True, null=True)
 
     def __str__(self):
         return u"%s - %s" % (self.academic_year, self.acronym)
