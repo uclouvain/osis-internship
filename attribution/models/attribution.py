@@ -90,8 +90,7 @@ def search(tutor=None, learning_unit_year=None, score_responsible=None, list_lea
         queryset = queryset.filter(score_responsible=score_responsible)
     if list_learning_unit_year:
         queryset = queryset.filter(learning_unit_year__in=list_learning_unit_year)
-    return queryset.select_related('tutor__person', 'learning_unit_year')\
-        .order_by('tutor__person__last_name', 'tutor__person__first_name' )
+    return queryset.select_related('tutor__person', 'learning_unit_year')
 
 
 def find_all_responsibles_by_learning_unit_year(a_learning_unit_year):
@@ -198,3 +197,11 @@ def clear_responsible_by_learning_unit_year(learning_unit_year):
 
 def find_by_id(attribution_id):
     return Attribution.objects.get(pk=attribution_id)
+
+
+def find_by_learning_unit_year(learning_unit_year=None):
+    queryset = Attribution.objects
+    if learning_unit_year:
+        queryset = queryset.filter(learning_unit_year=learning_unit_year)
+    return queryset.select_related('tutor__person', 'learning_unit_year')\
+        .order_by('tutor__person__last_name', 'tutor__person__first_name')
