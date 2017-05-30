@@ -203,6 +203,24 @@ class PgmManagerAdministrationTest(TestCase):
     def test_get_not_entity_root(self):
         self.assertIsNone(pgm_manager_administration.get_entity_root(1))
 
+    @mock.patch('django.contrib.auth.decorators')
+    def test_get_entity_root_selected_all(self, mock_decorators):
+        mock_decorators.login_required = lambda x: x
+        request_factory = RequestFactory()
+        post_request = request_factory.get('/pgm_manager/search', {'entity': 'all_ESPO'})
+        post_request.user = mock.Mock()
+        self.assertEqual(pgm_manager_administration.get_entity_root_selected(post_request), 'ESPO')
+
+    @mock.patch('django.contrib.auth.decorators')
+    def test_get_entity_root_selected(self, mock_decorators):
+        mock_decorators.login_required = lambda x: x
+        request_factory = RequestFactory()
+        post_request = request_factory.post('/pgm_manager/search', {'entity': '2',
+                                                                    'entity_root': '2'})
+        post_request.user = mock.Mock()
+        self.assertEqual(pgm_manager_administration.get_entity_root_selected(post_request), '2')
+
+
 def add_permission(user, codename):
     perm = get_permission(codename)
     user.user_permissions.add(perm)
