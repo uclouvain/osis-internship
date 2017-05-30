@@ -83,7 +83,6 @@
                     </thead>
                     <tbody>
                         {% for key, value_list in dict_attribution.items %}
-                            {% csrf_token %}
                             <tr>
                                 <td>{{ value_list.1 }}</td>
                                 <td>{{ value_list.2 }}</td>
@@ -117,7 +116,7 @@
                                 </td>
                                 <td>
                                     <button type="submit" id="bt_submit_edit" class="btn btn-default pull-right" role="button"
-                                        title="{% trans 'edit' %}" name="action" value="list_{{ value_list.0 }}"><span class="glyphicon glyphicon-edit"></span></button>
+                                        title="{% trans 'edit' %}" name="id" value="learning_unit_year_{{ value_list.0 }}"><span class="glyphicon glyphicon-edit"></span></button>
                                 </td>
                             </tr>
                             <input type="hidden" id="hdn_course_code" name="course_code" value="{{ course_code }}">

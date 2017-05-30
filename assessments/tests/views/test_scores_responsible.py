@@ -24,6 +24,8 @@
 #
 ##############################################################################
 import datetime
+from operator import concat
+
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 from assessments.views import scores_responsible
@@ -71,15 +73,16 @@ class ScoresResponsibleViewTestCase(TestCase):
     def test_scores_responsible_search_with_many_elements(self):
         self.client.force_login(self.user)
         url = reverse('scores_responsible_search')
-        response = self.client.post(url, {"tutor": self.tutor.person.first_name,
-                                          "course_code": "LBIR121"})
+        response = self.client.get(url+"?course_code=%s&learning_unit_title=%s&tutor=%s&scores_responsible=%s"
+                                   % ("LBIR121", "", self.tutor.person.last_name, ""))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.context[-1]['dict_attribution']), 2)
 
     def test_scores_responsible_search_without_elements(self):
         self.client.force_login(self.user)
         url = reverse('scores_responsible_search')
-        response = self.client.post(url)
+        response = self.client.get(url+"?course_code=%s&learning_unit_title=%s&tutor=%s&scores_responsible=%s"
+                                   % ("", "", "", ""))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.context[-1]['dict_attribution']), 2)
 
@@ -91,8 +94,8 @@ class ScoresResponsibleViewTestCase(TestCase):
 
     def test_scores_responsible_management(self):
         self.client.force_login(self.user)
-        url = reverse('scores_responsible_management', args=[self.learning_unit_year.id])
-        response = self.client.post(url, {"tutor": ''})
+        url = reverse('scores_responsible_management')
+        response = self.client.get(url, data={'id': "learning_unit_year_"+str(self.learning_unit_year.id)})
         self.assertEqual(response.status_code, 200)
 
     def test_scores_responsible_add(self):
@@ -101,7 +104,7 @@ class ScoresResponsibleViewTestCase(TestCase):
         prf_id = 'prf_' + str(self.attribution.id)
         response = self.client.post(url, {"action": "add",
                                           "a_tutor": prf_id})
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)
 
     def test_scores_responsible_cancel(self):
         self.client.force_login(self.user)
@@ -109,4 +112,4 @@ class ScoresResponsibleViewTestCase(TestCase):
         prf_id = 'prf_' + str(self.attribution.id)
         response = self.client.post(url, {"action": "cancel",
                                           "a_tutor": prf_id})
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)

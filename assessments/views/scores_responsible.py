@@ -26,8 +26,6 @@
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
-from django.shortcuts import redirect
-
 from attribution import models as mdl_attr
 from base import models as mdl_base
 from base.views import layout
@@ -87,19 +85,18 @@ def create_attributions_list(attributions):
 @login_required
 @user_passes_test(is_faculty_admin)
 def scores_responsible_management(request):
-    if request.GET.get('action'):
-        list_id = request.GET.get('action').strip('list_')
-        a_learning_unit_year = mdl_base.learning_unit_year.find_by_id(list_id)
-        attributions = mdl_attr.attribution.find_all_responsible_by_learning_unit_year(a_learning_unit_year)
-        academic_year = mdl_base.academic_year.current_academic_year()
-        return layout.render(request, 'scores_responsible_edit.html',
-                             {'learning_unit_year': a_learning_unit_year,
-                              'attributions': attributions,
-                              "academic_year": academic_year,
-                              'course_code': request.GET.get('course_code'),
-                              'learning_unit_title': request.GET.get('learning_unit_title'),
-                              'tutor': request.GET.get('tutor'),
-                              'scores_responsible': request.GET.get('scores_responsible')})
+    learning_unit_year_id = request.GET.get('id').strip('learning_unit_year_')
+    a_learning_unit_year = mdl_base.learning_unit_year.find_by_id(learning_unit_year_id)
+    attributions = mdl_attr.attribution.find_all_responsible_by_learning_unit_year(a_learning_unit_year)
+    academic_year = mdl_base.academic_year.current_academic_year()
+    return layout.render(request, 'scores_responsible_edit.html',
+                         {'learning_unit_year': a_learning_unit_year,
+                          'attributions': attributions,
+                          "academic_year": academic_year,
+                          'course_code': request.GET.get('course_code'),
+                          'learning_unit_title': request.GET.get('learning_unit_title'),
+                          'tutor': request.GET.get('tutor'),
+                          'scores_responsible': request.GET.get('scores_responsible')})
 
 
 @login_required
@@ -118,5 +115,8 @@ def scores_responsible_add(request, pk):
                 a_attribution.score_responsible = True
                 a_attribution.save()
     url = reverse('scores_responsible_search')
-    return HttpResponseRedirect(url + "?course_code=%s&learning_unit_title=%s&tutor=%s&scores_responsible=%s" % (request.POST.get('course_code'), request.POST.get('learning_unit_title'), request.POST.get('tutor'), request.POST.get('scores_responsible')))
-
+    return HttpResponseRedirect(url + "?course_code=%s&learning_unit_title=%s&tutor=%s&scores_responsible=%s"
+                                % (request.POST.get('course_code'),
+                                   request.POST.get('learning_unit_title'),
+                                   request.POST.get('tutor'),
+                                   request.POST.get('scores_responsible')))
