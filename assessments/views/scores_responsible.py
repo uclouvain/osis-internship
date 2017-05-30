@@ -115,9 +115,9 @@ def scores_responsible_add(request, pk):
     if request.POST.get('action') == "add":
         a_learning_unit_year = mdl_base.learning_unit_year.find_by_id(pk)
         mdl_attr.attribution.clear_responsible_by_learning_unit_year(a_learning_unit_year)
-        if request.POST.get('a_tutor'):
-            tutor_id = request.POST.get('a_tutor').strip('tutor_')
-            attribution = mdl_attr.attribution.find_by_id(tutor_id)
+        if request.POST.get('attribution'):
+            attribution_id = request.POST.get('attribution').strip('attribution_')
+            attribution = mdl_attr.attribution.find_by_id(attribution_id)
             attributions = mdl_attr.attribution.Attribution.objects \
                 .filter(learning_unit_year=attribution.learning_unit_year) \
                 .filter(tutor=attribution.tutor)

@@ -99,15 +99,15 @@ class ScoresResponsibleViewTestCase(TestCase):
     def test_scores_responsible_add(self):
         self.client.force_login(self.user)
         url = reverse('scores_responsible_add', args=[self.learning_unit_year.id])
-        prf_id = 'prf_' + str(self.attribution.id)
+        attribution_id = 'attribution_' + str(self.attribution.id)
         response = self.client.post(url, {"action": "add",
-                                          "a_tutor": prf_id})
+                                          "attribution_id": attribution_id})
         self.assertEqual(response.status_code, 302)
 
     def test_scores_responsible_cancel(self):
         self.client.force_login(self.user)
         url = reverse('scores_responsible_add', args=[self.learning_unit_year.id])
-        prf_id = 'prf_' + str(self.attribution.id)
+        attribution_id = 'attribution_' + str(self.attribution.id)
         response = self.client.post(url, {"action": "cancel",
-                                          "a_tutor": prf_id})
+                                          "attribution_id": attribution_id})
         self.assertEqual(response.status_code, 302)
