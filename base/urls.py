@@ -48,7 +48,7 @@ urlpatterns = [
         url(r'^storage/$', common.storage, name='storage'),
     ])),
 
-    url(r'^api/v1/entity/$', entity.post_entities, name='post_entities'),
+    url(r'^api/v1/entities/$', entity.post_entities, name='post_entities'),
 
     url(r'^catalog/$', common.catalog, name='catalog'),
 
