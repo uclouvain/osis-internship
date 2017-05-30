@@ -1530,3 +1530,6 @@ msgstr "Start"
 
 msgid "duration"
 msgstr "Duration"
+
+msgid "experimental_phase"
+msgstr "This feature is in testing phase"
