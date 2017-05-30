@@ -39,7 +39,7 @@ def is_faculty_admin(user):
 @login_required
 @user_passes_test(is_faculty_admin)
 def scores_responsible(request):
-    entities_manager = mdl_base.entity_manager.find_all_entity_manager_by_user(request.user)
+    entities_manager = mdl_base.entity_manager.find_by_user(request.user)
     academic_year = mdl_base.academic_year.current_academic_year()
     return layout.render(request, 'scores_responsible.html', {"entities_manager": entities_manager,
                                                               "academic_year": academic_year,
@@ -49,7 +49,7 @@ def scores_responsible(request):
 @login_required
 @user_passes_test(is_faculty_admin)
 def scores_responsible_search(request):
-    entities_manager = mdl_base.entity_manager.find_all_entity_manager_by_user(request.user)
+    entities_manager = mdl_base.entity_manager.find_by_user(request.user)
     attributions = mdl_attr.attribution.find_all_distinct_parents(entities_manager)
     academic_year = mdl_base.academic_year.current_academic_year()
     if request.GET:
@@ -89,7 +89,7 @@ def create_attributions_list(attributions):
 @login_required
 @user_passes_test(is_faculty_admin)
 def scores_responsible_management(request):
-    entities_manager = mdl_base.entity_manager.find_all_entity_manager_by_user(request.user)
+    entities_manager = mdl_base.entity_manager.find_by_user(request.user)
     learning_unit_year_id = request.GET.get('id').strip('learning_unit_year_')
     a_learning_unit_year = mdl_base.learning_unit_year.find_by_id(learning_unit_year_id)
     attributions = mdl_attr.attribution.find_all_distinct_parents(entities_manager)

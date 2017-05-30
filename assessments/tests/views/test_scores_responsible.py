@@ -24,8 +24,6 @@
 #
 ##############################################################################
 import datetime
-from operator import concat
-
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 from assessments.views import scores_responsible
@@ -87,7 +85,7 @@ class ScoresResponsibleViewTestCase(TestCase):
         self.assertEqual(len(response.context[-1]['dict_attribution']), 2)
 
     def test_create_attributions_list(self):
-        entities_manager = mdl_base.entity_manager.find_all_entity_manager_by_user(self.user)
+        entities_manager = mdl_base.entity_manager.find_by_user(self.user)
         attributions_list = attribution.find_all_distinct_parents(entities_manager)
         dictionary = scores_responsible.create_attributions_list(attributions_list)
         self.assertIsNotNone(dictionary)
