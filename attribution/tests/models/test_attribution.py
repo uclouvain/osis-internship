@@ -23,10 +23,13 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+import datetime
 from django.test import TestCase
 from django.contrib.auth.models import User
-from base.tests.models import test_academic_year, test_learning_unit_year, test_tutor, test_person
+from base.tests.factories import tutor, user, structure, entity_manager, academic_year, learning_unit_year
+from base.tests.models import test_learning_unit_year, test_tutor
 from attribution.models import attribution
+from base.tests.models.test_person import create_person_with_user
 
 
 def create_attribution(tutor, learning_unit_year, score_responsible=False):
@@ -37,56 +40,51 @@ def create_attribution(tutor, learning_unit_year, score_responsible=False):
 
 
 class AttributionTest(TestCase):
+    def setUp(self):
+        self.user = user.UserFactory()
+        self.user.save()
+        self.person = create_person_with_user(self.user)
+        self.structure = structure.StructureFactory()
+        self.structure_children = structure.StructureFactory(part_of=self.structure)
+        self.entity_manager = entity_manager.EntityManagerFactory(person=self.person, structure=self.structure)
+        self.tutor = tutor.TutorFactory(person=self.person)
+        self.academic_year = academic_year.AcademicYearFactory(year=datetime.date.today().year,
+                                                               start_date=datetime.date.today())
+        self.learning_unit_year = learning_unit_year.LearningUnitYearFactory(structure=self.structure,
+                                                                             acronym="LBIR1210",
+                                                                             academic_year=self.academic_year)
+        self.learning_unit_year_children = learning_unit_year.LearningUnitYearFactory(structure=self.structure_children,
+                                                                                      acronym="LBIR1211",
+                                                                                      academic_year=self.academic_year)
+        self.learning_unit_year_without_attribution = learning_unit_year.LearningUnitYearFactory(structure=self.structure,
+                                                                                                 acronym="LBIR1212",
+                                                                                                 academic_year=self.academic_year)
+        self.attribution = create_attribution(tutor=self.tutor,
+                                              learning_unit_year=self.learning_unit_year,
+                                              score_responsible=True)
+        self.attribution_children = create_attribution(tutor=self.tutor,
+                                                       learning_unit_year=self.learning_unit_year_children,
+                                                       score_responsible=False)
+
+    def test_search(self):
+        attributions = attribution.search(tutor=self.tutor,
+                                          learning_unit_year=self.learning_unit_year,
+                                          score_responsible=True,
+                                          list_learning_unit_year=None)
+        self.assertEqual(attributions[0].tutor, self.tutor)
 
     def test_find_responsible(self):
-        academic_year = test_academic_year.create_academic_year()
-        learning_unit_year = test_learning_unit_year.create_learning_unit_year('LDROI', 'Droit', academic_year)
-        first_coordinator = test_tutor.create_tutor(first_name="Jane", last_name="Phonda")
-        second_coordinator = test_tutor.create_tutor(first_name="Marie", last_name="Jane")
-        third_coordinator = test_tutor.create_tutor(first_name="John", last_name="Smith")
-        teacher = test_tutor.create_tutor(first_name="Joseph", last_name="Miller")
-
-        create_attribution(first_coordinator, learning_unit_year, True)
-        create_attribution(second_coordinator, learning_unit_year, True)
-        create_attribution(third_coordinator, learning_unit_year, True)
-        create_attribution(teacher, learning_unit_year)
-
-        responsible = attribution.find_responsible(learning_unit_year)
-
-        self.assertEqual(responsible.person.first_name, first_coordinator.person.first_name)
+        responsible = attribution.find_responsible(self.learning_unit_year)
+        self.assertEqual(responsible.person.first_name, self.tutor.person.first_name)
 
     def test_find_responsible_without_attribution(self):
-        academic_year = test_academic_year.create_academic_year()
-        learning_unit_year = test_learning_unit_year.create_learning_unit_year('LDROI', 'Droit', academic_year)
-        self.assertIsNone(attribution.find_responsible(learning_unit_year))
+        self.assertIsNone(attribution.find_responsible(self.learning_unit_year_without_attribution))
 
-    def test_find_responsible_without_resposible(self):
-        academic_year = test_academic_year.create_academic_year()
-        learning_unit_year = test_learning_unit_year.create_learning_unit_year('LDROI', 'Droit', academic_year)
-        first_teacher = test_tutor.create_tutor(first_name="John", last_name="Smith")
-        second_teacher = test_tutor.create_tutor(first_name="Marie", last_name="Jane")
-
-        create_attribution(first_teacher, learning_unit_year)
-        create_attribution(second_teacher, learning_unit_year)
-
-        self.assertIsNone(attribution.find_responsible(learning_unit_year))
+    def test_find_responsible_without_responsible(self):
+        self.assertIsNone(attribution.find_responsible(self.learning_unit_year_without_attribution))
 
     def test_is_score_responsible(self):
-        academic_year = test_academic_year.create_academic_year()
-        learning_unit_year = test_learning_unit_year.create_learning_unit_year('LDROI', 'Droit', academic_year)
-
-        user = User(first_name="John", last_name="Smith")
-        user.save()
-        person = test_person.create_person_with_user(user)
-        tutor = test_tutor.create_tutor_with_person(person)
-        create_attribution(tutor, learning_unit_year, True)
-
-        self.assertTrue(attribution.is_score_responsible(user, learning_unit_year))
+        self.assertTrue(attribution.is_score_responsible(self.user, self.learning_unit_year))
 
     def test_is_score_responsible_without_attribution(self):
-        academic_year = test_academic_year.create_academic_year()
-        learning_unit_year = test_learning_unit_year.create_learning_unit_year('LDROI', 'Droit', academic_year)
-
-        user = User()
-
-        self.assertFalse(attribution.is_score_responsible(user, learning_unit_year))
+        self.assertFalse(attribution.is_score_responsible(self.user, self.learning_unit_year_without_attribution))
