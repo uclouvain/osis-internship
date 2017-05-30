@@ -27,4 +27,9 @@ class Migration(migrations.Migration):
             name='start_date',
             field=models.DateTimeField(null=True),
         ),
+        migrations.AddField(
+            model_name='organization',
+            name='code',
+            field=models.CharField(blank=True, max_length=50, null=True),
+        ),
     ]
