@@ -43,10 +43,9 @@ class LearningContainerYear(models.Model):
     container_type = models.CharField(max_length=20, blank=True, null=True,
                                       choices=learning_container_year_types.LEARNING_CONTAINER_YEAR_TYPES)
     title = models.CharField(max_length=255)
-    title_english= models.CharField(max_length=250, blank=True, null=True)
+    title_english = models.CharField(max_length=250, blank=True, null=True)
     acronym = models.CharField(max_length=10)
     changed = models.DateTimeField(null=True)
-
     language = models.ForeignKey('reference.Language', blank=True, null=True)
 
     def __str__(self):

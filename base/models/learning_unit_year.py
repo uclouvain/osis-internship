@@ -44,7 +44,7 @@ class LearningUnitYear(SerializableModel):
     changed = models.DateTimeField(null=True)
     acronym = models.CharField(max_length=15, db_index=True)
     title = models.CharField(max_length=255)
-    title_english= models.CharField(max_length=250, blank=True, null=True)
+    title_english = models.CharField(max_length=250, blank=True, null=True)
     subtype = models.CharField(max_length=20, blank=True, null=True,
                                choices=learning_unit_year_subtypes.LEARNING_UNIT_YEAR_SUBTYPES)
     credits = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)

@@ -10,7 +10,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('reference', '0016_auto_20170410_1318'),
-        ('base', '0121_auto_20170518_0959'),
+        ('base', '0124_entity_models_update'),
     ]
 
     operations = [
