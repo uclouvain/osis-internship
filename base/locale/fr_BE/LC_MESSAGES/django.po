@@ -978,9 +978,6 @@ msgstr "Injection des notes"
 msgid "scores_responsible"
 msgstr "Responsable(s) de notes"
 
-msgid "scores_responsibles_administration"
-msgstr "Responsables de notes des programmes"
-
 msgid "scores_saved"
 msgstr "note(s) enregistrée(s)"
 

@@ -44,9 +44,6 @@ msgstr "Selectionner/dé-sélectionnner tout"
 msgid "pgm_managers"
 msgstr "Gestionnaires de programmes"
 
-msgid "srm_managers"
-msgstr "Gestionnaires de responsables de notes"
-
 msgid "desc_lnk_srm_managers"
 msgstr "Permet d'administrer la liste des responsables de notes qui ont accès à l'encodage en ligne"
 
