@@ -27,7 +27,7 @@ from datetime import datetime
 
 from django.contrib.auth.models import Permission
 from django.contrib.auth.models import User
-from django.test import TestCase, Client
+from django.test import TestCase, Client, RequestFactory
 
 from assessments.views import pgm_manager_administration
 from base.models import program_manager
@@ -38,6 +38,10 @@ from base.tests.factories.structure import StructureFactory
 from base.tests.factories.offer_year import OfferYearFactory
 from base.tests.factories.academic_year import AcademicYearFactory
 from base.tests.factories.offer_type import OfferTypeFactory
+from base.tests.factories.offer_type import OfferTypeFactory
+from base.tests.factories.entity_manager import EntityManagerFactory
+from unittest import mock
+from django.core.urlresolvers import reverse
 
 
 class PgmManagerAdministrationTest(TestCase):
@@ -166,6 +170,39 @@ class PgmManagerAdministrationTest(TestCase):
                                                                                      self.academic_year_current)), 1)
 
 
+    def test_get_administrator_entities(self):
+        a_person = PersonFactory(user=self.user)
+        root_acronyms =['A', 'B']
+        child_acronyms =['AA', 'BB']
+
+        structure_root_1 = StructureFactory(acronym=root_acronyms[0])
+
+        StructureFactory(acronym=child_acronyms[0], part_of=structure_root_1)
+        StructureFactory(acronym=child_acronyms[1], part_of=structure_root_1)
+
+        structure_root_2 = StructureFactory(acronym=root_acronyms[1])
+
+        EntityManagerFactory(person=a_person,
+                             structure=structure_root_1)
+        EntityManagerFactory(person=a_person,
+                             structure=structure_root_2)
+
+        data = pgm_manager_administration.get_administrator_entities(self.user)
+        self.assertEqual(data[0]['root'], structure_root_1)
+        self.assertEqual(len(data[0]['structures']), 3)
+        self.assertEqual(data[1]['root'], structure_root_2)
+        self.assertEqual(len(data[1]['structures']), 1)
+
+    def test_get_entity_root(self):
+        a_structure = StructureFactory()
+        self.assertEqual(pgm_manager_administration.get_entity_root(a_structure.id), a_structure)
+
+    def test_get_entity_root_with_none(self):
+        self.assertIsNone(pgm_manager_administration.get_entity_root(None))
+
+    def test_get_not_entity_root(self):
+        self.assertIsNone(pgm_manager_administration.get_entity_root(1))
+
 def add_permission(user, codename):
     perm = get_permission(codename)
     user.user_permissions.add(perm)
@@ -173,3 +210,6 @@ def add_permission(user, codename):
 
 def get_permission(codename):
     return Permission.objects.get(codename=codename)
+
+
+
