@@ -167,13 +167,15 @@ def add(person, type_arg, available_by_email, available_by_phone, available_at_o
     return adv
 
 
-def is_manager(user):
+def _has_role(user, role):
     pers = person.find_by_user(user)
     this_adviser = search_by_person(pers)
-    return this_adviser.type == 'MGR' if this_adviser else False
+    return this_adviser.type == role if this_adviser else False
+
+
+def is_manager(user):
+    return _has_role(user, 'MGR')
 
 
 def is_teacher(user):
-    pers = person.find_by_user(user)
-    this_adviser = search_by_person(pers)
-    return this_adviser.type == 'PRF' if this_adviser else False
+    return _has_role(user, 'PRF')
