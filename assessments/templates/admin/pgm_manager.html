@@ -306,6 +306,7 @@
                 url: "/assessments/update_managers_list?pgm_ids=" + ch
 
             }).then(function (data) {
+                $('#tb_managers tbody > tr').remove();
                 if (data.length > 0) {
                     var trHTML = '';
                     $.each(data, function (key, value) {

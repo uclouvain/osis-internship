@@ -36,6 +36,7 @@ from dissertation.forms import ManagerDissertationForm, ManagerDissertationEditF
     ManagerDissertationUpdateForm, AdviserForm
 from openpyxl.writer.excel import save_virtual_workbook
 from openpyxl import Workbook
+from openpyxl.utils.exceptions import IllegalCharacterError
 from django.http import HttpResponse
 import time
 
@@ -102,6 +103,9 @@ def manager_dissertations_detail(request, pk):
     count_proposition_role = proposition_role.count_by_dissertation(dissert)
     proposition_roles = proposition_role.search_by_dissertation(dissert)
     offer_prop = offer_proposition.get_by_dissertation(dissert)
+
+    if offer_prop is None:
+        return redirect('manager_dissertations_list')
 
     files = dissertation_document_file.find_by_dissertation(dissert)
     filename = ""
@@ -321,19 +325,24 @@ def generate_xls(disserts):
                        'Description'
                        ])
     for dissert in disserts:
-        line = construct_line(dissert)
-        worksheet1.append(line)
+        try:
+            line = construct_line(dissert, include_description=True)
+            worksheet1.append(line)
+        except IllegalCharacterError:
+            line = construct_line(dissert, include_description=False)
+            worksheet1.append(line)
 
     return save_virtual_workbook(workbook)
 
 
-def construct_line(dissert):
+def construct_line(dissert, include_description=True):
     defend_year = dissert.defend_year if dissert.defend_year else '---'
-    description = dissert.description if dissert.description else '---'
+    description = dissert.description.encode('utf8', 'ignore') if dissert.description and include_description else '---'
+    title = dissert.title.encode('utf8', 'ignore')
 
     line = [dissert.creation_date,
             str(dissert.author),
-            dissert.title,
+            title,
             dissert.status,
             str(dissert.offer_year_start),
             defend_year
@@ -639,6 +648,9 @@ def dissertations_detail(request, pk):
     if teacher_can_see_dissertation(adv, dissert):
         count_dissertation_role = dissertation_role.count_by_dissertation(dissert)
         offer_prop = offer_proposition.get_by_dissertation(dissert)
+        if offer_prop is None:
+            return redirect('dissertations_list')
+
         promotors_count = dissertation_role.count_by_status_dissertation('PROMOTEUR', dissert)
 
         files = dissertation_document_file.find_by_dissertation(dissert)
@@ -769,9 +781,8 @@ def dissertations_role_delete(request, pk):
     dissert = dissert_role.dissertation
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
-
-    if teacher_is_promotor(adv, dissert):
-        offer_prop = offer_proposition.get_by_dissertation(dissert)
+    offer_prop = offer_proposition.get_by_dissertation(dissert)
+    if offer_prop is not None and teacher_is_promotor(adv, dissert):
         if offer_prop.adviser_can_suggest_reader and role_can_be_deleted(dissert, dissert_role):
             justification = "%s %s" % ("teacher_delete_jury", str(dissert_role))
             dissertation_update.add(request, dissert, dissert.status, justification=justification)
@@ -786,10 +797,9 @@ def dissertations_jury_new(request, pk):
     dissert = get_object_or_404(Dissertation, pk=pk)
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
-
-    if teacher_is_promotor(adv, dissert):
+    offer_prop = offer_proposition.get_by_dissertation(dissert)
+    if offer_prop is not None and teacher_is_promotor(adv, dissert):
         count_dissertation_role = dissertation_role.count_by_dissertation(dissert)
-        offer_prop = offer_proposition.get_by_dissertation(dissert)
         if count_dissertation_role < 4 and offer_prop.adviser_can_suggest_reader:
             if request.method == "POST":
                 form = ManagerDissertationRoleForm(request.POST)

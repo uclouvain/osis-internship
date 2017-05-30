@@ -29,7 +29,8 @@ from django.contrib import admin
 
 class EntityAddressAdmin(admin.ModelAdmin):
     list_display = ('entity', 'label', 'location', 'postal_code', 'city', 'country', )
-    search_fields = ['entity', 'label', 'location', 'postal_code', 'city', 'country']
+    search_fields = ['entity__id', 'entity__external_id', 'entity__entityversion__acronym', 'label', 'location',
+                     'postal_code', 'city', 'country']
     raw_id_fields = ('entity', )
 
 

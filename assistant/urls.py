@@ -133,7 +133,7 @@ urlpatterns = [
         url(r'^delegate/(?P<structure_id>\d+)/add/$', reviewer_delegation.add_reviewer_for_structure,
             name='reviewer_delegation_add'),
         url(r'^review/(?P<mandate_id>\d+)/', include([
-            url(r'^(?P<role>[\w{}.-]{1,40})/$', reviewer_review.review_view, name='review_view'),
+            url(r'^(?P<role>[\w{}.-]{1,40})/view/$', reviewer_review.review_view, name='review_view'),
             url(r'^edit/$', reviewer_review.review_edit, name='review_edit'),
             url(r'^(?P<review_id>\d+)/save/$', reviewer_review.review_save, name='review_save'),
         ])),

@@ -979,7 +979,7 @@ msgid "scores_responsible"
 msgstr "Responsable(s) de notes"
 
 msgid "scores_responsibles_administration"
-msgstr "Administration des responsables de notes de programmes"
+msgstr "Responsables de notes des programmes"
 
 msgid "scores_saved"
 msgstr "note(s) enregistrée(s)"

@@ -83,11 +83,10 @@ urlpatterns = [
             name='scores_responsible'),
         url(r'^scores_responsible_search$', scores_responsible.scores_responsible_search,
             name='scores_responsible_search'),
-        url(r'^scores_responsible_management/(?P<pk>[0-9]+)/edit/$', scores_responsible.scores_responsible_management,
+        url(r'^scores_responsible_management/edit/$', scores_responsible.scores_responsible_management,
             name='scores_responsible_management'),
         url(r'^scores_responsible_add/(?P<pk>[0-9]+)/$', scores_responsible.scores_responsible_add,
             name='scores_responsible_add'),
-        url(r'^scores_responsible_management$', scores_responsible.scores_responsible_list),
     ])),
 
     url(r'^update_managers_list/$', pgm_manager_administration.update_managers_list),
