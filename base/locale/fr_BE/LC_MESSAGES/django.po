@@ -1524,6 +1524,9 @@ msgstr "Durée"
 msgid "learning_unit_specifications"
 msgstr "Cahier de charges"
 
+msgid "experimental_phase"
+msgstr "Cette fonctionnalité est en phase expérimentale"
+
 msgid "title_official_1"
 msgstr "Intitulé officiel (partie 1 commune aux partims)"
 
