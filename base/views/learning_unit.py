@@ -118,7 +118,7 @@ def learning_unit_pedagogy(request, learning_unit_year_id):
 @permission_required('base.can_access_learningunit', raise_exception=True)
 def learning_unit_attributions(request, learning_unit_year_id):
     context = _get_common_context_learning_unit_year(learning_unit_year_id)
-    context['attributions'] = mdl_attr.attribution.search(learning_unit_year=learning_unit_year_id)
+    context['attributions'] = mdl_attr.attribution.find_by_learning_unit_year(learning_unit_year=learning_unit_year_id)
     return layout.render(request, "learning_unit/attributions.html", context)
 
 

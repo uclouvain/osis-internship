@@ -24,6 +24,7 @@
 #
 ##############################################################################
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.utils import timezone
 from base.models import offer
@@ -85,7 +86,12 @@ class OfferProposition(SerializableModel):
 
 
 def get_by_offer(an_offer):
-    return OfferProposition.objects.get(offer=an_offer)
+    try:
+        offer_proposition = OfferProposition.objects.get(offer=an_offer)
+    except ObjectDoesNotExist:
+        offer_proposition = None
+
+    return offer_proposition
 
 
 def search_by_offer(offers):
