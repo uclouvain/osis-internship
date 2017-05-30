@@ -41,7 +41,6 @@
 </div>
 <div class="panel panel-default">
     <div class="panel-body">
-
         <form action="{% url 'reviewer_action' %}" method="post">
             {% csrf_token %}
             {{ reviewers_formset.management_form }}
@@ -49,7 +48,7 @@
         <table id="myTable" class="table table-hover table-condensed table-bordered" cellspacing="0" width="100%">
         <thead>
         <tr>
-        <th>{{ msg }}{% trans 'name' %}</th>
+        <th>{% trans 'name' %}</th>
         <th>{% trans 'structure' %}</th>
         <th>{% trans 'role' %}</th>
         <th>{% trans 'action' %}</th>
@@ -58,7 +57,7 @@
         <tbody>
         {% for reviewer in reviewers_formset %}
             <tr>
-            <td>{{ reviewer.person.value }}</td>
+            <td>{{ reviewer.person.value }}{{ reviewer.access }}</td>
             <td>{{ reviewer.structure.value }}</td>
             <td>{{ reviewer.role.value }}</td>
             <td>{{ reviewer.action }}</td>

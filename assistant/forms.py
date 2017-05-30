@@ -325,21 +325,24 @@ class ReviewerForm(ModelForm):
         exclude = ['person']
 
 
+class ReviewerReplacementForm(ModelForm):
+    person = forms.ChoiceField(required=False)
+    id = forms.CharField(widget=forms.HiddenInput())
+
+    class Meta:
+        model = mdl.reviewer.Reviewer
+        fields = ('person', 'id')
+        exclude = ('structure', 'role')
+
+
 class ReviewersFormset(ModelForm):
-    """
-    def __init__(self, *args, **kwargs):
-        super(ReviewersFormset, self).__init__(*args, **kwargs)
-        for key in self.fields.keys():
-            self.fields[key].widget.attrs['readonly'] = True
-    """
     role = forms.ChoiceField(required=False)
     structure = forms.ChoiceField(required=False)
     person = forms.ChoiceField(required=False)
-    id = forms.IntegerField()
-
-    ACTIONS = (('-----', _('-----')),('DELETE', _('delete_reviewer')), ('REPLACE', _('replace_reviewer')))
-    action = forms.ChoiceField(required=False, choices=ACTIONS, initial=None,
-                               widget=forms.Select(attrs={'onchange': 'this.form.submit();'}))
+    id = forms.IntegerField(required=False)
+    ACTIONS = (('-----', _('-----')), ('DELETE', _('delete_reviewer')), ('REPLACE', _('replace_reviewer')))
+    action = forms.ChoiceField(required=False, choices=ACTIONS,
+                               widget=forms.Select(attrs={'class': 'selector', 'onchange': 'this.form.submit();'}))
 
     class Meta:
         model = mdl.reviewer.Reviewer
