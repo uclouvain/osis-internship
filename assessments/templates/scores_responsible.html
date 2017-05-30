@@ -33,7 +33,8 @@
 {% endblock %}
 {% block content %}
 <div class="page-header">
-    <h2>{% trans 'scores_responsibles_administration' %} {{learning_unit_year_acronym}}</h2>
+    <h2>{% trans 'scores_responsibles_administration' %} -
+        <label>{% for entity in entities_manager %}{% if forloop.last %}{{entity.structure.acronym}}{% else %}{{entity.structure.acronym}}, {% endif %}{% endfor %}</label> ({{ academic_year }})</h2>
 </div>
 <div class="panel panel-default">
     <div class="panel-body">
@@ -42,22 +43,22 @@
                 <div class="col-md-2 form-group">
                     <label for="txt_course_code">{% trans 'course_code' %}</label>
                     <input class="form-control" id="txt_course_code"  name="course_code"
-                           value="{% if course_code %}{{ course_code }}{% else %}{% endif %}">
+                           value="{{ course_code|default_if_none:'' }}">
                 </div>
                 <div class="col-md-3 form-group">
                     <label for="txt_learning_unit_title">{% trans 'learning_unit_title' %}</label>
                     <input class="form-control" id="txt_learning_unit_title"  name="learning_unit_title"
-                           value="{% if learning_unit_title %}{{ learning_unit_title }}{% else %}{{ request.GET.search }}{% endif %}">
+                           value="{{ learning_unit_title|default_if_none:'' }}">
                 </div>
                 <div class="col-md-3 form-group">
                     <label for="txt_tutor">{% trans 'tutor' %}</label>
                     <input class="form-control" id="txt_tutor"  name="tutor"
-                           value="{% if tutor %}{{ tutor }}{% else %}{{ request.GET.search }}{% endif %}">
+                           value="{{ tutor|default_if_none:'' }}">
                 </div>
                 <div class="col-md-3 form-group">
                     <label for="txt_scores_responsible">{% trans 'scores_responsible' %}</label>
                     <input class="form-control" id="txt_scores_responsible"  name="scores_responsible"
-                           value="{% if scores_responsible %}{{ scores_responsible }}{% else %}{{ request.GET.search }}{% endif %}">
+                           value="{{ scores_responsible|default_if_none:'' }}">
                 </div>
                 <div class="col-md-1 form-group" style="margin-top:25px">
                     <button type="submit" id="bt_submit_search" class="btn btn-primary" role="button"
@@ -65,59 +66,68 @@
                 </div>
             </div>
         </form>
-        <div class="row form-group"  {% if dict_attribution|length > 0 %}style="visibility:visible;display:block;"{%else%}style="visibility:hidden;display:none;"{% endif %}>
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th>{% trans 'entity' %}</th>
-                        <th>{% trans 'course_code' %}</th>
-                        <th>{% trans 'learning_unit_title' %}</th>
-                        <th>{% trans 'tutor' %}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for key, value_list in dict_attribution.items %}
+        <form method="get" action="{% url 'scores_responsible_management'%}">
+            {% if dict_attribution|length == 0 and init == "1" %}
+                <label class="alert alert-info" style="margin:5px">{% trans 'no_result' %}</label>
+            {% endif %}
+            <div {% if dict_attribution|length > 0 %}style="visibility:visible;display:block;"{%else%}style="visibility:hidden;display:none;"{% endif %}>
+                <table class="table table-hover">
+                    <thead>
                         <tr>
-                            <td>{{ value_list.1 }}</td>
-                            <td>{{ value_list.2 }}</td>
-                            <td>{{ value_list.3 }}</td>
-                            <td>
-                                {% if value_list.4 %}
-                                    {% for value in value_list.4 %}
-                                        {% if forloop.first %}
-                                            <p {% if value.1 == True %} style="font-weight:bold;" {% endif %}>
-                                                - {{ value.0 }}
-                                                {% if value_list.4|length > 1 %}
-                                                    <a role="button" data-toggle="collapse" data-target="#list_{{ value_list.2 }}"
-                                                       aria-expanded="false"
-                                                       aria-controls="tutors_by_course"
-                                                       title="{% trans 'display_tutors' %}">
-                                                        <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
-                                                    </a>
-                                                {% endif %}
-                                            </p>
-                                            <div id="list_{{ value_list.2 }}" class="panel-collapse collapse">
-                                        {% else %}
-                                            <p {% if value.1 == True %} style="font-weight:bold;" {% endif %}>
-                                                - {{ value.0 }}
-                                            </p>
-                                        {% endif %}
-                                    {% endfor %}
-                                    </div>
-                                {% else %}
-                                    {% trans 'without_attribution' %}
-                                {% endif %}
-                            </td>
-                            <td>
-                                <a class="btn btn-default pull-right" href="{% url 'scores_responsible_management' pk=value_list.0 %}" style="margin-right: 5px;">
-                                    <span class="glyphicon glyphicon-edit"></span>
-                                </a>
-                            </td>
+                            <th>{% trans 'entity' %}</th>
+                            <th>{% trans 'course_code' %}</th>
+                            <th>{% trans 'learning_unit_title' %}</th>
+                            <th>{% trans 'tutor' %}</th>
+                            <th></th>
                         </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+                    </thead>
+                    <tbody>
+                        {% for key, value_list in dict_attribution.items %}
+                            <tr>
+                                <td>{{ value_list.1 }}</td>
+                                <td>{{ value_list.2 }}</td>
+                                <td>{{ value_list.3 }}</td>
+                                <td>
+                                    {% if value_list.4 %}
+                                        {% for value in value_list.4 %}
+                                            {% if forloop.first %}
+                                                <p {% if value.1 == True %} style="font-weight:bold;" {% endif %}>
+                                                    - {{ value.0 }}
+                                                    {% if value_list.4|length > 1 %}
+                                                        <a role="button" data-toggle="collapse" data-target="#list_{{ value_list.2 }}"
+                                                           aria-expanded="false"
+                                                           aria-controls="tutors_by_course"
+                                                           title="{% trans 'display_tutors' %}">
+                                                            <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+                                                        </a>
+                                                    {% endif %}
+                                                </p>
+                                                <div id="list_{{ value_list.2 }}" class="panel-collapse collapse">
+                                            {% else %}
+                                                <p {% if value.1 == True %} style="font-weight:bold;" {% endif %}>
+                                                    - {{ value.0 }}
+                                                </p>
+                                            {% endif %}
+                                        {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {% trans 'without_attribution' %}
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <button type="submit" id="bt_submit_edit" class="btn btn-default pull-right" role="button"
+                                        title="{% trans 'edit' %}" name="id" value="learning_unit_year_{{ value_list.0 }}"><span class="glyphicon glyphicon-edit"></span></button>
+                                </td>
+                            </tr>
+                            <input type="hidden" id="hdn_course_code" name="course_code" value="{{ course_code }}">
+                            <input type="hidden" id="hdn_learning_unit_title" name="learning_unit_title" value="{{ learning_unit_title }}">
+                            <input type="hidden" id="hdn_tutor" name="tutor" value="{{ tutor }}">
+                            <input type="hidden" id="hdn_scores_responsible" name="scores_responsible" value="{{ scores_responsible }}">
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </form>
     </div>
 </div>
 {% endblock %}
