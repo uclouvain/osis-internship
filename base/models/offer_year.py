@@ -230,3 +230,10 @@ def entity_list_parameter(entity_list, queryset):
     if entity_list:
         queryset = queryset.filter(entity_management__in=entity_list)
     return queryset
+
+
+def get_last_offer_year_by_offer(an_offer):
+    last_offer_year = OfferYear.objects.filter(offer=an_offer).order_by('-academic_year__start_date').first()
+    if last_offer_year:
+        return last_offer_year
+    return None
