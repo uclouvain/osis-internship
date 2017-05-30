@@ -41,4 +41,14 @@ class Migration(migrations.Migration):
             name='external_id',
             field=models.CharField(max_length=255, unique=True),
         ),
+        migrations.AlterField(
+            model_name='entitylink',
+            name='end_date',
+            field=models.DateField(db_index=True, null=True),
+        ),
+        migrations.AlterField(
+            model_name='entityversion',
+            name='end_date',
+            field=models.DateField(db_index=True, null=True),
+        ),
     ]

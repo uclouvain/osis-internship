@@ -40,7 +40,7 @@ class EntityLink(models.Model):
     parent = models.ForeignKey('Entity', related_name='links_to_children')
     child = models.ForeignKey('Entity', related_name='link_to_parent')
     start_date = models.DateField(db_index=True)
-    end_date = models.DateField(db_index=True)
+    end_date = models.DateField(db_index=True, null=True)
 
     def __str__(self):
         return "Parent : {} - Child : {} - {} to {}".format(
