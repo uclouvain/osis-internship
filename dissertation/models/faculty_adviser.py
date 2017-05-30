@@ -26,6 +26,7 @@
 from django.contrib import admin
 from django.db import models
 from base.models import offer
+from base.models import offer_year
 from . import adviser
 
 
@@ -47,7 +48,8 @@ class FacultyAdviser(models.Model):
         return self.adviser.type
 
     def offer_most_recent_offer_year(self):
-        return self.offer.most_recent_offer_year()
+        most_recent_offer_year = offer_year.get_last_offer_year_by_offer(self.offer)
+        return "{} - {}".format(str(most_recent_offer_year), most_recent_offer_year.title)
 
 
 def search_by_adviser(a_adviser):
