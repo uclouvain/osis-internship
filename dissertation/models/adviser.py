@@ -28,8 +28,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
-from .dissertation_role import DissertationRole
-from base import models as mdl
+from base.models import person
+from dissertation.models import dissertation_role
 
 
 class AdviserAdmin(SerializableModelAdmin):
@@ -65,7 +65,6 @@ class Adviser(SerializableModel):
 
     @property
     def get_stat_dissertation_role(self):
-
         list_stat = [0] * 5
         # list_stat[0]= count dissertation_role active of adviser
         # list_stat[1]= count dissertation_role Promoteur active of adviser
@@ -78,7 +77,7 @@ class Adviser(SerializableModel):
         list_stat[3] = 0
         list_stat[4] = 0
 
-        queryset = DissertationRole.objects.all().filter(Q(adviser=self))
+        queryset = dissertation_role.DissertationRole.objects.all().filter(Q(adviser=self))
         list_stat[0] = queryset.filter(dissertation__active=True)\
                                .count()
 
@@ -101,12 +100,7 @@ class Adviser(SerializableModel):
                                           Q(dissertation__status='DEFENDED'))
 
         list_stat[2] = advisers_copro.count()
-        tab_offer_count_copro = {}
-        for dissertaion_role_copro in advisers_copro:
-            if dissertaion_role_copro.dissertation.offer_year_start.offer in tab_offer_count_copro:
-                tab_offer_count_copro[dissertaion_role_copro.dissertation.offer_year_start.offer] += 1
-            else:
-                tab_offer_count_copro[dissertaion_role_copro.dissertation.offer_year_start.offer] = 1
+        tab_offer_count_copro = dissertation_role.get_tab_count_role_by_offer(advisers_copro)
 
         advisers_reader = queryset.filter(Q(adviser=self) &
                                           Q(status='READER') &
@@ -116,12 +110,7 @@ class Adviser(SerializableModel):
                                            Q(dissertation__status='DEFENDED'))
 
         list_stat[3] = advisers_reader.count()
-        tab_offer_count_read = {}
-        for dissertation_role_read in advisers_reader:
-            if dissertation_role_read.dissertation.offer_year_start.offer in tab_offer_count_read:
-                tab_offer_count_read[dissertation_role_read.dissertation.offer_year_start.offer] += 1
-            else:
-                tab_offer_count_read[dissertation_role_read.dissertation.offer_year_start.offer] = 1
+        tab_offer_count_read = dissertation_role.get_tab_count_role_by_offer(advisers_reader)
 
         advisers_pro = queryset.filter(status='PROMOTEUR')\
                                .filter(Q(dissertation__active=True)) \
@@ -129,12 +118,8 @@ class Adviser(SerializableModel):
                                         Q(dissertation__status='ENDED') |
                                         Q(dissertation__status='DEFENDED'))
 
-        tab_offer_count_pro = {}
-        for dissertation_role_read in advisers_pro:
-            if dissertation_role_read.dissertation.offer_year_start.offer in tab_offer_count_pro:
-                tab_offer_count_pro[dissertation_role_read.dissertation.offer_year_start.offer] += 1
-            else:
-                tab_offer_count_pro[dissertation_role_read.dissertation.offer_year_start.offer] = 1
+        tab_offer_count_pro = dissertation_role.get_tab_count_role_by_offer(advisers_pro)
+
         return list_stat, tab_offer_count_read, tab_offer_count_copro, tab_offer_count_pro
 
     class Meta:
@@ -183,12 +168,12 @@ def add(person, type_arg, available_by_email, available_by_phone, available_at_o
 
 
 def is_manager(user):
-    person = mdl.person.find_by_user(user)
-    this_adviser = search_by_person(person)
+    pers = person.find_by_user(user)
+    this_adviser = search_by_person(pers)
     return this_adviser.type == 'MGR' if this_adviser else False
 
 
 def is_teacher(user):
-    person = mdl.person.find_by_user(user)
-    this_adviser = search_by_person(person)
+    pers = person.find_by_user(user)
+    this_adviser = search_by_person(pers)
     return this_adviser.type == 'PRF' if this_adviser else False
