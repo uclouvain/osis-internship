@@ -1523,3 +1523,21 @@ msgstr "Durée"
 
 msgid "learning_unit_specifications"
 msgstr "Cahier de charges"
+
+msgid "experimental_phase"
+msgstr "Cette fonctionnalité est en phase expérimentale"
+
+msgid "title_official_1"
+msgstr "Intitulé officiel (partie 1 commune aux partims)"
+
+msgid "title_official_2"
+msgstr "Intitulé officiel (partie 2 propre au partim)"
+
+msgid "title_in_english"
+msgstr "Intitulé en anglais"
+
+msgid "title_in_english_1"
+msgstr "(partie 1 commune aux partims)"
+
+msgid "title_in_english_2"
+msgstr "(partie 2 propre au partim)"

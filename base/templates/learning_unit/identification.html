@@ -40,52 +40,73 @@
         <div class="tab-content">
             <div role="tabpanel" class="tab-pane active" id="identification">
                 <br/>
-                <div class="col-md-8">
-                    <div class="row">
-                        <div class="col-md-3">
-                            <label>{% trans 'code'%}</label><br>
-                            {{ learning_unit_year.acronym }}
-                        </div>
-                        <div class="col-md-3">
-                            <label>{% trans 'partims' %}</label><br>
-                            <div>
-                            {% for partim in learning_container_year_partims %}
-                                {% if forloop.counter > 1 %}
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label>{% trans 'code'%}</label><br>
+                                {{ learning_unit_year.acronym }}
+                            </div>
+                            <div class="col-md-3">
+                                <label>{% trans 'partims' %}</label><br>
+                                <div>
+                                    {% for partim in learning_container_year_partims %}
+                                    {% if forloop.counter > 1 %}
                                     ,
-                                {% endif%}
-                                <a href="{% url 'learning_unit' partim.id %}">{{ partim.subdivision}}</a>
-                            {% endfor %}
+                                    {% endif%}
+                                    <a href="{% url 'learning_unit' partim.id %}">{{ partim.subdivision}}</a>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <label>{% trans 'type' %}</label><br>
+                                {% trans learning_unit_year.learning_container_year.container_type %}
+                            </div>
+                            <div class="col-md-3">
+                                <label>{% trans 'subtype' %}</label><br>
+                                {% trans learning_unit_year.subtype %}
                             </div>
                         </div>
-                        <div class="col-md-3">
-                            <label>{% trans 'type' %}</label><br>
-                            {% trans learning_unit_year.learning_container_year.container_type %}
-                        </div>
-                        <div class="col-md-3">
-                            <label>{% trans 'subtype' %}</label><br>
-                            {% trans learning_unit_year.subtype %}
-                        </div>
-                    </div>
-                    <div class="row" style="margin-top:10px;">
-                        <div class="col-md-3">
-                            <label>{% trans 'nominal_credits' %}</label><br>
-                            {{ learning_unit_year.credits }}
-                        </div>
-                        <div class="col-md-3">
-                            <label>{% trans 'periodicity' %}</label><br>
-                            {% if learning_unit_year.learning_unit.periodicity %}
+                        <div class="row" style="margin-top:10px;">
+                            <div class="col-md-3">
+                                <label>{% trans 'nominal_credits' %}</label><br>
+                                {{ learning_unit_year.credits }}
+                            </div>
+                            <div class="col-md-3">
+                                <label>{% trans 'periodicity' %}</label><br>
+                                {% if learning_unit_year.learning_unit.periodicity %}
                                 {% trans learning_unit_year.learning_unit.periodicity %}
-                            {% endif %}
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                <label>{% trans 'status' %}</label><br>
+                                {% trans learning_unit_year.activity_status %}
+                            </div>
                         </div>
-                         <div class="col-md-3">
-                            <label>{% trans 'status' %}</label><br>
-                            {% trans learning_unit_year.activity_status %}
-                        </div>
+
+                        <br>
+                        <label>{% trans 'title_official_1' %}</label><br>
+                        {{ learning_unit_year.learning_container_year.title | default_if_none:'' }}
+                        <br><br>
+                        <label>{% trans 'title_official_2' %}</label><br>
+                        {% if learning_unit_year.subtype == 'PARTIM'%}
+                        {{learning_unit_year.title | default_if_none:''}}
+                        {% endif%}
+                        <br><br>
+                        <label>{% trans 'title_in_english' %}{% trans 'title_in_english_1' %}</label><br>
+                        {{learning_unit_year.learning_container_year.title_english | default_if_none:'' }}
+                        <br><br>
+                        <label>{% trans 'title_in_english' %}{% trans 'title_in_english_2' %}</label><br>
+                        {% if learning_unit_year.subtype == 'PARTIM'%}
+                        {{learning_unit_year.title_english | default_if_none:'' }}
+                        {% endif%}
+                        <br><br>
+                        <label>{% trans 'language' %}</label><br>
+                        {{learning_unit_year.learning_container_year.language | default_if_none:'' }}
                     </div>
-                </div>
 
-                <div class="col-md-4">
-
+                    <div class="col-md-4">
+                    </div>
                 </div>
             </div>
         </div>
