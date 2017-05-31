@@ -25,7 +25,6 @@
 ##############################################################################
 from django.db import models
 from django.utils import timezone
-from django.core.exceptions import ObjectDoesNotExist
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 
 
