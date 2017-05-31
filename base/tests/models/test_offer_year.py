@@ -57,3 +57,16 @@ class OfferYearTest(TestCase):
         previous_academic_year = AcademicYearFactory(year=timezone.now().year-1)
         self.assertFalse(offer_year.search_offers([offer_yr.entity_management], previous_academic_year, None).exists())
 
+    def test_get_last_offer_year_by_offer(self):
+        an_offer = test_offer.create_offer("test_offer")
+        academic_years = [
+            AcademicYearFactory(year=2015+x) for x in range(3)
+        ]
+        offer_years = [
+                OfferYearFactory(
+                    offer=an_offer,
+                    academic_year=academic_years[x],
+                )
+                for x in range(3)
+            ]
+        self.assertEqual(offer_year.get_last_offer_year_by_offer(an_offer), offer_years[2])

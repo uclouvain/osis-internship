@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -31,8 +31,20 @@ OPTIONAL_APPS = (
     'dissertation',
     'internship',
     'assessments',
-    'cms'
+    'cms',
+    'rest_framework',
+    'rest_framework.authtoken'
 )
 
 INSTALLED_APPS += OPTIONAL_APPS
 APPS_TO_TEST += OPTIONAL_APPS
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAdminUser',
+    ),
+    'TEST_REQUEST_DEFAULT_FORMAT': 'json'
+}

@@ -34,8 +34,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from base.models import person, person_address, session_exam_calendar, session_exam_deadline, \
                         academic_year as academic_yr, offer_year, program_manager, tutor
 from attribution.models import attribution
-from base.enums import exam_enrollment_justification_type as justification_types
-from base.enums import exam_enrollment_state as enrollment_states
+from base.models.enums import exam_enrollment_state as enrollment_states, exam_enrollment_justification_type as justification_types
 
 from base.models.exceptions import JustificationValueException
 from base.models.utils.admin_extentions import remove_delete_action
@@ -198,10 +197,11 @@ def is_deadline_tutor_reached(enrollment):
     return False
 
 
-def get_deadline_tutor_computed(enrollment):
+def get_deadline(enrollment):
     exam_deadline = get_session_exam_deadline(enrollment)
     if exam_deadline:
-        return exam_deadline.deadline_tutor_computed
+        return exam_deadline.deadline_tutor_computed if exam_deadline.deadline_tutor_computed else \
+               exam_deadline.deadline
     return None
 
 
@@ -318,8 +318,8 @@ def get_progress_by_learning_unit_years_and_offer_years(user,
                                           output_field=IntegerField()
                                  )),
                                  scores_not_yet_submitted=Sum(Case(
-                                     When((Q(score_draft__isnull=False) & Q(score_final__isnull=False) & Q(justification_final__isnull=False)) |
-                                          (Q(justification_draft__isnull=False) & Q(score_final__isnull=False) & Q(justification_final__isnull=False))
+                                     When((Q(score_draft__isnull=False) & Q(score_final__isnull=True) & Q(justification_final__isnull=True)) |
+                                          (Q(justification_draft__isnull=False) & Q(score_final__isnull=True) & Q(justification_final__isnull=True))
                                           ,then=1),
                                           default=0,
                                           output_field=IntegerField()
@@ -516,7 +516,7 @@ def scores_sheet_data(exam_enrollments, tutor=None):
                         score = str(int(exam_enrol.score_final))
 
                 # Compute deadline score encoding
-                deadline = get_deadline_tutor_computed(exam_enrol)
+                deadline = get_deadline(exam_enrol)
                 if deadline:
                     deadline = deadline.strftime(date_format)
 

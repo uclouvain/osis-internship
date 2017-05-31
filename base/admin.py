@@ -39,8 +39,20 @@ admin.site.register(application_notice.ApplicationNotice,
 admin.site.register(campus.Campus,
                     campus.CampusAdmin)
 
+admin.site.register(entity.Entity,
+                    entity.EntityAdmin)
+
+admin.site.register(entity_address.EntityAddress,
+                    entity_address.EntityAddressAdmin)
+
+admin.site.register(entity_link.EntityLink,
+                    entity_link.EntityLinkAdmin)
+
 admin.site.register(entity_manager.EntityManager,
                     entity_manager.EntityManagerAdmin)
+
+admin.site.register(entity_version.EntityVersion,
+                    entity_version.EntityVersionAdmin)
 
 admin.site.register(exam_enrollment.ExamEnrollment,
                     exam_enrollment.ExamEnrollmentAdmin)
@@ -51,14 +63,8 @@ admin.site.register(exam_enrollment.ExamEnrollmentHistory,
 admin.site.register(external_offer.ExternalOffer,
                     external_offer.ExternalOfferAdmin)
 
-admin.site.register(learning_class.LearningClass,
-                    learning_class.LearningClassAdmin)
-
 admin.site.register(learning_class_year.LearningClassYear,
                     learning_class_year.LearningClassYearAdmin)
-
-admin.site.register(learning_component.LearningComponent,
-                    learning_component.LearningComponentAdmin)
 
 admin.site.register(learning_component_year.LearningComponentYear,
                     learning_component_year.LearningComponentYearAdmin)
@@ -86,6 +92,9 @@ admin.site.register(offer_enrollment.OfferEnrollment,
 
 admin.site.register(offer.Offer,
                     offer.OfferAdmin)
+
+admin.site.register(offer_type.OfferType,
+                    offer_type.OfferTypeAdmin)
 
 admin.site.register(offer_year.OfferYear,
                     offer_year.OfferYearAdmin)

@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -30,14 +30,15 @@ from osis_common.models.serializable_model import SerializableModel, Serializabl
 
 
 class OfferYearAdmin(SerializableModelAdmin):
-    list_display = ('acronym', 'title', 'academic_year', 'offer', 'parent', 'changed')
+    list_display = ('acronym', 'title', 'academic_year', 'offer', 'parent', 'offer_type', 'changed')
     fieldsets = ((None, {'fields': ('offer', 'academic_year', 'entity_administration', 'entity_administration_fac',
                                     'entity_management', 'entity_management_fac', 'acronym', 'title', 'parent',
                                     'title_international', 'title_short', 'title_printable', 'grade', 'grade_type',
                                     'recipient', 'location', 'postal_code', 'city', 'country', 'phone', 'fax', 'email',
-                                    'campus')}),)
-    list_filter = ('academic_year', 'grade', 'grade_type', 'campus')
-    raw_id_fields = ('offer', 'parent')
+                                    'campus', 'offer_type')}),)
+    list_filter = ('academic_year', 'grade', 'offer_type', 'campus')
+    raw_id_fields = ('offer', 'parent', 'offer_type', 'grade_type','campus','country','entity_administration',
+                     'entity_administration_fac', 'entity_management', 'entity_management_fac', 'academic_year')
     search_fields = ['acronym']
 
 
@@ -74,6 +75,7 @@ class OfferYear(SerializableModel):
     campus = models.ForeignKey('Campus', blank=True, null=True)
     grade_type = models.ForeignKey('reference.GradeType', blank=True, null=True)
     enrollment_enabled = models.BooleanField(default=False)
+    offer_type = models.ForeignKey('OfferType', blank=True, null=True)
 
     def __str__(self):
         return u"%s - %s" % (self.academic_year, self.acronym)
@@ -194,7 +196,7 @@ def find_by_id_list(ids):
     return None
 
 
-def search_offers(entity_list=None, academic_yr=None, a_grade_type=None):
+def search_offers(entity_list=None, academic_yr=None, an_offer_type=None):
     out = None
     queryset = OfferYear.objects
 
@@ -202,17 +204,19 @@ def search_offers(entity_list=None, academic_yr=None, a_grade_type=None):
 
     queryset = academic_year_parameter(academic_yr, queryset)
 
-    queryset = grade_type_parameter(a_grade_type, queryset)
+    queryset = offer_type_parameter(an_offer_type, queryset)
 
-    if entity_list or academic_yr or a_grade_type:
+    if entity_list or academic_yr or an_offer_type:
         out = queryset.order_by('acronym')
 
-    return out
+    return out.select_related("entity_management", "offer_type")
 
 
-def grade_type_parameter(a_grade_type, queryset):
-    if a_grade_type:
-        queryset = queryset.filter(grade_type=a_grade_type)
+def offer_type_parameter(an_offer_type, queryset):
+    if an_offer_type:
+        queryset = queryset.filter(offer_type=an_offer_type)
+    else:
+        queryset = queryset.filter(offer_type__isnull=False)
     return queryset
 
 
@@ -226,3 +230,10 @@ def entity_list_parameter(entity_list, queryset):
     if entity_list:
         queryset = queryset.filter(entity_management__in=entity_list)
     return queryset
+
+
+def get_last_offer_year_by_offer(an_offer):
+    last_offer_year = OfferYear.objects.filter(offer=an_offer).order_by('-academic_year__start_date').first()
+    if last_offer_year:
+        return last_offer_year
+    return None

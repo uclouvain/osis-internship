@@ -28,6 +28,7 @@ from django.db import models
 from django.utils import timezone
 from django.contrib import admin
 from base.models import offer_year
+from base.models.enums import academic_calendar_type
 from django.utils.translation import ugettext as _
 
 
@@ -50,17 +51,18 @@ class OfferYearCalendar(models.Model):
 
     def update_dates(self, start_date, end_date):
         if self.customized:
-            self.start_date = start_date
+            if start_date < self.end_date:
+                #  Test needed to prevent error when erroneous data are detected
+                self.start_date = start_date
+                self.save()
         else:
-            self.start_date = start_date
-            self.end_date = end_date
-        self.save()
+            if start_date < end_date:
+                #  Test needed to prevent error when erroneous data are detected
+                self.start_date = start_date
+                self.end_date = end_date
+                self.save()
 
     def save(self, *args, **kwargs):
-        academic_start_date = self.get_start_date()
-        academic_end_date = self.get_end_date()
-        self.start_date_validation(academic_start_date)
-        self.end_date_validation(academic_end_date)
         self.end_start_dates_validation()
         super(OfferYearCalendar, self).save(*args, **kwargs)
 
@@ -107,12 +109,16 @@ class OfferYearCalendar(models.Model):
 
 def save_from_academic_calendar(academic_calendar):
     _raise_if_parameter_not_conform(academic_calendar)
-    offer_year_calendars = find_by_academic_calendar(academic_calendar)
-    if offer_year_calendars:
-        for offer_year_calendar in offer_year_calendars:
-            offer_year_calendar.update_dates(academic_calendar.start_date, academic_calendar.end_date)
-    else:
-        _create_from_academic_calendar(academic_calendar)
+    if academic_calendar.reference in (academic_calendar_type.DELIBERATION,
+                                       academic_calendar_type.EXAM_ENROLLMENTS,
+                                       academic_calendar_type.SCORES_EXAM_DIFFUSION,
+                                       academic_calendar_type.SCORES_EXAM_SUBMISSION):
+        offer_year_calendars = find_by_academic_calendar(academic_calendar)
+        if offer_year_calendars:
+            for offer_year_calendar in offer_year_calendars:
+                offer_year_calendar.update_dates(academic_calendar.start_date, academic_calendar.end_date)
+        else:
+            _create_from_academic_calendar(academic_calendar)
 
 
 def _raise_if_parameter_not_conform(academic_calendar):
@@ -132,11 +138,6 @@ def _create_from_academic_calendar(academic_calendar):
                                               start_date=academic_calendar.start_date,
                                               end_date=academic_calendar.end_date)
         offer_yr_calendar.save()
-
-
-def find_by_current_session_exam():
-    return OfferYearCalendar.objects.filter(start_date__lte=timezone.now())\
-        .filter(end_date__gte=timezone.now()).first()
 
 
 def find_by_academic_calendar(academic_cal):
@@ -174,3 +175,5 @@ def find_latest_end_date_by_academic_calendar(academic_calendar_id):
             .latest('end_date')
     except ObjectDoesNotExist:
         return None
+
+

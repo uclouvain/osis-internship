@@ -62,7 +62,10 @@ def find_by_id(affectation_id):
     return InternshipStudentAffectationStat.objects.get(pk=affectation_id)
 
 
-def find_non_mandatory_affectations():
-    periods = ["P9", "P10", "P11", "P12"]
-    return InternshipStudentAffectationStat.objects.filter(period__name__in=periods).\
+def find_non_mandatory_affectations(period_ids):
+    return InternshipStudentAffectationStat.objects.filter(period__id__in=period_ids).\
+        select_related("student", "organization", "speciality")
+
+def find_affectations(period_ids):
+    return InternshipStudentAffectationStat.objects.filter(period__id__in=period_ids).\
         select_related("student", "organization", "speciality")

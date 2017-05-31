@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -23,15 +23,15 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from osis_common.messaging import message_config, send_message as message_service
-from base.models import academic_year
-from assistant.models import assistant_mandate, settings, manager, reviewer
-from django.shortcuts import redirect
-from assistant.models.message import Message
-from django.utils import timezone
 from django.contrib.auth.decorators import user_passes_test
-from assistant.enums import message_type
+from django.shortcuts import redirect
+from django.utils import timezone
+from assistant.models import assistant_mandate, settings, manager, reviewer
+from assistant.models.enums import message_type
+from assistant.models.message import Message
 from assistant.utils import manager_access
+from base.models import academic_year
+from osis_common.messaging import message_config, send_message as message_service
 
 
 @user_passes_test(manager_access.user_is_manager, login_url='assistants_home')

@@ -27,7 +27,7 @@ msgid "all_label"
 msgstr "All"
 
 msgid "pgm_mgr_administration"
-msgstr "Program managers administration"
+msgstr "Program managers"
 
 msgid "all_hierarchy"
 msgstr "All hierarchy of "
@@ -57,7 +57,7 @@ msgid "person_search"
 msgstr "Person search"
 
 msgid "remove_manager_label"
-msgstr "Are you sure you want to remove the following manager?"
+msgstr "Are you sure you want to remove the following manager"
 
 msgid "stay_manager_label"
 msgstr "He will keep the following program's management : "
@@ -71,6 +71,20 @@ msgstr "No entity associated to your entity manager's profil"
 msgid "already_program_mgr"
 msgstr "is already program manager for"
 
+msgid "remove"
+msgstr "Remove"
+
+msgid "hlp_employee_search"
+msgstr "Please enter a lastname, and optionnally a firstname"
+
+msgid "lastname"
+msgstr "Lastname"
+
+msgid "firstname"
+msgstr "Firstname"
+
+msgid "middlename"
+msgstr "Middlename"
 
 
 

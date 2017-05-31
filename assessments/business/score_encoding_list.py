@@ -27,7 +27,7 @@ import copy
 from decimal import Decimal, Context, Inexact
 from base.models import academic_year, session_exam_calendar, exam_enrollment, program_manager, tutor, offer_year, \
                         learning_unit_year
-from base.enums import exam_enrollment_justification_type
+from base.models.enums import exam_enrollment_justification_type
 
 
 def get_scores_encoding_list(user, **kwargs):
@@ -81,7 +81,7 @@ def get_scores_encoding_list(user, **kwargs):
 
 def _append_session_exam_deadline(enrollments):
     for enrollment in enrollments:
-        enrollment.deadline_tutor_computed = exam_enrollment.get_deadline_tutor_computed(enrollment)
+        enrollment.deadline = exam_enrollment.get_deadline(enrollment)
         enrollment.deadline_reached = exam_enrollment.is_deadline_reached(enrollment)
         enrollment.deadline_tutor_reached = exam_enrollment.is_deadline_tutor_reached(enrollment)
     return enrollments
@@ -157,7 +157,7 @@ def clean_score_and_justification(enrollment):
     is_decimal_scores_authorized = enrollment.learning_unit_enrollment.learning_unit_year.decimal_scores
 
     score_clean = None
-    if enrollment.score_encoded:
+    if enrollment.score_encoded is not None and enrollment.score_encoded != "":
         score_clean = _truncate_decimals(enrollment.score_encoded, is_decimal_scores_authorized)
 
     justification_clean = None if not enrollment.justification_encoded else enrollment.justification_encoded

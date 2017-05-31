@@ -25,8 +25,6 @@
 ##############################################################################
 from django.db import models
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
-from base.models import person
-from base.enums import structure_type
 
 
 class EntityManagerAdmin(SerializableModelAdmin):
@@ -49,15 +47,18 @@ class EntityManager(SerializableModel):
         )
 
 
-def _get_perms(model):
+def get_perms(model):
     return model._meta.permissions
 
 
 def find_entity_manager_by_user(a_user):
-    a_person = person.find_by_user(a_user)
-    if a_person:
-        entity_administrators = EntityManager.objects.filter(person=a_person)
-        for f in entity_administrators:
-            return f
-    return None
+    return EntityManager.objects.filter(person__user=a_user)\
+        .select_related('person')\
+        .select_related('structure').first()
 
+
+def find_by_user(a_user):
+    return EntityManager.objects.filter(person__user=a_user)\
+        .select_related('person')\
+        .select_related('structure')\
+        .order_by('structure__acronym')

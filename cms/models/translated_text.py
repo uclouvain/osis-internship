@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -26,9 +26,8 @@
 from ckeditor.fields import RichTextField
 from django.contrib import admin
 from django.db import models
-
+from django.conf import settings
 from cms.enums.entity_name import ENTITY_NAME
-from reference.models.language import Language
 from .text_label import TextLabel
 
 
@@ -38,7 +37,9 @@ class TranslatedTextAdmin(admin.ModelAdmin):
 
 
 class TranslatedText(models.Model):
-    language = models.ForeignKey(Language)
+    external_id = models.CharField(max_length=100, blank=True, null=True)
+    changed = models.DateTimeField(null=True)
+    language = models.CharField(max_length=30, null=True, choices=settings.LANGUAGES, default=settings.LANGUAGE_CODE)
     text_label = models.ForeignKey(TextLabel, blank=None, null=True)
     entity = models.CharField(db_index=True, max_length=25, choices=ENTITY_NAME)
     reference = models.IntegerField(db_index=True)
@@ -50,3 +51,14 @@ class TranslatedText(models.Model):
 
 def find_by_id(id):
     return TranslatedText.objects.get(pk=id)
+
+
+def search(entity, reference, text_labels_name=None, language=None):
+    queryset = TranslatedText.objects.filter(entity=entity, reference=reference)
+
+    if language:
+        queryset = queryset.filter(language=language)
+    if text_labels_name:
+        queryset = queryset.filter(text_label__label__in=text_labels_name)
+
+    return queryset.select_related('text_label')

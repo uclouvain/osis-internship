@@ -352,9 +352,6 @@ msgstr "Modifier les paramètres"
 msgid "edit_proposition_dissertation"
 msgstr "Modifier"
 
-msgid "email"
-msgstr "E-mail"
-
 msgid "empirical_research"
 msgstr "Recherche empirique"
 
@@ -462,9 +459,6 @@ msgstr "Juin"
 
 msgid "jury_status"
 msgstr "État du jury"
-
-msgid "justification"
-msgstr "Justification"
 
 msgid "justification_confirmation_message"
 msgstr "Vous allez enregistrer le changement de statut et sa justification. Voulez-vous continuer ?"
@@ -735,9 +729,6 @@ msgstr "Personne à ajouter"
 
 msgid "person_not_found_by_mail"
 msgstr "Aucune personne ne correspond à cet adresse e-mail"
-
-msgid "phone"
-msgstr "Téléphone"
 
 msgid "phone_mobile"
 msgstr "Téléphone mobile"

@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# OSIS stands for Open Student Information System. It's an application
+#    OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
@@ -24,8 +24,9 @@
 #
 ##############################################################################
 import factory
+
+from assistant.models.enums import reviewer_role
 from base.tests.factories.person import PersonFactory
-from assistant.enums import reviewer_role
 
 
 class ReviewerFactory(factory.DjangoModelFactory):

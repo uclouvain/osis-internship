@@ -152,18 +152,4 @@ class OfferYearCalendarsAttributesValidation(TestCase):
         with self.assertRaises(AttributeError):
             self.offer_year_calendar.save()
 
-    def test_end_date_greather_than_academic_calendar_end_date(self):
-        self.offer_year_calendar = OfferYearCalendarFactory.build(offer_year=self.offer_year,
-                                                                  academic_calendar=self.academic_calendar)
-        self.offer_year_calendar.start_date = datetime.date(YEAR_CALENDAR, 9, 1)
-        self.offer_year_calendar.end_date = self.academic_calendar.end_date + datetime.timedelta(days=2)
-        with self.assertRaises(AttributeError):
-            self.offer_year_calendar.save()
 
-    def test_start_date_lower_than_academic_calendar_start_date(self):
-        self.offer_year_calendar = OfferYearCalendarFactory.build(offer_year=self.offer_year,
-                                                                  academic_calendar=self.academic_calendar)
-        self.offer_year_calendar.end_date = datetime.date(YEAR_CALENDAR+2, 8, 1)
-        self.offer_year_calendar.start_date = self.academic_calendar.start_date - datetime.timedelta(days=2)
-        with self.assertRaises(AttributeError):
-            self.offer_year_calendar.save()
