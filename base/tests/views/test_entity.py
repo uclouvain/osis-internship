@@ -25,13 +25,10 @@
 ##############################################################################
 import datetime
 import json
-from base.models.entity import Entity
-from base.serializers import EntitySerializer
 from base.tests.factories.entity import EntityFactory
-from base.tests.factories.entity_address import EntityAddressFactory
-from base.tests.factories.entity_version import EntityVersionFactory
 from base.tests.factories.organization import OrganizationFactory
-from base.tests.factories.user import SuperUserFactory
+from base.tests.factories.user import UserFactory
+from django.contrib.auth.models import Permission
 from django.core.urlresolvers import reverse
 from rest_framework import status
 from rest_framework.authtoken.models import Token
@@ -44,7 +41,8 @@ class EntityViewTestCase(APITestCase):
 
     def setUp(self):
         self.entities = [EntityFactory() for x in range(3)]
-        user = SuperUserFactory()
+        user = UserFactory()
+        user.user_permissions.add(Permission.objects.get(codename='can_post_entities_by_drf'))
         token = Token.objects.create(user=user)
         self.client = APIClient()
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + token.key)
