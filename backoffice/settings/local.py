@@ -32,8 +32,6 @@ OPTIONAL_APPS = (
     'internship',
     'assessments',
     'cms',
-    'rest_framework',
-    'rest_framework.authtoken'
 )
 
 INSTALLED_APPS += OPTIONAL_APPS

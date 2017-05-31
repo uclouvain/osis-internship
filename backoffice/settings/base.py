@@ -65,6 +65,8 @@ INSTALLED_APPS = (
     'reference',
     'base',
     'statici18n',
+    'rest_framework',
+    'rest_framework.authtoken',
 )
 
 MIDDLEWARE_CLASSES = (
