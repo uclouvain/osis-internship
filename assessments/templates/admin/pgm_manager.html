@@ -379,6 +379,7 @@
         $.ajax({
             url: "/assessments/pgm_manager/person/list/search?fullname=" + $('#txt_fullname_manager_search').val()
         }).then(function (data) {
+            $('#tb_persons tbody > tr').remove();
             if (data.length > 0) {
                 $('#pnl_person_search_results').css('visibility', 'visible').css('display', 'block');
 
@@ -450,12 +451,11 @@
             $("#hdn_to_be_removed_pgms").val(ch);
             save_selected_values();
 
-            clean_on_off_pannels(); // initialize
             $.ajax({
                 url: "/assessments/delete_manager_information?pgm_ids=" + ch + "&person_id=" + person_id
 
             }).then(function (data) {
-
+                    clean_on_off_pannels(); // initialize
                     $.each(data, function (key, value) {
                         //--------------------------------------------------------------
                         // To display information on the effects of the removal.
