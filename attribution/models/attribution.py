@@ -28,6 +28,7 @@ from django.db import models
 from django.db.models import Q
 from attribution.models.enums import function
 from base.models.academic_year import current_academic_years
+from base.models.person import Person
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 from attribution.models import attribution_charge
 from base.models import learning_unit_component
@@ -136,28 +137,30 @@ def is_score_responsible(user, learning_unit_year):
     return attributions > 0
 
 
-def search_scores_responsible(learning_unit_title, course_code, attributions, tutor, scores_responsible):
+def search_scores_responsible(learning_unit_title, course_code, attributions, tutor, responsible):
     queryset = Attribution.objects.filter(learning_unit_year__academic_year=current_academic_years())
     if learning_unit_title:
         queryset = queryset.filter(learning_unit_year__title__icontains=learning_unit_title)
     if course_code:
-        queryset = queryset.filter(learning_unit_year__acronym__icontains=course_code).distinct("learning_unit_year")
-    if tutor and scores_responsible:
+        queryset = queryset.filter(learning_unit_year__acronym__icontains=course_code)
+    if tutor and responsible:
         queryset = queryset \
-            .filter(Q(tutor__person__first_name__icontains=tutor) |
-                    Q(tutor__person__last_name__icontains=tutor) |
-                    Q(tutor__person__first_name__icontains=scores_responsible) |
-                    Q(tutor__person__last_name__icontains=scores_responsible)) \
-            .filter(score_responsible=True)
+            .filter(tutor__person__in=Person.objects
+                    .filter(Q(Q(tutor__attribution__score_responsible=True) &
+                              Q(Q(tutor__person__first_name__icontains=responsible) |
+                                Q(tutor__person__last_name__icontains=responsible)) |
+                            Q(Q(Q(tutor__person__first_name__icontains=tutor) |
+                                Q(tutor__person__last_name__icontains=tutor))))))
     else:
         if tutor:
             queryset = queryset \
-                .filter(Q(tutor__person__first_name__icontains=tutor) |
-                        Q(tutor__person__last_name__icontains=tutor))
-        if scores_responsible:
-            queryset = queryset\
-                .filter(Q(tutor__person__first_name__icontains=scores_responsible) |
-                        Q(tutor__person__last_name__icontains=scores_responsible))
+                .filter(tutor__person__in=Person.objects.filter(Q(first_name__icontains=tutor) |
+                                                                Q(last_name__icontains=tutor)))
+        if responsible:
+            queryset = queryset \
+                .filter(id__in=Attribution.objects.filter(score_responsible=True, tutor__person__in=Person.objects
+                                                          .filter(Q(first_name__icontains=responsible) |
+                                                                  Q(last_name__icontains=responsible))))
     if attributions:
         entities_list = [attribution.learning_unit_year.structure.acronym for attribution in attributions]
         queryset = queryset\

@@ -58,7 +58,7 @@ def scores_responsible_search(request):
             course_code=request.GET.get('course_code'),
             attributions=attributions,
             tutor=request.GET.get('tutor'),
-            scores_responsible=request.GET.get('scores_responsible'))
+            responsible=request.GET.get('scores_responsible'))
         dict_attribution = create_attributions_list(attributions_searched)
         return layout.render(request, 'scores_responsible.html', {"entities_manager": entities_manager,
                                                                   "academic_year": academic_year,
