@@ -23,19 +23,35 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
+from django.contrib import admin, messages
+from django.contrib.auth.models import Group
 from attribution.models import attribution
 from base.models import person
 from osis_common.models import serializable_model
 
 
 class TutorAdmin(serializable_model.SerializableModelAdmin):
+    actions = ['add_to_group']
     list_display = ('person', 'changed')
     fieldsets = ((None, {'fields': ('person',)}),)
     list_filter = ('person__gender', 'person__language')
     raw_id_fields = ('person', )
     search_fields = ['person__first_name', 'person__last_name', 'person__global_id']
+
+    def add_to_group(self, request, queryset):
+        group_name = "tutors"
+        group = Group.objects.get(name=group_name)
+        if group:
+            count = 0
+            for tutor in queryset:
+                user = tutor.person.user
+                if user and not user.groups.filter(name=group_name).exists():
+                    user.groups.add(group)
+                    count += 1
+            self.message_user(request, "{} users added to the group 'tutors'.".format(count), level=messages.SUCCESS)
+        else:
+            self.message_user(request, "Group {} doesn't exist.".format(group_name), level=messages.ERROR)
 
 
 class Tutor(serializable_model.SerializableModel):

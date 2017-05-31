@@ -1148,9 +1148,8 @@ def load_solution(data, cohort):
             temp_internship_table[organization][acronym] = OrderedDict()
             fill_periods_default_values(acronym, keys, organization, temp_internship_table)
 
-        speciality_occurences = len(mdl_internship.internship_speciality.InternshipSpeciality.objects.filter(cohort=cohort, acronym=acronym))
-        temp_internship_table[organization][acronym][period_name]['before'] = pid.number_places * speciality_occurences
-        temp_internship_table[organization][acronym][period_name]['after'] = pid.number_places * speciality_occurences
+        temp_internship_table[organization][acronym][period_name]['before'] += pid.number_places
+        temp_internship_table[organization][acronym][period_name]['after'] += pid.number_places
 
 
 
