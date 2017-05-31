@@ -35,6 +35,8 @@ class SettingsAdmin(admin.ModelAdmin):
 class Settings(models.Model):
     starting_date = models.DateField()
     ending_date = models.DateField()
+    assistants_starting_date = models.DateField()
+    assistants_ending_date = models.DateField()
 
     def __str__(self):
         return u"%s - %s" % (self.starting_date, self.ending_date)
@@ -46,6 +48,14 @@ def get_settings():
 
 def access_to_procedure_is_open():
     if not Settings.objects.filter(starting_date__lt=timezone.now(), ending_date__gt=timezone.now()):
+        return False
+    else:
+        return True
+
+
+def assistants_can_see_file():
+    if not Settings.objects.filter(assistants_starting_date__lt=timezone.now(),
+                                   assistants_ending_date__gt=timezone.now()):
         return False
     else:
         return True
