@@ -945,9 +945,6 @@ msgstr "Score invalid"
 msgid "scores_responsible"
 msgstr "Scores Responsible"
 
-msgid "scores_responsibles_administration"
-msgstr "Administration of the scores responsibles"
-
 msgid "score_saved"
 msgstr "score Saved"
 
