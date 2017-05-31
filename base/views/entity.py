@@ -23,10 +23,10 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.contrib.auth.decorators import permission_required
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from base.models.entity import Entity
 from base.models import entity
 from base.models import entity_link
 from base.models import entity_version
@@ -34,6 +34,7 @@ from base.serializers import EntitySerializer
 
 
 @api_view(['POST'])
+@permission_required('base.can_post_entities_by_drf', raise_exception=True)
 def post_entities(request):
     if request.method == 'POST':
         existing_entity = entity.get_by_external_id(request.data.get('external_id'))
