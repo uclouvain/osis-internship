@@ -114,7 +114,8 @@ class OfferViewTestCase(TestCase):
         AcademicCalendar.save = save
         academic_calendar = AcademicCalendarFactory()
 
-        offer_year_calendar = OfferYearCalendarFactory(offer_year=offer_year, academic_calendar=academic_calendar) #mock.Mock(id=1)
+        offer_year_calendar = OfferYearCalendarFactory(offer_year=offer_year,
+                                                       academic_calendar=academic_calendar)
         program_manager = ProgramManagerFactory(offer_year=offer_year)
 
         request = mock.Mock(method='GET')
@@ -154,8 +155,6 @@ class OfferViewTestCase(TestCase):
         self.assertEqual(response.content, b'ok')
         self.assertTrue(response.has_header('content-type'))
         self.assertEqual(response.get('content-type'), 'text/plain')
-
-
 
     @mock.patch('django.contrib.auth.decorators')
     def test_score_encoding_get(self,
