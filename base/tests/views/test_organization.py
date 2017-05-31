@@ -63,7 +63,7 @@ def get_form_organization_save():
         "acronym": "NYU",
         "name": "NEW-YORK UNIVERSITY",
         "website": "www.nyu.edu",
-        "reference": "REFERENCE"
+        "acronym_learning_unit": "NYUA"
     }
 
 

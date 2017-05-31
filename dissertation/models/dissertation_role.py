@@ -186,9 +186,9 @@ def get_copromoteur_by_dissertation(dissert):
 def get_tab_count_role_by_offer(list_roles):
     tab = {}
     for role in list_roles:
-        if role.dissertation.offer_year_start.offer.title in tab:
-            tab[str(role.dissertation.offer_year_start.offer.title)] += 1
+        if role.dissertation.offer_year_start.offer in tab:
+            tab[role.dissertation.offer_year_start.offer] += 1
         else:
-            tab[str(role.dissertation.offer_year_start.offer.title)] = 1
+            tab[role.dissertation.offer_year_start.offer] = 1
 
     return tab

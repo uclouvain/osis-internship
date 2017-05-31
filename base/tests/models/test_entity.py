@@ -40,7 +40,6 @@ class EntityTest(TestCase):
     def setUp(self):
         self.start_date = timezone.make_aware(datetime.datetime(2015, 1, 1))
         self.end_date = timezone.make_aware(datetime.datetime(2015, 12, 31))
-        self.end_date = timezone.make_aware(datetime.datetime(2015, 12, 31))
         self.date_in_2015 = factory.fuzzy.FuzzyDate(timezone.make_aware(datetime.datetime(2015, 1, 1)),
                                                     timezone.make_aware(datetime.datetime(2015, 12, 30))).fuzz()
         self.date_in_2017 = factory.fuzzy.FuzzyDate(timezone.make_aware(datetime.datetime(2017, 1, 1)),
@@ -56,11 +55,11 @@ class EntityTest(TestCase):
                 )
 
     def test_get_entity_direct_children_in_dates(self):
-        self.assertCountEqual(self.parent.get_direct_children(date=self.date_in_2015),
+        self.assertCountEqual(self.parent.find_direct_children(date=self.date_in_2015),
                               [self.children[x] for x in range(4)])
 
     def test_get_entity_direct_children_out_dates(self):
-        self.assertCountEqual(self.parent.get_direct_children(date=self.date_in_2017), [])
+        self.assertCountEqual(self.parent.find_direct_children(date=self.date_in_2017), [])
 
     def test_get_entity_direct_children_in_and_out_dates(self):
         in_2017_children = [EntityFactory() for x in range(4)]
@@ -71,7 +70,7 @@ class EntityTest(TestCase):
                 start_date=timezone.make_aware(datetime.datetime(2017, 1, 1)),
                 end_date=timezone.make_aware(datetime.datetime(2017, 12, 31))
                 )
-        self.assertCountEqual(self.parent.get_direct_children(date=self.date_in_2017),
+        self.assertCountEqual(self.parent.find_direct_children(date=self.date_in_2017),
                               [in_2017_children[x] for x in range(4)])
 
     def test_find_descendants(self):
@@ -156,3 +155,61 @@ class EntityTest(TestCase):
 
         self.assertCountEqual(entity.search(entity_type=types_dict['FACULTY']), [self.children[1], self.children[3]])
         self.assertCountEqual(entity.search(entity_type='NON_EXISTING'), [])
+
+    def test_get_most_recent_acronym(self):
+        start_dates = [
+            timezone.make_aware(datetime.datetime(2015, 1, 1)),
+            timezone.make_aware(datetime.datetime(2016, 1, 1)),
+            timezone.make_aware(datetime.datetime(2017, 1, 1))
+        ]
+        end_dates = [
+            timezone.make_aware(datetime.datetime(2015, 12, 31)),
+            timezone.make_aware(datetime.datetime(2016, 12, 31)),
+            timezone.make_aware(datetime.datetime(2017, 12, 31))
+        ]
+
+        for x in range(3):
+            EntityVersionFactory(
+                entity=self.parent,
+                acronym="ENTITY_V_" + str(x),
+                start_date=start_dates[x],
+                end_date=end_dates[x]
+            )
+
+        self.assertEqual(self.parent.most_recent_acronym(), "ENTITY_V_2")
+
+    def test_get_by_external_id(self):
+        an_entity = EntityFactory(external_id="1234567")
+        self.assertEqual(entity.get_by_external_id("1234567"), an_entity)
+        self.assertEqual(entity.get_by_external_id("321"), None)
+
+    def test_get_by_internal_id(self):
+        an_entity = EntityFactory()
+        self.assertEqual(entity.get_by_internal_id(an_entity.id), an_entity)
+        self.assertEqual(entity.get_by_internal_id(an_entity.id+1), None)
+
+    def test_find_versions(self):
+        start_dates = [
+            timezone.make_aware(datetime.datetime(2015, 1, 1)),
+            timezone.make_aware(datetime.datetime(2016, 1, 1)),
+            timezone.make_aware(datetime.datetime(2017, 1, 1))
+        ]
+        end_dates = [
+            timezone.make_aware(datetime.datetime(2015, 12, 31)),
+            timezone.make_aware(datetime.datetime(2016, 12, 31)),
+            timezone.make_aware(datetime.datetime(2017, 12, 31))
+        ]
+
+        versions = [EntityVersionFactory(
+                    entity=self.parent,
+                    acronym="ENTITY_V_" + str(x),
+                    entity_type="FACULTY",
+                    title="Faculty n° " + str(x),
+                    start_date=start_dates[x],
+                    end_date=end_dates[x]
+                    ) for x in range(3)]
+        self.assertCountEqual(self.parent.find_versions(),
+                              [versions[0],
+                              versions[1],
+                              versions[2]
+                               ])
