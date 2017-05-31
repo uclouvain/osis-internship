@@ -209,7 +209,7 @@ def search_offers(entity_list=None, academic_yr=None, an_offer_type=None):
     if entity_list or academic_yr or an_offer_type:
         out = queryset.order_by('acronym')
 
-    return out
+    return out.select_related("entity_management", "offer_type")
 
 
 def offer_type_parameter(an_offer_type, queryset):
