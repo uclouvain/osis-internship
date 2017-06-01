@@ -58,7 +58,8 @@ def learning_units(request):
         'form': form,
         'academic_years': mdl.academic_year.find_academic_years(),
         'learning_units': found_learning_units,
-        'current_academic_year': mdl.academic_year.current_academic_year()
+        'current_academic_year': mdl.academic_year.current_academic_year(),
+        'experimental_phase': True
     })
     return layout.render(request, "learning_units.html", context)
 
@@ -69,6 +70,7 @@ def learning_unit_identification(request, learning_unit_year_id):
     context = _get_common_context_learning_unit_year(learning_unit_year_id)
     learning_unit_year = context['learning_unit_year']
     context['learning_container_year_partims'] = _get_partims_related(learning_unit_year)
+    context['experimental_phase'] = True
     return layout.render(request, "learning_unit/identification.html", context)
 
 
@@ -85,6 +87,7 @@ def learning_unit_components(request, learning_unit_year_id):
     learning_unit_year = mdl.learning_unit_year.find_by_id(learning_unit_year_id)
     components = get_components(learning_unit_year.learning_container_year)
     tab_active = 'components'
+    experimental_phase = True
     return layout.render(request, "learning_unit/components.html", locals())
 
 
@@ -111,6 +114,7 @@ def learning_unit_pedagogy(request, learning_unit_year_id):
         'form_french': LearningUnitPedagogyForm(learning_unit_year, fr_language),
         'form_english': LearningUnitPedagogyForm(learning_unit_year, en_language)
     })
+    context['experimental_phase'] = True
     return layout.render(request, "learning_unit/pedagogy.html", context)
 
 
@@ -119,6 +123,7 @@ def learning_unit_pedagogy(request, learning_unit_year_id):
 def learning_unit_attributions(request, learning_unit_year_id):
     context = _get_common_context_learning_unit_year(learning_unit_year_id)
     context['attributions'] = mdl_attr.attribution.find_by_learning_unit_year(learning_unit_year=learning_unit_year_id)
+    context['experimental_phase'] = True
     return layout.render(request, "learning_unit/attributions.html", context)
 
 
@@ -150,6 +155,7 @@ def learning_unit_specifications(request, learning_unit_year_id):
         'form_french': LearningUnitSpecificationsForm(learning_unit_year, fr_language),
         'form_english': LearningUnitSpecificationsForm(learning_unit_year, en_language)
     })
+    context['experimental_phase'] = True
     return layout.render(request, "learning_unit/specifications.html", context)
 
 

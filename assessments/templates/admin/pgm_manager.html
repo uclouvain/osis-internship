@@ -209,28 +209,21 @@
         update_manager_list();
     });
 
-    function get_offer_id_list_on(){
-        var ch = "";
+    function get_offer_id_list_on(to_array=false){
+        var choices = []
         $('#nb_selected').empty();
-        var offers_count=0;
         $("input[id^='chb_pgm_id_']").each(function () {
-
             if ($(this).prop("checked") == true) {
-                offers_count=offers_count+1;
                 var id = $(this).attr("id");
-
                 var offerId = id.substring(id.lastIndexOf("_") + 1);
                 if (offerId) {
-                    if (ch == "") {
-                        ch = offerId;
-                    } else {
-                        ch = ch + "," + offerId;
-                    }
+                    offerId = parseInt(offerId)
+                    choices.push(offerId)
                 }
             }
         });
-        $('#nb_selected').text(offers_count);
-        return ch;
+        $('#nb_selected').text(choices.length);
+        return (to_array) ? choices : choices.join(",");
     }
 
     function check_bt_add_manager_disabling(){
@@ -291,11 +284,10 @@
     }
 
     function update_manager_list(){
-        var ch = get_offer_id_list_on();
-
+        var choices = get_offer_id_list_on(true);
         $('#tb_managers tbody > tr').remove();
 
-        if (ch != "") {
+        if (choices.length > 0) {
             $.ajax({
                 beforeSend: function(){
                     $('#wait').show();
@@ -303,7 +295,7 @@
                 complete: function(){
                     $('#wait').hide();
                 },
-                url: "/assessments/update_managers_list?pgm_ids=" + ch
+                url: "/assessments/update_managers_list?pgm_ids=" + choices.join(',')
 
             }).then(function (data) {
                 $('#tb_managers tbody > tr').remove();
@@ -318,7 +310,7 @@
                         trHTML += '<tr>';
                         trHTML += '<td>' ;
                         var manager_name = value.person_last_name + ', ' + value.person_first_name;
-                        if(ch == pgm_ids) {
+                        if(array_one_is_included_on_array_two(choices, pgm_ids)) {
                             trHTML += '<strong>' + manager_name + '</strong>';
                         }else{
                             trHTML += manager_name;
@@ -340,34 +332,57 @@
         }
     }
 
+    function array_one_is_included_on_array_two(array_1, array_2){
+        intersection = array_1.filter(function(value){
+            return array_2.indexOf(value) > -1;
+        }).filter(function (e, i, c) {
+            return c.indexOf(e) === i;
+        });
+        return intersection.length == array_1.length;
+    }
+
     function clean_on_off_pannels(){
-        $("#pnl_pgm_on").find("label").remove().end();
-
-        $("#pnl_pgm_off").find("label").remove().end();
-
-        $("#pnl_pgm_off").find("span").remove().end();
+        $("#pnl_pgm_on").find("label").remove();
+        $("#pnl_pgm_off").find("label").remove();
+        $("#pnl_pgm_off").find("span").remove();
     }
 
     function set_off_pannel(person_off, person_off_first_name, acronym_off){
-        $("#pnl_pgm_off").append("<label>"+ person_off +", "+ person_off_first_name +"</label>");
-        $("#pnl_pgm_off").append("<span><br></span>");
+        html_to_append = "<label>"+ person_off +", "+ person_off_first_name +"</label><span><br></span>"
         if(acronym_off && acronym_off.indexOf(',') == -1) {
-            $("#pnl_pgm_off").append("<span>" + gettext('of_pgm') + "</span>");
+            html_to_append += "<span>" + gettext('of_pgm') + "</span>";
         }else{
-            $("#pnl_pgm_off").append("<span>"+ gettext('of_pgms') +"</span>");
+            html_to_append += "<span>"+ gettext('of_pgms') +"</span>";
         }
 
-        $("#pnl_pgm_off").append("<label style='color:red;'>"+ acronym_off +"</label><label>&nbsp; ?</label>");
-        $("#pnl_pgm_off").append("<span><br></span>");
+        if (acronym_off) {
+            for (var i = 0; i < acronym_off.length; i++) {
+                if (i < acronym_off.length - 1){
+                    html_to_append += "<label style='color:red;'>"+ acronym_off[i] +",&nbsp;</label>";
+                }else{
+                    html_to_append += "<label style='color:red;'>"+ acronym_off[i] +" </label>";
+                }
+            }
+            html_to_append += "<label>&nbsp; ?</label>"
+        }
+        html_to_append += "<span><br></span>";
+        $("#pnl_pgm_off").append(html_to_append);
     }
 
     function set_on_pannel(acronym_on) {
-        if (acronym_on) {
-            $("#pnl_pgm_on").append("<label>" + acronym_on + "</label>");
+        html_to_append = ""
+        if (acronym_on && acronym_on.length > 0) {
+            for (var i = 0; i < acronym_on.length; i++) {
+                if (i < acronym_on.length - 1){
+                    html_to_append += "<label>"+ acronym_on[i] +",&nbsp;</label>";
+                }else{
+                    html_to_append += "<label>"+ acronym_on[i] +"</label>";
+                }
+            }
         }else{
-            $("#pnl_pgm_on").append("<label>-</label>");
+            html_to_append += "<label>-</label>"
         }
-
+        $("#pnl_pgm_on").append(html_to_append)
     }
 
     $("#bt_submit_person_search").click(function(event) {

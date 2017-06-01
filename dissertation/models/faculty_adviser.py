@@ -49,7 +49,8 @@ class FacultyAdviser(models.Model):
 
     def offer_most_recent_offer_year(self):
         most_recent_offer_year = offer_year.get_last_offer_year_by_offer(self.offer)
-        return "{} - {}".format(str(most_recent_offer_year), most_recent_offer_year.title)
+        most_recent_offer_year_title = most_recent_offer_year.title if most_recent_offer_year is not None else ""
+        return "{} - {}".format(str(most_recent_offer_year), most_recent_offer_year_title)
 
 
 def search_by_adviser(a_adviser):

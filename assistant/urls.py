@@ -103,9 +103,10 @@ urlpatterns = [
             url(r'^send/to_all_deans/$', send_email.send_message_to_deans, name='send_message_to_deans'),
         ])),
         url(r'^reviewers/', include([
-            url(r'^$', reviewers_management.ReviewersListView.as_view(), name='reviewers_list'),
+            url(r'^$', reviewers_management.reviewers_index, name='reviewers_list'),
+            url(r'^action/$', reviewers_management.reviewer_action, name="reviewer_action"),
             url(r'^add/$', reviewers_management.reviewer_add, name='reviewer_add'),
-            url(r'^(?P<reviewer_id>\d+)/delete/$', reviewers_management.reviewer_delete, name='reviewer_delete'),
+            url(r'^replace/$', reviewers_management.reviewer_replace, name='reviewer_replace'),
         ])),
         url(r'^settings/', include([
             url(r'^edit/$', manager_settings.settings_edit, name='settings_edit'),
