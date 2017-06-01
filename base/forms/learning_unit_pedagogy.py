@@ -45,7 +45,9 @@ class LearningUnitPedagogyForm(forms.Form):
         texts_list = translated_text.search(entity=entity_name.LEARNING_UNIT_YEAR,
                                             reference=self.learning_unit_year.id,
                                             language=language_iso,
-                                            text_labels_name=text_labels_name)
+                                            text_labels_name=text_labels_name)\
+                                    .exclude(text__isnull=True)
+
         for trans_txt in texts_list:
             text_label = trans_txt.text_label.label
             setattr(self, text_label, mark_safe(trans_txt.text))
