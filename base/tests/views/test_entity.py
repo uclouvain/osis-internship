@@ -42,7 +42,6 @@ class EntityViewTestCase(APITestCase):
     def setUp(self):
         self.entities = [EntityFactory() for x in range(3)]
         user = UserFactory()
-        user.user_permissions.add(Permission.objects.get(codename='can_post_entities_by_drf'))
         token = Token.objects.create(user=user)
         self.client = APIClient()
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + token.key)
