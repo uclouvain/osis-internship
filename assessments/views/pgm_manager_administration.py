@@ -307,9 +307,15 @@ class PgmManagerSerializer(serializers.Serializer):
     person_id = serializers.IntegerField()
     person_last_name = serializers.CharField()
     person_first_name = serializers.CharField()
-    offer_year_acronyms_on = serializers.CharField()
-    offer_year_acronyms_off = serializers.CharField()
-    programs = serializers.CharField()
+    offer_year_acronyms_on = serializers.ListField(
+       child=serializers.CharField()
+    )
+    offer_year_acronyms_off = serializers.ListField(
+       child=serializers.CharField()
+    )
+    programs = serializers.ListField(
+       child=serializers.IntegerField()
+    )
 
 
 @login_required
@@ -336,20 +342,18 @@ def _get_program_manager_list(offer_year_ids, person=None, delete=False):
     for program_manager in program_managers_related:
         person = program_manager.person
         all_offer_years_managed = offer_years_grouped.get(person.id, [])
-        pgms = _build_offer_ids_string(all_offer_years_managed)
+        pgms = [str(offer_year.id) for offer_year in all_offer_years_managed]
 
         if delete:
-            to_delete = [offer_year for offer_year in all_offer_years_managed if offer_year.id in offer_year_ids]
-            to_keep = [offer_year for offer_year in all_offer_years_managed if offer_year.id not in offer_year_ids]
-            acronyms_to_delete = _build_acronyms_off_string(to_delete)
-            acronyms_to_keep = _build_acronyms_off_string(to_keep)
+            to_delete = [offer_year.acronym for offer_year in all_offer_years_managed if offer_year.id in offer_year_ids]
+            to_keep = [offer_year.acronym for offer_year in all_offer_years_managed if offer_year.id not in offer_year_ids]
 
             pgm = PgmManager(person_id=person.id,
                              person_last_name=person.last_name,
                              person_first_name=person.first_name,
                              programs=pgms,
-                             offer_year_acronyms_off=acronyms_to_delete,
-                             offer_year_acronyms_on=acronyms_to_keep)
+                             offer_year_acronyms_off=to_delete,
+                             offer_year_acronyms_on=to_keep)
         else:
             pgm = PgmManager(person_id=person.id,
                              person_last_name=person.last_name,
@@ -366,36 +370,6 @@ def _get_all_offer_years_grouped_by_person(person_ids):
         key = program_manager.person.id
         offer_years.setdefault(key, []).append(program_manager.offer_year)
     return offer_years
-
-
-def _build_offer_ids_string(offer_years):
-    #  Build a string of the offer ids
-    #  String used in the ajax call
-    ids = [str(offer_year.id) for offer_year in offer_years]
-    return ",".join(ids)
-
-
-def _build_acronyms_off_string(offer_years):
-    #  Build a string of the offer ids
-    #  String used in the ajax call
-    acronyms = [offer_year.acronym for offer_year in offer_years]
-    return ",".join(acronyms)
-
-
-def pgm_to_keep_managing(a_person, programs):
-    current_academic_yr = mdl.academic_year.current_academic_year()
-    list_program_manager_to_keep = mdl.program_manager.find_by_person_exclude_offer_list(a_person,
-                                                                                         programs,
-                                                                                         current_academic_yr)
-    # Concatenation of offers acronym to be used in the html page
-    offer_acronym_concatenation = ""
-    for program_manager_to_keep in list_program_manager_to_keep:
-        if offer_acronym_concatenation == "":
-            offer_acronym_concatenation = program_manager_to_keep.offer_year.acronym
-        else:
-            offer_acronym_concatenation = "{0}, {1}".format(offer_acronym_concatenation,
-                                                            program_manager_to_keep.offer_year.acronym)
-    return offer_acronym_concatenation
 
 
 def _get_programs(academic_yr, entity_list, manager_person, an_offer_type):
