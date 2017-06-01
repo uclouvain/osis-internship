@@ -65,7 +65,10 @@ class AssistantFormViewTestCase(TestCase):
                                                                  )
         self.assistant_mandate.save()
         self.settings = Settings.objects.create(starting_date=timezone.now() - timezone.timedelta(days=100),
-                                                ending_date=timezone.now() + timezone.timedelta(days=100))
+                                                ending_date=timezone.now() + timezone.timedelta(days=100),
+                                                assistants_starting_date=timezone.now(),
+                                                assistants_ending_date=timezone.now() + timezone.timedelta(days=100)
+                                                )
         self.settings.save()
 
     def test_assistant_form_part4_edit_view_basic(self):
