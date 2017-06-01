@@ -28,12 +28,12 @@
 {% block breadcrumb %}
 <li id="lnk_institution">{% trans 'institution' %}</li>
 <li id="lnk_studies"><a href="{% url 'academic_actors' %}">{% trans 'academic_actors' %}</a></li>
-<li><a href="{% url 'scores_responsible' %}" id="lnk_scores_responsible">{% trans 'scores_responsible' %}</a></li>
+<li><a href="{% url 'scores_responsible' %}" id="lnk_scores_responsible">{% trans 'scores_responsible_title' %}</a></li>
 <li class="active">{{ learning_unit_year.acronym }}</li>
 {% endblock %}
 {% block content %}
 <div class="page-header">
-    <h2>{% trans 'tutors_of_course' %} <label>{{ learning_unit_year.acronym }}</label>({{ academic_year }})</h2>
+    <h2>{% trans 'tutors_of_course' %} <label>{{ learning_unit_year.acronym }}</label> ({{ academic_year }})</h2>
 </div>
 <div class="panel panel-default">
     <div class="panel-body">

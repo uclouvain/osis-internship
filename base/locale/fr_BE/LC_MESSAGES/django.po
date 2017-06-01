@@ -978,6 +978,9 @@ msgstr "Injection des notes"
 msgid "scores_responsible"
 msgstr "Responsable(s) de notes"
 
+msgid "scores_responsible_title"
+msgstr "Responsable de notes"
+
 msgid "scores_saved"
 msgstr "note(s) enregistrée(s)"
 
@@ -1389,7 +1392,7 @@ msgid "abscence_justified_preserved"
 msgstr "Abscence justifiée dèjà encodée et préservée"
 
 msgid "tutors_of_course"
-msgstr "Enseignant(e)(s) du cours"
+msgstr "Enseignant du cours"
 
 msgid "academic_actors"
 msgstr "Les acteurs académiques"
