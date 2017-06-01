@@ -38,10 +38,10 @@ from base.tests.factories.structure import StructureFactory
 from base.tests.factories.offer_year import OfferYearFactory
 from base.tests.factories.academic_year import AcademicYearFactory
 from base.tests.factories.offer_type import OfferTypeFactory
-from base.tests.factories.offer_type import OfferTypeFactory
 from base.tests.factories.entity_manager import EntityManagerFactory
 from unittest import mock
 from django.core.urlresolvers import reverse
+from rest_framework import status
 
 
 class PgmManagerAdministrationTest(TestCase):
@@ -169,7 +169,6 @@ class PgmManagerAdministrationTest(TestCase):
         self.assertEqual(len(pgm_manager_administration._get_entity_program_managers([{'root': a_management_entity}],
                                                                                      self.academic_year_current)), 1)
 
-
     def test_get_administrator_entities(self):
         a_person = PersonFactory(user=self.user)
         root_acronyms =['A', 'B']
@@ -205,20 +204,83 @@ class PgmManagerAdministrationTest(TestCase):
 
     @mock.patch('django.contrib.auth.decorators')
     def test_get_entity_root_selected_all(self, mock_decorators):
-        mock_decorators.login_required = lambda x: x
-        request_factory = RequestFactory()
-        post_request = request_factory.get('/pgm_manager/search', {'entity': 'all_ESPO'})
-        post_request.user = mock.Mock()
+        post_request = set_post_request(mock_decorators, {'entity': 'all_ESPO'},'/pgm_manager/search')
         self.assertEqual(pgm_manager_administration.get_entity_root_selected(post_request), 'ESPO')
 
     @mock.patch('django.contrib.auth.decorators')
     def test_get_entity_root_selected(self, mock_decorators):
-        mock_decorators.login_required = lambda x: x
-        request_factory = RequestFactory()
-        post_request = request_factory.post('/pgm_manager/search', {'entity': '2',
-                                                                    'entity_root': '2'})
-        post_request.user = mock.Mock()
+        post_request = set_post_request(mock_decorators, {'entity': '2',
+                                                            'entity_root': '2'},'/pgm_manager/search')
         self.assertEqual(pgm_manager_administration.get_entity_root_selected(post_request), '2')
+
+    @mock.patch('django.contrib.auth.decorators')
+    def test_get_filter_value(self, mock_decorators):
+        request = set_post_request(mock_decorators,{'offer_type': '-'},'/pgm_manager/search')
+        self.assertIsNone(pgm_manager_administration.get_filter_value(request, 'offer_type'))
+        request = set_post_request(mock_decorators,{'offer_type': '1'},'/pgm_manager/search')
+        self.assertEqual(pgm_manager_administration.get_filter_value(request, 'offer_type'), '1')
+
+    def test_filter_by_person(self):
+        an_offer_type = OfferTypeFactory()
+        offer_year1 = OfferYearFactory(academic_year=self.academic_year_current,
+                                       entity_management=self.structure_parent1,
+                                       offer_type=an_offer_type)
+
+        offer_year2 = OfferYearFactory(academic_year=self.academic_year_current,
+                                       entity_management=self.structure_child1,
+                                       offer_type=an_offer_type)
+        ProgramManagerFactory(person=self.person, offer_year=offer_year1)
+        ProgramManagerFactory(person=self.person, offer_year=offer_year2)
+        self.assertEqual(len(pgm_manager_administration._filter_by_person(self.person,
+                                                                          [self.structure_parent1, self.structure_child1],
+                                                                          self.academic_year_current,
+                                                                          an_offer_type)),2)
+        self.assertEqual(len(pgm_manager_administration._filter_by_person(self.person,
+                                                                          [self.structure_parent1],
+                                                                          self.academic_year_current,
+                                                                          an_offer_type)),1)
+        self.assertEqual(len(pgm_manager_administration._filter_by_person(self.person,
+                                                                          [],
+                                                                          self.academic_year_current,
+                                                                          an_offer_type)), 2)
+        an_other_offer_type = OfferTypeFactory()
+        self.assertEqual(len(pgm_manager_administration._filter_by_person(self.person,
+                                                                          [self.structure_parent1],
+                                                                          self.academic_year_current,
+                                                                          an_other_offer_type)),0)
+
+    def test_get_entity_list_for_one_entity(self):
+        entity_parent1 = StructureFactory(acronym='P1')
+
+        entity_child1 = StructureFactory(acronym='C1', part_of=entity_parent1)
+        entity_child11 = StructureFactory(acronym='C11', part_of=entity_child1)
+
+        entity_child2 = StructureFactory(acronym='C2', part_of=entity_parent1)
+        entity_child21 = StructureFactory(acronym='C21', part_of=entity_child2)
+        entity_child22 = StructureFactory(acronym='C22', part_of=entity_child2)
+
+        self.assertEqual(len(pgm_manager_administration.get_entity_list(entity_child1.id, None)), 1)
+
+
+    def test_get_entity_list_for_entity_hierarchy(self):
+        entity_parent1 = StructureFactory(acronym='P1')
+
+        entity_child1 = StructureFactory(acronym='C1', part_of=entity_parent1)
+        entity_child11 = StructureFactory(acronym='C11', part_of=entity_child1)
+
+        entity_child2 = StructureFactory(acronym='P2', part_of=entity_parent1)
+        entity_child21 = StructureFactory(acronym='P21', part_of=entity_child2)
+        entity_child22 = StructureFactory(acronym='P22', part_of=entity_child2)
+
+        self.assertEqual(len(pgm_manager_administration.get_entity_list(None, entity_parent1)), 6)
+
+    # @mock.patch('django.contrib.auth.decorators')
+    # def test_delete_manager_no_person_to_be_removed(self, mock_decorators):
+    #     request = set_get_request(mock_decorators, {}, '/pgm_manager/delete')
+    #
+    #     self.assertEqual(response.status_code=204)
+    #     status.H
+
 
 
 def add_permission(user, codename):
@@ -230,4 +292,17 @@ def get_permission(codename):
     return Permission.objects.get(codename=codename)
 
 
+def set_post_request(mock_decorators, dict, url):
+    mock_decorators.login_required = lambda x: x
+    request_factory = RequestFactory()
+    request = request_factory.post(url, dict)
+    request.user = mock.Mock()
+    return request
 
+
+def set_get_request(mock_decorators, dict, url):
+    mock_decorators.login_required = lambda x: x
+    request_factory = RequestFactory()
+    request = request_factory.post(url, dict)
+    request.user = mock.Mock()
+    return request
