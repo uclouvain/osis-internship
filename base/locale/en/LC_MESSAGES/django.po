@@ -16,15 +16,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-msgid "ABSENCE_JUSTIFIED"
-msgstr "Justified absence"
-
-msgid "ABSENCE_UNJUSTIFIED"
-msgstr "Unjustified Absence"
-
-msgid "CHEATING"
-msgstr "Cheating"
-
 msgid "Create a xls file while activity\\"
 msgstr ""
 
@@ -48,9 +39,6 @@ msgstr "OSIS"
 
 msgid "Print scores for all activities"
 msgstr ""
-
-msgid "SCORE_MISSING"
-msgstr "Score missing"
 
 msgid "Save"
 msgstr ""
@@ -77,9 +65,6 @@ msgstr "The opening's date of scores' encodings of the academic calendar can't b
 
 msgid "academic_calendars"
 msgstr "Academic calendars"
-
-msgid "academic_year"
-msgstr "Academic year"
 
 msgid "academic_year_not_exist"
 msgstr "Academic year (%d) doesn't exist"
@@ -269,9 +254,6 @@ msgstr "Delete"
 msgid "delete_selected_messages"
 msgstr "Delete selected messages"
 
-msgid "deliberation_date"
-msgstr "Deliberation date"
-
 msgid "desc_assistants"
 msgstr "Mandats des assistants académiques et de recherche."
 
@@ -353,9 +335,6 @@ msgstr "Doctoral commmission"
 msgid "documentation"
 msgstr "Documentation"
 
-msgid "done_at"
-msgstr "Done at"
-
 msgid "double_encoding"
 msgstr "Double encoding"
 
@@ -370,9 +349,6 @@ msgstr "Dubble online scores encoding"
 
 msgid "edit"
 msgstr "Edit"
-
-msgid "email"
-msgstr "Email"
 
 msgid "empty_note_pdf_legend"
 msgstr "(empty)=No score yet"
@@ -431,9 +407,6 @@ msgstr "Execute"
 msgid "faculty"
 msgstr "Faculty"
 
-msgid "fax"
-msgstr "Fax"
-
 msgid "female"
 msgstr "Female"
 
@@ -454,9 +427,6 @@ msgstr "Files"
 
 msgid "final"
 msgstr "Final"
-
-msgid "firstname"
-msgstr "Firstname"
 
 msgid "fixed_line_phone"
 msgstr "Fixed-line phone"
@@ -521,9 +491,6 @@ msgstr "Ill"
 msgid "ill_pdf_legend"
 msgstr "I=Ill"
 
-msgid "in_accordance_to_regulation"
-msgstr "In accordance to regulation's rules 104, 109 and 111. Complete rules avalaible here"
-
 msgid "incomplete"
 msgstr "Incomplete"
 
@@ -555,14 +522,8 @@ msgstr "Invalid file"
 msgid "javascript_is_disabled"
 msgstr "JavaScript is disabled on your browser, but OSIS does not work without JavaScript."
 
-msgid "justification"
-msgstr "Justification"
-
 msgid "justification_invalid"
 msgstr "Invalid justification"
-
-msgid "justification_legend"
-msgstr "Justification legend: %s"
 
 msgid "justifications"
 msgstr "Justifications"
@@ -588,8 +549,6 @@ msgstr "As displayed on the home page"
 msgid "language"
 msgstr "Language"
 
-msgid "lastname"
-msgstr "Lastname"
 
 msgid "last_synchronization"
 msgstr "Last synchronization"
@@ -614,9 +573,6 @@ msgstr "Learning units"
 
 msgid "learning_units_in"
 msgstr "learning units in"
-
-msgid "link_to_RGEE"
-msgstr "https://www.uclouvain.be/enseignement-reglements.html"
 
 msgid "lnk_message_history_read_title"
 msgstr "See the message"
@@ -767,9 +723,6 @@ msgstr "No valid academic year found in your xls file. The date should be format
 msgid "deadline_reached"
 msgstr "Deadline reached"
 
-msgid "none"
-msgstr "None"
-
 msgid "not_passed"
 msgstr "Not passed"
 
@@ -872,9 +825,6 @@ msgstr ""
 msgid "ph_d"
 msgstr "Ph.D"
 
-msgid "phone"
-msgstr "Phone"
-
 msgid "plain"
 msgstr "Plain"
 
@@ -920,9 +870,6 @@ msgstr "Proffessors must not submit scores"
 msgid "profile"
 msgstr "Profile"
 
-msgid "program"
-msgstr "Program"
-
 msgid "program_commission"
 msgstr "Program commission"
 
@@ -957,10 +904,7 @@ msgid "registration_id"
 msgstr "Registration ID"
 
 msgid "registration_id_not_access_or_not_exist"
-msgstr "You don't have access rights for this student or he doesn't exist in our database"
-
-msgid "registration_number"
-msgstr "Registration number"
+msgstr "Student not registered for exam"
 
 msgid "research_center"
 msgstr "Research center"
@@ -998,17 +942,8 @@ msgstr "The score seems to be incorrect. Decimales NOT allowed"
 msgid "score_invalid"
 msgstr "Score invalid"
 
-msgid "score_legend"
-msgstr "%s (0=Score of presence)"
-
-msgid "score_missing_pdf_legend"
-msgstr "?=Score missing"
-
 msgid "scores_responsible"
 msgstr "Scores Responsible"
-
-msgid "scores_responsibles_administration"
-msgstr "Administration of the scores responsibles"
 
 msgid "score_saved"
 msgstr "score Saved"
@@ -1039,12 +974,6 @@ msgstr "Sore saved, button save not available anymore"
 
 msgid "scores_must_be_between_0_and_20"
 msgstr "Scores must be between 0 and 20"
-
-msgid "scores_sheet"
-msgstr "Scores sheet"
-
-msgid "scores_transcript"
-msgstr "Scores transcript"
 
 msgid "search_for_a_file"
 msgstr "Search for a file"
@@ -1084,9 +1013,6 @@ msgstr "Session"
 
 msgid "short_title"
 msgstr "Short title"
-
-msgid "signature"
-msgstr "Signature"
 
 msgid "size"
 msgstr "Size"
@@ -1157,9 +1083,6 @@ msgstr "No message was sent : the message template {} does not exist."
 msgid "temporary_save"
 msgstr "Temporary save (not submitted to the faculty yet)"
 
-msgid "the"
-msgstr "the"
-
 msgid "the_coordinator_must_still_submit_scores"
 msgstr "The coordinator must still submit the scores"
 
@@ -1215,6 +1138,9 @@ msgstr "Select an excel file to inject scores."
 msgid "tooltip_to_my_messages"
 msgstr "Back to messages"
 
+msgid "tutor"
+msgstr "Tutor"
+
 msgid "tutors"
 msgstr "Tutors"
 
@@ -1241,12 +1167,6 @@ msgstr "Type"
 
 msgid "types"
 msgstr "Types"
-
-msgid "ucl_denom_location"
-msgstr "Université catholique de Louvain"
-
-msgid "unauthorized_decimal_for_this_activity"
-msgstr "Unauthorized decimal for this learning unit"
 
 msgid "undefined"
 msgstr "Undefined"
@@ -1388,17 +1308,11 @@ msgstr "Coordinator"
 msgid "HOLDER"
 msgstr "Holder"
 
-msgid "holder_number"
-msgstr "Holders number"
-
 msgid "CO_HOLDER"
 msgstr "Co-holder"
 
 msgid "DEPUTY"
 msgstr "Deputy"
-
-msgid "SCORES_RESPONSIBLE"
-msgstr "Scores responsible"
 
 msgid "scores_responsible_can_submit_partial_encoding"
 msgstr "Scores responsible can submit partial encoding"
@@ -1494,7 +1408,7 @@ msgid "trainings"
 msgstr "Trainings"
 
 msgid "components"
-msgstr "Component and classes"
+msgstr "Components"
 
 msgid "educational_information"
 msgstr "Educational information"
@@ -1511,3 +1425,123 @@ msgstr "Proposal"
 msgid "academic_calendar_offer_year_calendar_start_date_end_date_error"
 msgstr "The start's date of '%s' of the academic calendar can't be higher than %s "
        "(end date of '%s' of the program '%s')"
+
+msgid "component_type"
+msgstr "Component type"
+
+msgid "nominal_quater"
+msgstr "Nominal quater"
+
+msgid "vol_q1"
+msgstr "Vol. q1"
+
+msgid "vol_q2"
+msgstr "Vol. q2"
+
+msgid "nominal_volume"
+msgstr "Nominal volume"
+
+msgid "schedules_conformity"
+msgstr "Sched. conform. "
+
+msgid "planned_classrooms"
+msgstr "Planned classrooms"
+
+msgid "classes"
+msgstr "Classes"
+
+msgid "learning_unit_code"
+msgstr "Learning unit code"
+
+msgid "partims"
+msgstr "Partims"
+
+msgid "periodicity"
+msgstr "Periodicity"
+
+msgid "nominal_credits"
+msgstr "Nominal credits"
+
+msgid "ACTIVE"
+msgstr "Active"
+
+msgid "PASSIVE"
+msgstr "Passive"
+
+msgid "INACTIVE"
+msgstr "Inactive"
+
+msgid "MASTER_DISSERTATION"
+msgstr "Master Dissertation"
+
+msgid "FULL"
+msgstr "Full"
+
+msgid "MOBILITY"
+msgstr "Mobility"
+
+msgid "OTHER"
+msgstr "Other"
+
+msgid "PARTIM"
+msgstr "Partim"
+
+msgid "PHD_THESIS"
+msgstr "PhD Thesis"
+
+msgid "selected"
+msgstr "selected"
+
+msgid "learning_unit_specifications"
+msgstr "Specifications"
+
+msgid "LECTURING_COMPLETE"
+msgstr "Complete lecturing"
+
+msgid "LECTURING_INCOMPLETE"
+msgstr "Incomplete lecturing"
+
+msgid "PRACTICAL_EXERCISES_COMPLETE"
+msgstr "Complete practical exercises"
+
+msgid "PRACTICAL_EXERCISES_INCOMPLETE"
+msgstr "Incomplete practical exercises"
+
+msgid "LECTURING"
+msgstr "Lecturing"
+
+msgid "STAGE"
+msgstr "Stage"
+
+msgid "DISSERTATION"
+msgstr "Dissertation"
+
+msgid "PRACTICAL_EXERCISES"
+msgstr "Practical exercises"
+
+msgid "subtype"
+msgstr "Subtype"
+
+msgid "start"
+msgstr "Start"
+
+msgid "duration"
+msgstr "Duration"
+
+msgid "experimental_phase"
+msgstr "This feature is in testing phase"
+
+msgid "title_official_1"
+msgstr "Official title (Part 1, common with partims)"
+
+msgid "title_official_2"
+msgstr "Official title (Part 2, specific to each partim)"
+
+msgid "title_in_english"
+msgstr "Title in English"
+
+msgid "title_in_english_1"
+msgstr "(Part 1, common with partims)"
+
+msgid "title_in_english_2"
+msgstr "(Part 2, specific to each partim)"

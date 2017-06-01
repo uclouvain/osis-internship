@@ -23,6 +23,8 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+import datetime
+import operator
 import factory
 import factory.fuzzy
 from django.conf import settings
@@ -30,6 +32,8 @@ from django.utils import timezone
 
 from base.tests.factories.academic_year import AcademicYearFactory
 from base.tests.factories.learning_container import LearningContainerFactory
+from base.models.enums import learning_container_year_types
+
 
 def _get_tzinfo():
     if settings.USE_TZ:
@@ -37,11 +41,16 @@ def _get_tzinfo():
     else:
         return None
 
+
 class LearningContainerYearFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = "base.LearningContainerYear"
 
+    external_id = factory.Sequence(lambda n: '10000000%02d' % n)
     academic_year = factory.SubFactory(AcademicYearFactory)
     learning_container = factory.SubFactory(LearningContainerFactory)
-    title = factory.LazyAttribute(lambda obj: obj.learning_container.title)
+    container_type = factory.Iterator(learning_container_year_types.LEARNING_CONTAINER_YEAR_TYPES, getter=operator.itemgetter(0))
+    title = factory.Sequence(lambda n: 'Learning container year - %d' % n)
     acronym = factory.Sequence(lambda n: 'LCY-%d' % n)
+    changed = factory.fuzzy.FuzzyDateTime(datetime.datetime(2016, 1, 1, tzinfo=_get_tzinfo()),
+                                          datetime.datetime(2017, 3, 1, tzinfo=_get_tzinfo()))

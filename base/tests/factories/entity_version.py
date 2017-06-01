@@ -1,6 +1,6 @@
 ##############################################################################
 #
-#    OSIS stands for Open Student Information System. It's an application
+# OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -23,15 +23,27 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+import factory
+from django.conf import settings
+from django.utils import timezone
+from base.models.enums import entity_type
+from base.tests.factories.entity import EntityFactory
 
-from django.utils.translation import ugettext_lazy as _
 
-NONE = "NONE"
-VALID = "VALID"
-INVALID = "INVALID"
+def _get_tzinfo():
+    if settings.USE_TZ:
+        return timezone.get_current_timezone()
+    else:
+        return None
 
-LEARNING_UNIT_YEAR_STATUS = (
-    (NONE, _(NONE)),
-    (VALID, _(VALID)),
-    (INVALID, _(INVALID))
-)
+
+class EntityVersionFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = 'base.EntityVersion'
+
+    entity = factory.SubFactory(EntityFactory)
+    title = factory.Faker('text', max_nb_chars=255)
+    acronym = factory.Faker('text', max_nb_chars=20)
+    entity_type = factory.Iterator(entity_type.ENTITY_TYPES, getter=lambda c: c[0])
+    start_date = factory.Faker('date_time_this_decade', before_now=True, after_now=False, tzinfo=_get_tzinfo())
+    end_date = factory.Faker('date_time_this_decade', before_now=False, after_now=True, tzinfo=_get_tzinfo())

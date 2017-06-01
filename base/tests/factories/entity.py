@@ -1,6 +1,6 @@
 ##############################################################################
 #
-#    OSIS stands for Open Student Information System. It's an application
+# OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -23,17 +23,13 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
-from django.contrib import admin
-from django.utils import timezone
+import factory
+from base.tests.factories.organization import OrganizationFactory
 
-#Doit devenir Learning_unit_component
-class LearningComponentAdmin(admin.ModelAdmin):
-    list_display = ('learning_container',)
-    fieldsets = ((None, {'fields': ('learning_container',)}),)
 
-class LearningComponent(models.Model):
-    learning_container = models.ForeignKey('LearningContainer')
+class EntityFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = 'base.Entity'
 
-def find_by_id(learning_component_id):
-    return LearningComponent.objects.get(pk=learning_component_id)
+    organization = factory.SubFactory(OrganizationFactory)
+    external_id = factory.Faker('text', max_nb_chars=255)

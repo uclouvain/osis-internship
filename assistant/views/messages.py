@@ -24,8 +24,9 @@
 #
 ##############################################################################
 from django.shortcuts import render
+
+from assistant.models.enums import message_type
 from assistant.models.message import find_all
-from assistant.enums import message_type
 
 
 def show_history(request):

@@ -38,6 +38,7 @@ from django.db.utils import OperationalError as DjangoOperationalError, Interfac
 from django.http import HttpResponseRedirect
 from django.utils.translation import ugettext_lazy as _
 from psycopg2._psycopg import OperationalError as PsycopOperationalError, InterfaceError as  PsycopInterfaceError
+import time
 
 from assessments.business import score_encoding_progress, score_encoding_list, score_encoding_export
 from attribution import models as mdl_attr
@@ -117,8 +118,10 @@ def scores_encoding(request):
         # Manage filter
         learning_unit_year_ids = None
         if learning_unit_year_acronym:
+            learning_unit_year_acronym = learning_unit_year_acronym.strip() if isinstance(learning_unit_year_acronym, str)\
+                                         else learning_unit_year_acronym
             learning_unit_year_ids = mdl.learning_unit_year.search(acronym=learning_unit_year_acronym) \
-                .values_list('id', flat=True)
+                                                           .values_list('id', flat=True)
         if tutor_id and tutor_id != NOBODY:
             learning_unit_year_ids_filter_by_tutor = mdl_attr.attribution.search(tutor=tutor_id) \
                 .distinct('learning_unit_year') \
@@ -219,8 +222,7 @@ def online_encoding_form(request, learning_unit_year_id=None):
             context = _preserve_encoded_values(request, context)
         else:
             template_name = "online_encoding.html"
-            send_messages_to_notify_encoding_progress(request,
-                                                      context["enrollments"],
+            send_messages_to_notify_encoding_progress(context["enrollments"],
                                                       context["learning_unit_year"],
                                                       context["is_program_manager"],
                                                       updated_enrollments)
@@ -257,10 +259,7 @@ def online_encoding_submission(request, learning_unit_year_id):
     learning_unit_year = mdl.learning_unit_year.find_by_id(learning_unit_year_id)
     attributions = mdl_attr.attribution.Attribution.objects.filter(learning_unit_year=learning_unit_year)
     persons = list(set([attribution.tutor.person for attribution in attributions]))
-    sent_error_message = send_mail.send_mail_after_scores_submission(persons, learning_unit_year.acronym,
-                                                                     submitted_enrollments, all_encoded)
-    if sent_error_message:
-        messages.add_message(request, messages.ERROR, "%s" % sent_error_message)
+    send_mail.send_mail_after_scores_submission(persons, learning_unit_year.acronym, submitted_enrollments, all_encoded)
     return HttpResponseRedirect(reverse('online_encoding', args=(learning_unit_year_id,)))
 
 
@@ -359,8 +358,7 @@ def online_double_encoding_validation(request, learning_unit_year_id=None):
             scores_list_encoded = score_encoding_list.get_scores_encoding_list(
                 user=request.user,
                 learning_unit_year_id=learning_unit_year_id)
-            send_messages_to_notify_encoding_progress(request,
-                                                      scores_list_encoded.enrollments,
+            send_messages_to_notify_encoding_progress(scores_list_encoded.enrollments,
                                                       scores_list_encoded.learning_unit_year,
                                                       is_program_manager,
                                                       updated_enrollments)
@@ -492,19 +490,15 @@ def bulk_send_messages_to_notify_encoding_progress(request, updated_enrollments,
                 continue
             scores_list = score_encoding_list.get_scores_encoding_list(user=request.user,
                                                                        learning_unit_year_id=learning_unit_year.id)
-            send_messages_to_notify_encoding_progress(request, scores_list.enrollments,
-                                                      learning_unit_year, is_program_manager, updated_enrollments)
+            send_messages_to_notify_encoding_progress(scores_list.enrollments, learning_unit_year,
+                                                      is_program_manager, updated_enrollments)
             mail_already_sent_by_learning_unit.add(learning_unit_year)
 
 
-def send_messages_to_notify_encoding_progress(request, all_enrollments, learning_unit_year, is_program_manager,
+def send_messages_to_notify_encoding_progress(all_enrollments, learning_unit_year, is_program_manager,
                                               updated_enrollments):
     if is_program_manager:
-        sent_error_messages = __send_messages_for_each_offer_year(all_enrollments,
-                                                                  learning_unit_year,
-                                                                  updated_enrollments)
-        for sent_error_message in sent_error_messages:
-            messages.add_message(request, messages.ERROR, "%s" % sent_error_message)
+        __send_messages_for_each_offer_year(all_enrollments, learning_unit_year, updated_enrollments)
 
 
 def online_double_encoding_get_form(request, data=None, learning_unit_year_id=None):
@@ -622,32 +616,15 @@ def get_json_data_scores_sheets(tutor_global_id):
             return json.dumps(data)
         else:
             return json.dumps({})
-    except (PsycopOperationalError, PsycopInterfaceError, DjangoOperationalError, DjangoInterfaceError) as ep:
+    except (PsycopOperationalError, PsycopInterfaceError, DjangoOperationalError, DjangoInterfaceError):
+        queue_exception_logger.error('Postgres Error during get_json_data_scores_sheets on global_id {} => retried'.format(tutor_global_id))
         trace = traceback.format_exc()
-        try:
-            data = json.dumps({'tutor_global_id': tutor_global_id})
-            queue_exception = QueueException(queue_name=settings.QUEUES.get('QUEUES_NAME').get('PAPER_SHEET'),
-                                             message=data,
-                                             exception_title='[Catched and retried] - {}'.format(type(ep).__name__),
-                                             exception=trace)
-            queue_exception_logger.error(queue_exception.to_exception_log())
-        except Exception:
-            logger.error(trace)
-            log_trace = traceback.format_exc()
-            logger.warning('Error during queue logging :\n {}'.format(log_trace))
+        queue_exception_logger.error(trace)
         connection.close()
-        get_json_data_scores_sheets(tutor_global_id)
-    except Exception as e:
+        time.sleep(1)
+        return get_json_data_scores_sheets(tutor_global_id)
+    except Exception:
+        logger.warning('(Not PostgresError) during get_json_data_scores_sheets on global_id {}'.format(tutor_global_id))
         trace = traceback.format_exc()
-        try:
-            data = json.dumps({'tutor_global_id': tutor_global_id})
-            queue_exception = QueueException(queue_name=settings.QUEUES.get('QUEUES_NAME').get('PAPER_SHEET'),
-                                             message=data,
-                                             exception_title=type(e).__name__,
-                                             exception=trace)
-            queue_exception_logger.error(queue_exception.to_exception_log())
-        except Exception:
-            logger.error(trace)
-            log_trace = traceback.format_exc()
-            logger.warning('Error during queue logging :\n {}'.format(log_trace))
-        return None
+        logger.error(trace)
+        return json.dumps({})

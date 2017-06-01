@@ -24,17 +24,16 @@
 #
 ##############################################################################
 from django import forms
-from django.utils.translation import ugettext as _
-from django.forms import ModelForm, Textarea
-from assistant import models as mdl
-from base.models import structure, academic_year, learning_unit_year
-from django.forms.models import inlineformset_factory
 from django.core.exceptions import ValidationError
+from django.forms import ModelForm, Textarea
 from django.forms import widgets
-from assistant.enums import reviewer_role
-from assistant.models.enums import review_advice_choices, assistant_type, assistant_mandate_renewal
-from assistant.models.enums import assistant_phd_inscription
+from django.forms.models import inlineformset_factory
+from django.utils.translation import ugettext as _
+from base.models import structure, academic_year, learning_unit_year
 from base.models.enums import structure_type
+from assistant import models as mdl
+from assistant.models.enums import review_advice_choices, assistant_type, assistant_mandate_renewal, \
+    reviewer_role, assistant_phd_inscription
 
 
 class MandateFileForm(forms.Form):
@@ -237,8 +236,6 @@ class TutoringLearningUnitForm(forms.Form):
 
 
 class AssistantFormPart5(ModelForm):
-    degrees = forms.CharField(
-        required=False, widget=forms.Textarea(attrs={'cols': '80', 'rows': '4'}))
     formations = forms.CharField(
         required=False, widget=forms.Textarea(attrs={'cols': '80', 'rows': '4'}))
 
@@ -247,11 +244,11 @@ class AssistantFormPart5(ModelForm):
         fields = ('faculty_representation', 'institute_representation', 'sector_representation',
                   'governing_body_representation', 'corsci_representation', 'students_service',
                   'infrastructure_mgmt_service', 'events_organisation_service', 'publishing_field_service',
-                  'scientific_jury_service', 'degrees', 'formations')
+                  'scientific_jury_service', 'formations')
 
 
 class ReviewForm(ModelForm):
-    justification = forms.CharField(help_text=_("justification_required_if_conditional"),
+    justification = forms.CharField(help_text=_("justification_required_if_conditional_or_negative"),
                                     required=False, widget=forms.Textarea(attrs={'cols': '80', 'rows': '5'}))
     remark = forms.CharField(required=False, widget=forms.Textarea(attrs={'cols': '80', 'rows': '5'}))
     confidential = forms.CharField(help_text=_("information_not_provided_to_assistant"),
@@ -270,8 +267,8 @@ class ReviewForm(ModelForm):
         super(ReviewForm, self).clean()
         advice = self.cleaned_data.get("advice")
         justification = self.cleaned_data.get('justification')
-        if advice == review_advice_choices.CONDITIONAL and not justification:
-            msg = _("justification_required_if_conditional")
+        if advice != review_advice_choices.FAVORABLE and not justification:
+            msg = _("justification_required_if_conditional_or_negative")
             self.add_error('justification', msg)
 
 
@@ -321,6 +318,30 @@ class ReviewerForm(ModelForm):
         model = mdl.reviewer.Reviewer
         fields = ('structure', 'role')
         exclude = ['person']
+
+
+class ReviewerReplacementForm(ModelForm):
+    person = forms.ChoiceField(required=False)
+    id = forms.CharField(widget=forms.HiddenInput())
+
+    class Meta:
+        model = mdl.reviewer.Reviewer
+        fields = ('person', 'id')
+        exclude = ('structure', 'role')
+
+
+class ReviewersFormset(ModelForm):
+    role = forms.ChoiceField(required=False)
+    structure = forms.ChoiceField(required=False)
+    person = forms.ChoiceField(required=False)
+    id = forms.IntegerField(required=False)
+    ACTIONS = (('-----', _('-----')), ('DELETE', _('delete_reviewer')), ('REPLACE', _('replace_reviewer')))
+    action = forms.ChoiceField(required=False, choices=ACTIONS,
+                               widget=forms.Select(attrs={'class': 'selector', 'onchange': 'this.form.submit();'}))
+
+    class Meta:
+        model = mdl.reviewer.Reviewer
+        exclude = ('structure', 'role', 'person')
 
 
 class SettingsForm(ModelForm):

@@ -1,9 +1,42 @@
+##############################################################################
+#
+#    OSIS stands for Open Student Information System. It's an application
+#    designed to manage the core business of higher education institutions,
+#    such as universities, faculties, institutes and professional schools.
+#    The core business involves the administration of students, teachers,
+#    courses, programs and so on.
+#
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+#    GNU General Public License for more details.
+#
+#    A copy of this license - GNU General Public License - is available
+#    at the root of the source code of this program.  If not,
+#    see http://www.gnu.org/licenses/.
+#
+##############################################################################
+from django.utils import timezone
 from unittest import mock
 
 from django.core.urlresolvers import reverse
 from django.test import TestCase, RequestFactory
 
+from base.tests.factories.academic_year import AcademicYearFactory
 from base.tests.factories.learning_unit_year import LearningUnitYearFactory
+from base.tests.factories.learning_class_year import LearningClassYearFactory
+from base.tests.factories.learning_component_year import LearningComponentYearFactory
+from base.tests.factories.learning_container import LearningContainerFactory
+from base.tests.factories.learning_container_year import LearningContainerYearFactory
+
+from base.views import learning_unit as learning_unit_view
 
 
 class LearningUnitViewTestCase(TestCase):
@@ -75,3 +108,22 @@ class LearningUnitViewTestCase(TestCase):
 
         self.assertEqual(template, 'learning_unit/identification.html')
         self.assertEqual(context['learning_unit_year'], learning_unit_year)
+
+    def test_get_components_no_learning_container_yr(self):
+        self.assertEqual(len(learning_unit_view.get_components(None)), 0)
+
+    def test_get_components_with_classes(self):
+        an_academic_year = AcademicYearFactory(year=timezone.now().year)
+        l_container = LearningContainerFactory()
+        l_container.save()
+        l_container_year = LearningContainerYearFactory.build(academic_year=an_academic_year,
+                                                              title="LC-98998",
+                                                              learning_container=l_container)
+        l_container_year.save()
+        l_component_year = LearningComponentYearFactory(learning_container_year=l_container_year)
+        LearningClassYearFactory(learning_component_year=l_component_year)
+        LearningClassYearFactory(learning_component_year=l_component_year)
+
+        components = learning_unit_view.get_components(l_container_year)
+        self.assertEqual(len(components), 1)
+        self.assertEqual(len(components[0]['classes']), 2)

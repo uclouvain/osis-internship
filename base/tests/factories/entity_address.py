@@ -1,6 +1,6 @@
 ##############################################################################
 #
-#    OSIS stands for Open Student Information System. It's an application
+# OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -23,17 +23,17 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
-from django.contrib import admin
+import factory
+from base.tests.factories.entity import EntityFactory
 
 
-class LearningClassAdmin(admin.ModelAdmin):
-    list_display = ('learning_component',)
-    fieldsets = ((None, {'fields': ('learning_component',)}),)
+class EntityAddressFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = 'base.EntityAddress'
 
-class LearningClass(models.Model):
-    learning_component = models.ForeignKey('LearningComponent')
-
-def find_by_id(learning_class_id):
-    return LearningClass.objects.get(pk=learning_class_id)
-
+    entity = factory.SubFactory(EntityFactory)
+    label = factory.Faker('text', max_nb_chars=20)
+    location = factory.Faker('street_address')
+    postal_code = factory.Faker('zipcode')
+    city = factory.Faker('city')
+    country = factory.Faker('country')

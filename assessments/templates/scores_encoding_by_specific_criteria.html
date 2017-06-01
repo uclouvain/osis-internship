@@ -122,8 +122,8 @@
                             {{ enrollment.learning_unit_enrollment.learning_unit_year.acronym |add:" - " |add:enrollment.learning_unit_enrollment.learning_unit_year.title | truncatechars:22}}
                         </td>
                         <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.registration_id }}</td>
-                        <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.last_name }}</td>
-                        <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.first_name }}</td>
+                        <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.last_name|default_if_none:"" }}</td>
+                        <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.first_name|default_if_none:"" }}</td>
                         <td>
                             <input class="form-control col-sm" type="text" name="score_{{ enrollment.id }}"
                                 id="num_score_{{ enrollment.id }}" tabindex="{{ forloop.counter }}"
@@ -255,7 +255,7 @@
     }
 
     var target_score = '#form_justification tbody tr td input';
-    $(target_score).on('keypress',
+    $(target_score).on('keydown',
                        { "target": target_score,
                          "table_size": $('#form_justification tbody tr').length,
                          "index_increment_value": 2},
@@ -263,7 +263,7 @@
 
 
     var target_justification = '#form_justification tbody tr td select';
-    $(target_justification).on('keypress',
+    $(target_justification).on('keydown',
                                { "target": target_justification,
                                  "table_size": $('#form_justification tbody tr').length * 2,
                                  "index_increment_value": 1},

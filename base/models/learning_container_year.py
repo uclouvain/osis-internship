@@ -23,28 +23,30 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
 from django.contrib import admin
-from base.models import academic_year
-
+from django.db import models
+from base.models import learning_unit_year
+from base.models.enums import learning_unit_year_subtypes, learning_container_year_types
 
 
 class LearningContainerYearAdmin(admin.ModelAdmin):
-    list_display = ('learning_container', 'academic_year', 'acronym', 'title')
-    fieldsets = ((None, {'fields': ('learning_container', 'academic_year', 'acronym', 'title')}),)
+    list_display = ('learning_container', 'academic_year', 'container_type', 'acronym', 'title')
+    fieldsets = ((None, {'fields': ('learning_container', 'academic_year', 'container_type', 'acronym', 'title',
+                                    'title_english', 'language')}),)
     search_fields = ['acronym']
 
 
 class LearningContainerYear(models.Model):
+    external_id = models.CharField(max_length=100, blank=True, null=True)
     academic_year = models.ForeignKey('AcademicYear')
     learning_container = models.ForeignKey('LearningContainer')
+    container_type = models.CharField(max_length=20, blank=True, null=True,
+                                      choices=learning_container_year_types.LEARNING_CONTAINER_YEAR_TYPES)
     title = models.CharField(max_length=255)
+    title_english = models.CharField(max_length=250, blank=True, null=True)
     acronym = models.CharField(max_length=10)
-
-    def save(self, *args, **kwargs):
-        if self.title != self.learning_container.title and self.academic_year != academic_year.current_academic_year :
-            raise AttributeError("The title of the learning container year is different from the learning container.")
-        super(LearningContainerYear, self).save()
+    changed = models.DateTimeField(null=True)
+    language = models.ForeignKey('reference.Language', blank=True, null=True)
 
     def __str__(self):
         return u"%s - %s" % (self.acronym, self.title)
@@ -54,5 +56,12 @@ class LearningContainerYear(models.Model):
             ("can_access_learningcontaineryear", "Can access learning container year"),
         )
 
+
 def find_by_id(learning_container_year_id):
     return LearningContainerYear.objects.get(pk=learning_container_year_id)
+
+
+def find_all_partims(learning_container_year):
+    return learning_unit_year.search(learning_container_year_id=learning_container_year,
+                                     subtype=learning_unit_year_subtypes.PARTIM)\
+                             .exclude(learning_container_year__isnull=True).order_by('acronym')

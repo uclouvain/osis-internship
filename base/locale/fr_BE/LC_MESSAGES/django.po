@@ -16,15 +16,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-msgid "ABSENCE_JUSTIFIED"
-msgstr "Absence justifiée"
-
-msgid "ABSENCE_UNJUSTIFIED"
-msgstr "Absence injustifiée"
-
-msgid "CHEATING"
-msgstr "Tricherie"
-
 msgid "Create a xls file while activity\\"
 msgstr ""
 
@@ -48,9 +39,6 @@ msgstr "OSIS"
 
 msgid "Print scores for all activities"
 msgstr ""
-
-msgid "SCORE_MISSING"
-msgstr "Note manquante"
 
 msgid "Save"
 msgstr ""
@@ -77,9 +65,6 @@ msgstr "La date d'ouverture de l'encodage des notes du calendrier académique ne
 
 msgid "academic_calendars"
 msgstr "Calendriers académique"
-
-msgid "academic_year"
-msgstr "Année académique"
 
 msgid "academic_year_not_exist"
 msgstr "L'année académique (%d) n'existe pas"
@@ -262,9 +247,6 @@ msgstr "Supprimer"
 msgid "delete_selected_messages"
 msgstr "Supprimer les messages sélectionnés"
 
-msgid "deliberation_date"
-msgstr "Date de délibération"
-
 msgid "desc_assistants"
 msgstr "Processus visant à aider les enseignants pour l'encodage des notes."
 
@@ -349,9 +331,6 @@ msgstr "Commision doctorale"
 msgid "documentation"
 msgstr "Documentation"
 
-msgid "done_at"
-msgstr "Fait à"
-
 msgid "double_encoding"
 msgstr "Double encodage"
 
@@ -366,9 +345,6 @@ msgstr "Double encodage de notes en ligne"
 
 msgid "edit"
 msgstr "Éditer"
-
-msgid "email"
-msgstr "Email"
 
 msgid "empty_note_pdf_legend"
 msgstr "(vide)=Pas encore de note"
@@ -427,9 +403,6 @@ msgstr "Exécuter"
 msgid "faculty"
 msgstr "Faculté"
 
-msgid "fax"
-msgstr "Fax"
-
 msgid "female"
 msgstr "Féminin"
 
@@ -450,9 +423,6 @@ msgstr "Fichiers"
 
 msgid "final"
 msgstr "Final"
-
-msgid "firstname"
-msgstr "Prénom"
 
 msgid "fixed_line_phone"
 msgstr "Téléphone fixe"
@@ -517,9 +487,6 @@ msgstr "Malade"
 msgid "ill_pdf_legend"
 msgstr "M=Malade"
 
-msgid "in_accordance_to_regulation"
-msgstr "Conformément aux articles 104, 109 et 111 RGEE (Règlement Général des Examens) disponible au lien suivant"
-
 msgid "incomplete"
 msgstr "Incomplet"
 
@@ -553,14 +520,8 @@ msgstr "Fichier invalide"
 msgid "javascript_is_disabled"
 msgstr "JavaScript est désactivé dans votre navigateur, mais OSIS ne fonctionne pas sans JavaScript."
 
-msgid "justification"
-msgstr "Justification"
-
 msgid "justification_invalid"
 msgstr "Justification invalide"
-
-msgid "justification_legend"
-msgstr "Légende pour le champ 'Justification': %s"
 
 msgid "justifications"
 msgstr "Justifications"
@@ -586,9 +547,6 @@ msgstr "Comme présenté sur la page d'accueil"
 
 msgid "language"
 msgstr "Langue"
-
-msgid "lastname"
-msgstr "Nom"
 
 msgid "last_synchronization"
 msgstr "Dernière synchronisation"
@@ -619,9 +577,6 @@ msgstr "Tous les cours du professeur qui possèdent des inscriptions doivent êt
 
 msgid "learning_units_without_inscription_must_not_be_shown"
 msgstr "Les cours qui ne possèdent pas d'inscriptions ne devraient pas être présents"
-
-msgid "link_to_RGEE"
-msgstr "https://www.uclouvain.be/enseignement-reglements.html"
 
 msgid "lnk_message_history_read_title"
 msgstr "Afficher le message"
@@ -777,9 +732,6 @@ msgstr "Aucune année académique au format valide n'a été trouvé dans votre 
 msgid "deadline_reached"
 msgstr "Date limite atteinte"
 
-msgid "none"
-msgstr "Aucun"
-
 msgid "not_passed"
 msgstr "Non communiquée"
 
@@ -884,9 +836,6 @@ msgstr ""
 msgid "ph_d"
 msgstr "Ph.D"
 
-msgid "phone"
-msgstr "Téléphone"
-
 msgid "plain"
 msgstr "Plain"
 
@@ -932,9 +881,6 @@ msgstr "Les professeurs ne peuvent pas soumettre de notes"
 msgid "profile"
 msgstr "Profil"
 
-msgid "program"
-msgstr "Programme"
-
 msgid "program_commission"
 msgstr "Commison d'enseignement/programme"
 
@@ -969,10 +915,7 @@ msgid "registration_id"
 msgstr "NOMA"
 
 msgid "registration_id_not_access_or_not_exist"
-msgstr "Vous n'avez pas des droits accès pour cet étudiant ou il n'existe pas en base de données"
-
-msgid "registration_number"
-msgstr "Noma"
+msgstr "Étudiant non inscrit à l'examen"
 
 msgid "research_center"
 msgstr "Centre de recherche"
@@ -1011,12 +954,6 @@ msgstr "La note encodée est incorrecte : décimales non autorisées"
 msgid "score_invalid"
 msgstr "Note invalide"
 
-msgid "score_legend"
-msgstr "%s (0=Cote de présence)"
-
-msgid "score_missing_pdf_legend"
-msgstr "?=Note manquante"
-
 msgid "score_saved"
 msgstr "note(s) injectée(s)"
 
@@ -1041,9 +978,6 @@ msgstr "Injection des notes"
 msgid "scores_responsible"
 msgstr "Responsable(s) de notes"
 
-msgid "scores_responsibles_administration"
-msgstr "Administration des Responsables de notes pour les cours de la faculté"
-
 msgid "scores_saved"
 msgstr "note(s) enregistrée(s)"
 
@@ -1052,12 +986,6 @@ msgstr "Notes sauvegardées, le bouton sauvegarder n'est plus présent"
 
 msgid "scores_must_be_between_0_and_20"
 msgstr "Les notes doivent être comprise entre 0 et 20"
-
-msgid "scores_sheet"
-msgstr "Feuille de notes"
-
-msgid "scores_transcript"
-msgstr "Feuille de notes"
 
 msgid "search_for_a_file"
 msgstr "Recherche d'un fichier"
@@ -1097,9 +1025,6 @@ msgstr "Session"
 
 msgid "short_title"
 msgstr "Titre abrégé"
-
-msgid "signature"
-msgstr "Signature"
 
 msgid "size"
 msgstr "Taille"
@@ -1169,9 +1094,6 @@ msgstr "Aucun message n'a été envoyé : le modèle de message {} n'existe pas.
 
 msgid "temporary_save"
 msgstr "Sauvegarde temporaire (non soumis à la faculté)"
-
-msgid "the"
-msgstr "le"
 
 msgid "the_coordinator_must_still_submit_scores"
 msgstr "Le coordinateur doit toujours soumettre les notes"
@@ -1260,12 +1182,6 @@ msgstr "Type"
 
 msgid "types"
 msgstr "Types"
-
-msgid "ucl_denom_location"
-msgstr "Université catholique de Louvain"
-
-msgid "unauthorized_decimal_for_this_activity"
-msgstr "Attention : décimales non autorisées pour ce cours"
 
 msgid "undefined"
 msgstr "Non défini"
@@ -1415,9 +1331,6 @@ msgstr "Co-titulaire"
 msgid "DEPUTY"
 msgstr "Suppléant"
 
-msgid "SCORES_RESPONSIBLE"
-msgstr "Responsable de notes"
-
 msgid "scores_responsible_can_submit_partial_encoding"
 msgstr "Les responsables de notes peuvent soumettre des encodages partiels"
 
@@ -1476,7 +1389,7 @@ msgid "abscence_justified_preserved"
 msgstr "Abscence justifiée dèjà encodée et préservée"
 
 msgid "tutors_of_course"
-msgstr "Titulaires du cours"
+msgstr "Enseignant(e)(s) du cours"
 
 msgid "academic_actors"
 msgstr "Les acteurs académiques"
@@ -1512,7 +1425,7 @@ msgid "trainings"
 msgstr "Formations"
 
 msgid "components"
-msgstr "Composants et classes"
+msgstr "Composants"
 
 msgid "educational_information"
 msgstr "Infos pédagogiques"
@@ -1529,3 +1442,99 @@ msgstr "Proposition"
 msgid "academic_calendar_offer_year_calendar_start_date_end_date_error"
 msgstr "La date d'ouverture de '%s' du calendrier académique ne peut pas être supérieure au %s "
        "(date de fin de '%s' du programme '%s')"
+
+msgid "component_type"
+msgstr "Type de composant"
+
+msgid "nominal_quater"
+msgstr "Quadri. nominal "
+
+msgid "vol_q1"
+msgstr "Vol. q1"
+
+msgid "vol_q2"
+msgstr "Vol. q2"
+
+msgid "nominal_volume"
+msgstr "Volume nominal"
+
+msgid "schedules_conformity"
+msgstr "Conform. horaires"
+
+msgid "planned_classrooms"
+msgstr "Classes prévues"
+
+msgid "classes"
+msgstr "Classes"
+
+msgid "learning_unit_code"
+msgstr "Code de l'UE"
+
+msgid "partims"
+msgstr "Partims"
+
+msgid "periodicity"
+msgstr "Périodicité"
+
+msgid "nominal_credits"
+msgstr "Credits nominaux"
+
+msgid "ACTIVE"
+msgstr "Actif"
+
+msgid "PASSIVE"
+msgstr "Passif"
+
+msgid "INACTIVE"
+msgstr "Inactif"
+
+msgid "MASTER_DISSERTATION"
+msgstr "Mémoire"
+
+msgid "FULL"
+msgstr "Complet"
+
+msgid "MOBILITY"
+msgstr "Mobilité"
+
+msgid "OTHER"
+msgstr "Autre"
+
+msgid "PARTIM"
+msgstr "Partim"
+
+msgid "PHD_THESIS"
+msgstr "Thèse"
+
+msgid "selected"
+msgstr "sélectionné(s)"
+
+msgid "subtype"
+msgstr "Sous-type"
+
+msgid "start"
+msgstr "Début"
+
+msgid "duration"
+msgstr "Durée"
+
+msgid "learning_unit_specifications"
+msgstr "Cahier de charges"
+
+msgid "experimental_phase"
+msgstr "Cette fonctionnalité est en phase expérimentale"
+
+msgid "title_official_1"
+msgstr "Intitulé officiel (partie 1 commune aux partims)"
+
+msgid "title_official_2"
+msgstr "Intitulé officiel (partie 2 propre au partim)"
+
+msgid "title_in_english"
+msgstr "Intitulé en anglais"
+
+msgid "title_in_english_1"
+msgstr "(partie 1 commune aux partims)"
+
+msgid "title_in_english_2"
+msgstr "(partie 2 propre au partim)"
