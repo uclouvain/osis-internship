@@ -26,7 +26,6 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from base.models.entity import Entity
 from base.models import entity
 from base.models import entity_link
 from base.models import entity_version
