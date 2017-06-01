@@ -28,7 +28,6 @@ import json
 from base.tests.factories.entity import EntityFactory
 from base.tests.factories.organization import OrganizationFactory
 from base.tests.factories.user import UserFactory
-from django.contrib.auth.models import Permission
 from django.core.urlresolvers import reverse
 from rest_framework import status
 from rest_framework.authtoken.models import Token
