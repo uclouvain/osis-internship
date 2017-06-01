@@ -222,8 +222,7 @@ def online_encoding_form(request, learning_unit_year_id=None):
             context = _preserve_encoded_values(request, context)
         else:
             template_name = "online_encoding.html"
-            send_messages_to_notify_encoding_progress(request,
-                                                      context["enrollments"],
+            send_messages_to_notify_encoding_progress(context["enrollments"],
                                                       context["learning_unit_year"],
                                                       context["is_program_manager"],
                                                       updated_enrollments)
@@ -260,10 +259,7 @@ def online_encoding_submission(request, learning_unit_year_id):
     learning_unit_year = mdl.learning_unit_year.find_by_id(learning_unit_year_id)
     attributions = mdl_attr.attribution.Attribution.objects.filter(learning_unit_year=learning_unit_year)
     persons = list(set([attribution.tutor.person for attribution in attributions]))
-    sent_error_message = send_mail.send_mail_after_scores_submission(persons, learning_unit_year.acronym,
-                                                                     submitted_enrollments, all_encoded)
-    if sent_error_message:
-        messages.add_message(request, messages.ERROR, "%s" % sent_error_message)
+    send_mail.send_mail_after_scores_submission(persons, learning_unit_year.acronym, submitted_enrollments, all_encoded)
     return HttpResponseRedirect(reverse('online_encoding', args=(learning_unit_year_id,)))
 
 
@@ -362,8 +358,7 @@ def online_double_encoding_validation(request, learning_unit_year_id=None):
             scores_list_encoded = score_encoding_list.get_scores_encoding_list(
                 user=request.user,
                 learning_unit_year_id=learning_unit_year_id)
-            send_messages_to_notify_encoding_progress(request,
-                                                      scores_list_encoded.enrollments,
+            send_messages_to_notify_encoding_progress(scores_list_encoded.enrollments,
                                                       scores_list_encoded.learning_unit_year,
                                                       is_program_manager,
                                                       updated_enrollments)
@@ -495,19 +490,15 @@ def bulk_send_messages_to_notify_encoding_progress(request, updated_enrollments,
                 continue
             scores_list = score_encoding_list.get_scores_encoding_list(user=request.user,
                                                                        learning_unit_year_id=learning_unit_year.id)
-            send_messages_to_notify_encoding_progress(request, scores_list.enrollments,
-                                                      learning_unit_year, is_program_manager, updated_enrollments)
+            send_messages_to_notify_encoding_progress(scores_list.enrollments, learning_unit_year,
+                                                      is_program_manager, updated_enrollments)
             mail_already_sent_by_learning_unit.add(learning_unit_year)
 
 
-def send_messages_to_notify_encoding_progress(request, all_enrollments, learning_unit_year, is_program_manager,
+def send_messages_to_notify_encoding_progress(all_enrollments, learning_unit_year, is_program_manager,
                                               updated_enrollments):
     if is_program_manager:
-        sent_error_messages = __send_messages_for_each_offer_year(all_enrollments,
-                                                                  learning_unit_year,
-                                                                  updated_enrollments)
-        for sent_error_message in sent_error_messages:
-            messages.add_message(request, messages.ERROR, "%s" % sent_error_message)
+        __send_messages_for_each_offer_year(all_enrollments, learning_unit_year, updated_enrollments)
 
 
 def online_double_encoding_get_form(request, data=None, learning_unit_year_id=None):

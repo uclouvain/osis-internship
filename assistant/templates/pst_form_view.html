@@ -129,59 +129,61 @@
                 </div>
             </div>
         </div>
-  		<div class="panel-default">
-  			<div class="panel-heading">
-  				<h4>{% trans 'doctorate' %}</h4>
-    		</div>
-    	</div>
-        <div class="form-group" style="padding-top: 10px;">
-            <div class="row" style="padding-top: 2px;">
-                <div class="col-md-3">
-                    {% trans 'registered_phd' %}
+  		{% if mandate.assistant_type == 'ASSISTANT' %}
+            <div class="panel-default">
+  			    <div class="panel-heading">
+  				    <h4>{% trans 'doctorate' %}</h4>
+    		    </div>
+    	    </div>
+            <div class="form-group" style="padding-top: 10px;">
+                <div class="row" style="padding-top: 2px;">
+                    <div class="col-md-3">
+                        {% trans 'registered_phd' %}
+                    </div>
+                    <div class="col-md-3">
+                        {{ assistant.inscription }}
+                    </div>
+                    <div class="col-md-3">
+                        {% trans 'expected_registering_date' %}
+                    </div>
+                    <div class="col-md-3">
+                        {{ assistant.expected_phd_date }}
+                    </div>
                 </div>
-                <div class="col-md-3">
-                    {{ assistant.inscription }}
+                <div class="row" style="padding-top: 2px;">
+                    <div class="col-md-3">
+                        {% trans 'supervisor' %}
+                    </div>
+                    <div class="col-md-9">
+                        {{ assistant.supervisor }}
+                    </div>
                 </div>
-                <div class="col-md-3">
-                    {% trans 'expected_registering_date' %}
+                <div class="row" style="padding-top: 2px;">
+                    <div class="col-md-3">
+                        {% trans 'phd_inscription_date' %}
+                    </div>
+                    <div class="col-md-9">
+                        {{ assistant.phd_inscription_date }}
+                    </div>
                 </div>
-                <div class="col-md-3">
-                    {{ assistant.expected_phd_date }}
+                <div class="row" style="padding-top: 2px;">
+                    <div class="col-md-3">
+                        {% trans 'confirmatory_test_date' %}<h6>{% trans '2nd_renewal' %}</h6>
+                    </div>
+                    <div class="col-md-9">
+                        {{ assistant.confirmation_test_date }}
+                    </div>
+                </div>
+                <div class="row" style="padding-top: 2px;">
+                    <div class="col-md-3">
+                        {% trans 'thesis_defence_date' %}
+                    </div>
+                    <div class="col-md-9">
+                        {{ assistant.thesis_date }}
+                    </div>
                 </div>
             </div>
-            <div class="row" style="padding-top: 2px;">
-                <div class="col-md-3">
-                    {% trans 'supervisor' %}
-                </div>
-                <div class="col-md-9">
-                    {{ assistant.supervisor }}
-                </div>
-            </div>
-            <div class="row" style="padding-top: 2px;">
-                <div class="col-md-3">
-                    {% trans 'phd_inscription_date' %}
-                </div>
-                <div class="col-md-9">
-                    {{ assistant.phd_inscription_date }}
-                </div>
-            </div>
-            <div class="row" style="padding-top: 2px;">
-                <div class="col-md-3">
-                    {% trans 'confirmatory_test_date' %}<h6>{% trans '2nd_renewal' %}</h6>
-                </div>
-                <div class="col-md-9">
-                    {{ assistant.confirmation_test_date }}
-                </div>
-            </div>
-            <div class="row" style="padding-top: 2px;">
-                <div class="col-md-3">
-                    {% trans 'thesis_defence_date' %}
-                </div>
-                <div class="col-md-9">
-                    {{ assistant.thesis_date }}
-                </div>
-            </div>
-        </div>
+        {% endif %}
         <div class="panel-default">
   			<div class="panel-heading">
   				<h4>{% trans 'various' %}</h4>
@@ -217,6 +219,13 @@
                     <th>{% trans 'academic_year' %}</th>
                     <th>{% trans 'acronym' %}</th>
                     <th>{% trans 'title' %}</th>
+                    <th>{% trans 'sessions_duration' %}</th>
+                    <th>{% trans 'sessions_number' %}</th>
+                    <th>{% trans 'series_number' %}</th>
+                    <th>{% trans 'total_hours' %}</th>
+                    <th>{% trans 'attendees' %}</th>
+                    <th>{% trans 'preparation_duration' %}</th>
+                    <th>{% trans 'others_delivery' %}</th>
                 </tr>
             </thead>
             <tbody>
@@ -225,6 +234,13 @@
                     <td>{{ learning_unit.learning_unit_year.academic_year }}</td>
                     <td>{{ learning_unit.learning_unit_year.acronym }}</td>
                     <td>{{ learning_unit.learning_unit_year.title }}</td>
+                    <td>{{ learning_unit.sessions_duration }}h</td>
+                    <td>{{ learning_unit.sessions_number }}</td>
+                    <td>{{ learning_unit.series_number }}</td>
+                    <td>{{ learning_unit.face_to_face_duration }}h</td>
+                    <td>{{ learning_unit.attendees }}</td>
+                    <td>{{ learning_unit.exams_supervision_duration }}h</td>
+                    <td>{{ learning_unit.others_delivery }}</td>
                 </tr>
                 {% endfor %}
             </tbody>

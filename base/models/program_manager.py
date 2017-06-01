@@ -125,8 +125,14 @@ def delete_by_id(an_id):
 
 def find_by_offer_year_list(offer_yr_list):
     return ProgramManager.objects.filter(offer_year__in=offer_yr_list) \
-        .select_related('person') \
-        .order_by('person__last_name', 'person__first_name')
+        .select_related('offer_year', 'person') \
+        .order_by('person__last_name', 'person__first_name', 'person__id')
+
+
+def find_by_person_list(person_list):
+    return ProgramManager.objects.filter(person__in=person_list)\
+                         .select_related('offer_year', 'person')\
+                         .order_by('person__last_name', 'person__first_name')
 
 
 def find_by_offer_year_list_person(a_person, offer_yr_list):
@@ -156,7 +162,10 @@ def find_by_person_academic_year(a_person=None, an_academic_yr=None, entity_list
     else:
         queryset = queryset.filter(offer_year__offer_type__isnull=False)
 
-    return queryset.select_related("offer_year")
+    return queryset.select_related(
+        "offer_year",
+        "offer_year__entity_management",
+        "offer_year__offer_type")
 
 
 def find_by_offer_year_person(a_person, offer_yr):
