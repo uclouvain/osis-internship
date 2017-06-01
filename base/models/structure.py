@@ -46,7 +46,8 @@ class Structure(models.Model):
 
     @property
     def children(self):
-        return Structure.objects.filter(part_of=self.pk).order_by('acronym')
+        return Structure.objects.filter(part_of=self.pk)\
+                                .order_by('acronym')
 
     def serializable_object(self):
         return {

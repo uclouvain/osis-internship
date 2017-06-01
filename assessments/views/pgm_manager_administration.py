@@ -193,7 +193,7 @@ def create_manager(request):
     person_id = request.POST['person_id']
     pgms_id = request.POST['pgms_id']
     
-    list_offer_id = convert_to_list(pgms_id)
+    list_offer_id = _convert_to_int_list(pgms_id)
     error_messages = ""
     person = mdl.person.find_by_id(person_id)
 
@@ -243,12 +243,9 @@ def add_save_program_manager(offer_yr, person):
     pgm_manage.save()
 
 
-def convert_to_list(pgms_id):
-    pgms_id = pgms_id.replace("[", "")
-    pgms_id = pgms_id.replace("]", "")
-    pgms_id = pgms_id.replace("'", "")
+def _convert_to_int_list(pgms_id):
     list_offer_id = pgms_id.split(",")
-    return list_offer_id
+    return list(map(int, list_offer_id))
 
 
 @login_required
@@ -310,98 +307,69 @@ class PgmManagerSerializer(serializers.Serializer):
     person_id = serializers.IntegerField()
     person_last_name = serializers.CharField()
     person_first_name = serializers.CharField()
-    offer_year_acronyms_on = serializers.CharField()
-    offer_year_acronyms_off = serializers.CharField()
-    programs = serializers.CharField()
+    offer_year_acronyms_on = serializers.ListField(
+       child=serializers.CharField()
+    )
+    offer_year_acronyms_off = serializers.ListField(
+       child=serializers.CharField()
+    )
+    programs = serializers.ListField(
+       child=serializers.IntegerField()
+    )
 
 
 @login_required
 def update_managers_list(request):
     # Update the manager's list after add/delete/check
-    list_id_offers_on = convert_to_list(request.GET['pgm_ids'])
-    program_manager_list = mdl.program_manager.find_by_offer_year_list(list_id_offers_on)
-    serializer = PgmManagerSerializer(build_program_manager_list(list_id_offers_on, program_manager_list, False),
-                                      read_only=True,
-                                      many=True)
+    list_id_offers_selected = _convert_to_int_list(request.GET['pgm_ids'])
+    program_manager_list = _get_program_manager_list(list_id_offers_selected)
+    serializer = PgmManagerSerializer(program_manager_list, read_only=True, many=True)
     return JSONResponse(serializer.data)
 
 
-def build_program_manager_list(list_id_offers_on, program_manager_list, detail):
-    pgm_managers = []
-    persons = []
-    for a_program_manager in program_manager_list:
-        a_person = a_program_manager.person
-        if a_person not in pgm_managers:
-            offers = get_offers_with_pgm_manager(list_id_offers_on, a_person)
-            pgms = build_offer_ids_string(offers)
-            if a_person not in persons:
-                persons.append(a_person)
-                if detail:
-                    acronyms_off = build_acronyms_off_string(offers)
-                    pgm_managers.append(PgmManager(person_id=a_person.id,
-                                                   person_last_name=a_person.last_name,
-                                                   person_first_name=a_person.first_name,
-                                                   programs=pgms,
-                                                   offer_year_acronyms_on=pgm_to_keep_managing(a_person,
-                                                                                               offers),
-                                                   offer_year_acronyms_off=acronyms_off
-                                                   ))
-                else:
-                    pgm_managers.append(PgmManager(person_id=a_person.id,
-                                                   person_last_name=a_person.last_name,
-                                                   person_first_name=a_person.first_name,
-                                                   programs=pgms
-                                                   ))
-    return pgm_managers
+def _get_program_manager_list(offer_year_ids, person=None, delete=False):
+    program_managers_related = mdl.program_manager.find_by_offer_year_list(offer_year_ids) \
+        .select_related('offer_year') \
+        .distinct('person__id', 'person__last_name', 'person__first_name')
+    if person:
+        program_managers_related = program_managers_related.filter(person=person)
 
+    # Get all offer id for all program managers related
+    person_related_ids = program_managers_related.values_list('person_id', flat=True)
+    offer_years_grouped = _get_all_offer_years_grouped_by_person(person_related_ids)
 
-def get_offers_with_pgm_manager(list_id_offers_on, a_person):
-    offers = []
-    for offer_year_id in list_id_offers_on:
-        an_offer_year = mdl.offer_year.find_by_id(int(offer_year_id))
-        if mdl.program_manager.find_by_offer_year_person(a_person, an_offer_year):
-            offers.append(an_offer_year)
-    return offers
+    list = []
+    for program_manager in program_managers_related:
+        person = program_manager.person
+        all_offer_years_managed = offer_years_grouped.get(person.id, [])
+        pgms = [str(offer_year.id) for offer_year in all_offer_years_managed]
 
+        if delete:
+            to_delete = [offer_year.acronym for offer_year in all_offer_years_managed if offer_year.id in offer_year_ids]
+            to_keep = [offer_year.acronym for offer_year in all_offer_years_managed if offer_year.id not in offer_year_ids]
 
-def build_offer_ids_string(offers):
-    #  Build a string of the offer ids
-    #  String used in the ajax call
-    pgms = ""
-    for an_offer_year in offers:
-        if pgms == "":
-            pgms = an_offer_year.id
+            pgm = PgmManager(person_id=person.id,
+                             person_last_name=person.last_name,
+                             person_first_name=person.first_name,
+                             programs=pgms,
+                             offer_year_acronyms_off=to_delete,
+                             offer_year_acronyms_on=to_keep)
         else:
-            pgms = "{0},{1}".format(pgms, an_offer_year.id)
-    return pgms
+            pgm = PgmManager(person_id=person.id,
+                             person_last_name=person.last_name,
+                             person_first_name=person.first_name,
+                             programs=pgms)
+        list.append(pgm)
+    return list
 
 
-def build_acronyms_off_string(offers):
-    #  Build a string of the offer acronyms
-    #  String used in the remove confirmation dialog pop-up
-    acronyms_off = ""
-    for an_offer_year in offers:
-        if acronyms_off == "":
-            acronyms_off = "{0}".format(an_offer_year.acronym)
-        else:
-            acronyms_off = "{0}, {1}".format(acronyms_off, an_offer_year.acronym)
-    return acronyms_off
-
-
-def pgm_to_keep_managing(a_person, programs):
-    current_academic_yr = mdl.academic_year.current_academic_year()
-    list_program_manager_to_keep = mdl.program_manager.find_by_person_exclude_offer_list(a_person,
-                                                                                         programs,
-                                                                                         current_academic_yr)
-    # Concatenation of offers acronym to be used in the html page
-    offer_acronym_concatenation = ""
-    for program_manager_to_keep in list_program_manager_to_keep:
-        if offer_acronym_concatenation == "":
-            offer_acronym_concatenation = program_manager_to_keep.offer_year.acronym
-        else:
-            offer_acronym_concatenation = "{0}, {1}".format(offer_acronym_concatenation,
-                                                            program_manager_to_keep.offer_year.acronym)
-    return offer_acronym_concatenation
+def _get_all_offer_years_grouped_by_person(person_ids):
+    offer_years = {}
+    program_managers = mdl.program_manager.find_by_person_list(person_ids)
+    for program_manager in program_managers:
+        key = program_manager.person.id
+        offer_years.setdefault(key, []).append(program_manager.offer_year)
+    return offer_years
 
 
 def _get_programs(academic_yr, entity_list, manager_person, an_offer_type):
@@ -445,12 +413,10 @@ def _get_offer_types():
 @login_required
 def delete_manager_information(request):
     # Update the manager's list after add/delete
-    list_id_offers_on = convert_to_list(request.GET['pgm_ids'])
-    offers_on = mdl.offer_year.find_by_id_list(list_id_offers_on)
+    list_id_offers_selected = _convert_to_int_list(request.GET['pgm_ids'])
     a_person = mdl.person.find_by_id(int(request.GET['person_id']))
-    program_manager_list = mdl.program_manager.find_by_offer_year_list_person(a_person, offers_on)
-    serializer = PgmManagerSerializer(build_program_manager_list(list_id_offers_on, program_manager_list, True),
-                                      many=True)
+    program_manager_list = _get_program_manager_list(list_id_offers_selected, person=a_person, delete=True)
+    serializer = PgmManagerSerializer(program_manager_list, many=True)
     return JSONResponse(serializer.data)
 
 

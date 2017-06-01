@@ -45,5 +45,5 @@ class OrganizationFactory(factory.DjangoModelFactory):
     name = factory.Faker('text', max_nb_chars=255)
     acronym = factory.Faker('text', max_nb_chars=15)
     website = factory.Faker('url')
-    reference = factory.Faker('text', max_nb_chars=30)
+    acronym_learning_unit = factory.Faker('text', max_nb_chars=30)
     type = factory.Iterator(organization.ORGANIZATION_TYPE, getter=lambda c: c[0])

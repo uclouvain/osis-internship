@@ -31,15 +31,24 @@ from django.core.exceptions import ObjectDoesNotExist
 
 class EntityLinkAdmin(admin.ModelAdmin):
     list_display = ('id', 'parent', 'child', 'start_date', 'end_date',)
-    search_fields = ['parent', 'child', 'start_date', 'end_date']
+    search_fields = ['parent__id', 'parent__external_id', 'parent__entityversion__acronym',
+                     'child__id', 'child__external_id', 'child__entityversion__acronym', 'start_date', 'end_date']
     raw_id_fields = ('parent', 'child',)
 
 
 class EntityLink(models.Model):
-    parent = models.ForeignKey('Entity', related_name='parent')
-    child = models.ForeignKey('Entity', related_name='child')
+    parent = models.ForeignKey('Entity', related_name='links_to_children')
+    child = models.ForeignKey('Entity', related_name='link_to_parent')
     start_date = models.DateField(db_index=True)
-    end_date = models.DateField(db_index=True)
+    end_date = models.DateField(db_index=True, null=True)
+
+    def __str__(self):
+        return "Parent : {} - Child : {} - {} to {}".format(
+            self.parent,
+            self.child,
+            self.start_date,
+            self.end_date
+        )
 
     def save(self, *args, **kwargs):
         if self.can_save_entity_link():
@@ -76,3 +85,25 @@ class EntityLink(models.Model):
             upper_hierarchy.append(self.get_upper_entity_link())
             upper_hierarchy.extend(self.get_upper_entity_link().get_upper_hierarchy())
         return upper_hierarchy
+
+
+def search(**kwargs):
+    queryset = EntityLink.objects
+
+    if 'parent' in kwargs:
+        queryset = queryset.filter(parent__exact=kwargs['parent'])
+
+    if 'child' in kwargs:
+        queryset = queryset.filter(child__exact=kwargs['child'])
+
+    if 'start_date' in kwargs:
+            queryset = queryset.filter(start_date__exact=kwargs['start_date'])
+
+    if 'end_date' in kwargs:
+            queryset = queryset.filter(end_date__exact=kwargs['end_date'])
+
+    return queryset
+
+
+def count(**kwargs):
+    return search(**kwargs).count()
