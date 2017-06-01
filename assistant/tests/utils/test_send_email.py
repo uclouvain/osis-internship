@@ -81,7 +81,10 @@ class SendEmailTestCase(TestCase):
         self.academic_assistant.supervisor = self.phd_supervisor
         self.academic_assistant.save()
         self.settings = Settings.objects.create(starting_date=timezone.now(),
-                                                ending_date=timezone.now() + timezone.timedelta(days=100))
+                                                ending_date=timezone.now() + timezone.timedelta(days=100),
+                                                assistants_starting_date=timezone.now(),
+                                                assistants_ending_date=timezone.now() + timezone.timedelta(days=100)
+                                                )
         self.settings.save()
         self.user = User.objects.create_user(
             username='reviewer', email='laurent.buset@uclouvain.be', password='reviewer'
