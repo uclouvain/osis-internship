@@ -115,13 +115,15 @@ class MandatesArchivesForm(ModelForm):
         model = mdl.assistant_mandate.AssistantMandate
         fields = ('academic_year',)
 
-
+RADIO_SELECT_REQUIRED = dict(
+    required=True,
+    widget=forms.RadioSelect(attrs={'onChange': 'Hide()'})
+)
 class AssistantFormPart3(ModelForm):
     PARAMETERS = dict(required=False, widget=forms.DateInput(format='%d/%m/%Y', attrs={'placeholder': 'dd/mm/yyyy'}),
                       input_formats=['%d/%m/%Y'])
 
-    inscription = forms.ChoiceField(required=True, widget=forms.RadioSelect(attrs={
-        "onChange": 'Hide()'}), choices=assistant_phd_inscription.PHD_INSCRIPTION_CHOICES)
+    inscription = forms.ChoiceField(choices=assistant_phd_inscription.PHD_INSCRIPTION_CHOICES, **RADIO_SELECT_REQUIRED)
     expected_phd_date = forms.DateField(**PARAMETERS)
     thesis_date = forms.DateField(**PARAMETERS)
     phd_inscription_date = forms.DateField(**PARAMETERS)
@@ -253,8 +255,7 @@ class ReviewForm(ModelForm):
     remark = forms.CharField(required=False, widget=forms.Textarea(attrs={'cols': '80', 'rows': '5'}))
     confidential = forms.CharField(help_text=_("information_not_provided_to_assistant"),
                                    required=False, widget=forms.Textarea(attrs={'cols': '80', 'rows': '5'}))
-    advice = forms.ChoiceField(required=True, widget=forms.RadioSelect(attrs={
-        "onChange": 'Hide()'}), choices=review_advice_choices.REVIEW_ADVICE_CHOICES)
+    advice = forms.ChoiceField(choices=review_advice_choices.REVIEW_ADVICE_CHOICES, **RADIO_SELECT_REQUIRED)
     reviewer = forms.ChoiceField(required=False)
 
     class Meta:
