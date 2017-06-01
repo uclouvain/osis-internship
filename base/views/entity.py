@@ -34,7 +34,6 @@ from base.serializers import EntitySerializer
 
 
 @api_view(['POST'])
-@permission_required('base.can_post_entities_by_drf', raise_exception=True)
 def post_entities(request):
     if request.method == 'POST':
         existing_entity = entity.get_by_external_id(request.data.get('external_id'))

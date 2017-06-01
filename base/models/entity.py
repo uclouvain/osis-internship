@@ -44,9 +44,6 @@ class Entity(models.Model):
 
     class Meta:
         verbose_name_plural = "entities"
-        permissions = (
-            ("can_post_entities_by_drf", "Can post entities by DRF"),
-        )
 
     def __str__(self):
         return "{0} ({1} - {2})".format(self.id, self.most_recent_acronym(), self.external_id)
