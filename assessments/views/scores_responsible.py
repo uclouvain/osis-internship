@@ -78,11 +78,11 @@ def create_attributions_list(attributions):
     dict_attribution = dict()
     for attribution in attributions:
         tutors = mdl_attr.attribution.find_all_tutors_by_learning_unit_year(attribution.learning_unit_year)
-        dict_attribution.update({attribution: [attribution.learning_unit_year.id,
-                                               attribution.learning_unit_year.structure.acronym,
-                                               attribution.learning_unit_year.acronym,
-                                               attribution.learning_unit_year.title,
-                                               tutors]})
+        dict_attribution[attribution] = [attribution.learning_unit_year.id,
+                                         attribution.learning_unit_year.structure.acronym,
+                                         attribution.learning_unit_year.acronym,
+                                         attribution.learning_unit_year.title,
+                                         tutors]
     return dict_attribution
 
 
