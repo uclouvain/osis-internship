@@ -274,13 +274,26 @@ class PgmManagerAdministrationTest(TestCase):
 
         self.assertEqual(len(pgm_manager_administration.get_entity_list(None, entity_parent1)), 6)
 
-    # @mock.patch('django.contrib.auth.decorators')
-    # def test_delete_manager_no_person_to_be_removed(self, mock_decorators):
-    #     request = set_get_request(mock_decorators, {}, '/pgm_manager/delete')
-    #
-    #     self.assertEqual(response.status_code=204)
-    #     status.H
+    @mock.patch('django.contrib.auth.decorators')
+    def test_delete_manager_no_person_to_be_removed(self, mock_decorators):
+        self.client.force_login(self.user)
+        url = reverse('delete_manager')
+        response = self.client.get(url+"?person=%s&pgms=%s"
+                                   % ("", ""))
+        self.assertEqual(response.status_code, 204)
 
+    @mock.patch('django.contrib.auth.decorators')
+    def test_delete_manager(self, mock_decorators):
+        offer_year1 = OfferYearFactory(academic_year=self.academic_year_current,
+                                       entity_management=self.structure_parent1)
+        ProgramManagerFactory(person=self.person, offer_year=offer_year1)
+        self.client.force_login(self.user)
+        url = reverse('delete_manager')
+        response = self.client.get(url+"?person=%s&pgms=%s"
+                                   % (self.person.id, offer_year1.id))
+        self.assertEqual(response.status_code, 204)
+
+    def test_is_already_program_manager(self):
 
 
 def add_permission(user, codename):
