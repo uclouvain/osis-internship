@@ -32,7 +32,7 @@ from base.models.enums import learning_component_year_type
 class LearningComponentYearAdmin(admin.ModelAdmin):
     list_display = ('learning_container_year', 'title', 'acronym', 'type', 'comment')
     fieldsets = ((None, {'fields': ('learning_container_year', 'title', 'acronym',
-                                    'type', 'comment', 'planned_classes', 'hourly_volume_total', 'hourly_volume_Q1')}),)
+                                    'type', 'comment', 'planned_classes', 'hourly_volume_total', 'hourly_volume_partial')}),)
     search_fields = ['acronym']
 
 
