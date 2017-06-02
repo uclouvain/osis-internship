@@ -52,7 +52,11 @@
                         {% for attribution in attributions %}
                             <tr>
                                 <td>{{ attribution.tutor.person.last_name}}, {{ attribution.tutor.person.first_name}}</td>
-                                <td>{% trans attribution.function %}</td>
+                                <td>
+                                    {% if attribution.function %}
+                                        {% trans attribution.function %}
+                                    {% endif %}
+                                </td>
                                 <td></td>
                                 <td>{{ attribution.start_year }}</td>
                                 <td>{{ attribution.duration }}</td>
