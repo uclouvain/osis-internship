@@ -30,4 +30,4 @@ from base.models import organization
 class OrganizationForm(ModelForm):
     class Meta:
         model = organization.Organization
-        fields = ['acronym', 'name', 'website', 'acronym_learning_unit']
+        fields = ['acronym', 'name', 'website', 'prefix']

@@ -1541,3 +1541,9 @@ msgstr "(partie 1 commune aux partims)"
 
 msgid "title_in_english_2"
 msgstr "(partie 2 propre au partim)"
+
+msgid "LECTURING"
+msgstr "Cours Magistraux"
+
+msgid "PRACTICAL_EXERCISES"
+msgstr "Travaux pratiques"

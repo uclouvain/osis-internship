@@ -55,8 +55,11 @@
                             {% endif %}
                         {% endifchanged %}
                         <tr style="background-color: gainsboro">
-                            <td>{% trans component.learning_component_year.type %}</td>
-                            <td>/{{component.learning_component_year.acronym}}</td>
+                            <td>{% if component.learning_component_year.type %}
+                                    {% trans component.learning_component_year.type %}
+                                {% endif %}
+                            </td>
+                            <td>/{{component.learning_component_year.acronym  | default_if_none:''}}</td>
                             <td>{{ component.learning_component_year.hourly_volume_total| default_if_none:'0'}}</td>
                             <td>{{ component.learning_component_year.hourly_volume_partial| default_if_none:'-'}}</td>
                             <td>{{ component.learning_component_year.hourly_volume_partial_q2 | default_if_none:'-'}}</td>
