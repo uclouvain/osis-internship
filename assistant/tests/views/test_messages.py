@@ -28,7 +28,7 @@ from datetime import date
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.db.models.query import QuerySet
-from django.test import TestCase, RequestFactory, Client
+from django.test import TestCase, RequestFactory
 from django.utils import timezone
 
 from assistant.models.enums import message_type
@@ -44,7 +44,6 @@ class MessagesViewTestCase(TestCase):
 
     def setUp(self):
         self.factory = RequestFactory()
-        self.client = Client()
         self.user = User.objects.create_user(
             username='tests', email='tests@uclouvain.be', password='secret'
         )
