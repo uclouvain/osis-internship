@@ -64,7 +64,9 @@
                             </div>
                             <div class="col-md-3">
                                 <label>{% trans 'subtype' %}</label><br>
-                                {% trans learning_unit_year.subtype %}
+                                {% if learning_unit_year.subtype %}
+                                    {% trans learning_unit_year.subtype %}
+                                {% endif %}
                             </div>
                         </div>
                         <div class="row" style="margin-top:10px;">
@@ -75,12 +77,14 @@
                             <div class="col-md-3">
                                 <label>{% trans 'periodicity' %}</label><br>
                                 {% if learning_unit_year.learning_unit.periodicity %}
-                                {% trans learning_unit_year.learning_unit.periodicity %}
+                                    {% trans learning_unit_year.learning_unit.periodicity %}
                                 {% endif %}
                             </div>
                             <div class="col-md-6">
                                 <label>{% trans 'status' %}</label><br>
-                                {% trans learning_unit_year.activity_status %}
+                                {% if learning_unit_year.activity_status %}
+                                    {% trans learning_unit_year.activity_status %}
+                                {% endif %}
                             </div>
                         </div>
 

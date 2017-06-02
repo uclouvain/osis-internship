@@ -68,12 +68,14 @@
                                 <div style="margin-left: 25px;">
                                     <table class="table" style="background-color: #caeced; ">
                                         <thead>
-                                        <th>{% trans 'classes'%}</th>
+                                            <th>{% trans 'classes'%}</th>
+                                            <th>{% trans 'description'%}</th>
                                         </thead>
                                         <tbody>
                                         {% for classe in component.classes %}
                                         <tr>
                                             <td>/{{classe.acronym}}</td>
+                                            <td>{{classe.description | default_if_none:''}}</td>
                                         </tr>
                                         {% endfor %}
                                         </tbody>
