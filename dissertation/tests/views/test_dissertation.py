@@ -23,7 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.test import TestCase, Client
+from django.test import TestCase
 from django.core.urlresolvers import reverse
 from base.tests.factories.offer_year import OfferYearFactory
 from base.tests.factories.person import PersonFactory
@@ -39,8 +39,6 @@ from dissertation.tests.factories.proposition_offer import PropositionOfferFacto
 class DissertationViewTestCase(TestCase):
 
     def setUp(self):
-        self.client = Client()
-
         self.manager = AdviserManagerFactory()
         a_person_teacher = PersonFactory.create(first_name='Pierre', last_name='Dupont')
         self.teacher = AdviserTeacherFactory(person=a_person_teacher)
@@ -54,7 +52,7 @@ class DissertationViewTestCase(TestCase):
 
         roles = ['PROMOTEUR', 'CO_PROMOTEUR', 'READER', 'PROMOTEUR', 'ACCOMPANIST']
         status = ['DRAFT', 'COM_SUBMIT', 'EVA_SUBMIT', 'TO_RECEIVE', 'DIR_SUBMIT']
-        
+
         for x in range(0, 5):
             proposition_dissertation = PropositionDissertationFactory(author=self.teacher,
                                                                       creator=a_person_teacher,

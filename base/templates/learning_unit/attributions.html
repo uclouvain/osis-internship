@@ -52,12 +52,16 @@
                         {% for attribution in attributions %}
                             <tr>
                                 <td>{{ attribution.tutor.person.last_name}}, {{ attribution.tutor.person.first_name}}</td>
-                                <td>{% trans attribution.function %}</td>
+                                <td>
+                                    {% if attribution.function %}
+                                        {% trans attribution.function %}
+                                    {% endif %}
+                                </td>
                                 <td></td>
-                                <td>{{ attribution.start_year }}</td>
-                                <td>{{ attribution.duration }}</td>
-                                <td>{{ attribution.volume_lecturing }}</td>
-                                <td>{{ attribution.volume_practical  }}</td>
+                                <td>{{ attribution.start_year | default_if_none:''}}</td>
+                                <td>{{ attribution.duration | default_if_none:''}}</td>
+                                <td>{{ attribution.volume_lecturing  | default_if_none:''}}</td>
+                                <td>{{ attribution.volume_practical  | default_if_none:''}}</td>
                             </tr>
                         {% endfor %}
                     </tbody>

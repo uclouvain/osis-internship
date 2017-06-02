@@ -23,7 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.test import TestCase, RequestFactory, Client
+from django.test import TestCase, RequestFactory
 import random
 from django.core.urlresolvers import reverse
 from dissertation.tests.models import test_proposition_dissertation, test_offer_proposition, test_adviser, \
@@ -36,8 +36,6 @@ from dissertation.models.proposition_role import PropositionRole
 class PropositionDissertationViewTestCase(TestCase):
 
     def setUp(self):
-        self.factory = RequestFactory()
-        self.client = Client()
         #Teacher
         self.adviser_teacher = test_adviser.create_adviser_from_scratch(username='teacher', email='teacher@uclouvain.be',
                                                                         password='teacher', type='PRF')
