@@ -60,7 +60,9 @@
                             </div>
                             <div class="col-md-3">
                                 <label>{% trans 'type' %}</label><br>
-                                {% trans learning_unit_year.learning_container_year.container_type %}
+                                {% if learning_unit_year.learning_container_year.container_type %}
+                                    {% trans learning_unit_year.learning_container_year.container_type %}
+                                {% endif %}
                             </div>
                             <div class="col-md-3">
                                 <label>{% trans 'subtype' %}</label><br>
@@ -94,7 +96,7 @@
                         <br><br>
                         <label>{% trans 'title_official_2' %}</label><br>
                         {% if learning_unit_year.subtype == 'PARTIM'%}
-                        {{learning_unit_year.title | default_if_none:''}}
+                            {{learning_unit_year.title | default_if_none:''}}
                         {% endif%}
                         <br><br>
                         <label>{% trans 'title_in_english' %}{% trans 'title_in_english_1' %}</label><br>
@@ -102,7 +104,7 @@
                         <br><br>
                         <label>{% trans 'title_in_english' %}{% trans 'title_in_english_2' %}</label><br>
                         {% if learning_unit_year.subtype == 'PARTIM'%}
-                        {{learning_unit_year.title_english | default_if_none:'' }}
+                            {{learning_unit_year.title_english | default_if_none:'' }}
                         {% endif%}
                         <br><br>
                         <label>{% trans 'language' %}</label><br>
