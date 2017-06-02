@@ -245,8 +245,7 @@ def add_save_program_manager(offer_yr, person):
 
 def _convert_to_int_list(pgms_id):
     if pgms_id:
-        list_offer_id = pgms_id.split(",")
-        return list(map(int, list_offer_id))
+        return list(map(int, pgms_id.split(",")))
     return []
 
 @login_required

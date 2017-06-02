@@ -230,24 +230,23 @@ class PgmManagerAdministrationTest(TestCase):
                                        offer_type=an_offer_type)
         ProgramManagerFactory(person=self.person, offer_year=offer_year1)
         ProgramManagerFactory(person=self.person, offer_year=offer_year2)
-        self.assertEqual(len(pgm_manager_administration._filter_by_person(self.person,
-                                                                          [self.structure_parent1,
-                                                                           self.structure_child1],
-                                                                          self.academic_year_current,
-                                                                          an_offer_type)), 2)
-        self.assertEqual(len(pgm_manager_administration._filter_by_person(self.person,
-                                                                          [self.structure_parent1],
-                                                                          self.academic_year_current,
-                                                                          an_offer_type)), 1)
-        self.assertEqual(len(pgm_manager_administration._filter_by_person(self.person,
-                                                                          [],
-                                                                          self.academic_year_current,
-                                                                          an_offer_type)), 2)
+        offer_year_results = pgm_manager_administration._filter_by_person(self.person,
+                                                              [self.structure_parent1, self.structure_child1],
+                                                              self.academic_year_current, an_offer_type)
+        self.assertCountEqual(offer_year_results, [offer_year1,offer_year2])
+
+        offer_year_results = pgm_manager_administration._filter_by_person(self.person, [self.structure_parent1],
+                                                              self.academic_year_current, an_offer_type)
+        self.assertCountEqual(offer_year_results, [offer_year1])
+
+        offer_year_results = pgm_manager_administration._filter_by_person(self.person, [], self.academic_year_current,
+                                                              an_offer_type)
+        self.assertCountEqual(offer_year_results, [offer_year1,offer_year2])
+
         an_other_offer_type = OfferTypeFactory()
-        self.assertEqual(len(pgm_manager_administration._filter_by_person(self.person,
-                                                                          [self.structure_parent1],
-                                                                          self.academic_year_current,
-                                                                          an_other_offer_type)), 0)
+        offer_year_results = pgm_manager_administration._filter_by_person(self.person, [self.structure_parent1],
+                                                              self.academic_year_current, an_other_offer_type)
+        self.assertCountEqual(offer_year_results, [])
 
     def test_get_entity_list_for_one_entity(self):
         entity_parent1 = StructureFactory(acronym='P1')
@@ -277,8 +276,7 @@ class PgmManagerAdministrationTest(TestCase):
     def test_delete_manager_no_person_to_be_removed(self):
         self.client.force_login(self.user)
         url = reverse('delete_manager')
-        response = self.client.get(url+"?person=%s&pgms=%s"
-                                   % ("", ""))
+        response = self.client.get(url+"?person=&pgms=")
         self.assertEqual(response.status_code, 204)
 
     def test_delete_manager(self):
@@ -372,9 +370,9 @@ def get_permission(codename):
     return Permission.objects.get(codename=codename)
 
 
-def set_post_request(mock_decorators, dict, url):
+def set_post_request(mock_decorators, data_dict, url):
     mock_decorators.login_required = lambda x: x
     request_factory = RequestFactory()
-    request = request_factory.post(url, dict)
+    request = request_factory.post(url, data_dict)
     request.user = mock.Mock()
     return request
