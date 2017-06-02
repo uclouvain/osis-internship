@@ -70,6 +70,8 @@ def learning_unit_identification(request, learning_unit_year_id):
     context = _get_common_context_learning_unit_year(learning_unit_year_id)
     learning_unit_year = context['learning_unit_year']
     context['learning_container_year_partims'] = _get_partims_related(learning_unit_year)
+    context['organization'] = _get_organization_from_learning_unit_year(learning_unit_year)
+    context['campus'] = _get_campus_from_learning_unit_year(learning_unit_year)
     context['experimental_phase'] = True
     return layout.render(request, "learning_unit/identification.html", context)
 
@@ -201,3 +203,15 @@ def _get_partims_related(learning_unit_year):
     learning_container_year = learning_unit_year.learning_container_year
     return mdl.learning_container_year.find_all_partims(learning_container_year)
 
+
+def _get_campus_from_learning_unit_year(learning_unit_year):
+    if learning_unit_year.learning_container_year:
+        return learning_unit_year.learning_container_year.campus
+    return None
+
+
+def _get_organization_from_learning_unit_year(learning_unit_year):
+    campus = _get_campus_from_learning_unit_year(learning_unit_year)
+    if campus:
+        return campus.organization
+    return None
