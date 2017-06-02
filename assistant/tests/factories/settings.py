@@ -30,10 +30,12 @@ class SettingsFactory(factory.DjangoModelFactory):
     class Meta:
         model = 'assistant.Settings'
 
-    starting_date = factory.fuzzy.FuzzyDate((timezone.now() - timezone.timedelta(days=10)).date())
+    starting_date = factory.fuzzy.FuzzyDate((timezone.now() - timezone.timedelta(days=10)).date(),
+                                            (timezone.now() - timezone.timedelta(days=5)).date())
     ending_date = factory.fuzzy.FuzzyDate((timezone.now() + timezone.timedelta(days=90)).date(),
                                           (timezone.now() + timezone.timedelta(days=100)).date())
-    assistants_starting_date = factory.fuzzy.FuzzyDate((timezone.now() - timezone.timedelta(days=10)).date())
+    assistants_starting_date = factory.fuzzy.FuzzyDate((timezone.now() - timezone.timedelta(days=10)).date(),
+                                                       (timezone.now() - timezone.timedelta(days=5)).date())
     assistants_ending_date = factory.fuzzy.FuzzyDate((timezone.now() + timezone.timedelta(days=90)).date(),
                                           (timezone.now() + timezone.timedelta(days=100)).date())
 

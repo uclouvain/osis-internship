@@ -64,7 +64,6 @@ class AssistantFormViewTestCase(TestCase):
                                                                  )
         self.assistant_mandate.save()
         self.settings = SettingsFactory()
-        #self.settings.save()
 
     def test_assistant_form_part4_edit_view_basic(self):
         request = self.factory.get(reverse('form_part4_edit', kwargs={'mandate_id': self.assistant_mandate.id}))

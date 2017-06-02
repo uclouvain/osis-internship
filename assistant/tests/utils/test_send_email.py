@@ -80,7 +80,6 @@ class SendEmailTestCase(TestCase):
         self.academic_assistant.supervisor = self.phd_supervisor
         self.academic_assistant.save()
         self.settings = SettingsFactory()
-        #self.settings.save()
         self.user = User.objects.create_user(
             username='reviewer', email='laurent.buset@uclouvain.be', password='reviewer'
         )
