@@ -93,7 +93,7 @@ class ScoresResponsibleViewTestCase(TestCase):
     def test_scores_responsible_management(self):
         self.client.force_login(self.user)
         url = reverse('scores_responsible_management')
-        response = self.client.get(url, data={'id': "learning_unit_year_"+str(self.learning_unit_year.id)})
+        response = self.client.get(url, data={'learning_unit_year': "learning_unit_year_"+str(self.learning_unit_year.id)})
         self.assertEqual(response.status_code, 200)
 
     def test_scores_responsible_add(self):
