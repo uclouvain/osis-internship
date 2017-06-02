@@ -27,7 +27,7 @@ from datetime import datetime
 
 from django.contrib.auth.models import Permission
 from django.contrib.auth.models import User
-from django.test import TestCase, Client
+from django.test import TestCase
 
 from assessments.views import pgm_manager_administration
 from base.models import program_manager
@@ -59,8 +59,6 @@ class PgmManagerAdministrationTest(TestCase):
         a_year = datetime.now().year
         self.academic_year_previous = AcademicYearFactory(year=a_year-1)
         self.academic_year_current = AcademicYearFactory(year=a_year)
-
-        self.Client = Client()
 
     def test_find_children_entities_from_acronym(self):
         self.assertIsNone(pgm_manager_administration.get_managed_entities(None))
