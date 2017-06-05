@@ -32,3 +32,4 @@ class EntityFactory(factory.DjangoModelFactory):
         model = 'base.Entity'
 
     organization = factory.SubFactory(OrganizationFactory)
+    external_id = factory.Faker('text', max_nb_chars=255)

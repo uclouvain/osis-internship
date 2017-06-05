@@ -27,7 +27,7 @@ msgid "all_label"
 msgstr "All"
 
 msgid "pgm_mgr_administration"
-msgstr "Program managers administration"
+msgstr "Program managers"
 
 msgid "all_hierarchy"
 msgstr "All hierarchy of "
@@ -43,9 +43,6 @@ msgstr "Select/deselect all"
 
 msgid "pgm_managers"
 msgstr "Program's managers"
-
-msgid "srm_managers"
-msgstr "Scores Responsible managers"
 
 msgid "desc_lnk_srm_managers"
 msgstr "Management of the scores responsibles managers"

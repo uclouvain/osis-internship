@@ -24,49 +24,90 @@
 #
 ##############################################################################
 import datetime
-from itertools import chain
-from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
 from django.test import TestCase
 from assessments.views import scores_responsible
 from attribution.models import attribution
 from attribution.tests.models import test_attribution
-from base.tests.factories.academic_year import AcademicYearFactory
-from base.tests.factories.entity_manager import EntityManagerFactory
-from base.tests.factories.learning_unit_year import LearningUnitYearFactory
-from base.tests.factories.structure import StructureFactory
-from base.tests.factories.tutor import TutorFactory
+from base import models as mdl_base
+from base.tests.factories import academic_year, entity_manager, learning_unit_year, structure, tutor, user
 from base.tests.models.test_person import create_person_with_user
 
 
 class ScoresResponsibleViewTestCase(TestCase):
     def setUp(self):
-        self.user = User(first_name="John", last_name="Smith")
+        self.user = user.UserFactory()
         self.user.save()
         self.person = create_person_with_user(self.user)
-        self.structure = StructureFactory()
-        self.structure_children = StructureFactory(part_of=self.structure)
-        self.entity_manager = EntityManagerFactory(person=self.person, structure=self.structure)
-        self.tutor = TutorFactory()
-        self.academic_year = AcademicYearFactory(year=datetime.date.today().year,
-                                                 start_date=datetime.date.today())
-        self.learning_unit_year = LearningUnitYearFactory(structure=self.structure,
-                                                          acronym="LBIR1210",
-                                                          academic_year=self.academic_year)
-        self.learning_unit_year_children = LearningUnitYearFactory(structure=self.structure_children,
-                                                                   acronym="LBIR1211",
-                                                                   academic_year=self.academic_year)
-        test_attribution.create_attribution(tutor=self.tutor,
-                                            learning_unit_year=self.learning_unit_year,
-                                            score_responsible=True)
-        test_attribution.create_attribution(tutor=self.tutor,
-                                            learning_unit_year=self.learning_unit_year_children,
-                                            score_responsible=True)
+        self.structure = structure.StructureFactory()
+        self.structure_children = structure.StructureFactory(part_of=self.structure)
+        self.entity_manager = entity_manager.EntityManagerFactory(person=self.person, structure=self.structure)
+        self.tutor = tutor.TutorFactory()
+        self.academic_year = academic_year.AcademicYearFactory(year=datetime.date.today().year,
+                                                               start_date=datetime.date.today())
+        self.learning_unit_year = learning_unit_year.LearningUnitYearFactory(structure=self.structure,
+                                                                             acronym="LBIR1210",
+                                                                             academic_year=self.academic_year)
+        self.learning_unit_year_children = learning_unit_year.LearningUnitYearFactory(structure=self.structure_children,
+                                                                                      acronym="LBIR1211",
+                                                                                      academic_year=self.academic_year)
+        self.attribution = test_attribution.create_attribution(tutor=self.tutor,
+                                                               learning_unit_year=self.learning_unit_year,
+                                                               score_responsible=True)
+        self.attribution_children = test_attribution.create_attribution(tutor=self.tutor,
+                                                                        learning_unit_year=self.learning_unit_year_children,
+                                                                        score_responsible=True)
 
     def test_is_faculty_admin(self):
-        a_faculty_administrator = scores_responsible.is_faculty_admin(self.user)
-        self.assertTrue(a_faculty_administrator)
+        entities_manager = scores_responsible.is_faculty_admin(self.user)
+        self.assertTrue(entities_manager)
 
-    def test_create_dictionary(self):
-        attributions_list = attribution.find_all_distinct_children(self.structure)
+    def test_scores_responsible(self):
+        self.client.force_login(self.user)
+        url = reverse('scores_responsible')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_scores_responsible_search_with_many_elements(self):
+        self.client.force_login(self.user)
+        url = reverse('scores_responsible_search')
+        response = self.client.get(url+"?course_code=%s&learning_unit_title=%s&tutor=%s&scores_responsible=%s"
+                                   % ("LBIR121", "", self.tutor.person.last_name, ""))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.context[-1]['dict_attribution']), 2)
+
+    def test_scores_responsible_search_without_elements(self):
+        self.client.force_login(self.user)
+        url = reverse('scores_responsible_search')
+        response = self.client.get(url+"?course_code=%s&learning_unit_title=%s&tutor=%s&scores_responsible=%s"
+                                   % ("", "", "", ""))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.context[-1]['dict_attribution']), 2)
+
+    def test_create_attributions_list(self):
+        entities_manager = mdl_base.entity_manager.find_by_user(self.user)
+        attributions_list = attribution.find_all_distinct_parents(entities_manager)
         dictionary = scores_responsible.create_attributions_list(attributions_list)
         self.assertIsNotNone(dictionary)
+
+    def test_scores_responsible_management(self):
+        self.client.force_login(self.user)
+        url = reverse('scores_responsible_management')
+        response = self.client.get(url, data={'learning_unit_year': "learning_unit_year_%d" % self.learning_unit_year.id})
+        self.assertEqual(response.status_code, 200)
+
+    def test_scores_responsible_add(self):
+        self.client.force_login(self.user)
+        url = reverse('scores_responsible_add', args=[self.learning_unit_year.id])
+        attribution_id = 'attribution_' + str(self.attribution.id)
+        response = self.client.post(url, {"action": "add",
+                                          "attribution_id": attribution_id})
+        self.assertEqual(response.status_code, 302)
+
+    def test_scores_responsible_cancel(self):
+        self.client.force_login(self.user)
+        url = reverse('scores_responsible_add', args=[self.learning_unit_year.id])
+        attribution_id = 'attribution_' + str(self.attribution.id)
+        response = self.client.post(url, {"action": "cancel",
+                                          "attribution_id": attribution_id})
+        self.assertEqual(response.status_code, 302)

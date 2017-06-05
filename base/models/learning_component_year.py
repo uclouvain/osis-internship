@@ -26,30 +26,28 @@
 from django.db import models
 from django.contrib import admin
 
+from base.models.enums import learning_component_year_type
+
 
 class LearningComponentYearAdmin(admin.ModelAdmin):
-    list_display = ('learning_container_year', 'learning_component', 'title', 'acronym', 'type', 'comment')
-    fieldsets = ((None, {'fields': ('learning_container_year', 'learning_component', 'title', 'acronym',
-                                    'type', 'comment', 'planned_classes', 'hourly_volume_total', 'hourly_volume_Q1')}),)
-    search_fields = ['acronym','learning_component']
+    list_display = ('learning_container_year', 'title', 'acronym', 'type', 'comment')
+    fieldsets = ((None, {'fields': ('learning_container_year', 'title', 'acronym',
+                                    'type', 'comment', 'planned_classes', 'hourly_volume_total', 'hourly_volume_partial')}),)
+    search_fields = ['acronym']
 
 
 class LearningComponentYear(models.Model):
     external_id = models.CharField(max_length=100, blank=True, null=True)
     learning_container_year = models.ForeignKey('LearningContainerYear')
-    learning_component = models.ForeignKey('LearningComponent')
     title = models.CharField(max_length=255, blank=True, null=True)
     acronym = models.CharField(max_length=3, blank=True, null=True)
-    type = models.CharField(max_length=20, blank=True, null=True)
+    type = models.CharField(max_length=30, choices=learning_component_year_type.LEARNING_COMPONENT_YEAR_TYPES,
+                            blank=True, null=True)
     comment = models.CharField(max_length=255, blank=True, null=True)
     planned_classes = models.IntegerField(blank=True, null=True)
     hourly_volume_total = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
     hourly_volume_partial = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
-
-    def save(self, *args, **kwargs):
-        if self.learning_container_year.learning_container != self.learning_component.learning_container:
-            raise AttributeError("Learning container year and learning component have different learning containers.")
-        super(LearningComponentYear, self).save()
+    deleted = models.BooleanField(default=False)
 
     def __str__(self):
         return u"%s - %s" % (self.acronym, self.title)
@@ -76,4 +74,5 @@ def find_by_id(learning_component_year_id):
 
 
 def find_by_learning_container_year(a_learning_container_year):
-    return LearningComponentYear.objects.filter(learning_container_year=a_learning_container_year).order_by('type','learning_component__acronym')
+    return LearningComponentYear.objects.filter(learning_container_year=a_learning_container_year)\
+                                         .order_by('type','acronym')

@@ -27,7 +27,6 @@ import factory
 import factory.fuzzy
 
 from base.tests.factories.learning_container_year import LearningContainerYearFactory
-from base.tests.factories.learning_component import LearningComponentFactory
 
 
 class LearningComponentYearFactory(factory.django.DjangoModelFactory):
@@ -35,7 +34,6 @@ class LearningComponentYearFactory(factory.django.DjangoModelFactory):
         model = "base.LearningComponentYear"
 
     learning_container_year = factory.SubFactory(LearningContainerYearFactory)
-    learning_component = factory.SubFactory(LearningComponentFactory)
     title = factory.Sequence(lambda n: 'title-%d' % n)
     acronym = factory.Sequence(lambda n: 'A-%d' % n)
     type = factory.Sequence(lambda n: 'Type-%d' % n)

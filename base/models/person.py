@@ -35,7 +35,7 @@ from django.db.models.functions import Concat, Lower
 
 
 class PersonAdmin(SerializableModelAdmin):
-    list_display = ('first_name', 'middle_name', 'last_name', 'username', 'email', 'gender', 'global_id',
+    list_display = ('get_first_name', 'middle_name', 'last_name', 'username', 'email', 'gender', 'global_id',
                     'national_id', 'changed', 'source', 'employee')
     search_fields = ['first_name', 'middle_name', 'last_name', 'user__username', 'email', 'global_id']
     fieldsets = ((None, {'fields': ('user', 'global_id', 'national_id', 'gender', 'first_name',
@@ -85,6 +85,14 @@ class Person(SerializableModel):
             return None
         return self.user.username
 
+    def get_first_name(self):
+        if self.first_name:
+            return self.first_name
+        elif self.user:
+            return self.user.first_name
+        else:
+            return "-"
+
     def __str__(self):
         first_name = ""
         middle_name = ""
@@ -112,6 +120,14 @@ def find_by_id(person_id):
 def find_by_user(user):
     person = Person.objects.filter(user=user).first()
     return person
+
+
+def get_user_interface_language(user):
+    user_language = settings.LANGUAGE_CODE
+    person = find_by_user(user)
+    if person:
+        user_language = person.language
+    return user_language
 
 
 def change_language(user, new_language):

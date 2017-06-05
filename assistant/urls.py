@@ -103,9 +103,10 @@ urlpatterns = [
             url(r'^send/to_all_deans/$', send_email.send_message_to_deans, name='send_message_to_deans'),
         ])),
         url(r'^reviewers/', include([
-            url(r'^$', reviewers_management.ReviewersListView.as_view(), name='reviewers_list'),
+            url(r'^$', reviewers_management.reviewers_index, name='reviewers_list'),
+            url(r'^action/$', reviewers_management.reviewer_action, name="reviewer_action"),
             url(r'^add/$', reviewers_management.reviewer_add, name='reviewer_add'),
-            url(r'^(?P<reviewer_id>\d+)/delete/$', reviewers_management.reviewer_delete, name='reviewer_delete'),
+            url(r'^replace/$', reviewers_management.reviewer_replace, name='reviewer_replace'),
         ])),
         url(r'^settings/', include([
             url(r'^edit/$', manager_settings.settings_edit, name='settings_edit'),
@@ -133,7 +134,7 @@ urlpatterns = [
         url(r'^delegate/(?P<structure_id>\d+)/add/$', reviewer_delegation.add_reviewer_for_structure,
             name='reviewer_delegation_add'),
         url(r'^review/(?P<mandate_id>\d+)/', include([
-            url(r'^(?P<role>[\w{}.-]{1,40})/$', reviewer_review.review_view, name='review_view'),
+            url(r'^(?P<role>[\w{}.-]{1,40})/view/$', reviewer_review.review_view, name='review_view'),
             url(r'^edit/$', reviewer_review.review_edit, name='review_edit'),
             url(r'^(?P<review_id>\d+)/save/$', reviewer_review.review_save, name='review_save'),
         ])),

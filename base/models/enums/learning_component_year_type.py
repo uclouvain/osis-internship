@@ -23,15 +23,16 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import factory
-import factory.fuzzy
 
-from base.tests.factories.learning_component import LearningComponentFactory
-
-
-class LearningClassFactory(factory.django.DjangoModelFactory):
-    class Meta:
-        model = "base.LearningClass"
-    learning_component = factory.SubFactory(LearningComponentFactory)
+LECTURING = "LECTURING"
+STAGE = "STAGE"
+DISSERTATION = "DISSERTATION"
+PRACTICAL_EXERCISES = "PRACTICAL_EXERCISES"
 
 
+LEARNING_COMPONENT_YEAR_TYPES = (
+    (LECTURING, LECTURING),
+    (STAGE, STAGE),
+    (DISSERTATION, DISSERTATION),
+    (PRACTICAL_EXERCISES, PRACTICAL_EXERCISES),
+)

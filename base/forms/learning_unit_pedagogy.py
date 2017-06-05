@@ -23,26 +23,31 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
-from django.contrib import admin
-from base.models.enums import learning_component_type, learning_component_description
+from django import forms
+from cms.models import translated_text
+from cms.enums import entity_name
+from django.utils.safestring import mark_safe
 
 
-class LearningComponentAdmin(admin.ModelAdmin):
-    list_display = ('acronym', 'type')
-    fieldsets = ((None, {'fields': ('learning_container','type', 'acronym', 'description')}),)
-    search_fields = ['acronym']
+class LearningUnitPedagogyForm(forms.Form):
+    learning_unit_year = language = None
 
-class LearningComponent(models.Model):
-    external_id = models.CharField(max_length=100, blank=True, null=True)
-    learning_container = models.ForeignKey('LearningContainer')
-    type = models.CharField(max_length=30, choices=learning_component_type.LEARNING_COMPONENT_TYPES,
-                            blank=True, null=True)
-    acronym = models.CharField(max_length=3)
-    description = models.CharField(max_length=30,
-                                   choices=learning_component_description.LEARNING_COMPONENT_DESCRIPTIONS,
-                                   blank=True, null=True)
+    def __init__(self, learning_unit_year, language, *args, **kwargs):
+        self.learning_unit_year = learning_unit_year
+        self.language = language
+        self.refresh_data()
+        super(LearningUnitPedagogyForm, self).__init__(*args, **kwargs)
 
+    def refresh_data(self):
+        language_iso = self.language[0]
+        text_labels_name = ['resume', 'bibliography', 'teaching_methods', 'evaluation_methods',
+                            'other_informations', 'online_resources']
+        texts_list = translated_text.search(entity=entity_name.LEARNING_UNIT_YEAR,
+                                            reference=self.learning_unit_year.id,
+                                            language=language_iso,
+                                            text_labels_name=text_labels_name)\
+                                    .exclude(text__isnull=True)
 
-def find_by_id(learning_component_id):
-    return LearningComponent.objects.get(pk=learning_component_id)
+        for trans_txt in texts_list:
+            text_label = trans_txt.text_label.label
+            setattr(self, text_label, mark_safe(trans_txt.text))

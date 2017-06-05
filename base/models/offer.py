@@ -28,8 +28,8 @@ from osis_common.models.serializable_model import SerializableModel, Serializabl
 
 
 class OfferAdmin(SerializableModelAdmin):
-    list_display = ('title', 'changed')
-    fieldsets = ((None, {'fields': ('title',)}),)
+    list_display = ('id', 'title', 'changed')
+    fieldsets = ((None, {'fields': ['title']}),)
     search_fields = ['title']
 
 
@@ -39,7 +39,7 @@ class Offer(SerializableModel):
     title = models.CharField(max_length=255)
 
     def __str__(self):
-        return self.title
+        return "{} {}".format(self.id, self.title)
 
     class Meta:
         permissions = (
