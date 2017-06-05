@@ -31,7 +31,7 @@ OPTIONAL_APPS = (
     'dissertation',
     'internship',
     'assessments',
-    'cms'
+    'cms',
 )
 
 INSTALLED_APPS += OPTIONAL_APPS

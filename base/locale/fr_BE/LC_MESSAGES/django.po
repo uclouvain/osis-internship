@@ -975,11 +975,11 @@ msgstr "La note encodée est incorrecte (elle doit être comprise entre 0 et 20)
 msgid "scores_injection"
 msgstr "Injection des notes"
 
-msgid "scores_responsible"
-msgstr "Responsable(s) de notes"
+msgid "scores_responsibles"
+msgstr "Responsables de notes"
 
-msgid "scores_responsibles_administration"
-msgstr "Administration des responsables de notes de programmes"
+msgid "scores_responsible_title"
+msgstr "Responsable de notes"
 
 msgid "scores_saved"
 msgstr "note(s) enregistrée(s)"
@@ -1157,7 +1157,7 @@ msgid "tooltip_to_my_messages"
 msgstr "Retourner à la liste des messages"
 
 msgid "tutor"
-msgstr "Enseignant(e)"
+msgstr "Enseignant·e"
 
 msgid "tutors"
 msgstr "Enseignants"
@@ -1325,6 +1325,9 @@ msgstr "Coordinateur"
 msgid "HOLDER"
 msgstr "Titulaire"
 
+msgid "holder_number"
+msgstr "Nb titulaires"
+
 msgid "CO_HOLDER"
 msgstr "Co-titulaire"
 
@@ -1389,7 +1392,7 @@ msgid "abscence_justified_preserved"
 msgstr "Abscence justifiée dèjà encodée et préservée"
 
 msgid "tutors_of_course"
-msgstr "Enseignant(e)(s) du cours"
+msgstr "Enseignant·e·s du cours"
 
 msgid "academic_actors"
 msgstr "Les acteurs académiques"
@@ -1473,12 +1476,6 @@ msgstr "Code de l'UE"
 msgid "partims"
 msgstr "Partims"
 
-msgid "learning_unit_type"
-msgstr "Type d'UE"
-
-msgid "learning_unit_subtype"
-msgstr "Sous-type d'UE"
-
 msgid "periodicity"
 msgstr "Périodicité"
 
@@ -1515,29 +1512,38 @@ msgstr "Thèse"
 msgid "selected"
 msgstr "sélectionné(s)"
 
-msgid "LECTURING_COMPLETE"
-msgstr "Cours magistral complet"
+msgid "subtype"
+msgstr "Sous-type"
 
-msgid "LECTURING_INCOMPLETE"
-msgstr "Cours magistral partiel"
+msgid "start"
+msgstr "Début"
 
-msgid "PRACTICAL_EXERCISES_COMPLETE"
-msgstr "Travaux pratiques complets"
+msgid "duration"
+msgstr "Durée"
 
-msgid "PRACTICAL_EXERCISES_INCOMPLETE"
-msgstr "Travaux pratiques partiels"
+msgid "learning_unit_specifications"
+msgstr "Cahier de charges"
+
+msgid "experimental_phase"
+msgstr "Cette fonctionnalité est en phase expérimentale"
+
+msgid "title_official_1"
+msgstr "Intitulé officiel (partie 1 commune aux partims)"
+
+msgid "title_official_2"
+msgstr "Intitulé officiel (partie 2 propre au partim)"
+
+msgid "title_in_english"
+msgstr "Intitulé en anglais"
+
+msgid "title_in_english_1"
+msgstr "(partie 1 commune aux partims)"
+
+msgid "title_in_english_2"
+msgstr "(partie 2 propre au partim)"
 
 msgid "LECTURING"
-msgstr "Cours magistral"
-
-msgid "STAGE"
-msgstr "Stage"
-
-msgid "DISSERTATION"
-msgstr "Mémoire"
+msgstr "Cours Magistraux"
 
 msgid "PRACTICAL_EXERCISES"
 msgstr "Travaux pratiques"
-
-msgid "subtype"
-msgstr "Sous-type"

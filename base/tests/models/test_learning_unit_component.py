@@ -27,7 +27,6 @@ import datetime
 from django.test import TestCase
 from base.models.learning_container import LearningContainer
 from base.models.learning_container_year import LearningContainerYear
-from base.models.learning_component import LearningComponent
 from base.models.learning_component_year import LearningComponentYear
 from base.models.learning_unit_year import LearningUnitYear
 from base.models.learning_unit_component import LearningUnitComponent
@@ -54,7 +53,6 @@ class LearningComponentYearTest(TestCase):
     def test_creation_learning_unit_component_class_with_different_year(self):
 
         learning_container = LearningContainer()
-        learning_component = LearningComponent(learning_container=learning_container)
 
         learning_container_year = LearningContainerYear(title="Biology",
                                                         acronym="LBIO1212",
@@ -62,7 +60,6 @@ class LearningComponentYearTest(TestCase):
                                                         learning_container=learning_container)
         #Composant annualisé est associé à son composant et à son conteneur annualisé
         learning_component_year = LearningComponentYear(learning_container_year=learning_container_year,
-                                                        learning_component=learning_component,
                                                         title="Cours magistral",
                                                         acronym="/C",
                                                         comment="TEST")
@@ -74,7 +71,7 @@ class LearningComponentYearTest(TestCase):
                                                 learning_container_year=learning_container_year)
 
         #Association du conteneur et de son composant dont les années académiques diffèrent l'une de l'autre
-        learning_unit_component = LearningUnitComponent(learning_component_year=learning_component_year,
-                                                        learning_unit_year=learning_unit_year)
+        LearningUnitComponent(learning_component_year=learning_component_year,
+                              learning_unit_year=learning_unit_year)
 
         self.assertEqual(learning_component_year.learning_container_year, learning_unit_year.learning_container_year)

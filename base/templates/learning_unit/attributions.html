@@ -38,7 +38,34 @@
 
         <div class="tab-content" id="tab_content">
             <div role="tabpanel" class="tab-pane active" id="attributions">
-
+                <table class="table">
+                    <thead>
+                        <th>{% trans 'tutor' %}</th>
+                        <th>{% trans 'function' %}</th>
+                        <th></th>
+                        <th>{% trans 'start' %}</th>
+                        <th>{% trans 'duration' %}</th>
+                        <th>Volume 1</th>
+                        <th>Volume 2</th>
+                    </thead>
+                    <tbody>
+                        {% for attribution in attributions %}
+                            <tr>
+                                <td>{{ attribution.tutor.person.last_name}}, {{ attribution.tutor.person.first_name}}</td>
+                                <td>
+                                    {% if attribution.function %}
+                                        {% trans attribution.function %}
+                                    {% endif %}
+                                </td>
+                                <td></td>
+                                <td>{{ attribution.start_year | default_if_none:''}}</td>
+                                <td>{{ attribution.duration | default_if_none:''}}</td>
+                                <td>{{ attribution.volume_lecturing  | default_if_none:''}}</td>
+                                <td>{{ attribution.volume_practical  | default_if_none:''}}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

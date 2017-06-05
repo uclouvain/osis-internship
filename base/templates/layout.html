@@ -211,7 +211,11 @@
                 </ol>
             {% endblock %}
         {% endif %}
-
+        {% if experimental_phase %}
+            <div class="alert alert-warning">
+                <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{% trans 'experimental_phase' %}
+            </div>
+        {% endif %}
         {% block content %}
         {% endblock %}
         <br>
@@ -229,7 +233,7 @@
                    id="lnk_osis_source_code">{% trans 'source_code' %}
                 </a></p>
 
-            <p class="navbar-text pull-right"><span class="glyphicon glyphicon-copyright-mark"></span> 2016 <a
+            <p class="navbar-text pull-right"><span class="glyphicon glyphicon-copyright-mark"></span> {% now "Y" %} <a
                     href="http://www.uclouvain.be" target="_blank" id="lnk_ucl">Université catholique de Louvain</a></p>
         </div>
     </nav>

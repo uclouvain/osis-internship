@@ -945,8 +945,8 @@ msgstr "Score invalid"
 msgid "scores_responsible"
 msgstr "Scores Responsible"
 
-msgid "scores_responsibles_administration"
-msgstr "Administration of the scores responsibles"
+msgid "scores_responsible_title"
+msgstr "Scores Responsible"
 
 msgid "score_saved"
 msgstr "score Saved"
@@ -1140,6 +1140,9 @@ msgstr "Select an excel file to inject scores."
 
 msgid "tooltip_to_my_messages"
 msgstr "Back to messages"
+
+msgid "tutor"
+msgstr "Tutor"
 
 msgid "tutors"
 msgstr "Tutors"
@@ -1456,12 +1459,6 @@ msgstr "Learning unit code"
 msgid "partims"
 msgstr "Partims"
 
-msgid "learning_unit_type"
-msgstr "Learning unit type"
-
-msgid "learning_unit_subtype"
-msgstr "Learning unit subtype"
-
 msgid "periodicity"
 msgstr "Periodicity"
 
@@ -1498,6 +1495,9 @@ msgstr "PhD Thesis"
 msgid "selected"
 msgstr "selected"
 
+msgid "learning_unit_specifications"
+msgstr "Specifications"
+
 msgid "LECTURING_COMPLETE"
 msgstr "Complete lecturing"
 
@@ -1524,3 +1524,27 @@ msgstr "Practical exercises"
 
 msgid "subtype"
 msgstr "Subtype"
+
+msgid "start"
+msgstr "Start"
+
+msgid "duration"
+msgstr "Duration"
+
+msgid "experimental_phase"
+msgstr "This feature is in testing phase"
+
+msgid "title_official_1"
+msgstr "Official title (Part 1, common with partims)"
+
+msgid "title_official_2"
+msgstr "Official title (Part 2, specific to each partim)"
+
+msgid "title_in_english"
+msgstr "Title in English"
+
+msgid "title_in_english_1"
+msgstr "(Part 1, common with partims)"
+
+msgid "title_in_english_2"
+msgstr "(Part 2, specific to each partim)"

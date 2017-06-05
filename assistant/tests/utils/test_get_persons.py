@@ -24,14 +24,13 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.test import TestCase, Client
+from django.test import TestCase
 from base.models.person import Person
 import json
 
 
 class GetPersonsTestCase(TestCase):
     def setUp(self):
-        self.client = Client()
         self.person = Person.objects.create(first_name='person1', last_name='tests', email='person1@tests.com')
         self.person.save()
         self.person = Person.objects.create(first_name='person2', last_name='tests', email='person2@tests.com')

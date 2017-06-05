@@ -23,10 +23,12 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from assistant.models import manager, reviewer
+from assistant.models import reviewer, review
 from django.core.urlresolvers import reverse
-from assistant.forms import MandatesArchivesForm, ReviewerForm
+from assistant.forms import MandatesArchivesForm, ReviewersFormset, ReviewerForm, ReviewerReplacementForm
 from django.views.generic import ListView
+from django.http import HttpResponseRedirect
+from django.forms.formsets import formset_factory
 from django.views.generic.edit import FormMixin
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import ObjectDoesNotExist
@@ -58,10 +60,80 @@ class ReviewersListView(LoginRequiredMixin, UserPassesTestMixin, ListView, FormM
 
 
 @user_passes_test(manager_access.user_is_manager, login_url='assistants_home')
+def reviewers_index(request):
+    all_reviewers = reviewer.find_reviewers()
+    initial_formset_content = [{'action': None,
+                                'structure': rev.structure,
+                                'role': rev.role,
+                                'person': rev.person,
+                                'id': rev.id,
+                                } for rev in all_reviewers]
+    reviewers_formset = formset_factory(ReviewersFormset, extra=0)(initial=initial_formset_content)
+    for form in reviewers_formset:
+        current_reviewer = reviewer.find_by_id(form['id'].value())
+        if review.find_by_reviewer(current_reviewer).count() == 0:
+            form.fields['action'].choices = (('-----', _('-----')), ('DELETE', _('delete_reviewer')),
+                                             ('REPLACE', _('replace_reviewer')))
+        else:
+            form.fields['action'].choices = (('-----', _('-----')), ('REPLACE', _('replace_reviewer')))
+    return render(request, "reviewers_list.html", {'reviewers_formset': reviewers_formset
+                                                   })
+
+
+@user_passes_test(manager_access.user_is_manager, login_url='assistants_home')
+def reviewer_action(request):
+    if request.POST:
+        reviewers_formset = formset_factory(ReviewersFormset)(request.POST, request.FILES)
+        if reviewers_formset.is_valid():
+            for reviewer_form in reviewers_formset:
+                action = reviewer_form.cleaned_data.get('action')
+                if action == 'DELETE':
+                    reviewer_delete(request, reviewer_form.cleaned_data.get('id'))
+                elif action == 'REPLACE':
+                    year = academic_year.current_academic_year().year
+                    reviewer_id = reviewer_form.cleaned_data.get('id')
+                    this_reviewer = reviewer.find_by_id(reviewer_id)
+                    form = ReviewerReplacementForm(initial={'person': this_reviewer.person,
+                                                            'id': this_reviewer.id}, prefix="rev",
+                                                   instance=this_reviewer)
+                    return render(request, "manager_replace_reviewer.html", {'reviewer': this_reviewer,
+                                                                             'year': year,
+                                                                             'form': form})
+    return HttpResponseRedirect(reverse('reviewers_list'))
+
+
+@user_passes_test(manager_access.user_is_manager, login_url='assistants_home')
 def reviewer_delete(request, reviewer_id):
     reviewer_to_delete = reviewer.find_by_id(reviewer_id)
     reviewer_to_delete.delete()
-    return redirect('reviewers_list')
+    return HttpResponseRedirect(reverse('reviewers_list'))
+
+
+@user_passes_test(manager_access.user_is_manager, login_url='assistants_home')
+def reviewer_replace(request):
+    year = academic_year.current_academic_year().year
+    if request.POST:
+        form = ReviewerReplacementForm(data=request.POST, prefix='rev')
+        if form.is_valid():
+            reviewer_to_replace = reviewer.find_by_id(form.cleaned_data.get('id'))
+            if request.POST.get('person_id'):
+                this_person = person.find_by_id(request.POST.get('person_id'))
+                try:
+                    reviewer.find_by_person(this_person)
+                    msg = _("person_already_reviewer_msg")
+                    form.add_error(None, msg)
+                    return render(request, "manager_replace_reviewer.html", {'form': form,
+                                                                             'reviewer': reviewer_to_replace,
+                                                                             'year': year})
+                except ObjectDoesNotExist:
+                    pass
+                reviewer_to_replace.person = this_person
+                reviewer_to_replace.save()
+                return redirect('reviewers_list')
+        else:
+            return render(request, "manager_replace_reviewer.html", {'form': form, 'year': year})
+    else:
+        return redirect('reviewers_list')
 
 
 @user_passes_test(manager_access.user_is_manager, login_url='assistants_home')
@@ -78,7 +150,7 @@ def reviewer_add(request):
                     msg = _("person_already_reviewer_msg")
                     form.add_error(None, msg)
                     return render(request, "manager_add_reviewer.html", {'form': form, 'year': year})
-                except reviewer.Reviewer.DoesNotExist:
+                except ObjectDoesNotExist:
                     pass
                 new_reviewer.person = this_person
                 new_reviewer.save()

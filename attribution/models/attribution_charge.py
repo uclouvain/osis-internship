@@ -33,6 +33,7 @@ class AttributionChargeAdmin(SerializableModelAdmin):
     search_fields = ['attribution__tutor__person__first_name', 'attribution__tutor__person__last_name',
                      'attribution__tutor__person__global_id',
                      'learning_unit_component__learning_unit_year__acronym']
+    list_filter = ('learning_unit_component__type',)
 
 
 class AttributionCharge(SerializableModel):
@@ -55,5 +56,14 @@ def search(attribution=None, learning_unit_component=None):
     if learning_unit_component:
         queryset = queryset.filter(learning_unit_component=learning_unit_component)
 
-
     return queryset
+
+
+def find_first_by_learning_unit_component(attribution=None, learning_unit_component=None):
+    return search(attribution, learning_unit_component).first()
+
+
+def find_by_component_type(an_attribution=None, a_learning_unit_component_type=None):
+    return AttributionCharge.objects.filter(attribution=an_attribution,
+                                            learning_unit_component__learning_unit_year=an_attribution.learning_unit_year,
+                                            learning_unit_component__type=a_learning_unit_component_type).first()

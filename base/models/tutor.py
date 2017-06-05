@@ -41,8 +41,8 @@ class TutorAdmin(serializable_model.SerializableModelAdmin):
 
     def add_to_group(self, request, queryset):
         group_name = "tutors"
-        group = Group.objects.get(name=group_name)
-        if group:
+        try:
+            group = Group.objects.get(name=group_name)
             count = 0
             for tutor in queryset:
                 user = tutor.person.user
@@ -50,7 +50,7 @@ class TutorAdmin(serializable_model.SerializableModelAdmin):
                     user.groups.add(group)
                     count += 1
             self.message_user(request, "{} users added to the group 'tutors'.".format(count), level=messages.SUCCESS)
-        else:
+        except Group.DoesNotExist:
             self.message_user(request, "Group {} doesn't exist.".format(group_name), level=messages.ERROR)
 
 
@@ -83,6 +83,7 @@ def find_by_id(tutor_id):
         return Tutor.objects.get(id=tutor_id)
     except Tutor.DoesNotExist:
         return None
+
 
 # To refactor because it is not in the right place.
 def find_by_learning_unit(learning_unit_year):
