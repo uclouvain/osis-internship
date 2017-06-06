@@ -33,7 +33,6 @@ from django.utils.translation import ugettext_lazy as _
 from base import models as mdl
 from attribution import models as mdl_attr
 from base.models.enums import learning_container_year_types
-from base.models.enums import learning_unit_year_subtypes
 from cms import models as mdl_cms
 from cms.enums import entity_name
 from base.forms.learning_units import LearningUnitYearForm
@@ -208,5 +207,7 @@ def _get_partims_related(learning_unit_year):
 def _show_subtype(learning_unit_year):
     learning_container_year = learning_unit_year.learning_container_year
 
-    return learning_container_year.container_type == learning_container_year_types.COURSE or \
+    if learning_container_year:
+        return learning_container_year.container_type == learning_container_year_types.COURSE or \
              learning_container_year.container_type == learning_container_year_types.INTERNSHIP
+    return False
