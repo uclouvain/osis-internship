@@ -32,3 +32,4 @@ OSIS is writen in
 [DJango](https://www.djangoproject.com/) 1.9 as web framework.
 To know more about the code and the collaboration of the community, please visit
 our [OpenHub](https://www.openhub.net/p/osis-louvain) page.
+

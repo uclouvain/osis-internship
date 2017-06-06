@@ -302,7 +302,7 @@
                 if (data.length > 0) {
                     var trHTML = '';
                     $.each(data, function (key, value) {
-                        var trHTML='';
+
                         var id_person = value.person_id;
                         var last_name = value.person_last_name;
                         var first_name = value.person_first_name;
@@ -324,8 +324,9 @@
                         trHTML += '</button>';
                         trHTML += '</td>';
                         trHTML += '</tr>';
-                        $('#tb_managers tbody').append(trHTML);
+
                     });
+                    $('#tb_managers tbody').html(trHTML);
 
                 }
             });
@@ -443,17 +444,17 @@
 
     function removal_submission(){
         $("#hdn_pgms_id").val(get_offer_id_list_on());
-        //$('#form_remove_manager').submit();
         $.ajax({
             url: "/assessments/pgm_manager/delete?person=" + $('#hdn_to_be_removed_person').val() + "&pgms=" + get_offer_id_list_on()
-        })
-        //$('#form_remove_manager').submit();
-        $("#bt_close_remove_manager_modal").click();
+        }).then(function() {
+            $("#bt_close_remove_manager_modal").click();
 
-        update_manager_list();
-        $("#pnl_errors").find("ul")
-                .remove()
-                .end();
+            update_manager_list();
+            $("#pnl_errors").find("ul")
+                    .remove()
+                    .end();
+            });
+
     }
 
     $(function() {

@@ -78,11 +78,11 @@ def create_attributions_list(attributions):
     dict_attribution = dict()
     for attribution in attributions:
         tutors = mdl_attr.attribution.find_all_tutors_by_learning_unit_year(attribution.learning_unit_year)
-        dict_attribution.update({attribution: [attribution.learning_unit_year.id,
-                                               attribution.learning_unit_year.structure.acronym,
-                                               attribution.learning_unit_year.acronym,
-                                               attribution.learning_unit_year.title,
-                                               tutors]})
+        dict_attribution[attribution] = [attribution.learning_unit_year.id,
+                                         attribution.learning_unit_year.structure.acronym,
+                                         attribution.learning_unit_year.acronym,
+                                         attribution.learning_unit_year.title,
+                                         tutors]
     return dict_attribution
 
 
@@ -90,7 +90,7 @@ def create_attributions_list(attributions):
 @user_passes_test(is_faculty_admin)
 def scores_responsible_management(request):
     entities_manager = mdl_base.entity_manager.find_by_user(request.user)
-    learning_unit_year_id = request.GET.get('id').strip('learning_unit_year_')
+    learning_unit_year_id = request.GET.get('learning_unit_year').strip('learning_unit_year_')
     a_learning_unit_year = mdl_base.learning_unit_year.find_by_id(learning_unit_year_id)
     attributions = mdl_attr.attribution.find_all_distinct_parents(entities_manager)
     entities_list = [attribution.learning_unit_year.structure.acronym for attribution in attributions]
