@@ -25,6 +25,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='learningunityear',
             name='subtype',
-            field=models.CharField(blank=True, choices=[('FULL', 'FULL'), ('PARTIM', 'PARTIM'), ('INTERSHIP', 'INTERSHIP'), ('TEACHING_INTERNSHIP', 'TEACHING_INTERNSHIP'), ('CLINICAL_INTERNSHIP', 'CLINICAL_INTERNSHIP'), ('PROFESSIONAL_INTERNSHIP', 'PROFESSIONAL_INTERNSHIP'), ('RESEARCH_INTERNSHIP', 'RESEARCH_INTERNSHIP')], max_length=20, null=True),
+            field=models.CharField(blank=True, choices=[('FULL', 'FULL'), ('PARTIM', 'PARTIM'), ('INTERNSHIP', 'INTERNSHIP'), ('TEACHING_INTERNSHIP', 'TEACHING_INTERNSHIP'), ('CLINICAL_INTERNSHIP', 'CLINICAL_INTERNSHIP'), ('PROFESSIONAL_INTERNSHIP', 'PROFESSIONAL_INTERNSHIP'), ('RESEARCH_INTERNSHIP', 'RESEARCH_INTERNSHIP')], max_length=50, null=True),
         ),
     ]
