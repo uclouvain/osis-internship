@@ -89,6 +89,9 @@ class OfferProposition(SerializableModel):
     def __str__(self):
         return self.acronym
 
+    class Meta:
+        ordering = ['offer_proposition_group','acronym']
+
 
 def get_by_offer(an_offer):
     return OfferProposition.objects.get(offer=an_offer)
@@ -122,3 +125,6 @@ def find_by_id(offer_proposition_id):
 
 def find_all_ordered_by_acronym():
     return OfferProposition.objects.order_by('acronym')
+
+def get_by_offer_proposition_group(offer_proposition_group):
+    return OfferProposition.objects.get(offer_proposition_group=offer_proposition_group)

@@ -139,6 +139,9 @@ msgstr "Graphe en tant que promoteur"
 msgid "chart_pie_adviser_reading"
 msgstr "Graphe en tant que lecteur"
 
+msgid "cochez_les_programmes_de_cours"
+msgstr "Cochez les programmes de cours en relation avec ce sujet"
+
 msgid "collaboration"
 msgstr "Collaboration"
 
@@ -630,6 +633,9 @@ msgstr "Programme"
 
 msgid "offer_propositions"
 msgstr "Programmes"
+
+msgid "offer_proposition_groupe"
+msgstr "Facultés "
 
 msgid "offer_year_start"
 msgstr "Programme/Année de début"

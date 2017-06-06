@@ -36,3 +36,6 @@ class OfferPropositionGroup(SerializableModel):
 
     def __str__(self):
         return self.name_short
+
+def find_all_ordered_by_name_short():
+    return OfferPropositionGroup.objects.order_by('name_short')
