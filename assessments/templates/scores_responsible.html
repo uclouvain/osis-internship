@@ -29,11 +29,11 @@
 {% block breadcrumb %}
 <li id="lnk_institution"><a href="{% url 'institution' %}" id ="lnk_home_institution">{% trans 'institution' %}</a></li>
 <li id="lnk_studies"><a href="{% url 'academic_actors' %}">{% trans 'academic_actors' %}</a></li>
-<li class="active">{% trans 'scores_responsible_title' %}</li>
+<li class="active">{% trans 'scores_responsibles' %}</li>
 {% endblock %}
 {% block content %}
 <div class="page-header">
-    <h2>{% trans 'scores_responsible_title' %} -
+    <h2>{% trans 'scores_responsibles' %} -
         <label>{% for entity in entities_manager %}{% if forloop.last %}{{entity.structure.acronym}}{% else %}{{entity.structure.acronym}}, {% endif %}{% endfor %}</label> ({{ academic_year }})</h2>
 </div>
 <div class="panel panel-default">
@@ -116,14 +116,14 @@
                                 </td>
                                 <td>
                                     <button type="submit" id="bt_submit_edit" class="btn btn-default pull-right" role="button"
-                                        title="{% trans 'edit' %}" name="id" value="learning_unit_year_{{ value_list.0 }}"><span class="glyphicon glyphicon-edit"></span></button>
+                                        title="{% trans 'edit' %}" name="learning_unit_year" value="learning_unit_year_{{ value_list.0 }}"><span class="glyphicon glyphicon-edit"></span></button>
                                 </td>
                             </tr>
-                            <input type="hidden" id="hdn_course_code" name="course_code" value="{{ course_code }}">
-                            <input type="hidden" id="hdn_learning_unit_title" name="learning_unit_title" value="{{ learning_unit_title }}">
-                            <input type="hidden" id="hdn_tutor" name="tutor" value="{{ tutor }}">
-                            <input type="hidden" id="hdn_scores_responsible" name="scores_responsible" value="{{ scores_responsible }}">
                         {% endfor %}
+                        <input type="hidden" id="hdn_course_code" name="course_code" value="{{ course_code }}">
+                        <input type="hidden" id="hdn_learning_unit_title" name="learning_unit_title" value="{{ learning_unit_title }}">
+                        <input type="hidden" id="hdn_tutor" name="tutor" value="{{ tutor }}">
+                        <input type="hidden" id="hdn_scores_responsible" name="scores_responsible" value="{{ scores_responsible }}">
                     </tbody>
                 </table>
             </div>
