@@ -112,6 +112,15 @@
                     </div>
 
                     <div class="col-md-4">
+                        <label>{% trans 'organization'%}</label><br>
+                         {% if organization %}
+                            {{ organization.name }}
+                         {% endif %}
+                        <br>
+                        <label style="margin-top:10px;">{% trans 'campus'%}</label><br>
+                         {% if campus %}
+                            {{ campus.name }}
+                         {% endif %}
                     </div>
                 </div>
             </div>
