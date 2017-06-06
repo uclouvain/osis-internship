@@ -8,7 +8,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('base', '0127_auto_20170530_1716'),
+        ('base', '0129_auto_20170601_1542'),
     ]
 
     operations = [
@@ -17,9 +17,6 @@ class Migration(migrations.Migration):
             name='description',
             field=models.CharField(blank=True, max_length=100, null=True),
         ),
-    ]
-
-    operations = [
         migrations.AddField(
             model_name='learningclassyear',
             name='external_id',
