@@ -68,6 +68,18 @@ class LearningComponentYear(models.Model):
                     return q2
         return None
 
+    @property
+    def type_letter_acronym(self):
+        if self.type:
+            if self.type == learning_component_year_type.LECTURING:
+                return 'C'
+            elif self.type == learning_component_year_type.PRACTICAL_EXERCISES :
+                return 'T'
+            elif self.type == learning_component_year_type.STAGE :
+                return 'S'
+            elif self.type == learning_component_year_type.DISSERTATION :
+                return 'D'
+        return None
 
 def find_by_id(learning_component_year_id):
     return LearningComponentYear.objects.get(pk=learning_component_year_id)

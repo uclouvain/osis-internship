@@ -65,7 +65,7 @@
                             <td>{{ component.learning_component_year.hourly_volume_partial_q2 | default_if_none:'-' }}</td>
                             <td>{{ component.learning_component_year.planned_classes| default_if_none:'0' }}</td>
                         </tr>
-                        {% if component.classes%}
+                        {% if component.classes %}
                         <tr>
                             <td colspan="4">
                                 <div style="margin-left: 25px;">
@@ -77,7 +77,9 @@
                                         <tbody class="classes_background">
                                         {% for classe in component.classes %}
                                         <tr>
-                                            <td>/{% if component.learning_component_year.type == 'LECTURING' %}C{% endif %}{% if component.learning_component_year.type == 'PRACTICAL_EXERCISES' %}T{% endif %}{{classe.acronym}}</td>
+                                            <td>/{% if component.learning_component_year.type_letter_acronym %}
+                                                    {{component.learning_component_year.type_letter_acronym}}
+                                                 {% endif %}{{classe.acronym}}</td>
                                             <td>{{classe.description | default_if_none:''}}</td>
                                         </tr>
                                         {% endfor %}
