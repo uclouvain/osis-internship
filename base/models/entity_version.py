@@ -40,12 +40,13 @@ class EntityVersionAdmin(admin.ModelAdmin):
 class EntityVersion(models.Model):
     external_id = models.CharField(max_length=100, blank=True, null=True)
     changed = models.DateTimeField(null=True)
-    entity = models.ForeignKey('Entity')
+    entity = models.ForeignKey('Entity', related_name='child_of')
     title = models.CharField(max_length=255)
     acronym = models.CharField(max_length=20)
     entity_type = models.CharField(choices=entity_type.ENTITY_TYPES, max_length=50, db_index=True)
+    parent = models.ForeignKey('Entity', related_name='parent_of', blank=True, null=True)
     start_date = models.DateField(db_index=True)
-    end_date = models.DateField(db_index=True, null=True)
+    end_date = models.DateField(db_index=True, blank=True, null=True)
 
     def __str__(self):
         return "{} ({} - {} - {} to {})".format(

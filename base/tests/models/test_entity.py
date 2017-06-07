@@ -31,7 +31,6 @@ from django.utils import timezone
 from base.models import entity
 from base.models.enums import entity_type
 from base.tests.factories.entity import EntityFactory
-from base.tests.factories.entity_link import EntityLinkFactory
 from base.tests.factories.entity_version import EntityVersionFactory
 
 
@@ -47,9 +46,9 @@ class EntityTest(TestCase):
         self.parent = EntityFactory()
         self.children = [EntityFactory() for x in range(4)]
         for x in range(4):
-            EntityLinkFactory(
+            EntityVersionFactory(
+                entity=self.children[x],
                 parent=self.parent,
-                child=self.children[x],
                 start_date=self.start_date,
                 end_date=self.end_date
                 )
@@ -64,9 +63,9 @@ class EntityTest(TestCase):
     def test_get_entity_direct_children_in_and_out_dates(self):
         in_2017_children = [EntityFactory() for x in range(4)]
         for x in range(4):
-            EntityLinkFactory(
+            EntityVersionFactory(
+                entity=in_2017_children[x],
                 parent=self.parent,
-                child=in_2017_children[x],
                 start_date=timezone.make_aware(datetime.datetime(2017, 1, 1)),
                 end_date=timezone.make_aware(datetime.datetime(2017, 12, 31))
                 )
@@ -78,21 +77,21 @@ class EntityTest(TestCase):
         grandgrandchildren = [EntityFactory() for x in range(4)]
 
         for x in range(4):
-            EntityLinkFactory(
+            EntityVersionFactory(
+                entity=grandchildren[x * 2],
                 parent=self.children[x],
-                child=grandchildren[x*2],
                 start_date=self.start_date,
                 end_date=self.end_date
             )
-            EntityLinkFactory(
+            EntityVersionFactory(
+                entity=grandchildren[x * 2 + 1],
                 parent=self.children[x],
-                child=grandchildren[x * 2 + 1],
                 start_date=self.start_date,
                 end_date=self.end_date
             )
-            EntityLinkFactory(
-                parent=grandchildren[x*2],
-                child=grandgrandchildren[x],
+            EntityVersionFactory(
+                entity=grandgrandchildren[x],
+                parent=grandchildren[x * 2],
                 start_date=self.start_date,
                 end_date=self.end_date
             )

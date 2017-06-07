@@ -27,7 +27,6 @@ from django.contrib import admin
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.utils import timezone
-from base.models.entity_link import EntityLink
 from base.models.entity_version import EntityVersion
 
 
@@ -39,9 +38,14 @@ class EntityAdmin(admin.ModelAdmin):
 
 
 class Entity(models.Model):
-    organization = models.ForeignKey('Organization', null=True)
+    organization = models.ForeignKey('Organization', blank=True, null=True)
     external_id = models.CharField(max_length=255, unique=True)
-    changed = models.DateTimeField(null=True)
+    changed = models.DateTimeField(blank=True, null=True)
+
+    location = models.CharField(max_length=255, blank=True, null=True)
+    postal_code = models.CharField(max_length=20, blank=True, null=True)
+    city = models.CharField(max_length=255, blank=True, null=True)
+    country = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
         verbose_name_plural = "entities"
@@ -53,14 +57,14 @@ class Entity(models.Model):
         if date is None:
             date = timezone.now()
 
-        return EntityLink.objects.filter(parent=self,
-                                         start_date__lte=date,
-                                         end_date__gte=date
-                                         )
+        return EntityVersion.objects.filter(parent=self,
+                                            start_date__lte=date,
+                                            end_date__gte=date
+                                            )
 
     def find_direct_children(self, date=None):
-        qs = self._direct_children(date).select_related("child")
-        return [entity_link.child for entity_link in qs]
+        qs = self._direct_children(date).select_related("entity")
+        return [entity_version.entity for entity_version in qs]
 
     def count_direct_children(self, date=None):
         return self._direct_children(date).count()

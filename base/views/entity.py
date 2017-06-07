@@ -27,7 +27,6 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from base.models import entity
-from base.models import entity_link
 from base.models import entity_version
 from base.serializers import EntitySerializer
 
@@ -50,8 +49,6 @@ def create_full_entity(request):
     entity_data = {
         'organization': request.data.get('organization'),
         'external_id': request.data.get('external_id'),
-        'entityaddress_set': request.data.get('entityaddress_set'),
-        'link_to_parent': request.data.get('link_to_parent'),
         'entityversion_set': request.data.get('entityversion_set'),
     }
     entity_serializer = EntitySerializer(data=entity_data)
@@ -66,11 +63,9 @@ def create_full_entity(request):
 
 def update_existing_entity(existing_entity, request):
     new_versions_count = create_versions_of_existing_entity(request, existing_entity)
-    new_links_count = create_links_of_existing_entity(request, existing_entity)
     entity_serializer = EntitySerializer(existing_entity)
     data = entity_serializer.data
     data['new_versions_count'] = new_versions_count
-    data['new_links_count'] = new_links_count
     return Response(data=data, status=status.HTTP_200_OK)
 
 
@@ -82,6 +77,7 @@ def create_versions_of_existing_entity(request, same_entity):
                                                    title=version.get('title'),
                                                    acronym=version.get('acronym'),
                                                    entity_type=version.get('entity_type'),
+                                                   parent=version.get('parent'),
                                                    start_date=version.get('start_date'),
                                                    end_date=version.get('end_date')
                                                    )
@@ -98,29 +94,3 @@ def create_version(version, same_entity):
         except AttributeError:
             new_version = None
         return new_version
-
-
-def create_links_of_existing_entity(request, same_entity):
-    new_links_count = 0
-    link_to_parent_data = request.data.get('link_to_parent')
-    for link in link_to_parent_data:
-        same_links_count = entity_link.count(child=same_entity,
-                                             parent=link.get('parent'),
-                                             start_date=link.get('start_date'),
-                                             end_date=link.get('end_date')
-                                             )
-        if not same_links_count:
-            if create_link(link, same_entity) is not None:
-                new_links_count += 1
-
-    return new_links_count
-
-
-def create_link(link, same_entity):
-        try:
-            parent_id = link.pop('parent')
-            parent = entity.get_by_internal_id(parent_id)
-            new_link = entity_link.EntityLink.objects.create(child=same_entity, parent=parent, **link)
-        except AttributeError:
-            new_link = None
-        return new_link

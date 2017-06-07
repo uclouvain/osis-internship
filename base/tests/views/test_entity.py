@@ -51,19 +51,12 @@ class EntityViewTestCase(APITestCase):
         valid_entity = {
             'organization': organization.id,
             'external_id': "01234567",
-            'link_to_parent': [
-                {
-                    "parent": parent.id,
-                    "start_date": datetime.date(2015, 1, 1).isoformat(),
-                    "end_date": datetime.date(2015, 12, 31).isoformat()
-                },
-            ],
-            'entityaddress_set': [],
             'entityversion_set': [
                 {
                     "title": "test",
                     "acronym": "TST",
                     "entity_type": "FACULTY",
+                    "parent": parent.id,
                     "start_date": datetime.date(2015, 1, 1).isoformat(),
                     "end_date": datetime.date(2015, 12, 31).isoformat()
                 }
