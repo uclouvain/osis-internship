@@ -23,19 +23,19 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+import time
 from django.contrib.auth.decorators import user_passes_test
 from django.http import HttpResponse
+from django.core.exceptions import ObjectDoesNotExist
 from openpyxl import Workbook
 from openpyxl.writer.excel import save_virtual_workbook
-from assistant.forms import MandateForm, structure_inline_formset
-from assistant import models as assistant_mdl
-from base.views import layout
-from django.core.exceptions import ObjectDoesNotExist
-from assistant.models import assistant_mandate, mandate_structure, review
-from assistant.models.enums import assistant_type, reviewer_role
 from base.models.enums import structure_type
 from base.models import academic_year
-import time
+from base.views import layout
+from assistant.forms import MandateForm, structure_inline_formset
+from assistant import models as assistant_mdl
+from assistant.models import assistant_mandate, mandate_structure, review
+from assistant.models.enums import assistant_type, reviewer_role
 
 
 def user_is_manager(user):
@@ -88,7 +88,7 @@ def load_mandates(request):
 @user_passes_test(user_is_manager, login_url='assistants_home')
 def export_mandates(request):
     xls = generate_xls()
-    filename = 'assistants_mandates_{}.xlsx'.format(time.strftime("%Y-%m-%d_%H:%M"))
+    filename = 'assistants_mandates_{}.xlsx'.format(time.strftime("%Y%m%d_%H%M"))
     response = HttpResponse(xls, content_type='application/vnd.ms-excel')
     response['Content-Disposition'] = "%s%s" % ("attachment; filename=", filename)
     return response
@@ -205,34 +205,20 @@ def get_structure_for_mandate(mandate):
 
 
 def get_doctorate_details(mandate):
-    doctorate_details = []
     if mandate.assistant_type == assistant_type.TEACHING_ASSISTANT:
-        supervisor = ''
-        thesis_title = ''
-        phd_inscription_date = ''
-        confirmation_test_date = ''
-        thesis_date = ''
-        expected_phd_date = ''
-        inscription = ''
-        remark = ''
+        return [''] * 8
     else:
-        supervisor = str(mandate.assistant.supervisor)
-        thesis_title = mandate.assistant.thesis_title
-        phd_inscription_date = mandate.assistant.phd_inscription_date
-        confirmation_test_date = mandate.assistant.confirmation_test_date
-        thesis_date = mandate.assistant.thesis_date
-        expected_phd_date = mandate.assistant.expected_phd_date
-        inscription = mandate.assistant.inscription
-        remark = mandate.assistant.remark
-    doctorate_details.insert(0, supervisor)
-    doctorate_details.append(thesis_title)
-    doctorate_details.append(phd_inscription_date)
-    doctorate_details.append(confirmation_test_date)
-    doctorate_details.append(thesis_date)
-    doctorate_details.append(expected_phd_date)
-    doctorate_details.append(inscription)
-    doctorate_details.append(remark)
-    return doctorate_details
+        ass = mandate.assistant
+        return [
+            str(ass.supervisor),
+            ass.thesis_title,
+            ass.phd_inscription_date,
+            ass.confirmation_test_date,
+            ass.thesis_date,
+            ass.expected_phd_date,
+            ass.inscription,
+            ass.remark
+        ]
 
 
 def get_reviews(mandate):
