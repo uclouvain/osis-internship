@@ -41,7 +41,7 @@ class LearningUnitYear(SerializableModel):
     academic_year = models.ForeignKey('AcademicYear')
     learning_unit = models.ForeignKey('LearningUnit')
     learning_container_year = models.ForeignKey('LearningContainerYear', blank=True, null=True)
-    changed = models.DateTimeField(null=True)
+    changed = models.DateTimeField(null=True, auto_now=True)
     acronym = models.CharField(max_length=15, db_index=True)
     title = models.CharField(max_length=255)
     title_english = models.CharField(max_length=250, blank=True, null=True)
