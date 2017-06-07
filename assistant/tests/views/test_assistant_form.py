@@ -23,7 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.test import TestCase, RequestFactory, Client
+from django.test import TestCase, RequestFactory
 from django.core.urlresolvers import reverse
 from django.utils import timezone
 from django.contrib.auth.models import User
@@ -41,7 +41,6 @@ class AssistantFormViewTestCase(TestCase):
 
     def setUp(self):
         self.factory = RequestFactory()
-        self.client = Client()
         self.user = User.objects.create_user(
             username='assistant', email='laurent.buset@uclouvain.be', password='assistant'
         )

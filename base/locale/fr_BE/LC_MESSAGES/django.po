@@ -797,6 +797,9 @@ msgstr "Ouvert"
 msgid "organization"
 msgstr "Organisation"
 
+msgid "campus"
+msgstr "Campus"
+
 msgid "organization_address"
 msgstr "Adresse de l'organisation"
 
@@ -976,7 +979,7 @@ msgid "scores_injection"
 msgstr "Injection des notes"
 
 msgid "scores_responsibles"
-msgstr "Responsable·s de notes"
+msgstr "Responsables de notes"
 
 msgid "scores_responsible_title"
 msgstr "Responsable de notes"
