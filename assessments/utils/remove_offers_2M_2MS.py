@@ -17,7 +17,7 @@ def _remove_2M_2MS_offers():
         off.delete()
         cpt += 1
         print('{} ({}) was removed'.format(off.acronym, off.academic_year))
-    print("{} OfferYear records were deleted.".format(cpt+1))
+    print("{} OfferYear records were deleted.".format(cpt))
 
 
 def execute():
