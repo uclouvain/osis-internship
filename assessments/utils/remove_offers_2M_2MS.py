@@ -10,11 +10,12 @@ def _remove_2M_2MS_offers():
     from django.db.models import Q
     from base.models.offer_year import OfferYear
     cpt = 0
-    for cpt, off in enumerate(OfferYear.objects.filter(Q(acronym__endswith='2MS') | Q(acronym__endswith='2M'))\
-                                             .exclude(acronym__icontains='/')\
-                                             .order_by('academic_year__year')
-                                             .select_related('academic_year')):
+    for off in OfferYear.objects.filter(Q(acronym__endswith='2MS') | Q(acronym__endswith='2M'))\
+                                .exclude(acronym__icontains='/')\
+                                .order_by('academic_year__year')\
+                                .select_related('academic_year'):
         off.delete()
+        cpt += 1
         print('{} ({}) was removed'.format(off.acronym, off.academic_year))
     print("{} OfferYear records were deleted.".format(cpt+1))
 
