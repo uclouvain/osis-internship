@@ -47,15 +47,10 @@ def get_settings():
 
 
 def access_to_procedure_is_open():
-    if not Settings.objects.filter(starting_date__lt=timezone.now(), ending_date__gt=timezone.now()):
-        return False
-    else:
-        return True
+    return Settings.objects.filter(starting_date__lt=timezone.now(),
+                                   ending_date__gt=timezone.now()).count() > 0
 
 
 def assistants_can_see_file():
-    if not Settings.objects.filter(assistants_starting_date__lt=timezone.now(),
-                                   assistants_ending_date__gt=timezone.now()):
-        return False
-    else:
-        return True
+    return Settings.objects.filter(assistants_starting_date__lt=timezone.now(),
+                                   assistants_ending_date__gt=timezone.now()).count() > 0
