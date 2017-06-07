@@ -78,7 +78,10 @@ def find_structures():
 
 
 def find_by_id(structure_id):
-    return Structure.objects.get(pk=structure_id)
+    try:
+        return Structure.objects.get(pk=structure_id)
+    except:
+        return None
 
 
 def search(acronym=None, title=None, type=None):

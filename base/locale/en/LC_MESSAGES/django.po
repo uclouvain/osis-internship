@@ -786,6 +786,9 @@ msgstr "Open"
 msgid "organization"
 msgstr "Organization"
 
+msgid "campus"
+msgstr "Campus"
+
 msgid "organization_address"
 msgstr "Organization address"
 
@@ -943,6 +946,9 @@ msgid "score_invalid"
 msgstr "Score invalid"
 
 msgid "scores_responsible"
+msgstr "Scores Responsible"
+
+msgid "scores_responsible_title"
 msgstr "Scores Responsible"
 
 msgid "score_saved"
@@ -1340,6 +1346,27 @@ msgstr "Master thesis"
 
 msgid "INTERNSHIP"
 msgstr "Internship"
+
+msgid "OTHER_COLLECTIVE"
+msgstr "Other collective"
+
+msgid "OTHER_INDIVIDUAL"
+msgstr "Other individual"
+
+msgid "EXTERNAL"
+msgstr "External"
+
+msgid "TEACHING_INTERNSHIP"
+msgstr "Teaching internship"
+
+msgid "CLINICAL_INTERNSHIP"
+msgstr "Clinical internship"
+
+msgid "PROFESSIONAL_INTERNSHIP"
+msgstr "Professional internship"
+
+msgid "RESEARCH_INTERNSHIP"
+msgstr "Research internship"
 
 msgid "ANNUAL"
 msgstr "Annual"

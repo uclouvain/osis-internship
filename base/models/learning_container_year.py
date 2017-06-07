@@ -47,6 +47,7 @@ class LearningContainerYear(models.Model):
     acronym = models.CharField(max_length=10)
     changed = models.DateTimeField(null=True)
     language = models.ForeignKey('reference.Language', blank=True, null=True)
+    campus = models.ForeignKey('Campus', blank=True, null=True)
 
     def __str__(self):
         return u"%s - %s" % (self.acronym, self.title)
