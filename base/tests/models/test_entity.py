@@ -45,12 +45,20 @@ class EntityTest(TestCase):
                                                     timezone.make_aware(datetime.datetime(2017, 12, 30))).fuzz()
         self.parent = EntityFactory()
         self.children = [EntityFactory() for x in range(4)]
+        self.types_dict = dict(entity_type.ENTITY_TYPES)
+        types = [self.types_dict['SECTOR'],
+                 self.types_dict['FACULTY'],
+                 self.types_dict['SCHOOL'],
+                 self.types_dict['FACULTY']]
+
         for x in range(4):
             EntityVersionFactory(
                 entity=self.children[x],
                 parent=self.parent,
+                acronym="ENTITY_V_" + str(x),
                 start_date=self.start_date,
-                end_date=self.end_date
+                end_date=self.end_date,
+                entity_type=types[x]
                 )
 
     def test_get_entity_direct_children_in_dates(self):
@@ -102,69 +110,34 @@ class EntityTest(TestCase):
                               descendants)
 
     def test_search_entities_by_version_acronym_date_in(self):
-        for x in range(4):
-            EntityVersionFactory(
-                entity=self.children[x],
-                acronym="ENTITY_V_" + str(x),
-                start_date=self.start_date,
-                end_date=self.end_date
-            )
-
         self.assertCountEqual(entity.search(acronym='ENTITY_V', version_date=self.date_in_2015), self.children)
         self.assertCountEqual(entity.search(acronym='NON_EXISTING', version_date=self.date_in_2015), [])
         self.assertCountEqual(entity.search(acronym='ENTITY_V_1', version_date=self.date_in_2015), [self.children[1]])
 
     def test_search_entities_by_version_acronym_date_out(self):
-        for x in range(4):
-            EntityVersionFactory(
-                entity=self.children[x],
-                acronym="ENTITY_V_" + str(x),
-                start_date=self.start_date,
-                end_date=self.end_date
-            )
-
         self.assertCountEqual(entity.search(acronym='ENTITY_V', version_date=self.date_in_2017), [])
         self.assertCountEqual(entity.search(acronym='NON_EXISTING', version_date=self.date_in_2017), [])
         self.assertCountEqual(entity.search(acronym='ENTITY_V_1', version_date=self.date_in_2017), [])
 
     def test_find_entity_descendants_from_entity_version_and_date(self):
-        EntityVersionFactory(
-            entity=self.parent,
-            acronym="ENTITY_PARENT",
-            start_date=self.start_date,
-            end_date=self.end_date
-        )
         for ent in entity.search(acronym='ENTITY_PARENT', version_date=self.date_in_2015):
             self.assertCountEqual(ent.find_descendants(date=self.date_in_2015), self.children)
 
     def test_search_entities_by_version_type(self):
-        types_dict = dict(entity_type.ENTITY_TYPES)
-        types = [types_dict['SECTOR'],
-                 types_dict['FACULTY'],
-                 types_dict['SCHOOL'],
-                 types_dict['FACULTY']]
-        for x in range(4):
-            EntityVersionFactory(
-                entity=self.children[x],
-                acronym="ENTITY_V_" + str(x),
-                start_date=self.start_date,
-                end_date=self.end_date,
-                entity_type=types[x]
-            )
-
-        self.assertCountEqual(entity.search(entity_type=types_dict['FACULTY']), [self.children[1], self.children[3]])
+        self.assertCountEqual(entity.search(entity_type=self.types_dict['FACULTY']),
+                              [self.children[1], self.children[3]])
         self.assertCountEqual(entity.search(entity_type='NON_EXISTING'), [])
 
     def test_get_most_recent_acronym(self):
         start_dates = [
-            timezone.make_aware(datetime.datetime(2015, 1, 1)),
             timezone.make_aware(datetime.datetime(2016, 1, 1)),
-            timezone.make_aware(datetime.datetime(2017, 1, 1))
+            timezone.make_aware(datetime.datetime(2017, 1, 1)),
+            timezone.make_aware(datetime.datetime(2018, 1, 1))
         ]
         end_dates = [
-            timezone.make_aware(datetime.datetime(2015, 12, 31)),
             timezone.make_aware(datetime.datetime(2016, 12, 31)),
-            timezone.make_aware(datetime.datetime(2017, 12, 31))
+            timezone.make_aware(datetime.datetime(2017, 12, 31)),
+            timezone.make_aware(datetime.datetime(2018, 12, 31))
         ]
 
         for x in range(3):
@@ -189,14 +162,14 @@ class EntityTest(TestCase):
 
     def test_find_versions(self):
         start_dates = [
-            timezone.make_aware(datetime.datetime(2015, 1, 1)),
             timezone.make_aware(datetime.datetime(2016, 1, 1)),
-            timezone.make_aware(datetime.datetime(2017, 1, 1))
+            timezone.make_aware(datetime.datetime(2017, 1, 1)),
+            timezone.make_aware(datetime.datetime(2018, 1, 1))
         ]
         end_dates = [
-            timezone.make_aware(datetime.datetime(2015, 12, 31)),
             timezone.make_aware(datetime.datetime(2016, 12, 31)),
-            timezone.make_aware(datetime.datetime(2017, 12, 31))
+            timezone.make_aware(datetime.datetime(2017, 12, 31)),
+            timezone.make_aware(datetime.datetime(2018, 12, 31))
         ]
 
         versions = [EntityVersionFactory(

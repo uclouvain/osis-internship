@@ -40,7 +40,7 @@ class EntityVersionAdmin(admin.ModelAdmin):
 class EntityVersion(models.Model):
     external_id = models.CharField(max_length=100, blank=True, null=True)
     changed = models.DateTimeField(null=True)
-    entity = models.ForeignKey('Entity', related_name='child_of')
+    entity = models.ForeignKey('Entity')
     title = models.CharField(max_length=255)
     acronym = models.CharField(max_length=20)
     entity_type = models.CharField(choices=entity_type.ENTITY_TYPES, max_length=50, db_index=True)
