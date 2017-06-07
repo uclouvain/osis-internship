@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -23,34 +23,20 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
-from django.contrib import admin
+import factory
 from django.utils import timezone
 
+class SettingsFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = 'assistant.Settings'
 
-class SettingsAdmin(admin.ModelAdmin):
-    list_display = ('starting_date', 'ending_date')
-
-
-class Settings(models.Model):
-    starting_date = models.DateField()
-    ending_date = models.DateField()
-    assistants_starting_date = models.DateField()
-    assistants_ending_date = models.DateField()
-
-    def __str__(self):
-        return u"%s - %s" % (self.starting_date, self.ending_date)
-
-
-def get_settings():
-    return Settings.objects.first()
+    starting_date = factory.fuzzy.FuzzyDate((timezone.now() - timezone.timedelta(days=10)).date(),
+                                            (timezone.now() - timezone.timedelta(days=5)).date())
+    ending_date = factory.fuzzy.FuzzyDate((timezone.now() + timezone.timedelta(days=90)).date(),
+                                          (timezone.now() + timezone.timedelta(days=100)).date())
+    assistants_starting_date = factory.fuzzy.FuzzyDate((timezone.now() - timezone.timedelta(days=10)).date(),
+                                                       (timezone.now() - timezone.timedelta(days=5)).date())
+    assistants_ending_date = factory.fuzzy.FuzzyDate((timezone.now() + timezone.timedelta(days=90)).date(),
+                                          (timezone.now() + timezone.timedelta(days=100)).date())
 
 
-def access_to_procedure_is_open():
-    return Settings.objects.filter(starting_date__lt=timezone.now(),
-                                   ending_date__gt=timezone.now()).count() > 0
-
-
-def assistants_can_see_file():
-    return Settings.objects.filter(assistants_starting_date__lt=timezone.now(),
-                                   assistants_ending_date__gt=timezone.now()).count() > 0
