@@ -24,10 +24,18 @@
 #
 ##############################################################################
 from django.contrib.auth.decorators import user_passes_test
+from django.http import HttpResponse
+from openpyxl import Workbook
+from openpyxl.writer.excel import save_virtual_workbook
 from assistant.forms import MandateForm, structure_inline_formset
 from assistant import models as assistant_mdl
 from base.views import layout
 from django.core.exceptions import ObjectDoesNotExist
+from assistant.models import assistant_mandate, mandate_structure, review
+from assistant.models.enums import assistant_type, reviewer_role
+from base.models.enums import structure_type
+from base.models import academic_year
+import time
 
 
 def user_is_manager(user):
@@ -75,3 +83,172 @@ def mandate_save(request, mandate_id):
 @user_passes_test(user_is_manager, login_url='assistants_home')
 def load_mandates(request):
     return layout.render(request, "load_mandates.html", {})
+
+
+@user_passes_test(user_is_manager, login_url='assistants_home')
+def export_mandates(request):
+    xls = generate_xls()
+    filename = 'assistants_mandates_{}.xlsx'.format(time.strftime("%Y-%m-%d_%H:%M"))
+    response = HttpResponse(xls, content_type='application/vnd.ms-excel')
+    response['Content-Disposition'] = "%s%s" % ("attachment; filename=", filename)
+    return response
+
+
+def generate_xls():
+    workbook = Workbook(encoding='utf-8')
+    worksheet1 = workbook.active
+    worksheet1.title = "mandates"
+    worksheet1.append(['Nom',
+                       'Prénom',
+                       'FGS',
+                       'SAP id',
+                       'Type',
+                       'ETP',
+                       'Date entrée',
+                       'Date sortie',
+                       'Barême',
+                       'Durée contrat',
+                       'Durée contrat ETP',
+                       'Type renouvellement',
+                       'Absences',
+                       'Commentaires',
+                       'Autres status',
+                       'Secteur',
+                       'Faculté',
+                       'Programme de commission',
+                       'Institut',
+                       'Pôle',
+                       'Promoteur thèse',
+                       'Titre thèse',
+                       'Date inscription doctorat',
+                       'Date test confirmation',
+                       'Date thèse',
+                       'Date prévue doctorat',
+                       'Inscription doctorat',
+                       'Remarque doctorat',
+                       'Fonctions en dehors UCL',
+                       'Mandat externe',
+                       '% enseignement',
+                       '% recherche',
+                       '% service',
+                       '% formation',
+                       'Phd supervisor reviewer',
+                       'Phd supervisor avis',
+                       'Phd supervisor justification',
+                       'Phd supervisor remarque',
+                       'Phd supervisor confidentiel',
+                       'Recherche reviewer',
+                       'Recherche avis',
+                       'Recherche justification',
+                       'Recherche remarque',
+                       'Recherche confidentiel',
+                       'Supervision reviewer',
+                       'Supervision avis',
+                       'Supervision justification',
+                       'Supervision remarque',
+                       'Supervision confidentiel',
+                       'Vice-recteur reviewer',
+                       'Vice-recteur avis',
+                       'Vice-recteur justification',
+                       'Vice-recteur remarque',
+                       'Vice-recteur confidentiel',
+                       ])
+    mandates = assistant_mandate.find_by_academic_year(academic_year.current_academic_year())
+    for mandate in mandates:
+        line = construct_line(mandate)
+        worksheet1.append(line)
+    return save_virtual_workbook(workbook)
+
+
+def construct_line(mandate):
+    line = [str(mandate.assistant.person.last_name),
+            str(mandate.assistant.person.first_name),
+            mandate.assistant.person.global_id,
+            mandate.sap_id,
+            str(mandate.assistant_type),
+            mandate.fulltime_equivalent,
+            mandate.entry_date,
+            mandate.end_date,
+            mandate.scale,
+            mandate.contract_duration,
+            mandate.contract_duration_fte,
+            mandate.renewal_type,
+            mandate.absences,
+            mandate.comment,
+            mandate.other_status,
+            ]
+    line += get_structure_for_mandate(mandate)
+    line += get_doctorate_details(mandate)
+    line += [mandate.external_functions,
+             mandate.external_contract]
+    line += [mandate.tutoring_percent,
+             mandate.research_percent,
+             mandate.service_activities_percent,
+             mandate.formation_activities_percent
+             ]
+    line += get_reviews(mandate)
+    return line
+
+
+def get_structure_for_mandate(mandate):
+    sector = mandate_structure.find_by_mandate_and_type(mandate, structure_type.SECTOR).first()
+    structures = [sector.structure.acronym] if sector is not None else ['']
+    faculty = mandate_structure.find_by_mandate_and_type(mandate, structure_type.FACULTY).first()
+    structures += [faculty.structure.acronym] if faculty is not None else ['']
+    program_commission = mandate_structure.find_by_mandate_and_type(mandate, structure_type.PROGRAM_COMMISSION).first()
+    structures += [program_commission.structure.acronym] if program_commission is not None else ['']
+    institute = mandate_structure.find_by_mandate_and_type(mandate, structure_type.INSTITUTE).first()
+    structures += [institute.structure.acronym] if institute is not None else ['']
+    pole = mandate_structure.find_by_mandate_and_type(mandate, structure_type.POLE).first()
+    structures += [pole.structure.acronym] if pole is not None else ['']
+    return structures
+
+
+def get_doctorate_details(mandate):
+    doctorate_details = []
+    if mandate.assistant_type == assistant_type.TEACHING_ASSISTANT:
+        supervisor = ''
+        thesis_title = ''
+        phd_inscription_date = ''
+        confirmation_test_date = ''
+        thesis_date = ''
+        expected_phd_date = ''
+        inscription = ''
+        remark = ''
+    else:
+        supervisor = str(mandate.assistant.supervisor)
+        thesis_title = mandate.assistant.thesis_title
+        phd_inscription_date = mandate.assistant.phd_inscription_date
+        confirmation_test_date = mandate.assistant.confirmation_test_date
+        thesis_date = mandate.assistant.thesis_date
+        expected_phd_date = mandate.assistant.expected_phd_date
+        inscription = mandate.assistant.inscription
+        remark = mandate.assistant.remark
+    doctorate_details.insert(0, supervisor)
+    doctorate_details.append(thesis_title)
+    doctorate_details.append(phd_inscription_date)
+    doctorate_details.append(confirmation_test_date)
+    doctorate_details.append(thesis_date)
+    doctorate_details.append(expected_phd_date)
+    doctorate_details.append(inscription)
+    doctorate_details.append(remark)
+    return doctorate_details
+
+
+def get_reviews(mandate):
+    reviews_details = []
+    reviews = review.find_by_mandate(mandate.id)
+    for idx, rev in enumerate(reviews):
+        if rev.reviewer is None:
+            reviews_details += [str(rev.mandate.assistant.supervisor)] if rev.mandate.assistant.supervisor is not None \
+                else ['']
+        elif idx == 0:
+            reviews_details.extend(['' for i in range(5)])
+            if rev.reviewer.role == reviewer_role.SUPERVISION:
+                reviews_details.extend(['' for i in range(5)])
+            reviews_details.append(str(rev.reviewer.person))
+        reviews_details += [rev.advice] if rev.advice is not None else ['']
+        reviews_details += [rev.justification] if rev.justification is not None else ['']
+        reviews_details += [rev.remark] if rev.remark is not None else ['']
+        reviews_details += [rev.confidential] if rev.confidential is not None else ['']
+    return reviews_details
