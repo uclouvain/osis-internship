@@ -71,6 +71,8 @@ def learning_unit_identification(request, learning_unit_year_id):
     context = _get_common_context_learning_unit_year(learning_unit_year_id)
     learning_unit_year = context['learning_unit_year']
     context['learning_container_year_partims'] = _get_partims_related(learning_unit_year)
+    context['organization'] = _get_organization_from_learning_unit_year(learning_unit_year)
+    context['campus'] = _get_campus_from_learning_unit_year(learning_unit_year)
     context['experimental_phase'] = True
     context['show_subtype'] = _show_subtype(learning_unit_year)
     return layout.render(request, "learning_unit/identification.html", context)
@@ -211,3 +213,16 @@ def _show_subtype(learning_unit_year):
         return learning_container_year.container_type == learning_container_year_types.COURSE or \
              learning_container_year.container_type == learning_container_year_types.INTERNSHIP
     return False
+
+
+def _get_campus_from_learning_unit_year(learning_unit_year):
+    if learning_unit_year.learning_container_year:
+        return learning_unit_year.learning_container_year.campus
+    return None
+
+
+def _get_organization_from_learning_unit_year(learning_unit_year):
+    campus = _get_campus_from_learning_unit_year(learning_unit_year)
+    if campus:
+        return campus.organization
+    return None

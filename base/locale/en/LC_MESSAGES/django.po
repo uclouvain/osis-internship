@@ -786,6 +786,9 @@ msgstr "Open"
 msgid "organization"
 msgstr "Organization"
 
+msgid "campus"
+msgstr "Campus"
+
 msgid "organization_address"
 msgstr "Organization address"
 

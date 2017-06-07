@@ -797,6 +797,9 @@ msgstr "Ouvert"
 msgid "organization"
 msgstr "Organisation"
 
+msgid "campus"
+msgstr "Campus"
+
 msgid "organization_address"
 msgstr "Adresse de l'organisation"
 
