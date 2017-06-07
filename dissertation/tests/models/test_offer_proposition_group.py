@@ -23,8 +23,22 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from dissertation.models.offer_proposition_group import OfferPropositionGroup
+from dissertation.models.offer_proposition_group import *
+from django.test import TestCase
 
-def create_offer_proposition(acronym, offer):
-    offer_proposition = OfferPropositionGroup.objects.create(acronym=acronym, offer=offer)
-    return offer_proposition
+
+class OfferPropositionGroupTestCase(TestCase):
+    def setUp(self):
+        OfferPropositionGroup.objects.create(name_short="PSP", name_long="Faculté de Psychologie")
+        OfferPropositionGroup.objects.create(name_short="DROIT", name_long="Faculté de droit")
+
+    def test_offer_proposition_group_exist(self):
+        psp = OfferPropositionGroup.objects.get(name_short='PSP')
+        drt = OfferPropositionGroup.objects.get(name_long='Faculté de droit')
+        self.assertEqual(psp.name_long, "Faculté de Psychologie")
+        self.assertEqual(drt.name_short, "DROIT")
+
+    def test_find_all_ordered_by_name_short(self):
+        all_offer_proposition_group = find_all_ordered_by_name_short()
+        self.assertEqual(all_offer_proposition_group.count(), 2)
+
