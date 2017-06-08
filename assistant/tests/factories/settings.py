@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -23,10 +23,20 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-LECTURING = "LECTURING"
-PRACTICAL_EXERCISES = "PRACTICAL_EXERCISES"
+import factory
+from django.utils import timezone
 
-LEARNING_COMPONENT_YEAR_TYPES = (
-    (LECTURING, LECTURING),
-    (PRACTICAL_EXERCISES, PRACTICAL_EXERCISES)
-)
+class SettingsFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = 'assistant.Settings'
+
+    starting_date = factory.fuzzy.FuzzyDate((timezone.now() - timezone.timedelta(days=10)).date(),
+                                            (timezone.now() - timezone.timedelta(days=5)).date())
+    ending_date = factory.fuzzy.FuzzyDate((timezone.now() + timezone.timedelta(days=90)).date(),
+                                          (timezone.now() + timezone.timedelta(days=100)).date())
+    assistants_starting_date = factory.fuzzy.FuzzyDate((timezone.now() - timezone.timedelta(days=10)).date(),
+                                                       (timezone.now() - timezone.timedelta(days=5)).date())
+    assistants_ending_date = factory.fuzzy.FuzzyDate((timezone.now() + timezone.timedelta(days=90)).date(),
+                                          (timezone.now() + timezone.timedelta(days=100)).date())
+
+

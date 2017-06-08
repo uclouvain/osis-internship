@@ -23,6 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from datetime import date
 from django import forms
 from django.core.exceptions import ValidationError
 from django.forms import ModelForm, Textarea
@@ -346,9 +347,15 @@ class ReviewersFormset(ModelForm):
 
 
 class SettingsForm(ModelForm):
-    starting_date = forms.DateField(required=True, widget=widgets.SelectDateWidget)
-    ending_date = forms.DateField(required=True, widget=widgets.SelectDateWidget)
+    starting_date = forms.DateField(required=True, widget=widgets.SelectDateWidget(
+        years=range(date.today().year-1, date.today().year+2)))
+    ending_date = forms.DateField(required=True, widget=widgets.SelectDateWidget(
+        years=range(date.today().year-1, date.today().year+2)))
+    assistants_starting_date = forms.DateField(required=True, widget=widgets.SelectDateWidget(
+        years=range(date.today().year-1, date.today().year+2)))
+    assistants_ending_date = forms.DateField(required=True, widget=widgets.SelectDateWidget(
+        years=range(date.today().year-1, date.today().year+2)))
 
     class Meta:
         model = mdl.settings.Settings
-        fields = ('starting_date', 'ending_date')
+        fields = ('starting_date', 'ending_date', 'assistants_starting_date', 'assistants_ending_date')
