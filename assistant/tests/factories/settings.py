@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -24,22 +24,19 @@
 #
 ##############################################################################
 import factory
-import factory.django
+from django.utils import timezone
 
-from internship.tests.factories.organization import OrganizationFactory
-from internship.tests.factories.speciality import SpecialityFactory
-from internship.tests.factories.cohort import CohortFactory
-
-
-class OfferFactory(factory.django.DjangoModelFactory):
+class SettingsFactory(factory.DjangoModelFactory):
     class Meta:
-        model = 'internship.InternshipOffer'
+        model = 'assistant.Settings'
 
-    organization = factory.SubFactory(OrganizationFactory)
-    speciality = factory.SubFactory(SpecialityFactory)
-    cohort = factory.SubFactory(CohortFactory)
+    starting_date = factory.fuzzy.FuzzyDate((timezone.now() - timezone.timedelta(days=10)).date(),
+                                            (timezone.now() - timezone.timedelta(days=5)).date())
+    ending_date = factory.fuzzy.FuzzyDate((timezone.now() + timezone.timedelta(days=90)).date(),
+                                          (timezone.now() + timezone.timedelta(days=100)).date())
+    assistants_starting_date = factory.fuzzy.FuzzyDate((timezone.now() - timezone.timedelta(days=10)).date(),
+                                                       (timezone.now() - timezone.timedelta(days=5)).date())
+    assistants_ending_date = factory.fuzzy.FuzzyDate((timezone.now() + timezone.timedelta(days=90)).date(),
+                                          (timezone.now() + timezone.timedelta(days=100)).date())
 
-    title = factory.Faker('sentence', nb_words=6, variable_nb_words=True)
-    maximum_enrollments = factory.Faker('random_int', min=3, max=8)
-    master = factory.Faker('name')
-    selectable = factory.Faker('random_element', elements=(True, False))
+
