@@ -50,6 +50,10 @@ def create_full_entity(request):
         'organization': request.data.get('organization'),
         'external_id': request.data.get('external_id'),
         'entityversion_set': request.data.get('entityversion_set'),
+        'location': request.data.get('location'),
+        'postal_code': request.data.get('postal_code'),
+        'city': request.data.get('city'),
+        'country': request.data.get('country'),
     }
     entity_serializer = EntitySerializer(data=entity_data)
     if entity_serializer.is_valid():

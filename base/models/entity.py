@@ -32,7 +32,7 @@ from base.models.entity_version import EntityVersion
 
 class EntityAdmin(admin.ModelAdmin):
     list_display = ('id', 'most_recent_acronym', 'external_id', 'organization')
-    search_fields = ['external_id', 'entityversion__acronym']
+    search_fields = ['external_id', 'entityversion__acronym', 'organization__acronym', 'organization__title']
     readonly_fields = ('organization', 'external_id', 'most_recent_acronym', 'find_direct_children', 'find_descendants',
                        'find_versions', 'get_parent')
 

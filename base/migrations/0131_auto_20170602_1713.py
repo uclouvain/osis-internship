@@ -96,4 +96,14 @@ class Migration(migrations.Migration):
             name='title',
             field=models.CharField(db_index=True, max_length=255),
         ),
+        migrations.AlterField(
+            model_name='entityversion',
+            name='entity_type',
+            field=models.CharField(blank=True,
+                                   choices=[('SECTOR', 'SECTOR'), ('FACULTY', 'FACULTY'), ('SCHOOL', 'SCHOOL'),
+                                            ('INSTITUTE', 'INSTITUTE'), ('POLE', 'POLE'),
+                                            ('DOCTORAL_COMMISSION', 'DOCTORAL_COMMISSION'), ('PLATFORM', 'PLATFORM'),
+                                            ('LOGISTICS_ENTITY', 'LOGISTICS_ENTITY'), ('UNDEFINED', 'UNDEFINED')],
+                                   db_index=True, max_length=50, null=True),
+        ),
     ]
