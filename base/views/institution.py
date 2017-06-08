@@ -27,7 +27,7 @@ import json
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required, permission_required
 from base import models as mdl
-from base.models.enums import structure_type
+from base.models.enums import structure_type, entities_type
 from . import layout
 
 
@@ -99,3 +99,36 @@ def structure_address(request, structure_id):
 def academic_actors(request):
     return layout.render(request, "academic_actors.html", {})
 
+
+@login_required
+def entities(request):
+    return layout.render(request, "entities.html", {'init': "1",
+                                                    'types': entities_type.TYPES})
+
+
+@login_required
+def entities_search(request):
+    entities_version = mdl.entity_version.search_entities(acronym=request.GET.get('acronym'),
+                                                  title=request.GET.get('title'),
+                                                  type=request.GET.get('type_choices'))
+    return layout.render(request, "entities.html", {'entities_version': entities_version,
+                                                    'types': structure_type.TYPES})
+
+
+@login_required
+def entity_read(request, entity_version_id):
+    entity_version = mdl.entity_version.find_by_id(entity_version_id)
+    entity_parent = entity_version.entity.find_direct_parent()
+    if entity_parent:
+        entity_version_parent = entity_parent.most_recent_version()
+        return layout.render(request, "entity.html", {'entity_version': entity_version,
+                                                      'entity_version_parent': entity_version_parent})
+    else:
+        return layout.render(request, "entity.html", {'entity_version': entity_version})
+
+
+@login_required
+def entity_diagram(request, entity_version_id):
+    entity_version = mdl.entity_version.find_by_id(entity_version_id)
+    return layout.render(request, "structure_organogram.html", {'structure': entity_version,
+                                                                'structure_as_json': json.dumps(entity_version.serializable_object())})

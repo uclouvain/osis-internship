@@ -122,3 +122,18 @@ def search(**kwargs):
 
 def count(**kwargs):
     return search(**kwargs).count()
+
+
+def search_entities(acronym=None, title=None, type=None):
+    queryset = EntityVersion.objects
+    if acronym:
+        queryset = queryset.filter(acronym__iexact=acronym)
+    if title:
+        queryset = queryset.filter(title__icontains=title)
+    if type:
+        queryset = queryset.filter(entity_type=type)
+    return queryset
+
+
+def find_by_id(entity_version_id):
+    return EntityVersion.objects.get(pk=entity_version_id)

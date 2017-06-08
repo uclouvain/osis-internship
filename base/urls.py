@@ -140,5 +140,14 @@ urlpatterns = [
         ]))
     ])),
 
+    url(r'^entities/', include([
+        url(r'^$', institution.entities, name='entities'),
+        url(r'^search$', institution.entities_search, name='entities_search'),
+        url(r'^(?P<entity_version_id>[0-9]+)/', include([
+            url(r'^$', institution.entity_read, name='entity_read'),
+            url(r'^diagram/$', institution.entity_diagram, name='entity_diagram'),
+        ]))
+    ])),
+
     url(r'^studies/$', common.studies, name='studies')
 ]

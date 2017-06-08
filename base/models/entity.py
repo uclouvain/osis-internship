@@ -58,6 +58,13 @@ class Entity(models.Model):
                                          end_date__gte=date
                                          )
 
+    def find_direct_parent(self, date=None):
+        if date is None:
+            date = timezone.now()
+        qs = EntityLink.objects.filter(child=self, start_date__lte=date, end_date__gte=date).select_related("parent").first()
+        if qs:
+            return qs.parent
+
     def find_direct_children(self, date=None):
         qs = self._direct_children(date).select_related("child")
         return [entity_link.child for entity_link in qs]
@@ -79,9 +86,12 @@ class Entity(models.Model):
         return descendants
 
     def most_recent_acronym(self):
+        return self.most_recent_version().acronym
+
+    def most_recent_version(self):
         last_version = EntityVersion.objects.filter(entity=self).order_by('-start_date').first()
         if last_version:
-            return last_version.acronym
+            return last_version
         return None
 
     def find_versions(self):
