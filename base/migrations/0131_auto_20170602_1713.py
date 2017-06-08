@@ -76,4 +76,24 @@ class Migration(migrations.Migration):
         migrations.DeleteModel(
             name='EntityLink',
         ),
+        migrations.AlterField(
+            model_name='entityversion',
+            name='acronym',
+            field=models.CharField(db_index=True, max_length=20),
+        ),
+        migrations.AlterField(
+            model_name='entityversion',
+            name='changed',
+            field=models.DateTimeField(blank=True, null=True),
+        ),
+        migrations.AlterField(
+            model_name='entityversion',
+            name='entity',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='base.Entity'),
+        ),
+        migrations.AlterField(
+            model_name='entityversion',
+            name='title',
+            field=models.CharField(db_index=True, max_length=255),
+        ),
     ]

@@ -34,15 +34,15 @@ from base.models.enums import entity_type
 class EntityVersionAdmin(admin.ModelAdmin):
     list_display = ('id', 'entity', 'acronym', 'title', 'entity_type', 'start_date', 'end_date',)
     search_fields = ['entity__id', 'entity__external_id', 'title', 'acronym', 'entity_type', 'start_date', 'end_date']
-    raw_id_fields = ('entity',)
+    raw_id_fields = ('entity', 'parent')
 
 
 class EntityVersion(models.Model):
     external_id = models.CharField(max_length=100, blank=True, null=True)
-    changed = models.DateTimeField(null=True)
+    changed = models.DateTimeField(blank=True, null=True)
     entity = models.ForeignKey('Entity')
-    title = models.CharField(max_length=255)
-    acronym = models.CharField(max_length=20)
+    title = models.CharField(db_index=True, max_length=255)
+    acronym = models.CharField(db_index=True, max_length=20)
     entity_type = models.CharField(choices=entity_type.ENTITY_TYPES, max_length=50, db_index=True)
     parent = models.ForeignKey('Entity', related_name='parent_of', blank=True, null=True)
     start_date = models.DateField(db_index=True)
@@ -65,16 +65,24 @@ class EntityVersion(models.Model):
 
     def can_save_entity_version(self):
         return self.count_entity_versions_same_entity_overlapping_dates() == 0 and \
-               self.count_entity_versions_same_acronym_overlapping_dates() == 0
+               self.count_entity_versions_same_acronym_overlapping_dates() == 0 and \
+               self.parent != self.entity
 
     def search_entity_versions_with_overlapping_dates(self):
-        return EntityVersion.objects.filter(
-                Q(start_date__range=(self.start_date, self.end_date)) |
-                Q(end_date__range=(self.start_date, self.end_date)) |
-                (
-                    Q(start_date__lte=self.start_date) & Q(end_date__gte=self.end_date)
+        if self.end_date:
+            qs = EntityVersion.objects.filter(
+                    Q(start_date__range=(self.start_date, self.end_date)) |
+                    Q(end_date__range=(self.start_date, self.end_date)) |
+                    (
+                        Q(start_date__lte=self.start_date) & Q(end_date__gte=self.end_date)
+                    )
                 )
-            )
+        else:
+            qs = EntityVersion.objects.filter(
+                    end_date__gte=self.start_date
+                )
+
+        return qs.exclude(id=self.id)
 
     def count_entity_versions_same_entity_overlapping_dates(self):
         return self.search_entity_versions_with_overlapping_dates().filter(entity=self.entity).count()

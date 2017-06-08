@@ -34,7 +34,7 @@ class EntityAdmin(admin.ModelAdmin):
     list_display = ('id', 'most_recent_acronym', 'external_id', 'organization')
     search_fields = ['external_id', 'entityversion__acronym']
     readonly_fields = ('organization', 'external_id', 'most_recent_acronym', 'find_direct_children', 'find_descendants',
-                       'find_versions')
+                       'find_versions', 'get_parent')
 
 
 class Entity(models.Model):
@@ -92,6 +92,19 @@ class Entity(models.Model):
         versions = EntityVersion.objects.filter(entity=self).order_by('start_date')
         return versions
 
+    def get_parent(self, date=None):
+        if date is None:
+            date = timezone.now()
+        try:
+            qs = EntityVersion.objects.get(entity=self,
+                                           start_date__lte=date,
+                                           end_date__gte=date
+                                           )
+            return qs.parent
+
+        except ObjectDoesNotExist:
+            return None
+
 
 def search(**kwargs):
     queryset = Entity.objects
@@ -111,15 +124,13 @@ def search(**kwargs):
 
 def get_by_internal_id(internal_id):
     try:
-        entity = Entity.objects.get(id__exact=internal_id)
+        return Entity.objects.get(id__exact=internal_id)
     except ObjectDoesNotExist:
         return None
-    return entity
 
 
 def get_by_external_id(external_id):
     try:
-        entity = Entity.objects.get(external_id__exact=external_id)
+        return Entity.objects.get(external_id__exact=external_id)
     except ObjectDoesNotExist:
         return None
-    return entity
