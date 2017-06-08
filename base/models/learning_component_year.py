@@ -70,16 +70,14 @@ class LearningComponentYear(models.Model):
 
     @property
     def type_letter_acronym(self):
-        if self.type:
-            if self.type == learning_component_year_type.LECTURING:
-                return 'C'
-            elif self.type == learning_component_year_type.PRACTICAL_EXERCISES :
-                return 'T'
-            elif self.type == learning_component_year_type.STAGE :
-                return 'S'
-            elif self.type == learning_component_year_type.DISSERTATION :
-                return 'D'
-        return None
+        e = learning_component_year_type
+        return {
+            e.LECTURING: 'C',
+            e.PRACTICAL_EXERCISES: 'T',
+            e.STAGE: 'S',
+            e.DISSERTATION: 'D',
+        }.get(self.type)
+
 
 def find_by_id(learning_component_year_id):
     return LearningComponentYear.objects.get(pk=learning_component_year_id)
@@ -87,4 +85,4 @@ def find_by_id(learning_component_year_id):
 
 def find_by_learning_container_year(a_learning_container_year):
     return LearningComponentYear.objects.filter(learning_container_year=a_learning_container_year)\
-                                         .order_by('type','acronym')
+                                        .order_by('type', 'acronym')
