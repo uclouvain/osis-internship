@@ -33,27 +33,25 @@ from base.serializers import EntitySerializer
 
 @api_view(['POST'])
 def post_entities(request):
-    if request.method == 'POST':
-        existing_entity = entity.get_by_external_id(request.data.get('external_id'))
+    existing_entity = entity.get_by_external_id(request.data.get('external_id'))
 
-        if existing_entity is None:
-            return create_full_entity(request)
+    if existing_entity is None:
+        return create_full_entity(request)
 
-        else:
-            return update_existing_entity(existing_entity, request)
     else:
-        return Response(status=status.HTTP_401_UNAUTHORIZED)
+        return update_existing_entity(existing_entity, request)
 
 
 def create_full_entity(request):
     entity_data = {
         'organization': request.data.get('organization'),
         'external_id': request.data.get('external_id'),
+        'website': request.data.get('website'),
         'entityversion_set': request.data.get('entityversion_set'),
         'location': request.data.get('location'),
         'postal_code': request.data.get('postal_code'),
         'city': request.data.get('city'),
-        'country': request.data.get('country'),
+        'country': request.data.get('country')
     }
     entity_serializer = EntitySerializer(data=entity_data)
     if entity_serializer.is_valid():

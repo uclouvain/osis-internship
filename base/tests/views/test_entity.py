@@ -24,6 +24,7 @@
 #
 ##############################################################################
 import datetime
+import factory
 import json
 from base.tests.factories.entity import EntityFactory
 from base.tests.factories.organization import OrganizationFactory
@@ -60,7 +61,12 @@ class EntityViewTestCase(APITestCase):
                     "start_date": datetime.date(2015, 1, 1).isoformat(),
                     "end_date": datetime.date(2015, 12, 31).isoformat()
                 }
-            ]
+            ],
+            'location': "476 5th Ave",
+            'postal_code': "10018",
+            'city': "New York",
+            'country': "United States of America",
+            'website': "https://www.google.com"
         }
         response = self.client.post(
             reverse('post_entities'),

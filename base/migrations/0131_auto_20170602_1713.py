@@ -106,4 +106,9 @@ class Migration(migrations.Migration):
                                             ('LOGISTICS_ENTITY', 'LOGISTICS_ENTITY'), ('UNDEFINED', 'UNDEFINED')],
                                    db_index=True, max_length=50, null=True),
         ),
+        migrations.AddField(
+            model_name='entity',
+            name='website',
+            field=models.CharField(blank=True, max_length=255, null=True),
+        ),
     ]

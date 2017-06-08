@@ -26,13 +26,14 @@
 from django.contrib import admin
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
+from django.db.models import Q
 from django.utils import timezone
 from base.models.entity_version import EntityVersion
 
 
 class EntityAdmin(admin.ModelAdmin):
     list_display = ('id', 'most_recent_acronym', 'external_id', 'organization')
-    search_fields = ['external_id', 'entityversion__acronym', 'organization__acronym', 'organization__title']
+    search_fields = ['external_id', 'entityversion__acronym', 'organization__acronym', 'organization__name']
     readonly_fields = ('organization', 'external_id', 'most_recent_acronym', 'find_direct_children', 'find_descendants',
                        'find_versions', 'get_parent')
 
@@ -46,6 +47,7 @@ class Entity(models.Model):
     postal_code = models.CharField(max_length=20, blank=True, null=True)
     city = models.CharField(max_length=255, blank=True, null=True)
     country = models.CharField(max_length=255, blank=True, null=True)
+    website = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
         verbose_name_plural = "entities"
@@ -57,10 +59,8 @@ class Entity(models.Model):
         if date is None:
             date = timezone.now()
 
-        return EntityVersion.objects.filter(parent=self,
-                                            start_date__lte=date,
-                                            end_date__gte=date
-                                            )
+        return EntityVersion.objects.filter\
+            (parent=self, start_date__lte=date).filter(Q(end_date__gte=date) | Q(end_date__isnull=True))
 
     def find_direct_children(self, date=None):
         qs = self._direct_children(date).select_related("entity")
