@@ -582,7 +582,7 @@ msgid "lnk_message_history_read_title"
 msgstr "Afficher le message"
 
 msgid "location"
-msgstr "Rue et numéro"
+msgstr "Localité"
 
 msgid "log-in"
 msgstr "Log-in"
@@ -793,9 +793,6 @@ msgstr "Seules les notes soumises peuvent être double encodées"
 
 msgid "open"
 msgstr "Ouvert"
-
-msgid "organization"
-msgstr "Organisation"
 
 msgid "campus"
 msgstr "Campus"

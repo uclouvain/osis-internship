@@ -783,9 +783,6 @@ msgstr "Only submitted scores can be bouble encoded"
 msgid "open"
 msgstr "Open"
 
-msgid "organization"
-msgstr "Organization"
-
 msgid "campus"
 msgstr "Campus"
 
