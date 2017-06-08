@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -39,18 +39,6 @@ from django.contrib.auth.decorators import user_passes_test
 from base.views import layout
 import time
 from django.http import HttpResponse
-
-
-def is_manager(user):
-    person = mdl.person.find_by_user(user)
-    this_adviser = adviser.search_by_person(person)
-    return this_adviser.type == 'MGR' if this_adviser else False
-
-
-def is_teacher(user):
-    person = mdl.person.find_by_user(user)
-    this_adviser = adviser.search_by_person(person)
-    return this_adviser.type == 'PRF' if this_adviser else False
 
 
 def detect_in_request(request, wanted_key, wanted_value):
@@ -95,7 +83,7 @@ def is_valid(request, form):
 
 
 @login_required
-@user_passes_test(is_manager)
+@user_passes_test(adviser.is_manager)
 def manager_proposition_dissertations(request):
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
@@ -106,7 +94,7 @@ def manager_proposition_dissertations(request):
 
 
 @login_required
-@user_passes_test(is_manager)
+@user_passes_test(adviser.is_manager)
 def manager_proposition_dissertation_delete(request, pk):
     proposition = get_object_or_404(PropositionDissertation, pk=pk)
     proposition.deactivate()
@@ -114,7 +102,7 @@ def manager_proposition_dissertation_delete(request, pk):
 
 
 @login_required
-@user_passes_test(is_manager)
+@user_passes_test(adviser.is_manager)
 def manager_proposition_dissertation_detail(request, pk):
     proposition = get_object_or_404(PropositionDissertation, pk=pk)
     offer_propositions = proposition_offer.find_by_proposition_dissertation(proposition)
@@ -142,7 +130,7 @@ def manager_proposition_dissertation_detail(request, pk):
 
 
 @login_required
-@user_passes_test(is_manager)
+@user_passes_test(adviser.is_manager)
 def manage_proposition_dissertation_edit(request, pk):
     proposition = get_object_or_404(PropositionDissertation, pk=pk)
     offer_propositions = offer_proposition.find_all_ordered_by_acronym()
@@ -173,7 +161,7 @@ def manage_proposition_dissertation_edit(request, pk):
 
 
 @login_required
-@user_passes_test(is_manager)
+@user_passes_test(adviser.is_manager)
 def manager_proposition_dissertations_jury_edit(request, pk):
     prop_role = get_object_or_404(PropositionRole, pk=pk)
     proposition = prop_role.proposition_dissertation
@@ -181,7 +169,7 @@ def manager_proposition_dissertations_jury_edit(request, pk):
 
 
 @login_required
-@user_passes_test(is_manager)
+@user_passes_test(adviser.is_manager)
 def manager_proposition_dissertations_jury_new(request, pk):
     proposition = get_object_or_404(PropositionDissertation, pk=pk)
     count_proposition_role = PropositionRole.objects.filter(proposition_dissertation=proposition).count()
@@ -207,7 +195,7 @@ def manager_proposition_dissertations_jury_new(request, pk):
 
 
 @login_required
-@user_passes_test(is_manager)
+@user_passes_test(adviser.is_manager)
 def manager_proposition_dissertations_role_delete(request, pk):
     prop_role = get_object_or_404(PropositionRole, pk=pk)
     proposition = prop_role.proposition_dissertation
@@ -216,7 +204,7 @@ def manager_proposition_dissertations_role_delete(request, pk):
 
 
 @login_required
-@user_passes_test(is_manager)
+@user_passes_test(adviser.is_manager)
 def manager_proposition_dissertation_new(request):
     offer_propositions = offer_proposition.find_all_ordered_by_acronym()
     offer_propositions_group = offer_proposition_group.find_all_ordered_by_name_short()
@@ -243,7 +231,7 @@ def manager_proposition_dissertation_new(request):
 
 
 @login_required
-@user_passes_test(is_manager)
+@user_passes_test(adviser.is_manager)
 def manager_proposition_dissertations_search(request):
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
@@ -296,7 +284,7 @@ def get_current_adviser(request):
 
 
 @login_required
-@user_passes_test(is_teacher)
+@user_passes_test(adviser.is_teacher)
 def proposition_dissertations(request):
     propositions_dissertations = proposition_dissertation.get_all_for_teacher(get_current_adviser(request))
     return layout.render(request, 'proposition_dissertations_list.html',
@@ -304,7 +292,7 @@ def proposition_dissertations(request):
 
 
 @login_required
-@user_passes_test(is_teacher)
+@user_passes_test(adviser.is_teacher)
 def proposition_dissertation_delete(request, pk):
     proposition = get_object_or_404(PropositionDissertation, pk=pk)
     proposition.deactivate()
@@ -312,7 +300,7 @@ def proposition_dissertation_delete(request, pk):
 
 
 @login_required
-@user_passes_test(is_teacher)
+@user_passes_test(adviser.is_teacher)
 def proposition_dissertation_detail(request, pk):
     proposition = get_object_or_404(PropositionDissertation, pk=pk)
     offer_propositions = proposition_offer.find_by_proposition_dissertation(proposition)
@@ -338,7 +326,7 @@ def proposition_dissertation_detail(request, pk):
 
 
 @login_required
-@user_passes_test(is_teacher)
+@user_passes_test(adviser.is_teacher)
 def proposition_dissertation_edit(request, pk):
     proposition = get_object_or_404(PropositionDissertation, pk=pk)
     adv = get_current_adviser(request)
@@ -373,7 +361,7 @@ def proposition_dissertation_edit(request, pk):
 
 
 @login_required
-@user_passes_test(is_teacher)
+@user_passes_test(adviser.is_teacher)
 def my_dissertation_propositions(request):
     propositions_dissertations = proposition_dissertation.get_mine_for_teacher(get_current_adviser(request))
     return layout.render(request, 'proposition_dissertations_list_my.html',
@@ -381,7 +369,7 @@ def my_dissertation_propositions(request):
 
 
 @login_required
-@user_passes_test(is_teacher)
+@user_passes_test(adviser.is_teacher)
 def proposition_dissertations_created(request):
     propositions_dissertations = proposition_dissertation.get_created_for_teacher(get_current_adviser(request))
     return layout.render(request, 'proposition_dissertations_list_created.html',
@@ -389,7 +377,7 @@ def proposition_dissertations_created(request):
 
 
 @login_required
-@user_passes_test(is_teacher)
+@user_passes_test(adviser.is_teacher)
 def proposition_dissertation_new(request):
     person = mdl.person.find_by_user(request.user)
     offer_propositions = offer_proposition.find_all_ordered_by_acronym()
@@ -416,7 +404,7 @@ def proposition_dissertation_new(request):
 
 
 @login_required
-@user_passes_test(is_teacher)
+@user_passes_test(adviser.is_teacher)
 def proposition_dissertations_search(request):
     propositions_dissertations = proposition_dissertation.search(terms=request.GET['search'],
                                                                  active=True,
@@ -427,7 +415,7 @@ def proposition_dissertations_search(request):
 
 
 @login_required
-@user_passes_test(is_teacher)
+@user_passes_test(adviser.is_teacher)
 def proposition_dissertations_jury_edit(request, pk):
     prop_role = get_object_or_404(PropositionRole, pk=pk)
     proposition = prop_role.proposition_dissertation
@@ -435,7 +423,7 @@ def proposition_dissertations_jury_edit(request, pk):
 
 
 @login_required
-@user_passes_test(is_teacher)
+@user_passes_test(adviser.is_teacher)
 def proposition_dissertations_jury_new(request, pk):
     proposition = get_object_or_404(PropositionDissertation, pk=pk)
     count_proposition_role = PropositionRole.objects.filter(proposition_dissertation=proposition).count()
@@ -465,7 +453,7 @@ def proposition_dissertations_jury_new(request, pk):
 
 
 @login_required
-@user_passes_test(is_teacher)
+@user_passes_test(adviser.is_teacher)
 def proposition_dissertations_role_delete(request, pk):
     prop_role = get_object_or_404(PropositionRole, pk=pk)
     proposition = prop_role.proposition_dissertation

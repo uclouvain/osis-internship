@@ -10,7 +10,7 @@
 * The core business involves the administration of students, teachers,
 * courses, programs and so on.
 *
-* Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+* Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 *
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -50,11 +50,11 @@
             </div>
             <div class="col-md-2">
                 <label>{% trans 'start_date'%}</label><br>
-                {{ academic_calendar.start_date| default_if_none:''|date_in_form_format:"d/m/Y" }}
+                {{ academic_calendar.start_date| default_if_none:''|date_in_form_format }}
             </div>
             <div class="col-md-2">
                 <label>{% trans 'end_date' %}</label><br>
-                {{ academic_calendar.end_date| default_if_none:''|date_in_form_format:"d/m/Y" }}
+                {{ academic_calendar.end_date| default_if_none:''|date_in_form_format }}
             </div>
         </div>
         <br>

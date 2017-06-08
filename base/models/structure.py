@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@
 ##############################################################################
 from django.db import models
 from django.contrib import admin
-from base.enums import structure_type
+from base.models.enums import structure_type
 
 
 class StructureAdmin(admin.ModelAdmin):
@@ -46,7 +46,8 @@ class Structure(models.Model):
 
     @property
     def children(self):
-        return Structure.objects.filter(part_of=self.pk).order_by('acronym')
+        return Structure.objects.filter(part_of=self.pk)\
+                                .order_by('acronym')
 
     def serializable_object(self):
         return {
@@ -54,6 +55,14 @@ class Structure(models.Model):
             'acronym': self.acronym,
             'children': [child.serializable_object() for child in self.children]
         }
+
+    def serializable_acronym(self):
+        l = []
+        l.append(self.acronym)
+        for child in self.children:
+            l.append(child.acronym)
+            child.serializable_acronym()
+        return l
 
     def __str__(self):
         return u"%s - %s" % (self.acronym, self.title)
@@ -69,7 +78,10 @@ def find_structures():
 
 
 def find_by_id(structure_id):
-    return Structure.objects.get(pk=structure_id)
+    try:
+        return Structure.objects.get(pk=structure_id)
+    except:
+        return None
 
 
 def search(acronym=None, title=None, type=None):
@@ -95,6 +107,10 @@ def find_by_type(type):
     return Structure.objects.filter(type__icontains=type)
 
 
+def find_by_types(types):
+    return Structure.objects.filter(type__in=types).order_by('type', 'acronym')
+
+
 def find_faculty(a_structure):
     if a_structure.type == structure_type.FACULTY:
         return a_structure
@@ -106,4 +122,13 @@ def find_faculty(a_structure):
             else:
                 return parent
         return None
+
+
+def find_first(acronym=None, title=None, type=None):
+    return search(acronym, title, type).first()
+
+
+def find_by_acronyms(acronym_list):
+    return Structure.objects.filter(acronym__in=acronym_list).order_by("acronym")
+
 

@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -25,13 +25,14 @@
 ##############################################################################
 from django.db import models
 from django.core import serializers
-from reference.enums import domain_type
+from reference.models.enums import domain_type
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 
 
 class DomainAdmin(SerializableModelAdmin):
     list_display = ('name', 'parent', 'decree', 'type')
     fieldsets = ((None, {'fields': ('name', 'parent', 'decree', 'type')}),)
+    list_filter = ('type', 'national', 'adhoc')
     search_fields = ['name']
 
 

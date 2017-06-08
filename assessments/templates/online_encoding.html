@@ -208,8 +208,8 @@
                         </td>
                         <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.offer_year.acronym }}</td>
                         <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.registration_id }}</td>
-                        <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.last_name|title }}</td>
-                        <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.first_name }}</td>
+                        <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.last_name|default_if_none:""|title }}</td>
+                        <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.first_name|default_if_none:"" }}</td>
                         <td>
                             {% if is_program_manager %}
                                 {% if enrollment.score_final != None %}
@@ -244,7 +244,7 @@
                                 {% endif %}
                             {% endif %}
                         </td>
-                        <td>{{ enrollment.deadline_tutor_computed | default_if_none:'' |date:"j/m/Y" }}</td>
+                        <td>{{ enrollment.deadline | default_if_none:'' |date:"j/m/Y" }}</td>
                     </tr>
                 {% endfor %}
             </tbody>

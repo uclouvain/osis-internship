@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -27,8 +27,10 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.http.response import HttpResponseRedirect
 from django.core.urlresolvers import reverse
+from django.contrib.auth.decorators import user_passes_test
 from assistant.models import academic_assistant, manager, reviewer
 from assistant.models import settings
+from assistant.utils import manager_access
 
 
 @login_required
@@ -51,7 +53,7 @@ def assistant_home(request):
                 return HttpResponseRedirect(reverse('access_denied'))
 
 
-@login_required
+@user_passes_test(manager_access.user_is_manager, login_url='assistants_home')
 def manager_home(request):
     return render(request, 'manager_home.html')
 

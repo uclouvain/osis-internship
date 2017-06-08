@@ -38,7 +38,10 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.shortcuts import get_object_or_404
 
+from internship.utils.student_assignment.solver import AssignmentSolver
+
 from internship import models as mdl_internship
+from internship.models.internship_student_affectation_stat import InternshipStudentAffectationStat
 from internship.views.internship import calc_dist, set_tabs_name
 from internship.views.place import sort_organizations, set_speciality_unique
 
@@ -203,8 +206,9 @@ def compute_stats(cohort, sol):
     for speciality, students in get_student_mandatory_choices(cohort, True).items():
         for choices in students:
             students_socio.add(choices[0].student.id)
+    internships = mdl_internship.internship.Internship.objects.filter(cohort=cohort)
     socio = len(mdl_internship.internship_choice.InternshipChoice.
-                objects.filter(priority=True).distinct('student').values('student'))
+                objects.filter(internship__in=internships, priority=True).distinct('student').values('student'))
 
     total_n_internships = first_n + second_n + third_n + fourth_n + imposed_choices
     total_s_internships = first_s + second_s + third_s + fourth_s
@@ -213,8 +217,9 @@ def compute_stats(cohort, sol):
     stats['tot_stud'] = len(sol)
     stats['erasmus'] = erasmus
     stats['erasmus_pc'] = round(erasmus / total_internships * 100, 2)
-    stats['erasmus_students'] = len(mdl_internship.internship_enrollment.InternshipEnrollment.
-                                    objects.distinct('student').values('student'))
+    period_ids = mdl_internship.period.Period.objects.filter(cohort=cohort).values_list("id", flat=True)
+    stats['erasmus_students'] = len(mdl_internship.internship_enrollment.InternshipEnrollment.objects.
+                                    filter(period_id__in=period_ids).distinct('student').values('student'))
     stats['erasmus_students_pc'] = round(stats['erasmus_students'] / stats['tot_stud'] * 100, 2)
     stats['socio'] = socio
     stats['socio_pc'] = round(socio / total_internships * 100, 2)
@@ -604,8 +609,7 @@ def get_student_mandatory_choices(cohort, priority):
     """
     specialities = {}
     internships = mdl_internship.internship.Internship.objects.filter(cohort=cohort)
-    internship_ids = internships.values_list("id", flat=True)
-    choices = mdl_internship.internship_choice.InternshipChoice.objects.filter(priority=priority, internship_id__in=internship_ids).\
+    choices = mdl_internship.internship_choice.InternshipChoice.objects.filter(priority=priority, internship__in=internships).\
         select_related("speciality", "student")
 
     if len(choices) == 0:
@@ -623,12 +627,13 @@ def get_student_mandatory_choices(cohort, priority):
 
     # Remove erasmus choices
     if priority:
-        for enrollment in mdl_internship.internship_enrollment.InternshipEnrollment.objects.all():
+        periods = mdl_internship.period.Period.objects.filter(cohort=cohort)
+        for enrollment in mdl_internship.internship_enrollment.InternshipEnrollment.objects.filter(period__in=periods):
             if enrollment.internship_offer.speciality.id in specialities:
                 if enrollment.student in specialities[enrollment.internship_offer.speciality.id]:
                     del specialities[enrollment.internship_offer.speciality.id][enrollment.student]
     else:
-        for choice in mdl_internship.internship_choice.InternshipChoice.objects.filter(priority=True, cohort=cohort).\
+        for choice in mdl_internship.internship_choice.InternshipChoice.objects.filter(priority=True, internship__in=internships).\
                 select_related("speciality", "student"):
             if choice.student in specialities[choice.speciality.id]:
                 del specialities[choice.speciality.id][choice.student]
@@ -870,13 +875,14 @@ def get_best_choice(choices, priority):
         return choice(best_solutions_filtered)
 
 
-def fill_erasmus_choices():
+def fill_erasmus_choices(cohort):
     """
     Fill the solution with all erasmus internships
     :return:
     """
     # Retrieve all students
-    erasmus_enrollments = mdl_internship.internship_enrollment.InternshipEnrollment.objects.all().\
+    periods = mdl_internship.period.Period.objects.filter(cohort=cohort)
+    erasmus_enrollments = mdl_internship.internship_enrollment.InternshipEnrollment.objects.filter(period__in=periods).\
         select_related("student", "period", "internship_offer")
     for enrol in erasmus_enrollments:
         # Check if the internship is available
@@ -1089,7 +1095,7 @@ def generate_solution(cohort):
     internship_table = init_internship_table(cohort)
     init_organizations(cohort)
     init_specialities(cohort)
-    fill_erasmus_choices()
+    fill_erasmus_choices(cohort)
     fill_emergency_choices(True)
     fill_emergency_choices(False)
     fill_normal_choices(True)
@@ -1142,8 +1148,8 @@ def load_solution(data, cohort):
             temp_internship_table[organization][acronym] = OrderedDict()
             fill_periods_default_values(acronym, keys, organization, temp_internship_table)
 
-        temp_internship_table[organization][acronym][period_name]['before'] = pid.number_places
-        temp_internship_table[organization][acronym][period_name]['after'] = pid.number_places
+        temp_internship_table[organization][acronym][period_name]['before'] += pid.number_places
+        temp_internship_table[organization][acronym][period_name]['after'] += pid.number_places
 
 
 
@@ -1184,9 +1190,32 @@ def load_solution(data, cohort):
 
 def fill_periods_default_values(acronym, keys, organization, temp_internship_table):
     for key in keys:
-        temp_internship_table[organization][acronym][key] = {}
-        temp_internship_table[organization][acronym][key]['before'] = 0
-        temp_internship_table[organization][acronym][key]['after'] = 0
+        temp_internship_table[organization][acronym][key] = {
+            'before': 0,
+            'after': 0,
+        }
+
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def assign_automatically_internships(request, cohort_id):
+    cohort = get_object_or_404(mdl_internship.cohort.Cohort, pk=cohort_id)
+    if request.method == 'POST':
+            times = 1
+            start_date_time = datetime.now()
+            period_ids = mdl_internship.period.Period.objects.filter(cohort=cohort).values_list("id", flat=True)
+            mdl_internship.internship_student_affectation_stat.find_non_mandatory_affectations(period_ids=period_ids).delete()
+            solver = AssignmentSolver(cohort)
+            solver.solve()
+            solver.persist_solution()
+            end_date_time = datetime.now()
+            affectation_generation_time = mdl_internship.affectation_generation_time.AffectationGenerationTime()
+            affectation_generation_time.cohort = cohort
+            affectation_generation_time.start_date_time = start_date_time
+            affectation_generation_time.end_date_time = end_date_time
+            affectation_generation_time.generated_by = request.user.username
+            affectation_generation_time.save()
+    return redirect(reverse('internship_affectation_statistics',  kwargs={'cohort_id': cohort.id}))
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
@@ -1197,27 +1226,36 @@ def internship_affectation_statistics(request, cohort_id):
     sol, table, stats, internship_errors = None, None, None, None
     periods = mdl_internship.period.Period.objects.filter(cohort=cohort)
     period_ids = periods.values_list("id", flat=True)
-    data = mdl_internship.internship_student_affectation_stat.InternshipStudentAffectationStat.objects.filter(period_id__in=period_ids).\
-        select_related("student", "organization", "speciality", "period")
-    if len(data) > 0:
-        sol, table = load_solution(data, cohort)
+
+    student_affectations = InternshipStudentAffectationStat.objects\
+        .filter(period_id__in=period_ids)\
+        .select_related("student", "organization", "speciality", "period")
+
+    if student_affectations.count() > 0:
+        sol, table = load_solution(student_affectations, cohort)
         stats = compute_stats(cohort, sol)
         # Mange sort of the students
         sol = OrderedDict(sorted(sol.items(), key=lambda t: t[0].person.last_name))
         # Mange sort of the organizations
         table.sort(key=itemgetter(0))
-        internship_errors = mdl_internship.internship_student_affectation_stat.InternshipStudentAffectationStat.\
-            objects.filter(organization=organizations[hospital_error], period_id__in=period_ids)
+
+        internship_errors = InternshipStudentAffectationStat.objects \
+            .filter(organization=organizations[hospital_error],
+                    period_id__in=period_ids)
 
     latest_generation = mdl_internship.affectation_generation_time.get_latest()
-    return render(request, "internship_affectation_statics.html",
-                  {'section': 'internship',
-                   'cohort': cohort,
-                   'recap_sol': sol,
-                   'stats': stats,
-                   'organizations': table,
-                   'errors': internship_errors,
-                   'latest_generation': latest_generation })
+
+    context = {
+        'section': 'internship',
+        'cohort': cohort,
+        'recap_sol': sol,
+        'stats': stats,
+        'organizations': table,
+        'errors': internship_errors,
+        'latest_generation': latest_generation
+    }
+
+    return render(request, "internship_affectation_statics.html", context)
 
 
 @login_required
@@ -1225,7 +1263,7 @@ def internship_affectation_statistics(request, cohort_id):
 def internship_affectation_sumup(request, cohort_id):
     cohort = get_object_or_404(mdl_internship.cohort.Cohort, pk=cohort_id)
     all_speciality = list(mdl_internship.internship_speciality.find_all(cohort=cohort))
-    all_speciality=set_speciality_unique(all_speciality)
+    all_speciality = set_speciality_unique(all_speciality)
     set_tabs_name(all_speciality)
     periods = mdl_internship.period.search(cohort=cohort)
     organizations = mdl_internship.organization.search(cohort=cohort)
@@ -1257,11 +1295,12 @@ def internship_affectation_sumup(request, cohort_id):
             temp_affectations[period.name] = temp_temp_affectations
         affectations[speciality.name] = temp_affectations
 
-    return render(request, "internship_affectation_sumup.html",
-                  {'section': 'internship',
-                   'specialities': all_speciality,
-                   'periods': periods,
-                   'organizations': informations,
-                   'affectations': affectations,
-                   'cohort': cohort
-                   })
+    context = {
+        'section': 'internship',
+        'specialities': all_speciality,
+        'periods': periods,
+        'organizations': informations,
+        'affectations': affectations,
+        'cohort': cohort
+    }
+    return render(request, "internship_affectation_sumup.html", context)

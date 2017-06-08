@@ -10,7 +10,7 @@
 * The core business involves the administration of students, teachers,
 * courses, programs and so on.
 *
-* Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+* Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 *
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -42,6 +42,7 @@
     <link rel="stylesheet" href="{% static 'css/osis.css' %}?version={{ js }}">
     <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/tree.css' %}">
+    <link rel="stylesheet" href="{% static 'css/dataTables.bootstrap.min.css' %}">
     {% block header %}
     <noscript>
       <meta http-equiv="refresh" content="0;url={% url 'noscript' %}">
@@ -131,8 +132,12 @@
                                        id="lnk_organizations">{% trans 'organizations' %}</a></li>
                                 {% endif %}
                                 {% if perms.base.can_access_structure  %}
-                                <li><a href="{% url 'structures' %}"
-                                       id="lnk_dropdown_entities">{% trans 'entities' %}</a></li>
+                                    <li><a href="{% url 'structures' %}"
+                                           id="lnk_dropdown_entities">{% trans 'entities' %}</a></li>
+                                {% endif %}
+                                {% if perms.base.is_entity_manager %}
+                                <li><a href="{% url 'academic_actors' %}"
+                                       id="lnk_dropdown_academic actors">{% trans 'academic_actors' %}</a></li>
                                 {% endif %}
                             </ul>
                         </li>
@@ -206,7 +211,11 @@
                 </ol>
             {% endblock %}
         {% endif %}
-
+        {% if experimental_phase %}
+            <div class="alert alert-warning">
+                <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{% trans 'experimental_phase' %}
+            </div>
+        {% endif %}
         {% block content %}
         {% endblock %}
         <br>
@@ -224,7 +233,7 @@
                    id="lnk_osis_source_code">{% trans 'source_code' %}
                 </a></p>
 
-            <p class="navbar-text pull-right"><span class="glyphicon glyphicon-copyright-mark"></span> 2016 <a
+            <p class="navbar-text pull-right"><span class="glyphicon glyphicon-copyright-mark"></span> {% now "Y" %} <a
                     href="http://www.uclouvain.be" target="_blank" id="lnk_ucl">Université catholique de Louvain</a></p>
         </div>
     </nav>
@@ -232,6 +241,8 @@
     <script src="{% static 'js/jquery-2.1.4.min.js' %}"></script>
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
     <script src="{% static 'js/osis.js' %}?version={{ js }}"></script>
+    <script type="text/javascript" src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/dataTables.bootstrap.min.js' %}"></script>
     {% block script %}
     {% endblock %}
     {% analytical_body_bottom %}

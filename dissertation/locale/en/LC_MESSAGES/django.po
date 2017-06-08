@@ -172,6 +172,69 @@ msgstr "Created by"
 msgid "current_status"
 msgstr "Current status"
 
+msgid "datatable_emptytable"
+msgstr "No data available in table"
+
+msgid "datatable_info"
+msgstr "Showing _START_ to _END_ of _TOTAL_ entries"
+
+msgid "datatable_infoempty"
+msgstr "Showing 0 to 0 of 0 entries"
+
+msgid "datatable_infofiltered"
+msgstr "(filtered from _MAX_ total entries)"
+
+msgid "datatable_infopostfix"
+msgstr ""
+
+msgid "datatable_infothousands"
+msgstr ","
+
+msgid "datatable_lengthmenu"
+msgstr "Show _MENU_ entries"
+
+msgid "datatable_loadingrecords"
+msgstr "Loading..."
+
+msgid "datatable_processing"
+msgstr "Processing..."
+
+msgid "datatable_search"
+msgstr "Search:"
+
+msgid "datatable_zerorecords"
+msgstr "No matching records found"
+
+msgid "datatable_first"
+msgstr "First"
+
+msgid "datatable_last"
+msgstr "Last"
+
+msgid "datatable_next"
+msgstr "Next"
+
+msgid "datatable_previous"
+msgstr "Previous"
+
+msgid "datatable_sortascending"
+msgstr ": activate to sort column ascending"
+
+msgid "datatable_sortdescending"
+msgstr ": activate to sort column descending"
+
+msgid "date_end_visibility_dissertation"
+msgstr "End of period for creation of dissertations"
+
+msgid "date_end_visibility_proposition"
+msgstr "End of period of visibility for dissertation subjects"
+
+msgid "date_start_visibility_dissertation"
+msgstr "Start of period for creation of dissertations"
+
+msgid "date_start_visibility_proposition"
+msgstr "Start of period of visibility for dissertation subjects"
+
 msgid "defend_periode"
 msgstr "Defense period"
 
@@ -292,9 +355,6 @@ msgstr "Edit parameters"
 msgid "edit_proposition_dissertation"
 msgstr "Edit"
 
-msgid "email"
-msgstr "E-mail"
-
 msgid "empirical_research"
 msgstr "Empirical research"
 
@@ -402,9 +462,6 @@ msgstr "June"
 
 msgid "jury_status"
 msgstr "Jury status"
-
-msgid "justification"
-msgstr "Justification"
 
 msgid "justification_confirmation_message"
 msgstr "You are ready to save this change and your justification. Are you sure you want to continue ?"
@@ -675,9 +732,6 @@ msgstr "Person to add"
 
 msgid "person_not_found_by_mail"
 msgstr "No person matches this e-mail address"
-
-msgid "phone"
-msgstr "Phone"
 
 msgid "phone_mobile"
 msgstr "Mobile phone"

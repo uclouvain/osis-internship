@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -24,15 +24,17 @@
 #
 ##############################################################################
 from django.contrib.auth.decorators import login_required, user_passes_test
-from assistant.models import *
 from django.core.urlresolvers import reverse
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render
+from django.core.exceptions import ObjectDoesNotExist
+from django.utils.translation import ugettext as _
+from assistant.models import *
 from assistant.utils.send_email import send_message
 from assistant.forms import *
 from assistant.models.enums import document_type
 from base.models import person_address, person
-from django.core.exceptions import ObjectDoesNotExist
+from assistant.models.enums import assistant_mandate_state, assistant_phd_inscription
 
 
 def user_is_assistant_and_procedure_is_open(user):
@@ -53,14 +55,12 @@ def user_is_assistant_and_procedure_is_open(user):
 def form_part1_edit(request, mandate_id):
     mandate = assistant_mandate.find_mandate_by_id(mandate_id)
     assistant = mandate.assistant
-    addresses = person_address.find_by_person(person.find_by_id(assistant.person.id))
     form = AssistantFormPart1(initial={'external_functions': mandate.external_functions,
                                        'external_contract': mandate.external_contract,
                                        'justification': mandate.justification})
 
     return render(request, "assistant_form_part1.html", {'assistant': assistant,
                                                          'mandate': mandate,
-                                                         'addresses': addresses,
                                                          'form': form,
                                                          'supervisor': assistant.supervisor})
 
@@ -82,10 +82,12 @@ def form_part1_save(request, mandate_id):
 
 @login_required
 def tutoring_learning_unit_add(request, mandate_id):
+    mandate = assistant_mandate.find_mandate_by_id(mandate_id)
     form = TutoringLearningUnitForm(initial={'mandate_id': mandate_id,
                                              'tutoring_learning_unit_year_id': None
                                              })
     return render(request, "tutoring_learning_unit_year.html", {'form': form,
+                                                                'assistant_type': mandate.assistant_type,
                                                                 'mandate_id': mandate_id
                                                                 })
 
@@ -95,6 +97,7 @@ def tutoring_learning_unit_edit(request, tutoring_learning_unit_id=None):
     edited_learning_unit_year = mdl.tutoring_learning_unit_year.find_by_id(tutoring_learning_unit_id)
     this_academic_year = edited_learning_unit_year.learning_unit_year.academic_year
     mandate_id = edited_learning_unit_year.mandate_id
+    mandate = assistant_mandate.find_mandate_by_id(mandate_id)
     form = TutoringLearningUnitForm(initial={'mandate_id': edited_learning_unit_year.mandate_id,
                                              'tutoring_learning_unit_year_id': edited_learning_unit_year.id,
                                              'learning_unit_year': edited_learning_unit_year.learning_unit_year.acronym,
@@ -109,6 +112,7 @@ def tutoring_learning_unit_edit(request, tutoring_learning_unit_id=None):
                                              'others_delivery': edited_learning_unit_year.others_delivery,
                                              'academic_year': this_academic_year.id})
     return render(request, "tutoring_learning_unit_year.html", {'form': form,
+                                                                'assistant_type': mandate.assistant_type,
                                                                 'mandate_id': mandate_id})
 
 
@@ -165,8 +169,19 @@ def form_part3_save(request, mandate_id):
     elif request.method == 'POST':
         form = AssistantFormPart3(data=request.POST, instance=assistant, prefix='mand')
         if form.is_valid():
+            current_assistant = form.save(commit=False)
+            if current_assistant.inscription == assistant_phd_inscription.YES \
+                    and (not request.POST.get('person_id') and current_assistant.supervisor is None):
+                msg = _("must_enter_supervisor_if_registered")
+                form.add_error('inscription', msg)
+                return render(request, "assistant_form_part3.html", {'assistant': assistant, 'mandate': mandate,
+                                                                     'files': files, 'form': form})
+            if current_assistant.inscription is None:
+                msg = _("phd_inscription_choice_required")
+                form.add_error('inscription', msg)
+                return render(request, "assistant_form_part3.html", {'assistant': assistant, 'mandate': mandate,
+                                                                     'files': files, 'form': form})
             if request.POST.get('person_id'):
-                current_assistant = form.save(commit=False)
                 current_assistant.supervisor = person.find_by_id(request.POST.get('person_id'))
                 current_assistant.save()
             else:
@@ -183,7 +198,7 @@ def form_part4_edit(request, mandate_id):
     person = request.user.person
     assistant = mandate.assistant
     files = assistant_document_file.find_by_assistant_mandate_and_description(mandate, document_type.RESEARCH_DOCUMENT)
-    if person != assistant.person or mandate.state != 'TRTS':
+    if person != assistant.person or mandate.state != assistant_mandate_state.TRTS:
         return HttpResponseRedirect(reverse('assistant_mandates'))
     form = AssistantFormPart4(initial={'internships': mandate.internships,
                                        'conferences': mandate.conferences,
@@ -206,7 +221,7 @@ def form_part4_save(request, mandate_id):
     assistant = mandate.assistant
     person = request.user.person
     files = assistant_document_file.find_by_assistant_mandate_and_description(mandate, document_type.RESEARCH_DOCUMENT)
-    if person != assistant.person or mandate.state != 'TRTS':
+    if person != assistant.person or mandate.state != assistant_mandate_state.TRTS:
         return HttpResponseRedirect(reverse('assistant_mandates'))
     elif request.method == 'POST':
         form = AssistantFormPart4(data=request.POST, instance=mandate, prefix='mand')
@@ -224,7 +239,7 @@ def form_part4_save(request, mandate_id):
 def form_part6_edit(request, mandate_id):
     mandate = assistant_mandate.find_mandate_by_id(mandate_id)
     assistant = mandate.assistant
-    if request.user.person != assistant.person or mandate.state != 'TRTS':
+    if request.user.person != assistant.person or mandate.state != assistant_mandate_state.TRTS:
         return HttpResponseRedirect(reverse('assistant_mandates'))
     form = AssistantFormPart6(initial={'tutoring_percent': mandate.tutoring_percent,
                                        'service_activities_percent': mandate.service_activities_percent,
@@ -239,27 +254,33 @@ def form_part6_edit(request, mandate_id):
 
 @user_passes_test(user_is_assistant_and_procedure_is_open, login_url='access_denied')
 def form_part6_save(request, mandate_id):
-    """Use to save an assistant form part6."""
     mandate = assistant_mandate.find_mandate_by_id(mandate_id)
     assistant = mandate.assistant
     person = request.user.person
-    if person != assistant.person or mandate.state != 'TRTS':
+    if person != assistant.person or mandate.state != assistant_mandate_state.TRTS:
         return HttpResponseRedirect(reverse('assistant_mandates'))
     elif request.method == 'POST':
         form = AssistantFormPart6(data=request.POST, instance=mandate, prefix='mand')
         if form.is_valid():
             if 'validate_and_submit' in request.POST:
+                current_mandate = form.save(commit=False)
+                if assistant.inscription is None:
+                    msg = _("phd_inscription_choice_required")
+                    form.add_error(None, msg)
+                    current_mandate.save()
+                    return render(request, "assistant_form_part6.html", {'assistant': assistant, 'mandate': mandate,
+                                                                         'form': form})
                 if assistant.supervisor:
-                    mandate.state = 'PHD_SUPERVISOR'
+                    mandate.state = assistant_mandate_state.PHD_SUPERVISOR
                     html_template_ref = 'assistant_phd_supervisor_html'
                     txt_template_ref = 'assistant_phd_supervisor_txt'
                     send_message(person=assistant.supervisor, html_template_ref=html_template_ref,
                                  txt_template_ref=txt_template_ref, assistant=assistant)
                 elif mandate.assistant_type == "TEACHING_ASSISTANT":
-                    mandate.state = 'SUPERVISION'
+                    mandate.state = assistant_mandate_state.SUPERVISION
                 else:
-                    mandate.state = 'RESEARCH'
-                form.save()
+                    mandate.state = assistant_mandate_state.RESEARCH
+                current_mandate.save()
                 return HttpResponseRedirect(reverse('assistant_mandates'))
             else:
                 form.save()
@@ -274,7 +295,7 @@ def form_part5_edit(request, mandate_id):
     mandate = assistant_mandate.find_mandate_by_id(mandate_id)
     this_person = request.user.person
     assistant = mandate.assistant
-    if this_person != assistant.person or mandate.state != 'TRTS':
+    if this_person != assistant.person or mandate.state != assistant_mandate_state.TRTS:
         return HttpResponseRedirect(reverse('assistant_mandates'))
     form = AssistantFormPart5(initial={'faculty_representation': mandate.faculty_representation,
                                        'institute_representation': mandate.institute_representation,
@@ -286,7 +307,6 @@ def form_part5_edit(request, mandate_id):
                                        'events_organisation_service': mandate.events_organisation_service,
                                        'publishing_field_service': mandate.publishing_field_service,
                                        'scientific_jury_service': mandate.scientific_jury_service,
-                                       'degrees': mandate.degrees,
                                        'formations': mandate.formations
                                        }, prefix='mand')
     return render(request, "assistant_form_part5.html", {'assistant': assistant,
@@ -299,7 +319,7 @@ def form_part5_save(request, mandate_id):
     """Use to save an assistant form part5."""
     mandate = assistant_mandate.find_mandate_by_id(mandate_id)
     assistant = mandate.assistant
-    if request.user.person != assistant.person or mandate.state != 'TRTS':
+    if request.user.person != assistant.person or mandate.state != assistant_mandate_state.TRTS:
         return HttpResponseRedirect(reverse('assistant_mandates'))
     elif request.method == 'POST':
         form = AssistantFormPart5(data=request.POST, instance=mandate, prefix='mand')

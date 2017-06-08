@@ -24,36 +24,55 @@
 #
 ##############################################################################
 import csv
-
+import pendulum
 from django.contrib.auth.models import Group
+from base.models import person as mdl_person
+from internship.models import internship_student_information as mdl_isi
 
-from base.models.person import Person
-from internship.models.internship_student_information import InternshipStudentInformation
+
+def import_csv_row(cohort, row):
+    name, gender, birthdate, birthplace, nationality, noma, \
+        fgs, street, zipcode, city, country, phone, email = row
+
+    person = mdl_person.Person.objects.filter(global_id=fgs).first()
+
+    if not person:
+        if ',' in name:
+            t = name.split(',')
+            last_name, first_name = t[0].strip(), t[1].strip()
+        else:
+            t = name.split()
+            last_name, first_name = ' '.join(t[:-1]).strip(), t[-1].strip()
+
+        d = pendulum.parse(birthdate)
+
+        birth_date = d.format('%Y-%m-%d')
+
+        person = mdl_person.Person.objects.create(
+            global_id=fgs,
+            gender=gender,
+            first_name=first_name,
+            last_name=last_name,
+            birth_date=birth_date
+        )
+
+    info = {
+        'person': person,
+        'country': country,
+        'postal_code': zipcode,
+        'email': email,
+        'phone_mobile': phone,
+        'city': city,
+        'cohort': cohort,
+    }
+
+    mdl_isi.InternshipStudentInformation.objects.create(**info)
 
 
 def import_csv(cohort, csvfile):
     reader = csv.reader(csvfile)
     next(reader)
     for row in reader:
-        name, gender, birthdate, birthplace, nationality, noma, \
-            fgs, street, zipcode, city, country, phone, email = row
+        import_csv_row(cohort, row)
 
-        person = Person.objects.filter(global_id=fgs).first()
 
-        if not person:
-            continue
-
-        info = {
-            'person': person,
-            'country': country,
-            'postal_code': zipcode,
-            'email': email,
-            'phone_mobile': phone,
-            'city': city,
-            'cohort': cohort,
-        }
-        student_info = InternshipStudentInformation.objects.create(**info)
-
-        if person.user:
-            group = Group.objects.get(name='internship_students')
-            person.user.groups.add(group)

@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -25,10 +25,48 @@
 ##############################################################################
 from base.models import offer_year
 from base.tests.models import test_offer
+from base.tests.factories.academic_year import AcademicYearFactory
+from base.tests.factories.offer_year import OfferYearFactory
+from django.test import TestCase
+from django.utils import timezone
 
 
 def create_offer_year(acronym, title, academic_year):
-    an_offer_year = offer_year.OfferYear(offer=test_offer.create_offer(title), academic_year=academic_year,
-                                               acronym=acronym, title=title)
+    an_offer_year = offer_year.OfferYear(offer=test_offer.create_offer(title),
+                                         academic_year=academic_year,
+                                         acronym=acronym, title=title)
     an_offer_year.save()
     return an_offer_year
+
+
+class OfferYearTest(TestCase):
+
+    def test_find_by_id_list_none_ids_list(self):
+        self.assertIsNone(offer_year.find_by_id_list(None))
+
+    def test_find_by_id_list_empty_ids_list(self):
+        self.assertIsNone(offer_year.find_by_id_list([]))
+
+    def test_search_offers(self):
+        academic_year = AcademicYearFactory(year=timezone.now().year)
+        self.assertFalse(offer_year.search_offers(None, academic_year, None).exists())
+
+        offer_yr = OfferYearFactory(academic_year=academic_year)
+        self.assertEqual(offer_year.search_offers([offer_yr.entity_management], academic_year, None)[0], offer_yr)
+
+        previous_academic_year = AcademicYearFactory(year=timezone.now().year-1)
+        self.assertFalse(offer_year.search_offers([offer_yr.entity_management], previous_academic_year, None).exists())
+
+    def test_get_last_offer_year_by_offer(self):
+        an_offer = test_offer.create_offer("test_offer")
+        academic_years = [
+            AcademicYearFactory(year=2015+x) for x in range(3)
+        ]
+        offer_years = [
+                OfferYearFactory(
+                    offer=an_offer,
+                    academic_year=academic_years[x],
+                )
+                for x in range(3)
+            ]
+        self.assertEqual(offer_year.get_last_offer_year_by_offer(an_offer), offer_years[2])

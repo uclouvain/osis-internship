@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -24,15 +24,15 @@
 #
 ##############################################################################
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ObjectDoesNotExist
+from django.core.urlresolvers import reverse
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render
-from assistant.models import assistant_mandate, review, tutoring_learning_unit_year, mandate_structure
-from django.core.exceptions import ObjectDoesNotExist
-from assistant.enums import reviewer_role
 from django.utils import timezone
-from django.core.urlresolvers import reverse
+
 from assistant.forms import ReviewForm
-from assistant.models.enums import review_status
+from assistant.models import assistant_mandate, review, tutoring_learning_unit_year, mandate_structure
+from assistant.models.enums import review_status, assistant_mandate_state, reviewer_role
 
 
 @login_required
@@ -59,7 +59,6 @@ def review_view(request, mandate_id):
 @login_required
 def review_edit(request, mandate_id):
     mandate = assistant_mandate.find_mandate_by_id(mandate_id)
-    current_reviewer = None
     try:
         review.find_done_by_supervisor_for_mandate(mandate)
         return HttpResponseRedirect(reverse("assistants_home"))
@@ -70,8 +69,7 @@ def review_edit(request, mandate_id):
             status=review_status.IN_PROGRESS
         )
     previous_mandates = assistant_mandate.find_before_year_for_assistant(mandate.academic_year.year, mandate.assistant)
-    role = reviewer_role.PHD_SUPERVISOR
-    menu = generate_phd_supervisor_menu_tabs(mandate, role)
+    menu = generate_phd_supervisor_menu_tabs(mandate, reviewer_role.PHD_SUPERVISOR)
     assistant = mandate.assistant
     form = ReviewForm(initial={'mandate': mandate,
                                'reviewer': existing_review.reviewer,
@@ -82,7 +80,7 @@ def review_edit(request, mandate_id):
                                'remark': existing_review.remark
                                }, prefix="rev", instance=existing_review)
     return render(request, 'review_form.html', {'review': existing_review,
-                                                'role': role,
+                                                'role': reviewer_role.PHD_SUPERVISOR,
                                                 'year': mandate.academic_year.year + 1,
                                                 'absences': mandate.absences,
                                                 'comment': mandate.comment,
@@ -99,17 +97,19 @@ def review_save(request, review_id, mandate_id):
     rev = review.find_by_id(review_id)
     mandate = assistant_mandate.find_mandate_by_id(mandate_id)
     form = ReviewForm(data=request.POST, instance=rev, prefix='rev')
+    menu = generate_phd_supervisor_menu_tabs(mandate, reviewer_role.PHD_SUPERVISOR)
+    previous_mandates = assistant_mandate.find_before_year_for_assistant(mandate.academic_year.year, mandate.assistant)
     if form.is_valid():
         current_review = form.save(commit=False)
         if 'validate_and_submit' in request.POST:
             current_review.status = review_status.DONE
             current_review.save()
             if mandate_structure.find_by_mandate_and_type(mandate, 'INSTITUTE'):
-                mandate.state = "RESEARCH"
+                mandate.state = assistant_mandate_state.RESEARCH
             elif mandate_structure.find_by_mandate_and_part_of_type(mandate, 'INSTITUTE'):
-                mandate.state = "RESEARCH"
+                mandate.state = assistant_mandate_state.RESEARCH
             else:
-                mandate.state = "SUPERVISION"
+                mandate.state = assistant_mandate_state.SUPERVISION
             mandate.save()
             return HttpResponseRedirect(reverse("phd_supervisor_assistants_list"))
         elif 'save' in request.POST:
@@ -117,10 +117,17 @@ def review_save(request, review_id, mandate_id):
             current_review.save()
             return review_edit(request, mandate_id)
     else:
-        return render(request, "review_form.html", {'review': rev, 'role': mandate.state,
+        return render(request, "review_form.html", {'review': rev,
+                                                    'role': mandate.state,
                                                     'year': mandate.academic_year.year + 1,
-                                                    'absences': mandate.absences, 'comment': mandate.comment,
-                                                    'mandate_id': mandate.id, 'form': form})
+                                                    'absences': mandate.absences,
+                                                    'comment': mandate.comment,
+                                                    'mandate_id': mandate.id,
+                                                    'previous_mandates': previous_mandates,
+                                                    'assistant': mandate.assistant,
+                                                    'menu': menu,
+                                                    'menu_type': 'phd_supervisor_menu',
+                                                    'form': form})
 
 
 @login_required
@@ -150,13 +157,17 @@ def generate_phd_supervisor_menu_tabs(mandate, active_item: None):
     except ObjectDoesNotExist:
             review_is_done = False
     if review_is_done is False:
-        if active_item == 'PHD_SUPERVISOR':
-            menu.append({'item': 'PHD_SUPERVISOR', 'class': 'active', 'action': 'edit'})
+        if active_item == assistant_mandate_state.PHD_SUPERVISOR:
+            menu.append({'item': assistant_mandate_state.PHD_SUPERVISOR, 'class': 'active',
+                         'action': 'edit'})
         else:
-            menu.append({'item': 'PHD_SUPERVISOR', 'class': '', 'action': 'edit'})
+            menu.append({'item': assistant_mandate_state.PHD_SUPERVISOR, 'class': '',
+                         'action': 'edit'})
     else:
-        if active_item == 'PHD_SUPERVISOR':
-            menu.append({'item': 'PHD_SUPERVISOR', 'class': 'active', 'action': 'view'})
+        if active_item == assistant_mandate_state.PHD_SUPERVISOR:
+            menu.append({'item': assistant_mandate_state.PHD_SUPERVISOR, 'class': 'active',
+                         'action': 'view'})
         else:
-            menu.append({'item': 'PHD_SUPERVISOR', 'class': '', 'action': 'view'})
+            menu.append({'item': assistant_mandate_state.PHD_SUPERVISOR, 'class': '',
+                         'action': 'view'})
     return menu

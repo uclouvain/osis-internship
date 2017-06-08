@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -25,7 +25,6 @@
 ##############################################################################
 from django.db import models
 from django.utils import timezone
-from django.core.exceptions import ObjectDoesNotExist
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 
 
@@ -58,7 +57,7 @@ class AcademicYear(SerializableModel):
         super(AcademicYear, self).save(*args, **kwargs)
 
     def __str__(self):
-        return u"%s-%s" % (self.year, self.year + 1)
+        return u"%s-%s" % (self.year, str(self.year + 1)[-2:])
 
     class Meta:
         permissions = (

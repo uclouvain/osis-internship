@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -35,7 +35,7 @@ from django.views.generic.edit import FormMixin
 from django.http.response import HttpResponseRedirect
 from assistant.models import tutoring_learning_unit_year
 from assistant.models import settings
-from assistant.models.enums import document_type
+from assistant.models.enums import document_type, assistant_mandate_state
 
 
 class AssistantMandatesListView(LoginRequiredMixin, UserPassesTestMixin, ListView, FormMixin):
@@ -59,6 +59,7 @@ class AssistantMandatesListView(LoginRequiredMixin, UserPassesTestMixin, ListVie
     def get_context_data(self, **kwargs):
         context = super(AssistantMandatesListView, self).get_context_data(**kwargs)
         context['assistant'] = academic_assistant.find_by_person(person.find_by_user(self.request.user))
+        context['can_see_file'] = settings.assistants_can_see_file()
         return context
 
 
@@ -80,9 +81,9 @@ def user_is_assistant_and_procedure_is_open(user):
 def mandate_change_state(request, mandate_id):
     mandate = assistant_mandate.find_mandate_by_id(mandate_id)
     if 'bt_mandate_accept' in request.POST:
-        mandate.state = 'TRTS'
+        mandate.state = assistant_mandate_state.TRTS
     elif 'bt_mandate_decline' in request.POST:
-        mandate.state = 'DECLINED'
+        mandate.state = assistant_mandate_state.DECLINED
     mandate.save()
     return HttpResponseRedirect(reverse('assistant_mandates'))
 
@@ -111,6 +112,7 @@ class AssistantLearningUnitsListView(LoginRequiredMixin, UserPassesTestMixin, Li
         context = super(AssistantLearningUnitsListView, self).get_context_data(**kwargs)
         context['mandate_id'] = self.kwargs['mandate_id']
         mandate = assistant_mandate.find_mandate_by_id(context['mandate_id'])
+        context['assistant_type'] = mandate.assistant_type
         files = assistant_document_file.find_by_assistant_mandate_and_description(mandate,
                                                                                   document_type.TUTORING_DOCUMENT)
         context['files'] = files

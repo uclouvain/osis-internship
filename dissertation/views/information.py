@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -34,21 +34,8 @@ from dissertation.forms import AdviserForm, ManagerAdviserForm, ManagerAddAdvise
     ManagerAddAdviserPerson, AddAdviserForm
 from django.contrib.auth.decorators import user_passes_test
 from base.views import layout
-from base.enums import person_source_type
+from base.models.enums import person_source_type
 
-
-# Used by decorator @user_passes_test(is_manager) to secure manager views
-def is_manager(user):
-    person = mdl.person.find_by_user(user)
-    this_adviser = adviser.search_by_person(person)
-    return this_adviser.type == 'MGR' if this_adviser else False
-
-
-# Used by decorator @user_passes_test(is_manager) to secure manager views
-def is_teacher(user):
-    person = mdl.person.find_by_user(user)
-    this_adviser = adviser.search_by_person(person)
-    return this_adviser.type == 'PRF' if this_adviser else False
 
 ###########################
 #      TEACHER VIEWS      #
@@ -56,7 +43,7 @@ def is_teacher(user):
 
 
 @login_required
-@user_passes_test(is_teacher)
+@user_passes_test(adviser.is_teacher)
 def informations(request):
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
@@ -67,7 +54,7 @@ def informations(request):
 
 
 @login_required
-@user_passes_test(is_teacher)
+@user_passes_test(adviser.is_teacher)
 def informations_detail_stats(request):
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
@@ -97,7 +84,7 @@ def informations_detail_stats(request):
 
 
 @login_required
-@user_passes_test(is_teacher)
+@user_passes_test(adviser.is_teacher)
 def informations_edit(request):
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
@@ -118,7 +105,7 @@ def informations_edit(request):
 
 
 @login_required
-@user_passes_test(is_teacher)
+@user_passes_test(adviser.is_teacher)
 def informations_add(request):
     if request.method == "POST":
         if 'search_form' in request.POST:  # step 2 : second form to select person in list
@@ -179,14 +166,14 @@ def informations_add(request):
 
 
 @login_required
-@user_passes_test(is_manager)
+@user_passes_test(adviser.is_manager)
 def manager_informations(request):
     advisers = adviser.list_teachers()
     return layout.render(request, 'manager_informations_list.html', {'advisers': advisers})
 
 
 @login_required
-@user_passes_test(is_manager)
+@user_passes_test(adviser.is_manager)
 def manager_informations_add(request):
     if request.method == "POST":
         if 'search_form' in request.POST:  # step 2 : second form to select person in list
@@ -243,7 +230,7 @@ def manager_informations_add(request):
 
 
 @login_required
-@user_passes_test(is_manager)
+@user_passes_test(adviser.is_manager)
 def manager_informations_add_person(request):
     if request.method == "POST":
         form = ManagerAddAdviserPerson(request.POST)
@@ -271,7 +258,7 @@ def manager_informations_add_person(request):
 
 
 @login_required
-@user_passes_test(is_manager)
+@user_passes_test(adviser.is_manager)
 def manager_informations_detail(request, pk):
     adv = get_object_or_404(Adviser, pk=pk)
     return layout.render(request, 'manager_informations_detail.html',
@@ -281,7 +268,7 @@ def manager_informations_detail(request, pk):
 
 
 @login_required
-@user_passes_test(is_manager)
+@user_passes_test(adviser.is_manager)
 def manager_informations_edit(request, pk):
     adv = get_object_or_404(Adviser, pk=pk)
     if request.method == "POST":
@@ -303,14 +290,14 @@ def manager_informations_edit(request, pk):
 
 
 @login_required
-@user_passes_test(is_manager)
+@user_passes_test(adviser.is_manager)
 def manager_informations_search(request):
     advisers = search_adviser(terms=request.GET['search'])
     return layout.render(request, "manager_informations_list.html", {'advisers': advisers})
 
 
 @login_required
-@user_passes_test(is_manager)
+@user_passes_test(adviser.is_manager)
 def manager_informations_list_request(request):
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
@@ -322,7 +309,7 @@ def manager_informations_list_request(request):
 
 
 @login_required
-@user_passes_test(is_manager)
+@user_passes_test(adviser.is_manager)
 def manager_informations_detail_list(request, pk):
     person = mdl.person.find_by_user(request.user)
     connected_adviser = adviser.search_by_person(person)
@@ -345,7 +332,7 @@ def manager_informations_detail_list(request, pk):
                           })
 
 @login_required
-@user_passes_test(is_manager)
+@user_passes_test(adviser.is_manager)
 def manager_informations_detail_list_wait(request, pk):
     person = mdl.person.find_by_user(request.user)
     connected_adviser = adviser.search_by_person(person)
@@ -358,7 +345,7 @@ def manager_informations_detail_list_wait(request, pk):
 
 
 @login_required
-@user_passes_test(is_manager)
+@user_passes_test(adviser.is_manager)
 def manager_informations_detail_stats(request, pk):
     adv = get_object_or_404(Adviser, pk=pk)
 

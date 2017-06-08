@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@
 ##############################################################################
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
-from reference.enums import grade_type_coverage, institutional_grade_type as enum_institutional_grade_type
+from reference.models.enums import grade_type_coverage, institutional_grade_type as enum_institutional_grade_type
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 
 
@@ -57,3 +57,4 @@ def find_by_id(gt_id):
         return GradeType.objects.get(id=gt_id)
     except ObjectDoesNotExist:
         return None
+

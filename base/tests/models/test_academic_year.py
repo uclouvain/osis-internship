@@ -1,12 +1,12 @@
 ##############################################################################
 #
-# OSIS stands for Open Student Information System. It's an application
+#    OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -73,7 +73,7 @@ class MultipleAcademicYearTest(TestCase):
 
 class SingleAcademicYearTest(TestCase):
     def test_starting_equalto_current(self):
-        academic_yr = AcademicYearFactory(year=timezone.now().year)
+        academic_yr = AcademicYearFactory(year=timezone.now().year-1)
         starting_academic_year = academic_year.starting_academic_year()
         self.assertEqual(starting_academic_year.year, academic_yr.year)
 

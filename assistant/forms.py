@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -23,17 +23,18 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from datetime import date
 from django import forms
-from django.utils.translation import ugettext as _
-from django.db.models import Q
-from django.forms import ModelForm, Textarea
-from assistant import models as mdl
-from base.models import structure, academic_year, person, learning_unit_year
-from django.forms.models import inlineformset_factory
 from django.core.exceptions import ValidationError
+from django.forms import ModelForm, Textarea
 from django.forms import widgets
-from assistant.enums import reviewer_role
-from assistant.models.enums import review_advice_choices, review_status
+from django.forms.models import inlineformset_factory
+from django.utils.translation import ugettext as _
+from base.models import structure, academic_year, learning_unit_year
+from base.models.enums import structure_type
+from assistant import models as mdl
+from assistant.models.enums import review_advice_choices, assistant_type, assistant_mandate_renewal, \
+    reviewer_role, assistant_phd_inscription
 
 
 class MandateFileForm(forms.Form):
@@ -55,9 +56,9 @@ class MandateForm(ModelForm):
         attrs={'rows': '4', 'cols': '80'}))
     other_status = forms.CharField(max_length=50, required=False)
     renewal_type = forms.ChoiceField(
-        choices=mdl.assistant_mandate.AssistantMandate.RENEWAL_TYPE_CHOICES)
+        choices=assistant_mandate_renewal.ASSISTANT_MANDATE_RENEWAL_TYPES)
     assistant_type = forms.ChoiceField(
-        choices=mdl.assistant_mandate.AssistantMandate.ASSISTANT_TYPE_CHOICES)
+        choices=assistant_type.ASSISTANT_TYPES)
     sap_id = forms.CharField(required=True, max_length=12, strip=True)
     contract_duration = forms.CharField(
         required=True, max_length=30, strip=True)
@@ -79,9 +80,11 @@ class MandateStructureForm(ModelForm):
 
 def get_field_qs(field, **kwargs):
     if field.name == 'structure':
-        return forms.ModelChoiceField(queryset=structure.Structure.objects.filter(
-            Q(type='INSTITUTE') | Q(type='POLE') | Q(type='PROGRAM_COMMISSION') |
-            Q(type='FACULTY')).order_by('acronym'))
+        return forms.ModelChoiceField(queryset=structure.find_by_types([structure_type.INSTITUTE,
+                                                                        structure_type.POLE,
+                                                                        structure_type.PROGRAM_COMMISSION,
+                                                                        structure_type.FACULTY
+                                                                        ]))
     return field.formfield(**kwargs)
 
 
@@ -90,11 +93,6 @@ structure_inline_formset = inlineformset_factory(mdl.assistant_mandate.Assistant
                                                  formfield_callback=get_field_qs,
                                                  fields=('structure', 'assistant_mandate'),
                                                  extra=2, can_delete=True, min_num=1, max_num=4)
-
-
-class HorizontalRadioRenderer(forms.RadioSelect.renderer):
-    def render(self):
-        return u'\n'.join([u'%s\n' % w for w in self])
 
 
 class AssistantFormPart1(ModelForm):
@@ -118,24 +116,19 @@ class MandatesArchivesForm(ModelForm):
         model = mdl.assistant_mandate.AssistantMandate
         fields = ('academic_year',)
 
-
+RADIO_SELECT_REQUIRED = dict(
+    required=True,
+    widget=forms.RadioSelect(attrs={'onChange': 'Hide()'})
+)
 class AssistantFormPart3(ModelForm):
-    inscription = forms.ChoiceField(required=True, widget=forms.RadioSelect(renderer=HorizontalRadioRenderer, attrs={
-        "onChange": 'Hide()'}), choices=mdl.academic_assistant.AcademicAssistant.PHD_INSCRIPTION_CHOICES)
-    expected_phd_date = forms.DateField(required=False, widget=forms.DateInput(format='%d/%m/%Y',
-                                                                               attrs={'placeholder': 'dd/mm/yyyy'}),
-                                        input_formats=['%d/%m/%Y'])
-    thesis_date = forms.DateField(required=False, widget=forms.DateInput(format='%d/%m/%Y',
-                                                                         attrs={'placeholder': 'dd/mm/yyyy'}),
-                                  input_formats=['%d/%m/%Y'])
-    phd_inscription_date = forms.DateField(required=False, widget=forms.DateInput(format='%d/%m/%Y',
-                                                                                  attrs={'placeholder': 'dd/mm/yyyy'}),
-                                           input_formats=['%d/%m/%Y'])
-    confirmation_test_date = forms.DateField(required=False,
-                                             widget=forms.DateInput(format='%d/%m/%Y',
-                                                                    attrs={'placeholder': 'dd/mm/yyyy'}),
-                                             input_formats=['%d/%m/%Y'])
+    PARAMETERS = dict(required=False, widget=forms.DateInput(format='%d/%m/%Y', attrs={'placeholder': 'dd/mm/yyyy'}),
+                      input_formats=['%d/%m/%Y'])
 
+    inscription = forms.ChoiceField(choices=assistant_phd_inscription.PHD_INSCRIPTION_CHOICES, **RADIO_SELECT_REQUIRED)
+    expected_phd_date = forms.DateField(**PARAMETERS)
+    thesis_date = forms.DateField(**PARAMETERS)
+    phd_inscription_date = forms.DateField(**PARAMETERS)
+    confirmation_test_date = forms.DateField(**PARAMETERS)
     thesis_title = forms.CharField(
         required=False, widget=forms.Textarea(attrs={'cols': '80', 'rows': '2'}))
     remark = forms.CharField(
@@ -246,8 +239,6 @@ class TutoringLearningUnitForm(forms.Form):
 
 
 class AssistantFormPart5(ModelForm):
-    degrees = forms.CharField(
-        required=False, widget=forms.Textarea(attrs={'cols': '80', 'rows': '4'}))
     formations = forms.CharField(
         required=False, widget=forms.Textarea(attrs={'cols': '80', 'rows': '4'}))
 
@@ -256,17 +247,16 @@ class AssistantFormPart5(ModelForm):
         fields = ('faculty_representation', 'institute_representation', 'sector_representation',
                   'governing_body_representation', 'corsci_representation', 'students_service',
                   'infrastructure_mgmt_service', 'events_organisation_service', 'publishing_field_service',
-                  'scientific_jury_service', 'degrees', 'formations')
+                  'scientific_jury_service', 'formations')
 
 
 class ReviewForm(ModelForm):
-    justification = forms.CharField(help_text=_("justification_required_if_conditional"),
+    justification = forms.CharField(help_text=_("justification_required_if_conditional_or_negative"),
                                     required=False, widget=forms.Textarea(attrs={'cols': '80', 'rows': '5'}))
     remark = forms.CharField(required=False, widget=forms.Textarea(attrs={'cols': '80', 'rows': '5'}))
     confidential = forms.CharField(help_text=_("information_not_provided_to_assistant"),
                                    required=False, widget=forms.Textarea(attrs={'cols': '80', 'rows': '5'}))
-    advice = forms.ChoiceField(required=True, widget=forms.RadioSelect(renderer=HorizontalRadioRenderer, attrs={
-        "onChange": 'Hide()'}), choices=review_advice_choices.REVIEW_ADVICE_CHOICES)
+    advice = forms.ChoiceField(choices=review_advice_choices.REVIEW_ADVICE_CHOICES, **RADIO_SELECT_REQUIRED)
     reviewer = forms.ChoiceField(required=False)
 
     class Meta:
@@ -279,8 +269,8 @@ class ReviewForm(ModelForm):
         super(ReviewForm, self).clean()
         advice = self.cleaned_data.get("advice")
         justification = self.cleaned_data.get('justification')
-        if advice == review_advice_choices.CONDITIONAL and not justification:
-            msg = _("justification_required_if_conditional")
+        if advice != review_advice_choices.FAVORABLE and not justification:
+            msg = _("justification_required_if_conditional_or_negative")
             self.add_error('justification', msg)
 
 
@@ -308,7 +298,7 @@ class AssistantFormPart6(ModelForm):
 class ReviewerDelegationForm(ModelForm):
     role = forms.CharField(widget=forms.HiddenInput(), required=True)
     structure = forms.ModelChoiceField(widget=forms.HiddenInput(), required=True,
-                                       queryset=structure.Structure.objects.all())
+                                       queryset=structure.find_structures())
 
     class Meta:
         model = mdl.reviewer.Reviewer
@@ -322,8 +312,9 @@ class ReviewerDelegationForm(ModelForm):
 class ReviewerForm(ModelForm):
     role = forms.ChoiceField(required=True, choices=reviewer_role.ROLE_CHOICES)
     structure = forms.ModelChoiceField(required=True, queryset=(
-        structure.find_by_type('INSTITUTE') | structure.find_by_type('FACULTY') |
-        structure.find_by_type('SECTOR')).order_by('type', 'acronym'))
+        structure.find_by_types([structure_type.INSTITUTE,
+                                 structure_type.FACULTY,
+                                 structure_type.SECTOR])))
 
     class Meta:
         model = mdl.reviewer.Reviewer
@@ -331,10 +322,40 @@ class ReviewerForm(ModelForm):
         exclude = ['person']
 
 
+class ReviewerReplacementForm(ModelForm):
+    person = forms.ChoiceField(required=False)
+    id = forms.CharField(widget=forms.HiddenInput())
+
+    class Meta:
+        model = mdl.reviewer.Reviewer
+        fields = ('person', 'id')
+        exclude = ('structure', 'role')
+
+
+class ReviewersFormset(ModelForm):
+    role = forms.ChoiceField(required=False)
+    structure = forms.ChoiceField(required=False)
+    person = forms.ChoiceField(required=False)
+    id = forms.IntegerField(required=False)
+    ACTIONS = (('-----', _('-----')), ('DELETE', _('delete_reviewer')), ('REPLACE', _('replace_reviewer')))
+    action = forms.ChoiceField(required=False, choices=ACTIONS,
+                               widget=forms.Select(attrs={'class': 'selector', 'onchange': 'this.form.submit();'}))
+
+    class Meta:
+        model = mdl.reviewer.Reviewer
+        exclude = ('structure', 'role', 'person')
+
+
 class SettingsForm(ModelForm):
-    starting_date = forms.DateField(required=True, widget=widgets.SelectDateWidget)
-    ending_date = forms.DateField(required=True, widget=widgets.SelectDateWidget)
+    starting_date = forms.DateField(required=True, widget=widgets.SelectDateWidget(
+        years=range(date.today().year-1, date.today().year+2)))
+    ending_date = forms.DateField(required=True, widget=widgets.SelectDateWidget(
+        years=range(date.today().year-1, date.today().year+2)))
+    assistants_starting_date = forms.DateField(required=True, widget=widgets.SelectDateWidget(
+        years=range(date.today().year-1, date.today().year+2)))
+    assistants_ending_date = forms.DateField(required=True, widget=widgets.SelectDateWidget(
+        years=range(date.today().year-1, date.today().year+2)))
 
     class Meta:
         model = mdl.settings.Settings
-        fields = ('starting_date', 'ending_date')
+        fields = ('starting_date', 'ending_date', 'assistants_starting_date', 'assistants_ending_date')

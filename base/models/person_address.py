@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -39,6 +39,7 @@ class PersonAddressAdmin(admin.ModelAdmin):
     search_fields = ['person__first_name', 'person__last_name', 'person__global_id']
     fieldsets = ((None, {'fields': ('person', 'label', 'location', 'postal_code', 'city', 'country')}),)
     raw_id_fields = ('person',)
+    list_filter = ('label', 'city')
 
 
 class PersonAddress(models.Model):

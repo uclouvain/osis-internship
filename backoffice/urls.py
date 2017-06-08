@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -27,6 +27,12 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from django.conf import settings
 from base.views import common
+from django.views.i18n import javascript_catalog
+
+js_info_dict = {
+    'domain': 'djangojs',
+    'packages': ('assessments',),
+}
 
 urlpatterns = (
     url(r'^login/$', common.login, name='login'),
@@ -35,6 +41,7 @@ urlpatterns = (
 
     url(r'^'+settings.ADMIN_URL, admin.site.urls),
     url(r'', include('base.urls')),
+    url(r'^jsi18n/$', javascript_catalog, js_info_dict, name='javascript-catalog'),
 )
 
 if 'assistant' in settings.INSTALLED_APPS:

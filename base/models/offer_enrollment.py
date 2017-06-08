@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -32,7 +32,8 @@ class OfferEnrollmentAdmin(SerializableModelAdmin):
     fieldsets = ((None, {'fields': ('offer_year','student','date_enrollment')}),)
     list_filter = ('offer_year__academic_year',)
     raw_id_fields = ('offer_year', 'student')
-    search_fields = ['offer_year__acronym', 'student__person__first_name', 'student__person__last_name']
+    search_fields = ['offer_year__acronym', 'student__person__first_name', 'student__person__last_name',
+                     'student__registration_id']
 
 
 class OfferEnrollment(SerializableModel):

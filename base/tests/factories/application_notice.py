@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# OSIS stands for Open Student Information System. It's an application
+#    OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
@@ -35,6 +35,8 @@ class ApplicationNoticeFactory(factory.DjangoModelFactory):
 
     subject = factory.Sequence(lambda n: 'Application Notice - %d' % n)
     notice = factory.LazyAttribute(lambda obj: 'Fake description of application notice %s' % obj.subject)
-    start_publish = factory.LazyAttribute(lambda obj: datetime.date(timezone.now().year, 1, 1))
-    stop_publish = factory.LazyAttribute(lambda obj: datetime.date(timezone.now().year+1, 12, 30))
+    start_publish = factory.LazyAttribute(lambda obj: datetime.datetime(timezone.now().year, 1, 1,
+                                                                        tzinfo=timezone.get_current_timezone()))
+    stop_publish = factory.LazyAttribute(lambda obj: datetime.datetime(timezone.now().year+1, 12, 30,
+                                                                       tzinfo=timezone.get_current_timezone()))
 

@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -25,19 +25,16 @@
 ##############################################################################
 import datetime
 from django.test import TestCase
+from django.utils import timezone
 from base.models.learning_container import LearningContainer
 from base.models.learning_container_year import LearningContainerYear
-from base.models.learning_component import LearningComponent
 from base.models.learning_component_year import LearningComponentYear
 from base.models.learning_unit_year import LearningUnitYear
 from base.models.learning_unit_component import LearningUnitComponent
-from base.models.learning_unit_component_class import LearningUnitComponentClass
 from base.models.learning_class_year import LearningClassYear
-from base.models.learning_class import LearningClass
 from base.models.academic_year import AcademicYear
-from base.enums import learning_unit_year_type
 
-now = datetime.datetime.now()
+now = timezone.now()
 
 
 class LearningComponentYearTest(TestCase):
@@ -46,20 +43,18 @@ class LearningComponentYearTest(TestCase):
 
     def setUp(self):
         self.current_academic_year = AcademicYear(year=(now.year),
-                                     start_date=datetime.datetime(now.year, now.month, 15),
-                                     end_date=datetime.datetime(now.year + 1, now.month, 28))
+                                     start_date=datetime.date(now.year, now.month, 15),
+                                     end_date=datetime.date(now.year + 1, now.month, 28))
         self.current_academic_year.save()
 
         self.current_academic_year_different = AcademicYear(year=(now.year)-1,
-                                     start_date=datetime.datetime(now.year-1, now.month, 15),
-                                     end_date=datetime.datetime(now.year + 2, now.month, 28))
+                                     start_date=datetime.date(now.year-1, now.month, 15),
+                                     end_date=datetime.date(now.year + 2, now.month, 28))
         self.current_academic_year_different.save()
 
     def test_creation_learning_unit_component_class_with_different_year(self):
 
         learning_container = LearningContainer()
-        learning_component = LearningComponent(learning_container=learning_container)
-        learning_class = LearningClass(learning_component=learning_component)
 
         learning_container_year = LearningContainerYear(title="Biology",
                                                         acronym="LBIO1212",
@@ -67,15 +62,12 @@ class LearningComponentYearTest(TestCase):
                                                         learning_container=learning_container)
         #Composant annualisé est associé à son composant et à son conteneur annualisé
         learning_component_year = LearningComponentYear(learning_container_year=learning_container_year,
-                                                        learning_component=learning_component,
                                                         title="Cours magistral",
                                                         acronym="/C",
-                                                        type=learning_unit_year_type.COURSE,
                                                         comment="TEST")
         #Classe annualisée est associée à son composant et à son conteneur annualisé
         learning_class_year = LearningClassYear(learning_component_year=learning_component_year,
-                                                        learning_class=learning_class,
-                                                        acronym="/C1")
+                                                acronym="/C1")
 
 
         #UE associée à un conteneur d'une année différente du composant
@@ -87,4 +79,5 @@ class LearningComponentYearTest(TestCase):
         learning_unit_component = LearningUnitComponent(learning_component_year=learning_component_year,
                                                         learning_unit_year=learning_unit_year)
 
-        self.assertEqual(learning_unit_component.learning_component_year, learning_class_year.learning_component_year)
+        self.assertEqual(learning_unit_component.learning_component_year,
+                         learning_class_year.learning_component_year)

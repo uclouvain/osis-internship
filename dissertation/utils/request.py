@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -24,15 +24,14 @@
 #
 ##############################################################################
 
-from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
 from base.models.student import find_by_offer_year
 from base.models.offer_year import OfferYear
 from django.contrib.auth.decorators import user_passes_test
-from dissertation.views.information import is_manager
+from dissertation.models.adviser import is_manager
 from django.http import JsonResponse
-import json
+
 
 @login_required
 @user_passes_test(is_manager)
@@ -43,10 +42,9 @@ def get_students_list_in_offer_year(request, offer_year_start_id):
     if students_list:
         for student in students_list:
             data.append({'person_id': student.id,
-                        'first_name': student.person.first_name,
-                        'last_name': student.person.last_name,
-                        'registration_id':student.registration_id})
-
+                         'first_name': student.person.first_name,
+                         'last_name': student.person.last_name,
+                         'registration_id': student.registration_id})
 
     else:
         data = False

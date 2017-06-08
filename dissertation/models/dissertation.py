@@ -1,12 +1,12 @@
 ##############################################################################
 #
-# OSIS stands for Open Student Information System. It's an application
+#    OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -186,17 +186,17 @@ def get_next_status(dissert, operation):
 
         offer_prop = offer_proposition.get_by_offer(dissert.offer_year_start.offer)
 
+        if offer_prop is None:
+            return dissert.status
+
         if offer_prop.validation_commission_exists and dissert.status == 'DIR_SUBMIT':
 
             return 'COM_SUBMIT'
 
         elif offer_prop.evaluation_first_year and (dissert.status == 'DIR_SUBMIT' or
-                                                           dissert.status == 'COM_SUBMIT' or
-                                                           dissert.status == 'COM_KO'):
+                                                   dissert.status == 'COM_SUBMIT' or
+                                                   dissert.status == 'COM_KO'):
             return 'EVA_SUBMIT'
-
-        elif dissert.status == 'EVA_SUBMIT' or dissert.status == 'EVA_KO':
-            return 'TO_RECEIVE'
 
         elif dissert.status == 'DEFENDED':
             return 'ENDED_WIN'

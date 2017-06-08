@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -23,9 +23,9 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import datetime
 from django.contrib.auth.models import User
 from django.test import TestCase
+from django.utils import timezone
 from base.models.academic_year import AcademicYear
 from base.models.offer import Offer
 from base.models.offer_year import OfferYear
@@ -33,11 +33,14 @@ from base.models.person import Person
 from base.models.program_manager import ProgramManager
 from base.models.student import Student
 from base.models.tutor import Tutor
+from base.models.entity_manager import EntityManager
+from base.models.structure import Structure
 from base.models import models_signals as mdl_signals, person as mdl_person
 
 
 def get_or_create_user(user_infos):
-    a_user, created = User.objects.get_or_create(username=user_infos.get('USERNAME'), password=user_infos.get('PASSWORD'))
+    a_user, created = User.objects.get_or_create(username=user_infos.get('USERNAME'),
+                                                 password=user_infos.get('PASSWORD'))
     if created:
         if user_infos.get('USER_FIRST_NAME'):
             a_user.first_name = user_infos.get('USER_FIRST_NAME')
@@ -69,7 +72,7 @@ def get_or_create_person(user=None, first_name=None, global_id=None):
 
 def assert_person_match_user_infos(test_case, person, user_infos):
     test_case.assertEqual(person.first_name, user_infos.get('USER_FIRST_NAME'))
-    test_case.assertEqual(person.last_name,user_infos.get('USER_LAST_NAME'))
+    test_case.assertEqual(person.last_name, user_infos.get('USER_LAST_NAME'))
     test_case.assertEqual(person.global_id, user_infos.get('USER_FGS'))
     test_case.assertEqual(person.email, user_infos.get('USER_EMAIL'))
 
@@ -141,9 +144,6 @@ class AddToGroupsSignalsTest(TestCase):
     def is_member(self, group):
         return self.user_foo.groups.filter(name=group).exists()
 
-    def create_test_student(self):
-        return Student.objects.create(registration_id=123456789, person=self.person_foo)
-
     def create_test_tutor(self):
         return Tutor.objects.create(person=self.person_foo)
 
@@ -151,23 +151,17 @@ class AddToGroupsSignalsTest(TestCase):
         title = 'Test1BA'
         acronym = 'Test1BA'
         offer = Offer.objects.create(title=title)
-        now = datetime.datetime.now()
+        now = timezone.now()
         academic_year = AcademicYear.objects.create(year=now.year)
         offer_year = OfferYear.objects.create(offer=offer, academic_year=academic_year, title=title, acronym=acronym)
         return ProgramManager.objects.create(offer_year=offer_year, person=self.person_foo)
 
+    def create_test_entity_manager(self):
+        return EntityManager.objects.create(person=self.person_foo, structure=Structure.objects.create(acronym="TEST"))
+
     def setUp(self):
         self.user_foo = User.objects.create_user('user_foo')
         self.person_foo = Person.objects.create(user=self.user_foo)
-
-    def test_add_to_students_group(self):
-        self.create_test_student()
-        self.assertTrue(self.is_member('students'), 'user_foo should be in students group')
-
-    def test_remove_from_students_group(self):
-        student_foo = self.create_test_student()
-        student_foo.delete()
-        self.assertFalse(self.is_member('students'), 'user_foo should not be in students group anymore')
 
     def test_add_to_tutors_group(self):
         self.create_test_tutor()
@@ -187,3 +181,14 @@ class AddToGroupsSignalsTest(TestCase):
         pgm_manager_foo.delete()
         self.assertFalse(self.is_member('program_managers'),
                          'user_foo should not be in program_managers group anymore')
+
+    def test_add_to_entity_manager_group(self):
+        self.create_test_entity_manager()
+        self.assertTrue(self.is_member('entity_managers'),
+                        'entity_manager_foo should be in entity_managers group')
+
+    def test_remove_from_entity_manager_group(self):
+        faculty_administrator_foo = self.create_test_entity_manager()
+        faculty_administrator_foo.delete()
+        self.assertFalse(self.is_member('entity_managers'),
+                         'faculty_administrator_foo should not be in entity_managers group anymore')

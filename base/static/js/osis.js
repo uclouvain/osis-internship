@@ -87,9 +87,6 @@ function originalValueChanged(values, id, score, justification) {
 
     for (i = 0; i < values.length; i++) {
         if (values[i][0] == id) {
-            // To test
-            //console.log(parseFloat(values[i][1].replace(",", ".")) + " : " + score)
-            //console.log(values[i][2] + " : " + justification)
             if(score == parseFloat(values[i][1].replace(",", ".")) && justification == values[i][2]) {
                 return false;
             } else {
@@ -105,8 +102,6 @@ function check_browser(){
     var accepted = false;
     if (browser.name in browser_supported_versions){
         var accepted_version = browser_supported_versions[browser.name];
-        console.log(accepted_version);
-        console.log(browser.version);
         if (browser.version >= accepted_version) {
             accepted = true;
         }

@@ -229,6 +229,12 @@ Start the virtual environment and install the dependencies:
     $ source venv/bin/activate
     (venv)$ pip install -r requirements.txt
 
+Install phantomjs:
+
+1. Download phantomjs from : http://phantomjs.org/download.html
+2. Move the executable file in /usr/local/bin
+3. Add the path to your .bash_profile or .profile
+
 Create the data structure in the database:
 
     (venv)$ python manage.py migrate
@@ -683,7 +689,7 @@ before any Python code:
     #    The core business involves the administration of students, teachers,
     #    courses, programs and so on.
     #
-    #    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+    #    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
     #
     #    This program is free software: you can redistribute it and/or modify
     #    it under the terms of the GNU General Public License as published by
@@ -710,7 +716,7 @@ For HTML/Template files, we change just the comment syntax:
      * The core business involves the administration of students, teachers,
      * courses, programs and so on.
      *
-     * Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+     * Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
      *
      * This program is free software: you can redistribute it and/or modify
      * it under the terms of the GNU General Public License as published by

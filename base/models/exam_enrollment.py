@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -23,20 +23,22 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+import unicodedata
 from decimal import *
 from django.db import models
 from django.db.models import When, Case, Q, Sum, Count, IntegerField, F
 from django.contrib import admin
 from django.utils.translation import ugettext as _
+from django.utils import timezone
 from django.core.validators import MaxValueValidator, MinValueValidator
-from base.models import person, learning_unit_year, person_address, session_exam_calendar, session_exam_deadline, \
+from base.models import person, person_address, session_exam_calendar, session_exam_deadline, \
                         academic_year as academic_yr, offer_year, program_manager, tutor
 from attribution.models import attribution
-from base.enums import exam_enrollment_justification_type as justification_types
-from base.enums import exam_enrollment_state as enrollment_states
-import datetime
-import unicodedata
+from base.models.enums import exam_enrollment_state as enrollment_states, exam_enrollment_justification_type as justification_types
+
 from base.models.exceptions import JustificationValueException
+from base.models.utils.admin_extentions import remove_delete_action
+
 
 JUSTIFICATION_ABSENT_FOR_TUTOR = _('absent')
 
@@ -195,10 +197,11 @@ def is_deadline_tutor_reached(enrollment):
     return False
 
 
-def get_deadline_tutor_computed(enrollment):
+def get_deadline(enrollment):
     exam_deadline = get_session_exam_deadline(enrollment)
     if exam_deadline:
-        return exam_deadline.deadline_tutor_computed
+        return exam_deadline.deadline_tutor_computed if exam_deadline.deadline_tutor_computed else \
+               exam_deadline.deadline
     return None
 
 
@@ -236,11 +239,7 @@ class ExamEnrollmentHistoryAdmin(admin.ModelAdmin):
         return False
 
     def get_actions(self, request):
-        actions = super(ExamEnrollmentHistoryAdmin, self).get_actions(request)
-
-        if 'delete_selected' in actions:
-            del actions['delete_selected']
-        return actions
+        return remove_delete_action(super(ExamEnrollmentHistoryAdmin, self).get_actions(request))
 
 
 class ExamEnrollmentHistory(models.Model):
@@ -319,8 +318,8 @@ def get_progress_by_learning_unit_years_and_offer_years(user,
                                           output_field=IntegerField()
                                  )),
                                  scores_not_yet_submitted=Sum(Case(
-                                     When((Q(score_draft__isnull=False) & Q(score_final__isnull=False) & Q(justification_final__isnull=False)) |
-                                          (Q(justification_draft__isnull=False) & Q(score_final__isnull=False) & Q(justification_final__isnull=False))
+                                     When((Q(score_draft__isnull=False) & Q(score_final__isnull=True) & Q(justification_final__isnull=True)) |
+                                          (Q(justification_draft__isnull=False) & Q(score_final__isnull=True) & Q(justification_final__isnull=True))
                                           ,then=1),
                                           default=0,
                                           output_field=IntegerField()
@@ -370,7 +369,7 @@ def find_for_score_encodings(session_exam_number,
         # Filter by Tutor is like filter by a list of learningUnits
         # It's not necessary to add a filter if learningUnitYear or learningUnitYearIds are already defined
         if not learning_unit_year_id and not learning_unit_year_ids:
-            learning_unit_years = learning_unit_year.find_by_tutor(tutor)
+            learning_unit_years = attribution.find_by_tutor(tutor)
             queryset = queryset.filter(learning_unit_enrollment__learning_unit_year_id__in=learning_unit_years)
 
     if offer_year_id:
@@ -411,14 +410,13 @@ def find_for_score_encodings(session_exam_number,
                    )
 
     return queryset.select_related('learning_unit_enrollment__offer_enrollment__offer_year') \
+                   .select_related('session_exam')\
                    .select_related('learning_unit_enrollment__offer_enrollment__student__person')\
                    .select_related('learning_unit_enrollment__learning_unit_year')
 
 
-
 def group_by_learning_unit_year_id(exam_enrollments):
     """
-
     :param exam_enrollments: List of examEnrollments to regroup by earningunitYear.id
     :return: A dictionary where the key is LearningUnitYear.id and the value is a list of examEnrollment
     """
@@ -433,9 +431,10 @@ def group_by_learning_unit_year_id(exam_enrollments):
 
 
 def scores_sheet_data(exam_enrollments, tutor=None):
+    date_format = str(_('date_format'))
     exam_enrollments = sort_for_encodings(exam_enrollments)
     data = {'tutor_global_id': tutor.person.global_id if tutor else ''}
-    now = datetime.datetime.now()
+    now = timezone.now()
     data['publication_date'] = '%s/%s/%s' % (now.day, now.month, now.year)
     data['institution'] = str(_('ucl_denom_location'))
     data['link_to_regulation'] = str(_('link_to_RGEE'))
@@ -454,13 +453,16 @@ def scores_sheet_data(exam_enrollments, tutor=None):
         learning_unit_yr = exam_enrollments[0].session_exam.learning_unit_year
         scores_responsible = attribution.find_responsible(learning_unit_yr.id)
         scores_responsible_address = None
+        person = None
         if scores_responsible:
+            person = scores_responsible.person
             scores_responsible_address = person_address.find_by_person_label(scores_responsible.person, 'PROFESSIONAL')
 
         learn_unit_year_dict['academic_year'] = str(learning_unit_yr.academic_year)
+
         learn_unit_year_dict['scores_responsible'] = {
-            'first_name': scores_responsible.person.first_name if scores_responsible else '',
-            'last_name': scores_responsible.person.last_name if scores_responsible else ''}
+            'first_name': person.first_name if person and person.first_name else '',
+            'last_name': person.last_name if person and person.last_name else ''}
 
         learn_unit_year_dict['scores_responsible']['address'] = {'location': scores_responsible_address.location
                                                                  if scores_responsible_address else '',
@@ -490,20 +492,12 @@ def scores_sheet_data(exam_enrollments, tutor=None):
             number_session = exam_enrollment.session_exam.number_session
             deliberation_date = session_exam_calendar.find_deliberation_date(number_session, offer_year)
             if deliberation_date:
-                deliberation_date = deliberation_date.strftime("%d/%m/%Y")
+                deliberation_date = deliberation_date.strftime(date_format)
             else:
                 deliberation_date = _('not_passed')
 
-            # Compute deadline score encoding
-            deadline = get_deadline_tutor_computed(exam_enrollment)
-            if deadline:
-                deadline = deadline.strftime('%d/%m/%Y')
-            else:
-                deadline = ""
-
             program = {'acronym': exam_enrollment.learning_unit_enrollment.offer_enrollment.offer_year.acronym,
                        'deliberation_date': deliberation_date,
-                       'deadline': deadline,
                        'address': {'recipient': offer_year.recipient,
                                    'location': offer_year.location,
                                    'postal_code': offer_year.postal_code,
@@ -520,12 +514,19 @@ def scores_sheet_data(exam_enrollments, tutor=None):
                         score = str(exam_enrol.score_final)
                     else:
                         score = str(int(exam_enrol.score_final))
+
+                # Compute deadline score encoding
+                deadline = get_deadline(exam_enrol)
+                if deadline:
+                    deadline = deadline.strftime(date_format)
+
                 enrollments.append({
                     "registration_id": student.registration_id,
                     "last_name": student.person.last_name,
                     "first_name": student.person.first_name,
                     "score": score,
-                    "justification": _(exam_enrol.justification_final) if exam_enrol.justification_final else ''
+                    "justification": _(exam_enrol.justification_final) if exam_enrol.justification_final else '',
+                    "deadline": deadline if deadline else ''
                 })
             program['enrollments'] = enrollments
             programs.append(program)
@@ -575,7 +576,6 @@ def sort_for_encodings(exam_enrollments):
     :param exam_enrollments: List of examEnrollments to sort
     :return:
     """
-
     def _sort(key):
         learn_unit_acronym = key.learning_unit_enrollment.learning_unit_year.acronym
         off_enroll = key.learning_unit_enrollment.offer_enrollment

@@ -9,7 +9,7 @@
  * The core business involves the administration of students, teachers,
  * courses, programs and so on.
  *
- * Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+ * Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,6 +25,9 @@
  * at the root of the source code of this program.  If not,
  * see http://www.gnu.org/licenses/.
 {% endcomment %}
+{% block style %}
+<link rel="stylesheet" href="{% static 'css/dataTables.bootstrap.min.css' %}">
+{% endblock %}
 
 {% block breadcrumb %}
   <li><a href="{% url 'studies' %}" id="lnk_studies">{% trans 'student_path' %}</a></li>
@@ -51,15 +54,15 @@
       <br>
       <label class="alert alert-info" style="margin-left:10%;width:80%;text-align:center;">{% trans 'no_result' %}</label>
     {% else %}
-      <table class="table table-hover">
-        <tr>
+      <table class="table table-hover" id="tb_memoire">
+        <thead>
           <th>{% trans 'title'%}</th>
           <th>{% trans 'author'%}</th>
           <th>{% trans 'status'%}</th>
           <th>{% trans 'offer_year_start'%}</th>
           <th>{% trans 'proposition_dissertation'%}</th>
           <th>{% trans 'action'%}</th>
-        </tr>
+        </thead>
         {% for dissertation in dissertations %}
           <tr>
             <td><a href="{% url 'manager_dissertations_detail' pk=dissertation.pk %}">{{ dissertation.title }}</a></td>
@@ -113,4 +116,44 @@
       </table>
     {% endif %}
   </div>
+{% endblock %}
+{% block script %}
+<script type="text/javascript" src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/dataTables.bootstrap.min.js' %}"></script>
+<script>
+    $(document).ready(function()
+    {
+        $('#tb_memoire').DataTable(
+            {
+                "paging" : true,
+                "ordering" : true,
+                "info"  : false,
+                "searching" : false,
+                "language":
+                {
+
+                "sProcessing":     "{% trans 'datatable_processing'%}",
+                "sSearch":         "{% trans 'datatable_search'%}",
+                "sLengthMenu":     "{% trans 'datatable_lengthmenu'%}",
+                "sInfo":           "{% trans 'datatable_info'%}",
+                "sInfoEmpty":      "{% trans 'datatable_infoempty'%}",
+                "sInfoFiltered":   "{% trans 'datatable_infofiltered'%}",
+                "sInfoPostFix":    "{% trans 'datatable_infopostfix'%}",
+                "sLoadingRecords": "{% trans 'datatable_loadingrecords'%}",
+                "sZeroRecords":    "{% trans 'datatable_zerorecords'%}",
+                "sEmptyTable":     "{% trans 'datatable_emptytable'%}",
+                "oPaginate": {
+                    "sFirst":      "{% trans 'datatable_first'%}",
+                    "sPrevious":   "{% trans 'datatable_previous'%}",
+                    "sNext":       "{% trans 'datatable_next'%}",
+                    "sLast":       "{% trans 'datatable_last'%}"
+                            },
+            "oAria": {
+                "sSortAscending":  "{% trans 'datatable_sortascending'%}",
+                "sSortDescending": "{% trans 'datatable_sortdescending'%}",
+                    }
+                }
+            })
+    ;});
+</script>
 {% endblock %}

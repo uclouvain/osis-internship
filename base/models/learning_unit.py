@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -25,17 +25,19 @@
 ##############################################################################
 from django.db import models
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
-from base.enums.learning_unit_periodicity import PERIODICITY_TYPES
+from base.models.enums.learning_unit_periodicity import PERIODICITY_TYPES
 
 
 class LearningUnitAdmin(SerializableModelAdmin):
-    list_display = ('acronym', 'title', 'start_year', 'end_year', 'changed')
-    fieldsets = ((None, {'fields': ('acronym','title','description','start_year','end_year')}),)
-    search_fields = ['acronym']
+    list_display = ('learning_container', 'acronym', 'title', 'start_year', 'end_year', 'changed')
+    fieldsets = ((None, {'fields': ('learning_container', 'acronym', 'title', 'description', 'start_year', 'end_year')}),)
+    search_fields = ['acronym', 'title']
+    list_filter = ('periodicity', 'start_year')
 
 
 class LearningUnit(SerializableModel):
     external_id = models.CharField(max_length=100, blank=True, null=True)
+    learning_container = models.ForeignKey('LearningContainer', blank=True, null=True)
     changed = models.DateTimeField(null=True)
     acronym = models.CharField(max_length=15)
     title = models.CharField(max_length=255)
@@ -74,4 +76,3 @@ def search(acronym=None):
         queryset = queryset.filter(acronym=acronym)
 
     return queryset
-

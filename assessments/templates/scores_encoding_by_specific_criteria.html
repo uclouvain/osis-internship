@@ -59,7 +59,7 @@
                     <input type="text" class="form-control" id="txt_first_name" name="first_name" placeholder="{% trans 'firstname' %}" value="{{first_name | default_if_none:''}}">
                 </div>
                 <div class="col-md-3">
-                    <label>{% trans 'justification' %}</label>
+                    <label>{% trans 'state' %}</label>
                     <select class="form-control" name="justification" id="slt_justification">
                         <option value="">{% trans 'all' %}</option>
                         <option {% if justification == "ABSENCE_UNJUSTIFIED" %} selected {% endif %} value="ABSENCE_UNJUSTIFIED">{% trans 'ABSENCE_UNJUSTIFIED' %}</option>
@@ -89,7 +89,7 @@
 
             {% include "template_messages.html" %}
             
-            {% if exam_enrollments %}
+            {% if enrollments %}
             <button type="submit" class="btn btn-primary" id="bt_save_online_encoding_up" name="action" value="save">
                 <span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span> {% trans 'save' %}</button>
             <table class="table table-hover">
@@ -106,7 +106,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                {% for enrollment in exam_enrollments %}
+                {% for enrollment in enrollments %}
                     <tr style="{% if enrollment.deadline_reached %}
                                     background-color:#D3D3D3;
                                {% endif %}">
@@ -122,8 +122,8 @@
                             {{ enrollment.learning_unit_enrollment.learning_unit_year.acronym |add:" - " |add:enrollment.learning_unit_enrollment.learning_unit_year.title | truncatechars:22}}
                         </td>
                         <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.registration_id }}</td>
-                        <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.last_name }}</td>
-                        <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.first_name }}</td>
+                        <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.last_name|default_if_none:"" }}</td>
+                        <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.first_name|default_if_none:"" }}</td>
                         <td>
                             <input class="form-control col-sm" type="text" name="score_{{ enrollment.id }}"
                                 id="num_score_{{ enrollment.id }}" tabindex="{{ forloop.counter }}"
@@ -141,7 +141,7 @@
                         </td>
                         <td>
                             <select class="form-control" name="justification_{{ enrollment.id }}" id="slt_justification_score_{{ enrollment.id }}"
-                                   tabindex="{{ exam_enrollments|length|sum:forloop.counter }}"
+                                   tabindex="{{ enrollments|length|sum:forloop.counter }}"
                                     {% if enrollment.deadline_reached %}
                                     disabled
                                  {% endif %}>
@@ -168,7 +168,7 @@
 {% block script %}
 <script>
     var values = [
-        {% for enrollment in exam_enrollments %}
+        {% for enrollment in enrollments %}
             {% if is_program_manager %}
                 ['{{ enrollment.id }}', '{{ enrollment.score_final | default_if_none:'-1' }}','{{ enrollment.justification_final | default_if_none:'' }}'],
             {% else %}
@@ -255,7 +255,7 @@
     }
 
     var target_score = '#form_justification tbody tr td input';
-    $(target_score).on('keypress',
+    $(target_score).on('keydown',
                        { "target": target_score,
                          "table_size": $('#form_justification tbody tr').length,
                          "index_increment_value": 2},
@@ -263,7 +263,7 @@
 
 
     var target_justification = '#form_justification tbody tr td select';
-    $(target_justification).on('keypress',
+    $(target_justification).on('keydown',
                                { "target": target_justification,
                                  "table_size": $('#form_justification tbody tr').length * 2,
                                  "index_increment_value": 1},

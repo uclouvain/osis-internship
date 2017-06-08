@@ -1,12 +1,12 @@
 ##############################################################################
 #
-# OSIS stands for Open Student Information System. It's an application
+#    OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -25,10 +25,11 @@
 ##############################################################################
 from dissertation.models.offer_proposition_group import OfferPropositionGroup
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.utils import timezone
 from base.models import offer
-from datetime import datetime
+from datetime import date
 
 
 class OfferPropositionAdmin(SerializableModelAdmin):
@@ -56,35 +57,31 @@ class OfferProposition(SerializableModel):
 
     @property
     def in_periode_visibility_proposition(self):
-        now = datetime.date(datetime.now())
         start = self.start_visibility_proposition
         end = self.end_visibility_proposition
 
-        return start <= now <= end
+        return start <= date.today() <= end
 
     @property
     def in_periode_visibility_dissertation(self):
-        now = datetime.date(datetime.now())
         start = self.start_visibility_dissertation
         end = self.end_visibility_dissertation
 
-        return start <= now <= end
+        return start <= date.today() <= end
 
     @property
     def in_periode_jury_visibility(self):
-        now = datetime.date(datetime.now())
         start = self.start_jury_visibility
         end = self.end_jury_visibility
 
-        return start <= now <= end
+        return start <= date.today() <= end
 
     @property
     def in_periode_edit_title(self):
-        now = datetime.date(datetime.now())
         start = self.start_edit_title
         end = self.end_edit_title
 
-        return start <= now <= end
+        return start <= date.today() <= end
 
     def __str__(self):
         return self.acronym
@@ -94,7 +91,12 @@ class OfferProposition(SerializableModel):
 
 
 def get_by_offer(an_offer):
-    return OfferProposition.objects.get(offer=an_offer)
+    try:
+        offer_proposition = OfferProposition.objects.get(offer=an_offer)
+    except ObjectDoesNotExist:
+        offer_proposition = None
+
+    return offer_proposition
 
 
 def search_by_offer(offers):

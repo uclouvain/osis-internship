@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -35,19 +35,13 @@ from django.contrib.auth.decorators import user_passes_test
 from base.views import layout
 
 
-# Used by decorator @user_passes_test(is_manager) to secure manager views
-def is_manager(user):
-    person = mdl.person.find_by_user(user)
-    this_adviser = adviser.search_by_person(person)
-    return this_adviser.type == 'MGR' if this_adviser else False
-
 ###########################
 #      MANAGER VIEWS      #
 ###########################
 
 
 @login_required
-@user_passes_test(is_manager)
+@user_passes_test(adviser.is_manager)
 def manager_offer_parameters(request):
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
@@ -57,7 +51,7 @@ def manager_offer_parameters(request):
 
 
 @login_required
-@user_passes_test(is_manager)
+@user_passes_test(adviser.is_manager)
 def manager_offer_parameters_edit(request, pk):
     offer_prop = get_object_or_404(OfferProposition, pk=pk)
     if request.method == "POST":

@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# OSIS stands for Open Student Information System. It's an application
+#    OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
@@ -25,6 +25,7 @@
 ##############################################################################
 import factory
 import factory.fuzzy
+from django.utils import timezone
 from base.tests.factories.person import PersonFactory
 from dissertation.tests.factories.adviser import AdviserTeacherFactory
 from dissertation.models.proposition_dissertation import PropositionDissertation
@@ -44,4 +45,5 @@ class PropositionDissertationFactory(factory.DjangoModelFactory):
     type = factory.Iterator(PropositionDissertation.TYPES_CHOICES, getter=lambda c: c[0])
     visibility = True
     active = True
-    created_date = factory.Faker('date_time_this_year', before_now=True, after_now=False, tzinfo=None)
+    created_date = factory.Faker('date_time_this_year', before_now=True, after_now=False,
+                                 tzinfo=timezone.get_current_timezone())

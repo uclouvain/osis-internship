@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -31,7 +31,7 @@ OPTIONAL_APPS = (
     'dissertation',
     'internship',
     'assessments',
-    'cms'
+    'cms',
 )
 
 INSTALLED_APPS += OPTIONAL_APPS

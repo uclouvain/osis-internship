@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -26,28 +26,20 @@
 from django.contrib.auth.decorators import user_passes_test
 from assistant.forms import SettingsForm
 from base.views import layout
-from assistant.models import settings, manager
+from assistant.models import settings
 from base.models import academic_year
-from django.core.exceptions import ObjectDoesNotExist
+from assistant.utils import manager_access
 
 
-def user_is_manager(user):
-    """Use with a ``user_passes_test`` decorator to restrict access to
-    authenticated users who are manager."""
-    try:
-        if user.is_authenticated():
-            return manager.Manager.objects.get(person=user.person)
-    except ObjectDoesNotExist:
-        return False
-
-
-@user_passes_test(user_is_manager, login_url='assistants_home')
+@user_passes_test(manager_access.user_is_manager, login_url='assistants_home')
 def settings_edit(request):
     """Use to edit app settings."""
     global_settings = settings.get_settings()
     if global_settings:
         form = SettingsForm(initial={'starting_date': global_settings.starting_date,
-                                     'ending_date': global_settings.ending_date
+                                     'ending_date': global_settings.ending_date,
+                                     'assistants_starting_date': global_settings.assistants_starting_date,
+                                     'assistants_ending_date': global_settings.assistants_ending_date
                                      }, prefix="set", instance=global_settings)
     else:
         form = SettingsForm(prefix="set", instance=global_settings)
@@ -57,7 +49,7 @@ def settings_edit(request):
                                                     })
 
 
-@user_passes_test(user_is_manager, login_url='assistants_home')
+@user_passes_test(manager_access.user_is_manager, login_url='assistants_home')
 def settings_save(request):
     global_settings = settings.get_settings()
     form = SettingsForm(data=request.POST, instance=global_settings, prefix='set')

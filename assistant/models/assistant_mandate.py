@@ -1,4 +1,4 @@
-##############################################################################
+    ##############################################################################
 #
 #    OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -27,38 +27,15 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.contrib import admin
+from assistant.models.enums import assistant_mandate_state, assistant_type, assistant_mandate_renewal
+from assistant.models.enums import assistant_mandate_appeal
 
 class AssistantMandateAdmin(admin.ModelAdmin):
     list_display = ('assistant', 'renewal_type', 'academic_year')
     raw_id_fields = ('assistant',)
 
 class AssistantMandate(models.Model):
-    RENEWAL_TYPE_CHOICES = (
-        ('NORMAL', _('Normal')),
-        ('EXCEPTIONAL', _('Exceptional')))
 
-    STATE_CHOICES = (
-        ('DECLINED', _('Declined')),             
-        ('TO_DO', _('To do')),
-        ('TRTS', _('Trts')),
-        ('PHD_SUPERVISOR', _('PhD supervisor')),
-        ('RESEARCH', _('Research')),
-        ('SUPERVISION', _('Supervision')),
-        ('VICE_RECTOR', _('Vice rector')),
-        ('DONE', _('Done'))
-    )
-
-    APPEAL_CHOICES = (
-        ('NONE', _('N/A')),
-        ('POSITIVE_APPEAL', _('Positive appeal')),
-        ('NEGATIVE_APPEAL', _('Negative appeal')),
-        ('APPEAL_IN_PROGRESS', _('Appeal in progress')),
-        ('NO_APPEAL', _('No appeal')))
-    
-    ASSISTANT_TYPE_CHOICES = (
-        ('ASSISTANT', _('Assistant')),
-        ('TEACHING_ASSISTANT', _('Teaching assistant')))
-    
     assistant = models.ForeignKey('AcademicAssistant')
     academic_year = models.ForeignKey('base.AcademicYear')
     fulltime_equivalent = models.DecimalField(max_digits=3, decimal_places=2)
@@ -66,17 +43,19 @@ class AssistantMandate(models.Model):
     end_date = models.DateField()
     position_id = models.CharField(max_length=12)
     sap_id = models.CharField(max_length=12)
-    grade = models.CharField(max_length=40)
-    assistant_type = models.CharField(max_length=20, choices=ASSISTANT_TYPE_CHOICES, default='ASSISTANT')
+    assistant_type = models.CharField(max_length=20, choices=assistant_type.ASSISTANT_TYPES,
+                                      default=assistant_type.ASSISTANT)
     scale = models.CharField(max_length=3)
     absences = models.TextField(null=True, blank=True)
     comment = models.TextField(null=True, blank=True)
     other_status = models.CharField(max_length=50, null=True, blank=True)
-    renewal_type = models.CharField(max_length=12, choices=RENEWAL_TYPE_CHOICES, default='NORMAL')
+    renewal_type = models.CharField(max_length=12, choices=assistant_mandate_renewal.ASSISTANT_MANDATE_RENEWAL_TYPES,
+                                    default=assistant_mandate_renewal.NORMAL)
     external_functions = models.TextField(null=True, blank=True)
     external_contract = models.CharField(max_length=255, null=True, blank=True)
     justification = models.TextField(null=True, blank=True)
-    state = models.CharField(max_length=20, choices=STATE_CHOICES, default='TO_DO')
+    state = models.CharField(max_length=20, choices=assistant_mandate_state.ASSISTANT_MANDATE_STATES,
+                             default=assistant_mandate_state.TO_DO)
     tutoring_remark = models.TextField(null=True, blank=True)
     activities_report_remark = models.TextField(null=True, blank=True)
     research_percent = models.PositiveIntegerField(validators=[MinValueValidator(0), MaxValueValidator(100)], default=0)
@@ -91,7 +70,6 @@ class AssistantMandate(models.Model):
     awards = models.TextField(null=True, blank=True)
     framing = models.TextField(null=True, blank=True)
     remark = models.TextField(null=True, blank=True)
-    degrees = models.TextField(null=True, blank=True)
     formations = models.TextField(null=True, blank=True)
     faculty_representation = models.PositiveIntegerField(default=0)
     institute_representation = models.PositiveIntegerField(default=0)
@@ -103,7 +81,8 @@ class AssistantMandate(models.Model):
     events_organisation_service = models.PositiveIntegerField(default=0)
     publishing_field_service = models.PositiveIntegerField(default=0)
     scientific_jury_service = models.PositiveIntegerField(default=0)
-    appeal = models.CharField(max_length=20, choices=APPEAL_CHOICES, default='NONE')
+    appeal = models.CharField(max_length=20, choices=assistant_mandate_appeal.ASSISTANT_MANDATE_APPEALS,
+                              default=assistant_mandate_appeal.NONE)
     special = models.BooleanField(default=False)
     contract_duration = models.CharField(max_length=30)
     contract_duration_fte = models.CharField(max_length=30)

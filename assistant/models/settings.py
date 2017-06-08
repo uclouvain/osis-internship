@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -24,8 +24,8 @@
 #
 ##############################################################################
 from django.db import models
-from datetime import datetime
 from django.contrib import admin
+from django.utils import timezone
 
 
 class SettingsAdmin(admin.ModelAdmin):
@@ -35,6 +35,8 @@ class SettingsAdmin(admin.ModelAdmin):
 class Settings(models.Model):
     starting_date = models.DateField()
     ending_date = models.DateField()
+    assistants_starting_date = models.DateField()
+    assistants_ending_date = models.DateField()
 
     def __str__(self):
         return u"%s - %s" % (self.starting_date, self.ending_date)
@@ -45,7 +47,10 @@ def get_settings():
 
 
 def access_to_procedure_is_open():
-    if not Settings.objects.filter(starting_date__lt=datetime.now(), ending_date__gt=datetime.now()):
-        return False
-    else:
-        return True
+    return Settings.objects.filter(starting_date__lt=timezone.now(),
+                                   ending_date__gt=timezone.now()).count() > 0
+
+
+def assistants_can_see_file():
+    return Settings.objects.filter(assistants_starting_date__lt=timezone.now(),
+                                   assistants_ending_date__gt=timezone.now()).count() > 0

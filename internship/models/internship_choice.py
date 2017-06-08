@@ -48,6 +48,9 @@ class InternshipChoice(SerializableModel):
     def __str__(self):
         return u"%s - %s : %s" % (self.organization.acronym, self.speciality.acronym, self.choice)
 
+    class Meta:
+        unique_together = (("student", "internship", "choice"),)
+
 
 def find_by_all_student():
     return InternshipChoice.objects.all().distinct('student').select_related("student", "organization", "speciality")
@@ -103,6 +106,10 @@ def get_non_mandatory_internship_choices(cohort):
     return InternshipChoice.objects.filter(internship_id__in=internships.values_list("id", flat=True)).\
         select_related("student", "organization", "speciality", "internship")
 
+def find_internship_choices(cohort):
+    internships = internship.Internship.objects.filter(cohort=cohort, pk__gte=1)
+    return InternshipChoice.objects.filter(internship_id__in=internships.values_list("id", flat=True)).\
+        select_related("student", "organization", "speciality", "internship")
 
 def get_internship_choices_made(cohort, student):
     internships = internship.Internship.objects.filter(cohort=cohort, pk__gte=1)

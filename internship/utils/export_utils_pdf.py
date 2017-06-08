@@ -34,7 +34,7 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import mm
 from reportlab.lib import colors
 from django.utils.translation import ugettext_lazy as _
-import datetime
+from django.utils import timezone
 
 from base import models as mdl
 from internship.models.organization import Organization
@@ -163,7 +163,7 @@ def header_building(canvas, doc, styles):
 
 
 def footer_building(canvas, doc, styles):
-    printing_date = datetime.datetime.now()
+    printing_date = timezone.now()
     printing_date = printing_date.strftime("%d/%m/%Y")
     pageinfo = "%s : %s" % (_('printing_date'), printing_date)
     footer = Paragraph(''' <para align=right>Page %d - %s </para>''' % (doc.page, pageinfo), styles['Normal'])

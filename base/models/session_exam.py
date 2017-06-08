@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -29,11 +29,11 @@ from base.models.enums import number_session
 
 
 class SessionExamAdmin(admin.ModelAdmin):
-    list_display = ('learning_unit_year', 'number_session', 'changed')
-    list_filter = ('learning_unit_year__academic_year', 'number_session',)
-    raw_id_fields = ('learning_unit_year',)
-    fieldsets = ((None, {'fields': ('learning_unit_year', 'number_session')}),)
-    search_fields = ['learning_unit_year__acronym']
+    list_display = ('offer_year', 'learning_unit_year', 'number_session', 'changed')
+    list_filter = ('learning_unit_year__academic_year', 'number_session', 'offer_year__academic_year')
+    raw_id_fields = ('learning_unit_year', 'offer_year')
+    fieldsets = ((None, {'fields': ('learning_unit_year', 'number_session', 'offer_year')}),)
+    search_fields = ['learning_unit_year__acronym', 'offer_year__acronym']
 
 
 class SessionExam(models.Model):
@@ -41,6 +41,7 @@ class SessionExam(models.Model):
     changed = models.DateTimeField(null=True)
     number_session = models.IntegerField(choices=number_session.NUMBERS_SESSION)
     learning_unit_year = models.ForeignKey('LearningUnitYear')
+    offer_year = models.ForeignKey('OfferYear', blank=True, null=True)
     progress = None
 
     def __str__(self):

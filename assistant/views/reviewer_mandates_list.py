@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -24,10 +24,9 @@
 #
 ##############################################################################
 from assistant.models import reviewer, mandate_structure
-from base.models import academic_year, structure
+from base.models import academic_year
 from assistant.forms import MandatesArchivesForm
 from django.views.generic import ListView
-from django.db.models import Q
 from django.core.urlresolvers import reverse
 from django.views.generic.edit import FormMixin
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -58,11 +57,8 @@ class MandatesListView(LoginRequiredMixin, UserPassesTestMixin, ListView, FormMi
         if len(assistant_mandate.find_for_supervisor_for_academic_year(self.request.user.person,
                                                                        academic_year.current_academic_year())) > 0:
             self.is_supervisor = True
-        structures_id = structure.Structure.objects.filter(Q(id=current_reviewer.structure.id) |
-                                                           Q(part_of_id=current_reviewer.structure.id)).\
-            values_list('id', flat=True)
-        mandates_id = mandate_structure.MandateStructure.objects.filter(structure__in=structures_id).\
-            values_list('assistant_mandate_id', flat=True).distinct()
+        mandates_id = mandate_structure.find_by_structure(current_reviewer.structure).values_list(
+            'assistant_mandate_id', flat=True)
         if form.is_valid():
             self.request.session['selected_academic_year'] = form.cleaned_data[
                 'academic_year'].id
