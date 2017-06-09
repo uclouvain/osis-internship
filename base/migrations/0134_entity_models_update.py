@@ -93,7 +93,7 @@ class Migration(migrations.Migration):
                                    choices=[('SECTOR', 'SECTOR'), ('FACULTY', 'FACULTY'), ('SCHOOL', 'SCHOOL'),
                                             ('INSTITUTE', 'INSTITUTE'), ('POLE', 'POLE'),
                                             ('DOCTORAL_COMMISSION', 'DOCTORAL_COMMISSION'), ('PLATFORM', 'PLATFORM'),
-                                            ('LOGISTICS_ENTITY', 'LOGISTICS_ENTITY'), ('UNDEFINED', 'UNDEFINED')],
+                                            ('LOGISTICS_ENTITY', 'LOGISTICS_ENTITY')],
                                    db_index=True, max_length=50, null=True),
         ),
         migrations.AddField(
