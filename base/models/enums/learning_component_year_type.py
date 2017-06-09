@@ -23,12 +23,10 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-
 LECTURING = "LECTURING"
 PRACTICAL_EXERCISES = "PRACTICAL_EXERCISES"
 
-
 LEARNING_COMPONENT_YEAR_TYPES = (
     (LECTURING, LECTURING),
-    (PRACTICAL_EXERCISES, PRACTICAL_EXERCISES),
+    (PRACTICAL_EXERCISES, PRACTICAL_EXERCISES)
 )

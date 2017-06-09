@@ -41,7 +41,7 @@ class EntityAdmin(admin.ModelAdmin):
 class Entity(models.Model):
     organization = models.ForeignKey('Organization', null=True)
     external_id = models.CharField(max_length=255, unique=True)
-    changed = models.DateTimeField(null=True)
+    changed = models.DateTimeField(null=True, auto_now=True)
 
     class Meta:
         verbose_name_plural = "entities"
