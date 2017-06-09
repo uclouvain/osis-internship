@@ -27,6 +27,7 @@ import time
 from django.contrib.auth.decorators import user_passes_test
 from django.http import HttpResponse
 from django.core.exceptions import ObjectDoesNotExist
+from django.utils.translation import ugettext as _
 from openpyxl import Workbook
 from openpyxl.writer.excel import save_virtual_workbook
 from base.models.enums import structure_type
@@ -96,67 +97,67 @@ def export_mandates(request):
 
 def generate_xls():
     workbook = Workbook(encoding='utf-8')
-    worksheet1 = workbook.active
-    worksheet1.title = "mandates"
-    worksheet1.append(['Nom',
-                       'Prénom',
-                       'FGS',
-                       'SAP id',
-                       'Type',
-                       'ETP',
-                       'Date entrée',
-                       'Date sortie',
-                       'Barême',
-                       'Durée contrat',
-                       'Durée contrat ETP',
-                       'Type renouvellement',
-                       'Absences',
-                       'Commentaires',
-                       'Autres status',
-                       'Secteur',
-                       'Faculté',
-                       'Programme de commission',
-                       'Institut',
-                       'Pôle',
-                       'Promoteur thèse',
-                       'Titre thèse',
-                       'Date inscription doctorat',
-                       'Date test confirmation',
-                       'Date thèse',
-                       'Date prévue doctorat',
-                       'Inscription doctorat',
-                       'Remarque doctorat',
-                       'Fonctions en dehors UCL',
-                       'Mandat externe',
-                       '% enseignement',
-                       '% recherche',
-                       '% service',
-                       '% formation',
-                       'Phd supervisor reviewer',
-                       'Phd supervisor avis',
-                       'Phd supervisor justification',
-                       'Phd supervisor remarque',
-                       'Phd supervisor confidentiel',
-                       'Recherche reviewer',
-                       'Recherche avis',
-                       'Recherche justification',
-                       'Recherche remarque',
-                       'Recherche confidentiel',
-                       'Supervision reviewer',
-                       'Supervision avis',
-                       'Supervision justification',
-                       'Supervision remarque',
-                       'Supervision confidentiel',
-                       'Vice-recteur reviewer',
-                       'Vice-recteur avis',
-                       'Vice-recteur justification',
-                       'Vice-recteur remarque',
-                       'Vice-recteur confidentiel',
-                       ])
+    worksheet = workbook.active
+    worksheet.title = "mandates"
+    worksheet.append([_("name"),
+                      _("firstname"),
+                      _("fgs"),
+                      _("sap_id"),
+                      _("assistant_type"),
+                      _("fulltime_equivalent"),
+                      _("entry_date"),
+                      _("exit_date"),
+                      _("scale"),
+                      _("contract_period"),
+                      _("eft_contract_period"),
+                      _("renewal_type"),
+                      _("absences"),
+                      _("comments"),
+                      _("others_status"),
+                      _("sector"),
+                      _("faculty"),
+                      _("program_commission"),
+                      _("institute"),
+                      _("pole"),
+                      _("phd_supervisor"),
+                      _("thesis_title"),
+                      _("doctorate_inscription_date"),
+                      _("confirmation_test_date"),
+                      _("thesis_date"),
+                      _("expected_doctorate_date"),
+                      _("doctorate_inscription"),
+                      _("doctorate_remark"),
+                      _("functions_outside_ucl"),
+                      _("external_mandate"),
+                      _("teaching_percentage"),
+                      _("research_percentage"),
+                      _("service_percentage"),
+                      _("formation_percentage"),
+                      _("phd_supervisor_reviewer"),
+                      _("phd_supervisor_review"),
+                      _("phd_supervisor_justification"),
+                      _("phd_supervisor_comment"),
+                      _("phd_supervisor_confidential"),
+                      _("research_supervisor_reviewer"),
+                      _("research_review"),
+                      _("research_justification"),
+                      _("research_comment"),
+                      _("research_confidential"),
+                      _("supervision_supervisor_reviewer"),
+                      _("supervision_review"),
+                      _("supervision_justification"),
+                      _("supervision_comment"),
+                      _("supervision_confidential"),
+                      _("vice_rector_supervisor_reviewer"),
+                      _("vice_rector_review"),
+                      _("vice_rector_justification"),
+                      _("vice_rector_comment"),
+                      _("vice_rector_confidential")
+                      ])
     mandates = assistant_mandate.find_by_academic_year(academic_year.current_academic_year())
     for mandate in mandates:
         line = construct_line(mandate)
-        worksheet1.append(line)
+        worksheet.append(line)
     return save_virtual_workbook(workbook)
 
 
@@ -177,8 +178,8 @@ def construct_line(mandate):
             mandate.comment,
             mandate.other_status,
             ]
-    line += get_structure_for_mandate(mandate)
-    line += get_doctorate_details(mandate)
+    line += get_structures_for_mandate(mandate)
+    line += get_assistant_doctorate_details(mandate)
     line += [mandate.external_functions,
              mandate.external_contract]
     line += [mandate.tutoring_percent,
@@ -190,7 +191,7 @@ def construct_line(mandate):
     return line
 
 
-def get_structure_for_mandate(mandate):
+def get_structures_for_mandate(mandate):
     sector = mandate_structure.find_by_mandate_and_type(mandate, structure_type.SECTOR).first()
     structures = [sector.structure.acronym] if sector is not None else ['']
     faculty = mandate_structure.find_by_mandate_and_type(mandate, structure_type.FACULTY).first()
@@ -204,7 +205,7 @@ def get_structure_for_mandate(mandate):
     return structures
 
 
-def get_doctorate_details(mandate):
+def get_assistant_doctorate_details(mandate):
     if mandate.assistant_type == assistant_type.TEACHING_ASSISTANT:
         return [''] * 8
     else:
