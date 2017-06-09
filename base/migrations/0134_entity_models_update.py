@@ -52,11 +52,6 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterField(
             model_name='entity',
-            name='changed',
-            field=models.DateTimeField(blank=True, null=True),
-        ),
-        migrations.AlterField(
-            model_name='entity',
             name='organization',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='base.Organization'),
         ),
@@ -80,11 +75,6 @@ class Migration(migrations.Migration):
             model_name='entityversion',
             name='acronym',
             field=models.CharField(db_index=True, max_length=20),
-        ),
-        migrations.AlterField(
-            model_name='entityversion',
-            name='changed',
-            field=models.DateTimeField(blank=True, null=True),
         ),
         migrations.AlterField(
             model_name='entityversion',

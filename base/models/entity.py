@@ -41,7 +41,7 @@ class EntityAdmin(admin.ModelAdmin):
 class Entity(models.Model):
     organization = models.ForeignKey('Organization', blank=True, null=True)
     external_id = models.CharField(max_length=255, unique=True)
-    changed = models.DateTimeField(blank=True, null=True, auto_now=True)
+    changed = models.DateTimeField(null=True, auto_now=True)
 
     location = models.CharField(max_length=255, blank=True, null=True)
     postal_code = models.CharField(max_length=20, blank=True, null=True)
