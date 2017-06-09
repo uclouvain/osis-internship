@@ -84,15 +84,16 @@ def create_versions_of_existing_entity(request, same_entity):
                                                    end_date=version.get('end_date')
                                                    )
         if not same_versions_count:
-            if create_version(version, same_entity) is not None:
+            parent = entity.get_by_internal_id(version.pop('parent'))
+            if create_version(version, same_entity, parent) is not None:
                 new_versions_count += 1
 
     return new_versions_count
 
 
-def create_version(version, same_entity):
+def create_version(version, same_entity, parent):
         try:
-            new_version = entity_version.EntityVersion.objects.create(entity=same_entity, **version)
+            new_version = entity_version.EntityVersion.objects.create(entity=same_entity, parent=parent, **version)
         except AttributeError:
             new_version = None
         return new_version
