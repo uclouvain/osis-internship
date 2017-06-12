@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -23,22 +23,20 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
-from django.contrib import admin
+import factory
+from django.utils import timezone
+
+class SettingsFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = 'assistant.Settings'
+
+    starting_date = factory.fuzzy.FuzzyDate((timezone.now() - timezone.timedelta(days=10)).date(),
+                                            (timezone.now() - timezone.timedelta(days=5)).date())
+    ending_date = factory.fuzzy.FuzzyDate((timezone.now() + timezone.timedelta(days=90)).date(),
+                                          (timezone.now() + timezone.timedelta(days=100)).date())
+    assistants_starting_date = factory.fuzzy.FuzzyDate((timezone.now() - timezone.timedelta(days=10)).date(),
+                                                       (timezone.now() - timezone.timedelta(days=5)).date())
+    assistants_ending_date = factory.fuzzy.FuzzyDate((timezone.now() + timezone.timedelta(days=90)).date(),
+                                          (timezone.now() + timezone.timedelta(days=100)).date())
 
 
-class LearningContainerAdmin(admin.ModelAdmin):
-    list_display = ('external_id',)
-    fieldsets = ((None, {'fields': ('external_id',)}),)
-    search_fields = ['external_id']
-
-class LearningContainer(models.Model):
-    external_id = models.CharField(max_length=100, blank=True, null=True)
-    changed = models.DateTimeField(null=True, auto_now=True)
-
-    def __str__(self):
-        return u"%s" % (self.external_id)
-
-
-def find_by_id(learning_container_id):
-    return LearningContainer.objects.get(pk=learning_container_id)
