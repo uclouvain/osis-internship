@@ -32,9 +32,10 @@ from base.models.enums import entity_type
 
 
 class EntityVersionAdmin(admin.ModelAdmin):
-    list_display = ('id', 'entity', 'acronym', 'title', 'entity_type', 'start_date', 'end_date',)
+    list_display = ('id', 'entity', 'acronym', 'parent', 'title', 'entity_type', 'start_date', 'end_date',)
     search_fields = ['entity__id', 'entity__external_id', 'title', 'acronym', 'entity_type', 'start_date', 'end_date']
     raw_id_fields = ('entity', 'parent')
+    readonly_fields = ('find_direct_children', 'count_direct_children', 'find_descendants', 'get_parent_version')
 
 
 class EntityVersion(models.Model):
@@ -89,6 +90,52 @@ class EntityVersion(models.Model):
 
     def count_entity_versions_same_acronym_overlapping_dates(self):
         return self.search_entity_versions_with_overlapping_dates().filter(acronym=self.acronym).count()
+
+    def _direct_children(self, date):
+        if date is None:
+            date = timezone.now().date()
+
+        if self._contains_given_date(date):
+            return EntityVersion.objects.filter(parent=self.entity, start_date__lte=date)\
+                                            .filter(Q(end_date__gte=date) | Q(end_date__isnull=True))
+        else:
+            return None
+
+    def find_direct_children(self, date=None):
+        direct_children = self._direct_children(date)
+        return list(direct_children) if direct_children else []
+
+    def count_direct_children(self, date=None):
+        direct_children = self._direct_children(date)
+        return direct_children.count() if direct_children else 0
+
+    def find_descendants(self, date=None):
+        descendants = []
+        if self.count_direct_children(date) > 0:
+            direct_children = self.find_direct_children(date)
+            descendants.extend(direct_children)
+            for child in direct_children:
+                descendants.extend(child.find_descendants(date))
+
+        return descendants
+
+    def get_parent_version(self, date=None):
+        if date is None:
+            date = timezone.now().date()
+
+        if self._contains_given_date(date):
+            qs = EntityVersion.objects.filter(entity=self.parent, start_date__lte=date) \
+                                      .filter(Q(end_date__gte=date) | Q(end_date__isnull=True))
+            try:
+                return qs.get()
+            except ObjectDoesNotExist:
+                return None
+        else:
+            return None
+
+    def _contains_given_date(self, date):
+        return (self.end_date is not None and self.start_date <= date <= self.end_date) \
+               or (self.end_date is None and self.start_date <= date)
 
 
 def find(acronym, date=None):

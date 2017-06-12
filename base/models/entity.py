@@ -26,16 +26,12 @@
 from django.contrib import admin
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
-from django.db.models import Q
-from django.utils import timezone
-from base.models.entity_version import EntityVersion
 
 
 class EntityAdmin(admin.ModelAdmin):
-    list_display = ('id', 'most_recent_acronym', 'external_id', 'organization')
+    list_display = ('id', 'external_id', 'organization')
     search_fields = ['external_id', 'entityversion__acronym', 'organization__acronym', 'organization__name']
-    readonly_fields = ('organization', 'external_id', 'most_recent_acronym', 'find_direct_children', 'find_descendants',
-                       'find_versions', 'get_parent')
+    readonly_fields = ('organization', 'external_id')
 
 
 class Entity(models.Model):
@@ -53,57 +49,7 @@ class Entity(models.Model):
         verbose_name_plural = "entities"
 
     def __str__(self):
-        return "{0} ({1} - {2})".format(self.id, self.most_recent_acronym(), self.external_id)
-
-    def _direct_children(self, date=None):
-        if date is None:
-            date = timezone.now()
-
-        return EntityVersion.objects.filter\
-            (parent=self, start_date__lte=date).filter(Q(end_date__gte=date) | Q(end_date__isnull=True))
-
-    def find_direct_children(self, date=None):
-        qs = self._direct_children(date).select_related("entity")
-        return [entity_version.entity for entity_version in qs]
-
-    def count_direct_children(self, date=None):
-        return self._direct_children(date).count()
-
-    def find_descendants(self, date=None):
-        if date is None:
-            date = timezone.now()
-
-        descendants = []
-        if self.count_direct_children(date) > 0:
-            direct_children = self.find_direct_children(date)
-            descendants.extend(direct_children)
-            for child in direct_children:
-                descendants.extend(child.find_descendants(date))
-
-        return descendants
-
-    def most_recent_acronym(self):
-        last_version = EntityVersion.objects.filter(entity=self).order_by('-start_date').first()
-        if last_version:
-            return last_version.acronym
-        return None
-
-    def find_versions(self):
-        versions = EntityVersion.objects.filter(entity=self).order_by('start_date')
-        return versions
-
-    def get_parent(self, date=None):
-        if date is None:
-            date = timezone.now()
-        try:
-            qs = EntityVersion.objects.get(entity=self,
-                                           start_date__lte=date,
-                                           end_date__gte=date
-                                           )
-            return qs.parent
-
-        except ObjectDoesNotExist:
-            return None
+        return "{0} - {1}".format(self.id, self.external_id)
 
 
 def search(**kwargs):
