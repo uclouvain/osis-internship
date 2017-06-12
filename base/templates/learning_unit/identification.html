@@ -119,13 +119,7 @@
                             {{ organization.name }}
                          {% endif %}
                         <br>
-                        <label style="margin-top:10px;">
-                            {% if learning_unit_year.learning_container_year.container_type == 'EXTERNAL' %}
-                                {% trans 'location'%}
-                            {% else %}
-                                {% trans 'campus'%}
-                            {% endif %}
-                        </label><br>
+                        <label style="margin-top:10px;">{% trans 'location'%}</label><br>
                          {% if campus %}
                             {{ campus.name }}
                          {% endif %}
