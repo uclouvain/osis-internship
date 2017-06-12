@@ -28,8 +28,9 @@ from unittest.mock import patch
 from django.contrib.auth.models import Permission
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
-from django.test import TestCase
+from django.test import TestCase, RequestFactory
 from django.utils import timezone
+from assessments.business.score_encoding_list import ScoresEncodingList
 
 from base.tests.models import test_exam_enrollment, test_offer_enrollment, \
     test_learning_unit_enrollment, test_session_exam, test_offer_year
@@ -52,6 +53,7 @@ from base.tests.factories.student import StudentFactory
 
 class OnlineEncodingTest(TestCase):
     def setUp(self):
+        self.request_factory = RequestFactory()
         academic_year = AcademicYearFactory(year=timezone.now().year - 1)
         academic_calendar = AcademicCalendarFactory.build(title="Submission of score encoding - 1",
                                                           start_date=academic_year.start_date,
@@ -185,6 +187,16 @@ class OnlineEncodingTest(TestCase):
         self.refresh_exam_enrollments_from_db()
         self.assert_exam_enrollments(self.enrollments[0], 15, 15, None, None)
         self.assert_exam_enrollments(self.enrollments[1], None, None, None, None)
+
+    @patch("assessments.views.score_encoding._extract_id_from_post_data")
+    @patch("assessments.business.score_encoding_list.get_scores_encoding_list")
+    def test_encoding_by_specific_criteria_case_no_changes_in_form(self, mock_scores_encoding_list, mock_id_from_post_data):
+        mock_scores_encoding_list.return_value = ScoresEncodingList()
+        mock_id_from_post_data.return_value = []
+        request = self.request_factory.get(reverse('specific_criteria_submission'))
+        request.user = self.tutor.person.user
+        scores_encoding_object = score_encoding._get_score_encoding_list_with_only_enrollment_modified(request)
+        self.assertEqual(scores_encoding_object.enrollments, [])
 
     @patch("base.utils.send_mail.send_message_after_all_encoded_by_manager")
     def test_email_after_encoding_all_students_for_offer_year(self, mock_send_email):
