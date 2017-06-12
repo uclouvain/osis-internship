@@ -30,6 +30,7 @@ from base.tests.factories.organization import OrganizationFactory
 class EntityFactory(factory.DjangoModelFactory):
     class Meta:
         model = 'base.Entity'
+        django_get_or_create = ('external_id',)
 
     organization = factory.SubFactory(OrganizationFactory)
     external_id = factory.Faker('text', max_nb_chars=255)
