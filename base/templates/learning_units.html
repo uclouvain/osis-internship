@@ -42,7 +42,6 @@
                 <div class="col-md-3">
                     <label for="slt_academic_year">{% trans 'academic_year'%}</label>
                     <select class="form-control" id="slt_academic_year" name="academic_year">
-                        <option value=""></option>
                         {% for ac_year in academic_years %}
 
                         <option
@@ -93,7 +92,7 @@
             <th>{% trans 'acronym'%}</th>
             <th>{% trans 'title'%}</th>
             <th>{% trans 'credits'%}</th>
-            <th>{% trans 'academic_year'%}</th>
+            <th>{% trans 'status'%}</th>
             </thead>
             {% for learning_unit in learning_units %}
             <tr>
@@ -102,7 +101,19 @@
                     {{ learning_unit.acronym }}</a></td>
                 <td>{{ learning_unit.title }}</td>
                 <td>{% if learning_unit.credits %}{{ learning_unit.credits }}{% endif %}</td>
-                <td>{{ learning_unit.academic_year }}</td>
+                <td>{% if learning_unit.activity_status == 'ACTIVE' %}
+                        <span class="glyphicon glyphicon-ok-circle" aria-hidden="true" style="color:green;"
+                              title="{% trans  learning_unit.activity_status %}"></span>
+                    {% endif %}
+                    {% if learning_unit.activity_status == 'INACTIVE' %}
+                        <span class="glyphicon glyphicon-ok-circle" aria-hidden="true" style="color:gray;"
+                              title="{% trans  learning_unit.activity_status %}"></span>
+                    {% endif %}
+                    {% if learning_unit.activity_status == 'PASSIVE' %}
+                        <span class="glyphicon glyphicon-ok-circle" aria-hidden="true" style="color:orange;"
+                              title="{% trans  learning_unit.activity_status %}"></span>
+                    {% endif %}
+                </td>
             </tr>
             {% endfor %}
         </table>

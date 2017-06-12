@@ -1384,7 +1384,7 @@ msgid "LU_ERRORS_INVALID"
 msgstr "'Enter a valid value."
 
 msgid "LU_ERRORS_INVALID_SEARCH"
-msgstr "Invalid search - Please fill some information before executing a search."
+msgstr "Please, inform at least two filters in your searches"
 
 msgid "LU_ERRORS_ACADEMIC_YEAR_REQUIRED"
 msgstr "Please specify an academic year"
