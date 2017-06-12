@@ -1,0 +1,77 @@
+<!doctype html>
+{% load staticfiles %}
+{% load i18n %}
+
+{% comment "License" %}
+ * OSIS stands for Open Student Information System. It's an application
+ * designed to manage the core business of higher education institutions,
+ * such as universities, faculties, institutes and professional schools.
+ * The core business involves the administration of students, teachers,
+ * courses, programs and so on.
+ *
+ * Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * A copy of this license - GNU General Public License - is available
+ * at the root of the source code of this program.  If not,
+ * see http://www.gnu.org/licenses/.
+{% endcomment %}
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>{% trans 'OSIS' %}</title>
+
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+		    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+		    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+        <link rel="icon" href="{% static 'img/favicon.ico' %}" />
+        <link rel="stylesheet" href="{% static 'css/armata.css' %}" type='text/css'>
+        <link rel="stylesheet" href="{% static 'css/custom.css' %}">
+        <link rel="stylesheet" href="{% static 'css/tree.css' %}">
+    </head>
+    <body>
+    {% if entity_version %}
+        <div class="tree" style="width:3000px; margin-top:-80px;">
+            <ul>
+                <li>
+                    <a href="#">{{ entity_version.entity.most_recent_version.acronym }} - {{ entity_version.entity.most_recent_version.title }}</a>
+                    <ul>
+                        {% for key, child in dict_structure.items %}
+                            <li>
+                                <a href="{% url 'entity_read' entity_version_id=child.0 %}" id="lnk_entity_read_{{ child.0 }}" target="_parent">{{ child.1 }}</a>
+                                {% if child.2 %}
+                                    <ul class='vertical'>
+                                        {% for key,child in child.2.items %}
+                                            <li>
+                                                <a href="{% url 'entity_read' entity_version_id=child.0 %}" id="lnk_entity_read_{{ child.0 }}" target="_parent">{{ child.1 }}</a>
+                                                {% if child.2 %}
+                                                    <ul class='vertical'>
+                                                        {% for key,child in child.2.items %}
+                                                            <li>
+                                                                <a href="{% url 'entity_read' entity_version_id=child.0 %}" id="lnk_entity_read_{{ child.0 }}" target="_parent">{{ child.1 }}</a>
+                                                            </li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                {% endif %}
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    {% endif %}
+    </body>
+</html>

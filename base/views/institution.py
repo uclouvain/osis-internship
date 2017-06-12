@@ -130,5 +130,20 @@ def entity_read(request, entity_version_id):
 @login_required
 def entity_diagram(request, entity_version_id):
     entity_version = mdl.entity_version.find_by_id(entity_version_id)
-    return layout.render(request, "structure_organogram.html", {'structure': entity_version,
-                                                                'structure_as_json': json.dumps(entity_version.serializable_object())})
+    dict_structure = dict()
+    children = entity_version.entity.find_direct_children()
+    for child in children:
+        dict_structure[child.most_recent_version().acronym] = [child.most_recent_version().id,
+                                                               child.most_recent_version().acronym,
+                                                               find_direct_children(child)]
+    return layout.render(request, "entity_organogram.html", {'entity_version': entity_version,
+                                                             'dict_structure': dict_structure})
+
+
+def find_direct_children(entity):
+    dict_children = dict()
+    for child in entity.find_direct_children():
+        dict_children[child.most_recent_version().acronym] = [child.most_recent_version().id,
+                                                              child.most_recent_version().acronym,
+                                                              find_direct_children(child)]
+    return dict_children
