@@ -71,7 +71,7 @@
                 <label class="alert alert-info" style="margin:5px">{% trans 'no_result' %}</label>
             {% endif %}
             <div {% if dict_attribution|length > 0 %}style="visibility:visible;display:block;"{%else%}style="visibility:hidden;display:none;"{% endif %}>
-                <table class="table table-hover">
+                <table class="table table-hover" id="tb_responsibles">
                     <thead>
                         <tr>
                             <th>{% trans 'entity' %}</th>
@@ -130,4 +130,29 @@
         </form>
     </div>
 </div>
+{% endblock %}
+{% block script %}
+<script type="text/javascript" src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/dataTables.bootstrap.min.js' %}"></script>
+<script>
+    $(document).ready(function()
+    {
+        $('#tb_responsibles').DataTable(
+            {
+                "aoColumnDefs": [
+                    { 'bSortable': false, 'aTargets': [ 4 ] }
+                ],
+                "paging" : false,
+                "ordering" : true,
+                "info"  : false,
+                "searching" : false,
+                "language":
+                {"oAria":{
+                    "sSortAscending":  "{% trans 'datatable_sortascending'%}",
+                    "sSortDescending": "{% trans 'datatable_sortdescending'%}",
+                    }
+                }
+            })
+    ;});
+</script>
 {% endblock %}
