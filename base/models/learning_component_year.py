@@ -26,7 +26,7 @@
 from django.db import models
 from django.contrib import admin
 
-from base.models.enums import learning_component_year_type
+from base.models.enums import learning_component_year_type, learning_container_year_types
 
 
 class LearningComponentYearAdmin(admin.ModelAdmin):
@@ -70,13 +70,16 @@ class LearningComponentYear(models.Model):
 
     @property
     def type_letter_acronym(self):
-        e = learning_component_year_type
-        return {
-            e.LECTURING: 'C',
-            e.PRACTICAL_EXERCISES: 'T',
-            e.STAGE: 'S',
-            e.DISSERTATION: 'D',
-        }.get(self.type)
+        if self.learning_container_year.container_type == learning_container_year_types.COURSE:
+            return {
+                learning_component_year_type.LECTURING: 'C',
+                learning_component_year_type.PRACTICAL_EXERCISES: 'T',
+            }.get(self.type)
+        else:
+            return {
+                learning_container_year_types.INTERNSHIP: 'S',
+                learning_container_year_types.DISSERTATION: 'D',
+            }.get(self.learning_container_year.container_type)
 
 
 def find_by_id(learning_component_year_id):

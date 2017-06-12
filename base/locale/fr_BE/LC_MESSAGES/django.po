@@ -1356,6 +1356,9 @@ msgid "COURSE"
 msgstr "Cours"
 
 msgid "MASTER_THESIS"
+msgstr "Thèse"
+
+msgid "DISSERTATION"
 msgstr "Mémoire"
 
 msgid "INTERNSHIP"
