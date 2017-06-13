@@ -88,11 +88,11 @@ def learning_unit_formations(request, learning_unit_year_id):
 @login_required
 @permission_required('base.can_access_learningunit', raise_exception=True)
 def learning_unit_components(request, learning_unit_year_id):
-    learning_unit_year = mdl.learning_unit_year.find_by_id(learning_unit_year_id)
-    components = get_components(learning_unit_year.learning_container_year)
-    tab_active = 'components'
-    experimental_phase = True
-    return layout.render(request, "learning_unit/components.html", locals())
+    context = _get_common_context_learning_unit_year(learning_unit_year_id)
+    context['components'] = get_components(context['learning_unit_year'].learning_container_year)
+    context['tab_active'] = 'components'
+    context['experimental_phase'] = True
+    return layout.render(request, "learning_unit/components.html", context)
 
 
 @login_required
@@ -184,7 +184,8 @@ def _get_common_context_learning_unit_year(learning_unit_year_id):
     learning_unit_year = mdl.learning_unit_year.find_by_id(learning_unit_year_id)
 
     context = {
-        'learning_unit_year': learning_unit_year
+        'learning_unit_year': learning_unit_year,
+        'current_academic_year': mdl.academic_year.current_academic_year()
     }
     return context
 
