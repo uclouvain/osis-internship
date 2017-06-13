@@ -105,7 +105,7 @@
                         {{learning_unit_year.learning_container_year.title_english | default_if_none:'' }}
                         <br><br>
                         <label>{% trans 'title_in_english' %}{% trans 'title_in_english_2' %}</label><br>
-                        {% if learning_unit_year.subtype == 'PARTIM'%}
+                        {% if learning_unit_year.subtype == 'PARTIM' %}
                             {{learning_unit_year.title_english | default_if_none:'' }}
                         {% endif%}
                         <br><br>
@@ -114,12 +114,12 @@
                     </div>
 
                     <div class="col-md-4">
-                        <label>{% trans 'organization'%}</label><br>
+                        <label>{% trans 'institution'%}</label><br>
                          {% if organization %}
                             {{ organization.name }}
                          {% endif %}
                         <br>
-                        <label style="margin-top:10px;">{% trans 'campus'%}</label><br>
+                        <label style="margin-top:10px;">{% trans 'location'%}</label><br>
                          {% if campus %}
                             {{ campus.name }}
                          {% endif %}
