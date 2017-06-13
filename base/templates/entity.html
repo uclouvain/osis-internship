@@ -92,9 +92,9 @@
                                     </thead>
                                     {% for entity in entity_version.find_descendants %}
                                     <tr>
-                                        <td><a href="{% url 'entity_read' entity_version_id=entity.most_recent_version.id %}" id="lnk_entity_read_{{entity.most_recent_version.id}}">
-                                            {{ entity.most_recent_version.acronym }}</a></td>
-                                        <td>{{ entity.most_recent_version.title }}</td>
+                                        <td><a href="{% url 'entity_read' entity_version_id=entity.id %}" id="lnk_entity_read_{{entity.id}}">
+                                            {{ entity.acronym }}</a></td>
+                                        <td>{{ entity.title }}</td>
                                     </tr>
                                     {% endfor %}
                                 </table>

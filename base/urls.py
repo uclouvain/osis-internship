@@ -131,16 +131,6 @@ urlpatterns = [
         ]))
     ])),
 
-    url(r'^structures/', include([
-        url(r'^$', institution.structures, name='structures'),
-        url(r'^search$', institution.structures_search, name='structures_search'),
-        url(r'^(?P<structure_id>[0-9]+)/', include([
-            url(r'^$', institution.structure_read, name='structure_read'),
-            url(r'^diagram/$', institution.structure_diagram, name='structure_diagram'),
-            url(r'^address/$', institution.structure_address, name='structure_address'),
-        ]))
-    ])),
-
     url(r'^entities/', include([
         url(r'^$', institution.entities, name='entities'),
         url(r'^search$', institution.entities_search, name='entities_search'),
