@@ -40,10 +40,10 @@ class InformationViewTestCase(TestCase):
 
     def setUp(self):
         self.manager = AdviserManagerFactory()
-        a_person_teacher = PersonFactory.create(first_name='Pierre', last_name='Dupont')
+        a_person_teacher = PersonFactory(first_name='Pierre', last_name='Dupont')
         self.teacher = AdviserTeacherFactory(person=a_person_teacher)
-        a_person_student = PersonFactory.create(last_name="Durant", user=None)
-        student = StudentFactory.create(person=a_person_student)
+        a_person_student = PersonFactory(last_name="Durant", user=None)
+        student = StudentFactory(person=a_person_student)
 
         offer_year_start = OfferYearFactory(acronym="test_offer")
         offer = offer_year_start.offer
