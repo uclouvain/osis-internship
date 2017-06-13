@@ -594,9 +594,12 @@ def _get_score_encoding_list_with_only_enrollment_modified(request, learning_uni
         user=request.user,
         learning_unit_year_id=learning_unit_year_id,
         enrollments_ids=encoded_enrollment_ids)
-    scores_list_encoded.enrollments = _extract_encoded_values_from_post_data(
-        request,
-        scores_list_encoded.enrollments)
+    if encoded_enrollment_ids:
+        scores_list_encoded.enrollments = _extract_encoded_values_from_post_data(
+            request,
+            scores_list_encoded.enrollments)
+    else:
+        scores_list_encoded.enrollments = []
 
     return scores_list_encoded
 

@@ -109,8 +109,8 @@ def entities(request):
 @login_required
 def entities_search(request):
     entities_version = mdl.entity_version.search_entities(acronym=request.GET.get('acronym'),
-                                                  title=request.GET.get('title'),
-                                                  type=request.GET.get('type_choices'))
+                                                          title=request.GET.get('title'),
+                                                          type=request.GET.get('type_choices'))
     return layout.render(request, "entities.html", {'entities_version': entities_version,
                                                     'types': structure_type.TYPES})
 
@@ -118,7 +118,7 @@ def entities_search(request):
 @login_required
 def entity_read(request, entity_version_id):
     entity_version = mdl.entity_version.find_by_id(entity_version_id)
-    entity_parent = entity_version.entity.find_direct_parent()
+    entity_parent = entity_version.get_parent_version()
     if entity_parent:
         entity_version_parent = entity_parent.most_recent_version()
         return layout.render(request, "entity.html", {'entity_version': entity_version,
@@ -131,7 +131,7 @@ def entity_read(request, entity_version_id):
 def entity_diagram(request, entity_version_id):
     entity_version = mdl.entity_version.find_by_id(entity_version_id)
     dict_structure = dict()
-    children = entity_version.entity.find_direct_children()
+    children = entity_version.find_direct_children()
     for child in children:
         dict_structure[child.most_recent_version().acronym] = [child.most_recent_version().id,
                                                                child.most_recent_version().acronym,
