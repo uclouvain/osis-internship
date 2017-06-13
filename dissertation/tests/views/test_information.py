@@ -73,7 +73,7 @@ class InformationViewTestCase(TestCase):
 
     def test_manager_informations_detail_list(self):
         self.client.force_login(self.manager.person.user)
-        url = reverse('manager_informations_detail_list', kwargs={'pk': self.teacher.person.user.id})
+        url = reverse('manager_informations_detail_list', kwargs={'pk': self.teacher.id})
         response = self.client.get(url)
         self.assertEqual(response.context[-1].get('adv_list_disserts_pro').count(), 1) # only 1 because 1st is DRAFT
         self.assertEqual(response.context[-1].get('adv_list_disserts_copro').count(), 1)
