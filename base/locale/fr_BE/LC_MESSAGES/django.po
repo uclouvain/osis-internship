@@ -582,7 +582,7 @@ msgid "lnk_message_history_read_title"
 msgstr "Afficher le message"
 
 msgid "location"
-msgstr "Rue et numéro"
+msgstr "Localité"
 
 msgid "log-in"
 msgstr "Log-in"
@@ -793,9 +793,6 @@ msgstr "Seules les notes soumises peuvent être double encodées"
 
 msgid "open"
 msgstr "Ouvert"
-
-msgid "organization"
-msgstr "Organisation"
 
 msgid "campus"
 msgstr "Campus"
@@ -1395,7 +1392,7 @@ msgid "LU_ERRORS_INVALID"
 msgstr "'Entrez une valeur valide."
 
 msgid "LU_ERRORS_INVALID_SEARCH"
-msgstr "Recherche invalide - Veuillez ajouter des informations avant d'exécuter une recherche."
+msgstr "Recherche invalide - Veuillez remplir mininum 2 filtres lors de vos recherches."
 
 msgid "LU_ERRORS_ACADEMIC_YEAR_REQUIRED"
 msgstr "Veuillez préciser une année académique."
