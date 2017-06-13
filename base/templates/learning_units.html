@@ -43,16 +43,15 @@
                     <label for="slt_academic_year">{% trans 'academic_year'%}</label>
                     <select class="form-control" id="slt_academic_year" name="academic_year">
                         {% for ac_year in academic_years %}
-
-                        <option
-                            {% if request.GET.academic_year and ac_year.id == request.GET.academic_year|add:"0" %}
-                                selected
-                            {% endif %}
-                            {% if not request.GET.academic_year and ac_year.id == current_academic_year.id %}
-                                selected
-                            {% endif %}
-                            value="{{ ac_year.id }}">{{ ac_year }}
-                        </option>
+                            <option
+                                {% if request.GET.academic_year and ac_year.id == request.GET.academic_year|add:"0" %}
+                                    selected
+                                {% endif %}
+                                {% if not request.GET.academic_year and ac_year.id == current_academic_year.id %}
+                                    selected
+                                {% endif %}
+                                value="{{ ac_year.id }}">{{ ac_year }}
+                            </option>
                         {% endfor %}
                     </select>
                 </div>
