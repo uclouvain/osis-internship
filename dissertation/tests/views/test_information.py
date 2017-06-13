@@ -75,8 +75,8 @@ class InformationViewTestCase(TestCase):
         self.client.force_login(self.manager.person.user)
         url = reverse('manager_informations_detail_list', kwargs={'pk': self.teacher.person.user.id})
         response = self.client.get(url)
-        self.assertEqual(response.context[-1]['adv_list_disserts_pro'].count(), 1)  # only 1 because 1st is DRAFT
-        self.assertEqual(response.context[-1]['adv_list_disserts_copro'].count(), 1)
-        self.assertEqual(response.context[-1]['adv_list_disserts_reader'].count(), 1)
-        self.assertEqual(response.context[-1]['adv_list_disserts_accompanist'].count(), 1)
-        self.assertEqual(response.context[-1]['adv_list_disserts_president'].count(), 1)
+        self.assertEqual(response.context[-1].get('adv_list_disserts_pro').count(), 1) # only 1 because 1st is DRAFT
+        self.assertEqual(response.context[-1].get('adv_list_disserts_copro').count(), 1)
+        self.assertEqual(response.context[-1].get('adv_list_disserts_reader').count(), 1)
+        self.assertEqual(response.context[-1].get('adv_list_disserts_accompanist').count(), 1)
+        self.assertEqual(response.context[-1].get('adv_list_disserts_president').count(), 1)
