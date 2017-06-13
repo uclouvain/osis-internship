@@ -33,10 +33,10 @@
 {% endblock %}
 {% block content %}
 <div class="page-header">
-    {% if entity_version_parent %}
+    {% if entity_parent %}
         <h3>
-            <a href="{% url 'entity_read' entity_version_id=entity_version_parent.id %}" id="lnk_entity_read_{{ entity_version_parent.id }}"
-               title="{{ entity_version_parent.acronym }}">{{ entity_version_parent.title }}</a>
+            <a href="{% url 'entity_read' entity_version_id=entity_parent.id %}" id="lnk_entity_read_{{ entity_parent.id }}"
+               title="{{ entity_parent.acronym }}">{{ entity_parent.title }}</a>
         </h3>
         <h2>{{ entity_version.acronym }} - {{ entity_version.title }}</h2>
     {% else %}

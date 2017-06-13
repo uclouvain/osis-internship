@@ -40,7 +40,7 @@
     </head>
     <body>
     {% if entity_version %}
-        <div class="tree" style="width:3000px; margin-top:-80px;">
+        <div class="tree" style="width:5000px; margin-top:-80px;">
             <ul>
                 <li>
                     <a href="#">{{ entity_version.acronym }} - {{ entity_version.title }}</a>
@@ -58,6 +58,15 @@
                                                         {% for key,child in child.2.items %}
                                                             <li>
                                                                 <a href="{% url 'entity_read' entity_version_id=child.0 %}" id="lnk_entity_read_{{ child.0 }}" target="_parent">{{ child.1 }}</a>
+                                                                {% if child.2 %}
+                                                                    <ul class='vertical'>
+                                                                        {% for key,child in child.2.items %}
+                                                                            <li>
+                                                                                <a href="{% url 'entity_read' entity_version_id=child.0 %}" id="lnk_entity_read_{{ child.0 }}" target="_parent">{{ child.1 }}</a>
+                                                                            </li>
+                                                                        {% endfor %}
+                                                                    </ul>
+                                                                {% endif %}
                                                             </li>
                                                         {% endfor %}
                                                     </ul>

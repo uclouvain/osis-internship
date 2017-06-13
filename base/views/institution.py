@@ -23,7 +23,6 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import json
 from django.contrib.auth.decorators import login_required, permission_required
 from base import models as mdl
 from base.models.enums import structure_type, entities_type
@@ -40,13 +39,6 @@ def institution(request):
 @permission_required('base.can_access_mandate', raise_exception=True)
 def mandates(request):
     return layout.render(request, "mandates.html", {'section': 'mandates'})
-
-
-@login_required
-def structure_diagram(request, structure_id):
-    structure = mdl.structure.find_by_id(structure_id)
-    return layout.render(request, "structure_organogram.html", {'structure': structure,
-                                                                'structure_as_json': json.dumps(structure.serializable_object())})
 
 
 @login_required
