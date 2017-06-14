@@ -25,7 +25,7 @@
 ##############################################################################
 from django.contrib.auth.decorators import login_required, permission_required
 from base import models as mdl
-from base.models.enums import structure_type, entities_type
+from base.models.enums import structure_type, entity_type
 from . import layout
 
 
@@ -49,7 +49,7 @@ def academic_actors(request):
 @login_required
 def entities(request):
     return layout.render(request, "entities.html", {'init': "1",
-                                                    'types': entities_type.TYPES})
+                                                    'types': entity_type.ENTITY_TYPES})
 
 
 @login_required
