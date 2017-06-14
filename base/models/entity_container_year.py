@@ -26,20 +26,23 @@
 from django.db import models
 from django.contrib import admin
 
+from base.models.enums import entity_container_year_link_type
 
-class LearningContainerAdmin(admin.ModelAdmin):
-    list_display = ('external_id',)
-    fieldsets = ((None, {'fields': ('external_id',)}),)
-    search_fields = ['external_id']
 
-class LearningContainer(models.Model):
-    external_id = models.CharField(max_length=100, blank=True, null=True)
-    changed = models.DateTimeField(null=True, auto_now=True)
-    auto_renewal_until = models.IntegerField(null=True)
+class EntityContainerYearAdmin(admin.ModelAdmin):
+    list_display = ('learning_container_year', 'entity', 'type')
+    fieldsets = ((None, {'fields': ('entity',)}),)
+    search_fields = ['learning_container_year__acronym', 'type']
+
+
+class EntityContainerYear(models.Model):
+    entity = models.ForeignKey('Entity')
+    learning_container_year = models.ForeignKey('LearningContainerYear')
+    type = models.CharField(max_length=30, choices=entity_container_year_link_type.ENTITY_CONTAINER_YEAR_LINK_TYPES)
+
+    # A l'avenir, doit être unique !! Après nettoyage des données
+    # class Meta:
+    #     unique_together = ('entity', 'learning_container_year', 'type',)
 
     def __str__(self):
-        return u"%s" % (self.external_id)
-
-
-def find_by_id(learning_container_id):
-    return LearningContainer.objects.get(pk=learning_container_id)
+        return u"%s - %s - %s" % (self.entity, self.learning_container_year, self.type)

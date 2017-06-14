@@ -23,23 +23,13 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
-from django.contrib import admin
+REQUIREMENT_ENTITY = "REQUIREMENT_ENTITY"
+ALLOCATION_ENTITY = "ALLOCATION_ENTITY"
+ADDITIONAL_ALLOCATION_ENTITY = "ADDITIONAL_REQUIREMENT_ENTITY"
 
 
-class LearningContainerAdmin(admin.ModelAdmin):
-    list_display = ('external_id',)
-    fieldsets = ((None, {'fields': ('external_id',)}),)
-    search_fields = ['external_id']
-
-class LearningContainer(models.Model):
-    external_id = models.CharField(max_length=100, blank=True, null=True)
-    changed = models.DateTimeField(null=True, auto_now=True)
-    auto_renewal_until = models.IntegerField(null=True)
-
-    def __str__(self):
-        return u"%s" % (self.external_id)
-
-
-def find_by_id(learning_container_id):
-    return LearningContainer.objects.get(pk=learning_container_id)
+ENTITY_CONTAINER_YEAR_LINK_TYPES = (
+    (REQUIREMENT_ENTITY, REQUIREMENT_ENTITY),
+    (ALLOCATION_ENTITY, ALLOCATION_ENTITY),
+    (ADDITIONAL_ALLOCATION_ENTITY, ADDITIONAL_ALLOCATION_ENTITY),
+)
