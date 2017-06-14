@@ -329,7 +329,7 @@ msgstr "Display scores for this learning unit"
 msgid "display_tutors"
 msgstr "Display all tutors for this learning unit"
 
-msgid "doctoral_commission"
+msgid "DOCTORAL_COMMISSION"
 msgstr "Doctoral commmission"
 
 msgid "documentation"
@@ -404,7 +404,7 @@ msgstr "Exam board secretary"
 msgid "execute"
 msgstr "Execute"
 
-msgid "faculty"
+msgid "FACULTY"
 msgstr "Faculty"
 
 msgid "female"
@@ -504,7 +504,7 @@ msgstr "Inject"
 msgid "inject_xls_file"
 msgstr "Inject XLS file"
 
-msgid "institute"
+msgid "INSTITUTE"
 msgstr "Institute"
 
 msgid "institution"
@@ -834,7 +834,7 @@ msgstr "Plain and HTML"
 msgid "please_enable_javascript"
 msgstr "Please <a href='http://enable-javascript.com' target='_blank'>enable JavaScript</a> to use this application."
 
-msgid "pole"
+msgid "POLE"
 msgstr "Pole"
 
 msgid "postal_code"
@@ -987,7 +987,7 @@ msgstr "Search for an entity"
 msgid "search_for_an_organization"
 msgstr "Search for an organization"
 
-msgid "sector"
+msgid "SECTOR"
 msgstr "Sector"
 
 msgid "select"
@@ -1569,3 +1569,12 @@ msgstr "(Part 1, common with partims)"
 
 msgid "title_in_english_2"
 msgstr "(Part 2, specific to each partim)"
+
+msgid "SCHOOL"
+msgstr "Ecole"
+
+msgid "PLATFORM"
+msgstr "Platform"
+
+msgid "LOGISTICS_ENTITY"
+msgstr "Logistics entity"

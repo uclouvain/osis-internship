@@ -64,16 +64,20 @@
                 </div>
                 <br>
                 <div class="row">
-                    <div class="col-md-3">
-                        <label>{% trans 'organization'%}</label><br>
-                        {{ entity_version.organization | default_if_none:'' }}
-                    </div>
-                    <div class="col-md-9">
-                        <label>{% trans 'type'%}</label><br>
-                        {{ entity_version.entity_type }}
-                    </div>
+
+                        <div class="col-md-3">
+                            <label>{% trans 'organization'%}</label><br>
+                            {{ entity_version.organization | default_if_none:'' }}
+                        </div>
+
+                    {% if entity_version.entity_type %}
+                        <div class="col-md-9">
+                            <label>{% trans 'type'%}</label><br>
+                            {% trans entity_version.entity_type %}
+                        </div>
+                    {% endif %}
                 </div>
-                {%if entity_version.find_descendants %}
+                {% if entity_version.find_descendants %}
                 <br>
                 <div class="panel panel-default">
                     <div class="panel-body">

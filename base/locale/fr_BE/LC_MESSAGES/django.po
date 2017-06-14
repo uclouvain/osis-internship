@@ -325,7 +325,7 @@ msgstr "Visualiser/charger les notes pour le cours"
 msgid "display_tutors"
 msgstr "Afficher tous les enseignants pour ce cours"
 
-msgid "doctoral_commission"
+msgid "DOCTORAL_COMMISSION"
 msgstr "Commision doctorale"
 
 msgid "documentation"
@@ -400,7 +400,7 @@ msgstr "Secrétaire du jury"
 msgid "execute"
 msgstr "Exécuter"
 
-msgid "faculty"
+msgid "FACULTY"
 msgstr "Faculté"
 
 msgid "female"
@@ -502,7 +502,7 @@ msgstr "Injecter"
 msgid "inject_xls_file"
 msgstr "Injecter fichier excel"
 
-msgid "institute"
+msgid "INSTITUTE"
 msgstr "Institut"
 
 msgid "institution"
@@ -845,7 +845,7 @@ msgstr "Plain et HTML"
 msgid "please_enable_javascript"
 msgstr "Veuillez <a href='http://enable-javascript.com/fr/' target='_blank'>activer le JavaScript</a> pour utiliser l'application."
 
-msgid "pole"
+msgid "POLE"
 msgstr "Pole"
 
 msgid "postal_code"
@@ -999,7 +999,7 @@ msgstr "Rechercher une entité"
 msgid "search_for_an_organization"
 msgstr "Recherche d'organisations"
 
-msgid "sector"
+msgid "SECTOR"
 msgstr "Secteur"
 
 msgid "select"
@@ -1571,3 +1571,13 @@ msgstr "Cours Magistraux"
 
 msgid "PRACTICAL_EXERCISES"
 msgstr "Travaux pratiques"
+
+msgid "SCHOOL"
+msgstr "Ecole"
+
+msgid "PLATFORM"
+msgstr "Plateforme"
+
+msgid "LOGISTICS_ENTITY"
+msgstr "Entitée logistique"
+
