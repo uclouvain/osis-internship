@@ -1569,3 +1569,6 @@ msgstr "(Part 1, common with partims)"
 
 msgid "title_in_english_2"
 msgstr "(Part 2, specific to each partim)"
+
+msgid "scores_responsibles"
+msgstr "Scores responsibles"
