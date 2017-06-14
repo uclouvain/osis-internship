@@ -231,8 +231,7 @@ class ExamEnrollmentHistoryAdmin(admin.ModelAdmin):
                      'exam_enrollment__learning_unit_enrollment__offer_enrollment__student__person__last_name',
                      'exam_enrollment__learning_unit_enrollment__offer_enrollment__student__registration_id',
                      'exam_enrollment__learning_unit_enrollment__learning_unit_year__acronym']
-    list_filter = ('exam_enrollment__learning_unit_enrollment__learning_unit_year__academic_year',
-                   'exam_enrollment__session_exam')
+    list_filter = ('exam_enrollment__learning_unit_enrollment__learning_unit_year__academic_year',)
     readonly_fields = ('exam_enrollment', 'person', 'score_final', 'justification_final', 'modification_date')
 
     def has_delete_permission(self, request, obj=None):
