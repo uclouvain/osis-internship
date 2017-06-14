@@ -271,9 +271,9 @@ def _check_intergity_data(row, **kwargs):
 
 def _update_row(user, row, enrollments_managed_grouped, is_program_manager):
     xls_registration_id = _extract_registration_id(row)
-    xls_learning_unit_acronym = _clean_value(row[col_learning_unit].value)
+    xls_learning_unit_acronym = row[col_learning_unit].value
     xls_score = _clean_value(row[col_score].value)
-    xls_justification = row[col_justification].value
+    xls_justification = _clean_value(row[col_justification].value)
 
     key = "{}_{}".format(xls_registration_id, xls_learning_unit_acronym)
     enrollments = enrollments_managed_grouped.get(key, [])
