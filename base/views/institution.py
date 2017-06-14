@@ -23,6 +23,8 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+import json
+
 from django.contrib.auth.decorators import login_required, permission_required
 from base import models as mdl
 from base.models.enums import structure_type, entity_type
@@ -75,14 +77,8 @@ def entity_read(request, entity_version_id):
 @login_required
 def entity_diagram(request, entity_version_id):
     entity_version = mdl.entity_version.find_by_id(entity_version_id)
-    dict_structure = dict()
-    children = entity_version.find_direct_children()
-    for child in children:
-        dict_structure[child.acronym] = [child.id,
-                                         child.acronym,
-                                         find_direct_children(child)]
     return layout.render(request, "entity_organogram.html", {'entity_version': entity_version,
-                                                             'dict_structure': dict_structure})
+                                                             'entities_version_as_json': json.dumps(entity_version.serializable_object())})
 
 
 def find_direct_children(entity):

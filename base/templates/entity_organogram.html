@@ -37,50 +37,58 @@
         <link rel="stylesheet" href="{% static 'css/armata.css' %}" type='text/css'>
         <link rel="stylesheet" href="{% static 'css/custom.css' %}">
         <link rel="stylesheet" href="{% static 'css/tree.css' %}">
+        {% block style %}
+        {% endblock %}
+        <style>
+          body { font-family: 'Armata', sans-serif; }
+        </style>
     </head>
     <body>
-    {% if entity_version %}
-        <div class="tree" style="width:5000px; margin-top:-80px;">
-            <ul>
-                <li>
-                    <a href="#">{{ entity_version.acronym }} - {{ entity_version.title }}</a>
-                    <ul>
-                        {% for key, child in dict_structure.items %}
-                            <li>
-                                <a href="{% url 'entity_read' entity_version_id=child.0 %}" id="lnk_entity_read_{{ child.0 }}" target="_parent">{{ child.1 }}</a>
-                                {% if child.2 %}
-                                    <ul class='vertical'>
-                                        {% for key,child in child.2.items %}
-                                            <li>
-                                                <a href="{% url 'entity_read' entity_version_id=child.0 %}" id="lnk_entity_read_{{ child.0 }}" target="_parent">{{ child.1 }}</a>
-                                                {% if child.2 %}
-                                                    <ul class='vertical'>
-                                                        {% for key,child in child.2.items %}
-                                                            <li>
-                                                                <a href="{% url 'entity_read' entity_version_id=child.0 %}" id="lnk_entity_read_{{ child.0 }}" target="_parent">{{ child.1 }}</a>
-                                                                {% if child.2 %}
-                                                                    <ul class='vertical'>
-                                                                        {% for key,child in child.2.items %}
-                                                                            <li>
-                                                                                <a href="{% url 'entity_read' entity_version_id=child.0 %}" id="lnk_entity_read_{{ child.0 }}" target="_parent">{{ child.1 }}</a>
-                                                                            </li>
-                                                                        {% endfor %}
-                                                                    </ul>
-                                                                {% endif %}
-                                                            </li>
-                                                        {% endfor %}
-                                                    </ul>
-                                                {% endif %}
-                                            </li>
-                                        {% endfor %}
-                                    </ul>
-                                {% endif %}
-                            </li>
-                        {% endfor %}
-                    </ul>
-                </li>
-            </ul>
-        </div>
+    {% if entity_version%}
+        <div class="tree" id="organogram" style="width:3000px; margin-top:-80px;"></div>
+        <br><br>
+        <script src="{% static 'js/jquery-2.1.4.min.js' %}"></script>
+        <script>
+            function show_nodes(super_node, entity_version) {
+                var sub_nodes =$("<ul></ul>");
+                var children = entity_version.children;
+                for(var i = 0, len = children.length ;i < len; i++) {
+                    var child = children[i];
+                    var url="/entities/" + child.id;
+                    if(Array.isArray(children) && children.length > 0) {
+                       var sub_nodes = $("<ul class='vertical'></ul>");
+
+                       super_node.append($("<li></li>").append($("<a></a>").attr("href",url)
+                                                                           .attr("target","_parent")
+                                                                           .text(child.acronym))
+                                                       .append(sub_nodes));
+                       show_nodes(sub_nodes, child);
+                    } else {
+                        sub_nodes="";
+                        super_node.append($("<li></li>").append($("<a></a>").attr("href",url)
+                                                                            .attr("target","_parent")
+                                                                            .text(child.acronym)));
+                    }
+                }
+            }
+
+            function show_organogram(entities_version_as_json) {
+                var sub_nodes = $("<ul></ul>");
+                var json_data = JSON.parse(entities_version_as_json);
+                show_nodes(sub_nodes, json_data);
+                var escaped_structure = "{{ entity_version.acronym }} - {{ entity_version.title }}";
+                $('#organogram').append($("<ul></ul>")
+                                          .append($("<li></li>")
+                                             .append($("<a></a>").attr("href","{% url 'entity_read' entity_version.id %}")
+                                                                 .attr("target","_parent")
+                                                                 .text(escaped_structure))
+                                             .append(sub_nodes)));
+            }
+
+            $(document).ready(function() {
+                show_organogram('{{entities_version_as_json | safe}}');
+            });
+        </script>
     {% endif %}
     </body>
 </html>
