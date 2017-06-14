@@ -66,7 +66,7 @@
                 </div>
             </div>
         </form>
-        <form method="get" action="{% url 'scores_responsible_management'%}">
+        <form method="get">
             {% if dict_attribution|length == 0 and init == "1" %}
                 <label class="alert alert-info" style="margin:5px">{% trans 'no_result' %}</label>
             {% endif %}
@@ -115,8 +115,7 @@
                                     {% endif %}
                                 </td>
                                 <td>
-                                    <button type="submit" id="bt_submit_edit" class="btn btn-default pull-right" role="button"
-                                        title="{% trans 'edit' %}" name="learning_unit_year" value="learning_unit_year_{{ value_list.0 }}"><span class="glyphicon glyphicon-edit"></span></button>
+                                    <a href="{% url 'scores_responsible_management'%}?course_code={{ course_code }}&learning_unit_title={{ learning_unit_title }}&tutor={{ tutor }}&scores_responsible={{ scores_responsible }}&learning_unit_year=learning_unit_year_{{ value_list.0 }}"><span class="glyphicon glyphicon-edit"></span></button>
                                 </td>
                             </tr>
                         {% endfor %}
