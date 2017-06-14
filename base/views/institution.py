@@ -79,12 +79,3 @@ def entity_diagram(request, entity_version_id):
     entity_version = mdl.entity_version.find_by_id(entity_version_id)
     return layout.render(request, "entity_organogram.html", {'entity_version': entity_version,
                                                              'entities_version_as_json': json.dumps(entity_version.serializable_object())})
-
-
-def find_direct_children(entity):
-    dict_children = dict()
-    for child in entity.find_direct_children():
-        dict_children[child.acronym] = [child.id,
-                                        child.acronym,
-                                        find_direct_children(child)]
-    return dict_children
