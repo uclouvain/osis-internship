@@ -168,8 +168,8 @@ msgstr "S=Unjustified Absence"
 msgid "justified_absence_export_legend"
 msgstr "M=Justified Absence"
 
-msgid "child_entities"
-msgstr "Child entities"
+msgid "attached_entities"
+msgstr "Attached entities"
 
 msgid "choose_file"
 msgstr "Choose file"
@@ -788,6 +788,9 @@ msgstr "Campus"
 
 msgid "organization_address"
 msgstr "Organization address"
+
+msgid "organization"
+msgstr "Organization"
 
 msgid "organizations"
 msgstr "Organizations"
@@ -1578,3 +1581,9 @@ msgstr "Platform"
 
 msgid "LOGISTICS_ENTITY"
 msgstr "Logistics entity"
+
+msgid "organogram"
+msgstr "Organogram"
+
+msgid "attached_to"
+msgstr "Attached to"
