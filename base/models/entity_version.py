@@ -137,6 +137,13 @@ class EntityVersion(models.Model):
         return (self.end_date is not None and self.start_date <= date <= self.end_date) \
                or (self.end_date is None and self.start_date <= date)
 
+    def serializable_object(self):
+        return {
+            'id': self.id,
+            'acronym': self.acronym,
+            'children': [child.serializable_object() for child in self.find_direct_children()]
+        }
+
 
 def find(acronym, date=None):
     if date is None:
@@ -178,3 +185,18 @@ def search(**kwargs):
 
 def count(**kwargs):
     return search(**kwargs).count()
+
+
+def search_entities(acronym=None, title=None, type=None):
+    queryset = EntityVersion.objects
+    if acronym:
+        queryset = queryset.filter(acronym__iexact=acronym)
+    if title:
+        queryset = queryset.filter(title__icontains=title)
+    if type:
+        queryset = queryset.filter(entity_type=type)
+    return queryset
+
+
+def find_by_id(entity_version_id):
+    return EntityVersion.objects.get(pk=entity_version_id)
