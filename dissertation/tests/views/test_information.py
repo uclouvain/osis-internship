@@ -36,14 +36,14 @@ from dissertation.tests.factories.proposition_dissertation import PropositionDis
 from dissertation.tests.factories.proposition_offer import PropositionOfferFactory
 
 
-class DissertationViewTestCase(TestCase):
+class InformationViewTestCase(TestCase):
 
     def setUp(self):
         self.manager = AdviserManagerFactory()
-        a_person_teacher = PersonFactory.create(first_name='Pierre', last_name='Dupont')
+        a_person_teacher = PersonFactory(first_name='Pierre', last_name='Dupont')
         self.teacher = AdviserTeacherFactory(person=a_person_teacher)
-        a_person_student = PersonFactory.create(last_name="Durant", user=None)
-        student = StudentFactory.create(person=a_person_student)
+        a_person_student = PersonFactory(last_name="Durant", user=None)
+        student = StudentFactory(person=a_person_student)
 
         offer_year_start = OfferYearFactory(acronym="test_offer")
         offer = offer_year_start.offer
@@ -71,50 +71,12 @@ class DissertationViewTestCase(TestCase):
                                 dissertation_role__status=roles[x]
                                 )
 
-    def test_get_dissertations_list_for_teacher(self):
-        self.client.force_login(self.teacher.person.user)
-        url = reverse('dissertations_list')
-        response = self.client.get(url)
-        self.assertEqual(response.context[-1]['adviser_list_dissertations'].count(), 1)  # only 1 because 1st is DRAFT
-        self.assertEqual(response.context[-1]['adviser_list_dissertations_copro'].count(), 1)
-        self.assertEqual(response.context[-1]['adviser_list_dissertations_reader'].count(), 1)
-        self.assertEqual(response.context[-1]['adviser_list_dissertations_accompanist'].count(), 1)
-        self.assertEqual(response.context[-1]['adviser_list_dissertations_president'].count(), 1)
-
-    def test_get_dissertations_list_for_manager(self):
+    def test_manager_informations_detail_list(self):
         self.client.force_login(self.manager.person.user)
-        url = reverse('manager_dissertations_list')
+        url = reverse('manager_informations_detail_list', kwargs={'pk': self.teacher.id})
         response = self.client.get(url)
-        self.assertEqual(response.context[-1]['dissertations'].count(), 6)
-
-    def test_search_dissertations_for_manager(self):
-        self.client.force_login(self.manager.person.user)
-        url = reverse('manager_dissertations_search')
-
-        response = self.client.get(url, data={"search": "no result search"})
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.context[-1]['dissertations'].count(), 0)
-
-        response = self.client.get(url, data={"search": "Dissertation 2"})
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.context[-1]['dissertations'].count(), 1)
-
-        response = self.client.get(url, data={"search": "Proposition 3"})
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.context[-1]['dissertations'].count(), 1)
-
-        response = self.client.get(url, data={"search": "Dissertation"})
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.context[-1]['dissertations'].count(), 6)
-
-        response = self.client.get(url, data={"search": "test_offer"})
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.context[-1]['dissertations'].count(), 6)
-
-        response = self.client.get(url, data={"search": "Durant"})
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.context[-1]['dissertations'].count(), 6)
-
-        response = self.client.get(url, data={"search": "Dupont"})
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.context[-1]['dissertations'].count(), 6)
+        self.assertEqual(response.context[-1].get('adv_list_disserts_pro').count(), 1) # only 1 because 1st is DRAFT
+        self.assertEqual(response.context[-1].get('adv_list_disserts_copro').count(), 1)
+        self.assertEqual(response.context[-1].get('adv_list_disserts_reader').count(), 1)
+        self.assertEqual(response.context[-1].get('adv_list_disserts_accompanist').count(), 1)
+        self.assertEqual(response.context[-1].get('adv_list_disserts_president').count(), 1)
