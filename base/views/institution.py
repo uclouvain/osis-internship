@@ -50,7 +50,7 @@ def academic_actors(request):
 
 @login_required
 def entities(request):
-    return layout.render(request, "entities.html", {'init': "1",
+    return layout.render(request, "entities.html", {'init': "0",
                                                     'types': entity_type.ENTITY_TYPES})
 
 
@@ -60,6 +60,7 @@ def entities_search(request):
                                                           title=request.GET.get('title'),
                                                           type=request.GET.get('type_choices'))
     return layout.render(request, "entities.html", {'entities_version': entities_version,
+                                                    'init': "1",
                                                     'types': structure_type.TYPES})
 
 
@@ -77,5 +78,6 @@ def entity_read(request, entity_version_id):
 @login_required
 def entity_diagram(request, entity_version_id):
     entity_version = mdl.entity_version.find_by_id(entity_version_id)
+    entities_version_as_json = json.dumps(entity_version.get_organogram_data(level=0))
     return layout.render(request, "entity_organogram.html", {'entity_version': entity_version,
-                                                             'entities_version_as_json': json.dumps(entity_version.serializable_object())})
+                                                             'entities_version_as_json': entities_version_as_json})

@@ -496,7 +496,7 @@ msgstr "Link"
 msgid "litterature_review"
 msgstr "Litterature review"
 
-msgid "main"
+msgid "MAIN"
 msgstr "Main"
 
 msgid "manager"

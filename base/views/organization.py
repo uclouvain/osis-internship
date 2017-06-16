@@ -26,6 +26,7 @@
 from django.contrib.auth.decorators import login_required, permission_required
 from base import models as mdl
 from base.forms.organization import OrganizationForm
+from base.models.enums import organization_type
 from . import layout
 from reference import models as mdlref
 
@@ -33,7 +34,8 @@ from reference import models as mdlref
 @login_required
 @permission_required('base.can_access_organization', raise_exception=True)
 def organizations(request):
-    return layout.render(request, "organizations.html", {'types': mdl.organization.ORGANIZATION_TYPE})
+    return layout.render(request, "organizations.html", {'types': organization_type.ORGANIZATION_TYPE,
+                                                         "init": "0"})
 
 
 @login_required
@@ -44,7 +46,8 @@ def organizations_search(request):
                                             type=request.GET['type_choices'])
 
     return layout.render(request, "organizations.html", {'organizations': organizations,
-                                                         'types': mdl.organization.ORGANIZATION_TYPE})
+                                                         'types': organization_type.ORGANIZATION_TYPE,
+                                                         "init": "1"})
 
 
 @login_required
@@ -94,7 +97,7 @@ def organization_save(request, organization_id):
 def organization_edit(request, organization_id):
     organization = mdl.organization.find_by_id(organization_id)
     return layout.render(request, "organization_form.html", {'organization': organization,
-                                                             'types': mdl.organization.ORGANIZATION_TYPE})
+                                                             'types': organization_type.ORGANIZATION_TYPE})
 
 
 @login_required
@@ -102,7 +105,7 @@ def organization_edit(request, organization_id):
 def organization_create(request):
     organization = mdl.organization.Organization()
     return layout.render(request, "organization_form.html", {'organization': organization,
-                                                             'types': mdl.organization.ORGANIZATION_TYPE})
+                                                             'types': organization_type.ORGANIZATION_TYPE})
 
 
 @login_required
