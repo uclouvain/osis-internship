@@ -44,7 +44,6 @@ class PgmManagerAdministrationTest(TestCase):
 
     def setUp(self):
         self.user = User.objects.create_user('tmp', 'tmp@gmail.com', 'tmp')
-        add_permission(self.user, "is_entity_manager")
         self.person = PersonFactory()
 
         self.structure_parent1 = StructureFactory(acronym='SSH')
