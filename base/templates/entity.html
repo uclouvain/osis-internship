@@ -73,13 +73,13 @@
                         </div>
                     {% endif %}
                     {% if entity_parent %}
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <label>{% trans 'attached_to' %}</label><br>
                             {{ entity_parent.acronym }} - {{ entity_parent.title }}
                         </div>
                     {% endif %}
                     {% if entity_version.entity.organization %}
-                        <div class="col-md-7">
+                        <div class="col-md-6">
                             <label>{% trans 'organization'%}</label><br>
                             {{ entity_version.entity.organization | default_if_none:'' }}
                         </div>
@@ -88,7 +88,7 @@
                 {% if entity_version.find_descendants %}
                 <br>
                 <div class="panel panel-default">
-                    <div class="panel-header">
+                    <div class="panel-heading">
                         <label>{% trans 'attached_entities' %}</label>
                     </div>
                     <div class="panel-body">

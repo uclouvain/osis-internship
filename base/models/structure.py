@@ -53,7 +53,7 @@ class Structure(models.Model):
         return {
             'id': self.id,
             'acronym': self.acronym,
-            'children': [child.serializable_object() for child in self.children]
+            'children': [child.get_organogram_data() for child in self.children]
         }
 
     def serializable_acronym(self):
