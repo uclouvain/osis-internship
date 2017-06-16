@@ -112,7 +112,7 @@ def get_managed_entities(entity_managed_list):
     if entity_managed_list:
         structures = []
         for entity_managed in entity_managed_list:
-            children_acronyms = find_values('acronym', json.dumps(entity_managed['root'].get_organogram_data()))
+            children_acronyms = find_values('acronym', json.dumps(entity_managed['root'].serializable_object()))
             structures.extend(mdl.structure.find_by_acronyms(children_acronyms))
         return sorted(structures, key=lambda a_structure: a_structure.acronym)
 
@@ -125,7 +125,7 @@ def get_entity_list(entity, entity_managed_structure):
         if entity_found:
             return [entity_found]
     else:
-        children_acronyms = find_values('acronym', json.dumps(entity_managed_structure.get_organogram_data()))
+        children_acronyms = find_values('acronym', json.dumps(entity_managed_structure.serializable_object()))
         return mdl.structure.find_by_acronyms(children_acronyms)
 
     return None
@@ -208,7 +208,7 @@ def create_manager(request):
 def get_administrator_entities(a_user):
     structures = []
     for entity_managed in mdl.entity_manager.find_by_user(a_user):
-        children_acronyms = find_values('acronym', json.dumps(entity_managed.structure.get_organogram_data()))
+        children_acronyms = find_values('acronym', json.dumps(entity_managed.structure.serializable_object()))
         structures.append({'root': entity_managed.structure,
                            'structures': mdl.structure.find_by_acronyms(children_acronyms)})
     return structures
