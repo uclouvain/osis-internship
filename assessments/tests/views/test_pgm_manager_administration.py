@@ -47,7 +47,6 @@ class PgmManagerAdministrationTest(TestCase):
 
     def setUp(self):
         self.user = User.objects.create_user('tmp', 'tmp@gmail.com', 'tmp')
-        add_permission(self.user, "is_entity_manager")
         self.person = PersonFactory()
 
         self.structure_parent1 = StructureFactory(acronym='SSH')
@@ -275,6 +274,8 @@ class PgmManagerAdministrationTest(TestCase):
 
     def test_delete_manager_no_person_to_be_removed(self):
         self.client.force_login(self.user)
+        a_person = PersonFactory(user=self.user)
+        EntityManagerFactory(person=a_person)
         url = reverse('delete_manager')
         response = self.client.get(url+"?person=&pgms=")
         self.assertEqual(response.status_code, 204)
@@ -284,6 +285,8 @@ class PgmManagerAdministrationTest(TestCase):
                                        entity_management=self.structure_parent1)
         ProgramManagerFactory(person=self.person, offer_year=offer_year1)
         self.client.force_login(self.user)
+        a_person = PersonFactory(user=self.user)
+        EntityManagerFactory(person=a_person)
         url = reverse('delete_manager')
         response = self.client.get(url+"?person=%s&pgms=%s"
                                    % (self.person.id, offer_year1.id))
