@@ -24,7 +24,6 @@
 #
 ##############################################################################
 from django.db import models
-from base import models as mdl_base
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 
 
@@ -41,7 +40,6 @@ class EntityManager(SerializableModel):
 
     def __str__(self):
         return u"%s" % self.person
-
 
 
 def get_perms(model):
@@ -62,5 +60,5 @@ def find_by_user(a_user):
 
 
 def is_entity_manager(user):
-    entities_manager = mdl_base.entity_manager.find_entity_manager_by_user(user)
+    entities_manager = find_entity_manager_by_user(user)
     return entities_manager if entities_manager else False
