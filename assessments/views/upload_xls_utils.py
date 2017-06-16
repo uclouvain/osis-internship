@@ -287,10 +287,10 @@ def _update_row(user, row, enrollments_managed_grouped, is_program_manager):
         raise UploadValueError("%s" % _('deadline_reached'), messages.ERROR)
 
     if not is_program_manager and enrollment.is_final:
-        raise UploadValueError("%s" %  _('score_already_submitted'), messages.WARNING)
+        raise UploadValueError("%s" % _('score_already_submitted'), messages.WARNING)
 
-    if xls_score is not None and xls_justification:
-        raise UploadValueError("%s" %  _('constraint_score_other_score'), messages.ERROR)
+    if (xls_score or xls_score == 0) and xls_justification:
+        raise UploadValueError("%s" % _('constraint_score_other_score'), messages.ERROR)
 
     if xls_justification and _is_informative_justification(enrollment, xls_justification, is_program_manager):
        return False
@@ -307,7 +307,7 @@ def _update_row(user, row, enrollments_managed_grouped, is_program_manager):
 
 
 def _clean_value(value):
-    return value.trim() if isinstance(value, str) else value
+    return value.strip() if isinstance(value, str) else value
 
 
 def _is_informative_justification(enrollment, xls_justification, is_program_manager):
