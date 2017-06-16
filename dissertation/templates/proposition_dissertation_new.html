@@ -148,9 +148,7 @@
 <script type="text/javascript">
 
     $( document ).ready(function() {
-        console.log('Function ready');
         $("input[type=checkbox]")
-
         .each(function() {  // first pass, create name mapping
             if (this.name.indexOf('txt_checkbox_')!=-1 && this.checked)
             {
@@ -161,7 +159,6 @@
 
     function affiche_masque_div_enfant(id_div_enfant,id_statut_bouton)
     {
-        console.log('function affiche_masque_div_enfant');
         var div_enfant = document.getElementById(id_div_enfant);
         var statut_bouton = document.getElementById(id_statut_bouton);
              if(statut_bouton.value == "OK" && (div_enfant.style.display!="none") )
@@ -175,13 +172,11 @@
 
     function block_div(check_box,id_div_parent,id_statut_bouton,id_div_enfant)
     {
-        console.log('function block_div');
         var statut_bouton = document.getElementById(id_statut_bouton);
         var div_parent= document.getElementById(id_div_parent);
         var div_enfant = document.getElementById(id_div_enfant);
         if (check_box.checked)
         {
-            console.log('statut_bouton.value :'+statut_bouton.value);
             div_enfant.style.display = "block";
             statut_bouton.value ="KO";
         }
