@@ -65,7 +65,7 @@
                     </div>
                     <div class="col-md-8">
                         <label>{% trans 'type' %}</label><br>
-                        {{ organization.type | default_if_none:'-' }}
+                        {% if organization.type %}  {% trans organization.type %} {% else %} - {% endif %}
                     </div>
                 </div>
                 <br>

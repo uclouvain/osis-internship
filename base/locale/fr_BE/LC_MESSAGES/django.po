@@ -1589,3 +1589,18 @@ msgstr "Organigramme"
 
 msgid "attached_to"
 msgstr "Attachée à"
+
+msgid "ACADEMIC_PARTNER"
+msgstr "Partenaire académique"
+
+msgid "INDUSTRIAL_PARTNER"
+msgstr "Partenaire industriel"
+
+msgid "SERVICE_PARTNER"
+msgstr "Partenaire de service"
+
+msgid "COMMERCE_PARTNER"
+msgstr "Partenaire commercial"
+
+msgid "PUBLIC_PARTNER"
+msgstr "Partenaire public"

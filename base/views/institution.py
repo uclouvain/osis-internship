@@ -50,7 +50,7 @@ def academic_actors(request):
 
 @login_required
 def entities(request):
-    return layout.render(request, "entities.html", {'init': "1",
+    return layout.render(request, "entities.html", {'init': "0",
                                                     'types': entity_type.ENTITY_TYPES})
 
 
@@ -60,6 +60,7 @@ def entities_search(request):
                                                           title=request.GET.get('title'),
                                                           type=request.GET.get('type_choices'))
     return layout.render(request, "entities.html", {'entities_version': entities_version,
+                                                    'init': "1",
                                                     'types': structure_type.TYPES})
 
 
