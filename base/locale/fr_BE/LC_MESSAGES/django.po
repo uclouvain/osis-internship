@@ -1581,3 +1581,11 @@ msgstr "Plateforme"
 msgid "LOGISTICS_ENTITY"
 msgstr "Entitée logistique"
 
+msgid "requirement_entity"
+msgstr "Entité resp. cahier de charges"
+
+msgid "allocation_entity"
+msgstr "Entité resp. de l'attribution"
+
+msgid "additional_allocation_entities"
+msgstr "Autres entités et répartition"

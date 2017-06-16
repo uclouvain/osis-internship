@@ -1578,3 +1578,12 @@ msgstr "Platform"
 
 msgid "LOGISTICS_ENTITY"
 msgstr "Logistics entity"
+
+msgid "requirement_entity"
+msgstr "Requirement entity"
+
+msgid "allocation_entity"
+msgstr "Allocation entity"
+
+msgid "additional_allocation_entities"
+msgstr "Additional allocation entities"

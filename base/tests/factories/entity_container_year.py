@@ -23,15 +23,34 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-REQUIREMENT_ENTITY = "REQUIREMENT_ENTITY"
-ALLOCATION_ENTITY = "ALLOCATION_ENTITY"
-ADDITIONAL_ALLOCATION_ENTITY_1 = "ADDITIONAL_REQUIREMENT_ENTITY_1"
-ADDITIONAL_ALLOCATION_ENTITY_2 = "ADDITIONAL_REQUIREMENT_ENTITY_2"
+import datetime
+import operator
+
+import factory
+import factory.fuzzy
+from django.conf import settings
+from django.utils import timezone
+
+from base.models.enums import entity_container_year_link_type
+from base.tests.factories.entity import EntityFactory
+from base.tests.factories.learning_container_year import LearningContainerYearFactory
 
 
-ENTITY_CONTAINER_YEAR_LINK_TYPES = (
-    (REQUIREMENT_ENTITY, REQUIREMENT_ENTITY),
-    (ALLOCATION_ENTITY, ALLOCATION_ENTITY),
-    (ADDITIONAL_ALLOCATION_ENTITY_1, ADDITIONAL_ALLOCATION_ENTITY_1),
-    (ADDITIONAL_ALLOCATION_ENTITY_2, ADDITIONAL_ALLOCATION_ENTITY_2),
-)
+def _get_tzinfo():
+    if settings.USE_TZ:
+        return timezone.get_current_timezone()
+    else:
+        return None
+
+
+class EntityContainerYearFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = "base.EntityContainerYear"
+
+    external_id = factory.Sequence(lambda n: '10000000%02d' % n)
+    changed = factory.fuzzy.FuzzyDateTime(datetime.datetime(2016, 1, 1, tzinfo=_get_tzinfo()),
+                                          datetime.datetime(2017, 3, 1, tzinfo=_get_tzinfo()))
+    entity = factory.SubFactory(EntityFactory)
+    learning_container_year = factory.SubFactory(LearningContainerYearFactory)
+    type = factory.Iterator(entity_container_year_link_type.ENTITY_CONTAINER_YEAR_LINK_TYPES,
+                            getter=operator.itemgetter(0))

@@ -34,10 +34,24 @@ class EntityComponentYearAdmin(admin.ModelAdmin):
 
 
 class EntityComponentYear(models.Model):
+    external_id = models.CharField(max_length=255, blank=True, null=True)
+    changed = models.DateTimeField(null=True, auto_now=True)
     entity_container_year = models.ForeignKey('EntityContainerYear')
     learning_component_year = models.ForeignKey('LearningComponentYear')
     hourly_volume_total = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
     hourly_volume_partial = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
+
+
+    @property
+    def hourly_volume_partial_q2(self):
+        if self.hourly_volume_total:
+            if self.hourly_volume_partial:
+                q2 = self.hourly_volume_total - self.hourly_volume_partial
+                if q2 <= 0:
+                    return None
+                else:
+                    return q2
+        return Noneµ
 
 
     def __str__(self):

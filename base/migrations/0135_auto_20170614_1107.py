@@ -25,10 +25,14 @@ class Migration(migrations.Migration):
             name='EntityContainerYear',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('type', models.CharField(choices=[('REQUIREMENT_ENTITY', 'REQUIREMENT_ENTITY'), ('ALLOCATION_ENTITY', 'ALLOCATION_ENTITY'), ('ADDITIONAL_REQUIREMENT_ENTITY', 'ADDITIONAL_REQUIREMENT_ENTITY')], max_length=30)),
+                ('type', models.CharField(choices=[('REQUIREMENT_ENTITY', 'REQUIREMENT_ENTITY'), ('ALLOCATION_ENTITY', 'ALLOCATION_ENTITY'), ('ADDITIONAL_REQUIREMENT_ENTITY_1', 'ADDITIONAL_REQUIREMENT_ENTITY_1'), ('ADDITIONAL_REQUIREMENT_ENTITY_2', 'ADDITIONAL_REQUIREMENT_ENTITY_2')], max_length=35)),
                 ('entity', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='base.Entity')),
                 ('learning_container_year', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='base.LearningContainerYear')),
             ],
+        ),
+        migrations.AlterUniqueTogether(
+            name='entitycontaineryear',
+            unique_together=set([('entity', 'learning_container_year', 'type')]),
         ),
         migrations.AddField(
             model_name='learningcontainer',
@@ -44,5 +48,33 @@ class Migration(migrations.Migration):
             model_name='entitycomponentyear',
             name='learning_component_year',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='base.LearningComponentYear'),
+        ),
+        migrations.AddField(
+            model_name='entitycomponentyear',
+            name='changed',
+            field=models.DateTimeField(auto_now=True, null=True),
+        ),
+        migrations.AddField(
+            model_name='entitycomponentyear',
+            name='external_id',
+            field=models.CharField(blank=True, max_length=255, null=True),
+        ),
+        migrations.AddField(
+            model_name='entitycontaineryear',
+            name='changed',
+            field=models.DateTimeField(auto_now=True, null=True),
+        ),
+        migrations.AddField(
+            model_name='entitycontaineryear',
+            name='external_id',
+            field=models.CharField(blank=True, max_length=255, null=True),
+        ),
+        migrations.RemoveField(
+            model_name='learningcomponentyear',
+            name='hourly_volume_partial',
+        ),
+        migrations.RemoveField(
+            model_name='learningcomponentyear',
+            name='hourly_volume_total',
         ),
     ]

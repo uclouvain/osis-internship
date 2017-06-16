@@ -123,6 +123,30 @@
                          {% if campus %}
                             {{ campus.name }}
                          {% endif %}
+                        <br>
+                         <label style="margin-top:10px;">{% trans 'requirement_entity'%}</label><br>
+                         {% if requirement_entity %}
+                            {{ requirement_entity.name }}
+                         {% endif %}
+                        <br>
+                        <label style="margin-top:10px;">{% trans 'allocation_entity'%}</label><br>
+                         {% if allocation_entity %}
+                            {{ allocation_entity.acronym }}
+                         {% endif %}
+                        <br>
+
+                        <label style="margin-top:10px;">{% trans 'additional_allocation_entities'%}</label><br>
+                        <table>
+                            <thead>
+                                <tr>  </tr>
+                                <tr>  </tr>
+                                <tr>  </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+
                     </div>
                 </div>
             </div>

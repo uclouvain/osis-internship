@@ -177,8 +177,14 @@ def search(**kwargs):
     if 'start_date' in kwargs:
             queryset = queryset.filter(start_date__exact=kwargs['start_date'])
 
+    if 'start_date__lte' in kwargs:
+        queryset = queryset.filter(start_date__lte=kwargs['start_date__lte'])
+
     if 'end_date' in kwargs:
             queryset = queryset.filter(end_date__exact=kwargs['end_date'])
+
+    if 'end_date__gte' in kwargs:
+        queryset = queryset.filter(end_date__gte=kwargs['end_date__gte'])
 
     return queryset
 
