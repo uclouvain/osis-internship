@@ -107,28 +107,38 @@
                 {% endif %}
             </label>
             <br>
-            {% for offer_proposition_g in offer_proposition_group %}
-            <div class="dropdown">
-                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" style="width:15%;">
-                <label>{{ offer_proposition_g }}</label>
-                <span class="caret"></span>
-                </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" >
-                        {% for offer_proposition in offer_propositions %}
-                            {% if offer_proposition.offer_proposition_group == offer_proposition_g %}
-                            <li><label for="txt_checkbox_{{ offer_proposition.id }}">&nbsp; {{ offer_proposition }}</label>
-                                <input id="txt_checkbox_{{ offer_proposition.id }}" name="txt_checkbox_{{ offer_proposition.id }}"
-                                    type="checkbox" style="position:absolute;right:10%;"
-                                       {% for proposition_offer in proposition_offers %}
-                                       {% if proposition_offer.offer_proposition.id == offer_proposition.id %}
-                                       checked="checked"
-                                       {% endif %}
-                                       {% endfor %}> </li>
-                            {% endif %}
-                        {% endfor %}
-                    </ul>
+            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                    {% for offer_proposition_g in offer_proposition_group %}
+                     <div class="panel panel-default">
+
+                        <div class="panel-heading" role="tab" id="heading_{{ offer_proposition_g }}">
+                          <h4 class="panel-title">
+                            <a id="test_{{ offer_proposition_g }}" class="collapse_{{ offer_proposition_g }}" role="button"
+                               onclick="affiche_masque_div_enfant('collapse_{{ offer_proposition_g }}','statut_bouton_{{ offer_proposition_g }}');">
+                            {{ offer_proposition_g }} <span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span> </label>
+                            </a>
+                              <input type="hidden" id="statut_bouton_{{ offer_proposition_g }}" name="statut_bouton_{{ offer_proposition_g }}"  value="OK">
+                          </h4>
+                        </div>
+
+                        <div id="collapse_{{ offer_proposition_g}}" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading_{{ offer_proposition_g }}" style="display:none;">
+                            {% for offer_proposition in offer_propositions %}
+                                {% if offer_proposition.offer_proposition_group == offer_proposition_g %}
+
+                                  <div class="list-group">
+                                    <input id="txt_checkbox_{{ offer_proposition.id }}" name="txt_checkbox_{{ offer_proposition.id }}"
+                                    type="checkbox" onclick="block_div(this,'test_{{ offer_proposition_g }}','statut_bouton_{{ offer_proposition_g }}','collapse_{{ offer_proposition_g }}');"
+                                           {% for proposition_offer in proposition_offers %}
+                                            {% if proposition_offer.offer_proposition.id == offer_proposition.id %}checked{% endif %}{% endfor %}>
+
+                                    <label for="txt_checkbox_{{ offer_proposition.id }}">&nbsp; {{ offer_proposition }}</label>
+                                  </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endfor %}
             </div>
-            {% endfor %}
         </div>
         <div style="text-align: right;">
             <button type="submit" class="save btn btn-primary">
@@ -138,4 +148,43 @@
       </form>
     </div>
   </div>
+{% endblock %}
+{% block script %}
+<script type="text/javascript">
+    $( document ).ready(function() {
+        $("input[type=checkbox]")
+        .each(function() {
+            if (this.name.indexOf('txt_checkbox_')!=-1 && this.checked)
+            {
+                this.click();
+                this.click();
+            }
+        })
+    });
+
+    function affiche_masque_div_enfant(id_div_enfant,id_statut_bouton)
+    {
+        var div_enfant = document.getElementById(id_div_enfant);
+        var statut_bouton = document.getElementById(id_statut_bouton);
+             if(statut_bouton.value == "OK" && (div_enfant.style.display!="none") )
+             {
+                div_enfant.style.display = "none";
+             }else
+             {
+                div_enfant.style.display = "BLOCK";
+             }
+    }
+
+    function block_div(check_box,id_div_parent,id_statut_bouton,id_div_enfant)
+    {
+        var statut_bouton = document.getElementById(id_statut_bouton);
+        var div_parent= document.getElementById(id_div_parent);
+        var div_enfant = document.getElementById(id_div_enfant);
+        if (check_box.checked)
+        {
+            div_enfant.style.display = "block";
+            statut_bouton.value ="KO";
+        }
+    }
+</script>
 {% endblock %}
