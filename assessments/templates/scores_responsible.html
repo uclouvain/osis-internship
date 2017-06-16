@@ -66,63 +66,63 @@
                 </div>
             </div>
         </form>
-        <form method="get">
-            {% if dict_attribution|length == 0 and init == "1" %}
-                <label class="alert alert-info" style="margin:5px">{% trans 'no_result' %}</label>
-            {% endif %}
-            <div {% if dict_attribution|length > 0 %}style="visibility:visible;display:block;"{%else%}style="visibility:hidden;display:none;"{% endif %}>
-                <table class="table table-hover" id="tb_responsibles">
-                    <thead>
+        {% if dict_attribution|length == 0 and init == "1" %}
+            <label class="alert alert-info" style="margin:5px">{% trans 'no_result' %}</label>
+        {% endif %}
+        <div {% if dict_attribution|length > 0 %}style="visibility:visible;display:block;"{%else%}style="visibility:hidden;display:none;"{% endif %}>
+            <table class="table table-hover" id="tb_responsibles">
+                <thead>
+                    <tr>
+                        <th>{% trans 'entity' %}</th>
+                        <th>{% trans 'course_code' %}</th>
+                        <th>{% trans 'learning_unit_title' %}</th>
+                        <th>{% trans 'tutor' %}</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for key, value_list in dict_attribution.items %}
                         <tr>
-                            <th>{% trans 'entity' %}</th>
-                            <th>{% trans 'course_code' %}</th>
-                            <th>{% trans 'learning_unit_title' %}</th>
-                            <th>{% trans 'tutor' %}</th>
-                            <th></th>
+                            <td>{{ value_list.1 }}</td>
+                            <td>{{ value_list.2 }}</td>
+                            <td>{{ value_list.3 }}</td>
+                            <td>
+                                {% if value_list.4 %}
+                                    {% for value in value_list.4 %}
+                                        {% if forloop.first %}
+                                            <p {% if value.1 == True %} style="font-weight:bold;" {% endif %}>
+                                                - {{ value.0 }}
+                                                {% if value_list.4|length > 1 %}
+                                                    <a role="button" data-toggle="collapse" data-target="#list_{{ value_list.2 }}"
+                                                       aria-expanded="false"
+                                                       aria-controls="tutors_by_course"
+                                                       title="{% trans 'display_tutors' %}">
+                                                        <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+                                                    </a>
+                                                {% endif %}
+                                            </p>
+                                            <div id="list_{{ value_list.2 }}" class="panel-collapse collapse">
+                                        {% else %}
+                                            <p {% if value.1 == True %} style="font-weight:bold;" {% endif %}>
+                                                - {{ value.0 }}
+                                            </p>
+                                        {% endif %}
+                                    {% endfor %}
+                                    </div>
+                                {% else %}
+                                    {% trans 'without_attribution' %}
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="{% url 'scores_responsible_management'%}?course_code={{ course_code }}&learning_unit_title={{ learning_unit_title }}&tutor={{ tutor }}&scores_responsible={{ scores_responsible }}&learning_unit_year=learning_unit_year_{{ value_list.0 }}">
+                                    <span class="glyphicon glyphicon-edit"></span>
+                                </a>
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        {% for key, value_list in dict_attribution.items %}
-                            <tr>
-                                <td>{{ value_list.1 }}</td>
-                                <td>{{ value_list.2 }}</td>
-                                <td>{{ value_list.3 }}</td>
-                                <td>
-                                    {% if value_list.4 %}
-                                        {% for value in value_list.4 %}
-                                            {% if forloop.first %}
-                                                <p {% if value.1 == True %} style="font-weight:bold;" {% endif %}>
-                                                    - {{ value.0 }}
-                                                    {% if value_list.4|length > 1 %}
-                                                        <a role="button" data-toggle="collapse" data-target="#list_{{ value_list.2 }}"
-                                                           aria-expanded="false"
-                                                           aria-controls="tutors_by_course"
-                                                           title="{% trans 'display_tutors' %}">
-                                                            <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
-                                                        </a>
-                                                    {% endif %}
-                                                </p>
-                                                <div id="list_{{ value_list.2 }}" class="panel-collapse collapse">
-                                            {% else %}
-                                                <p {% if value.1 == True %} style="font-weight:bold;" {% endif %}>
-                                                    - {{ value.0 }}
-                                                </p>
-                                            {% endif %}
-                                        {% endfor %}
-                                        </div>
-                                    {% else %}
-                                        {% trans 'without_attribution' %}
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    <a href="{% url 'scores_responsible_management'%}?course_code={{ course_code }}&learning_unit_title={{ learning_unit_title }}&tutor={{ tutor }}&scores_responsible={{ scores_responsible }}&learning_unit_year=learning_unit_year_{{ value_list.0 }}"><span class="glyphicon glyphicon-edit"></span></button>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </form>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 {% endblock %}
