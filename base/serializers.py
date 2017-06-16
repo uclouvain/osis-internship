@@ -31,7 +31,7 @@ from base.models.entity_version import EntityVersion
 class EntityVersionSerializer(serializers.ModelSerializer):
     class Meta:
         model = EntityVersion
-        fields = ('acronym', 'title', 'entity_type', 'parent', 'start_date', 'end_date',)
+        fields = ('acronym', 'title', 'entity_type', 'parent', 'start_date', 'end_date', 'external_id')
 
 
 class EntitySerializer(serializers.ModelSerializer):
