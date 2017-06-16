@@ -8,7 +8,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('base', '0129_auto_20170601_1542'),
+        ('base', '0134_entity_models_update'),
     ]
 
     operations = [
