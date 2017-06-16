@@ -65,9 +65,11 @@ def create_full_entity(request):
 
 def update_existing_entity(existing_entity, request):
     new_versions_count = create_versions_of_existing_entity(request, existing_entity)
+    updated_versions_count = update_versions_of_existing_entity(request, existing_entity)
     entity_serializer = EntitySerializer(existing_entity)
     data = entity_serializer.data
     data['new_versions_count'] = new_versions_count
+    data['updated_versions_count'] = updated_versions_count
     return Response(data=data, status=status.HTTP_200_OK)
 
 
@@ -89,6 +91,34 @@ def create_versions_of_existing_entity(request, same_entity):
                 new_versions_count += 1
 
     return new_versions_count
+
+
+def update_versions_of_existing_entity(request, same_entity):
+    updated_versions_count = 0
+    entityversion_data = request.data.get('entityversion_set')
+    for version in entityversion_data:
+        to_update_versions = entity_version.search(entity=same_entity,
+                                                   title=version.get('title'),
+                                                   acronym=version.get('acronym'),
+                                                   entity_type=version.get('entity_type'),
+                                                   parent=version.get('parent'),
+                                                   start_date=version.get('start_date')
+                                                   )
+
+        for to_update_version in to_update_versions:
+            if not match_dates(to_update_version.end_date, version.get('end_date')):
+                to_update_version.end_date = version.get('end_date')
+                to_update_version.save()
+                updated_versions_count += 1
+
+    return updated_versions_count
+
+
+def match_dates(osis_date, esb_date):
+    if osis_date is None:
+        return esb_date is None
+    else:
+        return osis_date.strftime('%Y-%m-%d') == esb_date
 
 
 def create_version(version, same_entity, parent):
