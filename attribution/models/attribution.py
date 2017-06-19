@@ -199,32 +199,6 @@ def find_all_distinct_children(structure):
     return attributions_list
 
 
-def find_all_structure_parents(entities_manager):
-    learning_unit_years_list = list()
-    for entity_manager in entities_manager:
-        learning_unit_years = LearningUnitYear.objects \
-            .filter(structure=entity_manager.structure) \
-            .filter(academic_year=current_academic_years()) \
-            .distinct("structure")
-        for learning_unit_year in learning_unit_years:
-            learning_unit_years = list(chain(learning_unit_years,
-                                             find_all_structure_children(learning_unit_year.structure)))
-        learning_unit_years_list = list(chain(learning_unit_years_list, learning_unit_years))
-    return learning_unit_years_list
-
-
-def find_all_structure_children(structure):
-    learning_unit_years = LearningUnitYear.objects \
-        .filter(structure__part_of=structure) \
-        .filter(academic_year=current_academic_years()) \
-        .distinct("structure")
-    for learning_unit_year in learning_unit_years:
-        if learning_unit_year.structure.part_of:
-            learning_unit_years = list(chain(learning_unit_years,
-                                             find_all_structure_children(learning_unit_year.structure)))
-    return learning_unit_years
-
-
 def find_all_responsible_by_learning_unit_year(learning_unit_year):
     all_tutors = Attribution.objects.filter(learning_unit_year=learning_unit_year) \
         .distinct("tutor").values_list('id', flat=True)

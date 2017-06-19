@@ -46,7 +46,7 @@ def scores_responsible(request):
 @user_passes_test(is_entity_manager)
 def scores_responsible_search(request):
     entities_manager = mdl_base.entity_manager.find_by_user(request.user)
-    learning_unit_years = mdl_attr.attribution.find_all_structure_parents(entities_manager)
+    learning_unit_years = mdl_base.learning_unit_year.find_all_structure_parents(entities_manager)
     academic_year = mdl_base.academic_year.current_academic_year()
     if request.GET:
         attributions_searched = mdl_attr.attribution.search_scores_responsible(
