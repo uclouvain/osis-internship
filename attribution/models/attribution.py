@@ -48,7 +48,7 @@ class AttributionAdmin(SerializableModelAdmin):
 
 class Attribution(SerializableModel):
     external_id = models.CharField(max_length=100, blank=True, null=True)
-    changed = models.DateTimeField(null=True)
+    changed = models.DateTimeField(null=True, auto_now=True)
     start_date = models.DateField(auto_now=False, blank=True, null=True, auto_now_add=False)
     end_date = models.DateField(auto_now=False, blank=True, null=True, auto_now_add=False)
     start_year = models.IntegerField(blank=True, null=True)
@@ -138,7 +138,7 @@ def is_score_responsible(user, learning_unit_year):
     return attributions > 0
 
 
-def search_scores_responsible(learning_unit_title, course_code, attributions, tutor, responsible):
+def search_scores_responsible(learning_unit_title, course_code, learning_unit_years, tutor, responsible):
     queryset = Attribution.objects.filter(learning_unit_year__academic_year=current_academic_years())
     if learning_unit_title:
         queryset = queryset.filter(learning_unit_year__title__icontains=learning_unit_title)
@@ -164,8 +164,8 @@ def search_scores_responsible(learning_unit_title, course_code, attributions, tu
                 .filter(score_responsible=True, tutor__person__in=Person.objects
                         .filter(Q(first_name__icontains=responsible) |
                                 Q(last_name__icontains=responsible)))
-    if attributions:
-        entities_list = [attribution.learning_unit_year.structure.acronym for attribution in attributions]
+    if learning_unit_years:
+        entities_list = [learning_unit_year.structure.acronym for learning_unit_year in learning_unit_years]
         queryset = queryset \
             .filter(learning_unit_year__structure__acronym__in=entities_list)
     return queryset.distinct("learning_unit_year")
