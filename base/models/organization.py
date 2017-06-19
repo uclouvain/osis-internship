@@ -24,6 +24,8 @@
 #
 ##############################################################################
 from django.db import models
+
+from base.models.enums import organization_type
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 
 
@@ -33,22 +35,14 @@ class OrganizationAdmin(SerializableModelAdmin):
     search_fields = ['acronym']
 
 
-ORGANIZATION_TYPE = (('MAIN', 'Main'),
-                     ('ACADEMIC_PARTNER', 'Academic partner'),
-                     ('INDUSTRIAL_PARTNER', 'Industrial partner'),
-                     ('SERVICE_PARTNER', 'Service partner'),
-                     ('COMMERCE_PARTNER', 'Commerce partner'),
-                     ('PUBLIC_PARTNER', 'Public partner'))
-
-
 class Organization(SerializableModel):
     external_id = models.CharField(max_length=100, blank=True, null=True)
-    changed = models.DateTimeField(null=True)
+    changed = models.DateTimeField(null=True, auto_now=True)
     name = models.CharField(max_length=255)
     code = models.CharField(max_length=50, blank=True, null=True)
     acronym = models.CharField(max_length=20, blank=True, null=True)
     website = models.URLField(max_length=255, blank=True, null=True)
-    type = models.CharField(max_length=30, blank=True, null=True, choices=ORGANIZATION_TYPE, default='UNKNOWN')
+    type = models.CharField(max_length=30, blank=True, null=True, choices=organization_type.ORGANIZATION_TYPE, default='UNKNOWN')
     start_date = models.DateTimeField(null=True)
     end_date = models.DateTimeField(null=True)
     prefix = models.CharField(max_length=30, blank=True, null=True)

@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# OSIS stands for Open Student Information System. It's an application
+#    OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
@@ -24,23 +24,19 @@
 #
 ##############################################################################
 import factory
-from django.conf import settings
 from django.utils import timezone
-from base.tests.factories.entity import EntityFactory
 
-
-def _get_tzinfo():
-    if settings.USE_TZ:
-        return timezone.get_current_timezone()
-    else:
-        return None
-
-
-class EntityLinkFactory(factory.DjangoModelFactory):
+class SettingsFactory(factory.DjangoModelFactory):
     class Meta:
-        model = 'base.EntityLink'
+        model = 'assistant.Settings'
 
-    parent = factory.SubFactory(EntityFactory)
-    child = factory.SubFactory(EntityFactory)
-    start_date = factory.Faker('date_time_this_decade', before_now=True, after_now=False, tzinfo=_get_tzinfo())
-    end_date = factory.Faker('date_time_this_decade', before_now=False, after_now=True, tzinfo=_get_tzinfo())
+    starting_date = factory.fuzzy.FuzzyDate((timezone.now() - timezone.timedelta(days=10)).date(),
+                                            (timezone.now() - timezone.timedelta(days=5)).date())
+    ending_date = factory.fuzzy.FuzzyDate((timezone.now() + timezone.timedelta(days=90)).date(),
+                                          (timezone.now() + timezone.timedelta(days=100)).date())
+    assistants_starting_date = factory.fuzzy.FuzzyDate((timezone.now() - timezone.timedelta(days=10)).date(),
+                                                       (timezone.now() - timezone.timedelta(days=5)).date())
+    assistants_ending_date = factory.fuzzy.FuzzyDate((timezone.now() + timezone.timedelta(days=90)).date(),
+                                          (timezone.now() + timezone.timedelta(days=100)).date())
+
+

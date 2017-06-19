@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# OSIS stands for Open Student Information System. It's an application
+#    OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -23,17 +23,20 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import factory
-from base.tests.factories.entity import EntityFactory
+from django.utils.translation import ugettext_lazy as _
 
+MAIN = "MAIN"
+ACADEMIC_PARTNER = "ACADEMIC_PARTNER"
+INDUSTRIAL_PARTNER = "INDUSTRIAL_PARTNER"
+SERVICE_PARTNER = "SERVICE_PARTNER"
+COMMERCE_PARTNER = "COMMERCE_PARTNER"
+PUBLIC_PARTNER = "PUBLIC_PARTNER"
 
-class EntityAddressFactory(factory.DjangoModelFactory):
-    class Meta:
-        model = 'base.EntityAddress'
-
-    entity = factory.SubFactory(EntityFactory)
-    label = factory.Faker('text', max_nb_chars=20)
-    location = factory.Faker('street_address')
-    postal_code = factory.Faker('zipcode')
-    city = factory.Faker('city')
-    country = factory.Faker('country')
+ORGANIZATION_TYPE = (
+    (MAIN, _(MAIN)),
+    (ACADEMIC_PARTNER, _(ACADEMIC_PARTNER)),
+    (INDUSTRIAL_PARTNER, _(INDUSTRIAL_PARTNER)),
+    (SERVICE_PARTNER, _(SERVICE_PARTNER)),
+    (COMMERCE_PARTNER, _(COMMERCE_PARTNER)),
+    (PUBLIC_PARTNER, _(PUBLIC_PARTNER)),
+)

@@ -23,14 +23,19 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from itertools import chain
+
 from django.db import models
+
+from base.models.academic_year import current_academic_years
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 from base.models.enums import learning_unit_year_activity_status, learning_unit_year_subtypes
 
 
 class LearningUnitYearAdmin(SerializableModelAdmin):
     list_display = ('acronym', 'title', 'academic_year', 'credits', 'changed', 'structure')
-    fieldsets = ((None, {'fields': ('academic_year', 'learning_unit', 'acronym', 'title', 'title_english', 'credits', 'decimal_scores', 'structure', 'learning_container_year')}),)
+    fieldsets = ((None, {'fields': ('academic_year', 'learning_unit', 'acronym', 'title', 'title_english', 'credits',
+                                    'decimal_scores', 'structure', 'learning_container_year', 'activity_status')}),)
     list_filter = ('academic_year', 'vacant', 'in_charge', 'decimal_scores')
     raw_id_fields = ('learning_unit', 'learning_container_year', 'structure')
     search_fields = ['acronym', 'structure__acronym']
@@ -41,11 +46,11 @@ class LearningUnitYear(SerializableModel):
     academic_year = models.ForeignKey('AcademicYear')
     learning_unit = models.ForeignKey('LearningUnit')
     learning_container_year = models.ForeignKey('LearningContainerYear', blank=True, null=True)
-    changed = models.DateTimeField(null=True)
+    changed = models.DateTimeField(null=True, auto_now=True)
     acronym = models.CharField(max_length=15, db_index=True)
     title = models.CharField(max_length=255)
     title_english = models.CharField(max_length=250, blank=True, null=True)
-    subtype = models.CharField(max_length=20, blank=True, null=True,
+    subtype = models.CharField(max_length=50, blank=True, null=True,
                                choices=learning_unit_year_subtypes.LEARNING_UNIT_YEAR_SUBTYPES)
     credits = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
     decimal_scores = models.BooleanField(default=False)
@@ -100,3 +105,29 @@ def search(academic_year_id=None, acronym=None, learning_container_year_id=None,
         queryset = queryset.filter(activity_status=activity_status)
 
     return queryset.select_related('learning_container_year')
+
+
+def find_all_structure_parents(entities_manager):
+    learning_unit_years_list = list()
+    for entity_manager in entities_manager:
+        learning_unit_years = LearningUnitYear.objects \
+            .filter(structure=entity_manager.structure) \
+            .filter(academic_year=current_academic_years()) \
+            .distinct("structure")
+        for learning_unit_year in learning_unit_years:
+            learning_unit_years = list(chain(learning_unit_years,
+                                             find_all_structure_children(learning_unit_year.structure)))
+        learning_unit_years_list = list(chain(learning_unit_years_list, learning_unit_years))
+    return learning_unit_years_list
+
+
+def find_all_structure_children(structure):
+    learning_unit_years = LearningUnitYear.objects \
+        .filter(structure__part_of=structure) \
+        .filter(academic_year=current_academic_years()) \
+        .distinct("structure")
+    for learning_unit_year in learning_unit_years:
+        if learning_unit_year.structure.part_of:
+            learning_unit_years = list(chain(learning_unit_years,
+                                             find_all_structure_children(learning_unit_year.structure)))
+    return learning_unit_years
