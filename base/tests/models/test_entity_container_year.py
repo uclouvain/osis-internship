@@ -95,8 +95,8 @@ class EntityContainerYearTest(TestCase):
         self.assertIsInstance(entities, dict)
         self.assertTrue(entity_container_year_link_type.REQUIREMENT_ENTITY in entities)
         self.assertTrue(entity_container_year_link_type.ALLOCATION_ENTITY in entities)
-        self.assertFalse(entity_container_year_link_type.ADDITIONAL_ALLOCATION_ENTITY_1 in entities)
-        self.assertFalse(entity_container_year_link_type.ADDITIONAL_ALLOCATION_ENTITY_2 in entities)
+        self.assertFalse(entity_container_year_link_type.ADDITIONAL_REQUIREMENT_ENTITY_1 in entities)
+        self.assertFalse(entity_container_year_link_type.ADDITIONAL_REQUIREMENT_ENTITY_2 in entities)
 
         # Find requirement entity
         self.assertEqual(self.entity_versions[work_on_year],
@@ -107,7 +107,7 @@ class EntityContainerYearTest(TestCase):
                          entity_container_year.find_allocation_entity(learning_container_year=l_container_year))
 
         # No additional allocation entity
-        self.assertFalse(entity_container_year.find_all_additional_allocation_entities(learning_container_year=l_container_year))
+        self.assertFalse(entity_container_year.find_all_additional_requirement_entities(learning_container_year=l_container_year))
 
 
     def test_find_latest_allocation_entity(self):

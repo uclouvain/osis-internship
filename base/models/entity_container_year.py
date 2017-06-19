@@ -88,8 +88,8 @@ def find_allocation_entity(learning_container_year):
     return next(iter(results.values()), None)
 
 
-def find_all_additional_allocation_entities(learning_container_year):
-    results = find_entities(learning_container_year, [entity_container_year_link_type.ADDITIONAL_ALLOCATION_ENTITY_1,
-                                                      entity_container_year_link_type.ADDITIONAL_ALLOCATION_ENTITY_2])
+def find_all_additional_requirement_entities(learning_container_year):
+    results = find_entities(learning_container_year, [entity_container_year_link_type.ADDITIONAL_REQUIREMENT_ENTITY_1,
+                                                      entity_container_year_link_type.ADDITIONAL_REQUIREMENT_ENTITY_2])
     return next(iter(results.values()), None)
 
