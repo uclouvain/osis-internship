@@ -65,7 +65,7 @@ def create_full_entity(request):
 
 def update_existing_entity(existing_entity, request):
     new_versions_count = create_versions_of_existing_entity(request, existing_entity)
-    updated_versions_count = update_versions_of_existing_entity(request, existing_entity)
+    updated_versions_count = update_end_date_of_existing_versions(request, existing_entity)
     entity_serializer = EntitySerializer(existing_entity)
     data = entity_serializer.data
     data['new_versions_count'] = new_versions_count
@@ -77,15 +77,8 @@ def create_versions_of_existing_entity(request, same_entity):
     new_versions_count = 0
     entityversion_data = request.data.get('entityversion_set')
     for version in entityversion_data:
-        same_versions_count = entity_version.count(entity=same_entity,
-                                                   title=version.get('title'),
-                                                   acronym=version.get('acronym'),
-                                                   entity_type=version.get('entity_type'),
-                                                   parent=version.get('parent'),
-                                                   start_date=version.get('start_date'),
-                                                   end_date=version.get('end_date')
-                                                   )
-        if not same_versions_count:
+        identical_versions_count = entity_version.count_identical_versions(same_entity, version)
+        if not identical_versions_count:
             parent = entity.get_by_internal_id(version.pop('parent'))
             if create_version(version, same_entity, parent) is not None:
                 new_versions_count += 1
@@ -93,32 +86,17 @@ def create_versions_of_existing_entity(request, same_entity):
     return new_versions_count
 
 
-def update_versions_of_existing_entity(request, same_entity):
+def update_end_date_of_existing_versions(request, same_entity):
     updated_versions_count = 0
     entityversion_data = request.data.get('entityversion_set')
     for version in entityversion_data:
-        to_update_versions = entity_version.search(entity=same_entity,
-                                                   title=version.get('title'),
-                                                   acronym=version.get('acronym'),
-                                                   entity_type=version.get('entity_type'),
-                                                   parent=version.get('parent'),
-                                                   start_date=version.get('start_date')
-                                                   )
-
+        to_update_versions = entity_version.find_update_candidates_versions(same_entity, version)
         for to_update_version in to_update_versions:
-            if not match_dates(to_update_version.end_date, version.get('end_date')):
-                to_update_version.end_date = version.get('end_date')
-                to_update_version.save()
-                updated_versions_count += 1
+            to_update_version.end_date = version.get('end_date')
+            to_update_version.save()
+            updated_versions_count += 1
 
     return updated_versions_count
-
-
-def match_dates(osis_date, esb_date):
-    if osis_date is None:
-        return esb_date is None
-    else:
-        return osis_date.strftime('%Y-%m-%d') == esb_date
 
 
 def create_version(version, same_entity, parent):
