@@ -41,11 +41,6 @@ class EntityManager(SerializableModel):
     def __str__(self):
         return u"%s" % self.person
 
-    class Meta:
-        permissions = (
-            ("is_entity_manager", "Is entity manager "),
-        )
-
 
 def get_perms(model):
     return model._meta.permissions
@@ -62,3 +57,8 @@ def find_by_user(a_user):
         .select_related('person')\
         .select_related('structure')\
         .order_by('structure__acronym')
+
+
+def is_entity_manager(user):
+    entities_manager = find_entity_manager_by_user(user)
+    return entities_manager if entities_manager else False

@@ -162,8 +162,8 @@ msgstr "S=Absence injustifiée"
 msgid "justified_absence_export_legend"
 msgstr "M=Absence justifiée"
 
-msgid "child_entities"
-msgstr "Entités 'enfant'"
+msgid "attached_entities"
+msgstr "Entités attachées"
 
 msgid "choose_file"
 msgstr "Parcourir"
@@ -799,6 +799,9 @@ msgstr "Campus"
 
 msgid "organization_address"
 msgstr "Adresse de l'organisation"
+
+msgid "organization"
+msgstr "Organisation"
 
 msgid "organizations"
 msgstr "Organisations"
@@ -1581,3 +1584,23 @@ msgstr "Plateforme"
 msgid "LOGISTICS_ENTITY"
 msgstr "Entitée logistique"
 
+msgid "organogram"
+msgstr "Organigramme"
+
+msgid "attached_to"
+msgstr "Attachée à"
+
+msgid "ACADEMIC_PARTNER"
+msgstr "Partenaire académique"
+
+msgid "INDUSTRIAL_PARTNER"
+msgstr "Partenaire industriel"
+
+msgid "SERVICE_PARTNER"
+msgstr "Partenaire de service"
+
+msgid "COMMERCE_PARTNER"
+msgstr "Partenaire commercial"
+
+msgid "PUBLIC_PARTNER"
+msgstr "Partenaire public"
