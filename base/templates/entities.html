@@ -92,7 +92,7 @@
                         <td><a href="{% url 'entity_read' entity_version_id=entity_version.id %}" id="lnk_entity_read_{{entity_version.id}}">
                             {{ entity_version.acronym }}</a></td>
                         <td>{{ entity_version.title }}</td>
-                        <td>{% if entity_version.entity_type != 'UNKNOWN'%}{{ entity_version.entity_type|default_if_none:''}}{% endif %}</td>
+                        <td>{% if entity_version.entity_type != 'UNKNOWN' and entity_version.entity_type %}{% trans entity_version.entity_type %}{% else %}-{% endif %}</td>
                     </tr>
                 {% endfor %}
             </tbody>
