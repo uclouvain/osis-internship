@@ -137,12 +137,20 @@ class EntityVersion(models.Model):
         return (self.end_date is not None and self.start_date <= date <= self.end_date) \
                or (self.end_date is None and self.start_date <= date)
 
-    def serializable_object(self):
-        return {
-            'id': self.id,
-            'acronym': self.acronym,
-            'children': [child.serializable_object() for child in self.find_direct_children()]
-        }
+    def get_organogram_data(self, level):
+        level += 1
+        if level < 3:
+            return {
+                'id': self.id,
+                'acronym': self.acronym,
+                'children': [child.get_organogram_data(level) for child in self.find_direct_children()]
+            }
+        else:
+            return {
+                'id': self.id,
+                'acronym': self.acronym,
+                'children': []
+            }
 
 
 def find(acronym, date=None):
