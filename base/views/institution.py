@@ -61,7 +61,7 @@ def entities_search(request):
                                                           type=request.GET.get('type_choices'))
     return layout.render(request, "entities.html", {'entities_version': entities_version,
                                                     'init': "1",
-                                                    'types': structure_type.TYPES})
+                                                    'types': entity_type.ENTITY_TYPES})
 
 
 @login_required
