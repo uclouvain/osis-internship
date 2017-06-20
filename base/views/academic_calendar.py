@@ -23,7 +23,6 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import json
 from django.core import serializers
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required, permission_required
