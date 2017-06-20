@@ -25,13 +25,13 @@
 ##############################################################################
 from django import shortcuts
 from django.template.context import RequestContext
-from base import models as mdl
 from random import randint
+from osis_common.models import application_notice
 
 
 def _check_notice(request, values):
     if 'subject' not in request.session and 'notice' not in request.session:
-        notice = mdl.application_notice.find_current_notice()
+        notice = application_notice.find_current_notice()
         if notice:
             request.session.set_expiry(3600)
             request.session['subject'] = notice.subject

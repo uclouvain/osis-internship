@@ -24,7 +24,7 @@
 #
 ##############################################################################
 from django.test import TestCase
-from base.models.application_notice import find_current_notice
+from osis_common.models.application_notice import find_current_notice
 from base.tests.factories.application_notice import ApplicationNoticeFactory
 
 
