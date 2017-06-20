@@ -1546,6 +1546,12 @@ msgstr "Dissertation"
 msgid "PRACTICAL_EXERCISES"
 msgstr "Practical exercises"
 
+msgid "lecturing"
+msgstr "Lecturing"
+
+msgid "PE"
+msgstr "PE"
+
 msgid "subtype"
 msgstr "Subtype"
 

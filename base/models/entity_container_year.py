@@ -51,7 +51,7 @@ class EntityContainerYear(models.Model):
         return u"%s - %s - %s" % (self.entity, self.learning_container_year, self.type)
 
 
-def find_entities(learning_container_year, link_type=None):
+def find_entities(learning_container_year, link_type=None, with_volumes=False):
     lcy_start_date = learning_container_year.academic_year.start_date
 
     queryset = EntityContainerYear.objects.filter(learning_container_year=learning_container_year)
@@ -63,19 +63,28 @@ def find_entities(learning_container_year, link_type=None):
     entity_container_years = queryset.select_related('learning_container_year__academic_year', 'entity')\
                                      .prefetch_related(
                                             Prefetch('entity__entityversion_set',
-                                                     queryset=entity_version.search(start_date__lte=lcy_start_date,
-                                                                                    end_date__gte=lcy_start_date)\
-                                                                            .order_by('start_date'),
+                                                     queryset=entity_version.find_latest_version(lcy_start_date),
                                                      to_attr="entity_versions")
                                     )
 
-    return {ecy.type: _get_latest_entity_version(ecy) for ecy in entity_container_years}
+    if with_volumes:
+        entity_container_years = entity_container_years.prefetch_related(
+            Prefetch('entitycomponentyear_set',
+            to_attr="volumes")
+        )
+
+    return {ecy.type: _get_latest_entity_version(ecy, with_volumes) for ecy in entity_container_years}
 
 
-def _get_latest_entity_version(entity_container_year):
+def _get_latest_entity_version(entity_container_year, with_volumes):
+    entity_version = None
     if entity_container_year.entity.entity_versions:
-        return entity_container_year.entity.entity_versions[-1]
-    return None
+        entity_version = entity_container_year.entity.entity_versions[-1]
+
+        if with_volumes and entity_container_year.volumes:
+            entity_version.volumes = { vol.learning_component_year.type : vol for vol in entity_container_year.volumes}
+
+    return entity_version
 
 
 def find_requirement_entity(learning_container_year):

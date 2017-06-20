@@ -1575,6 +1575,12 @@ msgstr "Cours Magistraux"
 msgid "PRACTICAL_EXERCISES"
 msgstr "Travaux pratiques"
 
+msgid "lecturing"
+msgstr "Cours magistral"
+
+msgid "PE"
+msgstr "TP"
+
 msgid "SCHOOL"
 msgstr "Ecole"
 

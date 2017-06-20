@@ -51,7 +51,7 @@ class EntityComponentYear(models.Model):
                     return None
                 else:
                     return q2
-        return Noneµ
+        return None
 
 
     def __str__(self):

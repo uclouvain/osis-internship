@@ -32,6 +32,8 @@ from django.utils.translation import ugettext_lazy as _
 
 from base import models as mdl
 from attribution import models as mdl_attr
+from base.models import entity_container_year
+from base.models.enums import entity_container_year_link_type
 from base.models.enums import learning_container_year_types
 from cms import models as mdl_cms
 from cms.enums import entity_name
@@ -75,6 +77,7 @@ def learning_unit_identification(request, learning_unit_year_id):
     context['campus'] = _get_campus_from_learning_unit_year(learning_unit_year)
     context['experimental_phase'] = True
     context['show_subtype'] = _show_subtype(learning_unit_year)
+    context.update(_get_all_attributions(learning_unit_year))
     return layout.render(request, "learning_unit/identification.html", context)
 
 
@@ -227,3 +230,18 @@ def _get_organization_from_learning_unit_year(learning_unit_year):
     if campus:
         return campus.organization
     return None
+
+
+def _get_all_attributions(learning_unit_year):
+    attributions = {}
+    if learning_unit_year.learning_container_year:
+        all_attributions = entity_container_year.find_entities(learning_unit_year.learning_container_year,
+                                                               with_volumes=True)
+        attributions['requirement_entity'] = all_attributions.get(entity_container_year_link_type.REQUIREMENT_ENTITY)
+        attributions['allocation_entity'] = all_attributions.get(entity_container_year_link_type.ALLOCATION_ENTITY)
+        attributions['additional_requirement_entities'] = [
+            all_attributions[link_type] for link_type in all_attributions
+                if link_type not in [entity_container_year_link_type.REQUIREMENT_ENTITY,
+                                     entity_container_year_link_type.ALLOCATION_ENTITY]
+        ]
+    return attributions
