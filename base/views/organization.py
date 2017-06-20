@@ -41,8 +41,6 @@ def organizations(request):
 @login_required
 @permission_required('base.can_access_organization', raise_exception=True)
 def organizations_search(request):
-    print('organizations_search')
-
     organizations = mdl.organization.search(acronym=request.GET['acronym'],
                                             name=request.GET['name'],
                                             type=request.GET['type_choices'])
@@ -79,7 +77,7 @@ def organization_save(request, organization_id):
         organization = mdl.organization.Organization()
 
     # get the screen modifications
-    organization.acronym = request.POST.get('acronym', None)
+    organization.acronym = request.POST.get('acronym')
     organization.name = request.POST.get('name')
     organization.website = request.POST.get('website')
     organization.reference = request.POST.get('reference')
