@@ -100,7 +100,7 @@ def find_highlight_academic_calendar():
 
 
 def find_academic_calendar_by_academic_year(academic_year_id):
-    return AcademicCalendar.objects.filter(academic_year=academic_year_id).order_by('title')
+    return AcademicCalendar.objects.filter(academic_year=academic_year_id).order_by('start_date')
 
 
 def find_academic_calendar_by_academic_year_with_dates(academic_year_id):

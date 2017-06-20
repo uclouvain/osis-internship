@@ -23,6 +23,8 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+import json
+from django.core import serializers
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required, permission_required
 from base.forms.academic_calendar import AcademicCalendarForm
@@ -35,14 +37,15 @@ from . import layout
 def academic_calendars(request):
     academic_year = None
     academic_years = mdl.academic_year.find_academic_years()
-
     academic_year_calendar = mdl.academic_year.current_academic_year()
+
     if academic_year_calendar:
         academic_year = academic_year_calendar.id
+
     academic_calendar_list = mdl.academic_calendar.find_academic_calendar_by_academic_year(academic_year)
-    return layout.render(request, "academic_calendars.html", {'academic_year': academic_year,
-                                                              'academic_years': academic_years,
-                                                              'academic_calendars': academic_calendar_list})
+    academic_calendar_json = serializers.serialize("json", academic_calendar_list)
+
+    return layout.render(request, "academic_calendars.html", locals())
 
 
 @login_required
@@ -56,12 +59,11 @@ def academic_calendars_search(request):
         if academic_year_calendar:
             academic_year = academic_year_calendar.id
 
-    query = mdl.academic_calendar.find_academic_calendar_by_academic_year(academic_year)
+    academic_year = int(academic_year)
+    academic_calendar_list = mdl.academic_calendar.find_academic_calendar_by_academic_year(academic_year)
+    academic_calendar_json = serializers.serialize("json", academic_calendar_list)
 
-    return layout.render(request, "academic_calendars.html", {
-        'academic_year': int(academic_year),
-        'academic_years': academic_years,
-        'academic_calendars': query})
+    return layout.render(request, "academic_calendars.html", locals())
 
 
 @login_required

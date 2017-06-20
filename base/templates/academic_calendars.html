@@ -66,19 +66,19 @@
         </div>
       </form>
     </div>
-      <br>
-        <div>
-    {% if academic_calendars|length == 0 and init == "0" %}
+    <br>
+    <div>
+    {% if academic_calendar_list|length == 0 and init == "0" %}
       <label class="alert alert-info" style="margin:5px">{% trans 'no_result' %}</label>
     {% endif %}
-    {% if academic_calendars|length > 0%}
+    {% if academic_calendar_list|length > 0%}
     <table class="table table-striped table-hover">
       <thead>
         <th>{% trans 'title'%}</th>
         <th>{% trans 'start_date'%}</th>
         <th>{% trans 'end_date'%}</th>
       </thead>
-      {% for academic_calendar in academic_calendars %}
+      {% for academic_calendar in academic_calendar_list %}
         <tr>
           <td><a href="{% url 'academic_calendar_read' academic_calendar_id=academic_calendar.id %}" id="lnk_academic_calendar_edit_{{academic_calendar.id}}">{% trans academic_calendar.title %}</a></td>
           <td>{{academic_calendar.start_date| default_if_none:''|date_in_form_format }}</td>
@@ -87,10 +87,74 @@
       {% endfor %}
     </table>
     {% endif %}
-
+    </div>
+    <div>
+      {% if academic_calendar_list|length > 0%}
+        <div id="chart_div"></div>
+      {% endif %}
+    </div>
   </div>
-  </div>
-
-
 </div>
+{% endblock %}
+{% block script %}
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        google.charts.load('current', {'packages':['gantt']});
+        google.charts.setOnLoadCallback(drawChart);
+
+        function daysToMilliseconds(days) {
+          return days * 24 * 60 * 60 * 1000;
+        }
+
+        var academic_calendar_json = '{{academic_calendar_json | safe}}'
+        var academic_calendars = JSON.parse(academic_calendar_json);
+        var len = academic_calendars.length
+
+        function drawChart() {
+          var data = new google.visualization.DataTable();
+          data.addColumn('string', 'Task ID');
+          data.addColumn('string', 'Task Name');
+          data.addColumn('string', 'Resource ID');
+          data.addColumn('date', 'Start Date');
+          data.addColumn('date', 'End Date');
+          data.addColumn('number', 'Duration');
+          data.addColumn('number', '');
+          data.addColumn('string', 'Dependencies');
+
+
+
+          for(var i = 0 ;i < len; i++) {
+              var academic_calendar = academic_calendars[i];
+              var splitted_start_date =academic_calendar.fields.start_date.split('-');
+              var splitted_end_date =academic_calendar.fields.end_date.split('-');
+              var label = i.toString()
+              data.addRows([
+                [
+                    label,
+                    academic_calendar.fields.title,
+                    academic_calendar.fields.reference,
+                    new Date(splitted_start_date[0], splitted_start_date[1], splitted_start_date[2]),
+                    new Date(splitted_end_date[0], splitted_end_date[1], splitted_end_date[2]),
+                    null,
+                    0,
+                    null
+                ],
+              ]);
+          }
+
+
+          var options = {
+            height: len * 50,
+            gantt: {
+              trackHeight: 40,
+              percentEnabled: 'False',
+              criticalPathEnabled: 'False',
+            },
+          };
+
+          var chart = new google.visualization.Gantt(document.getElementById('chart_div'));
+
+          chart.draw(data, options);
+        }
+    </script>
 {% endblock %}
