@@ -117,7 +117,7 @@ class EntityVersion(models.Model):
             for child in direct_children:
                 descendants.extend(child.find_descendants(date))
 
-        return descendants
+        return sorted(descendants, key=lambda an_entity: an_entity.acronym)
 
     def get_parent_version(self, date=None):
         if date is None:
