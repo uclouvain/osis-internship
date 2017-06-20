@@ -1619,3 +1619,6 @@ msgstr "Entité resp. de l'attribution"
 
 msgid "additional_requirement_entity"
 msgstr "Entité complémentaire"
+
+msgid "academic_end_year"
+msgstr "Anac de fin"
