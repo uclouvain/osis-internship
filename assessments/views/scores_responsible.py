@@ -46,13 +46,13 @@ def scores_responsible(request):
 @user_passes_test(is_entity_manager)
 def scores_responsible_search(request):
     entities_manager = mdl_base.entity_manager.find_by_user(request.user)
-    attributions = mdl_attr.attribution.find_all_distinct_parents(entities_manager)
+    learning_unit_years = mdl_base.learning_unit_year.find_all_structure_parents(entities_manager)
     academic_year = mdl_base.academic_year.current_academic_year()
     if request.GET:
         attributions_searched = mdl_attr.attribution.search_scores_responsible(
             learning_unit_title=request.GET.get('learning_unit_title'),
             course_code=request.GET.get('course_code'),
-            attributions=attributions,
+            learning_unit_years=learning_unit_years,
             tutor=request.GET.get('tutor'),
             responsible=request.GET.get('scores_responsible'))
         dict_attribution = create_attributions_list(attributions_searched)
