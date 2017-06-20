@@ -51,7 +51,7 @@ class EntityContainerYear(models.Model):
         return u"%s - %s - %s" % (self.entity, self.learning_container_year, self.type)
 
 
-def find_entities(learning_container_year, link_type=None, with_volumes=False):
+def find_entities(learning_container_year, link_type=None):
     lcy_start_date = learning_container_year.academic_year.start_date
 
     queryset = EntityContainerYear.objects.filter(learning_container_year=learning_container_year)
@@ -67,23 +67,13 @@ def find_entities(learning_container_year, link_type=None, with_volumes=False):
                                                      to_attr="entity_versions")
                                     )
 
-    if with_volumes:
-        entity_container_years = entity_container_years.prefetch_related(
-            Prefetch('entitycomponentyear_set',
-            to_attr="volumes")
-        )
-
-    return {ecy.type: _get_latest_entity_version(ecy, with_volumes) for ecy in entity_container_years}
+    return {ecy.type: _get_latest_entity_version(ecy) for ecy in entity_container_years}
 
 
-def _get_latest_entity_version(entity_container_year, with_volumes):
+def _get_latest_entity_version(entity_container_year):
     entity_version = None
     if entity_container_year.entity.entity_versions:
         entity_version = entity_container_year.entity.entity_versions[-1]
-
-        if with_volumes and entity_container_year.volumes:
-            entity_version.volumes = { vol.learning_component_year.type : vol for vol in entity_container_year.volumes}
-
     return entity_version
 
 

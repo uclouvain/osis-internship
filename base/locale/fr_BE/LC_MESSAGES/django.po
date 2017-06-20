@@ -1617,5 +1617,5 @@ msgstr "Entité resp. cahier de charges"
 msgid "allocation_entity"
 msgstr "Entité resp. de l'attribution"
 
-msgid "additional_allocation_entities"
-msgstr "Autres entités et répartition"
+msgid "additional_requirement_entity"
+msgstr "Entité complémentaire"

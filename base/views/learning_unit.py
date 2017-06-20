@@ -235,8 +235,7 @@ def _get_organization_from_learning_unit_year(learning_unit_year):
 def _get_all_attributions(learning_unit_year):
     attributions = {}
     if learning_unit_year.learning_container_year:
-        all_attributions = entity_container_year.find_entities(learning_unit_year.learning_container_year,
-                                                               with_volumes=True)
+        all_attributions = entity_container_year.find_entities(learning_unit_year.learning_container_year)
         attributions['requirement_entity'] = all_attributions.get(entity_container_year_link_type.REQUIREMENT_ENTITY)
         attributions['allocation_entity'] = all_attributions.get(entity_container_year_link_type.ALLOCATION_ENTITY)
         attributions['additional_requirement_entities'] = [
