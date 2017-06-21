@@ -1622,3 +1622,6 @@ msgstr "Entité complémentaire"
 
 msgid "academic_end_year"
 msgstr "Anac de fin"
+
+msgid "organization_name"
+msgstr "Nom"
