@@ -90,9 +90,10 @@
     </div>
     <div>
       {% if academic_calendar_list|length > 0%}
-        <div id="chart_div"></div>
+        <p id="gantt_div"></p>
       {% endif %}
     </div>
+
   </div>
 </div>
 {% endblock %}
@@ -102,8 +103,23 @@
         google.charts.load('current', {'packages':['gantt']});
         google.charts.setOnLoadCallback(drawChart);
 
-        function daysToMilliseconds(days) {
-          return days * 24 * 60 * 60 * 1000;
+        function buildDate(stringDate) {
+          var splittedDate = stringDate.split('-');
+          var date = new Date(splittedDate[0], splittedDate[1]-1, splittedDate[2]);
+          return date;
+        }
+
+        function computePercentDone(startDate, endDate) {
+          var today = new Date()
+
+          if (today <= startDate) {
+            return 0;
+          } else if (today >= endDate) {
+            return 100;
+          } else {
+            var percent = Math.abs(100 * (today.getTime() - startDate.getTime()) / (endDate.getTime() - startDate.getTime()));
+            return Math.round(percent);
+          }
         }
 
         var academic_calendar_json = '{{academic_calendar_json | safe}}'
@@ -121,40 +137,41 @@
           data.addColumn('number', '');
           data.addColumn('string', 'Dependencies');
 
-
-
           for(var i = 0 ;i < len; i++) {
               var academic_calendar = academic_calendars[i];
-              var splitted_start_date =academic_calendar.fields.start_date.split('-');
-              var splitted_end_date =academic_calendar.fields.end_date.split('-');
+              var startDate = buildDate(academic_calendar.fields.start_date);
+              var endDate = buildDate(academic_calendar.fields.end_date);
+              var percentDone = computePercentDone(startDate, endDate)
+
               var label = i.toString()
               data.addRows([
                 [
                     label,
                     academic_calendar.fields.title,
                     academic_calendar.fields.reference,
-                    new Date(splitted_start_date[0], splitted_start_date[1], splitted_start_date[2]),
-                    new Date(splitted_end_date[0], splitted_end_date[1], splitted_end_date[2]),
+                    startDate,
+                    endDate,
                     null,
-                    0,
+                    percentDone,
                     null
                 ],
               ]);
           }
 
-
           var options = {
             height: len * 50,
+            width: 1000,
             gantt: {
               trackHeight: 40,
-              percentEnabled: 'False',
+              percentEnabled: 'True',
               criticalPathEnabled: 'False',
             },
           };
 
-          var chart = new google.visualization.Gantt(document.getElementById('chart_div'));
+          var chart = new google.visualization.Gantt(document.getElementById('gantt_div'));
 
           chart.draw(data, options);
         }
+
     </script>
 {% endblock %}
