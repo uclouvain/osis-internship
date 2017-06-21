@@ -100,8 +100,11 @@ def learning_unit_components(request, learning_unit_year_id):
 def learning_unit_pedagogy(request, learning_unit_year_id):
     context = _get_common_context_learning_unit_year(learning_unit_year_id)
     learning_unit_year = context['learning_unit_year']
-    user_language = mdl.person.get_user_interface_language(request.user)
 
+    if request.method == "POST":
+        _learning_unit_pedagogy_post(request, learning_unit_year)
+
+    user_language = mdl.person.get_user_interface_language(request.user)
     CMS_LABEL = ['resume', 'bibliography', 'teaching_methods', 'evaluation_methods',
                  'other_informations', 'online_resources']
     translated_labels = mdl_cms.translated_text_label.search(text_entity=entity_name.LEARNING_UNIT_YEAR,
@@ -115,11 +118,30 @@ def learning_unit_pedagogy(request, learning_unit_year_id):
         context[label_name] = trans_label.label
 
     context.update({
-        'form_french': LearningUnitPedagogyForm(learning_unit_year, fr_language),
-        'form_english': LearningUnitPedagogyForm(learning_unit_year, en_language)
+        'form_french': LearningUnitPedagogyForm(learning_unit_year=learning_unit_year,
+                                                language=fr_language),
+        'form_english': LearningUnitPedagogyForm(learning_unit_year=learning_unit_year,
+                                                 language=en_language)
     })
     context['experimental_phase'] = True
     return layout.render(request, "learning_unit/pedagogy.html", context)
+
+
+def _learning_unit_pedagogy_post(request, learning_unit_year):
+    fr_language = next((lang for lang in settings.LANGUAGES if lang[0] == 'fr-be'), None)
+    en_language = next((lang for lang in settings.LANGUAGES if lang[0] == 'en'), None)
+
+    form_french = LearningUnitPedagogyForm(request.POST,
+                                           learning_unit_year=learning_unit_year,
+                                           language=fr_language)
+    if form_french.is_valid():
+        form_french.save()
+
+    form_english = LearningUnitPedagogyForm(request.POST,
+                                            learning_unit_year=learning_unit_year,
+                                            language=en_language)
+    if form_english.is_valid():
+        form_english.save()
 
 
 @login_required

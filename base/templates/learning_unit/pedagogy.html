@@ -38,7 +38,10 @@
 
         <div class="tab-content" id="tab_content">
             <div role="tabpanel" class="tab-pane active" id="pedagogy">
-                 <form>
+                 <form role="form" method="POST">
+                     <button type="submit">SAVE</button>
+                    {% csrf_token %}
+                    {{ form_french.media }}
                     <div class="row" style="margin-top:10px;">
                         <div class="col-md-2">
                             <label> {% trans 'language'%} </label>
