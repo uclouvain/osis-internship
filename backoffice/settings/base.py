@@ -181,6 +181,8 @@ USER_SIGNALS_MANAGER = os.environ.get('USER_SIGNALS_MANAGER', None)
 USER_UPDATED_SIGNAL = os.environ.get('USER_UPDATED_SIGNAL', None)
 USER_CREATED_SIGNAL = os.environ.get('USER_CREATED_SIGNAL', None)
 
+# Field upload settings
+DATA_UPLOAD_MAX_NUMBER_FIELDS = int(os.environ.get('DATA_UPLOAD_MAX_NUMBER_FIELDS', 5000))
 
 # This has to be set in your .env with the actual url where you institution logo can be found.
 # Ex : LOGO_INSTITUTION_URL = 'https://www.google.be/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png'
