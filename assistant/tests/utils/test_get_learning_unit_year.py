@@ -24,7 +24,8 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import datetime, json
+import datetime
+import json
 
 from django.test import TestCase
 
@@ -43,13 +44,17 @@ class GetLearningUnitsYearTestCase(TestCase):
             academic_year=self.academic_year)
 
     def test_get_learning_units_year(self):
-        response = self.client.generic(method='get', path='/assistants/api/get_learning_units_year/?term=LBIR1211',
-                                       HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        response = self.client.generic(
+            method='get',
+            path='/assistants/api/get_learning_units_year/?term=LBIR1211',
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         data = json.loads(response.content.decode("utf-8"))
         self.assertEqual(data[0]['value'], 'LBIR1211')
         self.assertEqual(len(data), 1)
 
-        response = self.client.generic(method='get', path='/assistants/api/get_learning_units_year/?term=LBIR12',
-                                       HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        response = self.client.generic(
+            method='get',
+            path='/assistants/api/get_learning_units_year/?term=LBIR12',
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         data = json.loads(response.content.decode("utf-8"))
         self.assertEqual(len(data), 2)

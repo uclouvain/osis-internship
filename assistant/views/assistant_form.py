@@ -33,7 +33,7 @@ from assistant.models import *
 from assistant.utils.send_email import send_message
 from assistant.forms import *
 from assistant.models.enums import document_type
-from base.models import person_address, person
+from base.models import person_address, person, learning_unit_year
 from assistant.models.enums import assistant_mandate_state, assistant_phd_inscription
 
 
@@ -94,37 +94,59 @@ def tutoring_learning_unit_add(request, mandate_id):
 
 @login_required
 def tutoring_learning_unit_edit(request, tutoring_learning_unit_id=None):
-    edited_learning_unit_year = mdl.tutoring_learning_unit_year.find_by_id(tutoring_learning_unit_id)
-    this_academic_year = edited_learning_unit_year.learning_unit_year.academic_year
-    mandate_id = edited_learning_unit_year.mandate_id
+    edited_tutoring_learning_unit_year = mdl.tutoring_learning_unit_year.find_by_id(tutoring_learning_unit_id)
+    mandate_id = edited_tutoring_learning_unit_year.mandate_id
     mandate = assistant_mandate.find_mandate_by_id(mandate_id)
-    form = TutoringLearningUnitForm(initial={'mandate_id': edited_learning_unit_year.mandate_id,
-                                             'tutoring_learning_unit_year_id': edited_learning_unit_year.id,
-                                             'learning_unit_year': edited_learning_unit_year.learning_unit_year.acronym,
-                                             'sessions_duration': edited_learning_unit_year.sessions_duration,
-                                             'sessions_number': edited_learning_unit_year.sessions_number,
-                                             'series_number': edited_learning_unit_year.series_number,
-                                             'face_to_face_duration': edited_learning_unit_year.face_to_face_duration,
-                                             'attendees': edited_learning_unit_year.attendees,
-                                             'preparation_duration': edited_learning_unit_year.preparation_duration,
-                                             'exams_supervision_duration':
-                                                 edited_learning_unit_year.exams_supervision_duration,
-                                             'others_delivery': edited_learning_unit_year.others_delivery,
-                                             'academic_year': this_academic_year.id})
-    return render(request, "tutoring_learning_unit_year.html", {'form': form,
-                                                                'assistant_type': mandate.assistant_type,
-                                                                'mandate_id': mandate_id})
+    search_learning_units_year = edited_tutoring_learning_unit_year.learning_unit_year.acronym + \
+                                 ' (' + str(edited_tutoring_learning_unit_year.learning_unit_year.academic_year) + ')'
+
+    form = TutoringLearningUnitForm(
+        initial={
+            'mandate_id': edited_tutoring_learning_unit_year.mandate_id,
+            'tutoring_learning_unit_year_id': edited_tutoring_learning_unit_year.id,
+            'sessions_duration': edited_tutoring_learning_unit_year.sessions_duration,
+            'sessions_number': edited_tutoring_learning_unit_year.sessions_number,
+            'series_number': edited_tutoring_learning_unit_year.series_number,
+            'face_to_face_duration': edited_tutoring_learning_unit_year.face_to_face_duration,
+            'attendees': edited_tutoring_learning_unit_year.attendees,
+            'preparation_duration': edited_tutoring_learning_unit_year.preparation_duration,
+            'exams_supervision_duration': edited_tutoring_learning_unit_year.exams_supervision_duration,
+            'others_delivery': edited_tutoring_learning_unit_year.others_delivery
+        })
+    return render(request, "tutoring_learning_unit_year.html",
+                  {
+                      'form': form,
+                      'assistant_type': mandate.assistant_type,
+                      'mandate_id': mandate_id,
+                      'learning_unit_year_id': edited_tutoring_learning_unit_year.learning_unit_year.id,
+                      'search_learning_units_year': search_learning_units_year
+                  })
 
 
 @login_required
-def tutoring_learning_unit_save(request, mandate_id):
-    form = TutoringLearningUnitForm(data=request.POST)
-    if form.is_valid():
-        form.save()
-        return HttpResponseRedirect(reverse('mandate_learning_units', kwargs={'mandate_id': mandate_id}))
-    else:
-        return render(request, "tutoring_learning_unit_year.html", {'form': form,
-                                                                    'mandate_id': mandate_id})
+def tutoring_learning_unit_save(request):
+    if request.method == 'POST':
+        tutoring_learning_unit_year_id = request.POST.get('tutoring_learning_unit_year_id')
+        if tutoring_learning_unit_year_id:
+            current_tutoring_learning_unit = mdl.tutoring_learning_unit_year.find_by_id(tutoring_learning_unit_year_id)
+        else:
+            current_tutoring_learning_unit = None
+        form = TutoringLearningUnitForm(data=request.POST, instance=current_tutoring_learning_unit)
+        if form .is_valid():
+            mandate_id = request.POST.get('mandate_id')
+            learning_unit_year_id = request.POST.get('learning_unit_year_id')
+            this_mandate = assistant_mandate.find_mandate_by_id(mandate_id)
+            current_tutoring_learning_unit = form.save(commit=False)
+            if not learning_unit_year_id:
+                msg = _("must_enter_learning_unit_year")
+                form.add_error(None, msg)
+            else:
+                this_learning_unit_year = learning_unit_year.find_by_id(learning_unit_year_id)
+                current_tutoring_learning_unit.learning_unit_year = this_learning_unit_year
+                current_tutoring_learning_unit.mandate = this_mandate
+                current_tutoring_learning_unit.save()
+                return HttpResponseRedirect(reverse('mandate_learning_units', kwargs={'mandate_id': mandate_id}))
+    return render(request, "tutoring_learning_unit_year.html", {'form': form, 'mandate_id': mandate_id})
 
 
 @login_required

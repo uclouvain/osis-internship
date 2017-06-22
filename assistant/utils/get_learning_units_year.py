@@ -35,6 +35,7 @@ def get_learning_units_year(request):
         for learning_unit_year in learning_units_year:
             response_data.append({'value': learning_unit_year.acronym,
                                   'title': learning_unit_year.title,
+                                  'academic_year': str(learning_unit_year.academic_year),
                                   'id': learning_unit_year.id
                                   })
     else:

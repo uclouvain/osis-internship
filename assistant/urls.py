@@ -63,7 +63,7 @@ urlpatterns = [
                     name='tutoring_learning_unit_delete'),
                 url(r'^(?P<tutoring_learning_unit_id>\d+)/edit/$', assistant_form.tutoring_learning_unit_edit,
                     name='tutoring_learning_unit_edit'),
-                url(r'^(?P<mandate_id>\d+)/save/$', assistant_form.tutoring_learning_unit_save,
+                url(r'^save/$', assistant_form.tutoring_learning_unit_save,
                     name='tutoring_learning_unit_save'),
             ])),
             url(r'^part3/(?P<mandate_id>\d+)/', include([

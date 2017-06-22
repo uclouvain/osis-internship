@@ -30,11 +30,11 @@ from django.forms import ModelForm, Textarea
 from django.forms import widgets
 from django.forms.models import inlineformset_factory
 from django.utils.translation import ugettext as _
-from base.models import structure, academic_year, learning_unit_year
+from base.models import structure, academic_year
 from base.models.enums import structure_type
 from assistant import models as mdl
-from assistant.models.enums import review_advice_choices, assistant_type, assistant_mandate_renewal, \
-    reviewer_role, assistant_phd_inscription
+from assistant.models.enums import review_advice_choices, assistant_type
+from assistant.models.enums import assistant_mandate_renewal, reviewer_role, assistant_phd_inscription
 
 
 class MandateFileForm(forms.Form):
@@ -120,6 +120,8 @@ RADIO_SELECT_REQUIRED = dict(
     required=True,
     widget=forms.RadioSelect(attrs={'onChange': 'Hide()'})
 )
+
+
 class AssistantFormPart3(ModelForm):
     PARAMETERS = dict(required=False, widget=forms.DateInput(format='%d/%m/%Y', attrs={'placeholder': 'dd/mm/yyyy'}),
                       input_formats=['%d/%m/%Y'])
@@ -162,80 +164,28 @@ class AssistantFormPart4(ModelForm):
                   'awards', 'framing', 'remark')
 
 
-class TutoringLearningUnitForm(forms.Form):
-    sessions_number = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'input session_number'}))
-    sessions_duration = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'input session_duration'}))
-    series_number = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'input series_numbers'}))
-    face_to_face_duration = forms.IntegerField(widget=forms.NumberInput(attrs={'readonly': 'enabled'}))
-    attendees = forms.IntegerField(widget=forms.NumberInput(attrs={'min': '1', 'max': '999', 'step': '1'}))
+class TutoringLearningUnitForm(ModelForm):
+    sessions_number = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'input session_number',
+                                                                         'style': 'width:6ch'}))
+    sessions_duration = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'input session_duration',
+                                                                           'style': 'width:6ch'}))
+    series_number = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'input series_numbers',
+                                                                       'style': 'width:6ch'}))
+    face_to_face_duration = forms.IntegerField(widget=forms.NumberInput(attrs={'readonly': 'enabled',
+                                                                               'style': 'width:6ch'}))
+    attendees = forms.IntegerField(widget=forms.NumberInput(attrs={'min': '1', 'max': '999', 'step': '1',
+                                                                   'style': 'width:6ch'}))
     exams_supervision_duration = forms.IntegerField(
-        widget=forms.NumberInput(attrs={'min': '1', 'max': '999', 'step': '1'}))
+        widget=forms.NumberInput(attrs={'min': '1', 'max': '999', 'step': '1', 'style': 'width:6ch'}))
     others_delivery = forms.CharField(required=False, widget=forms.Textarea(attrs={'cols': '80', 'rows': '4'}))
     mandate_id = forms.CharField(widget=forms.HiddenInput(), required=True)
-    learning_unit_year = forms.CharField(required=True)
     tutoring_learning_unit_year_id = forms.CharField(widget=forms.HiddenInput(), required=False)
-
-    def __init__(self, *args, **kwargs):
-        super(TutoringLearningUnitForm, self).__init__(*args, **kwargs)
-        self.fields['academic_year'] = \
-            forms.ChoiceField(choices=[(obj.id, obj) for obj in academic_year.find_academic_years()])
 
     class Meta:
         model = mdl.tutoring_learning_unit_year.TutoringLearningUnitYear
-        fields = ('academic_years', 'sessions_number', 'sessions_duration', 'series_numbers', 'face_to_face_duration',
-                  'attendees', 'exams_supervision_duration', 'mandate', 'learning_unit_year')
-
-    def clean(self):
-        super(TutoringLearningUnitForm, self).clean()
-        academic_year_id = self.cleaned_data.get("academic_year")
-        learning_unit_acronym = self.cleaned_data.get('learning_unit_year')
-        learning_units_year = learning_unit_year.search(academic_year_id=academic_year_id,
-                                                        acronym=learning_unit_acronym)
-        if not learning_units_year:
-            msg = _("learning_unit_year_error_msg")
-            self.add_error('learning_unit_year', msg)
-        elif learning_units_year.count() > 1:
-            msg = _("learning_unit_year_multiple_msg")
-            self.add_error('learning_unit_year', msg)
-            for this_learning_unit_year in learning_units_year:
-                msg_acronym = this_learning_unit_year.acronym
-                self.add_error('learning_unit_year', msg_acronym)
-
-    def save(self):
-        data = self.cleaned_data
-        academic_year_id = data.get("academic_year")
-        learning_unit_acronym = data.get("learning_unit_year")
-        this_learning_unit_year = learning_unit_year.search(academic_year_id=academic_year_id,
-                                                            acronym=learning_unit_acronym)[:1].get()
-        mandate_id = data.get("mandate_id")
-        sessions_number = data.get("sessions_number")
-        sessions_duration = data.get("sessions_duration")
-        series_number = data.get("series_number")
-        face_to_face_duration = data.get("face_to_face_duration")
-        attendees = data.get("attendees")
-        exams_supervision_duration = data.get("exams_supervision_duration")
-        others_delivery = data.get("others_delivery")
-        tutoring_learning_unit_year_id = data.get("tutoring_learning_unit_year_id")
-        mandate = mdl.assistant_mandate.find_mandate_by_id(mandate_id)
-        if tutoring_learning_unit_year_id:
-            tutoring_learning_unit_year = mdl.tutoring_learning_unit_year.find_by_id(tutoring_learning_unit_year_id)
-            tutoring_learning_unit_year.sessions_number = sessions_number
-            tutoring_learning_unit_year.sessions_duration = sessions_duration
-            tutoring_learning_unit_year.series_number = series_number
-            tutoring_learning_unit_year.face_to_face_duration = face_to_face_duration
-            tutoring_learning_unit_year.attendees = attendees
-            tutoring_learning_unit_year.exams_supervision_duration = exams_supervision_duration
-            tutoring_learning_unit_year.others_delivery = others_delivery
-            tutoring_learning_unit_year.mandate = mandate
-            tutoring_learning_unit_year.learning_unit_year = this_learning_unit_year
-        else:
-            tutoring_learning_unit_year = mdl.tutoring_learning_unit_year.TutoringLearningUnitYear.objects.create(
-                learning_unit_year=this_learning_unit_year, sessions_number=sessions_number,
-                sessions_duration=sessions_duration, series_number=series_number,
-                face_to_face_duration=face_to_face_duration, attendees=attendees,
-                exams_supervision_duration=exams_supervision_duration, others_delivery=others_delivery,
-                mandate=mandate)
-        tutoring_learning_unit_year.save()
+        fields = ('sessions_number', 'sessions_duration', 'series_number', 'face_to_face_duration',
+                  'attendees', 'exams_supervision_duration', 'others_delivery')
+        exclude = ['learning_unit_year', 'mandate']
 
 
 class AssistantFormPart5(ModelForm):
