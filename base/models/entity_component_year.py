@@ -41,18 +41,15 @@ class EntityComponentYear(models.Model):
     hourly_volume_total = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
     hourly_volume_partial = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
 
-
     @property
-    def hourly_volume_partial_q2(self):
-        if self.hourly_volume_total:
-            if self.hourly_volume_partial:
-                q2 = self.hourly_volume_total - self.hourly_volume_partial
-                if q2 <= 0:
-                    return None
-                else:
-                    return q2
+    def hourly_volume_remaining(self):
+        if self.hourly_volume_total and self.hourly_volume_partial:
+            q2 = self.hourly_volume_total - self.hourly_volume_partial
+            if q2 <= 0:
+                return None
+            else:
+                return q2
         return None
-
 
     def __str__(self):
         return u"%s - %s" % (self.entity_container_year, self.learning_component_year)
