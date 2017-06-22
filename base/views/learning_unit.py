@@ -40,6 +40,7 @@ from cms.enums import entity_name
 from base.forms.learning_units import LearningUnitYearForm
 from base.forms.learning_unit_specifications import LearningUnitSpecificationsForm
 from base.forms.learning_unit_pedagogy import LearningUnitPedagogyForm
+from base.models.enums import entity_container_year_link_type
 
 from . import layout
 
@@ -200,7 +201,12 @@ def get_components(a_learning_container_yr):
 
         for learning_component_year in learning_component_year_list:
             learning_class_year_list = mdl.learning_class_year.find_by_learning_component_year(learning_component_year)
+            entity_container_yrs = mdl.entity_container_year.find_by_learning_container_year(learning_component_year.learning_container_year,
+                                                                                            entity_container_year_link_type.REQUIREMENT_ENTITY)
             components.append({'learning_component_year': learning_component_year,
+                               'entity_component_yr': mdl.entity_component_year.find_by_entity_container_year(entity_container_yrs,
+                                                                                                                 learning_component_year).first(),
+
                                'classes': learning_class_year_list})
     return components
 

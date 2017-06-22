@@ -29,6 +29,10 @@ from django.contrib import admin
 from base.models.enums import learning_component_year_type, learning_container_year_types
 
 
+
+
+
+
 class LearningComponentYearAdmin(admin.ModelAdmin):
     list_display = ('learning_container_year', 'title', 'acronym', 'type', 'comment')
     fieldsets = ((None, {'fields': ('learning_container_year', 'title', 'acronym',
@@ -75,3 +79,4 @@ def find_by_id(learning_component_year_id):
 def find_by_learning_container_year(a_learning_container_year):
     return LearningComponentYear.objects.filter(learning_container_year=a_learning_container_year)\
                                         .order_by('type', 'acronym')
+
