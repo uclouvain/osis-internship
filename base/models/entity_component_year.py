@@ -44,11 +44,9 @@ class EntityComponentYear(models.Model):
     @property
     def hourly_volume_remaining(self):
         if self.hourly_volume_total and self.hourly_volume_partial:
-            q2 = self.hourly_volume_total - self.hourly_volume_partial
-            if q2 <= 0:
-                return None
-            else:
-                return q2
+            q = self.hourly_volume_total - self.hourly_volume_partial
+            if q > 0:
+                return q
         return None
 
     def __str__(self):
