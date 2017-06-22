@@ -24,21 +24,30 @@
 #
 ##############################################################################
 from django.db import models
+from django.contrib import admin
 
 
-# To be removed.
-class Attribution(models.Model):
-    FUNCTION_CHOICES = (
-        ('COORDINATOR', 'Coordinator'),
-        ('PROFESSOR', 'Professor'))
+class EntityComponentYearAdmin(admin.ModelAdmin):
+    list_display = ('entity_container_year', 'learning_component_year', 'hourly_volume_total',
+                    'hourly_volume_partial')
+    search_fields = ['entity_container_year__learning_container_year__acronym']
 
-    external_id = models.CharField(max_length=100, blank=True, null=True)
+
+class EntityComponentYear(models.Model):
+    external_id = models.CharField(max_length=255, blank=True, null=True)
     changed = models.DateTimeField(null=True, auto_now=True)
-    start_date = models.DateField(auto_now=False, blank=True, null=True, auto_now_add=False)
-    end_date = models.DateField(auto_now=False, blank=True, null=True, auto_now_add=False)
-    function = models.CharField(max_length=15, blank=True, null=True, choices=FUNCTION_CHOICES, db_index=True)
-    learning_unit_year = models.ForeignKey('LearningUnitYear', related_name='learning_unit_year_attribution', blank=True, null=True, default=None)
-    tutor = models.ForeignKey('Tutor', related_name='tutor_attribution')
+    entity_container_year = models.ForeignKey('EntityContainerYear')
+    learning_component_year = models.ForeignKey('LearningComponentYear')
+    hourly_volume_total = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
+    hourly_volume_partial = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
+
+    @property
+    def hourly_volume_remaining(self):
+        if self.hourly_volume_total and self.hourly_volume_partial:
+            q = self.hourly_volume_total - self.hourly_volume_partial
+            if q > 0:
+                return q
+        return None
 
     def __str__(self):
-        return u"%s - %s" % (self.tutor.person, self.function)
+        return u"%s - %s" % (self.entity_container_year, self.learning_component_year)

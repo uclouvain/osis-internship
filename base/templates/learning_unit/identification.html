@@ -123,6 +123,32 @@
                          {% if campus %}
                             {{ campus.name }}
                          {% endif %}
+                        <br>
+                         <label style="margin-top:10px;">{% trans 'requirement_entity'%}</label><br>
+                         {% if requirement_entity %}
+                            {{ requirement_entity.acronym }}
+                         {% endif %}
+                        <br>
+                        <label style="margin-top:10px;">{% trans 'allocation_entity'%}</label><br>
+                         {% if allocation_entity %}
+                            {{ allocation_entity.acronym }}
+                         {% endif %}
+                        <br>
+
+                        {% for entity in additional_requirement_entities %}
+                            <label style="margin-top:10px;">{% trans 'additional_requirement_entity'%}</label><br>
+                            {{ entity.acronym }}
+                        {% endfor %}
+
+                        <label style="margin-top:10px;">{% trans 'allocation_entity'%}</label><br>
+                         {% if allocation_entity %}
+                            {{ allocation_entity.acronym }}
+                         {% endif %}
+                        <br>
+
+                        <label style="margin-top:10px;">{% trans 'academic_end_year'%}</label><br>
+                        {{ learning_unit_year.learning_container_year.learning_container.auto_renewal_until|default_if_none:'-' }}
+                        <br>
                     </div>
                 </div>
             </div>

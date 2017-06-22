@@ -32,7 +32,7 @@ from base.models.enums import learning_component_year_type, learning_container_y
 class LearningComponentYearAdmin(admin.ModelAdmin):
     list_display = ('learning_container_year', 'title', 'acronym', 'type', 'comment')
     fieldsets = ((None, {'fields': ('learning_container_year', 'title', 'acronym',
-                                    'type', 'comment', 'planned_classes', 'hourly_volume_total', 'hourly_volume_partial')}),)
+                                    'type', 'comment', 'planned_classes')}),)
     search_fields = ['acronym']
 
 
@@ -45,8 +45,6 @@ class LearningComponentYear(models.Model):
                             blank=True, null=True)
     comment = models.CharField(max_length=255, blank=True, null=True)
     planned_classes = models.IntegerField(blank=True, null=True)
-    hourly_volume_total = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
-    hourly_volume_partial = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
     deleted = models.BooleanField(default=False)
 
     def __str__(self):
@@ -56,17 +54,6 @@ class LearningComponentYear(models.Model):
         permissions = (
             ("can_access_learningunitcomponentyear", "Can access learning unit component year"),
         )
-
-    @property
-    def hourly_volume_partial_q2(self):
-        if self.hourly_volume_total:
-            if self.hourly_volume_partial:
-                q2 = self.hourly_volume_total - self.hourly_volume_partial
-                if q2 <= 0:
-                    return None
-                else:
-                    return q2
-        return None
 
     @property
     def type_letter_acronym(self):

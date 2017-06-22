@@ -167,6 +167,12 @@ def find(acronym, date=None):
     return entity_version
 
 
+def find_latest_version(date):
+    return EntityVersion.objects.filter(Q(end_date__gte=date) | Q(end_date__isnull=True),
+                                        start_date__lte=date)\
+                                .order_by('-start_date')
+
+
 def search(**kwargs):
     queryset = EntityVersion.objects
 

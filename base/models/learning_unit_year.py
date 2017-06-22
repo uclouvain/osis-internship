@@ -71,8 +71,10 @@ class LearningUnitYear(SerializableModel):
             return self.acronym.replace(self.learning_container_year.acronym, "")
         return None
 
+
 def find_by_id(learning_unit_year_id):
-    return LearningUnitYear.objects.get(pk=learning_unit_year_id)
+    return LearningUnitYear.objects.select_related('learning_container_year__learning_container')\
+                                   .get(pk=learning_unit_year_id)
 
 
 def find_by_acronym(acronym):

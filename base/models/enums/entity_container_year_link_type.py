@@ -23,22 +23,15 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
+REQUIREMENT_ENTITY = "REQUIREMENT_ENTITY"
+ALLOCATION_ENTITY = "ALLOCATION_ENTITY"
+ADDITIONAL_REQUIREMENT_ENTITY_1 = "ADDITIONAL_REQUIREMENT_ENTITY_1"
+ADDITIONAL_REQUIREMENT_ENTITY_2 = "ADDITIONAL_REQUIREMENT_ENTITY_2"
 
 
-# To be removed.
-class Attribution(models.Model):
-    FUNCTION_CHOICES = (
-        ('COORDINATOR', 'Coordinator'),
-        ('PROFESSOR', 'Professor'))
-
-    external_id = models.CharField(max_length=100, blank=True, null=True)
-    changed = models.DateTimeField(null=True, auto_now=True)
-    start_date = models.DateField(auto_now=False, blank=True, null=True, auto_now_add=False)
-    end_date = models.DateField(auto_now=False, blank=True, null=True, auto_now_add=False)
-    function = models.CharField(max_length=15, blank=True, null=True, choices=FUNCTION_CHOICES, db_index=True)
-    learning_unit_year = models.ForeignKey('LearningUnitYear', related_name='learning_unit_year_attribution', blank=True, null=True, default=None)
-    tutor = models.ForeignKey('Tutor', related_name='tutor_attribution')
-
-    def __str__(self):
-        return u"%s - %s" % (self.tutor.person, self.function)
+ENTITY_CONTAINER_YEAR_LINK_TYPES = (
+    (REQUIREMENT_ENTITY, REQUIREMENT_ENTITY),
+    (ALLOCATION_ENTITY, ALLOCATION_ENTITY),
+    (ADDITIONAL_REQUIREMENT_ENTITY_1, ADDITIONAL_REQUIREMENT_ENTITY_1),
+    (ADDITIONAL_REQUIREMENT_ENTITY_2, ADDITIONAL_REQUIREMENT_ENTITY_2),
+)
