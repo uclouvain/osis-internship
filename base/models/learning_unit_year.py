@@ -35,7 +35,8 @@ from base.models.enums import learning_unit_year_activity_status, learning_unit_
 class LearningUnitYearAdmin(SerializableModelAdmin):
     list_display = ('acronym', 'title', 'academic_year', 'credits', 'changed', 'structure')
     fieldsets = ((None, {'fields': ('academic_year', 'learning_unit', 'acronym', 'title', 'title_english', 'credits',
-                                    'decimal_scores', 'structure', 'learning_container_year', 'activity_status')}),)
+                                    'decimal_scores', 'structure', 'learning_container_year', 'activity_status',
+                                    'subtype')}),)
     list_filter = ('academic_year', 'vacant', 'in_charge', 'decimal_scores')
     raw_id_fields = ('learning_unit', 'learning_container_year', 'structure')
     search_fields = ['acronym', 'structure__acronym']
@@ -70,8 +71,10 @@ class LearningUnitYear(SerializableModel):
             return self.acronym.replace(self.learning_container_year.acronym, "")
         return None
 
+
 def find_by_id(learning_unit_year_id):
-    return LearningUnitYear.objects.get(pk=learning_unit_year_id)
+    return LearningUnitYear.objects.select_related('learning_container_year__learning_container')\
+                                   .get(pk=learning_unit_year_id)
 
 
 def find_by_acronym(acronym):

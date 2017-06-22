@@ -1618,5 +1618,11 @@ msgstr "Requirement entity"
 msgid "allocation_entity"
 msgstr "Allocation entity"
 
-msgid "additional_allocation_entities"
-msgstr "Additional allocation entities"
+msgid "additional_requirement_entity"
+msgstr "Additional entity"
+
+msgid "academic_end_year"
+msgstr "Academic end year"
+
+msgid "organization_name"
+msgstr "Name"
