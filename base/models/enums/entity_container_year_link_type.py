@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -23,20 +23,15 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import datetime
-import factory
-import factory.fuzzy
-from django.utils import timezone
+REQUIREMENT_ENTITY = "REQUIREMENT_ENTITY"
+ALLOCATION_ENTITY = "ALLOCATION_ENTITY"
+ADDITIONAL_REQUIREMENT_ENTITY_1 = "ADDITIONAL_REQUIREMENT_ENTITY_1"
+ADDITIONAL_REQUIREMENT_ENTITY_2 = "ADDITIONAL_REQUIREMENT_ENTITY_2"
 
 
-class ApplicationNoticeFactory(factory.DjangoModelFactory):
-    class Meta:
-        model = 'base.ApplicationNotice'
-
-    subject = factory.Sequence(lambda n: 'Application Notice - %d' % n)
-    notice = factory.LazyAttribute(lambda obj: 'Fake description of application notice %s' % obj.subject)
-    start_publish = factory.LazyAttribute(lambda obj: datetime.datetime(timezone.now().year, 1, 1,
-                                                                        tzinfo=timezone.get_current_timezone()))
-    stop_publish = factory.LazyAttribute(lambda obj: datetime.datetime(timezone.now().year+1, 12, 30,
-                                                                       tzinfo=timezone.get_current_timezone()))
-
+ENTITY_CONTAINER_YEAR_LINK_TYPES = (
+    (REQUIREMENT_ENTITY, REQUIREMENT_ENTITY),
+    (ALLOCATION_ENTITY, ALLOCATION_ENTITY),
+    (ADDITIONAL_REQUIREMENT_ENTITY_1, ADDITIONAL_REQUIREMENT_ENTITY_1),
+    (ADDITIONAL_REQUIREMENT_ENTITY_2, ADDITIONAL_REQUIREMENT_ENTITY_2),
+)

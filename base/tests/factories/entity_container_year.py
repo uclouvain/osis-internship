@@ -23,30 +23,34 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
-from django.contrib import admin
+import datetime
+import operator
+
+import factory
+import factory.fuzzy
+from django.conf import settings
 from django.utils import timezone
 
-
-class ApplicationNoticeAdmin(admin.ModelAdmin):
-    list_display = ('subject','notice','start_publish','stop_publish')
-    fieldsets = ((None, {'fields': ('subject','notice','start_publish','stop_publish')}),)
-
-
-class ApplicationNotice(models.Model):
-    subject = models.CharField(max_length=255)
-    notice = models.TextField()
-    start_publish = models.DateTimeField()
-    stop_publish = models.DateTimeField()
+from base.models.enums import entity_container_year_link_type
+from base.tests.factories.entity import EntityFactory
+from base.tests.factories.learning_container_year import LearningContainerYearFactory
 
 
-def find_current_notice():
-    samples = ApplicationNotice.objects.filter(stop_publish__gt=timezone.now(),
-                                               start_publish__lt=timezone.now()).first()
-    return samples
+def _get_tzinfo():
+    if settings.USE_TZ:
+        return timezone.get_current_timezone()
+    else:
+        return None
 
 
+class EntityContainerYearFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = "base.EntityContainerYear"
 
-
-
-
+    external_id = factory.Sequence(lambda n: '10000000%02d' % n)
+    changed = factory.fuzzy.FuzzyDateTime(datetime.datetime(2016, 1, 1, tzinfo=_get_tzinfo()),
+                                          datetime.datetime(2017, 3, 1, tzinfo=_get_tzinfo()))
+    entity = factory.SubFactory(EntityFactory)
+    learning_container_year = factory.SubFactory(LearningContainerYearFactory)
+    type = factory.Iterator(entity_container_year_link_type.ENTITY_CONTAINER_YEAR_LINK_TYPES,
+                            getter=operator.itemgetter(0))
