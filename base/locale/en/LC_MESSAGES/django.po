@@ -1644,3 +1644,9 @@ msgstr "Vol. Q1"
 
 msgid "volume_remaining"
 msgstr "Vol. Q2"
+
+msgid "learning_unit_quater"
+msgstr "LU quater"
+
+msgid "composition"
+msgstr "Composition"

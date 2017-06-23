@@ -88,6 +88,9 @@ def learning_unit_identification(request, learning_unit_year_id):
     context['experimental_phase'] = True
     context['show_subtype'] = _show_subtype(learning_unit_year)
     context.update(_get_all_attributions(learning_unit_year))
+    context['components'] = get_components(learning_unit_year.learning_container_year)
+    context['volume_distribution'] = volume_distribution(learning_unit_year.learning_container_year)
+
     return layout.render(request, "learning_unit/identification.html", context)
 
 
@@ -105,6 +108,7 @@ def learning_unit_components(request, learning_unit_year_id):
     context['components'] = get_components(context['learning_unit_year'].learning_container_year)
     context['tab_active'] = 'components'
     context['experimental_phase'] = True
+    context['show_classes'] = True
     return layout.render(request, "learning_unit/components.html", context)
 
 
@@ -212,7 +216,7 @@ def get_components(a_learning_container_yr):
             learning_class_year_list = mdl.learning_class_year.find_by_learning_component_year(learning_component_year)
             entity_container_yrs = mdl.entity_container_year.find_by_learning_container_year(learning_component_year.learning_container_year,
                                                                                             entity_container_year_link_type.REQUIREMENT_ENTITY)
-            entity_component_yr = mdl.entity_component_year.find_by_entity_container_year(entity_container_yrs,
+            entity_component_yr = mdl.entity_component_year.find_by_entity_container_years(entity_container_yrs,
                                                                                           learning_component_year).first()
             components.append({'learning_component_year': learning_component_year,
                                'entity_component_yr': entity_component_yr,
@@ -300,7 +304,6 @@ def format_nominal_volume(entity_component_yr):
         return 'remaining'
     else:
         return 'partial_remaining'
-    return None
 
 
 def format_volume_remaining(entity_component_yr):
@@ -308,3 +311,42 @@ def format_volume_remaining(entity_component_yr):
     if volume_remaining == 0:
         return '-'
     return volume_remaining
+
+
+def volume_distribution(a_learning_container_yr):
+
+    component_partial_exists = False
+    component_remaining_exists = False
+
+    if a_learning_container_yr:
+        learning_component_yrs = mdl.learning_component_year.find_by_learning_container_year(a_learning_container_yr)
+
+        for learning_component_year in learning_component_yrs:
+            entity_container_yrs = mdl.entity_container_year\
+                .find_by_learning_container_year(learning_component_year.learning_container_year,
+                                                 entity_container_year_link_type.REQUIREMENT_ENTITY)
+            entity_component_yr = mdl.entity_component_year\
+                .find_by_entity_container_years(entity_container_yrs, learning_component_year).first()
+
+            if entity_component_yr.hourly_volume_partial is None:
+                return UNDEFINED_VALUE
+            else:
+                if entity_component_yr.hourly_volume_partial == entity_component_yr.hourly_volume_total:
+                    component_partial_exists = True
+                if entity_component_yr.hourly_volume_partial == 0:
+                    component_remaining_exists = True
+                if entity_component_yr.hourly_volume_partial == VOLUME_FOR_UNKNOWN_QUADRIMESTER:
+                    return _('partial_or_remaining')
+                if entity_component_yr.hourly_volume_partial > 0 and entity_component_yr.hourly_volume_partial < entity_component_yr.hourly_volume_total:
+                    return _('partial_remaining')
+
+            if component_partial_exists:
+                if component_remaining_exists:
+                    return _('partial_remaining')
+                else:
+                    return _('partial')
+            else:
+                if component_remaining_exists:
+                    return _('remaining')
+    return None
+
