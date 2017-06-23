@@ -63,7 +63,7 @@
                             <td>/{{ component.learning_component_year.acronym  | default_if_none:'' }}</td>
                             <td>{{ component.volumes.hourly_volume | default_if_none:'0'}}</td>
                             <td>
-                                {%if component.entity_component_yr.volumes.quadrimester_volume%}
+                                {%if component.volumes.quadrimester_volume%}
                                     {% trans component.volumes.quadrimester_volume  %}
                                 {%else%}
                                     0
