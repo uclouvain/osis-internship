@@ -24,6 +24,7 @@
 #
 ##############################################################################
 from django import forms
+from django.utils.safestring import mark_safe
 from ckeditor.widgets import CKEditorWidget
 from cms.enums import entity_name
 from cms.models import translated_text
@@ -31,42 +32,47 @@ from cms.models import translated_text
 
 class LearningUnitPedagogyForm(forms.Form):
     learning_unit_year = language = None
-    resume = forms.CharField(widget=CKEditorWidget(config_name='minimal'), required=False)
-    bibliography = forms.CharField(widget=CKEditorWidget(config_name='minimal'), required=False)
-    teaching_methods = forms.CharField(widget=CKEditorWidget(config_name='minimal'), required=False)
-    evaluation_methods = forms.CharField(widget=CKEditorWidget(config_name='minimal'), required=False)
-    other_informations = forms.CharField(widget=CKEditorWidget(config_name='minimal'), required=False)
-    online_resources = forms.CharField(widget=CKEditorWidget(config_name='minimal'), required=False)
+    text_labels_name = ['resume', 'bibliography', 'teaching_methods', 'evaluation_methods',
+                        'other_informations', 'online_resources']
 
     def __init__(self, *args, **kwargs):
         self.learning_unit_year = kwargs.pop('learning_unit_year', None)
         self.language = kwargs.pop('language', None)
-        self.prefix = self.language[0] # FORM Prefix is the ISO code
-        super(LearningUnitPedagogyForm, self).__init__(*args, **kwargs)
         self.load_initial()
+        super(LearningUnitPedagogyForm, self).__init__(*args, **kwargs)
 
     def load_initial(self):
         translated_texts_list = self._get_all_translated_text_related()
 
         for trans_txt in translated_texts_list:
             text_label = trans_txt.text_label.label
-            self.fields[text_label].initial = trans_txt.text
-
-    def save(self):
-        translated_texts_list = self._get_all_translated_text_related()
-        cleaned_data = self.cleaned_data
-
-        # Update
-        for trans_txt in translated_texts_list:
-            text_label = trans_txt.text_label.label
-            trans_txt.text = cleaned_data.pop(text_label, None)
-            trans_txt.save()
+            setattr(self, text_label, mark_safe(trans_txt.text))
 
     def _get_all_translated_text_related(self):
         language_iso = self.language[0]
-        text_labels_name = ['resume', 'bibliography', 'teaching_methods', 'evaluation_methods',
-                            'other_informations', 'online_resources']
+
         return translated_text.search(entity=entity_name.LEARNING_UNIT_YEAR,
                                       reference=self.learning_unit_year.id,
                                       language=language_iso,
-                                      text_labels_name=text_labels_name)
+                                      text_labels_name=self.text_labels_name)
+
+
+class LearningUnitPedagogyEditForm(forms.Form):
+    trans_text = forms.CharField(widget=CKEditorWidget(config_name='minimal'), required=False)
+    cms_id = forms.IntegerField(widget=forms.HiddenInput())
+
+    def __init__(self, *args, **kwargs):
+        self.learning_unit_year = kwargs.pop('learning_unit_year', None)
+        self.language_iso = kwargs.pop('language', None)
+        self.text_label = kwargs.pop('text_label', None)
+        super(LearningUnitPedagogyEditForm, self).__init__(*args, **kwargs)
+        if self.learning_unit_year and self.language_iso and self.text_label:
+            self.load_initial()
+
+    def load_initial(self):
+        value = translated_text.get_or_create(entity=entity_name.LEARNING_UNIT_YEAR,
+                                              reference=self.learning_unit_year.id,
+                                              language=self.language_iso,
+                                              text_label=self.text_label)
+        self.fields['cms_id'].initial = value.id
+        self.fields['trans_text'].initial = value.text
