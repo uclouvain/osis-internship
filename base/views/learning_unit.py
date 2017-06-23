@@ -47,7 +47,7 @@ from . import layout
 UNDEFINED_VALUE = '?'
 
 HOURLY_VOLUME_KEY = 'hourly_volume'
-QUADRIMESTER_VOLUME_KEY = 'quadrimester_volume'
+TOTAL_VOLUME_KEY = 'total_volume'
 VOLUME_PARTIAL_KEY = 'volume_partial'
 VOLUME_REMAINING_KEY = 'volume_remaining'
 
@@ -268,25 +268,25 @@ def _get_all_attributions(learning_unit_year):
 def volumes(entity_component_yr):
     if entity_component_yr:
         if not entity_component_yr.hourly_volume_total:
-            return dict.fromkeys([HOURLY_VOLUME_KEY, QUADRIMESTER_VOLUME_KEY, VOLUME_PARTIAL_KEY, VOLUME_REMAINING_KEY],
+            return dict.fromkeys([HOURLY_VOLUME_KEY, TOTAL_VOLUME_KEY, VOLUME_PARTIAL_KEY, VOLUME_REMAINING_KEY],
                                  UNDEFINED_VALUE)
 
         if entity_component_yr.hourly_volume_partial is None:
             return {HOURLY_VOLUME_KEY: entity_component_yr.hourly_volume_total,
-                    QUADRIMESTER_VOLUME_KEY: UNDEFINED_VALUE,
+                    TOTAL_VOLUME_KEY: UNDEFINED_VALUE,
                     VOLUME_PARTIAL_KEY: UNDEFINED_VALUE,
                     VOLUME_REMAINING_KEY: UNDEFINED_VALUE}
 
         if unknown_quadrimester(entity_component_yr):
             return {HOURLY_VOLUME_KEY: entity_component_yr.hourly_volume_total,
-                    QUADRIMESTER_VOLUME_KEY: 'partial_or_remaining',
+                    TOTAL_VOLUME_KEY: 'partial_or_remaining',
                     VOLUME_PARTIAL_KEY: '({})'.format(entity_component_yr.hourly_volume_total),
                     VOLUME_REMAINING_KEY: '({})'.format(entity_component_yr.hourly_volume_total)}
 
         return {HOURLY_VOLUME_KEY: entity_component_yr.hourly_volume_total,
-                QUADRIMESTER_VOLUME_KEY: format_nominal_quadrimester(entity_component_yr),
+                TOTAL_VOLUME_KEY: format_nominal_quadrimester(entity_component_yr),
                 VOLUME_PARTIAL_KEY: entity_component_yr.hourly_volume_partial,
-                VOLUME_REMAINING_KEY: format_volq2(entity_component_yr)}
+                VOLUME_REMAINING_KEY: format_remaining_volume(entity_component_yr)}
 
 
 def unknown_quadrimester(entity_component_yr):
@@ -303,7 +303,7 @@ def format_nominal_quadrimester(entity_component_yr):
             return 'partial_remaining'
 
 
-def format_volq2(entity_component_yr):
+def format_remaining_volume(entity_component_yr):
     vol_q2 = entity_component_yr.hourly_volume_total - entity_component_yr.hourly_volume_partial
     if vol_q2 == 0:
         return '-'

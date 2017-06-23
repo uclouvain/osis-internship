@@ -190,7 +190,7 @@ class LearningUnitViewTestCase(TestCase):
         entity_component_yr = EntityComponentYearFactory(hourly_volume_total=0)
         data = learning_unit_view.volumes(entity_component_yr)
         self.assertEqual(data.get(learning_unit_view.HOURLY_VOLUME_KEY), learning_unit_view.UNDEFINED_VALUE)
-        self.assertEqual(data.get(learning_unit_view.QUADRIMESTER_VOLUME_KEY), learning_unit_view.UNDEFINED_VALUE)
+        self.assertEqual(data.get(learning_unit_view.TOTAL_VOLUME_KEY), learning_unit_view.UNDEFINED_VALUE)
         self.assertEqual(data.get(learning_unit_view.VOLUME_PARTIAL_KEY), learning_unit_view.UNDEFINED_VALUE)
         self.assertEqual(data.get(learning_unit_view.VOLUME_REMAINING_KEY), learning_unit_view.UNDEFINED_VALUE)
 
@@ -199,7 +199,7 @@ class LearningUnitViewTestCase(TestCase):
                                                          hourly_volume_partial=-1)
         data = learning_unit_view.volumes(entity_component_yr)
         self.assertEqual(data.get(learning_unit_view.HOURLY_VOLUME_KEY), 15)
-        self.assertEqual(data.get(learning_unit_view.QUADRIMESTER_VOLUME_KEY), 'partial_or_remaining')
+        self.assertEqual(data.get(learning_unit_view.TOTAL_VOLUME_KEY), 'partial_or_remaining')
         self.assertEqual(data.get(learning_unit_view.VOLUME_PARTIAL_KEY), "(15)")
         self.assertEqual(data.get(learning_unit_view.VOLUME_REMAINING_KEY), "(15)")
 
@@ -215,7 +215,7 @@ class LearningUnitViewTestCase(TestCase):
                                                          hourly_volume_partial=None)
         data = learning_unit_view.volumes(entity_component_yr)
         self.assertEqual(data.get(learning_unit_view.HOURLY_VOLUME_KEY), 15)
-        self.assertEqual(data.get(learning_unit_view.QUADRIMESTER_VOLUME_KEY), learning_unit_view.UNDEFINED_VALUE)
+        self.assertEqual(data.get(learning_unit_view.TOTAL_VOLUME_KEY), learning_unit_view.UNDEFINED_VALUE)
         self.assertEqual(data.get(learning_unit_view.VOLUME_PARTIAL_KEY), learning_unit_view.UNDEFINED_VALUE)
         self.assertEqual(data.get(learning_unit_view.VOLUME_REMAINING_KEY), learning_unit_view.UNDEFINED_VALUE)
 
@@ -225,7 +225,7 @@ class LearningUnitViewTestCase(TestCase):
                                                          hourly_volume_partial=15)
         data = learning_unit_view.volumes(entity_component_yr)
         self.assertEqual(data.get(learning_unit_view.HOURLY_VOLUME_KEY), 15)
-        self.assertEqual(data.get(learning_unit_view.QUADRIMESTER_VOLUME_KEY), 'partial')
+        self.assertEqual(data.get(learning_unit_view.TOTAL_VOLUME_KEY), 'partial')
         self.assertEqual(data.get(learning_unit_view.VOLUME_PARTIAL_KEY), 15)
         self.assertEqual(data.get(learning_unit_view.VOLUME_REMAINING_KEY), '-')
 
@@ -235,7 +235,7 @@ class LearningUnitViewTestCase(TestCase):
                                                          hourly_volume_partial=10)
         data = learning_unit_view.volumes(entity_component_yr)
         self.assertEqual(data.get(learning_unit_view.HOURLY_VOLUME_KEY), entity_component_yr.hourly_volume_total)
-        self.assertEqual(data.get(learning_unit_view.QUADRIMESTER_VOLUME_KEY), 'partial_remaining')
+        self.assertEqual(data.get(learning_unit_view.TOTAL_VOLUME_KEY), 'partial_remaining')
         self.assertEqual(data.get(learning_unit_view.VOLUME_PARTIAL_KEY), entity_component_yr.hourly_volume_partial)
         self.assertEqual(data.get(learning_unit_view.VOLUME_REMAINING_KEY), entity_component_yr.hourly_volume_total-entity_component_yr.hourly_volume_partial)
 
