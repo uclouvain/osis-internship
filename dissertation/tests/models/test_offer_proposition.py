@@ -44,7 +44,7 @@ class OfferPropositionTestCase(TestCase):
         self.assertEqual(offer_proposition_psp.offer_proposition_group,OfferPropositionGroup.objects.get(name_short='PSP'))
 
 
-def create_offer_proposition(acronym, offer,offer_proposition_group):
+def create_offer_proposition(acronym, offer,offer_proposition_group=None):
     offer_proposition = OfferProposition.objects.create(acronym=acronym, offer=offer, offer_proposition_group=offer_proposition_group)
     return offer_proposition
 

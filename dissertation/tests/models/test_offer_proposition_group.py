@@ -25,20 +25,14 @@
 ##############################################################################
 from dissertation.models.offer_proposition_group import *
 from django.test import TestCase
+from dissertation.tests.factories.offer_proposition_group import OfferPropositionGroupFactory
 
 
 class OfferPropositionGroupTestCase(TestCase):
-    def setUp(self):
-        OfferPropositionGroup.objects.create(name_short="PSP", name_long="Faculté de Psychologie")
-        OfferPropositionGroup.objects.create(name_short="DROIT", name_long="Faculté de droit")
-
-    def test_offer_proposition_group_exist(self):
-        psp = OfferPropositionGroup.objects.get(name_short='PSP')
-        drt = OfferPropositionGroup.objects.get(name_long='Faculté de droit')
-        self.assertEqual(psp.name_long, "Faculté de Psychologie")
-        self.assertEqual(drt.name_short, "DROIT")
-
     def test_find_all_ordered_by_name_short(self):
+        OfferPropositionGroupFactory.create()
+        OfferPropositionGroupFactory.create()
         all_offer_proposition_group = find_all_ordered_by_name_short()
         self.assertEqual(all_offer_proposition_group.count(), 2)
+
 
