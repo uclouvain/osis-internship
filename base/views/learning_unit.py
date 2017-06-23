@@ -44,6 +44,15 @@ from base.models.enums import learning_unit_year_subtypes
 
 from . import layout
 
+UNDEFINED_VALUE = '?'
+
+HOURLY_VOLUME_KEY = 'hourly_volume'
+QUADRIMESTER_VOLUME_KEY = 'quadrimester_volume'
+VOLUME_PARTIAL_KEY = 'volume_partial'
+VOLUME_REMAINING_KEY = 'volume_remaining'
+
+VOLUME_FOR_UNKNOWN_QUADRIMESTER = -1
+
 
 @login_required
 @permission_required('base.can_access_learningunit', raise_exception=True)
@@ -203,10 +212,11 @@ def get_components(a_learning_container_yr):
             learning_class_year_list = mdl.learning_class_year.find_by_learning_component_year(learning_component_year)
             entity_container_yrs = mdl.entity_container_year.find_by_learning_container_year(learning_component_year.learning_container_year,
                                                                                             entity_container_year_link_type.REQUIREMENT_ENTITY)
+            entity_component_yr = mdl.entity_component_year.find_by_entity_container_year(entity_container_yrs,
+                                                                                          learning_component_year).first()
             components.append({'learning_component_year': learning_component_year,
-                               'entity_component_yr': mdl.entity_component_year.find_by_entity_container_year(entity_container_yrs,
-                                                                                                                 learning_component_year).first(),
-
+                               'entity_component_yr': entity_component_yr,
+                               'volumes': volumes(entity_component_yr),
                                'classes': learning_class_year_list})
     return components
 
@@ -253,3 +263,48 @@ def _get_all_attributions(learning_unit_year):
                                      entity_container_year_link_type.ALLOCATION_ENTITY]
         ]
     return attributions
+
+
+def volumes(entity_component_yr):
+    if entity_component_yr:
+        if not entity_component_yr.hourly_volume_total:
+            return dict.fromkeys([HOURLY_VOLUME_KEY, QUADRIMESTER_VOLUME_KEY, VOLUME_PARTIAL_KEY, VOLUME_REMAINING_KEY],
+                                 UNDEFINED_VALUE)
+
+        if entity_component_yr.hourly_volume_partial is None:
+            return {HOURLY_VOLUME_KEY: entity_component_yr.hourly_volume_total,
+                    QUADRIMESTER_VOLUME_KEY: UNDEFINED_VALUE,
+                    VOLUME_PARTIAL_KEY: UNDEFINED_VALUE,
+                    VOLUME_REMAINING_KEY: UNDEFINED_VALUE}
+
+        if unknown_quadrimester(entity_component_yr):
+            return {HOURLY_VOLUME_KEY: entity_component_yr.hourly_volume_total,
+                    QUADRIMESTER_VOLUME_KEY: 'partial_or_remaining',
+                    VOLUME_PARTIAL_KEY: '({})'.format(entity_component_yr.hourly_volume_total),
+                    VOLUME_REMAINING_KEY: '({})'.format(entity_component_yr.hourly_volume_total)}
+
+        return {HOURLY_VOLUME_KEY: entity_component_yr.hourly_volume_total,
+                QUADRIMESTER_VOLUME_KEY: format_nominal_quadrimester(entity_component_yr),
+                VOLUME_PARTIAL_KEY: entity_component_yr.hourly_volume_partial,
+                VOLUME_REMAINING_KEY: format_volq2(entity_component_yr)}
+
+
+def unknown_quadrimester(entity_component_yr):
+    return entity_component_yr.hourly_volume_partial == VOLUME_FOR_UNKNOWN_QUADRIMESTER
+
+
+def format_nominal_quadrimester(entity_component_yr):
+    if entity_component_yr.hourly_volume_total == entity_component_yr.hourly_volume_partial:
+        return 'partial'
+    else:
+        if entity_component_yr.hourly_volume_partial == 0:
+            return 'remaining'
+        else:
+            return 'partial_remaining'
+
+
+def format_volq2(entity_component_yr):
+    vol_q2 = entity_component_yr.hourly_volume_total - entity_component_yr.hourly_volume_partial
+    if vol_q2 == 0:
+        return '-'
+    return vol_q2
