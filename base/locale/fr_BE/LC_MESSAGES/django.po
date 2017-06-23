@@ -1625,3 +1625,21 @@ msgstr "Anac de fin"
 
 msgid "organization_name"
 msgstr "Nom"
+
+msgid "partial"
+msgstr "Q1"
+
+msgid "remaining"
+msgstr "Q2"
+
+msgid "partial_remaining"
+msgstr "Q1&Q2"
+
+msgid "partial_or_remaining"
+msgstr "Q1|Q2"
+
+msgid "volume_partial"
+msgstr "Vol. Q1"
+
+msgid "volume_remaining"
+msgstr "Vol. Q2"
