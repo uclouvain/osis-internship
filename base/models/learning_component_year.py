@@ -29,10 +29,6 @@ from django.contrib import admin
 from base.models.enums import learning_component_year_type, learning_container_year_types
 
 
-
-
-
-
 class LearningComponentYearAdmin(admin.ModelAdmin):
     list_display = ('learning_container_year', 'title', 'acronym', 'type', 'comment')
     fieldsets = ((None, {'fields': ('learning_container_year', 'title', 'acronym',
