@@ -319,34 +319,36 @@ def volume_distribution(a_learning_container_yr):
     component_remaining_exists = False
 
     if a_learning_container_yr:
+        learning_component_yrs = mdl.learning_component_year.LearningComponentYear.objects.all()
         learning_component_yrs = mdl.learning_component_year.find_by_learning_container_year(a_learning_container_yr)
 
         for learning_component_year in learning_component_yrs:
             entity_container_yrs = mdl.entity_container_year\
                 .find_by_learning_container_year(learning_component_year.learning_container_year,
                                                  entity_container_year_link_type.REQUIREMENT_ENTITY)
-            entity_component_yr = mdl.entity_component_year\
-                .find_by_entity_container_years(entity_container_yrs, learning_component_year).first()
-
-            if entity_component_yr.hourly_volume_partial is None:
-                return UNDEFINED_VALUE
-            else:
-                if entity_component_yr.hourly_volume_partial == entity_component_yr.hourly_volume_total:
-                    component_partial_exists = True
-                if entity_component_yr.hourly_volume_partial == 0:
-                    component_remaining_exists = True
-                if entity_component_yr.hourly_volume_partial == VOLUME_FOR_UNKNOWN_QUADRIMESTER:
-                    return _('partial_or_remaining')
-                if entity_component_yr.hourly_volume_partial > 0 and entity_component_yr.hourly_volume_partial < entity_component_yr.hourly_volume_total:
-                    return _('partial_remaining')
-
-            if component_partial_exists:
-                if component_remaining_exists:
-                    return _('partial_remaining')
+            entity_component_yrs = mdl.entity_component_year\
+                .find_by_entity_container_years(entity_container_yrs, learning_component_year)
+            for entity_component_yr in entity_component_yrs:
+                if entity_component_yr.hourly_volume_partial is None:
+                    return UNDEFINED_VALUE
                 else:
-                    return _('partial')
+                    if entity_component_yr.hourly_volume_partial == entity_component_yr.hourly_volume_total:
+                        component_partial_exists = True
+                    if entity_component_yr.hourly_volume_partial == 0.00:
+                        component_remaining_exists = True
+                    if entity_component_yr.hourly_volume_partial == VOLUME_FOR_UNKNOWN_QUADRIMESTER:
+                        return _('partial_or_remaining')
+                    if entity_component_yr.hourly_volume_partial > 0.00 and entity_component_yr.hourly_volume_partial < entity_component_yr.hourly_volume_total:
+                        return _('partial_remaining')
+
+        if component_partial_exists:
+            if component_remaining_exists:
+                return _('partial_remaining')
             else:
-                if component_remaining_exists:
-                    return _('remaining')
+                return _('partial')
+        else:
+            if component_remaining_exists:
+                return _('remaining')
+
     return None
 
