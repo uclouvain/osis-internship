@@ -319,7 +319,6 @@ def volume_distribution(a_learning_container_yr):
     component_remaining_exists = False
 
     if a_learning_container_yr:
-        learning_component_yrs = mdl.learning_component_year.LearningComponentYear.objects.all()
         learning_component_yrs = mdl.learning_component_year.find_by_learning_container_year(a_learning_container_yr)
 
         for learning_component_year in learning_component_yrs:
