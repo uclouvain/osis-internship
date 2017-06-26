@@ -27,7 +27,7 @@ from django.conf.urls import url, include
 from assistant.views import mandate, home, assistant_form, assistant, phd_supervisor_review
 from assistant.views import manager_settings, reviewers_management, upload_assistant_file
 from assistant.views import mandates_list, reviewer_mandates_list, reviewer_review, reviewer_delegation
-from assistant.utils import get_persons, get_learning_units_year
+from assistant.utils import get_persons
 from assistant.views import messages, phd_supervisor_assistants_list
 from assistant.views import assistant_mandate_reviews
 from assistant.utils import send_email, import_xls_file_data
@@ -37,8 +37,7 @@ urlpatterns = [
     url(r'^$', home.assistant_home, name='assistants_home'),
     url(r'^access_denied$', home.access_denied, name='access_denied'),
     url(r'^api/get_persons/', get_persons.get_persons, name='get_persons'),
-    url(r'^api/get_learning_units_year/', get_learning_units_year.get_learning_units_year,
-        name='get_learning_units_year'),
+
 
     url(r'^assistant/', include([
         url(r'^$', assistant.AssistantMandatesListView.as_view(), name='assistant_mandates'),
@@ -55,6 +54,8 @@ urlpatterns = [
                 url(r'^save/$', assistant_form.form_part1_save, name='form_part1_save'),
             ])),
             url(r'^part2/', include([
+                url(r'^get_learning_units_year/', assistant_form.get_learning_units_year,
+                    name='get_learning_units_year'),
                 url(r'^(?P<mandate_id>\d+)/$', assistant.AssistantLearningUnitsListView.as_view(),
                     name='mandate_learning_units'),
                 url(r'^(?P<mandate_id>\d+)/add/$', assistant_form.tutoring_learning_unit_add,
