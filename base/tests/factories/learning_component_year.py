@@ -35,7 +35,7 @@ class LearningComponentYearFactory(factory.django.DjangoModelFactory):
 
     learning_container_year = factory.SubFactory(LearningContainerYearFactory)
     title = factory.Sequence(lambda n: 'title-%d' % n)
-    acronym = factory.Sequence(lambda n: 'A-%d' % n)
+    acronym = factory.Sequence(lambda n: 'A%d' % n)
     type = factory.Sequence(lambda n: 'Type-%d' % n)
     comment = factory.Sequence(lambda n: 'Comment-%d' % n)
     planned_classes = factory.fuzzy.FuzzyInteger(10)
