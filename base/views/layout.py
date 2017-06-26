@@ -24,14 +24,13 @@
 #
 ##############################################################################
 from django import shortcuts
-from django.template.context import RequestContext
-from base import models as mdl
 from random import randint
+from osis_common.models import application_notice
 
 
 def _check_notice(request, values):
     if 'subject' not in request.session and 'notice' not in request.session:
-        notice = mdl.application_notice.find_current_notice()
+        notice = application_notice.find_current_notice()
         if notice:
             request.session.set_expiry(3600)
             request.session['subject'] = notice.subject
@@ -47,10 +46,10 @@ def render(request, template, values):
 
     values['js'] = randint(0, 100)
 
-    return shortcuts.render(request, template, values, RequestContext(request))
+    return shortcuts.render(request, template, values)
 
 
 def render_to_response(request, template, values):
     _check_notice(request, values)
 
-    return shortcuts.render_to_response(template, values, RequestContext(request))
+    return shortcuts.render_to_response(template, values)

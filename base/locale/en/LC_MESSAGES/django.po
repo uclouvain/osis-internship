@@ -1555,6 +1555,12 @@ msgstr "Dissertation"
 msgid "PRACTICAL_EXERCISES"
 msgstr "Practical exercises"
 
+msgid "lecturing"
+msgstr "Lecturing"
+
+msgid "PE"
+msgstr "PE"
+
 msgid "subtype"
 msgstr "Subtype"
 
@@ -1615,3 +1621,35 @@ msgstr "Commerce partner"
 msgid "PUBLIC_PARTNER"
 msgstr "Public partner"
 
+msgid "requirement_entity"
+msgstr "Requirement entity"
+
+msgid "allocation_entity"
+msgstr "Allocation entity"
+
+msgid "additional_requirement_entity"
+msgstr "Additional entity"
+
+msgid "academic_end_year"
+msgstr "Academic end year"
+
+msgid "organization_name"
+msgstr "Name"
+
+msgid "partial"
+msgstr "Q1"
+
+msgid "remaining"
+msgstr "Q2"
+
+msgid "partial_remaining"
+msgstr "Q1&Q2"
+
+msgid "partial_or_remaining"
+msgstr "Q1|Q2"
+
+msgid "volume_partial"
+msgstr "Vol. Q1"
+
+msgid "volume_remaining"
+msgstr "Vol. Q2"

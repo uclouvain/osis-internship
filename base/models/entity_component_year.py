@@ -27,20 +27,25 @@ from django.db import models
 from django.contrib import admin
 
 
-class LearningContainerAdmin(admin.ModelAdmin):
-    list_display = ('external_id',)
-    fieldsets = ((None, {'fields': ('external_id',)}),)
-    search_fields = ['external_id']
+class EntityComponentYearAdmin(admin.ModelAdmin):
+    list_display = ('entity_container_year', 'learning_component_year', 'hourly_volume_total',
+                    'hourly_volume_partial')
+    search_fields = ['entity_container_year__learning_container_year__acronym']
+    raw_id_fields = ('entity_container_year', 'learning_component_year')
 
 
-class LearningContainer(models.Model):
-    external_id = models.CharField(max_length=100, blank=True, null=True)
+class EntityComponentYear(models.Model):
+    external_id = models.CharField(max_length=255, blank=True, null=True)
     changed = models.DateTimeField(null=True, auto_now=True)
-    auto_renewal_until = models.IntegerField(null=True)
+    entity_container_year = models.ForeignKey('EntityContainerYear')
+    learning_component_year = models.ForeignKey('LearningComponentYear')
+    hourly_volume_total = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
+    hourly_volume_partial = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
 
     def __str__(self):
-        return u"%s" % self.external_id
+        return u"%s - %s" % (self.entity_container_year, self.learning_component_year)
 
 
-def find_by_id(learning_container_id):
-    return LearningContainer.objects.get(pk=learning_container_id)
+def find_by_entity_container_year(entity_container_yrs, a_learning_component_year):
+    return EntityComponentYear.objects.filter(entity_container_year__in=entity_container_yrs,
+                                              learning_component_year=a_learning_component_year)

@@ -1584,6 +1584,12 @@ msgstr "Cours Magistraux"
 msgid "PRACTICAL_EXERCISES"
 msgstr "Travaux pratiques"
 
+msgid "lecturing"
+msgstr "Cours magistral"
+
+msgid "PE"
+msgstr "TP"
+
 msgid "SCHOOL"
 msgstr "Ecole"
 
@@ -1613,3 +1619,36 @@ msgstr "Partenaire commercial"
 
 msgid "PUBLIC_PARTNER"
 msgstr "Partenaire public"
+
+msgid "requirement_entity"
+msgstr "Entité resp. cahier de charges"
+
+msgid "allocation_entity"
+msgstr "Entité resp. de l'attribution"
+
+msgid "additional_requirement_entity"
+msgstr "Entité complémentaire"
+
+msgid "academic_end_year"
+msgstr "Anac de fin"
+
+msgid "organization_name"
+msgstr "Nom"
+
+msgid "partial"
+msgstr "Q1"
+
+msgid "remaining"
+msgstr "Q2"
+
+msgid "partial_remaining"
+msgstr "Q1&Q2"
+
+msgid "partial_or_remaining"
+msgstr "Q1|Q2"
+
+msgid "volume_partial"
+msgstr "Vol. Q1"
+
+msgid "volume_remaining"
+msgstr "Vol. Q2"

@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -23,14 +23,34 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.test import TestCase
-from base.models.application_notice import find_current_notice
-from base.tests.factories.application_notice import ApplicationNoticeFactory
+import datetime
+
+import factory
+import factory.fuzzy
+from django.conf import settings
+from django.utils import timezone
+
+from base.tests.factories.entity_container_year import EntityContainerYearFactory
+from base.tests.factories.learning_component_year import LearningComponentYearFactory
 
 
-class ApplicationNoticeTest(TestCase):
-    def test_find_current_notice(self):
-        tmp_application_notice = ApplicationNoticeFactory()
-        db_application_notice = find_current_notice()
-        self.assertIsNotNone(db_application_notice)
-        self.assertEqual(db_application_notice, tmp_application_notice)
+def _get_tzinfo():
+    if settings.USE_TZ:
+        return timezone.get_current_timezone()
+    else:
+        return None
+
+
+class EntityComponentYearFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = "base.EntityComponentYear"
+
+    external_id = factory.Sequence(lambda n: '10000000%02d' % n)
+    changed = factory.fuzzy.FuzzyDateTime(datetime.datetime(2016, 1, 1, tzinfo=_get_tzinfo()),
+                                          datetime.datetime(2017, 3, 1, tzinfo=_get_tzinfo()))
+
+    entity_container_year = factory.SubFactory(EntityContainerYearFactory)
+    learning_component_year = factory.SubFactory(LearningComponentYearFactory)
+    hourly_volume_total = factory.fuzzy.FuzzyDecimal(9)
+    hourly_volume_partial = factory.fuzzy.FuzzyDecimal(9)
+
