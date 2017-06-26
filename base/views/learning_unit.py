@@ -42,7 +42,7 @@ from base.models.enums import learning_container_year_types
 from cms import models as mdl_cms
 from cms.enums import entity_name
 from base.forms.learning_units import LearningUnitYearForm
-from base.forms.learning_unit_specifications import LearningUnitSpecificationsForm
+from base.forms.learning_unit_specifications import LearningUnitSpecificationsForm, LearningUnitSpecificationsEditForm
 from base.forms.learning_unit_pedagogy import LearningUnitPedagogyForm, LearningUnitPedagogyEditForm
 from base.models.enums import learning_unit_year_subtypes
 from cms.models import text_label
@@ -179,6 +179,7 @@ def learning_unit_proposals(request, learning_unit_year_id):
     context = _get_common_context_learning_unit_year(learning_unit_year_id)
     return layout.render(request, "learning_unit/proposals.html", context)
 
+
 @login_required
 @permission_required('base.can_access_learningunit', raise_exception=True)
 def learning_unit_specifications(request, learning_unit_year_id):
@@ -198,6 +199,34 @@ def learning_unit_specifications(request, learning_unit_year_id):
     })
     context['experimental_phase'] = True
     return layout.render(request, "learning_unit/specifications.html", context)
+
+
+@login_required
+@permission_required('base.can_edit_learningunit_specification', raise_exception=True)
+@require_http_methods(["GET", "POST"])
+def learning_unit_specifications_edit(request, learning_unit_year_id):
+    if request.method == 'POST':
+        form = LearningUnitSpecificationsEditForm(request.POST)
+        if form.is_valid():
+            form.save()
+        return HttpResponseRedirect(reverse("learning_unit_specifications",
+                                            kwargs={'learning_unit_year_id':learning_unit_year_id}))
+
+    context = _get_common_context_learning_unit_year(learning_unit_year_id)
+    label_name = request.GET.get('label')
+    text_lb = text_label.find_root_by_name(label_name)
+    form = LearningUnitSpecificationsEditForm(**{
+        'learning_unit_year': context['learning_unit_year'],
+        'language': request.GET.get('language'),
+        'text_label': text_lb
+    })
+    form.load_initial()  # Load data from database
+    context['form'] = form
+
+    user_language = mdl.person.get_user_interface_language(request.user)
+    context['text_label_translated'] = next((txt for txt in text_lb.translated_text_labels
+                                             if txt.language == user_language), None)
+    return layout.render(request, "learning_unit/specifications_edit.html", context)
 
 
 def _check_if_display_message(request, learning_units):

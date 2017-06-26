@@ -58,9 +58,25 @@
                             <label> {{ label_translated }} </label>
                         </div>
                         <div class="col-md-5">
+                            {% if perms.base.can_edit_learningunit_specification %}
+                            <a class="specification-edit-btn pull-right" href="#"
+                               data-form="{% url 'learning_unit_specifications_edit' learning_unit_year_id=learning_unit_year.id %}?language={{form_french.language.0}}&label={{label_key}}"
+                               title="Edit">
+                                <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                            </a>
+                            {% endif %}
+
                             {{ form_french|getattr:label_key }}
                         </div>
                         <div class="col-md-5">
+                            {% if perms.base.can_edit_learningunit_specification %}
+                            <a class="specification-edit-btn pull-right" href="#"
+                               data-form="{% url 'learning_unit_specifications_edit' learning_unit_year_id=learning_unit_year.id %}?language={{form_english.language.0}}&label={{label_key}}"
+                               title="Edit">
+                                <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                            </a>
+                            {% endif %}
+
                             {{ form_english|getattr:label_key }}
                         </div>
                     </div>
@@ -70,4 +86,21 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="specification_edit" tabindex="-1" role="dialog" data-backdrop="static"></div>
 {% endblock %}
+
+{% block script %}
+    <script>
+        $(".specification-edit-btn").click(function(ev) {
+            ev.preventDefault();
+            var url = $(this).data("form"); // get the contact form url
+            var specification_edit_modal = $("#specification_edit");
+            specification_edit_modal.load(url, function() { // load the url into the modal
+                $(this).modal('show');
+            });
+            return false;
+        });
+    </script>
+{% endblock %}
+
