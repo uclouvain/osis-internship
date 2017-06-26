@@ -49,6 +49,15 @@ from cms.models import text_label
 
 from . import layout
 
+UNDEFINED_VALUE = '?'
+
+HOURLY_VOLUME_KEY = 'hourly_volume'
+TOTAL_VOLUME_KEY = 'total_volume'
+VOLUME_PARTIAL_KEY = 'volume_partial'
+VOLUME_REMAINING_KEY = 'volume_remaining'
+
+VOLUME_FOR_UNKNOWN_QUADRIMESTER = -1
+
 
 @login_required
 @permission_required('base.can_access_learningunit', raise_exception=True)
@@ -225,7 +234,13 @@ def get_components(a_learning_container_yr):
 
         for learning_component_year in learning_component_year_list:
             learning_class_year_list = mdl.learning_class_year.find_by_learning_component_year(learning_component_year)
+            entity_container_yrs = mdl.entity_container_year.find_by_learning_container_year(learning_component_year.learning_container_year,
+                                                                                            entity_container_year_link_type.REQUIREMENT_ENTITY)
+            entity_component_yr = mdl.entity_component_year.find_by_entity_container_year(entity_container_yrs,
+                                                                                          learning_component_year).first()
             components.append({'learning_component_year': learning_component_year,
+                               'entity_component_yr': entity_component_yr,
+                               'volumes': volumes(entity_component_yr),
                                'classes': learning_class_year_list})
     return components
 
@@ -285,3 +300,48 @@ def _get_cms_label_data(cms_label, user_language):
         cms_label_data[label] = translated_text
 
     return cms_label_data
+
+
+def volumes(entity_component_yr):
+    if entity_component_yr:
+        if not entity_component_yr.hourly_volume_total:
+            return dict.fromkeys([HOURLY_VOLUME_KEY, TOTAL_VOLUME_KEY, VOLUME_PARTIAL_KEY, VOLUME_REMAINING_KEY],
+                                 UNDEFINED_VALUE)
+
+        if entity_component_yr.hourly_volume_partial is None:
+            return {HOURLY_VOLUME_KEY: entity_component_yr.hourly_volume_total,
+                    TOTAL_VOLUME_KEY: UNDEFINED_VALUE,
+                    VOLUME_PARTIAL_KEY: UNDEFINED_VALUE,
+                    VOLUME_REMAINING_KEY: UNDEFINED_VALUE}
+
+        if unknown_volume_partial(entity_component_yr):
+            return {HOURLY_VOLUME_KEY: entity_component_yr.hourly_volume_total,
+                    TOTAL_VOLUME_KEY: 'partial_or_remaining',
+                    VOLUME_PARTIAL_KEY: '({})'.format(entity_component_yr.hourly_volume_total),
+                    VOLUME_REMAINING_KEY: '({})'.format(entity_component_yr.hourly_volume_total)}
+
+        return {HOURLY_VOLUME_KEY: entity_component_yr.hourly_volume_total,
+                TOTAL_VOLUME_KEY: format_nominal_volume(entity_component_yr),
+                VOLUME_PARTIAL_KEY: entity_component_yr.hourly_volume_partial,
+                VOLUME_REMAINING_KEY: format_volume_remaining(entity_component_yr)}
+
+
+def unknown_volume_partial(entity_component_yr):
+    return entity_component_yr.hourly_volume_partial == VOLUME_FOR_UNKNOWN_QUADRIMESTER
+
+
+def format_nominal_volume(entity_component_yr):
+    if entity_component_yr.hourly_volume_total == entity_component_yr.hourly_volume_partial:
+        return 'partial'
+    elif entity_component_yr.hourly_volume_partial == 0:
+        return 'remaining'
+    else:
+        return 'partial_remaining'
+    return None
+
+
+def format_volume_remaining(entity_component_yr):
+    volume_remaining = entity_component_yr.hourly_volume_total - entity_component_yr.hourly_volume_partial
+    if volume_remaining == 0:
+        return '-'
+    return volume_remaining

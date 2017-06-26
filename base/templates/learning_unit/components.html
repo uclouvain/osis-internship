@@ -42,9 +42,10 @@
                     <thead>
                         <th>{% trans 'components'%}</th>
                         <th>{% trans 'code'%}</th>
-                        <th>Volume</th>
-                        <th>Vol. q1</th>
-                        <th>Vol. q2</th>
+                        <th>{% trans 'nominal_volume' %}</th>
+                        <th>{% trans 'nominal_quater' %}</th>
+                        <th>{% trans 'volume_partial'%}</th>
+                        <th>{% trans 'volume_remaining'%}</th>
                         <th>{% trans 'planned_classrooms'%}</th>
                     </thead>
                     <tbody>
@@ -60,9 +61,16 @@
                                 {% endif %}
                             </td>
                             <td>/{{ component.learning_component_year.acronym  | default_if_none:'' }}</td>
-                            <td>{{ component.learning_component_year.hourly_volume_total| default_if_none:'0' }}</td>
-                            <td>{{ component.learning_component_year.hourly_volume_partial| default_if_none:'-' }}</td>
-                            <td>{{ component.learning_component_year.hourly_volume_remaining | default_if_none:'-' }}</td>
+                            <td>{{ component.volumes.hourly_volume | default_if_none:'0'}}</td>
+                            <td>
+                                {%if component.volumes.total_volume%}
+                                    {% trans component.volumes.total_volume  %}
+                                {%else%}
+                                    0
+                                {% endif %}
+                            </td>
+                            <td>{{ component.volumes.volume_partial | default_if_none:'0'}}</td>
+                            <td>{{ component.volumes.volume_remaining | default_if_none:'0'}}</td>
                             <td>{{ component.learning_component_year.planned_classes| default_if_none:'0' }}</td>
                         </tr>
                         {% if component.classes %}

@@ -92,3 +92,8 @@ def find_all_additional_requirement_entities(learning_container_year):
                                                       entity_container_year_link_type.ADDITIONAL_REQUIREMENT_ENTITY_2])
     return next(iter(results.values()), None)
 
+
+def find_by_learning_container_year(a_learning_container_year, a_entity_container_year_link_type):
+    return EntityContainerYear.objects.filter(learning_container_year=a_learning_container_year,
+                                              type=a_entity_container_year_link_type)
+
