@@ -228,6 +228,12 @@ msgstr "Date"
 msgid "date_not_passed"
 msgstr "Date not passed"
 
+msgid "day"
+msgstr "day"
+
+msgid "days"
+msgstr "days"
+
 msgid "decimal_score_allowed"
 msgstr "Decimal score allowed"
 
@@ -322,6 +328,9 @@ msgstr "The configuration of you user profile"
 
 msgid "description"
 msgstr "Description"
+
+msgid "details"
+msgstr "Details"
 
 msgid "display_scores_for_one_learning_unit"
 msgstr "Display scores for this learning unit"

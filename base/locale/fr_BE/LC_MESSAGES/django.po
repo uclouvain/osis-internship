@@ -222,6 +222,12 @@ msgstr "Date de remise"
 msgid "date_not_passed"
 msgstr "Date non communiquée"
 
+msgid "day"
+msgstr "jour"
+
+msgid "days"
+msgstr "jours"
+
 msgid "decimal_score_allowed"
 msgstr "Note décimale autorisée"
 
@@ -318,6 +324,9 @@ msgstr "Informations liées à votre profil"
 
 msgid "description"
 msgstr "Description"
+
+msgid "details"
+msgstr "Détails"
 
 msgid "display_scores_for_one_learning_unit"
 msgstr "Visualiser/charger les notes pour le cours"

@@ -3,6 +3,7 @@
 {% load i18n %}
 {% load dictionnary %}
 {% load format %}
+{% get_current_language as LANGUAGE_CODE %}
 
 {% comment "License" %}
  * OSIS stands for Open Student Information System. It's an application
@@ -55,8 +56,6 @@
             {% endfor %}
           </select>
         </div>
-        <div class="col-md-8">
-        </div>
         <div class="col-md-2">
             <br>
             <button type="submit" id="bt_submit_academic_calendar_search" class="btn btn-primary" role="button"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
@@ -64,33 +63,17 @@
                 <a href="{% url 'academic_calendar_form' %}" id="lnk_academic_calendar_create" class="btn btn-default" role="button"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
             {% endif %}
         </div>
+        <div class="col-md-8">
+        </div>
       </form>
     </div>
     <br>
-    <div>
-    {% if academic_calendar_list|length == 0 and init == "0" %}
-      <label class="alert alert-info" style="margin:5px">{% trans 'no_result' %}</label>
-    {% endif %}
-    {% if academic_calendar_list|length > 0%}
-    <table class="table table-striped table-hover">
-      <thead>
-        <th>{% trans 'title'%}</th>
-        <th>{% trans 'start_date'%}</th>
-        <th>{% trans 'end_date'%}</th>
-      </thead>
-      {% for academic_calendar in academic_calendar_list %}
-        <tr>
-          <td><a href="{% url 'academic_calendar_read' academic_calendar_id=academic_calendar.id %}" id="lnk_academic_calendar_edit_{{academic_calendar.id}}">{% trans academic_calendar.title %}</a></td>
-          <td>{{academic_calendar.start_date| default_if_none:''|date_in_form_format }}</td>
-          <td>{{academic_calendar.end_date| default_if_none:''|date_in_form_format }}</td>
-        </tr>
-      {% endfor %}
-    </table>
-    {% endif %}
-    </div>
-    <div>
+    <div id="gantt">
+      {% if academic_calendar_list|length == 0 and init == "0" %}
+        <label class="alert alert-info" style="margin:5px">{% trans 'no_result' %}</label>
+      {% endif %}
       {% if academic_calendar_list|length > 0%}
-        <p id="gantt_div"></p>
+        <div id="gantt_div"></div>
       {% endif %}
     </div>
 
@@ -98,80 +81,58 @@
 </div>
 {% endblock %}
 {% block script %}
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <link rel="stylesheet" href="{% static 'css/gantt.css' %}" type='text/css'>
+    <script src="{% static 'dhtmlxGantt/dhtmlxgantt.js' %}"></script>
+    <script src="{% static 'dhtmlxGantt/ext/dhtmlxgantt_tooltip.js' %}"></script>
+    <script src="{% static 'dhtmlxGantt/ext/dhtmlxgantt_marker.js' %}"></script>
+    <link href="{% static 'dhtmlxGantt/dhtmlxgantt.css' %}" rel="stylesheet">
+    {% if LANGUAGE_CODE == 'fr-be' %}
+        <script src="{% static 'dhtmlxGantt/locale/locale_fr.js' %}" charset="utf-8"></script>
+    {% endif %}
+
     <script type="text/javascript">
-        google.charts.load('current', {'packages':['gantt']});
-        google.charts.setOnLoadCallback(drawChart);
-
-        function buildDate(stringDate) {
-          var splittedDate = stringDate.split('-');
-          var date = new Date(splittedDate[0], splittedDate[1]-1, splittedDate[2]);
-          return date;
+        function formatDate(date){
+            month = date.getMonth() + 1
+            return date.getDate() + "/" + month + "/" + date.getFullYear()
         }
 
-        function computePercentDone(startDate, endDate) {
-          var today = new Date()
+        gantt.config.scale_unit = "year";
+        gantt.config.date_scale = "%Y";
+        gantt.config.subscales = [
+            {unit:"month", step:1, date:"%F" }
+        ];
 
-          if (today <= startDate) {
-            return 0;
-          } else if (today >= endDate) {
-            return 100;
-          } else {
-            var percent = Math.abs(100 * (today.getTime() - startDate.getTime()) / (endDate.getTime() - startDate.getTime()));
-            return Math.round(percent);
-          }
-        }
+        gantt.config.readonly = true;
+        gantt.config.columns = [
+            {name:"text", label:" ", width:"*", align: "left" },
+        ];
 
-        var academic_calendar_json = '{{academic_calendar_json | safe}}'
-        var academic_calendars = JSON.parse(academic_calendar_json);
-        var len = academic_calendars.length
+        gantt.templates.task_text=function(start,end,task){
+            return Math.round(task.progress * 100) + '%';
+        };
 
-        function drawChart() {
-          var data = new google.visualization.DataTable();
-          data.addColumn('string', 'Task ID');
-          data.addColumn('string', 'Task Name');
-          data.addColumn('string', 'Resource ID');
-          data.addColumn('date', 'Start Date');
-          data.addColumn('date', 'End Date');
-          data.addColumn('number', 'Duration');
-          data.addColumn('number', '');
-          data.addColumn('string', 'Dependencies');
+        gantt.config.tooltip_hide_timeout = 500;
+        gantt.templates.tooltip_text = function(start,end,task){
+            days = task.duration + 1 // include end_date in duration
+            if(days <= 1){
+                duration = days + " {% trans 'day'%}"
+            }
+            else{
+                duration = days + " {% trans 'days'%}"
+            }
 
-          for(var i = 0 ;i < len; i++) {
-              var academic_calendar = academic_calendars[i];
-              var startDate = buildDate(academic_calendar.fields.start_date);
-              var endDate = buildDate(academic_calendar.fields.end_date);
-              var percentDone = computePercentDone(startDate, endDate)
+            return "<b>" + task.text + "</b><br>" + formatDate(task.start_date) + " - " + formatDate(task.end_date)
+            + " (" + duration +  ") <br>"
+            + "<a href=\"{% url 'academic_calendars' %}" + task.id + "\">"
+            + "{% trans 'details'%}</a>";
+        };
 
-              var label = i.toString()
-              data.addRows([
-                [
-                    label,
-                    academic_calendar.fields.title,
-                    academic_calendar.fields.reference,
-                    startDate,
-                    endDate,
-                    null,
-                    percentDone,
-                    null
-                ],
-              ]);
-          }
+        var markerId = gantt.addMarker({
+            start_date: new Date() // this is today
+        });
 
-          var options = {
-            height: len * 50,
-            width: 1000,
-            gantt: {
-              trackHeight: 40,
-              percentEnabled: 'True',
-              criticalPathEnabled: 'False',
-            },
-          };
-
-          var chart = new google.visualization.Gantt(document.getElementById('gantt_div'));
-
-          chart.draw(data, options);
-        }
-
+        gantt.config.autosize = "y";
+        gantt.init("gantt_div");
+        gantt.parse({{ academic_calendar_json|safe }},"json");
     </script>
 {% endblock %}

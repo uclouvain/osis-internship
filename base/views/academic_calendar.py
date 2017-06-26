@@ -23,12 +23,46 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.core import serializers
+import datetime
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required, permission_required
 from base.forms.academic_calendar import AcademicCalendarForm
 from base import models as mdl
 from . import layout
+
+ACADEMIC_CALENDAR_TYPES_COLORS = {
+    'DELIBERATION': '#d9534f',
+    'DISSERTATION_SUBMISSION': '#5bc0de',
+    'EXAM_ENROLLMENTS': '#5bc0de',
+    'SCORES_EXAM_DIFFUSION': '#5cb85c',
+    'SCORES_EXAM_SUBMISSION': '#f0ad4e',
+    'TEACHING_CHARGE_APPLICATION': '#337ab7'
+}
+
+
+def _build_gantt_json(academic_calendar_list):
+    today = datetime.date.today()
+    academic_calendar_data = []
+    for calendar in academic_calendar_list:
+        if today <= calendar.start_date:
+            progress = 0
+        elif calendar.start_date < today < calendar.end_date:
+            progress = (today - calendar.start_date) / (calendar.end_date - calendar.start_date)
+        else:
+            progress = 1
+
+        data = {
+            'id': calendar.pk,
+            'text': calendar.title,
+            'start_date': calendar.start_date.strftime('%d-%m-%Y'),
+            'end_date': calendar.end_date.strftime('%d-%m-%Y'),
+            'color': ACADEMIC_CALENDAR_TYPES_COLORS.get(calendar.reference, '#337ab7'),
+            'progress': progress
+        }
+        academic_calendar_data.append(data)
+    return {
+        "data": academic_calendar_data
+    }
 
 
 @login_required
@@ -42,7 +76,7 @@ def academic_calendars(request):
         academic_year = academic_year_calendar.id
 
     academic_calendar_list = mdl.academic_calendar.find_academic_calendar_by_academic_year(academic_year)
-    academic_calendar_json = serializers.serialize("json", academic_calendar_list)
+    academic_calendar_json = _build_gantt_json(academic_calendar_list)
 
     return layout.render(request, "academic_calendars.html", locals())
 
@@ -60,7 +94,7 @@ def academic_calendars_search(request):
 
     academic_year = int(academic_year)
     academic_calendar_list = mdl.academic_calendar.find_academic_calendar_by_academic_year(academic_year)
-    academic_calendar_json = serializers.serialize("json", academic_calendar_list)
+    academic_calendar_json = _build_gantt_json(academic_calendar_list)
 
     return layout.render(request, "academic_calendars.html", locals())
 
