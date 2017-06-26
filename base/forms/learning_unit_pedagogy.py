@@ -59,15 +59,13 @@ class LearningUnitPedagogyForm(forms.Form):
 
 class LearningUnitPedagogyEditForm(forms.Form):
     trans_text = forms.CharField(widget=CKEditorWidget(config_name='minimal'), required=False)
-    cms_id = forms.IntegerField(widget=forms.HiddenInput())
+    cms_id = forms.IntegerField(widget=forms.HiddenInput, required=True)
 
     def __init__(self, *args, **kwargs):
         self.learning_unit_year = kwargs.pop('learning_unit_year', None)
         self.language_iso = kwargs.pop('language', None)
         self.text_label = kwargs.pop('text_label', None)
         super(LearningUnitPedagogyEditForm, self).__init__(*args, **kwargs)
-        if self.learning_unit_year and self.language_iso and self.text_label:
-            self.load_initial()
 
     def load_initial(self):
         value = translated_text.get_or_create(entity=entity_name.LEARNING_UNIT_YEAR,
@@ -76,3 +74,10 @@ class LearningUnitPedagogyEditForm(forms.Form):
                                               text_label=self.text_label)
         self.fields['cms_id'].initial = value.id
         self.fields['trans_text'].initial = value.text
+
+    def save(self):
+        cleaned_data = self.cleaned_data
+        trans_text = translated_text.find_by_id(cleaned_data['cms_id'])
+        trans_text.text = cleaned_data.get('trans_text')
+        trans_text.save()
+

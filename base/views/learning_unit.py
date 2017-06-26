@@ -28,8 +28,11 @@ from collections import OrderedDict
 
 from django.contrib import messages
 from django.conf import settings
+from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required, permission_required
+from django.http import HttpResponseRedirect
 from django.utils.translation import ugettext_lazy as _
+from django.views.decorators.http import require_http_methods
 
 from base import models as mdl
 from attribution import models as mdl_attr
@@ -125,25 +128,31 @@ def learning_unit_pedagogy(request, learning_unit_year_id):
 
 
 @login_required
-@permission_required('base.can_access_learningunit', raise_exception=True)
+@permission_required('base.can_edit_learningunit_pedagogy', raise_exception=True)
+@require_http_methods(["GET", "POST"])
 def learning_unit_pedagogy_edit(request, learning_unit_year_id):
+    if request.method == 'POST':
+        form = LearningUnitPedagogyEditForm(request.POST)
+        if form.is_valid():
+            form.save()
+        return HttpResponseRedirect(reverse("learning_unit_pedagogy",
+                                            kwargs={'learning_unit_year_id':learning_unit_year_id}))
+
     context = _get_common_context_learning_unit_year(learning_unit_year_id)
-    learning_unit_year = context['learning_unit_year']
-    language = request.GET.get('language')
     label_name = request.GET.get('label')
     text_lb = text_label.find_root_by_name(label_name)
+    form = LearningUnitPedagogyEditForm(**{
+        'learning_unit_year': context['learning_unit_year'],
+        'language': request.GET.get('language'),
+        'text_label': text_lb
+    })
+    form.load_initial()  # Load data from database
+    context['form'] = form
 
-    if request.method == 'GET':
-        user_language = mdl.person.get_user_interface_language(request.user)
-        context['text_label_translated'] = next((txt for txt in text_lb.translated_text_labels
-                                                 if txt.language == user_language), None)
-        context['form'] = LearningUnitPedagogyEditForm(learning_unit_year=learning_unit_year,
-                                                       language=language,
-                                                       text_label=text_lb)
-        return layout.render(request, "learning_unit/pedagogy_edit.html", context)
-    elif request.method == 'POST':
-        return learning_unit_pedagogy(request, learning_unit_year_id)
-
+    user_language = mdl.person.get_user_interface_language(request.user)
+    context['text_label_translated'] = next((txt for txt in text_lb.translated_text_labels
+                                             if txt.language == user_language), None)
+    return layout.render(request, "learning_unit/pedagogy_edit.html", context)
 
 
 @login_required
