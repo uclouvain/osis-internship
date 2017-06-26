@@ -146,8 +146,16 @@
                          {% endif %}
                         <br>
 
-                        <label style="margin-top:10px;">{% trans 'academic_end_year'%}</label><br>
-                        {{ learning_unit_year.learning_container_year.learning_container.auto_renewal_until|default_if_none:'-' }}
+                        <div class="row">
+                            <div class="col-md-6">
+                                 <label style="margin-top:10px;">{% trans 'academic_start_year'%}</label><br>
+                                {{ learning_unit_year.learning_container_year.learning_container.start_year|default_if_none:'-' }}
+                            </div>
+                            <div class="col-md-6">
+                                <label style="margin-top:10px;">{% trans 'academic_end_year'%}</label><br>
+                                {{ learning_unit_year.learning_container_year.learning_container.auto_renewal_until|default_if_none:'-' }}
+                            </div>
+                        </div>
                         <br>
                     </div>
                 </div>
