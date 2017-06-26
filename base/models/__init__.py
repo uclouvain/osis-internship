@@ -26,7 +26,6 @@
 
 from base.models import academic_calendar
 from base.models import academic_year
-from base.models import application_notice
 from base.models import campus
 from base.models import entity
 from base.models import entity_container_year

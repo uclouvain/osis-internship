@@ -75,3 +75,4 @@ def find_by_id(learning_component_year_id):
 def find_by_learning_container_year(a_learning_container_year):
     return LearningComponentYear.objects.filter(learning_container_year=a_learning_container_year)\
                                         .order_by('type', 'acronym')
+

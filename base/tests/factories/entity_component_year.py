@@ -23,30 +23,34 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
-from django.contrib import admin
+import datetime
+
+import factory
+import factory.fuzzy
+from django.conf import settings
 from django.utils import timezone
 
-
-class ApplicationNoticeAdmin(admin.ModelAdmin):
-    list_display = ('subject','notice','start_publish','stop_publish')
-    fieldsets = ((None, {'fields': ('subject','notice','start_publish','stop_publish')}),)
+from base.tests.factories.entity_container_year import EntityContainerYearFactory
+from base.tests.factories.learning_component_year import LearningComponentYearFactory
 
 
-class ApplicationNotice(models.Model):
-    subject = models.CharField(max_length=255)
-    notice = models.TextField()
-    start_publish = models.DateTimeField()
-    stop_publish = models.DateTimeField()
+def _get_tzinfo():
+    if settings.USE_TZ:
+        return timezone.get_current_timezone()
+    else:
+        return None
 
 
-def find_current_notice():
-    samples = ApplicationNotice.objects.filter(stop_publish__gt=timezone.now(),
-                                               start_publish__lt=timezone.now()).first()
-    return samples
+class EntityComponentYearFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = "base.EntityComponentYear"
 
+    external_id = factory.Sequence(lambda n: '10000000%02d' % n)
+    changed = factory.fuzzy.FuzzyDateTime(datetime.datetime(2016, 1, 1, tzinfo=_get_tzinfo()),
+                                          datetime.datetime(2017, 3, 1, tzinfo=_get_tzinfo()))
 
-
-
-
+    entity_container_year = factory.SubFactory(EntityContainerYearFactory)
+    learning_component_year = factory.SubFactory(LearningComponentYearFactory)
+    hourly_volume_total = factory.fuzzy.FuzzyDecimal(9)
+    hourly_volume_partial = factory.fuzzy.FuzzyDecimal(9)
 

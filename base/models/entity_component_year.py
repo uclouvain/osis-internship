@@ -31,6 +31,7 @@ class EntityComponentYearAdmin(admin.ModelAdmin):
     list_display = ('entity_container_year', 'learning_component_year', 'hourly_volume_total',
                     'hourly_volume_partial')
     search_fields = ['entity_container_year__learning_container_year__acronym']
+    raw_id_fields = ('entity_container_year', 'learning_component_year')
 
 
 class EntityComponentYear(models.Model):
@@ -41,18 +42,10 @@ class EntityComponentYear(models.Model):
     hourly_volume_total = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
     hourly_volume_partial = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
 
-
-    @property
-    def hourly_volume_partial_q2(self):
-        if self.hourly_volume_total:
-            if self.hourly_volume_partial:
-                q2 = self.hourly_volume_total - self.hourly_volume_partial
-                if q2 <= 0:
-                    return None
-                else:
-                    return q2
-        return None
-
-
     def __str__(self):
         return u"%s - %s" % (self.entity_container_year, self.learning_component_year)
+
+
+def find_by_entity_container_year(entity_container_yrs, a_learning_component_year):
+    return EntityComponentYear.objects.filter(entity_container_year__in=entity_container_yrs,
+                                              learning_component_year=a_learning_component_year)
