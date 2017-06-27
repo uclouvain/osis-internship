@@ -32,29 +32,28 @@ register = template.Library()
 
 
 @register.filter
-def get_style(planned_classes, real_classes):
-    planned_classes_int = None
-    real_classes_int = None
+def get_css_class(planned_classes, real_classes):
+    planned_classes_int = 0
+    real_classes_int = 0
 
     if planned_classes:
-        planned_classes_int = int(planned_classes)
+        planned_classes_int = planned_classes
 
     if real_classes:
-        real_classes_int = int(real_classes)
-    if planned_classes_int and real_classes_int:
-        if planned_classes_int == real_classes_int:
-            return "text-success"
-        else:
-            if real_classes_int - planned_classes_int == 1:
-                return "text-warning"
+        real_classes_int = real_classes
+
+    if planned_classes_int == real_classes_int:
+        return "text-success"
+    else:
+        if real_classes_int - planned_classes_int == 1:
+            return "text-warning"
 
     return "text-danger"
 
+
 @register.filter
 def used_by_partim(learning_component_year, learning_unit_year):
-    l =learning_unit_component.search(learning_component_year, learning_unit_year)
-
-    if l.exists():
+    if learning_unit_component.search(learning_component_year, learning_unit_year).exists():
         return _('yes')
     return _('no')
 
