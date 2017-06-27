@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -23,14 +23,20 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.test import TestCase
-from base.models.application_notice import find_current_notice
-from base.tests.factories.application_notice import ApplicationNoticeFactory
+from django.utils.translation import ugettext_lazy as _
 
+MAIN = "MAIN"
+ACADEMIC_PARTNER = "ACADEMIC_PARTNER"
+INDUSTRIAL_PARTNER = "INDUSTRIAL_PARTNER"
+SERVICE_PARTNER = "SERVICE_PARTNER"
+COMMERCE_PARTNER = "COMMERCE_PARTNER"
+PUBLIC_PARTNER = "PUBLIC_PARTNER"
 
-class ApplicationNoticeTest(TestCase):
-    def test_find_current_notice(self):
-        tmp_application_notice = ApplicationNoticeFactory()
-        db_application_notice = find_current_notice()
-        self.assertIsNotNone(db_application_notice)
-        self.assertEqual(db_application_notice, tmp_application_notice)
+ORGANIZATION_TYPE = (
+    (MAIN, _(MAIN)),
+    (ACADEMIC_PARTNER, _(ACADEMIC_PARTNER)),
+    (INDUSTRIAL_PARTNER, _(INDUSTRIAL_PARTNER)),
+    (SERVICE_PARTNER, _(SERVICE_PARTNER)),
+    (COMMERCE_PARTNER, _(COMMERCE_PARTNER)),
+    (PUBLIC_PARTNER, _(PUBLIC_PARTNER)),
+)

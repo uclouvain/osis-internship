@@ -45,7 +45,7 @@ class LearningContainerYear(models.Model):
     title = models.CharField(max_length=255)
     title_english = models.CharField(max_length=250, blank=True, null=True)
     acronym = models.CharField(max_length=10)
-    changed = models.DateTimeField(null=True)
+    changed = models.DateTimeField(null=True, auto_now=True)
     language = models.ForeignKey('reference.Language', blank=True, null=True)
     campus = models.ForeignKey('Campus', blank=True, null=True)
 
@@ -61,8 +61,3 @@ class LearningContainerYear(models.Model):
 def find_by_id(learning_container_year_id):
     return LearningContainerYear.objects.get(pk=learning_container_year_id)
 
-
-def find_all_partims(learning_container_year):
-    return learning_unit_year.search(learning_container_year_id=learning_container_year,
-                                     subtype=learning_unit_year_subtypes.PARTIM)\
-                             .exclude(learning_container_year__isnull=True).order_by('acronym')

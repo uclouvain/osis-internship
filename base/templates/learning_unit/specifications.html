@@ -29,6 +29,8 @@
 {% include "learning_unit/breadcrumb.html" %}
 {% endblock %}
 
+{% load getattr %}
+
 {% block content %}
 
 {% include "learning_unit/header.html" %}
@@ -38,55 +40,32 @@
 
         <div class="tab-content" id="tab_content">
             <div role="tabpanel" class="tab-pane active" id="specifications">
-                <form>
+                <div class="row" style="margin-top:10px;">
+                    <div class="col-md-2">
+                        <label> {% trans 'language'%} </label>
+                    </div>
+                    <div class="col-md-5">
+                        <label> {{ form_french.language.1 }} </label>
+                    </div>
+                    <div class="col-md-5">
+                        <label> {{ form_english.language.1 }} </label>
+                    </div>
+                </div>
+                <hr/>
+                {% for label_key, label_translated in cms_labels_translated.items %}
                     <div class="row" style="margin-top:10px;">
                         <div class="col-md-2">
-                            <label> {% trans 'language'%} </label>
+                            <label> {{ label_translated }} </label>
                         </div>
                         <div class="col-md-5">
-                            {{ form_french.language.1 }}
+                            {{ form_french|getattr:label_key }}
                         </div>
                         <div class="col-md-5">
-                           {{ form_english.language.1 }}
+                            {{ form_english|getattr:label_key }}
                         </div>
                     </div>
                     <hr/>
-                    <div class="row" style="margin-top:10px;">
-                        <div class="col-md-2">
-                            <label> {{ themes_discussed }} </label>
-                        </div>
-                        <div class="col-md-5">
-                            {{ form_french.themes_discussed }}
-                        </div>
-                        <div class="col-md-5">
-                            {{ form_english.themes_discussed }}
-                        </div>
-                    </div>
-                    <hr/>
-                    <div class="row" style="margin-top:10px;">
-                        <div class="col-md-2">
-                            <label> {{ skills_to_be_acquired }} </label>
-                        </div>
-                        <div class="col-md-5">
-                            {{ form_french.skills_to_be_acquired }}
-                        </div>
-                        <div class="col-md-5">
-                            {{ form_english.skills_to_be_acquired }}
-                        </div>
-                    </div>
-                    <hr/>
-                    <div class="row" style="margin-top:10px;">
-                        <div class="col-md-2">
-                            <label> {{ prerequisite }} </label>
-                        </div>
-                        <div class="col-md-5">
-                            {{ form_french.prerequisite }}
-                        </div>
-                        <div class="col-md-5">
-                            {{ form_english.prerequisite }}
-                        </div>
-                    </div>
-                </form>
+                {% endfor %}
             </div>
         </div>
     </div>

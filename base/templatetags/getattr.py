@@ -23,30 +23,27 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
-from django.contrib import admin
-from django.utils import timezone
+from django import template
+register = template.Library()
 
+@register.filter
+def getattr (obj, args):
+    """ Try to get an attribute from an object.
 
-class ApplicationNoticeAdmin(admin.ModelAdmin):
-    list_display = ('subject','notice','start_publish','stop_publish')
-    fieldsets = ((None, {'fields': ('subject','notice','start_publish','stop_publish')}),)
+    Example: {% if block|getattr:"editable,True" %}
 
-
-class ApplicationNotice(models.Model):
-    subject = models.CharField(max_length=255)
-    notice = models.TextField()
-    start_publish = models.DateTimeField()
-    stop_publish = models.DateTimeField()
-
-
-def find_current_notice():
-    samples = ApplicationNotice.objects.filter(stop_publish__gt=timezone.now(),
-                                               start_publish__lt=timezone.now()).first()
-    return samples
-
-
-
-
-
-
+    Beware that the default is always a string, if you want this
+    to return False, pass an empty second argument:
+    {% if block|getattr:"editable," %}
+    """
+    args = args.split(',')
+    if len(args) == 1:
+        (attribute, default) = [args[0], ""]
+    else:
+        (attribute, default) = args
+    try:
+        return obj.__getattribute__(attribute)
+    except AttributeError:
+         return  obj.__dict__.get(attribute, default)
+    except:
+        return default

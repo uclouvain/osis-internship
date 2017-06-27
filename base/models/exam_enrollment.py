@@ -60,7 +60,7 @@ class ExamEnrollmentAdmin(admin.ModelAdmin):
 
 class ExamEnrollment(models.Model):
     external_id = models.CharField(max_length=100, blank=True, null=True)
-    changed = models.DateTimeField(null=True)
+    changed = models.DateTimeField(null=True, auto_now=True)
     score_draft = models.DecimalField(max_digits=4, decimal_places=2, blank=True, null=True,
                                       validators=[MinValueValidator(0,message="scores_must_be_between_0_and_20"),
                                                   MaxValueValidator(20, message="scores_must_be_between_0_and_20")])
@@ -229,7 +229,9 @@ class ExamEnrollmentHistoryAdmin(admin.ModelAdmin):
     raw_id_fields = ('exam_enrollment', 'person')
     search_fields = ['exam_enrollment__learning_unit_enrollment__offer_enrollment__student__person__first_name',
                      'exam_enrollment__learning_unit_enrollment__offer_enrollment__student__person__last_name',
-                     'exam_enrollment__learning_unit_enrollment__offer_enrollment__student__registration_id']
+                     'exam_enrollment__learning_unit_enrollment__offer_enrollment__student__registration_id',
+                     'exam_enrollment__learning_unit_enrollment__learning_unit_year__acronym']
+    list_filter = ('exam_enrollment__learning_unit_enrollment__learning_unit_year__academic_year',)
     readonly_fields = ('exam_enrollment', 'person', 'score_final', 'justification_final', 'modification_date')
 
     def has_delete_permission(self, request, obj=None):

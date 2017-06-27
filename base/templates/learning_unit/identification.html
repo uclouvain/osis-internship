@@ -105,24 +105,65 @@
                         {{learning_unit_year.learning_container_year.title_english | default_if_none:'' }}
                         <br><br>
                         <label>{% trans 'title_in_english' %}{% trans 'title_in_english_2' %}</label><br>
-                        {% if learning_unit_year.subtype == 'PARTIM'%}
+                        {% if learning_unit_year.subtype == 'PARTIM' %}
                             {{learning_unit_year.title_english | default_if_none:'' }}
                         {% endif%}
                         <br><br>
                         <label>{% trans 'language' %}</label><br>
                         {{learning_unit_year.learning_container_year.language | default_if_none:'' }}
+                        <br><br>
+                        <label>{% trans 'learning_unit_quater' %}</label><br>
+                        {{ volume_distribution }}
+                        <br><br>
+                        <label>{% trans 'composition' %}</label><br>
+                        {% if components %}
+                            {% include "learning_unit/components_identification.html" %}
+                        {% endif %}
                     </div>
 
                     <div class="col-md-4">
-                        <label>{% trans 'organization'%}</label><br>
+                        <label>{% trans 'institution'%}</label><br>
                          {% if organization %}
                             {{ organization.name }}
                          {% endif %}
                         <br>
-                        <label style="margin-top:10px;">{% trans 'campus'%}</label><br>
+                        <label style="margin-top:10px;">{% trans 'location'%}</label><br>
                          {% if campus %}
                             {{ campus.name }}
                          {% endif %}
+                        <br>
+                         <label style="margin-top:10px;">{% trans 'requirement_entity'%}</label><br>
+                         {% if requirement_entity %}
+                            {{ requirement_entity.acronym }}
+                         {% endif %}
+                        <br>
+                        <label style="margin-top:10px;">{% trans 'allocation_entity'%}</label><br>
+                         {% if allocation_entity %}
+                            {{ allocation_entity.acronym }}
+                         {% endif %}
+                        <br>
+                        {% for entity in additional_requirement_entities %}
+                            <label style="margin-top:10px;">{% trans 'additional_requirement_entity'%}</label><br>
+                            {{ entity.acronym }}
+                        {% endfor %}
+
+                        <label style="margin-top:10px;">{% trans 'allocation_entity'%}</label><br>
+                         {% if allocation_entity %}
+                            {{ allocation_entity.acronym }}
+                         {% endif %}
+                        <br>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                 <label style="margin-top:10px;">{% trans 'academic_start_year'%}</label><br>
+                                {{ learning_unit_year.learning_container_year.learning_container.start_year|default_if_none:'-' }}
+                            </div>
+                            <div class="col-md-6">
+                                <label style="margin-top:10px;">{% trans 'academic_end_year'%}</label><br>
+                                {{ learning_unit_year.learning_container_year.learning_container.auto_renewal_until|default_if_none:'-' }}
+                            </div>
+                        </div>
+                        <br>
                     </div>
                 </div>
             </div>

@@ -162,8 +162,8 @@ msgstr "S=Absence injustifiée"
 msgid "justified_absence_export_legend"
 msgstr "M=Absence justifiée"
 
-msgid "child_entities"
-msgstr "Entités 'enfant'"
+msgid "attached_entities"
+msgstr "Entités attachées"
 
 msgid "choose_file"
 msgstr "Parcourir"
@@ -325,7 +325,7 @@ msgstr "Visualiser/charger les notes pour le cours"
 msgid "display_tutors"
 msgstr "Afficher tous les enseignants pour ce cours"
 
-msgid "doctoral_commission"
+msgid "DOCTORAL_COMMISSION"
 msgstr "Commision doctorale"
 
 msgid "documentation"
@@ -400,7 +400,7 @@ msgstr "Secrétaire du jury"
 msgid "execute"
 msgstr "Exécuter"
 
-msgid "faculty"
+msgid "FACULTY"
 msgstr "Faculté"
 
 msgid "female"
@@ -502,7 +502,7 @@ msgstr "Injecter"
 msgid "inject_xls_file"
 msgstr "Injecter fichier excel"
 
-msgid "institute"
+msgid "INSTITUTE"
 msgstr "Institut"
 
 msgid "institution"
@@ -582,7 +582,7 @@ msgid "lnk_message_history_read_title"
 msgstr "Afficher le message"
 
 msgid "location"
-msgstr "Rue et numéro"
+msgstr "Localité"
 
 msgid "log-in"
 msgstr "Log-in"
@@ -794,14 +794,14 @@ msgstr "Seules les notes soumises peuvent être double encodées"
 msgid "open"
 msgstr "Ouvert"
 
-msgid "organization"
-msgstr "Organisation"
-
 msgid "campus"
 msgstr "Campus"
 
 msgid "organization_address"
 msgstr "Adresse de l'organisation"
+
+msgid "organization"
+msgstr "Organisation"
 
 msgid "organizations"
 msgstr "Organisations"
@@ -848,7 +848,7 @@ msgstr "Plain et HTML"
 msgid "please_enable_javascript"
 msgstr "Veuillez <a href='http://enable-javascript.com/fr/' target='_blank'>activer le JavaScript</a> pour utiliser l'application."
 
-msgid "pole"
+msgid "POLE"
 msgstr "Pole"
 
 msgid "postal_code"
@@ -1002,7 +1002,7 @@ msgstr "Rechercher une entité"
 msgid "search_for_an_organization"
 msgstr "Recherche d'organisations"
 
-msgid "sector"
+msgid "SECTOR"
 msgstr "Secteur"
 
 msgid "select"
@@ -1359,6 +1359,9 @@ msgid "COURSE"
 msgstr "Cours"
 
 msgid "MASTER_THESIS"
+msgstr "Thèse"
+
+msgid "DISSERTATION"
 msgstr "Mémoire"
 
 msgid "INTERNSHIP"
@@ -1392,7 +1395,7 @@ msgid "LU_ERRORS_INVALID"
 msgstr "'Entrez une valeur valide."
 
 msgid "LU_ERRORS_INVALID_SEARCH"
-msgstr "Recherche invalide - Veuillez ajouter des informations avant d'exécuter une recherche."
+msgstr "Recherche invalide - Veuillez remplir mininum 2 filtres lors de vos recherches."
 
 msgid "LU_ERRORS_ACADEMIC_YEAR_REQUIRED"
 msgstr "Veuillez préciser une année académique."
@@ -1571,3 +1574,81 @@ msgstr "Cours Magistraux"
 
 msgid "PRACTICAL_EXERCISES"
 msgstr "Travaux pratiques"
+
+msgid "lecturing"
+msgstr "Cours magistral"
+
+msgid "PE"
+msgstr "TP"
+
+msgid "SCHOOL"
+msgstr "Ecole"
+
+msgid "PLATFORM"
+msgstr "Plateforme"
+
+msgid "LOGISTICS_ENTITY"
+msgstr "Entitée logistique"
+
+msgid "organogram"
+msgstr "Organigramme"
+
+msgid "attached_to"
+msgstr "Attachée à"
+
+msgid "ACADEMIC_PARTNER"
+msgstr "Partenaire académique"
+
+msgid "INDUSTRIAL_PARTNER"
+msgstr "Partenaire industriel"
+
+msgid "SERVICE_PARTNER"
+msgstr "Partenaire de service"
+
+msgid "COMMERCE_PARTNER"
+msgstr "Partenaire commercial"
+
+msgid "PUBLIC_PARTNER"
+msgstr "Partenaire public"
+
+msgid "requirement_entity"
+msgstr "Entité resp. cahier de charges"
+
+msgid "allocation_entity"
+msgstr "Entité resp. de l'attribution"
+
+msgid "additional_requirement_entity"
+msgstr "Entité complémentaire"
+
+msgid "academic_end_year"
+msgstr "Anac de fin"
+
+msgid "academic_start_year"
+msgstr "Anac de début"
+
+msgid "organization_name"
+msgstr "Nom"
+
+msgid "partial"
+msgstr "Q1"
+
+msgid "remaining"
+msgstr "Q2"
+
+msgid "partial_remaining"
+msgstr "Q1&2"
+
+msgid "partial_or_remaining"
+msgstr "Q1|2"
+
+msgid "volume_partial"
+msgstr "Vol. Q1"
+
+msgid "volume_remaining"
+msgstr "Vol. Q2"
+
+msgid "learning_unit_quater"
+msgstr "Quadri. de l'UE"
+
+msgid "composition"
+msgstr "Composition"

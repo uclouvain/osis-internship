@@ -64,6 +64,7 @@ urlpatterns = [
             url(r'^formations/$', learning_unit.learning_unit_formations, name="learning_unit_formations"),
             url(r'^components/$', learning_unit.learning_unit_components, name="learning_unit_components"),
             url(r'^pedagogy/$', learning_unit.learning_unit_pedagogy, name="learning_unit_pedagogy"),
+            url(r'^pedagogy/edit/$', learning_unit.learning_unit_pedagogy_edit, name="learning_unit_pedagogy_edit"),
             url(r'^attributions/$', learning_unit.learning_unit_attributions,
                 name="learning_unit_attributions"),
             url(r'^proposals/$', learning_unit.learning_unit_proposals, name="learning_unit_proposals"),
@@ -85,7 +86,8 @@ urlpatterns = [
         ])),
         url(r'^profile/', include([
             url(r'^$', my_osis.profile, name='profile'),
-            url(r'^lang/$', my_osis.profile_lang, name='profile_lang')
+            url(r'^lang/$', my_osis.profile_lang, name='profile_lang'),
+            url(r'^lang/edit/([A-Za-z-]+)/$', my_osis.profile_lang_edit, name='lang_edit')
         ]))
     ])),
 
@@ -130,13 +132,12 @@ urlpatterns = [
         ]))
     ])),
 
-    url(r'^structures/', include([
-        url(r'^$', institution.structures, name='structures'),
-        url(r'^search$', institution.structures_search, name='structures_search'),
-        url(r'^(?P<structure_id>[0-9]+)/', include([
-            url(r'^$', institution.structure_read, name='structure_read'),
-            url(r'^diagram/$', institution.structure_diagram, name='structure_diagram'),
-            url(r'^address/$', institution.structure_address, name='structure_address'),
+    url(r'^entities/', include([
+        url(r'^$', institution.entities, name='entities'),
+        url(r'^search$', institution.entities_search, name='entities_search'),
+        url(r'^(?P<entity_version_id>[0-9]+)/', include([
+            url(r'^$', institution.entity_read, name='entity_read'),
+            url(r'^diagram/$', institution.entity_diagram, name='entity_diagram'),
         ]))
     ])),
 

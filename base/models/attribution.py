@@ -24,15 +24,7 @@
 #
 ##############################################################################
 from django.db import models
-from django.contrib import admin
 
-# To be removed.
-class AttributionAdmin(admin.ModelAdmin):
-    list_display = ('tutor', 'function', 'learning_unit_year', 'start_date', 'end_date', 'changed')
-    list_filter = ('function', 'learning_unit_year__academic_year')
-    fieldsets = ((None, {'fields': ('learning_unit_year', 'tutor', 'function', 'start_date', 'end_date')}),)
-    raw_id_fields = ('learning_unit_year', 'tutor')
-    search_fields = ['tutor__person__first_name', 'tutor__person__last_name', 'learning_unit_year__acronym']
 
 # To be removed.
 class Attribution(models.Model):
@@ -41,7 +33,7 @@ class Attribution(models.Model):
         ('PROFESSOR', 'Professor'))
 
     external_id = models.CharField(max_length=100, blank=True, null=True)
-    changed = models.DateTimeField(null=True)
+    changed = models.DateTimeField(null=True, auto_now=True)
     start_date = models.DateField(auto_now=False, blank=True, null=True, auto_now_add=False)
     end_date = models.DateField(auto_now=False, blank=True, null=True, auto_now_add=False)
     function = models.CharField(max_length=15, blank=True, null=True, choices=FUNCTION_CHOICES, db_index=True)

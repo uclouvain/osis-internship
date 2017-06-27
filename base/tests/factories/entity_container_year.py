@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# OSIS stands for Open Student Information System. It's an application
+#    OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -23,17 +23,34 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+import datetime
+import operator
+
 import factory
+import factory.fuzzy
+from django.conf import settings
+from django.utils import timezone
+
+from base.models.enums import entity_container_year_link_type
 from base.tests.factories.entity import EntityFactory
+from base.tests.factories.learning_container_year import LearningContainerYearFactory
 
 
-class EntityAddressFactory(factory.DjangoModelFactory):
+def _get_tzinfo():
+    if settings.USE_TZ:
+        return timezone.get_current_timezone()
+    else:
+        return None
+
+
+class EntityContainerYearFactory(factory.django.DjangoModelFactory):
     class Meta:
-        model = 'base.EntityAddress'
+        model = "base.EntityContainerYear"
 
+    external_id = factory.Sequence(lambda n: '10000000%02d' % n)
+    changed = factory.fuzzy.FuzzyDateTime(datetime.datetime(2016, 1, 1, tzinfo=_get_tzinfo()),
+                                          datetime.datetime(2017, 3, 1, tzinfo=_get_tzinfo()))
     entity = factory.SubFactory(EntityFactory)
-    label = factory.Faker('text', max_nb_chars=20)
-    location = factory.Faker('street_address')
-    postal_code = factory.Faker('zipcode')
-    city = factory.Faker('city')
-    country = factory.Faker('country')
+    learning_container_year = factory.SubFactory(LearningContainerYearFactory)
+    type = factory.Iterator(entity_container_year_link_type.ENTITY_CONTAINER_YEAR_LINK_TYPES,
+                            getter=operator.itemgetter(0))

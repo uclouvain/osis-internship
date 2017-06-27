@@ -168,8 +168,8 @@ msgstr "S=Unjustified Absence"
 msgid "justified_absence_export_legend"
 msgstr "M=Justified Absence"
 
-msgid "child_entities"
-msgstr "Child entities"
+msgid "attached_entities"
+msgstr "Attached entities"
 
 msgid "choose_file"
 msgstr "Choose file"
@@ -329,7 +329,7 @@ msgstr "Display scores for this learning unit"
 msgid "display_tutors"
 msgstr "Display all tutors for this learning unit"
 
-msgid "doctoral_commission"
+msgid "DOCTORAL_COMMISSION"
 msgstr "Doctoral commmission"
 
 msgid "documentation"
@@ -404,7 +404,7 @@ msgstr "Exam board secretary"
 msgid "execute"
 msgstr "Execute"
 
-msgid "faculty"
+msgid "FACULTY"
 msgstr "Faculty"
 
 msgid "female"
@@ -504,7 +504,7 @@ msgstr "Inject"
 msgid "inject_xls_file"
 msgstr "Inject XLS file"
 
-msgid "institute"
+msgid "INSTITUTE"
 msgstr "Institute"
 
 msgid "institution"
@@ -783,14 +783,14 @@ msgstr "Only submitted scores can be bouble encoded"
 msgid "open"
 msgstr "Open"
 
-msgid "organization"
-msgstr "Organization"
-
 msgid "campus"
 msgstr "Campus"
 
 msgid "organization_address"
 msgstr "Organization address"
+
+msgid "organization"
+msgstr "Organization"
 
 msgid "organizations"
 msgstr "Organizations"
@@ -837,7 +837,7 @@ msgstr "Plain and HTML"
 msgid "please_enable_javascript"
 msgstr "Please <a href='http://enable-javascript.com' target='_blank'>enable JavaScript</a> to use this application."
 
-msgid "pole"
+msgid "POLE"
 msgstr "Pole"
 
 msgid "postal_code"
@@ -990,7 +990,7 @@ msgstr "Search for an entity"
 msgid "search_for_an_organization"
 msgstr "Search for an organization"
 
-msgid "sector"
+msgid "SECTOR"
 msgstr "Sector"
 
 msgid "select"
@@ -1384,7 +1384,7 @@ msgid "LU_ERRORS_INVALID"
 msgstr "'Enter a valid value."
 
 msgid "LU_ERRORS_INVALID_SEARCH"
-msgstr "Invalid search - Please fill some information before executing a search."
+msgstr "Please, inform at least two filters in your searches"
 
 msgid "LU_ERRORS_ACADEMIC_YEAR_REQUIRED"
 msgstr "Please specify an academic year"
@@ -1546,6 +1546,12 @@ msgstr "Dissertation"
 msgid "PRACTICAL_EXERCISES"
 msgstr "Practical exercises"
 
+msgid "lecturing"
+msgstr "Lecturing"
+
+msgid "PE"
+msgstr "PE"
+
 msgid "subtype"
 msgstr "Subtype"
 
@@ -1572,3 +1578,78 @@ msgstr "(Part 1, common with partims)"
 
 msgid "title_in_english_2"
 msgstr "(Part 2, specific to each partim)"
+
+msgid "scores_responsibles"
+msgstr "Scores responsibles"
+
+msgid "SCHOOL"
+msgstr "Ecole"
+
+msgid "PLATFORM"
+msgstr "Platform"
+
+msgid "LOGISTICS_ENTITY"
+msgstr "Logistics entity"
+
+msgid "organogram"
+msgstr "Organogram"
+
+msgid "attached_to"
+msgstr "Attached to"
+
+msgid "ACADEMIC_PARTNER"
+msgstr "Academic partner"
+
+msgid "INDUSTRIAL_PARTNER"
+msgstr "Industrial partner"
+
+msgid "SERVICE_PARTNER"
+msgstr "Service partner"
+
+msgid "COMMERCE_PARTNER"
+msgstr "Commerce partner"
+
+msgid "PUBLIC_PARTNER"
+msgstr "Public partner"
+
+msgid "requirement_entity"
+msgstr "Requirement entity"
+
+msgid "allocation_entity"
+msgstr "Allocation entity"
+
+msgid "additional_requirement_entity"
+msgstr "Additional entity"
+
+msgid "academic_end_year"
+msgstr "Academic end year"
+
+msgid "academic_start_year"
+msgstr "Academic start year"
+
+msgid "organization_name"
+msgstr "Name"
+
+msgid "partial"
+msgstr "Q1"
+
+msgid "remaining"
+msgstr "Q2"
+
+msgid "partial_remaining"
+msgstr "Q1&2"
+
+msgid "partial_or_remaining"
+msgstr "Q1|2"
+
+msgid "volume_partial"
+msgstr "Vol. Q1"
+
+msgid "volume_remaining"
+msgstr "Vol. Q2"
+
+msgid "learning_unit_quater"
+msgstr "LU quater"
+
+msgid "composition"
+msgstr "Composition"

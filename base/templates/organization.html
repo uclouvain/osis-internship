@@ -33,13 +33,12 @@
 {% endblock %}
 {% block content %}
 <div class="page-header">
-    <h3>{{ organization.acronym }}</h3>
+    <h3>{{ organization.acronym | default_if_none:'' }}</h3>
 </div>
 <div class="panel panel-default">
     <div class="panel-body">
         <ul class="nav nav-tabs">
             <li class="active"><a data-toggle="tab" href="#tab_identification">{% trans 'identification'%}</a></li>
-            <li><a data-toggle="tab" href="#tab_structure">{% trans 'structure'%}</a></li>
         </ul>
         <div class="tab-content">
             <div id="tab_identification" class="tab-pane fade in active">
@@ -50,7 +49,7 @@
                         {{ organization.acronym | default_if_none:'-' }}
                     </div>
                     <div class="col-md-4">
-                        <label>{% trans 'name'%}</label><br>
+                        <label>{% trans 'organization_name'%}</label><br>
                         {{ organization.name | default_if_none:'-' }}
                     </div>
                     <div class="col-md-4">
@@ -66,23 +65,14 @@
                     </div>
                     <div class="col-md-8">
                         <label>{% trans 'type' %}</label><br>
-                        {{ organization.type | default_if_none:'-' }}
+                        {% if organization.type %}  {% trans organization.type %} {% else %} - {% endif %}
                     </div>
                 </div>
                 <br>
-                <div class="row">
-                    <div class="col-md-11">
-                        <label>{% trans 'address(ses)' %}</label>
-                    </div>
-                    <div class="col-md-1">
-                        {% if request.user.is_superuser %}
-                            <a href="{% url 'organization_address_create' organization_address_id=organization.id %}" id="lnk_organization_address_create"
-                               class="btn btn-default" role="button" title="{% trans 'add_an_address_to_the_organization' %}"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
-                        {% endif %}
-                    </div>
-                </div>
+
+                {%if organization_addresses %}
+                <label>{% trans 'address(ses)' %}</label>
                 <br>
-                {%if organization_addresses%}
                 <div class="row">
                     <div class="col-md-12">
                         <div class="list-group">
@@ -101,6 +91,8 @@
                         </div>
                     </div>
                 </div>
+                {%else%}
+                <br>
                 {%endif%}
 
                 {% if request.user.is_superuser %}
@@ -108,25 +100,6 @@
                        class="btn btn-primary" role="button" id="bt_organization_edit">
                         <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> {% trans 'edit'%}
                     </a>
-                {% endif %}
-            </div>
-            <div id="tab_structure" class="tab-pane fade">
-                <br>
-                {% if structures %}
-                    <ul class="nav nav-tabs">
-                        {% for structure in structures %}
-                            <li {% if forloop.first%}class="active"{% endif %}><a data-toggle="tab" href="#tab_{{structure.acronym}}">{{structure.acronym}}</a></li>
-                        {% endfor %}
-                    </ul>
-                    <div class="tab-content">
-                        {% for structure in structures %}
-                            <div id="tab_{{structure.acronym}}" class="tab-pane fade {% if forloop.first %}in active{% endif %}">
-                                <iframe src="{%url 'structure_diagram' structure_id=structure.id %}" width="1100px"
-                                        height="600px"
-                                        frameborder="0"></iframe>
-                            </div>
-                        {% endfor %}
-                    </div>
                 {% endif %}
             </div>
         </div>

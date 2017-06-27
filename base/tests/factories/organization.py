@@ -27,6 +27,7 @@ import factory
 from django.conf import settings
 from django.utils import timezone
 from base.models import organization
+from base.models.enums import organization_type
 
 
 def _get_tzinfo():
@@ -46,4 +47,4 @@ class OrganizationFactory(factory.DjangoModelFactory):
     acronym = factory.Faker('text', max_nb_chars=15)
     website = factory.Faker('url')
     prefix = factory.Faker('text', max_nb_chars=30)
-    type = factory.Iterator(organization.ORGANIZATION_TYPE, getter=lambda c: c[0])
+    type = factory.Iterator(organization_type.ORGANIZATION_TYPE, getter=lambda c: c[0])

@@ -181,6 +181,8 @@ USER_SIGNALS_MANAGER = os.environ.get('USER_SIGNALS_MANAGER', None)
 USER_UPDATED_SIGNAL = os.environ.get('USER_UPDATED_SIGNAL', None)
 USER_CREATED_SIGNAL = os.environ.get('USER_CREATED_SIGNAL', None)
 
+# Field upload settings
+DATA_UPLOAD_MAX_NUMBER_FIELDS = int(os.environ.get('DATA_UPLOAD_MAX_NUMBER_FIELDS', 5000))
 
 # This has to be set in your .env with the actual url where you institution logo can be found.
 # Ex : LOGO_INSTITUTION_URL = 'https://www.google.be/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png'
@@ -211,7 +213,7 @@ if not TESTING or not SKIP_QUEUES_TESTS:
 LOCALE_PATHS = ()
 
 # Apps Settings
-
+CKEDITOR_JQUERY_URL = os.path.join(STATIC_URL, "js/jquery-2.1.4.min.js")
 CKEDITOR_CONFIGS = {
     'default': {
         'toolbar': 'Custom',
@@ -231,6 +233,14 @@ CKEDITOR_CONFIGS = {
             {'name': 'about', 'items': ['About']},
         ],
     },
+    'minimal': {
+        'toolbar': 'Custom',
+        'toolbar_Custom': [
+            ['Bold', 'Italic', 'Underline'],
+            ['BulletedList'],
+            ['Link', 'Unlink']
+        ]
+    }
 }
 
 LOGGING = {

@@ -26,6 +26,7 @@
 from django.contrib import admin
 from django.core.validators import MinValueValidator
 from django.db import models
+from django.db.models import Prefetch
 
 from cms.enums.entity_name import ENTITY_NAME
 
@@ -43,7 +44,7 @@ class TextLabelAdmin(admin.ModelAdmin):
 
 class TextLabel(models.Model):
     external_id = models.CharField(max_length=100, blank=True, null=True)
-    changed = models.DateTimeField(null=True)
+    changed = models.DateTimeField(null=True, auto_now=True)
     parent = models.ForeignKey('self', blank=True, null=True)
     entity = models.CharField(max_length=25, choices=ENTITY_NAME)
     label = models.CharField(max_length=255)
@@ -114,3 +115,9 @@ def reorganise_order(parent):
         if text_label.order != index:
             text_label.order = index
             super(TextLabel, text_label).save()
+
+
+def find_root_by_name(text_label_name):
+    return TextLabel.objects.prefetch_related(
+                                Prefetch('translatedtextlabel_set',to_attr="translated_text_labels")
+                            ).get(label=text_label_name, order=1, parent__isnull=True)
