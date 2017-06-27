@@ -28,18 +28,16 @@
 {% block breadcrumb %}
 {% include "learning_unit/breadcrumb.html" %}
 {% endblock %}
+{% load getattr %}
 
 {% block content %}
-
 {% include "learning_unit/header.html" %}
 <div class="panel panel-default" >
     <div class="panel-body" id="tabs" >
         {% include "learning_unit/tabs.html" %}
-
         <div class="tab-content" id="tab_content">
             <div role="tabpanel" class="tab-pane active" id="pedagogy">
-                 <form>
-                    <div class="row" style="margin-top:10px;">
+                 <div class="row" style="margin-top:10px;">
                         <div class="col-md-2">
                             <label> {% trans 'language'%} </label>
                         </div>
@@ -51,80 +49,53 @@
                         </div>
                     </div>
                     <hr/>
-                    <div class="row" style="margin-top:10px;">
-                        <div class="col-md-2">
-                            <label> {{ resume }} </label>
+                    {% for label_key, label_translated in cms_labels_translated.items %}
+                        <div class="row" style="margin-top:10px;">
+                            <div class="col-md-2">
+                                <label> {{ label_translated }} </label>
+                            </div>
+                            <div class="col-md-5">
+                                {% if perms.base.can_edit_learningunit_pedagogy %}
+                                <a class="pedagogy-edit-btn pull-right" href="#"
+                                   data-form="{% url 'learning_unit_pedagogy_edit' learning_unit_year_id=learning_unit_year.id %}?language={{form_french.language.0}}&label={{label_key}}"
+                                   title="Edit">
+                                    <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                                </a>
+                                {% endif %}
+
+                                {{ form_french|getattr:label_key }}
+                            </div>
+                            <div class="col-md-5">
+                                {% if perms.base.can_edit_learningunit_pedagogy %}
+                                <a class="pedagogy-edit-btn pull-right" href="#"
+                                   data-form="{% url 'learning_unit_pedagogy_edit' learning_unit_year_id=learning_unit_year.id %}?language={{form_english.language.0}}&label={{label_key}}"
+                                   title="Edit">
+                                    <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                                </a>
+                                {% endif %}
+                                {{ form_english|getattr:label_key}}
+                            </div>
                         </div>
-                        <div class="col-md-5">
-                            {{ form_french.resume }}
-                        </div>
-                        <div class="col-md-5">
-                            {{ form_english.resume }}
-                        </div>
-                    </div>
-                    <hr/>
-                    <div class="row" style="margin-top:10px;">
-                        <div class="col-md-2">
-                            <label> {{ bibliography }} </label>
-                        </div>
-                        <div class="col-md-5">
-                            {{ form_french.bibliography }}
-                        </div>
-                        <div class="col-md-5">
-                            {{ form_english.bibliography }}
-                        </div>
-                    </div>
-                    <hr/>
-                    <div class="row" style="margin-top:10px;">
-                        <div class="col-md-2">
-                            <label> {{ teaching_methods }} </label>
-                        </div>
-                        <div class="col-md-5">
-                            {{ form_french.teaching_methods }}
-                        </div>
-                        <div class="col-md-5">
-                            {{ form_english.teaching_methods }}
-                        </div>
-                    </div>
-                    <hr/>
-                    <div class="row" style="margin-top:10px;">
-                        <div class="col-md-2">
-                            <label> {{ evaluation_methods }} </label>
-                        </div>
-                        <div class="col-md-5">
-                            {{ form_french.evaluation_methods }}
-                        </div>
-                        <div class="col-md-5">
-                            {{ form_english.evaluation_methods }}
-                        </div>
-                    </div>
-                    <hr/>
-                    <div class="row" style="margin-top:10px;">
-                        <div class="col-md-2">
-                            <label> {{ other_informations }} </label>
-                        </div>
-                        <div class="col-md-5">
-                            {{ form_french.other_informations }}
-                        </div>
-                        <div class="col-md-5">
-                            {{ form_english.other_informations }}
-                        </div>
-                    </div>
-                    <hr/>
-                    <div class="row" style="margin-top:10px;">
-                        <div class="col-md-2">
-                            <label> {{ online_resources }} </label>
-                        </div>
-                        <div class="col-md-5">
-                            {{ form_french.online_resources }}
-                        </div>
-                        <div class="col-md-5">
-                            {{ form_english.online_resources }}
-                        </div>
-                    </div>
-                </form>
+                        <hr/>
+                    {% endfor %}
             </div>
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="pedagogy_edit" tabindex="-1" role="dialog" data-backdrop="static"></div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        $(".pedagogy-edit-btn").click(function(ev) {
+            ev.preventDefault();
+            var url = $(this).data("form"); // get the contact form url
+            var pedagogy_edit_modal = $("#pedagogy_edit");
+            pedagogy_edit_modal.load(url, function() { // load the url into the modal
+                $(this).modal('show');
+            });
+            return false;
+        });
+    </script>
 {% endblock %}

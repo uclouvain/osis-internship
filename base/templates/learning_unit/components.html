@@ -35,73 +35,73 @@
 <div class="panel panel-default">
     <div class="panel-body" id="tabs">
         {% include "learning_unit/tabs.html" %}
-
         <div class="tab-content" id="tab_content">
             <div role="tabpanel" class="tab-pane active" id="components">
                 <table class="table">
                     <thead>
-                        <th>{% trans 'components'%}</th>
-                        <th>{% trans 'code'%}</th>
-                        <th>{% trans 'nominal_volume' %}</th>
-                        <th>{% trans 'nominal_quater' %}</th>
-                        <th>{% trans 'volume_partial'%}</th>
-                        <th>{% trans 'volume_remaining'%}</th>
-                        <th>{% trans 'planned_classrooms'%}</th>
+                    <th>{% trans 'components'%}</th>
+                    <th>{% trans 'code'%}</th>
+                    <th>{% trans 'nominal_volume' %}</th>
+                    <th>{% trans 'nominal_quater' %}</th>
+                    <th>{% trans 'volume_partial'%}</th>
+                    <th>{% trans 'volume_remaining'%}</th>
+                    <th>{% trans 'planned_classrooms'%}</th>
                     </thead>
                     <tbody>
                     {% for component in components%}
-                        {% ifchanged component.learning_component_year.type %}
-                            {% if forloop.counter > 1 %}
-                                <tr style="height: 1px;font-size: 5px;"><td colspan="5">&nbsp;</td></tr>
+                    {% ifchanged component.learning_component_year.type %}
+                    {% if forloop.counter > 1 %}
+                    <tr style="height: 1px;font-size: 5px;"><td colspan="5">&nbsp;</td></tr>
+                    {% endif %}
+                    {% endifchanged %}
+                    <tr style="background-color: gainsboro">
+                        <td>{% if component.learning_component_year.type %}
+                            {% trans component.learning_component_year.type %}
                             {% endif %}
-                        {% endifchanged %}
-                        <tr style="background-color: gainsboro">
-                            <td>{% if component.learning_component_year.type %}
-                                    {% trans component.learning_component_year.type %}
-                                {% endif %}
-                            </td>
-                            <td>/{{ component.learning_component_year.acronym  | default_if_none:'' }}</td>
-                            <td>{{ component.volumes.hourly_volume | default_if_none:'0'}}</td>
-                            <td>
-                                {%if component.volumes.total_volume%}
-                                    {% trans component.volumes.total_volume  %}
-                                {%else%}
-                                    0
-                                {% endif %}
-                            </td>
-                            <td>{{ component.volumes.volume_partial | default_if_none:'0'}}</td>
-                            <td>{{ component.volumes.volume_remaining | default_if_none:'0'}}</td>
-                            <td>{{ component.learning_component_year.planned_classes| default_if_none:'0' }}</td>
-                        </tr>
-                        {% if component.classes %}
-                        <tr>
-                            <td colspan="4">
-                                <div style="margin-left: 25px;">
-                                    <table class="table">
-                                        <thead class="classes_background">
-                                            <th>{% trans 'classes'%}</th>
-                                            <th>{% trans 'description'%}</th>
-                                        </thead>
-                                        <tbody class="classes_background">
-                                        {% for classe in component.classes %}
-                                        <tr>
-                                            <td>/{% if component.learning_component_year.type_letter_acronym %}
-                                                    {{component.learning_component_year.type_letter_acronym}}
-                                                 {% endif %}{{classe.acronym}}</td>
-                                            <td>{{classe.description | default_if_none:''}}</td>
-                                        </tr>
-                                        {% endfor %}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </td>
-                        </tr>
-                        {% endif %}
+                        </td>
+                        <td>/{{ component.learning_component_year.acronym  | default_if_none:'' }}</td>
+                        <td>{{ component.volumes.hourly_volume | default_if_none:'0'}}</td>
+                        <td>
+                            {%if component.volumes.total_volume%}
+                            {% trans component.volumes.total_volume  %}
+                            {%else%}
+                            0
+                            {% endif %}
+                        </td>
+                        <td>{{ component.volumes.volume_partial | default_if_none:'0'}}</td>
+                        <td>{{ component.volumes.volume_remaining | default_if_none:'0'}}</td>
+                        <td>{{ component.learning_component_year.planned_classes| default_if_none:'0' }}</td>
+                    </tr>
+                    {% if component.classes %}
+                    <tr>
+                        <td colspan="4">
+                            <div style="margin-left: 25px;">
+                                <table class="table">
+                                    <thead class="classes_background">
+                                    <th>{% trans 'classes'%}</th>
+                                    <th>{% trans 'description'%}</th>
+                                    </thead>
+                                    <tbody class="classes_background">
+                                    {% for classe in component.classes %}
+                                    <tr>
+                                        <td>/{% if component.learning_component_year.type_letter_acronym %}
+                                            {{component.learning_component_year.type_letter_acronym}}
+                                            {% endif %}{{classe.acronym}}</td>
+                                        <td>{{classe.description | default_if_none:''}}</td>
+                                    </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endif %}
                     {% endfor %}
                     </tbody>
                 </table>
             </div>
         </div>
+
     </div>
 </div>
 {% endblock %}

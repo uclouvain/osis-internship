@@ -23,20 +23,27 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import factory
-import factory.fuzzy
+from django import template
+register = template.Library()
 
-from base.tests.factories.learning_container_year import LearningContainerYearFactory
+@register.filter
+def getattr (obj, args):
+    """ Try to get an attribute from an object.
 
+    Example: {% if block|getattr:"editable,True" %}
 
-class LearningComponentYearFactory(factory.django.DjangoModelFactory):
-    class Meta:
-        model = "base.LearningComponentYear"
-
-    learning_container_year = factory.SubFactory(LearningContainerYearFactory)
-    title = factory.Sequence(lambda n: 'title-%d' % n)
-    acronym = factory.Sequence(lambda n: 'A%d' % n)
-    type = factory.Sequence(lambda n: 'Type-%d' % n)
-    comment = factory.Sequence(lambda n: 'Comment-%d' % n)
-    planned_classes = factory.fuzzy.FuzzyInteger(10)
-
+    Beware that the default is always a string, if you want this
+    to return False, pass an empty second argument:
+    {% if block|getattr:"editable," %}
+    """
+    args = args.split(',')
+    if len(args) == 1:
+        (attribute, default) = [args[0], ""]
+    else:
+        (attribute, default) = args
+    try:
+        return obj.__getattribute__(attribute)
+    except AttributeError:
+         return  obj.__dict__.get(attribute, default)
+    except:
+        return default

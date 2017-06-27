@@ -62,3 +62,11 @@ def search(entity, reference, text_labels_name=None, language=None):
         queryset = queryset.filter(text_label__label__in=text_labels_name)
 
     return queryset.select_related('text_label')
+
+
+def get_or_create(entity, reference, text_label, language):
+    translated_text, created = TranslatedText.objects.get_or_create(entity=entity,
+                                                 reference=reference,
+                                                 text_label=text_label,
+                                                 language=language)
+    return translated_text
