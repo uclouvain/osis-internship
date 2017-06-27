@@ -97,22 +97,25 @@ def read_xls_mandates(request, file_name):
             assistant = create_academic_assistant_if_not_exists(current_record)
             if assistant:
                 mandate = create_assistant_mandate_if_not_exists(current_record, assistant)
-                institute = search_structure_by_acronym_and_type(current_record.get('INSTITUTE'),
-                                                                 structure_type.INSTITUTE)
-                if institute:
-                    link_mandate_to_structure(mandate, institute)
                 faculty = search_structure_by_acronym_and_type(current_record.get('FACULTY'),
                                                                structure_type.FACULTY)
                 if faculty:
-                    link_mandate_to_structure(mandate, faculty)
                     link_mandate_to_structure(mandate, faculty.part_of)
-                pole = search_structure_by_acronym_and_type(current_record.get('POLE'), structure_type.POLE)
-                if pole:
-                    link_mandate_to_structure(mandate, pole)
+                    link_mandate_to_structure(mandate, faculty)
                 program_commission = search_structure_by_acronym_and_type(current_record.get('PROGRAM_COMMISSION'),
                                                                           structure_type.PROGRAM_COMMISSION)
                 if program_commission:
                     link_mandate_to_structure(mandate, program_commission)
+
+                institute = search_structure_by_acronym_and_type(current_record.get('INSTITUTE'),
+                                                                 structure_type.INSTITUTE)
+                if institute:
+                    link_mandate_to_structure(mandate, institute)
+
+                pole = search_structure_by_acronym_and_type(current_record.get('POLE'), structure_type.POLE)
+                if pole:
+                    link_mandate_to_structure(mandate, pole)
+
         current_row += 1
 
 

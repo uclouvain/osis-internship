@@ -45,8 +45,7 @@
 </ul>
     <div class="panel panel-default">
         <div class="panel-body">
-        <form method="POST" action="{% url 'tutoring_learning_unit_save' mandate_id%}">
-        {{ form.non_field_errors }}
+        <form method="POST" action="{% url 'tutoring_learning_unit_save' %}">
         {% csrf_token %}
  		{% for hidden in form.hidden_fields %}
 			{{ hidden }}
@@ -57,110 +56,51 @@
             </div>
         </div>
         <div class="form-group">
-            <div class="row">
-                <div class="col-md-3">
-                    <label for="txt_academic_year" id="txt_academic_year">{% trans 'academic_year' %}</label>
+            <label style="padding-top: 15px" for="txt_learning_unit" id="id_learning_unit">
+                {% trans 'learning_unit' %}</label>
+            {% if search_learning_units_year %}
+                <div class="controls">{{ search_learning_units_year }}</div>
+                <input type="hidden" name="learning_unit_year_id" id="learning_unit_year_id"
+                       value={{ learning_unit_year_id }} />
+            {% else %}
+                <div class="ui-widget"><input id="search_learning_units_year"
+                                              name="search_learning_units_year" size="100"
+                                              placeholder="{% trans 'search_by_acronym' %}">
                 </div>
-                <div class="col-md-3">
-                    <div class="controls">{{ form.academic_year }}</div>
-                    <span class="error">{{ form.academic_year.errors }}</span>
-                </div>
-            </div><p>
+                <input type="hidden" name="learning_unit_year_id" id="learning_unit_year_id" />
+            {% endif %}
+            {{ form.mandate_id.as_hidden }}
+            {{ form.non_field_errors }}
         </div>
         <div class="form-group">
-            <div class="row">
-                <div class="col-md-3">
-                    <label for="txt_learning_unit_acronym" id="txt_learning_unit_acronym">
-                        {% trans 'learning_unit_acronym' %}</label>
-                </div>
-                <div class="col-md-3">
-                    <div class="controls">{{ form.learning_unit_year }}</div>
-                    <span class="error">{{ form.learning_unit_year.errors }}</span>
-                </div>
-            </div><p>
-        </div>
-        <div id="inputs">
-        <div class="form-group">
-            <div class="row">
-                <div class="col-md-3">
-                    <label for="txt_sessions_number" id="txt_sessions_number">{% trans 'sessions_number' %}</label>
-                </div>
-                <div class="col-md-3">
-                    <div class="controls">{{ form.sessions_number }}</div>
-                    <span class="error">{{ form.sessions_number.errors }}</span>
-                </div>
-            </div><p>
-        </div>
-        <div class="form-group">
-            <div class="row">
-                <div class="col-md-3">
-                    <label for="txt_sessions_duration" id="txt_sessions_duration">
-                        {% trans 'sessions_duration' %}</label>
-                </div>
-                <div class="col-md-3">
-                    <div class="controls">{{ form.sessions_duration }}</div>
-                    <span class="error">{{ form.sessions_duration.errors }}</span>
-                </div>
-            </div><p>
-        </div>
-        <div class="form-group">
-            <div class="row">
-                <div class="col-md-3">
-                    <label for="txt_series_number" id="txt_series_number">{% trans 'series_number' %}</label>
-                </div>
-                <div class="col-md-3">
-                    <div class="controls">{{ form.series_number }}</div>
-                    <span class="error">{{ form.series_number.errors }}</span>
-                </div>
-            </div><p>
-        </div>
-        </div>
-        <div class="form-group">
-            <div class="row">
-                <div class="col-md-3">
-                    <label for="txt_sector_face_to_face_duration" id="txt_sector_face_to_face_duration">
-                        {% trans 'face_to_face_duration' %}</label>
-                </div>
-                <div class="col-md-3">
-                    <div class="controls">{{ form.face_to_face_duration }}</div>
-                    <span class="error">{{ form.face_to_face_duration.errors }}</span>
-                </div>
-            </div><p>
-        </div>
-        <div class="form-group">
-            <div class="row">
-                <div class="col-md-3">
-                    <label for="txt_sector_attendees" id="txt_sector_attendees">{% trans 'attendees' %}</label>
-                </div>
-                <div class="col-md-3">
-                    <div class="controls">{{ form.attendees }}</div>
-                    <span class="error">{{ form.attendees.errors }}</span>
-                </div>
-            </div><p>
-        </div>
-        <div class="form-group">
-            <div class="row">
-                <div class="col-md-3">
-                    <label for="txt_sector_exams_supervision_duration" id="txt_sector_exams_supervision_duration">
-                        {% trans 'exams_supervision_duration' %}</label>
-                </div>
-                <div class="col-md-3">
-                    <div class="controls">{{ form.exams_supervision_duration }}</div>
-                    <span class="error">{{ form.exams_supervision_duration.errors }}</span>
-                </div>
-            </div><p>
-        </div>
-        <div class="form-group">
-            <div class="row">
-                <div class="col-md-3">
-                    <label for="txt_sector_others_delivery" id="txt_sector_others_delivery">
-                        {% trans 'others_delivery' %}</label>
-                </div>
-                <div class="col-md-3">
-                    <div class="controls">{{ form.others_delivery }}</div>
-                    <span class="error">{{ form.others_delivery.errors }}</span>
-                </div>
-            </div><p>
+            <label style="padding-top: 5px" for="{{ form.sessions_number.id_for_label }}">
+                {% trans 'sessions_number' %}</label>
+            <div class="controls">{{ form.sessions_number }}</div>
+            <span class="error">{{ form.sessions_number.errors }}</span>
+            <label style="padding-top: 5px" for="{{ form.sessions_duration.id_for_label }}">
+                {% trans 'sessions_duration' %}</label>
+            <div class="controls">{{ form.sessions_duration }}</div>
+            <span class="error">{{ form.sessions_duration.errors }}</span>
+            <label style="padding-top: 5px" for="{{ form.series_number.id_for_label }}">
+                {% trans 'series_number' %}</label>
+            <div class="controls">{{ form.series_number }}</div>
+            <span class="error">{{ form.series_number.errors }}</span>
+            <label style="padding-top: 5px" for="{{ form.face_to_face_duration.id_for_label }}">
+                {% trans 'face_to_face_duration' %}</label>
+            <div class="controls">{{ form.face_to_face_duration }}</div>
+            <span class="error">{{ form.face_to_face_duration.errors }}</span>
+            <label style="padding-top: 5px" for="{{ form.attendees.id_for_label }}">
+                {% trans 'attendees' %}</label>
+            <div class="controls">{{ form.attendees }}</div>
+            <span class="error">{{ form.attendees.errors }}</span>
+            <label style="padding-top: 5px" for="{{ form.exams_supervision_duration.id_for_label }}">
+                {% trans 'exams_supervision_duration' %}</label>
+            <div class="controls">{{ form.exams_supervision_duration }}</div>
+            <span class="error">{{ form.exams_supervision_duration.errors }}</span>
+            <label style="padding-top: 5px" for="{{ form.others_delivery.id_for_label }}">
+                {% trans 'others_delivery' %}</label>
+            <div class="controls">{{ form.others_delivery }}</div>
+            <span class="error">{{ form.others_delivery.errors }}</span>
         </div>
         <button type="submit" class="btn btn-primary" title="{% trans 'save'%}" id="bt_save_tutoring_learning_unit">
         <span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'save'%}</button>
@@ -171,6 +111,7 @@
 </div>
 {% endblock %}
 {% block style %}
+<link rel="stylesheet" href="{% static 'css/jquery-ui.css' %}">
 <style>
     input[type=number]{
         width: 50px;
@@ -182,8 +123,10 @@
 </style>
 {% endblock %}
 {% block script %}
-    <script type="text/javascript">
+<script type="text/javascript" src="{% static 'js/jquery-ui.js' %}"></script>
+<script>
     window.onload = function () {
+        $('#learning_unit_year_id').empty();
         var session_number = document.getElementById('id_sessions_number');
         var session_duration = document.getElementById('id_sessions_duration');
         var series_number = document.getElementById('id_series_number');
@@ -196,5 +139,24 @@
         session_duration.onchange = trigFunc;
         series_number.onchange = trigFunc;
     };
-    </script>
+
+$(function() {
+  $("#search_learning_units_year").autocomplete({
+	source: "/assistants/assistant/form/part2/get_learning_units_year/",
+	minLength: 2,
+    delay: 100,
+    select: function(event, ui) {
+    	var learning_unit_year_id = ui.item.id;
+    	$( "#learning_unit_year_id" ).val(learning_unit_year_id);
+    	$( "#search_learning_units_year" ).val( ui.item.value + ' (' + ui.item.academic_year + ')');
+    	$('#id_sessions_number').focus();
+    	return False;
+    	}
+  }).autocomplete( "instance" )._renderItem = function( ul, item ) {
+      return $( "<li>" )
+        .append( item.value + " (" + item.academic_year + ")" )
+        .appendTo( ul );
+    };
+});
+   </script>
 {% endblock %}

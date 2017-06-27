@@ -237,7 +237,7 @@ CKEDITOR_CONFIGS = {
         'toolbar': 'Custom',
         'toolbar_Custom': [
             ['Bold', 'Italic', 'Underline'],
-            ['BulletedList'],
+            ['NumberedList','BulletedList'],
             ['Link', 'Unlink']
         ]
     }
