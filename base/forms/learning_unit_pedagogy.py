@@ -46,7 +46,8 @@ class LearningUnitPedagogyForm(forms.Form):
 
         for trans_txt in translated_texts_list:
             text_label = trans_txt.text_label.label
-            setattr(self, text_label, mark_safe(trans_txt.text))
+            text = trans_txt.text if trans_txt.text else ""
+            setattr(self, text_label, mark_safe(text))
 
     def _get_all_translated_text_related(self):
         language_iso = self.language[0]

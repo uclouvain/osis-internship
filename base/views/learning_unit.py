@@ -58,6 +58,8 @@ VOLUME_REMAINING_KEY = 'volume_remaining'
 
 VOLUME_FOR_UNKNOWN_QUADRIMESTER = -1
 
+ACRONYM_COMPLET_LEARNING_UNIT = "*"
+
 
 @login_required
 @permission_required('base.can_access_learningunit', raise_exception=True)
@@ -152,10 +154,11 @@ def learning_unit_pedagogy_edit(request, learning_unit_year_id):
 
     context = _get_common_context_learning_unit_year(learning_unit_year_id)
     label_name = request.GET.get('label')
+    language = request.GET.get('language')
     text_lb = text_label.find_root_by_name(label_name)
     form = LearningUnitPedagogyEditForm(**{
         'learning_unit_year': context['learning_unit_year'],
-        'language': request.GET.get('language'),
+        'language': language,
         'text_label': text_lb
     })
     form.load_initial()  # Load data from database
@@ -164,6 +167,7 @@ def learning_unit_pedagogy_edit(request, learning_unit_year_id):
     user_language = mdl.person.get_user_interface_language(request.user)
     context['text_label_translated'] = next((txt for txt in text_lb.translated_text_labels
                                              if txt.language == user_language), None)
+    context['language_translated'] = next((lang for lang in settings.LANGUAGES if lang[0] == language), None)
     return layout.render(request, "learning_unit/pedagogy_edit.html", context)
 
 
@@ -251,6 +255,7 @@ def get_components(a_learning_container_yr, get_classes):
             components.append({'learning_component_year': learning_component_year,
                                'entity_component_yr': entity_component_yr,
                                'volumes': volumes(entity_component_yr),
+                               'learning_unit_usage': _learning_unit_usage(learning_component_year),
                                'classes': learning_class_year_dict})
     return components
 
@@ -394,3 +399,16 @@ def volume_distribution(a_learning_container_yr):
 
     return None
 
+
+def _learning_unit_usage(a_learning_component_year):
+    learning_unit_component = mdl.learning_unit_component.find_by_learning_component_year(a_learning_component_year)
+    ch = ""
+    separator = ""
+    for index, l in enumerate(learning_unit_component):
+        if index == 1:
+            separator = ", "
+        acronym = ACRONYM_COMPLET_LEARNING_UNIT
+        if l.learning_unit_year.subdivision:
+            acronym = l.learning_unit_year.subdivision
+        ch = "{}{}{}".format(ch, separator, acronym)
+    return ch

@@ -36,6 +36,7 @@ from base.tests.factories.learning_class_year import LearningClassYearFactory
 from base.tests.factories.learning_component_year import LearningComponentYearFactory
 from base.tests.factories.learning_container import LearningContainerFactory
 from base.tests.factories.learning_container_year import LearningContainerYearFactory
+from base.tests.factories.learning_unit_component import LearningUnitComponentFactory
 from base.tests.factories.entity_component_year import EntityComponentYearFactory
 from base.tests.factories.entity_container_year import EntityContainerYearFactory
 from base.models.enums import entity_container_year_link_type
@@ -280,7 +281,6 @@ class LearningUnitViewTestCase(TestCase):
                                    hourly_volume_partial=25.00)
         self.assertEqual(learning_unit_view.volume_distribution(self.learning_container_yr), _('partial_remaining'))
 
-
     def test_learning_component_year_partial_remaining_second(self):
         EntityComponentYearFactory(learning_component_year=self.learning_component_yr,
                                    entity_container_year=self.entity_container_yr,
@@ -312,3 +312,38 @@ class LearningUnitViewTestCase(TestCase):
                                    hourly_volume_total=30.00,
                                    hourly_volume_partial=-1)
         self.assertEqual(learning_unit_view.volume_distribution(self.learning_container_yr), _('partial_or_remaining'))
+
+    def test_learning_unit_usage_two_usages(self):
+        learning_container_yr = LearningContainerYearFactory(academic_year=self.current_academic_year,
+                                                             acronym='LBIOL')
+
+        learning_unit_yr_1 = LearningUnitYearFactory(academic_year=self.current_academic_year,
+                                                     acronym='LBIOLA',
+                                                     learning_container_year=learning_container_yr)
+        learning_unit_yr_2 = LearningUnitYearFactory(academic_year=self.current_academic_year,
+                                                     acronym='LBIOLB',
+                                                     learning_container_year=learning_container_yr)
+
+        learning_component_yr = LearningComponentYearFactory(learning_container_year=learning_container_yr)
+
+        LearningUnitComponentFactory(learning_unit_year=learning_unit_yr_1,
+                                     learning_component_year=learning_component_yr)
+        LearningUnitComponentFactory(learning_unit_year=learning_unit_yr_2,
+                                     learning_component_year=learning_component_yr)
+
+        self.assertEqual(learning_unit_view._learning_unit_usage(learning_component_yr), 'A, B')
+
+    def test_learning_unit_usage_with_complete_LU(self):
+        learning_container_yr = LearningContainerYearFactory(academic_year=self.current_academic_year,
+                                                             acronym='LBIOL')
+
+        learning_unit_yr_1 = LearningUnitYearFactory(academic_year=self.current_academic_year,
+                                                     acronym='LBIOL',
+                                                     learning_container_year=learning_container_yr)
+
+        learning_component_yr = LearningComponentYearFactory(learning_container_year=learning_container_yr)
+
+        LearningUnitComponentFactory(learning_unit_year=learning_unit_yr_1,
+                                     learning_component_year=learning_component_yr)
+
+        self.assertEqual(learning_unit_view._learning_unit_usage(learning_component_yr), '*')

@@ -1,5 +1,6 @@
 {% load staticfiles %}
 {% load i18n %}
+{% load components_classes %}
 {% comment "License" %}
 * OSIS stands for Open Student Information System. It's an application
 * designed to manage the core business of higher education institutions,
@@ -35,6 +36,7 @@
             <th>{% trans 'volume_partial'%}</th>
             <th>{% trans 'volume_remaining'%}</th>
             <th>{% trans 'planned_classrooms'%}</th>
+            <th>{% trans 'real_classes'%}</th>
             </thead>
             <tbody>
             {% for component in components%}
@@ -60,6 +62,7 @@
                     <td>{{ component.volumes.volume_partial | default_if_none:'0'}}</td>
                     <td>{{ component.volumes.volume_remaining | default_if_none:'0'}}</td>
                     <td>{{ component.learning_component_year.planned_classes| default_if_none:'0' }}</td>
+                    <td><span class="fa fa-circle {{component.learning_component_year.planned_classes |get_css_class:component.learning_component_year.real_classes  }}"></span> {{ component.learning_component_year.real_classes| default_if_none:'0' }}</td>
                 </tr>
             {% endfor %}
             </tbody>

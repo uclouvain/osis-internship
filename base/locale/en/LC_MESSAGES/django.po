@@ -1654,5 +1654,11 @@ msgstr "LU quater"
 msgid "composition"
 msgstr "Composition"
 
-msgid "using_by_learning_unit"
-msgstr "Using by the UE"
+msgid "real_classes"
+msgstr "Real classes"
+
+msgid "lu_usage"
+msgstr "Learning units usage"
+
+msgid "used_by_partim"
+msgstr "Used by partim "
