@@ -61,30 +61,6 @@
                     <td>{{ component.volumes.volume_remaining | default_if_none:'0'}}</td>
                     <td>{{ component.learning_component_year.planned_classes| default_if_none:'0' }}</td>
                 </tr>
-                {% if component.classes %}
-                    <tr>
-                        <td colspan="4">
-                            <div style="margin-left: 25px;">
-                                <table class="table">
-                                    <thead class="classes_background">
-                                    <th>{% trans 'classes'%}</th>
-                                    <th>{% trans 'description'%}</th>
-                                    </thead>
-                                    <tbody class="classes_background">
-                                    {% for classe in component.classes %}
-                                    <tr>
-                                        <td>/{% if component.learning_component_year.type_letter_acronym %}
-                                            {{component.learning_component_year.type_letter_acronym}}
-                                            {% endif %}{{classe.acronym}}</td>
-                                        <td>{{classe.description | default_if_none:''}}</td>
-                                    </tr>
-                                    {% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </td>
-                    </tr>
-                {% endif %}
             {% endfor %}
             </tbody>
         </table>

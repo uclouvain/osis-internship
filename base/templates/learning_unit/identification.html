@@ -117,7 +117,7 @@
                         <br><br>
                         <label>{% trans 'composition' %}</label><br>
                         {% if components %}
-                            {% include "learning_unit/components_table.html" %}
+                            {% include "learning_unit/components_identification.html" %}
                         {% endif %}
                     </div>
 
@@ -142,7 +142,6 @@
                             {{ allocation_entity.acronym }}
                          {% endif %}
                         <br>
-
                         {% for entity in additional_requirement_entities %}
                             <label style="margin-top:10px;">{% trans 'additional_requirement_entity'%}</label><br>
                             {{ entity.acronym }}
