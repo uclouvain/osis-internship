@@ -61,7 +61,7 @@
                     <td>{{ component.volumes.volume_remaining | default_if_none:'0'}}</td>
                     <td>{{ component.learning_component_year.planned_classes| default_if_none:'0' }}</td>
                 </tr>
-                {% if show_classes and component.classes %}
+                {% if component.classes %}
                     <tr>
                         <td colspan="4">
                             <div style="margin-left: 25px;">

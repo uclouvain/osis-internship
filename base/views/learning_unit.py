@@ -88,7 +88,7 @@ def learning_unit_identification(request, learning_unit_year_id):
     context['experimental_phase'] = True
     context['show_subtype'] = _show_subtype(learning_unit_year)
     context.update(_get_all_attributions(learning_unit_year))
-    context['components'] = get_components(learning_unit_year.learning_container_year)
+    context['components'] = get_components(learning_unit_year.learning_container_year, False)
     context['volume_distribution'] = volume_distribution(learning_unit_year.learning_container_year)
 
     return layout.render(request, "learning_unit/identification.html", context)
@@ -105,10 +105,9 @@ def learning_unit_formations(request, learning_unit_year_id):
 @permission_required('base.can_access_learningunit', raise_exception=True)
 def learning_unit_components(request, learning_unit_year_id):
     context = _get_common_context_learning_unit_year(learning_unit_year_id)
-    context['components'] = get_components(context['learning_unit_year'].learning_container_year)
+    context['components'] = get_components(context['learning_unit_year'].learning_container_year, True)
     context['tab_active'] = 'components'
     context['experimental_phase'] = True
-    context['show_classes'] = True
     return layout.render(request, "learning_unit/components.html", context)
 
 
@@ -207,13 +206,16 @@ def _get_common_context_learning_unit_year(learning_unit_year_id):
     return context
 
 
-def get_components(a_learning_container_yr):
+def get_components(a_learning_container_yr, get_classes):
     components = []
     if a_learning_container_yr:
         learning_component_year_list = mdl.learning_component_year.find_by_learning_container_year(a_learning_container_yr)
 
         for learning_component_year in learning_component_year_list:
-            learning_class_year_list = mdl.learning_class_year.find_by_learning_component_year(learning_component_year)
+            if get_classes:
+                learning_class_year_list = mdl.learning_class_year.find_by_learning_component_year(learning_component_year)
+            else:
+                learning_class_year_list = None
             entity_container_yrs = mdl.entity_container_year.find_by_learning_container_year(learning_component_year.learning_container_year,
                                                                                             entity_container_year_link_type.REQUIREMENT_ENTITY)
             entity_component_yr = mdl.entity_component_year.find_by_entity_container_years(entity_container_yrs,
