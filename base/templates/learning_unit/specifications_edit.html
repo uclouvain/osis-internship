@@ -31,7 +31,7 @@
               action="{% url 'learning_unit_specifications_edit' learning_unit_year_id=form.learning_unit_year.id %}">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">×</button>
-                <h4>{{text_label_translated.label}}</h4>
+                <h4>{{text_label_translated.label}} - {{language_translated.1}}</h4>
             </div>
             <div class="modal-body">
                 {% csrf_token %}
@@ -39,8 +39,8 @@
                 {{ form.cms_id }}
             </div>
             <div class="modal-footer">
-               <input type="submit" class="btn" data-dismiss="modal" value="Cancel" />
-               <input class="btn btn-primary" type="submit" value="Save" />
+                <button class="btn btn-primary" type="submit">{% trans 'save' %}</button>
+                <button type="submit" class="btn" data-dismiss="modal">{% trans 'cancel' %} </button>
           </div>
         </form>
     </div>

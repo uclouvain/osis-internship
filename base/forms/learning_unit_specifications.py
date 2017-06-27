@@ -48,7 +48,8 @@ class LearningUnitSpecificationsForm(forms.Form):
 
         for trans_txt in texts_list:
             text_label = trans_txt.text_label.label
-            setattr(self, text_label, mark_safe(trans_txt.text))
+            text = trans_txt.text if trans_txt.text else ""
+            setattr(self, text_label, mark_safe(text))
 
 
 class LearningUnitSpecificationsEditForm(forms.Form):
