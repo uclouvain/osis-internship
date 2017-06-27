@@ -1634,7 +1634,7 @@ msgid "remaining"
 msgstr "Q2"
 
 msgid "partial_remaining"
-msgstr "Q1&Q2"
+msgstr "Q1&2"
 
 msgid "partial_or_remaining"
 msgstr "Q1|Q2"
