@@ -1633,13 +1633,19 @@ msgid "remaining"
 msgstr "Q2"
 
 msgid "partial_remaining"
-msgstr "Q1&Q2"
+msgstr "Q1&2"
 
 msgid "partial_or_remaining"
-msgstr "Q1|Q2"
+msgstr "Q1|2"
 
 msgid "volume_partial"
 msgstr "Vol. Q1"
 
 msgid "volume_remaining"
 msgstr "Vol. Q2"
+
+msgid "learning_unit_quater"
+msgstr "Quadri. de l'UE"
+
+msgid "composition"
+msgstr "Composition"
