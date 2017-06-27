@@ -55,7 +55,7 @@
             <th>{% trans 'matricule' %}</th>
             <th>{% trans 'assistant' %}</th>
             <th>{% trans 'structures' %}</th>
-            <th>{% trans 'stream' %}</th>
+            <th>{% trans 'assistant_type' %}</th>
             <th>{% trans 'renewal_short_name' %}</th>
             <th>{% trans 'doctorate' %}</th>
             <th>{% trans 'mandate' %}</th>
@@ -69,18 +69,14 @@
                 <tr><td>{{ mandate.sap_id }}</td>
                 <td><a href="{% url 'mandate_read' mandate.id %}">{{ mandate.assistant.person }}</a></td>
                 <td><ul>
-                {% for struct in mandate.mandatestructure_set.all %}
+                {% for struct in mandate.mandatestructure_set.all|dictsort:"id" %}
                     <li>{% trans struct.structure.type|lower %} : {{ struct.structure.acronym }}</li>
                 {% endfor %}
                 </ul></td>
-                {% if mandate.assistant_type == "TEACHING_ASSISTANT" %}
-                <td>AS</td>
-                {% else %}
-                <td>ST</td>
-                {% endif %}
+                <td>{% trans mandate.assistant_type|lower %}</td>
                 <td>{% trans mandate.state|lower %}</td>
                 <td>{% if mandate.assistant.inscription %}
-                        {% trans mandate.assistant.inscription %}
+                        {% trans mandate.assistant.inscription|lower %}
                     {% endif %}
                 </td>
                 <td>{{ mandate.contract_duration }}</td>
