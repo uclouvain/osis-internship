@@ -30,6 +30,7 @@ from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.utils.translation import ugettext as _
+from django.views.decorators.http import require_http_methods
 from openpyxl import load_workbook
 
 from assessments.business import score_encoding_list
@@ -59,6 +60,7 @@ INFORMATIVE_JUSTIFICATION_ALIASES = {
 }
 
 @login_required
+@require_http_methods(["POST"])
 def upload_scores_file(request, learning_unit_year_id=None):
     if request.method == 'POST':
         form = ScoreFileForm(request.POST, request.FILES)
