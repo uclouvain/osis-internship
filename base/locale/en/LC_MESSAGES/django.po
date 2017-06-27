@@ -1624,6 +1624,9 @@ msgstr "Additional entity"
 msgid "academic_end_year"
 msgstr "Academic end year"
 
+msgid "academic_start_year"
+msgstr "Academic start year"
+
 msgid "organization_name"
 msgstr "Name"
 
@@ -1634,10 +1637,10 @@ msgid "remaining"
 msgstr "Q2"
 
 msgid "partial_remaining"
-msgstr "Q1&Q2"
+msgstr "Q1&2"
 
 msgid "partial_or_remaining"
-msgstr "Q1|Q2"
+msgstr "Q1|2"
 
 msgid "volume_partial"
 msgstr "Vol. Q1"

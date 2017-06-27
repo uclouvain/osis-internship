@@ -134,8 +134,12 @@ class EntityVersion(models.Model):
             return None
 
     def _contains_given_date(self, date):
-        return (self.end_date is not None and self.start_date <= date <= self.end_date) \
-               or (self.end_date is None and self.start_date <= date)
+        if self.start_date and self.end_date:
+            return self.start_date <= date <= self.end_date
+        elif self.start_date and not self.end_date:
+            return self.start_date <= date
+        else:
+            return False
 
     def get_organogram_data(self, level):
         level += 1
