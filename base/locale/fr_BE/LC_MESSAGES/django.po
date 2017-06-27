@@ -269,7 +269,7 @@ msgid "desc_lnk_files"
 msgstr "Consultation des fichiers gérés par l'application."
 
 msgid "desc_lnk_home_catalog"
-msgstr "Elaboration et gestion du catalogue de formation."
+msgstr "Elaboration et gestion du catalogue des formations."
 
 msgid "desc_lnk_home_institution"
 msgstr "Gestion de l'institution."
@@ -431,7 +431,7 @@ msgid "focuses"
 msgstr "Finalités"
 
 msgid "formation_catalogue"
-msgstr "Catalogue de formation"
+msgstr "Catalogue des formations"
 
 msgid "function"
 msgstr "Fonction"
