@@ -56,7 +56,7 @@
                     {% endif %}
                     {{ review.advice }}
                 </p>
-                {% if review.advice == "CONDITIONAL" %}
+                {% if review.advice != "FAVORABLE" %}
                     <h4 class="list-group-item-text">{% trans 'justification' %}</h4>
                     <p style="margin-top: 10px;">
                         {{ review.justification }}

@@ -23,20 +23,38 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import factory
-import factory.fuzzy
+from django import template
+from base.models import learning_unit_component
+from django.utils.translation import ugettext_lazy as _
 
-from base.tests.factories.learning_container_year import LearningContainerYearFactory
+
+register = template.Library()
 
 
-class LearningComponentYearFactory(factory.django.DjangoModelFactory):
-    class Meta:
-        model = "base.LearningComponentYear"
+@register.filter
+def get_css_class(planned_classes, real_classes):
+    planned_classes_int = 0
+    real_classes_int = 0
 
-    learning_container_year = factory.SubFactory(LearningContainerYearFactory)
-    title = factory.Sequence(lambda n: 'title-%d' % n)
-    acronym = factory.Sequence(lambda n: 'A%d' % n)
-    type = factory.Sequence(lambda n: 'Type-%d' % n)
-    comment = factory.Sequence(lambda n: 'Comment-%d' % n)
-    planned_classes = factory.fuzzy.FuzzyInteger(10)
+    if planned_classes:
+        planned_classes_int = planned_classes
+
+    if real_classes:
+        real_classes_int = real_classes
+
+    if planned_classes_int == real_classes_int:
+        return "text-success"
+    else:
+        if real_classes_int - planned_classes_int == 1:
+            return "text-warning"
+
+    return "text-danger"
+
+
+@register.filter
+def used_by_partim(learning_component_year, learning_unit_year):
+    if learning_unit_component.search(learning_component_year, learning_unit_year).exists():
+        return _('yes')
+    return _('no')
+
 

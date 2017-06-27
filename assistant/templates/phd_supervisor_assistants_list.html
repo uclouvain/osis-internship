@@ -69,11 +69,11 @@
             <tr>
             <td>{{ mandate.sap_id }}</td>
             <td>{{ mandate.assistant.person }}</td><td><ul>
-            {% for struct in mandate.mandatestructure_set.all %}
-                <li>{% trans struct.structure.type|lower %} : {{ struct.structure.acronym }}</li>
+            {% for struct in mandate.mandatestructure_set.all|dictsort:"id" %}
+                <li>{% trans struct.structure.type %} : {{ struct.structure.acronym }}</li>
             {% endfor %}
             </ul> </td>
-            <td>{{ mandate.assistant_type }}</td>
+            <td>{% trans mandate.assistant_type %}</td>
             <td>{{ mandate.contract_duration }}</td>
             <td>{{ mandate.contract_duration_fte }}</td>
             <td>{% trans mandate.state %}</td>

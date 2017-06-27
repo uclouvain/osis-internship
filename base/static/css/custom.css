@@ -50,3 +50,9 @@ input[type=number] {
 #pnl_add_manager_modal .modal-dialog  {
     width:90%;
 }
+
+div[class^="django-ckeditor-widget"],
+div[class^="django-ckeditor-widget"] > textarea,
+div[class^="django-ckeditor-widget"] > div {
+    width:100%!important;
+}

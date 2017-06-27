@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -25,18 +25,21 @@
 ##############################################################################
 import factory
 import factory.fuzzy
+import string
+import operator
+from base.models.enums import component_type
+from base.tests.factories.learning_unit_year import LearningUnitYearFactory
+from base.tests.factories.learning_component_year import LearningComponentYearFactory
+from factory.django import DjangoModelFactory
 
-from base.tests.factories.learning_container_year import LearningContainerYearFactory
 
-
-class LearningComponentYearFactory(factory.django.DjangoModelFactory):
+class LearningUnitComponentFactory(DjangoModelFactory):
     class Meta:
-        model = "base.LearningComponentYear"
+        model = "base.LearningUnitComponent"
 
-    learning_container_year = factory.SubFactory(LearningContainerYearFactory)
-    title = factory.Sequence(lambda n: 'title-%d' % n)
-    acronym = factory.Sequence(lambda n: 'A%d' % n)
-    type = factory.Sequence(lambda n: 'Type-%d' % n)
-    comment = factory.Sequence(lambda n: 'Comment-%d' % n)
-    planned_classes = factory.fuzzy.FuzzyInteger(10)
+    external_id = factory.fuzzy.FuzzyText(length=10, chars=string.digits)
 
+    learning_unit_year = factory.SubFactory(LearningUnitYearFactory)
+    learning_component_year = factory.SubFactory(LearningComponentYearFactory)
+    type = factory.Iterator(component_type.COMPONENT_TYPES, getter=operator.itemgetter(0))
+    duration = factory.fuzzy.FuzzyDecimal(9)

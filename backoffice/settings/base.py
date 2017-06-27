@@ -213,7 +213,7 @@ if not TESTING or not SKIP_QUEUES_TESTS:
 LOCALE_PATHS = ()
 
 # Apps Settings
-
+CKEDITOR_JQUERY_URL = os.path.join(STATIC_URL, "js/jquery-2.1.4.min.js")
 CKEDITOR_CONFIGS = {
     'default': {
         'toolbar': 'Custom',
@@ -233,6 +233,14 @@ CKEDITOR_CONFIGS = {
             {'name': 'about', 'items': ['About']},
         ],
     },
+    'minimal': {
+        'toolbar': 'Custom',
+        'toolbar_Custom': [
+            ['Bold', 'Italic', 'Underline'],
+            ['NumberedList','BulletedList'],
+            ['Link', 'Unlink']
+        ]
+    }
 }
 
 LOGGING = {
