@@ -27,17 +27,9 @@ import datetime
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required, permission_required
 from base.forms.academic_calendar import AcademicCalendarForm
+from base.models.enums import academic_calendar_type
 from base import models as mdl
 from . import layout
-
-ACADEMIC_CALENDAR_TYPES_COLORS = {
-    'DELIBERATION': '#d9534f',
-    'DISSERTATION_SUBMISSION': '#5bc0de',
-    'EXAM_ENROLLMENTS': '#5bc0de',
-    'SCORES_EXAM_DIFFUSION': '#5cb85c',
-    'SCORES_EXAM_SUBMISSION': '#f0ad4e',
-    'TEACHING_CHARGE_APPLICATION': '#337ab7'
-}
 
 
 def _build_gantt_json(academic_calendar_list):
@@ -56,7 +48,7 @@ def _build_gantt_json(academic_calendar_list):
             'text': calendar.title,
             'start_date': calendar.start_date.strftime('%d-%m-%Y'),
             'end_date': calendar.end_date.strftime('%d-%m-%Y'),
-            'color': ACADEMIC_CALENDAR_TYPES_COLORS.get(calendar.reference, '#337ab7'),
+            'color': academic_calendar_type.ACADEMIC_CALENDAR_TYPES_COLORS.get(calendar.reference, '#337ab7'),
             'progress': progress
         }
         academic_calendar_data.append(data)
