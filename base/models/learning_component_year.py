@@ -27,7 +27,7 @@ from django.db import models
 from django.contrib import admin
 
 from base.models.enums import learning_component_year_type, learning_container_year_types
-from base.models import learning_class_year as LearningClassYear
+from base.models import learning_class_year
 
 
 class LearningComponentYearAdmin(admin.ModelAdmin):
@@ -70,7 +70,7 @@ class LearningComponentYear(models.Model):
 
     @property
     def real_classes(self):
-        return len(LearningClassYear.find_by_learning_component_year(self))
+        return len(learning_class_year.find_by_learning_component_year(self))
 
 def find_by_id(learning_component_year_id):
     return LearningComponentYear.objects.get(pk=learning_component_year_id)

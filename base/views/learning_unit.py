@@ -249,7 +249,7 @@ def get_components(a_learning_container_yr, get_classes):
             components.append({'learning_component_year': learning_component_year,
                                'entity_component_yr': entity_component_yr,
                                'volumes': volumes(entity_component_yr),
-                               'learning_unit_usage': learning_unit_usage(learning_component_year),
+                               'learning_unit_usage': _learning_unit_usage(learning_component_year),
                                'classes': learning_class_year_list})
     return components
 
@@ -394,16 +394,15 @@ def volume_distribution(a_learning_container_yr):
     return None
 
 
-def learning_unit_usage(a_learning_component_year):
-    list = mdl.learning_unit_component.find_by_learning_component_year(a_learning_component_year)
+def _learning_unit_usage(a_learning_component_year):
+    learning_unit_component = mdl.learning_unit_component.find_by_learning_component_year(a_learning_component_year)
     ch = ""
     separator = ""
-    for index, l in enumerate(list):
+    for index, l in enumerate(learning_unit_component):
         if index == 1:
             separator = ", "
         acronym = ACRONYM_COMPLET_LEARNING_UNIT
         if l.learning_unit_year.subdivision:
             acronym = l.learning_unit_year.subdivision
         ch = "{}{}{}".format(ch, separator, acronym)
-
     return ch
