@@ -193,6 +193,9 @@ def generate_reviewer_menu_tabs(role, mandate, active_item: None):
                 menu.append({'item': state, 'class': 'active', 'action': 'edit'})
             else:
                 menu.append({'item': state, 'class': '', 'action': 'edit'})
+        print(mandate.state)
+        print(state)
+        print(role)
         if mandate.state == state:
             break
         elif active_item == state:
