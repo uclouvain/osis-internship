@@ -1624,6 +1624,9 @@ msgstr "Additional entity"
 msgid "academic_end_year"
 msgstr "Academic end year"
 
+msgid "academic_start_year"
+msgstr "Academic start year"
+
 msgid "organization_name"
 msgstr "Name"
 
