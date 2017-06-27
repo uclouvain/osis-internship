@@ -1650,3 +1650,6 @@ msgstr "LU quater"
 
 msgid "composition"
 msgstr "Composition"
+
+msgid "using_by_learning_unit"
+msgstr "Using by the UE"
