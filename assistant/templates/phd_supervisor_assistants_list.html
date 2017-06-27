@@ -56,7 +56,7 @@
         <th>{% trans 'global_id' %}</th>
         <th>{% trans 'assistant' %}</th>
         <th>{% trans 'structures' %}</th>
-        <th>{% trans 'branche' %}</th>
+        <th>{% trans 'assistant_type' %}</th>
         <th>{% trans 'mandate' %}</th>
         <th>{% trans 'eq_fte' %}</th>
         <th>{% trans 'workflow' %}</th>
@@ -69,14 +69,14 @@
             <tr>
             <td>{{ mandate.sap_id }}</td>
             <td>{{ mandate.assistant.person }}</td><td><ul>
-            {% for struct in mandate.mandatestructure_set.all %}
+            {% for struct in mandate.mandatestructure_set.all|dictsort:"id" %}
                 <li>{% trans struct.structure.type|lower %} : {{ struct.structure.acronym }}</li>
             {% endfor %}
             </ul> </td>
-            <td>{{ mandate.assistant_type }}</td>
+            <td>{% trans mandate.assistant_type|lower %}</td>
             <td>{{ mandate.contract_duration }}</td>
             <td>{{ mandate.contract_duration_fte }}</td>
-            <td>{% trans mandate.state %}</td>
+            <td>{% trans mandate.state|lower %}</td>
             {% if mandate.assistant.supervisor == request.user.person and mandate.state == "PHD_SUPERVISOR" %}
                 <td align="center"><a href="{% url 'phd_supervisor_review_edit' mandate.id %}">
                 <button type="button" class="btn btn-link btn-lg" title="{% trans 'edit'%}" id="bt_review_edit">
