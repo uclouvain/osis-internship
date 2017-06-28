@@ -24,11 +24,15 @@
 #
 ##############################################################################
 import datetime
+from collections import OrderedDict
 
 from django.contrib import messages
 from django.conf import settings
+from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required, permission_required
+from django.http import HttpResponseRedirect
 from django.utils.translation import ugettext_lazy as _
+from django.views.decorators.http import require_http_methods
 
 from base import models as mdl
 from attribution import models as mdl_attr
@@ -39,8 +43,9 @@ from cms import models as mdl_cms
 from cms.enums import entity_name
 from base.forms.learning_units import LearningUnitYearForm
 from base.forms.learning_unit_specifications import LearningUnitSpecificationsForm
-from base.forms.learning_unit_pedagogy import LearningUnitPedagogyForm
+from base.forms.learning_unit_pedagogy import LearningUnitPedagogyForm, LearningUnitPedagogyEditForm
 from base.models.enums import learning_unit_year_subtypes
+from cms.models import text_label
 
 from . import layout
 
@@ -52,6 +57,8 @@ VOLUME_PARTIAL_KEY = 'volume_partial'
 VOLUME_REMAINING_KEY = 'volume_remaining'
 
 VOLUME_FOR_UNKNOWN_QUADRIMESTER = -1
+
+ACRONYM_COMPLET_LEARNING_UNIT = "*"
 
 
 @login_required
@@ -88,6 +95,9 @@ def learning_unit_identification(request, learning_unit_year_id):
     context['experimental_phase'] = True
     context['show_subtype'] = _show_subtype(learning_unit_year)
     context.update(_get_all_attributions(learning_unit_year))
+    context['components'] = get_components(learning_unit_year.learning_container_year, False)
+    context['volume_distribution'] = volume_distribution(learning_unit_year.learning_container_year)
+
     return layout.render(request, "learning_unit/identification.html", context)
 
 
@@ -102,7 +112,7 @@ def learning_unit_formations(request, learning_unit_year_id):
 @permission_required('base.can_access_learningunit', raise_exception=True)
 def learning_unit_components(request, learning_unit_year_id):
     context = _get_common_context_learning_unit_year(learning_unit_year_id)
-    context['components'] = get_components(context['learning_unit_year'].learning_container_year)
+    context['components'] = get_components(context['learning_unit_year'].learning_container_year, True)
     context['tab_active'] = 'components'
     context['experimental_phase'] = True
     return layout.render(request, "learning_unit/components.html", context)
@@ -113,26 +123,52 @@ def learning_unit_components(request, learning_unit_year_id):
 def learning_unit_pedagogy(request, learning_unit_year_id):
     context = _get_common_context_learning_unit_year(learning_unit_year_id)
     learning_unit_year = context['learning_unit_year']
-    user_language = mdl.person.get_user_interface_language(request.user)
 
     CMS_LABEL = ['resume', 'bibliography', 'teaching_methods', 'evaluation_methods',
                  'other_informations', 'online_resources']
-    translated_labels = mdl_cms.translated_text_label.search(text_entity=entity_name.LEARNING_UNIT_YEAR,
-                                                             labels=CMS_LABEL,
-                                                             language=user_language)
+    user_language = mdl.person.get_user_interface_language(request.user)
+    context['cms_labels_translated'] = _get_cms_label_data(CMS_LABEL, user_language)
 
     fr_language = next((lang for lang in settings.LANGUAGES if lang[0] == 'fr-be'), None)
     en_language = next((lang for lang in settings.LANGUAGES if lang[0] == 'en'), None)
-    for trans_label in translated_labels:
-        label_name = trans_label.text_label.label
-        context[label_name] = trans_label.label
-
     context.update({
-        'form_french': LearningUnitPedagogyForm(learning_unit_year, fr_language),
-        'form_english': LearningUnitPedagogyForm(learning_unit_year, en_language)
+        'form_french': LearningUnitPedagogyForm(learning_unit_year=learning_unit_year,
+                                                language=fr_language),
+        'form_english': LearningUnitPedagogyForm(learning_unit_year=learning_unit_year,
+                                                 language=en_language)
     })
     context['experimental_phase'] = True
     return layout.render(request, "learning_unit/pedagogy.html", context)
+
+
+@login_required
+@permission_required('base.can_edit_learningunit_pedagogy', raise_exception=True)
+@require_http_methods(["GET", "POST"])
+def learning_unit_pedagogy_edit(request, learning_unit_year_id):
+    if request.method == 'POST':
+        form = LearningUnitPedagogyEditForm(request.POST)
+        if form.is_valid():
+            form.save()
+        return HttpResponseRedirect(reverse("learning_unit_pedagogy",
+                                            kwargs={'learning_unit_year_id':learning_unit_year_id}))
+
+    context = _get_common_context_learning_unit_year(learning_unit_year_id)
+    label_name = request.GET.get('label')
+    language = request.GET.get('language')
+    text_lb = text_label.find_root_by_name(label_name)
+    form = LearningUnitPedagogyEditForm(**{
+        'learning_unit_year': context['learning_unit_year'],
+        'language': language,
+        'text_label': text_lb
+    })
+    form.load_initial()  # Load data from database
+    context['form'] = form
+
+    user_language = mdl.person.get_user_interface_language(request.user)
+    context['text_label_translated'] = next((txt for txt in text_lb.translated_text_labels
+                                             if txt.language == user_language), None)
+    context['language_translated'] = next((lang for lang in settings.LANGUAGES if lang[0] == language), None)
+    return layout.render(request, "learning_unit/pedagogy_edit.html", context)
 
 
 @login_required
@@ -155,18 +191,13 @@ def learning_unit_proposals(request, learning_unit_year_id):
 def learning_unit_specifications(request, learning_unit_year_id):
     context = _get_common_context_learning_unit_year(learning_unit_year_id)
     learning_unit_year = context['learning_unit_year']
-    user_language = mdl.person.get_user_interface_language(request.user)
 
     CMS_LABEL = ['themes_discussed', 'skills_to_be_acquired', 'prerequisite']
-    translated_labels = mdl_cms.translated_text_label.search(text_entity=entity_name.LEARNING_UNIT_YEAR,
-                                                             labels=CMS_LABEL,
-                                                             language=user_language)
+    user_language = mdl.person.get_user_interface_language(request.user)
+    context['cms_labels_translated'] = _get_cms_label_data(CMS_LABEL, user_language)
 
     fr_language = next((lang for lang in settings.LANGUAGES if lang[0] == 'fr-be'), None)
     en_language = next((lang for lang in settings.LANGUAGES if lang[0] == 'en'), None)
-    for trans_label in translated_labels:
-        label_name = trans_label.text_label.label
-        context[label_name] = trans_label.label
 
     context.update({
         'form_french': LearningUnitSpecificationsForm(learning_unit_year, fr_language),
@@ -203,20 +234,24 @@ def _get_common_context_learning_unit_year(learning_unit_year_id):
     return context
 
 
-def get_components(a_learning_container_yr):
+def get_components(a_learning_container_yr, get_classes):
     components = []
     if a_learning_container_yr:
         learning_component_year_list = mdl.learning_component_year.find_by_learning_container_year(a_learning_container_yr)
 
         for learning_component_year in learning_component_year_list:
-            learning_class_year_list = mdl.learning_class_year.find_by_learning_component_year(learning_component_year)
+            if get_classes:
+                learning_class_year_list = mdl.learning_class_year.find_by_learning_component_year(learning_component_year)
+            else:
+                learning_class_year_list = None
             entity_container_yrs = mdl.entity_container_year.find_by_learning_container_year(learning_component_year.learning_container_year,
                                                                                             entity_container_year_link_type.REQUIREMENT_ENTITY)
-            entity_component_yr = mdl.entity_component_year.find_by_entity_container_year(entity_container_yrs,
+            entity_component_yr = mdl.entity_component_year.find_by_entity_container_years(entity_container_yrs,
                                                                                           learning_component_year).first()
             components.append({'learning_component_year': learning_component_year,
                                'entity_component_yr': entity_component_yr,
                                'volumes': volumes(entity_component_yr),
+                               'learning_unit_usage': _learning_unit_usage(learning_component_year),
                                'classes': learning_class_year_list})
     return components
 
@@ -265,6 +300,19 @@ def _get_all_attributions(learning_unit_year):
     return attributions
 
 
+def _get_cms_label_data(cms_label, user_language):
+    cms_label_data = OrderedDict()
+    translated_labels = mdl_cms.translated_text_label.search(text_entity=entity_name.LEARNING_UNIT_YEAR,
+                                                             labels=cms_label,
+                                                             language=user_language)
+
+    for label in cms_label:
+        translated_text = next((trans.label for trans in translated_labels if trans.text_label.label == label), None)
+        cms_label_data[label] = translated_text
+
+    return cms_label_data
+
+
 def volumes(entity_component_yr):
     if entity_component_yr:
         if not entity_component_yr.hourly_volume_total:
@@ -300,7 +348,6 @@ def format_nominal_volume(entity_component_yr):
         return 'remaining'
     else:
         return 'partial_remaining'
-    return None
 
 
 def format_volume_remaining(entity_component_yr):
@@ -308,3 +355,56 @@ def format_volume_remaining(entity_component_yr):
     if volume_remaining == 0:
         return '-'
     return volume_remaining
+
+
+def volume_distribution(a_learning_container_yr):
+
+    component_partial_exists = False
+    component_remaining_exists = False
+
+    if a_learning_container_yr:
+        learning_component_yrs = mdl.learning_component_year.find_by_learning_container_year(a_learning_container_yr)
+
+        for learning_component_year in learning_component_yrs:
+            entity_container_yrs = mdl.entity_container_year\
+                .find_by_learning_container_year(learning_component_year.learning_container_year,
+                                                 entity_container_year_link_type.REQUIREMENT_ENTITY)
+            entity_component_yrs = mdl.entity_component_year\
+                .find_by_entity_container_years(entity_container_yrs, learning_component_year)
+            for entity_component_yr in entity_component_yrs:
+                if entity_component_yr.hourly_volume_partial is None:
+                    return UNDEFINED_VALUE
+                else:
+                    if entity_component_yr.hourly_volume_partial == entity_component_yr.hourly_volume_total:
+                        component_partial_exists = True
+                    if entity_component_yr.hourly_volume_partial == 0.00:
+                        component_remaining_exists = True
+                    if entity_component_yr.hourly_volume_partial == VOLUME_FOR_UNKNOWN_QUADRIMESTER:
+                        return _('partial_or_remaining')
+                    if entity_component_yr.hourly_volume_partial > 0.00 and entity_component_yr.hourly_volume_partial < entity_component_yr.hourly_volume_total:
+                        return _('partial_remaining')
+
+        if component_partial_exists:
+            if component_remaining_exists:
+                return _('partial_remaining')
+            else:
+                return _('partial')
+        else:
+            if component_remaining_exists:
+                return _('remaining')
+
+    return None
+
+
+def _learning_unit_usage(a_learning_component_year):
+    learning_unit_component = mdl.learning_unit_component.find_by_learning_component_year(a_learning_component_year)
+    ch = ""
+    separator = ""
+    for index, l in enumerate(learning_unit_component):
+        if index == 1:
+            separator = ", "
+        acronym = ACRONYM_COMPLET_LEARNING_UNIT
+        if l.learning_unit_year.subdivision:
+            acronym = l.learning_unit_year.subdivision
+        ch = "{}{}{}".format(ch, separator, acronym)
+    return ch

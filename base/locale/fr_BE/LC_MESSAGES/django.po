@@ -275,7 +275,7 @@ msgid "desc_lnk_files"
 msgstr "Consultation des fichiers gérés par l'application."
 
 msgid "desc_lnk_home_catalog"
-msgstr "Elaboration et gestion du catalogue de formation."
+msgstr "Elaboration et gestion du catalogue des formations."
 
 msgid "desc_lnk_home_institution"
 msgstr "Gestion de l'institution."
@@ -440,7 +440,7 @@ msgid "focuses"
 msgstr "Finalités"
 
 msgid "formation_catalogue"
-msgstr "Catalogue de formation"
+msgstr "Catalogue des formations"
 
 msgid "function"
 msgstr "Fonction"
@@ -1635,6 +1635,9 @@ msgstr "Entité complémentaire"
 msgid "academic_end_year"
 msgstr "Anac de fin"
 
+msgid "academic_start_year"
+msgstr "Anac de début"
+
 msgid "organization_name"
 msgstr "Nom"
 
@@ -1645,13 +1648,28 @@ msgid "remaining"
 msgstr "Q2"
 
 msgid "partial_remaining"
-msgstr "Q1&Q2"
+msgstr "Q1&2"
 
 msgid "partial_or_remaining"
-msgstr "Q1|Q2"
+msgstr "Q1|2"
 
 msgid "volume_partial"
 msgstr "Vol. Q1"
 
 msgid "volume_remaining"
 msgstr "Vol. Q2"
+
+msgid "learning_unit_quater"
+msgstr "Quadri. de l'UE"
+
+msgid "composition"
+msgstr "Composition"
+
+msgid "real_classes"
+msgstr "Classes effectives"
+
+msgid "lu_usage"
+msgstr "Utilisation par les UE"
+
+msgid "used_by_partim"
+msgstr "Utilisation par partim "
