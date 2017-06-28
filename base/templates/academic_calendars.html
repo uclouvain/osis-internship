@@ -74,7 +74,18 @@
         <div id="gantt_div"></div>
       {% endif %}
     </div>
-
+    {% if undated_calendars_list|length > 0%}
+      <div id="undated_calendars">
+        <br>{% trans 'undated_events' %} :
+        <ul>
+          {% for calendar in undated_calendars_list %}
+            <li>
+              <a href="{% url 'academic_calendar_read' academic_calendar_id=calendar.id %}" id="lnk_academic_calendar_edit_{{calendar.id}}">{{ calendar.title }}</a>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
   </div>
 </div>
 {% endblock %}

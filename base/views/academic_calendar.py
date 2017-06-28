@@ -59,6 +59,14 @@ def _build_gantt_json(academic_calendar_list):
     }
 
 
+def _get_undated_calendars(academic_calendar_list):
+    undated_calendars_list = []
+    for calendar in academic_calendar_list:
+        if calendar.start_date is None or calendar.end_date is None:
+            undated_calendars_list.append(calendar)
+    return undated_calendars_list
+
+
 @login_required
 @permission_required('base.can_access_academic_calendar', raise_exception=True)
 def academic_calendars(request):
@@ -71,6 +79,7 @@ def academic_calendars(request):
 
     academic_calendar_list = mdl.academic_calendar.find_academic_calendar_by_academic_year(academic_year)
     academic_calendar_json = _build_gantt_json(academic_calendar_list)
+    undated_calendars_list = _get_undated_calendars(academic_calendar_list)
 
     return layout.render(request, "academic_calendars.html", locals())
 
@@ -89,6 +98,7 @@ def academic_calendars_search(request):
     academic_year = int(academic_year)
     academic_calendar_list = mdl.academic_calendar.find_academic_calendar_by_academic_year(academic_year)
     academic_calendar_json = _build_gantt_json(academic_calendar_list)
+    undated_calendars_list = _get_undated_calendars(academic_calendar_list)
 
     return layout.render(request, "academic_calendars.html", locals())
 
