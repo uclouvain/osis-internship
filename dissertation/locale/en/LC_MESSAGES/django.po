@@ -142,7 +142,7 @@ msgstr "Chart as promotor"
 msgid "chart_pie_adviser_reading"
 msgstr "Chart as reader"
 
-msgid "cochez_les_programmes_de_cours"
+msgid "select_course_programs"
 msgstr "Check the programs related to this topic"
 
 msgid "collaboration"
@@ -825,6 +825,9 @@ msgstr "See my waiting dissertations"
 
 msgid "select_at_least_one_item"
 msgstr "Please select at least one item"
+
+msgid "select_course_programs"
+msgstr "Check the programs related to this topic"
 
 msgid "select_program_first"
 msgstr "Please select Start Program/Year first"

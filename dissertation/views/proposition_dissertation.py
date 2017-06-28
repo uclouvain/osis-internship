@@ -354,7 +354,7 @@ def proposition_dissertation_edit(request, pk):
                               'offer_propositions': offer_propositions,
                               'offer_propositions_error': offer_propositions_error,
                               'proposition_offers': proposition_offers,
-                             'offer_proposition_group': offer_propositions_group
+                              'offer_proposition_group': offer_propositions_group
                               })
     else:
         return redirect('proposition_dissertation_detail', pk=proposition.pk)
