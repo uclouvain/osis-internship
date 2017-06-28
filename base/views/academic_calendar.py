@@ -36,6 +36,8 @@ def _build_gantt_json(academic_calendar_list):
     today = datetime.date.today()
     academic_calendar_data = []
     for calendar in academic_calendar_list:
+        if calendar.start_date is None or calendar.end_date is None:
+            continue
         if today <= calendar.start_date:
             progress = 0
         elif calendar.start_date < today < calendar.end_date:
