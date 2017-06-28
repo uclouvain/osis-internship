@@ -62,11 +62,6 @@
 			<label style="padding-top: 5px" for="registered_phd">{% trans 'registered_phd' %}</label>
 			<div class="controls" id="registered_phd">{{ form.inscription }}
 				<span class="error">{{ form.inscription.errors }}</span></div>
-			<label style="padding-top: 5px" id="label_for_expected_phd_date" for="expected_phd_date">
-                {% trans 'expected_registering_date' %}</label>
-			<div class="controls" id="expected_phd_date">{{ form.expected_phd_date }}
-				<span class="error">{{ form.expected_phd_date.errors }}</span>
-			</div>
 			{% if not supervisor %}
 				<label style="padding-top: 5px" for="search_persons">{% trans 'supervisor' %}</label>
 				<div class="ui-widget"><input id="search_persons" name="search_persons" size="100"
@@ -79,7 +74,13 @@
 				{{ supervisor }}
 				</div>
 			{% endif %}
-			<label style="padding-top: 5px" for="phd_inscription_date">{% trans 'phd_inscription_date' %}</label>
+			<label style="padding-top: 5px" id="label_for_expected_phd_date" for="expected_phd_date">
+                {% trans 'expected_registering_date' %}</label>
+			<div class="controls" id="expected_phd_date">{{ form.expected_phd_date }}
+				<span class="error">{{ form.expected_phd_date.errors }}</span>
+			</div>
+            <label style="padding-top: 5px" id="label_for_phd_inscription_date"
+                   for="phd_inscription_date">{% trans 'phd_inscription_date' %}</label>
 			<div class="controls" id="phd_inscription_date">{{ form.phd_inscription_date }}</div>
 			<span class="error">{{ form.phd_inscription_date.errors }}</span>
 			<label for="thesis_title" style="padding-top: 5px">{% trans 'thesis_title' %}</label>
@@ -164,6 +165,8 @@ function Hide() {
          document.getElementById('id_mand-expected_phd_date').style.display = 'none';
          document.getElementById('id_mand-expected_phd_date').value='';
          document.getElementById('label_for_expected_phd_date').style.display = 'none';
+         document.getElementById('phd_inscription_date').style.display ='';
+ 		document.getElementById('label_for_phd_inscription_date').style.display = 'block';
 
 
     } else if(document.getElementById('id_mand-inscription_1').checked == true)
@@ -171,9 +174,23 @@ function Hide() {
          document.getElementById('id_mand-expected_phd_date').style.display = 'none';
          document.getElementById('id_mand-expected_phd_date').value='';
          document.getElementById('label_for_expected_phd_date').style.display = 'none';
-    } else {
+         document.getElementById('phd_inscription_date').style.display = 'none';
+         document.getElementById('phd_inscription_date').value='';
+         document.getElementById('label_for_phd_inscription_date').style.display = 'none';
+     }
+     else if(document.getElementById('id_mand-inscription_2').checked == true)
+     {
+         document.getElementById('phd_inscription_date').style.display = 'none';
+         document.getElementById('phd_inscription_date').value='';
+         document.getElementById('label_for_phd_inscription_date').style.display = 'none';
+         document.getElementById('id_mand-expected_phd_date').style.display ='';
+ 		 document.getElementById('label_for_expected_phd_date').style.display = 'block';
+    }
+    else {
  		document.getElementById('id_mand-expected_phd_date').style.display ='';
  		document.getElementById('label_for_expected_phd_date').style.display = 'block';
+ 		document.getElementById('phd_inscription_date').style.display ='';
+ 		document.getElementById('label_for_phd_inscription_date').style.display = 'block';
     }
 }
 
