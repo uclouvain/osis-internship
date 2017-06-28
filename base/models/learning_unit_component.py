@@ -31,7 +31,7 @@ from osis_common.models.serializable_model import SerializableModel, Serializabl
 class LearningUnitComponentAdmin(SerializableModelAdmin):
     list_display = ('learning_unit_year', 'learning_component_year', 'type', 'duration')
     fieldsets = ((None, {'fields': ('learning_unit_year', 'learning_component_year', 'type', 'duration')}),)
-    raw_id_fields = ('learning_unit_year', )
+    raw_id_fields = ('learning_unit_year', 'learning_component_year')
     search_fields = ['learning_unit_year__acronym']
 
 
@@ -63,6 +63,10 @@ def find_by_learning_year_type(a_learning_unit_year=None, a_type=None):
 
 def find_by_learning_component_year(a_learning_component_year):
     return LearningUnitComponent.objects.filter(learning_component_year=a_learning_component_year).order_by('learning_unit_year__acronym')
+
+
+def find_by_learning_class_year(learning_class_year):
+    return LearningUnitComponent.objects.filter(learningunitcomponentclass__learning_class_year=learning_class_year).order_by('learning_unit_year__acronym')
 
 
 def search(a_learning_component_year=None, a_learning_unit_year=None):

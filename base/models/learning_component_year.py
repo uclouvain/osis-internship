@@ -35,6 +35,7 @@ class LearningComponentYearAdmin(admin.ModelAdmin):
     fieldsets = ((None, {'fields': ('learning_container_year', 'title', 'acronym',
                                     'type', 'comment', 'planned_classes')}),)
     search_fields = ['acronym']
+    raw_id_fields = ('learning_container_year',)
 
 
 class LearningComponentYear(models.Model):
