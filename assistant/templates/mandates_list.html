@@ -37,7 +37,7 @@
 {% endblock %}
 {% block content %}
 <div class="page-header">
-    <h3>{% trans 'assistantship_mandate_renewal' %} {{ year|add:1 }}</h3>
+    <h4>{% trans 'assistant_mandates_renewals' %} {{ year|add:1 }}</h4>
 </div>
 <div class="panel panel-default">
     <div class="panel-body">
@@ -59,7 +59,7 @@
             <th>{% trans 'renewal_short_name' %}</th>
             <th>{% trans 'doctorate' %}</th>
             <th>{% trans 'mandate' %}</th>
-            <th>{% trans 'equivalent_full_time' %}</th>
+            <th>{% trans 'fulltime_equivalent' %}</th>
             <th>{% trans 'percentage_equivalent_full_time' %}</th>
             <th>{% trans 'reviews' %}</th>
             </tr>
@@ -70,11 +70,11 @@
                 <td><a href="{% url 'mandate_read' mandate.id %}">{{ mandate.assistant.person }}</a></td>
                 <td><ul>
                 {% for struct in mandate.mandatestructure_set.all|dictsort:"id" %}
-                    <li>{% trans struct.structure.type|lower %} : {{ struct.structure.acronym }}</li>
+                    <li>{% trans struct.structure.type %} : {{ struct.structure.acronym }}</li>
                 {% endfor %}
                 </ul></td>
-                <td>{% trans mandate.assistant_type|lower %}</td>
-                <td>{% trans mandate.state|lower %}</td>
+                <td>{% trans mandate.assistant_type %}</td>
+                <td>{% trans mandate.state %}</td>
                 <td>{% if mandate.assistant.inscription %}
                         {% trans mandate.assistant.inscription|lower %}
                     {% endif %}

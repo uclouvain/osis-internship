@@ -39,7 +39,7 @@
 <ul class="nav nav-tabs ">
 <li><a href="{% url 'assistant_mandates' %}">{% trans 'my_mandates' %}</a></li>
 <li><a href="{% url 'form_part1_edit' mandate.id %}">{% trans 'assistant_form_part1' %}</a></li>
-<li><a href="{% url 'mandate_learning_units' mandate.id %}">{% trans 'assistant_form_part2' %}</a></li>
+<li><a href="{% url 'mandate_learning_units' mandate.id %}">{% trans 'learning_units' %}</a></li>
 <li class="active"><a href="{% url 'form_part3_edit' mandate.id %}">{% trans 'assistant_form_part3' %}</a></li>
 <li><a href="{% url 'form_part4_edit' mandate.id %}">{% trans 'assistant_form_part4' %}</a></li>
 <li><a href="{% url 'form_part5_edit' mandate.id %}">{% trans 'assistant_form_part5' %}</a></li>
@@ -93,7 +93,7 @@
 			<div class="controls" id="thesis_defence_date">{{ form.thesis_date }}
 				<span class="error">{{ form.thesis_date.errors }}</span>
 			</div>
-			<label for="remark" style="padding-top: 5px">{% trans 'doctorate_remark' %}</label>
+			<label for="remark" style="padding-top: 5px">{% trans 'remark' %}</label>
 			<div class="controls" id="remark">{{ form.remark }}</div>
 			<span class="error">{{ form.remark.errors }}</span>
         </div>
@@ -109,7 +109,7 @@
                        title="{% trans 'delete_file'%}"
                        onclick="location.href='{% url 'assistant_file_delete' mandate.id file.id 'form_part3_edit' %}';">
                     <span class="glyphicon glyphicon-remove" aria-hidden="true" id="spn_delete_file"></span>
-                        {% trans 'delete_file' %}</a>
+                        {% trans 'delete' %}</a>
                 </div>
                 <div class="col-md-10" id="hdn_filename" style="text-align: left">
                    <a href="{% url 'assistant_file_download' document_file_id=file.id %}">{{ file.document_file }}</a>
@@ -120,7 +120,7 @@
 			<a class="btn btn-default" data-toggle="modal" data-target="#pnl_upload_documents"
                id="btn_add_file" style="margin-right: 5px;" title="{% trans 'add_file'%}">
                 <span class="glyphicon glyphicon-upload" aria-hidden="true" id="spn_add_file"></span>
-                {% trans 'upload_pdf_file' %}</a>
+                {% trans 'upload' %}</a>
 		</div>
         <hr>
 	    <input type="hidden" value="{{mandate.id | default_if_none:''}}" id="hdn_current_mandate_id"

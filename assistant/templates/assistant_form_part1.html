@@ -36,7 +36,7 @@
 <ul class="nav nav-tabs ">
 	<li><a href="{% url 'assistant_mandates' %}">{% trans 'my_mandates' %}</a></li>
 	<li class="active"><a href="#">{% trans 'assistant_form_part1' %}</a></li>
-	<li><a href="{% url 'mandate_learning_units' mandate.id %}">{% trans 'assistant_form_part2' %}</a></li>
+	<li><a href="{% url 'mandate_learning_units' mandate.id %}">{% trans 'learning_units' %}</a></li>
 	{% if mandate.assistant_type == "ASSISTANT" %}
 		<li><a href="{% url 'form_part3_edit' mandate.id %}">{% trans 'assistant_form_part3' %}</a></li>
 		<li><a href="{% url 'form_part4_edit' mandate.id %}">{% trans 'assistant_form_part4' %}</a></li>
@@ -75,14 +75,14 @@
 				<div class="controls" id="structures">{{structure.structure.acronym}}</div>
       		{% endfor %}
 			<label style="padding-top: 15px" for="full_time_equivalent">
-				{% trans 'full_time_equivalent' %}</label>
+				{% trans 'fulltime_equivalent' %}</label>
 			<div class="controls" id="full_time_equivalent">{{mandate.fulltime_equivalent}}</div>
       		<label style="padding-top: 15px" for="date_of_first_nomination">
 				{% trans 'date_of_first_nomination' %}</label>
       		<div class="controls" id="date_of_first_nomination">{{mandate.entry_date}}</div>
       		<label  style="padding-top: 15px" for="field">{% trans 'field' %}</label>
 			<div class="controls" id="field">
-				{{ mandate.assistant_type }}
+				{% trans mandate.assistant_type %}
 			</div>
       	</div>
     	<div class="panel-default">

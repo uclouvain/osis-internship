@@ -33,11 +33,11 @@
 <li><a href="{% url 'institution' %}" id="lnk_institution">{% trans 'institution' %}</a></li>
 <li><a href="{% url 'mandates' %}" id="lnk_mandates">{% trans 'mandates' %}</a></li>
 <li><a href="{% url 'manager_home' %}" id="lnk_manager_home">{% trans 'assistants' %}</a></li>
-<li class="active">{% trans 'reviewers_list' %}</li>
+<li class="active">{% trans 'reviewers' %}</li>
 {% endblock %}
 {% block content %}
 <div class="page-header">
-    <h3>{% trans 'assistantship_mandate_renewal' %} {{ year|add:1 }}</h3>
+    <h4>{% trans 'assistant_mandates_renewals' %}</h4>
 </div>
 <div class="panel panel-default">
     <div class="panel-body">
@@ -59,7 +59,7 @@
             <tr>
             <td>{{ reviewer.person.value }}{{ reviewer.access }}</td>
             <td>{{ reviewer.structure.value }}</td>
-            <td>{{ reviewer.role.value }}</td>
+            <td>{% trans reviewer.role.value %}</td>
             <td>{{ reviewer.action }}</td>
             {{ reviewer.id.as_hidden }}
         {% endfor %}

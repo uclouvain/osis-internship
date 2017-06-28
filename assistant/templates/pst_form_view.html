@@ -42,7 +42,7 @@
 {% endblock %}
 {% block content %}
 <div class="page-header">
-    <h2>{% trans 'assistants_mandates_renewal' %} ({{ year }})</h2>
+    <h4>{% trans 'assistant_mandates_renewal' %} ({{ year }})</h4>
     <h4>{{ assistant.person }}</h4>
 </div>
 <ul class="nav nav-tabs">
@@ -222,9 +222,9 @@
                     <th>{% trans 'sessions_duration' %}</th>
                     <th>{% trans 'sessions_number' %}</th>
                     <th>{% trans 'series_number' %}</th>
-                    <th>{% trans 'total_hours' %}</th>
+                    <th>{% trans 'face_to_face_duration' %}</th>
                     <th>{% trans 'attendees' %}</th>
-                    <th>{% trans 'preparation_duration' %}</th>
+                    <th>{% trans 'exams_supervision_duration' %}</th>
                     <th>{% trans 'others_delivery' %}</th>
                 </tr>
             </thead>
