@@ -110,19 +110,42 @@
         </div>
         <div class="panel-group">
             <label for="txt_level" {% if offer_propositions_error %} style="color:red;" {% endif %}>
-                {% trans 'offer_propositions' %}
+                {% trans 'select_course_programs' %}
                 {% if offer_propositions_error %}
                     <br>{% trans offer_propositions_error %}
                 {% endif %}
             </label>
             <br>
-            {% for offer_proposition in offer_propositions %}
-                <label for="txt_checkbox_{{ offer_proposition.id }}">{{ offer_proposition.acronym }}</label>
-                <input id="txt_checkbox_{{ offer_proposition.id }}"  name="txt_checkbox_{{ offer_proposition.id }}"
-                       style="margin-left:6px;" type="checkbox">
-                <br>
-            {% endfor %}
-        </div>
+            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                    {% for offer_proposition_g in offer_proposition_group %}
+                     <div class="panel panel-default">
+
+                        <div class="panel-heading" role="tab" id="heading_{{ offer_proposition_g }}">
+                          <h4 class="panel-title">
+                            <a id="test_{{ offer_proposition_g }}" class="collapse_{{ offer_proposition_g }}" role="button" onclick="display_hide_div_child('collapse_{{ offer_proposition_g }}','statut_bouton_{{ offer_proposition_g }}');">
+                            {{ offer_proposition_g }} <span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span> </label>
+                            </a>
+                              <input type="hidden" id="statut_bouton_{{ offer_proposition_g }}" name="statut_bouton_{{ offer_proposition_g }}"  value="OK">
+                          </h4>
+                        </div>
+
+                        <div id="collapse_{{ offer_proposition_g}}" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading_{{ offer_proposition_g }}" style="display:none;">
+                            {% for offer_proposition in offer_propositions %}
+                                {% if offer_proposition.offer_proposition_group == offer_proposition_g %}
+
+                                  <div class="list-group">
+                                      &nbsp;
+                                    <input id="txt_checkbox_{{ offer_proposition.id }}" name="txt_checkbox_{{ offer_proposition.id }}"
+                                    type="checkbox" onclick="block_div(this,'test_{{ offer_proposition_g }}','statut_bouton_{{ offer_proposition_g }}','collapse_{{ offer_proposition_g }}');" class="test_{{ offer_proposition_g }}">
+                                    <label for="txt_checkbox_{{ offer_proposition.id }}">&nbsp; {{ offer_proposition }}</label>
+                                  </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    {% endfor %}
+            </div>
         <div style="text-align: right;">
             <button type="submit" class="save btn btn-primary">
                 {% trans 'save' %}
@@ -131,4 +154,8 @@
       </form>
     </div>
   </div>
+{% endblock %}
+{% block script %}
+<script type="text/javascript" src="{% static "js/dissertation.js" %} ">
+</script>
 {% endblock %}

@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -23,23 +23,16 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from dissertation.models.proposition_dissertation import PropositionDissertation
-from dissertation.models.proposition_offer import PropositionOffer
-from dissertation.tests.models import test_proposition_role
+from dissertation.models.offer_proposition_group import *
+from django.test import TestCase
+from dissertation.tests.factories.offer_proposition_group import OfferPropositionGroupFactory
 
 
-def create_proposition_dissertation(title, adviser, person, offer_proposition = None, collaboration="FORBIDDEN", type="OTH",
-                                    level="SPECIFIC", max_number_student=1 ):
-    proposition = PropositionDissertation.objects.create(title=title, author= adviser,
-                                                         collaboration=collaboration, type=type,
-                                                         level=level, max_number_student=max_number_student,
-                                                         creator=person)
-    #Assign adviser as "PROMOTEUR"
-    test_proposition_role.create_proposition_role(proposition=proposition, adviser=adviser)
+class OfferPropositionGroupTestCase(TestCase):
+    def test_find_all_ordered_by_name_short(self):
+        OfferPropositionGroupFactory.create()
+        OfferPropositionGroupFactory.create()
+        all_offer_proposition_group = find_all_ordered_by_name_short()
+        self.assertEqual(all_offer_proposition_group.count(), 2)
 
-    #Make link in many-to-many table
-    if offer_proposition is not None:
-        PropositionOffer.objects.create(proposition_dissertation=proposition, offer_proposition=offer_proposition)
-
-    return proposition
 

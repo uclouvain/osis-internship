@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2016-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -23,17 +23,19 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from dissertation.models import adviser
-from dissertation.models import dissertation
-from dissertation.models import dissertation_document_file
-from dissertation.models import dissertation_group
-from dissertation.models import dissertation_location
-from dissertation.models import dissertation_role
-from dissertation.models import dissertation_update
-from dissertation.models import faculty_adviser
-from dissertation.models import offer_proposition
-from dissertation.models import proposition_dissertation
-from dissertation.models import proposition_document_file
-from dissertation.models import proposition_offer
-from dissertation.models import proposition_role
-from dissertation.models import offer_proposition_group
+from django.db import models
+from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
+
+class OfferPropositionGroupAdmin(SerializableModelAdmin):
+    list_display = ('name_short', 'name_long')
+    search_fields=('name_short', 'name_long')
+
+class OfferPropositionGroup(SerializableModel):
+    name_short = models.CharField(max_length=10)
+    name_long = models.CharField(max_length=256)
+
+    def __str__(self):
+        return self.name_short
+
+def find_all_ordered_by_name_short():
+    return OfferPropositionGroup.objects.order_by('name_short')
