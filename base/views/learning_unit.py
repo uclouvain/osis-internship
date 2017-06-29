@@ -369,7 +369,7 @@ def volumes(entity_component_yr):
 
         return {HOURLY_VOLUME_KEY: entity_component_yr.hourly_volume_total,
                 TOTAL_VOLUME_KEY: format_nominal_volume(entity_component_yr),
-                VOLUME_PARTIAL_KEY: entity_component_yr.hourly_volume_partial,
+                VOLUME_PARTIAL_KEY: format_volume_zero(entity_component_yr.hourly_volume_partial),
                 VOLUME_REMAINING_KEY: format_volume_remaining(entity_component_yr)}
 
 
@@ -453,3 +453,9 @@ def get_learning_unit_usage_list(learning_unit_component):
             acronym = l.learning_unit_year.subdivision
         ch = "{}{}{}".format(ch, separator, acronym)
     return ch
+
+
+def format_volume_zero(volume):
+    if volume == 0:
+        return '-'
+    return volume

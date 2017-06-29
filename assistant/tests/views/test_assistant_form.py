@@ -49,10 +49,10 @@ class AssistantFormViewTestCase(TestCase):
         self.user = UserFactory()
         self.person = PersonFactory(first_name="James", last_name="Dupont", user=self.user)
         self.academic_assistant = AcademicAssistantFactory(person=self.person)
-        self.assistant_mandate = AssistantMandateFactory()
+        self.academic_year = AcademicYearFactory(year=datetime.date.today().year)
+        self.assistant_mandate = AssistantMandateFactory(academic_year=self.academic_year)
         self.assistant_mandate.assistant = self.academic_assistant
         self.assistant_mandate.state = assistant_mandate_state.TRTS
-        self.academic_year = AcademicYearFactory(year=datetime.date.today().year)
         self.learning_unit_year = LearningUnitYearFactory(
             acronym="LBIR1210",
             academic_year=self.academic_year)
