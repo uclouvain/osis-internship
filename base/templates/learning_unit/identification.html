@@ -112,10 +112,6 @@
                         <label>{% trans 'language' %}</label><br>
                         {{learning_unit_year.learning_container_year.language | default_if_none:'' }}
                         <br><br>
-                        <label>{% trans 'learning_unit_quater' %}</label><br>
-                        {{ volume_distribution }}
-                        <br><br>
-                        <label>{% trans 'composition' %}</label><br>
                         {% if components %}
                             {% include "learning_unit/components_identification.html" %}
                         {% endif %}
