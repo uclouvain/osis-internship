@@ -53,7 +53,7 @@ class OfferProposition(SerializableModel):
     end_jury_visibility = models.DateField(default=timezone.now)
     start_edit_title = models.DateField(default=timezone.now)
     end_edit_title = models.DateField(default=timezone.now)
-    offer_proposition_group = models.ForeignKey(OfferPropositionGroup,null=True)
+    offer_proposition_group = models.ForeignKey(OfferPropositionGroup, null=True)
 
     @property
     def in_periode_visibility_proposition(self):
@@ -87,7 +87,7 @@ class OfferProposition(SerializableModel):
         return self.acronym
 
     class Meta:
-        ordering = ['offer_proposition_group','acronym']
+        ordering = ['offer_proposition_group', 'acronym']
 
 
 def get_by_offer(an_offer):
@@ -100,9 +100,9 @@ def get_by_offer(an_offer):
 
 
 def search_by_offer(offers):
-    return OfferProposition.objects.filter(offer__in=offers)\
-                                   .distinct()\
-                                   .order_by('acronym')
+    return OfferProposition.objects.filter(offer__in=offers) \
+        .distinct() \
+        .order_by('acronym')
 
 
 def show_validation_commission(offer_props):
@@ -128,5 +128,10 @@ def find_by_id(offer_proposition_id):
 def find_all_ordered_by_acronym():
     return OfferProposition.objects.order_by('acronym')
 
+
 def get_by_offer_proposition_group(offer_proposition_group):
-    return OfferProposition.objects.get(offer_proposition_group=offer_proposition_group)
+    try:
+        offer_proposition = OfferProposition.objects.get(offer_proposition_group=offer_proposition_group)
+    except ObjectDoesNotExist:
+        offer_proposition = None
+    return offer_proposition

@@ -142,9 +142,6 @@ msgstr "Chart as promotor"
 msgid "chart_pie_adviser_reading"
 msgstr "Chart as reader"
 
-msgid "select_course_programs"
-msgstr "Check the programs related to this topic"
-
 msgid "collaboration"
 msgstr "Collaboration"
 

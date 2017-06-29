@@ -691,8 +691,8 @@ msgstr "Programme"
 msgid "offer_propositions"
 msgstr "Programmes"
 
-msgid "offer_proposition_groupe"
-msgstr "Facultés "
+msgid "offer_proposition_group"
+msgstr "Facultés/groupes d'offer"
 
 msgid "offer_year_start"
 msgstr "Programme/Année de début"
