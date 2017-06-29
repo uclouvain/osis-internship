@@ -43,12 +43,12 @@ def get_css_class(planned_classes, real_classes):
         real_classes_int = real_classes
 
     if planned_classes_int == real_classes_int:
-        return "text-success"
+        return "success-color"
     else:
         if real_classes_int - planned_classes_int == 1:
-            return "text-warning"
+            return "warning-color"
 
-    return "text-danger"
+    return "danger-color"
 
 
 @register.filter
