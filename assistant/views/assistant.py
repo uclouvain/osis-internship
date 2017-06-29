@@ -87,12 +87,10 @@ def mandate_change_state(request, mandate_id):
         mandate.state = assistant_mandate_state.TRTS
     elif 'bt_mandate_decline' in request.POST:
         mandate.state = assistant_mandate_state.DECLINED
-        try:
-            faculty = mandate_structure.find_by_mandate_and_type(mandate, structure_type.FACULTY)
-        except ObjectDoesNotExist:
-            faculty = None
+        faculty = mandate_structure.find_by_mandate_and_type(mandate, structure_type.FACULTY)
         if faculty:
-            faculty_dean = reviewer.find_by_structure_and_role(faculty.first().structure, reviewer_role.SUPERVISION)
+            faculty_dean = reviewer.find_by_structure_and_role(faculty.first().
+                                                               structure, reviewer_role.SUPERVISION).first()
             assistant = academic_assistant.find_by_person(person.find_by_user(request.user))
             html_template_ref = 'assistant_dean_assistant_decline_html'
             txt_template_ref = 'assistant_dean_assistant_decline_txt'

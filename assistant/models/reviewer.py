@@ -87,7 +87,7 @@ def find_by_role(role):
 
 
 def find_by_structure_and_role(struct, role):
-    return Reviewer.objects.get(structure=struct, role=role)
+    return Reviewer.objects.filter(structure=struct, role=role)
 
 
 def can_delegate_to_structure(reviewer, struct):
