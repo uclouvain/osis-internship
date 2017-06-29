@@ -95,7 +95,7 @@ def learning_unit_identification(request, learning_unit_year_id):
     context['experimental_phase'] = True
     context['show_subtype'] = _show_subtype(learning_unit_year)
     context.update(_get_all_attributions(learning_unit_year))
-    context['components'] = get_components(learning_unit_year.learning_container_year, False)
+    context['components'] = get_components_identification(learning_unit_year.learning_container_year)
     context['volume_distribution'] = volume_distribution(learning_unit_year.learning_container_year)
 
     return layout.render(request, "learning_unit/identification.html", context)
@@ -459,3 +459,21 @@ def format_volume_zero(volume):
     if volume == 0:
         return '-'
     return volume
+
+
+def get_components_identification(a_learning_container_yr):
+    components = []
+    if a_learning_container_yr:
+        learning_component_year_list = mdl.learning_component_year.find_by_learning_container_year(a_learning_container_yr)
+
+        for learning_component_year in learning_component_year_list:
+            if mdl.learning_unit_component.search(learning_component_year, learning_unit_yr).exists():
+                entity_container_yrs = mdl.entity_container_year.find_by_learning_container_year(learning_component_year.learning_container_year,
+                                                                                                 entity_container_year_link_type.REQUIREMENT_ENTITY)
+                entity_component_yr = mdl.entity_component_year.find_by_entity_container_years(entity_container_yrs,
+                                                                                               learning_component_year).first()
+                components.append({'learning_component_year': learning_component_year,
+                                   'entity_component_yr': entity_component_yr,
+                                   'volumes': volumes(entity_component_yr),
+                                   'learning_unit_usage': _learning_unit_usage(learning_component_year)})
+    return components
