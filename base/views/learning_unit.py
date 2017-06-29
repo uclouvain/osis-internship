@@ -95,7 +95,7 @@ def learning_unit_identification(request, learning_unit_year_id):
     context['experimental_phase'] = True
     context['show_subtype'] = _show_subtype(learning_unit_year)
     context.update(_get_all_attributions(learning_unit_year))
-    context['components'] = get_components_identification(learning_unit_year.learning_container_year)
+    context['components'] = get_components_identification(learning_unit_year)
     context['volume_distribution'] = volume_distribution(learning_unit_year.learning_container_year)
 
     return layout.render(request, "learning_unit/identification.html", context)
@@ -461,7 +461,8 @@ def format_volume_zero(volume):
     return volume
 
 
-def get_components_identification(a_learning_container_yr):
+def get_components_identification(learning_unit_yr):
+    a_learning_container_yr = learning_unit_yr.learning_container_year
     components = []
     if a_learning_container_yr:
         learning_component_year_list = mdl.learning_component_year.find_by_learning_container_year(a_learning_container_yr)
