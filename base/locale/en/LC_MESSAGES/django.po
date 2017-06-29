@@ -1674,5 +1674,3 @@ msgstr "Learning units usage"
 
 msgid "used_by_partim"
 msgstr "Used by partim "
-
-
