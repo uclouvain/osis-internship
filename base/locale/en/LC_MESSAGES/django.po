@@ -828,6 +828,9 @@ msgstr "The period of scores' encoding %s will be open %s"
 msgid "page_not_found"
 msgstr "Page not found."
 
+msgid "method_not_allowed"
+msgstr "Method not allowed"
+
 msgid "password"
 msgstr "Password"
 
