@@ -1674,3 +1674,15 @@ msgstr "Learning units usage"
 
 msgid "used_by_partim"
 msgstr "Used by partim "
+
+msgid "academic_years"
+msgstr "Academic years"
+
+msgid "from"
+msgstr "From"
+
+msgid "to"
+msgstr "to"
+
+msgid "since"
+msgstr "Since"
