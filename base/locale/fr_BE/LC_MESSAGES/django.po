@@ -839,6 +839,9 @@ msgstr "La période d'encodage des notes pour la session %s sera ouverte à part
 msgid "page_not_found"
 msgstr "Page inexistante"
 
+msgid "method_not_allowed"
+msgstr "Methode non autorisée"
+
 msgid "password"
 msgstr "Mot de passe"
 

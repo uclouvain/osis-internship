@@ -41,6 +41,12 @@ def page_not_found(request):
     return response
 
 
+def method_not_allowed(request):
+    response = layout.render(request, 'method_not_allowed.html', {})
+    response.status_code = 405
+    return response
+
+
 def access_denied(request):
     response = layout.render(request, 'access_denied.html', {})
     response.status_code = 401
