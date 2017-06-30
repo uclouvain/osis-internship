@@ -171,6 +171,7 @@ def pst_form_view(request, mandate_id):
 
 
 def generate_reviewer_menu_tabs(role, mandate, active_item: None):
+    print(role)
     if active_item:
         active_item = re.sub('_ASSISTANT', '', active_item)
     menu = []
@@ -190,6 +191,9 @@ def generate_reviewer_menu_tabs(role, mandate, active_item: None):
     except:
         review_is_done = False
     for state, order in sorted(mandate_states.items()):
+        if state == assistant_mandate_state.VICE_RECTOR and (
+                    role != reviewer_role.VICE_RECTOR and role != reviewer_role.VICE_RECTOR_ASSISTANT):
+            break
         if state in role and review_is_done is False:
             if active_item == state:
                 menu.append({'item': state, 'class': 'active', 'action': 'edit'})
@@ -201,4 +205,5 @@ def generate_reviewer_menu_tabs(role, mandate, active_item: None):
             menu.append({'item': state, 'class': 'active', 'action': 'view'})
         else:
             menu.append({'item': state, 'class': '', 'action': 'view'})
+    print(menu)
     return menu
