@@ -96,7 +96,7 @@ def learning_unit_identification(request, learning_unit_year_id):
     context['show_subtype'] = _show_subtype(learning_unit_year)
     context.update(_get_all_attributions(learning_unit_year))
     context['components'] = get_components_identification(learning_unit_year)
-    context['volume_distribution'] = volume_distribution(learning_unit_year.learning_container_year)
+    context['volume_distribution'] = volume_distribution(learning_unit_year)
 
     return layout.render(request, "learning_unit/identification.html", context)
 
@@ -393,8 +393,8 @@ def format_volume_remaining(entity_component_yr):
     return volume_remaining
 
 
-def volume_distribution(a_learning_container_yr):
-
+def volume_distribution(learning_unit_yr):
+    a_learning_container_yr = learning_unit_yr.learning_container_year
     component_partial_exists = False
     component_remaining_exists = False
 
@@ -402,23 +402,24 @@ def volume_distribution(a_learning_container_yr):
         learning_component_yrs = mdl.learning_component_year.find_by_learning_container_year(a_learning_container_yr)
 
         for learning_component_year in learning_component_yrs:
-            entity_container_yrs = mdl.entity_container_year\
-                .find_by_learning_container_year(learning_component_year.learning_container_year,
-                                                 entity_container_year_link_type.REQUIREMENT_ENTITY)
-            entity_component_yrs = mdl.entity_component_year\
-                .find_by_entity_container_years(entity_container_yrs, learning_component_year)
-            for entity_component_yr in entity_component_yrs:
-                if entity_component_yr.hourly_volume_partial is None:
-                    return UNDEFINED_VALUE
-                else:
-                    if entity_component_yr.hourly_volume_partial == entity_component_yr.hourly_volume_total:
-                        component_partial_exists = True
-                    if entity_component_yr.hourly_volume_partial == 0.00:
-                        component_remaining_exists = True
-                    if entity_component_yr.hourly_volume_partial == VOLUME_FOR_UNKNOWN_QUADRIMESTER:
-                        return _('partial_or_remaining')
-                    if entity_component_yr.hourly_volume_partial > 0.00 and entity_component_yr.hourly_volume_partial < entity_component_yr.hourly_volume_total:
-                        return _('partial_remaining')
+            if mdl.learning_unit_component.search(learning_component_year, learning_unit_yr).exists():
+                entity_container_yrs = mdl.entity_container_year\
+                    .find_by_learning_container_year(learning_component_year.learning_container_year,
+                                                     entity_container_year_link_type.REQUIREMENT_ENTITY)
+                entity_component_yrs = mdl.entity_component_year\
+                    .find_by_entity_container_years(entity_container_yrs, learning_component_year)
+                for entity_component_yr in entity_component_yrs:
+                    if entity_component_yr.hourly_volume_partial is None:
+                        return UNDEFINED_VALUE
+                    else:
+                        if entity_component_yr.hourly_volume_partial == entity_component_yr.hourly_volume_total:
+                            component_partial_exists = True
+                        if entity_component_yr.hourly_volume_partial == 0.00:
+                            component_remaining_exists = True
+                        if entity_component_yr.hourly_volume_partial == VOLUME_FOR_UNKNOWN_QUADRIMESTER:
+                            return _('partial_or_remaining')
+                        if entity_component_yr.hourly_volume_partial > 0.00 and entity_component_yr.hourly_volume_partial < entity_component_yr.hourly_volume_total:
+                            return _('partial_remaining')
 
         if component_partial_exists:
             if component_remaining_exists:
