@@ -171,7 +171,6 @@ def pst_form_view(request, mandate_id):
 
 
 def generate_reviewer_menu_tabs(role, mandate, active_item: None):
-    print(role)
     if active_item:
         active_item = re.sub('_ASSISTANT', '', active_item)
     menu = []
@@ -205,5 +204,4 @@ def generate_reviewer_menu_tabs(role, mandate, active_item: None):
             menu.append({'item': state, 'class': 'active', 'action': 'view'})
         else:
             menu.append({'item': state, 'class': '', 'action': 'view'})
-    print(menu)
     return menu
