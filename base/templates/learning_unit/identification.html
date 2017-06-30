@@ -110,14 +110,13 @@
                         {% endif%}
                         <br><br>
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-3">
                                 <label>{% trans 'language' %}</label><br>
                                 {{learning_unit_year.learning_container_year.language | default_if_none:'' }}
                             </div>
-                            <div class="col-md-6">
-                                <div class="pull-right">
-                                    <label>{% trans 'learning_unit_quater' %}</label>: {{ volume_distribution }}<br>
-                                </div>
+                            <div class="col-md-9">
+                                <label>{% trans 'learning_unit_quater' %}</label><br>
+                                {{ volume_distribution }}
                             </div>
                         </div>
                         {% if components %}

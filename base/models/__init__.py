@@ -43,7 +43,6 @@ from base.models import learning_unit_component
 from base.models import learning_unit_component_class
 from base.models import learning_unit_enrollment
 from base.models import learning_unit_year
-from base.models import native
 from base.models import offer
 from base.models import offer_enrollment
 from base.models import offer_type
