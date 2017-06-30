@@ -45,7 +45,7 @@ def get_css_class(planned_classes, real_classes):
     if planned_classes_int == real_classes_int:
         return "success-color"
     else:
-        if real_classes_int - planned_classes_int == 1:
+        if planned_classes_int - real_classes_int == 1:
             return "warning-color"
 
     return "danger-color"
