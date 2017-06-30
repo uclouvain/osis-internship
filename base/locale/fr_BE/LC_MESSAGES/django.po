@@ -1677,3 +1677,14 @@ msgstr "Utilisation par les UE"
 msgid "used_by_partim"
 msgstr "Utilisation par partim "
 
+msgid "academic_years"
+msgstr "Années académiques"
+
+msgid "from"
+msgstr "De"
+
+msgid "to"
+msgstr "à"
+
+msgid "since"
+msgstr "Depuis"

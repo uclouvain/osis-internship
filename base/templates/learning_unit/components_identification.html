@@ -29,7 +29,7 @@
     <div class="panel-heading">{% trans 'composition' %}</div>
     <div class="panel-body">
         <div class="pull-right">
-            <label>{% trans 'learning_unit_quater' %}</label>: {{ volume_distribution }}<br>
+            <label>{% trans 'learning_unit_quater' %}</label>: {{ volume_distribution | default_if_none:'' }}<br>
         </div>
     </div>
     <table class="table table-striped">
