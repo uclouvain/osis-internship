@@ -190,8 +190,8 @@ def generate_reviewer_menu_tabs(role, mandate, active_item: None):
     except:
         review_is_done = False
     for state, order in sorted(mandate_states.items()):
-        if state == assistant_mandate_state.VICE_RECTOR and (
-                    role != reviewer_role.VICE_RECTOR and role != reviewer_role.VICE_RECTOR_ASSISTANT):
+        if state == assistant_mandate_state.VICE_RECTOR and role != reviewer_role.VICE_RECTOR \
+                and role != reviewer_role.VICE_RECTOR_ASSISTANT:
             break
         if state in role and review_is_done is False:
             if active_item == state:
