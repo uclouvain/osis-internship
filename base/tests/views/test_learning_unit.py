@@ -249,8 +249,12 @@ class LearningUnitViewTestCase(TestCase):
                                    entity_container_year=self.entity_container_yr,
                                    hourly_volume_total=15.00,
                                    hourly_volume_partial=None)
-
-        self.assertEqual(learning_unit_view.volume_distribution(self.learning_container_yr),learning_unit_view.UNDEFINED_VALUE)
+        learning_unit_yr = LearningUnitYearFactory(academic_year=self.current_academic_year,
+                                                     acronym='LBIOLA',
+                                                     learning_container_year=self.learning_container_yr)
+        LearningUnitComponentFactory(learning_unit_year=learning_unit_yr,
+                                     learning_component_year=self.learning_component_yr)
+        self.assertEqual(learning_unit_view.volume_distribution(learning_unit_yr), learning_unit_view.UNDEFINED_VALUE)
 
     def test_learning_component_year_remaining(self):
         EntityComponentYearFactory(learning_component_year=self.learning_component_yr,
@@ -261,7 +265,12 @@ class LearningUnitViewTestCase(TestCase):
                                    entity_container_year=self.entity_container_yr,
                                    hourly_volume_total=15.00,
                                    hourly_volume_partial=0.00)
-        self.assertEqual(learning_unit_view.volume_distribution(self.learning_container_yr), _('remaining'))
+        learning_unit_yr = LearningUnitYearFactory(academic_year=self.current_academic_year,
+                                                   acronym='LBIOLA',
+                                                   learning_container_year=self.learning_container_yr)
+        LearningUnitComponentFactory(learning_unit_year=learning_unit_yr,
+                                     learning_component_year=self.learning_component_yr)
+        self.assertEqual(learning_unit_view.volume_distribution(learning_unit_yr), _('remaining'))
 
     def test_learning_component_year_partial(self):
         EntityComponentYearFactory(learning_component_year=self.learning_component_yr,
@@ -272,14 +281,24 @@ class LearningUnitViewTestCase(TestCase):
                                    entity_container_year=self.entity_container_yr,
                                    hourly_volume_total=15.00,
                                    hourly_volume_partial=15.00)
-        self.assertEqual(learning_unit_view.volume_distribution(self.learning_container_yr), _('partial'))
+        learning_unit_yr = LearningUnitYearFactory(academic_year=self.current_academic_year,
+                                                   acronym='LBIOLA',
+                                                   learning_container_year=self.learning_container_yr)
+        LearningUnitComponentFactory(learning_unit_year=learning_unit_yr,
+                                     learning_component_year=self.learning_component_yr)
+        self.assertEqual(learning_unit_view.volume_distribution(learning_unit_yr), _('partial'))
 
     def test_learning_component_year_partial_remaining(self):
         EntityComponentYearFactory(learning_component_year=self.learning_component_yr,
                                    entity_container_year=self.entity_container_yr,
                                    hourly_volume_total=30.00,
                                    hourly_volume_partial=25.00)
-        self.assertEqual(learning_unit_view.volume_distribution(self.learning_container_yr), _('partial_remaining'))
+        learning_unit_yr = LearningUnitYearFactory(academic_year=self.current_academic_year,
+                                                   acronym='LBIOLA',
+                                                   learning_container_year=self.learning_container_yr)
+        LearningUnitComponentFactory(learning_unit_year=learning_unit_yr,
+                                     learning_component_year=self.learning_component_yr)
+        self.assertEqual(learning_unit_view.volume_distribution(learning_unit_yr), _('partial_remaining'))
 
     def test_learning_component_year_partial_remaining_second(self):
         EntityComponentYearFactory(learning_component_year=self.learning_component_yr,
@@ -289,29 +308,48 @@ class LearningUnitViewTestCase(TestCase):
         EntityComponentYearFactory(learning_component_year=self.learning_component_yr,
                                    entity_container_year=self.entity_container_yr,
                                    hourly_volume_partial=0.00)
-        self.assertEqual(learning_unit_view.volume_distribution(self.learning_container_yr), _('partial_remaining'))
+        learning_unit_yr = LearningUnitYearFactory(academic_year=self.current_academic_year,
+                                                   acronym='LBIOLA',
+                                                   learning_container_year=self.learning_container_yr)
+        LearningUnitComponentFactory(learning_unit_year=learning_unit_yr,
+                                     learning_component_year=self.learning_component_yr)
+        self.assertEqual(learning_unit_view.volume_distribution(learning_unit_yr), _('partial_remaining'))
 
     def test_learning_component_year_partial_second(self):
         EntityComponentYearFactory(learning_component_year=self.learning_component_yr,
                                    entity_container_year=self.entity_container_yr,
                                    hourly_volume_total=30.00,
                                    hourly_volume_partial=30.00)
-        self.assertEqual(learning_unit_view.volume_distribution(self.learning_container_yr), _('partial'))
+        learning_unit_yr = LearningUnitYearFactory(academic_year=self.current_academic_year,
+                                                   acronym='LBIOLA',
+                                                   learning_container_year=self.learning_container_yr)
+        LearningUnitComponentFactory(learning_unit_year=learning_unit_yr,
+                                     learning_component_year=self.learning_component_yr)
+        self.assertEqual(learning_unit_view.volume_distribution(learning_unit_yr), _('partial'))
 
     def test_learning_component_year_remaining_third(self):
         EntityComponentYearFactory(learning_component_year=self.learning_component_yr,
                                    entity_container_year=self.entity_container_yr,
                                    hourly_volume_total=30.00,
                                    hourly_volume_partial=0.00)
-
-        self.assertEqual(learning_unit_view.volume_distribution(self.learning_container_yr), _('remaining'))
+        learning_unit_yr = LearningUnitYearFactory(academic_year=self.current_academic_year,
+                                                   acronym='LBIOLA',
+                                                   learning_container_year=self.learning_container_yr)
+        LearningUnitComponentFactory(learning_unit_year=learning_unit_yr,
+                                     learning_component_year=self.learning_component_yr)
+        self.assertEqual(learning_unit_view.volume_distribution(learning_unit_yr), _('remaining'))
 
     def test_learning_component_yr_unknow_quadrimester(self):
         EntityComponentYearFactory(learning_component_year=self.learning_component_yr,
                                    entity_container_year=self.entity_container_yr,
                                    hourly_volume_total=30.00,
                                    hourly_volume_partial=-1)
-        self.assertEqual(learning_unit_view.volume_distribution(self.learning_container_yr), _('partial_or_remaining'))
+        learning_unit_yr = LearningUnitYearFactory(academic_year=self.current_academic_year,
+                                                   acronym='LBIOLA',
+                                                   learning_container_year=self.learning_container_yr)
+        LearningUnitComponentFactory(learning_unit_year=learning_unit_yr,
+                                     learning_component_year=self.learning_component_yr)
+        self.assertEqual(learning_unit_view.volume_distribution(learning_unit_yr), _('partial_or_remaining'))
 
     def test_learning_unit_usage_two_usages(self):
         learning_container_yr = LearningContainerYearFactory(academic_year=self.current_academic_year,
@@ -346,4 +384,4 @@ class LearningUnitViewTestCase(TestCase):
         LearningUnitComponentFactory(learning_unit_year=learning_unit_yr_1,
                                      learning_component_year=learning_component_yr)
 
-        self.assertEqual(learning_unit_view._learning_unit_usage(learning_component_yr), '*')
+        self.assertEqual(learning_unit_view._learning_unit_usage(learning_component_yr), _('complete'))

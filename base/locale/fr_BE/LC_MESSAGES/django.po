@@ -839,6 +839,9 @@ msgstr "La période d'encodage des notes pour la session %s sera ouverte à part
 msgid "page_not_found"
 msgstr "Page inexistante"
 
+msgid "method_not_allowed"
+msgstr "Methode non autorisée"
+
 msgid "password"
 msgstr "Mot de passe"
 
@@ -1197,6 +1200,9 @@ msgstr "Type"
 
 msgid "types"
 msgstr "Types"
+
+msgid "undated_events"
+msgstr "Événements non datés"
 
 msgid "undefined"
 msgstr "Non défini"
@@ -1671,3 +1677,14 @@ msgstr "Utilisation par les UE"
 msgid "used_by_partim"
 msgstr "Utilisation par partim "
 
+msgid "academic_years"
+msgstr "Années académiques"
+
+msgid "from"
+msgstr "De"
+
+msgid "to"
+msgstr "à"
+
+msgid "since"
+msgstr "Depuis"

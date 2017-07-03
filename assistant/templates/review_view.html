@@ -42,7 +42,7 @@
 {% endblock %}
 {% block content %}
 <div class="page-header">
-    <h2>{% trans 'assistants_mandates_renewal' %} ({{ year }})</h2>
+    <h4>{% trans 'assistant_mandates_renewal' %} ({{ year }})</h4>
     <h4>{{ assistant.person }}</h4>
 </div>
 <ul class="nav nav-tabs">
@@ -98,6 +98,7 @@
                     {% else %}
                     <span class="glyphicon glyphicon-alert" style="font-size: 14pt; color: orange" aria-hidden="true"></span>
                     {% endif %}
+                    {% trans review.advice %}
                 </div>
             </div><p>
         </div>

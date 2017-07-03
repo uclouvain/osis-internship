@@ -23,23 +23,14 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from dissertation.models.proposition_dissertation import PropositionDissertation
-from dissertation.models.proposition_offer import PropositionOffer
-from dissertation.tests.models import test_proposition_role
+import factory
+import factory.fuzzy
+from assistant.tests.factories.assistant_mandate import AssistantMandateFactory
+from base.tests.factories.structure import StructureFactory
 
 
-def create_proposition_dissertation(title, adviser, person, offer_proposition = None, collaboration="FORBIDDEN", type="OTH",
-                                    level="SPECIFIC", max_number_student=1 ):
-    proposition = PropositionDissertation.objects.create(title=title, author= adviser,
-                                                         collaboration=collaboration, type=type,
-                                                         level=level, max_number_student=max_number_student,
-                                                         creator=person)
-    #Assign adviser as "PROMOTEUR"
-    test_proposition_role.create_proposition_role(proposition=proposition, adviser=adviser)
-
-    #Make link in many-to-many table
-    if offer_proposition is not None:
-        PropositionOffer.objects.create(proposition_dissertation=proposition, offer_proposition=offer_proposition)
-
-    return proposition
-
+class MandateStructureFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = 'assistant.MandateStructure'
+    assistant_mandate = factory.SubFactory(AssistantMandateFactory)
+    structure = factory.SubFactory(StructureFactory)

@@ -23,23 +23,23 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from dissertation.models.proposition_dissertation import PropositionDissertation
-from dissertation.models.proposition_offer import PropositionOffer
-from dissertation.tests.models import test_proposition_role
+from django.test import TestCase
+from assistant.tests.factories.assistant_mandate import AssistantMandateFactory
+from assistant.tests.factories.mandate_structure import MandateStructureFactory
+from base.tests.factories.structure import StructureFactory
+from base.models.enums import structure_type
+from assistant.models import mandate_structure
 
 
-def create_proposition_dissertation(title, adviser, person, offer_proposition = None, collaboration="FORBIDDEN", type="OTH",
-                                    level="SPECIFIC", max_number_student=1 ):
-    proposition = PropositionDissertation.objects.create(title=title, author= adviser,
-                                                         collaboration=collaboration, type=type,
-                                                         level=level, max_number_student=max_number_student,
-                                                         creator=person)
-    #Assign adviser as "PROMOTEUR"
-    test_proposition_role.create_proposition_role(proposition=proposition, adviser=adviser)
+class TestMandateStructureFactory(TestCase):
 
-    #Make link in many-to-many table
-    if offer_proposition is not None:
-        PropositionOffer.objects.create(proposition_dissertation=proposition, offer_proposition=offer_proposition)
+    def setUp(self):
+        self.assistant_mandate = AssistantMandateFactory()
+        self.structure = StructureFactory(type=structure_type.FACULTY)
+        self.mandate_structure = MandateStructureFactory(assistant_mandate=self.assistant_mandate,
+                                                         structure=self.structure)
 
-    return proposition
-
+    def test_find_by_mandate_and_type(self):
+        self.assertEqual(self.mandate_structure,
+                         mandate_structure.find_by_mandate_and_type(self.assistant_mandate,
+                                                                    structure_type.FACULTY).first())

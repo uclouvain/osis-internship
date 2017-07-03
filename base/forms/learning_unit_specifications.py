@@ -26,6 +26,7 @@
 from django import forms
 from cms.models import translated_text
 from cms.enums import entity_name
+from ckeditor.widgets import CKEditorWidget
 from django.utils.safestring import mark_safe
 
 
@@ -47,4 +48,30 @@ class LearningUnitSpecificationsForm(forms.Form):
 
         for trans_txt in texts_list:
             text_label = trans_txt.text_label.label
-            setattr(self, text_label, mark_safe(trans_txt.text))
+            text = trans_txt.text if trans_txt.text else ""
+            setattr(self, text_label, mark_safe(text))
+
+
+class LearningUnitSpecificationsEditForm(forms.Form):
+    trans_text = forms.CharField(widget=CKEditorWidget(config_name='minimal'), required=False)
+    cms_id = forms.IntegerField(widget=forms.HiddenInput, required=True)
+
+    def __init__(self, *args, **kwargs):
+        self.learning_unit_year = kwargs.pop('learning_unit_year', None)
+        self.language_iso = kwargs.pop('language', None)
+        self.text_label = kwargs.pop('text_label', None)
+        super(LearningUnitSpecificationsEditForm, self).__init__(*args, **kwargs)
+
+    def load_initial(self):
+        value = translated_text.get_or_create(entity=entity_name.LEARNING_UNIT_YEAR,
+                                              reference=self.learning_unit_year.id,
+                                              language=self.language_iso,
+                                              text_label=self.text_label)
+        self.fields['cms_id'].initial = value.id
+        self.fields['trans_text'].initial = value.text
+
+    def save(self):
+        cleaned_data = self.cleaned_data
+        trans_text = translated_text.find_by_id(cleaned_data['cms_id'])
+        trans_text.text = cleaned_data.get('trans_text')
+        trans_text.save()

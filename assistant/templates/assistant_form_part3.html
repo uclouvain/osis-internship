@@ -39,7 +39,7 @@
 <ul class="nav nav-tabs ">
 <li><a href="{% url 'assistant_mandates' %}">{% trans 'my_mandates' %}</a></li>
 <li><a href="{% url 'form_part1_edit' mandate.id %}">{% trans 'assistant_form_part1' %}</a></li>
-<li><a href="{% url 'mandate_learning_units' mandate.id %}">{% trans 'assistant_form_part2' %}</a></li>
+<li><a href="{% url 'mandate_learning_units' mandate.id %}">{% trans 'learning_units' %}</a></li>
 <li class="active"><a href="{% url 'form_part3_edit' mandate.id %}">{% trans 'assistant_form_part3' %}</a></li>
 <li><a href="{% url 'form_part4_edit' mandate.id %}">{% trans 'assistant_form_part4' %}</a></li>
 <li><a href="{% url 'form_part5_edit' mandate.id %}">{% trans 'assistant_form_part5' %}</a></li>
@@ -62,11 +62,6 @@
 			<label style="padding-top: 5px" for="registered_phd">{% trans 'registered_phd' %}</label>
 			<div class="controls" id="registered_phd">{{ form.inscription }}
 				<span class="error">{{ form.inscription.errors }}</span></div>
-			<label style="padding-top: 5px" id="label_for_expected_phd_date" for="expected_phd_date">
-                {% trans 'expected_registering_date' %}</label>
-			<div class="controls" id="expected_phd_date">{{ form.expected_phd_date }}
-				<span class="error">{{ form.expected_phd_date.errors }}</span>
-			</div>
 			{% if not supervisor %}
 				<label style="padding-top: 5px" for="search_persons">{% trans 'supervisor' %}</label>
 				<div class="ui-widget"><input id="search_persons" name="search_persons" size="100"
@@ -79,7 +74,13 @@
 				{{ supervisor }}
 				</div>
 			{% endif %}
-			<label style="padding-top: 5px" for="phd_inscription_date">{% trans 'phd_inscription_date' %}</label>
+			<label style="padding-top: 5px" id="label_for_expected_phd_date" for="expected_phd_date">
+                {% trans 'expected_registering_date' %}</label>
+			<div class="controls" id="expected_phd_date">{{ form.expected_phd_date }}
+				<span class="error">{{ form.expected_phd_date.errors }}</span>
+			</div>
+            <label style="padding-top: 5px" id="label_for_phd_inscription_date"
+                   for="phd_inscription_date">{% trans 'phd_inscription_date' %}</label>
 			<div class="controls" id="phd_inscription_date">{{ form.phd_inscription_date }}</div>
 			<span class="error">{{ form.phd_inscription_date.errors }}</span>
 			<label for="thesis_title" style="padding-top: 5px">{% trans 'thesis_title' %}</label>
@@ -93,7 +94,7 @@
 			<div class="controls" id="thesis_defence_date">{{ form.thesis_date }}
 				<span class="error">{{ form.thesis_date.errors }}</span>
 			</div>
-			<label for="remark" style="padding-top: 5px">{% trans 'doctorate_remark' %}</label>
+			<label for="remark" style="padding-top: 5px">{% trans 'remark' %}</label>
 			<div class="controls" id="remark">{{ form.remark }}</div>
 			<span class="error">{{ form.remark.errors }}</span>
         </div>
@@ -109,7 +110,7 @@
                        title="{% trans 'delete_file'%}"
                        onclick="location.href='{% url 'assistant_file_delete' mandate.id file.id 'form_part3_edit' %}';">
                     <span class="glyphicon glyphicon-remove" aria-hidden="true" id="spn_delete_file"></span>
-                        {% trans 'delete_file' %}</a>
+                        {% trans 'delete' %}</a>
                 </div>
                 <div class="col-md-10" id="hdn_filename" style="text-align: left">
                    <a href="{% url 'assistant_file_download' document_file_id=file.id %}">{{ file.document_file }}</a>
@@ -120,7 +121,7 @@
 			<a class="btn btn-default" data-toggle="modal" data-target="#pnl_upload_documents"
                id="btn_add_file" style="margin-right: 5px;" title="{% trans 'add_file'%}">
                 <span class="glyphicon glyphicon-upload" aria-hidden="true" id="spn_add_file"></span>
-                {% trans 'upload_pdf_file' %}</a>
+                {% trans 'upload' %}</a>
 		</div>
         <hr>
 	    <input type="hidden" value="{{mandate.id | default_if_none:''}}" id="hdn_current_mandate_id"
@@ -164,6 +165,8 @@ function Hide() {
          document.getElementById('id_mand-expected_phd_date').style.display = 'none';
          document.getElementById('id_mand-expected_phd_date').value='';
          document.getElementById('label_for_expected_phd_date').style.display = 'none';
+         document.getElementById('phd_inscription_date').style.display ='';
+ 		document.getElementById('label_for_phd_inscription_date').style.display = 'block';
 
 
     } else if(document.getElementById('id_mand-inscription_1').checked == true)
@@ -171,9 +174,23 @@ function Hide() {
          document.getElementById('id_mand-expected_phd_date').style.display = 'none';
          document.getElementById('id_mand-expected_phd_date').value='';
          document.getElementById('label_for_expected_phd_date').style.display = 'none';
-    } else {
+         document.getElementById('phd_inscription_date').style.display = 'none';
+         document.getElementById('phd_inscription_date').value='';
+         document.getElementById('label_for_phd_inscription_date').style.display = 'none';
+     }
+     else if(document.getElementById('id_mand-inscription_2').checked == true)
+     {
+         document.getElementById('phd_inscription_date').style.display = 'none';
+         document.getElementById('phd_inscription_date').value='';
+         document.getElementById('label_for_phd_inscription_date').style.display = 'none';
+         document.getElementById('id_mand-expected_phd_date').style.display ='';
+ 		 document.getElementById('label_for_expected_phd_date').style.display = 'block';
+    }
+    else {
  		document.getElementById('id_mand-expected_phd_date').style.display ='';
  		document.getElementById('label_for_expected_phd_date').style.display = 'block';
+ 		document.getElementById('phd_inscription_date').style.display ='';
+ 		document.getElementById('label_for_phd_inscription_date').style.display = 'block';
     }
 }
 

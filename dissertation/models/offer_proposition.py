@@ -23,6 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from dissertation.models.offer_proposition_group import OfferPropositionGroup
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
@@ -32,7 +33,7 @@ from datetime import date
 
 
 class OfferPropositionAdmin(SerializableModelAdmin):
-    list_display = ('acronym', 'offer')
+    list_display = ('acronym', 'offer', 'offer_proposition_group')
     raw_id_fields = ('offer',)
     search_fields = ('uuid',)
 
@@ -52,6 +53,7 @@ class OfferProposition(SerializableModel):
     end_jury_visibility = models.DateField(default=timezone.now)
     start_edit_title = models.DateField(default=timezone.now)
     end_edit_title = models.DateField(default=timezone.now)
+    offer_proposition_group = models.ForeignKey(OfferPropositionGroup, null=True)
 
     @property
     def in_periode_visibility_proposition(self):
@@ -84,6 +86,9 @@ class OfferProposition(SerializableModel):
     def __str__(self):
         return self.acronym
 
+    class Meta:
+        ordering = ['offer_proposition_group', 'acronym']
+
 
 def get_by_offer(an_offer):
     try:
@@ -95,9 +100,9 @@ def get_by_offer(an_offer):
 
 
 def search_by_offer(offers):
-    return OfferProposition.objects.filter(offer__in=offers)\
-                                   .distinct()\
-                                   .order_by('acronym')
+    return OfferProposition.objects.filter(offer__in=offers) \
+        .distinct() \
+        .order_by('acronym')
 
 
 def show_validation_commission(offer_props):
@@ -122,3 +127,11 @@ def find_by_id(offer_proposition_id):
 
 def find_all_ordered_by_acronym():
     return OfferProposition.objects.order_by('acronym')
+
+
+def get_by_offer_proposition_group(offer_proposition_group):
+    try:
+        offer_proposition = OfferProposition.objects.get(offer_proposition_group=offer_proposition_group)
+    except ObjectDoesNotExist:
+        offer_proposition = None
+    return offer_proposition

@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2016-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -23,38 +23,19 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django import template
-from base.models import learning_unit_component
-from django.utils.translation import ugettext_lazy as _
+from django.db import models
+from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 
+class OfferPropositionGroupAdmin(SerializableModelAdmin):
+    list_display = ('name_short', 'name_long')
+    search_fields=('name_short', 'name_long')
 
-register = template.Library()
+class OfferPropositionGroup(SerializableModel):
+    name_short = models.CharField(max_length=10)
+    name_long = models.CharField(max_length=256)
 
+    def __str__(self):
+        return self.name_short
 
-@register.filter
-def get_css_class(planned_classes, real_classes):
-    planned_classes_int = 0
-    real_classes_int = 0
-
-    if planned_classes:
-        planned_classes_int = planned_classes
-
-    if real_classes:
-        real_classes_int = real_classes
-
-    if planned_classes_int == real_classes_int:
-        return "success-color"
-    else:
-        if planned_classes_int - real_classes_int == 1:
-            return "warning-color"
-
-    return "danger-color"
-
-
-@register.filter
-def used_by_partim(learning_component_year, learning_unit_year):
-    if learning_unit_component.search(learning_component_year, learning_unit_year).exists():
-        return _('yes')
-    return _('no')
-
-
+def find_all_ordered_by_name_short():
+    return OfferPropositionGroup.objects.order_by('name_short')
