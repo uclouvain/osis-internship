@@ -63,7 +63,8 @@
 			<div class="controls" id="registered_phd">{{ form.inscription }}
 				<span class="error">{{ form.inscription.errors }}</span></div>
 			{% if not supervisor %}
-				<label style="padding-top: 5px" for="search_persons">{% trans 'supervisor' %}</label>
+				<label style="padding-top: 5px" id="label_for_search_persons" for="search_persons">
+					{% trans 'supervisor' %}</label>
 				<div class="ui-widget"><input id="search_persons" name="search_persons" size="100"
 											  placeholder="{% trans 'search_by_email_or_last_name' %}">
 				</div>
@@ -162,35 +163,45 @@ $(function() {
 function Hide() {
 	if(document.getElementById('id_mand-inscription_0').checked == true)
      {
-         document.getElementById('id_mand-expected_phd_date').style.display = 'none';
-         document.getElementById('id_mand-expected_phd_date').value='';
-         document.getElementById('label_for_expected_phd_date').style.display = 'none';
-         document.getElementById('phd_inscription_date').style.display ='';
+        document.getElementById('id_mand-expected_phd_date').style.display = 'none';
+        document.getElementById('id_mand-expected_phd_date').value='';
+        document.getElementById('label_for_expected_phd_date').style.display = 'none';
+        document.getElementById('phd_inscription_date').style.display ='';
  		document.getElementById('label_for_phd_inscription_date').style.display = 'block';
+ 		document.getElementById('search_persons').style.display ='';
+ 		document.getElementById('label_for_search_persons').style.display = 'block';
 
 
     } else if(document.getElementById('id_mand-inscription_1').checked == true)
      {
-         document.getElementById('id_mand-expected_phd_date').style.display = 'none';
-         document.getElementById('id_mand-expected_phd_date').value='';
-         document.getElementById('label_for_expected_phd_date').style.display = 'none';
-         document.getElementById('phd_inscription_date').style.display = 'none';
-         document.getElementById('phd_inscription_date').value='';
-         document.getElementById('label_for_phd_inscription_date').style.display = 'none';
+     	document.getElementById('id_mand-expected_phd_date').style.display = 'none';
+        document.getElementById('id_mand-expected_phd_date').value='';
+        document.getElementById('label_for_expected_phd_date').style.display = 'none';
+        document.getElementById('phd_inscription_date').style.display = 'none';
+        document.getElementById('phd_inscription_date').value='';
+        document.getElementById('label_for_phd_inscription_date').style.display = 'none';
+        document.getElementById('search_persons').style.display = 'none';
+        document.getElementById('search_persons').value='';
+        document.getElementById('label_for_search_persons').style.display = 'none';
+
      }
      else if(document.getElementById('id_mand-inscription_2').checked == true)
      {
-         document.getElementById('phd_inscription_date').style.display = 'none';
-         document.getElementById('phd_inscription_date').value='';
-         document.getElementById('label_for_phd_inscription_date').style.display = 'none';
-         document.getElementById('id_mand-expected_phd_date').style.display ='';
- 		 document.getElementById('label_for_expected_phd_date').style.display = 'block';
+     	document.getElementById('phd_inscription_date').style.display = 'none';
+        document.getElementById('phd_inscription_date').value='';
+        document.getElementById('label_for_phd_inscription_date').style.display = 'none';
+        document.getElementById('id_mand-expected_phd_date').style.display ='';
+ 		document.getElementById('label_for_expected_phd_date').style.display = 'block';
+ 		document.getElementById('search_persons').style.display ='';
+ 		document.getElementById('label_for_search_persons').style.display = 'block';
     }
     else {
  		document.getElementById('id_mand-expected_phd_date').style.display ='';
  		document.getElementById('label_for_expected_phd_date').style.display = 'block';
  		document.getElementById('phd_inscription_date').style.display ='';
  		document.getElementById('label_for_phd_inscription_date').style.display = 'block';
+ 		document.getElementById('search_persons').style.display ='';
+ 		document.getElementById('label_for_search_persons').style.display = 'block';
     }
 }
 
