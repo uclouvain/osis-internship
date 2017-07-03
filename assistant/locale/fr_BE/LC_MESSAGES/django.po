@@ -88,6 +88,9 @@ msgstr "Type d'assistant·e"
 msgid "assistants"
 msgstr "Assistants"
 
+msgid "at_least_one_learning_unit"
+msgstr "Vous devez ajouter au moins une unité d'enseignement dans la rubrique \"Unités d'enseignement\""
+
 msgid "attendees"
 msgstr "Nombre d'étudiants par série"
 
