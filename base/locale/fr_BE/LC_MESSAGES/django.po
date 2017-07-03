@@ -1437,7 +1437,7 @@ msgid "tutors_of_course"
 msgstr "Enseignant·e·s du cours"
 
 msgid "academic_actors"
-msgstr "Les acteurs académiques"
+msgstr "Acteurs académiques"
 
 msgid "academic_start_date_error"
 msgstr "La date de début doit être comprise entre les dates de début/fin de l'année académique"
@@ -1491,7 +1491,7 @@ msgstr "La date d'ouverture de '%s' du calendrier académique ne peut pas être 
 msgid "component_type"
 msgstr "Type de composant"
 
-msgid "nominal_quater"
+msgid "nominal_quarter"
 msgstr "Quadri. nominal "
 
 msgid "vol_q1"
@@ -1662,7 +1662,7 @@ msgstr "Vol. Q1"
 msgid "volume_remaining"
 msgstr "Vol. Q2"
 
-msgid "learning_unit_quater"
+msgid "learning_unit_quarter"
 msgstr "Quadri. de l'UE"
 
 msgid "composition"

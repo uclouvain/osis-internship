@@ -1,7 +1,6 @@
 {% extends "layout.html" %}
 {% load staticfiles %}
 {% load i18n %}
-
 {% comment "License" %}
 * OSIS stands for Open Student Information System. It's an application
 * designed to manage the core business of higher education institutions,
@@ -27,21 +26,17 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-<li><a href="{% url 'institution' %}" id="lnk_institution">{% trans 'institution' %}</a></li>
-<li><a href="{% url 'organizations' %}" id="lnk_organizations">{% trans 'organizations' %}</a></li>
-<li class="active">{% trans 'organization' %}</li>
+{% include "organization/breadcrumb.html" %}
 {% endblock %}
+
 {% block content %}
-<div class="page-header">
-    <h3>{{ organization.acronym | default_if_none:'' }}</h3>
-</div>
-<div class="panel panel-default">
-    <div class="panel-body">
-        <ul class="nav nav-tabs">
-            <li class="active"><a data-toggle="tab" href="#tab_identification">{% trans 'identification'%}</a></li>
-        </ul>
-        <div class="tab-content">
-            <div id="tab_identification" class="tab-pane fade in active">
+
+{% include "organization/header.html" %}
+<div class="panel panel-default" >
+    <div class="panel-body" id="tabs" >
+        {% include "organization/tabs.html" %}
+         <div class="tab-content">
+             <div id="tab_identification" class="tab-pane fade in active">
                 <br>
                 <div class="row">
                     <div class="col-md-4">
@@ -70,7 +65,7 @@
                 </div>
                 <br>
 
-                {%if organization_addresses %}
+                {% if organization_addresses %}
                 <label>{% trans 'address(ses)' %}</label>
                 <br>
                 <div class="row">
@@ -102,7 +97,7 @@
                     </a>
                 {% endif %}
             </div>
-        </div>
+         </div>
     </div>
 </div>
 {% endblock %}

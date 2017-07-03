@@ -112,6 +112,7 @@ urlpatterns = [
         url(r'^create/$', organization.organization_create, name='organization_create'),
         url(r'^(?P<organization_id>[0-9]+)/', include([
             url(r'^$', organization.organization_read, name='organization_read'),
+            url(r'^campus/$', organization.organization_campus, name='organization_campus'),
             url(r'^edit/$', organization.organization_edit, name='organization_edit'),
             url(r'^save/$', organization.organization_save, name='organization_save'),
         ])),
