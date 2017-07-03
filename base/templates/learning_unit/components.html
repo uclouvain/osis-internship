@@ -102,7 +102,7 @@
                                                     {% endif %}{{key.acronym}}</td>
                                                 <td>{{ classe.0 }}</td>
                                                 <td>
-                                                    {% if learning_unit_year.subdivision in classe.0 and learning_unit_year.subdivision != '' or classe.1%}
+                                                    {% if learning_unit_year.subdivision in classe.0 and learning_unit_year.subdivision != '' or classe.1 and learning_unit_year.subdivision == ''%}
                                                         {% trans 'yes'%}
                                                     {% else %}
                                                         {% trans 'no'%}
