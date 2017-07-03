@@ -52,6 +52,9 @@ msgstr "Avis"
 msgid "ASSISTANT"
 msgstr "Assistant"
 
+msgid "at_least_one_learning_unit"
+msgstr "You lust add at least one learning unit in the \"Learning units\" item"
+
 msgid "TEACHING_ASSISTANT"
 msgstr "Teaching assistant"
 
