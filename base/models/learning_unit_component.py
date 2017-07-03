@@ -33,7 +33,7 @@ class LearningUnitComponentAdmin(SerializableModelAdmin):
     list_display = ('learning_unit_year', 'learning_component_year', 'type', 'duration')
     fieldsets = ((None, {'fields': ('learning_unit_year', 'learning_component_year', 'type', 'duration')}),)
     raw_id_fields = ('learning_unit_year', 'learning_component_year')
-    search_fields = ['id', 'learning_unit_year__acronym']
+    search_fields = ['learning_unit_year__acronym']
     list_filter = ('learning_unit_year__academic_year',)
 
 
