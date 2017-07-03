@@ -211,9 +211,9 @@ def form_part3_save(request, mandate_id):
         form = AssistantFormPart3(data=request.POST, instance=assistant, prefix='mand')
         if form.is_valid():
             current_assistant = form.save(commit=False)
-            if current_assistant.inscription == assistant_phd_inscription.YES \
+            if current_assistant.inscription != assistant_phd_inscription.NO \
                     and (not request.POST.get('person_id') and current_assistant.supervisor is None):
-                msg = _("must_enter_supervisor_if_registered")
+                msg = _("must_enter_supervisor_if_registered_or_in_progress")
                 form.add_error('inscription', msg)
                 return render(request, "assistant_form_part3.html", {'assistant': assistant, 'mandate': mandate,
                                                                      'files': files, 'form': form})

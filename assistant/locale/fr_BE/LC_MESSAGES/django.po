@@ -332,7 +332,7 @@ msgstr "Numéro de matricule"
 msgid "mandate_view"
 msgstr "Dossier d'assistant et avis"
 
-msgid "must_enter_supervisor_if_registered"
+msgid "must_enter_supervisor_if_registered_or_in_progress"
 msgstr "Le promoteur doit être identifé"
 
 msgid "my_mandates"
