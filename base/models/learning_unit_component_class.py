@@ -39,6 +39,11 @@ class LearningUnitComponentClass(models.Model):
     learning_unit_component = models.ForeignKey('LearningUnitComponent')
     learning_class_year = models.ForeignKey('LearningClassYear')
 
+    def save(self, *args, **kwargs):
+        if self.learning_unit_component.learning_component_year.id != self.learning_class_year.learning_component_year.id:
+            raise AttributeError("Learning Component Year doesn't exist")
+        super(LearningUnitComponentClass, self).save(*args, **kwargs)
+
     class Meta:
         permissions = (
             ("can_access_learningunitcomponentclass", "Can access learning unit component class"),
