@@ -69,7 +69,7 @@
 			<div class="controls" id="renewal_type">
 				{{ mandate.renewal_type }}
 			</div>
-			{% for structure in mandate.mandatestructure_set.all|dictsort:"structure.type" %}
+			{% for structure in mandate.mandatestructure_set.all|dictsort:"id" %}
 				<label style="padding-top: 15px" for="structures">
 					{% trans structure.structure.type|lower %}</label>
 				<div class="controls" id="structures">{{structure.structure.acronym}}</div>
