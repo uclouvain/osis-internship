@@ -276,7 +276,11 @@ def get_components(a_learning_container_yr, get_classes):
                 learning_class_year_dict = dict()
                 for learning_class_year in learning_class_year_list:
                     learning_unit_usage_by_class = _learning_unit_usage_by_class(learning_class_year)
-                    learning_class_year_dict[learning_class_year] = learning_unit_usage_by_class
+                    if str(ACRONYM_COMPLET_LEARNING_UNIT) in learning_unit_usage_by_class:
+                        using_by_complet_learning_unit= True
+                    else:
+                        using_by_complet_learning_unit = False
+                    learning_class_year_dict[learning_class_year] = [learning_unit_usage_by_class, using_by_complet_learning_unit]
             else:
                 learning_class_year_dict = None
 

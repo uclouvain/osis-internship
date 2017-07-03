@@ -34,6 +34,7 @@ class LearningContainerYearAdmin(admin.ModelAdmin):
     fieldsets = ((None, {'fields': ('learning_container', 'academic_year', 'container_type', 'acronym', 'title',
                                     'title_english', 'language')}),)
     search_fields = ['acronym']
+    list_filter = ('academic_year',)
 
 
 class LearningContainerYear(models.Model):

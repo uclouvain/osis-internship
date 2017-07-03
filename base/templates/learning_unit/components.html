@@ -100,9 +100,9 @@
                                                 <td>/{% if component.learning_component_year.type_letter_acronym %}
                                                     {{component.learning_component_year.type_letter_acronym}}
                                                     {% endif %}{{key.acronym}}</td>
-                                                <td>{{ classe }}</td>
+                                                <td>{{ classe.0 }}</td>
                                                 <td>
-                                                    {% if learning_unit_year.subdivision in classe and learning_unit_year.subdivision != '' %}
+                                                    {% if learning_unit_year.subdivision in classe.0 and learning_unit_year.subdivision != '' or classe.1%}
                                                         {% trans 'yes'%}
                                                     {% else %}
                                                         {% trans 'no'%}
