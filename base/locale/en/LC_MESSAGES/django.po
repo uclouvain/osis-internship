@@ -401,6 +401,9 @@ msgstr "Entities"
 msgid "entity"
 msgstr "Entity"
 
+msgid "versions"
+msgstr "Versions"
+
 msgid "evaluations"
 msgstr "Evaluations"
 
