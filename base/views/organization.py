@@ -59,15 +59,8 @@ def organization_read(request, organization_id):
     organization = mdl.organization.find_by_id(organization_id)
     structures = mdl.structure.find_by_organization(organization)
     organization_addresses = mdl.organization_address.find_by_organization(organization)
-    return layout.render(request, "organization/identification.html", locals())
-
-
-@login_required
-@permission_required('base.can_access_organization', raise_exception=True)
-def organization_campus(request, organization_id):
-    organization = mdl.organization.find_by_id(organization_id)
     campus = mdl.campus.find_by_organization(organization)
-    return layout.render(request, "organization/campus_list.html", locals())
+    return layout.render(request, "organization.html", locals())
 
 
 @login_required
@@ -96,7 +89,7 @@ def organization_save(request, organization_id):
         organization.save()
         return HttpResponseRedirect(reverse('organization_read', kwargs={'organization_id': organization.id}))
     else:
-        return layout.render(request, "organization/organization_form.html", {'organization': organization,
+        return layout.render(request, "organization_form.html", {'organization': organization,
                                                                               'form': form})
 
 
@@ -104,7 +97,7 @@ def organization_save(request, organization_id):
 @permission_required('base.can_access_organization', raise_exception=True)
 def organization_edit(request, organization_id):
     organization = mdl.organization.find_by_id(organization_id)
-    return layout.render(request, "organization/organization_form.html", {'organization': organization,
+    return layout.render(request, "organization_form.html", {'organization': organization,
                                                                           'types': organization_type.ORGANIZATION_TYPE})
 
 
@@ -112,7 +105,7 @@ def organization_edit(request, organization_id):
 @permission_required('base.can_access_organization', raise_exception=True)
 def organization_create(request):
     organization = mdl.organization.Organization()
-    return layout.render(request, "organization/organization_form.html", {'organization': organization,
+    return layout.render(request, "organization_form.html", {'organization': organization,
                                                                           'types': organization_type.ORGANIZATION_TYPE})
 
 
