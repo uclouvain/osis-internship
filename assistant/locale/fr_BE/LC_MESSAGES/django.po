@@ -255,7 +255,7 @@ msgid "fulltime_equivalent"
 msgstr "Equivalent temps plein"
 
 msgid "fulltime_equivalent_percentage"
-msgstr "Pourcentage en équivalent temps plein"
+msgstr "Pourcentage d'occupation"
 
 msgid "function_outside_university"
 msgstr "Fonctions actuelles exercées en dehors de l'Université et % de temps consacré"
