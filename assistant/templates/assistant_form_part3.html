@@ -63,7 +63,8 @@
 			<div class="controls" id="registered_phd">{{ form.inscription }}
 				<span class="error">{{ form.inscription.errors }}</span></div>
 			{% if not supervisor %}
-				<label style="padding-top: 5px" for="search_persons">{% trans 'supervisor' %}</label>
+				<label style="padding-top: 5px" id="label_for_search_persons" for="search_persons">
+					{% trans 'supervisor' %}</label>
 				<div class="ui-widget"><input id="search_persons" name="search_persons" size="100"
 											  placeholder="{% trans 'search_by_email_or_last_name' %}">
 				</div>
@@ -145,52 +146,54 @@ window.onload = function() {
     $('#person_id').empty();
 };
 $(function() {
-  $("#search_persons").autocomplete({
-	source: "/assistants/api/get_persons/",
-    minLength: 3,
-    delay: 100,
-    select: function(event, ui) {
-    	var person_id = ui.item.id;
-    	$( "#person_id" ).val(person_id);
-    	$( "#search_persons" ).val( ui.item.first_name + ', ' + ui.item.last_name + ' (' + ui.item.value + ')' );
-    	$('#id_phd_inscription_date').focus();
-    	return False;
-    	}
-  });
+    $("#search_persons").autocomplete({
+        source: "/assistants/api/get_persons/",
+        minLength: 3,
+        delay: 100,
+        select: function(event, ui) {
+            var person_id = ui.item.id;
+            $("#person_id").val(person_id);
+            $("#search_persons").val(ui.item.first_name + ', ' + ui.item.last_name + ' (' + ui.item.value + ')');
+            $('#id_phd_inscription_date').focus();
+            return False;
+        }
+    });
 });
 
 function Hide() {
-	if(document.getElementById('id_mand-inscription_0').checked == true)
-     {
-         document.getElementById('id_mand-expected_phd_date').style.display = 'none';
-         document.getElementById('id_mand-expected_phd_date').value='';
-         document.getElementById('label_for_expected_phd_date').style.display = 'none';
-         document.getElementById('phd_inscription_date').style.display ='';
- 		document.getElementById('label_for_phd_inscription_date').style.display = 'block';
-
-
-    } else if(document.getElementById('id_mand-inscription_1').checked == true)
-     {
-         document.getElementById('id_mand-expected_phd_date').style.display = 'none';
-         document.getElementById('id_mand-expected_phd_date').value='';
-         document.getElementById('label_for_expected_phd_date').style.display = 'none';
-         document.getElementById('phd_inscription_date').style.display = 'none';
-         document.getElementById('phd_inscription_date').value='';
-         document.getElementById('label_for_phd_inscription_date').style.display = 'none';
-     }
-     else if(document.getElementById('id_mand-inscription_2').checked == true)
-     {
-         document.getElementById('phd_inscription_date').style.display = 'none';
-         document.getElementById('phd_inscription_date').value='';
-         document.getElementById('label_for_phd_inscription_date').style.display = 'none';
-         document.getElementById('id_mand-expected_phd_date').style.display ='';
- 		 document.getElementById('label_for_expected_phd_date').style.display = 'block';
-    }
-    else {
- 		document.getElementById('id_mand-expected_phd_date').style.display ='';
- 		document.getElementById('label_for_expected_phd_date').style.display = 'block';
- 		document.getElementById('phd_inscription_date').style.display ='';
- 		document.getElementById('label_for_phd_inscription_date').style.display = 'block';
+    if (document.getElementById('id_mand-inscription_0').checked == true) {
+        document.getElementById('id_mand-expected_phd_date').style.display = 'none';
+        document.getElementById('id_mand-expected_phd_date').value = '';
+        document.getElementById('label_for_expected_phd_date').style.display = 'none';
+        document.getElementById('phd_inscription_date').style.display = '';
+        document.getElementById('label_for_phd_inscription_date').style.display = 'block';
+        document.getElementById('search_persons').style.display = '';
+        document.getElementById('label_for_search_persons').style.display = 'block';
+    } else if (document.getElementById('id_mand-inscription_1').checked == true) {
+        document.getElementById('id_mand-expected_phd_date').style.display = 'none';
+        document.getElementById('id_mand-expected_phd_date').value = '';
+        document.getElementById('label_for_expected_phd_date').style.display = 'none';
+        document.getElementById('phd_inscription_date').style.display = 'none';
+        document.getElementById('phd_inscription_date').value = '';
+        document.getElementById('label_for_phd_inscription_date').style.display = 'none';
+        document.getElementById('search_persons').style.display = 'none';
+        document.getElementById('search_persons').value = '';
+        document.getElementById('label_for_search_persons').style.display = 'none';
+    } else if (document.getElementById('id_mand-inscription_2').checked == true) {
+        document.getElementById('phd_inscription_date').style.display = 'none';
+        document.getElementById('phd_inscription_date').value = '';
+        document.getElementById('label_for_phd_inscription_date').style.display = 'none';
+        document.getElementById('id_mand-expected_phd_date').style.display = '';
+        document.getElementById('label_for_expected_phd_date').style.display = 'block';
+        document.getElementById('search_persons').style.display = '';
+        document.getElementById('label_for_search_persons').style.display = 'block';
+    } else {
+        document.getElementById('id_mand-expected_phd_date').style.display = '';
+        document.getElementById('label_for_expected_phd_date').style.display = 'block';
+        document.getElementById('phd_inscription_date').style.display = '';
+        document.getElementById('label_for_phd_inscription_date').style.display = 'block';
+        document.getElementById('search_persons').style.display = '';
+        document.getElementById('label_for_search_persons').style.display = 'block';
     }
 }
 
@@ -198,83 +201,83 @@ window.onload = function() {
     Hide();
 };
 
-	$("#pst-form-part3 :input").change(function() {
-   		$("#pst-form-part3").data("changed",true);
-	});
-	$('a').on('click', function(e) {
-	    if ($("#pst-form-part3").data("changed")) {
-		    var choice = confirm("{% trans 'save_before_link' %}");
-		    if (choice == true) {
-			    e.preventDefault();
-			    $('form#pst-form-part3').submit();
-		   }
-	    }
-    });
-    //***************************
-    //File upload
-    //***************************
-    $("#txt_file").on("change", function(){
-       var file = this.files[0];
-       fileName = file.name;
-       $("#hdn_filename").val(fileName);
-    });
-    $('[id^="bt_load_doc_"]').click(function(event) {
-        var target = $(event.target);
-        var id = target.attr("id");
-        var pos = id.indexOf('bt_load_doc_');
-        var description = id.substring(pos+12);
-    });
-    $("#bt_upload_document").click(function(event) {
-        var target = $(event.target);
-        var id = target.attr("id");
-        var form = target.form;
-        var description = $("#hdn_description").val();
-        //Clear existing fields
-        $('#hdn_file_'+$("#txt_file").val()).remove();
-        $('#hdn_file_name_'+description).remove();
-        $('#hdn_file_description_'+description).remove();
-        var fileSelect = document.getElementById('txt_file');
-        var files = fileSelect.files;
-        var file = files[0];
-        var data = new FormData();
-        data.append('description', description);
-        data.append('storage_duration', 0);
-        data.append('content_type',file.type);
-        data.append('filename', $("#txt_file").val());
-        data.append('mandate_id', $("#hdn_current_mandate_id").val());
-        var accepted_types = ['application/pdf'];
-        if(file){
-            if ($.inArray(file.type,accepted_types) >= 0){
-                data.append('file', file);
-                $.ajax({
-                    url: "{% url 'assistant_file_upload' %}",
-                    enctype: 'multipart/form-data',
-                    type: 'POST',
-                    data : data,
-                    processData: false,
-                    contentType: false,
-                    complete: function(xhr, statusText){
-                        if(xhr.status=='0'){
-                            //problem occured
-                            $('#pnl_assistant_error').remove();
-                            var msg_error = jQuery('<div class="alert alert-danger" id="pnl_assistant_error">'+
-                            gettext('error_occured')+'</span>');
-                            $('#pnl_assistant_errors').append(msg_error);
-                            return false;
-                        }
-                        window.location.reload(true);
-                    }
-                });
-                return true;
-            }else{
-                document.getElementById("error_modal_upload").innerHTML = "{% trans 'only_pdf_file'%}";
-                $("#txt_file").val('')
-                $('#pnl_upload_error').remove();
-                event.preventDefault();
-                event.stopImmediatePropagation();
-                return false;
-            }
+$("#pst-form-part3 :input").change(function() {
+    $("#pst-form-part3").data("changed", true);
+});
+$('a').on('click', function(e) {
+    if ($("#pst-form-part3").data("changed")) {
+        var choice = confirm("{% trans 'save_before_link' %}");
+        if (choice == true) {
+            e.preventDefault();
+            $('form#pst-form-part3').submit();
         }
-    });
+    }
+});
+//***************************
+//File upload
+//***************************
+$("#txt_file").on("change", function() {
+    var file = this.files[0];
+    fileName = file.name;
+    $("#hdn_filename").val(fileName);
+});
+$('[id^="bt_load_doc_"]').click(function(event) {
+    var target = $(event.target);
+    var id = target.attr("id");
+    var pos = id.indexOf('bt_load_doc_');
+    var description = id.substring(pos + 12);
+});
+$("#bt_upload_document").click(function(event) {
+    var target = $(event.target);
+    var id = target.attr("id");
+    var form = target.form;
+    var description = $("#hdn_description").val();
+    //Clear existing fields
+    $('#hdn_file_' + $("#txt_file").val()).remove();
+    $('#hdn_file_name_' + description).remove();
+    $('#hdn_file_description_' + description).remove();
+    var fileSelect = document.getElementById('txt_file');
+    var files = fileSelect.files;
+    var file = files[0];
+    var data = new FormData();
+    data.append('description', description);
+    data.append('storage_duration', 0);
+    data.append('content_type', file.type);
+    data.append('filename', $("#txt_file").val());
+    data.append('mandate_id', $("#hdn_current_mandate_id").val());
+    var accepted_types = ['application/pdf'];
+    if (file) {
+        if ($.inArray(file.type, accepted_types) >= 0) {
+            data.append('file', file);
+            $.ajax({
+                url: "{% url 'assistant_file_upload' %}",
+                enctype: 'multipart/form-data',
+                type: 'POST',
+                data: data,
+                processData: false,
+                contentType: false,
+                complete: function(xhr, statusText) {
+                    if (xhr.status == '0') {
+                        //problem occured
+                        $('#pnl_assistant_error').remove();
+                        var msg_error = jQuery('<div class="alert alert-danger" id="pnl_assistant_error">' +
+                            gettext('error_occured') + '</span>');
+                        $('#pnl_assistant_errors').append(msg_error);
+                        return false;
+                    }
+                    window.location.reload(true);
+                }
+            });
+            return true;
+        } else {
+            document.getElementById("error_modal_upload").innerHTML = "{% trans 'only_pdf_file'%}";
+            $("#txt_file").val('')
+            $('#pnl_upload_error').remove();
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            return false;
+        }
+    }
+});
     </script>
 {% endblock %}

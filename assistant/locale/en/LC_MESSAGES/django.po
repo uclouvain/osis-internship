@@ -52,6 +52,9 @@ msgstr "Avis"
 msgid "ASSISTANT"
 msgstr "Assistant"
 
+msgid "at_least_one_learning_unit"
+msgstr "You lust add at least one learning unit in the \"Learning units\" item"
+
 msgid "TEACHING_ASSISTANT"
 msgstr "Teaching assistant"
 
@@ -328,7 +331,7 @@ msgstr "Employee number"
 msgid "mandate_view"
 msgstr "Assistant file and reviews"
 
-msgid "must_enter_supervisor_if_registered"
+msgid "must_enter_supervisor_if_registered_or_in_progress"
 msgstr "You must choose a phd supervisor"
 
 msgid "name_firstame"

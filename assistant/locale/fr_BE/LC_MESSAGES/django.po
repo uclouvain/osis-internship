@@ -88,6 +88,9 @@ msgstr "Type d'assistant·e"
 msgid "assistants"
 msgstr "Assistants"
 
+msgid "at_least_one_learning_unit"
+msgstr "Vous devez ajouter au moins une unité d'enseignement dans la rubrique \"Unités d'enseignement\""
+
 msgid "attendees"
 msgstr "Nombre d'étudiants par série"
 
@@ -252,7 +255,7 @@ msgid "fulltime_equivalent"
 msgstr "Equivalent temps plein"
 
 msgid "fulltime_equivalent_percentage"
-msgstr "Pourcentage en équivalent temps plein"
+msgstr "Pourcentage d'occupation"
 
 msgid "function_outside_university"
 msgstr "Fonctions actuelles exercées en dehors de l'Université et % de temps consacré"
@@ -329,7 +332,7 @@ msgstr "Numéro de matricule"
 msgid "mandate_view"
 msgstr "Dossier d'assistant et avis"
 
-msgid "must_enter_supervisor_if_registered"
+msgid "must_enter_supervisor_if_registered_or_in_progress"
 msgstr "Le promoteur doit être identifé"
 
 msgid "my_mandates"

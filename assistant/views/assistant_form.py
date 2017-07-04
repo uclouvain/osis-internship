@@ -211,9 +211,9 @@ def form_part3_save(request, mandate_id):
         form = AssistantFormPart3(data=request.POST, instance=assistant, prefix='mand')
         if form.is_valid():
             current_assistant = form.save(commit=False)
-            if current_assistant.inscription == assistant_phd_inscription.YES \
+            if current_assistant.inscription != assistant_phd_inscription.NO \
                     and (not request.POST.get('person_id') and current_assistant.supervisor is None):
-                msg = _("must_enter_supervisor_if_registered")
+                msg = _("must_enter_supervisor_if_registered_or_in_progress")
                 form.add_error('inscription', msg)
                 return render(request, "assistant_form_part3.html", {'assistant': assistant, 'mandate': mandate,
                                                                      'files': files, 'form': form})
@@ -236,7 +236,6 @@ def form_part3_save(request, mandate_id):
 @user_passes_test(user_is_assistant_and_procedure_is_open, login_url='access_denied')
 def form_part4_edit(request, mandate_id):
     mandate = assistant_mandate.find_mandate_by_id(mandate_id)
-    current_person = request.user.person
     assistant = mandate.assistant
     files = assistant_document_file.find_by_assistant_mandate_and_description(mandate, document_type.RESEARCH_DOCUMENT)
     form = AssistantFormPart4(initial={'internships': mandate.internships,
@@ -301,11 +300,19 @@ def form_part6_save(request, mandate_id):
     elif request.method == 'POST':
         form = AssistantFormPart6(data=request.POST, instance=mandate, prefix='mand')
         if form.is_valid():
+            errors_in_form = False
             if 'validate_and_submit' in request.POST:
                 current_mandate = form.save(commit=False)
                 if assistant.inscription is None:
+                    errors_in_form = True
                     msg = _("phd_inscription_choice_required")
                     form.add_error(None, msg)
+                learning_units_nbr = tutoring_learning_unit_year.find_by_mandate(current_mandate).count()
+                if learning_units_nbr == 0:
+                    errors_in_form = True
+                    msg = _("at_least_one_learning_unit")
+                    form.add_error(None, msg)
+                if errors_in_form:
                     current_mandate.save()
                     return render(request, "assistant_form_part6.html", {'assistant': assistant, 'mandate': mandate,
                                                                          'form': form})
