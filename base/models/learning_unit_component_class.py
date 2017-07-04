@@ -41,7 +41,7 @@ class LearningUnitComponentClass(models.Model):
 
     def save(self, *args, **kwargs):
         if self.learning_unit_component.learning_component_year.id != self.learning_class_year.learning_component_year.id:
-            raise AttributeError("Learning Component Year doesn't exist")
+            raise AttributeError("Learning Component Year is different in Learning Unit Component and Learning Class Year")
         super(LearningUnitComponentClass, self).save(*args, **kwargs)
 
     class Meta:

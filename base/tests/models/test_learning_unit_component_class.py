@@ -43,16 +43,8 @@ class LearningunitComponentClassTest(TestCase):
         self.learning_unit_component = LearningUnitComponentFactory(learning_component_year=self.learning_component_year)
         self.learning_class_year = LearningClassYearFactory(learning_component_year=self.learning_component_year)
 
-    def test_save_with_link_to_learning_component_year(self):
-        learning_unit_component_class = LearningUnitComponentClassFactory\
-            .build(learning_unit_component=self.learning_unit_component,
-                   learning_class_year=self.learning_class_year)
-        learning_unit_component_class.save()
-        self.assertEqual(mdl.learning_unit_component_class.find_by_id(learning_unit_component_class),
-                         learning_unit_component_class)
-
-    def test_save_without_link_to_learning_component_year(self):
-        with self.assertRaisesMessage(AttributeError, "Learning Component Year doesn't exist"):
+    def test_save_with_differents_learning_component_year(self):
+        with self.assertRaisesMessage(AttributeError, "Learning Component Year is different in Learning Unit Component and Learning Class Year"):
             learning_unit_component = LearningUnitComponentFactory()
             learning_class_year = LearningClassYearFactory()
             learning_unit_component_class = LearningUnitComponentClassFactory\
