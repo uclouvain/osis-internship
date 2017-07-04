@@ -31,6 +31,7 @@ from django.test import TestCase, RequestFactory
 
 from base.models.enums import learning_unit_year_subtypes
 from base.tests.factories.academic_year import AcademicYearFactory
+from base.tests.factories.learning_unit_component_class import LearningUnitComponentClassFactory
 from base.tests.factories.learning_unit_year import LearningUnitYearFactory
 from base.tests.factories.learning_class_year import LearningClassYearFactory
 from base.tests.factories.learning_component_year import LearningComponentYearFactory
@@ -385,3 +386,21 @@ class LearningUnitViewTestCase(TestCase):
                                      learning_component_year=learning_component_yr)
 
         self.assertEqual(learning_unit_view._learning_unit_usage(learning_component_yr), _('complete'))
+
+    def test_learning_unit_usage_by_class_with_complete_LU(self):
+        academic_year = AcademicYearFactory(year=2016)
+        learning_container_yr = LearningContainerYearFactory(academic_year=academic_year,
+                                                             acronym='LBIOL')
+
+        learning_unit_yr_1 = LearningUnitYearFactory(academic_year=academic_year,
+                                                     acronym='LBIOL',
+                                                     learning_container_year=learning_container_yr)
+
+        learning_component_yr = LearningComponentYearFactory(learning_container_year=learning_container_yr)
+
+        learning_unit_component = LearningUnitComponentFactory(learning_unit_year=learning_unit_yr_1,
+                                                               learning_component_year=learning_component_yr)
+        learning_class_year = LearningClassYearFactory(learning_component_year=learning_component_yr)
+        LearningUnitComponentClassFactory(learning_unit_component=learning_unit_component,
+                                          learning_class_year=learning_class_year)
+        self.assertEqual(learning_unit_view._learning_unit_usage_by_class(learning_class_year), _('complete'))
