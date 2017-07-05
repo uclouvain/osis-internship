@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -23,31 +23,16 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
-from django.contrib import admin
+import factory
+import factory.fuzzy
+from base.tests.factories.learning_class_year import LearningClassYearFactory
+from base.tests.factories.learning_unit_component import LearningUnitComponentFactory
+from factory.django import DjangoModelFactory
 
 
-class LearningClassYearAdmin(admin.ModelAdmin):
-    list_display = ('learning_component_year', 'acronym')
-    fieldsets = ((None, {'fields': ('learning_component_year', 'acronym', 'description')}),)
-    search_fields = ['acronym']
-    raw_id_fields = ('learning_component_year',)
-
-
-class LearningClassYear(models.Model):
-    external_id = models.CharField(max_length=100, blank=True, null=True)
-    learning_component_year = models.ForeignKey('LearningComponentYear')
-    acronym = models.CharField(max_length=3)
-    description = models.CharField(max_length=100, blank=True, null=True)
-
+class LearningUnitComponentClassFactory(DjangoModelFactory):
     class Meta:
-        permissions = (
-            ("can_access_learningclassyear", "Can access learning class year"),
-        )
+        model = "base.LearningUnitComponentClass"
 
-
-def find_by_id(learning_class_year_id):
-    return LearningClassYear.objects.get(pk=learning_class_year_id)
-
-def find_by_learning_component_year(a_learning_component_year):
-    return LearningClassYear.objects.filter(learning_component_year=a_learning_component_year).order_by("acronym")
+    learning_unit_component = factory.SubFactory(LearningUnitComponentFactory)
+    learning_class_year = factory.SubFactory(LearningClassYearFactory)
