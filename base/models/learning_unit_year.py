@@ -117,10 +117,10 @@ def find_all_structure_parents(entities_manager):
             .filter(structure=entity_manager.structure) \
             .filter(academic_year=current_academic_years()) \
             .distinct("structure")
+        parents_list = list()
         for learning_unit_year in learning_unit_years:
-            learning_unit_years = list(chain(learning_unit_years,
-                                             find_all_structure_children(learning_unit_year.structure)))
-        learning_unit_years_list = list(chain(learning_unit_years_list, learning_unit_years))
+            parents_list = list(chain(parents_list, find_all_structure_children(learning_unit_year.structure)))
+        learning_unit_years_list = list(chain(learning_unit_years_list, parents_list))
     return learning_unit_years_list
 
 
@@ -129,8 +129,8 @@ def find_all_structure_children(structure):
         .filter(structure__part_of=structure) \
         .filter(academic_year=current_academic_years()) \
         .distinct("structure")
+    children_list = list()
     for learning_unit_year in learning_unit_years:
         if learning_unit_year.structure.part_of:
-            learning_unit_years = list(chain(learning_unit_years,
-                                             find_all_structure_children(learning_unit_year.structure)))
-    return learning_unit_years
+            children_list = list(chain(children_list, find_all_structure_children(learning_unit_year.structure)))
+    return children_list
