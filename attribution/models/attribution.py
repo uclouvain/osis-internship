@@ -179,10 +179,10 @@ def find_all_distinct_parents(entities_manager):
             .filter(learning_unit_year__academic_year=current_academic_years()) \
             .select_related("learning_unit_year__structure") \
             .distinct("learning_unit_year__structure")
+        parents_list = list()
         for attribution in attributions_list:
-            attributions_list = list(chain(attributions_list,
-                                           find_all_distinct_children(attribution.learning_unit_year.structure)))
-        attributions = list(chain(attributions, attributions_list))
+            parents_list = list(chain(parents_list, find_all_distinct_children(attribution.learning_unit_year.structure)))
+        attributions = list(chain(attributions, parents_list))
     return attributions
 
 
@@ -192,11 +192,11 @@ def find_all_distinct_children(structure):
         .filter(learning_unit_year__academic_year=current_academic_years()) \
         .select_related("learning_unit_year__structure") \
         .distinct("learning_unit_year__structure")
+    children_list = list()
     for attribution in attributions_list:
         if attribution.learning_unit_year.structure.part_of:
-            attributions_list = list(chain(attributions_list,
-                                           find_all_distinct_children(attribution.learning_unit_year.structure)))
-    return attributions_list
+            children_list = list(chain(children_list, find_all_distinct_children(attribution.learning_unit_year.structure)))
+    return children_list
 
 
 def find_all_responsible_by_learning_unit_year(learning_unit_year):
