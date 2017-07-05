@@ -1471,8 +1471,8 @@ msgstr "The start's date of '%s' of the academic calendar can't be higher than %
 msgid "component_type"
 msgstr "Component type"
 
-msgid "nominal_quater"
-msgstr "Nominal quater"
+msgid "nominal_quarter"
+msgstr "Nominal quarter"
 
 msgid "vol_q1"
 msgstr "Vol. q1"
@@ -1663,8 +1663,8 @@ msgstr "Vol. Q1"
 msgid "volume_remaining"
 msgstr "Vol. Q2"
 
-msgid "learning_unit_quater"
-msgstr "LU quater"
+msgid "learning_unit_quarter"
+msgstr "LU quarter"
 
 msgid "composition"
 msgstr "Composition"

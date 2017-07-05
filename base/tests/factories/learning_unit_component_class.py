@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -23,27 +23,16 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
-from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
+import factory
+import factory.fuzzy
+from base.tests.factories.learning_class_year import LearningClassYearFactory
+from base.tests.factories.learning_unit_component import LearningUnitComponentFactory
+from factory.django import DjangoModelFactory
 
 
-class CampusAdmin(SerializableModelAdmin):
-    list_display = ('name', 'organization', 'changed')
-    list_filter = ('organization',)
-    fieldsets = ((None, {'fields': ('name', 'organization')}),)
-    search_fields = ['name', 'organization__name']
+class LearningUnitComponentClassFactory(DjangoModelFactory):
+    class Meta:
+        model = "base.LearningUnitComponentClass"
 
-
-class Campus(SerializableModel):
-    external_id = models.CharField(max_length=100, blank=True, null=True)
-    changed = models.DateTimeField(null=True, auto_now=True)
-    name = models.CharField(max_length=100, blank=True, null=True)
-    organization = models.ForeignKey('Organization')
-
-    def __str__(self):
-        return u"%s" % self.name
-
-
-def find_by_organization(organization):
-    return Campus.objects.filter(organization=organization)\
-                         .order_by('name')
+    learning_unit_component = factory.SubFactory(LearningUnitComponentFactory)
+    learning_class_year = factory.SubFactory(LearningClassYearFactory)

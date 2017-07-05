@@ -276,7 +276,11 @@ def get_components(a_learning_container_yr, get_classes):
                 learning_class_year_dict = dict()
                 for learning_class_year in learning_class_year_list:
                     learning_unit_usage_by_class = _learning_unit_usage_by_class(learning_class_year)
-                    learning_class_year_dict[learning_class_year] = learning_unit_usage_by_class
+                    if str(ACRONYM_COMPLET_LEARNING_UNIT) in learning_unit_usage_by_class:
+                        using_by_complet_learning_unit = True
+                    else:
+                        using_by_complet_learning_unit = False
+                    learning_class_year_dict[learning_class_year] = [learning_unit_usage_by_class, using_by_complet_learning_unit]
             else:
                 learning_class_year_dict = None
 
@@ -435,15 +439,6 @@ def volume_distribution(learning_unit_yr):
 
 def _learning_unit_usage(a_learning_component_year):
     learning_unit_component = mdl.learning_unit_component.find_by_learning_component_year(a_learning_component_year)
-    return get_learning_unit_usage_list(learning_unit_component)
-
-
-def _learning_unit_usage_by_class(a_learning_class_year):
-    learning_unit_component = mdl.learning_unit_component.find_by_learning_class_year(a_learning_class_year)
-    return get_learning_unit_usage_list(learning_unit_component)
-
-
-def get_learning_unit_usage_list(learning_unit_component):
     ch = ""
     separator = ""
     for index, l in enumerate(learning_unit_component):
@@ -452,6 +447,20 @@ def get_learning_unit_usage_list(learning_unit_component):
         acronym = ACRONYM_COMPLET_LEARNING_UNIT
         if l.learning_unit_year.subdivision:
             acronym = l.learning_unit_year.subdivision
+        ch = "{}{}{}".format(ch, separator, acronym)
+    return ch
+
+
+def _learning_unit_usage_by_class(a_learning_class_year):
+    learning_unit_component_class = mdl.learning_unit_component_class.find_by_learning_class_year(a_learning_class_year)
+    ch = ""
+    separator = ""
+    for index, l in enumerate(learning_unit_component_class):
+        if index == 1:
+            separator = ", "
+        acronym = ACRONYM_COMPLET_LEARNING_UNIT
+        if l.learning_unit_component.learning_unit_year.subdivision:
+            acronym = l.learning_unit_component.learning_unit_year.subdivision
         ch = "{}{}{}".format(ch, separator, acronym)
     return ch
 
