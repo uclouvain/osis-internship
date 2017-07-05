@@ -1,0 +1,65 @@
+{% load staticfiles %}
+{% load i18n %}
+{% load components_classes %}
+{% comment "License" %}
+* OSIS stands for Open Student Information System. It's an application
+* designed to manage the core business of higher education institutions,
+* such as universities, faculties, institutes and professional schools.
+* The core business involves the administration of students, teachers,
+* courses, programs and so on.
+*
+* Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* A copy of this license - GNU General Public License - is available
+* at the root of the source code of this program.  If not,
+* see http://www.gnu.org/licenses/.
+{% endcomment %}
+<br>
+<div class="panel panel-default">
+    <div class="panel-heading">{% trans 'composition' %}</div>
+    <table class="table">
+        <thead>
+        <th>{% trans 'components'%}</th>
+        <th>{% trans 'code'%}</th>
+        <th>{% trans 'nominal_volume' %}</th>
+        <th>{% trans 'nominal_quarter' %}</th>
+        <th>{% trans 'volume_partial'%}</th>
+        <th>{% trans 'volume_remaining'%}</th>
+        <th>{% trans 'planned_classrooms'%}</th>
+        <th>{% trans 'real_classes'%}</th>
+        </thead>
+        <tbody>
+        {% for component in components %}
+        <tr>
+            <td>{% if component.learning_component_year.type %}
+                {% trans component.learning_component_year.type %}
+                {% endif %}
+            </td>
+            <td>/{{ component.learning_component_year.acronym  | default_if_none:'' }}</td>
+            <td>{{ component.volumes.hourly_volume | default_if_none:'0'}}</td>
+            <td>
+                {%if component.volumes.total_volume%}
+                {% trans component.volumes.total_volume  %}
+                {%else%}
+                0
+                {% endif %}
+            </td>
+            <td>{{ component.volumes.volume_partial | default_if_none:'0'}}</td>
+            <td>{{ component.volumes.volume_remaining | default_if_none:'0'}}</td>
+            <td>{{ component.learning_component_year.planned_classes| default_if_none:'0' }}</td>
+            <td><span class="fa fa-circle {{component.learning_component_year.planned_classes |get_css_class:component.learning_component_year.real_classes  }}"></span> {{ component.learning_component_year.real_classes| default_if_none:'0' }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>

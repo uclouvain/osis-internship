@@ -38,6 +38,7 @@ urlpatterns = [
     url(r'^access_denied$', home.access_denied, name='access_denied'),
     url(r'^api/get_persons/', get_persons.get_persons, name='get_persons'),
 
+
     url(r'^assistant/', include([
         url(r'^$', assistant.AssistantMandatesListView.as_view(), name='assistant_mandates'),
         url(r'^document_file/', include([
@@ -53,6 +54,8 @@ urlpatterns = [
                 url(r'^save/$', assistant_form.form_part1_save, name='form_part1_save'),
             ])),
             url(r'^part2/', include([
+                url(r'^get_learning_units_year/', assistant_form.get_learning_units_year,
+                    name='get_learning_units_year'),
                 url(r'^(?P<mandate_id>\d+)/$', assistant.AssistantLearningUnitsListView.as_view(),
                     name='mandate_learning_units'),
                 url(r'^(?P<mandate_id>\d+)/add/$', assistant_form.tutoring_learning_unit_add,
@@ -61,7 +64,7 @@ urlpatterns = [
                     name='tutoring_learning_unit_delete'),
                 url(r'^(?P<tutoring_learning_unit_id>\d+)/edit/$', assistant_form.tutoring_learning_unit_edit,
                     name='tutoring_learning_unit_edit'),
-                url(r'^(?P<mandate_id>\d+)/save/$', assistant_form.tutoring_learning_unit_save,
+                url(r'^save/$', assistant_form.tutoring_learning_unit_save,
                     name='tutoring_learning_unit_save'),
             ])),
             url(r'^part3/(?P<mandate_id>\d+)/', include([

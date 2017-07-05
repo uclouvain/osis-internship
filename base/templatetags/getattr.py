@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -23,14 +23,27 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.test import TestCase
-from base.models.application_notice import find_current_notice
-from base.tests.factories.application_notice import ApplicationNoticeFactory
+from django import template
+register = template.Library()
 
+@register.filter
+def getattr (obj, args):
+    """ Try to get an attribute from an object.
 
-class ApplicationNoticeTest(TestCase):
-    def test_find_current_notice(self):
-        tmp_application_notice = ApplicationNoticeFactory()
-        db_application_notice = find_current_notice()
-        self.assertIsNotNone(db_application_notice)
-        self.assertEqual(db_application_notice, tmp_application_notice)
+    Example: {% if block|getattr:"editable,True" %}
+
+    Beware that the default is always a string, if you want this
+    to return False, pass an empty second argument:
+    {% if block|getattr:"editable," %}
+    """
+    args = args.split(',')
+    if len(args) == 1:
+        (attribute, default) = [args[0], ""]
+    else:
+        (attribute, default) = args
+    try:
+        return obj.__getattribute__(attribute)
+    except AttributeError:
+         return  obj.__dict__.get(attribute, default)
+    except:
+        return default

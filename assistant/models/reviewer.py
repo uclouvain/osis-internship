@@ -86,7 +86,11 @@ def find_by_role(role):
     return Reviewer.objects.filter(role=role)
 
 
-def can_delegate_to_structure(reviewer, structure):
+def find_by_structure_and_role(struct, role):
+    return Reviewer.objects.filter(structure=struct, role=role)
+
+
+def can_delegate_to_structure(reviewer, struct):
     """
     Détermine si le reviewer passé en argmument peut déléguer son rôle pour la structure.
     Pour pouvoir déléguer :
@@ -96,9 +100,9 @@ def can_delegate_to_structure(reviewer, structure):
     """
     if reviewer.role != reviewer_role.SUPERVISION and reviewer.role != reviewer_role.RESEARCH:
         return False
-    if structure == reviewer.structure:
+    if struct == reviewer.structure:
         return True
-    if structure.part_of == reviewer.structure:
+    if struct.part_of == reviewer.structure:
         return True
     else:
         return False

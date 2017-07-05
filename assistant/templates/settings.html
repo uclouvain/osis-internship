@@ -37,7 +37,7 @@
 {% endblock %}
 {% block content %}
 <div class="page-header">
-    <h3>{% trans 'assistantship_mandate_renewal' %} {{ year|add:1 }}</h3>
+    <h4>{% trans 'assistant_mandates_renewals' %} {{ year|add:1 }}</h4>
 </div>
 <div class="panel panel-default">
     <div class="panel-body">
@@ -53,22 +53,22 @@
 		    </div>
 	    </div><p>
         <div class="form-group" style="padding-top: 5px;">
-            {{ form.starting_date.label_tag }}
+            {% trans 'access_starting_date' %}
             <div class="controls">{{ form.starting_date }}</div>
             <span class="error">{{ form.starting_date.errors }}</span>
         </div>
         <div class="form-group" style="padding-top: 5px;">
-            {{ form.ending_date.label_tag }}
+            {% trans 'access_ending_date' %}
             <div class="controls">{{ form.ending_date }}</div>
             <span class="error">{{ form.ending_date.errors }}</span>
         </div>
         <div class="form-group" style="padding-top: 5px;">
-            {{ form.assistants_starting_date.label_tag }}
+            {% trans 'access_assistants_starting_date' %}
             <div class="controls">{{ form.assistants_starting_date }}</div>
             <span class="error">{{ form.assistants_starting_date.errors }}</span>
         </div>
         <div class="form-group" style="padding-top: 5px;">
-            {{ form.assistants_ending_date.label_tag }}
+            {% trans 'access_assistants_ending_date' %}
             <div class="controls">{{ form.assistants_ending_date }}</div>
             <span class="error">{{ form.assistants_ending_date.errors }}</span>
         </div>

@@ -228,7 +228,7 @@
         {% endif %}
         {% if experimental_phase %}
             <div class="alert alert-warning">
-                <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{% trans 'experimental_phase' %}
+                <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{% trans 'experimental_phase' %}.
             </div>
         {% endif %}
         {% block content %}
@@ -258,6 +258,8 @@
     <script src="{% static 'js/osis.js' %}?version={{ js }}"></script>
     <script type="text/javascript" src="{% static 'js/jquery.dataTables.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/dataTables.bootstrap.min.js' %}"></script>
+    <script type="text/javascript" src="{% static "ckeditor/ckeditor-init.js" %}"></script>
+    <script type="text/javascript" src="{% static "ckeditor/ckeditor/ckeditor.js" %}"></script>
     {% block script %}
     {% endblock %}
     {% analytical_body_bottom %}

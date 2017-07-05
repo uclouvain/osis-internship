@@ -27,6 +27,7 @@ from dissertation.models.proposition_dissertation import PropositionDissertation
 from dissertation.models.proposition_offer import PropositionOffer
 from dissertation.tests.models import test_proposition_role
 
+
 def create_proposition_dissertation(title, adviser, person, offer_proposition = None, collaboration="FORBIDDEN", type="OTH",
                                     level="SPECIFIC", max_number_student=1 ):
     proposition = PropositionDissertation.objects.create(title=title, author= adviser,

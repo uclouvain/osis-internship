@@ -24,6 +24,9 @@
 #
 ##############################################################################
 from django.contrib.auth.decorators import login_required, permission_required
+from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect
+
 from base import models as mdl
 from base.forms.organization import OrganizationForm
 from base.models.enums import organization_type
@@ -56,9 +59,8 @@ def organization_read(request, organization_id):
     organization = mdl.organization.find_by_id(organization_id)
     structures = mdl.structure.find_by_organization(organization)
     organization_addresses = mdl.organization_address.find_by_organization(organization)
-    return layout.render(request, "organization.html", {'organization': organization,
-                                                        'organization_addresses': organization_addresses,
-                                                        'structures': structures})
+    campus = mdl.campus.find_by_organization(organization)
+    return layout.render(request, "organization.html", locals())
 
 
 @login_required
@@ -85,11 +87,10 @@ def organization_save(request, organization_id):
 
     if form.is_valid():
         organization.save()
-        return organization_read(request, organization.id)
+        return HttpResponseRedirect(reverse('organization_read', kwargs={'organization_id': organization.id}))
     else:
-
         return layout.render(request, "organization_form.html", {'organization': organization,
-                                                                 'form': form})
+                                                                              'form': form})
 
 
 @login_required
@@ -97,7 +98,7 @@ def organization_save(request, organization_id):
 def organization_edit(request, organization_id):
     organization = mdl.organization.find_by_id(organization_id)
     return layout.render(request, "organization_form.html", {'organization': organization,
-                                                             'types': organization_type.ORGANIZATION_TYPE})
+                                                                          'types': organization_type.ORGANIZATION_TYPE})
 
 
 @login_required
@@ -105,7 +106,7 @@ def organization_edit(request, organization_id):
 def organization_create(request):
     organization = mdl.organization.Organization()
     return layout.render(request, "organization_form.html", {'organization': organization,
-                                                             'types': organization_type.ORGANIZATION_TYPE})
+                                                                          'types': organization_type.ORGANIZATION_TYPE})
 
 
 @login_required

@@ -23,20 +23,23 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import datetime
 import factory
 import factory.fuzzy
-from django.utils import timezone
+import string
+import operator
+from base.models.enums import component_type
+from base.tests.factories.learning_unit_year import LearningUnitYearFactory
+from base.tests.factories.learning_component_year import LearningComponentYearFactory
+from factory.django import DjangoModelFactory
 
 
-class ApplicationNoticeFactory(factory.DjangoModelFactory):
+class LearningUnitComponentFactory(DjangoModelFactory):
     class Meta:
-        model = 'base.ApplicationNotice'
+        model = "base.LearningUnitComponent"
 
-    subject = factory.Sequence(lambda n: 'Application Notice - %d' % n)
-    notice = factory.LazyAttribute(lambda obj: 'Fake description of application notice %s' % obj.subject)
-    start_publish = factory.LazyAttribute(lambda obj: datetime.datetime(timezone.now().year, 1, 1,
-                                                                        tzinfo=timezone.get_current_timezone()))
-    stop_publish = factory.LazyAttribute(lambda obj: datetime.datetime(timezone.now().year+1, 12, 30,
-                                                                       tzinfo=timezone.get_current_timezone()))
+    external_id = factory.fuzzy.FuzzyText(length=10, chars=string.digits)
 
+    learning_unit_year = factory.SubFactory(LearningUnitYearFactory)
+    learning_component_year = factory.SubFactory(LearningComponentYearFactory)
+    type = factory.Iterator(component_type.COMPONENT_TYPES, getter=operator.itemgetter(0))
+    duration = factory.fuzzy.FuzzyDecimal(9)

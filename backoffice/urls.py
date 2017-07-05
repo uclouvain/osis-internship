@@ -55,6 +55,7 @@ if 'assessments' in settings.INSTALLED_APPS:
 
 handler404 = 'base.views.common.page_not_found'
 handler403 = 'base.views.common.access_denied'
+handler405 = 'base.views.common.method_not_allowed'
 handler500 = 'base.views.common.server_error'
 
 admin.site.site_header = 'OSIS'

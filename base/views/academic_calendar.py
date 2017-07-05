@@ -23,11 +23,48 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+import datetime
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required, permission_required
 from base.forms.academic_calendar import AcademicCalendarForm
+from base.models.enums import academic_calendar_type
 from base import models as mdl
 from . import layout
+
+
+def _build_gantt_json(academic_calendar_list):
+    today = datetime.date.today()
+    academic_calendar_data = []
+    for calendar in academic_calendar_list:
+        if calendar.start_date is None or calendar.end_date is None:
+            continue
+        if today <= calendar.start_date:
+            progress = 0
+        elif calendar.start_date < today < calendar.end_date:
+            progress = (today - calendar.start_date) / (calendar.end_date - calendar.start_date)
+        else:
+            progress = 1
+
+        data = {
+            'id': calendar.pk,
+            'text': calendar.title,
+            'start_date': calendar.start_date.strftime('%d-%m-%Y'),
+            'end_date': calendar.end_date.strftime('%d-%m-%Y'),
+            'color': academic_calendar_type.ACADEMIC_CALENDAR_TYPES_COLORS.get(calendar.reference, '#337ab7'),
+            'progress': progress
+        }
+        academic_calendar_data.append(data)
+    return {
+        "data": academic_calendar_data
+    }
+
+
+def _get_undated_calendars(academic_calendar_list):
+    undated_calendars_list = []
+    for calendar in academic_calendar_list:
+        if calendar.start_date is None or calendar.end_date is None:
+            undated_calendars_list.append(calendar)
+    return undated_calendars_list
 
 
 @login_required
@@ -35,14 +72,16 @@ from . import layout
 def academic_calendars(request):
     academic_year = None
     academic_years = mdl.academic_year.find_academic_years()
-
     academic_year_calendar = mdl.academic_year.current_academic_year()
+
     if academic_year_calendar:
         academic_year = academic_year_calendar.id
+
     academic_calendar_list = mdl.academic_calendar.find_academic_calendar_by_academic_year(academic_year)
-    return layout.render(request, "academic_calendars.html", {'academic_year': academic_year,
-                                                              'academic_years': academic_years,
-                                                              'academic_calendars': academic_calendar_list})
+    academic_calendar_json = _build_gantt_json(academic_calendar_list)
+    undated_calendars_list = _get_undated_calendars(academic_calendar_list)
+
+    return layout.render(request, "academic_calendars.html", locals())
 
 
 @login_required
@@ -56,12 +95,12 @@ def academic_calendars_search(request):
         if academic_year_calendar:
             academic_year = academic_year_calendar.id
 
-    query = mdl.academic_calendar.find_academic_calendar_by_academic_year(academic_year)
+    academic_year = int(academic_year)
+    academic_calendar_list = mdl.academic_calendar.find_academic_calendar_by_academic_year(academic_year)
+    academic_calendar_json = _build_gantt_json(academic_calendar_list)
+    undated_calendars_list = _get_undated_calendars(academic_calendar_list)
 
-    return layout.render(request, "academic_calendars.html", {
-        'academic_year': int(academic_year),
-        'academic_years': academic_years,
-        'academic_calendars': query})
+    return layout.render(request, "academic_calendars.html", locals())
 
 
 @login_required

@@ -25,15 +25,17 @@
 ##############################################################################
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.urlresolvers import reverse
+from django.http import JsonResponse
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.translation import ugettext as _
+from base.models import person_address, person, learning_unit_year
+from base.models.learning_unit_year import search
 from assistant.models import *
 from assistant.utils.send_email import send_message
 from assistant.forms import *
 from assistant.models.enums import document_type
-from base.models import person_address, person
 from assistant.models.enums import assistant_mandate_state, assistant_phd_inscription
 
 
@@ -49,6 +51,23 @@ def user_is_assistant_and_procedure_is_open(user):
             return False
     except ObjectDoesNotExist:
         return False
+
+
+#@user_passes_test(user_is_assistant_and_procedure_is_open, login_url='access_denied')
+def get_learning_units_year(request):
+    if request.is_ajax() and 'term' in request.GET:
+        q = request.GET.get('term')
+        learning_units_year = search(acronym=q)[:50]
+        response_data = []
+        for learning_unit_year in learning_units_year:
+            response_data.append({'value': learning_unit_year.acronym,
+                                  'title': learning_unit_year.title,
+                                  'academic_year': str(learning_unit_year.academic_year),
+                                  'id': learning_unit_year.id
+                                  })
+    else:
+        response_data = []
+    return JsonResponse(response_data, safe=False)
 
 
 @user_passes_test(user_is_assistant_and_procedure_is_open, login_url='access_denied')
@@ -94,37 +113,59 @@ def tutoring_learning_unit_add(request, mandate_id):
 
 @login_required
 def tutoring_learning_unit_edit(request, tutoring_learning_unit_id=None):
-    edited_learning_unit_year = mdl.tutoring_learning_unit_year.find_by_id(tutoring_learning_unit_id)
-    this_academic_year = edited_learning_unit_year.learning_unit_year.academic_year
-    mandate_id = edited_learning_unit_year.mandate_id
+    edited_tutoring_learning_unit_year = mdl.tutoring_learning_unit_year.find_by_id(tutoring_learning_unit_id)
+    mandate_id = edited_tutoring_learning_unit_year.mandate_id
     mandate = assistant_mandate.find_mandate_by_id(mandate_id)
-    form = TutoringLearningUnitForm(initial={'mandate_id': edited_learning_unit_year.mandate_id,
-                                             'tutoring_learning_unit_year_id': edited_learning_unit_year.id,
-                                             'learning_unit_year': edited_learning_unit_year.learning_unit_year.acronym,
-                                             'sessions_duration': edited_learning_unit_year.sessions_duration,
-                                             'sessions_number': edited_learning_unit_year.sessions_number,
-                                             'series_number': edited_learning_unit_year.series_number,
-                                             'face_to_face_duration': edited_learning_unit_year.face_to_face_duration,
-                                             'attendees': edited_learning_unit_year.attendees,
-                                             'preparation_duration': edited_learning_unit_year.preparation_duration,
-                                             'exams_supervision_duration':
-                                                 edited_learning_unit_year.exams_supervision_duration,
-                                             'others_delivery': edited_learning_unit_year.others_delivery,
-                                             'academic_year': this_academic_year.id})
-    return render(request, "tutoring_learning_unit_year.html", {'form': form,
-                                                                'assistant_type': mandate.assistant_type,
-                                                                'mandate_id': mandate_id})
+    search_learning_units_year = edited_tutoring_learning_unit_year.learning_unit_year.acronym + \
+        ' (' + str(edited_tutoring_learning_unit_year.learning_unit_year.academic_year) + ')'
+
+    form = TutoringLearningUnitForm(
+        initial={
+            'mandate_id': edited_tutoring_learning_unit_year.mandate_id,
+            'tutoring_learning_unit_year_id': edited_tutoring_learning_unit_year.id,
+            'sessions_duration': edited_tutoring_learning_unit_year.sessions_duration,
+            'sessions_number': edited_tutoring_learning_unit_year.sessions_number,
+            'series_number': edited_tutoring_learning_unit_year.series_number,
+            'face_to_face_duration': edited_tutoring_learning_unit_year.face_to_face_duration,
+            'attendees': edited_tutoring_learning_unit_year.attendees,
+            'preparation_duration': edited_tutoring_learning_unit_year.preparation_duration,
+            'exams_supervision_duration': edited_tutoring_learning_unit_year.exams_supervision_duration,
+            'others_delivery': edited_tutoring_learning_unit_year.others_delivery
+        })
+    return render(request, "tutoring_learning_unit_year.html",
+                  {
+                      'form': form,
+                      'assistant_type': mandate.assistant_type,
+                      'mandate_id': mandate_id,
+                      'learning_unit_year_id': edited_tutoring_learning_unit_year.learning_unit_year.id,
+                      'search_learning_units_year': search_learning_units_year
+                  })
 
 
 @login_required
-def tutoring_learning_unit_save(request, mandate_id):
-    form = TutoringLearningUnitForm(data=request.POST)
-    if form.is_valid():
-        form.save()
-        return HttpResponseRedirect(reverse('mandate_learning_units', kwargs={'mandate_id': mandate_id}))
-    else:
-        return render(request, "tutoring_learning_unit_year.html", {'form': form,
-                                                                    'mandate_id': mandate_id})
+def tutoring_learning_unit_save(request):
+    if request.method == 'POST':
+        tutoring_learning_unit_year_id = request.POST.get('tutoring_learning_unit_year_id')
+        mandate_id = request.POST.get('mandate_id')
+        learning_unit_year_id = request.POST.get('learning_unit_year_id')
+        if tutoring_learning_unit_year_id:
+            current_tutoring_learning_unit = mdl.tutoring_learning_unit_year.find_by_id(tutoring_learning_unit_year_id)
+        else:
+            current_tutoring_learning_unit = None
+        form = TutoringLearningUnitForm(data=request.POST, instance=current_tutoring_learning_unit)
+        if form.is_valid():
+            this_mandate = assistant_mandate.find_mandate_by_id(mandate_id)
+            current_tutoring_learning_unit = form.save(commit=False)
+            if not learning_unit_year_id:
+                msg = _("must_enter_learning_unit_year")
+                form.add_error(None, msg)
+            else:
+                this_learning_unit_year = learning_unit_year.find_by_id(learning_unit_year_id)
+                current_tutoring_learning_unit.learning_unit_year = this_learning_unit_year
+                current_tutoring_learning_unit.mandate = this_mandate
+                current_tutoring_learning_unit.save()
+                return HttpResponseRedirect(reverse('mandate_learning_units', kwargs={'mandate_id': mandate_id}))
+        return render(request, "tutoring_learning_unit_year.html", {'form': form, 'mandate_id': mandate_id})
 
 
 @login_required
@@ -170,9 +211,9 @@ def form_part3_save(request, mandate_id):
         form = AssistantFormPart3(data=request.POST, instance=assistant, prefix='mand')
         if form.is_valid():
             current_assistant = form.save(commit=False)
-            if current_assistant.inscription == assistant_phd_inscription.YES \
+            if current_assistant.inscription != assistant_phd_inscription.NO \
                     and (not request.POST.get('person_id') and current_assistant.supervisor is None):
-                msg = _("must_enter_supervisor_if_registered")
+                msg = _("must_enter_supervisor_if_registered_or_in_progress")
                 form.add_error('inscription', msg)
                 return render(request, "assistant_form_part3.html", {'assistant': assistant, 'mandate': mandate,
                                                                      'files': files, 'form': form})
@@ -195,11 +236,8 @@ def form_part3_save(request, mandate_id):
 @user_passes_test(user_is_assistant_and_procedure_is_open, login_url='access_denied')
 def form_part4_edit(request, mandate_id):
     mandate = assistant_mandate.find_mandate_by_id(mandate_id)
-    person = request.user.person
     assistant = mandate.assistant
     files = assistant_document_file.find_by_assistant_mandate_and_description(mandate, document_type.RESEARCH_DOCUMENT)
-    if person != assistant.person or mandate.state != assistant_mandate_state.TRTS:
-        return HttpResponseRedirect(reverse('assistant_mandates'))
     form = AssistantFormPart4(initial={'internships': mandate.internships,
                                        'conferences': mandate.conferences,
                                        'publications': mandate.publications,
@@ -262,11 +300,19 @@ def form_part6_save(request, mandate_id):
     elif request.method == 'POST':
         form = AssistantFormPart6(data=request.POST, instance=mandate, prefix='mand')
         if form.is_valid():
+            errors_in_form = False
             if 'validate_and_submit' in request.POST:
                 current_mandate = form.save(commit=False)
                 if assistant.inscription is None:
+                    errors_in_form = True
                     msg = _("phd_inscription_choice_required")
                     form.add_error(None, msg)
+                learning_units_nbr = tutoring_learning_unit_year.find_by_mandate(current_mandate).count()
+                if learning_units_nbr == 0:
+                    errors_in_form = True
+                    msg = _("at_least_one_learning_unit")
+                    form.add_error(None, msg)
+                if errors_in_form:
                     current_mandate.save()
                     return render(request, "assistant_form_part6.html", {'assistant': assistant, 'mandate': mandate,
                                                                          'form': form})

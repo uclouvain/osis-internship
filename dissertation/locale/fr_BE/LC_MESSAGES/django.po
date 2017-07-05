@@ -691,6 +691,9 @@ msgstr "Programme"
 msgid "offer_propositions"
 msgstr "Programmes"
 
+msgid "offer_proposition_group"
+msgstr "Facultés/groupes d'offer"
+
 msgid "offer_year_start"
 msgstr "Programme/Année de début"
 
@@ -822,6 +825,9 @@ msgstr "Voir les mémoires en attente"
 
 msgid "select_at_least_one_item"
 msgstr "Veuillez choisir au moins un élément"
+
+msgid "select_course_programs"
+msgstr "Cochez les programmes de cours en relation avec ce sujet"
 
 msgid "select_program_first"
 msgstr "Choisissez d'abord le Programme/Année de début"

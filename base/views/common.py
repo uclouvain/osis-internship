@@ -31,13 +31,19 @@ from django.contrib.auth import authenticate, logout
 from django.shortcuts import redirect
 from django.utils import translation
 from . import layout
-from base.models import person as person_mdl, academic_year as academic_year_mdl, \
-    academic_calendar as academic_calendar_mdl, native as native_mdl
+from base import models as mdl
+from base.models.utils import native
 
 
 def page_not_found(request):
     response = layout.render(request, 'page_not_found.html', {})
     response.status_code = 404
+    return response
+
+
+def method_not_allowed(request):
+    response = layout.render(request, 'method_not_allowed.html', {})
+    response.status_code = 405
     return response
 
 
@@ -76,7 +82,7 @@ def login(request):
         username = request.POST['username']
         password = request.POST['password']
         user = authenticate(username=username, password=password)
-        person = person_mdl.find_by_user(user)
+        person = mdl.person.find_by_user(user)
         # ./manage.py createsuperuser (in local) doesn't create automatically a Person associated to User
         if person:
             if person.language:
@@ -90,12 +96,12 @@ def login(request):
 
 @login_required
 def home(request):
-    academic_yr = academic_year_mdl.current_academic_year()
+    academic_yr = mdl.academic_year.current_academic_year()
     calendar_events = None
     if academic_yr:
-        calendar_events = academic_calendar_mdl.find_academic_calendar_by_academic_year_with_dates(academic_yr.id)
+        calendar_events = mdl.academic_calendar.find_academic_calendar_by_academic_year_with_dates(academic_yr.id)
     return layout.render(request, "home.html", {'academic_calendar': calendar_events,
-                                                'highlight': academic_calendar_mdl.find_highlight_academic_calendar()})
+                                                'highlight': mdl.academic_calendar.find_highlight_academic_calendar()})
 
 
 def log_out(request):
@@ -131,7 +137,7 @@ def data(request):
 @user_passes_test(lambda u: u.is_staff and u.has_perm('base.is_administrator'))
 def data_maintenance(request):
     sql_command = request.POST.get('sql_command')
-    results = native_mdl.execute(sql_command)
+    results = native.execute(sql_command)
     return layout.render(request, "admin/data_maintenance.html", {'section': 'data_maintenance',
                                                                   'sql_command': sql_command,
                                                                   'results': results})
