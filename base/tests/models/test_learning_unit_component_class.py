@@ -23,61 +23,39 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import datetime
 from django.test import TestCase
-from django.utils import timezone
-from base.models.learning_container import LearningContainer
-from base.models.learning_container_year import LearningContainerYear
-from base.models.learning_component_year import LearningComponentYear
-from base.models.learning_unit_year import LearningUnitYear
-from base.models.learning_unit_component import LearningUnitComponent
-from base.models.learning_class_year import LearningClassYear
-from base.models.academic_year import AcademicYear
 
-now = timezone.now()
+from base.tests.factories.academic_year import AcademicYearFactory
+from base.tests.factories.learning_class_year import LearningClassYearFactory
+from base.tests.factories.learning_component_year import LearningComponentYearFactory
+from base.tests.factories.learning_container_year import LearningContainerYearFactory
+from base.tests.factories.learning_unit_component import LearningUnitComponentFactory
+from base.tests.factories.learning_unit_component_class import LearningUnitComponentClassFactory
+from base import models as mdl
 
 
-class LearningComponentYearTest(TestCase):
-
-    current_academic_year = None
+class LearningunitComponentClassTest(TestCase):
 
     def setUp(self):
-        self.current_academic_year = AcademicYear(year=(now.year),
-                                     start_date=datetime.date(now.year, now.month, 15),
-                                     end_date=datetime.date(now.year + 1, now.month, 28))
-        self.current_academic_year.save()
+        self.academic_year = AcademicYearFactory(year=2016)
+        self.learning_container_year = LearningContainerYearFactory(academic_year=self.academic_year)
+        self.learning_component_year = LearningComponentYearFactory(learning_container_year=self.learning_container_year)
+        self.learning_unit_component = LearningUnitComponentFactory(learning_component_year=self.learning_component_year)
+        self.learning_class_year = LearningClassYearFactory(learning_component_year=self.learning_component_year)
 
-        self.current_academic_year_different = AcademicYear(year=(now.year)-1,
-                                     start_date=datetime.date(now.year-1, now.month, 15),
-                                     end_date=datetime.date(now.year + 2, now.month, 28))
-        self.current_academic_year_different.save()
+    def test_save_with_differents_learning_component_year(self):
+        with self.assertRaisesMessage(AttributeError, "Learning Component Year is different in Learning Unit Component and Learning Class Year"):
+            learning_unit_component = LearningUnitComponentFactory()
+            learning_class_year = LearningClassYearFactory()
+            learning_unit_component_class = LearningUnitComponentClassFactory\
+                .build(learning_unit_component=learning_unit_component,
+                       learning_class_year=learning_class_year)
+            learning_unit_component_class.save()
 
-    def test_creation_learning_unit_component_class_with_different_year(self):
-
-        learning_container = LearningContainer()
-
-        learning_container_year = LearningContainerYear(title="Biology",
-                                                        acronym="LBIO1212",
-                                                        academic_year=self.current_academic_year,
-                                                        learning_container=learning_container)
-        #Composant annualisé est associé à son composant et à son conteneur annualisé
-        learning_component_year = LearningComponentYear(learning_container_year=learning_container_year,
-                                                        title="Cours magistral",
-                                                        acronym="/C",
-                                                        comment="TEST")
-        #Classe annualisée est associée à son composant et à son conteneur annualisé
-        learning_class_year = LearningClassYear(learning_component_year=learning_component_year,
-                                                acronym="/C1")
-
-
-        #UE associée à un conteneur d'une année différente du composant
-        learning_unit_year = LearningUnitYear(  title="Biology",
-                                                acronym="LBIO1212",
-                                                academic_year=self.current_academic_year_different,
-                                                learning_container_year=learning_container_year)
-        #Association du conteneur et de son composant dont les années académiques diffèrent l'une de l'autre
-        learning_unit_component = LearningUnitComponent(learning_component_year=learning_component_year,
-                                                        learning_unit_year=learning_unit_year)
-
-        self.assertEqual(learning_unit_component.learning_component_year,
-                         learning_class_year.learning_component_year)
+    def test_find_by_learning_class_year(self):
+        learning_unit_component_class = LearningUnitComponentClassFactory\
+            .build(learning_unit_component=self.learning_unit_component,
+                   learning_class_year=self.learning_class_year)
+        learning_unit_component_class.save()
+        self.assertEqual(mdl.learning_unit_component_class.find_by_learning_class_year(self.learning_class_year)[0],
+                         learning_unit_component_class)

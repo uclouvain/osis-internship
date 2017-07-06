@@ -31,11 +31,18 @@ class LearningUnitComponentClassAdmin(admin.ModelAdmin):
     list_display = ('learning_unit_component', 'learning_class_year')
     fieldsets = ((None, {'fields': ('learning_unit_component', 'learning_class_year')}),)
     raw_id_fields = ('learning_class_year', 'learning_unit_component')
+    list_filter = ('learning_unit_component__learning_unit_year__academic_year',)
+    search_fields = ['learning_unit_component__learning_unit_year__acronym']
 
 
 class LearningUnitComponentClass(models.Model):
     learning_unit_component = models.ForeignKey('LearningUnitComponent')
     learning_class_year = models.ForeignKey('LearningClassYear')
+
+    def save(self, *args, **kwargs):
+        if self.learning_unit_component.learning_component_year.id != self.learning_class_year.learning_component_year.id:
+            raise AttributeError("Learning Component Year is different in Learning Unit Component and Learning Class Year")
+        super(LearningUnitComponentClass, self).save(*args, **kwargs)
 
     class Meta:
         permissions = (
@@ -43,8 +50,8 @@ class LearningUnitComponentClass(models.Model):
         )
 
 
-def find_by_id(learning_unit_component_class_id):
-    return LearningUnitComponentClass.objects.get(pk=learning_unit_component_class_id)
+def find_by_id(learning_unit_component_class):
+    return LearningUnitComponentClass.objects.get(pk=learning_unit_component_class.id)
 
 
 def find_by_learning_class_year(learning_class_year):
