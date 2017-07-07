@@ -1,14 +1,16 @@
 from django.http import HttpResponseNotAllowed
 from django.template.response import TemplateResponse
+from django.utils.deprecation import MiddlewareMixin
 
 
-class ExtraHttpResponsesMiddleware(object):
-    def __init__(self, get_response):
-        self.get_response = get_response
+class ExtraHttpResponsesMiddleware(MiddlewareMixin):
 
-    def __call__(self, request):
-        response = self.get_response(request)
+    def process_response(self, request, response):
         if isinstance(response, HttpResponseNotAllowed):
-            response = TemplateResponse(request, 'method_not_allowed.html', {})
-            response.status_code = 405
+            response = TemplateResponse(request=request,
+                                        template="method_not_allowed.html",
+                                        status=405,
+                                        context={})
+            response.render()
         return response
+
