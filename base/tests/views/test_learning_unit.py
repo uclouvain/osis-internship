@@ -140,7 +140,7 @@ class LearningUnitViewTestCase(TestCase):
 
         components = learning_unit_view.get_components(l_container_year, True)
         self.assertEqual(len(components), 1)
-        self.assertEqual(len(components[0]['classes']), 2)
+        self.assertEqual(len(components[0]['learning_component_year'].classes), 2)
 
     @mock.patch('django.contrib.auth.decorators')
     @mock.patch('base.views.layout.render')
