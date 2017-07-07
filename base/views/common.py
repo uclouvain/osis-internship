@@ -28,10 +28,7 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required, permission_required, user_passes_test
 from django.contrib.auth.views import login as django_login
 from django.contrib.auth import authenticate, logout
-from django.http import HttpResponseNotAllowed
 from django.shortcuts import redirect
-from django.template.loader import render_to_string
-from django.template.response import TemplateResponse
 from django.utils import translation
 from . import layout
 from base import models as mdl
