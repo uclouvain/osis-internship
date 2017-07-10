@@ -93,6 +93,19 @@
     function resizeContainer() {
         var width = $('#organogram li.root').width();
         $('#organogram').width(width + 30);
+
+        var secondLevelLiWidth = computeSecondLevelWidth()
+        $('#organogram li.root > ul > li').each(function() {
+            $(this).css({'width' : secondLevelLiWidth + '%'})
+        });
+    }
+
+    function computeSecondLevelWidth()  {
+        var numberLi = $('#organogram li.root > ul > li').length
+        if (numberLi) {
+            return (100/numberLi);
+        }
+        return 100;
     }
 
     $(document).ready(function() {

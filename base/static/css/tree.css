@@ -12,7 +12,8 @@
 }
 
 .tree li {
-	float: left; text-align: center;
+	float: left;
+	text-align: center;
 	list-style-type: none;
 	position: relative;
 	padding: 20px 5px 0 5px;
@@ -32,7 +33,8 @@
 	width: 50%; height: 20px;
 }
 .tree li::after{
-	right: auto; left: 50%;
+	right: auto;
+	left: 50%;
 	border-left: 1px solid #8dc63f;
 }
 
@@ -81,11 +83,13 @@ right connector from last child*/
 	-moz-transition: all 0.5s;
 }
 
+
 /* -------------------------------- */
 /* Now starts the vertical elements */
 /* -------------------------------- */
 
-.tree ul.vertical, ul.vertical ul {
+.tree ul.vertical,
+ ul.vertical ul {
   padding-top: 0px;
   left: 50%;
 }
@@ -138,16 +142,13 @@ div.tree > ul > li > a {
   font-size: 1em;
   font-weight: bold;
 }
-
-
 /* ------------------------------------------------------------------ */
 /* Time for some hover effects                                        */
 /* We will apply the hover effect the the lineage of the element also */
 /* ------------------------------------------------------------------ */
 .tree li a:hover, .tree li a:hover+ul li a {
 	background: #8dc63f;
-  color: white;
-  /* border: 1px solid #aaa; */
+    color: white;
 }
 
 /*Connector styles on hover*/
