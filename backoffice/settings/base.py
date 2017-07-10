@@ -69,7 +69,7 @@ INSTALLED_APPS = (
     'rest_framework.authtoken',
 )
 
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -79,6 +79,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'base.middlewares.extra_http_responses_midleware.ExtraHttpResponsesMiddleware'
 )
 
 # check if we are testing right now
