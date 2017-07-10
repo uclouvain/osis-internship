@@ -45,7 +45,7 @@
         <li><a href="{% url 'phd_supervisor_assistants_list' %}">{% trans 'phd_supervisor_assistants_list' %}</a></li>
     {% endif %}
     {% if can_delegate %}
-        <li><a href="{% url 'reviewer_delegation' %}">{% trans 'reviewer_delegation' %}</a></li>
+            <li><a href="{% url 'reviewer_delegation' %}">{% trans 'reviewer_delegation' %}</a></li>
     {% endif %}
     </ul>
 
@@ -61,13 +61,15 @@
         <table id="myTable" class="table table-hover table-condensed table-bordered" cellspacing="0" width="100%">
         <thead>
         <tr>
-        <th>{% trans 'global_id' %}</th>
-        <th>{% trans 'assistant' %}</th>
+        <th>{% trans 'assistant_title' %}</th>
         <th>{% trans 'structures' %}</th>
-        <th>{% trans 'branche' %}</th>
-        <th>{% trans 'mandate' %}</th>
+        <th>{% trans 'assistant_type' %}</th>
+        <th>{% trans 'renewal_type' %}</th>
+
+        <th>{% trans 'contract_duration' %}</th>
         <th>{% trans 'eq_fte' %}</th>
-        <th>{% trans 'workflow' %}</th>
+        <th>{% trans 'fulltime_equivalent_percentage' %}</th>
+        <th>{% trans 'state' %}</th>
         <th>{% trans 'edit' %}</th>
         <th>{% trans 'view' %}</th>
         </tr>
@@ -75,16 +77,18 @@
         <tbody>
         {% for mandate in object_list %}
             <tr>
-            <td>{{ mandate.sap_id }}</td>
             <td>{{ mandate.assistant.person }}</td><td><ul>
-            {% for struct in mandate.mandatestructure_set.all %}
-                <li>{% trans struct.structure.type|lower %} : {{ struct.structure.acronym }}</li>
+            {% for struct in mandate.mandatestructure_set.all|dictsort:"id" %}
+                <li>{% trans struct.structure.type %} : {{ struct.structure.acronym }}</li>
             {% endfor %}
             </ul> </td>
-            <td>{{ mandate.assistant_type }}</td>
+            <td>{% trans mandate.assistant_type %}</td>
+            <td>{{ mandate.renewal_type }}</td>
+
             <td>{{ mandate.contract_duration }}</td>
             <td>{{ mandate.contract_duration_fte }}</td>
-            <td>{{ mandate.state }}</td>
+            <td>{% widthratio mandate.fulltime_equivalent 1 100 %}%</td>
+            <td>{% trans mandate.state %}</td>
 	        {% if mandate.state in reviewer.role %}
                 <td align="center"><a href="{% url 'review_edit' mandate.id %}">
                 <button type="button" class="btn btn-link btn-lg" title="{% trans 'edit'%}" id="bt_review_edit">

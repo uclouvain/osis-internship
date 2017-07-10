@@ -117,7 +117,7 @@ class EntityVersion(models.Model):
             for child in direct_children:
                 descendants.extend(child.find_descendants(date))
 
-        return descendants
+        return sorted(descendants, key=lambda an_entity: an_entity.acronym)
 
     def get_parent_version(self, date=None):
         if date is None:
@@ -134,8 +134,12 @@ class EntityVersion(models.Model):
             return None
 
     def _contains_given_date(self, date):
-        return (self.end_date is not None and self.start_date <= date <= self.end_date) \
-               or (self.end_date is None and self.start_date <= date)
+        if self.start_date and self.end_date:
+            return self.start_date <= date <= self.end_date
+        elif self.start_date and not self.end_date:
+            return self.start_date <= date
+        else:
+            return False
 
     def get_organogram_data(self, level):
         level += 1
@@ -165,6 +169,12 @@ def find(acronym, date=None):
         return None
 
     return entity_version
+
+
+def find_latest_version(date):
+    return EntityVersion.objects.filter(Q(end_date__gte=date) | Q(end_date__isnull=True),
+                                        start_date__lte=date)\
+                                .order_by('-start_date')
 
 
 def search(**kwargs):
@@ -208,3 +218,32 @@ def search_entities(acronym=None, title=None, type=None):
 
 def find_by_id(entity_version_id):
     return EntityVersion.objects.get(pk=entity_version_id)
+
+
+def count_identical_versions(same_entity, version):
+    return count(entity=same_entity,
+                 title=version.get('title'),
+                 acronym=version.get('acronym'),
+                 entity_type=version.get('entity_type'),
+                 parent=version.get('parent'),
+                 start_date=version.get('start_date'),
+                 end_date=version.get('end_date')
+                 )
+
+
+def find_update_candidates_versions(entity, version):
+    to_update_versions = search(entity=entity,
+                                title=version.get('title'),
+                                acronym=version.get('acronym'),
+                                entity_type=version.get('entity_type'),
+                                parent=version.get('parent'),
+                                start_date=version.get('start_date')
+                                )
+    return [v for v in to_update_versions if not _match_dates(v.end_date, version.get('end_date'))]
+
+
+def _match_dates(osis_date, esb_date):
+    if osis_date is None:
+        return esb_date is None
+    else:
+        return osis_date.strftime('%Y-%m-%d') == esb_date

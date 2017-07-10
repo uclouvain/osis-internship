@@ -109,20 +109,59 @@
                             {{learning_unit_year.title_english | default_if_none:'' }}
                         {% endif%}
                         <br><br>
-                        <label>{% trans 'language' %}</label><br>
-                        {{learning_unit_year.learning_container_year.language | default_if_none:'' }}
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label>{% trans 'language' %}</label><br>
+                                {{learning_unit_year.learning_container_year.language | default_if_none:'' }}
+                            </div>
+                            <div class="col-md-9">
+                                <label>{% trans 'learning_unit_quarter' %}</label><br>
+                                {{ volume_distribution }}
+                            </div>
+                        </div>
+                        {% if components %}
+                            {% include "learning_unit/components_identification.html" %}
+                        {% endif %}
                     </div>
 
                     <div class="col-md-4">
                         <label>{% trans 'institution'%}</label><br>
                          {% if organization %}
-                            {{ organization.name }}
+                            <a href="{% url 'organization_read' organization_id=organization.id %}">
+                                {{ organization.name }}
+                            </a>
                          {% endif %}
                         <br>
                         <label style="margin-top:10px;">{% trans 'location'%}</label><br>
                          {% if campus %}
                             {{ campus.name }}
                          {% endif %}
+                        <br>
+                         <label style="margin-top:10px;">{% trans 'requirement_entity'%}</label><br>
+                         {% if requirement_entity %}
+                            {{ requirement_entity.acronym }} - <a href="{% url 'entity_read' entity_version_id=requirement_entity.id %}">{{ requirement_entity.title | default_if_none:'' }}</a>
+                         {% endif %}
+                        <br>
+                        <label style="margin-top:10px;">{% trans 'allocation_entity'%}</label><br>
+                         {% if allocation_entity %}
+                            {{ allocation_entity.acronym }} - <a href="{% url 'entity_read' entity_version_id=allocation_entity.id %}">{{ allocation_entity.title | default_if_none:'' }}</a>
+                         {% endif %}
+                        <br>
+                        {% for entity in additional_requirement_entities %}
+                            <label style="margin-top:10px;">{% trans 'additional_requirement_entity'%}</label><br>
+                            {{ entity.acronym }}
+                        {% endfor %}
+                        <br>
+                        <label style="margin-top:10px;">{% trans 'academic_years'%}</label><br>
+                        {% if learning_unit_year.learning_container_year.learning_container.start_year and learning_unit_year.learning_container_year.learning_container.auto_renewal_until%}
+                            {% trans 'from' %} {{learning_unit_year.learning_container_year.learning_container.start_year}} {% trans 'to' %} {{ learning_unit_year.learning_container_year.learning_container.auto_renewal_until }}
+                        {% else %}
+                            {% if learning_unit_year.learning_container_year.learning_container.start_year and not learning_unit_year.learning_container_year.learning_container.auto_renewal_until%}
+                                {% trans 'since' %} {{learning_unit_year.learning_container_year.learning_container.start_year}}
+                            {% else %}
+                                -
+                            {% endif %}
+                        {% endif %}
                     </div>
                 </div>
             </div>

@@ -50,3 +50,21 @@ input[type=number] {
 #pnl_add_manager_modal .modal-dialog  {
     width:90%;
 }
+
+div[class^="django-ckeditor-widget"],
+div[class^="django-ckeditor-widget"] > textarea,
+div[class^="django-ckeditor-widget"] > div {
+    width:100%!important;
+}
+
+.success-color {
+    color: #5cb85c;
+}
+
+.warning-color {
+    color: #f0ad4e;
+}
+
+.danger-color {
+    color: #d9534f;
+}

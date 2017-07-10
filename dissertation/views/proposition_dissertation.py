@@ -27,7 +27,7 @@ from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from base import models as mdl
 from dissertation.models import adviser, dissertation, faculty_adviser, offer_proposition, proposition_dissertation,\
-    proposition_document_file, proposition_offer, proposition_role
+    proposition_document_file, proposition_offer, proposition_role, offer_proposition_group
 from dissertation.models.proposition_dissertation import PropositionDissertation
 from dissertation.models.proposition_offer import PropositionOffer
 from dissertation.models.proposition_role import PropositionRole
@@ -134,6 +134,7 @@ def manager_proposition_dissertation_detail(request, pk):
 def manage_proposition_dissertation_edit(request, pk):
     proposition = get_object_or_404(PropositionDissertation, pk=pk)
     offer_propositions = offer_proposition.find_all_ordered_by_acronym()
+    offer_propositions_group = offer_proposition_group.find_all_ordered_by_name_short()
     offer_propositions_error = None
     proposition_offers = proposition_offer.find_by_proposition_dissertation(proposition)
     if request.method == "POST":
@@ -155,7 +156,8 @@ def manage_proposition_dissertation_edit(request, pk):
                           'collaborations_choices': PropositionDissertation.COLLABORATION_CHOICES,
                           'offer_propositions': offer_propositions,
                           'offer_propositions_error': offer_propositions_error,
-                          'proposition_offers': proposition_offers})
+                          'proposition_offers': proposition_offers,
+                          'offer_proposition_group':offer_propositions_group})
 
 
 @login_required
@@ -205,6 +207,7 @@ def manager_proposition_dissertations_role_delete(request, pk):
 @user_passes_test(adviser.is_manager)
 def manager_proposition_dissertation_new(request):
     offer_propositions = offer_proposition.find_all_ordered_by_acronym()
+    offer_propositions_group = offer_proposition_group.find_all_ordered_by_name_short()
     offer_propositions_error = None
     if request.method == "POST":
         form = ManagerPropositionDissertationForm(request.POST)
@@ -223,7 +226,8 @@ def manager_proposition_dissertation_new(request):
                           'levels_choices': PropositionDissertation.LEVELS_CHOICES,
                           'collaborations_choices': PropositionDissertation.COLLABORATION_CHOICES,
                           'offer_propositions_error': offer_propositions_error,
-                          'offer_propositions': offer_propositions})
+                          'offer_propositions': offer_propositions,
+                          'offer_proposition_group':offer_propositions_group})
 
 
 @login_required
@@ -327,6 +331,7 @@ def proposition_dissertation_edit(request, pk):
     proposition = get_object_or_404(PropositionDissertation, pk=pk)
     adv = get_current_adviser(request)
     offer_propositions = offer_proposition.find_all_ordered_by_acronym()
+    offer_propositions_group = offer_proposition_group.find_all_ordered_by_name_short()
     offer_propositions_error = None
     proposition_offers = proposition_offer.find_by_proposition_dissertation(proposition)
     if proposition.author == adv or proposition.creator == adv.person:
@@ -348,7 +353,9 @@ def proposition_dissertation_edit(request, pk):
                               'collaborations_choices': PropositionDissertation.COLLABORATION_CHOICES,
                               'offer_propositions': offer_propositions,
                               'offer_propositions_error': offer_propositions_error,
-                              'proposition_offers': proposition_offers})
+                              'proposition_offers': proposition_offers,
+                              'offer_proposition_group': offer_propositions_group
+                              })
     else:
         return redirect('proposition_dissertation_detail', pk=proposition.pk)
 
@@ -374,6 +381,7 @@ def proposition_dissertations_created(request):
 def proposition_dissertation_new(request):
     person = mdl.person.find_by_user(request.user)
     offer_propositions = offer_proposition.find_all_ordered_by_acronym()
+    offer_propositions_group = offer_proposition_group.find_all_ordered_by_name_short()
     offer_propositions_error = None
     if request.method == "POST":
         form = PropositionDissertationForm(request.POST)
@@ -391,7 +399,8 @@ def proposition_dissertation_new(request):
                           'levels_choices': PropositionDissertation.LEVELS_CHOICES,
                           'collaborations_choices': PropositionDissertation.COLLABORATION_CHOICES,
                           'offer_propositions_error': offer_propositions_error,
-                          'offer_propositions': offer_propositions})
+                          'offer_propositions': offer_propositions,
+                          'offer_proposition_group': offer_propositions_group})
 
 
 @login_required

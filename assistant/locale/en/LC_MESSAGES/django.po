@@ -22,20 +22,47 @@ msgstr "(for the 2nd renewal)"
 msgid "absences"
 msgstr "Absences"
 
+msgid "access_starting_date"
+msgstr "Starting date"
+
+msgid "access_ending_date"
+msgstr "Ending date"
+
+msgid "access_assistants_starting_date"
+msgstr "Assistants starting date"
+
+msgid "access_assistants_ending_date"
+msgstr "Assistants ending date"
+
 msgid "action"
 msgstr "Action"
 
 msgid "activities_report_remark"
 msgstr "Activities report remark"
 
+msgid "add_tutoring_learning_unit"
+msgstr "Add a learning unit"
+
 msgid "address"
 msgstr "Address"
 
+msgid "advice"
+msgstr "Avis"
+
+msgid "ASSISTANT"
+msgstr "Assistant"
+
+msgid "at_least_one_learning_unit"
+msgstr "You lust add at least one learning unit in the \"Learning units\" item"
+
+msgid "TEACHING_ASSISTANT"
+msgstr "Teaching assistant"
+
+msgid "assistant_form"
+msgstr "Assistant form"
+
 msgid "assistant_form_part1"
 msgstr "Administrative"
-
-msgid "assistant_form_part2"
-msgstr "Learning Units"
 
 msgid "assistant_form_part3"
 msgstr "Doctorate"
@@ -52,20 +79,23 @@ msgstr "Summary"
 msgid "assistant_mandates_renewal"
 msgstr "Assistantship mandate renewal"
 
+msgid "assistant_mandates_renewals"
+msgstr "Assistantship mandates renewals management"
+
+msgid "assistant_title"
+msgstr "Assistant"
+
 msgid "assistant_type"
 msgstr "Assistant type"
 
 msgid "assistants"
 msgstr "Assistants"
 
-msgid "assistantship_mandate_renewal_part1"
-msgstr "Assistantship mandate renewal - Part 1"
-
-msgid "assistantship_mandate_renewal_part2"
-msgstr "Assistantship mandate renewal - Part 2"
-
 msgid "attendees"
 msgstr "Number of students per serie"
+
+msgid "awards"
+msgstr "Awards"
 
 msgid "birth_date"
 msgstr "Birth date"
@@ -76,8 +106,20 @@ msgstr "Birth date"
 msgid "cancel"
 msgstr "Cancel"
 
+msgid "choose_person_as_reviewer_for"
+msgstr "Choose a person as reviewer for"
+
 msgid "comment"
 msgstr "Comment"
+
+msgid "conferences_contributor"
+msgstr "Conference(s)"
+
+msgid "confidential"
+msgstr "Confidentiel"
+
+msgid "confirm_reviewer_addition"
+msgstr "Are you sure you want to delegate your role ? This action can not be undone."
 
 msgid "confirm_validation"
 msgstr "Are you sure you want to validate et submit ? This action can not be undone."
@@ -88,7 +130,7 @@ msgstr "Confirmatory test date"
 msgid "contact_details"
 msgstr "Administrative information"
 
-msgid "contract duration"
+msgid "contract_duration"
 msgstr "Contract duration"
 
 msgid "contract"
@@ -106,11 +148,20 @@ msgstr "Course"
 msgid "course_code"
 msgstr "Course code"
 
+msgid "dashboard"
+msgstr "Dashboard"
+
 msgid "date_of_first_nomination"
 msgstr "First nomination date"
 
 msgid "dean"
 msgstr "Dean of faculty"
+
+msgid "deans"
+msgstr "Deans of faculty"
+
+msgid "DECLINED"
+msgstr "Declined by the assistant"
 
 msgid "degrees"
 msgstr "Obtained diplomas"
@@ -118,11 +169,38 @@ msgstr "Obtained diplomas"
 msgid "delete"
 msgstr "Delete"
 
+msgid "desc_lnk_dashboard"
+msgstr "Table with all the assistant forms"
+
+msgid "desc_lnk_emails"
+msgstr "Emails management"
+
+msgid "desc_lnk_export_mandates"
+msgstr "Assistant mandates exportation to a XLSX file"
+
+msgid "desc_lnk_import_mandates"
+msgstr "Assistant mandates importation from a XLSX file"
+
+msgid "desc_lnk_reviewers"
+msgstr "Reviewers addition, replacement and removal"
+
+msgid "desc_lnk_settings"
+msgstr "Access time to the application management"
+
+msgid "dial_publications"
+msgstr "Publications list in PDF (DIAL)"
+
 msgid "doctorate"
 msgstr "Doctorate"
 
-msgid "equivalent_full_time"
-msgstr "EFT"
+msgid "DONE"
+msgstr "Done"
+
+msgid "emails"
+msgstr "Emails"
+
+msgid "eq_fte"
+msgstr "Contrat duration (FTE)"
 
 msgid "events_organisation_service"
 msgstr "Social organization (internships, conferences, study tours, seminars,...)"
@@ -139,10 +217,16 @@ msgstr "Exercises, practicals, seminars - associated with volume 2 hours, you as
 msgid "expected_registering_date"
 msgstr "Expected registering date"
 
+msgid "export_mandates"
+msgstr "Assistant mandates exportation"
+
 msgid "external_post"
 msgstr "External post asked outside (FNRS, FRIA, ...)"
 
 msgid "face_to_face"
+msgstr "Number presential sessions hours"
+
+msgid "face_to_face_duration"
 msgstr "Number presential sessions hours"
 
 msgid "faculty"
@@ -152,7 +236,7 @@ msgid "faculty_representation"
 msgstr "Faculty representation activities"
 
 msgid "field"
-msgstr "Field"
+msgstr "Mandate type"
 
 msgid "formation_activities"
 msgstr "Formation activities"
@@ -163,8 +247,14 @@ msgstr "Formation activities percentage"
 msgid "formations"
 msgstr "Scientific or educational formations"
 
-msgid "full_time_equivalent"
-msgstr "Full time equivalent"
+msgid "framing_participation"
+msgstr "Dissertations or thesis support participation"
+
+msgid "fulltime_equivalent"
+msgstr "Fulltime equivalent"
+
+msgid "fulltime_equivalent_percentage"
+msgstr "Percentage fulltime equivalent"
 
 msgid "function_outside_university"
 msgstr "Current function held outside the university and % of time spent"
@@ -174,6 +264,9 @@ msgstr "Gender"
 
 msgid "general_comment"
 msgstr "General Comment"
+
+msgid "global_id"
+msgstr "Matricule"
 
 msgid "governing_body_representation"
 msgstr "Governing body representation activities"
@@ -190,8 +283,17 @@ msgstr "Enter the number of hours per annum"
 msgid "import"
 msgstr "Import"
 
+msgid "import_mandates"
+msgstr "Assistant mandates importation"
+
 msgid "in_progress"
 msgstr "In progress"
+
+msgid "IN_PROGRESS"
+msgstr "In progress"
+
+msgid "information_not_provided_to_assistant"
+msgstr "This information will not be disclosed to the assistant"
 
 msgid "infrastructure_mgmt_service"
 msgstr "Managing public infrastructure"
@@ -205,6 +307,15 @@ msgstr "Institute representation activities"
 msgid "institution"
 msgstr "Institution"
 
+msgid "justification_required_if_conditional_or_negative"
+msgstr "Justification is required if advice is conditional or unfavourable"
+
+msgid "learning_unit_required"
+msgstr "\"Learning units\" item must be completed"
+
+msgid "learning_units_description"
+msgstr "Exercises, TP, seminars - hours vol 2 related, that you assume"
+
 msgid "mandate"
 msgstr "Mandate"
 
@@ -217,6 +328,12 @@ msgstr "Mandates list"
 msgid "matricule_number"
 msgstr "Employee number"
 
+msgid "mandate_view"
+msgstr "Assistant file and reviews"
+
+msgid "must_enter_supervisor_if_registered_or_in_progress"
+msgstr "You must choose a phd supervisor"
+
 msgid "name_firstame"
 msgstr "Name & First name"
 
@@ -227,6 +344,9 @@ msgid "next_part"
 msgstr "Next part"
 
 msgid "no"
+msgstr "No"
+
+msgid "NO"
 msgstr "No"
 
 msgid "no_answer"
@@ -253,20 +373,41 @@ msgstr "PhD"
 msgid "phd_inscription"
 msgstr "Ph.D. Inscription"
 
+msgid "phd_inscription_choice_required"
+msgstr "\"Doctorate\" item must be completed"
+
 msgid "phd_inscription_date"
 msgstr "Ph.D. Inscription date"
+
+msgid "PHD_SUPERVISOR"
+msgstr "PhD supervisor"
+
+msgid "phd_supervisor_review"
+msgstr "Thesis promoter review"
+
+msgid "phd_supervisor_assistants_list"
+msgstr "Folder list (as thesis promoter)"
 
 msgid "previous_part"
 msgstr "Back to previous part"
 
-msgid "program_commission"
+msgid "previous_renewal_comment"
+msgstr "Comments of the previous mandates renewals"
+
+msgid "PROGRAM_COMMISSION"
 msgstr "Program Commission"
+
+msgid "publications_in_progress"
+msgstr "Publication(s) in progress"
 
 msgid "publishing_field_service"
 msgstr "Publishing activities"
 
 msgid "registered_phd"
 msgstr "Registered Ph.D."
+
+msgid "remark"
+msgstr "Remark"
 
 msgid "renewal"
 msgstr "Renewal"
@@ -277,6 +418,9 @@ msgstr "Renewal form"
 msgid "renewal_short_name"
 msgstr "Renewal"
 
+msgid "review_edit"
+msgstr "Give an advice"
+
 msgid "renewal_type"
 msgstr "Type of renewal"
 
@@ -286,23 +430,68 @@ msgstr "Representation activities"
 msgid "research"
 msgstr "Research"
 
+msgid "RESEARCH"
+msgstr "Institute president"
+
+msgid "RESEARCH_ASSISTANT"
+msgstr "Institute president delegate"
+
 msgid "research_percent"
 msgstr "Research percentage"
+
+msgid "research_review"
+msgstr "Institute president review"
 
 msgid "research_short_name"
 msgstr "RES"
 
+msgid "reviewer_delegation"
+msgstr "Delegation(s)"
+
+msgid "reviewer_mandates_list"
+msgstr "Folders list"
+
+msgid "reviews"
+msgstr "Reviews"
+
+msgid "reviewers"
+msgstr "Reviewers"
+
+msgid "role"
+msgstr "Role"
+
 msgid "save"
 msgstr "Save"
+
+msgid "save_before_link"
+msgstr "Do you want to save changed data before changing item ?"
+
+msgid "scientific_internships"
+msgstr "Research stay(s) and/or scientific training"
 
 msgid "scientific_jury_service"
 msgstr "Juries and scientific commissions participation"
 
+msgid "search_by_email_or_last_name"
+msgstr "search by email or last name"
+
 msgid "sector_representation"
 msgstr "Sector representation activities"
 
+msgid "sector_vice_rector_review"
+msgstr "Sector vice-rector review"
+
 msgid "sector_vice-rector_short_name"
 msgstr "S. V-R"
+
+msgid "sender"
+msgstr "Sender"
+
+msgid "send_email_to_all_assistants"
+msgstr "Send an email to all assistants"
+
+msgid "send_email_to_all_deans"
+msgstr "Send an email to all faculty deans"
 
 msgid "series_number"
 msgstr "Number of series"
@@ -319,6 +508,12 @@ msgstr "Duration of one session"
 msgid "sessions_number"
 msgstr "Number of sessions scheduled for this course"
 
+msgid "settings"
+msgstr "Settings"
+
+msgid "startup_precedure"
+msgstr "Startup procedure"
+
 msgid "structures"
 msgstr "Structures"
 
@@ -331,17 +526,41 @@ msgstr "Summary"
 msgid "supervision"
 msgstr "Supervision"
 
+msgid "SUPERVISION"
+msgstr "Dean of the Faculty"
+
 msgid "supervisor"
 msgstr "Supervisor"
 
 msgid "supervisor_email_address"
 msgstr "Supervisor email address"
 
+msgid "supervision_review"
+msgstr "Avis doyen de faculté"
+
+msgid "support_committee_reports"
+msgstr "Rapport du comité d'encadrement"
+
 msgid "svr"
 msgstr "SVR"
 
+msgid "TRTS"
+msgstr "Assistant"
+
 msgid "thesis_defence_date"
 msgstr "Thesis defence date"
+
+msgid "thesis_title"
+msgstr "Provisional thesis title"
+
+msgid "TO_ALL_ASSISTANTS"
+msgstr "to assitants"
+
+msgid "TO_ALL_DEANS"
+msgstr "to faculty deans"
+
+msgid "TO_DO"
+msgstr "To do"
 
 msgid "total_must_be_100_message"
 msgstr "Total should equal 100"
@@ -349,11 +568,17 @@ msgstr "Total should equal 100"
 msgid "tutoring_percent"
 msgstr "Tutoring percentage"
 
+msgid "tutoring_reports"
+msgstr "Evaluations (facultatif)"
+
 msgid "tutoring_short_name"
 msgstr "TUT"
 
 msgid "type_of_renewal"
 msgstr "Type of renewal"
+
+msgid "upload"
+msgstr "Joindre un document PDF"
 
 msgid "validate_and_submit"
 msgstr "Validate and submit"
@@ -361,8 +586,20 @@ msgstr "Validate and submit"
 msgid "various"
 msgstr "Various"
 
+msgid "verify_address_message"
+msgstr "Si l'information concernant votre adresse est incorrecte ou incomplète, merci de signaler la modification par l'intermédiaire de votre guichet employé."
+
 msgid "vice_rector"
-msgstr "Vice Rector"
+msgstr "Vice-rector"
+
+msgid "VICE_RECTOR"
+msgstr "Sector vice-rector"
+
+msgid "VICE_RECTOR_ASSISTANT"
+msgstr "DAS/CAS"
 
 msgid "yes"
+msgstr "Yes"
+
+msgid "YES"
 msgstr "Yes"

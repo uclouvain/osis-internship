@@ -29,6 +29,8 @@
 {% include "learning_unit/breadcrumb.html" %}
 {% endblock %}
 
+{% load getattr %}
+
 {% block content %}
 
 {% include "learning_unit/header.html" %}
@@ -38,57 +40,67 @@
 
         <div class="tab-content" id="tab_content">
             <div role="tabpanel" class="tab-pane active" id="specifications">
-                <form>
+                <div class="row" style="margin-top:10px;">
+                    <div class="col-md-2">
+                        <label> {% trans 'language'%} </label>
+                    </div>
+                    <div class="col-md-5">
+                        <label> {{ form_french.language.1 }} </label>
+                    </div>
+                    <div class="col-md-5">
+                        <label> {{ form_english.language.1 }} </label>
+                    </div>
+                </div>
+                <hr/>
+                {% for label_key, label_translated in cms_labels_translated.items %}
                     <div class="row" style="margin-top:10px;">
                         <div class="col-md-2">
-                            <label> {% trans 'language'%} </label>
+                            <label> {{ label_translated }} </label>
                         </div>
                         <div class="col-md-5">
-                            <label> {{ form_french.language.1 }} </label>
+                            {% if perms.base.can_edit_learningunit_specification %}
+                            <a class="specification-edit-btn pull-right" href="#"
+                               data-form="{% url 'learning_unit_specifications_edit' learning_unit_year_id=learning_unit_year.id %}?language={{form_french.language.0}}&label={{label_key}}"
+                               title="Edit">
+                                <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                            </a>
+                            {% endif %}
+
+                            {{ form_french|getattr:label_key }}
                         </div>
                         <div class="col-md-5">
-                            <label> {{ form_english.language.1 }} </label>
+                            {% if perms.base.can_edit_learningunit_specification %}
+                            <a class="specification-edit-btn pull-right" href="#"
+                               data-form="{% url 'learning_unit_specifications_edit' learning_unit_year_id=learning_unit_year.id %}?language={{form_english.language.0}}&label={{label_key}}"
+                               title="Edit">
+                                <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                            </a>
+                            {% endif %}
+
+                            {{ form_english|getattr:label_key }}
                         </div>
                     </div>
                     <hr/>
-                    <div class="row" style="margin-top:10px;">
-                        <div class="col-md-2">
-                            <label> {{ themes_discussed }} </label>
-                        </div>
-                        <div class="col-md-5">
-                            {{ form_french.themes_discussed }}
-                        </div>
-                        <div class="col-md-5">
-                            {{ form_english.themes_discussed }}
-                        </div>
-                    </div>
-                    <hr/>
-                    <div class="row" style="margin-top:10px;">
-                        <div class="col-md-2">
-                            <label> {{ skills_to_be_acquired }} </label>
-                        </div>
-                        <div class="col-md-5">
-                            {{ form_french.skills_to_be_acquired }}
-                        </div>
-                        <div class="col-md-5">
-                            {{ form_english.skills_to_be_acquired }}
-                        </div>
-                    </div>
-                    <hr/>
-                    <div class="row" style="margin-top:10px;">
-                        <div class="col-md-2">
-                            <label> {{ prerequisite }} </label>
-                        </div>
-                        <div class="col-md-5">
-                            {{ form_french.prerequisite }}
-                        </div>
-                        <div class="col-md-5">
-                            {{ form_english.prerequisite }}
-                        </div>
-                    </div>
-                </form>
+                {% endfor %}
             </div>
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="specification_edit" role="dialog" data-backdrop="static"></div>
 {% endblock %}
+
+{% block script %}
+    <script>
+        $(".specification-edit-btn").click(function(ev) {
+            ev.preventDefault();
+            var url = $(this).data("form"); // get the contact form url
+            var specification_edit_modal = $("#specification_edit");
+            specification_edit_modal.load(url, function() { // load the url into the modal
+                $(this).modal('show');
+            });
+            return false;
+        });
+    </script>
+{% endblock %}
+

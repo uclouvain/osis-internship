@@ -26,9 +26,10 @@
 
 from base.models import academic_calendar
 from base.models import academic_year
-from base.models import application_notice
 from base.models import campus
 from base.models import entity
+from base.models import entity_container_year
+from base.models import entity_component_year
 from base.models import entity_manager
 from base.models import entity_version
 from base.models import exam_enrollment
@@ -42,7 +43,6 @@ from base.models import learning_unit_component
 from base.models import learning_unit_component_class
 from base.models import learning_unit_enrollment
 from base.models import learning_unit_year
-from base.models import native
 from base.models import offer
 from base.models import offer_enrollment
 from base.models import offer_type

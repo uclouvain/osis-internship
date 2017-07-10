@@ -64,10 +64,12 @@ urlpatterns = [
             url(r'^formations/$', learning_unit.learning_unit_formations, name="learning_unit_formations"),
             url(r'^components/$', learning_unit.learning_unit_components, name="learning_unit_components"),
             url(r'^pedagogy/$', learning_unit.learning_unit_pedagogy, name="learning_unit_pedagogy"),
+            url(r'^pedagogy/edit/$', learning_unit.learning_unit_pedagogy_edit, name="learning_unit_pedagogy_edit"),
             url(r'^attributions/$', learning_unit.learning_unit_attributions,
                 name="learning_unit_attributions"),
             url(r'^proposals/$', learning_unit.learning_unit_proposals, name="learning_unit_proposals"),
-            url(r'^specifications/$', learning_unit.learning_unit_specifications, name="learning_unit_specifications")
+            url(r'^specifications/$', learning_unit.learning_unit_specifications, name="learning_unit_specifications"),
+            url(r'^specifications/edit/$', learning_unit.learning_unit_specifications_edit, name="learning_unit_specifications_edit"),
         ]))
     ])),
 

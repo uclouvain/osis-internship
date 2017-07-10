@@ -43,7 +43,7 @@
 </div>
 <div class="panel panel-default">
     <div class="panel-body">
-    <h4>{% trans 'choose_person_as_reviewer_for' %} {{related_structure.title}} ({{related_structure.acronym}})</h4>	
+    <h5>{% trans 'choose_person_as_reviewer_for' %} {{related_structure.title}} ({{related_structure.acronym}})</h5>
     <form method="POST" action="{% url 'reviewer_delegation_add' related_structure.id %}">
     {{ form.non_field_errors }}
  		{% csrf_token %}

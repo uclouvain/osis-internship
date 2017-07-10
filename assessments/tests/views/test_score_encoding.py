@@ -400,6 +400,21 @@ class GetScoreEncodingViewProgramManagerTest(TestCase):
                 test_exam_enrollment.create_exam_enrollment(self.first_session_exam_3, learning_unit_enrollment)
 
 
+class UploadXLSTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='score_encoding', password='score_encoding')
+        add_permission(self.user, "can_access_scoreencoding")
+        self.client.force_login(self.user)
+
+    def test_method_not_allowed_upload_xlsx(self):
+        from assessments.views.upload_xls_utils import upload_scores_file
+        url = reverse(upload_scores_file, kwargs={
+            'learning_unit_year_id': '1',
+        })
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 405)
+
+
 def prepare_exam_enrollment_for_double_encoding_validation(exam_enrollment):
     exam_enrollment.score_reencoded = 14
     exam_enrollment.score_draft = 14

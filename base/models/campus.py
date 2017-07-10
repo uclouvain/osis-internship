@@ -42,3 +42,8 @@ class Campus(SerializableModel):
 
     def __str__(self):
         return u"%s" % self.name
+
+
+def find_by_organization(organization):
+    return Campus.objects.filter(organization=organization)\
+                         .order_by('name')

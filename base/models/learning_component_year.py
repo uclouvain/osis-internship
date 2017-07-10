@@ -27,13 +27,16 @@ from django.db import models
 from django.contrib import admin
 
 from base.models.enums import learning_component_year_type, learning_container_year_types
+from base.models import learning_class_year
 
 
 class LearningComponentYearAdmin(admin.ModelAdmin):
     list_display = ('learning_container_year', 'title', 'acronym', 'type', 'comment')
     fieldsets = ((None, {'fields': ('learning_container_year', 'title', 'acronym',
-                                    'type', 'comment', 'planned_classes', 'hourly_volume_total', 'hourly_volume_partial')}),)
-    search_fields = ['acronym']
+                                    'type', 'comment', 'planned_classes')}),)
+    search_fields = ['acronym', 'learning_container_year__acronym']
+    raw_id_fields = ('learning_container_year',)
+    list_filter = ('learning_container_year__academic_year',)
 
 
 class LearningComponentYear(models.Model):
@@ -45,8 +48,6 @@ class LearningComponentYear(models.Model):
                             blank=True, null=True)
     comment = models.CharField(max_length=255, blank=True, null=True)
     planned_classes = models.IntegerField(blank=True, null=True)
-    hourly_volume_total = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
-    hourly_volume_partial = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
     deleted = models.BooleanField(default=False)
 
     def __str__(self):
@@ -56,17 +57,6 @@ class LearningComponentYear(models.Model):
         permissions = (
             ("can_access_learningunitcomponentyear", "Can access learning unit component year"),
         )
-
-    @property
-    def hourly_volume_partial_q2(self):
-        if self.hourly_volume_total:
-            if self.hourly_volume_partial:
-                q2 = self.hourly_volume_total - self.hourly_volume_partial
-                if q2 <= 0:
-                    return None
-                else:
-                    return q2
-        return None
 
     @property
     def type_letter_acronym(self):
@@ -80,6 +70,9 @@ class LearningComponentYear(models.Model):
                 learning_container_year_types.DISSERTATION: 'D',
             }.get(self.learning_container_year.container_type)
 
+    @property
+    def real_classes(self):
+        return len(learning_class_year.find_by_learning_component_year(self))
 
 def find_by_id(learning_component_year_id):
     return LearningComponentYear.objects.get(pk=learning_component_year_id)
@@ -88,3 +81,4 @@ def find_by_id(learning_component_year_id):
 def find_by_learning_container_year(a_learning_container_year):
     return LearningComponentYear.objects.filter(learning_container_year=a_learning_container_year)\
                                         .order_by('type', 'acronym')
+

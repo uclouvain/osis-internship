@@ -39,11 +39,11 @@
 <ul class="nav nav-tabs ">
 <li><a href="{% url 'assistant_mandates' %}">{% trans 'my_mandates' %}</a></li>
 <li><a href="{% url 'form_part1_edit' mandate_id %}">{% trans 'assistant_form_part1' %}</a></li>
-<li class="active"><a href="{% url 'mandate_learning_units' mandate_id %}">{% trans 'assistant_form_part2' %}</a></li>
+<li class="active"><a href="{% url 'mandate_learning_units' mandate_id %}">{% trans 'learning_units' %}</a></li>
 {% if assistant_type == "ASSISTANT" %}
     <li><a href="{% url 'form_part3_edit' mandate_id %}">{% trans 'assistant_form_part3' %}</a></li>
+    <li><a href="{% url 'form_part4_edit' mandate_id %}">{% trans 'assistant_form_part4' %}</a></li>
 {% endif %}
-<li><a href="{% url 'form_part4_edit' mandate_id %}">{% trans 'assistant_form_part4' %}</a></li>
 <li><a href="{% url 'form_part5_edit' mandate_id %}">{% trans 'assistant_form_part5' %}</a></li>
 <li><a href="{% url 'form_part6_edit' mandate_id %}">{% trans 'assistant_form_part6' %}</a></li>
 </ul>
@@ -51,7 +51,8 @@
     <div class="panel-body">
         <div class="panel-default">
             <div class="panel-heading">
-                <h4>{% trans 'tutoring_learning_units' %}</h4>
+                <h4>{% trans 'learning_units' %}</h4>
+                <h5>{% trans 'learning_units_description' %}</h5>
             </div>
         </div><p>
         <div class="table-responsive">
@@ -104,10 +105,10 @@
             <div class="row" style="padding-top: 15px;">
                 <div class="col-md-2" style="text-align: left">
                     <a class="btn btn-default btn-danger btn-sm" id="btn_delete_file" style="margin-right: 5px;"
-                       title="{% trans 'delete_file'%}"
+                       title="{% trans 'delete'%}"
                        onclick="location.href='{% url 'assistant_file_delete' mandate_id file.id 'mandate_learning_units' %}';">
                     <span class="glyphicon glyphicon-remove" aria-hidden="true" id="spn_delete_file"></span>
-                        {% trans 'delete_file' %}</a>
+                        {% trans 'delete' %}</a>
                 </div>
                 <div class="col-md-10" id="hdn_filename" style="text-align: left">
                    <a href="{% url 'assistant_file_download' document_file_id=file.id %}">{{ file.document_file }}</a>
@@ -118,7 +119,7 @@
 			<a class="btn btn-default" data-toggle="modal" data-target="#pnl_upload_documents"
                id="btn_add_file" style="margin-right: 5px;" title="{% trans 'add_file'%}">
                 <span class="glyphicon glyphicon-upload" aria-hidden="true" id="spn_add_file"></span>
-                {% trans 'upload_pdf_file' %}</a>
+                {% trans 'upload' %}</a>
 		</div>
             <input type="hidden" value="{{mandate_id | default_if_none:''}}" id="hdn_current_mandate_id"
 		   name="mandate_id" title="mandate_id" >

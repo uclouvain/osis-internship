@@ -41,7 +41,7 @@ class OrganizationViewTestCase(TestCase):
         url = reverse('organization_save', args=[self.organization.id])
         response = self.client.post(url, data=get_form_organization_save())
         self.organization.refresh_from_db()
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)
         self.assertEqual(self.organization.acronym, "NYU")
         self.assertEqual(self.organization.name, "NEW-YORK UNIVERSITY")
 

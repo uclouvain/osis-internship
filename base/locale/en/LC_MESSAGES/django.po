@@ -228,6 +228,12 @@ msgstr "Date"
 msgid "date_not_passed"
 msgstr "Date not passed"
 
+msgid "day"
+msgstr "day"
+
+msgid "days"
+msgstr "days"
+
 msgid "decimal_score_allowed"
 msgstr "Decimal score allowed"
 
@@ -322,6 +328,9 @@ msgstr "The configuration of you user profile"
 
 msgid "description"
 msgstr "Description"
+
+msgid "details"
+msgstr "Details"
 
 msgid "display_scores_for_one_learning_unit"
 msgstr "Display scores for this learning unit"
@@ -819,6 +828,9 @@ msgstr "The period of scores' encoding %s will be open %s"
 msgid "page_not_found"
 msgstr "Page not found."
 
+msgid "method_not_allowed"
+msgstr "Method not allowed"
+
 msgid "password"
 msgstr "Password"
 
@@ -1174,6 +1186,9 @@ msgstr "Type"
 msgid "types"
 msgstr "Types"
 
+msgid "undated_events"
+msgstr "Undated events"
+
 msgid "undefined"
 msgstr "Undefined"
 
@@ -1456,8 +1471,8 @@ msgstr "The start's date of '%s' of the academic calendar can't be higher than %
 msgid "component_type"
 msgstr "Component type"
 
-msgid "nominal_quater"
-msgstr "Nominal quater"
+msgid "nominal_quarter"
+msgstr "Nominal quarter"
 
 msgid "vol_q1"
 msgstr "Vol. q1"
@@ -1546,6 +1561,12 @@ msgstr "Dissertation"
 msgid "PRACTICAL_EXERCISES"
 msgstr "Practical exercises"
 
+msgid "lecturing"
+msgstr "Lecturing"
+
+msgid "PE"
+msgstr "PE"
+
 msgid "subtype"
 msgstr "Subtype"
 
@@ -1606,3 +1627,65 @@ msgstr "Commerce partner"
 msgid "PUBLIC_PARTNER"
 msgstr "Public partner"
 
+msgid "requirement_entity"
+msgstr "Requirement entity"
+
+msgid "allocation_entity"
+msgstr "Allocation entity"
+
+msgid "additional_requirement_entity"
+msgstr "Additional entity"
+
+msgid "academic_end_year"
+msgstr "Academic end year"
+
+msgid "academic_start_year"
+msgstr "Academic start year"
+
+msgid "organization_name"
+msgstr "Name"
+
+msgid "partial"
+msgstr "Q1"
+
+msgid "remaining"
+msgstr "Q2"
+
+msgid "partial_remaining"
+msgstr "Q1&2"
+
+msgid "partial_or_remaining"
+msgstr "Q1|2"
+
+msgid "volume_partial"
+msgstr "Vol. Q1"
+
+msgid "volume_remaining"
+msgstr "Vol. Q2"
+
+msgid "learning_unit_quarter"
+msgstr "LU quarter"
+
+msgid "composition"
+msgstr "Composition"
+
+msgid "real_classes"
+msgstr "Real classes"
+
+msgid "lu_usage"
+msgstr "Learning units usage"
+
+msgid "used_by_partim"
+msgstr "Used by partim "
+
+msgid "academic_years"
+msgstr "Academic years"
+
+msgid "from"
+msgstr "From"
+
+msgid "to"
+msgstr "to"
+
+msgid "since"
+msgstr "Since"

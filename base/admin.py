@@ -33,14 +33,17 @@ admin.site.register(academic_calendar.AcademicCalendar,
 admin.site.register(academic_year.AcademicYear,
                     academic_year.AcademicYearAdmin)
 
-admin.site.register(application_notice.ApplicationNotice,
-                    application_notice.ApplicationNoticeAdmin)
-
 admin.site.register(campus.Campus,
                     campus.CampusAdmin)
 
 admin.site.register(entity.Entity,
                     entity.EntityAdmin)
+
+admin.site.register(entity_component_year.EntityComponentYear,
+                    entity_component_year.EntityComponentYearAdmin)
+
+admin.site.register(entity_container_year.EntityContainerYear,
+                    entity_container_year.EntityContainerYearAdmin)
 
 admin.site.register(entity_manager.EntityManager,
                     entity_manager.EntityManagerAdmin)
@@ -71,6 +74,9 @@ admin.site.register(learning_container_year.LearningContainerYear,
 
 admin.site.register(learning_unit.LearningUnit,
                     learning_unit.LearningUnitAdmin)
+
+admin.site.register(learning_unit_component_class.LearningUnitComponentClass,
+                    learning_unit_component_class.LearningUnitComponentClassAdmin)
 
 admin.site.register(learning_unit_component.LearningUnitComponent,
                     learning_unit_component.LearningUnitComponentAdmin)

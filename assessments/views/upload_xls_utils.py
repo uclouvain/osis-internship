@@ -30,6 +30,7 @@ from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.utils.translation import ugettext as _
+from django.views.decorators.http import require_http_methods
 from openpyxl import load_workbook
 
 from assessments.business import score_encoding_list
@@ -59,21 +60,21 @@ INFORMATIVE_JUSTIFICATION_ALIASES = {
 }
 
 @login_required
+@require_http_methods(["POST"])
 def upload_scores_file(request, learning_unit_year_id=None):
-    if request.method == 'POST':
-        form = ScoreFileForm(request.POST, request.FILES)
-        if form.is_valid():
-            file_name = request.FILES['file']
-            if file_name is not None:
-                learning_unit_year = mdl.learning_unit_year.find_by_id(learning_unit_year_id)
-                try:
-                    __save_xls_scores(request, file_name, learning_unit_year.id)
-                except IndexError:
-                    messages.add_message(request, messages.ERROR, _('xls_columns_structure_error').format(_('via_excel'), _('get_excel_file')))
-        else:
-            for error_msg in [error_msg for error_msgs in form.errors.values() for error_msg in error_msgs]:
-                messages.add_message(request, messages.ERROR, "{}".format(error_msg))
-        return HttpResponseRedirect(reverse('online_encoding', args=[learning_unit_year_id, ]))
+    form = ScoreFileForm(request.POST, request.FILES)
+    if form.is_valid():
+        file_name = request.FILES['file']
+        if file_name is not None:
+            learning_unit_year = mdl.learning_unit_year.find_by_id(learning_unit_year_id)
+            try:
+                __save_xls_scores(request, file_name, learning_unit_year.id)
+            except IndexError:
+                messages.add_message(request, messages.ERROR, _('xls_columns_structure_error').format(_('via_excel'), _('get_excel_file')))
+    else:
+        for error_msg in [error_msg for error_msgs in form.errors.values() for error_msg in error_msgs]:
+            messages.add_message(request, messages.ERROR, "{}".format(error_msg))
+    return HttpResponseRedirect(reverse('online_encoding', args=[learning_unit_year_id, ]))
 
 
 def _get_all_data(worksheet):
