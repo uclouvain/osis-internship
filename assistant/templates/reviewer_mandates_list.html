@@ -50,10 +50,12 @@
     </ul>
 
     <div class="panel-body">
-        <div class="row">
+        <div class="row" style="padding-bottom: 5px;">
 	        <div class="col-md-12 text-right">
             <form action=" {% url 'reviewer_mandates_list' %} " method="GET">
-            {{ form }}
+            {{ form.academic_year }}
+            <button type="submit" class="btn btn-default btn-xs" title="{% trans 'apply'%}" id="bt_filter">
+                <span class="glyphicon glyphicon-apply" aria-hidden="true"></span> {% trans 'apply'%}</button>
             </form>
             </div>
         </div>

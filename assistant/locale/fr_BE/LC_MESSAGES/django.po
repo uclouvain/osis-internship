@@ -49,6 +49,9 @@ msgstr "Adresse"
 msgid "advice"
 msgstr "Avis"
 
+msgid "apply"
+msgstr "Appliquer"
+
 msgid "assistant_form"
 msgstr "Dossier assistant"
 
