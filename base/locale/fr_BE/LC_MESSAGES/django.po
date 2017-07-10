@@ -397,6 +397,9 @@ msgstr "Entités"
 msgid "entity"
 msgstr "Entité"
 
+msgid "versions"
+msgstr "Versions"
+
 msgid "evaluations"
 msgstr "Évaluations"
 
