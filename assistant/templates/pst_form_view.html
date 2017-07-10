@@ -42,10 +42,9 @@
 {% endblock %}
 {% block content %}
 <div class="page-header">
-    <h4>{% trans 'assistant_mandates_renewal' %} ({{ year }})</h4>
+    <h3>{% trans 'assistant_mandates_renewal' %} ({{ year }})</h3>
     <h4>{{ assistant.person }}</h4>
-</div>
-<ul class="nav nav-tabs">
+    <ul class="nav nav-tabs">
 	<li class="active"><a href="#">{% trans 'assistant_form' %}</a></li>
     {% for dict in menu %}
         <li class={{ dict.class}}>
@@ -78,6 +77,8 @@
         </li>
     {% endfor %}
 </ul>
+</div>
+
 <div class="panel panel-default">
     <div class="panel-body">
   		<div class="panel-default">

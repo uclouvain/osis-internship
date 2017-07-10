@@ -42,10 +42,9 @@
 {% endblock %}
 {% block content %}
 <div class="page-header">
-    <h4>{% trans 'assistant_mandates_renewal' %} ({{ year }})</h4>
+    <h3>{% trans 'assistant_mandates_renewal' %} ({{ year }})</h3>
     <h4>{{ assistant.person }}</h4>
-</div>
-<ul class="nav nav-tabs">
+    <ul class="nav nav-tabs">
 	{% if menu_type == 'phd_supervisor_menu' %}
         <li><a href="{% url 'phd_supervisor_pst_form_view' mandate_id=mandate_id %}">{% trans 'assistant_form' %}</a>
         </li>
@@ -83,59 +82,42 @@
         </li>
     {% endfor %}
 </ul>
+</div>
+
 <div class="panel panel-default">
     <div class="panel-body">
         <div class="form-group">
-            <div class="row">
-                <div class="col-md-2">
-                    <label for="txt_advice">{% trans 'advice' %}</label>
-                </div>
-                <div class="col-md-3">
-                    {% if review.advice == "FAVORABLE" %}
+            <label for="txt_advice">{% trans 'advice' %}</label>
+            <div class="controls">
+                {% if review.advice == "FAVORABLE" %}
                     <span class="glyphicon glyphicon-thumbs-up" style="font-size: 14pt; color: green" aria-hidden="true"></span>
-                    {% elif review.advice == "UNFAVOURABLE" %}
+                {% elif review.advice == "UNFAVOURABLE" %}
                     <span class="glyphicon glyphicon-thumbs-down" style="font-size: 14pt; color: red" aria-hidden="true"></span>
-                    {% else %}
+                {% else %}
                     <span class="glyphicon glyphicon-alert" style="font-size: 14pt; color: orange" aria-hidden="true"></span>
-                    {% endif %}
-                    {% trans review.advice %}
-                </div>
-            </div><p>
+                {% endif %}
+                {% trans review.advice %}
+            </div>
         </div>
-        {% if review.advice != "FAVORABLE" %}
+        {% if review.justification %}
             <div class="form-group">
-                <div class="row">
-                    <div class="col-md-2">
-                        <label id="justification_label" for="txt_justification">{% trans 'justification' %}</label>
-                    </div>
-                    <div class="col-md-5">
-                        {{ review.justification }}
-                    </div>
-                </div>
-            </div><p>
+                <label id="justification_label" for="txt_justification">{% trans 'justification' %}</label>
+                <div class="controls">{{ review.justification }}</div>
+            </div>
         {% endif %}
-        <div class="form-group">
-            <div class="row">
-                <div class="col-md-2">
-                    <label for="txt_comment">{% trans 'remark' %}</label>
-                </div>
-                <div class="col-md-3">
-                    {{ review.remark }}
-                </div>
+        {% if review.remark %}
+            <div class="form-group">
+                <label for="txt_remark">{% trans 'remark' %}</label>
+                <div class="controls">{{ review.remark }}</div>
             </div>
-        </div>
-        <div class="form-group">
-            <div class="row">
-                <div class="col-md-2">
-                    <label for="txt_comment">{% trans 'confidential' %}</label>
-                </div>
-                <div class="col-md-3">
-                    {{ review.confidential }}
-                </div>
+        {% endif %}
+        {% if review.confidential %}
+            <div class="form-group">
+                <label for="txt_confidential">{% trans 'confidential' %}</label>
+                <div class="controls">{{ review.confidential }}</div>
             </div>
-            <p>
-        </div>
-	</div>
+        {% endif %}
+    </div>
 </div>
 {% endblock %}
 {% block script %}

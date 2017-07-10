@@ -37,24 +37,23 @@
 {% block content %}
 <div class="page-header">
     <h3>{% trans 'assistantship_mandate_renewal' %} {{ year|add:1 }}</h3>
+    <ul class="nav nav-tabs">
+            <li class="active"><a href="#">{% trans 'reviewer_mandates_list' %}</a></li>
+            {% if is_supervisor %}
+                <li><a href="{% url 'phd_supervisor_assistants_list' %}">{% trans 'phd_supervisor_assistants_list' %}</a></li>
+            {% endif %}
+            {% if can_delegate %}
+                <li><a href="{% url 'reviewer_delegation' %}">{% trans 'reviewer_delegation' %}</a></li>
+            {% endif %}
+        </ul>
 </div>
 <div class="panel panel-default">
-    <ul class="nav nav-tabs">
-    <li class="active"><a href="#">{% trans 'reviewer_mandates_list' %}</a></li>
-    {% if is_supervisor %}
-        <li><a href="{% url 'phd_supervisor_assistants_list' %}">{% trans 'phd_supervisor_assistants_list' %}</a></li>
-    {% endif %}
-    {% if can_delegate %}
-            <li><a href="{% url 'reviewer_delegation' %}">{% trans 'reviewer_delegation' %}</a></li>
-    {% endif %}
-    </ul>
-
     <div class="panel-body">
         <div class="row">
 	        <div class="col-md-12 text-right">
-            <form action=" {% url 'reviewer_mandates_list' %} " method="GET">
-            {{ form }}
-            </form>
+                <form action=" {% url 'reviewer_mandates_list' %} " method="GET">
+                {{ form }}
+                </form>
             </div>
         </div>
         <div class="table-responsive">

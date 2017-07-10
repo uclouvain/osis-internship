@@ -23,11 +23,9 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from datetime import date
 from django import forms
 from django.core.exceptions import ValidationError
 from django.forms import ModelForm, Textarea
-from django.forms import widgets
 from django.forms.models import inlineformset_factory
 from django.utils.translation import ugettext as _
 from base.models import structure, academic_year
@@ -296,15 +294,16 @@ class ReviewersFormset(ModelForm):
 
 
 class SettingsForm(ModelForm):
-    starting_date = forms.DateField(required=True, widget=widgets.SelectDateWidget(
-        years=range(date.today().year-1, date.today().year+2)))
-    ending_date = forms.DateField(required=True, widget=widgets.SelectDateWidget(
-        years=range(date.today().year-1, date.today().year+2)))
-    assistants_starting_date = forms.DateField(required=True, widget=widgets.SelectDateWidget(
-        years=range(date.today().year-1, date.today().year+2)))
-    assistants_ending_date = forms.DateField(required=True, widget=widgets.SelectDateWidget(
-        years=range(date.today().year-1, date.today().year+2)))
+    starting_date = forms.DateField(required=True)
+    ending_date = forms.DateField(required=True)
+    assistants_starting_date = forms.DateField(required=True)
+    assistants_ending_date = forms.DateField(required=True)
 
     class Meta:
         model = mdl.settings.Settings
         fields = ('starting_date', 'ending_date', 'assistants_starting_date', 'assistants_ending_date')
+
+    def __init__(self, *args, **kwargs):
+        super(SettingsForm, self).__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control'

@@ -37,7 +37,7 @@
 {% endblock %}
 {% block content %}
 <div class="page-header">
-    <h4>{% trans 'assistant_mandates_renewals' %} {{ year|add:1 }}</h4>
+    <h3>{% trans 'assistant_mandates_renewals' %} {{ year|add:1 }}</h3>
 </div>
 <div class="panel panel-default">
     <div class="panel-body">
@@ -47,36 +47,46 @@
  		    {% for hidden in form.hidden_fields %}
 			    {{ hidden }}
 		    {% endfor %}
-	    <div class="panel-default">
-		    <div class="panel-heading">
-                <h4>{% trans 'dates' %}</h4>
-		    </div>
-	    </div><p>
-        <div class="form-group" style="padding-top: 5px;">
-            {% trans 'access_starting_date' %}
-            <div class="controls">{{ form.starting_date }}</div>
-            <span class="error">{{ form.starting_date.errors }}</span>
+        <div class="row">
+            <div class="col-md-6">
+	            <div class="panel-default">
+		            <div class="panel-heading">
+                        <h4>{% trans 'app_dates' %}</h4>
+		            </div>
+	                <div class="form-group" style="padding-top: 5px;">
+                        <label for="txt_starting_date">{% trans 'beginning' %}</label>
+                        {{ form.starting_date }}
+                        <span class="error">{{ form.starting_date.errors }}</span>
+                    </div>
+                    <div class="form-group" style="padding-top: 5px;">
+                        <label for="txt_ending_date">{% trans 'end' %}</label>
+                        {{ form.ending_date }}
+                        <span class="error">{{ form.ending_date.errors }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="panel-default">
+		            <div class="panel-heading">
+                        <h4>{% trans 'assistants_dates' %}</h4>
+		            </div>
+                    <div class="form-group" style="padding-top: 5px;">
+                        <label for="txt_assistants_starting_date">{% trans 'beginning' %}</label>
+                        {{ form.assistants_starting_date }}
+                        <span class="error">{{ form.assistants_starting_date.errors }}</span>
+                    </div>
+                    <div class="form-group" style="padding-top: 5px;">
+                        <label for="txt_assistants_ending_date">{% trans 'end' %}</label>
+                        {{ form.assistants_ending_date }}
+                        <span class="error">{{ form.assistants_ending_date.errors }}</span>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="form-group" style="padding-top: 5px;">
-            {% trans 'access_ending_date' %}
-            <div class="controls">{{ form.ending_date }}</div>
-            <span class="error">{{ form.ending_date.errors }}</span>
-        </div>
-        <div class="form-group" style="padding-top: 5px;">
-            {% trans 'access_assistants_starting_date' %}
-            <div class="controls">{{ form.assistants_starting_date }}</div>
-            <span class="error">{{ form.assistants_starting_date.errors }}</span>
-        </div>
-        <div class="form-group" style="padding-top: 5px;">
-            {% trans 'access_assistants_ending_date' %}
-            <div class="controls">{{ form.assistants_ending_date }}</div>
-            <span class="error">{{ form.assistants_ending_date.errors }}</span>
-        </div>
-            <button type="submit" class="btn btn-primary" title="{% trans 'save'%}" id="bt_settings_save">
+        <button type="submit" class="btn btn-primary" title="{% trans 'save'%}" id="bt_settings_save">
             <span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'save'%}</button>
             <a class="btn btn-default" id="lnk_cancel" href="{% url 'manager_home' %}">
             <span class="glyphicon glyphicon-cancel" aria-hidden="true"></span> {% trans 'cancel'%}</a>
-        </div>
         </form>
     </div>
 </div>
