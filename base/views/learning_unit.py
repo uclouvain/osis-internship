@@ -30,6 +30,7 @@ from django.contrib import messages
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required, permission_required
+from django.db import models
 from django.http import HttpResponseRedirect
 from django.utils.translation import ugettext_lazy as _
 from django.views.decorators.http import require_http_methods
@@ -265,35 +266,28 @@ def _get_common_context_learning_unit_year(learning_unit_year_id):
     return context
 
 
-def get_components(a_learning_container_yr, get_classes):
+def get_components(learning_container_year, with_classes=False):
     components = []
-    if a_learning_container_yr:
-        learning_component_year_list = mdl.learning_component_year.find_by_learning_container_year(a_learning_container_yr)
+    learning_components_year = mdl.learning_component_year.find_by_learning_container_year(learning_container_year, with_classes)
 
-        for learning_component_year in learning_component_year_list:
-            if get_classes:
-                learning_class_year_list = mdl.learning_class_year.find_by_learning_component_year(learning_component_year)
-                learning_class_year_dict = dict()
-                for learning_class_year in learning_class_year_list:
-                    learning_unit_usage_by_class = _learning_unit_usage_by_class(learning_class_year)
-                    if str(ACRONYM_COMPLET_LEARNING_UNIT) in learning_unit_usage_by_class:
-                        using_by_complet_learning_unit = True
-                    else:
-                        using_by_complet_learning_unit = False
-                    learning_class_year_dict[learning_class_year] = [learning_unit_usage_by_class, using_by_complet_learning_unit]
-            else:
-                learning_class_year_dict = None
+    for learning_component_year in learning_components_year:
+        if learning_component_year.classes:
+            for learning_class_year in learning_component_year.classes:
+                learning_class_year.used_by_learning_units_year = _learning_unit_usage_by_class(learning_class_year)
+                learning_class_year.is_used_by_full_learning_unit_year = (str(ACRONYM_COMPLET_LEARNING_UNIT) in learning_class_year.used_by_learning_units_year)
 
-            entity_container_yrs = mdl.entity_container_year.find_by_learning_container_year(learning_component_year.learning_container_year,
-                                                                                            entity_container_year_link_type.REQUIREMENT_ENTITY)
-            entity_component_yr = mdl.entity_component_year.find_by_entity_container_years(entity_container_yrs,
-                                                                                          learning_component_year).first()
-            components.append({'learning_component_year': learning_component_year,
-                               'entity_component_yr': entity_component_yr,
-                               'volumes': volumes(entity_component_yr),
-                               'learning_unit_usage': _learning_unit_usage(learning_component_year),
-                               'classes': learning_class_year_dict})
+        entity_container_yrs = mdl.entity_container_year.find_by_learning_container_year(
+            learning_component_year.learning_container_year,
+            entity_container_year_link_type.REQUIREMENT_ENTITY)
+        entity_component_yr = mdl.entity_component_year.find_by_entity_container_years(entity_container_yrs,
+                                                                                       learning_component_year).first()
+
+        components.append({'learning_component_year': learning_component_year,
+                           'entity_component_yr': entity_component_yr,
+                           'volumes': volumes(entity_component_yr),
+                           'learning_unit_usage': _learning_unit_usage(learning_component_year)})
     return components
+
 
 
 def _get_partims_related(learning_unit_year):
