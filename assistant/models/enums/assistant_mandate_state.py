@@ -23,6 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.utils.translation import ugettext_lazy as _
 
 DECLINED = 'DECLINED'
 TO_DO = 'TO_DO'
@@ -34,11 +35,11 @@ VICE_RECTOR = 'VICE_RECTOR'
 DONE = 'DONE'
 
 ASSISTANT_MANDATE_STATES = (
-    (DECLINED, DECLINED),
-    (TO_DO, TO_DO),
-    (TRTS, TRTS),
-    (PHD_SUPERVISOR, PHD_SUPERVISOR),
-    (RESEARCH, RESEARCH),
-    (SUPERVISION, SUPERVISION),
-    (VICE_RECTOR, VICE_RECTOR),
-    (DONE, DONE))
+    (DECLINED, _(DECLINED)),
+    (TO_DO, _(TO_DO)),
+    (TRTS, _(TRTS)),
+    (PHD_SUPERVISOR, _(PHD_SUPERVISOR)),
+    (RESEARCH, _(RESEARCH)),
+    (SUPERVISION, _(SUPERVISION)),
+    (VICE_RECTOR, _(VICE_RECTOR)),
+    (DONE, _(DONE)))

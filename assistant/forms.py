@@ -286,7 +286,11 @@ class ReviewersFormset(ModelForm):
     structure = forms.ChoiceField(required=False)
     person = forms.ChoiceField(required=False)
     id = forms.IntegerField(required=False)
-    ACTIONS = (('-----', _('-----')), ('DELETE', _('delete_reviewer')), ('REPLACE', _('replace_reviewer')))
+    ACTIONS = (
+        ('-----', _('-----')),
+        ('DELETE', _('delete')),
+        ('REPLACE', _('replace'))
+    )
     action = forms.ChoiceField(required=False, choices=ACTIONS,
                                widget=forms.Select(attrs={'class': 'selector', 'onchange': 'this.form.submit();'}))
 

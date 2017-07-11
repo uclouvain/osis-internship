@@ -112,6 +112,9 @@ msgstr "Choisissez une personne comme évaluateur pour"
 msgid "comment"
 msgstr "Commentaire"
 
+msgid "CONDITIONAL"
+msgstr "Conditionnel"
+
 msgid "conferences_contributor"
 msgstr "Conférence(s) auxquelle(s) j'ai contribué par communication ou poster, seul·e ou avec d'autres"
 
@@ -208,6 +211,9 @@ msgstr "Organisation de stages, colloques, visites, voyages d’études, terrain
 msgid "exams_supervision_duration"
 msgstr "Préparation, coordination et évaluation (h)"
 
+msgid "EXCEPTIONAL"
+msgstr "Exceptionnel"
+
 msgid "exceptional_justification"
 msgstr "Dans la mesure où vous ne rempliriez plus les conditions pour bénéficier d'un renouvellement 'normal', pouvez-vous préciser les circonstances justifiant une demande de renouvellement exceptionnel (art. 51 du RAMCS)"
 
@@ -234,6 +240,9 @@ msgstr "Faculté"
 
 msgid "faculty_representation"
 msgstr "Au sein de la faculté (commissions de programme, bureau de faculté, conseil de faculté)"
+
+msgid "FAVORABLE"
+msgstr "Favorable"
 
 msgid "field"
 msgstr "Type de mandat"
@@ -359,6 +368,9 @@ msgstr "pas répondu"
 msgid "no_supervisor"
 msgstr "Pas de promoteur"
 
+msgid "NORMAL"
+msgstr "Normal"
+
 msgid "other_status"
 msgstr "Autre status"
 
@@ -370,6 +382,12 @@ msgstr "% ETP"
 
 msgid "period_covered"
 msgstr "Période couverte par le rapport (depuis le 1er engagement ou la précédente demande de renouvellement)"
+
+msgid "person_already_reviewer_msg"
+msgstr "Cette personne est déjà évaluateur, veuillez choisir quelqu'un d'autre"
+
+msgid "person_who_will_be_replacing"
+msgstr "Évaluateur remplaçant"
 
 msgid "phd"
 msgstr "PhD"
@@ -425,6 +443,12 @@ msgstr "Statut"
 msgid "renewal_type"
 msgstr "Type de renouvellement"
 
+msgid "replace"
+msgstr "Remplacer"
+
+msgid "replacement"
+msgstr "Remplacement"
+
 msgid "representation_activities"
 msgstr "Activités de représentation à l'UCL"
 
@@ -457,6 +481,9 @@ msgstr "Liste des dossiers"
 
 msgid "reviews"
 msgstr "Avis"
+
+msgid "reviewer"
+msgstr "Évaluateur"
 
 msgid "reviewers"
 msgstr "Évaluateurs"
@@ -518,6 +545,9 @@ msgstr "Structures"
 msgid "settings"
 msgstr "Réglages"
 
+msgid "SPECIAL"
+msgstr "Spécial"
+
 msgid "startup_precedure"
 msgstr "Procédure de démarrage"
 
@@ -532,6 +562,9 @@ msgstr "Encadrement"
 
 msgid "SUPERVISION"
 msgstr "Doyen de faculté"
+
+msgid "SUPERVISION_ASSISTANT"
+msgstr "Délégué de doyen de faculté"
 
 msgid "supervisor"
 msgstr "Promoteur"
@@ -583,6 +616,9 @@ msgstr "ENS"
 
 msgid "type_of_renewal"
 msgstr "Type de renouvellement"
+
+msgid "UNFAVOURABLE"
+msgstr "Défavorable"
 
 msgid "upload"
 msgstr "Joindre un document PDF"
