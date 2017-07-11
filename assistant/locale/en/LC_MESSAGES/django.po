@@ -49,14 +49,14 @@ msgstr "Address"
 msgid "advice"
 msgstr "Avis"
 
+msgid "app_dates"
+msgstr "Procedure opening and closing dates"
+
 msgid "ASSISTANT"
 msgstr "Assistant"
 
 msgid "at_least_one_learning_unit"
 msgstr "You lust add at least one learning unit in the \"Learning units\" item"
-
-msgid "TEACHING_ASSISTANT"
-msgstr "Teaching assistant"
 
 msgid "assistant_form"
 msgstr "Assistant form"
@@ -91,11 +91,17 @@ msgstr "Assistant type"
 msgid "assistants"
 msgstr "Assistants"
 
+msgid "assistants_dates"
+msgstr "Evaluations access dates for the assistants"
+
 msgid "attendees"
 msgstr "Number of students per serie"
 
 msgid "awards"
 msgstr "Awards"
+
+msgid "beginning"
+msgstr "Beginning"
 
 msgid "birth_date"
 msgstr "Birth date"
@@ -198,6 +204,9 @@ msgstr "Done"
 
 msgid "emails"
 msgstr "Emails"
+
+msgid "end"
+msgstr "End"
 
 msgid "eq_fte"
 msgstr "Contrat duration (FTE)"
@@ -544,8 +553,8 @@ msgstr "Rapport du comité d'encadrement"
 msgid "svr"
 msgstr "SVR"
 
-msgid "TRTS"
-msgstr "Assistant"
+msgid "TEACHING_ASSISTANT"
+msgstr "Teaching assistant"
 
 msgid "thesis_defence_date"
 msgstr "Thesis defence date"
@@ -564,6 +573,9 @@ msgstr "To do"
 
 msgid "total_must_be_100_message"
 msgstr "Total should equal 100"
+
+msgid "TRTS"
+msgstr "Assistant"
 
 msgid "tutoring_percent"
 msgstr "Tutoring percentage"
