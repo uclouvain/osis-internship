@@ -274,7 +274,7 @@ def get_components(learning_container_year, with_classes=False):
         if learning_component_year.classes:
             for learning_class_year in learning_component_year.classes:
                 learning_class_year.used_by_learning_units_year = _learning_unit_usage_by_class(learning_class_year)
-                learning_class_year.is_used_by_full_learning_unit_year = (str(ACRONYM_COMPLET_LEARNING_UNIT) in learning_class_year.used_by_learning_units_year)
+                learning_class_year.is_used_by_full_learning_unit_year = _is_used_by_full_learning_unit_year(learning_class_year)
 
         entity_container_yrs = mdl.entity_container_year.find_by_learning_container_year(
             learning_component_year.learning_container_year,
@@ -438,10 +438,7 @@ def _learning_unit_usage(a_learning_component_year):
     for index, l in enumerate(learning_unit_component):
         if index == 1:
             separator = ", "
-        acronym = ACRONYM_COMPLET_LEARNING_UNIT
-        if l.learning_unit_year.subdivision:
-            acronym = l.learning_unit_year.subdivision
-        ch = "{}{}{}".format(ch, separator, acronym)
+        ch = "{}{}{}".format(ch, separator, l.learning_unit_year.acronym)
     return ch
 
 
@@ -482,3 +479,12 @@ def get_components_identification(learning_unit_yr):
                                    'volumes': volumes(entity_component_yr),
                                    'learning_unit_usage': _learning_unit_usage(learning_component_year)})
     return components
+
+
+def _is_used_by_full_learning_unit_year(a_learning_class_year):
+    learning_unit_component_class = mdl.learning_unit_component_class.find_by_learning_class_year(a_learning_class_year)
+    for index, l in enumerate(learning_unit_component_class):
+        if l.learning_unit_component.learning_unit_year.subdivision is None:
+            return True
+
+    return False
