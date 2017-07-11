@@ -36,7 +36,9 @@
 {% endblock %}
 {% block content %}
 <div class="page-header">
+    <h6>{% trans 'connected_as' %} {{ reviewer.person }} ({% trans reviewer.role %}) - {{ reviewer.structure.acronym }}</h6>
     <h3>{% trans 'assistantship_mandate_renewal' %} {{ year|add:1 }}</h3>
+
     <ul class="nav nav-tabs">
             <li class="active"><a href="#">{% trans 'reviewer_mandates_list' %}</a></li>
             {% if is_supervisor %}
@@ -64,7 +66,6 @@
         <th>{% trans 'structures' %}</th>
         <th>{% trans 'assistant_type' %}</th>
         <th>{% trans 'renewal_type' %}</th>
-
         <th>{% trans 'contract_duration' %}</th>
         <th>{% trans 'eq_fte' %}</th>
         <th>{% trans 'fulltime_equivalent_percentage' %}</th>

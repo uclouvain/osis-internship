@@ -127,6 +127,9 @@ msgstr "Êtes-vous certain de vouloir valider et soumettre ? Cette action ne pou
 msgid "confirmatory_test_date"
 msgstr "Date de l'épreuve de confirmation"
 
+msgid "connected_as"
+msgstr "Vous êtes connecté en tant que"
+
 msgid "contact_details"
 msgstr "Coordonnées administratives"
 
