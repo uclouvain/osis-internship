@@ -1494,8 +1494,8 @@ msgstr "La date d'ouverture de '%s' du calendrier académique ne peut pas être 
 msgid "component_type"
 msgstr "Type de composant"
 
-msgid "nominal_quarter"
-msgstr "Quadri. nominal "
+msgid "volume_quarter"
+msgstr "Quadri. "
 
 msgid "vol_q1"
 msgstr "Vol. q1"
@@ -1503,8 +1503,8 @@ msgstr "Vol. q1"
 msgid "vol_q2"
 msgstr "Vol. q2"
 
-msgid "nominal_volume"
-msgstr "Volume nominal"
+msgid "volume"
+msgstr "Volume"
 
 msgid "schedules_conformity"
 msgstr "Conform. horaires"
@@ -1588,7 +1588,7 @@ msgid "title_in_english_2"
 msgstr "(partie 2 propre au partim)"
 
 msgid "LECTURING"
-msgstr "Cours Magistraux"
+msgstr "Partie magistrale"
 
 msgid "PRACTICAL_EXERCISES"
 msgstr "Travaux pratiques"
@@ -1691,3 +1691,12 @@ msgstr "à"
 
 msgid "since"
 msgstr "Depuis"
+
+msgid "editing"
+msgstr "Edition"
+
+msgid "component"
+msgstr "Composant"
+
+msgid "used_by"
+msgstr "Reutilisé par l'unité d'enseignement"

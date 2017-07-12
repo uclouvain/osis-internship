@@ -23,11 +23,9 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from datetime import date
 from django import forms
 from django.core.exceptions import ValidationError
 from django.forms import ModelForm, Textarea
-from django.forms import widgets
 from django.forms.models import inlineformset_factory
 from django.utils.translation import ugettext as _
 from base.models import structure, academic_year
@@ -109,8 +107,7 @@ class AssistantFormPart1(ModelForm):
 
 
 class MandatesArchivesForm(ModelForm):
-    academic_year = forms.ModelChoiceField(queryset=academic_year.AcademicYear.objects.all(),
-                                           widget=forms.Select(attrs={"onChange": 'submit()'}))
+    academic_year = forms.ModelChoiceField(queryset=academic_year.AcademicYear.objects.all())
 
     class Meta:
         model = mdl.assistant_mandate.AssistantMandate
@@ -286,7 +283,11 @@ class ReviewersFormset(ModelForm):
     structure = forms.ChoiceField(required=False)
     person = forms.ChoiceField(required=False)
     id = forms.IntegerField(required=False)
-    ACTIONS = (('-----', _('-----')), ('DELETE', _('delete_reviewer')), ('REPLACE', _('replace_reviewer')))
+    ACTIONS = (
+        ('-----', _('-----')),
+        ('DELETE', _('delete')),
+        ('REPLACE', _('replace'))
+    )
     action = forms.ChoiceField(required=False, choices=ACTIONS,
                                widget=forms.Select(attrs={'class': 'selector', 'onchange': 'this.form.submit();'}))
 
@@ -296,15 +297,16 @@ class ReviewersFormset(ModelForm):
 
 
 class SettingsForm(ModelForm):
-    starting_date = forms.DateField(required=True, widget=widgets.SelectDateWidget(
-        years=range(date.today().year-1, date.today().year+2)))
-    ending_date = forms.DateField(required=True, widget=widgets.SelectDateWidget(
-        years=range(date.today().year-1, date.today().year+2)))
-    assistants_starting_date = forms.DateField(required=True, widget=widgets.SelectDateWidget(
-        years=range(date.today().year-1, date.today().year+2)))
-    assistants_ending_date = forms.DateField(required=True, widget=widgets.SelectDateWidget(
-        years=range(date.today().year-1, date.today().year+2)))
+    starting_date = forms.DateField(required=True)
+    ending_date = forms.DateField(required=True)
+    assistants_starting_date = forms.DateField(required=True)
+    assistants_ending_date = forms.DateField(required=True)
 
     class Meta:
         model = mdl.settings.Settings
         fields = ('starting_date', 'ending_date', 'assistants_starting_date', 'assistants_ending_date')
+
+    def __init__(self, *args, **kwargs):
+        super(SettingsForm, self).__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control'

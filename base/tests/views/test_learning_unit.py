@@ -43,7 +43,9 @@ from base.tests.factories.entity_container_year import EntityContainerYearFactor
 from base.models.enums import entity_container_year_link_type
 from base.views import learning_unit as learning_unit_view
 from django.utils.translation import ugettext_lazy as _
-
+from base.tests.factories.user import SuperUserFactory
+from django.core.exceptions import ObjectDoesNotExist
+from base.models import learning_unit_component
 
 class LearningUnitViewTestCase(TestCase):
     def setUp(self):
@@ -55,6 +57,8 @@ class LearningUnitViewTestCase(TestCase):
         self.learning_component_yr = LearningComponentYearFactory(learning_container_year=self.learning_container_yr)
         self.entity_container_yr = EntityContainerYearFactory(learning_container_year=self.learning_container_yr,
                                                          type=entity_container_year_link_type.REQUIREMENT_ENTITY)
+        self.a_superuser = SuperUserFactory()
+        self.client.force_login(self.a_superuser)
 
     @mock.patch('django.contrib.auth.decorators')
     @mock.patch('base.views.layout.render')
@@ -370,7 +374,7 @@ class LearningUnitViewTestCase(TestCase):
         LearningUnitComponentFactory(learning_unit_year=learning_unit_yr_2,
                                      learning_component_year=learning_component_yr)
 
-        self.assertEqual(learning_unit_view._learning_unit_usage(learning_component_yr), 'A, B')
+        self.assertEqual(learning_unit_view._learning_unit_usage(learning_component_yr), 'LBIOLA, LBIOLB')
 
     def test_learning_unit_usage_with_complete_LU(self):
         learning_container_yr = LearningContainerYearFactory(academic_year=self.current_academic_year,
@@ -385,7 +389,7 @@ class LearningUnitViewTestCase(TestCase):
         LearningUnitComponentFactory(learning_unit_year=learning_unit_yr_1,
                                      learning_component_year=learning_component_yr)
 
-        self.assertEqual(learning_unit_view._learning_unit_usage(learning_component_yr), _('complete'))
+        self.assertEqual(learning_unit_view._learning_unit_usage(learning_component_yr), 'LBIOL')
 
     def test_learning_unit_usage_by_class_with_complete_LU(self):
         academic_year = AcademicYearFactory(year=2016)
@@ -404,3 +408,39 @@ class LearningUnitViewTestCase(TestCase):
         LearningUnitComponentClassFactory(learning_unit_component=learning_unit_component,
                                           learning_class_year=learning_class_year)
         self.assertEqual(learning_unit_view._learning_unit_usage_by_class(learning_class_year), _('complete'))
+
+    def test_component_save(self):
+        learning_unit_yr = LearningUnitYearFactory(academic_year=self.current_academic_year,
+                                                   learning_container_year=self.learning_container_yr)
+        learning_unit_compnt = LearningUnitComponentFactory(learning_unit_year=learning_unit_yr,
+                                                               learning_component_year=self.learning_component_yr)
+        url = reverse('learning_unit_component_edit', args=[learning_unit_yr.id])
+        qs = 'learning_component_year_id={}'.format(self.learning_component_yr.id)
+
+        response = self.client.post('{}?{}'.format(url,qs), data={"planned_classes": "1", "used_by": "on"})
+        self.learning_component_yr.refresh_from_db()
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(self.learning_component_yr.planned_classes, 1)
+
+    def test_component_save_delete_link(self):
+        learning_unit_yr = LearningUnitYearFactory(academic_year=self.current_academic_year,
+                                                   learning_container_year=self.learning_container_yr)
+        learning_unit_compnt = LearningUnitComponentFactory(learning_unit_year=learning_unit_yr,
+                                                            learning_component_year=self.learning_component_yr)
+        url = reverse('learning_unit_component_edit', args=[learning_unit_yr.id])
+        qs = 'learning_component_year_id={}'.format(self.learning_component_yr.id)
+
+        response = self.client.post('{}?{}'.format(url,qs), data={"planned_classes": "1"})
+        self.assertRaises(ObjectDoesNotExist, learning_unit_component.LearningUnitComponent.objects.filter(pk=learning_unit_compnt.id).first())
+
+    def test_component_save_create_link(self):
+        learning_unit_yr = LearningUnitYearFactory(academic_year=self.current_academic_year,
+                                                   learning_container_year=self.learning_container_yr)
+        url = reverse('learning_unit_component_edit', args=[learning_unit_yr.id])
+        qs = 'learning_component_year_id={}'.format(self.learning_component_yr.id)
+
+        response = self.client.post('{}?{}'.format(url,qs), data={"planned_classes": "1", "used_by": "on"})
+
+        self.assertTrue(learning_unit_component.find_by_learning_component_year(self.learning_component_yr).exists())
+
+
