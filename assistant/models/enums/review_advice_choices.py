@@ -23,11 +23,12 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.utils.translation import ugettext_lazy as _
 
 FAVORABLE = 'FAVORABLE'
 CONDITIONAL = 'CONDITIONAL'
 UNFAVOURABLE = 'UNFAVOURABLE'
 
-REVIEW_ADVICE_CHOICES = ((FAVORABLE, FAVORABLE),
-                         (CONDITIONAL, CONDITIONAL),
-                         (UNFAVOURABLE, UNFAVOURABLE))
+REVIEW_ADVICE_CHOICES = ((FAVORABLE, _(FAVORABLE)),
+                         (CONDITIONAL, _(CONDITIONAL)),
+                         (UNFAVOURABLE, _(UNFAVOURABLE)))
