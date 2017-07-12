@@ -1190,7 +1190,7 @@ msgid "types"
 msgstr "Types"
 
 msgid "undated_events"
-msgstr "Undated events"
+msgstr "Unscheduled events"
 
 msgid "undefined"
 msgstr "Undefined"
