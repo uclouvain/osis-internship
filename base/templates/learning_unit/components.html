@@ -88,7 +88,7 @@
                             {% if perms.base.change_learningcomponentyear %}
                             <a class="component-edit-btn pull-right" href="#"
                                data-form="{% url 'learning_unit_component_edit' learning_unit_year_id=learning_unit_year.id %}?learning_component_year_id={{component.learning_component_year.id}}"
-                               title="Edit">
+                               title="{% trans 'edit' %}">
                                 <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
                             </a>
                             {% endif %}
