@@ -1700,4 +1700,4 @@ msgid "component"
 msgstr "Component"
 
 msgid "used_by"
-msgstr "Used by"
+msgstr "Used by learning unit"

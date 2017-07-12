@@ -28,7 +28,7 @@ from base import models as mdl
 
 
 class LearningUnitComponentEditForm(forms.Form):
-    planned_classes = forms.IntegerField(min_value=0, max_value=99)
+    planned_classes = forms.IntegerField(min_value=0, max_value=300)
     used_by = forms.BooleanField(required=False)
 
     def __init__(self, *args, **kwargs):

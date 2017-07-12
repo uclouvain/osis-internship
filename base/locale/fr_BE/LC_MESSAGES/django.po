@@ -1699,4 +1699,4 @@ msgid "component"
 msgstr "Composant"
 
 msgid "used_by"
-msgstr "Utilisation par"
+msgstr "Reutilisé par l'unité d'enseignement"
