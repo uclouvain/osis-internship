@@ -139,6 +139,9 @@ msgstr "Are you sure you want to validate et submit ? This action can not be und
 msgid "confirmatory_test_date"
 msgstr "Confirmatory test date"
 
+msgid "connected_as"
+msgstr "You are logged in as"
+
 msgid "contact_details"
 msgstr "Administrative information"
 

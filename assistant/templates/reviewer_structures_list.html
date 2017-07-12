@@ -38,6 +38,7 @@
 {% endblock %}
 {% block content %}
 <div class="page-header">
+    <h6>{% trans 'connected_as' %} {{ current_reviewer.person }} ({% trans current_reviewer.role %}) - {{ current_reviewer.structure.acronym }}</h6>
     <h3>{% trans 'assistantship_mandate_renewal' %} {{ year|add:1 }}</h3>
     <ul class="nav nav-tabs">
         <li><a href="{% url 'reviewer_mandates_list' %}">{% trans 'reviewer_mandates_list' %}</a></li>
