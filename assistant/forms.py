@@ -69,6 +69,11 @@ class MandateForm(ModelForm):
         fields = ('comment', 'absences', 'other_status', 'renewal_type', 'assistant_type', 'sap_id',
                   'contract_duration', 'contract_duration_fte', 'fulltime_equivalent')
 
+    def __init__(self, *args, **kwargs):
+        super(MandateForm, self).__init__(*args, **kwargs)
+        for field in self.fields:
+            self.fields[field].widget.attrs['class'] = 'form-control'
+
 
 class MandateStructureForm(ModelForm):
     class Meta:
@@ -104,6 +109,12 @@ class AssistantFormPart1(ModelForm):
     class Meta:
         model = mdl.assistant_mandate.AssistantMandate
         fields = ('external_functions', 'external_contract', 'justification')
+
+    def __init__(self, *args, **kwargs):
+        super(AssistantFormPart1, self).__init__(*args, **kwargs)
+        self.fields['external_functions'].widget.attrs['class'] = 'form-control'
+        self.fields['external_contract'].widget.attrs['class'] = 'form-control'
+        self.fields['justification'].widget.attrs['class'] = 'form-control'
 
 
 class MandatesArchivesForm(ModelForm):
@@ -141,6 +152,15 @@ class AssistantFormPart3(ModelForm):
                   )
         exclude = ['supervisor']
 
+    def __init__(self, *args, **kwargs):
+        super(AssistantFormPart3, self).__init__(*args, **kwargs)
+        self.fields['expected_phd_date'].widget.attrs['class'] = 'form-control'
+        self.fields['phd_inscription_date'].widget.attrs['class'] = 'form-control'
+        self.fields['thesis_date'].widget.attrs['class'] = 'form-control'
+        self.fields['confirmation_test_date'].widget.attrs['class'] = 'form-control'
+        self.fields['thesis_title'].widget.attrs['class'] = 'form-control'
+        self.fields['remark'].widget.attrs['class'] = 'form-control'
+
 
 class AssistantFormPart4(ModelForm):
     internships = forms.CharField(
@@ -160,6 +180,12 @@ class AssistantFormPart4(ModelForm):
         model = mdl.assistant_mandate.AssistantMandate
         fields = ('internships', 'conferences', 'publications',
                   'awards', 'framing', 'remark')
+
+    def __init__(self, *args, **kwargs):
+        super(AssistantFormPart4, self).__init__(*args, **kwargs)
+        for field in self.fields:
+            self.fields[field].widget.attrs['class'] = 'form-control'
+
 
 
 class TutoringLearningUnitForm(ModelForm):
@@ -185,6 +211,11 @@ class TutoringLearningUnitForm(ModelForm):
                   'attendees', 'exams_supervision_duration', 'others_delivery')
         exclude = ['learning_unit_year', 'mandate']
 
+    def __init__(self, *args, **kwargs):
+        super(TutoringLearningUnitForm, self).__init__(*args, **kwargs)
+        for field in self.fields:
+            self.fields[field].widget.attrs['class'] = 'form-control'
+
 
 class AssistantFormPart5(ModelForm):
     formations = forms.CharField(
@@ -196,6 +227,11 @@ class AssistantFormPart5(ModelForm):
                   'governing_body_representation', 'corsci_representation', 'students_service',
                   'infrastructure_mgmt_service', 'events_organisation_service', 'publishing_field_service',
                   'scientific_jury_service', 'formations')
+
+    def __init__(self, *args, **kwargs):
+        super(AssistantFormPart5, self).__init__(*args, **kwargs)
+        for field in self.fields:
+            self.fields[field].widget.attrs['class'] = 'form-control'
 
 
 class ReviewForm(ModelForm):
@@ -211,6 +247,12 @@ class ReviewForm(ModelForm):
         fields = ('mandate', 'advice', 'status', 'justification', 'remark', 'confidential', 'changed')
         widgets = {'mandate': forms.HiddenInput(), 'reviewer': forms.HiddenInput, 'status': forms.HiddenInput,
                    'changed': forms.HiddenInput}
+
+    def __init__(self, *args, **kwargs):
+        super(ReviewForm, self).__init__(*args, **kwargs)
+        self.fields['justification'].widget.attrs['class'] = 'form-control'
+        self.fields['remark'].widget.attrs['class'] = 'form-control'
+        self.fields['confidential'].widget.attrs['class'] = 'form-control'
 
     def clean(self):
         super(ReviewForm, self).clean()
@@ -229,6 +271,11 @@ class AssistantFormPart6(ModelForm):
         model = mdl.assistant_mandate.AssistantMandate
         fields = ('tutoring_percent', 'service_activities_percent', 'formation_activities_percent',
                   'research_percent', 'activities_report_remark')
+
+    def __init__(self, *args, **kwargs):
+        super(AssistantFormPart6, self).__init__(*args, **kwargs)
+        for field in self.fields:
+            self.fields[field].widget.attrs['class'] = 'form-control'
 
     def clean(self):
         tutoring_percent = self.cleaned_data['tutoring_percent']
@@ -267,6 +314,11 @@ class ReviewerForm(ModelForm):
         model = mdl.reviewer.Reviewer
         fields = ('structure', 'role')
         exclude = ['person']
+
+    def __init__(self, *args, **kwargs):
+        super(ReviewerForm, self).__init__(*args, **kwargs)
+        for field in self.fields:
+            self.fields[field].widget.attrs['class'] = 'form-control'
 
 
 class ReviewerReplacementForm(ModelForm):

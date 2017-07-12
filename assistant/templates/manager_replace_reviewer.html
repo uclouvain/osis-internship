@@ -51,9 +51,8 @@
 		    {% endfor %}
 	    <div class="form-group">
 		    <label for="search_persons">{% trans 'person_who_will_be_replacing' %}</label>
-			<div class="ui-widget"><input id="search_persons" name="search_persons" size="100"
-										  placeholder="{% trans 'search_by_email_or_last_name' %}">
-			</div>
+			<input id="search_persons" name="search_persons" size="100" class="form-control"
+                   placeholder="{% trans 'search_by_email_or_last_name' %}">
 			<input type="hidden" name="person_id" id="person_id">
 		</div>
 		<div class="form-group">
