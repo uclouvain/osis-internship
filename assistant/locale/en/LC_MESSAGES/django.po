@@ -49,6 +49,9 @@ msgstr "Address"
 msgid "advice"
 msgstr "Avis"
 
+msgid "apply"
+msgstr "Apply"
+
 msgid "app_dates"
 msgstr "Procedure opening and closing dates"
 
@@ -118,6 +121,9 @@ msgstr "Choose a person as reviewer for"
 msgid "comment"
 msgstr "Comment"
 
+msgid "CONDITIONAL"
+msgstr "Conditional"
+
 msgid "conferences_contributor"
 msgstr "Conference(s)"
 
@@ -132,6 +138,9 @@ msgstr "Are you sure you want to validate et submit ? This action can not be und
 
 msgid "confirmatory_test_date"
 msgstr "Confirmatory test date"
+
+msgid "connected_as"
+msgstr "You are logged in as"
 
 msgid "contact_details"
 msgstr "Administrative information"
@@ -220,6 +229,9 @@ msgstr "Preparation, coordination and evaluation"
 msgid "exceptional_justification"
 msgstr "To the extent that you no longer meet the conditions for a 'normal' renewal, can you clarify the circumstances justifying a request for an 'exceptional' renewal (art. 51 of the RAMCS)"
 
+msgid "EXCEPTIONAL"
+msgstr "Exceptional"
+
 msgid "exercises_tp"
 msgstr "Exercises, practicals, seminars - associated with volume 2 hours, you assume personally"
 
@@ -243,6 +255,9 @@ msgstr "Faculty"
 
 msgid "faculty_representation"
 msgstr "Faculty representation activities"
+
+msgid "FAVORABLE"
+msgstr "Favorable"
 
 msgid "field"
 msgstr "Mandate type"
@@ -364,6 +379,9 @@ msgstr "did not respond"
 msgid "no_supervisor"
 msgstr "No supervisor"
 
+msgid "NORMAL"
+msgstr "Normal"
+
 msgid "other_status"
 msgstr "Other status"
 
@@ -375,6 +393,12 @@ msgstr "% EFT"
 
 msgid "period_covered"
 msgstr "Period covered"
+
+msgid "person_already_reviewer_msg"
+msgstr "This person is already a reviewer, please choose someone else"
+
+msgid "person_who_will_be_replacing"
+msgstr "Substitute reviewer"
 
 msgid "phd"
 msgstr "PhD"
@@ -433,6 +457,12 @@ msgstr "Give an advice"
 msgid "renewal_type"
 msgstr "Type of renewal"
 
+msgid "replace"
+msgstr "Replace"
+
+msgid "replacement"
+msgstr "Replacement"
+
 msgid "representation_activities"
 msgstr "Representation activities"
 
@@ -462,6 +492,9 @@ msgstr "Folders list"
 
 msgid "reviews"
 msgstr "Reviews"
+
+msgid "reviewer"
+msgstr "Reviewer"
 
 msgid "reviewers"
 msgstr "Reviewers"
@@ -520,6 +553,9 @@ msgstr "Number of sessions scheduled for this course"
 msgid "settings"
 msgstr "Settings"
 
+msgid "SPECIAL"
+msgstr "Special"
+
 msgid "startup_precedure"
 msgstr "Startup procedure"
 
@@ -537,6 +573,9 @@ msgstr "Supervision"
 
 msgid "SUPERVISION"
 msgstr "Dean of the Faculty"
+
+msgid "SUPERVISION_ASSISTANT"
+msgstr "Delegate of dean of the Faculty"
 
 msgid "supervisor"
 msgstr "Supervisor"
@@ -588,6 +627,9 @@ msgstr "TUT"
 
 msgid "type_of_renewal"
 msgstr "Type of renewal"
+
+msgid "UNFAVOURABLE"
+msgstr "Unfavourable"
 
 msgid "upload"
 msgstr "Joindre un document PDF"

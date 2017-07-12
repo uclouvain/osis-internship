@@ -118,8 +118,7 @@ class AssistantFormPart1(ModelForm):
 
 
 class MandatesArchivesForm(ModelForm):
-    academic_year = forms.ModelChoiceField(queryset=academic_year.AcademicYear.objects.all(),
-                                           widget=forms.Select(attrs={"onChange": 'submit()'}))
+    academic_year = forms.ModelChoiceField(queryset=academic_year.AcademicYear.objects.all())
 
     class Meta:
         model = mdl.assistant_mandate.AssistantMandate
@@ -336,7 +335,11 @@ class ReviewersFormset(ModelForm):
     structure = forms.ChoiceField(required=False)
     person = forms.ChoiceField(required=False)
     id = forms.IntegerField(required=False)
-    ACTIONS = (('-----', _('-----')), ('DELETE', _('delete_reviewer')), ('REPLACE', _('replace_reviewer')))
+    ACTIONS = (
+        ('-----', _('-----')),
+        ('DELETE', _('delete')),
+        ('REPLACE', _('replace'))
+    )
     action = forms.ChoiceField(required=False, choices=ACTIONS,
                                widget=forms.Select(attrs={'class': 'selector', 'onchange': 'this.form.submit();'}))
 

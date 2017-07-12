@@ -43,6 +43,7 @@
 {% endblock %}
 {% block content %}
 <div class="page-header">
+    <h6>{% trans 'connected_as' %} {{ current_reviewer.person }} ({% trans current_reviewer.role %}) - {{ current_reviewer.structure.acronym }}</h6>
     <h3>{% trans 'assistants_mandates_renewal' %} ({{ year }})</h3>
     <h4>{{ assistant.person }}</h4>
 </div>
@@ -127,8 +128,8 @@
             <span class="error">{{ form.advice.errors }}</span>
         </div>
         <div class="form-group">
-            <label for="txt_justification" id="id-txt_justification">{% trans 'justification' %}</label>
-            {{ form.justification }}
+            <label for="txt_rev-justification" id="id_txt_rev-justification">{% trans 'justification' %}</label>
+            <div class="controls">{{ form.justification }}</div>
             <span class="error">{{ form.justification.errors }}</span>
             <label  style="font-size:10px" id="justification_help_label">{% trans form.justification.help_text %}</label>
         </div>
@@ -172,12 +173,12 @@ function Hide() {
         document.getElementById('id_rev-justification').style.display = 'none';
         document.getElementById('id_rev-justification').value='';
         document.getElementById('justification_help_label').style.display = 'none';
-        document.getElementById('id-txt_justification').style.display = 'none';
+        document.getElementById('id_txt_rev-justification').style.display = 'none';
     } else
      {
         document.getElementById('id_rev-justification').style.display = 'block';
         document.getElementById('justification_help_label').style.display = 'block';
-        document.getElementById('id-txt_justification').style.display = 'block';
+        document.getElementById('id_txt_rev-justification').style.display = 'block';
     }
 }
 window.onload = function() {

@@ -1692,3 +1692,12 @@ msgstr "to"
 
 msgid "since"
 msgstr "Since"
+
+msgid "editing"
+msgstr "Edition"
+
+msgid "component"
+msgstr "Component"
+
+msgid "used_by"
+msgstr "Used by learning unit"
