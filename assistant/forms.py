@@ -107,8 +107,7 @@ class AssistantFormPart1(ModelForm):
 
 
 class MandatesArchivesForm(ModelForm):
-    academic_year = forms.ModelChoiceField(queryset=academic_year.AcademicYear.objects.all(),
-                                           widget=forms.Select(attrs={"onChange": 'submit()'}))
+    academic_year = forms.ModelChoiceField(queryset=academic_year.AcademicYear.objects.all())
 
     class Meta:
         model = mdl.assistant_mandate.AssistantMandate

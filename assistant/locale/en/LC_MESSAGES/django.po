@@ -49,6 +49,9 @@ msgstr "Address"
 msgid "advice"
 msgstr "Avis"
 
+msgid "apply"
+msgstr "Apply"
+
 msgid "app_dates"
 msgstr "Procedure opening and closing dates"
 
