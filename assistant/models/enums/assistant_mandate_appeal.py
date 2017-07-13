@@ -23,6 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.utils.translation import ugettext_lazy as _
 
 NONE = 'NONE'
 POSITIVE_APPEAL = 'POSITIVE_APPEAL'
@@ -31,8 +32,8 @@ APPEAL_IN_PROGRESS = 'APPEAL_IN_PROGRESS'
 NO_APPEAL = 'NO_APPEAL'
 
 ASSISTANT_MANDATE_APPEALS = (
-    (NONE, NONE),
-    (POSITIVE_APPEAL, POSITIVE_APPEAL),
-    (NEGATIVE_APPEAL, NEGATIVE_APPEAL),
-    (APPEAL_IN_PROGRESS, APPEAL_IN_PROGRESS),
-    (NO_APPEAL, NO_APPEAL))
+    (NONE, _(NONE)),
+    (POSITIVE_APPEAL, _(POSITIVE_APPEAL)),
+    (NEGATIVE_APPEAL, _(NEGATIVE_APPEAL)),
+    (APPEAL_IN_PROGRESS, _(APPEAL_IN_PROGRESS)),
+    (NO_APPEAL, _(NO_APPEAL)))

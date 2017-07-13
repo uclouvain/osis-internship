@@ -107,16 +107,24 @@ def add_reviewer_for_structure(request, structure_id):
                     reviewer.find_by_person(this_person)
                     msg = _("person_already_reviewer_msg")
                     form.add_error(None, msg)
-                    return render(request, "reviewer_add_reviewer.html", {'form': form, 'year': year,
-                                                                          'related_structure': related_structure})
+                    return render(request, "reviewer_add_reviewer.html", {
+                        'form': form,
+                        'year': year,
+                        'related_structure': related_structure,
+                        'reviewer': reviewer.find_by_person(request.user.person)
+                    })
                 except reviewer.Reviewer.DoesNotExist:
                     pass
                 new_reviewer.person = this_person
                 new_reviewer.save()
                 return redirect('reviewer_delegation')
         else:
-            return render(request, "reviewer_add_reviewer.html", {'form': form, 'year': year,
-                                                                  'related_structure': related_structure})
+            return render(request, "reviewer_add_reviewer.html", {
+                'form': form,
+                'year': year,
+                'related_structure': related_structure,
+                'reviewer': reviewer.find_by_person(request.user.person)
+            })
     else:
         this_reviewer = reviewer.find_by_person(person=request.user.person)
         if this_reviewer.role == reviewer_role.SUPERVISION:
@@ -124,5 +132,7 @@ def add_reviewer_for_structure(request, structure_id):
         else: 
             role = reviewer_role.RESEARCH_ASSISTANT
         form = ReviewerDelegationForm(initial={'structure': related_structure, 'year': year, 'role': role})
-        return render(request, "reviewer_add_reviewer.html", {'form': form, 'year': year,
-                                                              'related_structure': related_structure})
+        return render(request, "reviewer_add_reviewer.html", {'form': form,
+                                                              'year': year,
+                                                              'related_structure': related_structure,
+                                                              'reviewer': this_reviewer})

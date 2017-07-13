@@ -43,7 +43,8 @@
 {% endblock %}
 {% block content %}
 <div class="page-header">
-    <h2>{% trans 'assistants_mandates_renewal' %} ({{ year }})</h2>
+    <h6>{% trans 'connected_as' %} {{ current_reviewer.person }} ({% trans current_reviewer.role %}) - {{ current_reviewer.structure.acronym }}</h6>
+    <h3>{% trans 'assistants_mandates_renewal' %} ({{ year }})</h3>
     <h4>{{ assistant.person }}</h4>
 </div>
 <ul class="nav nav-tabs">
@@ -121,29 +122,29 @@
                 </table>
             </div>
         </div>
-        <div class="form-group" style="padding-top: 5px;">
+        <div class="form-group">
             {% trans 'advice' %}
             <div class="controls">{{ form.advice }}</div>
             <span class="error">{{ form.advice.errors }}</span>
         </div>
-        <div class="form-group" style="padding-top: 5px;">
-            {{ form.justification.label_tag }}
+        <div class="form-group">
+            <label for="txt_rev-justification" id="id_txt_rev-justification">{% trans 'justification' %}</label>
             <div class="controls">{{ form.justification }}</div>
             <span class="error">{{ form.justification.errors }}</span>
             <label  style="font-size:10px" id="justification_help_label">{% trans form.justification.help_text %}</label>
         </div>
-        <div class="form-group" style="padding-top: 5px;">
+        <div class="form-group">
             {% trans 'remark' %}
             <div class="controls">{{ form.remark }}</div>
             <span class="error">{{ form.remark.errors }}</span>
         </div>
-        <div class="form-group" style="padding-top: 5px;">
+        <div class="form-group">
             {% trans 'confidential' %}
             <div class="controls">{{ form.confidential }}</div>
             <span class="error">{{ form.confidential.errors }}</span>
             <label style="font-size:10px">{% trans form.confidential.help_text %}</label>
         </div>
-        <div class="form-group" style="padding-top: 15px;">
+        <div class="form-group">
             <div class="row">
                 <div class="col-md-6" align="left">
 		            <button type="submit" class="btn btn-primary btn-block" title="{% trans 'save'%}"
@@ -164,7 +165,7 @@
         </div>
         {# un assistant de supervision ne peut valider la review #}
         {% if "SUPERVISION_ASSISTANT" not in role %}
-        <div class="form-group" style="padding-top: 10px;">
+        <div class="form-group">
                 <div style="text-align: center">
                     <button type="submit" class="btn btn-success btn-block" title="{% trans 'validate_and_submit'%}"
                     id="bt_pstform_validate_and_submit" name="validate_and_submit"
@@ -185,9 +186,13 @@ function Hide() {
      {
         document.getElementById('id_rev-justification').style.display = 'none';
         document.getElementById('id_rev-justification').value='';
+        document.getElementById('justification_help_label').style.display = 'none';
+        document.getElementById('id_txt_rev-justification').style.display = 'none';
     } else
      {
-        document.getElementById('id_rev-justification').style.display = '';
+        document.getElementById('id_rev-justification').style.display = 'block';
+        document.getElementById('justification_help_label').style.display = 'block';
+        document.getElementById('id_txt_rev-justification').style.display = 'block';
     }
 }
 window.onload = function() {

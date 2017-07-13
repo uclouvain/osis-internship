@@ -401,6 +401,9 @@ msgstr "Entities"
 msgid "entity"
 msgstr "Entity"
 
+msgid "versions"
+msgstr "Versions"
+
 msgid "evaluations"
 msgstr "Evaluations"
 
@@ -1471,8 +1474,8 @@ msgstr "The start's date of '%s' of the academic calendar can't be higher than %
 msgid "component_type"
 msgstr "Component type"
 
-msgid "nominal_quarter"
-msgstr "Nominal quarter"
+msgid "volume_quarter"
+msgstr "Quarter"
 
 msgid "vol_q1"
 msgstr "Vol. q1"
@@ -1480,8 +1483,8 @@ msgstr "Vol. q1"
 msgid "vol_q2"
 msgstr "Vol. q2"
 
-msgid "nominal_volume"
-msgstr "Nominal volume"
+msgid "volume"
+msgstr "Volume"
 
 msgid "schedules_conformity"
 msgstr "Sched. conform. "
@@ -1698,3 +1701,12 @@ msgstr "to"
 
 msgid "since"
 msgstr "Since"
+
+msgid "editing"
+msgstr "Edition"
+
+msgid "component"
+msgstr "Component"
+
+msgid "used_by"
+msgstr "Used by learning unit"

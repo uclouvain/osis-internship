@@ -1,7 +1,6 @@
 {% extends "layout.html" %}
 {% load staticfiles %}
 {% load i18n %}
-
 {% comment "License" %}
 * OSIS stands for Open Student Information System. It's an application
 * designed to manage the core business of higher education institutions,
@@ -27,29 +26,19 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-<li><a href="{% url 'institution' %}" id="lnk_institution">{% trans 'institution' %}</a></li>
-<li><a href="{% url 'entities' %}" id="lnk_entities">{% trans 'entities' %}</a></li>
-<li class="active">{{ entity_version.acronym }}</li>
+{% include "entity/breadcrumb.html" %}
 {% endblock %}
+
 {% block content %}
-<div class="page-header">
-    {% if entity_parent %}
-        <h3>{{ entity_parent.acronym }} - {{ entity_parent.title }}</h3>
-        <h2>{{ entity_version.acronym }} - {{ entity_version.title }}</h2>
-    {% else %}
-        <h3>{{ entity_version.title }}</h3>
-    {% endif %}
-</div>
-<div class="panel panel-default">
-    <div class="panel-body">
-        <ul class="nav nav-tabs">
-            <li class="active"><a data-toggle="tab" href="#tab_identification">{% trans 'identification'%}</a></li>
-            {% if entity_version.find_descendants|length > 0 %}
-                <li><a data-toggle="tab" href="#tab_structure">{% trans 'organogram'%}</a></li>
-            {% endif %}
-        </ul>
+
+{% include "entity/header.html" %}
+
+<div class="panel panel-default" >
+    <div class="panel-body" id="tabs" >
+        {% include "entity/tabs.html" %}
+
         <div class="tab-content">
-            <div id="tab_identification" class="tab-pane fade in active">
+            <div id="tab_identification" class="tab-pane active">
                 <br>
                 <div class="row">
                     <div class="col-md-2">
@@ -119,12 +108,6 @@
                     </div>
                 </div>
                 {% endif %}
-            </div>
-            <div id="tab_structure" class="tab-pane fade">
-                {%if entity_version %}
-                <iframe src="{%url 'entity_diagram' entity_version_id=entity_version.id %}" width="1100px" height="600px"
-                        frameborder="0"></iframe>
-                {%endif%}
             </div>
         </div>
     </div>
