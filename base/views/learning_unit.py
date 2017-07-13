@@ -30,7 +30,6 @@ from django.contrib import messages
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required, permission_required
-from django.db import models
 from django.http import HttpResponseRedirect
 from django.utils.translation import ugettext_lazy as _
 from django.views.decorators.http import require_http_methods
@@ -45,6 +44,7 @@ from cms.enums import entity_name
 from base.forms.learning_units import LearningUnitYearForm
 from base.forms.learning_unit_specifications import LearningUnitSpecificationsForm, LearningUnitSpecificationsEditForm
 from base.forms.learning_unit_pedagogy import LearningUnitPedagogyForm, LearningUnitPedagogyEditForm
+from base.forms.learning_unit_component import LearningUnitComponentEditForm
 from base.models.enums import learning_unit_year_subtypes
 from cms.models import text_label
 
@@ -487,4 +487,38 @@ def _is_used_by_full_learning_unit_year(a_learning_class_year):
         if l.learning_unit_component.learning_unit_year.subdivision is None:
             return True
 
+    return False
+
+
+@login_required
+@permission_required('base.change_learningcomponentyear', raise_exception=True)
+@require_http_methods(["GET", "POST"])
+def learning_unit_component_edit(request, learning_unit_year_id):
+    context = _get_common_context_learning_unit_year(learning_unit_year_id)
+    context.update({'learning_component_year':
+                        mdl.learning_component_year.find_by_id(request.GET.get('learning_component_year_id'))})
+
+    if request.method == 'POST':
+        form = LearningUnitComponentEditForm(request.POST,
+                                             ** {'learning_unit_year': context['learning_unit_year'],
+                                                 'learning_component_year': context['learning_component_year']})
+        if form.is_valid():
+            form.save()
+        return HttpResponseRedirect(reverse("learning_unit_components",
+                                            kwargs={'learning_unit_year_id': learning_unit_year_id}))
+
+    form = LearningUnitComponentEditForm(**{
+        'learning_unit_year': context['learning_unit_year'],
+        'learning_component_year': context['learning_component_year'],
+        'used_by': _used_by(context['learning_component_year'], context['learning_unit_year'])
+
+    })
+    form.load_initial()  # Load data from database
+    context['form'] = form
+    return layout.render(request, "learning_unit/component_edit.html", context)
+
+
+def _used_by(learning_component_year, learning_unit_year):
+    if mdl.learning_unit_component.used_by(learning_component_year, learning_unit_year):
+        return True
     return False

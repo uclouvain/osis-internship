@@ -72,10 +72,10 @@ def reviewers_index(request):
     for form in reviewers_formset:
         current_reviewer = reviewer.find_by_id(form['id'].value())
         if review.find_by_reviewer(current_reviewer).count() == 0:
-            form.fields['action'].choices = (('-----', _('-----')), ('DELETE', _('delete_reviewer')),
-                                             ('REPLACE', _('replace_reviewer')))
+            form.fields['action'].choices = (('-----', _('-----')), ('DELETE', _('delete')),
+                                             ('REPLACE', _('replace')))
         else:
-            form.fields['action'].choices = (('-----', _('-----')), ('REPLACE', _('replace_reviewer')))
+            form.fields['action'].choices = (('-----', _('-----')), ('REPLACE', _('replace')))
     return render(request, "reviewers_list.html", {'reviewers_formset': reviewers_formset
                                                    })
 

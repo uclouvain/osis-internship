@@ -1692,6 +1692,15 @@ msgstr "à"
 msgid "since"
 msgstr "Depuis"
 
+msgid "editing"
+msgstr "Edition"
+
+msgid "component"
+msgstr "Composant"
+
+msgid "used_by"
+msgstr "Reutilisé par l'unité d'enseignement"
+
 msgid "offers_enrollments"
 msgstr "Inscriptions aux offres"
 

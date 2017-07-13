@@ -70,6 +70,7 @@ urlpatterns = [
             url(r'^proposals/$', learning_unit.learning_unit_proposals, name="learning_unit_proposals"),
             url(r'^specifications/$', learning_unit.learning_unit_specifications, name="learning_unit_specifications"),
             url(r'^specifications/edit/$', learning_unit.learning_unit_specifications_edit, name="learning_unit_specifications_edit"),
+            url(r'^component/edit/$', learning_unit.learning_unit_component_edit, name="learning_unit_component_edit"),
         ]))
     ])),
 
