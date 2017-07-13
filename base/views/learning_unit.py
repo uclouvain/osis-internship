@@ -39,6 +39,7 @@ from attribution import models as mdl_attr
 from base.models import entity_container_year
 from base.models.enums import entity_container_year_link_type
 from base.models.enums import learning_container_year_types
+from base.models.enums import learning_unit_year_activity_status
 from cms import models as mdl_cms
 from cms.enums import entity_name
 from base.forms.learning_units import LearningUnitYearForm
@@ -64,7 +65,7 @@ ACRONYM_COMPLET_LEARNING_UNIT = _("complete")
 @login_required
 @permission_required('base.can_access_learningunit', raise_exception=True)
 def learning_units(request):
-    if request.GET.get('academic_year'):
+    if request.GET.get('academic_year_id'):
         form = LearningUnitYearForm(request.GET)
     else:
         form = LearningUnitYearForm()
@@ -74,9 +75,14 @@ def learning_units(request):
         _check_if_display_message(request, learning_units)
 
     context = _get_common_context_list_learning_unit_years()
+    activity_statuses = tuple(activity for activity in learning_unit_year_activity_status.LEARNING_UNIT_YEAR_ACTIVITY_STATUS
+                              if activity[0] != learning_unit_year_activity_status.PASSIVE)
     context.update({
         'form': form,
         'academic_years': mdl.academic_year.find_academic_years(),
+        'container_types': learning_container_year_types.LEARNING_CONTAINER_YEAR_TYPES,
+        'types': learning_unit_year_subtypes.LEARNING_UNIT_YEAR_SUBTYPES,
+        'activity_statuses': activity_statuses,
         'learning_units': found_learning_units,
         'current_academic_year': mdl.academic_year.current_academic_year(),
         'experimental_phase': True
@@ -329,7 +335,7 @@ def _get_organization_from_learning_unit_year(learning_unit_year):
 def _get_all_attributions(learning_unit_year):
     attributions = {}
     if learning_unit_year.learning_container_year:
-        all_attributions = entity_container_year.find_entities(learning_unit_year.learning_container_year)
+        all_attributions = entity_container_year.find_last_entity_version_grouped_by_linktypes(learning_unit_year.learning_container_year)
         attributions['requirement_entity'] = all_attributions.get(entity_container_year_link_type.REQUIREMENT_ENTITY)
         attributions['allocation_entity'] = all_attributions.get(entity_container_year_link_type.ALLOCATION_ENTITY)
         attributions['additional_requirement_entities'] = [

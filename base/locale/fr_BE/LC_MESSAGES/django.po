@@ -1629,8 +1629,17 @@ msgstr "Partenaire public"
 msgid "requirement_entity"
 msgstr "Entité resp. cahier de charges"
 
+msgid "requirement_entity_small"
+msgstr "Ent. charge"
+
 msgid "allocation_entity"
 msgstr "Entité resp. de l'attribution"
+
+msgid "allocation_entity_small"
+msgstr "Ent. attrib."
+
+msgid "with_entity_subordinated_small"
+msgstr "Avec ent. subord."
 
 msgid "additional_requirement_entity"
 msgstr "Entité complémentaire"

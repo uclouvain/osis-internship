@@ -32,6 +32,7 @@ from base.tests.factories.learning_container_year import LearningContainerYearFa
 from base.tests.factories.learning_unit_component import LearningUnitComponentFactory
 from base.tests.factories.learning_unit_component_class import LearningUnitComponentClassFactory
 from base import models as mdl
+from base.tests.factories.learning_unit_year import LearningUnitYearFactory
 
 
 class LearningunitComponentClassTest(TestCase):
@@ -39,14 +40,17 @@ class LearningunitComponentClassTest(TestCase):
     def setUp(self):
         self.academic_year = AcademicYearFactory(year=2016)
         self.learning_container_year = LearningContainerYearFactory(academic_year=self.academic_year)
+        self.learning_unit_year = LearningUnitYearFactory(academic_year=self.academic_year,
+                                                          learning_container_year=self.learning_container_year)
         self.learning_component_year = LearningComponentYearFactory(learning_container_year=self.learning_container_year)
-        self.learning_unit_component = LearningUnitComponentFactory(learning_component_year=self.learning_component_year)
+        self.learning_unit_component = LearningUnitComponentFactory(learning_component_year=self.learning_component_year,
+                                                                    learning_unit_year=self.learning_unit_year)
         self.learning_class_year = LearningClassYearFactory(learning_component_year=self.learning_component_year)
 
     def test_save_with_differents_learning_component_year(self):
         with self.assertRaisesMessage(AttributeError, "Learning Component Year is different in Learning Unit Component and Learning Class Year"):
-            learning_unit_component = LearningUnitComponentFactory()
-            learning_class_year = LearningClassYearFactory()
+            learning_unit_component = LearningUnitComponentFactory(learning_unit_year=self.learning_unit_year)
+            learning_class_year = LearningClassYearFactory(learning_component_year=self.learning_component_year)
             learning_unit_component_class = LearningUnitComponentClassFactory\
                 .build(learning_unit_component=learning_unit_component,
                        learning_class_year=learning_class_year)
