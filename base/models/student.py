@@ -26,6 +26,7 @@
 from django.db import models
 from django.core.exceptions import ObjectDoesNotExist
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
+from base import models as mdl
 
 
 class StudentAdmin(SerializableModelAdmin):
@@ -99,3 +100,11 @@ def find_by_id(student_id):
         return Student.objects.get(pk=student_id)
     except ObjectDoesNotExist:
         return None
+
+
+def search(full_name):
+    if full_name:
+        persons = mdl.person.search(full_name)
+        if persons.exists():
+            return Student.objects.filter(person__in=persons).order_by('person__last_name', 'person__first_name')
+    return None
