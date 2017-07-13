@@ -84,11 +84,11 @@
 
                 <div class="col-md-2">
                     <label for="id_subtype">{% trans 'subtype' %}</label>
-                    <select class="form-control" id="slt_type" name="type">
+                    <select class="form-control" id="slt_type" name="subtype">
                         <option value="">{% trans 'all_label' %}</option>
                         {% for type in types %}
                             <option
-                                {% if request.GET.type and type.0 == request.GET.type %}
+                                {% if request.GET.subtype and type.0 == request.GET.subtype %}
                                     selected
                                 {% endif %}
                                 value="{{ type.0 }}">{% trans type.1 %}
