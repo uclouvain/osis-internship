@@ -26,6 +26,7 @@
 import copy
 import json
 import logging
+import pika
 import traceback
 
 from django.conf import settings
@@ -631,3 +632,21 @@ def get_json_data_scores_sheets(tutor_global_id):
         trace = traceback.format_exc()
         logger.error(trace)
         return json.dumps({})
+
+
+def send_json_scores_sheets_to_response_queue(global_id):
+    json_response = get_json_data_scores_sheets(global_id)
+    credentials = pika.PlainCredentials(settings.QUEUES.get('QUEUE_USER'),
+                                        settings.QUEUES.get('QUEUE_PASSWORD'))
+    rabbit_settings = pika.ConnectionParameters(settings.QUEUES.get('QUEUE_URL'),
+                                                settings.QUEUES.get('QUEUE_PORT'),
+                                                settings.QUEUES.get('QUEUE_CONTEXT_ROOT'),
+                                                credentials)
+    connect = pika.BlockingConnection(rabbit_settings)
+    channel = connect.channel()
+    queue_name = settings.QUEUES.get('QUEUES_NAME').get('SCORE_ENDCODING_PDF_RESPONSE')
+    channel.queue_declare(queue=queue_name, durable=True)
+    channel.basic_publish(exchange='',
+                          routing_key=queue_name,
+                          body=json_response)
+    connect.close()
