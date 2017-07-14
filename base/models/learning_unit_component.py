@@ -64,7 +64,8 @@ def find_by_learning_year_type(a_learning_unit_year=None, a_type=None):
 
 
 def find_by_learning_component_year(a_learning_component_year):
-    return LearningUnitComponent.objects.filter(learning_component_year=a_learning_component_year).order_by('learning_unit_year__acronym')
+    return LearningUnitComponent.objects.filter(learning_component_year=a_learning_component_year)\
+        .order_by('learning_unit_year__acronym')
 
 
 def search(a_learning_component_year=None, a_learning_unit_year=None):
@@ -76,3 +77,9 @@ def search(a_learning_component_year=None, a_learning_unit_year=None):
         queryset = queryset.filter(learning_unit_year=a_learning_unit_year)
 
     return queryset
+
+
+def used_by(learning_component_year, learning_unit_year):
+    if search(learning_component_year, learning_unit_year).exists():
+        return True
+    return False

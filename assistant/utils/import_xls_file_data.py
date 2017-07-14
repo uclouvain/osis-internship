@@ -33,7 +33,7 @@ from django.contrib import messages
 from django.utils.translation import ugettext as _
 from assistant.forms import MandateFileForm
 from assistant.utils import manager_access
-from assistant.models.enums import assistant_type, assistant_phd_inscription
+from assistant.models.enums import assistant_type, assistant_phd_inscription, assistant_mandate_renewal
 from base.models.enums import structure_type
 
 COLS_NUMBER = 22
@@ -187,7 +187,12 @@ def create_assistant_mandate_if_not_exists(record, assistant):
     mandate.sap_id = record.get('SAP_ID')
     mandate.contract_duration = record.get('CONTRACT_DURATION')
     mandate.contract_duration_fte = record.get('CONTRACT_DURATION_FTE')
-    mandate.renewal_type = record.get('RENEWAL_TYPE')
+    if record.get('RENEWAL_TYPE').lower() == 'exceptional' or record.get('RENEWAL_TYPE').lower() == 'exceptionnel':
+        mandate.renewal_type = assistant_mandate_renewal.EXCEPTIONAL
+    elif record.get('RENEWAL_TYPE').lower() == 'normal':
+        mandate.renewal_type = assistant_mandate_renewal.NORMAL
+    else:
+        mandate.renewal_type = assistant_mandate_renewal.SPECIAL
     mandate.absences = record.get('ABSENCES')
     mandate.comment = record.get('COMMENT')
     mandate.other_status = record.get('OTHER_STATUS')

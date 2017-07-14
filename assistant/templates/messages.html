@@ -37,7 +37,7 @@
 {% endblock %}
 {% block content %}
 <div class="page-header">
-    <h4>{% trans 'assistant_mandates_renewals' %} {{ year|add:1 }}</h4>
+    <h3>{% trans 'assistant_mandates_renewals' %} {{ year|add:1 }}</h3>
 </div>
 <div class="panel panel-default">
     <div class="panel-body">
@@ -51,12 +51,12 @@
                     {% trans 'send_email_to_all_assistants' %}</a></p>
             </div>
             <div class="list-group-item">
-                <h4 class="list-group-item-heading">{% trans 'deans' %}</h4>
+                <h4 class="list-group-item-heading">{% trans 'reviewers' %}</h4>
                 <p class="list-group-item-text">{% trans 'startup_precedure' %}</p>
-                <p style="margin-top: 10px;"><a href="{% url 'send_message_to_deans' %}" class="btn btn-info"
+                <p style="margin-top: 10px;"><a href="{% url 'send_message_to_reviewers' %}" class="btn btn-info"
                                                 role="button"
                                                 onclick="return confirm('{% trans 'confirm_send_emails' %}')">
-                    {% trans 'send_email_to_all_deans' %}</a></p>
+                    {% trans 'send_email_to_reviewers' %}</a></p>
             </div>
         </div>
         <div class="table-responsive">

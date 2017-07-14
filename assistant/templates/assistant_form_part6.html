@@ -61,25 +61,31 @@
             </div>
         </div>
         <div class="form-group">
-            <label style="padding-top: 5px" for="{{ form.tutoring_percent.id_for_label }}">
+            <label for="{{ form.tutoring_percent.id_for_label }}">
                 {% trans 'tutoring_percent' %}</label>
-            <div class="controls">{{ form.tutoring_percent }}</div>
+            {{ form.tutoring_percent }}
             <span class="error">{{ form.tutoring_percent.errors }}</span>
-            {% if mandate.assistant_type == "ASSISTANT" %}
-                <label style="padding-top: 5px" for="{{ form.research_percent.id_for_label }}">
+        </div>
+        {% if mandate.assistant_type == "ASSISTANT" %}
+            <div class="form-group">
+                <label for="{{ form.research_percent.id_for_label }}">
                     {% trans 'research_percent' %}</label>
-                <div class="controls">{{ form.research_percent }}</div>
+                {{ form.research_percent }}
                 <span class="error">{{ form.research_percent.errors }}</span>
-            {% else %}
-                {{ form.research_percent.as_hidden }}
-            {% endif %}
-            <label style="padding-top: 5px" for="{{ form.service_activities_percent.id_for_label }}">
+            </div>
+        {% else %}
+            {{ form.research_percent.as_hidden }}
+        {% endif %}
+        <div class="form-group">
+            <label for="{{ form.service_activities_percent.id_for_label }}">
                 {% trans 'service_activities_percent' %}</label>
-            <div class="controls">{{ form.service_activities_percent }}</div>
+            {{ form.service_activities_percent }}
             <span class="error">{{ form.service_activities_percent.errors }}</span>
-            <label style="padding-top: 5px" for="{{ form.formation_activities_percent.id_for_label }}">
+        </div>
+        <div class="form-group">
+            <label for="{{ form.formation_activities_percent.id_for_label }}">
                 {% trans 'formation_activities_percent' %}</label>
-            <div class="controls">{{ form.formation_activities_percent }}</div>
+            {{ form.formation_activities_percent }}
             <span class="error">{{ form.formation_activities_percent.errors }}</span>
         </div>
         <div class="panel-default">
@@ -88,17 +94,17 @@
             </div>
         </div>
         <div class="form-group">
-            <label style="padding-top: 5px" for="{{ form.activities_report_remark.id_for_label }}">
+            <label for="{{ form.activities_report_remark.id_for_label }}">
                 {% trans 'activities_report_remark' %}</label>
-            <div class="controls">{{ form.activities_report_remark }}</div>
+            {{ form.activities_report_remark }}
             <span class="error">{{ form.activities_report_remark.errors }}</span>
         </div>
         <div class="btn-toolbar">
-            <button type="submit" class="btn btn-primary btn-block"
+            <button type="submit" class="btn btn-primary"
                     title="{% trans 'save'%}" id="bt_pstform_part6_save">
                     <span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'save'%}
             </button>
-            <button type="submit" class="btn btn-success btn-block" title="{% trans 'validate_and_submit'%}"
+            <button type="submit" class="btn btn-success" title="{% trans 'validate_and_submit'%}"
                     id="bt_pstform_validate_and_submit" name="validate_and_submit"
                     onclick="return confirm('{% trans 'confirm_validation' %}')">
                     <span class="glyphicon glyphicon-saved" aria-hidden="true">

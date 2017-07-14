@@ -74,11 +74,18 @@ class LearningComponentYear(models.Model):
     def real_classes(self):
         return len(learning_class_year.find_by_learning_component_year(self))
 
+
 def find_by_id(learning_component_year_id):
     return LearningComponentYear.objects.get(pk=learning_component_year_id)
 
 
-def find_by_learning_container_year(a_learning_container_year):
-    return LearningComponentYear.objects.filter(learning_container_year=a_learning_container_year)\
+def find_by_learning_container_year(learning_container_year, with_classes=False):
+    queryset = LearningComponentYear.objects.filter(learning_container_year=learning_container_year)\
                                         .order_by('type', 'acronym')
+    if with_classes:
+        queryset = queryset.prefetch_related(
+             models.Prefetch('learningclassyear_set',
+             to_attr="classes")
+        )
 
+    return queryset

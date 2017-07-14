@@ -58,6 +58,7 @@ def review_view(request, mandate_id, role):
                                                 'menu_type': 'reviewer_menu',
                                                 'mandate_id': mandate.id,
                                                 'mandate_state': mandate.state,
+                                                'current_reviewer': current_reviewer,
                                                 'assistant': assistant,
                                                 'year': mandate.academic_year.year + 1
                                                 })
@@ -97,6 +98,7 @@ def review_edit(request, mandate_id):
                                                 'mandate_id': mandate.id,
                                                 'previous_mandates': previous_mandates,
                                                 'assistant': assistant,
+                                                'current_reviewer': current_reviewer,
                                                 'menu': menu,
                                                 'menu_type': 'reviewer_menu',
                                                 'form': form})
@@ -166,6 +168,7 @@ def pst_form_view(request, mandate_id):
                                                   'mandate_id': mandate.id,
                                                   'assistant': assistant, 'mandate': mandate,
                                                   'learning_units': learning_units,
+                                                  'current_reviewer': current_reviewer,
                                                   'role': current_role,
                                                   'year': mandate.academic_year.year + 1})
 

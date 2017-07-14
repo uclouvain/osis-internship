@@ -42,8 +42,8 @@
                     <thead>
                     <th>{% trans 'components'%}</th>
                     <th>{% trans 'code'%}</th>
-                    <th>{% trans 'nominal_volume' %}</th>
-                    <th>{% trans 'nominal_quarter' %}</th>
+                    <th>{% trans 'volume' %}</th>
+                    <th>{% trans 'volume_quarter' %}</th>
                     <th>{% trans 'volume_partial'%}</th>
                     <th>{% trans 'volume_remaining'%}</th>
                     <th>{% trans 'planned_classrooms'%}</th>
@@ -52,6 +52,7 @@
                     {% if learning_unit_year.subdivision %}
                         <th>{% trans 'used_by_partim'%}{{ learning_unit_year.subdivision }}</th>
                     {% endif%}
+                    <th></th>
                     </thead>
                     <tbody>
                     {% for component in components%}
@@ -83,30 +84,43 @@
                         {% if learning_unit_year.subdivision %}
                             <td>{{ component.learning_component_year |used_by_partim:learning_unit_year }}</td>
                         {% endif %}
+                        <td>
+                            {% if perms.base.change_learningcomponentyear %}
+                            <a class="component-edit-btn pull-right" href="#"
+                               data-form="{% url 'learning_unit_component_edit' learning_unit_year_id=learning_unit_year.id %}?learning_component_year_id={{component.learning_component_year.id}}"
+                               title="{% trans 'edit' %}">
+                                <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                            </a>
+                            {% endif %}
+                        </td>
                     </tr>
-                    {% if component.classes %}
+                    {% if component.learning_component_year.classes %}
                     <tr>
-                        <td colspan="4">
+                        <td colspan="7">
                             <div style="margin-left: 25px;">
                                 <table class="table">
                                     <thead class="classes_background">
                                         <th>{% trans 'classes'%}</th>
                                         <th>{% trans 'lu_usage'%}</th>
                                         <th>{% trans 'used_by_partim'%}{{ learning_unit_year.subdivision }}</th>
+                                        <th>{% trans 'description'%}</th>
                                     </thead>
                                     <tbody class="classes_background">
-                                        {% for key,classe in component.classes.items %}
+                                        {% for learning_class_year in component.learning_component_year.classes %}
                                             <tr>
                                                 <td>/{% if component.learning_component_year.type_letter_acronym %}
                                                     {{component.learning_component_year.type_letter_acronym}}
-                                                    {% endif %}{{key.acronym}}</td>
-                                                <td>{{ classe.0 }}</td>
+                                                    {% endif %}{{learning_class_year.acronym}}</td>
+                                                <td>{{ learning_class_year.used_by_learning_units_year }}</td>
                                                 <td>
-                                                    {% if learning_unit_year.subdivision in classe.0 and learning_unit_year.subdivision != '' or classe.1 and learning_unit_year.subdivision == ''%}
+                                                    {% if learning_unit_year.subdivision in learning_class_year.used_by_learning_units_year and learning_unit_year.subdivision != '' or learning_class_year.is_used_by_full_learning_unit_year and learning_unit_year.subdivision == ''%}
                                                         {% trans 'yes'%}
                                                     {% else %}
                                                         {% trans 'no'%}
                                                     {% endif %}
+                                                </td>
+                                                <td>
+                                                    {{ learning_class_year.description|default_if_none:'' }}
                                                 </td>
                                             </tr>
                                         {% endfor %}
@@ -124,4 +138,19 @@
 
     </div>
 </div>
+<div class="modal fade" id="component_edit" role="dialog" data-backdrop="static"></div>
+{% endblock %}
+
+{% block script %}
+<script>
+    $(".component-edit-btn").click(function(ev) {
+        ev.preventDefault();
+        var url = $(this).data("form"); // get the contact form url
+        var component_edit_modal = $("#component_edit");
+        component_edit_modal.load(url, function() { // load the url into the modal
+            $(this).modal('show');
+        });
+        return false;
+    });
+</script>
 {% endblock %}

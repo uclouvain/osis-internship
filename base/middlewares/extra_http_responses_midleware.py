@@ -23,38 +23,19 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django import template
-from base.models import learning_unit_component
-from django.utils.translation import ugettext_lazy as _
+from django.http import HttpResponseNotAllowed
+from django.template.response import TemplateResponse
+from django.utils.deprecation import MiddlewareMixin
 
 
-register = template.Library()
+class ExtraHttpResponsesMiddleware(MiddlewareMixin):
 
-
-@register.filter
-def get_css_class(planned_classes, real_classes):
-    planned_classes_int = 0
-    real_classes_int = 0
-
-    if planned_classes:
-        planned_classes_int = planned_classes
-
-    if real_classes:
-        real_classes_int = real_classes
-
-    if planned_classes_int == real_classes_int:
-        return "success-color"
-    else:
-        if planned_classes_int - real_classes_int == 1:
-            return "warning-color"
-
-    return "danger-color"
-
-
-@register.filter
-def used_by_partim(learning_component_year, learning_unit_year):
-    if learning_unit_component.used_by(learning_component_year, learning_unit_year):
-        return _('yes')
-    return _('no')
-
+    def process_response(self, request, response):
+        if isinstance(response, HttpResponseNotAllowed):
+            response = TemplateResponse(request=request,
+                                        template="method_not_allowed.html",
+                                        status=405,
+                                        context={})
+            response.render()
+        return response
 
