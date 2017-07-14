@@ -649,6 +649,4 @@ def send_json_scores_sheets_to_response_queue(global_id):
         queue_name = settings.QUEUES.get('QUEUES_NAME').get('SCORE_ENDCODING_PDF_RESPONSE')
         send_message(queue_name, data, connect, channel)
     except (RuntimeError, pika.exceptions.ConnectionClosed, pika.exceptions.ChannelClosed, pika.exceptions.AMQPError):
-        logger.warning('Could not send back scores_sheets json in response queue for global_id {}'.format(global_id))
-        trace = traceback.format_exc()
-        logger.error(trace)
+        logger.exception('Could not send back scores_sheets json in response queue for global_id {}'.format(global_id))
