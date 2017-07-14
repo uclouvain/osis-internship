@@ -62,9 +62,9 @@
                     {{ form.acronym }}
                 </div>
 
-                <div class="col-md-4">
-                    <label for="id_keyword">{% trans 'keyword' %}</label>
-                    {{ form.keyword }}
+                <div class="col-md-2">
+                    <label for="id_title">{% trans 'title' %}</label>
+                    {{ form.title }}
                 </div>
 
                 <div class="col-md-2">
@@ -96,11 +96,7 @@
                         {% endfor %}
                     </select>
                 </div>
-
-
-            </div>
-            <div class="row" style="margin-top:10px;">
-                <div class="col-md-2">
+                <div class="col-md-1">
                     <label for="id_status">{% trans 'status' %}</label>
                     <select class="form-control" id="slt_status" name="activity_status">
                         <option value="">{% trans 'all_label' %}</option>
@@ -113,30 +109,29 @@
                             </option>
                         {% endfor %}
                     </select>
-                </div>
-
-                <div class="col-md-2">
+                 </div>
+                 <div class="col-md-1">
                     <label for="id_requirement_entity_acronym">{% trans 'requirement_entity_small' %}</label>
                     {{ form.requirement_entity_acronym }}
+
+
                 </div>
 
-                <div class="col-md-2">
-                    <div style="margin-top:30px;">
-                        <input type="checkbox" id="id_with_entity_subordinated"
-                           name="with_entity_subordinated"
-                            {% if request.GET.with_entity_subordinated and 'on' == request.GET.with_entity_subordinated %}
-                                    checked
-                            {% endif %} >
-                        <label>{% trans 'with_entity_subordinated_small' %}</label>
-                    </div>
+            </div>
+            <div class="pull-right">
+                <div style="display:inline-block;">
+                    <input type="checkbox" id="id_with_entity_subordinated"
+                       name="with_entity_subordinated" style="margin-top:5px;"
+                        {% if request.GET.with_entity_subordinated and 'on' == request.GET.with_entity_subordinated %}
+                                checked
+                        {% endif %} >
+                    <label>{% trans 'with_entity_subordinated_small' %}</label>
                 </div>
 
-                <div class="col-md-1">
-                    <button type="submit" id="bt_submit_learning_unit_search"
-                            class="btn btn-primary pull-rigth" style="margin-top:23px;" role="button"
-                            title="{% trans 'learning_unit_search' %}">
-                        <span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
-                </div>
+                <button type="submit" id="bt_submit_learning_unit_search"
+                        class="btn btn-primary pull-rigth" style="margin-top:23px;" role="button"
+                        title="{% trans 'learning_unit_search' %}">
+                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
             </div>
         </div>
     </form>

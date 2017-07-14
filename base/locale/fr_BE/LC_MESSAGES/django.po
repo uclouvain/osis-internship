@@ -1633,7 +1633,7 @@ msgid "requirement_entity"
 msgstr "Entité resp. cahier de charges"
 
 msgid "requirement_entity_small"
-msgstr "Ent. charge"
+msgstr "Ent. ch."
 
 msgid "allocation_entity"
 msgstr "Entité resp. de l'attribution"
