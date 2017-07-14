@@ -53,9 +53,8 @@
 		{% endfor %}
 	<div class="form-group">
 		<label for="search_persons">{% trans 'person' %}</label>
-		<div class="ui-widget"><input id="search_persons" name="search_persons" size="100"
-										  placeholder="{% trans 'search_by_email_or_last_name' %}">
-		</div>
+		<input id="search_persons" name="search_persons" size="100" class="form-control"
+               placeholder="{% trans 'search_by_email_or_last_name' %}">
 		<input type="hidden" name="person_id" id="person_id">
 	</div>
     <button type="submit" class="btn btn-primary" title="{% trans 'save'%}" id="bt_add_reviewer_save"
