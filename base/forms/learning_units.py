@@ -31,12 +31,13 @@ from django.core.exceptions import ValidationError
 
 from base.models.enums import entity_container_year_link_type
 
+MAX_ROW_NUMBERS = 1000
 
 class LearningUnitYearForm(forms.Form):
     academic_year_id = forms.CharField(max_length=10, required=False)
     container_type = subtype = activity_status = forms.CharField(required=False)
-    acronym = keyword = requirement_entity_acronym = forms.CharField(widget=forms.TextInput(attrs={'size': '10', 'class': 'form-control'}),
-                                                                     max_length=20, required=False)
+    acronym = title = requirement_entity_acronym = forms.CharField(widget=forms.TextInput(attrs={'size': '10', 'class': 'form-control'}),
+                                                                   max_length=20, required=False)
     with_entity_subordinated = forms.BooleanField(required=False)
 
     def clean_acronym(self):
@@ -74,9 +75,9 @@ class LearningUnitYearForm(forms.Form):
         learning_units = mdl.learning_unit_year.search(**clean_data)\
                                                .select_related('academic_year', 'learning_container_year')\
                                                .prefetch_related(entity_container_prefetch)\
-                                               .order_by('academic_year__year', 'acronym')
+                                               .order_by('academic_year__year', 'acronym')[:MAX_ROW_NUMBERS]
 
-        return [ _append_latest_entities(learning_unit) for learning_unit in learning_units]
+        return [_append_latest_entities(learning_unit) for learning_unit in learning_units]
 
 
 def is_valid_search(**search_filter):
