@@ -22,18 +22,6 @@ msgstr "(pour le 2ème renouvellement)"
 msgid "absences"
 msgstr "Absences"
 
-msgid "access_starting_date"
-msgstr "Date d'ouverture d'accès à l'application"
-
-msgid "access_ending_date"
-msgstr "Date de fermeture de l'accès à l'application"
-
-msgid "access_assistants_starting_date"
-msgstr "Date d'ouverture d'accès aux avis pour les assistants"
-
-msgid "access_assistants_ending_date"
-msgstr "Date de fermeture de l'accès aux avis pour les assistants"
-
 msgid "action"
 msgstr "Action"
 
@@ -48,6 +36,9 @@ msgstr "Adresse"
 
 msgid "advice"
 msgstr "Avis"
+
+msgid "app_dates"
+msgstr "Dates de la procédure de renouvellement des mandats"
 
 msgid "apply"
 msgstr "Appliquer"
@@ -91,6 +82,9 @@ msgstr "Type d'assistant·e"
 msgid "assistants"
 msgstr "Assistants"
 
+msgid "assistants_dates"
+msgstr "Dates d'accès aux évaluations pour les assistants"
+
 msgid "at_least_one_learning_unit"
 msgstr "Vous devez ajouter au moins une unité d'enseignement dans la rubrique \"Unités d'enseignement\""
 
@@ -99,6 +93,9 @@ msgstr "Nombre d'étudiants par série"
 
 msgid "awards"
 msgstr "Prix et/ou distinction(s)"
+
+msgid "beginning"
+msgstr "Début"
 
 msgid "birth_date"
 msgstr "Date de naissance"
@@ -125,7 +122,13 @@ msgid "confidential"
 msgstr "Confidentiel"
 
 msgid "confirm_reviewer_addition"
+msgstr "Êtes-vous certain de vouloir ajouter cet évaluateur ? Cette action est irréversible."
+
+msgid "confirm_reviewer_delegation"
 msgstr "Êtes-vous certain de vouloir déléguer votre rôle ? Cette action est irréversible."
+
+msgid "confirm_send_emails"
+msgstr "Êtes-vous certain de vouloir envoyer ces courriels ? Cette action est irréversible."
 
 msgid "confirm_validation"
 msgstr "Êtes-vous certain de vouloir valider et soumettre ? Cette action ne pourra pas être annulée."
@@ -207,6 +210,9 @@ msgstr "Terminé"
 
 msgid "emails"
 msgstr "Courriels"
+
+msgid "end"
+msgstr "Fin"
 
 msgid "eq_fte"
 msgstr "Durée contrat (ETP)"
@@ -530,6 +536,9 @@ msgstr "Envoyer un email à tous les assistants"
 msgid "send_email_to_all_deans"
 msgstr "Envoyer un email aux doyens de faculté"
 
+msgid "send_email_to_reviewers"
+msgstr "Envoyer un email aux évaluateurs"
+
 msgid "series_number"
 msgstr "Nombre de séries"
 
@@ -601,6 +610,9 @@ msgstr "Aux assistants"
 
 msgid "TO_ALL_DEANS"
 msgstr "Aux doyens de faculté"
+
+msgid "TO_ALL_REVIEWERS"
+msgstr "À tous les évaluateurs"
 
 msgid "TO_DO"
 msgstr "Début"

@@ -104,7 +104,7 @@ urlpatterns = [
         url(r'^messages/', include([
             url(r'^history/$', messages.show_history, name='messages_history'),
             url(r'^send/to_all_assistants/$', send_email.send_message_to_assistants, name='send_message_to_assistants'),
-            url(r'^send/to_all_deans/$', send_email.send_message_to_deans, name='send_message_to_deans'),
+            url(r'^send/to_reviewers/$', send_email.send_message_to_reviewers, name='send_message_to_reviewers'),
         ])),
         url(r'^reviewers/', include([
             url(r'^$', reviewers_management.reviewers_index, name='reviewers_list'),
