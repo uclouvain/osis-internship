@@ -1639,6 +1639,15 @@ msgstr "Allocation entity"
 msgid "additional_requirement_entity"
 msgstr "Additional entity"
 
+msgid "requirement_entity_small"
+msgstr "Req. Ent."
+
+msgid "allocation_entity_small"
+msgstr "Alloc. Ent."
+
+msgid "with_entity_subordinated_small"
+msgstr "With subord. ent."
+
 msgid "academic_end_year"
 msgstr "Academic end year"
 
