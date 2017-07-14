@@ -27,7 +27,7 @@ from django.test import TestCase
 from django.core.urlresolvers import reverse
 from django.core.urlresolvers import resolve
 from assistant.views.messages import show_history
-from assistant.utils.send_email import send_message_to_assistants, send_message_to_deans
+from assistant.utils.send_email import send_message_to_assistants, send_message_to_reviewers
 
 
 class AssistantURLsTestCase(TestCase):
@@ -40,6 +40,6 @@ class AssistantURLsTestCase(TestCase):
         found = resolve(reverse('send_message_to_assistants'))
         self.assertEqual(found.func, send_message_to_assistants)
 
-    def test_url_resolves_to_manager_message_send_to_deans(self):
-        found = resolve(reverse('send_message_to_deans'))
-        self.assertEqual(found.func, send_message_to_deans)
+    def test_url_resolves_to_manager_message_send_to_reviewers(self):
+        found = resolve(reverse('send_message_to_reviewers'))
+        self.assertEqual(found.func, send_message_to_reviewers)

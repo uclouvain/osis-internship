@@ -53,7 +53,7 @@ class EntityContainerYearTest(TestCase):
             academic_year=self.academic_years[2015]
         )
         #No link between an entity/learning_container_year, so no result
-        no_entity = entity_container_year.find_entities(learning_container_year=l_container_year)
+        no_entity = entity_container_year.find_last_entity_version_grouped_by_linktypes(learning_container_year=l_container_year)
         self.assertFalse(no_entity)
 
     def test_find_entities_with_empty_link_type(self):
@@ -67,7 +67,7 @@ class EntityContainerYearTest(TestCase):
             type=entity_container_year_link_type.REQUIREMENT_ENTITY
         )
         # No link between an entity/learning_container_year, so no result
-        no_entity = entity_container_year.find_entities(learning_container_year=l_container_year, link_type=[])
+        no_entity = entity_container_year.find_last_entity_version_grouped_by_linktypes(learning_container_year=l_container_year, link_type=[])
         self.assertFalse(no_entity)
 
 
@@ -91,7 +91,7 @@ class EntityContainerYearTest(TestCase):
             type=entity_container_year_link_type.ALLOCATION_ENTITY
         )
         # Find all entities
-        entities = entity_container_year.find_entities(learning_container_year=l_container_year)
+        entities = entity_container_year.find_last_entity_version_grouped_by_linktypes(learning_container_year=l_container_year)
         self.assertIsInstance(entities, dict)
         self.assertTrue(entity_container_year_link_type.REQUIREMENT_ENTITY in entities)
         self.assertTrue(entity_container_year_link_type.ALLOCATION_ENTITY in entities)

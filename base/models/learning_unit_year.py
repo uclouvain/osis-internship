@@ -91,7 +91,7 @@ def find_by_acronym(acronym):
 
 
 def search(academic_year_id=None, acronym=None, learning_container_year_id=None, learning_unit=None,
-           title=None, subtype=None, activity_status=None):
+           title=None, subtype=None, activity_status=None, container_type=None, *args, **kwargs):
     queryset = LearningUnitYear.objects
 
     if academic_year_id:
@@ -100,8 +100,11 @@ def search(academic_year_id=None, acronym=None, learning_container_year_id=None,
     if acronym:
         queryset = queryset.filter(acronym__icontains=acronym)
 
-    if learning_container_year_id:
-        queryset = queryset.filter(learning_container_year=learning_container_year_id)
+    if learning_container_year_id is not None:
+        if isinstance(learning_container_year_id, list):
+            queryset = queryset.filter(learning_container_year__in=learning_container_year_id)
+        elif learning_container_year_id:
+            queryset = queryset.filter(learning_container_year=learning_container_year_id)
 
     if learning_unit:
         queryset = queryset.filter(learning_unit=learning_unit)
@@ -114,6 +117,9 @@ def search(academic_year_id=None, acronym=None, learning_container_year_id=None,
 
     if activity_status:
         queryset = queryset.filter(activity_status=activity_status)
+
+    if container_type:
+        queryset = queryset.filter(learning_container_year__container_type=container_type)
 
     return queryset.select_related('learning_container_year')
 
