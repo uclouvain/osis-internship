@@ -58,7 +58,7 @@
                                 {% if perms.base.can_edit_learningunit_pedagogy %}
                                 <a class="pedagogy-edit-btn pull-right" href="#"
                                    data-form="{% url 'learning_unit_pedagogy_edit' learning_unit_year_id=learning_unit_year.id %}?language={{form_french.language.0}}&label={{label_key}}"
-                                   title="Edit">
+                                   title="{% trans 'edit' %}">
                                     <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
                                 </a>
                                 {% endif %}
@@ -69,7 +69,7 @@
                                 {% if perms.base.can_edit_learningunit_pedagogy %}
                                 <a class="pedagogy-edit-btn pull-right" href="#"
                                    data-form="{% url 'learning_unit_pedagogy_edit' learning_unit_year_id=learning_unit_year.id %}?language={{form_english.language.0}}&label={{label_key}}"
-                                   title="Edit">
+                                   title="{% trans 'edit' %}">
                                     <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
                                 </a>
                                 {% endif %}

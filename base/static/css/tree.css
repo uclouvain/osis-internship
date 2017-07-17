@@ -12,7 +12,8 @@
 }
 
 .tree li {
-	float: left; text-align: center;
+	float: left;
+	text-align: center;
 	list-style-type: none;
 	position: relative;
 	padding: 20px 5px 0 5px;
@@ -24,43 +25,40 @@
 
 /*We will use ::before and ::after to draw the connectors*/
 
-.tree li::before, .tree li::after{
+.tree li::before,
+.tree li::after{
 	content: '';
 	position: absolute; top: 0; right: 50%;
 	border-top: 1px solid #8dc63f;
 	width: 50%; height: 20px;
 }
 .tree li::after{
-	right: auto; left: 50%;
+	right: auto;
+	left: 50%;
 	border-left: 1px solid #8dc63f;
 }
 
 /*We need to remove left-right connectors from elements without
 any siblings*/
-.tree li:only-child::after, .tree li:only-child::before {
-	display: none;
+.tree li.root::after,
+.tree li.root::before {
+	display: none!important;
 }
-
 /*Remove space from the top of single children*/
-.tree li:only-child{ padding-top: 0;}
+.tree li.root {
+    padding-top: 0;
+}
 
 /*Remove left connector from first child and
 right connector from last child*/
-.tree li:first-child::before, .tree li:last-child::after{
+.tree li:first-child::before,
+.tree li:last-child::after{
 	border: 0 none;
 }
 
 /*Adding back the vertical connector to the last nodes*/
 .tree li:last-child::before{
 	border-right: 1px solid #8dc63f;
-	border-radius: 0 5px 0 0;
-	-webkit-border-radius: 0 5px 0 0;
-	-moz-border-radius: 0 5px 0 0;
-}
-.tree li:first-child::after{
-	border-radius: 5px 0 0 0;
-	-webkit-border-radius: 5px 0 0 0;
-	-moz-border-radius: 5px 0 0 0;
 }
 
 /*Time to add downward connectors from parents*/
@@ -85,11 +83,13 @@ right connector from last child*/
 	-moz-transition: all 0.5s;
 }
 
+
 /* -------------------------------- */
 /* Now starts the vertical elements */
 /* -------------------------------- */
 
-.tree ul.vertical, ul.vertical ul {
+.tree ul.vertical,
+ ul.vertical ul {
   padding-top: 0px;
   left: 50%;
 }
@@ -142,16 +142,13 @@ div.tree > ul > li > a {
   font-size: 1em;
   font-weight: bold;
 }
-
-
 /* ------------------------------------------------------------------ */
 /* Time for some hover effects                                        */
 /* We will apply the hover effect the the lineage of the element also */
 /* ------------------------------------------------------------------ */
 .tree li a:hover, .tree li a:hover+ul li a {
 	background: #8dc63f;
-  color: white;
-  /* border: 1px solid #aaa; */
+    color: white;
 }
 
 /*Connector styles on hover*/

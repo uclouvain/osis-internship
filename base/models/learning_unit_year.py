@@ -25,7 +25,7 @@
 ##############################################################################
 from django.db import models
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
-from base.models.enums import learning_unit_year_activity_status, learning_unit_year_subtypes
+from base.models.enums import learning_unit_year_activity_status, learning_unit_year_subtypes, learning_container_year_types
 
 
 class LearningUnitYearAdmin(SerializableModelAdmin):
@@ -67,6 +67,15 @@ class LearningUnitYear(SerializableModel):
             return self.acronym.replace(self.learning_container_year.acronym, "")
         return None
 
+    @property
+    def parent(self):
+        if self.subdivision:
+            return LearningUnitYear.objects.filter(subtype=learning_unit_year_subtypes.FULL,
+                                                      learning_container_year=self.learning_container_year,
+                                                      learning_container_year__acronym=self.learning_container_year.acronym,
+                                                      learning_container_year__container_type=learning_container_year_types.COURSE).first()
+        return None
+
 
 def find_by_id(learning_unit_year_id):
     return LearningUnitYear.objects.select_related('learning_container_year__learning_container')\
@@ -79,7 +88,7 @@ def find_by_acronym(acronym):
 
 
 def search(academic_year_id=None, acronym=None, learning_container_year_id=None, learning_unit=None,
-           title=None, subtype=None, activity_status=None):
+           title=None, subtype=None, activity_status=None, container_type=None, *args, **kwargs):
     queryset = LearningUnitYear.objects
 
     if academic_year_id:
@@ -88,8 +97,11 @@ def search(academic_year_id=None, acronym=None, learning_container_year_id=None,
     if acronym:
         queryset = queryset.filter(acronym__icontains=acronym)
 
-    if learning_container_year_id:
-        queryset = queryset.filter(learning_container_year=learning_container_year_id)
+    if learning_container_year_id is not None:
+        if isinstance(learning_container_year_id, list):
+            queryset = queryset.filter(learning_container_year__in=learning_container_year_id)
+        elif learning_container_year_id:
+            queryset = queryset.filter(learning_container_year=learning_container_year_id)
 
     if learning_unit:
         queryset = queryset.filter(learning_unit=learning_unit)
@@ -102,5 +114,8 @@ def search(academic_year_id=None, acronym=None, learning_container_year_id=None,
 
     if activity_status:
         queryset = queryset.filter(activity_status=activity_status)
+
+    if container_type:
+        queryset = queryset.filter(learning_container_year__container_type=container_type)
 
     return queryset.select_related('learning_container_year')

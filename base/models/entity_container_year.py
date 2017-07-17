@@ -51,23 +51,43 @@ class EntityContainerYear(models.Model):
         return u"%s - %s - %s" % (self.entity, self.learning_container_year, self.type)
 
 
-def find_entities(learning_container_year, link_type=None):
+def find_last_entity_version_grouped_by_linktypes(learning_container_year, link_type=None):
     lcy_start_date = learning_container_year.academic_year.start_date
-
-    queryset = EntityContainerYear.objects.filter(learning_container_year=learning_container_year)
-    if isinstance(link_type, list):
-        queryset = queryset.filter(type__in=link_type)
-    elif link_type:
-        queryset = queryset.filter(type=link_type)
-
-    entity_container_years = queryset.select_related('learning_container_year__academic_year', 'entity')\
-                                     .prefetch_related(
-                                            Prefetch('entity__entityversion_set',
-                                                     queryset=entity_version.find_latest_version(lcy_start_date),
-                                                     to_attr="entity_versions")
-                                    )
-
+    entity_container_years = search(learning_container_year=learning_container_year, link_type=link_type)\
+        .prefetch_related(
+            Prefetch('entity__entityversion_set',
+                 queryset=entity_version.find_latest_version(lcy_start_date),
+                 to_attr="entity_versions")
+        )
     return {ecy.type: _get_latest_entity_version(ecy) for ecy in entity_container_years}
+
+
+def search(*args, **kwargs):
+    ids = kwargs.get('ids')
+    learning_container_year = kwargs.get('learning_container_year')
+    link_type = kwargs.get('link_type')
+    entity_id = kwargs.get('entity_id')
+
+    queryset = EntityContainerYear.objects
+    if ids is not None:
+        queryset = queryset.filter(id__in=ids)
+
+    if learning_container_year:
+        queryset = queryset.filter(learning_container_year=learning_container_year)
+
+    if link_type is not None:
+        if isinstance(link_type, list):
+            queryset = queryset.filter(type__in=link_type)
+        elif link_type:
+            queryset = queryset.filter(type=link_type)
+
+    if entity_id is not None:
+        if isinstance(entity_id, list):
+            queryset = queryset.filter(entity__in=entity_id)
+        elif entity_id:
+            queryset = queryset.filter(entity=entity_id)
+
+    return queryset.select_related('learning_container_year__academic_year', 'entity')
 
 
 def _get_latest_entity_version(entity_container_year):
@@ -78,18 +98,18 @@ def _get_latest_entity_version(entity_container_year):
 
 
 def find_requirement_entity(learning_container_year):
-    results = find_entities(learning_container_year, entity_container_year_link_type.REQUIREMENT_ENTITY)
+    results = find_last_entity_version_grouped_by_linktypes(learning_container_year, entity_container_year_link_type.REQUIREMENT_ENTITY)
     return next(iter(results.values()), None)
 
 
 def find_allocation_entity(learning_container_year):
-    results = find_entities(learning_container_year, entity_container_year_link_type.ALLOCATION_ENTITY)
+    results = find_last_entity_version_grouped_by_linktypes(learning_container_year, entity_container_year_link_type.ALLOCATION_ENTITY)
     return next(iter(results.values()), None)
 
 
 def find_all_additional_requirement_entities(learning_container_year):
-    results = find_entities(learning_container_year, [entity_container_year_link_type.ADDITIONAL_REQUIREMENT_ENTITY_1,
-                                                      entity_container_year_link_type.ADDITIONAL_REQUIREMENT_ENTITY_2])
+    results = find_last_entity_version_grouped_by_linktypes(learning_container_year, [entity_container_year_link_type.ADDITIONAL_REQUIREMENT_ENTITY_1,
+                                                                                      entity_container_year_link_type.ADDITIONAL_REQUIREMENT_ENTITY_2])
     return next(iter(results.values()), None)
 
 

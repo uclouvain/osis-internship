@@ -22,18 +22,6 @@ msgstr "(for the 2nd renewal)"
 msgid "absences"
 msgstr "Absences"
 
-msgid "access_starting_date"
-msgstr "Starting date"
-
-msgid "access_ending_date"
-msgstr "Ending date"
-
-msgid "access_assistants_starting_date"
-msgstr "Assistants starting date"
-
-msgid "access_assistants_ending_date"
-msgstr "Assistants ending date"
-
 msgid "action"
 msgstr "Action"
 
@@ -49,14 +37,14 @@ msgstr "Address"
 msgid "advice"
 msgstr "Avis"
 
+msgid "apply"
+msgstr "Apply"
+
+msgid "app_dates"
+msgstr "Procedure opening and closing dates"
+
 msgid "ASSISTANT"
 msgstr "Assistant"
-
-msgid "at_least_one_learning_unit"
-msgstr "You lust add at least one learning unit in the \"Learning units\" item"
-
-msgid "TEACHING_ASSISTANT"
-msgstr "Teaching assistant"
 
 msgid "assistant_form"
 msgstr "Assistant form"
@@ -91,11 +79,20 @@ msgstr "Assistant type"
 msgid "assistants"
 msgstr "Assistants"
 
+msgid "assistants_dates"
+msgstr "Evaluations access dates for the assistants"
+
+msgid "at_least_one_learning_unit"
+msgstr "You lust add at least one learning unit in the \"Learning units\" item"
+
 msgid "attendees"
 msgstr "Number of students per serie"
 
 msgid "awards"
 msgstr "Awards"
+
+msgid "beginning"
+msgstr "Beginning"
 
 msgid "birth_date"
 msgstr "Birth date"
@@ -112,6 +109,9 @@ msgstr "Choose a person as reviewer for"
 msgid "comment"
 msgstr "Comment"
 
+msgid "CONDITIONAL"
+msgstr "Conditional"
+
 msgid "conferences_contributor"
 msgstr "Conference(s)"
 
@@ -119,13 +119,22 @@ msgid "confidential"
 msgstr "Confidentiel"
 
 msgid "confirm_reviewer_addition"
+msgstr "Are you sure you want to add this reviewer ? This action can not be undone."
+
+msgid "confirm_reviewer_delegation"
 msgstr "Are you sure you want to delegate your role ? This action can not be undone."
+
+msgid "confirm_send_emails"
+msgstr "Are you sure you want to send emails ? This action can not be undone."
 
 msgid "confirm_validation"
 msgstr "Are you sure you want to validate et submit ? This action can not be undone."
 
 msgid "confirmatory_test_date"
 msgstr "Confirmatory test date"
+
+msgid "connected_as"
+msgstr "You are logged in as"
 
 msgid "contact_details"
 msgstr "Administrative information"
@@ -199,6 +208,9 @@ msgstr "Done"
 msgid "emails"
 msgstr "Emails"
 
+msgid "end"
+msgstr "End"
+
 msgid "eq_fte"
 msgstr "Contrat duration (FTE)"
 
@@ -210,6 +222,9 @@ msgstr "Preparation, coordination and evaluation"
 
 msgid "exceptional_justification"
 msgstr "To the extent that you no longer meet the conditions for a 'normal' renewal, can you clarify the circumstances justifying a request for an 'exceptional' renewal (art. 51 of the RAMCS)"
+
+msgid "EXCEPTIONAL"
+msgstr "Exceptional"
 
 msgid "exercises_tp"
 msgstr "Exercises, practicals, seminars - associated with volume 2 hours, you assume personally"
@@ -234,6 +249,9 @@ msgstr "Faculty"
 
 msgid "faculty_representation"
 msgstr "Faculty representation activities"
+
+msgid "FAVORABLE"
+msgstr "Favorable"
 
 msgid "field"
 msgstr "Mandate type"
@@ -355,6 +373,9 @@ msgstr "did not respond"
 msgid "no_supervisor"
 msgstr "No supervisor"
 
+msgid "NORMAL"
+msgstr "Normal"
+
 msgid "other_status"
 msgstr "Other status"
 
@@ -366,6 +387,12 @@ msgstr "% EFT"
 
 msgid "period_covered"
 msgstr "Period covered"
+
+msgid "person_already_reviewer_msg"
+msgstr "This person is already a reviewer, please choose someone else"
+
+msgid "person_who_will_be_replacing"
+msgstr "Substitute reviewer"
 
 msgid "phd"
 msgstr "PhD"
@@ -424,6 +451,12 @@ msgstr "Give an advice"
 msgid "renewal_type"
 msgstr "Type of renewal"
 
+msgid "replace"
+msgstr "Replace"
+
+msgid "replacement"
+msgstr "Replacement"
+
 msgid "representation_activities"
 msgstr "Representation activities"
 
@@ -453,6 +486,9 @@ msgstr "Folders list"
 
 msgid "reviews"
 msgstr "Reviews"
+
+msgid "reviewer"
+msgstr "Reviewer"
 
 msgid "reviewers"
 msgstr "Reviewers"
@@ -493,6 +529,9 @@ msgstr "Send an email to all assistants"
 msgid "send_email_to_all_deans"
 msgstr "Send an email to all faculty deans"
 
+msgid "send_email_to_reviewers"
+msgstr "Send an email to all reviewers"
+
 msgid "series_number"
 msgstr "Number of series"
 
@@ -510,6 +549,9 @@ msgstr "Number of sessions scheduled for this course"
 
 msgid "settings"
 msgstr "Settings"
+
+msgid "SPECIAL"
+msgstr "Special"
 
 msgid "startup_precedure"
 msgstr "Startup procedure"
@@ -529,6 +571,9 @@ msgstr "Supervision"
 msgid "SUPERVISION"
 msgstr "Dean of the Faculty"
 
+msgid "SUPERVISION_ASSISTANT"
+msgstr "Delegate of dean of the Faculty"
+
 msgid "supervisor"
 msgstr "Supervisor"
 
@@ -544,8 +589,8 @@ msgstr "Rapport du comité d'encadrement"
 msgid "svr"
 msgstr "SVR"
 
-msgid "TRTS"
-msgstr "Assistant"
+msgid "TEACHING_ASSISTANT"
+msgstr "Teaching assistant"
 
 msgid "thesis_defence_date"
 msgstr "Thesis defence date"
@@ -559,11 +604,17 @@ msgstr "to assitants"
 msgid "TO_ALL_DEANS"
 msgstr "to faculty deans"
 
+msgid "TO_ALL_REVIEWERS"
+msgstr "to all reviewers"
+
 msgid "TO_DO"
 msgstr "To do"
 
 msgid "total_must_be_100_message"
 msgstr "Total should equal 100"
+
+msgid "TRTS"
+msgstr "Assistant"
 
 msgid "tutoring_percent"
 msgstr "Tutoring percentage"
@@ -576,6 +627,9 @@ msgstr "TUT"
 
 msgid "type_of_renewal"
 msgstr "Type of renewal"
+
+msgid "UNFAVOURABLE"
+msgstr "Unfavourable"
 
 msgid "upload"
 msgstr "Joindre un document PDF"

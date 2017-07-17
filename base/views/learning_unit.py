@@ -39,11 +39,13 @@ from attribution import models as mdl_attr
 from base.models import entity_container_year
 from base.models.enums import entity_container_year_link_type
 from base.models.enums import learning_container_year_types
+from base.models.enums import learning_unit_year_activity_status
 from cms import models as mdl_cms
 from cms.enums import entity_name
 from base.forms.learning_units import LearningUnitYearForm
 from base.forms.learning_unit_specifications import LearningUnitSpecificationsForm, LearningUnitSpecificationsEditForm
 from base.forms.learning_unit_pedagogy import LearningUnitPedagogyForm, LearningUnitPedagogyEditForm
+from base.forms.learning_unit_component import LearningUnitComponentEditForm
 from base.models.enums import learning_unit_year_subtypes
 from cms.models import text_label
 
@@ -64,7 +66,7 @@ ACRONYM_COMPLET_LEARNING_UNIT = _("complete")
 @login_required
 @permission_required('base.can_access_learningunit', raise_exception=True)
 def learning_units(request):
-    if request.GET.get('academic_year'):
+    if request.GET.get('academic_year_id'):
         form = LearningUnitYearForm(request.GET)
     else:
         form = LearningUnitYearForm()
@@ -74,9 +76,14 @@ def learning_units(request):
         _check_if_display_message(request, learning_units)
 
     context = _get_common_context_list_learning_unit_years()
+    activity_statuses = tuple(activity for activity in learning_unit_year_activity_status.LEARNING_UNIT_YEAR_ACTIVITY_STATUS
+                              if activity[0] != learning_unit_year_activity_status.PASSIVE)
     context.update({
         'form': form,
         'academic_years': mdl.academic_year.find_academic_years(),
+        'container_types': learning_container_year_types.LEARNING_CONTAINER_YEAR_TYPES,
+        'types': learning_unit_year_subtypes.LEARNING_UNIT_YEAR_SUBTYPES,
+        'activity_statuses': activity_statuses,
         'learning_units': found_learning_units,
         'current_academic_year': mdl.academic_year.current_academic_year(),
         'experimental_phase': True
@@ -265,35 +272,28 @@ def _get_common_context_learning_unit_year(learning_unit_year_id):
     return context
 
 
-def get_components(a_learning_container_yr, get_classes):
+def get_components(learning_container_year, with_classes=False):
     components = []
-    if a_learning_container_yr:
-        learning_component_year_list = mdl.learning_component_year.find_by_learning_container_year(a_learning_container_yr)
+    learning_components_year = mdl.learning_component_year.find_by_learning_container_year(learning_container_year, with_classes)
 
-        for learning_component_year in learning_component_year_list:
-            if get_classes:
-                learning_class_year_list = mdl.learning_class_year.find_by_learning_component_year(learning_component_year)
-                learning_class_year_dict = dict()
-                for learning_class_year in learning_class_year_list:
-                    learning_unit_usage_by_class = _learning_unit_usage_by_class(learning_class_year)
-                    if str(ACRONYM_COMPLET_LEARNING_UNIT) in learning_unit_usage_by_class:
-                        using_by_complet_learning_unit = True
-                    else:
-                        using_by_complet_learning_unit = False
-                    learning_class_year_dict[learning_class_year] = [learning_unit_usage_by_class, using_by_complet_learning_unit]
-            else:
-                learning_class_year_dict = None
+    for learning_component_year in learning_components_year:
+        if learning_component_year.classes:
+            for learning_class_year in learning_component_year.classes:
+                learning_class_year.used_by_learning_units_year = _learning_unit_usage_by_class(learning_class_year)
+                learning_class_year.is_used_by_full_learning_unit_year = _is_used_by_full_learning_unit_year(learning_class_year)
 
-            entity_container_yrs = mdl.entity_container_year.find_by_learning_container_year(learning_component_year.learning_container_year,
-                                                                                            entity_container_year_link_type.REQUIREMENT_ENTITY)
-            entity_component_yr = mdl.entity_component_year.find_by_entity_container_years(entity_container_yrs,
-                                                                                          learning_component_year).first()
-            components.append({'learning_component_year': learning_component_year,
-                               'entity_component_yr': entity_component_yr,
-                               'volumes': volumes(entity_component_yr),
-                               'learning_unit_usage': _learning_unit_usage(learning_component_year),
-                               'classes': learning_class_year_dict})
+        entity_container_yrs = mdl.entity_container_year.find_by_learning_container_year(
+            learning_component_year.learning_container_year,
+            entity_container_year_link_type.REQUIREMENT_ENTITY)
+        entity_component_yr = mdl.entity_component_year.find_by_entity_container_years(entity_container_yrs,
+                                                                                       learning_component_year).first()
+
+        components.append({'learning_component_year': learning_component_year,
+                           'entity_component_yr': entity_component_yr,
+                           'volumes': volumes(entity_component_yr),
+                           'learning_unit_usage': _learning_unit_usage(learning_component_year)})
     return components
+
 
 
 def _get_partims_related(learning_unit_year):
@@ -329,7 +329,7 @@ def _get_organization_from_learning_unit_year(learning_unit_year):
 def _get_all_attributions(learning_unit_year):
     attributions = {}
     if learning_unit_year.learning_container_year:
-        all_attributions = entity_container_year.find_entities(learning_unit_year.learning_container_year)
+        all_attributions = entity_container_year.find_last_entity_version_grouped_by_linktypes(learning_unit_year.learning_container_year)
         attributions['requirement_entity'] = all_attributions.get(entity_container_year_link_type.REQUIREMENT_ENTITY)
         attributions['allocation_entity'] = all_attributions.get(entity_container_year_link_type.ALLOCATION_ENTITY)
         attributions['additional_requirement_entities'] = [
@@ -444,10 +444,7 @@ def _learning_unit_usage(a_learning_component_year):
     for index, l in enumerate(learning_unit_component):
         if index == 1:
             separator = ", "
-        acronym = ACRONYM_COMPLET_LEARNING_UNIT
-        if l.learning_unit_year.subdivision:
-            acronym = l.learning_unit_year.subdivision
-        ch = "{}{}{}".format(ch, separator, acronym)
+        ch = "{}{}{}".format(ch, separator, l.learning_unit_year.acronym)
     return ch
 
 
@@ -488,3 +485,46 @@ def get_components_identification(learning_unit_yr):
                                    'volumes': volumes(entity_component_yr),
                                    'learning_unit_usage': _learning_unit_usage(learning_component_year)})
     return components
+
+
+def _is_used_by_full_learning_unit_year(a_learning_class_year):
+    learning_unit_component_class = mdl.learning_unit_component_class.find_by_learning_class_year(a_learning_class_year)
+    for index, l in enumerate(learning_unit_component_class):
+        if l.learning_unit_component.learning_unit_year.subdivision is None:
+            return True
+
+    return False
+
+
+@login_required
+@permission_required('base.change_learningcomponentyear', raise_exception=True)
+@require_http_methods(["GET", "POST"])
+def learning_unit_component_edit(request, learning_unit_year_id):
+    context = _get_common_context_learning_unit_year(learning_unit_year_id)
+    context.update({'learning_component_year':
+                        mdl.learning_component_year.find_by_id(request.GET.get('learning_component_year_id'))})
+
+    if request.method == 'POST':
+        form = LearningUnitComponentEditForm(request.POST,
+                                             ** {'learning_unit_year': context['learning_unit_year'],
+                                                 'learning_component_year': context['learning_component_year']})
+        if form.is_valid():
+            form.save()
+        return HttpResponseRedirect(reverse("learning_unit_components",
+                                            kwargs={'learning_unit_year_id': learning_unit_year_id}))
+
+    form = LearningUnitComponentEditForm(**{
+        'learning_unit_year': context['learning_unit_year'],
+        'learning_component_year': context['learning_component_year'],
+        'used_by': _used_by(context['learning_component_year'], context['learning_unit_year'])
+
+    })
+    form.load_initial()  # Load data from database
+    context['form'] = form
+    return layout.render(request, "learning_unit/component_edit.html", context)
+
+
+def _used_by(learning_component_year, learning_unit_year):
+    if mdl.learning_unit_component.used_by(learning_component_year, learning_unit_year):
+        return True
+    return False

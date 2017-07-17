@@ -39,6 +39,7 @@
 {% endblock %}
 {% block content %}
 <div class="page-header">
+    <h6>{% trans 'connected_as' %} {{ reviewer.person }} ({% trans reviewer.role %}) - {{ reviewer.structure.acronym }}</h6>
     <h3>{% trans 'assistantship_mandate_renewal' %} {{ year|add:1 }}</h3>
 </div>
 <div class="panel panel-default">
@@ -52,13 +53,12 @@
 		{% endfor %}
 	<div class="form-group">
 		<label for="search_persons">{% trans 'person' %}</label>
-		<div class="ui-widget"><input id="search_persons" name="search_persons" size="100"
-										  placeholder="{% trans 'search_by_email_or_last_name' %}">
-		</div>
+		<input id="search_persons" name="search_persons" size="100" class="form-control"
+               placeholder="{% trans 'search_by_email_or_last_name' %}">
 		<input type="hidden" name="person_id" id="person_id">
 	</div>
     <button type="submit" class="btn btn-primary" title="{% trans 'save'%}" id="bt_add_reviewer_save"
-    onclick="return confirm('{% trans 'confirm_reviewer_addition' %}')">
+    onclick="return confirm('{% trans 'confirm_reviewer_delegation' %}')">
     <span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'save'%}</button>
     <a class="btn btn-default" id="lnk_upload_cancel" href="{% url 'reviewer_delegation' %}">
     <span class="glyphicon glyphicon-cancel" aria-hidden="true"></span> {% trans 'cancel'%}</a>

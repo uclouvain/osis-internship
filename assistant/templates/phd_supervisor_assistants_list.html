@@ -37,17 +37,17 @@
 {% block content %}
 <div class="page-header">
     <h3>{% trans 'assistantship_mandate_renewal' %} {{ year|add:1 }}</h3>
-</div>
-<div class="panel panel-default">
     {% if is_reviewer %}
         <ul class="nav nav-tabs">
             <li><a href="{% url 'reviewer_mandates_list' %}">{% trans 'reviewer_mandates_list' %}</a></li>
             <li class="active"><a href="#">{% trans 'phd_supervisor_assistants_list' %}</a></li>
             {% if can_delegate %}
-            <li><a href="{% url 'reviewer_delegation' %}">{% trans 'reviewer_delegation' %}</a></li>
+                <li><a href="{% url 'reviewer_delegation' %}">{% trans 'reviewer_delegation' %}</a></li>
             {% endif %}
         </ul>
     {% endif %}
+</div>
+<div class="panel panel-default">
     <div class="panel-body">
         <div class="table-responsive">
         <table id="myTable" class="table table-hover table-condensed table-bordered" cellspacing="0" width="100%">
