@@ -34,28 +34,29 @@
 <li><a href="{% url 'institution' %}" id="lnk_institution">{% trans 'institution' %}</a></li>
 <li><a href="{% url 'mandates' %}" id="lnk_mandates">{% trans 'mandates' %}</a></li>
 <li><a href="{% url 'manager_home' %}" id="lnk_manager_home">{% trans 'assistants' %}</a></li>
-<li><a href="{% url 'reviewers_list' %}" id="lnk_reviewers_list">{% trans 'reviewers_list' %}</a></li>
-<li class="active">{% trans 'replace_reviewer' %}</li>
+<li><a href="{% url 'reviewers_list' %}" id="lnk_reviewers_list">{% trans 'reviewers' %}</a></li>
+<li class="active">{% trans 'replacement' %}</li>
 {% endblock %}
 {% block content %}
 <div class="page-header">
-    <h3>{% trans 'assistantship_mandate_renewal' %} {{ year|add:1 }}</h3>
+    <h3>{% trans 'assistant_mandates_renewals' %} {{ year|add:1 }}</h3>
 </div>
 <div class="panel panel-default">
     <div class="panel-body">
         <form method="POST" action="{% url 'reviewer_replace' %}">
-        {{ form.non_field_errors }}
+
  		    {% csrf_token %}
  		    {% for hidden in form.hidden_fields %}
 			    {{ hidden }}
 		    {% endfor %}
 	    <div class="form-group">
 		    <label for="search_persons">{% trans 'person_who_will_be_replacing' %}</label>
-			<div class="ui-widget"><input id="search_persons" name="search_persons" size="100"
-										  placeholder="{% trans 'search_by_email_or_last_name' %}">
-			</div>
+			<input id="search_persons" name="search_persons" size="100" class="form-control"
+                   placeholder="{% trans 'search_by_email_or_last_name' %}">
 			<input type="hidden" name="person_id" id="person_id">
+            <p class="text-danger">{{ form.non_field_errors.as_text }}</p>
 		</div>
+
 		<div class="form-group">
 			<label for="{{ personne.auto_id }}">{% trans 'reviewer' %}</label>
 			<div class="controls">{{ reviewer.person }}</div>

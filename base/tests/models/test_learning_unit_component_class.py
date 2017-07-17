@@ -24,7 +24,6 @@
 #
 ##############################################################################
 from django.test import TestCase
-
 from base.tests.factories.academic_year import AcademicYearFactory
 from base.tests.factories.learning_class_year import LearningClassYearFactory
 from base.tests.factories.learning_component_year import LearningComponentYearFactory

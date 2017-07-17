@@ -52,34 +52,34 @@
   				<h4>{% trans 'research' %}</h4>
     		</div>
     	</div>
-    	<div class="form-group" style="padding-top: 5px;">
+    	<div class="form-group" style="padding-top: 10px">
       		<label for="internships">{% trans 'scientific_internships' %}</label>
-            <div class="controls" id="internships">{{ form.internships }}</div>
+            {{ form.internships }}
             <span class="error">{{ form.internships.errors }}</span>
       	</div>
-      	<div class="form-group" style="padding-top: 5px;">
+      	<div class="form-group">
             <label for="conferences">{% trans 'conferences_contributor' %}</label>
-            <div class="controls" id="conferences">{{ form.conferences }}</div>
+            {{ form.conferences }}
             <span class="error">{{ form.conferences.errors }}</span>
       	</div>
-      	<div class="form-group" style="padding-top: 5px;">
+      	<div class="form-group">
             <label for="publications">{% trans 'publications_in_progress' %}</label>
-            <div class="controls" id="publications">{{ form.publications }}</div>
+            {{ form.publications }}
             <span class="error">{{ form.publications.errors }}</span>
       	</div>
-      	<div class="form-group" style="padding-top: 5px;">
+      	<div class="form-group">
             <label for="awards">{% trans 'awards' %}</label>
-            <div class="controls" id="awards">{{ form.awards }}</div>
+            {{ form.awards }}
             <span class="error">{{ form.awards.errors }}</span>
       	</div>
-      	<div class="form-group" style="padding-top: 5px;">
+      	<div class="form-group">
             <label for="framing">{% trans 'framing_participation' %}</label>
-            <div class="controls" id="framing">{{ form.framing }}</div>
+            {{ form.framing }}
             <span class="error">{{ form.framing.errors }}</span>
       	</div>
-      	<div class="form-group" style="padding-top: 5px;">
+      	<div class="form-group">
             <label for="remark">{% trans 'remark' %}</label>
-            <div class="controls" id="remark">{{ form.remark }}</div>
+            {{ form.remark }}
             <span class="error">{{ form.remark.errors }}</span>
       	</div>
     	<div class="panel-default">
@@ -110,15 +110,9 @@
         <hr>
 	    <input type="hidden" value="{{mandate.id | default_if_none:''}}" id="hdn_current_mandate_id"
 		   name="mandate_id" title="mandate_id" >
-        <input type="hidden" value="{{ document_type }}" id="hdn_description" name="description"
-               title="description">
-		<div class="form-group">
-    		<div class="row" style="padding-left: 15px; padding-right: 15px;">
-     			<button type="submit" class="btn btn-primary btn-block" title="{% trans 'save'%}"
-                        id="bt_pstform_part3_save">
-     			<span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'save'%}</button>
-    		</div>
-		</div>
+        <input type="hidden" value="{{ document_type }}" id="hdn_description" name="description" title="description">
+        <button type="submit" class="btn btn-primary" title="{% trans 'save'%}" id="bt_pstform_part3_save">
+     	<span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'save'%}</button>
     	</form>
 	</div>
 </div>
