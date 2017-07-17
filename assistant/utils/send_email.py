@@ -62,6 +62,18 @@ def send_message_to_deans(request):
 
 
 @user_passes_test(manager_access.user_is_manager, login_url='assistants_home')
+def send_message_to_reviewers(request):
+    html_template_ref = 'assistant_reviewers_startup_html'
+    txt_template_ref = 'assistant_reviewers_startup_txt'
+    reviewers = reviewer.find_reviewers()
+    for rev in reviewers:
+        print(rev.person)
+        send_message(rev.person, html_template_ref, txt_template_ref)
+    save_message_history(request, message_type.TO_ALL_REVIEWERS)
+    return redirect('messages_history')
+
+
+@user_passes_test(manager_access.user_is_manager, login_url='assistants_home')
 def save_message_history(request, type):
     message = Message.objects.create(sender=manager.Manager.objects.get(person=request.user.person),
                                      date=timezone.now(),

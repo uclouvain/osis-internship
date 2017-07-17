@@ -22,18 +22,6 @@ msgstr "(pour le 2ème renouvellement)"
 msgid "absences"
 msgstr "Absences"
 
-msgid "access_starting_date"
-msgstr "Date d'ouverture d'accès à l'application"
-
-msgid "access_ending_date"
-msgstr "Date de fermeture de l'accès à l'application"
-
-msgid "access_assistants_starting_date"
-msgstr "Date d'ouverture d'accès aux avis pour les assistants"
-
-msgid "access_assistants_ending_date"
-msgstr "Date de fermeture de l'accès aux avis pour les assistants"
-
 msgid "action"
 msgstr "Action"
 
@@ -48,6 +36,12 @@ msgstr "Adresse"
 
 msgid "advice"
 msgstr "Avis"
+
+msgid "app_dates"
+msgstr "Dates de la procédure de renouvellement des mandats"
+
+msgid "apply"
+msgstr "Appliquer"
 
 msgid "assistant_form"
 msgstr "Dossier assistant"
@@ -88,6 +82,9 @@ msgstr "Type d'assistant·e"
 msgid "assistants"
 msgstr "Assistants"
 
+msgid "assistants_dates"
+msgstr "Dates d'accès aux évaluations pour les assistants"
+
 msgid "at_least_one_learning_unit"
 msgstr "Vous devez ajouter au moins une unité d'enseignement dans la rubrique \"Unités d'enseignement\""
 
@@ -96,6 +93,9 @@ msgstr "Nombre d'étudiants par série"
 
 msgid "awards"
 msgstr "Prix et/ou distinction(s)"
+
+msgid "beginning"
+msgstr "Début"
 
 msgid "birth_date"
 msgstr "Date de naissance"
@@ -112,6 +112,9 @@ msgstr "Choisissez une personne comme évaluateur pour"
 msgid "comment"
 msgstr "Commentaire"
 
+msgid "CONDITIONAL"
+msgstr "Conditionnel"
+
 msgid "conferences_contributor"
 msgstr "Conférence(s) auxquelle(s) j'ai contribué par communication ou poster, seul·e ou avec d'autres"
 
@@ -119,13 +122,22 @@ msgid "confidential"
 msgstr "Confidentiel"
 
 msgid "confirm_reviewer_addition"
+msgstr "Êtes-vous certain de vouloir ajouter cet évaluateur ? Cette action est irréversible."
+
+msgid "confirm_reviewer_delegation"
 msgstr "Êtes-vous certain de vouloir déléguer votre rôle ? Cette action est irréversible."
+
+msgid "confirm_send_emails"
+msgstr "Êtes-vous certain de vouloir envoyer ces courriels ? Cette action est irréversible."
 
 msgid "confirm_validation"
 msgstr "Êtes-vous certain de vouloir valider et soumettre ? Cette action ne pourra pas être annulée."
 
 msgid "confirmatory_test_date"
 msgstr "Date de l'épreuve de confirmation"
+
+msgid "connected_as"
+msgstr "Vous êtes connecté en tant que"
 
 msgid "contact_details"
 msgstr "Coordonnées administratives"
@@ -199,6 +211,9 @@ msgstr "Terminé"
 msgid "emails"
 msgstr "Courriels"
 
+msgid "end"
+msgstr "Fin"
+
 msgid "eq_fte"
 msgstr "Durée contrat (ETP)"
 
@@ -207,6 +222,9 @@ msgstr "Organisation de stages, colloques, visites, voyages d’études, terrain
 
 msgid "exams_supervision_duration"
 msgstr "Préparation, coordination et évaluation (h)"
+
+msgid "EXCEPTIONAL"
+msgstr "Exceptionnel"
 
 msgid "exceptional_justification"
 msgstr "Dans la mesure où vous ne rempliriez plus les conditions pour bénéficier d'un renouvellement 'normal', pouvez-vous préciser les circonstances justifiant une demande de renouvellement exceptionnel (art. 51 du RAMCS)"
@@ -234,6 +252,9 @@ msgstr "Faculté"
 
 msgid "faculty_representation"
 msgstr "Au sein de la faculté (commissions de programme, bureau de faculté, conseil de faculté)"
+
+msgid "FAVORABLE"
+msgstr "Favorable"
 
 msgid "field"
 msgstr "Type de mandat"
@@ -359,6 +380,9 @@ msgstr "pas répondu"
 msgid "no_supervisor"
 msgstr "Pas de promoteur"
 
+msgid "NORMAL"
+msgstr "Normal"
+
 msgid "other_status"
 msgstr "Autre status"
 
@@ -370,6 +394,12 @@ msgstr "% ETP"
 
 msgid "period_covered"
 msgstr "Période couverte par le rapport (depuis le 1er engagement ou la précédente demande de renouvellement)"
+
+msgid "person_already_reviewer_msg"
+msgstr "Cette personne est déjà évaluateur, veuillez choisir quelqu'un d'autre"
+
+msgid "person_who_will_be_replacing"
+msgstr "Évaluateur remplaçant"
 
 msgid "phd"
 msgstr "PhD"
@@ -425,6 +455,12 @@ msgstr "Statut"
 msgid "renewal_type"
 msgstr "Type de renouvellement"
 
+msgid "replace"
+msgstr "Remplacer"
+
+msgid "replacement"
+msgstr "Remplacement"
+
 msgid "representation_activities"
 msgstr "Activités de représentation à l'UCL"
 
@@ -457,6 +493,9 @@ msgstr "Liste des dossiers"
 
 msgid "reviews"
 msgstr "Avis"
+
+msgid "reviewer"
+msgstr "Évaluateur"
 
 msgid "reviewers"
 msgstr "Évaluateurs"
@@ -497,6 +536,9 @@ msgstr "Envoyer un email à tous les assistants"
 msgid "send_email_to_all_deans"
 msgstr "Envoyer un email aux doyens de faculté"
 
+msgid "send_email_to_reviewers"
+msgstr "Envoyer un email aux évaluateurs"
+
 msgid "series_number"
 msgstr "Nombre de séries"
 
@@ -518,6 +560,9 @@ msgstr "Structures"
 msgid "settings"
 msgstr "Réglages"
 
+msgid "SPECIAL"
+msgstr "Spécial"
+
 msgid "startup_precedure"
 msgstr "Procédure de démarrage"
 
@@ -532,6 +577,9 @@ msgstr "Encadrement"
 
 msgid "SUPERVISION"
 msgstr "Doyen de faculté"
+
+msgid "SUPERVISION_ASSISTANT"
+msgstr "Délégué de doyen de faculté"
 
 msgid "supervisor"
 msgstr "Promoteur"
@@ -563,6 +611,9 @@ msgstr "Aux assistants"
 msgid "TO_ALL_DEANS"
 msgstr "Aux doyens de faculté"
 
+msgid "TO_ALL_REVIEWERS"
+msgstr "À tous les évaluateurs"
+
 msgid "TO_DO"
 msgstr "Début"
 
@@ -583,6 +634,9 @@ msgstr "ENS"
 
 msgid "type_of_renewal"
 msgstr "Type de renouvellement"
+
+msgid "UNFAVOURABLE"
+msgstr "Défavorable"
 
 msgid "upload"
 msgstr "Joindre un document PDF"

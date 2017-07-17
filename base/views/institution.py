@@ -68,16 +68,20 @@ def entities_search(request):
 def entity_read(request, entity_version_id):
     entity_version = mdl.entity_version.find_by_id(entity_version_id)
     entity_parent = entity_version.get_parent_version()
-    if entity_parent:
-        return layout.render(request, "entity.html", {'entity_version': entity_version,
-                                                      'entity_parent': entity_parent})
-    else:
-        return layout.render(request, "entity.html", {'entity_version': entity_version})
+    return layout.render(request, "entity/identification.html", locals())
+
+
+@login_required
+def entities_version(request, entity_version_id):
+    entity_version = mdl.entity_version.find_by_id(entity_version_id)
+    entity_parent = entity_version.get_parent_version()
+    entities_version = mdl.entity_version.search(entity=entity_version.entity)\
+                                         .order_by('-start_date')
+    return layout.render(request, "entity/versions.html", locals())
 
 
 @login_required
 def entity_diagram(request, entity_version_id):
     entity_version = mdl.entity_version.find_by_id(entity_version_id)
     entities_version_as_json = json.dumps(entity_version.get_organogram_data(level=0))
-    return layout.render(request, "entity_organogram.html", {'entity_version': entity_version,
-                                                             'entities_version_as_json': entities_version_as_json})
+    return layout.render(request, "entity/organogram.html", locals())

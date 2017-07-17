@@ -40,56 +40,43 @@
 {% endblock %}
 {% block content %}
 <div class="page-header">
-    <h4>{% trans 'assistant_mandates_renewals' %} {{ mandate.academic_year.year|add:1 }}</h4>
+    <h3>{% trans 'assistant_mandates_renewals' %} {{ mandate.academic_year.year|add:1 }}</h3>
 </div>
 <div class="panel panel-default">
     <div class="panel-body">
         <h3>{{ mandate.assistant.person }} ({{ mandate.assistant.person.gender }})</h3>
         <form method="post" action=" {% url 'mandate_save' mandate.id %} ">
             {% csrf_token %}
+            {{ mandate.assistant.person.email }}
             <div class="form-group">
                 <div class="row">
-                    <div class="col-md-3">
-                        {{ mandate.assistant.person.email }}
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="row">
-                    <div class="col-md-2">
+                    <div class="col-md-4">
                         <label for="txt_assistant_type">{% trans 'assistant_type' %}</label>
                         {{ form.assistant_type }}<span class="error">{{ form.assistant_type.errors }}</span>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <label for="txt_matricule_number">{% trans 'matricule_number' %}</label>
                         {{ form.sap_id }}
                     </div>
-                </div>
-            </div>
+                    <div class="col-md-4">
+                        <label for="txt_renewal_type">{% trans 'renewal_type' %}</label>
 
-            <div class="form-group">
-                <div class="row">
-                    <div class="col-md-3">
-                        <div class="controls">
-                            <label for="txt_renewal_type">{% trans 'renewal_type' %}</label>
-
-                            {{ form.renewal_type }}<span class="error">{{ form.renewal_type.errors }}</span></div>
-
+                            {{ form.renewal_type }}<span class="error">{{ form.renewal_type.errors }}</span>
                     </div>
                 </div>
             </div>
             <div class="form-group">
                 <div class="row">
 
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <label for="txt_contract_duration">{% trans 'contract_duration' %}</label>
                         {{ form.contract_duration }}
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <label for="txt_contract_duration_fte">{% trans 'contract_duration_fte' %}</label>
                         {{ form.contract_duration_fte }}
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <label for="txt_contract_duration">{% trans 'fulltime_equivalent_percentage' %}</label>
                         {{ form.fulltime_equivalent }}
                     </div>
@@ -97,41 +84,29 @@
             </div>
             {{ formset.management_form }}
             <div class="form-group">
-                <div class="row">
-                    <div class="col-md-12"><label for="txt_structures">{% trans 'structures' %}</label>
-                        {% for form in formset %}
-                        {% for field in form %}
+                <label for="txt_structures">{% trans 'structures' %}</label>
+                {% for form in formset %}
+                    {% for field in form %}
                         {% if field.name == "DELETE" %}
-                        <div class="controls">{{ field }} {% trans 'delete' %}<span class="error">{{ field.errors }}</span></div>
+                            <div class="controls">{{ field }} {% trans 'delete' %}<span class="error">{{ field.errors }}</span></div>
                         {% else %}
-                        <div class="controls">{{ field }}<span class="error">{{ field.errors }}</span></div>
+                            <div class="controls">{{ field }}<span class="error">{{ field.errors }}</span></div>
                         {% endif %}
-                        {% endfor %}
-
-                        {% endfor %}
-                    </div></div></div>
-            <div class="form-group">
-                <div class="row">
-                    <div class="col-md-6">
-                        <label for="txt_comment">{% trans 'comment' %}</label>
-                        <div class="controls">{{ form.comment }}<span class="error">{{ form.comment.errors }}</span></div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <label for="txt_absences">{% trans 'absences' %}</label>
-                        <div class="controls">{{ form.absences }}<span class="error">{{ form.absences.errors }}</span></div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <label for="txt_other_status">{% trans 'other_status' %}</label>
-                        <div class="controls">{{ form.other_status }}<span class="error">{{ form.other_status.errors }}</span></div>
-                    </div>
-                </div>
+                    {% endfor %}
+                {% endfor %}
             </div>
-
-            <br>
+            <div class="form-group">
+                <label for="txt_comment">{% trans 'comment' %}</label>
+                {{ form.comment }}<span class="error">{{ form.comment.errors }}</span>
+            </div>
+             <div class="form-group">
+                 <label for="txt_absences">{% trans 'absences' %}</label>
+                 {{ form.absences }}<span class="error">{{ form.absences.errors }}</span>
+             </div>
+             <div class="form-group">
+                 <label for="txt_other_status">{% trans 'other_status' %}</label>
+                 {{ form.other_status }}<span class="error">{{ form.other_status.errors }}</span>
+            </div>
             <button type="submit" class="btn btn-primary" title="{% trans 'save'%}" id="bt_mandate_save"><span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'save'%}</button>
             <a class="btn btn-default" id="lnk_mandate_cancel" href="{% url 'mandates_list' %}">
                 <span class="glyphicon glyphicon-cancel" aria-hidden="true"></span> {% trans 'cancel'%}</a>
