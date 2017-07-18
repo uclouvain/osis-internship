@@ -33,7 +33,7 @@
                 <button type="button" class="close" data-dismiss="modal" title="{% trans 'close'%}">×</button>
                 <h4>{% trans 'component'%}
                     {% if learning_component_year.type %}
-                     : {% trans learning_component_year.type %}
+                    : {% trans learning_component_year.type %}
                     {% endif %}
                 </h4>
             </div>
@@ -42,12 +42,14 @@
                 <label>{% trans 'planned_classrooms'%}</label><br>
                 {{ form.planned_classes }}
                 <br><br>
-                {{ form.used_by }}  <label>{% trans 'used_by'%} {{ form.learning_unit_year.acronym}}</label>
+                {{ form.used_by }} <label>{% trans 'used_by'%} {{ form.learning_unit_year.acronym}}</label>
             </div>
             <div class="modal-footer">
-               <button class="btn btn-primary" type="submit" title="{% trans 'save'%}">{% trans 'save' %}</button>
-               <button type="submit" class="btn" data-dismiss="modal" title="{% trans 'cancel'%}">{% trans 'cancel' %} </button>
-          </div>
+                <button class="btn btn-primary" type="submit" title="{% trans 'save'%}">{% trans 'save' %}</button>
+                <button type="submit" class="btn" data-dismiss="modal" title="{% trans 'cancel'%}">{% trans 'cancel'
+                    %}
+                </button>
+            </div>
         </form>
     </div>
 </div>
