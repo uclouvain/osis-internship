@@ -27,6 +27,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 
 from base import models as mdl
 from . import layout
+from base.views import common
 
 
 @login_required
@@ -34,9 +35,7 @@ from . import layout
 def students(request):
     if mdl.program_manager.is_program_manager(request.user):
         return layout.render(request, "student/students.html", {'students': None})
-    response = layout.render(request, 'access_denied.html', {})
-    response.status_code = 401
-    return response
+    return common.access_denied(request)
 
 
 @login_required
@@ -66,7 +65,5 @@ def student_read(request, registration_id):
             exams_enrollments = mdl.exam_enrollment.find_by_student(student)
             lu_enrollments = mdl.learning_unit_enrollment.find_by_student(student)
         return layout.render(request, "student/student.html", locals())
-    response = layout.render(request, 'access_denied.html', {})
-    response.status_code = 401
-    return response
+    return common.access_denied(request)
 
