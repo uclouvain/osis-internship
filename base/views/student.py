@@ -23,23 +23,19 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.decorators import login_required, permission_required, user_passes_test
 
 from base import models as mdl
 from . import layout
-from base.views import common
-
 
 @login_required
-@permission_required('base.can_access_student_path', raise_exception=True)
+@user_passes_test(mdl.program_manager.is_program_manager)
 def students(request):
-    if mdl.program_manager.is_program_manager(request.user):
-        return layout.render(request, "student/students.html", {'students': None})
-    return common.access_denied(request)
+    return layout.render(request, "student/students.html", {'students': None})
 
 
 @login_required
-@permission_required('base.can_access_student_path', raise_exception=True)
+@user_passes_test(mdl.program_manager.is_program_manager)
 def student_search(request):
     students_list = name = None
     registration_id = request.GET.get('registration_id')
@@ -56,14 +52,12 @@ def student_search(request):
 
 
 @login_required
-@permission_required('base.can_access_student_path', raise_exception=True)
+@user_passes_test(mdl.program_manager.is_program_manager)
 def student_read(request, registration_id):
-    if mdl.program_manager.is_program_manager(request.user):
-        student = mdl.student.find_by_id(registration_id)
-        if student:
-            offers_enrollments = mdl.offer_enrollment.find_by_student(student)
-            exams_enrollments = mdl.exam_enrollment.find_by_student(student)
-            lu_enrollments = mdl.learning_unit_enrollment.find_by_student(student)
-        return layout.render(request, "student/student.html", locals())
-    return common.access_denied(request)
+    student = mdl.student.find_by_id(registration_id)
+    if student:
+        offers_enrollments = mdl.offer_enrollment.find_by_student(student)
+        exams_enrollments = mdl.exam_enrollment.find_by_student(student)
+        lu_enrollments = mdl.learning_unit_enrollment.find_by_student(student)
+    return layout.render(request, "student/student.html", locals())
 

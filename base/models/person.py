@@ -154,8 +154,7 @@ def count_by_email(email):
 
 
 def search_employee(full_name):
-    queryset = Person.objects.annotate(begin_by_first_name=Lower(Concat('first_name', Value(' '), 'last_name')))
-    queryset = queryset.annotate(begin_by_last_name=Lower(Concat('last_name', Value(' '), 'first_name')))
+    queryset = annotate_with_first_last_names()
     if full_name:
         return queryset.filter(employee=True)\
             .filter(Q(begin_by_first_name__iexact='{}'.format(full_name.lower())) |
@@ -166,11 +165,17 @@ def search_employee(full_name):
 
 
 def search(full_name):
-    queryset = Person.objects.annotate(begin_by_first_name=Lower(Concat('first_name', Value(' '), 'last_name')))
-    queryset = queryset.annotate(begin_by_last_name=Lower(Concat('last_name', Value(' '), 'first_name')))
+    queryset = annotate_with_first_last_names()
     if full_name:
         return queryset.filter(Q(begin_by_first_name__iexact='{}'.format(full_name.lower())) |
                                Q(begin_by_last_name__iexact='{}'.format(full_name.lower())) |
                                Q(first_name__icontains=full_name) |
                                Q(last_name__icontains=full_name))
     return None
+
+
+def annotate_with_first_last_names():
+    queryset = Person.objects.annotate(begin_by_first_name=Lower(Concat('first_name', Value(' '), 'last_name')))
+    queryset = queryset.annotate(begin_by_last_name=Lower(Concat('last_name', Value(' '), 'first_name')))
+    return queryset
+

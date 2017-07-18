@@ -48,14 +48,9 @@
                     <label>{% trans 'name'%}</label>
                     <input type="text" class="form-control" id="txt_name" name="name" value="{{name | default_if_none:''}}">
                 </div>
-
-                <div class="col-md-3">
-
-                </div>
-
-                <div class="col-md-1">
+                <div class="col-md-6">
                     <button type="submit" id="bt_submit_student_search"
-                            class="btn btn-primary pull-rigth" style="margin-top:23px;" role="button"
+                            class="btn btn-primary" style="margin-top:23px;" role="button"
                             title="{% trans 'student_search' %}">
                         <span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
                 </div>
