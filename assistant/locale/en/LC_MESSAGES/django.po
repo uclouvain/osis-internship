@@ -22,18 +22,6 @@ msgstr "(for the 2nd renewal)"
 msgid "absences"
 msgstr "Absences"
 
-msgid "access_starting_date"
-msgstr "Starting date"
-
-msgid "access_ending_date"
-msgstr "Ending date"
-
-msgid "access_assistants_starting_date"
-msgstr "Assistants starting date"
-
-msgid "access_assistants_ending_date"
-msgstr "Assistants ending date"
-
 msgid "action"
 msgstr "Action"
 
@@ -57,9 +45,6 @@ msgstr "Procedure opening and closing dates"
 
 msgid "ASSISTANT"
 msgstr "Assistant"
-
-msgid "at_least_one_learning_unit"
-msgstr "You lust add at least one learning unit in the \"Learning units\" item"
 
 msgid "assistant_form"
 msgstr "Assistant form"
@@ -97,6 +82,9 @@ msgstr "Assistants"
 msgid "assistants_dates"
 msgstr "Evaluations access dates for the assistants"
 
+msgid "at_least_one_learning_unit"
+msgstr "You lust add at least one learning unit in the \"Learning units\" item"
+
 msgid "attendees"
 msgstr "Number of students per serie"
 
@@ -131,7 +119,13 @@ msgid "confidential"
 msgstr "Confidentiel"
 
 msgid "confirm_reviewer_addition"
+msgstr "Are you sure you want to add this reviewer ? This action can not be undone."
+
+msgid "confirm_reviewer_delegation"
 msgstr "Are you sure you want to delegate your role ? This action can not be undone."
+
+msgid "confirm_send_emails"
+msgstr "Are you sure you want to send emails ? This action can not be undone."
 
 msgid "confirm_validation"
 msgstr "Are you sure you want to validate et submit ? This action can not be undone."
@@ -535,6 +529,9 @@ msgstr "Send an email to all assistants"
 msgid "send_email_to_all_deans"
 msgstr "Send an email to all faculty deans"
 
+msgid "send_email_to_reviewers"
+msgstr "Send an email to all reviewers"
+
 msgid "series_number"
 msgstr "Number of series"
 
@@ -606,6 +603,9 @@ msgstr "to assitants"
 
 msgid "TO_ALL_DEANS"
 msgstr "to faculty deans"
+
+msgid "TO_ALL_REVIEWERS"
+msgstr "to all reviewers"
 
 msgid "TO_DO"
 msgstr "To do"
