@@ -180,10 +180,12 @@ def storage(request):
 def get_current_version(request):
     repo = Repo('.')
     tags = repo.tags
-    head_commit = repo.heads[3].commit.hexsha
+    heads = repo.heads
+    master = heads.master
+    head = master.log()[-1][1]
     latest_tag = None
     for tag in tags:
-        if str(tag.commit) == head_commit:
+        if str(tag.commit) == head:
             latest_tag = tag
             break
     return {'latest_tag': latest_tag}
