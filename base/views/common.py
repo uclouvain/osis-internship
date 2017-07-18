@@ -182,10 +182,9 @@ def get_current_version(request):
     tags = repo.tags
     heads = repo.heads
     master = heads.master
-    head = master.log()[-1][1]
     latest_tag = None
     for tag in tags:
-        if str(tag.commit) == head:
+        if tag.commit == master.commit:
             latest_tag = tag
             break
     return {'latest_tag': latest_tag}
