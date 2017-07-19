@@ -30,25 +30,24 @@ from django.test import TestCase, RequestFactory
 
 from base.tests.factories.student import StudentFactory
 from base.tests.factories.person import PersonFactory
+from base.tests.factories.program_manager import ProgramManagerFactory
 
 
 class StudentViewTestCase(TestCase):
 
-    @mock.patch('django.contrib.auth.decorators')
-    @mock.patch('base.views.layout.render')
-    @mock.patch('base.models.program_manager')
-    def test_students(self, mock_program_manager, mock_render, mock_decorators):
-        mock_decorators.login_required = lambda x: x
-        mock_decorators.permission_required = lambda *args, **kwargs: lambda func: func
-        mock_program_manager.is_program_manager.return_value = True
+    def setUp(self):
+        self.program_manager_1 = ProgramManagerFactory()
 
+    @mock.patch('base.models.program_manager.is_program_manager', return_value=True)
+    @mock.patch('base.views.layout.render')
+    def test_students(self,  mock_render, mock_program_manager):
         request_factory = RequestFactory()
 
         request = request_factory.get(reverse('students'))
-        request.user = mock.Mock()
+        request.user = self.program_manager_1.person.user
 
         from base.views.student import students
-    
+
         students(request)
 
         self.assertTrue(mock_render.called)
@@ -56,17 +55,13 @@ class StudentViewTestCase(TestCase):
 
         self.assertEqual(template, 'student/students.html')
 
-    @mock.patch('django.contrib.auth.decorators')
+    @mock.patch('base.models.program_manager.is_program_manager', return_value=True)
     @mock.patch('base.views.layout.render')
-    @mock.patch('base.models.program_manager')
-    def test_students_search(self, mock_program_manager, mock_render, mock_decorators):
-        mock_decorators.login_required = lambda x: x
-        mock_decorators.permission_required = lambda *args, **kwargs: lambda func: func
-        mock_program_manager.is_program_manager.return_value = True
+    def test_students_search(self, mock_render, mock_program_manager):
 
         request_factory = RequestFactory()
         request = request_factory.get(reverse('students'))
-        request.user = mock.Mock()
+        request.user = self.program_manager_1.person.user
 
         from base.views.student import students
 
@@ -79,18 +74,14 @@ class StudentViewTestCase(TestCase):
         self.assertEqual(template, 'student/students.html')
         self.assertIsNone(context['students'])
 
-    @mock.patch('django.contrib.auth.decorators')
+    @mock.patch('base.models.program_manager.is_program_manager', return_value=True)
     @mock.patch('base.views.layout.render')
-    @mock.patch('base.models.program_manager.is_program_manager')
-    def test_student_read(self, mock_program_manager, mock_render, mock_decorators):
-        mock_decorators.login_required = lambda x: x
-        mock_program_manager.return_value = True
-
+    def test_student_read(self,  mock_render, mock_program_manager):
         student = StudentFactory(person=PersonFactory(last_name='Durant', first_name='Thomas'))
 
         request_factory = RequestFactory()
         request = request_factory.get(reverse('student_read', args=[student.id]))
-        request.user = mock.Mock()
+        request.user = self.program_manager_1.person.user
 
         from base.views.student import student_read
 

@@ -54,6 +54,7 @@ def student_search(request):
 @login_required
 @user_passes_test(mdl.program_manager.is_program_manager)
 def student_read(request, registration_id):
+    print('student_read')
     student = mdl.student.find_by_id(registration_id)
     if student:
         offers_enrollments = mdl.offer_enrollment.find_by_student(student)
