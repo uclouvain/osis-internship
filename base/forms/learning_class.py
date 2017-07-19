@@ -39,6 +39,9 @@ class LearningClassEditForm(forms.Form):
 
         self.used_by = kwargs.pop('used_by', None)
         self.message = kwargs.pop('message', None)
+        self.title = '{} : {} {}'.format(_('classe'),
+                                         self.learning_component_year.type_letter_acronym,
+                                         self.learning_class_year.acronym)
 
         super(LearningClassEditForm, self).__init__(*args, **kwargs)
 

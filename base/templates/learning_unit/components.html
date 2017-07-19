@@ -110,7 +110,7 @@
                                         {% for learning_class_year in component.learning_component_year.classes %}
                                             <tr>
                                                 <td>/{% if component.learning_component_year.type_letter_acronym %}
-                                                    {{component.learning_component_year.type_letter_acronym}}
+                                                        {{component.learning_component_year.type_letter_acronym}}
                                                     {% endif %}{{learning_class_year.acronym}}</td>
                                                 <td>{{ learning_class_year.used_by_learning_units_year }}</td>
                                                 <td>
