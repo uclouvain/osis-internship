@@ -1710,3 +1710,6 @@ msgstr "Component"
 
 msgid "used_by"
 msgstr "Used by learning unit"
+
+msgid "impossible"
+msgstr "The above component doesn't used the learning unit"

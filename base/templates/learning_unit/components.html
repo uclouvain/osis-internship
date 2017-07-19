@@ -104,6 +104,7 @@
                                         <th>{% trans 'lu_usage'%}</th>
                                         <th>{% trans 'used_by_partim'%}{{ learning_unit_year.subdivision }}</th>
                                         <th>{% trans 'description'%}</th>
+                                        <th></th>
                                     </thead>
                                     <tbody class="classes_background">
                                         {% for learning_class_year in component.learning_component_year.classes %}
@@ -122,6 +123,16 @@
                                                 <td>
                                                     {{ learning_class_year.description|default_if_none:'' }}
                                                 </td>
+                                                <td>
+                                                    {% if perms.base.change_learningclassyear %}
+                                                    <a class="class-edit-btn pull-right" href="#"
+                                                       data-form="{% url 'learning_class_year_edit' learning_unit_year_id=learning_unit_year.id %}?learning_class_year_id={{learning_class_year.id}}&learning_component_year_id={{component.learning_component_year.id}}"
+                                                       title="{% trans 'edit' %}">
+                                                        <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                                                    </a>
+
+                                                    {% endif %}
+                                                </td>
                                             </tr>
                                         {% endfor %}
                                     </tbody>
@@ -139,6 +150,7 @@
     </div>
 </div>
 <div class="modal fade" id="component_edit" role="dialog" data-backdrop="static"></div>
+<div class="modal fade" id="class_edit" role="dialog" data-backdrop="static"></div>
 {% endblock %}
 
 {% block script %}
@@ -146,11 +158,22 @@
     $(".component-edit-btn").click(function(ev) {
         ev.preventDefault();
         var url = $(this).data("form"); // get the contact form url
-        var component_edit_modal = $("#component_edit");
-        component_edit_modal.load(url, function() { // load the url into the modal
+        var edit_modal = $("#component_edit");
+        edit_modal.load(url, function() { // load the url into the modal
             $(this).modal('show');
         });
         return false;
     });
+
+    $(".class-edit-btn").click(function(ev) {
+        ev.preventDefault();
+        var url = $(this).data("form"); // get the contact form url
+        var edit_modal = $("#class_edit");
+        edit_modal.load(url, function() { // load the url into the modal
+            $(this).modal('show');
+        });
+        return false;
+    });
+
 </script>
 {% endblock %}
