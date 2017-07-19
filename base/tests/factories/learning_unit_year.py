@@ -66,7 +66,7 @@ class LearningUnitYearFactory(DjangoModelFactory):
     team = False
     vacant = False
     in_charge = False
-    activity_status = True
+    status = True
 
 
 class LearningUnitYearFakerFactory(DjangoModelFactory):
@@ -86,4 +86,4 @@ class LearningUnitYearFakerFactory(DjangoModelFactory):
     team = False
     vacant = False
     in_charge = False
-    activity_status = True
+    status = True

@@ -122,7 +122,7 @@ class LearningUnitViewTestCase(TestCase):
         request_factory = RequestFactory()
         filter_data = {
             'academic_year_id': self.current_academic_year.id,
-            'activity_status': True,
+            'status': True,
             'acronym': 'LBIR'
         }
         request = request_factory.get(reverse('learning_units'), data=filter_data)
@@ -538,7 +538,7 @@ class LearningUnitViewTestCase(TestCase):
                                 academic_year=self.current_academic_year, subtype=learning_unit_year_subtypes.PARTIM)
         LearningUnitYearFactory(acronym="LBIR1100C", learning_container_year=l_container_yr,
                                 academic_year=self.current_academic_year, subtype=learning_unit_year_subtypes.PARTIM,
-                                activity_status=False)
+                                status=False)
 
         # Create another UE and put entity charge [ENV]
         l_container_yr_2 = LearningContainerYearFactory(acronym="CHIM1200", academic_year=self.current_academic_year,
