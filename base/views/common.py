@@ -182,7 +182,7 @@ def get_current_version(request):
     repo = Repo('.')
     tags = repo.tags
     heads = repo.heads
-    if heads.master:
+    if hasattr(heads, 'master'):
         master = heads.master
         for tag in tags:
             if tag.commit == master.commit:
