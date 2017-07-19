@@ -40,7 +40,7 @@ class PersonAdmin(SerializableModelAdmin):
     search_fields = ['first_name', 'middle_name', 'last_name', 'user__username', 'email', 'global_id']
     fieldsets = ((None, {'fields': ('user', 'global_id', 'national_id', 'gender', 'first_name',
                                     'middle_name', 'last_name', 'birth_date', 'email', 'phone',
-                                    'phone_mobile', 'language','employee')}),)
+                                    'phone_mobile', 'language', 'employee')}),)
     raw_id_fields = ('user',)
     list_filter = ('gender', 'language')
 
@@ -154,8 +154,7 @@ def count_by_email(email):
 
 
 def search_employee(full_name):
-    queryset = Person.objects.annotate(begin_by_first_name=Lower(Concat('first_name', Value(' '), 'last_name')))
-    queryset = queryset.annotate(begin_by_last_name=Lower(Concat('last_name', Value(' '), 'first_name')))
+    queryset = annotate_with_first_last_names()
     if full_name:
         return queryset.filter(employee=True)\
             .filter(Q(begin_by_first_name__iexact='{}'.format(full_name.lower())) |
@@ -163,3 +162,20 @@ def search_employee(full_name):
                     Q(first_name__icontains=full_name) |
                     Q(last_name__icontains=full_name))
     return None
+
+
+def search(full_name):
+    queryset = annotate_with_first_last_names()
+    if full_name:
+        return queryset.filter(Q(begin_by_first_name__iexact='{}'.format(full_name.lower())) |
+                               Q(begin_by_last_name__iexact='{}'.format(full_name.lower())) |
+                               Q(first_name__icontains=full_name) |
+                               Q(last_name__icontains=full_name))
+    return None
+
+
+def annotate_with_first_last_names():
+    queryset = Person.objects.annotate(begin_by_first_name=Lower(Concat('first_name', Value(' '), 'last_name')))
+    queryset = queryset.annotate(begin_by_last_name=Lower(Concat('last_name', Value(' '), 'first_name')))
+    return queryset
+
