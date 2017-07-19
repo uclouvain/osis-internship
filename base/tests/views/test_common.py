@@ -23,13 +23,11 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.template import context
 from django.test import TestCase
 from django.core.urlresolvers import reverse
 from django.test.utils import override_settings
 from django.contrib.auth.models import User, Permission
 from git import Repo
-
 from base.views.common import get_current_version
 
 
@@ -48,8 +46,8 @@ class ErrorViewTestCase(TestCase):
     def test_get_current_version(self):
         repo = Repo('.')
         heads = repo.heads
-        get_current_version(self)
+        response = get_current_version(self)
         if hasattr(heads, 'master'):
-            self.assertIsNot(context['last_tag'], None)
+            self.assertIsNot(response['latest_tag'], None)
         else:
-            self.assertIs(context['last_tag'], None)
+            self.assertIs(response['latest_tag'], None)
