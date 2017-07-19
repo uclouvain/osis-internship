@@ -27,6 +27,8 @@ from django.test import TestCase
 from django.core.urlresolvers import reverse
 from django.test.utils import override_settings
 from django.contrib.auth.models import User, Permission
+from git import Repo
+
 from base.views.common import get_current_version
 
 
@@ -43,5 +45,10 @@ class ErrorViewTestCase(TestCase):
         self.assertEqual(response.status_code, 404)
 
     def test_get_current_version(self):
+        repo = Repo('.')
+        heads = repo.heads
         last_tag = get_current_version(self)
-        self.assertEqual(last_tag, {'latest_tag': None})
+        if hasattr(heads, 'master'):
+            self.assertIsNot(last_tag, {'latest_tag': None})
+        else:
+            self.assertEqual(last_tag, {'latest_tag': last_tag})
