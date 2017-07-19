@@ -52,7 +52,6 @@ class LearningClassEditForm(forms.Form):
 
     def save(self):
         cleaned_data = self.cleaned_data
-
         self.link_management(cleaned_data.get('used_by'))
 
     def link_management(self, used_by):
@@ -74,7 +73,8 @@ class LearningClassEditForm(forms.Form):
                 new_learning_unit_component_class.save()
 
     def delete_link(self):
-        a_learning_unit_component = mdl.learning_unit_component.search(self.learning_component_year, self.learning_unit_year).first()
+        a_learning_unit_component = mdl.learning_unit_component.search(self.learning_component_year,
+                                                                       self.learning_unit_year).first()
         if a_learning_unit_component:
             # If exists delete link between learning_class_year and learning_unit_component
             links = mdl.learning_unit_component_class.search(a_learning_unit_component, self.learning_class_year)

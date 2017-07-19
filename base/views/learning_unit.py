@@ -535,27 +535,23 @@ def _used_by(learning_component_year, learning_unit_year):
 @permission_required('base.change_learningclassyear', raise_exception=True)
 @require_http_methods(["GET", "POST"])
 def learning_class_year_edit(request, learning_unit_year_id):
-    print('learning_class_year_edit')
     context = _get_common_context_learning_unit_year(learning_unit_year_id)
-    print(request.GET.get('learning_component_year_id'))
-    context.update({'learning_class_year':
-                        mdl.learning_class_year.find_by_id(request.GET.get('learning_class_year_id')),
-                    'learning_component_year':
-                        mdl.learning_component_year.find_by_id(request.GET.get('learning_component_year_id'))})
-
-
+    context.update(
+        {'learning_class_year': mdl.learning_class_year.find_by_id(request.GET.get('learning_class_year_id')),
+         'learning_component_year':
+             mdl.learning_component_year.find_by_id(request.GET.get('learning_component_year_id'))})
 
     if request.method == 'POST':
-        print('post')
+
         form = LearningClassEditForm(request.POST,
-                                             ** {'learning_unit_year': context['learning_unit_year'],
-                                                 'learning_class_year': context['learning_class_year'],
-                                                 'learning_component_year': context['learning_component_year']})
+                                     ** {'learning_unit_year': context['learning_unit_year'],
+                                         'learning_class_year': context['learning_class_year'],
+                                         'learning_component_year': context['learning_component_year']})
         if form.is_valid():
             form.save()
         return HttpResponseRedirect(reverse("learning_unit_components",
                                             kwargs={'learning_unit_year_id': learning_unit_year_id}))
-    print('get')
+
     form = LearningClassEditForm(**{
         'learning_unit_year': context['learning_unit_year'],
         'learning_class_year': context['learning_class_year'],
