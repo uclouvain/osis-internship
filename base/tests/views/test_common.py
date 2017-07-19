@@ -50,3 +50,5 @@ class ErrorViewTestCase(TestCase):
         last_tag = get_current_version(self)
         if hasattr(heads, 'master'):
             self.assertIsNot(last_tag, {'latest_tag': None})
+        else:
+            self.assertIs(last_tag, {'latest_tag': None})
