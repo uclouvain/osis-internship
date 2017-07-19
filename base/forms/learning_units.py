@@ -35,7 +35,7 @@ MAX_ROW_NUMBERS = 1000
 
 class LearningUnitYearForm(forms.Form):
     academic_year_id = forms.CharField(max_length=10, required=False)
-    container_type = subtype = activity_status = forms.CharField(required=False)
+    container_type = subtype = status = forms.CharField(required=False)
     acronym = title = requirement_entity_acronym = forms.CharField(widget=forms.TextInput(attrs={'size': '10', 'class': 'form-control'}),
                                                                    max_length=20, required=False)
     with_entity_subordinated = forms.BooleanField(required=False)
@@ -60,6 +60,7 @@ class LearningUnitYearForm(forms.Form):
         return clean_data
 
     def get_learning_units(self):
+        print('get_learning_units')
         clean_data = self.cleaned_data
 
         entity_container_prefetch = Prefetch('learning_container_year__entitycontaineryear_set',
@@ -88,6 +89,8 @@ def is_valid_search(**search_filter):
 
 
 def _clean_data(datas_to_clean):
+    print('datas_to_clean')
+    print(datas_to_clean)
     return {key: _treat_empty_or_str_none_as_none(value) for (key, value) in datas_to_clean.items()}
 
 

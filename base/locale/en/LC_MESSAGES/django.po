@@ -1505,15 +1505,12 @@ msgid "periodicity"
 msgstr "Periodicity"
 
 msgid "nominal_credits"
-msgstr "Nominal credits"
+msgstr "Credits"
 
-msgid "ACTIVE"
+msgid "active"
 msgstr "Active"
 
-msgid "PASSIVE"
-msgstr "Passive"
-
-msgid "INACTIVE"
+msgid "inactive"
 msgstr "Inactive"
 
 msgid "MASTER_DISSERTATION"
@@ -1710,3 +1707,6 @@ msgstr "Component"
 
 msgid "used_by"
 msgstr "Used by learning unit"
+
+msgid "localization"
+msgstr "Localization"

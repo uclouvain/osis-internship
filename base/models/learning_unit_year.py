@@ -25,14 +25,15 @@
 ##############################################################################
 from django.db import models
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
-from base.models.enums import learning_unit_year_activity_status, learning_unit_year_subtypes, learning_container_year_types
+from base.models.enums import learning_unit_year_activity_status, learning_unit_year_subtypes, \
+    learning_container_year_types, internship_subtypes
 
 
 class LearningUnitYearAdmin(SerializableModelAdmin):
-    list_display = ('acronym', 'title', 'academic_year', 'credits', 'changed', 'structure')
+    list_display = ('acronym', 'title', 'academic_year', 'credits', 'changed', 'structure', 'status')
     fieldsets = ((None, {'fields': ('academic_year', 'learning_unit', 'acronym', 'title', 'title_english', 'credits',
                                     'decimal_scores', 'structure', 'learning_container_year', 'activity_status',
-                                    'subtype')}),)
+                                    'subtype', 'status', 'internship_subtype' )}),)
     list_filter = ('academic_year', 'vacant', 'in_charge', 'decimal_scores')
     raw_id_fields = ('learning_unit', 'learning_container_year', 'structure')
     search_fields = ['acronym', 'structure__acronym']
@@ -56,7 +57,10 @@ class LearningUnitYear(SerializableModel):
     in_charge = models.BooleanField(default=False)
     structure = models.ForeignKey('Structure', blank=True, null=True)
     activity_status = models.CharField(max_length=20, blank=True, null=True,
-                                       choices=learning_unit_year_activity_status.LEARNING_UNIT_YEAR_ACTIVITY_STATUS)
+                                       choices=learning_unit_year_activity_status.LEARNING_UNIT_YEAR_ACTIVITY_STATUS) # to_be_deleted
+    internship_subtype = models.CharField(max_length=50, blank=True, null=True,
+                               choices=internship_subtypes.INTERNSHIP_SUBTYPES)
+    status = models.BooleanField(default=False)
 
     def __str__(self):
         return u"%s - %s" % (self.academic_year, self.acronym)
@@ -88,7 +92,7 @@ def find_by_acronym(acronym):
 
 
 def search(academic_year_id=None, acronym=None, learning_container_year_id=None, learning_unit=None,
-           title=None, subtype=None, activity_status=None, container_type=None, *args, **kwargs):
+           title=None, subtype=None, status=None, container_type=None, *args, **kwargs):
     queryset = LearningUnitYear.objects
 
     if academic_year_id:
@@ -112,8 +116,8 @@ def search(academic_year_id=None, acronym=None, learning_container_year_id=None,
     if subtype:
         queryset = queryset.filter(subtype=subtype)
 
-    if activity_status:
-        queryset = queryset.filter(activity_status=activity_status)
+    if status:
+        queryset = queryset.filter(status=status)
 
     if container_type:
         queryset = queryset.filter(learning_container_year__container_type=container_type)
