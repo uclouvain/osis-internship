@@ -178,13 +178,14 @@ def storage(request):
 
 
 def get_current_version(request):
+    latest_tag = None
     repo = Repo('.')
     tags = repo.tags
     heads = repo.heads
-    master = heads.master
-    latest_tag = None
-    for tag in tags:
-        if tag.commit == master.commit:
-            latest_tag = tag
-            break
+    if heads.master:
+        master = heads.master
+        for tag in tags:
+            if tag.commit == master.commit:
+                latest_tag = tag
+                break
     return {'latest_tag': latest_tag}
