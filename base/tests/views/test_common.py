@@ -44,4 +44,4 @@ class ErrorViewTestCase(TestCase):
 
     def test_get_current_version(self):
         last_tag = get_current_version(self)
-        self.assertIsNone(last_tag)
+        self.assertEqual(last_tag, {'latest_tag': None})
