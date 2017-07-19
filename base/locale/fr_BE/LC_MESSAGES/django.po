@@ -1709,3 +1709,9 @@ msgstr "Composant"
 
 msgid "used_by"
 msgstr "Reutilisé par l'unité d'enseignement"
+
+msgid "impossible"
+msgstr "L'unité d'enseignement ci-dessus n'utilise pas ce composant"
+
+msgid "classe"
+msgstr "Classe"
