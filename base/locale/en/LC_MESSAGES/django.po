@@ -1711,6 +1711,12 @@ msgstr "Component"
 msgid "used_by"
 msgstr "Used by learning unit"
 
+msgid "link_creation_impossible"
+msgstr "The above learning unit doesn't used the component"
+
+msgid "classe"
+msgstr "Classe"
+
 msgid "offers_enrollments"
 msgstr "Offers enrollments"
 
@@ -1737,9 +1743,3 @@ msgstr "Students"
 
 msgid "student_title"
 msgstr "Student"
-
-msgid "impossible"
-msgstr "The above learning unit doesn't used the componant"
-
-msgid "classe"
-msgstr "Classe"

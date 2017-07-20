@@ -1710,6 +1710,12 @@ msgstr "Composant"
 msgid "used_by"
 msgstr "Reutilisé par l'unité d'enseignement"
 
+msgid "link_creation_impossible"
+msgstr "L'unité d'enseignement ci-dessus n'utilise pas ce composant"
+
+msgid "classe"
+msgstr "Classe"
+
 msgid "offers_enrollments"
 msgstr "Inscriptions aux offres"
 
@@ -1736,9 +1742,3 @@ msgstr "Etudiants"
 
 msgid "student_title"
 msgstr "Etudiant"
-
-msgid "impossible"
-msgstr "L'unité d'enseignement ci-dessus n'utilise pas ce composant"
-
-msgid "classe"
-msgstr "Classe"
