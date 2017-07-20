@@ -1707,5 +1707,32 @@ msgstr "Composant"
 msgid "used_by"
 msgstr "Reutilisé par l'unité d'enseignement"
 
+msgid "offers_enrollments"
+msgstr "Inscriptions aux offres"
+
+msgid "learning_units_enrollments"
+msgstr "Inscription aux unités d'enseignement"
+
+msgid "exams_enrollments"
+msgstr "Inscription aux examens"
+
+msgid "average"
+msgstr "Moyenne"
+
+msgid "global_average"
+msgstr "Moyenne générale"
+
+msgid "result"
+msgstr "Résultat"
+
+msgid "enrollment_date"
+msgstr "Date d'inscription"
+
+msgid "students_title"
+msgstr "Etudiants"
+
+msgid "student_title"
+msgstr "Etudiant"
+
 msgid "localization"
 msgstr "Localisation"
