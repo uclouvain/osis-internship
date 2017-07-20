@@ -1734,5 +1734,11 @@ msgstr "Etudiants"
 msgid "student_title"
 msgstr "Etudiant"
 
+msgid "impossible"
+msgstr "L'unité d'enseignement ci-dessus n'utilise pas ce composant"
+
+msgid "classe"
+msgstr "Classe"
+
 msgid "localization"
 msgstr "Localisation"

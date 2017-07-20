@@ -1735,5 +1735,11 @@ msgstr "Students"
 msgid "student_title"
 msgstr "Student"
 
+msgid "impossible"
+msgstr "The above learning unit doesn't used the component"
+
+msgid "classe"
+msgstr "Classe"
+
 msgid "localization"
 msgstr "Localization"

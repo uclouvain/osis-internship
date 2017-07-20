@@ -31,6 +31,7 @@ from django.core.urlresolvers import reverse
 from django.test import TestCase, RequestFactory
 
 from base.models import learning_unit_component
+from base.models import learning_unit_component_class
 from base.models.enums import learning_container_year_types
 from base.models.enums import learning_unit_year_subtypes
 from base.tests.factories.academic_year import AcademicYearFactory
@@ -573,3 +574,46 @@ class LearningUnitViewTestCase(TestCase):
                                    type=entity_container_year_link_type.REQUIREMENT_ENTITY)
         LearningUnitYearFactory(acronym="AGES1500", learning_container_year=l_container_yr_4,
                                 academic_year=self.current_academic_year, subtype=None)
+
+    def test_class_save(self):
+        learning_unit_yr = LearningUnitYearFactory(academic_year=self.current_academic_year,
+                                                   learning_container_year=self.learning_container_yr)
+        learning_unit_compnt = LearningUnitComponentFactory(learning_unit_year=learning_unit_yr,
+                                                            learning_component_year=self.learning_component_yr)
+        learning_class_yr = LearningClassYearFactory(learning_component_year=self.learning_component_yr)
+
+        response = self.client.post('{}?{}&{}'.format(reverse('learning_class_year_edit', args=[learning_unit_yr.id]),
+                                                      'learning_component_year_id={}'.format(self.learning_component_yr.id),
+                                                      'learning_class_year_id={}'.format(learning_class_yr.id)),
+                                    data={"used_by": "on"})
+        self.learning_component_yr.refresh_from_db()
+        self.assertEqual(response.status_code, 302)
+
+    def test_class_save_create_link(self):
+        learning_unit_yr = LearningUnitYearFactory(academic_year=self.current_academic_year,
+                                                   learning_container_year=self.learning_container_yr)
+        learning_unit_compnt = LearningUnitComponentFactory(learning_unit_year=learning_unit_yr,
+                                                            learning_component_year=self.learning_component_yr)
+        learning_class_yr = LearningClassYearFactory(learning_component_year=self.learning_component_yr)
+
+        response = self.client.post('{}?{}&{}'.format(reverse('learning_class_year_edit', args=[learning_unit_yr.id]),
+                                                      'learning_component_year_id={}'.format(self.learning_component_yr.id),
+                                                      'learning_class_year_id={}'.format(learning_class_yr.id)),
+                                    data={"used_by": "on"})
+
+        self.assertTrue(learning_unit_component_class.search(learning_unit_compnt, learning_class_yr).exists())
+
+    def test_class_save_delete_link(self):
+        learning_unit_yr = LearningUnitYearFactory(academic_year=self.current_academic_year,
+                                                   learning_container_year=self.learning_container_yr)
+        learning_unit_compnt = LearningUnitComponentFactory(learning_unit_year=learning_unit_yr,
+                                                            learning_component_year=self.learning_component_yr)
+        learning_class_yr = LearningClassYearFactory(learning_component_year=self.learning_component_yr)
+        a_link = LearningUnitComponentClassFactory(learning_unit_component=learning_unit_compnt,
+                                                   learning_class_year=learning_class_yr)
+
+        response = self.client.post('{}?{}&{}'.format(reverse('learning_class_year_edit', args=[learning_unit_yr.id]),
+                                                      'learning_component_year_id={}'.format(self.learning_component_yr.id),
+                                                      'learning_class_year_id={}'.format(learning_class_yr.id)), data={})
+
+        self.assertRaises(ObjectDoesNotExist, learning_unit_component_class.LearningUnitComponentClass.objects.filter(pk=a_link.id).first())
