@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('reference', '0016_auto_20170410_1318'),
-        ('base', '0141_auto_20170703_0957'),
+        ('base', '0142_auto_20170718_1145'),
     ]
 
     operations = [
