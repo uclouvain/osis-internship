@@ -725,12 +725,14 @@ def dissertations_detail_updates(request, pk):
     dissert = get_object_or_404(Dissertation, pk=pk)
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
-    dissertation_updates = dissertation_update.search_by_dissertation(dissert)
-    return layout.render(request, 'dissertations_detail_updates.html',
-                         {'dissertation': dissert,
-                          'adviser': adv,
-                          'dissertation_updates': dissertation_updates})
-
+    if teacher_is_promotor(adv, dissert):
+        dissertation_updates = dissertation_update.search_by_dissertation(dissert)
+        return layout.render(request, 'dissertations_detail_updates.html',
+                             {'dissertation': dissert,
+                              'adviser': adv,
+                              'dissertation_updates': dissertation_updates})
+    else:
+        return redirect('dissertations_list')
 
 @login_required
 @user_passes_test(adviser.is_teacher)
