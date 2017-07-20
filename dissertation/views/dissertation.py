@@ -23,7 +23,6 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
 from base import models as mdl
@@ -498,7 +497,7 @@ def manager_dissertations_to_dir_ok(request, pk):
         if request.method == "POST":
             form = ManagerDissertationUpdateForm(request.POST)
             if form.is_valid():
-                dissert.accept()
+                dissert.manager_accept()
                 data = form.cleaned_data
                 justification = data['justification']
                 dissertation_update.add(request, dissert, old_status, justification=justification)
@@ -520,7 +519,7 @@ def manager_dissertations_accept_comm_list(request, pk):
     adv = adviser.search_by_person(person)
     if (adviser_can_manage(dissert, adv)):
         old_status = dissert.status
-        dissert.accept()
+        dissert.manager_accept()
         dissertation_update.add(request, dissert, old_status)
 
         return redirect('manager_dissertations_wait_comm_list')
@@ -535,7 +534,7 @@ def manager_dissertations_accept_eval_list(request, pk):
     adv = adviser.search_by_person(person)
     if (adviser_can_manage(dissert, adv)):
         old_status = dissert.status
-        dissert.accept()
+        dissert.manager_accept()
         dissertation_update.add(request, dissert, old_status)
 
         return redirect('manager_dissertations_wait_eval_list')
@@ -763,7 +762,7 @@ def dissertations_to_dir_ok(request, pk):
         if request.method == "POST":
             form = ManagerDissertationUpdateForm(request.POST)
             if form.is_valid():
-                dissert.accept()
+                dissert.teacher_accept()
                 data = form.cleaned_data
                 justification = data['justification']
                 dissertation_update.add(request, dissert, old_status, justification=justification)
