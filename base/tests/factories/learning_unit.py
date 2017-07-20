@@ -30,17 +30,12 @@ import datetime
 import operator
 from base.models.enums import learning_unit_periodicity
 from base.tests.factories.learning_container import LearningContainerFactory
-from django.conf import settings
 from django.utils import timezone
 from factory.django import DjangoModelFactory
 from faker import Faker
+from osis_common.utils.datetime.get_tzinfo import get_tzinfo
 fake = Faker()
 
-def _get_tzinfo():
-    if settings.USE_TZ:
-        return timezone.get_current_timezone()
-    else:
-        return None
 
 class LearningUnitFactory(DjangoModelFactory):
     class Meta:
@@ -48,8 +43,8 @@ class LearningUnitFactory(DjangoModelFactory):
 
     learning_container = factory.SubFactory(LearningContainerFactory)
     external_id = factory.fuzzy.FuzzyText(length=10, chars=string.digits)
-    changed = factory.fuzzy.FuzzyDateTime(datetime.datetime(2016, 1, 1, tzinfo=_get_tzinfo()),
-                                          datetime.datetime(2017, 3, 1, tzinfo=_get_tzinfo()))
+    changed = factory.fuzzy.FuzzyDateTime(datetime.datetime(2016, 1, 1, tzinfo=get_tzinfo()),
+                                          datetime.datetime(2017, 3, 1, tzinfo=get_tzinfo()))
     acronym = factory.Sequence(lambda n: 'LU-%d' % n)
     title = factory.Sequence(lambda n: 'Learning unit - %d' % n)
     description =factory.LazyAttribute(lambda obj : 'Fake description of learning unit %s' % obj.acronym )
@@ -64,7 +59,7 @@ class LearningUnitFakerFactory(DjangoModelFactory):
 
     learning_container = factory.SubFactory(LearningContainerFactory)
     external_id = factory.fuzzy.FuzzyText(length=10, chars=string.digits)
-    changed = fake.date_time_this_decade(before_now=True, after_now=True, tzinfo=_get_tzinfo())
+    changed = fake.date_time_this_decade(before_now=True, after_now=True, tzinfo=get_tzinfo())
     acronym = factory.Sequence(lambda n: 'LU-%d' % n)
     title = factory.Sequence(lambda n: 'Learning unit - %d' % n)
     description =factory.LazyAttribute(lambda obj : 'Fake description of learning unit %s' % obj.acronym )

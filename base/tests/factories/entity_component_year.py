@@ -27,18 +27,10 @@ import datetime
 
 import factory
 import factory.fuzzy
-from django.conf import settings
-from django.utils import timezone
 
 from base.tests.factories.entity_container_year import EntityContainerYearFactory
 from base.tests.factories.learning_component_year import LearningComponentYearFactory
-
-
-def _get_tzinfo():
-    if settings.USE_TZ:
-        return timezone.get_current_timezone()
-    else:
-        return None
+from osis_common.utils.datetime.get_tzinfo import get_tzinfo
 
 
 class EntityComponentYearFactory(factory.django.DjangoModelFactory):
@@ -46,8 +38,8 @@ class EntityComponentYearFactory(factory.django.DjangoModelFactory):
         model = "base.EntityComponentYear"
 
     external_id = factory.Sequence(lambda n: '10000000%02d' % n)
-    changed = factory.fuzzy.FuzzyDateTime(datetime.datetime(2016, 1, 1, tzinfo=_get_tzinfo()),
-                                          datetime.datetime(2017, 3, 1, tzinfo=_get_tzinfo()))
+    changed = factory.fuzzy.FuzzyDateTime(datetime.datetime(2016, 1, 1, tzinfo=get_tzinfo()),
+                                          datetime.datetime(2017, 3, 1, tzinfo=get_tzinfo()))
 
     entity_container_year = factory.SubFactory(EntityContainerYearFactory)
     learning_component_year = factory.SubFactory(LearningComponentYearFactory)
