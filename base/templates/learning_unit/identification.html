@@ -1,6 +1,7 @@
 {% extends "layout.html" %}
 {% load staticfiles %}
 {% load i18n %}
+{% load learning_unit %}
 {% comment "License" %}
 * OSIS stands for Open Student Information System. It's an application
 * designed to manage the core business of higher education institutions,
@@ -162,15 +163,7 @@
                         {% endfor %}
                         <br>
                         <label style="margin-top:10px;">{% trans 'academic_years'%}</label><br>
-                        {% if learning_unit_year.learning_container_year.learning_container.start_year and learning_unit_year.learning_container_year.learning_container.auto_renewal_until%}
-                            {{learning_unit_year.learning_container_year.learning_container.academic_years}}
-                        {% else %}
-                            {% if learning_unit_year.learning_container_year.learning_container.start_year and not learning_unit_year.learning_container_year.learning_container.auto_renewal_until%}
-                                {% trans 'since' %} {{learning_unit_year.learning_container_year.learning_container.start_year}}
-                            {% else %}
-                                -
-                            {% endif %}
-                        {% endif %}
+                        {{ learning_unit_year.learning_container_year.learning_container|academic_years }}
                     </div>
                 </div>
             </div>
