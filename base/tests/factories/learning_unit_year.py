@@ -37,7 +37,7 @@ from base.tests.factories.academic_year import AcademicYearFactory
 from base.tests.factories.academic_year import AcademicYearFakerFactory
 from base.tests.factories.learning_unit import LearningUnitFactory
 from base.tests.factories.learning_unit import LearningUnitFakerFactory
-from osis_common.utils.datetime.get_tzinfo import get_tzinfo
+from osis_common.utils.datetime import get_tzinfo
 
 fake = Faker()
 

@@ -29,7 +29,7 @@ import factory.fuzzy
 import string
 import operator
 from base.models.enums import structure_type
-from osis_common.utils.datetime.get_tzinfo import get_tzinfo
+from osis_common.utils.datetime import get_tzinfo
 
 
 class StructureFactory(factory.DjangoModelFactory):

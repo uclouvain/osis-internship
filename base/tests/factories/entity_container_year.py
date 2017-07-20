@@ -32,7 +32,7 @@ import factory.fuzzy
 from base.models.enums import entity_container_year_link_type
 from base.tests.factories.entity import EntityFactory
 from base.tests.factories.learning_container_year import LearningContainerYearFactory
-from osis_common.utils.datetime.get_tzinfo import get_tzinfo
+from osis_common.utils.datetime import get_tzinfo
 
 
 class EntityContainerYearFactory(factory.django.DjangoModelFactory):

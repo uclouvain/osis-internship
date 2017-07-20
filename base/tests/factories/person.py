@@ -30,7 +30,7 @@ import factory.fuzzy
 from django.conf import settings
 from base import models as mdl
 from base.tests.factories.user import UserFactory
-from osis_common.utils.datetime.get_tzinfo import get_tzinfo
+from osis_common.utils.datetime import get_tzinfo
 
 
 def generate_person_email(person, domain=None):

@@ -30,7 +30,7 @@ import datetime
 
 from base.tests.factories.person import PersonFactory
 from base.tests.factories.offer_year import OfferYearFactory
-from osis_common.utils.datetime.get_tzinfo import get_tzinfo
+from osis_common.utils.datetime import get_tzinfo
 
 
 class ProgramManagerFactory(factory.django.DjangoModelFactory):

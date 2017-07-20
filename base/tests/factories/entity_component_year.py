@@ -30,7 +30,7 @@ import factory.fuzzy
 
 from base.tests.factories.entity_container_year import EntityContainerYearFactory
 from base.tests.factories.learning_component_year import LearningComponentYearFactory
-from osis_common.utils.datetime.get_tzinfo import get_tzinfo
+from osis_common.utils.datetime import get_tzinfo
 
 
 class EntityComponentYearFactory(factory.django.DjangoModelFactory):

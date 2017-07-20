@@ -27,7 +27,7 @@ import factory
 import factory.fuzzy
 import string
 import datetime
-from osis_common.utils.datetime.get_tzinfo import get_tzinfo
+from osis_common.utils.datetime import get_tzinfo
 
 
 class OfferFactory(factory.django.DjangoModelFactory):

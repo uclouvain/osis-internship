@@ -30,7 +30,7 @@ import factory.fuzzy
 import string
 from base.models.enums import number_session, academic_calendar_type
 from .academic_calendar import AcademicCalendarFactory
-from osis_common.utils.datetime.get_tzinfo import get_tzinfo
+from osis_common.utils.datetime import get_tzinfo
 
 
 class SessionExamCalendarFactory(factory.DjangoModelFactory):

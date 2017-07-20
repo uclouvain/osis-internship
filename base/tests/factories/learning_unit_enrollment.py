@@ -29,7 +29,7 @@ import string
 import datetime
 from base.tests.factories.learning_unit_year import LearningUnitYearFactory
 from base.tests.factories.offer_enrollment import OfferEnrollmentFactory
-from osis_common.utils.datetime.get_tzinfo import get_tzinfo
+from osis_common.utils.datetime import get_tzinfo
 
 
 class LearningUnitEnrollment(factory.django.DjangoModelFactory):

@@ -29,7 +29,7 @@ import factory.fuzzy
 import string
 from base.tests.factories.offer_year import OfferYearFactory
 from base.tests.factories.student import StudentFactory
-from osis_common.utils.datetime.get_tzinfo import get_tzinfo
+from osis_common.utils.datetime import get_tzinfo
 
 
 class OfferEnrollmentFactory(factory.django.DjangoModelFactory):

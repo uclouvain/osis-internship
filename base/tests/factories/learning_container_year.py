@@ -31,7 +31,7 @@ import factory.fuzzy
 from base.tests.factories.academic_year import AcademicYearFactory
 from base.tests.factories.learning_container import LearningContainerFactory
 from base.models.enums import learning_container_year_types
-from osis_common.utils.datetime.get_tzinfo import get_tzinfo
+from osis_common.utils.datetime import get_tzinfo
 
 
 class LearningContainerYearFactory(factory.django.DjangoModelFactory):

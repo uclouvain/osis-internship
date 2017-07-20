@@ -33,7 +33,7 @@ from base.tests.factories.learning_container import LearningContainerFactory
 from django.utils import timezone
 from factory.django import DjangoModelFactory
 from faker import Faker
-from osis_common.utils.datetime.get_tzinfo import get_tzinfo
+from osis_common.utils.datetime import get_tzinfo
 fake = Faker()
 
 

@@ -25,7 +25,7 @@
 ##############################################################################
 import factory
 from base.models.enums import organization_type
-from osis_common.utils.datetime.get_tzinfo import get_tzinfo
+from osis_common.utils.datetime import get_tzinfo
 
 
 class OrganizationFactory(factory.DjangoModelFactory):

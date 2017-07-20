@@ -29,7 +29,7 @@ import datetime
 import string
 from base.tests.factories.academic_calendar import AcademicCalendarFactory
 from base.tests.factories.offer_year import OfferYearFactory
-from osis_common.utils.datetime.get_tzinfo import get_tzinfo
+from osis_common.utils.datetime import get_tzinfo
 
 
 def generate_start_date(offer_year_calendar):

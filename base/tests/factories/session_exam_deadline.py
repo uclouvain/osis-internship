@@ -30,7 +30,7 @@ import factory.fuzzy
 import string
 from base.models.enums import number_session
 from .offer_enrollment import OfferEnrollmentFactory
-from osis_common.utils.datetime.get_tzinfo import get_tzinfo
+from osis_common.utils.datetime import get_tzinfo
 
 
 class SessionExamDeadlineFactory(factory.DjangoModelFactory):

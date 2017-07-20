@@ -26,7 +26,7 @@
 import datetime
 import factory
 import factory.fuzzy
-from osis_common.utils.datetime.get_tzinfo import get_tzinfo
+from osis_common.utils.datetime import get_tzinfo
 
 
 class LearningContainerFactory(factory.django.DjangoModelFactory):
