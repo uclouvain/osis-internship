@@ -592,3 +592,10 @@ def sort_for_encodings(exam_enrollments):
                                 first_name.upper() if first_name else '')
 
     return sorted(exam_enrollments, key=lambda k: _sort(k))
+
+
+def find_by_student(a_student):
+    return ExamEnrollment.objects.filter(learning_unit_enrollment__offer_enrollment__student=a_student)\
+        .order_by('-learning_unit_enrollment__learning_unit_year__academic_year__year',
+                  'session_exam__number_session',
+                  'learning_unit_enrollment__learning_unit_year__acronym')
