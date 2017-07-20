@@ -63,44 +63,55 @@
                 <input type="hidden" name="learning_unit_year_id" id="learning_unit_year_id"
                        value={{ learning_unit_year_id }} />
             {% else %}
-                <div class="ui-widget"><input id="search_learning_units_year"
-                                              name="search_learning_units_year" size="100"
-                                              placeholder="{% trans 'search_by_acronym' %}">
-                </div>
+                <input id="search_learning_units_year"
+                       class="form-control"
+                       name="search_learning_units_year" size="100"
+                       placeholder="{% trans 'search_by_acronym' %}">
                 <input type="hidden" name="learning_unit_year_id" id="learning_unit_year_id" />
             {% endif %}
             {{ form.mandate_id.as_hidden }}
             {{ form.non_field_errors }}
         </div>
         <div class="form-group">
-
-            <label style="padding-top: 5px" for="{{ form.sessions_number.id_for_label }}">
+            <label for="{{ form.sessions_number.id_for_label }}">
                 {% trans 'sessions_number' %}</label>
-            <div class="controls">{{ form.sessions_number }}</div>
+            {{ form.sessions_number }}
             <span class="error">{{ form.sessions_number.errors }}</span>
-            <label style="padding-top: 5px" for="{{ form.sessions_duration.id_for_label }}">
+        </div>
+        <div class="form-group">
+            <label for="{{ form.sessions_duration.id_for_label }}">
                 {% trans 'sessions_duration' %}</label>
-            <div class="controls">{{ form.sessions_duration }}</div>
+            {{ form.sessions_duration }}
             <span class="error">{{ form.sessions_duration.errors }}</span>
-            <label style="padding-top: 5px" for="{{ form.series_number.id_for_label }}">
+        </div>
+        <div class="form-group">
+            <label for="{{ form.series_number.id_for_label }}">
                 {% trans 'series_number' %}</label>
-            <div class="controls">{{ form.series_number }}</div>
+            {{ form.series_number }}
             <span class="error">{{ form.series_number.errors }}</span>
-            <label style="padding-top: 5px" for="{{ form.face_to_face_duration.id_for_label }}">
+        </div>
+        <div class="form-group">
+            <label for="{{ form.face_to_face_duration.id_for_label }}">
                 {% trans 'face_to_face_duration' %}</label>
-            <div class="controls">{{ form.face_to_face_duration }}</div>
+            {{ form.face_to_face_duration }}
             <span class="error">{{ form.face_to_face_duration.errors }}</span>
-            <label style="padding-top: 5px" for="{{ form.attendees.id_for_label }}">
+        </div>
+        <div class="form-group">
+            <label for="{{ form.attendees.id_for_label }}">
                 {% trans 'attendees' %}</label>
-            <div class="controls">{{ form.attendees }}</div>
+            {{ form.attendees }}
             <span class="error">{{ form.attendees.errors }}</span>
-            <label style="padding-top: 5px" for="{{ form.exams_supervision_duration.id_for_label }}">
+        </div>
+        <div class="form-group">
+            <label for="{{ form.exams_supervision_duration.id_for_label }}">
                 {% trans 'exams_supervision_duration' %}</label>
-            <div class="controls">{{ form.exams_supervision_duration }}</div>
+            {{ form.exams_supervision_duration }}
             <span class="error">{{ form.exams_supervision_duration.errors }}</span>
-            <label style="padding-top: 5px" for="{{ form.others_delivery.id_for_label }}">
+        </div>
+        <div class="form-group">
+            <label for="{{ form.others_delivery.id_for_label }}">
                 {% trans 'others_delivery' %}</label>
-            <div class="controls">{{ form.others_delivery }}</div>
+            {{ form.others_delivery }}
             <span class="error">{{ form.others_delivery.errors }}</span>
         </div>
         <button type="submit" class="btn btn-primary" title="{% trans 'save'%}" id="bt_save_tutoring_learning_unit">

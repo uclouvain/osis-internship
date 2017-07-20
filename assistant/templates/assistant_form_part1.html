@@ -94,32 +94,29 @@
 			<label style="padding-top: 5px" for="function_outside_university">
 				{% trans 'function_outside_university' %}
 			</label>
-			<div class="controls" id="function_outside_university">{{ form.external_functions }}
-				<span class="error">{{ form.errors.external_functions }}</span>
-			</div>
+			{{ form.external_functions }}
+			<span class="error">{{ form.errors.external_functions }}</span>
+		</div>
+		<div class="form-group">
 			<label style="padding-top: 5px" for="external_post">
 				{% trans 'external_post' %}
 			</label>
-			<div class="controls" id="external_post">{{ form.external_contract }}
-				<span class="error">{{ form.errors.external_contract }}</span>
-			</div>
-    		{% if mandate.renewal_type == 'EXCEPTIONAL' %}
+			{{ form.external_contract }}
+            <span class="error">{{ form.errors.external_contract }}</span>
+        </div>
+        {% if mandate.renewal_type == 'EXCEPTIONAL' %}
+            <div class="form-group">
 				<label for="exceptional_justification">
       				{% trans 'exceptional_justification' %}
 				</label>
-				<div class="controls" id="exceptional_justification">{{ form.justification }}
-                    <span class="error">{{ form.errors.justification }}</span>
-    			</div>
-   			{% endif %}
-			<hr>
-			<div class="form-group">
-     			<button type="submit" class="btn btn-primary" title="{% trans 'save'%}"
-						id="bt_pstform_part1_save">
-     				<span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'save'%}
-				</button>
-			</div>
-		</div>
-    	</form>
+				{{ form.justification }}
+                <span class="error">{{ form.errors.justification }}</span>
+            </div>
+        {% endif %}
+        <button type="submit" class="btn btn-primary" title="{% trans 'save'%}" id="bt_pstform_part1_save">
+            <span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'save'%}
+        </button>
+    </form>
 	</div>
 </div>
 {% endblock %}

@@ -1205,7 +1205,7 @@ msgid "types"
 msgstr "Types"
 
 msgid "undated_events"
-msgstr "Événements non datés"
+msgstr "Événements non planifiés"
 
 msgid "undefined"
 msgstr "Non défini"
@@ -1632,8 +1632,17 @@ msgstr "Partenaire public"
 msgid "requirement_entity"
 msgstr "Entité resp. cahier de charges"
 
+msgid "requirement_entity_small"
+msgstr "Ent. ch."
+
 msgid "allocation_entity"
 msgstr "Entité resp. de l'attribution"
+
+msgid "allocation_entity_small"
+msgstr "Ent. attrib."
+
+msgid "with_entity_subordinated_small"
+msgstr "Avec ent. subord."
 
 msgid "additional_requirement_entity"
 msgstr "Entité complémentaire"
@@ -1700,3 +1709,36 @@ msgstr "Composant"
 
 msgid "used_by"
 msgstr "Reutilisé par l'unité d'enseignement"
+
+msgid "offers_enrollments"
+msgstr "Inscriptions aux offres"
+
+msgid "learning_units_enrollments"
+msgstr "Inscription aux unités d'enseignement"
+
+msgid "exams_enrollments"
+msgstr "Inscription aux examens"
+
+msgid "average"
+msgstr "Moyenne"
+
+msgid "global_average"
+msgstr "Moyenne générale"
+
+msgid "result"
+msgstr "Résultat"
+
+msgid "enrollment_date"
+msgstr "Date d'inscription"
+
+msgid "students_title"
+msgstr "Etudiants"
+
+msgid "student_title"
+msgstr "Etudiant"
+
+msgid "impossible"
+msgstr "L'unité d'enseignement ci-dessus n'utilise pas ce composant"
+
+msgid "classe"
+msgstr "Classe"

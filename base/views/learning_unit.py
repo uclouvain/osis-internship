@@ -39,12 +39,14 @@ from attribution import models as mdl_attr
 from base.models import entity_container_year
 from base.models.enums import entity_container_year_link_type
 from base.models.enums import learning_container_year_types
+from base.models.enums import learning_unit_year_activity_status
 from cms import models as mdl_cms
 from cms.enums import entity_name
 from base.forms.learning_units import LearningUnitYearForm
 from base.forms.learning_unit_specifications import LearningUnitSpecificationsForm, LearningUnitSpecificationsEditForm
 from base.forms.learning_unit_pedagogy import LearningUnitPedagogyForm, LearningUnitPedagogyEditForm
 from base.forms.learning_unit_component import LearningUnitComponentEditForm
+from base.forms.learning_class import LearningClassEditForm
 from base.models.enums import learning_unit_year_subtypes
 from cms.models import text_label
 
@@ -65,7 +67,7 @@ ACRONYM_COMPLET_LEARNING_UNIT = _("complete")
 @login_required
 @permission_required('base.can_access_learningunit', raise_exception=True)
 def learning_units(request):
-    if request.GET.get('academic_year'):
+    if request.GET.get('academic_year_id'):
         form = LearningUnitYearForm(request.GET)
     else:
         form = LearningUnitYearForm()
@@ -75,9 +77,14 @@ def learning_units(request):
         _check_if_display_message(request, learning_units)
 
     context = _get_common_context_list_learning_unit_years()
+    activity_statuses = tuple(activity for activity in learning_unit_year_activity_status.LEARNING_UNIT_YEAR_ACTIVITY_STATUS
+                              if activity[0] != learning_unit_year_activity_status.PASSIVE)
     context.update({
         'form': form,
         'academic_years': mdl.academic_year.find_academic_years(),
+        'container_types': learning_container_year_types.LEARNING_CONTAINER_YEAR_TYPES,
+        'types': learning_unit_year_subtypes.LEARNING_UNIT_YEAR_SUBTYPES,
+        'activity_statuses': activity_statuses,
         'learning_units': found_learning_units,
         'current_academic_year': mdl.academic_year.current_academic_year(),
         'experimental_phase': True
@@ -323,7 +330,7 @@ def _get_organization_from_learning_unit_year(learning_unit_year):
 def _get_all_attributions(learning_unit_year):
     attributions = {}
     if learning_unit_year.learning_container_year:
-        all_attributions = entity_container_year.find_entities(learning_unit_year.learning_container_year)
+        all_attributions = entity_container_year.find_last_entity_version_grouped_by_linktypes(learning_unit_year.learning_container_year)
         attributions['requirement_entity'] = all_attributions.get(entity_container_year_link_type.REQUIREMENT_ENTITY)
         attributions['allocation_entity'] = all_attributions.get(entity_container_year_link_type.ALLOCATION_ENTITY)
         attributions['additional_requirement_entities'] = [
@@ -522,3 +529,36 @@ def _used_by(learning_component_year, learning_unit_year):
     if mdl.learning_unit_component.used_by(learning_component_year, learning_unit_year):
         return True
     return False
+
+
+@login_required
+@permission_required('base.change_learningclassyear', raise_exception=True)
+@require_http_methods(["GET", "POST"])
+def learning_class_year_edit(request, learning_unit_year_id):
+    context = _get_common_context_learning_unit_year(learning_unit_year_id)
+    context.update(
+        {'learning_class_year': mdl.learning_class_year.find_by_id(request.GET.get('learning_class_year_id')),
+         'learning_component_year':
+             mdl.learning_component_year.find_by_id(request.GET.get('learning_component_year_id'))})
+
+    if request.method == 'POST':
+
+        form = LearningClassEditForm(request.POST,
+                                     ** {'learning_unit_year': context['learning_unit_year'],
+                                         'learning_class_year': context['learning_class_year'],
+                                         'learning_component_year': context['learning_component_year']})
+        if form.is_valid():
+            form.save()
+        return HttpResponseRedirect(reverse("learning_unit_components",
+                                            kwargs={'learning_unit_year_id': learning_unit_year_id}))
+
+    form = LearningClassEditForm(**{
+        'learning_unit_year': context['learning_unit_year'],
+        'learning_class_year': context['learning_class_year'],
+        'learning_component_year': context['learning_component_year'],
+        'used_by': _learning_unit_usage_by_class(context['learning_class_year'])
+
+    })
+    form.load_initial()  # Load data from database
+    context['form'] = form
+    return layout.render(request, "learning_unit/class_edit.html", context)

@@ -23,11 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from itertools import chain
-
 from django.db import models
-
-from base.models.academic_year import current_academic_years
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 from base.models.enums import learning_unit_year_activity_status, learning_unit_year_subtypes, learning_container_year_types
 
@@ -80,6 +76,7 @@ class LearningUnitYear(SerializableModel):
                                                       learning_container_year__container_type=learning_container_year_types.COURSE).first()
         return None
 
+
 def find_by_id(learning_unit_year_id):
     return LearningUnitYear.objects.select_related('learning_container_year__learning_container')\
                                    .get(pk=learning_unit_year_id)
@@ -91,7 +88,7 @@ def find_by_acronym(acronym):
 
 
 def search(academic_year_id=None, acronym=None, learning_container_year_id=None, learning_unit=None,
-           title=None, subtype=None, activity_status=None):
+           title=None, subtype=None, activity_status=None, container_type=None, *args, **kwargs):
     queryset = LearningUnitYear.objects
 
     if academic_year_id:
@@ -100,8 +97,11 @@ def search(academic_year_id=None, acronym=None, learning_container_year_id=None,
     if acronym:
         queryset = queryset.filter(acronym__icontains=acronym)
 
-    if learning_container_year_id:
-        queryset = queryset.filter(learning_container_year=learning_container_year_id)
+    if learning_container_year_id is not None:
+        if isinstance(learning_container_year_id, list):
+            queryset = queryset.filter(learning_container_year__in=learning_container_year_id)
+        elif learning_container_year_id:
+            queryset = queryset.filter(learning_container_year=learning_container_year_id)
 
     if learning_unit:
         queryset = queryset.filter(learning_unit=learning_unit)
@@ -115,33 +115,7 @@ def search(academic_year_id=None, acronym=None, learning_container_year_id=None,
     if activity_status:
         queryset = queryset.filter(activity_status=activity_status)
 
+    if container_type:
+        queryset = queryset.filter(learning_container_year__container_type=container_type)
+
     return queryset.select_related('learning_container_year')
-
-
-def find_all_structure_parents(entities_manager):
-    learning_unit_years_list = list()
-    for entity_manager in entities_manager:
-        learning_unit_years = LearningUnitYear.objects \
-            .filter(structure=entity_manager.structure) \
-            .filter(academic_year=current_academic_years()) \
-            .distinct("structure")
-        for learning_unit_year in learning_unit_years:
-            learning_unit_years = list(chain(learning_unit_years,
-                                             find_all_structure_children(learning_unit_year.structure)))
-        learning_unit_years_list = list(chain(learning_unit_years_list, learning_unit_years))
-    return learning_unit_years_list
-
-
-def find_all_structure_children(structure):
-    learning_unit_years = LearningUnitYear.objects \
-        .filter(structure__part_of=structure) \
-        .filter(academic_year=current_academic_years()) \
-        .distinct("structure")
-    for learning_unit_year in learning_unit_years:
-        if learning_unit_year.structure.part_of:
-            learning_unit_years = list(chain(learning_unit_years,
-                                             find_all_structure_children(learning_unit_year.structure)))
-    return learning_unit_years
-
-
-

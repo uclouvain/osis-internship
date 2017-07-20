@@ -26,6 +26,8 @@
 import copy
 import json
 import logging
+import pika
+import pika.exceptions
 import traceback
 
 from django.conf import settings
@@ -47,6 +49,7 @@ from base.utils import send_mail
 from base.views import layout
 from osis_common.document import paper_sheet
 from osis_common.models.queue_exception import QueueException
+from osis_common.queue.queue_sender import send_message
 
 logger = logging.getLogger(settings.DEFAULT_LOGGER)
 queue_exception_logger = logging.getLogger(settings.QUEUE_EXCEPTION_LOGGER)
@@ -615,10 +618,9 @@ def get_json_data_scores_sheets(tutor_global_id):
             exam_enrollments = list(mdl.exam_enrollment.find_for_score_encodings(number_session,
                                                                                  tutor=tutor,
                                                                                  academic_year=academic_yr))
-            data = mdl.exam_enrollment.scores_sheet_data(exam_enrollments, tutor=tutor)
-            return json.dumps(data)
+            return mdl.exam_enrollment.scores_sheet_data(exam_enrollments, tutor=tutor)
         else:
-            return json.dumps({})
+            return {}
     except (PsycopOperationalError, PsycopInterfaceError, DjangoOperationalError, DjangoInterfaceError):
         queue_exception_logger.error('Postgres Error during get_json_data_scores_sheets on global_id {} => retried'.format(tutor_global_id))
         trace = traceback.format_exc()
@@ -630,4 +632,21 @@ def get_json_data_scores_sheets(tutor_global_id):
         logger.warning('(Not PostgresError) during get_json_data_scores_sheets on global_id {}'.format(tutor_global_id))
         trace = traceback.format_exc()
         logger.error(trace)
-        return json.dumps({})
+        return {}
+
+
+def send_json_scores_sheets_to_response_queue(global_id):
+    data = get_json_data_scores_sheets(global_id)
+    credentials = pika.PlainCredentials(settings.QUEUES.get('QUEUE_USER'),
+                                        settings.QUEUES.get('QUEUE_PASSWORD'))
+    rabbit_settings = pika.ConnectionParameters(settings.QUEUES.get('QUEUE_URL'),
+                                                settings.QUEUES.get('QUEUE_PORT'),
+                                                settings.QUEUES.get('QUEUE_CONTEXT_ROOT'),
+                                                credentials)
+    try:
+        connect = pika.BlockingConnection(rabbit_settings)
+        channel = connect.channel()
+        queue_name = settings.QUEUES.get('QUEUES_NAME').get('SCORE_ENCODING_PDF_RESPONSE')
+        send_message(queue_name, data, connect, channel)
+    except (RuntimeError, pika.exceptions.ConnectionClosed, pika.exceptions.ChannelClosed, pika.exceptions.AMQPError):
+        logger.exception('Could not send back scores_sheets json in response queue for global_id {}'.format(global_id))
