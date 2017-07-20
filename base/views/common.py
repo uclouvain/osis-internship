@@ -88,7 +88,7 @@ def login(request):
         if person:
             if person.language:
                 user_language = person.language
-                translation.activate(user_language)
+                translation.anotctivate(user_language)
                 request.session[translation.LANGUAGE_SESSION_KEY] = user_language
     elif settings.OVERRIDED_LOGIN_URL:
         return redirect(settings.OVERRIDED_LOGIN_URL)
@@ -178,14 +178,14 @@ def storage(request):
 
 
 def get_current_version(request):
-    latest_tag = None
-    repo = Repo('.')
-    tags = repo.tags
-    heads = repo.heads
-    if hasattr(heads, 'master'):
-        master = heads.master
-        for tag in tags:
-            if tag.commit == master.commit:
-                latest_tag = tag
-                break
-    return {'latest_tag': latest_tag}
+    if 'latest_tag' not in request.session:
+        repo = Repo('.')
+        tags = repo.tags
+        heads = repo.heads
+        if hasattr(heads, 'master'):
+            master = heads.master
+            for tag in tags:
+                if tag.commit == master.commit:
+                    request.session['latest_tag'] = str(tag)
+                    break
+    return {'latest_tag': request.session['latest_tag']}
