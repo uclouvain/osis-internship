@@ -29,7 +29,7 @@ from osis_common.models.serializable_model import SerializableModel, Serializabl
 
 class OfferEnrollmentAdmin(SerializableModelAdmin):
     list_display = ('offer_year', 'student', 'date_enrollment', 'changed')
-    fieldsets = ((None, {'fields': ('offer_year','student','date_enrollment')}),)
+    fieldsets = ((None, {'fields': ('offer_year', 'student', 'date_enrollment')}),)
     list_filter = ('offer_year__academic_year',)
     raw_id_fields = ('offer_year', 'student')
     search_fields = ['offer_year__acronym', 'student__person__first_name', 'student__person__last_name',
@@ -54,9 +54,10 @@ class OfferEnrollment(SerializableModel):
 
 
 def find_by_student(a_student):
-    enrollments = OfferEnrollment.objects.filter(student=a_student)
+    enrollments = OfferEnrollment.objects.filter(student=a_student).order_by('-offer_year__academic_year__year',
+                                                                             'offer_year__acronym')
     return enrollments
 
 
-def find_by_student_offer(a_student,offer_year):
+def find_by_student_offer(a_student, offer_year):
     return OfferEnrollment.objects.filter(student=a_student, offer_year=offer_year)
