@@ -66,7 +66,6 @@ ACRONYM_COMPLET_LEARNING_UNIT = _("complete")
 @login_required
 @permission_required('base.can_access_learningunit', raise_exception=True)
 def learning_units(request):
-    print('learning_units')
     if request.GET.get('academic_year_id'):
         form = LearningUnitYearForm(request.GET)
     else:
