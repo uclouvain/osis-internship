@@ -1737,3 +1737,9 @@ msgstr "Students"
 
 msgid "student_title"
 msgstr "Student"
+
+msgid "impossible"
+msgstr "The above learning unit doesn't used the componant"
+
+msgid "classe"
+msgstr "Classe"

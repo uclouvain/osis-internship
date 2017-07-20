@@ -56,3 +56,14 @@ def find_by_id(learning_unit_component_class):
 
 def find_by_learning_class_year(learning_class_year):
     return LearningUnitComponentClass.objects.filter(learning_class_year=learning_class_year)
+
+
+def search(a_learning_unit_component=None, a_learning_class_year=None):
+    queryset = LearningUnitComponentClass.objects
+    if a_learning_unit_component:
+        queryset = queryset.filter(learning_unit_component=a_learning_unit_component)
+
+    if a_learning_class_year:
+        queryset = queryset.filter(learning_class_year=a_learning_class_year)
+
+    return queryset
