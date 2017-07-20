@@ -30,19 +30,17 @@ from osis_common.models.serializable_model import SerializableModel, Serializabl
 
 
 class GroupElementYearAdmin(SerializableModelAdmin):
-    list_display = ('education_group_year_parent', 'education_group_year_child_branch',
-                    'education_group_year_child_leaf', 'learning_unit_year')
-    fieldsets = ((None, {'fields': ('education_group_year_parent', 'education_group_year_child_branch',
-                                    'education_group_year_child_leaf', 'learning_unit_year')}),)
+    list_display = ('parent', 'child_branch',
+                    'child_leaf', 'learning_unit_year')
+    fieldsets = ((None, {'fields': ('parent', 'child_branch', 'child_leaf', 'learning_unit_year')}),)
 
-    raw_id_fields = ('education_group_year_parent', 'education_group_year_child_branch',
-                     'education_group_year_child_leaf', 'learning_unit_year')
+    raw_id_fields = ('parent', 'child_branch', 'child_leaf', 'learning_unit_year')
 
 
 class GroupElementYear(SerializableModel):
     external_id = models.CharField(max_length=100, blank=True, null=True)
     changed = models.DateTimeField(null=True, auto_now=True)
-    education_group_year_parent = models.ForeignKey('EducationGroupYear', related_name='parent', blank=True, null=True)
-    education_group_year_child_branch = models.ForeignKey('EducationGroupYear', related_name='child_branch', blank=True, null=True)
-    education_group_year_child_leaf = models.ForeignKey('EducationGroupYear', related_name='child_leaf', blank=True, null=True)
+    parent = models.ForeignKey('EducationGroupYear', related_name='parent', blank=True, null=True)
+    child_branch = models.ForeignKey('EducationGroupYear', related_name='child_branch', blank=True, null=True)
+    child_leaf = models.ForeignKey('EducationGroupYear', related_name='child_leaf', blank=True, null=True)
     learning_unit_year = models.ForeignKey('LearningUnitYear', blank=True, null=True)
