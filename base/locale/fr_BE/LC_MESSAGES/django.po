@@ -1525,15 +1525,12 @@ msgid "periodicity"
 msgstr "Périodicité"
 
 msgid "nominal_credits"
-msgstr "Credits nominaux"
+msgstr "Crédits"
 
-msgid "ACTIVE"
+msgid "active"
 msgstr "Actif"
 
-msgid "PASSIVE"
-msgstr "Passif"
-
-msgid "INACTIVE"
+msgid "inactive"
 msgstr "Inactif"
 
 msgid "MASTER_DISSERTATION"
@@ -1710,12 +1707,6 @@ msgstr "Composant"
 msgid "used_by"
 msgstr "Reutilisé par l'unité d'enseignement"
 
-msgid "link_creation_impossible"
-msgstr "L'unité d'enseignement ci-dessus n'utilise pas ce composant"
-
-msgid "classe"
-msgstr "Classe"
-
 msgid "offers_enrollments"
 msgstr "Inscriptions aux offres"
 
@@ -1742,3 +1733,12 @@ msgstr "Etudiants"
 
 msgid "student_title"
 msgstr "Etudiant"
+
+msgid "link_creation_impossible"
+msgstr "L'unité d'enseignement ci-dessus n'utilise pas ce composant"
+
+msgid "classe"
+msgstr "Classe"
+
+msgid "localization"
+msgstr "Localisation"

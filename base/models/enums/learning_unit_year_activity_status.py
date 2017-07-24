@@ -24,7 +24,7 @@
 #
 ##############################################################################
 from django.utils.translation import ugettext_lazy as _
-
+# to be deleted
 ACTIVE = "ACTIVE"
 PASSIVE = "PASSIVE"
 INACTIVE = "INACTIVE"
