@@ -1,4 +1,4 @@
-#############################################################################
+##############################################################################
 #
 #    OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
@@ -24,24 +24,26 @@
 #
 ##############################################################################
 from django.db import models
-from django.contrib import admin
+from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 
 
-class LearningContainerAdmin(admin.ModelAdmin):
-    list_display = ('external_id',)
-    fieldsets = ((None, {'fields': ('external_id',)}),)
-    search_fields = ['external_id']
+class EducationGroupYearAdmin(SerializableModelAdmin):
+    list_display = ('acronym', 'title', 'academic_year', 'education_group_type', 'changed')
+    fieldsets = ((None, {'fields': ('academic_year', 'acronym', 'title', 'education_group_type', 'education_group')}),)
+    list_filter = ('academic_year', 'education_group_type')
+    raw_id_fields = ('education_group_type', 'academic_year', 'education_group')
+    search_fields = ['acronym']
 
 
-class LearningContainer(models.Model):
+class EducationGroupYear(SerializableModel):
     external_id = models.CharField(max_length=100, blank=True, null=True)
     changed = models.DateTimeField(null=True, auto_now=True)
-    auto_renewal_until = models.IntegerField(null=True)
-    start_year = models.IntegerField(null=True)
+    acronym = models.CharField(max_length=15, db_index=True)
+    title = models.CharField(max_length=255)
+    academic_year = models.ForeignKey('AcademicYear')
+    education_group = models.ForeignKey('EducationGroup')
+    education_group_type = models.ForeignKey('OfferType', blank=True, null=True)
 
     def __str__(self):
-        return u"%s" % self.external_id
+        return u"%s - %s" % (self.academic_year, self.acronym)
 
-
-def find_by_id(learning_container_id):
-    return LearningContainer.objects.get(pk=learning_container_id)

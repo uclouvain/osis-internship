@@ -32,7 +32,7 @@ import factory.fuzzy
 from factory.django import DjangoModelFactory
 from faker import Faker
 
-from base.models.enums import learning_unit_year_activity_status, learning_unit_year_subtypes
+from base.models.enums import learning_unit_year_subtypes
 from base.tests.factories.academic_year import AcademicYearFactory
 from base.tests.factories.academic_year import AcademicYearFakerFactory
 from base.tests.factories.learning_unit import LearningUnitFactory
@@ -60,7 +60,7 @@ class LearningUnitYearFactory(DjangoModelFactory):
     team = False
     vacant = False
     in_charge = False
-    activity_status = learning_unit_year_activity_status.ACTIVE
+    status = True
 
 
 class LearningUnitYearFakerFactory(DjangoModelFactory):
@@ -80,4 +80,4 @@ class LearningUnitYearFakerFactory(DjangoModelFactory):
     team = False
     vacant = False
     in_charge = False
-    activity_status = learning_unit_year_activity_status.ACTIVE
+    status = True
