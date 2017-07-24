@@ -24,21 +24,11 @@
 #
 ##############################################################################
 from django.db import models
+from django.utils.translation import ugettext_lazy as _
+from base.models import offer, program_manager, academic_year
+from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 
 
-# To be removed.
-class Attribution(models.Model):
-    FUNCTION_CHOICES = (
-        ('COORDINATOR', 'Coordinator'),
-        ('PROFESSOR', 'Professor'))
-
+class EducationGroup(SerializableModel):
     external_id = models.CharField(max_length=100, blank=True, null=True)
     changed = models.DateTimeField(null=True, auto_now=True)
-    start_date = models.DateField(auto_now=False, blank=True, null=True, auto_now_add=False)
-    end_date = models.DateField(auto_now=False, blank=True, null=True, auto_now_add=False)
-    function = models.CharField(max_length=15, blank=True, null=True, choices=FUNCTION_CHOICES, db_index=True)
-    learning_unit_year = models.ForeignKey('LearningUnitYear', related_name='learning_unit_year_attribution', blank=True, null=True, default=None)
-    tutor = models.ForeignKey('Tutor', related_name='tutor_attribution')
-
-    def __str__(self):
-        return u"%s - %s" % (self.tutor.person, self.function)

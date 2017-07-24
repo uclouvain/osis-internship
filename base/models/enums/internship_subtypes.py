@@ -1,4 +1,4 @@
-#############################################################################
+##############################################################################
 #
 #    OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
@@ -23,25 +23,15 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
-from django.contrib import admin
 
+TEACHING_INTERNSHIP = "TEACHING_INTERNSHIP"
+CLINICAL_INTERNSHIP = "CLINICAL_INTERNSHIP"
+PROFESSIONAL_INTERNSHIP = "PROFESSIONAL_INTERNSHIP"
+RESEARCH_INTERNSHIP = "RESEARCH_INTERNSHIP"
 
-class LearningContainerAdmin(admin.ModelAdmin):
-    list_display = ('external_id',)
-    fieldsets = ((None, {'fields': ('external_id',)}),)
-    search_fields = ['external_id']
-
-
-class LearningContainer(models.Model):
-    external_id = models.CharField(max_length=100, blank=True, null=True)
-    changed = models.DateTimeField(null=True, auto_now=True)
-    auto_renewal_until = models.IntegerField(null=True)
-    start_year = models.IntegerField(null=True)
-
-    def __str__(self):
-        return u"%s" % self.external_id
-
-
-def find_by_id(learning_container_id):
-    return LearningContainer.objects.get(pk=learning_container_id)
+INTERNSHIP_SUBTYPES = (
+    (TEACHING_INTERNSHIP, TEACHING_INTERNSHIP),
+    (CLINICAL_INTERNSHIP, CLINICAL_INTERNSHIP),
+    (PROFESSIONAL_INTERNSHIP, PROFESSIONAL_INTERNSHIP),
+    (RESEARCH_INTERNSHIP, RESEARCH_INTERNSHIP)
+)

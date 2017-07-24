@@ -1,4 +1,4 @@
-#############################################################################
+##############################################################################
 #
 #    OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
@@ -23,25 +23,24 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
-from django.contrib import admin
+from django import template
+from django.utils.translation import ugettext_lazy as _
+
+register = template.Library()
 
 
-class LearningContainerAdmin(admin.ModelAdmin):
-    list_display = ('external_id',)
-    fieldsets = ((None, {'fields': ('external_id',)}),)
-    search_fields = ['external_id']
-
-
-class LearningContainer(models.Model):
-    external_id = models.CharField(max_length=100, blank=True, null=True)
-    changed = models.DateTimeField(null=True, auto_now=True)
-    auto_renewal_until = models.IntegerField(null=True)
-    start_year = models.IntegerField(null=True)
-
-    def __str__(self):
-        return u"%s" % self.external_id
-
-
-def find_by_id(learning_container_id):
-    return LearningContainer.objects.get(pk=learning_container_id)
+@register.filter
+def academic_years(a_learning_container):
+    if a_learning_container.start_year and a_learning_container.auto_renewal_until:
+        start_yr = ''
+        end_year = ''
+        if a_learning_container.start_year:
+            start_yr = a_learning_container.start_year
+        if self.auto_renewal_until:
+            end_year = str(a_learning_container.auto_renewal_until)[-2:]
+        return "{}-{}".format(start_yr, end_year)
+    else:
+        if a_learning_container.start_year and not a_learning_container.auto_renewal_until:
+            return "{} {}".format(_('since'), a_learning_container.start_year)
+        else:
+            return "-"

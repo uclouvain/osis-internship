@@ -98,16 +98,17 @@
                 </div>
                 <div class="col-md-1">
                     <label for="id_status">{% trans 'status' %}</label>
-                    <select class="form-control" id="slt_status" name="activity_status">
+                    <select class="form-control" id="slt_status" name="status">
                         <option value="">{% trans 'all_label' %}</option>
-                        {% for activity_status in activity_statuses %}
-                            <option
-                                {% if request.GET.activity_status and activity_status.0 == request.GET.activity_status %}
+                        <option value="True"
+                                {% if request.GET.status == 'True' %}
                                     selected
-                                {% endif %}
-                                value="{{ activity_status.0 }}">{% trans activity_status.1 %}
-                            </option>
-                        {% endfor %}
+                                {% endif %}>{% trans 'active'|title %}</option>
+                        <option value="False"
+                                {% if request.GET.status == 'False' %}
+                                selected
+                                {% endif %}>{% trans 'inactive' %}</option>
+
                     </select>
                  </div>
                  <div class="col-md-1">
@@ -179,17 +180,12 @@
                 <td>{{learning_unit.entities.REQUIREMENT_ENTITY.acronym|default_if_none:'-'}}</td>
                 <td>{{learning_unit.entities.ALLOCATION_ENTITY.acronym|default_if_none:'-'}}</td>
                 <td>{% if learning_unit.credits %}{{ learning_unit.credits }}{% endif %}</td>
-                <td>{% if learning_unit.activity_status == 'ACTIVE' %}
+                <td>{% if learning_unit.status %}
                         <span class="glyphicon glyphicon-ok-circle" aria-hidden="true" style="color:green;"
-                              title="{% trans  learning_unit.activity_status %}"></span>
-                    {% endif %}
-                    {% if learning_unit.activity_status == 'INACTIVE' %}
+                              title="{% trans  'active' %}"></span>
+                    {% else %}
                         <span class="glyphicon glyphicon-ok-circle" aria-hidden="true" style="color:gray;"
-                              title="{% trans  learning_unit.activity_status %}"></span>
-                    {% endif %}
-                    {% if learning_unit.activity_status == 'PASSIVE' %}
-                        <span class="glyphicon glyphicon-ok-circle" aria-hidden="true" style="color:orange;"
-                              title="{% trans  learning_unit.activity_status %}"></span>
+                              title="{% trans  'inactive' %}"></span>
                     {% endif %}
                 </td>
             </tr>
