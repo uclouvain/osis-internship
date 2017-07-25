@@ -23,7 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from dissertation.models.adviser import Adviser, search_adviser
 from dissertation.models import adviser
@@ -35,6 +35,7 @@ from dissertation.forms import AdviserForm, ManagerAdviserForm, ManagerAddAdvise
 from django.contrib.auth.decorators import user_passes_test
 from base.views import layout
 from base.models.enums import person_source_type
+from django.core.exceptions import ObjectDoesNotExist
 
 
 ###########################
@@ -160,6 +161,7 @@ def informations_add(request):
         form = ManagerAddAdviserPreForm()
         return layout.render(request, 'manager_informations_add_search.html', {'form': form})
 
+
 ###########################
 #      MANAGER VIEWS      #
 ###########################
@@ -260,7 +262,10 @@ def manager_informations_add_person(request):
 @login_required
 @user_passes_test(adviser.is_manager)
 def manager_informations_detail(request, pk):
-    adv = get_object_or_404(Adviser, pk=pk)
+    try:
+        adv = Adviser.objects.get(id=pk)
+    except ObjectDoesNotExist:
+        return redirect('manager_informations')
     return layout.render(request, 'manager_informations_detail.html',
                          {'adviser': adv,
                           'first_name': adv.person.first_name.title(),
@@ -270,7 +275,10 @@ def manager_informations_detail(request, pk):
 @login_required
 @user_passes_test(adviser.is_manager)
 def manager_informations_edit(request, pk):
-    adv = get_object_or_404(Adviser, pk=pk)
+    try:
+        adv = Adviser.objects.get(id=pk)
+    except ObjectDoesNotExist:
+        return redirect('manager_informations')
     if request.method == "POST":
         form = ManagerAdviserForm(request.POST, instance=adv)
         if form.is_valid():
@@ -314,7 +322,10 @@ def manager_informations_detail_list(request, pk):
     person = mdl.person.find_by_user(request.user)
     connected_adviser = adviser.search_by_person(person)
     offers = faculty_adviser.search_by_adviser(connected_adviser)
-    adv = get_object_or_404(Adviser, pk=pk)
+    try:
+        adv = Adviser.objects.get(id=pk)
+    except ObjectDoesNotExist:
+        return redirect('manager_informations')
 
     adv_list_disserts_pro = dissertation_role.search_by_adviser_and_role_and_offers(adv, 'PROMOTEUR', offers)
     adv_list_disserts_copro = dissertation_role.search_by_adviser_and_role_and_offers(adv, 'CO_PROMOTEUR', offers)
@@ -332,18 +343,24 @@ def manager_informations_detail_list_wait(request, pk):
     person = mdl.person.find_by_user(request.user)
     connected_adviser = adviser.search_by_person(person)
     offers = faculty_adviser.search_by_adviser(connected_adviser)
-    adv = get_object_or_404(Adviser, pk=pk)
-    disserts_role=dissertation_role.search_by_adviser_and_role_and_waiting(adv, offers)
+    try:
+        adv = Adviser.objects.get(id=pk)
+    except ObjectDoesNotExist:
+        return redirect('manager_informations')
+
+    disserts_role = dissertation_role.search_by_adviser_and_role_and_waiting(adv, offers)
 
     return layout.render(request, "manager_informations_detail_list_wait.html",
-                         {'disserts_role': disserts_role,'adviser':adv})
+                         {'disserts_role': disserts_role, 'adviser': adv})
 
 
 @login_required
 @user_passes_test(adviser.is_manager)
 def manager_informations_detail_stats(request, pk):
-    adv = get_object_or_404(Adviser, pk=pk)
-
+    try:
+        adv = Adviser.objects.get(id=pk)
+    except ObjectDoesNotExist:
+        return redirect('manager_informations')
     advisers_pro = dissertation_role.search_by_adviser_and_role_stats(adv, 'PROMOTEUR')
     count_advisers_pro = dissertation_role.count_by_adviser_and_role_stats(adv, 'PROMOTEUR')
     count_advisers_pro_request = dissertation_role.count_by_adviser(adv, 'PROMOTEUR', 'DIR_SUBMIT')
