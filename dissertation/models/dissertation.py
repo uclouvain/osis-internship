@@ -107,13 +107,22 @@ class Dissertation(SerializableModel):
                                       )
         self.set_status(next_status)
 
-    def accept(self):
-        next_status = get_next_status(self, "accept")
-        if self.status == 'DIR_SUBMIT':
-            emails_dissert.send_email(self, 'dissertation_accepted_by_teacher', self.author)
+    def manager_accept(self):
+        self.teacher_accept()
         if self.status == 'COM_SUBMIT' or self.status == 'COM_KO':
+            next_status = get_next_status(self, "accept")
             emails_dissert.send_email(self, 'dissertation_accepted_by_com', self.author)
-        self.set_status(next_status)
+            self.set_status(next_status)
+        elif self.status == 'EVA_SUBMIT':
+            next_status = get_next_status(self, "accept")
+            self.set_status(next_status)
+
+    def teacher_accept(self):
+        if self.status == 'DIR_SUBMIT':
+            next_status = get_next_status(self, "accept")
+            emails_dissert.send_email(self, 'dissertation_accepted_by_teacher', self.author)
+            self.set_status(next_status)
+
 
     def refuse(self):
         next_status = get_next_status(self, "refuse")
@@ -197,6 +206,9 @@ def get_next_status(dissert, operation):
                                                    dissert.status == 'COM_SUBMIT' or
                                                    dissert.status == 'COM_KO'):
             return 'EVA_SUBMIT'
+
+        elif offer_prop.evaluation_first_year and (dissert.status == 'EVA_SUBMIT'):
+            return 'TO_RECEIVE'
 
         elif dissert.status == 'DEFENDED':
             return 'ENDED_WIN'
