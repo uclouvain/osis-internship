@@ -36,7 +36,7 @@ def academic_years(a_learning_container):
         end_year = ''
         if a_learning_container.start_year:
             start_yr = a_learning_container.start_year
-        if self.auto_renewal_until:
+        if a_learning_container.auto_renewal_until:
             end_year = str(a_learning_container.auto_renewal_until)[-2:]
         return "{}-{}".format(start_yr, end_year)
     else:
