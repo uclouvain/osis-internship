@@ -66,8 +66,9 @@
                                 <td>
                                     {% if component.learning_component_year.classes %}
                                         <a role="button" data-toggle="collapse" href="#collapse_classes{{ forloop.counter0 }}"
-                                            aria-expanded="false" aria-controls="collapse_classes{{ forloop.counter0 }}" style="border:0;padding:0;">
-                                            <span class="glyphicon glyphicon-collapse-down" aria-hidden="true" style="color:black;"></span>
+                                            aria-expanded="false" aria-controls="collapse_classes{{ forloop.counter0 }}" style="border:0;padding:0;"
+                                            onclick="changeOrientation(expandButton{{ forloop.counter0 }})">
+                                            <span id="expandButton{{ forloop.counter0 }}" class="glyphicon glyphicon-expand" aria-hidden="true"></span>
                                         </a>
                                     {% endif %}
                                 </td>
@@ -180,6 +181,15 @@
         });
         return false;
     });
+
+    function changeOrientation(button) {
+        if (button.className == "glyphicon glyphicon-collapse-down"){
+            button.className = "glyphicon glyphicon-expand"
+        }
+        else if (button.className == "glyphicon glyphicon-expand"){
+            button.className = "glyphicon glyphicon-collapse-down"
+        }
+    }
 
 </script>
 {% endblock %}
