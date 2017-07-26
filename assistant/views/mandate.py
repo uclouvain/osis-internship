@@ -229,11 +229,10 @@ def get_reviews(mandate):
         if rev.reviewer is None:
             reviews_details += [str(rev.mandate.assistant.supervisor)] if rev.mandate.assistant.supervisor is not None \
                 else ['']
-        else:
-            if idx == 0:
+        elif idx == 0:
+            reviews_details.extend(['' for i in range(5)])
+            if rev.reviewer.role == reviewer_role.SUPERVISION:
                 reviews_details.extend(['' for i in range(5)])
-                if rev.reviewer.role == reviewer_role.SUPERVISION:
-                    reviews_details.extend(['' for i in range(5)])
             reviews_details.append(str(rev.reviewer.person))
         reviews_details += [rev.advice] if rev.advice is not None else ['']
         reviews_details += [rev.justification] if rev.justification is not None else ['']
