@@ -24,7 +24,6 @@
 #
 ##############################################################################
 from django.db import models
-from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 from assistant.models.enums import review_status, review_advice_choices
 
@@ -45,7 +44,7 @@ def find_by_id(review_id):
 
 
 def find_by_mandate(mandate_id):
-    return Review.objects.filter(mandate=mandate_id)
+    return Review.objects.filter(mandate=mandate_id).order_by('changed')
 
 
 def find_review_for_mandate_by_role(mandate, role):
