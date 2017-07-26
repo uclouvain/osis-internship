@@ -69,13 +69,13 @@
                                     {% trans learning_unit_year.learning_container_year.container_type %}
                                 {% endif %}
                                 {% if show_subtype %}
-                                    {% if learning_unit_year.subtype and learning_unit_year.learning_container_year.container_type == 'COURSE' and learning_unit_year.subtype != 'FULL'%}
+                                    {% if learning_unit_year.subtype%}
                                         ({% trans learning_unit_year.subtype|lower  %})
                                     {% endif %}
                                 {% endif %}
                             </div>
                             <div class="col-md-3">
-                                <label>{% trans 'internship' %} {% trans 'subtype'|lower %}</label><br>
+                                <label>{% trans 'internship_subtype' %}</label><br>
                                 {% if learning_unit_year.internship_subtype %}
                                     {% trans learning_unit_year.internship_subtype %}
                                 {% endif %}
@@ -149,12 +149,12 @@
                         <br>
                         <br>
                         {% if requirement_entity %}
-                            <a href="{% url 'entity_read' entity_version_id=requirement_entity.id %}" title="{% trans 'requirement_entity'%}">{{ requirement_entity.acronym }}</a> - {{ requirement_entity.title | default_if_none:'' }}
+                            <a href="{% url 'entity_read' entity_version_id=requirement_entity.id %}" title="{% trans 'requirement_entity'%}">{{ requirement_entity.acronym }}</a>
                         {% endif %}
                         <br>
                         <br>
                          {% if allocation_entity %}
-                        <a href="{% url 'entity_read' entity_version_id=allocation_entity.id %}" title="{% trans 'allocation_entity'%}">{{ allocation_entity.acronym }}</a> - {{ allocation_entity.title | default_if_none:'' }}
+                        <a href="{% url 'entity_read' entity_version_id=allocation_entity.id %}" title="{% trans 'allocation_entity'%}">{{ allocation_entity.acronym }}</a>
                          {% endif %}
                         <br>
                         {% for entity in additional_requirement_entities %}
