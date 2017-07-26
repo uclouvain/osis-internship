@@ -92,11 +92,13 @@ class Dissertation(SerializableModel):
         self.save()
 
     def set_status(self, status):
+        print('self.status set_status :' + self.status)
         self.status = status
         self.save()
+        print('self.status set_status 2 :' + self.status)
 
     def go_forward(self):
-
+        print('self.status Go_for :' + self.status)
         next_status = get_next_status(self, "go_forward")
         if self.status == 'TO_RECEIVE' and next_status == 'TO_DEFEND':
             emails_dissert.send_email(self, 'dissertation_acknowledgement', self.author)
@@ -108,16 +110,20 @@ class Dissertation(SerializableModel):
         self.set_status(next_status)
 
     def manager_accept(self):
-        self.teacher_accept()
         print ('self.status :'+self.status)
         print('next_status :' + get_next_status(self, "accept"))
-        if self.status == 'COM_SUBMIT' or self.status == 'COM_KO':
+        if self.status == 'DIR_SUBMIT':
+            self.teacher_accept()
+        elif self.status == 'COM_SUBMIT' or self.status == 'COM_KO':
             next_status = get_next_status(self, "accept")
             emails_dissert.send_email(self, 'dissertation_accepted_by_com', self.author)
             self.set_status(next_status)
+            print('self.status x :' + self.status)
         elif self.status == 'EVA_SUBMIT' or self.status == 'EVA_KO':
             next_status = get_next_status(self, "accept")
             self.set_status(next_status)
+            print('self.status x 2:' + self.status)
+        print('self.status 2 :' + self.status)
 
     def teacher_accept(self):
         if self.status == 'DIR_SUBMIT':
