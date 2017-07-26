@@ -40,6 +40,7 @@
             <div role="tabpanel" class="tab-pane active" id="components">
                 <table class="table">
                     <thead>
+                        <th></th>
                         <th>{% trans 'components' %}</th>
                         <th>{% trans 'code' %}</th>
                         <th>{% trans 'volume' %}</th>
@@ -53,7 +54,6 @@
                             <th>{% trans 'used_by_partim' %}{{ learning_unit_year.subdivision }}</th>
                         {% endif %}
                         <th></th>
-                        <th></th>
                     </thead>
                     <tbody>
                         {% for component in components %}
@@ -63,6 +63,15 @@
                                 {% endif %}
                             {% endifchanged %}
                             <tr style="background-color: gainsboro">
+                                <td>
+                                    {% if component.learning_component_year.classes %}
+                                        <a role="button" data-toggle="collapse" href="#collapse_classes{{ forloop.counter0 }}"
+                                            aria-expanded="false" aria-controls="collapse_classes{{ forloop.counter0 }}" style="border:0;padding:0;"
+                                            onclick="changeOrientation(expandButton{{ forloop.counter0 }})">
+                                            <span id="expandButton{{ forloop.counter0 }}" class="glyphicon glyphicon-expand" aria-hidden="true"></span>
+                                        </a>
+                                    {% endif %}
+                                </td>
                                 <td>{% if component.learning_component_year.type %}
                                         {% trans component.learning_component_year.type %}
                                     {% endif %}
@@ -86,14 +95,6 @@
                                 {% if learning_unit_year.subdivision %}
                                     <td>{{ component.learning_component_year |used_by_partim:learning_unit_year }}</td>
                                 {% endif %}
-                                <td>
-                                    {% if component.learning_component_year.classes %}
-                                        <a role="button" data-toggle="collapse" href="#collapse_classes{{ forloop.counter0 }}"
-                                            aria-expanded="false" aria-controls="collapse_classes{{ forloop.counter0 }}" style="border:0;padding:0;">
-                                            <span class="glyphicon glyphicon-collapse-down" aria-hidden="true" style="color:black;"></span>
-                                        </a>
-                                    {% endif %}
-                                </td>
                                 <td>
                                     {% if perms.base.change_learningcomponentyear %}
                                         <a class="component-edit-btn" href="#"
@@ -180,6 +181,15 @@
         });
         return false;
     });
+
+    function changeOrientation(button) {
+        if (button.className == "glyphicon glyphicon-collapse-down"){
+            button.className = "glyphicon glyphicon-expand"
+        }
+        else if (button.className == "glyphicon glyphicon-expand"){
+            button.className = "glyphicon glyphicon-collapse-down"
+        }
+    }
 
 </script>
 {% endblock %}
