@@ -43,129 +43,139 @@
                 <br/>
                 <div class="row">
                     <div class="col-md-8">
-                        <div class="row">
-                            <div class="col-md-3">
-                                <label>{% trans 'code'%}</label><br>
-                                {% if learning_unit_year.parent %}
-                                    <a href="{% url 'learning_unit' learning_unit_year.parent.id%}">{{ learning_unit_year.learning_container_year.acronym }}</a>{{learning_unit_year.subdivision}}
-                                {% else %}
-                                   {{ learning_unit_year.acronym }}
-                                {% endif%}
-                            </div>
-                            <div class="col-md-3">
-                                <label>{% trans 'partims' %}</label><br>
-                                <div>
-                                    {% for partim in learning_container_year_partims %}
-                                    {% if forloop.counter > 1 %}
-                                    ,
-                                    {% endif%}
-                                    <a href="{% url 'learning_unit' partim.id %}">{{ partim.subdivision}}</a>
-                                    {% endfor %}
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <label>{% trans 'code'%}</label><br>
+                                        {% if learning_unit_year.parent %}
+                                            <a href="{% url 'learning_unit' learning_unit_year.parent.id%}">{{ learning_unit_year.learning_container_year.acronym }}</a>{{learning_unit_year.subdivision}}
+                                        {% else %}
+                                           {{ learning_unit_year.acronym }}
+                                        {% endif%}
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label>{% trans 'partims' %}</label><br>
+                                        <div>
+                                            {% for partim in learning_container_year_partims %}
+                                            {% if forloop.counter > 1 %}
+                                            ,
+                                            {% endif%}
+                                            <a href="{% url 'learning_unit' partim.id %}">{{ partim.subdivision}}</a>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label>{% trans 'type' %}</label><br>
+                                        {% if learning_unit_year.learning_container_year.container_type %}
+                                            {% trans learning_unit_year.learning_container_year.container_type %}
+                                        {% endif %}
+                                        {% if show_subtype %}
+                                            {% if learning_unit_year.subtype%}
+                                                ({% trans learning_unit_year.subtype|lower  %})
+                                            {% endif %}
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label>{% trans 'internship_subtype' %}</label><br>
+                                        {% if learning_unit_year.internship_subtype %}
+                                            {% trans learning_unit_year.internship_subtype %}
+                                        {% endif %}
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-md-3">
-                                <label>{% trans 'type' %}</label><br>
-                                {% if learning_unit_year.learning_container_year.container_type %}
-                                    {% trans learning_unit_year.learning_container_year.container_type %}
-                                {% endif %}
-                                {% if show_subtype %}
-                                    {% if learning_unit_year.subtype%}
-                                        ({% trans learning_unit_year.subtype|lower  %})
-                                    {% endif %}
-                                {% endif %}
-                            </div>
-                            <div class="col-md-3">
-                                <label>{% trans 'internship_subtype' %}</label><br>
-                                {% if learning_unit_year.internship_subtype %}
-                                    {% trans learning_unit_year.internship_subtype %}
-                                {% endif %}
-                            </div>
-                        </div>
-                        <div class="row" style="margin-top:10px;">
-                            <div class="col-md-3">
-                                <label>{% trans 'nominal_credits' %}</label><br>
-                                {{ learning_unit_year.credits }}
-                            </div>
-                            <div class="col-md-3">
-                                <label>{% trans 'periodicity' %}</label><br>
-                                {% if learning_unit_year.learning_unit.periodicity %}
-                                    {% trans learning_unit_year.learning_unit.periodicity %}
-                                {% endif %}
-                            </div>
-                            <div class="col-md-6">
-                                <label>{% trans 'status' %}</label><br>
-                                {% if learning_unit_year.status %}
-                                    {% trans 'active'|title %}
-                                {% else %}
-                                    {% trans 'inactive'|title %}
-                                {% endif %}
-                            </div>
-                        </div>
+                                <div class="row" style="margin-top:10px;">
+                                    <div class="col-md-3">
+                                        <label>{% trans 'nominal_credits' %}</label><br>
+                                        {{ learning_unit_year.credits }}
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label>{% trans 'periodicity' %}</label><br>
+                                        {% if learning_unit_year.learning_unit.periodicity %}
+                                            {% trans learning_unit_year.learning_unit.periodicity %}
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label>{% trans 'status' %}</label><br>
+                                        {% if learning_unit_year.status %}
+                                            {% trans 'active'|title %}
+                                        {% else %}
+                                            {% trans 'inactive'|title %}
+                                        {% endif %}
+                                    </div>
+                                </div>
 
-                        <br>
-                        <label title="{% trans 'title_official_1' %}">{% trans 'title_official' %} - {% trans 'part1' %}</label><br>
-                        {{ learning_unit_year.learning_container_year.title | default_if_none:'' }}
-                        <br><br>
-                        <label title="{% trans 'title_official_2' %}">{% trans 'title_official' %} - {% trans 'part2' %}</label><br>
-                        {% if learning_unit_year.subtype == 'PARTIM'%}
-                            {{learning_unit_year.title | default_if_none:''}}
-                        {% endif%}
-                        <br><br>
-                        <label title="{% trans 'title_in_english' %} {% trans 'title_in_english_1' %}">{% trans 'title_in_english' %} - {% trans 'part1' %}</label><br>
-                        {{learning_unit_year.learning_container_year.title_english | default_if_none:'' }}
-                        <br><br>
-                        <label title="{% trans 'title_in_english' %} {% trans 'title_in_english_2' %}">{% trans 'title_in_english' %}- {% trans 'part2' %}</label><br>
-                        {% if learning_unit_year.subtype == 'PARTIM' %}
-                            {{learning_unit_year.title_english | default_if_none:'' }}
-                        {% endif%}
-                        <br><br>
-                        <div class="row">
-                            <div class="col-md-3">
-                                <label>{% trans 'language' %}</label><br>
-                                {{learning_unit_year.learning_container_year.language | default_if_none:'' }}
-                            </div>
-                            <div class="col-md-9">
-                                <label>{% trans 'learning_unit_quarter' %}</label><br>
-                                {{ volume_distribution }}
+                                <br>
+                                <label title="{% trans 'title_official_1' %}">{% trans 'title_official' %} - {% trans 'part1' %}</label><br>
+                                {{ learning_unit_year.learning_container_year.title | default_if_none:'' }}
+                                <br><br>
+                                <label title="{% trans 'title_official_2' %}">{% trans 'title_official' %} - {% trans 'part2' %}</label><br>
+                                {% if learning_unit_year.subtype == 'PARTIM'%}
+                                    {{learning_unit_year.title | default_if_none:''}}
+                                {% endif%}
+                                <br><br>
+                                <label title="{% trans 'title_in_english' %} {% trans 'title_in_english_1' %}">{% trans 'title_in_english' %} - {% trans 'part1' %}</label><br>
+                                {{learning_unit_year.learning_container_year.title_english | default_if_none:'' }}
+                                <br><br>
+                                <label title="{% trans 'title_in_english' %} {% trans 'title_in_english_2' %}">{% trans 'title_in_english' %}- {% trans 'part2' %}</label><br>
+                                {% if learning_unit_year.subtype == 'PARTIM' %}
+                                    {{learning_unit_year.title_english | default_if_none:'' }}
+                                {% endif%}
+
+                                <br><br>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <label>{% trans 'language' %}</label><br>
+                                        {{learning_unit_year.learning_container_year.language | default_if_none:'' }}
+                                    </div>
+                                    <div class="col-md-9">
+                                        <label>{% trans 'learning_unit_quarter' %}</label><br>
+                                        {{ volume_distribution }}
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         {% if components %}
                             {% include "learning_unit/components_identification.html" %}
                         {% endif %}
+
                     </div>
 
                     <div class="col-md-4">
-                        <label>{% trans 'institution'%}</label><br>
-                         {% if organization %}
-                            <a href="{% url 'organization_read' organization_id=organization.id %}">
-                                {{ organization.name }}
-                            </a>
-                         {% endif %}
-                        <br>
-                        <label style="margin-top:10px;">{% trans 'localization'%}</label><br>
-                         {% if campus %}
-                            {{ campus.name }}
-                         {% endif %}
-                        <br>
-                        <label style="margin-top:10px;">{% trans 'requirement_entity'%}</label><br>
-                        {% if requirement_entity %}
-                            <a href="{% url 'entity_read' entity_version_id=requirement_entity.id %}" title="{{ requirement_entity.title | default_if_none:'' }}">{{ requirement_entity.acronym }}</a>
-                        {% endif %}
-                        <br>
-                        <label style="margin-top:10px;">{% trans 'allocation_entity'%}</label><br>
-                         {% if allocation_entity %}
-                        <a href="{% url 'entity_read' entity_version_id=allocation_entity.id %}" title="{{ allocation_entity.title | default_if_none:'' }}">{{ allocation_entity.acronym }}</a>
-                         {% endif %}
-                        <br>
-                        {% for entity in additional_requirement_entities %}
-                            <label style="margin-top:10px;">{% trans 'additional_requirement_entity'%}</label><br>
-                            {{ entity.acronym }}
-                        {% endfor %}
-                        <br>
-                        <label style="margin-top:10px;">{% trans 'academic_years'%}</label><br>
-                        {% if learning_unit_year.learning_container_year.learning_container %}
-                            {{ learning_unit_year.learning_container_year.learning_container.start_year|academic_years:learning_unit_year.learning_container_year.learning_container.auto_renewal_until }}
-                        {% endif %}
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <label>{% trans 'institution'%}</label><br>
+                                 {% if organization %}
+                                    <a href="{% url 'organization_read' organization_id=organization.id %}">
+                                        {{ organization.name }}
+                                    </a>
+                                 {% endif %}
+                                <br>
+                                <label style="margin-top:10px;">{% trans 'localization'%}</label><br>
+                                 {% if campus %}
+                                    {{ campus.name }}
+                                 {% endif %}
+                                <br>
+                                <label style="margin-top:10px;">{% trans 'requirement_entity'%}</label><br>
+                                {% if requirement_entity %}
+                                    <a href="{% url 'entity_read' entity_version_id=requirement_entity.id %}" title="{{ requirement_entity.title | default_if_none:'' }}">{{ requirement_entity.acronym }}</a>
+                                {% endif %}
+                                <br>
+                                <label style="margin-top:10px;">{% trans 'allocation_entity'%}</label><br>
+                                 {% if allocation_entity %}
+                                <a href="{% url 'entity_read' entity_version_id=allocation_entity.id %}" title="{{ allocation_entity.title | default_if_none:'' }}">{{ allocation_entity.acronym }}</a>
+                                 {% endif %}
+                                <br>
+                                {% for entity in additional_requirement_entities %}
+                                    <label style="margin-top:10px;">{% trans 'additional_requirement_entity'%}</label><br>
+                                    {{ entity.acronym }}
+                                {% endfor %}
+                                <br>
+                                <label style="margin-top:10px;">{% trans 'academic_years'%}</label><br>
+                                {% if learning_unit_year.learning_container_year.learning_container %}
+                                    {{ learning_unit_year.learning_container_year.learning_container.start_year|academic_years:learning_unit_year.learning_container_year.learning_container.auto_renewal_until }}
+                                {% endif %}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
