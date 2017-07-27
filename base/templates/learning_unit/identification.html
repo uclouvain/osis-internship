@@ -103,21 +103,22 @@
                         </div>
 
                         <br>
-                        <label>{% trans 'title_official' %} - {% trans 'part1' %}</label><br>
-                        <span title="{% trans 'title_official_1' %}">{{ learning_unit_year.learning_container_year.title | default_if_none:'' }}</span>
+                        <label title="{% trans 'title_official_1' %}">{% trans 'title_official' %} - {% trans 'part1' %}</label><br>
+                        {{ learning_unit_year.learning_container_year.title | default_if_none:'' }}
                         <br><br>
-                        <label>{% trans 'title_official' %} - {% trans 'part2' %}</label><br>
+                        <label title="{% trans 'title_official_2' %}">{% trans 'title_official' %} - {% trans 'part2' %}</label><br>
                         {% if learning_unit_year.subtype == 'PARTIM'%}
-                        <span title="{% trans 'title_official_2' %}">{{learning_unit_year.title | default_if_none:''}}</span>
+                            {{learning_unit_year.title | default_if_none:''}}
                         {% endif%}
                         <br><br>
-                        <label>{% trans 'title_in_english' %} - {% trans 'part1' %}</label><br>
-                        <span title="{% trans 'title_in_english' %} {% trans 'title_in_english_1' %}">{{learning_unit_year.learning_container_year.title_english | default_if_none:'' }}</span>
+                        <label title="{% trans 'title_in_english' %} {% trans 'title_in_english_1' %}">{% trans 'title_in_english' %} - {% trans 'part1' %}</label><br>
+                        {{learning_unit_year.learning_container_year.title_english | default_if_none:'' }}
                         <br><br>
-                        <label>{% trans 'title_in_english' %}- {% trans 'part2' %}</label><br>
+                        <label title="{% trans 'title_in_english' %} {% trans 'title_in_english_2' %}">{% trans 'title_in_english' %}- {% trans 'part2' %}</label><br>
                         {% if learning_unit_year.subtype == 'PARTIM' %}
-                        <span title="{% trans 'title_in_english' %} {% trans 'title_in_english_2' %}">{{learning_unit_year.title_english | default_if_none:'' }}</span>
-                        {% endif%}                        <br><br>
+                            {{learning_unit_year.title_english | default_if_none:'' }}
+                        {% endif%}
+                        <br><br>
                         <div class="row">
                             <div class="col-md-3">
                                 <label>{% trans 'language' %}</label><br>
