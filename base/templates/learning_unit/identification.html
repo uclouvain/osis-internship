@@ -162,7 +162,9 @@
                         {% endfor %}
                         <br>
                         <label style="margin-top:10px;">{% trans 'academic_years'%}</label><br>
-                        {{ learning_unit_year.learning_container_year.learning_container|academic_years }}
+                        {% if learning_unit_year.learning_container_year.learning_container %}
+                            {{ learning_unit_year.learning_container_year.learning_container.start_year|academic_years:learning_unit_year.learning_container_year.learning_container.auto_renewal_until }}
+                        {% endif %}
                     </div>
                 </div>
             </div>
