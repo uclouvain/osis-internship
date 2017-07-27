@@ -1743,3 +1743,7 @@ msgstr "Classe"
 
 msgid "localization"
 msgstr "Localization"
+
+msgid "internship_subtype"
+msgstr "Internship subtype"
+

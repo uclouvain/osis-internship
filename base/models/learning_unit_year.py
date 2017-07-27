@@ -25,14 +25,13 @@
 ##############################################################################
 from django.db import models
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
-from base.models.enums import learning_unit_year_activity_status, learning_unit_year_subtypes, \
-    learning_container_year_types, internship_subtypes
+from base.models.enums import learning_unit_year_subtypes, learning_container_year_types, internship_subtypes
 
 
 class LearningUnitYearAdmin(SerializableModelAdmin):
     list_display = ('acronym', 'title', 'academic_year', 'credits', 'changed', 'structure', 'status')
     fieldsets = ((None, {'fields': ('academic_year', 'learning_unit', 'acronym', 'title', 'title_english', 'credits',
-                                    'decimal_scores', 'structure', 'learning_container_year', 'activity_status',
+                                    'decimal_scores', 'structure', 'learning_container_year',
                                     'subtype', 'status', 'internship_subtype' )}),)
     list_filter = ('academic_year', 'vacant', 'in_charge', 'decimal_scores')
     raw_id_fields = ('learning_unit', 'learning_container_year', 'structure')
@@ -56,8 +55,6 @@ class LearningUnitYear(SerializableModel):
     vacant = models.BooleanField(default=False)
     in_charge = models.BooleanField(default=False)
     structure = models.ForeignKey('Structure', blank=True, null=True)
-    activity_status = models.CharField(max_length=20, blank=True, null=True,
-                                       choices=learning_unit_year_activity_status.LEARNING_UNIT_YEAR_ACTIVITY_STATUS) # to_be_deleted
     internship_subtype = models.CharField(max_length=50, blank=True, null=True,
                                choices=internship_subtypes.INTERNSHIP_SUBTYPES)
     status = models.BooleanField(default=False)

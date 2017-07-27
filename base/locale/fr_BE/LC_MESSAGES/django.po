@@ -1742,3 +1742,6 @@ msgstr "Classe"
 
 msgid "localization"
 msgstr "Localisation"
+
+msgid "internship_subtype"
+msgstr "Sous-type de stage"

@@ -35,12 +35,12 @@ def academic_years(a_learning_container):
         start_yr = ''
         end_year = ''
         if a_learning_container.start_year:
-            start_yr = a_learning_container.start_year
+            start_yr = "{} {}-{}".format(_('of').title(), a_learning_container.start_year, str(a_learning_container.start_year+1)[-2:])
         if a_learning_container.auto_renewal_until:
-            end_year = str(a_learning_container.auto_renewal_until)[-2:]
+            end_year = "{} {}-{}".format(_('to'), a_learning_container.auto_renewal_until, str(a_learning_container.auto_renewal_until+1)[-2:])
         return "{}-{}".format(start_yr, end_year)
     else:
         if a_learning_container.start_year and not a_learning_container.auto_renewal_until:
-            return "{} {}".format(_('since'), a_learning_container.start_year)
+            return "{} {}-{}".format(_('since'), a_learning_container.start_year,str(a_learning_container.start_year+1)[-2:])
         else:
             return "-"
