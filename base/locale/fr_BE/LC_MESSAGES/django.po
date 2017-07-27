@@ -1705,7 +1705,7 @@ msgid "component"
 msgstr "Composant"
 
 msgid "used_by"
-msgstr "Reutilisé par l'unité d'enseignement"
+msgstr "Réutilisé par l'unité d'enseignement"
 
 msgid "offers_enrollments"
 msgstr "Inscriptions aux offres"
@@ -1745,3 +1745,12 @@ msgstr "Localisation"
 
 msgid "internship_subtype"
 msgstr "Sous-type de stage"
+
+msgid "part1"
+msgstr "partie 1"
+
+msgid "part2"
+msgstr "partie 2"
+
+msgid "title_official"
+msgstr "Intitulé officiel"

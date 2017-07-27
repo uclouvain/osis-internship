@@ -103,22 +103,21 @@
                         </div>
 
                         <br>
-                        <label>{% trans 'title_official_1' %}</label><br>
-                        {{ learning_unit_year.learning_container_year.title | default_if_none:'' }}
+                        <label>{% trans 'title_official' %} - {% trans 'part1' %}</label><br>
+                        <span title="{% trans 'title_official_1' %}">{{ learning_unit_year.learning_container_year.title | default_if_none:'' }}</span>
                         <br><br>
-                        <label>{% trans 'title_official_2' %}</label><br>
+                        <label>{% trans 'title_official' %} - {% trans 'part2' %}</label><br>
                         {% if learning_unit_year.subtype == 'PARTIM'%}
-                            {{learning_unit_year.title | default_if_none:''}}
+                        <span title="{% trans 'title_official_2' %}">{{learning_unit_year.title | default_if_none:''}}</span>
                         {% endif%}
                         <br><br>
-                        <label>{% trans 'title_in_english' %}{% trans 'title_in_english_1' %}</label><br>
-                        {{learning_unit_year.learning_container_year.title_english | default_if_none:'' }}
+                        <label>{% trans 'title_in_english' %} - {% trans 'part1' %}</label><br>
+                        <span title="{% trans 'title_in_english' %} {% trans 'title_in_english_1' %}">{{learning_unit_year.learning_container_year.title_english | default_if_none:'' }}</span>
                         <br><br>
-                        <label>{% trans 'title_in_english' %}{% trans 'title_in_english_2' %}</label><br>
+                        <label>{% trans 'title_in_english' %}- {% trans 'part2' %}</label><br>
                         {% if learning_unit_year.subtype == 'PARTIM' %}
-                            {{learning_unit_year.title_english | default_if_none:'' }}
-                        {% endif%}
-                        <br><br>
+                        <span title="{% trans 'title_in_english' %} {% trans 'title_in_english_2' %}">{{learning_unit_year.title_english | default_if_none:'' }}</span>
+                        {% endif%}                        <br><br>
                         <div class="row">
                             <div class="col-md-3">
                                 <label>{% trans 'language' %}</label><br>
@@ -147,14 +146,14 @@
                             {{ campus.name }}
                          {% endif %}
                         <br>
-                        <br>
+                        <label style="margin-top:10px;">{% trans 'requirement_entity'%}</label><br>
                         {% if requirement_entity %}
-                            <a href="{% url 'entity_read' entity_version_id=requirement_entity.id %}" title="{% trans 'requirement_entity'%}">{{ requirement_entity.acronym }}</a>
+                            <a href="{% url 'entity_read' entity_version_id=requirement_entity.id %}" title="{{ requirement_entity.title | default_if_none:'' }}">{{ requirement_entity.acronym }}</a>
                         {% endif %}
                         <br>
-                        <br>
+                        <label style="margin-top:10px;">{% trans 'allocation_entity'%}</label><br>
                          {% if allocation_entity %}
-                        <a href="{% url 'entity_read' entity_version_id=allocation_entity.id %}" title="{% trans 'allocation_entity'%}">{{ allocation_entity.acronym }}</a>
+                        <a href="{% url 'entity_read' entity_version_id=allocation_entity.id %}" title="{{ allocation_entity.title | default_if_none:'' }}">{{ allocation_entity.acronym }}</a>
                          {% endif %}
                         <br>
                         {% for entity in additional_requirement_entities %}
@@ -163,7 +162,9 @@
                         {% endfor %}
                         <br>
                         <label style="margin-top:10px;">{% trans 'academic_years'%}</label><br>
-                        {{ learning_unit_year.learning_container_year.learning_container|academic_years }}
+                        {% if learning_unit_year.learning_container_year.learning_container %}
+                            {{ learning_unit_year.learning_container_year.learning_container.start_year|academic_years:learning_unit_year.learning_container_year.learning_container.auto_renewal_until }}
+                        {% endif %}
                     </div>
                 </div>
             </div>
