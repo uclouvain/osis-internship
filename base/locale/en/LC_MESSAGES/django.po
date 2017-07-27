@@ -1747,3 +1747,11 @@ msgstr "Localization"
 msgid "internship_subtype"
 msgstr "Internship subtype"
 
+msgid "part1"
+msgstr "part 1"
+
+msgid "part2"
+msgstr "part 2"
+
+msgid "title_official"
+msgstr "Official title"
