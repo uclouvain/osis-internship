@@ -38,14 +38,14 @@
 {% block content %}
 <ul class="nav nav-tabs ">
 <li><a href="{% url 'assistant_mandates' %}">{% trans 'my_mandates' %}</a></li>
-<li><a href="{% url 'form_part1_edit' mandate_id %}">{% trans 'assistant_form_part1' %}</a></li>
-<li class="active"><a href="{% url 'mandate_learning_units' mandate_id %}">{% trans 'learning_units' %}</a></li>
+<li><a href="{% url 'form_part1_edit' %}">{% trans 'assistant_form_part1' %}</a></li>
+<li class="active"><a href="{% url 'mandate_learning_units' %}">{% trans 'learning_units' %}</a></li>
 {% if assistant_type == "ASSISTANT" %}
-    <li><a href="{% url 'form_part3_edit' mandate_id %}">{% trans 'assistant_form_part3' %}</a></li>
-    <li><a href="{% url 'form_part4_edit' mandate_id %}">{% trans 'assistant_form_part4' %}</a></li>
+    <li><a href="{% url 'form_part3_edit' %}">{% trans 'assistant_form_part3' %}</a></li>
+    <li><a href="{% url 'form_part4_edit' %}">{% trans 'assistant_form_part4' %}</a></li>
 {% endif %}
-<li><a href="{% url 'form_part5_edit' mandate_id %}">{% trans 'assistant_form_part5' %}</a></li>
-<li><a href="{% url 'form_part6_edit' mandate_id %}">{% trans 'assistant_form_part6' %}</a></li>
+<li><a href="{% url 'form_part5_edit' %}">{% trans 'assistant_form_part5' %}</a></li>
+<li><a href="{% url 'form_part6_edit' %}">{% trans 'assistant_form_part6' %}</a></li>
 </ul>
 <div class="panel panel-default">
     <div class="panel-body">
@@ -88,7 +88,7 @@
             </tbody>
             </table>
         </div>
-        <a href="{% url 'tutoring_learning_unit_add' mandate_id %}">
+        <a href="{% url 'tutoring_learning_unit_add' %}">
             <button type="button" class="btn btn-link btn-lg" title="{% trans 'add'%}" id="bt_reviewer_add">
             <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
             </button>{% trans 'add_tutoring_learning_unit' %}</a>
@@ -106,7 +106,7 @@
                 <div class="col-md-2" style="text-align: left">
                     <a class="btn btn-default btn-danger btn-sm" id="btn_delete_file" style="margin-right: 5px;"
                        title="{% trans 'delete'%}"
-                       onclick="location.href='{% url 'assistant_file_delete' mandate_id file.id 'mandate_learning_units' %}';">
+                       onclick="location.href='{% url 'assistant_file_delete' file.id 'mandate_learning_units' %}';">
                     <span class="glyphicon glyphicon-remove" aria-hidden="true" id="spn_delete_file"></span>
                         {% trans 'delete' %}</a>
                 </div>
