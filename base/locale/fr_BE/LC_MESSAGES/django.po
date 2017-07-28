@@ -1683,9 +1683,6 @@ msgstr "Classes effectives"
 msgid "lu_usage"
 msgstr "Utilisation par les UE"
 
-msgid "used_by_partim"
-msgstr "Utilisation par partim "
-
 msgid "academic_years"
 msgstr "Années académiques"
 

@@ -50,9 +50,6 @@
                         <th>{% trans 'planned_classrooms' %}</th>
                         <th>{% trans 'real_classes' %}</th>
                         <th>{% trans 'lu_usage' %}</th>
-                        {% if learning_unit_year.subdivision %}
-                            <th>{% trans 'used_by_partim' %}{{ learning_unit_year.subdivision }}</th>
-                        {% endif %}
                         <th></th>
                     </thead>
                     <tbody>
@@ -92,9 +89,6 @@
                                     <span style="background-color:none"
                                           class="fa fa-circle {{ component.learning_component_year.planned_classes |get_css_class:component.learning_component_year.real_classes }}"></span> {{ component.learning_component_year.real_classes| default_if_none:'0' }}</td>
                                 <td>{{ component.learning_unit_usage }}</td>
-                                {% if learning_unit_year.subdivision %}
-                                    <td>{{ component.learning_component_year |used_by_partim:learning_unit_year }}</td>
-                                {% endif %}
                                 <td>
                                     {% if perms.base.change_learningcomponentyear %}
                                         <a class="component-edit-btn" href="#"
@@ -112,7 +106,6 @@
                                             <thead class="classes_background">
                                                 <th>{% trans 'classes' %}</th>
                                                 <th>{% trans 'lu_usage' %}</th>
-                                                <th>{% trans 'used_by_partim' %}{{ learning_unit_year.subdivision }}</th>
                                                 <th>{% trans 'description' %}</th>
                                                 <th></th>
                                             </thead>
@@ -123,13 +116,6 @@
                                                                 {{ component.learning_component_year.type_letter_acronym }}
                                                             {% endif %}{{ learning_class_year.acronym }}</td>
                                                         <td>{{ learning_class_year.used_by_learning_units_year }}</td>
-                                                        <td>
-                                                            {% if learning_unit_year.subdivision in learning_class_year.used_by_learning_units_year and learning_unit_year.subdivision != '' or learning_class_year.is_used_by_full_learning_unit_year and learning_unit_year.subdivision == '' %}
-                                                                {% trans 'yes' %}
-                                                            {% else %}
-                                                                {% trans 'no' %}
-                                                            {% endif %}
-                                                        </td>
                                                         <td>
                                                             {{ learning_class_year.description|default_if_none:'' }}
                                                         </td>
