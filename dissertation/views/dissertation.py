@@ -23,6 +23,9 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from base.models.academic_year import find_academic_years, find_academic_year_by_id
+from base.models.offer import find_by_id
+from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
 from base import models as mdl
@@ -39,6 +42,7 @@ from openpyxl import Workbook
 from openpyxl.utils.exceptions import IllegalCharacterError
 from django.http import HttpResponse
 import time
+from django.utils import timezone
 
 
 def role_can_be_deleted(dissert, dissert_role):
@@ -282,12 +286,17 @@ def manager_dissertations_list(request):
     offers = faculty_adviser.search_by_adviser(adv)
     disserts = dissertation.search_by_offer(offers)
     offer_props = offer_proposition.search_by_offer(offers)
+    start_date=timezone.now().replace(year=timezone.now().year - 10)
+    end_date=timezone.now().replace(year=timezone.now().year + 1)
+    academic_year_10y=find_academic_years(end_date,start_date)
     show_validation_commission = offer_proposition.show_validation_commission(offer_props)
     show_evaluation_first_year = offer_proposition.show_evaluation_first_year(offer_props)
     return layout.render(request, 'manager_dissertations_list.html',
                          {'dissertations': disserts,
                           'show_validation_commission': show_validation_commission,
-                          'show_evaluation_first_year': show_evaluation_first_year})
+                          'show_evaluation_first_year': show_evaluation_first_year,
+                          'academic_year_10y': academic_year_10y,
+                          'offers':offers})
 
 
 @login_required
@@ -387,11 +396,38 @@ def manager_dissertations_search(request):
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
     offers = faculty_adviser.search_by_adviser(adv)
-    disserts = dissertation.search(terms=request.GET['search'], active=True)
+    try:
+        disserts = dissertation.search(terms=request.GET['search'], active=True)
+    except ObjectDoesNotExist:
+        disserts = None
+
     disserts = disserts.filter(offer_year_start__offer__in=offers)
+    try:
+        offer_search = request.GET['offer']
+    except ObjectDoesNotExist:
+        offer_search=''
+    try:
+        academic_year_search=request.GET['academic_year']
+    except ObjectDoesNotExist:
+        academic_year_search=''
+    try:
+        status_search=request.GET['status_search']
+    except ObjectDoesNotExist:
+        status_search==''
+    if offer_search!='':
+        offer_search=int(offer_search)
+        disserts = disserts.filter(offer_year_start__offer=find_by_id(offer_search))
+    if academic_year_search!='':
+        academic_year_search=int(academic_year_search)
+        disserts = disserts.filter(offer_year_start__academic_year=find_academic_year_by_id(academic_year_search))
+    if status_search!='':
+        disserts = disserts.filter(status=status_search)
     offer_props = offer_proposition.search_by_offer(offers)
     show_validation_commission = offer_proposition.show_validation_commission(offer_props)
     show_evaluation_first_year = offer_proposition.show_evaluation_first_year(offer_props)
+    start_date=timezone.now().replace(year=timezone.now().year - 10)
+    end_date=timezone.now().replace(year=timezone.now().year + 1)
+    academic_year_10y=find_academic_years(end_date,start_date)
 
     if 'bt_xlsx' in request.GET:
         xls = generate_xls(disserts)
@@ -404,7 +440,12 @@ def manager_dissertations_search(request):
         return layout.render(request, "manager_dissertations_list.html",
                                       {'dissertations': disserts,
                                        'show_validation_commission': show_validation_commission,
-                                       'show_evaluation_first_year': show_evaluation_first_year
+                                       'show_evaluation_first_year': show_evaluation_first_year,
+                                       'academic_year_10y': academic_year_10y,
+                                       'offers':offers,
+                                       'offer_search':offer_search,
+                                       'academic_year_search':academic_year_search,
+                                       'status_search':status_search
                                        })
 
 
