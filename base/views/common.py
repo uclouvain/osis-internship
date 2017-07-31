@@ -30,10 +30,10 @@ from django.contrib.auth.views import login as django_login
 from django.contrib.auth import authenticate, logout
 from django.shortcuts import redirect
 from django.utils import translation
+from git import Repo
 from . import layout
 from base import models as mdl
 from base.models.utils import native
-from git import Repo
 
 
 def page_not_found(request):
@@ -75,7 +75,8 @@ def common_context_processor(request):
         sentry_dns = ''
     return {'installed_apps': settings.INSTALLED_APPS,
             'environment': env,
-            'sentry_dns': sentry_dns}
+            'sentry_dns': sentry_dns,
+            'release_tag': release_tag}
 
 
 def login(request):
@@ -177,15 +178,15 @@ def storage(request):
     return layout.render(request, "admin/storage.html", {'table': table})
 
 
-def get_current_version(request):
-    if 'latest_tag' not in request.session:
-        repo = Repo('.')
-        tags = repo.tags
-        heads = repo.heads
-        if hasattr(heads, 'master'):
-            master = heads.master
-            for tag in tags:
-                if tag.commit == master.commit:
-                    request.session['latest_tag'] = str(tag)
-                    break
-    return {'latest_tag': request.session['latest_tag']}
+def get_current_version():
+    release_tag = None
+    global release_tag
+    repo = Repo('.')
+    tags = repo.tags
+    heads = repo.heads
+    if hasattr(heads, 'master'):
+        master = heads.master
+        for tag in tags:
+            if tag.commit == master.commit:
+                release_tag = str(tag)
+                break
