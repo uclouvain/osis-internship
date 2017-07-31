@@ -36,6 +36,11 @@ admin.site.register(academic_year.AcademicYear,
 admin.site.register(campus.Campus,
                     campus.CampusAdmin)
 
+admin.site.register(education_group.EducationGroup)
+
+admin.site.register(education_group_year.EducationGroupYear,
+                    education_group_year.EducationGroupYearAdmin)
+
 admin.site.register(entity.Entity,
                     entity.EntityAdmin)
 
@@ -59,6 +64,9 @@ admin.site.register(exam_enrollment.ExamEnrollmentHistory,
 
 admin.site.register(external_offer.ExternalOffer,
                     external_offer.ExternalOfferAdmin)
+
+admin.site.register(group_element_year.GroupElementYear,
+                    group_element_year.GroupElementYearAdmin)
 
 admin.site.register(learning_class_year.LearningClassYear,
                     learning_class_year.LearningClassYearAdmin)

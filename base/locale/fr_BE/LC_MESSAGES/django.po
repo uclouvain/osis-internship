@@ -1525,15 +1525,12 @@ msgid "periodicity"
 msgstr "Périodicité"
 
 msgid "nominal_credits"
-msgstr "Credits nominaux"
+msgstr "Crédits"
 
-msgid "ACTIVE"
+msgid "active"
 msgstr "Actif"
 
-msgid "PASSIVE"
-msgstr "Passif"
-
-msgid "INACTIVE"
+msgid "inactive"
 msgstr "Inactif"
 
 msgid "MASTER_DISSERTATION"
@@ -1708,4 +1705,52 @@ msgid "component"
 msgstr "Composant"
 
 msgid "used_by"
-msgstr "Reutilisé par l'unité d'enseignement"
+msgstr "Réutilisé par l'unité d'enseignement"
+
+msgid "offers_enrollments"
+msgstr "Inscriptions aux offres"
+
+msgid "learning_units_enrollments"
+msgstr "Inscription aux unités d'enseignement"
+
+msgid "exams_enrollments"
+msgstr "Inscription aux examens"
+
+msgid "average"
+msgstr "Moyenne"
+
+msgid "global_average"
+msgstr "Moyenne générale"
+
+msgid "result"
+msgstr "Résultat"
+
+msgid "enrollment_date"
+msgstr "Date d'inscription"
+
+msgid "students_title"
+msgstr "Etudiants"
+
+msgid "student_title"
+msgstr "Etudiant"
+
+msgid "link_creation_impossible"
+msgstr "L'unité d'enseignement ci-dessus n'utilise pas ce composant"
+
+msgid "classe"
+msgstr "Classe"
+
+msgid "localization"
+msgstr "Localisation"
+
+msgid "internship_subtype"
+msgstr "Sous-type de stage"
+
+msgid "part1"
+msgstr "partie 1"
+
+msgid "part2"
+msgstr "partie 2"
+
+msgid "title_official"
+msgstr "Intitulé officiel"

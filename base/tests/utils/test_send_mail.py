@@ -46,12 +46,10 @@ class TestSendMessage(TestCase):
 
         self.exam_enrollment_1 = test_exam_enrollment.create_exam_enrollment_with_student(1, "64641200",
                                                                                           self.offer_year,
-                                                                                          self.learning_unit_year,
-                                                                                          academic_year)
+                                                                                          self.learning_unit_year)
         self.exam_enrollment_2 = test_exam_enrollment.create_exam_enrollment_with_student(2, "60601200",
                                                                                           self.offer_year,
-                                                                                          self.learning_unit_year,
-                                                                                          academic_year)
+                                                                                          self.learning_unit_year)
         add_message_template_html()
         add_message_template_txt()
 
