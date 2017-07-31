@@ -50,7 +50,7 @@ class LearningClassEditForm(forms.Form):
         self.fields['used_by'].widget.attrs['disabled'] = False
         if mdl.learning_unit_component.search(self.learning_component_year,
                                               self.learning_unit_year).first() is None:
-            self.message = _('impossible')
+            self.message = _('link_creation_impossible')
             self.fields['used_by'].widget.attrs['disabled'] = True
 
     def save(self):

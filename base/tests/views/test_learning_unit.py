@@ -33,7 +33,6 @@ from django.test import TestCase, RequestFactory
 from base.models import learning_unit_component
 from base.models import learning_unit_component_class
 from base.models.enums import learning_container_year_types
-from base.models.enums import learning_unit_year_activity_status
 from base.models.enums import learning_unit_year_subtypes
 from base.tests.factories.academic_year import AcademicYearFactory
 from base.tests.factories.entity_version import EntityVersionFactory
@@ -112,7 +111,6 @@ class LearningUnitViewTestCase(TestCase):
                          len(learning_unit_year_subtypes.LEARNING_UNIT_YEAR_SUBTYPES))
         self.assertEqual(len(context['container_types']),
                          len(learning_container_year_types.LEARNING_CONTAINER_YEAR_TYPES))
-        self.assertEqual(len(context['activity_statuses']), 2)
         self.assertTrue(context['experimental_phase'])
         self.assertIsNone(context['learning_units'])
 
@@ -125,7 +123,7 @@ class LearningUnitViewTestCase(TestCase):
         request_factory = RequestFactory()
         filter_data = {
             'academic_year_id': self.current_academic_year.id,
-            'activity_status': learning_unit_year_activity_status.ACTIVE,
+            'status': True,
             'acronym': 'LBIR'
         }
         request = request_factory.get(reverse('learning_units'), data=filter_data)
@@ -491,7 +489,7 @@ class LearningUnitViewTestCase(TestCase):
         url = reverse('learning_unit_component_edit', args=[learning_unit_yr.id])
         qs = 'learning_component_year_id={}'.format(self.learning_component_yr.id)
 
-        response = self.client.post('{}?{}'.format(url,qs), data={"planned_classes": "1", "used_by": "on"})
+        response = self.client.post('{}?{}'.format(url, qs), data={"planned_classes": "1", "used_by": "on"})
         self.learning_component_yr.refresh_from_db()
         self.assertEqual(response.status_code, 302)
         self.assertEqual(self.learning_component_yr.planned_classes, 1)
@@ -504,7 +502,7 @@ class LearningUnitViewTestCase(TestCase):
         url = reverse('learning_unit_component_edit', args=[learning_unit_yr.id])
         qs = 'learning_component_year_id={}'.format(self.learning_component_yr.id)
 
-        response = self.client.post('{}?{}'.format(url,qs), data={"planned_classes": "1"})
+        response = self.client.post('{}?{}'.format(url, qs), data={"planned_classes": "1"})
         self.assertRaises(ObjectDoesNotExist, learning_unit_component.LearningUnitComponent.objects.filter(pk=learning_unit_compnt.id).first())
 
     def test_component_save_create_link(self):
@@ -513,7 +511,7 @@ class LearningUnitViewTestCase(TestCase):
         url = reverse('learning_unit_component_edit', args=[learning_unit_yr.id])
         qs = 'learning_component_year_id={}'.format(self.learning_component_yr.id)
 
-        response = self.client.post('{}?{}'.format(url,qs), data={"planned_classes": "1", "used_by": "on"})
+        response = self.client.post('{}?{}'.format(url, qs), data={"planned_classes": "1", "used_by": "on"})
 
         self.assertTrue(learning_unit_component.find_by_learning_component_year(self.learning_component_yr).exists())
 
@@ -541,7 +539,7 @@ class LearningUnitViewTestCase(TestCase):
                                 academic_year=self.current_academic_year, subtype=learning_unit_year_subtypes.PARTIM)
         LearningUnitYearFactory(acronym="LBIR1100C", learning_container_year=l_container_yr,
                                 academic_year=self.current_academic_year, subtype=learning_unit_year_subtypes.PARTIM,
-                                activity_status=learning_unit_year_activity_status.INACTIVE)
+                                status=False)
 
         # Create another UE and put entity charge [ENV]
         l_container_yr_2 = LearningContainerYearFactory(acronym="CHIM1200", academic_year=self.current_academic_year,

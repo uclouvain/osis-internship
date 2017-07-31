@@ -27,16 +27,10 @@ import datetime
 import factory
 import factory.fuzzy
 import string
-from django.conf import settings
 from django.utils import timezone
 from base.tests.factories.academic_year import AcademicYearFactory
+from osis_common.utils.datetime import get_tzinfo
 
-
-def _get_tzinfo():
-    if settings.USE_TZ:
-        return timezone.get_current_timezone()
-    else:
-        return None
 
 def generate_start_date(academic_calendar):
     if academic_calendar.academic_year:
@@ -56,8 +50,8 @@ class AcademicCalendarFactory(factory.DjangoModelFactory):
         model = 'base.AcademicCalendar'
 
     external_id = factory.fuzzy.FuzzyText(length=10, chars=string.digits)
-    changed = factory.fuzzy.FuzzyDateTime(datetime.datetime(2016, 1, 1, tzinfo=_get_tzinfo()),
-                                          datetime.datetime(2017, 3, 1, tzinfo=_get_tzinfo()))
+    changed = factory.fuzzy.FuzzyDateTime(datetime.datetime(2016, 1, 1, tzinfo=get_tzinfo()),
+                                          datetime.datetime(2017, 3, 1, tzinfo=get_tzinfo()))
     academic_year = factory.SubFactory(AcademicYearFactory)
     title = factory.Sequence(lambda n: 'Academic Calendar - %d' % n)
     start_date = factory.LazyAttribute(generate_start_date)
