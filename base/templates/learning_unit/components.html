@@ -59,7 +59,12 @@
                                     <tr style="height: 1px;font-size: 5px;"><td colspan="5">&nbsp;</td></tr>
                                 {% endif %}
                             {% endifchanged %}
-                            <tr style="background-color: gainsboro">
+                            {% if component.used_by_learning_unit %}
+                                <tr class="used_component">
+                            {% else %}
+                                <tr class="unused_component">
+                            {% endif %}
+
                                 <td>
                                     {% if component.learning_component_year.classes %}
                                         <a role="button" data-toggle="collapse" href="#collapse_classes{{ forloop.counter0 }}"

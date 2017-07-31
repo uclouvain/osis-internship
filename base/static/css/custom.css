@@ -68,3 +68,14 @@ div[class^="django-ckeditor-widget"] > div {
 .danger-color {
     color: #d9534f;
 }
+
+tr.used_component{
+    background-color: gainsboro;
+    border-top: 2px solid #909090;
+    border-bottom: 2px solid #909090;
+}
+
+tr.unused_component{
+    background-color: #EEE;
+    color: #909090;
+}
