@@ -46,8 +46,8 @@ class ErrorViewTestCase(TestCase):
     def test_get_current_version(self):
         repo = Repo('.')
         heads = repo.heads
-        response = get_current_version(self)
+        release_tag = get_current_version()
         if hasattr(heads, 'master'):
-            self.assertIsNot(response['latest_tag'], None)
+            self.assertIsNot(release_tag, None)
         else:
-            self.assertIs(response['latest_tag'], None)
+            self.assertIs(release_tag, None)

@@ -189,4 +189,6 @@ def get_current_version():
         for tag in tags:
             if tag.commit == master.commit:
                 release_tag = str(tag)
+                print("Release Tag is "+release_tag)
                 break
+    return release_tag
