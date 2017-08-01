@@ -49,12 +49,3 @@ def get_css_class(planned_classes, real_classes):
             return "warning-color"
 
     return "danger-color"
-
-
-@register.filter
-def used_by_partim(learning_component_year, learning_unit_year):
-    if learning_unit_component.used_by(learning_component_year, learning_unit_year):
-        return _('yes')
-    return _('no')
-
-

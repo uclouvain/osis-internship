@@ -1495,6 +1495,9 @@ msgstr "Planned classrooms"
 msgid "classes"
 msgstr "Classes"
 
+msgid "class"
+msgstr "Class"
+
 msgid "learning_unit_code"
 msgstr "Learning unit code"
 
@@ -1683,9 +1686,6 @@ msgstr "Real classes"
 
 msgid "lu_usage"
 msgstr "Learning units usage"
-
-msgid "used_by_partim"
-msgstr "Used by partim "
 
 msgid "academic_years"
 msgstr "Academic years"

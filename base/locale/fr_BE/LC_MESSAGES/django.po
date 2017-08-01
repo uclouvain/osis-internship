@@ -1515,6 +1515,9 @@ msgstr "Classes prévues"
 msgid "classes"
 msgstr "Classes"
 
+msgid "class"
+msgstr "Classe"
+
 msgid "learning_unit_code"
 msgstr "Code de l'UE"
 
@@ -1682,9 +1685,6 @@ msgstr "Classes effectives"
 
 msgid "lu_usage"
 msgstr "Utilisation par les UE"
-
-msgid "used_by_partim"
-msgstr "Utilisation par partim "
 
 msgid "academic_years"
 msgstr "Années académiques"
