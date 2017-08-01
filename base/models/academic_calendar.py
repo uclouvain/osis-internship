@@ -77,7 +77,7 @@ class AcademicCalendar(SerializableModel):
             function(self)
 
     def validation_start_end_dates(self):
-        if self.start_date and self.end_date and self.start_date >= self.end_date:
+        if self.start_date and self.end_date and self.start_date > self.end_date:
             raise StartDateHigherThanEndDateException(_('end_start_date_error'))
 
     def validation_mandatory_dates(self):

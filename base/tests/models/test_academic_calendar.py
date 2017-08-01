@@ -59,21 +59,10 @@ class AcademicCalendarTest(TestCase):
     def test_start_date_higher_than_end_date(self):
         yr = timezone.now().year
         an_academic_year = AcademicYearFactory(year=yr)
-        wrong_end_date = an_academic_year.end_date
-        wrong_start_date = wrong_end_date.replace(year=yr + 1)
         an_academic_calendar = AcademicCalendarFactory.build(academic_year=an_academic_year,
-                                                             title="A calendar event",
-                                                             start_date=wrong_start_date,
-                                                             end_date=wrong_end_date)
-        self.assertRaises(StartDateHigherThanEndDateException, an_academic_calendar.save, functions=[])
-
-    def test_start_date_equal_to_end_date(self):
-        an_academic_year = AcademicYearFactory(year=timezone.now().year)
-        wrong_start_date = an_academic_year.end_date
-        an_academic_calendar = AcademicCalendarFactory.build(academic_year=an_academic_year,
-                                                             title="A calendar event",
-                                                             start_date=wrong_start_date,
-                                                             end_date=wrong_start_date)
+                                                       title="An event",
+                                                       start_date=datetime.date(yr, 3, 4),
+                                                       end_date=datetime.date(yr, 3, 3))
         self.assertRaises(StartDateHigherThanEndDateException, an_academic_calendar.save, functions=[])
 
     def test_find_by_id(self):
