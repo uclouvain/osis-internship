@@ -123,13 +123,13 @@ class DissertationViewTestCase(TestCase):
 
     def test_adviser_can_manage_dissertation(self):
         manager = AdviserManagerFactory()
-        manager2= AdviserManagerFactory()
+        manager2 = AdviserManagerFactory()
         a_person_teacher = PersonFactory.create(first_name='Pierre', last_name='Dupont')
         teacher = AdviserTeacherFactory(person=a_person_teacher)
         a_person_student = PersonFactory.create(last_name="Durant", user=None)
         student = StudentFactory.create(person=a_person_student)
         offer_year_start = OfferYearFactory(acronym="test_offer")
-        offer_year_start2 = OfferYearFactory(acronym="test_offer")
+        offer_year_start2 = OfferYearFactory(acronym="test_offer", academic_year=offer_year_start.academic_year)
         offer = offer_year_start.offer
         offer2 = offer_year_start2.offer
         FacultyAdviserFactory(adviser=manager, offer=offer)
@@ -137,17 +137,15 @@ class DissertationViewTestCase(TestCase):
         create_faculty_adviser(manager2, offer2)
         proposition_dissertation = PropositionDissertationFactory(author=teacher,
                                                                   creator=a_person_teacher,
-                                                                  title='Proposition1'
-                                                                  )
-        dissertation=DissertationFactory(author=student,
-                            title='Dissertation 2017',
-                            offer_year_start=offer_year_start,
-                            proposition_dissertation=proposition_dissertation,
-                            status='DIR_SUBMIT',
-                            active=True,
-                            dissertation_role__adviser=teacher,
-                            dissertation_role__status='PROMOTEUR'
-                            )
-        self.assertEqual(adviser_can_manage(dissertation, manager),True)
+                                                                  title='Proposition1')
+        dissertation = DissertationFactory(author=student,
+                                           title='Dissertation 2017',
+                                           offer_year_start=offer_year_start,
+                                           proposition_dissertation=proposition_dissertation,
+                                           status='DIR_SUBMIT',
+                                           active=True,
+                                           dissertation_role__adviser=teacher,
+                                           dissertation_role__status='PROMOTEUR')
+        self.assertEqual(adviser_can_manage(dissertation, manager), True)
         self.assertEqual(adviser_can_manage(dissertation, manager2), False)
         self.assertEqual(adviser_can_manage(dissertation, teacher), False)
