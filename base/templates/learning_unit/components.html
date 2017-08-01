@@ -105,11 +105,13 @@
                                 {% endif %}
                             </td>
                         </tr>
-                        {% with class_number=forloop.counter0 %}
-                            {% for learning_class_year in component.learning_component_year.classes %}
-                                <tr class="class_year collapse collapse_classes{{ class_number }}">
-                                    <td></td>
-                                    <td>{% trans 'class' %}</td>
+                        {% with component_number=forloop.counter0 classes_count=component.learning_component_year.classes|length %}
+                            {% for learning_class_year in component.learning_component_year.classes|dictsort:"acronym" %}
+                                <tr class="class_year collapse collapse_classes{{ component_number }}">
+                                    {% if forloop.counter == 1 %}
+                                        <td rowspan="{{ classes_count }}"></td>
+                                        <td rowspan="{{ classes_count }}">{% trans 'classes' %}</td>
+                                    {% endif %}
                                     <td>
                                         /{% if component.learning_component_year.type_letter_acronym %}{{ component.learning_component_year.type_letter_acronym }}{% endif %}
                                         {{ learning_class_year.acronym }}
