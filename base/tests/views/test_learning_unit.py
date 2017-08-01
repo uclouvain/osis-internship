@@ -481,7 +481,7 @@ class LearningUnitViewTestCase(TestCase):
         learning_class_year = LearningClassYearFactory(learning_component_year=learning_component_yr)
         LearningUnitComponentClassFactory(learning_unit_component=learning_unit_component,
                                           learning_class_year=learning_class_year)
-        self.assertEqual(learning_unit_view._learning_unit_usage_by_class(learning_class_year), _('complete'))
+        self.assertEqual(learning_unit_view._learning_unit_usage_by_class(learning_class_year), 'LBIOL')
 
     def test_component_save(self):
         learning_unit_yr = LearningUnitYearFactory(academic_year=self.current_academic_year,
