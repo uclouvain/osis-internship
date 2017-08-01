@@ -60,8 +60,6 @@ VOLUME_REMAINING_KEY = 'volume_remaining'
 
 VOLUME_FOR_UNKNOWN_QUADRIMESTER = -1
 
-ACRONYM_COMPLET_LEARNING_UNIT = _("complete")
-
 
 @login_required
 @permission_required('base.can_access_learningunit', raise_exception=True)
@@ -297,7 +295,6 @@ def get_same_container_year_components(learning_unit_year, with_classes=False):
     return components
 
 
-
 def _get_partims_related(learning_unit_year):
     learning_container_year = learning_unit_year.learning_container_year
     if learning_container_year:
@@ -443,10 +440,9 @@ def _learning_unit_usage(a_learning_component_year):
     learning_unit_component = mdl.learning_unit_component.find_by_learning_component_year(a_learning_component_year)
     ch = ""
     separator = ""
-    for index, l in enumerate(learning_unit_component):
-        if index == 1:
-            separator = ", "
+    for l in learning_unit_component:
         ch = "{}{}{}".format(ch, separator, l.learning_unit_year.acronym)
+        separator = ", "
     return ch
 
 
@@ -454,13 +450,9 @@ def _learning_unit_usage_by_class(a_learning_class_year):
     learning_unit_component_class = mdl.learning_unit_component_class.find_by_learning_class_year(a_learning_class_year)
     ch = ""
     separator = ""
-    for index, l in enumerate(learning_unit_component_class):
-        if index == 1:
-            separator = ", "
-        acronym = ACRONYM_COMPLET_LEARNING_UNIT
-        if l.learning_unit_component.learning_unit_year.subdivision:
-            acronym = l.learning_unit_component.learning_unit_year.subdivision
-        ch = "{}{}{}".format(ch, separator, acronym)
+    for l in learning_unit_component_class:
+        ch = "{}{}{}".format(ch, separator, l.learning_unit_component.learning_unit_year.acronym)
+        separator = ", "
     return ch
 
 

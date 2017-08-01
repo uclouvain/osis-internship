@@ -1515,6 +1515,9 @@ msgstr "Classes prévues"
 msgid "classes"
 msgstr "Classes"
 
+msgid "class"
+msgstr "Classe"
+
 msgid "learning_unit_code"
 msgstr "Code de l'UE"
 

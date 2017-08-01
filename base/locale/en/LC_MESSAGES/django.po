@@ -1495,6 +1495,9 @@ msgstr "Planned classrooms"
 msgid "classes"
 msgstr "Classes"
 
+msgid "class"
+msgstr "Class"
+
 msgid "learning_unit_code"
 msgstr "Learning unit code"
 
