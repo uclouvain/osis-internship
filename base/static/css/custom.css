@@ -73,11 +73,15 @@ tbody.used_component{
     background-color: #ECECEC;
 }
 
+tbody.used_component tr.class_year{
+    background-color: #ECECFC;
+}
+
 tbody.unused_component{
     background-color: #F3F3F3;
     color: #909090;
 }
 
-tr.class_year{
-
+tbody.unused_component tr.class_year{
+    background-color: #F3F3FC;
 }
