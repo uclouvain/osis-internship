@@ -118,8 +118,8 @@ TEMPLATES = [
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ.get("DATABASE_NAME", 'osis_backend_dev'),
-        'USER': os.environ.get("POSTGRES_USER", 'osis_usr'),
+        'NAME': os.environ.get("DATABASE_NAME", 'osis_local'),
+        'USER': os.environ.get("POSTGRES_USER", 'osis'),
         'PASSWORD': os.environ.get("POSTGRES_PASSWORD", 'osis'),
         'HOST': os.environ.get("POSTGRES_HOST", '127.0.0.1'),
         'PORT': os.environ.get("POSTGRES_PORT", '5432'),
@@ -205,7 +205,6 @@ if not TESTING or not SKIP_QUEUES_TESTS:
         'QUEUES_NAME': {
             'MIGRATIONS_TO_PRODUCE': 'osis_portal',
             'MIGRATIONS_TO_CONSUME': 'osis',
-            'PAPER_SHEET': 'paper_sheet',
             'SCORE_ENCODING_PDF_REQUEST': 'score_encoding_pdf_request',
             'SCORE_ENCODING_PDF_RESPONSE': 'score_encoding_pdf_response',
         }

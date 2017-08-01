@@ -32,7 +32,8 @@ class LearningUnitEnrollmentAdmin(SerializableModelAdmin):
     fieldsets = ((None, {'fields': ('offer_enrollment', 'learning_unit_year', 'date_enrollment')}),)
     list_filter = ('learning_unit_year__academic_year',)
     raw_id_fields = ('offer_enrollment', 'learning_unit_year')
-    search_fields = ['learning_unit_year__acronym', 'offer_enrollment__offer_year__acronym',
+    search_fields = ['learning_unit_year__acronym',
+                     'offer_enrollment__offer_year__acronym',
                      'offer_enrollment__student__registration_id',
                      'offer_enrollment__student__person__first_name',
                      'offer_enrollment__student__person__last_name']
@@ -60,3 +61,13 @@ class LearningUnitEnrollment(SerializableModel):
 def find_by_learningunit_enrollment(learning_unit_year):
     return LearningUnitEnrollment.objects.filter(learning_unit_year=learning_unit_year).order_by('offer_enrollment__student__person__last_name',
                                                                                                  'offer_enrollment__student__person__first_name')
+
+
+def find_by_student(a_student):
+    return LearningUnitEnrollment.objects.filter(offer_enrollment__student=a_student)\
+        .order_by('-learning_unit_year__academic_year__year',
+                  'learning_unit_year__acronym')
+
+
+def find_by_offer_enrollment(an_offer_enrollment):
+    return LearningUnitEnrollment.objects.filter(offer_enrollment=an_offer_enrollment)

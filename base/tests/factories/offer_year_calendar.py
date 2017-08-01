@@ -27,17 +27,10 @@ import factory
 import factory.fuzzy
 import datetime
 import string
-from django.conf import settings
-from django.utils import timezone
 from base.tests.factories.academic_calendar import AcademicCalendarFactory
 from base.tests.factories.offer_year import OfferYearFactory
+from osis_common.utils.datetime import get_tzinfo
 
-
-def _get_tzinfo():
-    if settings.USE_TZ:
-        return timezone.get_current_timezone()
-    else:
-        return None
 
 def generate_start_date(offer_year_calendar):
     if offer_year_calendar.academic_calendar:
@@ -56,8 +49,8 @@ class OfferYearCalendarFactory(factory.django.DjangoModelFactory):
         model = "base.OfferYearCalendar"
 
     external_id = factory.fuzzy.FuzzyText(length=10, chars=string.digits)
-    changed = factory.fuzzy.FuzzyDateTime(datetime.datetime(2016, 1, 1, tzinfo=_get_tzinfo()),
-                                          datetime.datetime(2017, 3, 1, tzinfo=_get_tzinfo()))
+    changed = factory.fuzzy.FuzzyDateTime(datetime.datetime(2016, 1, 1, tzinfo=get_tzinfo()),
+                                          datetime.datetime(2017, 3, 1, tzinfo=get_tzinfo()))
     academic_calendar = factory.SubFactory(AcademicCalendarFactory)
     offer_year = factory.SubFactory(OfferYearFactory)
     start_date = factory.LazyAttribute(generate_start_date)
