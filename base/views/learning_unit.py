@@ -117,7 +117,7 @@ def learning_unit_formations(request, learning_unit_year_id):
 @permission_required('base.can_access_learningunit', raise_exception=True)
 def learning_unit_components(request, learning_unit_year_id):
     context = _get_common_context_learning_unit_year(learning_unit_year_id)
-    context['components'] = get_components(context['learning_unit_year'], True)
+    context['components'] = get_same_container_year_components(context['learning_unit_year'], True)
     context['tab_active'] = 'components'
     context['experimental_phase'] = True
     return layout.render(request, "learning_unit/components.html", context)
@@ -270,7 +270,7 @@ def _get_common_context_learning_unit_year(learning_unit_year_id):
     return context
 
 
-def get_components(learning_unit_year, with_classes=False):
+def get_same_container_year_components(learning_unit_year, with_classes=False):
     learning_container_year = learning_unit_year.learning_container_year
     components = []
     learning_components_year = mdl.learning_component_year.find_by_learning_container_year(learning_container_year, with_classes)

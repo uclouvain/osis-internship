@@ -203,7 +203,7 @@ class LearningUnitViewTestCase(TestCase):
 
     def test_get_components_no_learning_container_yr(self):
         learning_unit_year = LearningUnitYearFactory()
-        self.assertEqual(len(learning_unit_view.get_components(learning_unit_year, False)), 0)
+        self.assertEqual(len(learning_unit_view.get_same_container_year_components(learning_unit_year, False)), 0)
 
     def test_get_components_with_classes(self):
         l_container = LearningContainerFactory()
@@ -216,7 +216,7 @@ class LearningUnitViewTestCase(TestCase):
         LearningClassYearFactory(learning_component_year=l_component_year)
         learning_unit_year = LearningUnitYearFactory(learning_container_year=l_container_year)
 
-        components = learning_unit_view.get_components(learning_unit_year, True)
+        components = learning_unit_view.get_same_container_year_components(learning_unit_year, True)
         self.assertEqual(len(components), 1)
         self.assertEqual(len(components[0]['learning_component_year'].classes), 2)
 
