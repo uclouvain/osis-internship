@@ -30,6 +30,7 @@ from base import models as mdl
 from osis_common.models.serializable_model import SerializableModel
 from django.contrib.auth.models import Permission
 from osis_common.models.signals.authentication import user_created_signal, user_updated_signal
+from django.conf import settings
 
 
 person_created = Signal(providing_args=['person'])
@@ -76,7 +77,8 @@ def _create_update_person(user, person, user_infos):
                                    global_id=user_infos.get('USER_FGS'),
                                    first_name=user_infos.get('USER_FIRST_NAME'),
                                    last_name=user_infos.get('USER_LAST_NAME'),
-                                   email=user_infos.get('USER_EMAIL'))
+                                   email=user_infos.get('USER_EMAIL'),
+                                   external_id=settings.PERSON_EXTERNAL_ID_PATTERN.format(global_id=user_infos.get('USER_FGS')))
         person.save()
         person_created.send(sender=None, person=person)
     else:
