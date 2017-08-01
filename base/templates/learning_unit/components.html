@@ -97,7 +97,7 @@
                             <td>{{ component.learning_unit_usage }}</td>
                             <td>
                                 {% if perms.base.change_learningcomponentyear %}
-                                    <a class="component-edit-btn" href="#"
+                                    <a class="component-edit-btn pull-right" href="#"
                                        data-form="{% url 'learning_unit_component_edit' learning_unit_year_id=learning_unit_year.id %}?learning_component_year_id={{component.learning_component_year.id}}"
                                        title="{% trans 'edit' %}">
                                         <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
@@ -122,7 +122,7 @@
                                     <td>{{ learning_class_year.used_by_learning_units_year }}</td>
                                     <td>
                                         {% if perms.base.change_learningclassyear %}
-                                            <a class="class-edit-btn" href="#"
+                                            <a class="class-edit-btn pull-right" href="#"
                                                data-form="{% url 'learning_class_year_edit' learning_unit_year_id=learning_unit_year.id %}?learning_class_year_id={{learning_class_year.id}}&learning_component_year_id={{component.learning_component_year.id}}"
                                                title="{% trans 'edit' %}">
                                                 <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
