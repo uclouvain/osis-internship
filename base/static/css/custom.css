@@ -85,3 +85,11 @@ tbody.unused_component{
 tbody.unused_component tr.class_year{
     background-color: #F3FCFC;
 }
+
+tr.class_year{
+    font-size: 80%;
+}
+
+tr.class_year_head{
+    font-weight: bold;
+}

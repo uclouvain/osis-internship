@@ -57,7 +57,7 @@
                     {% for component in components %}
                         {% ifchanged component.learning_component_year.type %}
                             {% if forloop.counter > 1 %}
-                                <tr style="height: 1px;font-size: 5px;"><td colspan="5">&nbsp;</td></tr>
+                                <tr style="height: 1px;font-size: 1px;"><td colspan="11">&nbsp;</td></tr>
                             {% endif %}
                         {% endifchanged %}
                         {% if component.used_by_learning_unit %}
@@ -105,13 +105,17 @@
                                 {% endif %}
                             </td>
                         </tr>
-                        {% with component_number=forloop.counter0 classes_count=component.learning_component_year.classes|length %}
+                        {% with component_number=forloop.counter0 classes_count=component.learning_component_year.classes|length|add:"1" %}
+                                <tr class="class_year class_year_head collapse collapse_classes{{ component_number }}">
+                                    <td rowspan="{{ classes_count }}"></td>
+                                    <td rowspan="{{ classes_count }}">{% trans 'classes' %}</td>
+                                    <td>{% trans 'code' %}</td>
+                                    <td colspan="6">{% trans 'description' %}</td>
+                                    <td>{% trans 'lu_usage' %}</td>
+                                    <td></td>
+                                </tr>
                             {% for learning_class_year in component.learning_component_year.classes|dictsort:"acronym" %}
                                 <tr class="class_year collapse collapse_classes{{ component_number }}">
-                                    {% if forloop.counter == 1 %}
-                                        <td rowspan="{{ classes_count }}"></td>
-                                        <td rowspan="{{ classes_count }}">{% trans 'classes' %}</td>
-                                    {% endif %}
                                     <td>
                                         /{% if component.learning_component_year.type_letter_acronym %}{{ component.learning_component_year.type_letter_acronym }}{% endif %}
                                         {{ learning_class_year.acronym }}
