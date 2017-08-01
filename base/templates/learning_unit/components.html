@@ -92,8 +92,10 @@
                             <td>{{ component.volumes.volume_remaining | default_if_none:'0' }}</td>
                             <td>{{ component.learning_component_year.planned_classes| default_if_none:'0' }}</td>
                             <td>
-                                <span style="background-color:none"
-                                      class="fa fa-circle {{ component.learning_component_year.planned_classes |get_css_class:component.learning_component_year.real_classes }}"></span> {{ component.learning_component_year.real_classes| default_if_none:'0' }}</td>
+                                <span class="badge fixed_width {{ component.learning_component_year.planned_classes |get_css_class:component.learning_component_year.real_classes }}">
+                                    {{ component.learning_component_year.real_classes| default_if_none:'0' }}
+                                </span>
+                            </td>
                             <td>{{ component.learning_unit_usage }}</td>
                             <td>
                                 {% if perms.base.change_learningcomponentyear %}

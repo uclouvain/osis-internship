@@ -57,18 +57,6 @@ div[class^="django-ckeditor-widget"] > div {
     width:100%!important;
 }
 
-.success-color {
-    color: #5cb85c;
-}
-
-.warning-color {
-    color: #f0ad4e;
-}
-
-.danger-color {
-    color: #d9534f;
-}
-
 tbody.used_component{
     background-color: #ECECEC;
 }
@@ -92,4 +80,20 @@ tr.class_year{
 
 tr.class_year_head{
     font-weight: bold;
+}
+
+.badge.fixed_width{
+    width: 30px;
+}
+
+.badge.success-color {
+    background-color: #5cb85c;
+}
+
+.badge.warning-color {
+    background-color: #f0ad4e;
+}
+
+.badge.danger-color {
+    background-color: #d9534f;
 }
