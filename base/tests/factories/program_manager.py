@@ -27,26 +27,19 @@ import factory
 import factory.fuzzy
 import string
 import datetime
-from django.conf import settings
-from django.utils import timezone
 
 from base.tests.factories.person import PersonFactory
 from base.tests.factories.offer_year import OfferYearFactory
+from osis_common.utils.datetime import get_tzinfo
 
-def _get_tzinfo():
-    if settings.USE_TZ:
-        return timezone.get_current_timezone()
-    else:
-        return None
 
 class ProgramManagerFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = "base.ProgramManager"
         django_get_or_create = ('person', 'offer_year')
 
-
     external_id = factory.fuzzy.FuzzyText(length=10, chars=string.digits)
-    changed = factory.fuzzy.FuzzyDateTime(datetime.datetime(2016, 1, 1, tzinfo=_get_tzinfo()),
-                                          datetime.datetime(2017, 3, 1, tzinfo=_get_tzinfo()))
+    changed = factory.fuzzy.FuzzyDateTime(datetime.datetime(2016, 1, 1, tzinfo=get_tzinfo()),
+                                          datetime.datetime(2017, 3, 1, tzinfo=get_tzinfo()))
     person = factory.SubFactory(PersonFactory)
     offer_year = factory.SubFactory(OfferYearFactory)

@@ -1495,6 +1495,9 @@ msgstr "Planned classrooms"
 msgid "classes"
 msgstr "Classes"
 
+msgid "class"
+msgstr "Class"
+
 msgid "learning_unit_code"
 msgstr "Learning unit code"
 
@@ -1505,15 +1508,12 @@ msgid "periodicity"
 msgstr "Periodicity"
 
 msgid "nominal_credits"
-msgstr "Nominal credits"
+msgstr "Credits"
 
-msgid "ACTIVE"
+msgid "active"
 msgstr "Active"
 
-msgid "PASSIVE"
-msgstr "Passive"
-
-msgid "INACTIVE"
+msgid "inactive"
 msgstr "Inactive"
 
 msgid "MASTER_DISSERTATION"
@@ -1687,9 +1687,6 @@ msgstr "Real classes"
 msgid "lu_usage"
 msgstr "Learning units usage"
 
-msgid "used_by_partim"
-msgstr "Used by partim "
-
 msgid "academic_years"
 msgstr "Academic years"
 
@@ -1710,12 +1707,6 @@ msgstr "Component"
 
 msgid "used_by"
 msgstr "Used by learning unit"
-
-msgid "link_creation_impossible"
-msgstr "The above learning unit doesn't used the component"
-
-msgid "classe"
-msgstr "Classe"
 
 msgid "offers_enrollments"
 msgstr "Offers enrollments"
@@ -1743,3 +1734,24 @@ msgstr "Students"
 
 msgid "student_title"
 msgstr "Student"
+
+msgid "link_creation_impossible"
+msgstr "The above learning unit doesn't used the component"
+
+msgid "classe"
+msgstr "Classe"
+
+msgid "localization"
+msgstr "Localization"
+
+msgid "internship_subtype"
+msgstr "Internship subtype"
+
+msgid "part1"
+msgstr "part 1"
+
+msgid "part2"
+msgstr "part 2"
+
+msgid "title_official"
+msgstr "Official title"

@@ -178,9 +178,7 @@ LOGIN_REDIRECT_URL = os.environ.get('LOGIN_REDIRECT_URL', reverse_lazy('home'))
 LOGOUT_URL = os.environ.get('LOGOUT_URL', reverse_lazy('logout'))
 OVERRIDED_LOGIN_URL = os.environ.get('OVERRIDED_LOGIN_URL', None)
 OVERRIDED_LOGOUT_URL = os.environ.get('OVERRIDED_LOGOUT_URL', None)
-USER_SIGNALS_MANAGER = os.environ.get('USER_SIGNALS_MANAGER', None)
-USER_UPDATED_SIGNAL = os.environ.get('USER_UPDATED_SIGNAL', None)
-USER_CREATED_SIGNAL = os.environ.get('USER_CREATED_SIGNAL', None)
+PERSON_EXTERNAL_ID_PATTERN = os.environ.get('PERSON_EXTERNAL_ID_PATTERN', 'osis.person_{global_id}')
 
 # Field upload settings
 DATA_UPLOAD_MAX_NUMBER_FIELDS = int(os.environ.get('DATA_UPLOAD_MAX_NUMBER_FIELDS', 5000))

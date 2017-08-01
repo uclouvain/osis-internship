@@ -39,7 +39,6 @@ from attribution import models as mdl_attr
 from base.models import entity_container_year
 from base.models.enums import entity_container_year_link_type
 from base.models.enums import learning_container_year_types
-from base.models.enums import learning_unit_year_activity_status
 from cms import models as mdl_cms
 from cms.enums import entity_name
 from base.forms.learning_units import LearningUnitYearForm
@@ -61,8 +60,6 @@ VOLUME_REMAINING_KEY = 'volume_remaining'
 
 VOLUME_FOR_UNKNOWN_QUADRIMESTER = -1
 
-ACRONYM_COMPLET_LEARNING_UNIT = _("complete")
-
 
 @login_required
 @permission_required('base.can_access_learningunit', raise_exception=True)
@@ -77,14 +74,12 @@ def learning_units(request):
         _check_if_display_message(request, learning_units)
 
     context = _get_common_context_list_learning_unit_years()
-    activity_statuses = tuple(activity for activity in learning_unit_year_activity_status.LEARNING_UNIT_YEAR_ACTIVITY_STATUS
-                              if activity[0] != learning_unit_year_activity_status.PASSIVE)
+
     context.update({
         'form': form,
         'academic_years': mdl.academic_year.find_academic_years(),
         'container_types': learning_container_year_types.LEARNING_CONTAINER_YEAR_TYPES,
         'types': learning_unit_year_subtypes.LEARNING_UNIT_YEAR_SUBTYPES,
-        'activity_statuses': activity_statuses,
         'learning_units': found_learning_units,
         'current_academic_year': mdl.academic_year.current_academic_year(),
         'experimental_phase': True
@@ -120,7 +115,7 @@ def learning_unit_formations(request, learning_unit_year_id):
 @permission_required('base.can_access_learningunit', raise_exception=True)
 def learning_unit_components(request, learning_unit_year_id):
     context = _get_common_context_learning_unit_year(learning_unit_year_id)
-    context['components'] = get_components(context['learning_unit_year'].learning_container_year, True)
+    context['components'] = get_same_container_year_components(context['learning_unit_year'], True)
     context['tab_active'] = 'components'
     context['experimental_phase'] = True
     return layout.render(request, "learning_unit/components.html", context)
@@ -273,7 +268,8 @@ def _get_common_context_learning_unit_year(learning_unit_year_id):
     return context
 
 
-def get_components(learning_container_year, with_classes=False):
+def get_same_container_year_components(learning_unit_year, with_classes=False):
+    learning_container_year = learning_unit_year.learning_container_year
     components = []
     learning_components_year = mdl.learning_component_year.find_by_learning_container_year(learning_container_year, with_classes)
 
@@ -288,13 +284,15 @@ def get_components(learning_container_year, with_classes=False):
             entity_container_year_link_type.REQUIREMENT_ENTITY)
         entity_component_yr = mdl.entity_component_year.find_by_entity_container_years(entity_container_yrs,
                                                                                        learning_component_year).first()
+        used_by_learning_unit = mdl.learning_unit_component.search(learning_component_year, learning_unit_year)
 
         components.append({'learning_component_year': learning_component_year,
                            'entity_component_yr': entity_component_yr,
                            'volumes': volumes(entity_component_yr),
-                           'learning_unit_usage': _learning_unit_usage(learning_component_year)})
+                           'learning_unit_usage': _learning_unit_usage(learning_component_year),
+                           'used_by_learning_unit': used_by_learning_unit
+                           })
     return components
-
 
 
 def _get_partims_related(learning_unit_year):
@@ -442,10 +440,9 @@ def _learning_unit_usage(a_learning_component_year):
     learning_unit_component = mdl.learning_unit_component.find_by_learning_component_year(a_learning_component_year)
     ch = ""
     separator = ""
-    for index, l in enumerate(learning_unit_component):
-        if index == 1:
-            separator = ", "
+    for l in learning_unit_component:
         ch = "{}{}{}".format(ch, separator, l.learning_unit_year.acronym)
+        separator = ", "
     return ch
 
 
@@ -453,13 +450,9 @@ def _learning_unit_usage_by_class(a_learning_class_year):
     learning_unit_component_class = mdl.learning_unit_component_class.find_by_learning_class_year(a_learning_class_year)
     ch = ""
     separator = ""
-    for index, l in enumerate(learning_unit_component_class):
-        if index == 1:
-            separator = ", "
-        acronym = ACRONYM_COMPLET_LEARNING_UNIT
-        if l.learning_unit_component.learning_unit_year.subdivision:
-            acronym = l.learning_unit_component.learning_unit_year.subdivision
-        ch = "{}{}{}".format(ch, separator, acronym)
+    for l in learning_unit_component_class:
+        ch = "{}{}{}".format(ch, separator, l.learning_unit_component.learning_unit_year.acronym)
+        separator = ", "
     return ch
 
 
