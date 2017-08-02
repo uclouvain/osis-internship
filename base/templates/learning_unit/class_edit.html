@@ -36,6 +36,8 @@
             </div>
             <div class="modal-body">
                 {% csrf_token %}
+                <label>{% trans 'description'%}</label><br>
+                {{ form.description }}
                 <br>
                 {{ form.used_by }} <label>{% trans 'lu_usage'%} {{ learning_unit_year.acronym }}</label>
                 {% if form.message %}
