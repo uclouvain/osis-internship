@@ -24,17 +24,5 @@
 #
 ##############################################################################
 
-def group_periods_by_consecutives(periods, length=1):
-    if length==1:
-        for period in periods:
-            yield [period]
-    else:
-        for i in xrange(len(periods) - (length - 1)):
-            if all(map(lambda period: int(periods[i].name[1:]) + 1 == int(periods[i + 1].name[1:]), periods[i: i + length])):
-                yield periods[i: i + length]
-
-def get_periods_from_affectations(affectations):
-    return list(map(lambda affectation: affectation.period, affectations))
-
-def map_period_ids(periods):
-    return list(map(lambda period: period.id, periods))
+def get_student_affectations(student, affectations):
+    return list(filter(lambda affectation: affectation.student_id == student.id, affectations))
