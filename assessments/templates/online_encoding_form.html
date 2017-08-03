@@ -150,7 +150,7 @@
                         </td>
                         <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.offer_year.acronym }}</td>
                         <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.registration_id }}</td>
-                        <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.last_name|default_if_none:""|title }}</td>
+                        <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.last_name|default_if_none:"" }}</td>
                         <td>{{ enrollment.learning_unit_enrollment.offer_enrollment.student.person.first_name|default_if_none:"" }}</td>
                         <td>
 			                <input type="text" min="0" max="20" name="score_{{ enrollment.id }}"
