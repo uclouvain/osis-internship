@@ -993,6 +993,9 @@ msgstr "La note encodée est incorrecte (elle doit être comprise entre 0 et 20)
 msgid "scores_injection"
 msgstr "Injection des notes"
 
+msgid "scores_responsible"
+msgstr "Responsable de notes"
+
 msgid "scores_responsibles"
 msgstr "Responsables de notes"
 
