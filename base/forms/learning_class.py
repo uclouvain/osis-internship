@@ -35,7 +35,7 @@ class LearningClassEditForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         self.learning_unit_year = kwargs.pop('learning_unit_year', None)
-        self.learning_component_year = kwargs.get('learning_component_year', None)
+        self.learning_component_year = kwargs.pop('learning_component_year', None)
         self.learning_class_year = kwargs.pop('learning_class_year', None)
         self.description = kwargs.get('description', None)
         self.used_by = kwargs.pop('used_by', None)
