@@ -93,7 +93,7 @@ def find_mandates_for_academic_year(academic_year):
 
 
 def find_mandate_by_assistant_for_academic_year(assistant, this_academic_year):
-    return AssistantMandate.objects.filter(assistant=assistant, academic_year=this_academic_year)  
+    return AssistantMandate.objects.get(assistant=assistant, academic_year=this_academic_year)
 
 
 def find_mandate_by_id(mandate_id):

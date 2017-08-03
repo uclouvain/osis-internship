@@ -31,12 +31,13 @@ from django.utils.translation import ugettext_lazy as _
 class LearningClassEditForm(forms.Form):
 
     used_by = forms.BooleanField(required=False)
+    description = forms.CharField(required=False)
 
     def __init__(self, *args, **kwargs):
         self.learning_unit_year = kwargs.pop('learning_unit_year', None)
         self.learning_component_year = kwargs.pop('learning_component_year', None)
         self.learning_class_year = kwargs.pop('learning_class_year', None)
-
+        self.description = kwargs.get('description', None)
         self.used_by = kwargs.pop('used_by', None)
         self.message = kwargs.pop('message', None)
         self.title = '{} : {} {}'.format(_('classe'),
@@ -46,6 +47,8 @@ class LearningClassEditForm(forms.Form):
         super(LearningClassEditForm, self).__init__(*args, **kwargs)
 
     def load_initial(self):
+        self.fields['description'].initial = self.learning_class_year.description
+        self.fields['description'].widget.attrs['class'] = "form-control"
         self.fields['used_by'].initial = self.used_by
         self.fields['used_by'].widget.attrs['disabled'] = False
         if mdl.learning_unit_component.search(self.learning_component_year,
@@ -56,6 +59,7 @@ class LearningClassEditForm(forms.Form):
     def save(self):
         cleaned_data = self.cleaned_data
         self.link_management(cleaned_data.get('used_by'))
+        self.update_description(cleaned_data.get('description'))
 
     def link_management(self, used_by):
         if used_by:
@@ -84,3 +88,8 @@ class LearningClassEditForm(forms.Form):
             if links.exists():
                 for l in links:
                     l.delete()
+
+    def update_description(self, description):
+        a_learning_class_year = mdl.learning_class_year.find_by_id(self.learning_class_year.id)
+        a_learning_class_year.description = description
+        a_learning_class_year.save()

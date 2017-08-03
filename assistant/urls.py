@@ -42,23 +42,23 @@ urlpatterns = [
     url(r'^assistant/', include([
         url(r'^$', assistant.AssistantMandatesListView.as_view(), name='assistant_mandates'),
         url(r'^document_file/', include([
-            url(r'^delete/(?P<mandate_id>\d+)/(?P<document_file_id>\d+)/(?P<url>[\w\-]+)/$',
+            url(r'^delete/(?P<document_file_id>\d+)/(?P<url>[\w\-]+)/$',
                 upload_assistant_file.delete, name='assistant_file_delete'),
             url(r'^download/(?P<document_file_id>\d+)/$', upload_assistant_file.download,
                 name='assistant_file_download'),
             url(r'^upload/$', upload_assistant_file.save_uploaded_file, name='assistant_file_upload'),
         ])),
         url(r'^form/', include([
-            url(r'^part1/(?P<mandate_id>\d+)/', include([
+            url(r'^part1/', include([
                 url(r'^edit/$', assistant_form.form_part1_edit, name='form_part1_edit'),
                 url(r'^save/$', assistant_form.form_part1_save, name='form_part1_save'),
             ])),
             url(r'^part2/', include([
                 url(r'^get_learning_units_year/', assistant_form.get_learning_units_year,
                     name='get_learning_units_year'),
-                url(r'^(?P<mandate_id>\d+)/$', assistant.AssistantLearningUnitsListView.as_view(),
+                url(r'^$', assistant.AssistantLearningUnitsListView.as_view(),
                     name='mandate_learning_units'),
-                url(r'^(?P<mandate_id>\d+)/add/$', assistant_form.tutoring_learning_unit_add,
+                url(r'^add/$', assistant_form.tutoring_learning_unit_add,
                     name='tutoring_learning_unit_add'),
                 url(r'^(?P<tutoring_learning_unit_id>\d+)/delete/$', assistant_form.tutoring_learning_unit_delete,
                     name='tutoring_learning_unit_delete'),
@@ -67,24 +67,24 @@ urlpatterns = [
                 url(r'^save/$', assistant_form.tutoring_learning_unit_save,
                     name='tutoring_learning_unit_save'),
             ])),
-            url(r'^part3/(?P<mandate_id>\d+)/', include([
+            url(r'^part3/', include([
                 url(r'^edit/$', assistant_form.form_part3_edit, name='form_part3_edit'),
                 url(r'^save/$', assistant_form.form_part3_save, name='form_part3_save'),
             ])),
-            url(r'^part4/(?P<mandate_id>\d+)/', include([
+            url(r'^part4/', include([
                 url(r'^edit/$', assistant_form.form_part4_edit, name='form_part4_edit'),
                 url(r'^save/$', assistant_form.form_part4_save, name='form_part4_save'),
             ])),
-            url(r'^part5/(?P<mandate_id>\d+)/', include([
+            url(r'^part5/', include([
                 url(r'^edit/$', assistant_form.form_part5_edit, name='form_part5_edit'),
                 url(r'^save/$', assistant_form.form_part5_save, name='form_part5_save'),
             ])),
-            url(r'^part6/(?P<mandate_id>\d+)/', include([
+            url(r'^part6/', include([
                 url(r'^edit/$', assistant_form.form_part6_edit, name='form_part6_edit'),
                 url(r'^save/$', assistant_form.form_part6_save, name='form_part6_save'),
             ])),
         ])),
-        url(r'^mandate/(?P<mandate_id>\d+)/', include([
+        url(r'^mandate/', include([
             url(r'^change_state/$', assistant.mandate_change_state, name='mandate_change_state'),
             url(r'^reviews/$', assistant_mandate_reviews.reviews_view,
                 name='assistant_mandate_reviews'),
