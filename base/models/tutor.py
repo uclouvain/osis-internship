@@ -24,7 +24,7 @@
 #
 ##############################################################################
 from django.db import models
-from django.contrib import admin, messages
+from django.contrib import messages
 from django.contrib.auth.models import Group
 from attribution.models import attribution
 from base.models import person
