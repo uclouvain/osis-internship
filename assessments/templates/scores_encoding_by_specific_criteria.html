@@ -113,7 +113,8 @@
                         <td style="text-align:center;">
                             {% if enrollment.deadline_reached %}
                                 <span class="glyphicon glyphicon-lock" aria-hidden="true" style="color: #8B008B;" title="{% trans 'deadline_reached' %}"></span>
-                            {% elif enrollment.score_final != None or enrollment.justification_final %}
+                            {% endif %}
+                            {% if enrollment.score_final != None or enrollment.justification_final %}
                                 <span class="glyphicon glyphicon-send" aria-hidden="true" style="color: green;" title="{% trans 'score_submitted' %}"></span>
                             {% endif %}
                         </td>
