@@ -176,7 +176,10 @@ def scores_encoding(request):
         context.update({'tutor': tutor,
                         'offer_year_list': all_offers,
                         'offer_year_id': offer_year_id})
-    filtered_list = [a for a in score_encoding_progress_list if a.offer_year_id == offer_year_id]
+    if score_encoding_progress_list:
+        filtered_list = [score_encoding for score_encoding in score_encoding_progress_list if score_encoding.offer_year_id == offer_year_id]
+    else:
+        filtered_list = []
     context.update({
         'notes_list': score_encoding_progress.group_by_learning_unit_year(score_encoding_progress_list)
         if not offer_year_id else filtered_list
