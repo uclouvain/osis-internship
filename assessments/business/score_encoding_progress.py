@@ -51,10 +51,12 @@ def find_related_tutors(score_encoding_progress_list):
 
 def _order_by_last_name_and_first_name(tutor):
     # Somebody person must be first on list
-    SOMEBODY_GID='99999998'
+    SOMEBODY_GID = '99999998'
     if tutor.person.global_id == SOMEBODY_GID:
-        return ('_', '_')
-    return (tutor.person.last_name.lower(), tutor.person.first_name.lower())
+        return '_', '_'
+    last_name = tutor.person.last_name.lower() if tutor.person.last_name else ""
+    first_name = tutor.person.first_name.lower() if tutor.person.first_name else ""
+    return last_name, first_name
 
 
 def group_by_learning_unit_year(score_encoding_progress_list):
