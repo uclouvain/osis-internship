@@ -51,9 +51,6 @@ class LearningClassEditForm(forms.Form):
         self.fields['description'].widget.attrs['class'] = "form-control"
         self.fields['used_by'].initial = self.used_by
         self.fields['used_by'].widget.attrs['disabled'] = False
-        if mdl.learning_unit_component.search(self.learning_component_year,
-                                              self.learning_unit_year).first() is None:
-            self.fields['used_by'].widget.attrs['disabled'] = True
 
     def save(self):
         cleaned_data = self.cleaned_data
