@@ -127,7 +127,7 @@
                                     </td>
                                     <td>{{ learning_class_year.used_by_learning_units_year }}</td>
                                     <td>
-                                        {% if perms.base.change_learningclassyear %}
+                                        {% if perms.base.change_learningclassyear and component.used_by_learning_unit %}
                                             <a class="class-edit-btn pull-right" href="#"
                                                data-form="{% url 'learning_class_year_edit' learning_unit_year_id=learning_unit_year.id %}?learning_class_year_id={{learning_class_year.id}}&learning_component_year_id={{component.learning_component_year.id}}"
                                                title="{% trans 'edit' %}">
