@@ -48,7 +48,6 @@
                     <tr>
                         <th>{% trans 'name' %}</th>
                         <th>{% trans 'acronym' %}</th>
-                        <th>{% trans 'order_postion' %}</th>
                         <th>{% trans 'mandatory' %}</th>
                         <th> <th>
                     </tr>
@@ -61,9 +60,6 @@
                             </td>
                             <td>
                                 {{speciality.acronym}}
-                            </td>
-                            <td>
-                                {{speciality.order_position}}
                             </td>
                             <td>
                                 {%if speciality.mandatory%}
