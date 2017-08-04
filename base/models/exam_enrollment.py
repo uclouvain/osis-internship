@@ -364,7 +364,7 @@ def find_for_score_encodings(session_exam_number,
                                              enrollment_state=enrollment_states.ENROLLED)
     if learning_unit_year_id:
         queryset = queryset.filter(learning_unit_enrollment__learning_unit_year_id=learning_unit_year_id)
-    elif learning_unit_year_ids:
+    elif learning_unit_year_ids is not None:
         queryset = queryset.filter(learning_unit_enrollment__learning_unit_year_id__in=learning_unit_year_ids)
 
     if tutor:
