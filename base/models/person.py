@@ -36,9 +36,9 @@ from django.db.models.functions import Concat, Lower
 
 class PersonAdmin(SerializableModelAdmin):
     list_display = ('get_first_name', 'middle_name', 'last_name', 'username', 'email', 'gender', 'global_id',
-                    'national_id', 'changed', 'source', 'employee')
+                    'changed', 'source', 'employee')
     search_fields = ['first_name', 'middle_name', 'last_name', 'user__username', 'email', 'global_id']
-    fieldsets = ((None, {'fields': ('user', 'global_id', 'national_id', 'gender', 'first_name',
+    fieldsets = ((None, {'fields': ('user', 'global_id', 'gender', 'first_name',
                                     'middle_name', 'last_name', 'birth_date', 'email', 'phone',
                                     'phone_mobile', 'language', 'employee')}),)
     raw_id_fields = ('user',)
@@ -56,7 +56,6 @@ class Person(SerializableModel):
     user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
     global_id = models.CharField(max_length=10, blank=True, null=True, db_index=True)
     gender = models.CharField(max_length=1, blank=True, null=True, choices=GENDER_CHOICES, default='U')
-    national_id = models.CharField(max_length=25, blank=True, null=True)
     first_name = models.CharField(max_length=50, blank=True, null=True, db_index=True)
     middle_name = models.CharField(max_length=50, blank=True, null=True)
     last_name = models.CharField(max_length=50, blank=True, null=True, db_index=True)

@@ -464,6 +464,9 @@ msgstr "Get Excel File"
 msgid "global_identifiant"
 msgstr "Global identifiant"
 
+msgid "fgs"
+msgstr "FGS"
+
 msgid "go"
 msgstr "Go"
 
