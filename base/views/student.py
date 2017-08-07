@@ -23,19 +23,19 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.contrib.auth.decorators import login_required, permission_required, user_passes_test
+from django.contrib.auth.decorators import login_required, permission_required
 
 from base import models as mdl
 from . import layout
 
 @login_required
-@user_passes_test(mdl.program_manager.is_program_manager)
+@permission_required('base.can_access_student', raise_exception=True)
 def students(request):
     return layout.render(request, "student/students.html", {'students': None})
 
 
 @login_required
-@user_passes_test(mdl.program_manager.is_program_manager)
+@permission_required('base.can_access_student', raise_exception=True)
 def student_search(request):
     students_list = name = None
     registration_id = request.GET.get('registration_id')
@@ -52,7 +52,7 @@ def student_search(request):
 
 
 @login_required
-@user_passes_test(mdl.program_manager.is_program_manager)
+@permission_required('base.can_access_student', raise_exception=True)
 def student_read(request, registration_id):    
     student = mdl.student.find_by_id(registration_id)
     if student:
