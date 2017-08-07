@@ -648,7 +648,7 @@ def get_student_mandatory_choices(cohort, priority):
     # Sort he dict of student (this optimize the final result)
     global specialities_dict
 
-    all_specialities = mdl_internship.internship_speciality.search_order_by_position(cohort=cohort, mandatory=True)
+    all_specialities = mdl_internship.internship_speciality.search(cohort=cohort, mandatory=True)
     orders = []
 
     for speciality in all_specialities:
