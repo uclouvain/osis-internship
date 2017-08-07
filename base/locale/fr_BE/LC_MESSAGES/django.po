@@ -1515,6 +1515,10 @@ msgstr "Conform. horaires"
 msgid "planned_classrooms"
 msgstr "Classes prévues"
 
+msgid "real_on_planned_classrooms"
+msgstr "Classes effectives/prévues"
+
+
 msgid "classes"
 msgstr "Classes"
 

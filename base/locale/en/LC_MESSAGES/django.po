@@ -1492,6 +1492,9 @@ msgstr "Sched. conform. "
 msgid "planned_classrooms"
 msgstr "Planned classrooms"
 
+msgid "real_on_planned_classrooms"
+msgstr "Real/Planned classrooms"
+
 msgid "classes"
 msgstr "Classes"
 
