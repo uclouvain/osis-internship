@@ -525,11 +525,11 @@ def learning_class_year_edit(request, learning_unit_year_id):
              mdl.learning_component_year.find_by_id(request.GET.get('learning_component_year_id'))})
 
     if request.method == 'POST':
-
         form = LearningClassEditForm(request.POST,
                                      ** {'learning_unit_year': context['learning_unit_year'],
                                          'learning_class_year': context['learning_class_year'],
-                                         'learning_component_year': context['learning_component_year']})
+                                         'learning_component_year': context['learning_component_year']}
+                                     )
         if form.is_valid():
             form.save()
         return HttpResponseRedirect(reverse("learning_unit_components",
