@@ -24,50 +24,56 @@
 #
 ##############################################################################
 from django import forms
+
 from base import models as mdl
+from base.models.learning_component_year import LearningComponentYear
 
 
-class LearningUnitComponentEditForm(forms.Form):
-    planned_classes = forms.IntegerField(min_value=0, max_value=300)
+class LearningUnitComponentEditForm(forms.ModelForm):
     used_by = forms.BooleanField(required=False)
+
+    class Meta:
+        model = LearningComponentYear
+        fields = ['planned_classes', 'comment']
+        widgets = {
+            'planned_classes': forms.NumberInput(attrs={'min': 0, 'class': 'form-control'}),
+            'comment': forms.Textarea(attrs={'class': 'form-control', 'rows': 5})
+        }
 
     def __init__(self, *args, **kwargs):
         self.learning_unit_year = kwargs.pop('learning_unit_year', None)
-        self.learning_component_year = kwargs.pop('learning_component_year', None)
-
-        self.used_by = kwargs.pop('used_by', None)
-
         super(LearningUnitComponentEditForm, self).__init__(*args, **kwargs)
 
     def load_initial(self):
-        self.fields['planned_classes'].initial = self.learning_component_year.planned_classes
-        self.fields['used_by'].initial = self.used_by
+        self.fields['used_by'].initial = _get_links_between_learning_unit_and_component(self.learning_unit_year,
+                                                                                        self.instance).exists()
 
-    def save(self):
-        cleaned_data = self.cleaned_data
-        learning_component_yr = mdl.learning_component_year.find_by_id(self.learning_component_year.id)
-        learning_component_yr.planned_classes = cleaned_data.get('planned_classes')
-        learning_component_yr.save()
-        self.link_management(cleaned_data.get('used_by'))
-
-    def link_management(self, used_by):
+    def save(self, commit=True):
+        super(LearningUnitComponentEditForm, self).save(commit)
+        used_by = self.cleaned_data.get('used_by')
         if used_by:
-            self.create_link()
+            _create_link(self.learning_unit_year, self.instance)
         else:
-            self.delete_link()
+            _delete_link(self.learning_unit_year, self.instance)
 
-    def create_link(self):
-        # Create a link between learning_unit_year and learning_component_year
-        links = mdl.learning_unit_component.search(self.learning_component_year, self.learning_unit_year)
-        if not links.exists():
-            new_learning_unit_component = mdl.learning_unit_component.LearningUnitComponent(
-                learning_unit_year=self.learning_unit_year,
-                learning_component_year=self.learning_component_year)
-            new_learning_unit_component.save()
 
-    def delete_link(self):
-        # If exists delete link between learning_unit_year and learning_component_year
-        links = mdl.learning_unit_component.search(self.learning_component_year, self.learning_unit_year)
-        if links.exists():
-            for l in links:
-                l.delete()
+def _get_links_between_learning_unit_and_component(learning_unit_year, learning_component_year):
+    return mdl.learning_unit_component.search(learning_component_year, learning_unit_year)
+
+
+def _create_link(learning_unit_year, learning_component_year):
+    # Create a link between learning_unit_year and learning_component_year
+    links = _get_links_between_learning_unit_and_component(learning_unit_year, learning_component_year)
+    if not links.exists():
+        new_learning_unit_component = mdl.learning_unit_component.LearningUnitComponent(
+            learning_unit_year=learning_unit_year,
+            learning_component_year=learning_component_year)
+        new_learning_unit_component.save()
+
+
+def _delete_link(learning_unit_year, learning_component_year):
+    # If exists delete link between learning_unit_year and learning_component_year
+    links = _get_links_between_learning_unit_and_component(learning_unit_year, learning_component_year)
+    if links.exists():
+        for l in links:
+            l.delete()

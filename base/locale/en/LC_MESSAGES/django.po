@@ -1495,6 +1495,9 @@ msgstr "Sched. conform. "
 msgid "planned_classrooms"
 msgstr "Planned classrooms"
 
+msgid "real_on_planned_classrooms"
+msgstr "Real/Planned classrooms"
+
 msgid "classes"
 msgstr "Classes"
 
@@ -1737,9 +1740,6 @@ msgstr "Students"
 
 msgid "student_title"
 msgstr "Student"
-
-msgid "link_creation_impossible"
-msgstr "The above learning unit doesn't used the component"
 
 msgid "classe"
 msgstr "Classe"

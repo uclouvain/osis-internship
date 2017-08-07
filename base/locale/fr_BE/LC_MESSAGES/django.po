@@ -1518,6 +1518,10 @@ msgstr "Conform. horaires"
 msgid "planned_classrooms"
 msgstr "Classes prévues"
 
+msgid "real_on_planned_classrooms"
+msgstr "Classes effectives/prévues"
+
+
 msgid "classes"
 msgstr "Classes"
 
@@ -1711,7 +1715,7 @@ msgid "component"
 msgstr "Composant"
 
 msgid "used_by"
-msgstr "Réutilisé par l'unité d'enseignement"
+msgstr "Utilisation par l'unité d'enseignement"
 
 msgid "offers_enrollments"
 msgstr "Inscriptions aux offres"
@@ -1739,9 +1743,6 @@ msgstr "Etudiants"
 
 msgid "student_title"
 msgstr "Etudiant"
-
-msgid "link_creation_impossible"
-msgstr "L'unité d'enseignement ci-dessus n'utilise pas ce composant"
 
 msgid "classe"
 msgstr "Classe"
