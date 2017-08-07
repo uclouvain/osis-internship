@@ -28,10 +28,15 @@ from base import models as mdl
 from django.utils.translation import ugettext_lazy as _
 
 
-class LearningClassEditForm(forms.Form):
-
+class LearningClassEditForm(forms.ModelForm):
     used_by = forms.BooleanField(required=False)
-    description = forms.CharField(required=False)
+
+    class Meta:
+        model = mdl.learning_class_year.LearningClassYear
+        fields = ['description',]
+        widgets = {
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 1})
+        }
 
     def __init__(self, *args, **kwargs):
         self.learning_unit_year = kwargs.pop('learning_unit_year', None)
@@ -52,7 +57,7 @@ class LearningClassEditForm(forms.Form):
         self.fields['used_by'].initial = self.used_by
         self.fields['used_by'].widget.attrs['disabled'] = False
 
-    def save(self):
+    def save(self, commit=True):
         cleaned_data = self.cleaned_data
         self.link_management(cleaned_data.get('used_by'))
         self.update_description(cleaned_data.get('description'))
