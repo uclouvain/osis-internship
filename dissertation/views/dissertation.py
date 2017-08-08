@@ -400,20 +400,11 @@ def manager_dissertations_search(request):
         disserts = dissertation.search(terms=request.GET['search'], active=True)
     except ObjectDoesNotExist:
         disserts = None
-
     disserts = disserts.filter(offer_year_start__offer__in=offers)
-    try:
-        offer_search = request.GET['offer']
-    except ObjectDoesNotExist:
-        offer_search=''
-    try:
-        academic_year_search=request.GET['academic_year']
-    except ObjectDoesNotExist:
-        academic_year_search=''
-    try:
-        status_search=request.GET['status_search']
-    except ObjectDoesNotExist:
-        status_search==''
+    offer_search = request.GET.get('offer_search','')
+    academic_year_search=request.GET.get('academic_year','')
+    status_search=request.GET.get('status_search','')
+
     if offer_search!='':
         offer_search=int(offer_search)
         disserts = disserts.filter(offer_year_start__offer=find_by_id(offer_search))

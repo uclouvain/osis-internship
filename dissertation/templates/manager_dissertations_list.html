@@ -99,7 +99,7 @@ td.alt { background-color: #ffc; background-color: rgba(255, 255, 0, 0.2); }
           </div>
           <div class="col-md-3" style="border-width:2px;">
               <label for="offer">{% trans 'offers' %}</label>
-                  <select name="offer" id="offer">
+                  <select name="offer_search" id="offer_search">
                     <option value=""></option>
                   {% for offer in offers %}
                     <option value='{{ offer.id }}'
