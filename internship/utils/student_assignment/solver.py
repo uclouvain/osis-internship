@@ -169,12 +169,14 @@ class AssignmentSolver:
         student_periods = self.find_first_student_available_periods_for_internship(student, internship)
         offer = None
 
-        if len(student_periods) == 0:
+        if len(student_periods) > 0:
+            offer = self.find_best_available_offer_for_internship_periods(internship, choices, student_periods)
+        else:
             student_available_periods = self.find_student_available_periods_regardless_of_internship(student, internship)
             for grouped_periods in student_available_periods:
                 offer = self.find_best_available_offer_for_internship_periods(internship, choices, grouped_periods)
-                if offer:
-                    break
+                if offer: break
+
         if not offer:
             offer = self.find_offer_in_default_organization_for_internship(internship)
 
@@ -235,15 +237,22 @@ class AssignmentSolver:
         available_offers          = self.find_offers_for_available_organizations(internship.speciality, unavailable_organizations)
         period_places             = self.get_available_period_places_for_periods(available_offers, periods)
 
-        if len(period_places) > 0 and period_places[0]["number_places"] > 0:
+        if len(period_places) > 0:
             return available_offers.get(pk=period_places[0]["internship_offer_id"])
 
     def get_available_period_places_for_periods(self, offers, periods):
         available_offer_ids                 = offers.values_list("id", flat=True)
         period_ids                          = map_period_ids(periods)
         offers_period_places                = get_period_places_for_offer_ids(available_offer_ids, self.available_places)
-        period_places_for_periods           = get_period_places_for_period_ids(period_ids, offers_period_places)
-        return sort_period_places(period_places_for_periods)
+
+        if len(periods) == 1:
+            period_places_for_period = get_period_places_for_period_ids(period_ids, offers_period_places)
+            return sort_period_places(period_places_for_period)
+        else:
+            for offer_id in available_offer_ids:
+                period_places_for_periods = list(map(lambda period: get_period_places_for_offer_id_and_period_id(offer_id, period.id, offers_period_places), periods))
+                if all(period_place[0]["number_places"] > 0 for period_place in period_places_for_periods):
+                    return flatten(period_places_for_periods)
 
     def find_available_periods_for_offers(self, offers):
         offer_ids                    = offers.values_list("id", flat=True)
@@ -319,7 +328,7 @@ class AssignmentSolver:
         else:
             return self.offers.get(organization = self.default_organization, speciality__in=self.non_mandatory_specialities)
 
-    def find_offers_for_available_organizations(self, speciality, unavailable_organizations=[]):
+    def find_offers_for_available_organizations(self, speciality, unavailable_organizations):
         return self.offers.exclude(organization__in = unavailable_organizations). \
                 exclude(organization__in = self.forbidden_organizations)
 
