@@ -24,21 +24,31 @@
 #
 ##############################################################################
 import re
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import user_passes_test
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render
 from django.utils import timezone
-from assistant.forms import ReviewForm
-from assistant.models import assistant_mandate, review, mandate_structure, tutoring_learning_unit_year
-from assistant.models import reviewer
-from assistant.models.enums import review_status, assistant_mandate_state, reviewer_role
 from base.models import person
 from base.models.enums import structure_type
+from assistant.forms import ReviewForm
+from assistant.models import assistant_mandate, review, mandate_structure, tutoring_learning_unit_year
+from assistant.models import reviewer, settings
+from assistant.models.enums import review_status, assistant_mandate_state, reviewer_role
 
 
-@login_required
+def user_is_reviewer_and_procedure_is_open(user):
+    try:
+        if user.is_authenticated() and settings.access_to_procedure_is_open():
+            return reviewer.find_by_person(user.person)
+        else:
+            return False
+    except ObjectDoesNotExist:
+        return False
+
+
+@user_passes_test(user_is_reviewer_and_procedure_is_open, login_url='access_denied')
 def review_view(request, mandate_id, role):
     mandate = assistant_mandate.find_mandate_by_id(mandate_id)
     current_reviewer = reviewer.find_by_person(request.user.person)
@@ -64,7 +74,7 @@ def review_view(request, mandate_id, role):
                                                 })
 
 
-@login_required
+@user_passes_test(user_is_reviewer_and_procedure_is_open, login_url='access_denied')
 def review_edit(request, mandate_id):
     mandate = assistant_mandate.find_mandate_by_id(mandate_id)
     current_reviewer = reviewer.can_edit_review(
@@ -104,7 +114,7 @@ def review_edit(request, mandate_id):
                                                 'form': form})
 
 
-@login_required
+@user_passes_test(user_is_reviewer_and_procedure_is_open, login_url='access_denied')
 def review_save(request):
     mandate_id = request.POST.get("mandate_id")
     review_id = request.POST.get("review_id")
@@ -157,7 +167,7 @@ def review_save(request):
                                                     'form': form})
 
 
-@login_required
+@user_passes_test(user_is_reviewer_and_procedure_is_open, login_url='access_denied')
 def pst_form_view(request, mandate_id):
     mandate = assistant_mandate.find_mandate_by_id(mandate_id)
     current_reviewer = reviewer.find_by_person(request.user.person)

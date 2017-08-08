@@ -23,19 +23,31 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import user_passes_test
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render
 from django.utils import timezone
-
+from base.models import academic_year
 from assistant.forms import ReviewForm
 from assistant.models import assistant_mandate, review, tutoring_learning_unit_year, mandate_structure, reviewer
+from assistant.models import settings
 from assistant.models.enums import review_status, assistant_mandate_state, reviewer_role
 
 
-@login_required
+def user_is_phd_supervisor_and_procedure_is_open(user):
+    try:
+        if user.is_authenticated() and settings.access_to_procedure_is_open():
+            return assistant_mandate.find_for_supervisor_for_academic_year(user.person,
+                                                                            academic_year.current_academic_year())
+        else:
+            return False
+    except ObjectDoesNotExist:
+        return False
+
+
+@user_passes_test(user_is_phd_supervisor_and_procedure_is_open, login_url='access_denied')
 def review_view(request, mandate_id):
     mandate = assistant_mandate.find_mandate_by_id(mandate_id)
     current_role = reviewer_role.PHD_SUPERVISOR
@@ -56,7 +68,7 @@ def review_view(request, mandate_id):
                                                 })
 
 
-@login_required
+@user_passes_test(user_is_phd_supervisor_and_procedure_is_open, login_url='access_denied')
 def review_edit(request, mandate_id):
     mandate = assistant_mandate.find_mandate_by_id(mandate_id)
     try:
@@ -94,7 +106,7 @@ def review_edit(request, mandate_id):
                                                 'form': form})
 
 
-@login_required
+@user_passes_test(user_is_phd_supervisor_and_procedure_is_open, login_url='access_denied')
 def review_save(request):
     mandate_id = request.POST.get("mandate_id")
     review_id = request.POST.get("review_id")
@@ -134,7 +146,7 @@ def review_save(request):
                                                     'form': form})
 
 
-@login_required
+@user_passes_test(user_is_phd_supervisor_and_procedure_is_open, login_url='access_denied')
 def pst_form_view(request, mandate_id):
     mandate = assistant_mandate.find_mandate_by_id(mandate_id)
     current_role = reviewer_role.PHD_SUPERVISOR
