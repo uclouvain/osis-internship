@@ -125,7 +125,7 @@ urlpatterns = [
         url(r'^review/', include([
             url(r'^(?P<mandate_id>\d+)/$', phd_supervisor_review.review_view, name='phd_supervisor_review_view'),
             url(r'^edit/(?P<mandate_id>\d+)/$', phd_supervisor_review.review_edit, name='phd_supervisor_review_edit'),
-            url(r'^save/(?P<review_id>\d+)/(?P<mandate_id>\d+)/$', phd_supervisor_review.review_save,
+            url(r'^save/$', phd_supervisor_review.review_save,
                 name='phd_supervisor_review_save'),
         ])),
     ])),
@@ -139,7 +139,7 @@ urlpatterns = [
         url(r'^review/(?P<mandate_id>\d+)/', include([
             url(r'^(?P<role>[\w{}.-]{1,40})/view/$', reviewer_review.review_view, name='review_view'),
             url(r'^edit/$', reviewer_review.review_edit, name='review_edit'),
-            url(r'^(?P<review_id>\d+)/save/$', reviewer_review.review_save, name='review_save'),
         ])),
+        url(r'^review/save/$', reviewer_review.review_save, name='review_save'),
     ])),
 ]

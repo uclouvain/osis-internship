@@ -105,7 +105,9 @@ def review_edit(request, mandate_id):
 
 
 @login_required
-def review_save(request, review_id, mandate_id):
+def review_save(request):
+    mandate_id = request.POST.get("mandate_id")
+    review_id = request.POST.get("review_id")
     rev = review.find_by_id(review_id)
     mandate = assistant_mandate.find_mandate_by_id(mandate_id)
     current_reviewer = reviewer.can_edit_review(reviewer.find_by_person(person.find_by_user(request.user)).id,

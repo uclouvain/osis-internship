@@ -31,7 +31,7 @@ from django.shortcuts import render
 from django.utils import timezone
 
 from assistant.forms import ReviewForm
-from assistant.models import assistant_mandate, review, tutoring_learning_unit_year, mandate_structure
+from assistant.models import assistant_mandate, review, tutoring_learning_unit_year, mandate_structure, reviewer
 from assistant.models.enums import review_status, assistant_mandate_state, reviewer_role
 
 
@@ -68,6 +68,7 @@ def review_edit(request, mandate_id):
             reviewer=None,
             status=review_status.IN_PROGRESS
         )
+    current_reviewer = reviewer.find_by_person(request.user.person)
     previous_mandates = assistant_mandate.find_before_year_for_assistant(mandate.academic_year.year, mandate.assistant)
     menu = generate_phd_supervisor_menu_tabs(mandate, reviewer_role.PHD_SUPERVISOR)
     assistant = mandate.assistant
@@ -82,6 +83,7 @@ def review_edit(request, mandate_id):
     return render(request, 'review_form.html', {'review': existing_review,
                                                 'role': reviewer_role.PHD_SUPERVISOR,
                                                 'year': mandate.academic_year.year + 1,
+                                                'current_reviewer': current_reviewer,
                                                 'absences': mandate.absences,
                                                 'comment': mandate.comment,
                                                 'mandate_id': mandate.id,
@@ -93,7 +95,9 @@ def review_edit(request, mandate_id):
 
 
 @login_required
-def review_save(request, review_id, mandate_id):
+def review_save(request):
+    mandate_id = request.POST.get("mandate_id")
+    review_id = request.POST.get("review_id")
     rev = review.find_by_id(review_id)
     mandate = assistant_mandate.find_mandate_by_id(mandate_id)
     form = ReviewForm(data=request.POST, instance=rev, prefix='rev')
@@ -134,6 +138,7 @@ def review_save(request, review_id, mandate_id):
 def pst_form_view(request, mandate_id):
     mandate = assistant_mandate.find_mandate_by_id(mandate_id)
     current_role = reviewer_role.PHD_SUPERVISOR
+    current_reviewer = reviewer.find_by_person(request.user.person)
     learning_units = tutoring_learning_unit_year.find_by_mandate(mandate)
     assistant = mandate.assistant
     menu = generate_phd_supervisor_menu_tabs(mandate, None)
@@ -141,6 +146,7 @@ def pst_form_view(request, mandate_id):
                                                   'mandate_id': mandate.id,
                                                   'assistant': assistant, 'mandate': mandate,
                                                   'learning_units': learning_units,
+                                                  'current_reviewer': current_reviewer,
                                                   'role': current_role,
                                                   'menu_type': 'phd_supervisor_menu',
                                                   'year': mandate.academic_year.year + 1})

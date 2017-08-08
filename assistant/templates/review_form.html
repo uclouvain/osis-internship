@@ -44,9 +44,8 @@
 {% block content %}
 <div class="page-header">
     <h6>{% trans 'connected_as' %} {{ current_reviewer.person }} ({% trans current_reviewer.role %}) - {{ current_reviewer.structure.acronym }}</h6>
-    <h3>{% trans 'assistants_mandates_renewal' %} ({{ year }})</h3>
+    <h3>{% trans 'assistant_mandates_renewals' %} ({{ year }})</h3>
     <h4>{{ assistant.person }}</h4>
-</div>
 <ul class="nav nav-tabs">
     {% if menu_type == 'phd_supervisor_menu' %}
         <li><a href="{% url 'phd_supervisor_pst_form_view' mandate_id=mandate_id %}">{% trans 'assistant_form' %}</a>
@@ -85,13 +84,14 @@
         </li>
     {% endfor %}
 </ul>
+</div>
+
 <div class="panel panel-default">
     <div class="panel-body">
         {% if menu_type == 'phd_supervisor_menu' %}
-            <form method="post" action=
-                    "{% url 'phd_supervisor_review_save' review_id=review.id mandate_id=mandate_id %} ">
+            <form method="post" action="{% url 'phd_supervisor_review_save' %}">
         {% else %}
-            <form method="post" action=" {% url 'review_save' review_id=review.id mandate_id=mandate_id %} ">
+            <form method="post" action=" {% url 'review_save' %} ">
         {% endif %}
         {% csrf_token %}
         {% for hidden in form.hidden_fields %}
@@ -161,6 +161,8 @@
                     onclick="return confirm('{% trans 'confirm_validation' %}')">
             <span class="glyphicon glyphicon-saved" aria-hidden="true"></span>{% trans 'validate_and_submit'%}</button>
         {% endif %}
+        <input type="hidden" name="mandate_id" value="{{mandate_id | default_if_none:''}}">
+        <input type="hidden" name="review_id" value="{{review.id | default_if_none:''}}">
 	    </form>
 	</div>
 </div>
