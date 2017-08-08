@@ -215,25 +215,26 @@ td.alt { background-color: #ffc; background-color: rgba(255, 255, 0, 0.2); }
                 "language":
                 {
 
-                "sProcessing":     "Traitement en cours...",
-                "sSearch":         "Rechercher&nbsp;:",
-                "sLengthMenu":     "Afficher _MENU_ &eacute;l&eacute;ments",
-                "sInfo":           "Affichage de l'&eacute;l&eacute;ment _START_ &agrave; _END_ sur _TOTAL_ &eacute;l&eacute;ments",
-                "sInfoEmpty":      "Affichage de l'&eacute;l&eacute;ment 0 &agrave; 0 sur 0 &eacute;l&eacute;ment",
-                "sInfoFiltered":   "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
-                "sInfoPostFix":    "datatable_infopostfix",
-                "sLoadingRecords": "Chargement en cours...",
-                "sZeroRecords":    "Aucun &eacute;l&eacute;ment &agrave; afficher",
-                "sEmptyTable":     "Aucune donn&eacute;e disponible dans le tableau",
+                    "sProcessing":     "{% trans 'datatable_processing'%}",
+                    "sSearch":         "{% trans 'datatable_search'%}",
+                    "sLengthMenu":     "&nbsp;&nbsp;&nbsp;_MENU_ &eacute;l&eacute;ments",
+                    "sInfo":           "{% trans 'datatable_info'%}",
+                    "sInfoEmpty":      "{% trans 'datatable_infoempty'%}",
+                    "sInfoFiltered":   "{% trans 'datatable_infofiltered'%}",
+                    "sInfoPostFix":    "{% trans 'datatable_infopostfix'%}",
+                    "sInfoPostFix":    "{% trans 'datatable_infofiltered'%}",
+                    "sLoadingRecords": "{% trans 'datatable_loadingrecords'%}",
+                    "sZeroRecords":    "{% trans 'datatable_zerorecords'%}",
+                    "sEmptyTable":     "{% trans 'datatable_emptytable'%}",
                 "oPaginate": {
-                    "sFirst":      "Premier",
-                    "sPrevious":   "Pr&eacute;c&eacute;dent",
-                    "sNext":       "Suivant",
-                    "sLast":       "Dernier"
+                    "sFirst":      "{% trans 'datatable_first'%}",
+                    "sPrevious":   "{% trans 'datatable_previous'%}",
+                    "sNext":       "{% trans 'datatable_next'%}",
+                    "sLast":       "{% trans 'datatable_last'%}"
                             },
             "oAria": {
-                "sSortAscending":  ": activer pour trier la colonne par ordre croissant",
-                "sSortDescending": ": activer pour trier la colonne par ordre d&eacute;croissant",
+                    "sSortAscending":  "{% trans 'datatable_sortascending'%}",
+                    "sSortDescending": "{% trans 'datatable_sortdescending'%}",
                     }
                 }
             });
