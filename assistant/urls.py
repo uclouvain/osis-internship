@@ -33,7 +33,6 @@ from assistant.views import assistant_mandate_reviews
 from assistant.utils import send_email, import_xls_file_data
 
 urlpatterns = [
-    # S'il vous plaît, organiser les urls par ordre alphabétique.
     url(r'^$', home.assistant_home, name='assistants_home'),
     url(r'^access_denied$', home.access_denied, name='access_denied'),
     url(r'^api/get_persons/', get_persons.get_persons, name='get_persons'),
@@ -95,8 +94,8 @@ urlpatterns = [
         url(r'^$', home.manager_home, name='manager_home'),
         url(r'^mandates/', include([
             url(r'^$', mandates_list.MandatesListView.as_view(), name='mandates_list'),
-            url(r'^(?P<mandate_id>\d+)/edit/$', mandate.mandate_edit, name='mandate_read'),
-            url(r'^(?P<mandate_id>\d+)/save/$', mandate.mandate_save, name='mandate_save'),
+            url(r'^edit/$', mandate.mandate_edit, name='mandate_read'),
+            url(r'^save/$', mandate.mandate_save, name='mandate_save'),
             url(r'^load/$', mandate.load_mandates, name='load_mandates'),
             url(r'^upload/$', import_xls_file_data.upload_mandates_file, name='upload_mandates_file'),
             url(r'^export/$', mandate.export_mandates, name='export_mandates'),

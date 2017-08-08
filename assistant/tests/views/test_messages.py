@@ -69,12 +69,15 @@ class MessagesViewTestCase(TestCase):
         self.message.save()
 
     def test_messages_history_view_basic(self):
+        self.client.force_login(self.user)
         request = self.factory.get('/assistants/manager/messages/history')
+        request.user = self.user
         with self.assertTemplateUsed('messages.html'):
             response = show_history(request)
             self.assertEqual(response.status_code, 200)
 
     def test_messages_history_view_returns_messages(self):
+        self.client.force_login(self.user)
         response = self.client.get(reverse('messages_history'))
         messages = response.context['sent_messages']
         self.assertIs(type(messages), QuerySet)
