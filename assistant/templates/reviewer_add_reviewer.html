@@ -45,12 +45,13 @@
 <div class="panel panel-default">
     <div class="panel-body">
     <h5>{% trans 'choose_person_as_reviewer_for' %} {{related_structure.title}} ({{related_structure.acronym}})</h5>
-    <form method="POST" action="{% url 'reviewer_delegation_add' related_structure.id %}">
+    <form method="POST" action="{% url 'reviewer_delegation_add' %}">
     {{ form.non_field_errors }}
  		{% csrf_token %}
  		{% for hidden in form.hidden_fields %}
 			{{ hidden }}
 		{% endfor %}
+    <input type="hidden" value="{{related_structure.id | default_if_none:''}}" name="structure_id" >
 	<div class="form-group">
 		<label for="search_persons">{% trans 'person' %}</label>
 		<input id="search_persons" name="search_persons" size="100" class="form-control"

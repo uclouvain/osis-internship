@@ -69,16 +69,22 @@
                     {% if "ASSISTANT" in rev.role %}
                     {{ rev.person }}
                     {% elif structure.reviewer_set.all|length < 2 %}
-                    <a href="{% url 'reviewer_delegation_add' structure.id %}">
-                    <button type="button" class="btn btn-link" title="{% trans 'add'%}" id="bt_delegation_add">
-                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                    </button></a>
+                    <form id=structure.id method="POST" action="{% url 'reviewer_delegation_add' %}">
+                    {{ form.non_field_errors }}
+ 		            {% csrf_token %}
+                    <input type="hidden" name="structure_id" value="{{ structure.id }}">
+                    <button type="submit" class="btn btn-link" title="{% trans 'edit'%}">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> {% trans 'add'%}
+                    </button></form>
                     {% endif %}
                 {% empty %}
-                    <a href="{% url 'reviewer_delegation_add' structure.id %}">
-                    <button type="button" class="btn btn-link" title="{% trans 'add'%}" id="bt_delegation_add">
-                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                    </button></a>
+                    <form id=structure.id method="POST" action="{% url 'reviewer_delegation_add' %}">
+                    {{ form.non_field_errors }}
+ 		            {% csrf_token %}
+                    <input type="hidden" name="structure_id" value="{{ structure.id }}">
+                    <button type="submit" class="btn btn-link" title="{% trans 'edit'%}">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> {% trans 'add'%}
+                    </button></form>
                     </td>
                     </tr>
                 {% endfor %}

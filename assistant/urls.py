@@ -134,7 +134,7 @@ urlpatterns = [
         url(r'^$', reviewer_mandates_list.MandatesListView.as_view(), name='reviewer_mandates_list'),
         url(r'^delegation/$', reviewer_delegation.StructuresListView.as_view(), name='reviewer_delegation'),
         url(r'^pst_form/(?P<mandate_id>\d+)/$', reviewer_review.pst_form_view, name='pst_form_view'),
-        url(r'^delegate/(?P<structure_id>\d+)/add/$', reviewer_delegation.add_reviewer_for_structure,
+        url(r'^delegate/add/$', reviewer_delegation.add_reviewer_for_structure,
             name='reviewer_delegation_add'),
         url(r'^review/(?P<mandate_id>\d+)/', include([
             url(r'^(?P<role>[\w{}.-]{1,40})/view/$', reviewer_review.review_view, name='review_view'),
