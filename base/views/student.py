@@ -78,9 +78,16 @@ def student_picture(request, student_id):
         response = requests.get(url, headers={"Authorization": ESB_AUTHORIZATION})
         result = response.json()
         if response.status_code == 200 and result.get('photo_url'):
-            return redirect(result['photo_url'])
+            return _get_image(result.get('photo_url'), student)
         return _default_image(student)
     raise Http404()
+
+
+def _get_image(url, student):
+    response = requests.get(url)
+    if response.status_code == 200:
+        return HttpResponse(response.content, content_type="image/jpeg")
+    return _default_image(student)
 
 
 def _default_image(student):
