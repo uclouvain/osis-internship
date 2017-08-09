@@ -128,8 +128,8 @@ class DissertationViewTestCase(TestCase):
         teacher = AdviserTeacherFactory(person=a_person_teacher)
         a_person_student = PersonFactory.create(last_name="Durant", user=None)
         student = StudentFactory.create(person=a_person_student)
-        offer_year_start = OfferYearFactory(acronym="test_offer")
-        offer_year_start2 = OfferYearFactory(acronym="test_offer", academic_year=offer_year_start.academic_year)
+        offer_year_start = OfferYearFactory(acronym="test_offer_2")
+        offer_year_start2 = OfferYearFactory(acronym="test_offer_2", academic_year=offer_year_start.academic_year)
         offer = offer_year_start.offer
         offer2 = offer_year_start2.offer
         FacultyAdviserFactory(adviser=manager, offer=offer)
