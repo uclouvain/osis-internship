@@ -96,7 +96,6 @@ class Dissertation(SerializableModel):
         self.save()
 
     def go_forward(self):
-
         next_status = get_next_status(self, "go_forward")
         if self.status == 'TO_RECEIVE' and next_status == 'TO_DEFEND':
             emails_dissert.send_email(self, 'dissertation_acknowledgement', self.author)
@@ -108,14 +107,16 @@ class Dissertation(SerializableModel):
         self.set_status(next_status)
 
     def manager_accept(self):
-        self.teacher_accept()
-        if self.status == 'COM_SUBMIT' or self.status == 'COM_KO':
+        if self.status == 'DIR_SUBMIT':
+            self.teacher_accept()
+        elif self.status == 'COM_SUBMIT' or self.status == 'COM_KO':
             next_status = get_next_status(self, "accept")
             emails_dissert.send_email(self, 'dissertation_accepted_by_com', self.author)
             self.set_status(next_status)
-        elif self.status == 'EVA_SUBMIT':
+        elif self.status == 'EVA_SUBMIT' or self.status == 'EVA_KO':
             next_status = get_next_status(self, "accept")
             self.set_status(next_status)
+
 
     def teacher_accept(self):
         if self.status == 'DIR_SUBMIT':
