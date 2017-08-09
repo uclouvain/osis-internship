@@ -460,6 +460,9 @@ msgstr "Produire le fichier Excel"
 msgid "global_identifiant"
 msgstr "Identifiant global"
 
+msgid "fgs"
+msgstr "FGS"
+
 msgid "go"
 msgstr "Continuer"
 
@@ -993,6 +996,9 @@ msgstr "La note encodée est incorrecte (elle doit être comprise entre 0 et 20)
 msgid "scores_injection"
 msgstr "Injection des notes"
 
+msgid "scores_responsible"
+msgstr "Responsable de notes"
+
 msgid "scores_responsibles"
 msgstr "Responsables de notes"
 
@@ -1512,8 +1518,15 @@ msgstr "Conform. horaires"
 msgid "planned_classrooms"
 msgstr "Classes prévues"
 
+msgid "real_on_planned_classrooms"
+msgstr "Classes effectives/prévues"
+
+
 msgid "classes"
 msgstr "Classes"
+
+msgid "class"
+msgstr "Classe"
 
 msgid "learning_unit_code"
 msgstr "Code de l'UE"
@@ -1683,9 +1696,6 @@ msgstr "Classes effectives"
 msgid "lu_usage"
 msgstr "Utilisation par les UE"
 
-msgid "used_by_partim"
-msgstr "Utilisation par partim "
-
 msgid "academic_years"
 msgstr "Années académiques"
 
@@ -1705,7 +1715,7 @@ msgid "component"
 msgstr "Composant"
 
 msgid "used_by"
-msgstr "Reutilisé par l'unité d'enseignement"
+msgstr "Utilisation par l'unité d'enseignement"
 
 msgid "offers_enrollments"
 msgstr "Inscriptions aux offres"
@@ -1734,11 +1744,20 @@ msgstr "Etudiants"
 msgid "student_title"
 msgstr "Etudiant"
 
-msgid "link_creation_impossible"
-msgstr "L'unité d'enseignement ci-dessus n'utilise pas ce composant"
-
 msgid "classe"
 msgstr "Classe"
 
 msgid "localization"
 msgstr "Localisation"
+
+msgid "internship_subtype"
+msgstr "Sous-type de stage"
+
+msgid "part1"
+msgstr "partie 1"
+
+msgid "part2"
+msgstr "partie 2"
+
+msgid "title_official"
+msgstr "Intitulé officiel"

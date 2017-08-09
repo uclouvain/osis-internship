@@ -28,19 +28,11 @@ import operator
 
 import factory
 import factory.fuzzy
-from django.conf import settings
-from django.utils import timezone
 
 from base.models.enums import entity_container_year_link_type
 from base.tests.factories.entity import EntityFactory
 from base.tests.factories.learning_container_year import LearningContainerYearFactory
-
-
-def _get_tzinfo():
-    if settings.USE_TZ:
-        return timezone.get_current_timezone()
-    else:
-        return None
+from osis_common.utils.datetime import get_tzinfo
 
 
 class EntityContainerYearFactory(factory.django.DjangoModelFactory):
@@ -48,8 +40,8 @@ class EntityContainerYearFactory(factory.django.DjangoModelFactory):
         model = "base.EntityContainerYear"
 
     external_id = factory.Sequence(lambda n: '10000000%02d' % n)
-    changed = factory.fuzzy.FuzzyDateTime(datetime.datetime(2016, 1, 1, tzinfo=_get_tzinfo()),
-                                          datetime.datetime(2017, 3, 1, tzinfo=_get_tzinfo()))
+    changed = factory.fuzzy.FuzzyDateTime(datetime.datetime(2016, 1, 1, tzinfo=get_tzinfo()),
+                                          datetime.datetime(2017, 3, 1, tzinfo=get_tzinfo()))
     entity = factory.SubFactory(EntityFactory)
     learning_container_year = factory.SubFactory(LearningContainerYearFactory)
     type = factory.Iterator(entity_container_year_link_type.ENTITY_CONTAINER_YEAR_LINK_TYPES,

@@ -24,7 +24,7 @@
 #
 ##############################################################################
 from django.db import models
-from django.contrib import admin, messages
+from django.contrib import messages
 from django.contrib.auth.models import Group
 from attribution.models import attribution
 from base.models import person
@@ -91,7 +91,11 @@ def find_by_learning_unit(learning_unit_year):
     :param learning_unit_year:
     :return: All tutors of the learningUnit passed in parameter.
     """
-    tutor_ids = attribution.search(learning_unit_year=learning_unit_year).values_list('tutor').distinct('tutor')
+    if isinstance(learning_unit_year, list):
+        queryset = attribution.search(list_learning_unit_year=learning_unit_year)
+    else:
+        queryset = attribution.search(learning_unit_year=learning_unit_year)
+    tutor_ids = queryset.values_list('tutor').distinct('tutor')
     return Tutor.objects.filter(pk__in=tutor_ids)\
                         .select_related('person')\
                         .order_by('person__last_name', 'person__first_name')

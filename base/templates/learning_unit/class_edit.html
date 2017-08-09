@@ -36,11 +36,10 @@
             </div>
             <div class="modal-body">
                 {% csrf_token %}
+                <label>{% trans 'description'%}</label><br>
+                    {{ form.description }}
                 <br>
-                {{ form.used_by }} <label>{% trans 'lu_usage'%} {{ learning_unit_year.acronym }}</label>
-                {% if form.message %}
-                    <label class="alert-warning">({{ form.message }})</label>
-                {% endif %}
+                    {{ form.used_by }} <label>{% trans 'used_by' %} {{ learning_unit_year.acronym }}</label>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-primary" type="submit" title="{% trans 'save'%}">{% trans 'save' %}</button>

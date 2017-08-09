@@ -23,21 +23,11 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import datetime
 import factory
 import factory.fuzzy
 import string
 import operator
-from django.conf import settings
-from django.utils import timezone
 from reference.models.enums import grade_type_coverage, institutional_grade_type as enum_institutional_grade_type
-
-
-def _get_tzinfo():
-    if settings.USE_TZ:
-        return timezone.get_current_timezone()
-    else:
-        return None
 
 
 class GradeTypeFactory(factory.DjangoModelFactory):
