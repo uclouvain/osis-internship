@@ -40,7 +40,7 @@ def user_is_phd_supervisor_and_procedure_is_open(user):
     try:
         if user.is_authenticated() and settings.access_to_procedure_is_open():
             return assistant_mandate.find_for_supervisor_for_academic_year(user.person,
-                                                                            academic_year.current_academic_year())
+                                                                           academic_year.current_academic_year())
         else:
             return False
     except ObjectDoesNotExist:
@@ -48,7 +48,8 @@ def user_is_phd_supervisor_and_procedure_is_open(user):
 
 
 @user_passes_test(user_is_phd_supervisor_and_procedure_is_open, login_url='access_denied')
-def review_view(request, mandate_id):
+def review_view(request):
+    mandate_id = request.POST.get("mandate_id")
     mandate = assistant_mandate.find_mandate_by_id(mandate_id)
     current_role = reviewer_role.PHD_SUPERVISOR
     try:
@@ -69,7 +70,8 @@ def review_view(request, mandate_id):
 
 
 @user_passes_test(user_is_phd_supervisor_and_procedure_is_open, login_url='access_denied')
-def review_edit(request, mandate_id):
+def review_edit(request):
+    mandate_id = request.POST.get("mandate_id")
     mandate = assistant_mandate.find_mandate_by_id(mandate_id)
     try:
         review.find_done_by_supervisor_for_mandate(mandate)
@@ -131,7 +133,7 @@ def review_save(request):
         elif 'save' in request.POST:
             current_review.status = review_status.IN_PROGRESS
             current_review.save()
-            return review_edit(request, mandate_id)
+            return review_edit(request)
     else:
         return render(request, "review_form.html", {'review': rev,
                                                     'role': mandate.state,
@@ -147,7 +149,8 @@ def review_save(request):
 
 
 @user_passes_test(user_is_phd_supervisor_and_procedure_is_open, login_url='access_denied')
-def pst_form_view(request, mandate_id):
+def pst_form_view(request):
+    mandate_id = request.POST.get("mandate_id")
     mandate = assistant_mandate.find_mandate_by_id(mandate_id)
     current_role = reviewer_role.PHD_SUPERVISOR
     current_reviewer = reviewer.find_by_person(request.user.person)

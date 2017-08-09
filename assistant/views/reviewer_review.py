@@ -49,7 +49,9 @@ def user_is_reviewer_and_procedure_is_open(user):
 
 
 @user_passes_test(user_is_reviewer_and_procedure_is_open, login_url='access_denied')
-def review_view(request, mandate_id, role):
+def review_view(request):
+    mandate_id = request.POST.get("mandate_id")
+    role = request.POST.get("role")
     mandate = assistant_mandate.find_mandate_by_id(mandate_id)
     current_reviewer = reviewer.find_by_person(request.user.person)
     current_role = current_reviewer.role
@@ -75,7 +77,8 @@ def review_view(request, mandate_id, role):
 
 
 @user_passes_test(user_is_reviewer_and_procedure_is_open, login_url='access_denied')
-def review_edit(request, mandate_id):
+def review_edit(request):
+    mandate_id = request.POST.get("mandate_id")
     mandate = assistant_mandate.find_mandate_by_id(mandate_id)
     current_reviewer = reviewer.can_edit_review(
         reviewer.find_by_person(person.find_by_user(request.user)).id, mandate_id
@@ -152,7 +155,7 @@ def review_save(request):
         elif 'save' in request.POST:
             current_review.status = review_status.IN_PROGRESS
             current_review.save()
-            return review_edit(request, mandate_id)
+            return review_edit(request)
     else:
         return render(request, "review_form.html", {'review': rev,
                                                     'role': mandate.state,
@@ -168,7 +171,8 @@ def review_save(request):
 
 
 @user_passes_test(user_is_reviewer_and_procedure_is_open, login_url='access_denied')
-def pst_form_view(request, mandate_id):
+def pst_form_view(request):
+    mandate_id = request.POST.get("mandate_id")
     mandate = assistant_mandate.find_mandate_by_id(mandate_id)
     current_reviewer = reviewer.find_by_person(request.user.person)
     current_role = current_reviewer.role
