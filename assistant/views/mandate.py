@@ -40,9 +40,6 @@ from assistant.models.enums import assistant_type, reviewer_role
 
 
 def user_is_manager(user):
-    """Use with a ``user_passes_test`` decorator to restrict access to 
-    authenticated users who are manager."""
-    
     try:
         if user.is_authenticated():
             return assistant_mdl.manager.Manager.objects.get(person=user.person)
@@ -51,7 +48,8 @@ def user_is_manager(user):
     
 
 @user_passes_test(user_is_manager, login_url='assistants_home')
-def mandate_edit(request, mandate_id):
+def mandate_edit(request):
+    mandate_id = request.POST.get("mandate_id")
     mandate = assistant_mdl.assistant_mandate.find_mandate_by_id(mandate_id)
     form = MandateForm(initial={'comment': mandate.comment,
                                 'renewal_type': mandate.renewal_type,
@@ -65,8 +63,9 @@ def mandate_edit(request, mandate_id):
     return layout.render(request, 'mandate_form.html', {'mandate': mandate, 'form': form, 'formset': formset})
 
 
-@user_passes_test(user_is_manager, login_url='assistants_home')
-def mandate_save(request, mandate_id):
+@user_passes_test(user_is_manager, login_url='access_denied')
+def mandate_save(request):
+    mandate_id = request.POST.get("mandate_id")
     mandate = assistant_mdl.assistant_mandate.find_mandate_by_id(mandate_id)
     form = MandateForm(data=request.POST, instance=mandate, prefix='mand')
     formset = structure_inline_formset(request.POST, request.FILES, instance=mandate, prefix='struct')
@@ -74,19 +73,19 @@ def mandate_save(request, mandate_id):
         form.save()
         if formset.is_valid():
             formset.save()
-            return mandate_edit(request, mandate.id)
+            return mandate_edit(request)
         else:
             return layout.render(request, "mandate_form.html", {'mandate': mandate, 'form': form, 'formset': formset})
     else:
         return layout.render(request, "mandate_form.html", {'mandate': mandate, 'form': form, 'formset': formset})
 
 
-@user_passes_test(user_is_manager, login_url='assistants_home')
+@user_passes_test(user_is_manager, login_url='access_denied')
 def load_mandates(request):
     return layout.render(request, "load_mandates.html", {})
 
 
-@user_passes_test(user_is_manager, login_url='assistants_home')
+@user_passes_test(user_is_manager, login_url='access_denied')
 def export_mandates(request):
     xls = generate_xls()
     filename = 'assistants_mandates_{}.xlsx'.format(time.strftime("%Y%m%d_%H%M"))

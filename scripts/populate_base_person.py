@@ -37,14 +37,12 @@ def create_person():
     external_id = util.random_id()
     global_id = util.random_id()
     gender = util.random_gender()
-    national_id = util.random_id()
     first_name = util.random_first_name(gender)
     last_name = util.random_last_name()
     email = util.email_based_on_names(first_name, last_name)
 
     p = person.Person(external_id=external_id, global_id=global_id,
-                      gender=gender, national_id=national_id,
-                      first_name=first_name, last_name=last_name,
+                      gender=gender, first_name=first_name, last_name=last_name,
                       email=email)
     p.save()
 

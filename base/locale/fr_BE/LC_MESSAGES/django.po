@@ -460,6 +460,9 @@ msgstr "Produire le fichier Excel"
 msgid "global_identifiant"
 msgstr "Identifiant global"
 
+msgid "fgs"
+msgstr "FGS"
+
 msgid "go"
 msgstr "Continuer"
 

@@ -68,8 +68,17 @@
             </thead>
             <tbody>
             {% for mandate in object_list %}
-                <tr><td>{{ mandate.sap_id }}</td>
-                <td><a href="{% url 'mandate_read' mandate.id %}">{{ mandate.assistant.person }}</a></td>
+                <tr>
+                <td>{{ mandate.sap_id }}</td>
+                <td><form id=mandate_id method="POST" action="{% url 'mandate_read' %}">
+                    {{ form.non_field_errors }}
+ 		            {% csrf_token %}
+                    <input type="hidden" name="mandate_id" value="{{ mandate.id }}">
+                    {{ mandate.assistant.person }}
+                    <button type="submit" class="btn btn-link" title="{% trans 'edit'%}">
+                        <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> {% trans 'edit'%}
+                    </button></form>
+                </td>
                 <td><ul>
                 {% for struct in mandate.mandatestructure_set.all|dictsort:"id" %}
                     <li>{% trans struct.structure.type %} : {{ struct.structure.acronym }}</li>
