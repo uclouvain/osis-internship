@@ -396,10 +396,7 @@ def manager_dissertations_search(request):
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
     offers = faculty_adviser.search_by_adviser(adv)
-    try:
-        disserts = dissertation.search(terms=request.GET['search'], active=True)
-    except ObjectDoesNotExist:
-        disserts = None
+    disserts = dissertation.search(terms=request.GET.get('search',''), active=True)
     disserts = disserts.filter(offer_year_start__offer__in=offers)
     offer_search = request.GET.get('offer_search','')
     academic_year_search=request.GET.get('academic_year','')

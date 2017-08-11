@@ -27,13 +27,7 @@
 {% endcomment %}
 {% block style %}
 <link rel="stylesheet" href="{% static 'css/dataTables.bootstrap.min.css' %}">
-<style>
-.filter-table .quick { margin-left: 0.5em; font-size: 0.8em; text-decoration: none; }
-.fitler-table .quick:hover { text-decoration: underline; }
-td.alt { background-color: #ffc; background-color: rgba(255, 255, 0, 0.2); }
-</style>
 {% endblock %}
-
 {% block breadcrumb %}
   <li><a href="{% url 'studies' %}" id="lnk_studies">{% trans 'student_path' %}</a></li>
   <li><a href="{% url 'dissertations' %}" id="lnk_dissertations">{% trans 'dissertations' %}</a></li>
@@ -112,7 +106,7 @@ td.alt { background-color: #ffc; background-color: rgba(255, 255, 0, 0.2); }
                   </select>
               {{ academic_year }}
           </div>
-          <div class="col-md-5">
+          <div class="col-md-6">
               <label for="status_search">{% trans 'status' %}</label>
                   <select name="status_search" id="status_search">
                     <option value=""></option>
