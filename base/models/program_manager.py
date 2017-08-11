@@ -67,6 +67,9 @@ def is_program_manager(user, offer_year=None, learning_unit_year=None):
 
     Returns: True if the user manage an offer. False otherwise.
     """
+    if user.has_perm('base.is_administrator'):
+        return True
+
     if offer_year:
         try:
             programme_manager = ProgramManager.objects.filter(person__user=user, offer_year=offer_year)

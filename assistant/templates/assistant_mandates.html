@@ -56,7 +56,7 @@
     	<tbody>
       	{% for mandate in object_list %}
 			<tr>
-			<form method="post" action=" {% url 'mandate_change_state' mandate.id %} ">
+			<form method="post" action=" {% url 'mandate_change_state' %} ">
 			{% csrf_token %}
 			<td>{{ mandate.academic_year }}</td>	
 			<td><ul>
@@ -80,17 +80,19 @@
 				id="bt_mandate_decline" name="bt_mandate_decline" onclick="return confirm('{% trans 'confirm_decline' %}')">
 				<span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span> {% trans 'decline'%}</button>
 			{% elif mandate.state == "TRTS" %}
-				<a href="{% url 'form_part1_edit' mandate.id %}">
+				<a href="{% url 'form_part1_edit' %}">
                     <button type="button" class="btn btn-link btn-lg" title="{% trans 'edit'%}" id="bt_mandate_edit">
                     <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
                     </button>{% trans 'edit'%}</a>
             {% elif mandate.state == "DONE"  and can_see_file %}
-                <a href="{% url 'assistant_mandate_reviews' mandate.id %}">
+                <a href="{% url 'assistant_mandate_reviews' %}">
                 <button type="button" class="btn btn-link btn-lg" title="{% trans 'view'%}" id="bt_view_view">
                 <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
-                </button>{% trans 'view'%}</a>
+                </button>{% trans 'view' %}</a>
 			{% endif %}
 			</td>
+            <input type="hidden" value="{{mandate.id | default_if_none:''}}" id="hdn_current_mandate_id"
+                   name="mandate_id" title="mandate_id" >
 			</form>
 			</tr>
 		{% endfor %}

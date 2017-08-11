@@ -36,11 +36,11 @@ from django.db.models.functions import Concat, Lower
 
 class PersonAdmin(SerializableModelAdmin):
     list_display = ('get_first_name', 'middle_name', 'last_name', 'username', 'email', 'gender', 'global_id',
-                    'national_id', 'changed', 'source', 'employee')
+                    'changed', 'source', 'employee')
     search_fields = ['first_name', 'middle_name', 'last_name', 'user__username', 'email', 'global_id']
-    fieldsets = ((None, {'fields': ('user', 'global_id', 'national_id', 'gender', 'first_name',
+    fieldsets = ((None, {'fields': ('user', 'global_id', 'gender', 'first_name',
                                     'middle_name', 'last_name', 'birth_date', 'email', 'phone',
-                                    'phone_mobile', 'language','employee')}),)
+                                    'phone_mobile', 'language', 'employee')}),)
     raw_id_fields = ('user',)
     list_filter = ('gender', 'language')
 
@@ -56,7 +56,6 @@ class Person(SerializableModel):
     user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
     global_id = models.CharField(max_length=10, blank=True, null=True, db_index=True)
     gender = models.CharField(max_length=1, blank=True, null=True, choices=GENDER_CHOICES, default='U')
-    national_id = models.CharField(max_length=25, blank=True, null=True)
     first_name = models.CharField(max_length=50, blank=True, null=True, db_index=True)
     middle_name = models.CharField(max_length=50, blank=True, null=True)
     last_name = models.CharField(max_length=50, blank=True, null=True, db_index=True)
@@ -154,8 +153,7 @@ def count_by_email(email):
 
 
 def search_employee(full_name):
-    queryset = Person.objects.annotate(begin_by_first_name=Lower(Concat('first_name', Value(' '), 'last_name')))
-    queryset = queryset.annotate(begin_by_last_name=Lower(Concat('last_name', Value(' '), 'first_name')))
+    queryset = annotate_with_first_last_names()
     if full_name:
         return queryset.filter(employee=True)\
             .filter(Q(begin_by_first_name__iexact='{}'.format(full_name.lower())) |
@@ -163,3 +161,20 @@ def search_employee(full_name):
                     Q(first_name__icontains=full_name) |
                     Q(last_name__icontains=full_name))
     return None
+
+
+def search(full_name):
+    queryset = annotate_with_first_last_names()
+    if full_name:
+        return queryset.filter(Q(begin_by_first_name__iexact='{}'.format(full_name.lower())) |
+                               Q(begin_by_last_name__iexact='{}'.format(full_name.lower())) |
+                               Q(first_name__icontains=full_name) |
+                               Q(last_name__icontains=full_name))
+    return None
+
+
+def annotate_with_first_last_names():
+    queryset = Person.objects.annotate(begin_by_first_name=Lower(Concat('first_name', Value(' '), 'last_name')))
+    queryset = queryset.annotate(begin_by_last_name=Lower(Concat('last_name', Value(' '), 'first_name')))
+    return queryset
+

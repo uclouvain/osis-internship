@@ -464,6 +464,9 @@ msgstr "Get Excel File"
 msgid "global_identifiant"
 msgstr "Global identifiant"
 
+msgid "fgs"
+msgstr "FGS"
+
 msgid "go"
 msgstr "Go"
 
@@ -1492,8 +1495,14 @@ msgstr "Sched. conform. "
 msgid "planned_classrooms"
 msgstr "Planned classrooms"
 
+msgid "real_on_planned_classrooms"
+msgstr "Real/Planned classrooms"
+
 msgid "classes"
 msgstr "Classes"
+
+msgid "class"
+msgstr "Class"
 
 msgid "learning_unit_code"
 msgstr "Learning unit code"
@@ -1505,15 +1514,12 @@ msgid "periodicity"
 msgstr "Periodicity"
 
 msgid "nominal_credits"
-msgstr "Nominal credits"
+msgstr "Credits"
 
-msgid "ACTIVE"
+msgid "active"
 msgstr "Active"
 
-msgid "PASSIVE"
-msgstr "Passive"
-
-msgid "INACTIVE"
+msgid "inactive"
 msgstr "Inactive"
 
 msgid "MASTER_DISSERTATION"
@@ -1687,9 +1693,6 @@ msgstr "Real classes"
 msgid "lu_usage"
 msgstr "Learning units usage"
 
-msgid "used_by_partim"
-msgstr "Used by partim "
-
 msgid "academic_years"
 msgstr "Academic years"
 
@@ -1710,3 +1713,48 @@ msgstr "Component"
 
 msgid "used_by"
 msgstr "Used by learning unit"
+
+msgid "offers_enrollments"
+msgstr "Offers enrollments"
+
+msgid "learning_units_enrollments"
+msgstr "Learning units enrollments"
+
+msgid "exams_enrollments"
+msgstr "Exams Enrollments"
+
+msgid "average"
+msgstr "Average"
+
+msgid "global_average"
+msgstr "Global average"
+
+msgid "result"
+msgstr "Result"
+
+msgid "enrollment_date"
+msgstr "Enrollment date"
+
+msgid "students_title"
+msgstr "Students"
+
+msgid "student_title"
+msgstr "Student"
+
+msgid "classe"
+msgstr "Classe"
+
+msgid "localization"
+msgstr "Localization"
+
+msgid "internship_subtype"
+msgstr "Internship subtype"
+
+msgid "part1"
+msgstr "part 1"
+
+msgid "part2"
+msgstr "part 2"
+
+msgid "title_official"
+msgstr "Official title"

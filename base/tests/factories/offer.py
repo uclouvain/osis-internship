@@ -27,20 +27,14 @@ import factory
 import factory.fuzzy
 import string
 import datetime
-from django.conf import settings
-from django.utils import timezone
+from osis_common.utils.datetime import get_tzinfo
 
-def _get_tzinfo():
-    if settings.USE_TZ:
-        return timezone.get_current_timezone()
-    else:
-        return None
 
 class OfferFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = "base.Offer"
 
     external_id = factory.fuzzy.FuzzyText(length=10, chars=string.digits)
-    changed = factory.fuzzy.FuzzyDateTime(datetime.datetime(2016, 1, 1, tzinfo=_get_tzinfo()),
-                                          datetime.datetime(2017, 3, 1, tzinfo=_get_tzinfo()))
+    changed = factory.fuzzy.FuzzyDateTime(datetime.datetime(2016, 1, 1, tzinfo=get_tzinfo()),
+                                          datetime.datetime(2017, 3, 1, tzinfo=get_tzinfo()))
     title = factory.Sequence(lambda n: 'Offer %d' %n)

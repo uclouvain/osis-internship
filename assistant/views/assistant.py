@@ -27,7 +27,7 @@ from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.urlresolvers import reverse
 from django.forms import forms
-from base.models import person
+from base.models import person, academic_year
 from base.models.enums import structure_type
 from django.core.exceptions import ObjectDoesNotExist
 from assistant.models import academic_assistant, assistant_mandate, assistant_document_file
@@ -38,7 +38,6 @@ from assistant.models import tutoring_learning_unit_year
 from assistant.models import settings, mandate_structure, reviewer
 from assistant.models.enums import document_type, assistant_mandate_state, reviewer_role
 from assistant.utils.send_email import send_message
-
 
 
 class AssistantMandatesListView(LoginRequiredMixin, UserPassesTestMixin, ListView, FormMixin):
@@ -67,10 +66,6 @@ class AssistantMandatesListView(LoginRequiredMixin, UserPassesTestMixin, ListVie
 
 
 def user_is_assistant_and_procedure_is_open(user):
-    """Use with a ``user_passes_test`` decorator to restrict access to
-    authenticated users who are assistant.
-    The procedure must be open"""
-
     try:
         if user.is_authenticated() and settings.access_to_procedure_is_open():
             return academic_assistant.find_by_person(user.person)
@@ -81,7 +76,8 @@ def user_is_assistant_and_procedure_is_open(user):
 
 
 @user_passes_test(user_is_assistant_and_procedure_is_open, login_url='access_denied')
-def mandate_change_state(request, mandate_id):
+def mandate_change_state(request):
+    mandate_id = request.POST.get("mandate_id")
     mandate = assistant_mandate.find_mandate_by_id(mandate_id)
     if 'bt_mandate_accept' in request.POST:
         mandate.state = assistant_mandate_state.TRTS
@@ -106,24 +102,22 @@ class AssistantLearningUnitsListView(LoginRequiredMixin, UserPassesTestMixin, Li
     form_class = forms.Form
 
     def test_func(self):
-        try:
-            return user_is_assistant_and_procedure_is_open
-        except ObjectDoesNotExist:
-            return False
+        return user_is_assistant_and_procedure_is_open
 
     def get_login_url(self):
         return reverse('access_denied')
 
     def get_queryset(self):
-        mandate_id = self.kwargs['mandate_id']
-        queryset = tutoring_learning_unit_year.find_by_mandate(
-            assistant_mandate.find_mandate_by_id(mandate_id))
+        mandate = assistant_mandate.find_mandate_by_assistant_for_academic_year(
+            academic_assistant.find_by_person(self.request.user.person), academic_year.current_academic_year())
+        queryset = tutoring_learning_unit_year.find_by_mandate(mandate)
         return queryset
 
     def get_context_data(self, **kwargs):
         context = super(AssistantLearningUnitsListView, self).get_context_data(**kwargs)
-        context['mandate_id'] = self.kwargs['mandate_id']
-        mandate = assistant_mandate.find_mandate_by_id(context['mandate_id'])
+        mandate = assistant_mandate.find_mandate_by_assistant_for_academic_year(
+            academic_assistant.find_by_person(self.request.user.person), academic_year.current_academic_year())
+        context['mandate_id'] = mandate.id
         context['assistant_type'] = mandate.assistant_type
         files = assistant_document_file.find_by_assistant_mandate_and_description(mandate,
                                                                                   document_type.TUTORING_DOCUMENT)
