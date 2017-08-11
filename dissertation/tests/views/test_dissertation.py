@@ -23,12 +23,14 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from base.tests.factories.academic_year import AcademicYearFactory
 from dissertation.tests.models.test_faculty_adviser import create_faculty_adviser
 from dissertation.views.dissertation import adviser_can_manage
 from django.test import TestCase
 from django.core.urlresolvers import reverse
 from base.tests.factories.offer_year import OfferYearFactory
 from base.tests.factories.person import PersonFactory
+from base.tests.factories.offer import OfferFactory
 from base.tests.factories.student import StudentFactory
 from dissertation.tests.factories.adviser import AdviserManagerFactory, AdviserTeacherFactory
 from dissertation.tests.factories.dissertation import DissertationFactory
@@ -46,10 +48,14 @@ class DissertationViewTestCase(TestCase):
         self.teacher = AdviserTeacherFactory(person=a_person_teacher)
         a_person_student = PersonFactory.create(last_name="Durant", user=None)
         student = StudentFactory.create(person=a_person_student)
-
-        offer_year_start = OfferYearFactory(acronym="test_offer")
-        offer = offer_year_start.offer
+        offer=OfferFactory(title="test_offer1", id=100000)
+        offer2 = OfferFactory(title="test_offer2", id=200000)
+        academic_year1=AcademicYearFactory(id='100000')
+        AcademicYearFactory(id='200000')
+        offer_year_start = OfferYearFactory(acronym="test_offer1",offer=offer,id='5',academic_year=academic_year1)
+        OfferYearFactory(acronym="test_offer2", offer=offer, id='200000')
         offer_proposition = OfferPropositionFactory(offer=offer)
+        OfferPropositionFactory(offer=offer2)
         FacultyAdviserFactory(adviser=self.manager, offer=offer)
 
         roles = ['PROMOTEUR', 'CO_PROMOTEUR', 'READER', 'PROMOTEUR', 'ACCOMPANIST', 'PRESIDENT']
@@ -109,6 +115,29 @@ class DissertationViewTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context[-1]['dissertations'].count(), 6)
 
+        response = self.client.get(url, data={"search": "Dissertation",
+                                              "offer_search": "100000"})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context[-1]['dissertations'].count(), 6)
+
+        response = self.client.get(url, data={"search": "Dissertation",
+                                              "offer_search": "200000"})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context[-1]['dissertations'].count(), 0)
+
+        response = self.client.get(url, data={"academic_year": "100000"})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context[-1]['dissertations'].count(), 6)
+
+        response = self.client.get(url, data={"academic_year": "200000"})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context[-1]['dissertations'].count(), 0)
+
+        response = self.client.get(url, data={"status_search": "COM_SUBMIT"})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context[-1]['dissertations'].count(), 1)
+
+
         response = self.client.get(url, data={"search": "test_offer"})
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context[-1]['dissertations'].count(), 6)
@@ -128,8 +157,8 @@ class DissertationViewTestCase(TestCase):
         teacher = AdviserTeacherFactory(person=a_person_teacher)
         a_person_student = PersonFactory.create(last_name="Durant", user=None)
         student = StudentFactory.create(person=a_person_student)
-        offer_year_start = OfferYearFactory(acronym="test_offer_2")
-        offer_year_start2 = OfferYearFactory(acronym="test_offer_2", academic_year=offer_year_start.academic_year)
+        offer_year_start = OfferYearFactory(acronym="test_offer2")
+        offer_year_start2 = OfferYearFactory(acronym="test_offer3", academic_year=offer_year_start.academic_year)
         offer = offer_year_start.offer
         offer2 = offer_year_start2.offer
         FacultyAdviserFactory(adviser=manager, offer=offer)

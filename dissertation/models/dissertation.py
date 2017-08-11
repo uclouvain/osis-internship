@@ -156,7 +156,7 @@ def search(terms=None, active=True):
             Q(title__icontains=terms) |
             Q(offer_year_start__acronym__icontains=terms)
         )
-    queryset = queryset.filter(active=active).distinct()
+    queryset = queryset.filter(active=active).exclude(status='ENDED').distinct()
     return queryset
 
 

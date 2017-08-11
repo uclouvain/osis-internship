@@ -23,20 +23,33 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import user_passes_test
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render
 from django.utils import timezone
-
+from base.models import academic_year
 from assistant.forms import ReviewForm
-from assistant.models import assistant_mandate, review, tutoring_learning_unit_year, mandate_structure
+from assistant.models import assistant_mandate, review, tutoring_learning_unit_year, mandate_structure, reviewer
+from assistant.models import settings
 from assistant.models.enums import review_status, assistant_mandate_state, reviewer_role
 
 
-@login_required
-def review_view(request, mandate_id):
+def user_is_phd_supervisor_and_procedure_is_open(user):
+    try:
+        if user.is_authenticated() and settings.access_to_procedure_is_open():
+            return assistant_mandate.find_for_supervisor_for_academic_year(user.person,
+                                                                           academic_year.current_academic_year())
+        else:
+            return False
+    except ObjectDoesNotExist:
+        return False
+
+
+@user_passes_test(user_is_phd_supervisor_and_procedure_is_open, login_url='access_denied')
+def review_view(request):
+    mandate_id = request.POST.get("mandate_id")
     mandate = assistant_mandate.find_mandate_by_id(mandate_id)
     current_role = reviewer_role.PHD_SUPERVISOR
     try:
@@ -56,8 +69,9 @@ def review_view(request, mandate_id):
                                                 })
 
 
-@login_required
-def review_edit(request, mandate_id):
+@user_passes_test(user_is_phd_supervisor_and_procedure_is_open, login_url='access_denied')
+def review_edit(request):
+    mandate_id = request.POST.get("mandate_id")
     mandate = assistant_mandate.find_mandate_by_id(mandate_id)
     try:
         review.find_done_by_supervisor_for_mandate(mandate)
@@ -68,6 +82,7 @@ def review_edit(request, mandate_id):
             reviewer=None,
             status=review_status.IN_PROGRESS
         )
+    current_reviewer = reviewer.find_by_person(request.user.person)
     previous_mandates = assistant_mandate.find_before_year_for_assistant(mandate.academic_year.year, mandate.assistant)
     menu = generate_phd_supervisor_menu_tabs(mandate, reviewer_role.PHD_SUPERVISOR)
     assistant = mandate.assistant
@@ -82,6 +97,7 @@ def review_edit(request, mandate_id):
     return render(request, 'review_form.html', {'review': existing_review,
                                                 'role': reviewer_role.PHD_SUPERVISOR,
                                                 'year': mandate.academic_year.year + 1,
+                                                'current_reviewer': current_reviewer,
                                                 'absences': mandate.absences,
                                                 'comment': mandate.comment,
                                                 'mandate_id': mandate.id,
@@ -92,8 +108,10 @@ def review_edit(request, mandate_id):
                                                 'form': form})
 
 
-@login_required
-def review_save(request, review_id, mandate_id):
+@user_passes_test(user_is_phd_supervisor_and_procedure_is_open, login_url='access_denied')
+def review_save(request):
+    mandate_id = request.POST.get("mandate_id")
+    review_id = request.POST.get("review_id")
     rev = review.find_by_id(review_id)
     mandate = assistant_mandate.find_mandate_by_id(mandate_id)
     form = ReviewForm(data=request.POST, instance=rev, prefix='rev')
@@ -115,7 +133,7 @@ def review_save(request, review_id, mandate_id):
         elif 'save' in request.POST:
             current_review.status = review_status.IN_PROGRESS
             current_review.save()
-            return review_edit(request, mandate_id)
+            return review_edit(request)
     else:
         return render(request, "review_form.html", {'review': rev,
                                                     'role': mandate.state,
@@ -130,10 +148,12 @@ def review_save(request, review_id, mandate_id):
                                                     'form': form})
 
 
-@login_required
-def pst_form_view(request, mandate_id):
+@user_passes_test(user_is_phd_supervisor_and_procedure_is_open, login_url='access_denied')
+def pst_form_view(request):
+    mandate_id = request.POST.get("mandate_id")
     mandate = assistant_mandate.find_mandate_by_id(mandate_id)
     current_role = reviewer_role.PHD_SUPERVISOR
+    current_reviewer = reviewer.find_by_person(request.user.person)
     learning_units = tutoring_learning_unit_year.find_by_mandate(mandate)
     assistant = mandate.assistant
     menu = generate_phd_supervisor_menu_tabs(mandate, None)
@@ -141,6 +161,7 @@ def pst_form_view(request, mandate_id):
                                                   'mandate_id': mandate.id,
                                                   'assistant': assistant, 'mandate': mandate,
                                                   'learning_units': learning_units,
+                                                  'current_reviewer': current_reviewer,
                                                   'role': current_role,
                                                   'menu_type': 'phd_supervisor_menu',
                                                   'year': mandate.academic_year.year + 1})

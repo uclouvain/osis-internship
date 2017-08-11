@@ -73,9 +73,6 @@ class StructuresListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
 
 
 def user_is_reviewer_and_can_delegate(user):
-    """Use with a ``user_passes_test`` decorator to restrict access to
-    authenticated users who are reviewer and can delegate."""
-
     try:
         if user.is_authenticated() and settings.access_to_procedure_is_open():
             return reviewer.Reviewer.objects.get(Q(person=user.person) &
@@ -85,13 +82,10 @@ def user_is_reviewer_and_can_delegate(user):
 
 
 @user_passes_test(user_is_reviewer_and_can_delegate, login_url='assistants_home')
-def add_reviewer_for_structure(request, structure_id):
-    """
-    Crée un reviewer pour une structure donnée.
-    structure_id est l'identifiant de la structure pour laquelle on ajoute un reviewer.
-    Si le rôle du reviewer créé dépend du rôle de l'utilisateur (reviewer) connecté.
-    """
+def add_reviewer_for_structure(request):
+    structure_id = request.POST.get("structure_id")
     related_structure = structure.find_by_id(structure_id)
+    print(related_structure)
     year = academic_year.current_academic_year().year
     try:
         reviewer.can_delegate_to_structure(reviewer.find_by_person(request.user.person), related_structure)
@@ -119,20 +113,15 @@ def add_reviewer_for_structure(request, structure_id):
                 new_reviewer.save()
                 return redirect('reviewer_delegation')
         else:
+            this_reviewer = reviewer.find_by_person(person=request.user.person)
+            if this_reviewer.role == reviewer_role.SUPERVISION:
+                role = reviewer_role.SUPERVISION_ASSISTANT
+            else:
+                role = reviewer_role.RESEARCH_ASSISTANT
+            form = ReviewerDelegationForm(initial={'structure': related_structure, 'year': year, 'role': role})
             return render(request, "reviewer_add_reviewer.html", {
                 'form': form,
                 'year': year,
                 'related_structure': related_structure,
                 'reviewer': reviewer.find_by_person(request.user.person)
             })
-    else:
-        this_reviewer = reviewer.find_by_person(person=request.user.person)
-        if this_reviewer.role == reviewer_role.SUPERVISION:
-            role = reviewer_role.SUPERVISION_ASSISTANT
-        else: 
-            role = reviewer_role.RESEARCH_ASSISTANT
-        form = ReviewerDelegationForm(initial={'structure': related_structure, 'year': year, 'role': role})
-        return render(request, "reviewer_add_reviewer.html", {'form': form,
-                                                              'year': year,
-                                                              'related_structure': related_structure,
-                                                              'reviewer': this_reviewer})

@@ -120,12 +120,12 @@ urlpatterns = [
     url(r'^phd_supervisor/', include([
         url(r'^assistants/$', phd_supervisor_assistants_list.AssistantsListView.as_view(),
             name='phd_supervisor_assistants_list'),
-        url(r'^pst_form/(?P<mandate_id>\d+)/$', phd_supervisor_review.pst_form_view,
+        url(r'^pst_form/$', phd_supervisor_review.pst_form_view,
             name='phd_supervisor_pst_form_view'),
         url(r'^review/', include([
-            url(r'^(?P<mandate_id>\d+)/$', phd_supervisor_review.review_view, name='phd_supervisor_review_view'),
-            url(r'^edit/(?P<mandate_id>\d+)/$', phd_supervisor_review.review_edit, name='phd_supervisor_review_edit'),
-            url(r'^save/(?P<review_id>\d+)/(?P<mandate_id>\d+)/$', phd_supervisor_review.review_save,
+            url(r'^view/$', phd_supervisor_review.review_view, name='phd_supervisor_review_view'),
+            url(r'^edit/$', phd_supervisor_review.review_edit, name='phd_supervisor_review_edit'),
+            url(r'^save/$', phd_supervisor_review.review_save,
                 name='phd_supervisor_review_save'),
         ])),
     ])),
@@ -133,13 +133,13 @@ urlpatterns = [
     url(r'^reviewer/', include([
         url(r'^$', reviewer_mandates_list.MandatesListView.as_view(), name='reviewer_mandates_list'),
         url(r'^delegation/$', reviewer_delegation.StructuresListView.as_view(), name='reviewer_delegation'),
-        url(r'^pst_form/(?P<mandate_id>\d+)/$', reviewer_review.pst_form_view, name='pst_form_view'),
-        url(r'^delegate/(?P<structure_id>\d+)/add/$', reviewer_delegation.add_reviewer_for_structure,
+        url(r'^pst_form/$', reviewer_review.pst_form_view, name='pst_form_view'),
+        url(r'^delegate/add/$', reviewer_delegation.add_reviewer_for_structure,
             name='reviewer_delegation_add'),
-        url(r'^review/(?P<mandate_id>\d+)/', include([
-            url(r'^(?P<role>[\w{}.-]{1,40})/view/$', reviewer_review.review_view, name='review_view'),
+        url(r'^review/', include([
+            url(r'^view/$', reviewer_review.review_view, name='review_view'),
             url(r'^edit/$', reviewer_review.review_edit, name='review_edit'),
-            url(r'^(?P<review_id>\d+)/save/$', reviewer_review.review_save, name='review_save'),
+            url(r'^save/$', reviewer_review.review_save, name='review_save'),
         ])),
     ])),
 ]

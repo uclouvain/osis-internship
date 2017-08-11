@@ -117,8 +117,10 @@
                                     <li><a href="{% url 'assessments' %}"
                                            id="lnk_dropdown_evaluations">{% trans 'evaluations' %}</a></li>
                                 {% endif %}
-                                <li><a href="{% url 'students' %}"
-                                       id="lnk_dropdown_students">{% trans 'students_title' %}</a></li>
+                                {% if perms.base.can_access_student %}
+                                    <li><a href="{% url 'students' %}"
+                                           id="lnk_dropdown_students">{% trans 'students_title' %}</a></li>
+                                {% endif %}
                                 {% if 'internship' in installed_apps and perms.internship.can_access_internship %}
                                     <li><a href="{% url 'internship' %}"
                                            id="lnk_dropdown_internships">{% trans 'internships' %}</a></li>
