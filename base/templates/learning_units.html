@@ -81,7 +81,22 @@
                         {% endfor %}
                     </select>
                 </div>
+
                 <div class="col-md-2">
+                    <label for="id_subtype">{% trans 'subtype' %}</label>
+                    <select class="form-control" id="slt_type" name="subtype">
+                        <option value="">{% trans 'all_label' %}</option>
+                        {% for type in types %}
+                            <option
+                                {% if request.GET.subtype and type.0 == request.GET.subtype %}
+                                    selected
+                                {% endif %}
+                                value="{{ type.0 }}">{% trans type.1 %}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-1">
                     <label for="id_status">{% trans 'status' %}</label>
                     <select class="form-control" id="slt_status" name="status">
                         <option value="">{% trans 'all_label' %}</option>
@@ -96,29 +111,28 @@
 
                     </select>
                  </div>
-                <div class="col-md-1">
+                 <div class="col-md-1">
                     <label for="id_requirement_entity_acronym">{% trans 'requirement_entity_small' %}</label>
                     {{ form.requirement_entity_acronym }}
+
+
                 </div>
-                <div class="col-md-1">
-                    <label style="font-size:12px;">{% trans 'with_entity_subordinated_small' %}</label>
+
+            </div>
+            <div class="pull-right">
+                <div style="display:inline-block;">
                     <input type="checkbox" id="id_with_entity_subordinated"
                        name="with_entity_subordinated" style="margin-top:5px;"
                         {% if request.GET.with_entity_subordinated and 'on' == request.GET.with_entity_subordinated %}
                                 checked
                         {% endif %} >
+                    <label>{% trans 'with_entity_subordinated_small' %}</label>
                 </div>
-            </div>
-            <div >
-                {% if learning_units %}
-                    <div style="margin-top:35px;display:inline-block;">
-                        <strong style="color:grey;"> {{learning_units|length}} {% trans 'learning_units'|lower %} </strong>
-                    </div>
-                {% endif %}
+
                 <button type="submit" id="bt_submit_learning_unit_search"
-                        class="btn btn-primary pull-right" style="margin-top:23px;" role="button"
+                        class="btn btn-primary pull-rigth" style="margin-top:23px;" role="button"
                         title="{% trans 'learning_unit_search' %}">
-                <span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
             </div>
         </div>
     </form>
@@ -133,6 +147,7 @@
         {% endif %}
 
         {% if learning_units %}
+        <strong style="margin-left:10px;color:grey;"> {{learning_units|length}} {% trans 'learning_units'|lower %} </strong>
         <table id="table_learning_units" class="table table-striped table-hover">
             <thead>
                 <th>{% trans 'academic_year'%}</th>

@@ -35,7 +35,7 @@ MAX_ROW_NUMBERS = 1000
 
 class LearningUnitYearForm(forms.Form):
     academic_year_id = forms.CharField(max_length=10, required=False)
-    container_type = status = forms.CharField(required=False)
+    container_type = subtype = status = forms.CharField(required=False)
     acronym = title = requirement_entity_acronym = forms.CharField(widget=forms.TextInput(attrs={'size': '10', 'class': 'form-control'}),
                                                                    max_length=20, required=False)
     with_entity_subordinated = forms.BooleanField(required=False)
