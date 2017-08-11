@@ -70,6 +70,9 @@ msgstr "Add subject"
 msgid "add_proposition_dissertation_jury_member"
 msgstr "Add jury member"
 
+msgid "advanced_search"
+msgstr "Advanced search"
+
 msgid "adviser"
 msgstr "Teacher"
 

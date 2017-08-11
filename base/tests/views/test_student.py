@@ -25,6 +25,7 @@
 ##############################################################################
 from unittest import mock
 
+from django.contrib.auth.models import Permission
 from django.core.urlresolvers import reverse
 from django.test import TestCase, RequestFactory
 
@@ -37,10 +38,13 @@ class StudentViewTestCase(TestCase):
 
     def setUp(self):
         self.program_manager_1 = ProgramManagerFactory()
+        # Add permission
+        user = self.program_manager_1.person.user
+        permission = Permission.objects.get(name='Can access student')
+        user.user_permissions.add(permission)
 
-    @mock.patch('base.models.program_manager.is_program_manager', return_value=True)
     @mock.patch('base.views.layout.render')
-    def test_students(self,  mock_render, mock_program_manager):
+    def test_students(self,  mock_render):
         request_factory = RequestFactory()
 
         request = request_factory.get(reverse('students'))
@@ -55,9 +59,8 @@ class StudentViewTestCase(TestCase):
 
         self.assertEqual(template, 'student/students.html')
 
-    @mock.patch('base.models.program_manager.is_program_manager', return_value=True)
     @mock.patch('base.views.layout.render')
-    def test_students_search(self, mock_render, mock_program_manager):
+    def test_students_search(self, mock_render):
 
         request_factory = RequestFactory()
         request = request_factory.get(reverse('students'))
@@ -74,9 +77,8 @@ class StudentViewTestCase(TestCase):
         self.assertEqual(template, 'student/students.html')
         self.assertIsNone(context['students'])
 
-    @mock.patch('base.models.program_manager.is_program_manager', return_value=True)
     @mock.patch('base.views.layout.render')
-    def test_student_read(self,  mock_render, mock_program_manager):
+    def test_student_read(self,  mock_render):
         student = StudentFactory(person=PersonFactory(last_name='Durant', first_name='Thomas'))
 
         request_factory = RequestFactory()
