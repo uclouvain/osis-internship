@@ -174,7 +174,7 @@ class AssignmentSolver:
 
         if internship.speciality:
             offer = self.find_offer_in_default_organization_for_internship(internship)
-            return self.build_affectation_for_periods(student, offer.organization, student_periods[0], offer.speciality, "I", False)
+            return self.build_affectation_for_periods(student, offer.organization, random.choice(student_periods), offer.speciality, "I", False)
         else:
             return []
 
@@ -182,7 +182,12 @@ class AssignmentSolver:
     def find_first_student_available_periods_for_internship_choice(self, student, internship, choice):
         periods_with_places = self.find_available_periods_for_internship_choice(choice)
         grouped_periods     = list(group_periods_by_consecutives(periods_with_places, length=internship.length_in_periods))
-        return self.first_relevant_periods(student, internship, grouped_periods)
+
+        # If we could not find consecutive periods, we take non-consecutive periods instead
+        if len(grouped_periods) == 0:
+            grouped_periods = list(group_periods(periods_with_places, length=2))
+
+        return self.first_relevant_periods(student, internship.length_in_periods, grouped_periods)
 
     def find_available_periods_for_internship_choice(self, choice):
         offers = self.find_offers_for_internship_choice(choice)
@@ -193,22 +198,17 @@ class AssignmentSolver:
         return self.find_available_periods_for_offers(offers)
 
     ## Difference between the authorized periods and the already affected periods from the student
-    def all_available_periods(self, student, internship, periods):
+    def all_available_periods(self, student, internship_length, periods):
         student_affectations = get_student_affectations(student, self.affectations)
         unavailable_periods  = get_periods_from_affectations(student_affectations)
-        grouped_periods      = list(group_periods_by_consecutives(unavailable_periods, length=internship.length_in_periods))
-        available_periods    = difference(periods, grouped_periods)
-
-        if len(available_periods) == 0:
-            grouped_periods = list(group_periods_by_consecutives(unavailable_periods, length=1))
-
+        grouped_periods      = list(group_periods_by_consecutives(unavailable_periods, length=internship_length))
         available_periods    = difference(periods, grouped_periods)
 
         return available_periods
 
     ## Return relevant period groups for student for internship. Can be groups of 1 or 2 periods.
-    def first_relevant_periods(self, student, internship, periods):
-        available_periods    = self.all_available_periods(student, internship, periods)
+    def first_relevant_periods(self, student, internship_length, periods):
+        available_periods    = self.all_available_periods(student, internship_length, periods)
 
         if len(available_periods) > 0:
             return random.choice(available_periods)
@@ -220,12 +220,12 @@ class AssignmentSolver:
         if internship.speciality:
             internship_periods = self.mandatory_periods
             grouped_periods    = list(group_periods_by_consecutives(internship_periods, length=internship.length_in_periods))
-            periods = self.all_available_periods(student, internship, grouped_periods)
+            periods = self.all_available_periods(student, internship.length_in_periods, grouped_periods)
 
         if len(periods) == 0:
             internship_periods = self.periods
             grouped_periods    = list(group_periods_by_consecutives(internship_periods, length=internship.length_in_periods))
-            periods = self.all_available_periods(student, internship, grouped_periods)
+            periods = self.all_available_periods(student, internship.length_in_periods, grouped_periods)
         return periods
 
     def find_best_available_offer_for_internship_periods(self, internship, choices, periods):
@@ -271,8 +271,7 @@ class AssignmentSolver:
 
     def student_has_empty_periods(self, student, affectations):
         student_affectations = get_student_affectations(student, affectations)
-        unavailable_periods  = get_periods_from_affectations(student_affectations)
-        return len(unavailable_periods) < len(self.periods)
+        return len(student_affectations) < len(self.periods)
 
     def student_empty_periods(self, student, affectations):
         student_affectations = get_student_affectations(student, affectations)
