@@ -36,11 +36,11 @@
     <h2>{% trans 'learning_units' %}</h2>
 </div>
 <div class="panel panel-default">
-    <form method="get" action="{% url 'learning_units'%}" id="form_learning_units" name="search">
+    <form style="border-bottom: 1px solid #ddd;" method="get" action="{% url 'learning_units'%}" id="form_learning_units" name="search">
         <div class="panel-body">
             <div class="row">
                 <div class="col-md-2">
-                    <label for="slt_academic_year">{% trans 'academic_year'%}</label>
+                    <label for="slt_academic_year">{% trans 'academic_year_small'%}</label>
                     <select class="form-control" id="slt_academic_year" name="academic_year_id">
                         <option value="all">{% trans 'all_label' %}</option>
                         {% for ac_year in academic_years %}
@@ -62,7 +62,7 @@
                     {{ form.acronym }}
                 </div>
 
-                <div class="col-md-2">
+                <div class="col-md-3">
                     <label for="id_title">{% trans 'title' %}</label>
                     {{ form.title }}
                 </div>
@@ -96,7 +96,17 @@
                         {% endfor %}
                     </select>
                 </div>
-                <div class="col-md-1">
+                <div class="col-md-1 text-center">
+                    <button type="submit" id="bt_submit_learning_unit_search" style="margin-top:24px;"
+                            class="btn btn-primary" role="button"
+                            title="{% trans 'learning_unit_search' %}">
+                         <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="row" style="margin-top:10px;">
+                <div class="col-md-2">
                     <label for="id_status">{% trans 'status' %}</label>
                     <select class="form-control" id="slt_status" name="status">
                         <option value="">{% trans 'all_label' %}</option>
@@ -110,33 +120,27 @@
                                 {% endif %}>{% trans 'inactive' %}</option>
 
                     </select>
-                 </div>
-                 <div class="col-md-1">
+                </div>
+                <div class="col-md-2">
                     <label for="id_requirement_entity_acronym">{% trans 'requirement_entity_small' %}</label>
                     {{ form.requirement_entity_acronym }}
-
-
+                </div>
+                <div class="col-md-3">
+                    <div style="display:inline-block;">
+                        <input type="checkbox" id="id_with_entity_subordinated"
+                           name="with_entity_subordinated" style="margin-top:37px;"
+                            {% if request.GET.with_entity_subordinated and 'on' == request.GET.with_entity_subordinated %}
+                                    checked
+                            {% endif %} >
+                        <label>{% trans 'with_entity_subordinated_small' %}</label>
+                    </div>
                 </div>
 
-            </div>
-            <div class="pull-right">
-                <div style="display:inline-block;">
-                    <input type="checkbox" id="id_with_entity_subordinated"
-                       name="with_entity_subordinated" style="margin-top:5px;"
-                        {% if request.GET.with_entity_subordinated and 'on' == request.GET.with_entity_subordinated %}
-                                checked
-                        {% endif %} >
-                    <label>{% trans 'with_entity_subordinated_small' %}</label>
-                </div>
 
-                <button type="submit" id="bt_submit_learning_unit_search"
-                        class="btn btn-primary pull-rigth" style="margin-top:23px;" role="button"
-                        title="{% trans 'learning_unit_search' %}">
-                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
             </div>
         </div>
     </form>
-    <div>
+    <div style="margin-top:10px;">
         {% include "template_messages.html" %}
         {% if form.non_field_errors %}
         <div id="pnl_error_messages" class="alert alert-warning" role="alert">
@@ -150,7 +154,7 @@
         <strong style="margin-left:10px;color:grey;"> {{learning_units|length}} {% trans 'learning_units'|lower %} </strong>
         <table id="table_learning_units" class="table table-striped table-hover">
             <thead>
-                <th>{% trans 'academic_year'%}</th>
+                <th>{% trans 'academic_year_small'%}</th>
                 <th>{% trans 'code'%}</th>
                 <th>{% trans 'title'%}</th>
                 <th>{% trans 'type'%}</th>
