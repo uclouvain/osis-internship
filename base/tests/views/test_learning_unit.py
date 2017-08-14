@@ -202,7 +202,7 @@ class LearningUnitViewTestCase(TestCase):
         self.assertEqual(context['learning_unit_year'], learning_unit_year)
 
     def test_get_components_no_learning_container_yr(self):
-        learning_unit_year = LearningUnitYearFactory()
+        learning_unit_year = LearningUnitYearFactory(academic_year=self.current_academic_year)
         self.assertEqual(len(learning_unit_view.get_same_container_year_components(learning_unit_year, False)), 0)
 
     def test_get_components_with_classes(self):
