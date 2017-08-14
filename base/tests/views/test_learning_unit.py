@@ -214,7 +214,8 @@ class LearningUnitViewTestCase(TestCase):
         l_component_year = LearningComponentYearFactory(learning_container_year=l_container_year)
         LearningClassYearFactory(learning_component_year=l_component_year)
         LearningClassYearFactory(learning_component_year=l_component_year)
-        learning_unit_year = LearningUnitYearFactory(learning_container_year=l_container_year)
+        learning_unit_year = LearningUnitYearFactory(academic_year=self.current_academic_year,
+                                                     learning_container_year=l_container_year)
 
         components = learning_unit_view.get_same_container_year_components(learning_unit_year, True)
         self.assertEqual(len(components), 1)
