@@ -48,12 +48,13 @@ class DissertationViewTestCase(TestCase):
         self.teacher = AdviserTeacherFactory(person=a_person_teacher)
         a_person_student = PersonFactory.create(last_name="Durant", user=None)
         student = StudentFactory.create(person=a_person_student)
-        offer=OfferFactory(title="test_offer1", id=100000)
+        offer = OfferFactory(title="test_offer1", id=100000)
         offer2 = OfferFactory(title="test_offer2", id=200000)
-        academic_year1=AcademicYearFactory(id='100000')
+        self.academic_year1 = AcademicYearFactory(id='100000')
         AcademicYearFactory(id='200000')
-        offer_year_start = OfferYearFactory(acronym="test_offer1",offer=offer,id='5',academic_year=academic_year1)
-        OfferYearFactory(acronym="test_offer2", offer=offer, id='200000')
+        offer_year_start = OfferYearFactory(acronym="test_offer1", offer=offer, id='5',
+                                            academic_year=self.academic_year1)
+        OfferYearFactory(academic_year=self.academic_year1, acronym="test_offer2", offer=offer, id='200000')
         offer_proposition = OfferPropositionFactory(offer=offer)
         OfferPropositionFactory(offer=offer2)
         FacultyAdviserFactory(adviser=self.manager, offer=offer)
@@ -157,7 +158,7 @@ class DissertationViewTestCase(TestCase):
         teacher = AdviserTeacherFactory(person=a_person_teacher)
         a_person_student = PersonFactory.create(last_name="Durant", user=None)
         student = StudentFactory.create(person=a_person_student)
-        offer_year_start = OfferYearFactory(acronym="test_offer2")
+        offer_year_start = OfferYearFactory(academic_year=self.academic_year1, acronym="test_offer2")
         offer_year_start2 = OfferYearFactory(acronym="test_offer3", academic_year=offer_year_start.academic_year)
         offer = offer_year_start.offer
         offer2 = offer_year_start2.offer
