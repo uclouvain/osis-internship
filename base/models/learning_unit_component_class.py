@@ -58,12 +58,15 @@ def find_by_learning_class_year(learning_class_year):
     return LearningUnitComponentClass.objects.filter(learning_class_year=learning_class_year)
 
 
-def search(a_learning_unit_component=None, a_learning_class_year=None):
+def search(learning_unit_component=None, learning_class_year=None):
     queryset = LearningUnitComponentClass.objects
-    if a_learning_unit_component:
-        queryset = queryset.filter(learning_unit_component=a_learning_unit_component)
 
-    if a_learning_class_year:
-        queryset = queryset.filter(learning_class_year=a_learning_class_year)
+    if isinstance(learning_unit_component, list):
+        queryset = queryset.filter(learning_unit_component__in=learning_unit_component)
+    elif learning_unit_component:
+        queryset = queryset.filter(learning_unit_component=learning_unit_component)
+
+    if learning_class_year:
+        queryset = queryset.filter(learning_class_year=learning_class_year)
 
     return queryset
