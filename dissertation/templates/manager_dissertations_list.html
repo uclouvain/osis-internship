@@ -93,14 +93,14 @@
           </div>
           <div class="col-md-3" style="border-width:2px;">
               <label for="offer">{% trans 'offers' %}</label>
-                  <select name="offer_search" id="offer_search">
+                  <select name="offer_prop_search" id="offer_prop_search">
                     <option value=""></option>
-                  {% for offer in offers %}
-                    <option value='{{ offer.id }}'
-                            {% if offer_search  == offer.id %}
+                  {% for offer_prop in offer_props %}
+                    <option value='{{ offer_prop.id }}'
+                            {% if offer_prop_search  == offer_prop.id %}
                             selected
                             {% endif %} >
-                        {{ offer.title }}
+                        {{ offer_prop.acronym }}
                     </option>
                   {% endfor %}
                   </select>
