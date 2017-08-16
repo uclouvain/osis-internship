@@ -54,8 +54,8 @@ class DissertationViewTestCase(TestCase):
         AcademicYearFactory(id='200000')
         offer_year_start = OfferYearFactory(acronym="test_offer1",offer=offer,id='5',academic_year=academic_year1)
         OfferYearFactory(acronym="test_offer2", offer=offer, id='200000')
-        offer_proposition = OfferPropositionFactory(offer=offer)
-        OfferPropositionFactory(offer=offer2)
+        offer_proposition = OfferPropositionFactory(offer=offer,id=20000)
+        OfferPropositionFactory(offer=offer2,id=20001)
         FacultyAdviserFactory(adviser=self.manager, offer=offer)
 
         roles = ['PROMOTEUR', 'CO_PROMOTEUR', 'READER', 'PROMOTEUR', 'ACCOMPANIST', 'PRESIDENT']
@@ -116,12 +116,12 @@ class DissertationViewTestCase(TestCase):
         self.assertEqual(response.context[-1]['dissertations'].count(), 6)
 
         response = self.client.get(url, data={"search": "Dissertation",
-                                              "offer_search": "100000"})
+                                              "offer_prop_search": "20000"})
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context[-1]['dissertations'].count(), 6)
 
         response = self.client.get(url, data={"search": "Dissertation",
-                                              "offer_search": "200000"})
+                                              "offer_prop_search": "20001"})
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context[-1]['dissertations'].count(), 0)
 
