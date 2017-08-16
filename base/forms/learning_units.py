@@ -29,6 +29,7 @@ from django.db.models import Prefetch, Count
 from base import models as mdl
 from django.core.exceptions import ValidationError
 
+from base.models.academic_year import current_academic_year
 from base.models.enums import entity_container_year_link_type
 
 MAX_ROW_NUMBERS = 1000
@@ -134,3 +135,10 @@ def _get_latest_entity_version(entity_container_year):
     if entity_container_year.entity.entity_versions:
         entity_version = entity_container_year.entity.entity_versions[-1]
     return entity_version
+
+
+class CreateLearningUnitYearForm(forms.ModelForm):
+    class Meta:
+        model = mdl.learning_unit_year.LearningUnitYear
+        fields = ['academic_year', ]
+        widgets = {'academic_year': forms.Select(attrs={'class': 'form-control', 'rows': 1})}

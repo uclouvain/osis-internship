@@ -31,17 +31,19 @@ from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required, permission_required
 from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404
 from django.utils.translation import ugettext_lazy as _
 from django.views.decorators.http import require_http_methods
 
 from base import models as mdl
 from attribution import models as mdl_attr
 from base.models import entity_container_year
+from base.models.academic_year import current_academic_year, find_academic_year_by_id, AcademicYear
 from base.models.enums import entity_container_year_link_type
 from base.models.enums import learning_container_year_types
 from cms import models as mdl_cms
 from cms.enums import entity_name
-from base.forms.learning_units import LearningUnitYearForm
+from base.forms.learning_units import LearningUnitYearForm, CreateLearningUnitYearForm
 from base.forms.learning_unit_specifications import LearningUnitSpecificationsForm, LearningUnitSpecificationsEditForm
 from base.forms.learning_unit_pedagogy import LearningUnitPedagogyForm, LearningUnitPedagogyEditForm
 from base.forms.learning_unit_component import LearningUnitComponentEditForm
@@ -545,3 +547,8 @@ def learning_class_year_edit(request, learning_unit_year_id):
     form.load_initial()  # Load data from database
     context['form'] = form
     return layout.render(request, "learning_unit/class_edit.html", context)
+
+
+def learning_unit_create(request, academic_year):
+    form = CreateLearningUnitYearForm(initial={'academic_year': academic_year})
+    return layout.render(request, "learning_unit/learning_unit_form.html", {'form': form})
