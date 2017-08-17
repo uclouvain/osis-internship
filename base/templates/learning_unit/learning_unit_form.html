@@ -45,11 +45,15 @@
                 </div>
                 <div class="col-md-10">
                     <label style="margin-top:5px;">{% trans 'acronym' %}</label>
-                    {{ form.acronym }}
+                    {{ form.learning_container_year_type }}
                 </div>
             </div>
             <div>
-                <input class="submit" type="submit" value="Submit">
+                <label style="margin-top:5px;">{% trans 'acronym' %}</label>
+                {{ form.acronym }}
+            </div>
+            <div>
+                <button id="submit" name="submit" class="btn btn-primary center-block" title="SUBMIT" type="submit">SUBMIT</button>
             </div>
         </form>
     </div>
@@ -57,6 +61,25 @@
 {% endblock %}
 {% block script %}
 <script>
-    $("#LearningUnitYearForm").validate();
+$('#submit').on("click",function() {
+    jQuery.validator.addMethod("check_acronym", function(val) {
+        if(val=='test'){
+          return true;
+        }
+        return false;
+    });
+
+    $( "#LearningUnitYearForm" ).validate({
+        rules:{
+            acronym:{ check_acronym: true, required:true },
+        },
+        messages: {
+            acronym: {
+              check_acronym: "We need a good name",
+              required: "We need a name"
+            }
+        }
+    });
+});
 </script>
 {% endblock %}

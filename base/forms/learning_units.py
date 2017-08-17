@@ -31,6 +31,7 @@ from django.core.exceptions import ValidationError
 
 from base.models.academic_year import current_academic_year
 from base.models.enums import entity_container_year_link_type
+from base.models.enums.learning_container_year_types import LEARNING_CONTAINER_YEAR_TYPES
 
 MAX_ROW_NUMBERS = 1000
 
@@ -138,8 +139,11 @@ def _get_latest_entity_version(entity_container_year):
 
 
 class CreateLearningUnitYearForm(forms.ModelForm):
+    learning_container_year_type = forms.CharField(widget=forms.Select(attrs={'class': 'form-control'},
+                                                                       choices=LEARNING_CONTAINER_YEAR_TYPES))
+
     class Meta:
         model = mdl.learning_unit_year.LearningUnitYear
-        fields = ['academic_year', 'acronym']
-        widgets = {'academic_year': forms.Select(attrs={'class': 'form-control', 'required': True}),
-                   'acronym': forms.TextInput(attrs={'class': 'form-control', 'required': True})}
+        fields = ['academic_year', 'acronym', ]
+        widgets = {'academic_year': forms.Select(attrs={'class': 'form-control', 'id': 'academic_year'}),
+                   'acronym': forms.TextInput(attrs={'class': 'form-control', 'id': 'acronym'})}
