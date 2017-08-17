@@ -60,8 +60,8 @@ def student_search(request):
 
 @login_required
 @permission_required('base.can_access_student', raise_exception=True)
-def student_read(request, registration_id):    
-    student = mdl.student.find_by_id(registration_id)
+def student_read(request, student_id):
+    student = mdl.student.find_by_id(student_id)
     if student:
         offers_enrollments = mdl.offer_enrollment.find_by_student(student)
         exams_enrollments = mdl.exam_enrollment.find_by_student(student)
