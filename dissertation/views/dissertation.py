@@ -296,7 +296,7 @@ def manager_dissertations_list(request):
                           'show_validation_commission': show_validation_commission,
                           'show_evaluation_first_year': show_evaluation_first_year,
                           'academic_year_10y': academic_year_10y,
-                          'offers':offers})
+                          'offer_props':offer_props})
 
 
 @login_required
@@ -398,13 +398,14 @@ def manager_dissertations_search(request):
     offers = faculty_adviser.search_by_adviser(adv)
     disserts = dissertation.search(terms=request.GET.get('search',''), active=True)
     disserts = disserts.filter(offer_year_start__offer__in=offers)
-    offer_search = request.GET.get('offer_search','')
+    offer_prop_search = request.GET.get('offer_prop_search','')
     academic_year_search=request.GET.get('academic_year','')
     status_search=request.GET.get('status_search','')
 
-    if offer_search!='':
-        offer_search=int(offer_search)
-        disserts = disserts.filter(offer_year_start__offer=find_by_id(offer_search))
+    if offer_prop_search!='':
+        offer_prop_search=int(offer_prop_search)
+        offer_prop=offer_proposition.find_by_id(offer_prop_search)
+        disserts = disserts.filter(offer_year_start__offer=offer_prop.offer)
     if academic_year_search!='':
         academic_year_search=int(academic_year_search)
         disserts = disserts.filter(offer_year_start__academic_year=find_academic_year_by_id(academic_year_search))
@@ -430,8 +431,8 @@ def manager_dissertations_search(request):
                                        'show_validation_commission': show_validation_commission,
                                        'show_evaluation_first_year': show_evaluation_first_year,
                                        'academic_year_10y': academic_year_10y,
-                                       'offers':offers,
-                                       'offer_search':offer_search,
+                                       'offer_props':offer_props,
+                                       'offer_prop_search':offer_prop_search,
                                        'academic_year_search':academic_year_search,
                                        'status_search':status_search
                                        })
