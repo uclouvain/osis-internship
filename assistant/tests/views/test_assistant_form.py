@@ -24,10 +24,11 @@
 #
 ##############################################################################
 import json
-
+import datetime
 from django.test import TestCase, RequestFactory
 from django.core.urlresolvers import reverse
 
+from base.tests.factories.academic_year import AcademicYearFactory
 from base.tests.factories.learning_unit_year import LearningUnitYearFactory
 
 from assistant.views.assistant_form import form_part4_edit
@@ -41,8 +42,12 @@ class AssistantFormViewTestCase(TestCase):
         self.factory = RequestFactory()
         self.settings = SettingsFactory()
         self.assistant_mandate = AssistantMandateFactory()
-        LearningUnitYearFactory(acronym="LBIR1210")
-        LearningUnitYearFactory(acronym="LBIR1211")
+        today = datetime.date.today()
+        self.current_academic_year = AcademicYearFactory(start_date=today,
+                                                         end_date=today.replace(year=today.year + 1),
+                                                         year=today.year)
+        LearningUnitYearFactory(academic_year=self.current_academic_year, acronym="LBIR1210")
+        LearningUnitYearFactory(academic_year=self.current_academic_year, acronym="LBIR1211")
 
 
     def test_assistant_form_part4_edit_view_basic(self):
