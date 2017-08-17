@@ -37,14 +37,26 @@
 </div>
 <div class="panel panel-default">
     <div class="panel-body">
-        <form method="POST" action="">
+        <form method="POST" action="" id="LearningUnitYearForm">
             <div class="row">
                 <div class="col-md-2">
                     <label style="margin-top:5px;">{% trans 'academic_year' %}</label>
                     {{ form.academic_year }}
                 </div>
+                <div class="col-md-10">
+                    <label style="margin-top:5px;">{% trans 'acronym' %}</label>
+                    {{ form.acronym }}
+                </div>
+            </div>
+            <div>
+                <input class="submit" type="submit" value="Submit">
             </div>
         </form>
     </div>
 </div>
+{% endblock %}
+{% block script %}
+<script>
+    $("#LearningUnitYearForm").validate();
+</script>
 {% endblock %}

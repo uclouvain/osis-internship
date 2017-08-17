@@ -140,5 +140,6 @@ def _get_latest_entity_version(entity_container_year):
 class CreateLearningUnitYearForm(forms.ModelForm):
     class Meta:
         model = mdl.learning_unit_year.LearningUnitYear
-        fields = ['academic_year', ]
-        widgets = {'academic_year': forms.Select(attrs={'class': 'form-control', 'rows': 1})}
+        fields = ['academic_year', 'acronym']
+        widgets = {'academic_year': forms.Select(attrs={'class': 'form-control', 'required': True}),
+                   'acronym': forms.TextInput(attrs={'class': 'form-control', 'required': True})}
