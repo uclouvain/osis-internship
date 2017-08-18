@@ -53,62 +53,42 @@
       <form method="get" action="{% url 'manager_dissertations_search'%}">
         <div class="row">
           <div class="col-md-10">
-            <input class="form-control" id="txt_search" placeholder="{% trans 'search' %}" name="search"
-            value="{{ request.GET.search }}">
+              <input class="form-control" id="txt_search" placeholder="{% trans 'search' %}" name="search"
+                     value="{{ request.GET.search }}">
           </div>
-          <div class="col-md-2">
-            <button type="submit" id="bt_submit_manager_information_search" class="btn btn-primary" role="button"
-            title="{% trans 'search' %}"><span class="glyphicon glyphicon-search"
-            aria-hidden="true"></span></button>
-            <button type="submit" id="bt_submit_manager_information_xlsx" class="btn btn-default" role="button"
-            title="{% trans 'export_search_as_xls' %}" name="bt_xlsx" value="bt_xlsx"><span class="glyphicon glyphicon-download-alt"
-            aria-hidden="true" ></span></button>
-
-            <a href="{% url 'manager_dissertations_new' %}" id="lnk_manager_dissertations_new" class="btn btn-default"
-            role="button" title="{% trans 'create_dissertation'%}" style="margin-left:1em;" value='hide/show'><span class="glyphicon glyphicon-plus"
-            aria-hidden="true"></span></a>
-          </div>
-        </div>
-        <div class="row" id="hideshow" style="margin-left:8px;">
-            <a id="" role="button">
-            <h5>{% trans 'advanced_search' %}
-            <i class="glyphicon glyphicon-menu-up"></i></h5>
-            </a>
-        </div>
-        <div class="row" id="to_hide">
-          <br>
-          <div class="col-md-3" >
-              <label for="academic_year">{% trans 'academic_year' %}</label>
-                  <select name="academic_year" id="academic_year">
-                    <option value=""></option>
-                  {% for academic_year in academic_year_10y %}
-                    <option value="{{ academic_year.id }}"
-                            {% if academic_year_search  == academic_year.id %}
-                            selected
-                            {% endif %} >
-                        {{ academic_year }}</option>
-                  {% endfor %}
-                  </select>
-              {{ academic_year }}
-          </div>
-          <div class="col-md-3" style="border-width:2px;">
-              <label for="offer">{% trans 'offers' %}</label>
-                  <select name="offer_prop_search" id="offer_prop_search">
-                    <option value=""></option>
-                  {% for offer_prop in offer_props %}
-                    <option value='{{ offer_prop.id }}'
-                            {% if offer_prop_search  == offer_prop.id %}
-                            selected
-                            {% endif %} >
-                        {{ offer_prop.acronym }}
-                    </option>
-                  {% endfor %}
-                  </select>
-              {{ academic_year }}
-          </div>
-          <div class="col-md-6">
-              <label for="status_search">{% trans 'status' %}</label>
-                  <select name="status_search" id="status_search">
+          <div id="to_hide">
+              <div class="col-md-3" >
+                  <label for="academic_year">{% trans 'academic_year' %}</label>
+                      <select name="academic_year" id="academic_year" class="form-control">
+                        <option value=""></option>
+                      {% for academic_year in academic_year_10y %}
+                        <option value="{{ academic_year.id }}"
+                                {% if academic_year_search  == academic_year.id %}
+                                selected
+                                {% endif %} >
+                            {{ academic_year }}</option>
+                      {% endfor %}
+                      </select>
+                  {{ academic_year }}
+              </div>
+              <div class="col-md-3">
+                  <label for="offer_prop_search">{% trans 'offers' %}</label>
+                      <select name="offer_prop_search" id="offer_prop_search" class="form-control">
+                        <option value=""></option>
+                      {% for offer_prop in offer_props %}
+                        <option value='{{ offer_prop.id }}'
+                                {% if offer_prop_search  == offer_prop.id %}
+                                selected
+                                {% endif %} >
+                            {{ offer_prop.acronym }}
+                        </option>
+                      {% endfor %}
+                      </select>
+                  {{ academic_year }}
+              </div>
+              <div class="col-md-4">
+                  <label for="status_search">{% trans 'status' %}</label>
+                  <select name="status_search" id="status_search" class="form-control">
                     <option value=""></option>
                     <option value="DRAFT"{% if status_search  ==  "DARFT" %} selected {% endif %}>{% trans 'draft'%}</option>
                     <option value="DIR_SUBMIT"{% if status_search  ==  "DIR_SUBMIT" %} selected {% endif %}>{% trans 'submitted_to_director'%}</option>
@@ -124,10 +104,30 @@
                     <option value="ENDED_WIN"{% if status_search  ==  "ENDED_WIN" %} selected {% endif %}>{% trans 'ended_win'%}</option>
                     <option value="ENDED_LOS"{% if status_search  ==  "ENDED_LOS" %} selected {% endif %}>{% trans 'ended_los'%}</option>
                   </select>
+              </div>
           </div>
+          <div class="pull-right col-md-2">
+            <button type="submit" id="bt_submit_manager_information_search" class="btn btn-primary" role="button"
+            title="{% trans 'search' %}"><span class="glyphicon glyphicon-search"
+            aria-hidden="true"></span></button>
+            <button type="submit" id="bt_submit_manager_information_xlsx" class="btn btn-default" role="button"
+            title="{% trans 'export_search_as_xls' %}" name="bt_xlsx" value="bt_xlsx"><span class="glyphicon glyphicon-download-alt"
+            aria-hidden="true" ></span></button>
+
+            <a href="{% url 'manager_dissertations_new' %}" id="lnk_manager_dissertations_new" class="btn btn-default"
+            role="button" title="{% trans 'create_dissertation'%}" style="margin-left:1em;" value='hide/show'><span class="glyphicon glyphicon-plus"
+            aria-hidden="true"></span></a>
+          </div>
+
         </div>
+            <div id="hideshow">
+                <a id="" role="button">
+                <h5>{% trans 'advanced_search' %}
+                <i class="glyphicon glyphicon-collapse-down"></i></h5>
+                </a>
+            </div>
       </form>
-    </div>
+
         {% if dissertations|length == 0 %}
           <br>
           <label class="alert alert-info" style="margin-left:10%;width:80%;text-align:center;">{% trans 'no_result' %}</label>
@@ -142,7 +142,6 @@
             </thead>
             {% for dissertation in dissertations %}
             <tr class="visible" style="display: table-row;">
-
                 <td>
                     <a href="{% url 'manager_dissertations_detail' pk=dissertation.pk %}">
                         {{ dissertation.title }}
@@ -192,7 +191,9 @@
             {% endfor %}
           </table>
         {% endif %}
+    </div>
   </div>
+
 {% endblock %}
 {% block script %}
 <script type="text/javascript" src="{% static 'js/jquery.dataTables.min.js' %}"></script>
@@ -233,7 +234,8 @@
             });
       jQuery('#hideshow').on('click', function(event) {
              jQuery('#to_hide').toggle('show');
-             $("i", this).toggleClass("glyphicon glyphicon-menu-up glyphicon glyphicon-menu-down");
+             jQuery('#BR_DIV').toggle('show');
+             $("i", this).toggleClass("glyphicon glyphicon-collapse-down glyphicon glyphicon-expand");
         });
     });
 
