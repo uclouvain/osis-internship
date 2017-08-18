@@ -52,11 +52,11 @@
     <div class="panel-body">
       <form method="get" action="{% url 'manager_dissertations_search'%}">
         <div class="row">
-          <div class="col-md-9" style="margin-left:15px;">
+          <div class="col-md-10">
               <input class="form-control" id="txt_search" placeholder="{% trans 'search' %}" name="search"
                      value="{{ request.GET.search }}">
           </div>
-          <div class="col-md-10" id="to_hide">
+          <div id="to_hide">
               <div class="col-md-3" >
                   <label for="academic_year">{% trans 'academic_year' %}</label>
                       <select name="academic_year" id="academic_year" class="form-control">
@@ -106,7 +106,7 @@
                   </select>
               </div>
           </div>
-          <div class="col-md-2" id="block_down">
+          <div class="pull-right col-md-2">
             <button type="submit" id="bt_submit_manager_information_search" class="btn btn-primary" role="button"
             title="{% trans 'search' %}"><span class="glyphicon glyphicon-search"
             aria-hidden="true"></span></button>
@@ -118,15 +118,14 @@
             role="button" title="{% trans 'create_dissertation'%}" style="margin-left:1em;" value='hide/show'><span class="glyphicon glyphicon-plus"
             aria-hidden="true"></span></a>
           </div>
+
         </div>
-        <div class="row">
-            <div id="hideshow" style="margin-left:28px;">
+            <div id="hideshow">
                 <a id="" role="button">
                 <h5>{% trans 'advanced_search' %}
-                <i class="glyphicon glyphicon-menu-up"></i></h5>
+                <i class="glyphicon glyphicon-collapse-down"></i></h5>
                 </a>
             </div>
-        </div>
       </form>
 
         {% if dissertations|length == 0 %}
@@ -236,7 +235,7 @@
       jQuery('#hideshow').on('click', function(event) {
              jQuery('#to_hide').toggle('show');
              jQuery('#BR_DIV').toggle('show');
-             $("i", this).toggleClass("glyphicon glyphicon-menu-up glyphicon glyphicon-menu-down");
+             $("i", this).toggleClass("glyphicon glyphicon-collapse-down glyphicon glyphicon-expand");
         });
     });
 
