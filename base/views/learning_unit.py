@@ -123,6 +123,15 @@ def learning_unit_components(request, learning_unit_year_id):
 
 @login_required
 @permission_required('base.can_access_learningunit', raise_exception=True)
+def learning_unit_volumes_management(request, learning_unit_year_id):
+    context = _get_common_context_learning_unit_year(learning_unit_year_id)
+    context['tab_active'] = 'components'
+    context['experimental_phase'] = True
+    return layout.render(request, "learning_unit/volumes_management.html", context)
+
+
+@login_required
+@permission_required('base.can_access_learningunit', raise_exception=True)
 def learning_unit_pedagogy(request, learning_unit_year_id):
     context = _get_common_context_learning_unit_year(learning_unit_year_id)
     learning_unit_year = context['learning_unit_year']

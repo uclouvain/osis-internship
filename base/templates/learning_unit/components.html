@@ -38,6 +38,11 @@
         {% include "learning_unit/tabs.html" %}
         <div class="tab-content" id="tab_content">
             <div role="tabpanel" class="tab-pane active" id="components">
+                <a href="{% url 'learning_unit_volumes_management' learning_unit_year.id %}"
+                   id="lnk_learning_unit_create" class="btn btn-default pull-right" role="button"
+                   title="{% trans 'learning_unit_create' %}">
+                    Gérer les volumes
+                </a>
                 <table class="table">
                     <thead class="components">
                         <tr>
