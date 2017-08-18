@@ -33,34 +33,29 @@ class LearningClassEditForm(forms.ModelForm):
 
     class Meta:
         model = mdl.learning_class_year.LearningClassYear
-        fields = ['description',]
+        fields = ['description', ]
         widgets = {
-            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 1})
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 5})
         }
 
     def __init__(self, *args, **kwargs):
         self.learning_unit_year = kwargs.pop('learning_unit_year', None)
         self.learning_component_year = kwargs.pop('learning_component_year', None)
-        self.learning_class_year = kwargs.pop('learning_class_year', None)
-        self.description = kwargs.get('description', None)
-        self.used_by = kwargs.pop('used_by', None)
-        self.message = kwargs.pop('message', None)
-        self.title = '{} : {} {}'.format(_('classe'),
-                                         self.learning_component_year.type_letter_acronym,
-                                         self.learning_class_year.acronym)
-
         super(LearningClassEditForm, self).__init__(*args, **kwargs)
 
     def load_initial(self):
-        self.fields['description'].initial = self.learning_class_year.description
-        self.fields['description'].widget.attrs['class'] = "form-control"
-        self.fields['used_by'].initial = self.used_by
-        self.fields['used_by'].widget.attrs['disabled'] = False
+        self.fields['used_by'].initial = _get_links_between_learning_unit_component_and_class(
+                                            self.learning_unit_year,
+                                            self.learning_component_year,
+                                            self.instance).exists()
 
     def save(self, commit=True):
-        cleaned_data = self.cleaned_data
-        self.link_management(cleaned_data.get('used_by'))
-        self.update_description(cleaned_data.get('description'))
+        super(LearningClassEditForm, self).save(commit)
+        used_by = self.cleaned_data.get('used_by')
+        if used_by:
+            self.create_link()
+        else:
+            self.delete_link()
 
     def link_management(self, used_by):
         if used_by:
@@ -69,28 +64,37 @@ class LearningClassEditForm(forms.ModelForm):
             self.delete_link()
 
     def create_link(self):
-        a_learning_unit_component = mdl.learning_unit_component.search(self.learning_component_year,
-                                                                       self.learning_unit_year).first()
         # Create a link between learning_class_year and learning_unit_component
-        if a_learning_unit_component:
-            links = mdl.learning_unit_component_class.search(a_learning_unit_component, self.learning_class_year)
-            if not links.exists():
-                new_learning_unit_component_class = mdl.learning_unit_component_class.LearningUnitComponentClass(
-                    learning_class_year=self.learning_class_year,
-                    learning_unit_component=a_learning_unit_component)
-                new_learning_unit_component_class.save()
+        links = _get_links_between_learning_unit_component_and_class(
+                    self.learning_unit_year,
+                    self.learning_component_year,
+                    self.instance
+                )
+        if not links.exists():
+            learning_unit_component = mdl.learning_unit_component.search(self.learning_component_year,
+                                                                         self.learning_unit_year).first()
+            new_learning_unit_component_class = mdl.learning_unit_component_class.LearningUnitComponentClass(
+                learning_class_year=self.instance,
+                learning_unit_component=learning_unit_component)
+            new_learning_unit_component_class.save()
 
     def delete_link(self):
-        a_learning_unit_component = mdl.learning_unit_component.search(self.learning_component_year,
-                                                                       self.learning_unit_year).first()
-        if a_learning_unit_component:
-            # If exists delete link between learning_class_year and learning_unit_component
-            links = mdl.learning_unit_component_class.search(a_learning_unit_component, self.learning_class_year)
-            if links.exists():
-                for l in links:
-                    l.delete()
+        links = _get_links_between_learning_unit_component_and_class(
+                    self.learning_unit_year,
+                    self.learning_component_year,
+                    self.instance
+                )
+        if links.exists():
+            for l in links:
+                l.delete()
 
-    def update_description(self, description):
-        a_learning_class_year = mdl.learning_class_year.find_by_id(self.learning_class_year.id)
-        a_learning_class_year.description = description
-        a_learning_class_year.save()
+
+def _get_links_between_learning_unit_component_and_class(learning_unit_year,
+                                                         learning_component_year,
+                                                         learning_class_year):
+    learning_unit_component_ids = list(mdl.learning_unit_component.search(learning_component_year, learning_unit_year)\
+                                                                  .values_list('id', flat=True))
+    return mdl.learning_unit_component_class.search(
+        learning_unit_component=learning_unit_component_ids,
+        learning_class_year=learning_class_year
+    )
