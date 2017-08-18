@@ -71,7 +71,7 @@ def learning_units(request):
     found_learning_units = None
     if form.is_valid():
         found_learning_units = form.get_learning_units()
-        _check_if_display_message(request, learning_units)
+        _check_if_display_message(request, found_learning_units)
 
     context = _get_common_context_list_learning_unit_years()
 
@@ -241,8 +241,8 @@ def learning_unit_specifications_edit(request, learning_unit_year_id):
     return layout.render(request, "learning_unit/specifications_edit.html", context)
 
 
-def _check_if_display_message(request, learning_units):
-    if not learning_units:
+def _check_if_display_message(request, found_learning_units):
+    if not found_learning_units:
         messages.add_message(request, messages.WARNING, _('no_result'))
 
 

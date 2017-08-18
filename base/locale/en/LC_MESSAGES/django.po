@@ -52,6 +52,9 @@ msgstr "A=Absent"
 msgid "academic_calendar"
 msgstr "Academic calendar"
 
+msgid "academic_year_small"
+msgstr "Ac yr."
+
 msgid "academic_calendar_management"
 msgstr "Academic calendar management"
 
@@ -1652,7 +1655,7 @@ msgid "additional_requirement_entity"
 msgstr "Additional entity"
 
 msgid "requirement_entity_small"
-msgstr "Req. Ent."
+msgstr "Req. Entity"
 
 msgid "allocation_entity_small"
 msgstr "Alloc. Ent."
