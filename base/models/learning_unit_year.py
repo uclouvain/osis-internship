@@ -71,11 +71,19 @@ class LearningUnitYear(SerializableModel):
     @property
     def parent(self):
         if self.subdivision:
-            return LearningUnitYear.objects.filter(subtype=learning_unit_year_subtypes.FULL,
-                                                      learning_container_year=self.learning_container_year,
-                                                      learning_container_year__acronym=self.learning_container_year.acronym,
-                                                      learning_container_year__container_type=learning_container_year_types.COURSE).first()
+            return LearningUnitYear.objects.filter(
+                subtype=learning_unit_year_subtypes.FULL,
+                learning_container_year=self.learning_container_year,
+                learning_container_year__acronym=self.learning_container_year.acronym,
+                learning_container_year__container_type=learning_container_year_types.COURSE
+            ).first()
         return None
+
+    @property
+    def same_container_learning_unit_years(self):
+        return LearningUnitYear.objects.filter(
+            learning_container_year=self.learning_container_year
+        ).order_by('acronym')
 
 
 def find_by_id(learning_unit_year_id):

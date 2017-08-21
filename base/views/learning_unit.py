@@ -125,6 +125,7 @@ def learning_unit_components(request, learning_unit_year_id):
 @permission_required('base.can_access_learningunit', raise_exception=True)
 def learning_unit_volumes_management(request, learning_unit_year_id):
     context = _get_common_context_learning_unit_year(learning_unit_year_id)
+    context['learning_unit_years'] = get_same_container_learning_unit_years_with_links(context['learning_unit_year'])
     context['tab_active'] = 'components'
     context['experimental_phase'] = True
     return layout.render(request, "learning_unit/volumes_management.html", context)
@@ -275,6 +276,17 @@ def _get_common_context_learning_unit_year(learning_unit_year_id):
         'current_academic_year': mdl.academic_year.current_academic_year()
     }
     return context
+
+
+def get_same_container_learning_unit_years_with_links(learning_unit_year):
+    same_container_learning_unit_years = learning_unit_year.same_container_learning_unit_years
+    learning_unit_years = []
+    for learning_unit_year in same_container_learning_unit_years:
+        learning_unit_years.append({
+            'learning_unit_year': learning_unit_year,
+            'learning_unit_components': mdl.learning_unit_component.find_by_learning_unit_year(learning_unit_year)
+             })
+    return learning_unit_years
 
 
 def get_same_container_year_components(learning_unit_year, with_classes=False):

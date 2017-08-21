@@ -82,6 +82,10 @@ tr.class_year_head{
     font-weight: bold;
 }
 
+table.splitted-bodies tbody tr:first-child td{
+    background-color: #ECECEC;
+}
+
 .badge.fixed_width{
     width: 60px;
 }

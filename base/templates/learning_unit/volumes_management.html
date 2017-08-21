@@ -39,9 +39,56 @@
         <div class="tab-content" id="tab_content">
             <div role="tabpanel" class="tab-pane active" id="components">
                 <h4>Gestion des volumes</h4>
-                <table class="table">
-
-                </table>
+                <form action="#">
+                    <table class="table splitted-bodies">
+                        {% for item in learning_unit_years|dictsort:'learning_unit_year.acronym' %}
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        {{ item.learning_unit_year.acronym }}
+                                    </td>
+                                    <td>
+                                        <abbr title="Volume total">Vol.tot</abbr>
+                                    </td>
+                                    <td>
+                                        <abbr title="Volume Q1">Q1</abbr>
+                                    </td>
+                                    <td>
+                                        <abbr title="Volume Q2">Q2</abbr>
+                                    </td>
+                                    <td>
+                                        <abbr title="Classes prévues">C.P.</abbr>
+                                    </td>
+                                    <td>
+                                        <abbr title="Faculté de Droit et de Criminologie">DRT</abbr>
+                                    </td>
+                                </tr>
+                                {% for lu_component in item.learning_unit_components %}
+                                <tr>
+                                    <td>
+                                        {{ lu_component.learning_component_year.acronym }}
+                                    </td>
+                                    <td>
+                                        <input class="form-control" type="text">
+                                    </td>
+                                    <td>
+                                        <input class="form-control" type="text">
+                                    </td>
+                                    <td>
+                                        <input class="form-control" type="text">
+                                    </td>
+                                    <td>
+                                        <input class="form-control" type="text">
+                                    </td>
+                                    <td>
+                                        <input class="form-control" type="text">
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        {% endfor %}
+                    </table>
+                </form>
             </div>
         </div>
     </div>
