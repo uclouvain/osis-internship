@@ -73,7 +73,7 @@ def learning_units(request):
     found_learning_units = None
     if form.is_valid():
         found_learning_units = form.get_learning_units()
-        _check_if_display_message(request, learning_units)
+        _check_if_display_message(request, found_learning_units)
 
     context = _get_common_context_list_learning_unit_years()
 
@@ -243,8 +243,8 @@ def learning_unit_specifications_edit(request, learning_unit_year_id):
     return layout.render(request, "learning_unit/specifications_edit.html", context)
 
 
-def _check_if_display_message(request, learning_units):
-    if not learning_units:
+def _check_if_display_message(request, found_learning_units):
+    if not found_learning_units:
         messages.add_message(request, messages.WARNING, _('no_result'))
 
 
@@ -527,23 +527,22 @@ def learning_class_year_edit(request, learning_unit_year_id):
              mdl.learning_component_year.find_by_id(request.GET.get('learning_component_year_id'))})
 
     if request.method == 'POST':
-        form = LearningClassEditForm(request.POST,
-                                     ** {'learning_unit_year': context['learning_unit_year'],
-                                         'learning_class_year': context['learning_class_year'],
-                                         'learning_component_year': context['learning_component_year']}
-                                     )
+        form = LearningClassEditForm(
+            request.POST,
+            instance=context['learning_class_year'],
+            learning_unit_year=context['learning_unit_year'],
+            learning_component_year=context['learning_component_year']
+        )
         if form.is_valid():
             form.save()
         return HttpResponseRedirect(reverse("learning_unit_components",
                                             kwargs={'learning_unit_year_id': learning_unit_year_id}))
 
-    form = LearningClassEditForm(**{
-        'learning_unit_year': context['learning_unit_year'],
-        'learning_class_year': context['learning_class_year'],
-        'learning_component_year': context['learning_component_year'],
-        'used_by': _learning_unit_usage_by_class(context['learning_class_year'])
-
-    })
+    form = LearningClassEditForm(
+        instance=context['learning_class_year'],
+        learning_unit_year=context['learning_unit_year'],
+        learning_component_year=context['learning_component_year']
+    )
     form.load_initial()  # Load data from database
     context['form'] = form
     return layout.render(request, "learning_unit/class_edit.html", context)

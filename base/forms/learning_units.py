@@ -58,6 +58,12 @@ class LearningUnitYearForm(forms.Form):
             return None
         return data_cleaned
 
+    def clean_requirement_entity_acronym(self):
+        data_cleaned = self.cleaned_data.get('requirement_entity_acronym')
+        if data_cleaned:
+            return data_cleaned.upper()
+        return data_cleaned
+
     def clean(self):
         clean_data = _clean_data(self.cleaned_data)
         is_valid_search(**clean_data)
