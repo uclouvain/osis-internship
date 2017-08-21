@@ -38,23 +38,39 @@
 <div class="panel panel-default">
     <div class="panel-body">
         <form method="POST" action="" id="LearningUnitYearForm">
-            <div class="row">
-                <div class="col-md-2">
-                    <label style="margin-top:5px;">{% trans 'academic_year' %}</label>
-                    {{ form.academic_year }}
-                </div>
-                <div class="col-md-10">
-                    <label style="margin-top:5px;">{% trans 'acronym' %}</label>
-                    {{ form.learning_container_year_type }}
-                </div>
-            </div>
             <div>
-                <label style="margin-top:5px;">{% trans 'acronym' %}</label>
+                <label>{% trans 'acronym' %}</label>
                 {{ form.acronym }}
+                <br>
+                <label>{% trans 'academic_year' %}</label>
+                {{ form.academic_year }}
+                <br>
+                <label>{% trans 'status' %}</label>
+                {{ form.status }}
+                <br>
+                <br>
+                <label>{% trans 'internship_subtype' %}</label>
+                {{ form.internship_subtype }}
+                <br>
+                <label>{% trans 'end_year' %}</label>
+                {{ form.end_year }}
+                <br>
+                <label>{% trans 'periodicity' %}</label>
+                {{ form.periodicity }}
+                <br>
+                <label>{% trans 'credits' %}</label>
+                {{ form.credits }}
+                <br>
+                <label>{% trans 'campus' %}</label>
+                {{ form.campus }}
+                <br>
+                <label>{% trans 'entity_component_year' %}</label>
+                {{ form.entity_component_year }}
+                <br>
+
             </div>
-            <div>
-                <button id="submit" name="submit" class="btn btn-primary center-block" title="SUBMIT" type="submit">SUBMIT</button>
-            </div>
+            <br>
+            <button id="submit" name="submit" class="btn btn-primary center-block" title="SUBMIT" type="submit">SUBMIT</button>
         </form>
     </div>
 </div>

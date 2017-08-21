@@ -24,14 +24,16 @@
 #
 ##############################################################################
 from django import forms
-from django.db.models import Prefetch, Count
-
+from django.db.models import Prefetch
 from base import models as mdl
 from django.core.exceptions import ValidationError
 
-from base.models.academic_year import current_academic_year
+from base.models.campus import Campus
+from base.models.entity_component_year import EntityComponentYear
 from base.models.enums import entity_container_year_link_type
 from base.models.enums.learning_container_year_types import LEARNING_CONTAINER_YEAR_TYPES
+from base.models.enums.learning_unit_periodicity import PERIODICITY_TYPES
+from base.models.enums.organization_type import ORGANIZATION_TYPE
 
 MAX_ROW_NUMBERS = 1000
 
@@ -139,11 +141,43 @@ def _get_latest_entity_version(entity_container_year):
 
 
 class CreateLearningUnitYearForm(forms.ModelForm):
-    learning_container_year_type = forms.CharField(widget=forms.Select(attrs={'class': 'form-control'},
+    campus = Campus.objects.filter(organization__type=ORGANIZATION_TYPE[0][0])
+    # entity_component_year = EntityComponentYear.objects\
+    #     .filter(entity_container_year__entity__organization__type=ORGANIZATION_TYPE[0][0])
+    learning_container_year_type = forms.CharField(widget=forms.Select(attrs={'class': 'form-control',
+                                                                              'required': True},
                                                                        choices=LEARNING_CONTAINER_YEAR_TYPES))
+    end_year = forms.CharField(widget=forms.DateInput(attrs={'class': 'form-control'}))
+    periodicity = forms.CharField(widget=forms.Select(attrs={'class': 'form-control'},
+                                                      choices=PERIODICITY_TYPES))
+    campus = forms.CharField(widget=forms.Select(attrs={'class': 'form-control'},
+                                                 choices=((x.id, x.name) for x in campus)))
+    # entity_component_year = forms.CharField(widget=forms.Select(attrs={'class': 'form-control'},
+    #                                                             choices=((x.id, x.entity_container_year.entity)
+    #                                                                      for x in entity_component_year)))
 
     class Meta:
         model = mdl.learning_unit_year.LearningUnitYear
-        fields = ['academic_year', 'acronym', ]
-        widgets = {'academic_year': forms.Select(attrs={'class': 'form-control', 'id': 'academic_year'}),
-                   'acronym': forms.TextInput(attrs={'class': 'form-control', 'id': 'acronym'})}
+        fields = ['acronym', 'academic_year', 'status', 'internship_subtype', 'end_year', 'periodicity', 'credits',
+                  'campus', 'entity_component_year', ]
+        widgets = {'acronym': forms.TextInput(attrs={'class': 'form-control',
+                                                     'id': 'acronym',
+                                                     'required': True}),
+                   'academic_year': forms.Select(attrs={'class': 'form-control',
+                                                        'id': 'academic_year',
+                                                        'required': True}),
+                   'status': forms.CheckboxInput(attrs={'id': 'status',
+                                                        'required': True}),
+                   'internship_subtype': forms.Select(attrs={'class': 'form-control',
+                                                             'id': 'internship_subtype',
+                                                             'required': True}),
+                   'periodicity': forms.Select(attrs={'class': 'form-control',
+                                                      'id': 'periodicity',
+                                                      'required': True}),
+                   'credits': forms.TextInput(attrs={'class': 'form-control',
+                                                     'id': 'credits',
+                                                     'required': True}),
+                   'campus': forms.TextInput(attrs={'class': 'form-control',
+                                                    'id': 'campus',
+                                                    'required': True}),
+                   }
