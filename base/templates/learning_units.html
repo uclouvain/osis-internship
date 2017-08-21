@@ -62,7 +62,7 @@
                     {{ form.acronym }}
                 </div>
 
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <label for="id_title">{% trans 'title' %}</label>
                     {{ form.title }}
                 </div>
@@ -96,13 +96,7 @@
                         {% endfor %}
                     </select>
                 </div>
-                <div class="col-md-1 text-center">
-                    <button type="submit" id="bt_submit_learning_unit_search" style="margin-top:24px;"
-                            class="btn btn-primary" role="button"
-                            title="{% trans 'learning_unit_search' %}">
-                         <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-                    </button>
-                </div>
+
             </div>
 
             <div class="row" style="margin-top:10px;">
@@ -125,7 +119,7 @@
                     <label for="id_requirement_entity_acronym">{% trans 'requirement_entity_small' %}</label>
                     {{ form.requirement_entity_acronym }}
                 </div>
-                <div class="col-md-8">
+                <div class="col-md-7">
                     <div style="display:inline-block;">
                         <input type="checkbox" id="id_with_entity_subordinated"
                            name="with_entity_subordinated" style="margin-top:37px;"
@@ -135,8 +129,13 @@
                         <label>{% trans 'with_entity_subordinated_small' %}</label>
                     </div>
                 </div>
-
-
+                <div class="col-md-1 text-right" style="line-height:55px;">
+                    <button type="submit" id="bt_submit_learning_unit_search" style="vertical-align:bottom;"
+                            class="btn btn-primary" role="button"
+                            title="{% trans 'learning_unit_search' %}">
+                         <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                    </button>
+                </div>
             </div>
         </div>
     </form>
