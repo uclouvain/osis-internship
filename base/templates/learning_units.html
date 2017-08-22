@@ -187,9 +187,11 @@
                 <td>{% if learning_unit.status %}
                         <span class="glyphicon glyphicon-ok-circle" aria-hidden="true" style="color:green;"
                               title="{% trans  'active' %}"></span>
+                        <div style="display:none;">1</div>
                     {% else %}
                         <span class="glyphicon glyphicon-ok-circle" aria-hidden="true" style="color:gray;"
                               title="{% trans  'inactive' %}"></span>
+                        <div style="display:none;">0</div>
                     {% endif %}
                 </td>
             </tr>
