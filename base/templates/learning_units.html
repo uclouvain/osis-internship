@@ -208,18 +208,15 @@
     {
         $('#table_learning_units').DataTable(
             {
-                stateSave: true,
-                "aoColumnDefs": [
-                    { 'bSortable': false, 'aTargets': [ 4 ] }
-                ],
+                "stateSave": true,
                 "paging" : false,
                 "ordering" : true,
                 "info"  : false,
                 "searching" : false,
-                "language":
-                {"oAria":{
-                    "sSortAscending":  "{% trans 'datatable_sortascending'%}",
-                    "sSortDescending": "{% trans 'datatable_sortdescending'%}",
+                "language": {
+                    "oAria": {
+                        "sSortAscending":  "{% trans 'datatable_sortascending'%}",
+                        "sSortDescending": "{% trans 'datatable_sortdescending'%}",
                     }
                 }
             })
