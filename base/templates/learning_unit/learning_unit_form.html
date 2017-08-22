@@ -39,6 +39,9 @@
     <div class="panel-body">
         <form method="POST" action="" id="LearningUnitYearForm">
             <div>
+                <label>{% trans 'learning_container_year_type' %}</label>
+                {{ form.learning_container_year_type }}
+                <br>
                 <label>{% trans 'acronym' %}</label>
                 {{ form.acronym }}
                 <br>
@@ -64,10 +67,12 @@
                 <label>{% trans 'campus' %}</label>
                 {{ form.campus }}
                 <br>
-                <label>{% trans 'entity_component_year' %}</label>
-                {{ form.entity_component_year }}
+                <label>{% trans 'main_title' %}</label>
+                {{ form.title }}
                 <br>
-
+                <label>{% trans 'requirement_entity' %}</label>
+                {{ form.requirement_entity }}
+                <br>
             </div>
             <br>
             <button id="submit" name="submit" class="btn btn-primary center-block" title="SUBMIT" type="submit">SUBMIT</button>
