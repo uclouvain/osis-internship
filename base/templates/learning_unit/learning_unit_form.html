@@ -37,70 +37,57 @@
 </div>
 <div class="panel panel-default">
     <div class="panel-body">
-        <form method="POST" action="" id="LearningUnitYearForm">
-            <div>
-                <label>{% trans 'learning_container_year_type' %}</label>
-                {{ form.learning_container_year_type }}
-                <br>
-                <label>{% trans 'acronym' %}</label>
-                {{ form.acronym }}
-                <br>
-                <label>{% trans 'academic_year' %}</label>
-                {{ form.academic_year }}
-                <br>
-                <label>{% trans 'status' %}</label>
-                {{ form.status }}
-                <br>
-                <br>
-                <label>{% trans 'internship_subtype' %}</label>
-                {{ form.internship_subtype }}
-                <br>
-                <label>{% trans 'end_year' %}</label>
-                {{ form.end_year }}
-                <br>
-                <label>{% trans 'periodicity' %}</label>
-                {{ form.periodicity }}
-                <br>
-                <label>{% trans 'credits' %}</label>
-                {{ form.credits }}
-                <br>
-                <label>{% trans 'campus' %}</label>
-                {{ form.campus }}
-                <br>
-                <label>{% trans 'main_title' %}</label>
-                {{ form.title }}
-                <br>
-                <label>{% trans 'requirement_entity' %}</label>
-                {{ form.requirement_entity }}
-                <br>
+        <form method="post" action="{% url 'learning_unit_year_add' %}" id="LearningUnitYearForm">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-6">
+                    <label>{% trans 'academic_year' %}</label>
+                    {{ form.academic_year }}
+                </div>
+                <div class="col-md-6">
+                    <label>{% trans 'learning_container_year_type' %}</label>
+                    {{ form.learning_container_year_type }}
+                </div>
             </div>
+            <div id="hidden_div" style="display: none;">Hello hidden content</div>
             <br>
-            <button id="submit" name="submit" class="btn btn-primary center-block" title="SUBMIT" type="submit">SUBMIT</button>
+            <div class="panel-body">
+                <button type="submit" id="learning_unit_year_add" class="btn btn-primary" name="action" value="add" role="button"
+                            title="{% trans 'add' %}">{% trans 'save' %}</button>
+                <button type="submit" id="scores_responsible_cancel" class="btn btn-default" role="button"
+                            title="{% trans 'cancel' %}">{% trans 'cancel' %}</button>
+            </div>
         </form>
     </div>
 </div>
 {% endblock %}
 {% block script %}
 <script>
-$('#submit').on("click",function() {
-    jQuery.validator.addMethod("check_acronym", function(val) {
-        if(val=='test'){
-          return true;
+$('#learning_unit_year_add').on("click",function() {
+    jQuery.validator.addMethod("check_learning_container_year_type", function(val) {
+        if(val=='---------'){
+          return false;
         }
-        return false;
+        return true;
     });
-
     $( "#LearningUnitYearForm" ).validate({
         rules:{
-            acronym:{ check_acronym: true, required:true },
+            learning_container_year_type:{ check_learning_container_year_type: true, required:true },
         },
         messages: {
-            acronym: {
-              check_acronym: "We need a good name",
-              required: "We need a name"
+            learning_container_year_type: {
+              check_learning_container_year_type: "",
+              required: ""
             }
         }
     });
 });
+
+function showDiv(elem){
+   if(elem.value == "COURSE")
+        document.getElementById('hidden_div').style.display = "block";
+   else
+    document.getElementById('hidden_div').style.display = "none";
+}
 </script>
 {% endblock %}

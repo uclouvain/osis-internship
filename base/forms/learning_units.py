@@ -24,6 +24,8 @@
 #
 ##############################################################################
 import datetime
+from enum import Enum
+
 from django import forms
 from django.db.models import Prefetch
 from django.utils import timezone
@@ -32,9 +34,7 @@ from base import models as mdl
 from django.core.exceptions import ValidationError
 
 from base.models.campus import Campus
-from base.models.entity import Entity
-from base.models.entity_component_year import EntityComponentYear
-from base.models.entity_version import EntityVersion, find_latest_version
+from base.models.entity_version import find_latest_version
 from base.models.enums import entity_container_year_link_type
 from base.models.enums.learning_container_year_types import LEARNING_CONTAINER_YEAR_TYPES
 from base.models.enums.learning_unit_periodicity import PERIODICITY_TYPES
@@ -156,8 +156,10 @@ class CreateLearningUnitYearForm(forms.ModelForm):
     campus = Campus.objects.filter(organization__type=ORGANIZATION_TYPE[0][0])
     entities = find_latest_version(date=datetime.datetime.now(get_tzinfo()))
     learning_container_year_type = forms.CharField(widget=forms.Select(attrs={'class': 'form-control',
-                                                                              'required': True},
-                                                                       choices=LEARNING_CONTAINER_YEAR_TYPES))
+                                                                              'required': True,
+                                                                              'onchange': 'showDiv(this)'},
+                                                                       choices=(("---------", "---------"),)
+                                                                       .__add__(LEARNING_CONTAINER_YEAR_TYPES)))
     end_year = forms.CharField(widget=forms.DateInput(attrs={'class': 'form-control'}))
     periodicity = forms.CharField(widget=forms.Select(attrs={'class': 'form-control'},
                                                       choices=PERIODICITY_TYPES))
@@ -169,16 +171,14 @@ class CreateLearningUnitYearForm(forms.ModelForm):
     class Meta:
         model = mdl.learning_unit_year.LearningUnitYear
         fields = ['learning_container_year_type', 'acronym', 'academic_year', 'status', 'internship_subtype',
-                  'end_year', 'periodicity', 'credits',
-                  'campus', 'title', 'requirement_entity']
+                  'end_year', 'periodicity', 'credits', 'campus', 'title', 'requirement_entity']
         widgets = {'acronym': forms.TextInput(attrs={'class': 'form-control',
                                                      'id': 'acronym',
                                                      'required': True}),
                    'academic_year': forms.Select(attrs={'class': 'form-control',
                                                         'id': 'academic_year',
                                                         'required': True}),
-                   'status': forms.CheckboxInput(attrs={'id': 'status',
-                                                        'required': True}),
+                   'status': forms.CheckboxInput(attrs={'id': 'status'}),
                    'internship_subtype': forms.Select(attrs={'class': 'form-control',
                                                              'id': 'internship_subtype',
                                                              'required': True}),
@@ -187,5 +187,5 @@ class CreateLearningUnitYearForm(forms.ModelForm):
                                                      'required': True}),
                    'title': forms.TextInput(attrs={'class': 'form-control',
                                                    'id': 'title',
-                                                   'required': True}),
+                                                   'required': True})
                    }

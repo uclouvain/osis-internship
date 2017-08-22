@@ -31,7 +31,7 @@ from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required, permission_required
 from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.utils.translation import ugettext_lazy as _
 from django.views.decorators.http import require_http_methods
 
@@ -41,6 +41,8 @@ from base.models import entity_container_year
 from base.models.academic_year import current_academic_year, find_academic_year_by_id, AcademicYear
 from base.models.enums import entity_container_year_link_type
 from base.models.enums import learning_container_year_types
+from base.models.learning_unit import LearningUnit
+from base.models.learning_unit_year import LearningUnitYear
 from cms import models as mdl_cms
 from cms.enums import entity_name
 from base.forms.learning_units import LearningUnitYearForm, CreateLearningUnitYearForm
@@ -551,3 +553,19 @@ def learning_class_year_edit(request, learning_unit_year_id):
 def learning_unit_create(request, academic_year):
     form = CreateLearningUnitYearForm(initial={'academic_year': academic_year})
     return layout.render(request, "learning_unit/learning_unit_form.html", {'form': form})
+
+
+def learning_unit_year_add(request):
+    if request.POST.get('action') == "add":
+        form = CreateLearningUnitYearForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            academic_year = data['academic_year']
+            year = academic_year.year
+            learning_unit = LearningUnit(acronym=data['acronym'], title=data['title'],
+                                         start_year=year, periodicity=data['periodicity'])
+            learning_unit.save()
+            instance = form.save(commit=False)
+            instance.learning_unit = learning_unit
+            instance.save()
+    return redirect('learning_units')
