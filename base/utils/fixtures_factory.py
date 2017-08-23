@@ -158,16 +158,10 @@ def make_fixtures(request):
 
     entity_versions = mdl_base.entity_version.EntityVersion.objects.all()
     list_objects.extend(entity_versions)
-    # Strang after synchro, the field learning_container_id is empty in the table learning_unit
-    # The problem is going to be corrected in the ticket legacy #665
-    learning_units = mdl_base.learning_unit.LearningUnit.objects.filter(learning_container__in=learning_containers)
+
+    learning_units = mdl_base.learning_unit.LearningUnit.objects.filter(learning_container__in=learning_containers)[:MAX_ROW_NUMBER]
     list_objects.extend(learning_units)
 
-    # To correct the preceding problem
-    if learning_units is None or len(learning_units) == 0:
-        learning_units = mdl_base.learning_unit.LearningUnit.objects.all()[:MAX_ROW_NUMBER]
-        list_objects.extend(learning_units)
-    #
     learning_unit_years = mdl_base.learning_unit_year.LearningUnitYear.objects.filter(
         academic_year__in=academic_years,
         learning_unit__in=learning_units,
