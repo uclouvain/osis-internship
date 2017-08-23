@@ -30,6 +30,7 @@ from base.models import campus
 from base.models import education_group
 from base.models import education_group_year
 from base.models import entity
+from base.models import entity_address
 from base.models import entity_container_year
 from base.models import entity_component_year
 from base.models import entity_manager
@@ -52,11 +53,13 @@ from base.models import offer_type
 from base.models import offer_year
 from base.models import offer_year_calendar
 from base.models import offer_year_domain
+from base.models import offer_year_entity
 from base.models import organization
 from base.models import organization_address
 from base.models import person
 from base.models import person_address
 from base.models import program_manager
+from base.models import score_sheet_address
 from base.models import session_exam
 from base.models import session_exam_calendar
 from base.models import session_exam_deadline

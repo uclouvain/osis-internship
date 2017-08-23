@@ -76,6 +76,7 @@ class OfferYear(SerializableModel):
     grade_type = models.ForeignKey('reference.GradeType', blank=True, null=True)
     enrollment_enabled = models.BooleanField(default=False)
     offer_type = models.ForeignKey('OfferType', blank=True, null=True)
+    score_sheet_address = models.OneToOneField('ScoreSheetAddress', blank=True, null=True)
 
     def __str__(self):
         return u"%s - %s" % (self.academic_year, self.acronym)
