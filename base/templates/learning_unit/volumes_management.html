@@ -40,50 +40,114 @@
             <div role="tabpanel" class="tab-pane active" id="components">
                 <h4>Gestion des volumes</h4>
                 <form action="#">
-                    <table class="table splitted-bodies">
-                        {% for item in learning_unit_years|dictsort:'learning_unit_year.acronym' %}
+                    <table class="table volumes">
+                        {% for learning_unit in learning_units %}
                             <tbody>
                                 <tr>
                                     <td>
-                                        {{ item.learning_unit_year.acronym }}
+                                        {{ learning_unit.acronym }}
                                     </td>
+                                    <td>[</td>
                                     <td>
                                         <abbr title="Volume total">Vol.tot</abbr>
                                     </td>
+                                    <td>=</td>
                                     <td>
                                         <abbr title="Volume Q1">Q1</abbr>
                                     </td>
+                                    <td>+</td>
                                     <td>
                                         <abbr title="Volume Q2">Q2</abbr>
                                     </td>
+                                    <td>]</td>
+                                    <td>*</td>
                                     <td>
                                         <abbr title="Classes prévues">C.P.</abbr>
                                     </td>
+                                    <td>=</td>
+                                    <td>[</td>
+                                    {% if learning_unit.entities.REQUIREMENT_ENTITY %}
                                     <td>
-                                        <abbr title="Faculté de Droit et de Criminologie">DRT</abbr>
+                                        <abbr title="{{learning_unit.entities.REQUIREMENT_ENTITY.title|default_if_none:''}}">
+                                            {{learning_unit.entities.REQUIREMENT_ENTITY.acronym|default_if_none:'-'}}
+                                        </abbr>
                                     </td>
+                                    {% endif %}
+
+                                    {% if learning_unit.entities.ADDITIONAL_REQUIREMENT_ENTITY_1 %}
+                                    <td>+</td>
+                                    <td>
+                                        <abbr title="{{learning_unit.entities.ADDITIONAL_REQUIREMENT_ENTITY_1.title|default_if_none:''}}">
+                                            {{learning_unit.entities.ADDITIONAL_REQUIREMENT_ENTITY_1.acronym|default_if_none:'-'}}
+                                        </abbr>
+                                    </td>
+                                    {% endif %}
+
+                                    {% if learning_unit.entities.ADDITIONAL_REQUIREMENT_ENTITY_2 %}
+                                    <td>+</td>
+                                    <td>
+                                        <abbr title="{{learning_unit.entities.ADDITIONAL_REQUIREMENT_ENTITY_2.title|default_if_none:''}}">
+                                            {{learning_unit.entities.ADDITIONAL_REQUIREMENT_ENTITY_2.acronym|default_if_none:'-'}}
+                                        </abbr>
+                                    </td>
+                                    {% endif %}
+                                    <td>=</td>
+                                    <td>
+                                        <abbr title="Volume de charge total">Vol.charge</abbr>
+                                    </td>
+                                    <td>]</td>
                                 </tr>
-                                {% for lu_component in item.learning_unit_components %}
-                                <tr>
-                                    <td>
-                                        {{ lu_component.learning_component_year.acronym }}
-                                    </td>
-                                    <td>
-                                        <input class="form-control" type="text">
-                                    </td>
-                                    <td>
-                                        <input class="form-control" type="text">
-                                    </td>
-                                    <td>
-                                        <input class="form-control" type="text">
-                                    </td>
-                                    <td>
-                                        <input class="form-control" type="text">
-                                    </td>
-                                    <td>
-                                        <input class="form-control" type="text">
-                                    </td>
-                                </tr>
+                                {% for component in learning_unit.components %}
+                                    <tr>
+                                        <td>
+                                            <abbr title="{% if component.type %}{% trans component.type %} {% endif %}{{ component.acronym }}">
+                                                {{ component.acronym }}
+                                            </abbr>
+                                        </td>
+                                        <td></td>
+                                        <td>
+                                            <input class="form-control" type="text">
+                                        </td>
+                                        <td></td>
+                                        <td>
+                                            <input class="form-control" type="text">
+                                        </td>
+                                        <td></td>
+                                        <td>
+                                            <input class="form-control" type="text">
+                                        </td>
+                                        <td></td>
+                                        <td></td>
+                                        <td>
+                                            <input class="form-control" type="text" value="{{ component.planned_classes | default_if_none:0 }}">
+                                        </td>
+                                        <td></td>
+                                        <td></td>
+                                        {% if learning_unit.entities.REQUIREMENT_ENTITY %}
+                                        <td>
+                                            <input class="form-control" type="text">
+                                        </td>
+                                        {% endif %}
+
+                                        {% if learning_unit.entities.ADDITIONAL_REQUIREMENT_ENTITY_1 %}
+                                        <td></td>
+                                        <td>
+                                            <input class="form-control" type="text">
+                                        </td>
+                                        {% endif %}
+
+                                        {% if learning_unit.entities.ADDITIONAL_REQUIREMENT_ENTITY_2 %}
+                                        <td></td>
+                                        <td>
+                                            <input class="form-control" type="text">
+                                        </td>
+                                        {% endif %}
+                                        <td></td>
+                                        <td>
+                                            <input class="form-control" type="text">
+                                        </td>
+                                        <td></td>
+                                    </tr>
                                 {% endfor %}
                             </tbody>
                         {% endfor %}

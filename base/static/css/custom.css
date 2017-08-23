@@ -58,20 +58,20 @@ div[class^="django-ckeditor-widget"] > div {
 }
 
 tbody.used_component{
-    background-color: #ECECEC;
+    background-color: #ececec;
 }
 
 tbody.used_component tr.class_year{
-    background-color: #ECFCFC;
+    background-color: #ecfcfc;
 }
 
 tbody.unused_component{
-    background-color: #F3F3F3;
+    background-color: #f3f3f3;
     color: #909090;
 }
 
 tbody.unused_component tr.class_year{
-    background-color: #F3FCFC;
+    background-color: #f3fcfc;
 }
 
 tr.class_year{
@@ -82,8 +82,32 @@ tr.class_year_head{
     font-weight: bold;
 }
 
-table.splitted-bodies tbody tr:first-child td{
-    background-color: #ECECEC;
+table.volumes tr td{
+    text-align: center;
+}
+
+table.volumes tbody{
+    border-top: 2px solid #c0c0c0;
+    border-bottom: 2px solid #c0c0c0;
+}
+
+table.volumes tbody tr td{
+    background-color: #ecfcfc;
+}
+
+table.volumes tbody tr td:nth-child(1),
+table.volumes tbody tr td:nth-child(9),
+table.volumes tbody tr td:nth-child(11){
+    background-color: #f3f3f3;
+}
+
+
+table.volumes thead{
+    border: 2px solid #ddd;
+}
+
+table.volumes thead tr td{
+    text-align: center;
 }
 
 .badge.fixed_width{
