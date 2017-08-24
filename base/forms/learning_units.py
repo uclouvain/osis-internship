@@ -24,30 +24,29 @@
 #
 ##############################################################################
 import datetime
-from enum import Enum
-
+from django.utils.translation import ugettext_lazy as _
 from django import forms
 from django.db.models import Prefetch
-from django.utils import timezone
-
 from base import models as mdl
 from django.core.exceptions import ValidationError
-
 from base.models.campus import Campus
 from base.models.entity_version import find_latest_version
 from base.models.enums import entity_container_year_link_type
 from base.models.enums.learning_container_year_types import LEARNING_CONTAINER_YEAR_TYPES
 from base.models.enums.learning_unit_periodicity import PERIODICITY_TYPES
 from base.models.enums.organization_type import ORGANIZATION_TYPE
+from base.models.learning_unit_year import LearningUnitYear
 from osis_common.utils.datetime import get_tzinfo
 
 MAX_ROW_NUMBERS = 1000
 
+
 class LearningUnitYearForm(forms.Form):
     academic_year_id = forms.CharField(max_length=10, required=False)
     container_type = subtype = status = forms.CharField(required=False)
-    acronym = title = requirement_entity_acronym = forms.CharField(widget=forms.TextInput(attrs={'size': '10', 'class': 'form-control'}),
-                                                                   max_length=20, required=False)
+    acronym = title = requirement_entity_acronym = forms.CharField(
+        widget=forms.TextInput(attrs={'size': '10', 'class': 'form-control'}),
+        max_length=20, required=False)
     with_entity_subordinated = forms.BooleanField(required=False)
 
     def clean_acronym(self):
@@ -80,18 +79,18 @@ class LearningUnitYearForm(forms.Form):
 
         entity_container_prefetch = Prefetch('learning_container_year__entitycontaineryear_set',
                                              queryset=mdl.entity_container_year.search(
-                                                        link_type=[entity_container_year_link_type.ALLOCATION_ENTITY,
-                                                                   entity_container_year_link_type.REQUIREMENT_ENTITY])
-                                                        .prefetch_related(
-                                                            Prefetch('entity__entityversion_set', to_attr='entity_versions')
-                                                        ),
+                                                 link_type=[entity_container_year_link_type.ALLOCATION_ENTITY,
+                                                            entity_container_year_link_type.REQUIREMENT_ENTITY])
+                                             .prefetch_related(
+                                                 Prefetch('entity__entityversion_set', to_attr='entity_versions')
+                                             ),
                                              to_attr='entity_containers_year')
 
         clean_data['learning_container_year_id'] = _get_filter_learning_container_ids(clean_data)
-        learning_units = mdl.learning_unit_year.search(**clean_data)\
-                                               .select_related('academic_year', 'learning_container_year')\
-                                               .prefetch_related(entity_container_prefetch)\
-                                               .order_by('academic_year__year', 'acronym')[:MAX_ROW_NUMBERS]
+        learning_units = mdl.learning_unit_year.search(**clean_data) \
+                             .select_related('academic_year', 'learning_container_year') \
+                             .prefetch_related(entity_container_prefetch) \
+                             .order_by('academic_year__year', 'acronym')[:MAX_ROW_NUMBERS]
 
         return [_append_latest_entities(learning_unit) for learning_unit in learning_units]
 
@@ -118,8 +117,8 @@ def _get_filter_learning_container_ids(filter_data):
     if requirement_entity_acronym:
         entity_ids = _get_entities_ids(requirement_entity_acronym, with_entity_subordinated)
         return list(mdl.entity_container_year.search(link_type=entity_container_year_link_type.REQUIREMENT_ENTITY,
-                                                     entity_id=entity_ids)\
-                                             .values_list('learning_container_year', flat=True).distinct())
+                                                     entity_id=entity_ids) \
+                    .values_list('learning_container_year', flat=True).distinct())
     return None
 
 
@@ -155,12 +154,10 @@ def _get_latest_entity_version(entity_container_year):
 class CreateLearningUnitYearForm(forms.ModelForm):
     campus = Campus.objects.filter(organization__type=ORGANIZATION_TYPE[0][0])
     entities = find_latest_version(date=datetime.datetime.now(get_tzinfo()))
-    learning_container_year_type = forms.CharField(widget=forms.Select(attrs={'class': 'form-control',
-                                                                              'required': True,
-                                                                              'onchange': 'showDiv(this)'},
-                                                                       choices=(("---------", "---------"),)
-                                                                       .__add__(LEARNING_CONTAINER_YEAR_TYPES)))
-    end_year = forms.CharField(widget=forms.DateInput(attrs={'class': 'form-control'}))
+    learning_container_year_type = forms.CharField(
+        widget=forms.Select(attrs={'class': 'form-control', 'required': True, 'onchange': 'showDiv(this.value)'},
+                            choices=(("---------", "---------"),) + LEARNING_CONTAINER_YEAR_TYPES))
+    end_year = forms.CharField(widget=forms.DateInput(attrs={'class': 'form-control', 'required': True}))
     periodicity = forms.CharField(widget=forms.Select(attrs={'class': 'form-control'},
                                                       choices=PERIODICITY_TYPES))
     campus = forms.CharField(widget=forms.Select(attrs={'class': 'form-control'},
@@ -189,3 +186,18 @@ class CreateLearningUnitYearForm(forms.ModelForm):
                                                    'id': 'title',
                                                    'required': True})
                    }
+
+    def is_valid(self):
+        valid = super(CreateLearningUnitYearForm, self).is_valid()
+        print(self.data['academic_year'])
+        academic_year = mdl.academic_year.find_academic_year_by_id(self.data['academic_year'])
+        learning_unit_years = LearningUnitYear.objects.filter(academic_year__year__gte=academic_year.year,
+                                                              acronym__iexact=self.data['acronym'])
+        learning_unit_years_list = [learning_unit_year.acronym.lower() for learning_unit_year in learning_unit_years]
+        if valid:
+            if self.cleaned_data['acronym'].lower() in learning_unit_years_list:
+                self._errors['acronym'] = _('existing_acronym')
+                return False
+            else:
+                return True
+        return False

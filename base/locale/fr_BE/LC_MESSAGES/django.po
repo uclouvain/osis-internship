@@ -1771,3 +1771,6 @@ msgstr "partie 2"
 
 msgid "title_official"
 msgstr "Intitulé officiel"
+
+msgid "existing_acronym"
+msgstr "Acronyme déja existant"

@@ -568,4 +568,6 @@ def learning_unit_year_add(request):
             instance = form.save(commit=False)
             instance.learning_unit = learning_unit
             instance.save()
-    return redirect('learning_units')
+            return redirect('learning_units')
+        else:
+            return layout.render(request, "learning_unit/learning_unit_form.html", {'form': form})

@@ -1767,3 +1767,6 @@ msgstr "part 2"
 
 msgid "title_official"
 msgstr "Official title"
+
+msgid "existing_acronym"
+msgstr "Existing acronym"
