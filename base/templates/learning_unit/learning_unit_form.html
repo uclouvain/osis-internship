@@ -36,7 +36,7 @@
     <h2>{% trans 'create_learning_unit' %}</h2>
 </div>
 <div class="panel panel-default">
-    <div class="panel-body">
+    <div class="panel-body" id="LearningUnitYearDiv">
         <form method="post" action="{% url 'learning_unit_year_add' %}" id="LearningUnitYearForm">
             {% csrf_token %}
             <div class="row">
@@ -110,49 +110,66 @@
 {% endblock %}
 {% block script %}
 <script>
-<!--$('#learning_unit_year_add').on("click",function() {-->
-    <!--jQuery.validator.addMethod("check_learning_container_year_type", function(val) {-->
-        <!--if(val=='-&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;'){-->
-          <!--return false;-->
-        <!--}-->
-        <!--return true;-->
-    <!--});-->
+    $(document).ready(function() {
+        $('#acronym').on("click",function() {
+            var message = "";
+            var messageFunc = function () { return message; };
 
-    <!--jQuery.validator.addMethod("check_acronym", function(val) {-->
-        <!--if(learning_unit_years.indexOf(val) !== -1){-->
-          <!--return false;-->
-        <!--}-->
-        <!--return true;-->
-    <!--});-->
+            jQuery.validator.addMethod("check_acronym", function(val) {
+                var res;
 
-    <!--$( "#LearningUnitYearForm" ).validate({-->
-        <!--rules:{-->
-            <!--learning_container_year_type:{ check_learning_container_year_type: true, required: true },-->
-            <!--acronym:{ check_acronym: true, required: true },-->
-        <!--},-->
-        <!--messages: {-->
-            <!--learning_container_year_type: { check_learning_container_year_type: "", required: ""},-->
-            <!--acronym: { check_acronym: "l'acronym existe déjà", required: ""}-->
-        <!--}-->
-    <!--});-->
-<!--});-->
-const partim = "PARTIM";
-const blank = "---------";
-$( document ).ready(function() {
-    if('{{form.learning_container_year_type.value}}' != partim && '{{form.learning_container_year_type.value}}' != blank){
-        console.log(partim);
-        console.log(blank);
-        console.log('{{form.learning_container_year_type.value}}');
-        document.getElementById('is_not_partim').style.display = "block";
+                $.ajax({
+                    async:false,
+                    url: "/learning_units/learning_unit_check?acronym=" + val + "&year_id=" + $('#academic_year').val()
+                }).then(function (data) {
+                    var newMessage = [];
+
+                    if (data['valid']){
+                        res = true;
+                    }else{
+                        res = false;
+                        if(data['existing_acronym']){
+                            newMessage.push("existing_acronym");
+                        }
+
+                        if(data['incorrect_acronym']){
+                            newMessage.push("incorrect_acronym");
+                        }
+
+                    }
+                    message = newMessage.join("");
+
+                });
+                return res;
+            }, messageFunc);
+
+
+            $( "#LearningUnitYearForm" ).validate({
+                rules:{
+                    acronym:{ check_acronym: true },
+                },
+            }).element("#acronym");
+        });
+    });
+
+
+    const partim = "PARTIM";
+    const blank = "---------";
+    $( document ).ready(function() {
+        if('{{form.learning_container_year_type.value}}' != partim && '{{form.learning_container_year_type.value}}' != blank){
+            console.log(partim);
+            console.log(blank);
+            console.log('{{form.learning_container_year_type.value}}');
+            document.getElementById('is_not_partim').style.display = "block";
+        }
+
+    });
+
+    function showDiv(elem){
+       if(elem == partim || elem == blank)
+            document.getElementById('is_not_partim').style.display = "none";
+       else
+            document.getElementById('is_not_partim').style.display = "block";
     }
-
-});
-
-function showDiv(elem){
-   if(elem == partim || elem == blank)
-        document.getElementById('is_not_partim').style.display = "none";
-   else
-        document.getElementById('is_not_partim').style.display = "block";
-}
 </script>
 {% endblock %}
