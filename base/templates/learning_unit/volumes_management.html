@@ -97,7 +97,7 @@
                                     </td>
                                     <td>]</td>
                                 </tr>
-                                {% for component in learning_unit.components %}
+                                {% for component, data in learning_unit.components.items %}
                                     <tr>
                                         <td>
                                             <abbr title="{% if component.type %}{% trans component.type %} {% endif %}{{ component.acronym }}">
@@ -106,45 +106,45 @@
                                         </td>
                                         <td></td>
                                         <td>
-                                            <input class="form-control" type="text">
+                                            <input class="form-control" type="text" value="{{ data.VOLUME_TOTAL | default_if_none:0 }}">
                                         </td>
                                         <td></td>
                                         <td>
-                                            <input class="form-control" type="text">
+                                            <input class="form-control" type="text" value="{{ data.VOLUME_Q1 | default_if_none:0 }}">
                                         </td>
                                         <td></td>
                                         <td>
-                                            <input class="form-control" type="text">
+                                            <input class="form-control" type="text" value="{{ data.VOLUME_Q2 | default_if_none:0 }}">
                                         </td>
                                         <td></td>
                                         <td></td>
                                         <td>
-                                            <input class="form-control" type="text" value="{{ component.planned_classes | default_if_none:0 }}">
+                                            <input class="form-control" type="text"  value="{{ data.PLANNED_CLASSES | default_if_none:0 }}">
                                         </td>
                                         <td></td>
                                         <td></td>
                                         {% if learning_unit.entities.REQUIREMENT_ENTITY %}
                                         <td>
-                                            <input class="form-control" type="text">
+                                            <input class="form-control" type="text" value="{{ data.VOLUME_REQUIREMENT_ENTITY | default_if_none:0 }}">
                                         </td>
                                         {% endif %}
 
                                         {% if learning_unit.entities.ADDITIONAL_REQUIREMENT_ENTITY_1 %}
                                         <td></td>
                                         <td>
-                                            <input class="form-control" type="text">
+                                            <input class="form-control" type="text" value="{{ data.VOLUME_ADDITIONAL_REQUIREMENT_ENTITY_1 | default_if_none:0 }}">
                                         </td>
                                         {% endif %}
 
                                         {% if learning_unit.entities.ADDITIONAL_REQUIREMENT_ENTITY_2 %}
                                         <td></td>
                                         <td>
-                                            <input class="form-control" type="text">
+                                            <input class="form-control" type="text" value="{{ data.VOLUME_ADDITIONAL_REQUIREMENT_ENTITY_2 | default_if_none:0 }}">
                                         </td>
                                         {% endif %}
                                         <td></td>
                                         <td>
-                                            <input class="form-control" type="text">
+                                            <input class="form-control" type="text" value="{{ data.VOLUME_TOTAL_REQUIREMENT_ENTITIES | default_if_none:0 }}">
                                         </td>
                                         <td></td>
                                     </tr>
