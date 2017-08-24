@@ -39,8 +39,13 @@ from base import models as mdl
 from attribution import models as mdl_attr
 from base.models import entity_container_year
 from base.models.academic_year import current_academic_year, find_academic_year_by_id, AcademicYear
+from base.models.entity_container_year import EntityContainerYear
 from base.models.enums import entity_container_year_link_type
 from base.models.enums import learning_container_year_types
+from base.models.enums.entity_container_year_link_type import ENTITY_CONTAINER_YEAR_LINK_TYPES
+from base.models.enums.learning_unit_year_subtypes import LEARNING_UNIT_YEAR_SUBTYPES
+from base.models.learning_container import LearningContainer
+from base.models.learning_container_year import LearningContainerYear
 from base.models.learning_unit import LearningUnit
 from base.models.learning_unit_year import LearningUnitYear
 from cms import models as mdl_cms
@@ -549,6 +554,7 @@ def learning_class_year_edit(request, learning_unit_year_id):
 
 def learning_unit_create(request, academic_year):
     form = CreateLearningUnitYearForm(initial={'academic_year': academic_year,
+                                               'subtype': "FULL",
                                                'learning_container_year_type': "---------"})
     return layout.render(request, "learning_unit/learning_unit_form.html", {'form': form})
 
@@ -560,14 +566,53 @@ def learning_unit_year_add(request):
             data = form.cleaned_data
             academic_year = data['academic_year']
             year = academic_year.year
-            learning_unit = LearningUnit(acronym=data['acronym'], title=data['title'],
-                                         start_year=year, periodicity=data['periodicity'])
-            learning_unit.save()
-            instance = form.save(commit=False)
-            instance.learning_unit = learning_unit
-            instance.save()
+            entity_version = mdl.entity_version.find_by_id(data['requirement_entity'])
+            new_learning_container = create_learning_container(year, data)
+            new_learning_container_year = create_learning_container_year(academic_year, data, new_learning_container)
+            create_entity_container_year(entity_version, new_learning_container_year)
+            new_learning_unit = create_learning_unit(data, new_learning_container, year)
+            create_learning_unit_year(form, new_learning_container, new_learning_unit)
             return redirect('learning_units')
         else:
             return layout.render(request, "learning_unit/learning_unit_form.html", {'form': form})
     else:
         return redirect('learning_unit_create')
+
+
+def create_learning_container(year, data):
+    new_learning_container = LearningContainer(auto_renewal_until=int(data['end_year']), start_year=year)
+    new_learning_container.save()
+    return new_learning_container
+
+
+def create_learning_container_year(academic_year, data, new_learning_container):
+    new_learning_container_year = LearningContainerYear(academic_year=academic_year,
+                                                        learning_container=new_learning_container,
+                                                        title=data['title'],
+                                                        acronym=data['acronym'],
+                                                        container_type=data['learning_container_year_type'])
+    new_learning_container_year.save()
+    return new_learning_container_year
+
+
+def create_entity_container_year(entity_version, new_learning_container_year):
+    new_entity_container_year = EntityContainerYear(entity=entity_version.entity,
+                                                    learning_container_year=new_learning_container_year,
+                                                    type="REQUIREMENT_ENTITY")
+    new_entity_container_year.save()
+
+
+def create_learning_unit(data, new_learning_container, year):
+    new_learning_unit = LearningUnit(acronym=data['acronym'], title=data['title'], start_year=year,
+                                     end_year=int(data['end_year']), periodicity=data['periodicity'],
+                                     learning_container=new_learning_container)
+    new_learning_unit.save()
+    return new_learning_unit
+
+
+def create_learning_unit_year(form, new_learning_container, new_learning_unit):
+    new_learning_unit_year = form.save(commit=False)
+    new_learning_unit_year.learning_unit = new_learning_unit
+    new_learning_unit_year.learning_container = new_learning_container
+    new_learning_unit_year.save()
+    return new_learning_unit_year

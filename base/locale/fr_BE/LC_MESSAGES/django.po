@@ -1774,3 +1774,11 @@ msgstr "Intitulé officiel"
 
 msgid "existing_acronym"
 msgstr "Acronyme déja existant"
+
+msgid "incorrect_acronym"
+msgstr "Acronyme incorrect"
+
+msgid "acronym_rules"
+msgstr "Site en une lettre\n"
+       "Sigle en min 2 et max 4 lettres\n"
+       "Code numérique en 4 chiffres"

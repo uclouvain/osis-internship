@@ -24,13 +24,15 @@
 #
 ##############################################################################
 import datetime
+import re
+
 from django.utils.translation import ugettext_lazy as _
 from django import forms
 from django.db.models import Prefetch
 from base import models as mdl
 from django.core.exceptions import ValidationError
 from base.models.campus import Campus
-from base.models.entity_version import find_latest_version
+from base.models.entity_version import find_latest_version, EntityVersion
 from base.models.enums import entity_container_year_link_type
 from base.models.enums.learning_container_year_types import LEARNING_CONTAINER_YEAR_TYPES
 from base.models.enums.learning_unit_periodicity import PERIODICITY_TYPES
@@ -167,7 +169,7 @@ class CreateLearningUnitYearForm(forms.ModelForm):
     class Meta:
         model = mdl.learning_unit_year.LearningUnitYear
         fields = ['learning_container_year_type', 'acronym', 'academic_year', 'status', 'internship_subtype',
-                  'end_year', 'periodicity', 'credits', 'campus', 'title', 'requirement_entity']
+                  'end_year', 'periodicity', 'credits', 'campus', 'title', 'requirement_entity', 'subtype']
         widgets = {'acronym': forms.TextInput(attrs={'class': 'form-control',
                                                      'id': 'acronym',
                                                      'required': True}),
@@ -183,12 +185,12 @@ class CreateLearningUnitYearForm(forms.ModelForm):
                                                      'required': True}),
                    'title': forms.TextInput(attrs={'class': 'form-control',
                                                    'id': 'title',
-                                                   'required': True})
+                                                   'required': True}),
+                   'subtype': forms.HiddenInput()
                    }
 
     def is_valid(self):
         valid = super(CreateLearningUnitYearForm, self).is_valid()
-        print(self.data['academic_year'])
         academic_year = mdl.academic_year.find_academic_year_by_id(self.data['academic_year'])
         learning_unit_years = LearningUnitYear.objects.filter(academic_year__year__gte=academic_year.year,
                                                               acronym__iexact=self.data['acronym'])
@@ -196,6 +198,9 @@ class CreateLearningUnitYearForm(forms.ModelForm):
         if valid:
             if self.cleaned_data['acronym'].lower() in learning_unit_years_list:
                 self._errors['acronym'] = _('existing_acronym')
+                return False
+            elif not re.search(r"^[LM]{1}[A-Z]{2,4}[0-9]{4}$", self.data['acronym']):
+                self._errors['acronym'] = _('incorrect_acronym')
                 return False
             else:
                 return True
