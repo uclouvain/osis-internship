@@ -1772,6 +1772,9 @@ msgstr "partie 2"
 msgid "title_official"
 msgstr "Intitulé officiel"
 
+msgid "create_learning_unit"
+msgstr "Création d'une unité d'enseignement"
+
 msgid "existing_acronym"
 msgstr "Acronyme déja existant"
 

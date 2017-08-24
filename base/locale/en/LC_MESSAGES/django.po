@@ -1768,6 +1768,9 @@ msgstr "part 2"
 msgid "title_official"
 msgstr "Official title"
 
+msgid "create_learning_unit"
+msgstr "Create Learning Unit"
+
 msgid "existing_acronym"
 msgstr "Existing acronym"
 

@@ -28,7 +28,8 @@
 
 {% block breadcrumb %}
 <li><a href="{% url 'catalog' %}" id="lnk_catalog">{% trans 'formation_catalogue'%}</a></li>
-<li id="lnk_learning_units">{% trans 'learning_units' %}</li>
+<li><a href="{% url 'learning_units' %}" id="lnk_learning_units">{% trans 'learning_units'%}</a></li>
+<li id="lnk_learning_unit">{% trans 'learning_unit' %}</li>
 {% endblock %}
 
 {% block content %}
@@ -45,7 +46,7 @@
                     {{ form.academic_year }}{{ form.academic_year.errors }}
                 </div>
                 <div class="col-md-6">
-                    <label>{% trans 'learning_container_year_type' %}</label>
+                    <label>{% trans 'type' %}</label>
                     {{ form.learning_container_year_type }}{{ form.learning_container_year_type.errors }}
                 </div>
             </div>
@@ -111,47 +112,47 @@
 {% endblock %}
 {% block script %}
 <script>
-    $(document).ready(function() {
-        $('#acronym').on("click",function() {
-            var message = "";
-            var messageFunc = function () { return message; };
+    <!--$(document).ready(function() {-->
+        <!--$('#acronym').on("click",function() {-->
+            <!--var message = "";-->
+            <!--var messageFunc = function () { return message; };-->
 
-            jQuery.validator.addMethod("check_acronym", function(val) {
-                var res;
+            <!--jQuery.validator.addMethod("check_acronym", function(val) {-->
+                <!--var res;-->
 
-                $.ajax({
-                    async:false,
-                    url: "/learning_units/learning_unit_check?acronym=" + val + "&year_id=" + $('#academic_year').val()
-                }).then(function (data) {
-                    var newMessage = [];
+                <!--$.ajax({-->
+                    <!--async:false,-->
+                    <!--url: "/learning_units/learning_unit_check?acronym=" + val + "&year_id=" + $('#academic_year').val()-->
+                <!--}).then(function (data) {-->
+                    <!--var newMessage = [];-->
 
-                    if (data['valid']){
-                        res = true;
-                    }else{
-                        res = false;
-                        if(data['existing_acronym']){
-                            newMessage.push("existing_acronym");
-                        }
+                    <!--if (data['valid']){-->
+                        <!--res = true;-->
+                    <!--}else{-->
+                        <!--res = false;-->
+                        <!--if(data['existing_acronym']){-->
+                            <!--newMessage.push("existing_acronym");-->
+                        <!--}-->
 
-                        if(data['incorrect_acronym']){
-                            newMessage.push("incorrect_acronym");
-                        }
+                        <!--if(data['incorrect_acronym']){-->
+                            <!--newMessage.push("incorrect_acronym");-->
+                        <!--}-->
 
-                    }
-                    message = newMessage.join("   ");
+                    <!--}-->
+                    <!--message = newMessage.join("   ");-->
 
-                });
-                return res;
-            }, messageFunc);
+                <!--});-->
+                <!--return res;-->
+            <!--}, messageFunc);-->
 
 
-            $( "#LearningUnitYearForm" ).validate({
-                rules:{
-                    acronym:{ check_acronym: true },
-                },
-            }).element("#acronym");
-        });
-    });
+            <!--$( "#LearningUnitYearForm" ).validate({-->
+                <!--rules:{-->
+                    <!--acronym:{ check_acronym: true },-->
+                <!--},-->
+            <!--}).element("#acronym");-->
+        <!--});-->
+    <!--});-->
 
 
     const partim = "PARTIM";
