@@ -572,7 +572,8 @@ def learning_unit_year_add(request):
             return redirect('learning_units')
         else:
             return layout.render(request, "learning_unit/learning_unit_form.html", {'form': form})
-
+    else:
+        return redirect('learning_unit_create')
 
 def check_acronym(request):
     acronym = request.GET['acronym']
