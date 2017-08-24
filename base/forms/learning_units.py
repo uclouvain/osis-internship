@@ -190,8 +190,7 @@ class CreateLearningUnitYearForm(forms.ModelForm):
         valid = super(CreateLearningUnitYearForm, self).is_valid()
         print(self.data['academic_year'])
         academic_year = mdl.academic_year.find_academic_year_by_id(self.data['academic_year'])
-        learning_unit_years = LearningUnitYear.objects.filter(academic_year__year__gte=academic_year.year,
-                                                              acronym__iexact=self.data['acronym'])
+        learning_unit_years = mdl.learning_unit_year.find_gte_year_acronym(academic_year, self.data['acronym'])
         learning_unit_years_list = [learning_unit_year.acronym.lower() for learning_unit_year in learning_unit_years]
         if valid:
             if self.cleaned_data['acronym'].lower() in learning_unit_years_list:

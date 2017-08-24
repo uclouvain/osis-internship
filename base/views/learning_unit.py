@@ -583,9 +583,7 @@ def check_acronym(request):
     valid = True
     existing_acronym = False
     incorrect_acronym = False
-
-    learning_unit_years = mdl.learning_unit_year.LearningUnitYear.objects.filter(academic_year__year__gte=academic_yr.year,
-                                                          acronym__iexact=acronym) # method identique à ce qu'il y a dans form !!! duplication
+    learning_unit_years = mdl.learning_unit_year.find_gte_year_acronym(academic_yr, acronym)
 
     if learning_unit_years and len(learning_unit_years)>0:
         existing_acronym = True
