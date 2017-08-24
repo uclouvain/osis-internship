@@ -42,9 +42,6 @@ class EntityComponentYear(models.Model):
     hourly_volume_total = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
     hourly_volume_partial = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
 
-    class Meta:
-        unique_together = ('entity_container_year', 'learning_component_year',)
-
     def __str__(self):
         return u"%s - %s" % (self.entity_container_year, self.learning_component_year)
 
