@@ -52,12 +52,12 @@
             <br>
             <div id="is_not_partim" style="display: none;">
                 <div class="row">
-                    <div class="col-md-2">
+                    <div class="col-md-3">
                         <label {% if form.errors.acronym %} style="color:red;" {% endif %}>{% trans 'acronym' %}</label>
                         {{ form.acronym }}
                         {% if form.errors.acronym %} <label style="color:red;"> {{ form.errors.acronym }} </label> {% endif %}
                     </div>
-                    <div class="col-md-10">
+                    <div class="col-md-9">
                         <label>{% trans 'title' %}</label>
                         {{ form.title }}{{ form.title.errors }}
                     </div>
@@ -136,7 +136,7 @@
         <!--}-->
     <!--});-->
 <!--});-->
-const partim = "COURSE";
+const partim = "PARTIM";
 const blank = "---------";
 $( document ).ready(function() {
     if('{{form.learning_container_year_type.value}}' != partim && '{{form.learning_container_year_type.value}}' != blank){

@@ -548,7 +548,8 @@ def learning_class_year_edit(request, learning_unit_year_id):
 
 
 def learning_unit_create(request, academic_year):
-    form = CreateLearningUnitYearForm(initial={'academic_year': academic_year})
+    form = CreateLearningUnitYearForm(initial={'academic_year': academic_year,
+                                               'learning_container_year_type': "---------"})
     return layout.render(request, "learning_unit/learning_unit_form.html", {'form': form})
 
 
