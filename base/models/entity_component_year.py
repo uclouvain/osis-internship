@@ -28,7 +28,8 @@ from django.contrib import admin
 
 
 class EntityComponentYearAdmin(admin.ModelAdmin):
-    list_display = ('entity_container_year', 'learning_component_year', 'hourly_volume_total')
+    list_display = ('entity_container_year', 'learning_component_year', 'hourly_volume_total',
+                    'hourly_volume_partial')
     search_fields = ['entity_container_year__learning_container_year__acronym']
     raw_id_fields = ('entity_container_year', 'learning_component_year')
 
@@ -39,6 +40,7 @@ class EntityComponentYear(models.Model):
     entity_container_year = models.ForeignKey('EntityContainerYear')
     learning_component_year = models.ForeignKey('LearningComponentYear')
     hourly_volume_total = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
+    hourly_volume_partial = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
 
     class Meta:
         unique_together = ('entity_container_year', 'learning_component_year',)
