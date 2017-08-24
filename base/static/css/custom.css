@@ -106,10 +106,6 @@ table.volumes thead{
     border: 2px solid #ddd;
 }
 
-table.volumes thead tr td{
-    text-align: center;
-}
-
 .badge.fixed_width{
     width: 60px;
 }
