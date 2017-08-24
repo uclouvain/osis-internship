@@ -38,7 +38,6 @@ from base.models.enums.organization_type import ORGANIZATION_TYPE
 from base.models.learning_unit_year import LearningUnitYear
 from osis_common.utils.datetime import get_tzinfo
 
-MAX_ROW_NUMBERS = 1000
 
 
 class LearningUnitYearForm(forms.Form):
@@ -87,18 +86,18 @@ class LearningUnitYearForm(forms.Form):
                                              to_attr='entity_containers_year')
 
         clean_data['learning_container_year_id'] = _get_filter_learning_container_ids(clean_data)
-        learning_units = mdl.learning_unit_year.search(**clean_data) \
-                             .select_related('academic_year', 'learning_container_year') \
-                             .prefetch_related(entity_container_prefetch) \
-                             .order_by('academic_year__year', 'acronym')[:MAX_ROW_NUMBERS]
-
+        learning_units = mdl.learning_unit_year.search(**clean_data)\
+                                               .select_related('academic_year', 'learning_container_year')\
+                                               .prefetch_related(entity_container_prefetch)\
+                                               .order_by('academic_year__year', 'acronym')
         return [_append_latest_entities(learning_unit) for learning_unit in learning_units]
 
 
 def is_valid_search(**search_filter):
     MINIMUM_FILTER = 2
+    IGNORE_FILTERS = ['with_entity_subordinated']
 
-    if sum(1 for value in search_filter.values() if value) < MINIMUM_FILTER:
+    if sum(1 for key, value in search_filter.items() if key not in IGNORE_FILTERS and value) < MINIMUM_FILTER:
         raise ValidationError('LU_ERRORS_INVALID_SEARCH')
 
 
