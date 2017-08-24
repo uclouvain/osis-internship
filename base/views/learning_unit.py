@@ -60,6 +60,9 @@ from cms.models import text_label
 
 from . import layout
 
+from django.http import JsonResponse
+
+
 UNDEFINED_VALUE = '?'
 
 HOURLY_VOLUME_KEY = 'hourly_volume'
@@ -616,3 +619,26 @@ def create_learning_unit_year(form, new_learning_container, new_learning_unit):
     new_learning_unit_year.learning_container = new_learning_container
     new_learning_unit_year.save()
     return new_learning_unit_year
+
+
+def check_acronym(request):
+    acronym = request.GET['acronym']
+    year_id = request.GET['year_id']
+    academic_yr = mdl.academic_year.find_academic_year_by_id(year_id)
+
+    valid = True
+    existing_acronym = False
+    incorrect_acronym = False
+    learning_unit_years = mdl.learning_unit_year.find_gte_year_acronym(academic_yr, acronym)
+
+    if learning_unit_years and len(learning_unit_years)>0:
+        existing_acronym = True
+        valid = False
+
+    if not acronym.startswith('L'): # A compléter
+        incorrect_acronym = True
+        valid = False
+
+    return JsonResponse({'valid':valid,
+                         'existing_acronym':existing_acronym,
+                         'incorrect_acronym':incorrect_acronym}, safe=False)

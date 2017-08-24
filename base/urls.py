@@ -75,7 +75,8 @@ urlpatterns = [
             url(r'^specifications/edit/$', learning_unit.learning_unit_specifications_edit, name="learning_unit_specifications_edit"),
             url(r'^component/edit/$', learning_unit.learning_unit_component_edit, name="learning_unit_component_edit"),
             url(r'^class/edit/$', learning_unit.learning_class_year_edit, name="learning_class_year_edit"),
-        ]))
+        ])),
+        url(r'^learning_unit_check/$', learning_unit.check_acronym),
     ])),
 
     url(r'^my_osis/', include([
