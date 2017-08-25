@@ -136,5 +136,5 @@ def _get_floated_only_element_of_list(a_list, default=None):
     if not len_of_list:
         return default
     elif len_of_list == 1:
-        return float(a_list[0]) if a_list[0] else 0
-    raise ValueError("a_list should contain 0 or 1 elements")
+        return float(a_list[0]) if a_list[0] else 0.0
+    raise ValueError("The provided list should contain 0 or 1 elements")
