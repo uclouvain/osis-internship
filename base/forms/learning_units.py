@@ -29,6 +29,8 @@ import re
 from django.utils.translation import ugettext_lazy as _
 from django import forms
 from django.db.models import Prefetch
+
+import reference
 from base import models as mdl
 from django.core.exceptions import ValidationError
 from base.models.campus import Campus
@@ -39,7 +41,7 @@ from base.models.enums.learning_unit_periodicity import PERIODICITY_TYPES
 from base.models.enums.organization_type import ORGANIZATION_TYPE
 from base.models.learning_unit_year import LearningUnitYear
 from osis_common.utils.datetime import get_tzinfo
-
+from reference.models.language import Language
 
 
 class LearningUnitYearForm(forms.Form):
@@ -153,23 +155,35 @@ def _get_latest_entity_version(entity_container_year):
 
 
 class CreateLearningUnitYearForm(forms.ModelForm):
-    campus = Campus.objects.filter(organization__type=ORGANIZATION_TYPE[0][0])
+    campuses = Campus.objects.filter(organization__type=ORGANIZATION_TYPE[0][0])
+    languages = Language.objects.all()
     entities = find_latest_version(date=datetime.datetime.now(get_tzinfo()))
     learning_container_year_type = forms.CharField(
-        widget=forms.Select(attrs={'class': 'form-control', 'required': True, 'onchange': 'showDiv(this.value)'},
+        widget=forms.Select(attrs={'class': 'form-control', 'required': True,
+                                   'onchange': 'showDiv(this.value)', 'id': 'learning_container_year_type'},
                             choices=(("---------", "---------"),) + LEARNING_CONTAINER_YEAR_TYPES))
-    end_year = forms.CharField(widget=forms.DateInput(attrs={'class': 'form-control', 'required': True}))
-    periodicity = forms.CharField(widget=forms.Select(attrs={'class': 'form-control'},
+    end_year = forms.CharField(widget=forms.DateInput(attrs={'class': 'form-control', 'required': True,
+                                                             'id': 'end_year'}))
+    periodicity = forms.CharField(widget=forms.Select(attrs={'class': 'form-control',
+                                                             'id': 'periodicity'},
                                                       choices=PERIODICITY_TYPES))
-    campus = forms.CharField(widget=forms.Select(attrs={'class': 'form-control'},
-                                                 choices=((elem.id, elem.name) for elem in campus)))
-    requirement_entity = forms.CharField(widget=forms.Select(attrs={'class': 'form-control'},
+    campus = forms.CharField(widget=forms.Select(attrs={'class': 'form-control',
+                                                        'id': 'campus'},
+                                                 choices=((elem.id, elem.name) for elem in campuses)))
+    requirement_entity = forms.CharField(widget=forms.Select(attrs={'class': 'form-control',
+                                                                    'id': 'requirement_entity'},
                                                              choices=((elem.id, elem.acronym) for elem in entities)))
+    allocation_entity = forms.CharField(widget=forms.Select(attrs={'class': 'form-control',
+                                                                   'id': 'allocation_entity'},
+                                                            choices=((elem.id, elem.acronym) for elem in entities)))
+    language = forms.CharField(widget=forms.Select(attrs={'class': 'form-control', 'id': 'language'},
+                                                   choices=((elem.id, elem.name) for elem in languages)))
 
     class Meta:
         model = mdl.learning_unit_year.LearningUnitYear
         fields = ['learning_container_year_type', 'acronym', 'academic_year', 'status', 'internship_subtype',
-                  'end_year', 'periodicity', 'credits', 'campus', 'title', 'requirement_entity', 'subtype']
+                  'end_year', 'periodicity', 'credits', 'campus', 'title', 'title_english', 'allocation_entity',
+                  'requirement_entity', 'subtype', 'language']
         widgets = {'acronym': forms.TextInput(attrs={'class': 'form-control',
                                                      'id': 'acronym',
                                                      'required': True}),
@@ -178,14 +192,16 @@ class CreateLearningUnitYearForm(forms.ModelForm):
                                                         'required': True}),
                    'status': forms.CheckboxInput(attrs={'id': 'status'}),
                    'internship_subtype': forms.Select(attrs={'class': 'form-control',
-                                                             'id': 'internship_subtype',
-                                                             'required': True}),
+                                                             'id': 'internship_subtype'}),
                    'credits': forms.TextInput(attrs={'class': 'form-control',
                                                      'id': 'credits',
                                                      'required': True}),
                    'title': forms.TextInput(attrs={'class': 'form-control',
                                                    'id': 'title',
                                                    'required': True}),
+                   'title_english': forms.TextInput(attrs={'class': 'form-control',
+                                                           'id': 'title_english',
+                                                           'required': True}),
                    'subtype': forms.HiddenInput()
                    }
 

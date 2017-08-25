@@ -1550,10 +1550,10 @@ msgstr "Périodicité"
 msgid "nominal_credits"
 msgstr "Crédits"
 
-msgid "active"
+msgid "Active"
 msgstr "Actif"
 
-msgid "inactive"
+msgid "Inactive"
 msgstr "Inactif"
 
 msgid "MASTER_DISSERTATION"
@@ -1785,3 +1785,18 @@ msgid "acronym_rules"
 msgstr "Site en une lettre\n"
        "Sigle en min 2 et max 4 lettres\n"
        "Code numérique en 4 chiffres"
+
+msgid "end_year_title"
+msgstr "Année de fin"
+
+msgid "basic_informations_title"
+msgstr "Informations de base"
+
+msgid "active_title"
+msgstr "Actif"
+
+msgid "titles"
+msgstr "Intitulées"
+
+msgid "structure_title"
+msgstr "Structure"

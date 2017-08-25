@@ -569,10 +569,12 @@ def learning_unit_year_add(request):
             data = form.cleaned_data
             academic_year = data['academic_year']
             year = academic_year.year
-            entity_version = mdl.entity_version.find_by_id(data['requirement_entity'])
+            requirement_entity_version = mdl.entity_version.find_by_id(data['requirement_entity'])
+            allocation_entity_version = mdl.entity_version.find_by_id(data['allocation_entity'])
             new_learning_container = create_learning_container(year, data)
             new_learning_container_year = create_learning_container_year(academic_year, data, new_learning_container)
-            create_entity_container_year(entity_version, new_learning_container_year)
+            create_requirement_entity(requirement_entity_version, new_learning_container_year)
+            create_allocation_entity(allocation_entity_version, new_learning_container_year)
             new_learning_unit = create_learning_unit(data, new_learning_container, year)
             create_learning_unit_year(form, new_learning_container, new_learning_unit)
             return redirect('learning_units')
@@ -593,15 +595,23 @@ def create_learning_container_year(academic_year, data, new_learning_container):
                                                         learning_container=new_learning_container,
                                                         title=data['title'],
                                                         acronym=data['acronym'],
-                                                        container_type=data['learning_container_year_type'])
+                                                        container_type=data['learning_container_year_type'],
+                                                        language=data['language'])
     new_learning_container_year.save()
     return new_learning_container_year
 
 
-def create_entity_container_year(entity_version, new_learning_container_year):
+def create_requirement_entity(entity_version, new_learning_container_year):
     new_entity_container_year = EntityContainerYear(entity=entity_version.entity,
                                                     learning_container_year=new_learning_container_year,
                                                     type="REQUIREMENT_ENTITY")
+    new_entity_container_year.save()
+
+
+def create_allocation_entity(entity_version, new_learning_container_year):
+    new_entity_container_year = EntityContainerYear(entity=entity_version.entity,
+                                                    learning_container_year=new_learning_container_year,
+                                                    type="ALLOCATION_ENTITY")
     new_entity_container_year.save()
 
 
