@@ -124,7 +124,7 @@
                         </div>
                         <div class="col-md-3">
                             <label>{% trans 'allocation_entity' %}</label>
-                            {{ form.requirement_entity }}{{ form.requirement_entity.errors }}
+                            {{ form.allocation_entity }}{{ form.allocation_entity.errors }}
                         </div>
                     </div>
                     <br>
@@ -147,11 +147,14 @@
     const internship = "INTERNSHIP";
     $( document ).ready(function() {
         if('{{form.learning_container_year_type.value}}' != partim && '{{form.learning_container_year_type.value}}' != blank){
-            console.log(partim);
-            console.log(blank);
-            console.log('{{form.learning_container_year_type.value}}');
-            document.getElementById('is_not_partim').style.display = "block";
+            document.getElementById('for_titles').style.display = "block";
+            document.getElementById('for_structure').style.display = "block";
         }
+
+        if('{{form.learning_container_year_type.value}}' == internship)
+            document.getElementById('is_not_internship').style.display = "block";
+        else
+            document.getElementById('is_not_internship').style.display = "none";
     });
 
     function showDiv(elem){

@@ -31,23 +31,20 @@ from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required, permission_required
 from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import redirect
 from django.utils.translation import ugettext_lazy as _
 from django.views.decorators.http import require_http_methods
 
+import reference
 from base import models as mdl
 from attribution import models as mdl_attr
 from base.models import entity_container_year
-from base.models.academic_year import current_academic_year, find_academic_year_by_id, AcademicYear
 from base.models.entity_container_year import EntityContainerYear
 from base.models.enums import entity_container_year_link_type
 from base.models.enums import learning_container_year_types
-from base.models.enums.entity_container_year_link_type import ENTITY_CONTAINER_YEAR_LINK_TYPES
-from base.models.enums.learning_unit_year_subtypes import LEARNING_UNIT_YEAR_SUBTYPES
 from base.models.learning_container import LearningContainer
 from base.models.learning_container_year import LearningContainerYear
 from base.models.learning_unit import LearningUnit
-from base.models.learning_unit_year import LearningUnitYear
 from cms import models as mdl_cms
 from cms.enums import entity_name
 from base.forms.learning_units import LearningUnitYearForm, CreateLearningUnitYearForm
@@ -57,7 +54,8 @@ from base.forms.learning_unit_component import LearningUnitComponentEditForm
 from base.forms.learning_class import LearningClassEditForm
 from base.models.enums import learning_unit_year_subtypes
 from cms.models import text_label
-
+from reference.models import language
+from reference.models.language import find_by_id
 from . import layout
 
 from django.http import JsonResponse
@@ -576,7 +574,7 @@ def learning_unit_year_add(request):
             create_requirement_entity(requirement_entity_version, new_learning_container_year)
             create_allocation_entity(allocation_entity_version, new_learning_container_year)
             new_learning_unit = create_learning_unit(data, new_learning_container, year)
-            create_learning_unit_year(form, new_learning_container, new_learning_unit)
+            create_learning_unit_year(form, new_learning_container_year, new_learning_unit)
             return redirect('learning_units')
         else:
             return layout.render(request, "learning_unit/learning_unit_form.html", {'form': form})
@@ -591,12 +589,13 @@ def create_learning_container(year, data):
 
 
 def create_learning_container_year(academic_year, data, new_learning_container):
+    a_language = find_by_id(data['language'])
     new_learning_container_year = LearningContainerYear(academic_year=academic_year,
                                                         learning_container=new_learning_container,
                                                         title=data['title'],
                                                         acronym=data['acronym'],
                                                         container_type=data['learning_container_year_type'],
-                                                        language=data['language'])
+                                                        language=a_language)
     new_learning_container_year.save()
     return new_learning_container_year
 
@@ -623,10 +622,10 @@ def create_learning_unit(data, new_learning_container, year):
     return new_learning_unit
 
 
-def create_learning_unit_year(form, new_learning_container, new_learning_unit):
+def create_learning_unit_year(form, new_learning_container_year, new_learning_unit):
     new_learning_unit_year = form.save(commit=False)
     new_learning_unit_year.learning_unit = new_learning_unit
-    new_learning_unit_year.learning_container = new_learning_container
+    new_learning_unit_year.learning_container_year = new_learning_container_year
     new_learning_unit_year.save()
     return new_learning_unit_year
 

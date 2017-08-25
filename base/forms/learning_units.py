@@ -25,21 +25,17 @@
 ##############################################################################
 import datetime
 import re
-
 from django.utils.translation import ugettext_lazy as _
 from django import forms
 from django.db.models import Prefetch
-
-import reference
 from base import models as mdl
 from django.core.exceptions import ValidationError
 from base.models.campus import Campus
-from base.models.entity_version import find_latest_version, EntityVersion
+from base.models.entity_version import find_latest_version
 from base.models.enums import entity_container_year_link_type
 from base.models.enums.learning_container_year_types import LEARNING_CONTAINER_YEAR_TYPES
 from base.models.enums.learning_unit_periodicity import PERIODICITY_TYPES
 from base.models.enums.organization_type import ORGANIZATION_TYPE
-from base.models.learning_unit_year import LearningUnitYear
 from osis_common.utils.datetime import get_tzinfo
 from reference.models.language import Language
 
