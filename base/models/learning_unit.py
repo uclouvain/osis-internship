@@ -30,8 +30,11 @@ from base.models.enums.learning_unit_periodicity import PERIODICITY_TYPES
 
 class LearningUnitAdmin(SerializableModelAdmin):
     list_display = ('learning_container', 'acronym', 'title', 'start_year', 'end_year', 'changed')
-    fieldsets = ((None, {'fields': ('learning_container', 'acronym', 'title', 'description', 'start_year', 'end_year')}),)
-    search_fields = ['acronym', 'title']
+    fieldsets = ((None, {
+                    'fields': ('learning_container', 'acronym', 'title', 'description', 'start_year', 'end_year')
+                 }),)
+    raw_id_fields = ('learning_container',)
+    search_fields = ['acronym', 'title', 'learning_container__external_id']
     list_filter = ('periodicity', 'start_year')
 
 
