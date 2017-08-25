@@ -29,13 +29,13 @@ from base.models.enums import learning_unit_year_subtypes, learning_container_ye
 
 
 class LearningUnitYearAdmin(SerializableModelAdmin):
-    list_display = ('acronym', 'title', 'academic_year', 'credits', 'changed', 'structure', 'status')
+    list_display = ('external_id', 'acronym', 'title', 'academic_year', 'credits', 'changed', 'structure', 'status')
     fieldsets = ((None, {'fields': ('academic_year', 'learning_unit', 'acronym', 'title', 'title_english', 'credits',
                                     'decimal_scores', 'structure', 'learning_container_year',
                                     'subtype', 'status', 'internship_subtype' )}),)
     list_filter = ('academic_year', 'vacant', 'in_charge', 'decimal_scores')
     raw_id_fields = ('learning_unit', 'learning_container_year', 'structure')
-    search_fields = ['acronym', 'structure__acronym']
+    search_fields = ['acronym', 'structure__acronym', 'external_id']
 
 
 class LearningUnitYear(SerializableModel):
