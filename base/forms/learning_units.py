@@ -156,9 +156,11 @@ class CreateLearningUnitYearForm(forms.ModelForm):
     entities = find_latest_version(date=datetime.datetime.now(get_tzinfo()))
     learning_container_year_type = forms.CharField(
         widget=forms.Select(attrs={'class': 'form-control', 'required': True,
-                                   'onchange': 'showDiv(this.value)', 'id': 'learning_container_year_type'},
+                                   'onchange': 'showDiv(this.value)',
+                                   'id': 'learning_container_year_type'},
                             choices=(("---------", "---------"),) + LEARNING_CONTAINER_YEAR_TYPES))
-    end_year = forms.CharField(widget=forms.DateInput(attrs={'class': 'form-control', 'required': True,
+    end_year = forms.CharField(widget=forms.DateInput(attrs={'class': 'form-control',
+                                                             'required': True,
                                                              'id': 'end_year'}))
     periodicity = forms.CharField(widget=forms.Select(attrs={'class': 'form-control',
                                                              'id': 'periodicity'},
