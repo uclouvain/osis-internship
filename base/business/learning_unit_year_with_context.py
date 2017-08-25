@@ -26,7 +26,7 @@
 from django.db import models
 
 from base import models as mdl
-from base.models.enums import entity_container_year_link_type
+from base.models.enums import entity_container_year_link_type as entity_types
 
 
 class LearningUnitYearWithContext:
@@ -39,10 +39,12 @@ def get_with_context(**learning_unit_year_data):
         'learning_container_year__entitycontaineryear_set',
         queryset=mdl.entity_container_year
         .search(
-            link_type=[entity_container_year_link_type.REQUIREMENT_ENTITY,
-                       entity_container_year_link_type.ALLOCATION_ENTITY,
-                       entity_container_year_link_type.ADDITIONAL_REQUIREMENT_ENTITY_1,
-                       entity_container_year_link_type.ADDITIONAL_REQUIREMENT_ENTITY_2]
+            link_type=[
+                entity_types.REQUIREMENT_ENTITY,
+                entity_types.ALLOCATION_ENTITY,
+                entity_types.ADDITIONAL_REQUIREMENT_ENTITY_1,
+                entity_types.ADDITIONAL_REQUIREMENT_ENTITY_2
+            ]
         )
         .prefetch_related(
             models.Prefetch('entity__entityversion_set', to_attr='entity_versions')
@@ -101,9 +103,9 @@ def _append_components(learning_unit):
             component = learning_unit_component.learning_component_year
             entity_components_year = component.entity_components_year
             requirement_entities_volumes = _get_requirement_entities_volumes(entity_components_year)
-            vol_req_entity = requirement_entities_volumes.get('REQUIREMENT_ENTITY', 0) or 0
-            vol_add_req_entity_1 = requirement_entities_volumes.get('ADDITIONAL_REQUIREMENT_ENTITY_1', 0) or 0
-            vol_add_req_entity_2 = requirement_entities_volumes.get('ADDITIONAL_REQUIREMENT_ENTITY_2', 0) or 0
+            vol_req_entity = requirement_entities_volumes.get(entity_types.REQUIREMENT_ENTITY, 0) or 0
+            vol_add_req_entity_1 = requirement_entities_volumes.get(entity_types.ADDITIONAL_REQUIREMENT_ENTITY_1, 0) or 0
+            vol_add_req_entity_2 = requirement_entities_volumes.get(entity_types.ADDITIONAL_REQUIREMENT_ENTITY_2, 0) or 0
             volume_total_charge = vol_req_entity + vol_add_req_entity_1 + vol_add_req_entity_2
             volume_partial = float(component.hourly_volume_partial) if component.hourly_volume_partial else 0
             planned_classes = component.planned_classes or 1
@@ -114,16 +116,20 @@ def _append_components(learning_unit):
                 'VOLUME_Q1': volume_partial,
                 'VOLUME_Q2': volume_total - volume_partial,
                 'PLANNED_CLASSES': planned_classes,
-                'VOLUME_REQUIREMENT_ENTITY': vol_req_entity,
-                'VOLUME_ADDITIONAL_REQUIREMENT_ENTITY_1': vol_add_req_entity_1,
-                'VOLUME_ADDITIONAL_REQUIREMENT_ENTITY_2': vol_add_req_entity_2,
+                'VOLUME' + entity_types.REQUIREMENT_ENTITY: vol_req_entity,
+                'VOLUME' + entity_types.ADDITIONAL_REQUIREMENT_ENTITY_1: vol_add_req_entity_1,
+                'VOLUME' + entity_types.ADDITIONAL_REQUIREMENT_ENTITY_2: vol_add_req_entity_2,
                 'VOLUME_TOTAL_REQUIREMENT_ENTITIES': volume_total_charge,
             }
     return learning_unit
 
 
 def _get_requirement_entities_volumes(entity_components_year):
-    needed_entity_types = ['REQUIREMENT_ENTITY', 'ADDITIONAL_REQUIREMENT_ENTITY_1', 'ADDITIONAL_REQUIREMENT_ENTITY_2']
+    needed_entity_types = [
+        entity_types.REQUIREMENT_ENTITY,
+        entity_types.ADDITIONAL_REQUIREMENT_ENTITY_1,
+        entity_types.ADDITIONAL_REQUIREMENT_ENTITY_2
+    ]
     return {
         entity_type: _get_floated_only_element_of_list([ecy.hourly_volume_total for ecy in entity_components_year
                                                         if ecy.entity_container_year.type == entity_type], default=0)

@@ -25,8 +25,10 @@
 ##############################################################################
 from django.test import TestCase
 from base.business import learning_unit_year_with_context
+from base.models.enums import entity_container_year_link_type as entity_types
 from base.tests.factories.entity_component_year import EntityComponentYearFactory
 from base.tests.factories.entity_container_year import EntityContainerYearFactory
+from base.tests.factories.learning_component_year import LearningComponentYearFactory
 from base.tests.factories.learning_container_year import LearningContainerYearFactory
 from base.tests.factories.academic_year import AcademicYearFactory
 
@@ -46,12 +48,19 @@ class LearningUnitYearWithContextTestCase(TestCase):
             learning_unit_year_with_context._get_floated_only_element_of_list(a_list)
 
     def test_get_requirement_entities_volumes(self):
-        learning_container_year = LearningContainerYearFactory(academic_year=AcademicYearFactory(year=2016))
-        entity_types = ['REQUIREMENT_ENTITY', 'ADDITIONAL_REQUIREMENT_ENTITY_1', 'ADDITIONAL_REQUIREMENT_ENTITY_2']
-        entity_containers_year = [EntityContainerYearFactory(type=entity_types[x],
+        academic_year = AcademicYearFactory(year=2016)
+        learning_container_year = LearningContainerYearFactory(academic_year=academic_year)
+        learning_component_year = LearningComponentYearFactory(learning_container_year=learning_container_year)
+        entity_types_list = [
+            entity_types.REQUIREMENT_ENTITY,
+            entity_types.ADDITIONAL_REQUIREMENT_ENTITY_1,
+            entity_types.ADDITIONAL_REQUIREMENT_ENTITY_2
+        ]
+        entity_containers_year = [EntityContainerYearFactory(type=entity_types_list[x],
                                                              learning_container_year=learning_container_year
                                                              ) for x in range(3)]
         components = [EntityComponentYearFactory(entity_container_year=entity_containers_year[x],
+                                                 learning_component_year=learning_component_year,
                                                  hourly_volume_total=x+5
                                                  ) for x in range(3)]
         wanted_response = {
