@@ -95,9 +95,21 @@
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-md-3">
-                            <label {% if form.errors.acronym %} style="color:red;" {% endif %}>{% trans 'acronym' %} &nbsp; <abbr title="{% trans 'acronym_rules' %}"><span class="glyphicon glyphicon-question-sign pull-right" style="font-size: 14pt;" aria-hidden="true"></span></abbr></label>
+                            <label {% if form.errors.acronym %}
+                                        style="color:red;"
+                                   {% endif %}>
+                                {% trans 'acronym' %}
+                                <abbr title="{% trans 'acronym_rules' %}">
+                                    <span class="glyphicon glyphicon-question-sign pull-right"
+                                          style="font-size: 14pt;" aria-hidden="true"></span>
+                                </abbr>
+                            </label>
                             {{ form.acronym }}
-                            {% if form.errors.acronym %} <label style="color:red;"> {{ form.errors.acronym }} </label>{% endif %}
+                            {% if form.errors.acronym %}
+                                <label style="color:red;">
+                                    {{ form.errors.acronym }}
+                                </label>
+                            {% endif %}
                         </div>
                     </div>
                     <br>
@@ -142,8 +154,8 @@
 {% endblock %}
 {% block script %}
 <script>
-    const partim = "PARTIM";
     const blank = "---------";
+    const partim = "PARTIM";
     const internship = "INTERNSHIP";
     $( document ).ready(function() {
         if('{{form.learning_container_year_type.value}}' != partim && '{{form.learning_container_year_type.value}}' != blank){
