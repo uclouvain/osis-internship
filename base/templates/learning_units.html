@@ -62,7 +62,7 @@
                     {{ form.acronym }}
                 </div>
 
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <label for="id_title">{% trans 'title' %}</label>
                     {{ form.title }}
                 </div>
@@ -96,13 +96,7 @@
                         {% endfor %}
                     </select>
                 </div>
-                <div class="col-md-1 text-center">
-                    <button type="submit" id="bt_submit_learning_unit_search" style="margin-top:24px;"
-                            class="btn btn-primary" role="button"
-                            title="{% trans 'learning_unit_search' %}">
-                         <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-                    </button>
-                </div>
+
             </div>
 
             <div class="row" style="margin-top:10px;">
@@ -125,7 +119,7 @@
                     <label for="id_requirement_entity_acronym">{% trans 'requirement_entity_small' %}</label>
                     {{ form.requirement_entity_acronym }}
                 </div>
-                <div class="col-md-8">
+                <div class="col-md-7">
                     <div style="display:inline-block;">
                         <input type="checkbox" id="id_with_entity_subordinated"
                            name="with_entity_subordinated" style="margin-top:37px;"
@@ -135,8 +129,13 @@
                         <label>{% trans 'with_entity_subordinated_small' %}</label>
                     </div>
                 </div>
-
-
+                <div class="col-md-1 text-right" style="line-height:55px;">
+                    <button type="submit" id="bt_submit_learning_unit_search" style="vertical-align:bottom;"
+                            class="btn btn-primary" role="button"
+                            title="{% trans 'learning_unit_search' %}">
+                         <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                    </button>
+                </div>
             </div>
         </div>
     </form>
@@ -188,9 +187,11 @@
                 <td>{% if learning_unit.status %}
                         <span class="glyphicon glyphicon-ok-circle" aria-hidden="true" style="color:green;"
                               title="{% trans  'active' %}"></span>
+                        <div style="display:none;">1</div>
                     {% else %}
                         <span class="glyphicon glyphicon-ok-circle" aria-hidden="true" style="color:gray;"
                               title="{% trans  'inactive' %}"></span>
+                        <div style="display:none;">0</div>
                     {% endif %}
                 </td>
             </tr>
@@ -207,18 +208,15 @@
     {
         $('#table_learning_units').DataTable(
             {
-                stateSave: true,
-                "aoColumnDefs": [
-                    { 'bSortable': false, 'aTargets': [ 4 ] }
-                ],
+                "stateSave": true,
                 "paging" : false,
                 "ordering" : true,
                 "info"  : false,
                 "searching" : false,
-                "language":
-                {"oAria":{
-                    "sSortAscending":  "{% trans 'datatable_sortascending'%}",
-                    "sSortDescending": "{% trans 'datatable_sortdescending'%}",
+                "language": {
+                    "oAria": {
+                        "sSortAscending":  "{% trans 'datatable_sortascending'%}",
+                        "sSortDescending": "{% trans 'datatable_sortdescending'%}",
                     }
                 }
             })
