@@ -24,6 +24,7 @@
 #
 ##############################################################################
 import datetime
+import re
 from collections import OrderedDict
 
 from django.contrib import messages
@@ -637,18 +638,22 @@ def check_acronym(request):
     academic_yr = mdl.academic_year.find_academic_year_by_id(year_id)
 
     valid = True
+    existed_acronym = False
     existing_acronym = False
     incorrect_acronym = False
     learning_unit_years = mdl.learning_unit_year.find_gte_year_acronym(academic_yr, acronym)
+    old_learning_unit_years = mdl.learning_unit_year.find_lt_year_acronym(academic_yr, acronym)
 
-    if learning_unit_years and len(learning_unit_years)>0:
-        existing_acronym = True
-        valid = False
-
-    if not acronym.startswith('L'): # A compléter
+    if not re.search(r"^[LM]{1}[A-Z]{2,4}[0-9]{4}$", acronym):
         incorrect_acronym = True
         valid = False
-
-    return JsonResponse({'valid':valid,
-                         'existing_acronym':existing_acronym,
-                         'incorrect_acronym':incorrect_acronym}, safe=False)
+    if old_learning_unit_years:
+        existed_acronym = True
+        valid = False
+    if learning_unit_years:
+        existing_acronym = True
+        valid = False
+    return JsonResponse({'valid': valid,
+                         'existing_acronym': existing_acronym,
+                         'incorrect_acronym': incorrect_acronym,
+                         'existed_acronym': existed_acronym}, safe=False)

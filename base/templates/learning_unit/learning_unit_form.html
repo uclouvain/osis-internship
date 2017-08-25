@@ -184,46 +184,44 @@
             document.getElementById('is_not_internship').style.display = "none";
     }
 
-    <!--$(document).ready(function() {-->
-        <!--$('#acronym').on("click",function() {-->
-            <!--var message = "";-->
-            <!--var messageFunc = function () { return message; };-->
+    $(document).ready(function() {
+        $('#acronym').on("click",function() {
+            var message = "";
+            var messageFunc = function () { return message; };
 
-            <!--jQuery.validator.addMethod("check_acronym", function(val) {-->
-                <!--var res;-->
-
-                <!--$.ajax({-->
-                    <!--async:false,-->
-                    <!--url: "/learning_units/learning_unit_check?acronym=" + val + "&year_id=" + $('#academic_year').val()-->
-                <!--}).then(function (data) {-->
-                    <!--var newMessage = [];-->
-
-                    <!--if (data['valid']){-->
-                        <!--res = true;-->
-                    <!--}else{-->
-                        <!--res = false;-->
-                        <!--if(data['existing_acronym']){-->
-                            <!--newMessage.push("existing_acronym");-->
-                        <!--}-->
-
-                        <!--if(data['incorrect_acronym']){-->
-                            <!--newMessage.push("incorrect_acronym");-->
-                        <!--}-->
-
-                    <!--}-->
-                    <!--message = newMessage.join("   ");-->
-
-                <!--});-->
-                <!--return res;-->
-            <!--}, messageFunc);-->
+            jQuery.validator.addMethod("check_acronym", function(val) {
+                var res;
+                $.ajax({
+                    async:false,
+                    url: "/learning_units/learning_unit_check?acronym=" + val + "&year_id=" + $('#academic_year').val()
+                }).then(function (data) {
+                    var newMessage = [];
+                    if (data['valid']){
+                        res = true;
+                    }else{
+                        res = false;
+                        if(data['existed_acronym'] && !data['existing_acronym']){
+                            newMessage.push("{% trans 'existed_acronym' %}");
+                        }
+                        if(data['existing_acronym']){
+                            newMessage.push("{% trans 'existing_acronym' %}");
+                        }
+                        if(data['incorrect_acronym']){
+                            newMessage.push("{% trans 'incorrect_acronym' %}");
+                        }
+                    }
+                    message = newMessage.join("   ");
+                });
+                return res;
+            }, messageFunc);
 
 
-            <!--$( "#LearningUnitYearForm" ).validate({-->
-                <!--rules:{-->
-                    <!--acronym:{ check_acronym: true },-->
-                <!--},-->
-            <!--}).element("#acronym");-->
-        <!--});-->
-    <!--});-->
+            $( "#LearningUnitYearForm" ).validate({
+                rules:{
+                    acronym:{ check_acronym: true },
+                },
+            }).element("#acronym");
+        });
+    });
 </script>
 {% endblock %}

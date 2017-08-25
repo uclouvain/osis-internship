@@ -125,3 +125,8 @@ def search(academic_year_id=None, acronym=None, learning_container_year_id=None,
 def find_gte_year_acronym(academic_yr, acronym):
     return LearningUnitYear.objects.filter(academic_year__year__gte=academic_yr.year,
                                            acronym__iexact=acronym)
+
+
+def find_lt_year_acronym(academic_yr, acronym):
+    return LearningUnitYear.objects.filter(academic_year__year__lt=academic_yr.year,
+                                           acronym__iexact=acronym)
