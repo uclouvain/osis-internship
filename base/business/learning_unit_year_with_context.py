@@ -116,9 +116,9 @@ def _append_components(learning_unit):
                 'VOLUME_Q1': volume_partial,
                 'VOLUME_Q2': volume_total - volume_partial,
                 'PLANNED_CLASSES': planned_classes,
-                'VOLUME' + entity_types.REQUIREMENT_ENTITY: vol_req_entity,
-                'VOLUME' + entity_types.ADDITIONAL_REQUIREMENT_ENTITY_1: vol_add_req_entity_1,
-                'VOLUME' + entity_types.ADDITIONAL_REQUIREMENT_ENTITY_2: vol_add_req_entity_2,
+                'VOLUME_' + entity_types.REQUIREMENT_ENTITY: vol_req_entity,
+                'VOLUME_' + entity_types.ADDITIONAL_REQUIREMENT_ENTITY_1: vol_add_req_entity_1,
+                'VOLUME_' + entity_types.ADDITIONAL_REQUIREMENT_ENTITY_2: vol_add_req_entity_2,
                 'VOLUME_TOTAL_REQUIREMENT_ENTITIES': volume_total_charge,
             }
     return learning_unit
