@@ -36,14 +36,18 @@ class ScoreSheetAddress:
 
     def __init__(self, offer_year, *args, **kwargs):
         address = offer_year.score_sheet_address
-        if address.customized:
-            self._init_attrs(address)
+        if address:
+            if address.customized:
+                self._init_attrs(address)
+            else:
+                entity = address.offer_year_structure.entity
+                address = entity_address.find_by_id(entity)
+                version = entity_version.get_last_version(entity)
+                address.recipient = '{} - {}'.format(version.acronym, version.title)
+                self._init_attrs(address)
         else:
-            entity = address.offer_year_structure.entity
-            address = entity_address.find_by_id(entity)
-            version = entity_version.get_last_version(entity)
-            address.recipient = '{} - {}'.format(version.acronym, version.title)
-            self._init_attrs(address)
+            for field_name in self.fields:
+                setattr(self, field_name, None)
 
     def _init_attrs(self, obj):
         for field_name in self.fields:
