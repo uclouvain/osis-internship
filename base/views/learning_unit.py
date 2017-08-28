@@ -584,25 +584,19 @@ def learning_unit_year_add(request):
                 status = False
             requirement_entity_version = mdl.entity_version.find_by_id(data['requirement_entity'])
             allocation_entity_version = mdl.entity_version.find_by_id(data['allocation_entity'])
+            new_learning_container = create_learning_container(year, data)
+            new_learning_unit = create_learning_unit(data, new_learning_container, year)
             while year <= int(data['end_year']) and year < academic_year.year+6:
                 an_academic_year = mdl.academic_year.find_academic_year_by_year(year)
-                new_learning_container = create_learning_container(year, data)
-                new_learning_container_year = create_learning_container_year(an_academic_year,
-                                                                             data,
+                new_learning_container_year = create_learning_container_year(an_academic_year, data,
                                                                              new_learning_container)
                 new_requirement_entity = create_entity_container_year(requirement_entity_version,
                                                                       new_learning_container_year,
                                                                       REQUIREMENT_ENTITY)
-                create_entity_container_year(allocation_entity_version,
-                                             new_learning_container_year,
-                                             ALLOCATION_ENTITY)
-                new_learning_unit = create_learning_unit(data, new_learning_container, year)
+                create_entity_container_year(allocation_entity_version, new_learning_container_year, ALLOCATION_ENTITY)
                 if data['learning_container_year_type'] == COURSE:
-                    new_lecturing = create_learning_component_year(new_learning_container_year,
-                                                                   "CM1",
-                                                                   LECTURING)
-                    new_practical_exercise = create_learning_component_year(new_learning_container_year,
-                                                                            "TP1",
+                    new_lecturing = create_learning_component_year(new_learning_container_year, "CM1", LECTURING)
+                    new_practical_exercise = create_learning_component_year(new_learning_container_year, "TP1",
                                                                             PRACTICAL_EXERCISES)
                     create_entity_component_year(new_requirement_entity, new_lecturing)
                     create_entity_component_year(new_requirement_entity, new_practical_exercise)
@@ -610,12 +604,8 @@ def learning_unit_year_add(request):
                                                                        new_learning_container_year,
                                                                        new_learning_unit,
                                                                        status)
-                    create_learning_unit_component(new_learning_unit_year,
-                                                   new_lecturing,
-                                                   LECTURING)
-                    create_learning_unit_component(new_learning_unit_year,
-                                                   new_practical_exercise,
-                                                   PRACTICAL_EXERCISES)
+                    create_learning_unit_component(new_learning_unit_year, new_lecturing, LECTURING)
+                    create_learning_unit_component(new_learning_unit_year, new_practical_exercise, PRACTICAL_EXERCISES)
                 else:
                     new_learning_component_year = create_learning_component_year(new_learning_container_year,
                                                                                  "NT1", None)
