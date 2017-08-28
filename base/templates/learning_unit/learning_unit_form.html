@@ -171,12 +171,12 @@
     });
 
     function showDiv(elem){
-       if(elem == partim || elem == blank){
-            document.getElementById('for_titles').style.display = "none";
-            document.getElementById('for_structure').style.display = "none";
-       }else{
+       if(elem != partim || elem != blank){
             document.getElementById('for_titles').style.display = "block";
             document.getElementById('for_structure').style.display = "block";
+       }else{
+            document.getElementById('for_titles').style.display = "none";
+            document.getElementById('for_structure').style.display = "none";
        }
 
        if(elem == internship)
