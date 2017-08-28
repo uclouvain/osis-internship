@@ -23,7 +23,6 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import unicodedata
 from decimal import *
 
 from django.db import models
@@ -415,60 +414,6 @@ def find_for_score_encodings(session_exam_number,
                    .select_related('session_exam')\
                    .select_related('learning_unit_enrollment__offer_enrollment__student__person')\
                    .select_related('learning_unit_enrollment__learning_unit_year')
-
-
-def _normalize_string(string):
-    """
-    Remove accents in the string passed in parameter.
-    For example : 'é - è' ==> 'e - e'  //  'àç' ==> 'ac'
-    :param string: The string to normalize.
-    :return: The normalized string
-    """
-    string = string.replace(" ", "")
-    return ''.join((c for c in unicodedata.normalize('NFD', string) if unicodedata.category(c) != 'Mn'))
-
-
-def sort_by_offer_acronym_last_name_first_name(exam_enrollments):
-    def _sort(key):
-        off_enroll = key.learning_unit_enrollment.offer_enrollment
-        last_name = off_enroll.student.person.last_name
-        first_name = off_enroll.student.person.first_name
-        last_name = _normalize_string(last_name) if last_name else None
-        first_name = _normalize_string(first_name) if first_name else None
-        offer_year_acronym = key.learning_unit_enrollment.offer_enrollment.offer_year.acronym
-        learn_unit_acronym = key.learning_unit_enrollment.learning_unit_year.acronym
-        return "%s %s %s %s" % (offer_year_acronym if offer_year_acronym else '',
-                                last_name.upper() if last_name else '',
-                                first_name.upper() if first_name else '',
-                                learn_unit_acronym if learn_unit_acronym else '')
-
-    return sorted(exam_enrollments, key=lambda k: _sort(k))
-
-
-def sort_for_encodings(exam_enrollments):
-    """
-    Sort the list by
-     0. LearningUnitYear.acronym
-     1. offerYear.acronym
-     2. student.lastname
-     3. sutdent.firstname
-    :param exam_enrollments: List of examEnrollments to sort
-    :return:
-    """
-    def _sort(key):
-        learn_unit_acronym = key.learning_unit_enrollment.learning_unit_year.acronym
-        off_enroll = key.learning_unit_enrollment.offer_enrollment
-        acronym = off_enroll.offer_year.acronym
-        last_name = off_enroll.student.person.last_name
-        first_name = off_enroll.student.person.first_name
-        last_name = _normalize_string(last_name) if last_name else None
-        first_name = _normalize_string(first_name) if first_name else None
-        return "%s %s %s %s" % (learn_unit_acronym if learn_unit_acronym else '',
-                                acronym if acronym else '',
-                                last_name.upper() if last_name else '',
-                                first_name.upper() if first_name else '')
-
-    return sorted(exam_enrollments, key=lambda k: _sort(k))
 
 
 def find_by_student(a_student):

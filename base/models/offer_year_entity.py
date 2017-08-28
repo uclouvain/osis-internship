@@ -43,8 +43,26 @@ class OfferYearEntity(models.Model):
     type = models.CharField(max_length=30, blank=True, null=True, choices=offer_year_entity_type.TYPES)
 
     class Meta:
-        unique_together = ('offer_year', 'entity', 'type')
+        unique_together = ('offer_year', 'type')
 
     def __str__(self):
         return u"%s - %s - %s" % (self.offer_year, self.entity, self.type)
 
+
+def search(**kwargs):
+    queryset = OfferYearEntity.objects
+
+    if 'entity' in kwargs:
+        queryset = queryset.filter(entity__exact=kwargs['entity'])
+
+    if 'offer_year' in kwargs:
+        queryset = queryset.filter(offer_year=kwargs['offer_year'])
+
+    if 'type' in kwargs:
+        queryset = queryset.filter(type__exact=kwargs['type'])
+
+    return queryset
+
+
+def get_from_offer_year_and_type(offer_year, type):
+    return OfferYearEntity.objects.get(offer_year=offer_year, type=type)

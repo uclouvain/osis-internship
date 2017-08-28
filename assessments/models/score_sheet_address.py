@@ -26,7 +26,8 @@
 from django.contrib import admin
 from base.models import entity_address
 from django.db import models
-from base.models.enums import offer_year_entity_type
+from assessments.models.enums import score_sheet_address_choices
+from django.core.exceptions import ObjectDoesNotExist
 
 
 class ScoreSheetAddressAdmin(admin.ModelAdmin):
@@ -36,11 +37,10 @@ class ScoreSheetAddressAdmin(admin.ModelAdmin):
 
 
 class ScoreSheetAddress(models.Model):
-    # external_id = models.CharField(max_length=100, blank=True, null=True)
-    # changed = models.DateTimeField(null=True, auto_now=True)
-    offer_year_entity = models.ForeignKey('OfferYearEntity', blank=True, null=True)
-    level = models.PositiveIntegerField(blank=True, null=True)
-
+    offer_year = models.OneToOneField('base.OfferYear')
+    # Info to find the address
+    entity_address_choice = models.CharField(max_length=50, blank=True, null=True, choices=score_sheet_address_choices.CHOICES)
+    # Address fields
     location = models.CharField(max_length=255, blank=True, null=True)  # Address for scores cheets
     postal_code = models.CharField(max_length=20, blank=True, null=True)
     city = models.CharField(max_length=255, blank=True, null=True)
@@ -51,18 +51,38 @@ class ScoreSheetAddress(models.Model):
 
     @property
     def customized(self):
-        return self.location and self.postal_code and self.city and not self.offer_year_entity and not self.entity_type
+        return self.location and self.postal_code and self.city and not self.entity_address_choice
 
-    def get_address(self):
-        if not self.customized:
-            address = entity_address.find_by_id(self.offer_year_entity_id)
-            return address.get_address()
+    def get_offer_year_type(self):
+        if self.entity_address_choice:
+            if score_sheet_address_choices.ENTITY_MANAGEMENT in self.entity_address_choice:
+                return score_sheet_address_choices.ENTITY_MANAGEMENT
+            else:
+                return score_sheet_address_choices.ENTITY_ADMINISTRATION
+        return None
+
+    # def get_address(self):
+    #     if self.customized:
+    #         self._init_attrs(self)
+    #     else:
+    #         entity = offer_year_entity.get_from_offer_year_and_type(self.offer_year, self.get_offer_year_type())
+    #         address = entity_address.find_by_id(entity)
+    #         version = entity_version.get_last_version(entity)
+    #         address.recipient = '{} - {}'.format(version.acronym, version.title)
+    #         self._init_attrs(address)
 
     def save(self, *args, **kwargs):
-        if self.customized or (self.offer_year_entity and self.entity_type):
+        if self.customized or self.entity_address_choice:
             super(ScoreSheetAddress, self).save(*args, **kwargs)
         else:
-            raise Exception("Please set either offer_year_entity and level nor location, postal_code, city... but not all of them.")
+            raise Exception("Please set either entity_address_choice nor location, postal_code, city... but not all of them.")
 
     def __str__(self):
         return u"%s - %s - %s" % (self.offer_year, self.entity, self.type)
+
+
+def get_from_offer_year(off_year):
+    try:
+        return ScoreSheetAddress.objects.get(offer_year=off_year)
+    except ObjectDoesNotExist:
+        return None

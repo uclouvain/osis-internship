@@ -26,21 +26,22 @@
 from django.utils import timezone
 from django.utils.translation import ugettext as _
 from attribution.models import attribution
-from base.models import entity_address, entity_version, person_address, session_exam_calendar
-from base.models.exam_enrollment import sort_for_encodings, justification_label_authorized, \
-    get_deadline
+from base.models import entity_address, entity_version, person_address, session_exam_calendar, offer_year_entity
+from base.models.exam_enrollment import justification_label_authorized, get_deadline
+from assessments.business.score_encoding_list import sort_for_encodings
+from assessments.models import score_sheet_address
 
 
 class ScoreSheetAddress:
     fields = ['recipient', 'location', 'postal_code', 'city', 'country', 'phone', 'fax', 'email']
 
     def __init__(self, offer_year, *args, **kwargs):
-        address = offer_year.score_sheet_address
+        address = score_sheet_address.get_from_offer_year(offer_year)
         if address:
             if address.customized:
                 self._init_attrs(address)
             else:
-                entity = address.offer_year_structure.entity
+                entity = offer_year_entity.get_from_offer_year_and_type(offer_year, address.get_offer_year_type())
                 address = entity_address.find_by_id(entity)
                 version = entity_version.get_last_version(entity)
                 address.recipient = '{} - {}'.format(version.acronym, version.title)
