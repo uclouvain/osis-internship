@@ -24,16 +24,17 @@
 #
 ##############################################################################
 from django.contrib import admin
-from base.models import entity_address
 from django.db import models
 from assessments.models.enums import score_sheet_address_choices
 from django.core.exceptions import ObjectDoesNotExist
 
 
 class ScoreSheetAddressAdmin(admin.ModelAdmin):
-    list_display = ('type',)
-    fieldsets = ((None, {'fields': ('name', 'organization')}),)
-    search_fields = ['type']
+    list_display = ('offer_year', 'entity_address_choice', 'location', 'postal_code', 'city', 'phone', 'fax', 'email')
+    fieldsets = ((None, {'fields': ('offer_year', 'entity_address_choice', 'location', 'postal_code', 'city', 'country', 'phone', 'fax', 'email')}),)
+    search_fields = ['offer_year__acronym', 'location']
+    list_filter = ('entity_address_choice',)
+    raw_id_fields = ('offer_year',)
 
 
 class ScoreSheetAddress(models.Model):
@@ -60,16 +61,6 @@ class ScoreSheetAddress(models.Model):
             else:
                 return score_sheet_address_choices.ENTITY_ADMINISTRATION
         return None
-
-    # def get_address(self):
-    #     if self.customized:
-    #         self._init_attrs(self)
-    #     else:
-    #         entity = offer_year_entity.get_from_offer_year_and_type(self.offer_year, self.get_offer_year_type())
-    #         address = entity_address.find_by_id(entity)
-    #         version = entity_version.get_last_version(entity)
-    #         address.recipient = '{} - {}'.format(version.acronym, version.title)
-    #         self._init_attrs(address)
 
     def save(self, *args, **kwargs):
         if self.customized or self.entity_address_choice:

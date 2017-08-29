@@ -44,6 +44,9 @@ admin.site.register(education_group_year.EducationGroupYear,
 admin.site.register(entity.Entity,
                     entity.EntityAdmin)
 
+admin.site.register(entity_address.EntityAddress,
+                    entity_address.EntityAddressAdmin)
+
 admin.site.register(entity_component_year.EntityComponentYear,
                     entity_component_year.EntityComponentYearAdmin)
 
@@ -112,6 +115,9 @@ admin.site.register(offer_year_calendar.OfferYearCalendar,
 
 admin.site.register(offer_year_domain.OfferYearDomain,
                     offer_year_domain.OfferYearDomainAdmin)
+
+admin.site.register(offer_year_entity.OfferYearEntity,
+                    offer_year_entity.OfferYearEntityAdmin)
 
 admin.site.register(organization.Organization,
                     organization.OrganizationAdmin)

@@ -132,7 +132,7 @@ class OfferViewTestCase(TestCase):
 
         request, template, context = mock_render.call_args[0]
 
-        self.assertEqual(template, 'offer.html')
+        self.assertEqual(template, 'offer/tab_identification.html')
 
     @mock.patch('django.contrib.auth.decorators')
     @mock.patch('base.models.offer_year')
@@ -151,8 +151,8 @@ class OfferViewTestCase(TestCase):
 
         request = mock.Mock(method='POST')
 
-        from base.views.offer import score_encoding
-        response = score_encoding(request, offer_year.id)
+        from assessments.views.score_sheet import save_score_sheet_address
+        response = save_score_sheet_address(request, offer_year.id)
 
         self.assertTrue(offer_year.save.called)
         self.assertEqual(response.status_code, 200)
@@ -169,8 +169,8 @@ class OfferViewTestCase(TestCase):
         offer_year = mock.Mock(id=1)
         request = mock.Mock(method='GET')
 
-        from base.views.offer import score_encoding
-        response = score_encoding(request, offer_year.id)
+        from assessments.views.score_sheet import save_score_sheet_address
+        response = save_score_sheet_address(request, offer_year.id)
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.content, b'nok')

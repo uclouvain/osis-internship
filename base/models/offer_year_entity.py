@@ -31,7 +31,7 @@ from django.db import models
 class OfferYearEntityAdmin(admin.ModelAdmin):
     list_display = ('offer_year', 'entity', 'type',)
     fieldsets = ((None, {'fields': ('offer_year', 'entity', 'type')}),)
-    search_fields = ['type', 'entity__entity_version__acronym', 'offer_year__acronym']
+    search_fields = ['type', 'entity__entityversion__acronym', 'offer_year__acronym']
     list_filter = ('type', 'offer_year__academic_year',)
 
 

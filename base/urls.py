@@ -52,6 +52,17 @@ urlpatterns = [
 
     url(r'^catalog/$', common.catalog, name='catalog'),
 
+    url(r'^entities/', include([
+        url(r'^$', institution.entities, name='entities'),
+        url(r'^search$', institution.entities_search, name='entities_search'),
+        url(r'^(?P<entity_version_id>[0-9]+)/', include([
+            url(r'^$', institution.entity_read, name='entity_read'),
+            url(r'^address/$', institution.get_entity_address, name='entity_address'),
+            url(r'^diagram/$', institution.entity_diagram, name='entity_diagram'),
+            url(r'^versions/$', institution.entities_version, name='entities_version'),
+        ]))
+    ])),
+
     url(r'^institution/', include([
         url(r'^$', institution.institution, name='institution'),
         url(r'^mandates/$', institution.mandates, name='mandates'),
@@ -101,7 +112,8 @@ urlpatterns = [
         url(r'^search$', offer.offers_search, name='offers_search'),
         url(r'^(?P<offer_year_id>[0-9]+)/', include([
             url(r'^$', offer.offer_read, name='offer_read'),
-            url(r'^score_encoding/$', offer.score_encoding, name='offer_score_encoding'),
+            url(r'^academic_calendar/$', offer.offer_academic_calendar_tab, name='offer_academic_calendar_tab'),
+            url(r'^program_managers/$', offer.offer_program_managers_tab, name='offer_program_managers_tab'),
         ]))
     ])),
 
@@ -132,16 +144,6 @@ urlpatterns = [
                 name='organization_address_create'),
             url(r'^delete/$', organization.organization_address_delete,
                 name='organization_address_delete')
-        ]))
-    ])),
-
-    url(r'^entities/', include([
-        url(r'^$', institution.entities, name='entities'),
-        url(r'^search$', institution.entities_search, name='entities_search'),
-        url(r'^(?P<entity_version_id>[0-9]+)/', include([
-            url(r'^$', institution.entity_read, name='entity_read'),
-            url(r'^diagram/$', institution.entity_diagram, name='entity_diagram'),
-            url(r'^versions/$', institution.entities_version, name='entities_version'),
         ]))
     ])),
 

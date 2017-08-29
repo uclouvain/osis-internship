@@ -24,23 +24,19 @@
 #
 ##############################################################################
 from django.contrib import admin
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 
 
 class EntityAddressAdmin(admin.ModelAdmin):
     list_display = ('entity', 'label', 'location', 'postal_code', 'city', 'country')
     fieldsets = ((None, {'fields': ('entity', 'label', 'location', 'postal_code', 'city', 'country', 'phone', 'fax', 'email')}),)
-    search_fields = ['entity__entity_version__acronym']
-
-    # def get_search_results(self, request, queryset, search_term):
-    #     # search_term is what you input in admin site
-    #     # queryset is search results
-    #     queryset, use_distinct = super(EntityAddressAdmin, self).get_search_results(request, queryset, search_term)
+    search_fields = ['entity__entityversion__acronym']
 
 
 class EntityAddress(models.Model):
     external_id = models.CharField(max_length=100, blank=True, null=True)
-    entity = models.ForeignKey('Entity')
+    entity = models.OneToOneField('Entity')
     label = models.CharField(max_length=20)
     location = models.CharField(max_length=255)
     postal_code = models.CharField(max_length=20)
@@ -56,11 +52,13 @@ class EntityAddress(models.Model):
     def __str__(self):
         return "{0} - {1}".format(self.id, self.external_id)
 
-    def get_address(self):
-        return {
-
-        }
-
 
 def find_by_id(pk):
     return EntityAddress.objects.filter(pk=pk)
+
+
+def get_from_entity(entity):
+    try:
+        return EntityAddress.objects.get(entity=entity)
+    except ObjectDoesNotExist:
+        return None

@@ -1,0 +1,181 @@
+{% extends "layout.html" %}
+{% load format %}
+{% load staticfiles %}
+{% load i18n %}
+{% comment "License" %}
+* OSIS stands for Open Student Information System. It's an application
+* designed to manage the core business of higher education institutions,
+* such as universities, faculties, institutes and professional schools.
+* The core business involves the administration of students, teachers,
+* courses, programs and so on.
+*
+* Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* A copy of this license - GNU General Public License - is available
+* at the root of the source code of this program.  If not,
+* see http://www.gnu.org/licenses/.
+{% endcomment %}
+
+{% block breadcrumb %}
+    <li><a href="{% url 'catalog' %}" id="lnk_catalog">{% trans 'formation_catalogue' %}</a></li>
+    <li><a href="{% url 'offers' %}" id="lnk_offers">{% trans 'offers' %}</a></li>
+    <li class="active">{% trans 'offer' %}</li>
+{% endblock %}
+
+{% block content %}
+
+    {% include "offer/header.html" %}
+
+    <div class="panel panel-default">
+        <div class="panel-body" id="tabs">
+
+            {% include "offer/tabs.html" %}
+
+            <div class="tab-content" id="tab_content">
+                <div role="tabpanel" class="tab-pane active" id="identification">
+
+                    <br>
+                    <p>{% trans 'message_address_papersheet' %}.</p>
+                    <div class="alert alert-dismissible alert-warning">
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        <p>{% trans 'info_address_changed_for_papersheet' as info_address_changed_for_papersheet %}{{ info_address_changed_for_papersheet | format:offer_year.acronym}}.</p>
+                    </div>
+
+                    <label for="slt_related_entities">{% trans 'reuse_address_entity' %}...</label>
+                    <select class="form-control" id="slt_related_entities" name="related_entity">
+                        <option value="">{% trans 'select' %}...</option>
+                        {% for entity in offer_year.related_entities %}
+                            <option value="{{ entity.id }}">{{ entity }}</option>
+                        {% endfor %}
+                    </select>
+                    <br>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="txt_score_encoding_recipient">{% trans 'recipient' %}</label>
+                            <input class="form-control" value="{{ offer_year.recipient | default_if_none:'' }}"
+                                   name="score_encoding_recipient" id="txt_score_encoding_recipient"
+                                   maxlength="255">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="txt_score_encoding_location">{% trans 'location' %}</label>
+                            <input class="form-control" value="{{ offer_year.location | default_if_none:'' }}"
+                                   name="score_encoding_location" id="txt_score_encoding_location" maxlength="255">
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label for="txt_score_encoding_postal_code">{% trans 'postal_code' %}</label>
+                            <input class="form-control" value="{{ offer_year.postal_code | default_if_none:'' }}"
+                                   name="score_encoding_postal_code" id="txt_score_encoding_postal_code"
+                                   maxlength="20">
+                        </div>
+                        <div class="col-md-5">
+                            <label for="txt_score_encoding_city">{% trans 'city' %}</label>
+                            <input class="form-control" value="{{ offer_year.city | default_if_none:'' }}"
+                                   name="score_encoding_city" id="txt_score_encoding_city" maxlength="255">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="slt_score_encoding_country">{% trans 'country'%}</label>
+                            <select class="form-control" id="slt_score_encoding_country" name="score_encoding_country">
+                                {% for country in countries %}
+                                    <option value="{{ country.id }}" {% if offer_year.country.id == country.id %}selected{% endif %}>{{ country.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label for="txt_score_encoding_phone">{% trans 'phone' %}</label>
+                            <input class="form-control" value="{{ offer_year.phone | default_if_none:'' }}"
+                                   name="score_encoding_phone" id="txt_score_encoding_phone"
+                                   maxlength="20">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="txt_score_encoding_fax">{% trans 'fax' %}</label>
+                            <input class="form-control" value="{{ offer_year.fax | default_if_none:'' }}"
+                                   name="score_encoding_fax" id="txt_score_encoding_fax" maxlength="255">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="txt_score_encoding_email">{% trans 'email' %}</label>
+                            <input class="form-control" value="{{ offer_year.email | default_if_none:'' }}"
+                                   name="score_encoding_email" id="txt_score_encoding_email" maxlength="255">
+                        </div>
+                    </div>
+                    <br>
+                    {% if is_program_manager %}
+                        <button type="button" class="btn btn-primary" id="bt_save_score_encoding_address">
+                            <span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span> {% trans 'save' %}</button>
+                    {% endif %}
+                    <span id="status_save"></span>
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block script %}
+
+    <script type="text/javascript">
+
+        $('#slt_related_entities').change(function(e) {
+            var related_entity = $('#slt_related_entities').val();
+            if(related_entity != "") {
+                $.ajax({
+                    url: "/entities/" + related_entity + "/address/",
+                    data: null,
+                    dataType: 'json',
+                    success: function (data) {
+                        console.log(data);
+                        $('#txt_score_encoding_recipient').val(data.recipient);
+                        $('#txt_score_encoding_location').val(data.location);
+                        $('#txt_score_encoding_postal_code').val(data.postal_code);
+                        $('#txt_score_encoding_city').val(data.city);
+                        $('#slt_score_encoding_country').val(data.country);
+                        $('#txt_score_encoding_phone').val(data.phone);
+                        $('#txt_score_encoding_fax').val(data.fax);
+                        $('#txt_score_encoding_email').val(data.email);
+                    }
+                });
+
+
+            }
+        });
+
+        $('#bt_save_score_encoding_address').click(function() {
+            $('#bt_save_score_encoding_address').prop('disabled', true);
+            $('#status_save').text('{% trans 'saving' %}...').fadeIn(100);
+            $.post("/assessments/offers/" + {{ offer_year.id }} + "/score_sheet_address/save/",
+                    {
+                        recipient: $("#txt_score_encoding_recipient").val(),
+                        location: $("#txt_score_encoding_location").val(),
+                        postal_code: $("#txt_score_encoding_postal_code").val(),
+                        city: $("#txt_score_encoding_city").val(),
+                        country: $("#slt_score_encoding_country").val(),
+                        phone: $("#txt_score_encoding_phone").val(),
+                        fax: $("#txt_score_encoding_fax").val(),
+                        email: $("#txt_score_encoding_email").val()
+                    },
+                    function(data, status) {
+                        console.log("Data: " + data + "\nStatus: " + status);
+                        $('#bt_save_score_encoding_address').prop('disabled', false);
+                        $('#status_save').text('{% trans 'saved' %}').css('color', 'green').fadeOut(2000);
+                    });
+        });
+
+
+    </script>
+{% endblock %}
