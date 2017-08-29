@@ -110,8 +110,12 @@
                     </div>
                     <br>
                     <div>
-                        <label>{% trans 'title' %}</label>
-                        {{ form.title }}{{ form.title.errors }}
+                        <label {% if form.errors.title %}
+                                        style="color:red;"
+                                   {% endif %}>
+                            {% trans 'title' %}
+                        </label>
+                        {{ form.title }}
                     </div>
                     <br>
                     <div>
