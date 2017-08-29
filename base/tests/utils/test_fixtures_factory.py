@@ -61,29 +61,15 @@ class TestFixturesFactory(TestCase):
         persons = [person_1, person_2]
         self.assertEqual(fixtures_factory.find_person_max_id(persons), person_2.id)
 
-
-    def test_de_identifying_person_addresses_with_no_countries(self):
-        self.assertEqual(len(fixtures_factory.de_identifying_person_addresses([PersonFactory()], None)),1)
-        self.assertEqual(len(fixtures_factory.de_identifying_person_addresses([PersonFactory()], [])), 1)
-
-    def test_de_identifying_person_addresses_with_countries(self):
-        a_country = CountryFactory()
-        countries = [a_country]
-        self.assertEqual(fixtures_factory.de_identifying_person_addresses([PersonFactory()], countries)[0].country, a_country)
-
-    def test_de_identifying_person_addresses_with_fake_country(self):
-        self.assertEqual(len(fixtures_factory.de_identifying_person_addresses([PersonFactory()], [])), 1)
-
     def test_get_students_persons(self):
         a_person = PersonFactory()
         persons = [a_person]
         student = StudentFactory(person=a_person)
         student.save()
-        self.assertCountEqual(fixtures_factory.get_students_persons([a_person]), [a_person])
+        self.assertCountEqual(fixtures_factory.get_students_persons([a_person]), [])
 
     def test_get_students_no_persons(self):
         a_person = PersonFactory()
         student = StudentFactory(person=a_person)
         student.save()
         self.assertEqual(len(fixtures_factory.get_students_persons([])), 0)
-
