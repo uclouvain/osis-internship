@@ -29,12 +29,14 @@ from collections import OrderedDict
 from django.contrib import messages
 from django.conf import settings
 from django.core.urlresolvers import reverse
+from django.core.exceptions import ValidationError
 from django.contrib.auth.decorators import login_required, permission_required
 from django.http import HttpResponseRedirect
 from django.utils.translation import ugettext_lazy as _
 from django.views.decorators.http import require_http_methods
 
 from base import models as mdl
+from base.business import learning_unit_year_volumes
 from base.business import learning_unit_year_with_context
 from attribution import models as mdl_attr
 from base.models import entity_container_year
@@ -125,6 +127,9 @@ def learning_unit_components(request, learning_unit_year_id):
 @login_required
 @permission_required('base.can_access_learningunit', raise_exception=True)
 def learning_unit_volumes_management(request, learning_unit_year_id):
+    if request.method == 'POST':
+        learning_unit_volumes_management_edit(request, learning_unit_year_id)
+
     context = _get_common_context_learning_unit_year(learning_unit_year_id)
     context['learning_units'] = learning_unit_year_with_context.get_with_context(
         learning_container_year_id=context['learning_unit_year'].learning_container_year_id
@@ -133,6 +138,34 @@ def learning_unit_volumes_management(request, learning_unit_year_id):
     context['experimental_phase'] = True
     return layout.render(request, "learning_unit/volumes_management.html", context)
 
+
+def learning_unit_volumes_management_edit(request, learning_unit_year_id):
+    volumes = _extract_volumes_from_data(request)
+    try:
+        learning_unit_year_volumes.update_volumes(learning_unit_year_id, volumes)
+    except Exception as e:
+        error_msg = e.messages[0] if isinstance(e, ValidationError) else e.args[0]
+        messages.add_message(request, messages.ERROR, _(error_msg))
+
+
+def _extract_volumes_from_data(request):
+    volumes = {}
+    post_data = request.POST.dict()
+
+    for param, value in post_data.items():
+        param_splitted = param.rsplit("_", 2)
+        key = param_splitted[0]
+        if _is_a_valid_volume_key(key) and len(param_splitted) == 3:   # KEY_[LEARNINGUNITYEARID]_[LEARNINGCOMPONENTID]
+            learning_unit_year_id = int(param_splitted[1])
+            component_id = int(param_splitted[2])
+            volumes.setdefault(learning_unit_year_id, {}).setdefault(component_id, {}).update({key: value})
+    return volumes
+
+
+def _is_a_valid_volume_key(post_key):
+    return post_key in ['VOLUME_TOTAL', 'VOLUME_Q1', 'VOLUME_Q2', 'PLANNED_CLASSES', 'VOLUME_REQUIREMENT_ENTITY',
+                        'VOLUME_ADDITIONAL_REQUIREMENT_ENTITY_1', 'VOLUME_ADDITIONAL_REQUIREMENT_ENTITY_2',
+                        'VOLUME_TOTAL_REQUIREMENT_ENTITIES']
 
 @login_required
 @permission_required('base.can_access_learningunit', raise_exception=True)

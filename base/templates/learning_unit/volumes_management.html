@@ -39,7 +39,9 @@
         <div class="tab-content" id="tab_content">
             <div role="tabpanel" class="tab-pane active" id="components">
                 <h4>Gestion des volumes</h4>
-                <form action="#">
+                <form role="form" method="POST"
+                      action="{% url 'learning_unit_volumes_management' learning_unit_year_id=learning_unit_year.id%}" >
+                    {% csrf_token %}
                     <table class="table volumes">
                         {% for learning_unit in learning_units %}
                             <tbody>
@@ -106,45 +108,53 @@
                                         </td>
                                         <td></td>
                                         <td>
-                                            <input class="form-control" type="text" value="{{ data.VOLUME_TOTAL | default_if_none:0 }}">
+                                            <input class="form-control" name="VOLUME_TOTAL_{{learning_unit.id}}_{{component.id}}" type="text"
+                                                   value="{{ data.VOLUME_TOTAL | default_if_none:0 }}">
                                         </td>
                                         <td></td>
                                         <td>
-                                            <input class="form-control" type="text" value="{{ data.VOLUME_Q1 | default_if_none:0 }}">
+                                            <input class="form-control" name="VOLUME_Q1_{{learning_unit.id}}_{{component.id}}" type="text"
+                                                   value="{{ data.VOLUME_Q1 | default_if_none:0 }}">
                                         </td>
                                         <td></td>
                                         <td>
-                                            <input class="form-control" type="text" value="{{ data.VOLUME_Q2 | default_if_none:0 }}">
+                                            <input class="form-control" name="VOLUME_Q2_{{learning_unit.id}}_{{component.id}}" type="text"
+                                                   value="{{ data.VOLUME_Q2 | default_if_none:0 }}">
                                         </td>
                                         <td></td>
                                         <td></td>
                                         <td>
-                                            <input class="form-control" type="text"  value="{{ data.PLANNED_CLASSES | default_if_none:0 }}">
+                                            <input class="form-control" name="PLANNED_CLASSES_{{learning_unit.id}}_{{component.id}}" type="text"
+                                                   value="{{ data.PLANNED_CLASSES | default_if_none:0 }}">
                                         </td>
                                         <td></td>
                                         <td></td>
                                         {% if learning_unit.entities.REQUIREMENT_ENTITY %}
                                         <td>
-                                            <input class="form-control" type="text" value="{{ data.VOLUME_REQUIREMENT_ENTITY | default_if_none:0 }}">
+                                            <input class="form-control" name="VOLUME_REQUIREMENT_ENTITY_{{learning_unit.id}}_{{component.id}}" type="text"
+                                                   value="{{ data.VOLUME_REQUIREMENT_ENTITY | default_if_none:0 }}">
                                         </td>
                                         {% endif %}
 
                                         {% if learning_unit.entities.ADDITIONAL_REQUIREMENT_ENTITY_1 %}
                                         <td></td>
                                         <td>
-                                            <input class="form-control" type="text" value="{{ data.VOLUME_ADDITIONAL_REQUIREMENT_ENTITY_1 | default_if_none:0 }}">
+                                            <input class="form-control" name="VOLUME_ADDITIONAL_REQUIREMENT_ENTITY_1_{{learning_unit.id}}_{{component.id}}" type="text"
+                                                   value="{{ data.VOLUME_ADDITIONAL_REQUIREMENT_ENTITY_1 | default_if_none:0 }}">
                                         </td>
                                         {% endif %}
 
                                         {% if learning_unit.entities.ADDITIONAL_REQUIREMENT_ENTITY_2 %}
                                         <td></td>
                                         <td>
-                                            <input class="form-control" type="text" value="{{ data.VOLUME_ADDITIONAL_REQUIREMENT_ENTITY_2 | default_if_none:0 }}">
+                                            <input class="form-control" name="VOLUME_ADDITIONAL_REQUIREMENT_ENTITY_2_{{learning_unit.id}}_{{component.id}}" type="text"
+                                                   value="{{ data.VOLUME_ADDITIONAL_REQUIREMENT_ENTITY_2 | default_if_none:0 }}">
                                         </td>
                                         {% endif %}
                                         <td></td>
                                         <td>
-                                            <input class="form-control" type="text" value="{{ data.VOLUME_TOTAL_REQUIREMENT_ENTITIES | default_if_none:0 }}">
+                                            <input class="form-control" name="VOLUME_TOTAL_REQUIREMENT_ENTITIES_{{learning_unit.id}}_{{component.id}}" type="text"
+                                                   value="{{ data.VOLUME_TOTAL_REQUIREMENT_ENTITIES | default_if_none:0 }}">
                                         </td>
                                         <td></td>
                                     </tr>
@@ -152,6 +162,10 @@
                             </tbody>
                         {% endfor %}
                     </table>
+                    <div class="pull-right">
+                        <button type="submit" class="btn" title="{% trans 'cancel'%}">{% trans 'cancel'%}</button>
+                        <button class="btn btn-primary" type="submit" title="{% trans 'save'%}">{% trans 'save' %}</button>
+                    </div>
                 </form>
             </div>
         </div>
