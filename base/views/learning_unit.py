@@ -28,8 +28,8 @@ from collections import OrderedDict
 
 from django.contrib import messages
 from django.conf import settings
-from django.core.urlresolvers import reverse
 from django.core.exceptions import ValidationError
+from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required, permission_required
 from django.http import HttpResponseRedirect
 from django.utils.translation import ugettext_lazy as _
@@ -141,11 +141,17 @@ def learning_unit_volumes_management(request, learning_unit_year_id):
 
 def learning_unit_volumes_management_edit(request, learning_unit_year_id):
     volumes = _extract_volumes_from_data(request)
+
     try:
-        learning_unit_year_volumes.update_volumes(learning_unit_year_id, volumes)
+        errors = learning_unit_year_volumes.update_volumes(learning_unit_year_id, volumes)
     except Exception as e:
         error_msg = e.messages[0] if isinstance(e, ValidationError) else e.args[0]
         messages.add_message(request, messages.ERROR, _(error_msg))
+
+    if errors:
+        for error_msg in errors:
+            messages.add_message(request, messages.ERROR, error_msg)
+
 
 
 def _extract_volumes_from_data(request):
@@ -163,9 +169,7 @@ def _extract_volumes_from_data(request):
 
 
 def _is_a_valid_volume_key(post_key):
-    return post_key in ['VOLUME_TOTAL', 'VOLUME_Q1', 'VOLUME_Q2', 'PLANNED_CLASSES', 'VOLUME_REQUIREMENT_ENTITY',
-                        'VOLUME_ADDITIONAL_REQUIREMENT_ENTITY_1', 'VOLUME_ADDITIONAL_REQUIREMENT_ENTITY_2',
-                        'VOLUME_TOTAL_REQUIREMENT_ENTITIES']
+    return post_key in learning_unit_year_volumes.VALID_VOLUMES_KEYS
 
 @login_required
 @permission_required('base.can_access_learningunit', raise_exception=True)
