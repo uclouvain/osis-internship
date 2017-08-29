@@ -173,9 +173,9 @@ def build_entity_versions(entities):
 def build_entity_managers(persons, structures):
     entity_managers_person = []
     entity_managers = mdl_base.entity_manager.EntityManager.objects.filter(person__in=persons)
-    if entity_managers is None or len(entity_managers) == 0:
+    if entity_managers:
         entity_managers = mdl_base.entity_manager.EntityManager.objects.all()
-        if entity_managers is None or len(entity_managers) == 0:
+        if entity_managers:
             entity_managers_person = create_fake_person_for_entity_manager(persons)
             entity_managers = create_fake_entity_manager(entity_managers_person, structures)
 
@@ -245,19 +245,11 @@ def build_exam(learning_unit_enrollments, learning_unit_years,  offer_years):
 
 
 def build_offers(offer_years):
-    offers = []
-    for oy in offer_years:
-        if oy.offer not in offers:
-            offers.append(oy.offer)
-    return offers
+    return list([oy.offer for oy in offer_years])
 
 
 def get_learning_containers(learning_container_years_all):
-    learning_containers = []
-    for lc in learning_container_years_all:
-        if lc.learning_container not in learning_containers:
-            learning_containers.append(lc.learning_container)
-    return learning_containers
+    return list([lc.learning_container for lc in learning_container_years_all])
 
 
 def get_learning_container_years(academic_years):
@@ -363,7 +355,7 @@ def de_identifying_person_addresses(persons):
 
 
 def find_person_max_id(persons):
-    if persons and len(persons) > 0:
+    if persons:
         return max(person.id for person in persons)
     return 0
 
