@@ -578,49 +578,72 @@ def learning_unit_year_add(request):
             data = form.cleaned_data
             academic_year = data['academic_year']
             year = academic_year.year
-            if data['status'] == 'on':
-                status = True
-            else:
-                status = False
+            status = check_status(data)
             requirement_entity_version = mdl.entity_version.find_by_id(data['requirement_entity'])
             allocation_entity_version = mdl.entity_version.find_by_id(data['allocation_entity'])
             new_learning_container = create_learning_container(year, data)
             new_learning_unit = create_learning_unit(data, new_learning_container, year)
             while year <= int(data['end_year']) and year < academic_year.year+6:
-                an_academic_year = mdl.academic_year.find_academic_year_by_year(year)
-                new_learning_container_year = create_learning_container_year(an_academic_year, data,
-                                                                             new_learning_container)
-                new_requirement_entity = create_entity_container_year(requirement_entity_version,
-                                                                      new_learning_container_year,
-                                                                      REQUIREMENT_ENTITY)
-                create_entity_container_year(allocation_entity_version, new_learning_container_year, ALLOCATION_ENTITY)
-                if data['learning_container_year_type'] == COURSE:
-                    new_lecturing = create_learning_component_year(new_learning_container_year, "CM1", LECTURING)
-                    new_practical_exercise = create_learning_component_year(new_learning_container_year, "TP1",
-                                                                            PRACTICAL_EXERCISES)
-                    create_entity_component_year(new_requirement_entity, new_lecturing)
-                    create_entity_component_year(new_requirement_entity, new_practical_exercise)
-                    new_learning_unit_year = create_learning_unit_year(an_academic_year, form,
-                                                                       new_learning_container_year,
-                                                                       new_learning_unit,
-                                                                       status)
-                    create_learning_unit_component(new_learning_unit_year, new_lecturing, LECTURING)
-                    create_learning_unit_component(new_learning_unit_year, new_practical_exercise, PRACTICAL_EXERCISES)
-                else:
-                    new_learning_component_year = create_learning_component_year(new_learning_container_year,
-                                                                                 "NT1", None)
-                    create_entity_component_year(new_requirement_entity, new_learning_component_year)
-                    new_learning_unit_year = create_learning_unit_year(an_academic_year, form,
-                                                                       new_learning_container_year,
-                                                                       new_learning_unit,
-                                                                       status)
-                    create_learning_unit_component(new_learning_unit_year, new_learning_component_year, None)
+                create_learning_unit_structure(allocation_entity_version, data, form, new_learning_container,
+                                               new_learning_unit, requirement_entity_version, status, year)
                 year = year+1
             return redirect('learning_units')
         else:
             return layout.render(request, "learning_unit/learning_unit_form.html", {'form': form})
     else:
         return redirect('learning_unit_create')
+
+
+def create_learning_unit_structure(allocation_entity_version, data, form, new_learning_container, new_learning_unit,
+                                   requirement_entity_version, status, year):
+    an_academic_year = mdl.academic_year.find_academic_year_by_year(year)
+    new_learning_container_year = create_learning_container_year(an_academic_year, data,
+                                                                 new_learning_container)
+    new_requirement_entity = create_entity_container_year(requirement_entity_version,
+                                                          new_learning_container_year,
+                                                          REQUIREMENT_ENTITY)
+    create_entity_container_year(allocation_entity_version, new_learning_container_year, ALLOCATION_ENTITY)
+    if data['learning_container_year_type'] == COURSE:
+        create_course(an_academic_year, form, new_learning_container_year, new_learning_unit,
+                      new_requirement_entity, status)
+    else:
+        create_others_type(an_academic_year, form, new_learning_container_year, new_learning_unit,
+                           new_requirement_entity, status)
+
+
+def create_others_type(an_academic_year, form, new_learning_container_year, new_learning_unit, new_requirement_entity,
+                       status):
+    new_learning_component_year = create_learning_component_year(new_learning_container_year,
+                                                                 "NT1", None)
+    create_entity_component_year(new_requirement_entity, new_learning_component_year)
+    new_learning_unit_year = create_learning_unit_year(an_academic_year, form,
+                                                       new_learning_container_year,
+                                                       new_learning_unit,
+                                                       status)
+    create_learning_unit_component(new_learning_unit_year, new_learning_component_year, None)
+
+
+def create_course(an_academic_year, form, new_learning_container_year, new_learning_unit,
+                  new_requirement_entity, status):
+    new_lecturing = create_learning_component_year(new_learning_container_year, "CM1", LECTURING)
+    new_practical_exercise = create_learning_component_year(new_learning_container_year, "TP1",
+                                                            PRACTICAL_EXERCISES)
+    create_entity_component_year(new_requirement_entity, new_lecturing)
+    create_entity_component_year(new_requirement_entity, new_practical_exercise)
+    new_learning_unit_year = create_learning_unit_year(an_academic_year, form,
+                                                       new_learning_container_year,
+                                                       new_learning_unit,
+                                                       status)
+    create_learning_unit_component(new_learning_unit_year, new_lecturing, LECTURING)
+    create_learning_unit_component(new_learning_unit_year, new_practical_exercise, PRACTICAL_EXERCISES)
+
+
+def check_status(data):
+    if data['status'] == 'on':
+        status = True
+    else:
+        status = False
+    return status
 
 
 def create_learning_component_year(learning_container_year, acronym, type):
@@ -711,7 +734,7 @@ def check_acronym(request):
         valid = False
     if old_learning_unit_years:
         existed_acronym = True
-        valid = False
+        valid = True
     if learning_unit_years:
         existing_acronym = True
         valid = False

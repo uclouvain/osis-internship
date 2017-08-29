@@ -56,7 +56,7 @@
                         </div>
                         <div class="col-md-2">
                             <label>{% trans 'academic_year' %}</label>
-                            {{ form.academic_year }}{{ form.academic_year.errors }}
+                            {{ form.academic_year }}
                         </div>
                         <div class="col-md-2">
                             <label>{% trans 'end_year_title' %}</label>
@@ -106,11 +106,6 @@
                                 </abbr>
                             </label>
                             {{ form.acronym }}
-                            {% if form.errors.acronym %}
-                                <label style="color:red;">
-                                    {{ form.errors.acronym }}
-                                </label>
-                            {% endif %}
                         </div>
                     </div>
                     <br>
@@ -133,11 +128,11 @@
                     <div class="row">
                         <div class="col-md-3">
                             <label>{% trans 'requirement_entity' %}</label>
-                            {{ form.requirement_entity }}{{ form.requirement_entity.errors }}
+                            {{ form.requirement_entity }}
                         </div>
                         <div class="col-md-3">
                             <label>{% trans 'allocation_entity' %}</label>
-                            {{ form.allocation_entity }}{{ form.allocation_entity.errors }}
+                            {{ form.allocation_entity }}
                         </div>
                     </div>
                     <br>
@@ -199,11 +194,14 @@
                     var newMessage = [];
                     if (data['valid']){
                         res = true;
-                    }else{
-                        res = false;
+                        $(".error").css("color","black");
                         if(data['existed_acronym'] && !data['existing_acronym']){
+                            $(".error").css("color","orange");
                             newMessage.push("{% trans 'existed_acronym' %}");
                         }
+                    }else{
+                        res = false;
+                        $(".error").css("color","red");
                         if(data['existing_acronym']){
                             newMessage.push("{% trans 'existing_acronym' %}");
                         }
@@ -213,11 +211,17 @@
                     }
                     message = newMessage.join("   ");
                 });
-                return res;
+                test = [res,message];
             }, messageFunc);
 
 
             $( "#LearningUnitYearForm" ).validate({
+                invalidHandler: function(form, validator) {
+                    var errors = validator.numberOfInvalids();
+                    if (errors) {
+                        alert("You have " + error + " errors that need to be fixed");
+                    }
+                },
                 rules:{
                     acronym:{ check_acronym: true },
                 },
