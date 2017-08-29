@@ -215,6 +215,9 @@ class CreateLearningUnitYearForm(forms.ModelForm):
             elif not re.search(r"^[LM]{1}[A-Z]{2,4}[0-9]{4}$", self.data['acronym']):
                 self._errors['acronym'] = _('incorrect_acronym')
                 return False
+            elif academic_year.year > int(self.data['end_year']):
+                self._errors['end_year'] = _('incorrect_end_year')
+                return False
             else:
                 return True
         return False

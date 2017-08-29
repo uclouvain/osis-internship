@@ -47,43 +47,55 @@
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-md-2">
-                            <label>{% trans 'type' %}</label>
-                            {{ form.learning_container_year_type }}{{ form.learning_container_year_type.errors }}
+                            <label {% if form.errors.learning_container_year_type %}
+                                        style="color:red;"
+                                   {% endif %}>
+                                {% trans 'type' %}
+                            </label>
+                            {{ form.learning_container_year_type }}
                         </div>
                         <div class="col-md-3">
                             <label>{% trans 'campus' %}</label>
-                            {{ form.campus }}{{ form.campus.errors }}
+                            {{ form.campus }}
                         </div>
                         <div class="col-md-2">
                             <label>{% trans 'academic_year' %}</label>
                             {{ form.academic_year }}
                         </div>
                         <div class="col-md-2">
-                            <label>{% trans 'end_year_title' %}</label>
-                            {{ form.end_year }}{{ form.end_year.errors }}
+                            <label {% if form.errors.end_year %}
+                                        style="color:red;"
+                                   {% endif %}>
+                                {% trans 'end_year_title' %}
+                            </label>
+                            {{ form.end_year }}
                         </div>
                         <div class="col-md-3">
                             <label>{% trans 'periodicity' %}</label>
-                            {{ form.periodicity }}{{ form.periodicity.errors }}
+                            {{ form.periodicity }}
                         </div>
                     </div>
                     <br>
                     <div class="row">
                         <div class="col-md-2">
-                            <label>{% trans 'credits' %}</label>
-                            {{ form.credits }}{{ form.credits.errors }}
+                            <label {% if form.errors.credits %}
+                                        style="color:red;"
+                                   {% endif %}>
+                                {% trans 'credits' %}
+                            </label>
+                            {{ form.credits }}
                         </div>
                         <div class="col-md-3" id="is_not_internship" style="display: none;">
                             <label>{% trans 'internship_subtype' %}</label>
-                            {{ form.internship_subtype }}{{ form.internship_subtype.errors }}
+                            {{ form.internship_subtype }}
                         </div>
                         <div class="col-md-4">
                             <label>{% trans 'language' %}</label>
-                            {{ form.language }}{{ form.language.errors }}
+                            {{ form.language }}
                         </div>
                         <div class="col-md-1" style="margin-top:30px;">
                             <label>{% trans 'active_title' %}</label>
-                            {{ form.status }}{{ form.status.errors }}
+                            {{ form.status }}
                         </div>
                     </div>
                 </div>
@@ -119,8 +131,12 @@
                     </div>
                     <br>
                     <div>
-                        <label>{% trans 'title_in_english' %}</label>
-                        {{ form.title_english }}{{ form.title_english.errors }}
+                        <label {% if form.errors.title_english %}
+                                        style="color:red;"
+                                   {% endif %}>
+                            {% trans 'title_in_english' %}
+                        </label>
+                        {{ form.title_english }}
                     </div>
                 </div>
             </div>
