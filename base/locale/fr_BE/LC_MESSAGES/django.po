@@ -1771,3 +1771,27 @@ msgstr "partie 2"
 
 msgid "title_official"
 msgstr "Intitulé officiel"
+
+msgid "vol_tot_not_equal_to_q1_q2"
+msgstr "Vol.tot = Q1 + Q2"
+
+msgid "vol_tot_req_entities_not_equal_to_entity"
+msgstr "Le volume total de charge n'est pas égal à la somme des volumes de charge"
+
+msgid "vol_tot_req_entities_not_equal_to_vol_tot_mult_cp"
+msgstr "Vol.charge = Vol.tot * C.P"
+
+msgid "vol_tot_full_must_be_greater_than_partim"
+msgstr "Vol.tot du cours principal > Vol.tot du partim"
+
+msgid "vol_q1_full_must_be_greater_or_equal_to_partim"
+msgstr "Q1 du cours principal >= Q1 du partim"
+
+msgid "vol_q2_full_must_be_greater_or_equal_to_partim"
+msgstr "Q2 du cours principal >= Q2 du partim"
+
+msgid "planned_classes_full_must_be_greater_or_equal_to_partim"
+msgstr "C.P. du cours principal >= C.P. du partim"
+
+msgid "entity_requirement_full_must_be_greater_or_equal_to_partim"
+msgstr "Entité de charge du cours principal >= Entité de charge du partim"
