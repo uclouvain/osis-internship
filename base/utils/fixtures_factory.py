@@ -179,7 +179,7 @@ def build_entity_managers(persons, structures):
             entity_managers_person = create_fake_person_for_entity_manager(persons)
             entity_managers = create_fake_entity_manager(entity_managers_person, structures)
 
-    return entity_managers_person + entity_managers
+    return list(entity_managers_person) + list(entity_managers)
 
 
 def build_group_element_years(education_group_years, learning_unit_years):
