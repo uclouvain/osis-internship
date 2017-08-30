@@ -25,7 +25,8 @@
 ##############################################################################
 from django.db import models
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
-from base.models.enums import learning_unit_year_subtypes, learning_container_year_types, internship_subtypes
+from base.models.enums import learning_unit_year_subtypes, learning_container_year_types, internship_subtypes, \
+    learning_unit_year_session
 
 
 class LearningUnitYearAdmin(SerializableModelAdmin):
@@ -56,8 +57,10 @@ class LearningUnitYear(SerializableModel):
     in_charge = models.BooleanField(default=False)
     structure = models.ForeignKey('Structure', blank=True, null=True)
     internship_subtype = models.CharField(max_length=50, blank=True, null=True,
-                               choices=internship_subtypes.INTERNSHIP_SUBTYPES)
+                                          choices=internship_subtypes.INTERNSHIP_SUBTYPES)
     status = models.BooleanField(default=False)
+    session = models.CharField(max_length=50, blank=True, null=True,
+                               choices=learning_unit_year_session.LEARNING_UNIT_YEAR_SESSION)
 
     def __str__(self):
         return u"%s - %s" % (self.academic_year, self.acronym)
@@ -72,9 +75,11 @@ class LearningUnitYear(SerializableModel):
     def parent(self):
         if self.subdivision:
             return LearningUnitYear.objects.filter(subtype=learning_unit_year_subtypes.FULL,
-                                                      learning_container_year=self.learning_container_year,
-                                                      learning_container_year__acronym=self.learning_container_year.acronym,
-                                                      learning_container_year__container_type=learning_container_year_types.COURSE).first()
+                                                   learning_container_year=self.learning_container_year,
+                                                   learning_container_year__acronym=
+                                                   self.learning_container_year.acronym,
+                                                   learning_container_year__container_type=
+                                                   learning_container_year_types.COURSE).first()
         return None
 
 
