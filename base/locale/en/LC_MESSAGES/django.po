@@ -1796,3 +1796,9 @@ msgstr "Titles"
 
 msgid "structure_title"
 msgstr "Structure"
+
+msgid "fixtures_build"
+msgstr "Build anonymized fixtures"
+
+msgid "desc_lnk_fixtures_build"
+msgstr "Build a json file with anonymized fixtures"

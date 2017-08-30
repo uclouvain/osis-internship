@@ -1800,3 +1800,10 @@ msgstr "Intitulées"
 
 msgid "structure_title"
 msgstr "Structure"
+
+msgid "fixtures_build"
+msgstr "Créer des fixtures anonymisées"
+
+msgid "desc_lnk_fixtures_build"
+msgstr "Crée un fichier json avec des fixtures anonymisées"
+
