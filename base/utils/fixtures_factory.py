@@ -245,7 +245,7 @@ def build_exam(learning_unit_enrollments, learning_unit_years,  offer_years):
 
 
 def build_offers(offer_years):
-    return list([oy.offer for oy in offer_years])
+    return list({oy.offer for oy in offer_years})
 
 
 def get_learning_containers(learning_container_years_all):
