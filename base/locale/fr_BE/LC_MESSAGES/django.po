@@ -1807,3 +1807,6 @@ msgstr "Créer des fixtures anonymisées"
 msgid "desc_lnk_fixtures_build"
 msgstr "Crée un fichier json avec des fixtures anonymisées"
 
+msgid "incorrect_end_year"
+msgstr "L'année de départ doit-être inférieur à l'année de fin"
+

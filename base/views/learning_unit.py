@@ -26,7 +26,6 @@
 import datetime
 import re
 from collections import OrderedDict
-
 from django.contrib import messages
 from django.conf import settings
 from django.core.urlresolvers import reverse
@@ -35,8 +34,6 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
 from django.utils.translation import ugettext_lazy as _
 from django.views.decorators.http import require_http_methods
-
-import reference
 from base import models as mdl
 from attribution import models as mdl_attr
 from base.models import entity_container_year
@@ -44,11 +41,10 @@ from base.models.entity_component_year import EntityComponentYear
 from base.models.entity_container_year import EntityContainerYear
 from base.models.enums import entity_container_year_link_type
 from base.models.enums import learning_container_year_types
-from base.models.enums.entity_container_year_link_type import ENTITY_CONTAINER_YEAR_LINK_TYPES, REQUIREMENT_ENTITY, \
-    ALLOCATION_ENTITY
-from base.models.enums.learning_component_year_type import LEARNING_COMPONENT_YEAR_TYPES, PRACTICAL_EXERCISES, LECTURING
-from base.models.enums.learning_container_year_types import LEARNING_CONTAINER_YEAR_TYPES, COURSE
-from base.models.enums.learning_unit_year_subtypes import LEARNING_UNIT_YEAR_SUBTYPES, FULL
+from base.models.enums.entity_container_year_link_type import REQUIREMENT_ENTITY, ALLOCATION_ENTITY
+from base.models.enums.learning_component_year_type import PRACTICAL_EXERCISES, LECTURING
+from base.models.enums.learning_container_year_types import COURSE
+from base.models.enums.learning_unit_year_subtypes import FULL
 from base.models.learning_component_year import LearningComponentYear
 from base.models.learning_container import LearningContainer
 from base.models.learning_container_year import LearningContainerYear
@@ -64,10 +60,8 @@ from base.forms.learning_unit_component import LearningUnitComponentEditForm
 from base.forms.learning_class import LearningClassEditForm
 from base.models.enums import learning_unit_year_subtypes
 from cms.models import text_label
-from reference.models import language
 from reference.models.language import find_by_id
 from . import layout
-
 from django.http import JsonResponse
 
 

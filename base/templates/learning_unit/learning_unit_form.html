@@ -46,7 +46,7 @@
                 </div>
                 <div class="panel-body">
                     <div class="row">
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <label {% if form.errors.learning_container_year_type %}
                                         style="color:red;"
                                    {% endif %}>
@@ -58,40 +58,44 @@
                             <label>{% trans 'campus' %}</label>
                             {{ form.campus }}
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <label>{% trans 'academic_year' %}</label>
                             {{ form.academic_year }}
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <label {% if form.errors.end_year %}
                                         style="color:red;"
                                    {% endif %}>
                                 {% trans 'end_year_title' %}
                             </label>
                             {{ form.end_year }}
+                            <label {% if form.errors.end_year %}
+                                        style="color:red;"
+                                   {% endif %}>
+                                {{ form.errors.end_year }}
+                            </label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3" id="is_not_internship" style="display: none;">
+                            <label>{% trans 'internship_subtype' %}</label>
+                            {{ form.internship_subtype }}
                         </div>
                         <div class="col-md-3">
                             <label>{% trans 'periodicity' %}</label>
                             {{ form.periodicity }}
                         </div>
-                    </div>
-                    <br>
-                    <div class="row">
-                        <div class="col-md-2">
+                        <div class="col-md-4">
+                            <label>{% trans 'language' %}</label>
+                            {{ form.language }}
+                        </div>
+                        <div class="col-md-1">
                             <label {% if form.errors.credits %}
                                         style="color:red;"
                                    {% endif %}>
                                 {% trans 'credits' %}
                             </label>
                             {{ form.credits }}
-                        </div>
-                        <div class="col-md-3" id="is_not_internship" style="display: none;">
-                            <label>{% trans 'internship_subtype' %}</label>
-                            {{ form.internship_subtype }}
-                        </div>
-                        <div class="col-md-4">
-                            <label>{% trans 'language' %}</label>
-                            {{ form.language }}
                         </div>
                         <div class="col-md-1" style="margin-top:30px;">
                             <label>{% trans 'active_title' %}</label>

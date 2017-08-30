@@ -203,6 +203,12 @@ class CreateLearningUnitYearForm(forms.ModelForm):
                    'subtype': forms.HiddenInput()
                    }
 
+    def __init__(self, *args, **kwargs):
+        self.campuses = kwargs.pop('campuses', None)
+        self.languages = kwargs.pop('languages', None)
+        self.entities = kwargs.pop('entities', None)
+        super(CreateLearningUnitYearForm, self).__init__(*args, **kwargs)
+
     def is_valid(self):
         valid = super(CreateLearningUnitYearForm, self).is_valid()
         academic_year = mdl.academic_year.find_academic_year_by_id(self.data['academic_year'])
