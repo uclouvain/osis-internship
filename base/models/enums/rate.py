@@ -23,25 +23,31 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
-from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
+RATE1 = 'RATE1'
+RATE2 = 'RATE2'
+RATE3 = 'RATE3'
+RATE4 = 'RATE4'
+RATE5 = 'RATE5'
+RATE6 = 'RATE6'
+RATE7 = 'RATE7'
+RATE8 = 'RATE8'
+RATE9 = 'RATE9'
+RATE10 = 'RATE10'
+RATE11 = 'RATE11'
+RATE12 = 'RATE12'
+RATE13 = 'RATE13'
 
 
-class OfferYearDomainAdmin(SerializableModelAdmin):
-    list_display = ('domain', 'offer_year', 'changed')
-    fieldsets = ((None, {'fields': ('domain', 'offer_year')}),)
-    list_filter = ('offer_year__academic_year',)
-    raw_id_fields = ('domain', 'offer_year')
-    search_fields = ['domain__name', 'offer_year__acronym']
-
-
-class OfferYearDomain(SerializableModel):
-    external_id = models.CharField(max_length=100, blank=True, null=True)
-    changed = models.DateTimeField(null=True, auto_now=True)
-    domain = models.ForeignKey('reference.Domain', blank=True, null=True)
-    offer_year = models.ForeignKey('base.OfferYear', blank=True, null=True)
-    education_group_year = models.ForeignKey('base.EducationGroupYear', blank=True, null=True)
-
-    def __str__(self):
-        return u"%s - %s" % (self.domain, self.offer_year)
-
+RATES = ((RATE1, RATE1),
+         (RATE2, RATE2),
+         (RATE3, RATE3),
+         (RATE4, RATE4),
+         (RATE5, RATE5),
+         (RATE6, RATE6),
+         (RATE7, RATE7),
+         (RATE8, RATE8),
+         (RATE9, RATE9),
+         (RATE10, RATE10),
+         (RATE11, RATE11),
+         (RATE12, RATE12),
+         (RATE13, RATE13))

@@ -149,5 +149,8 @@ admin.site.register(student.Student,
 admin.site.register(synchronization.Synchronization,
                     synchronization.SynchronizationAdmin)
 
+admin.site.register(supplement.Supplement,
+                    supplement.SupplementAdmin)
+
 admin.site.register(tutor.Tutor,
                     tutor.TutorAdmin)

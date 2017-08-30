@@ -25,6 +25,7 @@
 ##############################################################################
 from django.db import models
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
+from base.models.enums import academic_type, rate, internship_presence, schedule_type, activity_presence, diploma_focus
 
 
 class EducationGroupYearAdmin(SerializableModelAdmin):
@@ -43,7 +44,33 @@ class EducationGroupYear(SerializableModel):
     academic_year = models.ForeignKey('AcademicYear')
     education_group = models.ForeignKey('EducationGroup')
     education_group_type = models.ForeignKey('OfferType', blank=True, null=True)
+    start_year = models.IntegerField()
+    end_year = models.IntegerField()
+    active = models.BooleanField(default=False)
+    subtest = models.BooleanField(default=False)
+    concours = models.BooleanField(default=False)
+    fundable = models.BooleanField(default=False)
+    funding_guidance = models.CharField(max_length=1, blank=True, null=True)
+    funding_cud = = models.BooleanField(default=False)
+    funding_guidance_cud = models.CharField(max_length=1, blank=True, null=True)
+    academic_type = models.CharField(max_length=20, choices=academic_type.ACADEMIC_TYPES)
+    university_certificate = = models.BooleanField(default=False)
+    rate = models.CharField(max_length=20, choices=rate.RATES)
+    enrollment_campus = models.ForeignKey('Campus')
+    main_teaching_campus = models.ForeignKey('Campus', blank=True, null=True)
+    administration_entity = models.ForeignKey('Entity')
+    academic_entity = models.ForeignKey('Entity')
+    dissertation = models.BooleanField(default=False)
+    internship = models.CharField(max_length=20, choices=internship_presence.INTERNSHIP_STATUS, blank=True, null=True)
+    schedule_type = models.CharField(max_length=20, choices=schedule_type.SCHEDULE_TYPES, default=schedule_type.DAILY)
+    english_activities = models.CharField(max_length=20, choices=activity_presence.ACTIVITY_PRESENCES, blank=True, null=True)
+    other_language_activities = models.CharField(max_length=20, choices=activity_presence.ACTIVITY_PRESENCES, blank=True, null=True)
+    other_campus_activities = models.CharField(max_length=20, choices=activity_presence.ACTIVITY_PRESENCES, blank=True, null=True)
+    supplement = models.ForeignKey('Supplement', blank=True, null=True)
+    joint_diploma = models.BooleanField(default=False)
+    diploma_focus = models.CharField(max_length=30, choices=diploma_focus.DIPLOMA_FOCUS, blank=True, null=True)
+    diploma_title = models.CharField(max_length=140, blank=True, null=True)
+    exchange_comment = models.CharField(max_length=320, blank=True, null=True)
 
     def __str__(self):
         return u"%s - %s" % (self.academic_year, self.acronym)
-
