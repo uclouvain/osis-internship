@@ -1805,3 +1805,15 @@ msgstr "Build a json file with anonymized fixtures"
 
 msgid "incorrect_end_year"
 msgstr "Start date should be before the end date"
+
+msgid "session_title"
+msgstr "Session"
+
+msgid "remarks_title"
+msgstr "Remarks"
+
+msgid "faculty_remark"
+msgstr "Faculty"
+
+msgid "other_remark"
+msgstr "Other"

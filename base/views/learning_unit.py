@@ -692,7 +692,8 @@ def create_entity_container_year(entity_version, learning_container_year, type):
 def create_learning_unit(data, learning_container, year):
     new_learning_unit = LearningUnit(acronym=data['acronym'], title=data['title'], start_year=year,
                                      end_year=int(data['end_year']), periodicity=data['periodicity'],
-                                     learning_container=learning_container)
+                                     learning_container=learning_container, faculty_remark=data['faculty_remark'],
+                                     other_remark=data['other_remark'])
     new_learning_unit.save()
     return new_learning_unit
 
@@ -706,7 +707,8 @@ def create_learning_unit_year(academic_year, form, learning_container_year, lear
                                               subtype=form.data['subtype'],
                                               credits=form.data['credits'],
                                               internship_subtype=form.data['internship_subtype'],
-                                              status=status)
+                                              status=status,
+                                              session=form.data['session'])
     new_learning_unit_year.save()
     return new_learning_unit_year
 

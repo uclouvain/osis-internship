@@ -1796,7 +1796,7 @@ msgid "active_title"
 msgstr "Actif"
 
 msgid "titles"
-msgstr "Intitulées"
+msgstr "Intitulés"
 
 msgid "structure_title"
 msgstr "Structure"
@@ -1809,4 +1809,18 @@ msgstr "Crée un fichier json avec des fixtures anonymisées"
 
 msgid "incorrect_end_year"
 msgstr "L'année de départ doit-être inférieur à l'année de fin"
+
+msgid "session_title"
+msgstr "Session"
+
+msgid "remarks_title"
+msgstr "Remarques"
+
+msgid "faculty_remark"
+msgstr "Faculté"
+
+msgid "other_remark"
+msgstr "Autre"
+
+
 

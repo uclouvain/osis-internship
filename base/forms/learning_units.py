@@ -35,6 +35,7 @@ from django.core.exceptions import ValidationError
 from base.models.campus import Campus
 from base.models.entity_version import find_latest_version
 from base.models.enums import entity_container_year_link_type
+from base.models.enums import entity_type
 from base.models.enums.learning_container_year_types import LEARNING_CONTAINER_YEAR_TYPES
 from base.models.enums.learning_unit_periodicity import PERIODICITY_TYPES
 from base.models.enums.organization_type import ORGANIZATION_TYPE
@@ -153,7 +154,10 @@ def _get_latest_entity_version(entity_container_year):
 
 
 def create_entities_list():
-    entities = find_latest_version(date=datetime.datetime.now(get_tzinfo()))
+    entities = find_latest_version(date=datetime.datetime.now(get_tzinfo()))\
+        .filter(entity_type__in=[entity_type.SECTOR, entity_type.FACULTY, entity_type.SCHOOL,
+                                 entity_type.INSTITUTE, entity_type.DOCTORAL_COMMISSION],
+                entity__organization__type=ORGANIZATION_TYPE[0][0])
     return [(elem.id, elem.acronym) for elem in entities]
 
 
@@ -177,6 +181,10 @@ class CreateLearningUnitYearForm(forms.ModelForm):
     end_year = forms.CharField(widget=forms.DateInput(attrs={'class': 'form-control',
                                                              'required': True,
                                                              'id': 'end_year'}))
+    faculty_remark = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control',
+                                                                  'id': 'faculty_remark'}))
+    other_remark = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control',
+                                                                'id': 'faculty_remark'}))
     periodicity = forms.CharField(widget=forms.Select(attrs={'class': 'form-control',
                                                              'id': 'periodicity'},
                                                       choices=PERIODICITY_TYPES))
@@ -197,7 +205,7 @@ class CreateLearningUnitYearForm(forms.ModelForm):
         model = mdl.learning_unit_year.LearningUnitYear
         fields = ['learning_container_year_type', 'acronym', 'academic_year', 'status', 'internship_subtype',
                   'end_year', 'periodicity', 'credits', 'campus', 'title', 'title_english', 'allocation_entity',
-                  'requirement_entity', 'subtype', 'language']
+                  'requirement_entity', 'subtype', 'language', 'session', 'faculty_remark', 'other_remark', ]
         widgets = {'acronym': forms.TextInput(attrs={'class': 'form-control',
                                                      'id': 'acronym',
                                                      'required': True}),
@@ -216,6 +224,9 @@ class CreateLearningUnitYearForm(forms.ModelForm):
                    'title_english': forms.TextInput(attrs={'class': 'form-control',
                                                            'id': 'title_english',
                                                            'required': True}),
+                   'session': forms.Select(attrs={'class': 'form-control',
+                                                  'id': 'session',
+                                                  'required': True}),
                    'subtype': forms.HiddenInput()
                    }
 
