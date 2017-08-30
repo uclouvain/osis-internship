@@ -25,7 +25,7 @@
 ##############################################################################
 
 from django.core import serializers
-from django.contrib.auth.models import Group, User, Permission
+from django.contrib.auth.models import Group, User
 from base import models as mdl_base
 from reference import models as mdl_reference
 from attribution import models as mdl_attribution
@@ -123,9 +123,11 @@ def make_fixtures(request):
     list_objects.extend(students)
 
     offer_years = mdl_base.offer_year.OfferYear.objects.filter(academic_year__in=academic_years)
-    list_objects.extend(offer_years)
 
     list_objects += build_offers(offer_years)
+    grade_types = mdl_reference.grade_type.GradeType.objects.all()
+    list_objects.extend(grade_types)
+    list_objects.extend(offer_years)
 
     offer_enrollments = mdl_base.offer_enrollment.OfferEnrollment.objects.filter(offer_year__in=offer_years,
                                                                                  student__in=students)
@@ -151,7 +153,7 @@ def make_fixtures(request):
 
     list_objects += build_learning_unit_component_classes(learning_class_years, learning_unit_components)
 
-    list_objects += create_offers_details(offer_years, academic_years)
+    list_objects += create_offers_details(offer_years, academic_years, grade_types)
 
     list_objects += build_attributions(learning_unit_components, learning_unit_years, persons)
 
@@ -159,7 +161,10 @@ def make_fixtures(request):
 
     list_objects += build_cms()
 
-    response = HttpResponse(serializers.serialize('json', list_objects), content_type='application/json')
+    response = HttpResponse(serializers.serialize('json',
+                                                  list_objects,
+                                                  use_natural_foreign_keys=True,
+                                                  use_natural_primary_keys=True), content_type='application/json')
     response['Content-Disposition'] = 'attachment; filename="initial_data.json"'
 
     return response
@@ -210,7 +215,7 @@ def build_reference():
 
 
 def build_auth():
-    return list(Permission.objects.all()) + list(Group.objects.all())
+    return list(Group.objects.all())
 
 
 def build_cms():
@@ -276,7 +281,7 @@ def build_organizations():
     return list(organizations) + list(organization_addresses)
 
 
-def create_offers_details(offer_years, academic_years):
+def create_offers_details(offer_years, academic_years, grade_types):
     academic_calendars = mdl_base.academic_calendar.AcademicCalendar.objects.filter(academic_year__in=academic_years)
 
     offer_year_calendars = mdl_base.offer_year_calendar.OfferYearCalendar.objects.filter(
@@ -284,8 +289,6 @@ def create_offers_details(offer_years, academic_years):
         offer_year__in=offer_years)
 
     domains = mdl_reference.domain.Domain.objects.all()
-
-    grade_types = mdl_reference.grade_type.GradeType.objects.all()
 
     external_offers = mdl_base.external_offer.ExternalOffer.objects.filter(domain__in=domains,
                                                                            grade_type__in=grade_types,
