@@ -249,7 +249,7 @@ def build_offers(offer_years):
 
 
 def get_learning_containers(learning_container_years_all):
-    return list([lc.learning_container for lc in learning_container_years_all])
+    return list({lc.learning_container for lc in learning_container_years_all})
 
 
 def get_learning_container_years(academic_years):
