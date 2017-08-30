@@ -106,7 +106,7 @@ def make_fixtures(request):
     structure_addresses = mdl_base.structure_address.StructureAddress.objects.all()
     list_objects.extend(structure_addresses)
 
-    list_objects += build_entity_managers(persons, structures)
+    list_objects += build_entity_managers(persons)
 
     list_objects += build_entity_versions(entities)
 
@@ -175,16 +175,9 @@ def build_entity_versions(entities):
     return entity_versions
 
 
-def build_entity_managers(persons, structures):
-    entity_managers_person = []
+def build_entity_managers(persons):
     entity_managers = mdl_base.entity_manager.EntityManager.objects.filter(person__in=persons)
-    if entity_managers:
-        entity_managers = mdl_base.entity_manager.EntityManager.objects.all()
-        if entity_managers:
-            entity_managers_person = create_fake_person_for_entity_manager(persons)
-            entity_managers = create_fake_entity_manager(entity_managers_person, structures)
-
-    return list(entity_managers_person) + list(entity_managers)
+    return entity_managers
 
 
 def build_group_element_years(education_group_years, learning_unit_years):
@@ -355,42 +348,6 @@ def de_identifying_person_addresses(persons):
 
             person_addresses.append(person_adr)
     return list(countries) + list(person_addresses)
-
-
-def find_person_max_id(persons):
-    if persons:
-        return max(person.id for person in persons)
-    return 0
-
-
-def create_fake_person_for_entity_manager(persons):
-    max_id = int(find_person_max_id(persons))
-    cpt = 0
-    fake_list = []
-
-    while cpt < 5:
-        max_id += 1
-        fake_list.append(mdl_base.person.Person(last_name=fake.last_name(),
-                                                first_name=fake.first_name(),
-                                                employee=True,
-                                                user=None,
-                                                id=max_id))
-        cpt += 1
-    return fake_list
-
-
-def create_fake_entity_manager(persons, structures):
-    fake_list = []
-    if persons and structures:
-        cpt = 0
-        new_id = 1
-        while cpt < 5 and cpt < len(persons):
-            fake_list.append(mdl_base.entity_manager.EntityManager(person=persons[cpt],
-                                                                   structure=structures[random.randint(0, len(structures)-1)],
-                                                                   id=new_id))
-            new_id = new_id + 1
-            cpt = cpt + 1
-    return fake_list
 
 
 def get_entities(learning_container_years_all):
