@@ -25,6 +25,8 @@
 ##############################################################################
 import datetime
 import re
+
+from django.utils.functional import lazy
 from django.utils.translation import ugettext_lazy as _
 from django import forms
 from django.db.models import Prefetch
@@ -150,10 +152,23 @@ def _get_latest_entity_version(entity_container_year):
     return entity_version
 
 
-class CreateLearningUnitYearForm(forms.ModelForm):
-    campuses = Campus.objects.filter(organization__type=ORGANIZATION_TYPE[0][0])
-    languages = Language.objects.all()
+def create_entities_list():
     entities = find_latest_version(date=datetime.datetime.now(get_tzinfo()))
+    return [(elem.id, elem.acronym) for elem in entities]
+
+
+def create_campuses_list():
+    campuses = Campus.objects.filter(organization__type=ORGANIZATION_TYPE[0][0])
+    return [(elem.id, elem.name) for elem in campuses]
+
+
+def create_languages_list():
+    languages = Language.objects.all()
+    return [(elem.id, elem.name) for elem in languages]
+
+
+class CreateLearningUnitYearForm(forms.ModelForm):
+
     learning_container_year_type = forms.CharField(
         widget=forms.Select(attrs={'class': 'form-control', 'required': True,
                                    'onchange': 'showDiv(this.value)',
@@ -165,17 +180,18 @@ class CreateLearningUnitYearForm(forms.ModelForm):
     periodicity = forms.CharField(widget=forms.Select(attrs={'class': 'form-control',
                                                              'id': 'periodicity'},
                                                       choices=PERIODICITY_TYPES))
-    campus = forms.CharField(widget=forms.Select(attrs={'class': 'form-control',
-                                                        'id': 'campus'},
-                                                 choices=((elem.id, elem.name) for elem in campuses)))
-    requirement_entity = forms.CharField(widget=forms.Select(attrs={'class': 'form-control',
-                                                                    'id': 'requirement_entity'},
-                                                             choices=((elem.id, elem.acronym) for elem in entities)))
-    allocation_entity = forms.CharField(widget=forms.Select(attrs={'class': 'form-control',
-                                                                   'id': 'allocation_entity'},
-                                                            choices=((elem.id, elem.acronym) for elem in entities)))
-    language = forms.CharField(widget=forms.Select(attrs={'class': 'form-control', 'id': 'language'},
-                                                   choices=((elem.id, elem.name) for elem in languages)))
+    campus = forms.ChoiceField(choices=lazy(create_campuses_list, tuple),
+                               widget=forms.Select(attrs={'class': 'form-control',
+                                                          'id': 'requirement_entity'}))
+    requirement_entity = forms.ChoiceField(choices=lazy(create_entities_list, tuple),
+                                           widget=forms.Select(attrs={'class': 'form-control',
+                                                                      'id': 'requirement_entity'}))
+    allocation_entity = forms.ChoiceField(choices=lazy(create_entities_list, tuple),
+                                          widget=forms.Select(attrs={'class': 'form-control',
+                                                                     'id': 'requirement_entity'}))
+    language = forms.ChoiceField(choices=lazy(create_languages_list, tuple),
+                                 widget=forms.Select(attrs={'class': 'form-control',
+                                                            'id': 'requirement_entity'}))
 
     class Meta:
         model = mdl.learning_unit_year.LearningUnitYear
@@ -202,12 +218,6 @@ class CreateLearningUnitYearForm(forms.ModelForm):
                                                            'required': True}),
                    'subtype': forms.HiddenInput()
                    }
-
-    def __init__(self, *args, **kwargs):
-        self.campuses = kwargs.pop('campuses', None)
-        self.languages = kwargs.pop('languages', None)
-        self.entities = kwargs.pop('entities', None)
-        super(CreateLearningUnitYearForm, self).__init__(*args, **kwargs)
 
     def is_valid(self):
         valid = super(CreateLearningUnitYearForm, self).is_valid()
