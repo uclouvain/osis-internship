@@ -143,29 +143,54 @@ class LearningUnitYearVolumesTestCase(TestCase):
         self.assertEqual(4, len(errors))
 
     def test_validate_parent_partim_component(self):
-        parent_data = {'VOLUME_TOTAL': round(Decimal(30.52), 2), 'VOLUME_Q1': round(Decimal(15), 2),
-                       'VOLUME_Q2': round(Decimal(15.52), 2), 'PLANNED_CLASSES': 1,
-                       'VOLUME_' + entity_container_year_link_type.REQUIREMENT_ENTITY: round(Decimal(15), 2),
-                       'VOLUME_' + entity_container_year_link_type.ADDITIONAL_REQUIREMENT_ENTITY_1: round(Decimal(30), 2),
-                       'VOLUME_' + entity_container_year_link_type.ADDITIONAL_REQUIREMENT_ENTITY_2: round(Decimal(10), 2)}
+        parent_data = {'VOLUME_TOTAL': Decimal(30), 'VOLUME_Q1': Decimal(15),
+                       'VOLUME_Q2': Decimal(15), 'PLANNED_CLASSES': 1,
+                       'VOLUME_' + entity_container_year_link_type.REQUIREMENT_ENTITY: Decimal(15),
+                       'VOLUME_' + entity_container_year_link_type.ADDITIONAL_REQUIREMENT_ENTITY_1: Decimal(30),
+                       'VOLUME_' + entity_container_year_link_type.ADDITIONAL_REQUIREMENT_ENTITY_2: Decimal(10)}
 
-        partim_data = {'VOLUME_TOTAL': round(Decimal(15), 2), 'VOLUME_Q1': round(Decimal(5), 2),
-                       'VOLUME_Q2': round(Decimal(10), 2), 'PLANNED_CLASSES': 1,
-                       'VOLUME_' + entity_container_year_link_type.REQUIREMENT_ENTITY: round(Decimal(10), 2),
-                       'VOLUME_' + entity_container_year_link_type.ADDITIONAL_REQUIREMENT_ENTITY_1:  round(Decimal(20), 2),
-                       'VOLUME_' + entity_container_year_link_type.ADDITIONAL_REQUIREMENT_ENTITY_2:  round(Decimal(5), 2)}
+        partim_data = {'VOLUME_TOTAL': Decimal(15), 'VOLUME_Q1': Decimal(5),
+                       'VOLUME_Q2': Decimal(10), 'PLANNED_CLASSES': 1,
+                       'VOLUME_' + entity_container_year_link_type.REQUIREMENT_ENTITY: Decimal(10),
+                       'VOLUME_' + entity_container_year_link_type.ADDITIONAL_REQUIREMENT_ENTITY_1:  Decimal(20),
+                       'VOLUME_' + entity_container_year_link_type.ADDITIONAL_REQUIREMENT_ENTITY_2:  Decimal(5)}
 
         # Test no error on initial data
         self.assertFalse(learning_unit_year_volumes._validate_parent_partim_component(parent_data, partim_data))
 
-        # Test Volume total parent must be greater than Volume total Partim
+        # Test error : Volume total parent must be greater than Volume total Partim
         wrong_parent_data = parent_data.copy()
         wrong_parent_data['VOLUME_TOTAL'] = 5
         self.assertTrue(learning_unit_year_volumes._validate_parent_partim_component(wrong_parent_data, partim_data))
 
-        # Test Volume Q1 parent must be greater or equals than Volume Q1 Partim
+        # Test error : Volume Q1 parent must be greater or equals than Volume Q1 Partim
         wrong_parent_data = parent_data.copy()
         wrong_parent_data['VOLUME_Q1'] = 2
+        self.assertTrue(learning_unit_year_volumes._validate_parent_partim_component(wrong_parent_data, partim_data))
+
+        # Test error : Volume Q2 parent must be greater or equals than Volume Q2 Partim
+        wrong_parent_data = parent_data.copy()
+        wrong_parent_data['VOLUME_Q2'] = 9
+        self.assertTrue(learning_unit_year_volumes._validate_parent_partim_component(wrong_parent_data, partim_data))
+
+        # Test error : Planned classes full must be greater or equals than planned classes partim
+        wrong_parent_data = parent_data.copy()
+        wrong_parent_data['PLANNED_CLASSES'] = 0
+        self.assertTrue(learning_unit_year_volumes._validate_parent_partim_component(wrong_parent_data, partim_data))
+
+        # Test error: Volume requirement entity full must be greater or equals than Volume requirement entity partim
+        wrong_parent_data = parent_data.copy()
+        wrong_parent_data['VOLUME_' + entity_container_year_link_type.REQUIREMENT_ENTITY] = 0
+        self.assertTrue(learning_unit_year_volumes._validate_parent_partim_component(wrong_parent_data, partim_data))
+
+        # Test error: Volume additional 1 requirement entity full must be greater or equals than Volume requirement entity partim
+        wrong_parent_data = parent_data.copy()
+        wrong_parent_data['VOLUME_' + entity_container_year_link_type.ADDITIONAL_REQUIREMENT_ENTITY_1] = 0
+        self.assertTrue(learning_unit_year_volumes._validate_parent_partim_component(wrong_parent_data, partim_data))
+
+        # Test error: Volume additional 2 requirement entity full must be greater or equals than Volume requirement entity partim
+        wrong_parent_data = parent_data.copy()
+        wrong_parent_data['VOLUME_' + entity_container_year_link_type.ADDITIONAL_REQUIREMENT_ENTITY_2] = 0
         self.assertTrue(learning_unit_year_volumes._validate_parent_partim_component(wrong_parent_data, partim_data))
 
     def _create_parent_with_components(self, learning_container_year):
