@@ -1767,3 +1767,9 @@ msgstr "part 2"
 
 msgid "title_official"
 msgstr "Official title"
+
+msgid "fixtures_build"
+msgstr "Build anonymized fixtures"
+
+msgid "desc_lnk_fixtures_build"
+msgstr "Build a json file with anonymized fixtures"
