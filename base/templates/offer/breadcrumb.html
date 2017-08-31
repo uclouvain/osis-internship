@@ -1,4 +1,3 @@
-{% extends "layout.html" %}
 {% load i18n %}
 {% comment "License" %}
 * OSIS stands for Open Student Information System. It's an application
@@ -24,38 +23,8 @@
 * see http://www.gnu.org/licenses/.
 {% endcomment %}
 
-{% block breadcrumb %}
-    {% include "offer/breadcrumb.html" %}
-{% endblock %}
 
-{% block content %}
+<li><a href="{% url 'catalog' %}" id="lnk_catalog">{% trans 'formation_catalogue' %}</a></li>
+<li><a href="{% url 'offers' %}" id="lnk_offers">{% trans 'offers' %}</a></li>
+<li class="active">{{ offer_year.acronym }}</li>
 
-    {% include "offer/header.html" %}
-
-    <div class="panel panel-default">
-        <div class="panel-body" id="tabs">
-
-            {% include "offer/tabs.html" %}
-
-            <div class="tab-content" id="tab_content">
-                <div role="tabpanel" class="tab-pane active" id="tab_program_managers">
-
-                    <br>
-                    <table class="table table-striped table-hover">
-                        <thead>
-                        <tr>
-                            <td>{% trans 'person' %}</td>
-                        </tr>
-                        </thead>
-                        {% for program_manager in program_managers %}
-                            <tr>
-                                <td>{{ program_manager.person }}</td>
-                            </tr>
-                        {% endfor %}
-                    </table>
-
-                </div>
-            </div>
-        </div>
-    </div>
-{% endblock %}

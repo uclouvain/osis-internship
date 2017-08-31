@@ -179,7 +179,7 @@ def find_latest_version(date):
 
 
 def get_last_version(entity):
-    return find_latest_version(academic_year.current_academic_year()).filter(entity=entity)
+    return find_latest_version(academic_year.current_academic_year().start_date).get(entity=entity)
 
 
 def search(**kwargs):

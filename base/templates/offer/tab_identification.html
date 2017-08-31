@@ -1,5 +1,4 @@
 {% extends "layout.html" %}
-{% load staticfiles %}
 {% load i18n %}
 {% comment "License" %}
 * OSIS stands for Open Student Information System. It's an application
@@ -26,9 +25,7 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-    <li><a href="{% url 'catalog' %}" id="lnk_catalog">{% trans 'formation_catalogue' %}</a></li>
-    <li><a href="{% url 'offers' %}" id="lnk_offers">{% trans 'offers' %}</a></li>
-    <li class="active">{% trans 'offer' %}</li>
+    {% include "offer/breadcrumb.html" %}
 {% endblock %}
 
 {% block content %}

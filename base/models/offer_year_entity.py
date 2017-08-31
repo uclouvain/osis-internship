@@ -24,6 +24,7 @@
 #
 ##############################################################################
 from django.contrib import admin
+from django.core.exceptions import ObjectDoesNotExist
 from base.models.enums import offer_year_entity_type
 from django.db import models
 
@@ -65,4 +66,7 @@ def search(**kwargs):
 
 
 def get_from_offer_year_and_type(offer_year, type):
-    return OfferYearEntity.objects.get(offer_year=offer_year, type=type)
+    try:
+        return OfferYearEntity.objects.get(offer_year=offer_year, type=type)
+    except ObjectDoesNotExist:
+        return None

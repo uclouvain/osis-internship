@@ -93,6 +93,16 @@ def entity_diagram(request, entity_version_id):
 @login_required
 def get_entity_address(request, entity_version_id):
     version = entity_version_mdl.find_by_id(entity_version_id)
-    # json_address = serializers.serialize('json', list(entity_address.get_from_entity(version.entity)))
     address = entity_address.get_from_entity(version.entity)
-    return JsonResponse(address if address else {}, safe=False)
+    if address:
+        return JsonResponse({
+            'recipient': '{} - {}'.format(version.acronym, version.title),
+            'location': address.location,
+            'postal_code': address.postal_code,
+            'city': address.city,
+            'country': address.country_id,
+            'phone': address.phone,
+            'fax': address.fax,
+            'email': address.email,
+        })
+    return JsonResponse({})

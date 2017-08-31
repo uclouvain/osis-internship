@@ -38,10 +38,13 @@ class ScoreSheetAddressAdmin(admin.ModelAdmin):
 
 
 class ScoreSheetAddress(models.Model):
+    external_id = models.CharField(max_length=100, blank=True, null=True)
+    changed = models.DateTimeField(null=True, auto_now=True)
     offer_year = models.OneToOneField('base.OfferYear')
     # Info to find the address
     entity_address_choice = models.CharField(max_length=50, blank=True, null=True, choices=score_sheet_address_choices.CHOICES)
     # Address fields
+    recipient = models.CharField(max_length=255, blank=True, null=True)
     location = models.CharField(max_length=255, blank=True, null=True)  # Address for scores cheets
     postal_code = models.CharField(max_length=20, blank=True, null=True)
     city = models.CharField(max_length=255, blank=True, null=True)

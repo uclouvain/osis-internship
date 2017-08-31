@@ -32,6 +32,7 @@ class EntityAddressAdmin(admin.ModelAdmin):
     list_display = ('entity', 'label', 'location', 'postal_code', 'city', 'country')
     fieldsets = ((None, {'fields': ('entity', 'label', 'location', 'postal_code', 'city', 'country', 'phone', 'fax', 'email')}),)
     search_fields = ['entity__entityversion__acronym']
+    raw_id_fields = ('country', 'entity')
 
 
 class EntityAddress(models.Model):
@@ -50,11 +51,14 @@ class EntityAddress(models.Model):
         verbose_name_plural = "Entity addresses"
 
     def __str__(self):
-        return "{0} - {1}".format(self.id, self.external_id)
+        return "{0}".format(self.label)
 
 
-def find_by_id(pk):
-    return EntityAddress.objects.filter(pk=pk)
+def get_from_id(pk):
+    try:
+        return EntityAddress.objects.get(pk=pk)
+    except ObjectDoesNotExist:
+        return None
 
 
 def get_from_entity(entity):

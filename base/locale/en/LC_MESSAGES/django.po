@@ -216,6 +216,9 @@ msgstr "Creation date"
 msgid "credits"
 msgstr "Credits"
 
+msgid "customized"
+msgstr "Customized"
+
 msgid "data"
 msgstr "Data"
 
@@ -710,6 +713,9 @@ msgstr "No data for this academic year"
 
 msgid "no_dubble_score_encoded_comparison_impossible"
 msgstr "No dubble score encoded ; nothing to compare."
+
+msgid "no_entity_address_found"
+msgstr "No address found for the selected entity."
 
 msgid "no_exam_session_opened_for_the_moment"
 msgstr "No scores' encoding session opened for the moment."
