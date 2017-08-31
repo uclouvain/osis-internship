@@ -82,7 +82,7 @@ def _save(volumes_grouped_by_lunityear):
 def _get_volumes_from_db(learning_unit_year_id):
     luy = learning_unit_year.find_by_id(learning_unit_year_id)
     return learning_unit_year_with_context.get_with_context(
-        learning_container_year_id=luy. learning_container_year
+        learning_container_year_id=luy.learning_container_year
     )
 
 
@@ -144,7 +144,7 @@ def _validate_components_data(l_unit_year):
     for component, data in l_unit_year.components.items():
         if not _is_tot_annual_equal_to_q1_q2(**data):
             errors.append("[{} {}] {}".format(l_unit_year.acronym, component.acronym, _('vol_tot_not_equal_to_q1_q2')))
-        if not _is_tot_req_entities_equal_to_tot_annual_mult_cp(**data):
+        if not _is_tot_req_entities_equal_to_vol_req_entity(**data):
             errors.append("[{} {}] {}".format(l_unit_year.acronym, component.acronym, _('vol_tot_req_entities_not_equal_to_entity')))
         if not _is_tot_req_entities_equal_to_tot_annual_mult_cp(**data):
             errors.append("[{} {}] {}".format(l_unit_year.acronym, component.acronym, _('vol_tot_req_entities_not_equal_to_vol_tot_mult_cp')))

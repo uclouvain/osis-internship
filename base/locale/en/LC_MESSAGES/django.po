@@ -1768,6 +1768,12 @@ msgstr "part 2"
 msgid "title_official"
 msgstr "Official title"
 
+msgid "fixtures_build"
+msgstr "Build anonymized fixtures"
+
+msgid "desc_lnk_fixtures_build"
+msgstr "Build a json file with anonymized fixtures"
+
 msgid "vol_tot_not_equal_to_q1_q2"
 msgstr "Vol.tot = Q1 + Q2"
 

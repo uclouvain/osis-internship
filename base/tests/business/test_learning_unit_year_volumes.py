@@ -47,10 +47,10 @@ class LearningUnitYearVolumesTestCase(TestCase):
                                           container_type=learning_container_year_types.COURSE)
 
         #Create UE Parent LBIR1100
-        self._create_parent_with_components(lc)
+        self.learning_unit_year_full = self._create_parent_with_components(lc)
 
         #Create UE Partim LBIR1100A
-        self._create_partim_A_with_components(lc)
+        self.learning_unit_year_partim = self._create_partim_A_with_components(lc)
 
 
     def test_validate_decimals(self):
@@ -115,6 +115,59 @@ class LearningUnitYearVolumesTestCase(TestCase):
             'VOLUME_TOTAL_REQUIREMENT_ENTITIES': learning_unit_year_volumes._validate_decimals('61.44')
         }))
 
+    def test_get_volumes_from_db(self):
+        # If we take volume from database with learning unit year full / partim, it should be the same
+        result_by_parent = learning_unit_year_volumes._get_volumes_from_db(self.learning_unit_year_full.id)
+        result_by_partim = learning_unit_year_volumes._get_volumes_from_db(self.learning_unit_year_partim.id)
+        self.assertEqual(result_by_parent, result_by_partim)
+
+    def test_validate_components_data(self):
+        volumes = learning_unit_year_volumes._get_volumes_from_db(self.learning_unit_year_full.id)
+
+        l_full_with_volumes_computed = next((lunit_year for lunit_year in volumes
+                                            if lunit_year.id == self.learning_unit_year_full.id), None)
+        self.assertEqual(l_full_with_volumes_computed,  self.learning_unit_year_full)
+
+        # No error found [No user change]
+        self.assertFalse(learning_unit_year_volumes._validate_components_data(l_full_with_volumes_computed))
+
+        # Simulate user modification -- Set VOL_TOT to 100 for CM/TP
+        for component, data in l_full_with_volumes_computed.components.items():
+            data['VOLUME_TOTAL'] = round(Decimal(100), 2)
+        errors = learning_unit_year_volumes._validate_components_data(l_full_with_volumes_computed)
+        self.assertTrue(errors)
+
+        # It should have 4 errors
+        # For each components (2), we do not respect - VOL_TOT = Q1 + Q2
+        #                                            - VOL_TOT * PLANNED_CLASSE = VOL_TOT_REQ_ENTITIES
+        self.assertEqual(4, len(errors))
+
+    def test_validate_parent_partim_component(self):
+        parent_data = {'VOLUME_TOTAL': round(Decimal(30.52), 2), 'VOLUME_Q1': round(Decimal(15), 2),
+                       'VOLUME_Q2': round(Decimal(15.52), 2), 'PLANNED_CLASSES': 1,
+                       'VOLUME_' + entity_container_year_link_type.REQUIREMENT_ENTITY: round(Decimal(15), 2),
+                       'VOLUME_' + entity_container_year_link_type.ADDITIONAL_REQUIREMENT_ENTITY_1: round(Decimal(30), 2),
+                       'VOLUME_' + entity_container_year_link_type.ADDITIONAL_REQUIREMENT_ENTITY_2: round(Decimal(10), 2)}
+
+        partim_data = {'VOLUME_TOTAL': round(Decimal(15), 2), 'VOLUME_Q1': round(Decimal(5), 2),
+                       'VOLUME_Q2': round(Decimal(10), 2), 'PLANNED_CLASSES': 1,
+                       'VOLUME_' + entity_container_year_link_type.REQUIREMENT_ENTITY: round(Decimal(10), 2),
+                       'VOLUME_' + entity_container_year_link_type.ADDITIONAL_REQUIREMENT_ENTITY_1:  round(Decimal(20), 2),
+                       'VOLUME_' + entity_container_year_link_type.ADDITIONAL_REQUIREMENT_ENTITY_2:  round(Decimal(5), 2)}
+
+        # Test no error on initial data
+        self.assertFalse(learning_unit_year_volumes._validate_parent_partim_component(parent_data, partim_data))
+
+        # Test Volume total parent must be greater than Volume total Partim
+        wrong_parent_data = parent_data.copy()
+        wrong_parent_data['VOLUME_TOTAL'] = 5
+        self.assertTrue(learning_unit_year_volumes._validate_parent_partim_component(wrong_parent_data, partim_data))
+
+        # Test Volume Q1 parent must be greater or equals than Volume Q1 Partim
+        wrong_parent_data = parent_data.copy()
+        wrong_parent_data['VOLUME_Q1'] = 2
+        self.assertTrue(learning_unit_year_volumes._validate_parent_partim_component(wrong_parent_data, partim_data))
+
     def _create_parent_with_components(self, learning_container_year):
         # Create learning unit year full
         luy_full = LearningUnitYearFactory(learning_container_year=learning_container_year,
@@ -123,7 +176,8 @@ class LearningUnitYearVolumesTestCase(TestCase):
         ## Create component CM
         cm_component = LearningComponentYearFactory(acronym="CM",
                                                     type=learning_component_year_type.LECTURING,
-                                                    learning_container_year=learning_container_year)
+                                                    learning_container_year=learning_container_year,
+                                                    planned_classes=1)
         LearningUnitComponentFactory(learning_unit_year=luy_full, learning_component_year=cm_component)
 
         ### Assign Volume
@@ -138,7 +192,8 @@ class LearningUnitYearVolumesTestCase(TestCase):
         ## Create component TP
         tp_component = LearningComponentYearFactory(acronym="TP",
                                                     type=learning_component_year_type.PRACTICAL_EXERCISES,
-                                                    learning_container_year=learning_container_year)
+                                                    learning_container_year=learning_container_year,
+                                                    planned_classes=1)
         LearningUnitComponentFactory(learning_unit_year=luy_full, learning_component_year=tp_component)
 
         ### Assign Volume
@@ -150,6 +205,7 @@ class LearningUnitYearVolumesTestCase(TestCase):
         }
         _assign_volume(learning_container_year, tp_component, tp_volume_parent)
 
+        return luy_full
 
     def _create_partim_A_with_components(self, learning_container_year):
         luy_partim_a = LearningUnitYearFactory(learning_container_year=learning_container_year,
@@ -158,7 +214,8 @@ class LearningUnitYearVolumesTestCase(TestCase):
         ## Create component CM
         cm_component = LearningComponentYearFactory(acronym="CM2",
                                                     type=learning_component_year_type.LECTURING,
-                                                    learning_container_year=learning_container_year)
+                                                    learning_container_year=learning_container_year,
+                                                    planned_classes=1)
         LearningUnitComponentFactory(learning_unit_year=luy_partim_a, learning_component_year=cm_component)
 
         ### Assign Volume
@@ -173,7 +230,8 @@ class LearningUnitYearVolumesTestCase(TestCase):
         ## Create component TP
         tp_component = LearningComponentYearFactory(acronym="TP2",
                                                     type=learning_component_year_type.PRACTICAL_EXERCISES,
-                                                    learning_container_year=learning_container_year)
+                                                    learning_container_year=learning_container_year,
+                                                    planned_classes=1)
         LearningUnitComponentFactory(learning_unit_year=luy_partim_a, learning_component_year=tp_component)
 
         ### Assign Volume
@@ -184,6 +242,8 @@ class LearningUnitYearVolumesTestCase(TestCase):
 
         }
         _assign_volume(learning_container_year, tp_component, tp_volume_parent)
+
+        return luy_partim_a
 
 
 def _assign_volume(container_year, component_year, map_entity_type_and_volume):

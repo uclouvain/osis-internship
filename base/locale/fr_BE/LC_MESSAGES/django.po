@@ -1772,6 +1772,12 @@ msgstr "partie 2"
 msgid "title_official"
 msgstr "Intitulé officiel"
 
+msgid "fixtures_build"
+msgstr "Créer des fixtures anonymisées"
+
+msgid "desc_lnk_fixtures_build"
+msgstr "Crée un fichier json avec des fixtures anonymisées"
+
 msgid "vol_tot_not_equal_to_q1_q2"
 msgstr "Vol.tot = Q1 + Q2"
 
