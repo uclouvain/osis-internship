@@ -52,7 +52,6 @@ class LearningUnitYearVolumesTestCase(TestCase):
         #Create UE Partim LBIR1100A
         self.learning_unit_year_partim = self._create_partim_A_with_components(lc)
 
-
     def test_validate_decimals(self):
         # Dot separator
         self.assertEqual(learning_unit_year_volumes._validate_decimals("40.65"), round(Decimal(40.65), 2))
@@ -193,6 +192,45 @@ class LearningUnitYearVolumesTestCase(TestCase):
         wrong_parent_data['VOLUME_' + entity_container_year_link_type.ADDITIONAL_REQUIREMENT_ENTITY_2] = 0
         self.assertTrue(learning_unit_year_volumes._validate_parent_partim_component(wrong_parent_data, partim_data))
 
+    def test_update_volumes(self):
+        volumes = learning_unit_year_volumes._get_volumes_from_db(self.learning_unit_year_full.id)
+        l_full_with_volumes_computed = next((lunit_year for lunit_year in volumes
+                                             if lunit_year.id == self.learning_unit_year_full.id), None)
+        component_cm = next((lcomponent_year for lcomponent_year in l_full_with_volumes_computed.components.keys()
+                             if lcomponent_year.type == learning_component_year_type.LECTURING), None)
+
+        # Simulate user modification on lecturing component of full learning unit
+        updated_volume = {
+            l_full_with_volumes_computed.id: {
+                component_cm.id: {
+                    'VOLUME_TOTAL': '60',
+                    'VOLUME_Q1': '5',
+                    'VOLUME_Q2': '55',
+                    'PLANNED_CLASSES': '2',
+                    'VOLUME_' + entity_container_year_link_type.REQUIREMENT_ENTITY: '40',
+                    'VOLUME_' + entity_container_year_link_type.ADDITIONAL_REQUIREMENT_ENTITY_1: '40',
+                    'VOLUME_' + entity_container_year_link_type.ADDITIONAL_REQUIREMENT_ENTITY_2: '40',
+                    'VOLUME_TOTAL_REQUIREMENT_ENTITIES': '120'
+                }
+            }
+        }
+        # Save it
+        errors = learning_unit_year_volumes.update_volumes(self.learning_unit_year_full.id, updated_volume)
+        # No errors
+        self.assertFalse(errors)
+
+        # Reload data - Verify if it save to database
+        volumes = learning_unit_year_volumes._get_volumes_from_db(self.learning_unit_year_full.id)
+        l_full_with_volumes_computed = next((lunit_year for lunit_year in volumes
+                                             if lunit_year.id == self.learning_unit_year_full.id), None)
+        data_component_cm = next((data for lcomponent_year, data in l_full_with_volumes_computed.components.items()
+                                  if lcomponent_year.type == learning_component_year_type.LECTURING), None)
+        self.assertEqual(data_component_cm['VOLUME_TOTAL'], 60)
+        self.assertEqual(data_component_cm['VOLUME_Q1'], 5)
+        self.assertEqual(data_component_cm['VOLUME_Q2'], 55)
+        self.assertEqual(data_component_cm['PLANNED_CLASSES'], 2)
+        self.assertEqual(data_component_cm['VOLUME_TOTAL_REQUIREMENT_ENTITIES'], 120)
+
     def _create_parent_with_components(self, learning_container_year):
         # Create learning unit year full
         luy_full = LearningUnitYearFactory(learning_container_year=learning_container_year,
@@ -261,9 +299,9 @@ class LearningUnitYearVolumesTestCase(TestCase):
 
         ### Assign Volume
         tp_volume_parent = {
-            entity_container_year_link_type.REQUIREMENT_ENTITY: {'vol_tot': 30},
-            entity_container_year_link_type.ADDITIONAL_REQUIREMENT_ENTITY_1: {'vol_tot': 10},
-            entity_container_year_link_type.ADDITIONAL_REQUIREMENT_ENTITY_2: {'vol_tot': 10},
+            entity_container_year_link_type.REQUIREMENT_ENTITY: {'vol_tot': 15},
+            entity_container_year_link_type.ADDITIONAL_REQUIREMENT_ENTITY_1: {'vol_tot': 5},
+            entity_container_year_link_type.ADDITIONAL_REQUIREMENT_ENTITY_2: {'vol_tot': 5},
 
         }
         _assign_volume(learning_container_year, tp_component, tp_volume_parent)

@@ -140,10 +140,11 @@ def learning_unit_volumes_management(request, learning_unit_year_id):
 
 
 def learning_unit_volumes_management_edit(request, learning_unit_year_id):
-    volumes = _extract_volumes_from_data(request)
+    errors = None
+    volumes_encoded = _extract_volumes_from_data(request)
 
     try:
-        errors = learning_unit_year_volumes.update_volumes(learning_unit_year_id, volumes)
+        errors = learning_unit_year_volumes.update_volumes(learning_unit_year_id, volumes_encoded)
     except Exception as e:
         error_msg = e.messages[0] if isinstance(e, ValidationError) else e.args[0]
         messages.add_message(request, messages.ERROR, _(error_msg))
@@ -151,7 +152,6 @@ def learning_unit_volumes_management_edit(request, learning_unit_year_id):
     if errors:
         for error_msg in errors:
             messages.add_message(request, messages.ERROR, error_msg)
-
 
 
 def _extract_volumes_from_data(request):
@@ -170,6 +170,10 @@ def _extract_volumes_from_data(request):
 
 def _is_a_valid_volume_key(post_key):
     return post_key in learning_unit_year_volumes.VALID_VOLUMES_KEYS
+
+def _perserve_volume_encoded(request, context):
+    pass
+
 
 @login_required
 @permission_required('base.can_access_learningunit', raise_exception=True)

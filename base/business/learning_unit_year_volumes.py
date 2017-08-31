@@ -55,7 +55,7 @@ def update_volumes(learning_unit_year_id, updated_volumes):
         # Format str to Decimal
         updated_volume = updated_volumes.get(lunityear.id)
         # Replace volumes database by volumes entered by user
-        lunityear.components = _update_volume(lunityear.components, updated_volume)
+        lunityear.components = _set_volume_to_components(lunityear.components, updated_volume)
 
     errors = _validate(volumes_grouped_by_lunityear)
     if not errors:
@@ -76,7 +76,19 @@ def _validate(volumes_grouped_by_lunityear):
 
 
 def _save(volumes_grouped_by_lunityear):
-    pass
+    for lunityear in volumes_grouped_by_lunityear:
+        for component, data in lunityear.components.items():
+            component.hourly_volume_partial = data.get('VOLUME_Q1')
+            component.planned_classes = data.get('PLANNED_CLASSES')
+            component.save()
+            _save_requirement_entities(component.entity_components_year, data)
+
+
+def _save_requirement_entities(entity_components_year, data):
+    for ecy in entity_components_year:
+        link_type = ecy.entity_container_year.type
+        ecy.hourly_volume_total = data.get('VOLUME_' + link_type)
+        ecy.save()
 
 
 def _get_volumes_from_db(learning_unit_year_id):
@@ -91,7 +103,7 @@ def _get_learning_unit_parent(volumes_grouped_by_lunityear):
                  if lunit_year.subtype == learning_unit_year_subtypes.FULL), None)
 
 
-def _update_volume(components, updated_volume):
+def _set_volume_to_components(components, updated_volume):
     if components and updated_volume:
         components_updated = {}
         for component, data in components.items():

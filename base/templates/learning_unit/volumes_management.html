@@ -164,7 +164,8 @@
                         {% endfor %}
                     </table>
                     <div class="pull-right">
-                        <button type="submit" class="btn" title="{% trans 'cancel'%}">{% trans 'cancel'%}</button>
+                        <a class="btn btn-default" href="{% url 'learning_unit_components' learning_unit_year_id=learning_unit_year.id%}"
+                           title="{% trans 'cancel'%}">{% trans 'cancel'%}</a>
                         <button class="btn btn-primary" type="submit" title="{% trans 'save'%}">{% trans 'save' %}</button>
                     </div>
                 </form>
