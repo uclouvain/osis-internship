@@ -31,35 +31,6 @@ from reference.tests.factories.country import CountryFactory
 from base.tests.factories.student import StudentFactory
 
 class TestFixturesFactory(TestCase):
-    def test_create_fake_entity_manager_no_result(self):
-        persons = [PersonFactory()]
-        structures = [StructureFactory()]
-
-        self.assertCountEqual(fixtures_factory.create_fake_entity_manager(None, None), [])
-        self.assertCountEqual(fixtures_factory.create_fake_entity_manager(persons, None), [])
-        self.assertCountEqual(fixtures_factory.create_fake_entity_manager(None, structures), [])
-
-    def test_create_fake_entity_manager_less_than_5_results(self):
-        persons = [PersonFactory()]
-        structures = [StructureFactory()]
-        self.assertEqual(len(fixtures_factory.create_fake_entity_manager(persons, structures)), 1)
-
-
-    def test_create_fake_entity_manager_no_more_than_5_results(self):
-        persons = [PersonFactory(), PersonFactory(), PersonFactory(), PersonFactory(), PersonFactory(),
-                   PersonFactory(), PersonFactory(), PersonFactory()]
-        structures = [StructureFactory()]
-        self.assertEqual(len(fixtures_factory.create_fake_entity_manager(persons, structures)), 5)
-
-
-    def test_find_person_max_id_first_person(self):
-        self.assertEqual(fixtures_factory.find_person_max_id([]), 0)
-
-    def test_find_person_max_id(self):
-        person_1 = PersonFactory()
-        person_2 = PersonFactory()
-        persons = [person_1, person_2]
-        self.assertEqual(fixtures_factory.find_person_max_id(persons), person_2.id)
 
     def test_get_students_persons(self):
         a_person = PersonFactory()
