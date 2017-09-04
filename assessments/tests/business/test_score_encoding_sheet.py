@@ -24,23 +24,16 @@
 #
 ##############################################################################
 import datetime
-from unittest import mock
 
-from django.core.urlresolvers import reverse
-from django.test import TestCase, RequestFactory
+from django.test import TestCase
 from assessments.business import score_encoding_sheet
 from assessments.models.enums import score_sheet_address_choices
 from assessments.tests.factories.score_sheet_address import ScoreSheetAddressFactory
 
-from base.models.academic_calendar import AcademicCalendar
-from base.models.enums import offer_year_entity_type
 from base.tests.factories.academic_year import AcademicYearFactory
 from base.tests.factories.entity import EntityFactory
-from base.tests.factories.entity_address import EntityAddressFactory
 from base.tests.factories.entity_version import EntityVersionFactory
 from base.tests.factories.offer_year import OfferYearFactory
-from assessments.views import score_sheet
-from assessments.forms.score_sheet_address import ScoreSheetAddressForm
 from base.tests.factories.offer_year_entity import OfferYearEntityFactory
 from reference.tests.factories.country import CountryFactory
 
@@ -64,10 +57,9 @@ class ScoreSheetAddressTest(TestCase):
                              start_date=past_date,
                              end_date=None)
         OfferYearEntityFactory(offer_year=self.offer_year,
-                               entity_id=entity.id,
+                               entity=entity,
                                type=entity_type)
-        return EntityAddressFactory(entity=entity,
-                                    country=CountryFactory())
+        return entity
 
     def test_case_address_from_entity_administration(self):
         ScoreSheetAddressFactory(offer_year=self.offer_year,
@@ -91,7 +83,12 @@ class ScoreSheetAddressTest(TestCase):
             self.assertEqual(getattr(add, f), address.get(f))
 
     def test_get_address_as_dict(self):
-        address = ScoreSheetAddressFactory()
-        fields = dir(address)
+        address1 = ScoreSheetAddressFactory(offer_year=self.offer_year)
+        self._assert_address_fields_are_in_object(address1)
+        address2 = EntityFactory()
+        self._assert_address_fields_are_in_object(address2)
+
+    def _assert_address_fields_are_in_object(self, address1):
+        fields = score_encoding_sheet._get_address_as_dict(address1).keys()
         for f in self.address_fields:
             self.assertIn(f, fields)

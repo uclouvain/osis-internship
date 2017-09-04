@@ -26,7 +26,7 @@
 from django.utils import timezone
 from django.utils.translation import ugettext as _
 from attribution.models import attribution
-from base.models import entity_address, entity_version as entity_version, person_address, session_exam_calendar, offer_year_entity
+from base.models import entity as entity_model, entity_version as entity_version, person_address, session_exam_calendar, offer_year_entity
 from base.models.exam_enrollment import justification_label_authorized, get_deadline
 from assessments.business.score_encoding_list import sort_for_encodings
 from assessments.models import score_sheet_address
@@ -41,9 +41,10 @@ def get_score_sheet_address(off_year):
         map_offer_year_entity_type_with_entity_id = _get_map_offer_year_entity_type_with_entity(off_year)
         entity_id = map_offer_year_entity_type_with_entity_id[address.entity_address_choice]
         ent_version = entity_version.get_last_version(entity_id)
-        address = entity_address.get_from_entity(entity_id)
-        if not address: # Case no address found for this entity
-            address = entity_address.EntityAddress()
+        entity = entity_model.get_by_internal_id(entity_id)
+        if not entity: # Case no address found for this entity
+            entity = entity_model.Entity()
+        address = entity
         address.recipient = '{} - {}'.format(ent_version.acronym, ent_version.title)
     return entity_id, _get_address_as_dict(address)
 
@@ -70,16 +71,7 @@ def _get_map_offer_year_entity_type_with_entity(off_year):
 
 
 def get_map_entity_with_offer_year_entity_type(off_year):
-    off_year_entity_manag = offer_year_entity.get_from_offer_year_and_type(off_year, ENTITY_MANAGEMENT)
-    entity_version_management = entity_version.get_last_version(off_year_entity_manag.entity)
-    off_year_entity_admin = offer_year_entity.get_from_offer_year_and_type(off_year, ENTITY_ADMINISTRATION)
-    entity_version_admin = entity_version.get_last_version(off_year_entity_admin.entity)
-    return {
-        entity_version_management.entity_id: ENTITY_MANAGEMENT,
-        entity_version_management.parent_id: ENTITY_MANAGEMENT_PARENT,
-        entity_version_admin.entity_id: ENTITY_ADMINISTRATION,
-        entity_version_admin.parent_id: ENTITY_ADMINISTRATION_PARENT,
-    }
+    return {value: key for key, value in _get_map_offer_year_entity_type_with_entity(off_year).items()}
 
 
 def save_address_from_entity(off_year, entity_version_id_selected):

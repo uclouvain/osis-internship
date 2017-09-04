@@ -24,21 +24,21 @@
 #
 ##############################################################################
 import datetime
+import json
 from unittest import mock
-from base.tests.factories.entity_address import EntityAddressFactory
 from base.tests.factories.entity_version import EntityVersionFactory
 from base.tests.factories.entity import EntityFactory
 from base.tests.factories.user import UserFactory
-from django.core.urlresolvers import reverse
 from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase
 from base.views import institution
+from reference.tests.factories.country import CountryFactory
 
 
 class EntityViewTestCase(APITestCase):
     def setUp(self):
         self.user = UserFactory()
-        self.entity = EntityFactory()
+        self.entity = EntityFactory(country=CountryFactory())
         self.parent = EntityFactory()
         self.start_date = datetime.date(2015, 1, 1)
         self.end_date = datetime.date(2015, 12, 31)
@@ -87,17 +87,18 @@ class EntityViewTestCase(APITestCase):
         self.assertEqual(response.status_code, 200)
 
     @mock.patch('base.models.entity_version.find_by_id')
-    @mock.patch('base.models.entity_address.get_from_entity')
     @mock.patch('django.contrib.auth.decorators')
-    def test_get_entity_address(self,  mock_decorators, mock_get_from_entity, mock_find_by_id):
+    def test_get_entity_address(self,  mock_decorators, mock_find_by_id):
         mock_decorators.login_required = lambda x: x
         mock_decorators.permission_required = lambda *args, **kwargs: lambda func: func
-        entity_version = EntityVersionFactory(acronym='SSH', title='Sector of sciences')
-        mock_get_from_entity.return_value = EntityAddressFactory()
+        entity = EntityFactory()
+        entity_version = EntityVersionFactory(entity=entity, acronym='SSH', title='Sector of sciences')
         mock_find_by_id.return_value = entity_version
         request = mock.Mock(method='GET')
         response = institution.get_entity_address(request, entity_version.id)
-        address_data = ['recipient', 'location', 'postal_code', 'city', 'country', 'phone', 'fax', 'email']
+        address_data = ['location', 'postal_code', 'city', 'country_id', 'phone', 'fax', 'email']
         self.assertEqual(response.status_code, 200)
-        for field in address_data:
-            self.assertIn(field, str(response.content))
+        data = json.loads(response.content.decode('utf-8'))
+        self.assertIsNotNone(data.get('recipient'))
+        for field_name in address_data:
+            self.assertEqual(getattr(entity, field_name), data['address'].get(field_name))

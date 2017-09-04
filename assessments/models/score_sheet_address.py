@@ -57,14 +57,6 @@ class ScoreSheetAddress(models.Model):
     def customized(self):
         return self.location and self.postal_code and self.city and not self.entity_address_choice
 
-    def get_offer_year_type(self):
-        if self.entity_address_choice:
-            if score_sheet_address_choices.ENTITY_MANAGEMENT in self.entity_address_choice:
-                return score_sheet_address_choices.ENTITY_MANAGEMENT
-            else:
-                return score_sheet_address_choices.ENTITY_ADMINISTRATION
-        return None
-
     def save(self, *args, **kwargs):
         if self.customized or self.entity_address_choice:
             super(ScoreSheetAddress, self).save(*args, **kwargs)

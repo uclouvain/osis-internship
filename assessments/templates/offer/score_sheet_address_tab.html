@@ -163,7 +163,7 @@
                     success: function (data) {
                         if (Object.keys(data.address).length != 0) {
                             disableFormInputs();
-                            set_form_fields_values(data);
+                            setFormFieldsValues(data);
                         }
                         else{
                             setFormFieldsValuesToNone();
@@ -200,12 +200,12 @@
         }
 
 
-        function set_form_fields_values(data){
+        function setFormFieldsValues(data){
             $('#id_recipient').val(data.recipient);
             $('#id_location').val(data.address.location);
             $('#id_postal_code').val(data.address.postal_code);
             $('#id_city').val(data.address.city);
-            $('#id_country').val(data.address.country);
+            $('#id_country').val(data.address.country_id);
             $('#id_phone').val(data.address.phone);
             $('#id_fax').val(data.address.fax);
             $('#id_email').val(data.address.email);
