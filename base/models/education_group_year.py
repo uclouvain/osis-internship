@@ -35,7 +35,7 @@ class EducationGroupYearAdmin(SerializableModelAdmin):
                                     'start_year', 'end_year', 'active', 'subtest', 'concours', 'fundable',
                                     'funding_guidance', 'funding_cud', 'funding_guidance_cud', 'academic_type',
                                     'university_certificate', 'rate', 'enrollment_campus','main_teaching_campus',
-                                    'administration_entity', 'academic_entity', 'dissertation', 'internships',
+                                    'dissertation', 'internships',
                                     'schedule_type', 'english_activities', 'other_language_activities',
                                     'other_campus_activities', 'professionnal_title', 'joint_diploma',
                                     'diploma_focus', 'title_printable', 'exchange_comment')}),)
@@ -66,8 +66,6 @@ class EducationGroupYear(SerializableModel):
     rate = models.CharField(max_length=20, choices=rate.RATES, blank=True, null=True)
     enrollment_campus = models.ForeignKey('Campus', related_name='enrollment', blank=True, null=True) #zut normalement non nlllagle
     main_teaching_campus = models.ForeignKey('Campus', blank=True, null=True, related_name='teaching')
-    administration_entity = models.ForeignKey('Entity', related_name='administration', blank=True, null=True)#zut normalement non nlllagle
-    academic_entity = models.ForeignKey('Entity', related_name='academic', blank=True, null=True)#zut normalement non nlllagle
     dissertation = models.BooleanField(default=False)
     internships = models.CharField(max_length=20, choices=internship_presence.INTERNSHIP_PRESENCE, blank=True, null=True)
     schedule_type = models.CharField(max_length=20, choices=schedule_type.SCHEDULE_TYPES, default=schedule_type.DAILY)

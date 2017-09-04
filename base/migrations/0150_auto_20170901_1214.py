@@ -15,11 +15,6 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AddField(
             model_name='educationgroupyear',
-            name='academic_entity',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='academic', to='base.Entity'),
-        ),
-        migrations.AddField(
-            model_name='educationgroupyear',
             name='academic_type',
             field=models.CharField(blank=True, choices=[('NON_ACADEMIC_OTHER', 'NON_ACADEMIC_OTHER'), ('NON_ACADEMIC_CREF', 'NON_ACADEMIC_CREF'), ('ACADEMIC', 'ACADEMIC')], max_length=20, null=True),
         ),
@@ -27,11 +22,6 @@ class Migration(migrations.Migration):
             model_name='educationgroupyear',
             name='active',
             field=models.CharField(choices=[('ACTIVE', 'ACTIVE'), ('INACTIVE', 'INACTIVE'), ('RE_REGISTRATION', 'RE_REGISTRATION')], default='ACTIVE', max_length=20),
-        ),
-        migrations.AddField(
-            model_name='educationgroupyear',
-            name='administration_entity',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='administration', to='base.Entity'),
         ),
         migrations.AddField(
             model_name='educationgroupyear',
