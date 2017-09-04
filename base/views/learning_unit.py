@@ -566,7 +566,7 @@ def learning_unit_create(request, academic_year):
 
 
 def learning_unit_year_add(request):
-    if request.POST.get('action') == "add":
+    if request.POST:
         form = CreateLearningUnitYearForm(request.POST)
         if form.is_valid():
             data = form.cleaned_data

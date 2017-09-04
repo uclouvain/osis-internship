@@ -23,24 +23,19 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import datetime
 import re
-
+from django import forms
+from django.core.exceptions import ValidationError
+from django.db.models import Prefetch
 from django.utils.functional import lazy
 from django.utils.translation import ugettext_lazy as _
-from django import forms
-from django.db.models import Prefetch
 from base import models as mdl
-from django.core.exceptions import ValidationError
-from base.models.campus import Campus
-from base.models.entity_version import find_latest_version
+from base.models.campus import create_main_campuses_list
+from base.models.entity_version import create_main_entities_version_list
 from base.models.enums import entity_container_year_link_type
-from base.models.enums import entity_type
 from base.models.enums.learning_container_year_types import LEARNING_CONTAINER_YEAR_TYPES
 from base.models.enums.learning_unit_periodicity import PERIODICITY_TYPES
-from base.models.enums.organization_type import ORGANIZATION_TYPE
-from osis_common.utils.datetime import get_tzinfo
-from reference.models.language import Language
+from reference.models.language import create_all_languages_list
 
 
 class LearningUnitYearForm(forms.Form):
@@ -153,24 +148,6 @@ def _get_latest_entity_version(entity_container_year):
     return entity_version
 
 
-def create_entities_list():
-    entities = find_latest_version(date=datetime.datetime.now(get_tzinfo()))\
-        .filter(entity_type__in=[entity_type.SECTOR, entity_type.FACULTY, entity_type.SCHOOL,
-                                 entity_type.INSTITUTE, entity_type.DOCTORAL_COMMISSION],
-                entity__organization__type=ORGANIZATION_TYPE[0][0])
-    return [(elem.id, elem.acronym) for elem in entities]
-
-
-def create_campuses_list():
-    campuses = Campus.objects.filter(organization__type=ORGANIZATION_TYPE[0][0])
-    return [(elem.id, elem.name) for elem in campuses]
-
-
-def create_languages_list():
-    languages = Language.objects.all()
-    return [(elem.id, elem.name) for elem in languages]
-
-
 class CreateLearningUnitYearForm(forms.ModelForm):
 
     learning_container_year_type = forms.CharField(
@@ -184,22 +161,22 @@ class CreateLearningUnitYearForm(forms.ModelForm):
     faculty_remark = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control',
                                                                   'id': 'faculty_remark'}))
     other_remark = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control',
-                                                                'id': 'faculty_remark'}))
+                                                                'id': 'other_remark'}))
     periodicity = forms.CharField(widget=forms.Select(attrs={'class': 'form-control',
                                                              'id': 'periodicity'},
                                                       choices=PERIODICITY_TYPES))
-    campus = forms.ChoiceField(choices=lazy(create_campuses_list, tuple),
+    campus = forms.ChoiceField(choices=lazy(create_main_campuses_list, tuple),
                                widget=forms.Select(attrs={'class': 'form-control',
-                                                          'id': 'requirement_entity'}))
-    requirement_entity = forms.ChoiceField(choices=lazy(create_entities_list, tuple),
+                                                          'id': 'campus'}))
+    requirement_entity = forms.ChoiceField(choices=lazy(create_main_entities_version_list, tuple),
                                            widget=forms.Select(attrs={'class': 'form-control',
                                                                       'id': 'requirement_entity'}))
-    allocation_entity = forms.ChoiceField(choices=lazy(create_entities_list, tuple),
+    allocation_entity = forms.ChoiceField(choices=lazy(create_main_entities_version_list, tuple),
                                           widget=forms.Select(attrs={'class': 'form-control',
-                                                                     'id': 'requirement_entity'}))
-    language = forms.ChoiceField(choices=lazy(create_languages_list, tuple),
+                                                                     'id': 'allocation_entity'}))
+    language = forms.ChoiceField(choices=lazy(create_all_languages_list, tuple),
                                  widget=forms.Select(attrs={'class': 'form-control',
-                                                            'id': 'requirement_entity'}))
+                                                            'id': 'language'}))
 
     class Meta:
         model = mdl.learning_unit_year.LearningUnitYear

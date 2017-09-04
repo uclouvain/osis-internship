@@ -24,6 +24,7 @@
 #
 ##############################################################################
 from django.db import models
+from base.models.enums.organization_type import ORGANIZATION_TYPE
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 
 
@@ -47,3 +48,8 @@ class Campus(SerializableModel):
 def find_by_organization(organization):
     return Campus.objects.filter(organization=organization)\
                          .order_by('name')
+
+
+def create_main_campuses_list():
+    campuses = Campus.objects.filter(organization__type=ORGANIZATION_TYPE[0][0])
+    return [(elem.id, elem.name) for elem in campuses]

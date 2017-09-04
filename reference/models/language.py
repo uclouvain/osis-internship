@@ -62,3 +62,8 @@ def serialize_list(list_languages):
     :return: the serialized list (a json)
     """
     return serializers.serialize("json", list_languages)
+
+
+def create_all_languages_list():
+    languages = Language.objects.all()
+    return [(elem.id, elem.name) for elem in languages]
