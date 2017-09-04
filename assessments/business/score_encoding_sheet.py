@@ -26,7 +26,7 @@
 from django.utils import timezone
 from django.utils.translation import ugettext as _
 from attribution.models import attribution
-from base.models import entity_address, entity_version, person_address, session_exam_calendar, offer_year_entity, offer_year
+from base.models import entity_address, entity_version as entity_version, person_address, session_exam_calendar, offer_year_entity, offer_year
 from base.models.exam_enrollment import justification_label_authorized, get_deadline
 from assessments.business.score_encoding_list import sort_for_encodings
 from assessments.models import score_sheet_address
@@ -34,36 +34,72 @@ from assessments.models.enums.score_sheet_address_choices import *
 from base.business import entity_version as entity_version_business
 
 
-class ScoreSheetAddress:
-    entity_version = None
-    fields = ['recipient', 'location', 'postal_code', 'city', 'country', 'phone', 'fax', 'email']
+def get_score_sheet_address(off_year):
+    address = score_sheet_address.get_from_offer_year(off_year)
+    entity_id = None
+    if address and not address.customized:
+        map_offer_year_entity_type_with_entity_id = _get_map_offer_year_entity_type_with_entity(off_year)
+        entity_id = map_offer_year_entity_type_with_entity_id[address.entity_address_choice]
+        ent_version = entity_version.get_last_version(entity_id)
+        address = entity_address.get_from_entity(entity_id)
+        if not address: # Case no address found for this entity
+            address = entity_address.EntityAddress()
+        address.recipient = '{} - {}'.format(ent_version.acronym, ent_version.title)
+    return entity_id, _get_address_as_dict(address)
 
-    def __init__(self, off_year, *args, **kwargs):
-        address = score_sheet_address.get_from_offer_year(off_year)
-        if address:
-            if address.customized:
-                self._init_attrs(address)
-            else:
-                off_year_entity = offer_year_entity.get_from_offer_year_and_type(off_year, address.get_offer_year_type())
-                version = entity_version.get_last_version(off_year_entity.entity)
-                self.entity_version = version
-                address = entity_address.get_from_entity(off_year_entity.entity_id)
-                address.recipient = '{} - {}'.format(version.acronym, version.title)
-                self._init_attrs(address)
-        else:
-            for field_name in self.fields:
-                setattr(self, field_name, None)
 
-    def _init_attrs(self, obj):
-        for field_name in self.fields:
-            setattr(self, field_name, getattr(obj, field_name))
+def _get_address_as_dict(address):
+    field_names = ['recipient', 'location', 'postal_code', 'city', 'country', 'phone', 'fax', 'email']
+    if address:
+        return {f_name: getattr(address, f_name, None) for f_name in field_names}
+    else:
+        return {f_name: None for f_name in field_names}
 
-    def get_address_as_dict(self):
-        return {field_name: getattr(self, field_name) for field_name in self.fields}
+# class ScoreSheetAddress:
+#     entity_version = None
+#     fields = ['recipient', 'location', 'postal_code', 'city', 'country', 'phone', 'fax', 'email']
+#
+#     def __init__(self, off_year, *args, **kwargs):
+#         address = score_sheet_address.get_from_offer_year(off_year)
+#         if address:
+#             if address.customized:
+#                 self._init_attrs(address)
+#             else:
+#                 # off_year_entity = offer_year_entity.get_from_offer_year_and_type(off_year, address.get_offer_year_type())
+#                 map_offer_year_entity_type_with_entity_id = {value: key for key, value in get_map_entity_with_offer_year_entity_type(off_year)}
+#                 entity_id = map_offer_year_entity_type_with_entity_id[address.entity_address_choice]
+#                 version = entity_version.get_last_version(entity_id)
+#                 self.entity_version = version
+#                 address = entity_address.get_from_entity(entity_id)
+#                 address.recipient = '{} - {}'.format(version.acronym, version.title)
+#                 self._init_attrs(address)
+#         else:
+#             for field_name in self.fields:
+#                 setattr(self, field_name, None)
+#
+#     def _init_attrs(self, obj):
+#         for field_name in self.fields:
+#             setattr(self, field_name, getattr(obj, field_name))
+#
+#     def get_address_as_dict(self):
+#         return {field_name: getattr(self, field_name) for field_name in self.fields}
+#
+#     @property
+#     def entity_id(self):
+#         return self.entity_version.entity_id if self.entity_version else None
 
-    @property
-    def entity_id(self):
-        return self.entity_version.entity_id if self.entity_version else None
+
+def _get_map_offer_year_entity_type_with_entity(off_year):
+    off_year_entity_manag = offer_year_entity.get_from_offer_year_and_type(off_year, ENTITY_MANAGEMENT)
+    entity_version_management = entity_version.get_last_version(off_year_entity_manag.entity)
+    off_year_entity_admin = offer_year_entity.get_from_offer_year_and_type(off_year, ENTITY_ADMINISTRATION)
+    entity_version_admin = entity_version.get_last_version(off_year_entity_admin.entity)
+    return {
+        ENTITY_MANAGEMENT: entity_version_management.entity_id,
+        ENTITY_MANAGEMENT_PARENT: entity_version_management.parent_id,
+        ENTITY_ADMINISTRATION: entity_version_admin.entity_id,
+        ENTITY_ADMINISTRATION_PARENT: entity_version_admin.parent_id,
+    }
 
 
 def get_map_entity_with_offer_year_entity_type(off_year):
@@ -79,12 +115,15 @@ def get_map_entity_with_offer_year_entity_type(off_year):
     }
 
 
-def upsert_score_sheet_address(off_year, entity_id_selected):
+def save_address_from_entity(off_year, entity_version_id_selected):
+    entity_id = entity_version.find_by_id(entity_version_id_selected).entity_id
     entity_id_mapped_with_type = get_map_entity_with_offer_year_entity_type(off_year)
-    entity_address_choice = entity_id_mapped_with_type.get(int(entity_id_selected))
-    address = score_sheet_address.ScoreSheetAddress(offer_year=off_year,
-                                                    entity_address_choice=entity_address_choice)
-    address.save()
+    entity_address_choice = entity_id_mapped_with_type.get(entity_id)
+    address = score_sheet_address.get_from_offer_year(off_year)
+    new_address = score_sheet_address.ScoreSheetAddress(id=address.id,
+                                                        offer_year=off_year,
+                                                        entity_address_choice=entity_address_choice)
+    new_address.save()
 
 
 def get_entity_version_choices(offer_year):
@@ -160,7 +199,7 @@ def scores_sheet_data(exam_enrollments, tutor=None):
 
             program = {'acronym': exam_enrollment.learning_unit_enrollment.offer_enrollment.offer_year.acronym,
                        'deliberation_date': deliberation_date,
-                       'address': ScoreSheetAddress(off_year).get_address_as_dict()}
+                       'address': get_score_sheet_address(off_year)[1]}
             enrollments = []
             for exam_enrol in list_enrollments:
                 student = exam_enrol.learning_unit_enrollment.student

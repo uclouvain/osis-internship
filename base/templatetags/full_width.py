@@ -23,20 +23,17 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from base.forms import bootstrap
-from assessments.models import score_sheet_address
-from django import forms
-from reference.models import country
+from django import template
+
+register = template.Library()
 
 
-class ScoreSheetAddressForm(bootstrap.BootstrapModelForm):
-    country = forms.ModelChoiceField(queryset=country.find_all(), required=False)
-    recipient = forms.CharField(max_length=255)
-    location = forms.CharField(max_length=255)
-    postal_code = forms.CharField(max_length=255)
-    city = forms.CharField(max_length=255)
-    offer_year_id = forms.HiddenInput()
-
-    class Meta:
-        model = score_sheet_address.ScoreSheetAddress
-        exclude = ['external_id', 'changed', 'offer_year']
+@register.assignment_tag(takes_context=True)
+def full_width(context):
+    """
+    :return: True only if there is no offer_year.orientation_sibling OR
+             when both the offer_year.offer_year_children and fer_year.offer_year_sibling are empty
+    """
+    offer_year = context['offer_year']
+    return not offer_year.orientation_sibling or (
+        not offer_year.offer_year_children and not offer_year.offer_year_sibling)

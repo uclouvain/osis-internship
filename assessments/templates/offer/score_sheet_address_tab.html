@@ -32,6 +32,8 @@
 
 {% block content %}
 
+    {% include 'template_messages.html' %}
+
     {% include "offer/header.html" %}
 
     <div class="panel panel-default">
@@ -159,7 +161,7 @@
                     data: null,
                     dataType: 'json',
                     success: function (data) {
-                        if (Object.keys(data).length != 0) {
+                        if (Object.keys(data.address).length != 0) {
                             disableFormInputs();
                             set_form_fields_values(data);
                         }
@@ -168,6 +170,7 @@
                             disableFormInputs();
                             showNoAddressFoundMsg();
                         }
+                        $('#id_recipient').val(data.recipient);
                     },
                     error: function (xhr, status, error) {
                         setFormFieldsValuesToNone();
@@ -199,13 +202,13 @@
 
         function set_form_fields_values(data){
             $('#id_recipient').val(data.recipient);
-            $('#id_location').val(data.location);
-            $('#id_postal_code').val(data.postal_code);
-            $('#id_city').val(data.city);
-            $('#id_country').val(data.country);
-            $('#id_phone').val(data.phone);
-            $('#id_fax').val(data.fax);
-            $('#id_email').val(data.email);
+            $('#id_location').val(data.address.location);
+            $('#id_postal_code').val(data.address.postal_code);
+            $('#id_city').val(data.address.city);
+            $('#id_country').val(data.address.country);
+            $('#id_phone').val(data.address.phone);
+            $('#id_fax').val(data.address.fax);
+            $('#id_email').val(data.address.email);
         }
 
 
