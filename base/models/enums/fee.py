@@ -23,31 +23,29 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-RATE1 = 'RATE1'
-RATE2 = 'RATE2'
-RATE3 = 'RATE3'
-RATE4 = 'RATE4'
-RATE5 = 'RATE5'
-RATE6 = 'RATE6'
-RATE7 = 'RATE7'
-RATE8 = 'RATE8'
-RATE9 = 'RATE9'
-RATE10 = 'RATE10'
-RATE11 = 'RATE11'
-RATE12 = 'RATE12'
-RATE13 = 'RATE13'
+FEE_1 = 'FEE_1'
+FEE_2 = 'FEE_2'
+FEE_3 = 'FEE_3'
+FEE_4 = 'FEE_4'
+FEE_5 = 'FEE_5'
+FEE_6 = 'FEE_6'
+FEE_7 = 'FEE_7'
+FEE_8 = 'FEE_8'
+FEE_10 = 'FEE_10'
+FEE_11 = 'FEE_11'
+FEE_12 = 'FEE_12'
+FEE_13 = 'FEE_13'
 
 
-RATES = ((RATE1, RATE1),
-         (RATE2, RATE2),
-         (RATE3, RATE3),
-         (RATE4, RATE4),
-         (RATE5, RATE5),
-         (RATE6, RATE6),
-         (RATE7, RATE7),
-         (RATE8, RATE8),
-         (RATE9, RATE9),
-         (RATE10, RATE10),
-         (RATE11, RATE11),
-         (RATE12, RATE12),
-         (RATE13, RATE13))
+FEES = ((FEE_1, FEE_1),  ## Rôle
+         (FEE_2, FEE_2), ## rôle + examen
+         (FEE_3, FEE_3), ## AESS, CAPAES ou fin de cycle
+         (FEE_4, FEE_4), ## Minerval sans examen
+         (FEE_5, FEE_5), ## Minerval complet
+         (FEE_6, FEE_6), ## certificat universitaire
+         (FEE_7, FEE_7), ## Master complémentaire spécialisation médicale
+         (FEE_8, FEE_8), ## Concours d’accès
+         (FEE_10, FEE_10), ## CU 30 crédits
+         (FEE_11, FEE_11), ## Certificat compétence méd
+         (FEE_12, FEE_12), ## Offres ISA : 12BA et 21MS
+         (FEE_13, FEE_13)) ## Offres ISA : 13BA et 22MS

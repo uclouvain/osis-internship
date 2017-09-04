@@ -24,9 +24,9 @@
 #
 ##############################################################################
 DAILY = 'DAILY'
-SHIFT = 'SHIFT'
+SHIFTED = 'SHIFTED'
 ADAPTED = 'ADAPTED'
 
 SCHEDULE_TYPES = ((DAILY, DAILY),
-                  (SHIFT, SHIFT),
+                  (SHIFTED, SHIFTED),
                   (ADAPTED, ADAPTED))
