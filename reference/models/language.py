@@ -23,6 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.core import serializers
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
@@ -47,7 +48,10 @@ class Language(SerializableModel):
 
 
 def find_by_id(language_id):
-    return Language.objects.get(pk=language_id)
+    try:
+        return Language.objects.get(id=language_id)
+    except ObjectDoesNotExist:
+        return None
 
 
 def find_by_code(code):
@@ -64,6 +68,6 @@ def serialize_list(list_languages):
     return serializers.serialize("json", list_languages)
 
 
-def create_all_languages_list():
+def find_all_languages():
     languages = Language.objects.all()
-    return [(elem.id, elem.name) for elem in languages]
+    return languages

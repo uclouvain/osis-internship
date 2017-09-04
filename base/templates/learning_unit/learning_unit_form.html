@@ -173,12 +173,12 @@
                 <div class="panel-body">
                     <div>
                         <label>{% trans 'faculty_remark' %}</label>
-                        {{ form.faculty_remark }}
+                        {{ form.faculty_remark }}{{ form.errors.faculty_remark }}
                     </div>
                     <br>
                     <div>
                         <label>{% trans 'other_remark' %}</label>
-                        {{ form.other_remark }}
+                        {{ form.other_remark }}{{ form.errors.other_remark }}
                     </div>
                 </div>
             </div>
@@ -251,13 +251,9 @@
                         if(data['existing_acronym']){
                             newMessage.push("{% trans 'existing_acronym' %}");
                         }
-                        if(data['incorrect_acronym']){
-                            newMessage.push("{% trans 'incorrect_acronym' %}");
-                        }
                     }
                     message = newMessage.join("   ");
                 });
-                test = [res,message];
             }, messageFunc);
 
 
@@ -265,7 +261,7 @@
                 invalidHandler: function(form, validator) {
                     var errors = validator.numberOfInvalids();
                     if (errors) {
-                        alert("You have " + error + " errors that need to be fixed");
+                        newMessage.push("{% trans 'existed_acronym' %}");
                     }
                 },
                 rules:{

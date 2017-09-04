@@ -614,12 +614,12 @@ def create_learning_unit_structure(allocation_entity_version, data, form, new_le
         create_course(an_academic_year, form, new_learning_container_year, new_learning_unit,
                       new_requirement_entity, status)
     else:
-        create_others_type(an_academic_year, form, new_learning_container_year, new_learning_unit,
-                           new_requirement_entity, status)
+        create_another_type(an_academic_year, form, new_learning_container_year, new_learning_unit,
+                            new_requirement_entity, status)
 
 
-def create_others_type(an_academic_year, form, new_learning_container_year, new_learning_unit, new_requirement_entity,
-                       status):
+def create_another_type(an_academic_year, form, new_learning_container_year, new_learning_unit, new_requirement_entity,
+                        status):
     new_learning_component_year = create_learning_component_year(new_learning_container_year,
                                                                  "NT1", None)
     create_entity_component_year(new_requirement_entity, new_learning_component_year)

@@ -1550,10 +1550,10 @@ msgstr "Périodicité"
 msgid "nominal_credits"
 msgstr "Crédits"
 
-msgid "Active"
+msgid "active"
 msgstr "Actif"
 
-msgid "Inactive"
+msgid "inactive"
 msgstr "Inactif"
 
 msgid "MASTER_DISSERTATION"
@@ -1775,11 +1775,11 @@ msgstr "Intitulé officiel"
 msgid "create_learning_unit"
 msgstr "Création d'une unité d'enseignement"
 
-msgid "existing_acronym"
-msgstr "Acronyme déja existant"
+msgid "existed_acronym"
+msgstr "Sigle a déjà existé"
 
-msgid "incorrect_acronym"
-msgstr "Acronyme incorrect"
+msgid "existing_acronym"
+msgstr "Sigle déja existant"
 
 msgid "acronym_rules"
 msgstr "Site en une lettre\n"

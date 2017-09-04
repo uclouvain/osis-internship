@@ -30,12 +30,12 @@ from django.db.models import Prefetch
 from django.utils.functional import lazy
 from django.utils.translation import ugettext_lazy as _
 from base import models as mdl
-from base.models.campus import create_main_campuses_list
-from base.models.entity_version import create_main_entities_version_list
+from base.models.campus import find_main_campuses
+from base.models.entity_version import find_main_entities_version
 from base.models.enums import entity_container_year_link_type
 from base.models.enums.learning_container_year_types import LEARNING_CONTAINER_YEAR_TYPES
 from base.models.enums.learning_unit_periodicity import PERIODICITY_TYPES
-from reference.models.language import create_all_languages_list
+from reference.models.language import find_all_languages
 
 
 class LearningUnitYearForm(forms.Form):
@@ -148,6 +148,18 @@ def _get_latest_entity_version(entity_container_year):
     return entity_version
 
 
+def create_main_campuses_list():
+    return [(elem.id, elem.name) for elem in find_main_campuses()]
+
+
+def create_main_entities_version_list():
+    return [(entity_version.id, entity_version.acronym) for entity_version in find_main_entities_version()]
+
+
+def create_languages_list():
+    return [(language.id, language.name) for language in find_all_languages()]
+
+
 class CreateLearningUnitYearForm(forms.ModelForm):
 
     learning_container_year_type = forms.CharField(
@@ -158,10 +170,10 @@ class CreateLearningUnitYearForm(forms.ModelForm):
     end_year = forms.CharField(widget=forms.DateInput(attrs={'class': 'form-control',
                                                              'required': True,
                                                              'id': 'end_year'}))
-    faculty_remark = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control',
-                                                                  'id': 'faculty_remark'}))
-    other_remark = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control',
-                                                                'id': 'other_remark'}))
+    faculty_remark = forms.CharField(required=False, widget=forms.Textarea(attrs={'class': 'form-control',
+                                                                                  'id': 'faculty_remark'}))
+    other_remark = forms.CharField(required=False, widget=forms.Textarea(attrs={'class': 'form-control',
+                                                                                'id': 'other_remark'}))
     periodicity = forms.CharField(widget=forms.Select(attrs={'class': 'form-control',
                                                              'id': 'periodicity'},
                                                       choices=PERIODICITY_TYPES))
@@ -174,7 +186,7 @@ class CreateLearningUnitYearForm(forms.ModelForm):
     allocation_entity = forms.ChoiceField(choices=lazy(create_main_entities_version_list, tuple),
                                           widget=forms.Select(attrs={'class': 'form-control',
                                                                      'id': 'allocation_entity'}))
-    language = forms.ChoiceField(choices=lazy(create_all_languages_list, tuple),
+    language = forms.ChoiceField(choices=lazy(create_languages_list, tuple),
                                  widget=forms.Select(attrs={'class': 'form-control',
                                                             'id': 'language'}))
 
@@ -215,9 +227,6 @@ class CreateLearningUnitYearForm(forms.ModelForm):
         if valid:
             if self.cleaned_data['acronym'].lower() in learning_unit_years_list:
                 self._errors['acronym'] = _('existing_acronym')
-                return False
-            elif not re.search(r"^[LM]{1}[A-Z]{2,4}[0-9]{4}$", self.data['acronym']):
-                self._errors['acronym'] = _('incorrect_acronym')
                 return False
             elif academic_year.year > int(self.data['end_year']):
                 self._errors['end_year'] = _('incorrect_end_year')

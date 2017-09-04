@@ -637,8 +637,8 @@ class LearningUnitViewTestCase(TestCase):
 
         self.assertRaises(ObjectDoesNotExist, learning_unit_component_class.LearningUnitComponentClass.objects.filter(pk=a_link.id).first())
 
-    def get_base_form_data(self, acronym, end_year):
-        return {"acronym": acronym,
+    def get_base_form_data(self, end_year):
+        return {"acronym": "LTAU2000",
                 "end_year": end_year,
                 "learning_container_year_type": COURSE,
                 "academic_year": self.current_academic_year.id,
@@ -658,25 +658,19 @@ class LearningUnitViewTestCase(TestCase):
                 "other_remark": "other remark"}
 
     def get_valid_data(self):
-        return self.get_base_form_data(acronym="LTAU2000", end_year=str(self.current_academic_year.end_date.year))
-
-    def get_faulty_acronym(self):
-        return self.get_base_form_data(acronym="RTAU", end_year=str(self.current_academic_year.end_date.year))
+        return self.get_base_form_data(end_year=str(self.current_academic_year.end_date.year))
 
     def get_faulty_end_year(self):
-        return self.get_base_form_data(acronym="LTAU2000", end_year=str(self.current_academic_year.end_date.year-2))
+        return self.get_base_form_data(end_year=str(self.current_academic_year.end_date.year-2))
 
     def test_learning_unit_year_form(self):
         form = CreateLearningUnitYearForm(data=self.get_valid_data())
         self.assertTrue(form.is_valid(), form.errors)
-        form = CreateLearningUnitYearForm(data=self.get_faulty_acronym())
-        self.assertFalse(form.is_valid(), form.errors)
         form = CreateLearningUnitYearForm(data=self.get_faulty_end_year())
         self.assertFalse(form.is_valid(), form.errors)
         url = reverse('learning_unit_year_add')
         response = self.client.post(url,
-                                    data=self.get_base_form_data(acronym="LTAU2000",
-                                                                 end_year=str(self.current_academic_year.end_date.year-1)))
+                                    data=self.get_base_form_data(end_year=str(self.current_academic_year.end_date.year-1)))
         self.assertEqual(response.status_code, 302)
         count_learning_unit_year = LearningUnitYear.objects.all().count()
         self.assertEqual(count_learning_unit_year, 1)

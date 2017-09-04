@@ -1771,11 +1771,11 @@ msgstr "Official title"
 msgid "create_learning_unit"
 msgstr "Create Learning Unit"
 
+msgid "existed_acronym"
+msgstr "Existed acronym"
+
 msgid "existing_acronym"
 msgstr "Existing acronym"
-
-msgid "incorrect_acronym"
-msgstr "Incorrect acronym"
 
 msgid "acronym_rules"
 msgstr "Site with one letter\n"
