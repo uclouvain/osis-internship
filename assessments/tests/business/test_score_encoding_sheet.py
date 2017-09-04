@@ -1,0 +1,97 @@
+##############################################################################
+#
+#    OSIS stands for Open Student Information System. It's an application
+#    designed to manage the core business of higher education institutions,
+#    such as universities, faculties, institutes and professional schools.
+#    The core business involves the administration of students, teachers,
+#    courses, programs and so on.
+#
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+#    GNU General Public License for more details.
+#
+#    A copy of this license - GNU General Public License - is available
+#    at the root of the source code of this program.  If not,
+#    see http://www.gnu.org/licenses/.
+#
+##############################################################################
+import datetime
+from unittest import mock
+
+from django.core.urlresolvers import reverse
+from django.test import TestCase, RequestFactory
+from assessments.business import score_encoding_sheet
+from assessments.models.enums import score_sheet_address_choices
+from assessments.tests.factories.score_sheet_address import ScoreSheetAddressFactory
+
+from base.models.academic_calendar import AcademicCalendar
+from base.models.enums import offer_year_entity_type
+from base.tests.factories.academic_year import AcademicYearFactory
+from base.tests.factories.entity import EntityFactory
+from base.tests.factories.entity_address import EntityAddressFactory
+from base.tests.factories.entity_version import EntityVersionFactory
+from base.tests.factories.offer_year import OfferYearFactory
+from assessments.views import score_sheet
+from assessments.forms.score_sheet_address import ScoreSheetAddressForm
+from base.tests.factories.offer_year_entity import OfferYearEntityFactory
+from reference.tests.factories.country import CountryFactory
+
+
+class ScoreSheetAddressTest(TestCase):
+
+    def setUp(self):
+        today = datetime.date.today()
+        self.academic_year = AcademicYearFactory(start_date=today,
+                                                 end_date=today.replace(year=today.year + 1),
+                                                 year=today.year)
+        self.offer_year = OfferYearFactory(academic_year=self.academic_year)
+        self.entity_address_admin = self._create_data_for_entity_address(score_sheet_address_choices.ENTITY_ADMINISTRATION)
+        self.entity_address_manag = self._create_data_for_entity_address(score_sheet_address_choices.ENTITY_MANAGEMENT)
+        self.address_fields = ['location', 'postal_code', 'city', 'country', 'phone', 'fax', 'email']
+
+    def _create_data_for_entity_address(self, entity_type):
+        past_date = datetime.datetime(year=2015, month=1, day=1)
+        entity = EntityFactory()
+        EntityVersionFactory(entity=entity,
+                             start_date=past_date,
+                             end_date=None)
+        OfferYearEntityFactory(offer_year=self.offer_year,
+                               entity_id=entity.id,
+                               type=entity_type)
+        return EntityAddressFactory(entity=entity,
+                                    country=CountryFactory())
+
+    def test_case_address_from_entity_administration(self):
+        ScoreSheetAddressFactory(offer_year=self.offer_year,
+                                 entity_address_choice=score_sheet_address_choices.ENTITY_ADMINISTRATION)
+        entity_id, address = score_encoding_sheet.get_score_sheet_address(self.offer_year)
+        for f in self.address_fields:
+            self.assertEqual(getattr(self.entity_address_admin, f), address.get(f))
+
+    def test_case_address_from_entity_management(self):
+        ScoreSheetAddressFactory(offer_year=self.offer_year,
+                                 entity_address_choice=score_sheet_address_choices.ENTITY_MANAGEMENT)
+        entity_id, address = score_encoding_sheet.get_score_sheet_address(self.offer_year)
+        for f in self.address_fields:
+            self.assertEqual(getattr(self.entity_address_manag, f), address.get(f))
+
+    def test_case_customized_address(self):
+        add = ScoreSheetAddressFactory(offer_year=self.offer_year,
+                                       entity_address_choice=None)
+        entity_id, address = score_encoding_sheet.get_score_sheet_address(self.offer_year)
+        for f in self.address_fields:
+            self.assertEqual(getattr(add, f), address.get(f))
+
+    def test_get_address_as_dict(self):
+        address = ScoreSheetAddressFactory()
+        fields = dir(address)
+        for f in self.address_fields:
+            self.assertIn(f, fields)

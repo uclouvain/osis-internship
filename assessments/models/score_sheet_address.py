@@ -72,7 +72,7 @@ class ScoreSheetAddress(models.Model):
             raise Exception("Please set either entity_address_choice nor location, postal_code, city... but not all of them.")
 
     def __str__(self):
-        return u"%s - %s - %s" % (self.offer_year, self.entity, self.type)
+        return "{0} - {1}".format(self.offer_year, self.entity_address_choice)
 
 
 def get_from_offer_year(off_year):

@@ -135,49 +135,6 @@ class OfferViewTestCase(TestCase):
         self.assertEqual(template, 'offer/tab_identification.html')
 
     @mock.patch('django.contrib.auth.decorators')
-    @mock.patch('base.models.offer_year')
-    @mock.patch('reference.models.country')
-    def test_score_encoding_post(self,
-                                 mock_country,
-                                 mock_offer_year,
-                                 mock_decorators):
-        mock_decorators.login_required = lambda x: x
-        mock_decorators.permission_required = lambda *args, **kwargs: lambda func: func
-
-        offer_year = mock.Mock(id=1)
-        mock_offer_year.find_by_id.return_value = offer_year
-        country = mock.Mock(id=1)
-        mock_country.find_by_id.return_value = country
-
-        request = mock.Mock(method='POST')
-
-        from assessments.views.score_sheet import save_score_sheet_address
-        response = save_score_sheet_address(request, offer_year.id)
-
-        self.assertTrue(offer_year.save.called)
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.content, b'ok')
-        self.assertTrue(response.has_header('content-type'))
-        self.assertEqual(response.get('content-type'), 'text/plain')
-
-    @mock.patch('django.contrib.auth.decorators')
-    def test_score_encoding_get(self,
-                                mock_decorators):
-        mock_decorators.login_required = lambda x: x
-        mock_decorators.permission_required = lambda *args, **kwargs: lambda func: func
-
-        offer_year = mock.Mock(id=1)
-        request = mock.Mock(method='GET')
-
-        from assessments.views.score_sheet import save_score_sheet_address
-        response = save_score_sheet_address(request, offer_year.id)
-
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.content, b'nok')
-        self.assertTrue(response.has_header('content-type'))
-        self.assertEqual(response.get('content-type'), 'text/plain')
-
-    @mock.patch('django.contrib.auth.decorators')
     @mock.patch('base.views.layout.render')
     @mock.patch('base.models.offer_year_calendar')
     @mock.patch('base.models.program_manager')

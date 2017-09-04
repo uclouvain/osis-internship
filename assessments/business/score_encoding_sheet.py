@@ -26,7 +26,7 @@
 from django.utils import timezone
 from django.utils.translation import ugettext as _
 from attribution.models import attribution
-from base.models import entity_address, entity_version as entity_version, person_address, session_exam_calendar, offer_year_entity, offer_year
+from base.models import entity_address, entity_version as entity_version, person_address, session_exam_calendar, offer_year_entity
 from base.models.exam_enrollment import justification_label_authorized, get_deadline
 from assessments.business.score_encoding_list import sort_for_encodings
 from assessments.models import score_sheet_address
@@ -54,39 +54,6 @@ def _get_address_as_dict(address):
         return {f_name: getattr(address, f_name, None) for f_name in field_names}
     else:
         return {f_name: None for f_name in field_names}
-
-# class ScoreSheetAddress:
-#     entity_version = None
-#     fields = ['recipient', 'location', 'postal_code', 'city', 'country', 'phone', 'fax', 'email']
-#
-#     def __init__(self, off_year, *args, **kwargs):
-#         address = score_sheet_address.get_from_offer_year(off_year)
-#         if address:
-#             if address.customized:
-#                 self._init_attrs(address)
-#             else:
-#                 # off_year_entity = offer_year_entity.get_from_offer_year_and_type(off_year, address.get_offer_year_type())
-#                 map_offer_year_entity_type_with_entity_id = {value: key for key, value in get_map_entity_with_offer_year_entity_type(off_year)}
-#                 entity_id = map_offer_year_entity_type_with_entity_id[address.entity_address_choice]
-#                 version = entity_version.get_last_version(entity_id)
-#                 self.entity_version = version
-#                 address = entity_address.get_from_entity(entity_id)
-#                 address.recipient = '{} - {}'.format(version.acronym, version.title)
-#                 self._init_attrs(address)
-#         else:
-#             for field_name in self.fields:
-#                 setattr(self, field_name, None)
-#
-#     def _init_attrs(self, obj):
-#         for field_name in self.fields:
-#             setattr(self, field_name, getattr(obj, field_name))
-#
-#     def get_address_as_dict(self):
-#         return {field_name: getattr(self, field_name) for field_name in self.fields}
-#
-#     @property
-#     def entity_id(self):
-#         return self.entity_version.entity_id if self.entity_version else None
 
 
 def _get_map_offer_year_entity_type_with_entity(off_year):

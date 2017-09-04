@@ -45,7 +45,6 @@ from assessments.models import score_sheet_address as score_sheet_address_model
 def offer_score_encoding_tab(request, offer_year_id):
     context = _get_common_context(request, offer_year_id)
     entity_id_selected, address = score_encoding_sheet.get_score_sheet_address(context.get('offer_year'))
-    # entity_id_selected = entity_version.entity_id if address else None
     form = score_sheet_address.ScoreSheetAddressForm(initial=address)
     context.update({'entity_id_selected': entity_id_selected, 'form': form})
     return layout.render(request, "offer/score_sheet_address_tab.html", context)
@@ -81,9 +80,6 @@ def _save_customized_address(request, offer_year_id):
                                                      instance=score_sheet_address_model.get_from_offer_year(offer_year_id))
     if form.is_valid():
         form.save()
-        # instance = form.instance
-        # instance.offer_year_id = offer_year_id
-        # instance.save()
         messages.add_message(request, messages.SUCCESS, _('score_sheet_address_saved'))
     return form
 
