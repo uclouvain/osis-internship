@@ -25,7 +25,7 @@
 ##############################################################################
 
 from django.core import serializers
-from django.contrib.auth.models import Group, User, Permission
+from django.contrib.auth.models import Group, User
 from base import models as mdl_base
 from reference import models as mdl_reference
 from attribution import models as mdl_attribution
@@ -106,7 +106,7 @@ def make_fixtures(request):
     structure_addresses = mdl_base.structure_address.StructureAddress.objects.all()
     list_objects.extend(structure_addresses)
 
-    list_objects += build_entity_managers(persons, structures)
+    list_objects += build_entity_managers(persons)
 
     list_objects += build_entity_versions(entities)
 
@@ -123,9 +123,11 @@ def make_fixtures(request):
     list_objects.extend(students)
 
     offer_years = mdl_base.offer_year.OfferYear.objects.filter(academic_year__in=academic_years)
-    list_objects.extend(offer_years)
 
     list_objects += build_offers(offer_years)
+    grade_types = mdl_reference.grade_type.GradeType.objects.all()
+    list_objects.extend(grade_types)
+    list_objects.extend(offer_years)
 
     offer_enrollments = mdl_base.offer_enrollment.OfferEnrollment.objects.filter(offer_year__in=offer_years,
                                                                                  student__in=students)
@@ -151,7 +153,7 @@ def make_fixtures(request):
 
     list_objects += build_learning_unit_component_classes(learning_class_years, learning_unit_components)
 
-    list_objects += create_offers_details(offer_years, academic_years)
+    list_objects += create_offers_details(offer_years, academic_years, grade_types)
 
     list_objects += build_attributions(learning_unit_components, learning_unit_years, persons)
 
@@ -159,7 +161,10 @@ def make_fixtures(request):
 
     list_objects += build_cms()
 
-    response = HttpResponse(serializers.serialize('json', list_objects), content_type='application/json')
+    response = HttpResponse(serializers.serialize('json',
+                                                  list_objects,
+                                                  use_natural_foreign_keys=True,
+                                                  use_natural_primary_keys=True), content_type='application/json')
     response['Content-Disposition'] = 'attachment; filename="initial_data.json"'
 
     return response
@@ -170,16 +175,9 @@ def build_entity_versions(entities):
     return entity_versions
 
 
-def build_entity_managers(persons, structures):
-    entity_managers_person = []
+def build_entity_managers(persons):
     entity_managers = mdl_base.entity_manager.EntityManager.objects.filter(person__in=persons)
-    if entity_managers:
-        entity_managers = mdl_base.entity_manager.EntityManager.objects.all()
-        if entity_managers:
-            entity_managers_person = create_fake_person_for_entity_manager(persons)
-            entity_managers = create_fake_entity_manager(entity_managers_person, structures)
-
-    return list(entity_managers_person) + list(entity_managers)
+    return entity_managers
 
 
 def build_group_element_years(education_group_years, learning_unit_years):
@@ -210,7 +208,7 @@ def build_reference():
 
 
 def build_auth():
-    return list(Permission.objects.all()) + list(Group.objects.all())
+    return list(Group.objects.all())
 
 
 def build_cms():
@@ -276,7 +274,7 @@ def build_organizations():
     return list(organizations) + list(organization_addresses)
 
 
-def create_offers_details(offer_years, academic_years):
+def create_offers_details(offer_years, academic_years, grade_types):
     academic_calendars = mdl_base.academic_calendar.AcademicCalendar.objects.filter(academic_year__in=academic_years)
 
     offer_year_calendars = mdl_base.offer_year_calendar.OfferYearCalendar.objects.filter(
@@ -284,8 +282,6 @@ def create_offers_details(offer_years, academic_years):
         offer_year__in=offer_years)
 
     domains = mdl_reference.domain.Domain.objects.all()
-
-    grade_types = mdl_reference.grade_type.GradeType.objects.all()
 
     external_offers = mdl_base.external_offer.ExternalOffer.objects.filter(domain__in=domains,
                                                                            grade_type__in=grade_types,
@@ -352,42 +348,6 @@ def de_identifying_person_addresses(persons):
 
             person_addresses.append(person_adr)
     return list(countries) + list(person_addresses)
-
-
-def find_person_max_id(persons):
-    if persons:
-        return max(person.id for person in persons)
-    return 0
-
-
-def create_fake_person_for_entity_manager(persons):
-    max_id = int(find_person_max_id(persons))
-    cpt = 0
-    fake_list = []
-
-    while cpt < 5:
-        max_id += 1
-        fake_list.append(mdl_base.person.Person(last_name=fake.last_name(),
-                                                first_name=fake.first_name(),
-                                                employee=True,
-                                                user=None,
-                                                id=max_id))
-        cpt += 1
-    return fake_list
-
-
-def create_fake_entity_manager(persons, structures):
-    fake_list = []
-    if persons and structures:
-        cpt = 0
-        new_id = 1
-        while cpt < 5 and cpt < len(persons):
-            fake_list.append(mdl_base.entity_manager.EntityManager(person=persons[cpt],
-                                                                   structure=structures[random.randint(0, len(structures)-1)],
-                                                                   id=new_id))
-            new_id = new_id + 1
-            cpt = cpt + 1
-    return fake_list
 
 
 def get_entities(learning_container_years_all):
