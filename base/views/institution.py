@@ -28,10 +28,9 @@ import json
 from django.contrib.auth.decorators import login_required, permission_required
 from django.http import JsonResponse
 from base import models as mdl
-from base.models import entity_version as entity_version_mdl, entity_address
+from base.models import entity_version as entity_version_mdl
 from base.models.enums import entity_type
 from . import layout
-from django.core import serializers
 
 
 @login_required
