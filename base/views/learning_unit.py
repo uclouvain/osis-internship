@@ -38,6 +38,7 @@ from base import models as mdl
 from base.business import learning_unit_year_with_context
 from attribution import models as mdl_attr
 from base.models import entity_container_year
+from base.models.academic_year import current_academic_years
 from base.models.entity_component_year import EntityComponentYear
 from base.models.entity_container_year import EntityContainerYear
 from base.models.enums import entity_container_year_link_type
@@ -585,12 +586,13 @@ def learning_unit_year_add(request):
             data = form.cleaned_data
             academic_year = data['academic_year']
             year = academic_year.year
+            current_academic_year = current_academic_years()
             status = check_status(data)
             requirement_entity_version = mdl.entity_version.find_by_id(data['requirement_entity'])
             allocation_entity_version = mdl.entity_version.find_by_id(data['allocation_entity'])
             new_learning_container = create_learning_container(year, data)
             new_learning_unit = create_learning_unit(data, new_learning_container, year)
-            while year <= int(data['end_year']) and year < academic_year.year+6:
+            while year <= int(data['end_year']) and year < current_academic_year[0].year+6:
                 create_learning_unit_structure(allocation_entity_version, data, form, new_learning_container,
                                                new_learning_unit, requirement_entity_version, status, year)
                 year = year+1
@@ -738,7 +740,7 @@ def check_acronym(request):
     learning_unit_years = mdl.learning_unit_year.find_gte_year_acronym(academic_yr, acronym)
     old_learning_unit_years = mdl.learning_unit_year.find_lt_year_acronym(academic_yr, acronym)
 
-    if not re.search(r"^[LM][A-Z]{2,4}[0-9]{4}$", acronym):
+    if len(acronym) > 15:
         incorrect_acronym = True
         valid = False
     if old_learning_unit_years:

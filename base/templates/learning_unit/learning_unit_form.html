@@ -251,6 +251,9 @@
                         if(data['existing_acronym']){
                             newMessage.push("{% trans 'existing_acronym' %}");
                         }
+                        if(data['incorrect_acronym']){
+                            newMessage.push("{% trans 'incorrect_acronym' %}");
+                        }
                     }
                     message = newMessage.join("   ");
                 });
