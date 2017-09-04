@@ -30,8 +30,11 @@ from base.models.enums.learning_unit_periodicity import PERIODICITY_TYPES
 
 class LearningUnitAdmin(SerializableModelAdmin):
     list_display = ('learning_container', 'acronym', 'title', 'start_year', 'end_year', 'changed')
-    fieldsets = ((None, {'fields': ('learning_container', 'acronym', 'title', 'description', 'start_year', 'end_year')}),)
-    search_fields = ['acronym', 'title']
+    fieldsets = ((None, {
+                    'fields': ('learning_container', 'acronym', 'title', 'description', 'start_year', 'end_year')
+                 }),)
+    raw_id_fields = ('learning_container',)
+    search_fields = ['acronym', 'title', 'learning_container__external_id']
     list_filter = ('periodicity', 'start_year')
 
 
@@ -46,6 +49,8 @@ class LearningUnit(SerializableModel):
     end_year = models.IntegerField(blank=True, null=True)
     progress = None
     periodicity = models.CharField(max_length=20, blank=True, null=True, choices=PERIODICITY_TYPES)
+    faculty_remark = models.TextField(blank=True, null=True)
+    other_remark = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return u"%s - %s" % (self.acronym, self.title)
