@@ -12,10 +12,6 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name='learningunit',
-            name='description',
-        ),
         migrations.AddField(
             model_name='learningunit',
             name='faculty_remark',
