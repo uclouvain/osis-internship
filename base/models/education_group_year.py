@@ -38,7 +38,9 @@ class EducationGroupYearAdmin(admin.ModelAdmin):
                                     'main_teaching_campus', 'dissertation', 'internship',
                                     'schedule_type', 'english_activities', 'other_language_activities',
                                     'other_campus_activities', 'professionnal_title', 'joint_diploma',
-                                    'diploma_printing_orientation', 'diploma_printing_title', 'inter_organization_information')}),)
+                                    'diploma_printing_orientation', 'diploma_printing_title',
+                                    'inter_organization_information', 'inter_university_french_community',
+                                    'inter_university_belgium', 'inter_university_abroad', 'primary_language')}),)
     list_filter = ('academic_year', 'education_group_type')
     raw_id_fields = ('education_group_type', 'academic_year', 'education_group')
     search_fields = ['acronym']
