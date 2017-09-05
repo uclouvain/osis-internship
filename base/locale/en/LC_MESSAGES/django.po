@@ -1774,8 +1774,52 @@ msgstr "part 2"
 msgid "title_official"
 msgstr "Official title"
 
+msgid "create_learning_unit"
+msgstr "Create Learning Unit"
+
+msgid "existed_acronym"
+msgstr "Existed acronym"
+
+msgid "existing_acronym"
+msgstr "Existing acronym"
+
+msgid "acronym_rules"
+msgstr "Site with one letter\n"
+       "Acronym with min 2 et max 4 letters\n"
+       "Number Code with 4 digit"
+
+msgid "end_year_title"
+msgstr "End year"
+
+msgid "basic_informations_title"
+msgstr "Basics informations"
+
+msgid "active_title"
+msgstr "Active"
+
+msgid "titles"
+msgstr "Titles"
+
+msgid "structure_title"
+msgstr "Structure"
+
 msgid "fixtures_build"
 msgstr "Build anonymized fixtures"
 
 msgid "desc_lnk_fixtures_build"
 msgstr "Build a json file with anonymized fixtures"
+
+msgid "incorrect_end_year"
+msgstr "Start date should be before the end date"
+
+msgid "session_title"
+msgstr "Session"
+
+msgid "remarks_title"
+msgstr "Remarks"
+
+msgid "faculty_remark"
+msgstr "Faculty"
+
+msgid "other_remark"
+msgstr "Other"

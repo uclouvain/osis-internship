@@ -1,6 +1,6 @@
 ##############################################################################
 #
-#    OSIS stands for Open Student Information System. It's an application
+# OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -23,23 +23,21 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+import datetime
+import string
 
-from django.utils.translation import ugettext_lazy as _
+import factory.fuzzy
 
-COURSE = "COURSE"
-INTERNSHIP = "INTERNSHIP"
-DISSERTATION = "DISSERTATION"
-OTHER_COLLECTIVE = "OTHER_COLLECTIVE"
-OTHER_INDIVIDUAL = "OTHER_INDIVIDUAL"
-MASTER_THESIS = "MASTER_THESIS"
-EXTERNAL = "EXTERNAL"
+from base.tests.factories.organization import OrganizationFactory
+from osis_common.utils.datetime import get_tzinfo
 
-LEARNING_CONTAINER_YEAR_TYPES = (
-    (COURSE, _(COURSE)),
-    (INTERNSHIP, _(INTERNSHIP)),
-    (DISSERTATION, _(DISSERTATION)),
-    (OTHER_COLLECTIVE, _(OTHER_COLLECTIVE)),
-    (OTHER_INDIVIDUAL, _(OTHER_INDIVIDUAL)),
-    (MASTER_THESIS, _(MASTER_THESIS)),
-    (EXTERNAL, _(EXTERNAL)),
-)
+
+class CampusFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = 'base.Campus'
+
+    external_id = factory.fuzzy.FuzzyText(length=10, chars=string.digits)
+    changed = factory.fuzzy.FuzzyDateTime(datetime.datetime(2016, 1, 1, tzinfo=get_tzinfo()),
+                                          datetime.datetime(2017, 3, 1, tzinfo=get_tzinfo()))
+    name = factory.Faker('first_name')
+    organization = factory.SubFactory(OrganizationFactory)

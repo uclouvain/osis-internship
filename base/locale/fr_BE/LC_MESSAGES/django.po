@@ -1780,8 +1780,55 @@ msgstr "partie 2"
 msgid "title_official"
 msgstr "Intitulé officiel"
 
+msgid "create_learning_unit"
+msgstr "Création d'une unité d'enseignement"
+
+msgid "existed_acronym"
+msgstr "Sigle a déjà existé"
+
+msgid "existing_acronym"
+msgstr "Sigle déja existant"
+
+msgid "acronym_rules"
+msgstr "Site en une lettre\n"
+       "Sigle en min 2 et max 4 lettres\n"
+       "Code numérique en 4 chiffres"
+
+msgid "end_year_title"
+msgstr "Année de fin"
+
+msgid "basic_informations_title"
+msgstr "Informations de base"
+
+msgid "active_title"
+msgstr "Actif"
+
+msgid "titles"
+msgstr "Intitulés"
+
+msgid "structure_title"
+msgstr "Structure"
+
 msgid "fixtures_build"
 msgstr "Créer des fixtures anonymisées"
 
 msgid "desc_lnk_fixtures_build"
 msgstr "Crée un fichier json avec des fixtures anonymisées"
+
+msgid "incorrect_end_year"
+msgstr "L'année de départ doit-être inférieur à l'année de fin"
+
+msgid "session_title"
+msgstr "Session"
+
+msgid "remarks_title"
+msgstr "Remarques"
+
+msgid "faculty_remark"
+msgstr "Faculté"
+
+msgid "other_remark"
+msgstr "Autre"
+
+
+
