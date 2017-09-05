@@ -201,12 +201,11 @@ class CreateLearningUnitYearForm(forms.ModelForm):
                                                      'required': True}),
                    'academic_year': forms.Select(attrs={'class': 'form-control',
                                                         'id': 'academic_year',
-                                                        'required': True,
-                                                        'ordering': 'year'}),
+                                                        'required': True}),
                    'status': forms.CheckboxInput(attrs={'id': 'status'}),
                    'internship_subtype': forms.Select(attrs={'class': 'form-control',
-                                                             'id': 'internship_subtype',
-                                                             'disabled': True}),
+                                                             'id': 'internship',
+                                                             'disabled': 'disabled'}),
                    'credits': forms.TextInput(attrs={'class': 'form-control',
                                                      'id': 'credits',
                                                      'required': True}),
@@ -232,7 +231,7 @@ class CreateLearningUnitYearForm(forms.ModelForm):
                 self._errors['acronym'] = _('existing_acronym')
                 return False
             elif academic_year.year > int(self.data['end_year']):
-                self._errors['end_year'] = _('incorrect_end_year')
+                self._errors['end_year'] = _('end_date_gt_begin_date')
                 return False
             else:
                 return True

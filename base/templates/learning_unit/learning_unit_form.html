@@ -67,7 +67,7 @@
                             </label>
                             {{ form.learning_container_year_type }}
                         </div>
-                        <div class="col-md-3" id="is_not_internship" style="display: block;">
+                        <div class="col-md-3">
                             <label>{% trans 'internship_subtype' %}</label>
                             {{ form.internship_subtype }}
                         </div>
@@ -197,46 +197,48 @@
     const internship = "INTERNSHIP";
     $( document ).ready(function() {
         if('{{form.learning_container_year_type.value}}' == internship)
-            document.getElementById('is_not_internship').setAttrib('disabled', TRUE);
+            document.getElementById('internship').disabled = false;
         else
-            document.getElementById('is_not_internship').setAttrib('disabled', FALSE);
+            document.getElementById('internship').disabled = true;
     });
 
     function showDiv(elem){
        if(elem == internship)
-            document.getElementById('is_not_internship').setAttrib('disabled', TRUE);
+            document.getElementById('internship').disabled = false;
        else
-            document.getElementById('is_not_internship').setAttrib('disabled', FALSE);
+            document.getElementById('internship').disabled = true;
     }
 
     $(document).ready(function() {
-        $('#acronym').blur("click",function() {
+        $('#acronym').on("click",function() {
             var message = "";
             var messageFunc = function () { return message; };
 
             jQuery.validator.addMethod("check_acronym", function(val) {
-                var res;
-                $.ajax({
-                    async:false,
-                    url: "/learning_units/check?acronym=" + val + "&year_id=" + $('#academic_year').val()
-                }).then(function (data) {
-                    var newMessage = [];
-                    if (data['valid']){
-                        res = true;
-                        $(".error").css("color","black");
-                        if(data['existed_acronym'] && !data['existing_acronym']){
-                            $(".error").css("color","orange");
-                            newMessage.push("{% trans 'existed_acronym' %}");
+                if(val.length>6){
+                    var res;
+                    $.ajax({
+                        async:false,
+                        url: "/learning_units/check?acronym=" + val + "&year_id=" + $('#academic_year').val()
+                    }).then(function (data) {
+                        var newMessage = [];
+                        if (data['valid']){
+                            res = true;
+                            $(".error").css("color","black");
+                            if(data['existed_acronym'] && !data['existing_acronym']){
+                                $(".error").css("color","orange");
+                                newMessage.push("{% trans 'existed_acronym' %}"+data['last_using']);
+                            }
+                        }else{
+                            res = false;
+                            $(".error").css("color","red");
+                            if(data['existing_acronym']){
+                                newMessage.push("{% trans 'existing_acronym' %}");
+                            }
                         }
-                    }else{
-                        res = false;
-                        $(".error").css("color","red");
-                        if(data['existing_acronym']){
-                            newMessage.push("{% trans 'existing_acronym' %}");
-                        }
-                    }
-                    message = newMessage.join("   ");
-                });
+                        message = newMessage.join("   ");
+                    });
+                }
             }, messageFunc);
 
 

@@ -1776,7 +1776,7 @@ msgid "create_learning_unit"
 msgstr "Création d'une unité d'enseignement"
 
 msgid "existed_acronym"
-msgstr "Sigle a déjà existé"
+msgstr "Sigle a déjà existé pour "
 
 msgid "existing_acronym"
 msgstr "Sigle déja existant"
@@ -1807,8 +1807,8 @@ msgstr "Créer des fixtures anonymisées"
 msgid "desc_lnk_fixtures_build"
 msgstr "Crée un fichier json avec des fixtures anonymisées"
 
-msgid "incorrect_end_year"
-msgstr "L'année de départ doit-être inférieur à l'année de fin"
+msgid "end_date_gt_begin_date"
+msgstr "La date de fin doit etre égale ou supérieur à la date de départ"
 
 msgid "session_title"
 msgstr "Session"

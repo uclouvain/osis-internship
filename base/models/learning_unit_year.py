@@ -57,7 +57,7 @@ class LearningUnitYear(SerializableModel):
     in_charge = models.BooleanField(default=False)
     structure = models.ForeignKey('Structure', blank=True, null=True)
     internship_subtype = models.CharField(max_length=50, blank=True, null=True,
-                               choices=internship_subtypes.INTERNSHIP_SUBTYPES)
+                                          choices=internship_subtypes.INTERNSHIP_SUBTYPES)
     status = models.BooleanField(default=False)
     session = models.CharField(max_length=50, blank=True, null=True,
                                choices=learning_unit_year_session.LEARNING_UNIT_YEAR_SESSION)
@@ -140,4 +140,4 @@ def find_gte_year_acronym(academic_yr, acronym):
 
 def find_lt_year_acronym(academic_yr, acronym):
     return LearningUnitYear.objects.filter(academic_year__year__lt=academic_yr.year,
-                                           acronym__iexact=acronym)
+                                           acronym__iexact=acronym).order_by('academic_year')

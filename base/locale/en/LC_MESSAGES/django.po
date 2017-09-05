@@ -1772,7 +1772,7 @@ msgid "create_learning_unit"
 msgstr "Create Learning Unit"
 
 msgid "existed_acronym"
-msgstr "Existed acronym"
+msgstr "Existed acronym for "
 
 msgid "existing_acronym"
 msgstr "Existing acronym"
@@ -1803,8 +1803,8 @@ msgstr "Build anonymized fixtures"
 msgid "desc_lnk_fixtures_build"
 msgstr "Build a json file with anonymized fixtures"
 
-msgid "incorrect_end_year"
-msgstr "Start date should be before the end date"
+msgid "end_date_gt_begin_date"
+msgstr "The end date must be equals or upper than the start date"
 
 msgid "session_title"
 msgstr "Session"
