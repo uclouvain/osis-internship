@@ -580,13 +580,12 @@ def learning_unit_create(request, academic_year):
 
 
 def learning_unit_year_add(request):
-    if request.POST:
+    if request.POST["action"] == "add":
         form = CreateLearningUnitYearForm(request.POST)
         if form.is_valid():
             data = form.cleaned_data
             academic_year = data['academic_year']
             year = academic_year.year
-            current_academic_year = current_academic_years()
             status = check_status(data)
             requirement_entity_version = mdl.entity_version.find_by_id(data['requirement_entity'])
             allocation_entity_version = mdl.entity_version.find_by_id(data['allocation_entity'])

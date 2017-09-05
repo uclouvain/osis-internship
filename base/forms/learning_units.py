@@ -149,11 +149,12 @@ def _get_latest_entity_version(entity_container_year):
 
 
 def create_main_campuses_list():
-    return [(elem.id, elem.name) for elem in find_main_campuses()]
+    return [(None, "---------"), ]+[(elem.id, elem.name) for elem in find_main_campuses()]
 
 
 def create_main_entities_version_list():
-    return [(entity_version.id, entity_version.acronym) for entity_version in find_main_entities_version()]
+    return [(None, "---------"), ]+[(entity_version.id, entity_version.acronym) for entity_version
+                                    in find_main_entities_version()]
 
 
 def create_languages_list():
@@ -168,7 +169,6 @@ class CreateLearningUnitYearForm(forms.ModelForm):
                                    'id': 'learning_container_year_type'},
                             choices=(("---------", "---------"),) + LEARNING_CONTAINER_YEAR_TYPES))
     end_year = forms.CharField(widget=forms.DateInput(attrs={'class': 'form-control',
-                                                             'required': True,
                                                              'id': 'end_year'}))
     faculty_remark = forms.CharField(required=False, widget=forms.Textarea(attrs={'class': 'form-control',
                                                                                   'id': 'faculty_remark'}))
@@ -201,10 +201,12 @@ class CreateLearningUnitYearForm(forms.ModelForm):
                                                      'required': True}),
                    'academic_year': forms.Select(attrs={'class': 'form-control',
                                                         'id': 'academic_year',
-                                                        'required': True}),
+                                                        'required': True,
+                                                        'ordering': 'year'}),
                    'status': forms.CheckboxInput(attrs={'id': 'status'}),
                    'internship_subtype': forms.Select(attrs={'class': 'form-control',
-                                                             'id': 'internship_subtype'}),
+                                                             'id': 'internship_subtype',
+                                                             'disabled': True}),
                    'credits': forms.TextInput(attrs={'class': 'form-control',
                                                      'id': 'credits',
                                                      'required': True}),
@@ -213,7 +215,7 @@ class CreateLearningUnitYearForm(forms.ModelForm):
                                                    'required': True}),
                    'title_english': forms.TextInput(attrs={'class': 'form-control',
                                                            'id': 'title_english',
-                                                           'required': True}),
+                                                           'required': False}),
                    'session': forms.Select(attrs={'class': 'form-control',
                                                   'id': 'session',
                                                   'required': True}),

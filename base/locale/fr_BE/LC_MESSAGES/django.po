@@ -1822,5 +1822,8 @@ msgstr "Faculté"
 msgid "other_remark"
 msgstr "Autre"
 
+msgid "new_learning_unit"
+msgstr "Nouvelle unité d'enseignement"
+
 
 

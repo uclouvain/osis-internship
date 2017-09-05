@@ -34,7 +34,7 @@
 
 {% block content %}
 <div class="page-header">
-    <h2>{% trans 'create_learning_unit' %}</h2>
+    <h2>{% trans 'new_learning_unit' %}</h2>
 </div>
 <div class="panel panel-default">
     <div class="panel-body">
@@ -46,6 +46,19 @@
                 </div>
                 <div class="panel-body">
                     <div class="row">
+                        <div class="col-md-2">
+                            <label {% if form.errors.acronym %}
+                                        style="color:red;"
+                                   {% endif %}>
+                                {% trans 'acronym' %}
+                                &nbsp;
+                                <abbr title="{% trans 'acronym_rules' %}">
+                                    <span class="glyphicon glyphicon-question-sign pull-right"
+                                          style="font-size: 14pt;" aria-hidden="true"></span>
+                                </abbr>
+                            </label>
+                            {{ form.acronym }}
+                        </div>
                         <div class="col-md-3">
                             <label {% if form.errors.learning_container_year_type %}
                                         style="color:red;"
@@ -54,10 +67,25 @@
                             </label>
                             {{ form.learning_container_year_type }}
                         </div>
+                        <div class="col-md-3" id="is_not_internship" style="display: block;">
+                            <label>{% trans 'internship_subtype' %}</label>
+                            {{ form.internship_subtype }}
+                        </div>
                         <div class="col-md-3">
                             <label>{% trans 'campus' %}</label>
                             {{ form.campus }}
                         </div>
+                        <div class="col-md-1">
+                            <label {% if form.errors.credits %}
+                                        style="color:red;"
+                                   {% endif %}>
+                                {% trans 'credits' %}
+                            </label>
+                            {{ form.credits }}{{ form.errors.credits }}
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
                         <div class="col-md-2">
                             <label>{% trans 'academic_year' %}</label>
                             {{ form.academic_year }}
@@ -79,23 +107,9 @@
                             <label>{% trans 'periodicity' %}</label>
                             {{ form.periodicity }}
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-3" id="is_not_internship" style="display: none;">
-                            <label>{% trans 'internship_subtype' %}</label>
-                            {{ form.internship_subtype }}
-                        </div>
                         <div class="col-md-3">
                             <label>{% trans 'language' %}</label>
                             {{ form.language }}
-                        </div>
-                        <div class="col-md-1">
-                            <label {% if form.errors.credits %}
-                                        style="color:red;"
-                                   {% endif %}>
-                                {% trans 'credits' %}
-                            </label>
-                            {{ form.credits }}
                         </div>
                         <div class="col-md-2">
                             <label>{% trans 'session_title' %}</label>
@@ -108,27 +122,11 @@
                     </div>
                 </div>
             </div>
-            <div class="panel panel-default" id="for_titles" style="display: none;">
+            <div class="panel panel-default">
                 <div class="panel-heading">
                     <label>{% trans 'titles' %}</label>
                 </div>
                 <div class="panel-body">
-                    <div class="row">
-                        <div class="col-md-3">
-                            <label {% if form.errors.acronym %}
-                                        style="color:red;"
-                                   {% endif %}>
-                                {% trans 'acronym' %}
-                                &nbsp;
-                                <abbr title="{% trans 'acronym_rules' %}">
-                                    <span class="glyphicon glyphicon-question-sign pull-right"
-                                          style="font-size: 14pt;" aria-hidden="true"></span>
-                                </abbr>
-                            </label>
-                            {{ form.acronym }}
-                        </div>
-                    </div>
-                    <br>
                     <div>
                         <label {% if form.errors.title %}
                                         style="color:red;"
@@ -148,7 +146,7 @@
                     </div>
                 </div>
             </div>
-            <div class="panel panel-default" id="for_structure" style="display: none;">
+            <div class="panel panel-default">
                 <div class="panel-heading">
                     <label>{% trans 'structure_title' %}</label>
                 </div>
@@ -166,19 +164,20 @@
                     <br>
                 </div>
             </div>
-            <div class="panel panel-default" id="for_remark" style="display: none;">
+            <div class="panel panel-default">
                 <div class="panel-heading">
                     <label>{% trans 'remarks_title' %}</label>
                 </div>
                 <div class="panel-body">
-                    <div>
-                        <label>{% trans 'faculty_remark' %}</label>
-                        {{ form.faculty_remark }}{{ form.errors.faculty_remark }}
-                    </div>
-                    <br>
-                    <div>
-                        <label>{% trans 'other_remark' %}</label>
-                        {{ form.other_remark }}{{ form.errors.other_remark }}
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>{% trans 'faculty_remark' %}</label>
+                            {{ form.faculty_remark }}{{ form.errors.faculty_remark }}
+                        </div>
+                        <div class="col-md-6">
+                            <label>{% trans 'other_remark' %}</label>
+                            {{ form.other_remark }}{{ form.errors.other_remark }}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -197,37 +196,21 @@
     const partim = "PARTIM";
     const internship = "INTERNSHIP";
     $( document ).ready(function() {
-        if('{{form.learning_container_year_type.value}}' != partim && '{{form.learning_container_year_type.value}}' != blank){
-            document.getElementById('for_titles').style.display = "block";
-            document.getElementById('for_structure').style.display = "block";
-            document.getElementById('for_remark').style.display = "block";
-        }
-
         if('{{form.learning_container_year_type.value}}' == internship)
-            document.getElementById('is_not_internship').style.display = "block";
+            document.getElementById('is_not_internship').setAttrib('disabled', TRUE);
         else
-            document.getElementById('is_not_internship').style.display = "none";
+            document.getElementById('is_not_internship').setAttrib('disabled', FALSE);
     });
 
     function showDiv(elem){
-       if(elem != partim || elem != blank){
-            document.getElementById('for_titles').style.display = "block";
-            document.getElementById('for_structure').style.display = "block";
-            document.getElementById('for_remark').style.display = "block";
-       }else{
-            document.getElementById('for_titles').style.display = "none";
-            document.getElementById('for_structure').style.display = "none";
-            document.getElementById('for_remark').style.display = "none";
-       }
-
        if(elem == internship)
-            document.getElementById('is_not_internship').style.display = "block";
+            document.getElementById('is_not_internship').setAttrib('disabled', TRUE);
        else
-            document.getElementById('is_not_internship').style.display = "none";
+            document.getElementById('is_not_internship').setAttrib('disabled', FALSE);
     }
 
     $(document).ready(function() {
-        $('#acronym').on("click",function() {
+        $('#acronym').blur("click",function() {
             var message = "";
             var messageFunc = function () { return message; };
 

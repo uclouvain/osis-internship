@@ -69,5 +69,5 @@ def serialize_list(list_languages):
 
 
 def find_all_languages():
-    languages = Language.objects.all()
+    languages = Language.objects.all().order_by('name')
     return languages

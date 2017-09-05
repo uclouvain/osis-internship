@@ -1817,3 +1817,6 @@ msgstr "Faculty"
 
 msgid "other_remark"
 msgstr "Other"
+
+msgid "new_learning_unit"
+msgstr "New learning unit"
