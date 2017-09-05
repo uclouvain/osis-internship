@@ -67,12 +67,12 @@ def make_fixtures(request):
     list_objects += build_organizations()
 
     list_objects += mdl_base.campus.Campus.objects.all()
-
-    list_objects.extend(mdl_base.education_group.EducationGroup.objects.all())
+    education_groups = mdl_base.education_group.EducationGroup.objects.filter(academic_year__in=academic_years)[:MAX_ROW_NUMBER]
+    list_objects.extend(education_groups)
 
     list_objects.extend(mdl_base.offer_type.OfferType.objects.all())
 
-    education_group_years = mdl_base.education_group_year.EducationGroupYear.objects.all()
+    education_group_years = mdl_base.education_group_year.EducationGroupYear.objects.filter(education_group__in=education_groups)
     list_objects.extend(education_group_years)
 
     learning_container_years_all = get_learning_container_years(academic_years)
@@ -122,7 +122,7 @@ def make_fixtures(request):
     students = mdl_base.student.Student.objects.filter(person__in=persons)
     list_objects.extend(students)
 
-    offer_years = mdl_base.offer_year.OfferYear.objects.filter(academic_year__in=academic_years)
+    offer_years = mdl_base.offer_year.OfferYear.objects.filter(academic_year__in=academic_years)[:MAX_ROW_NUMBER]
 
     list_objects += build_offers(offer_years)
     grade_types = mdl_reference.grade_type.GradeType.objects.all()
