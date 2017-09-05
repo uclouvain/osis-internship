@@ -35,7 +35,6 @@ from base.tests.factories.entity import EntityFactory
 from base.tests.factories.entity_version import EntityVersionFactory
 from base.tests.factories.offer_year import OfferYearFactory
 from base.tests.factories.offer_year_entity import OfferYearEntityFactory
-from reference.tests.factories.country import CountryFactory
 
 
 class ScoreSheetAddressTest(TestCase):
@@ -48,7 +47,7 @@ class ScoreSheetAddressTest(TestCase):
         self.offer_year = OfferYearFactory(academic_year=self.academic_year)
         self.entity_address_admin = self._create_data_for_entity_address(score_sheet_address_choices.ENTITY_ADMINISTRATION)
         self.entity_address_manag = self._create_data_for_entity_address(score_sheet_address_choices.ENTITY_MANAGEMENT)
-        self.address_fields = ['location', 'postal_code', 'city', 'country', 'phone', 'fax', 'email']
+        self.address_fields = ['location', 'postal_code', 'city', 'country', 'phone', 'fax']
 
     def _create_data_for_entity_address(self, entity_type):
         past_date = datetime.datetime(year=2015, month=1, day=1)
@@ -64,23 +63,25 @@ class ScoreSheetAddressTest(TestCase):
     def test_case_address_from_entity_administration(self):
         ScoreSheetAddressFactory(offer_year=self.offer_year,
                                  entity_address_choice=score_sheet_address_choices.ENTITY_ADMINISTRATION)
-        entity_id, address = score_encoding_sheet.get_score_sheet_address(self.offer_year)
-        for f in self.address_fields:
-            self.assertEqual(getattr(self.entity_address_admin, f), address.get(f))
+        self._assert_correct_address(self.entity_address_admin)
 
     def test_case_address_from_entity_management(self):
         ScoreSheetAddressFactory(offer_year=self.offer_year,
                                  entity_address_choice=score_sheet_address_choices.ENTITY_MANAGEMENT)
-        entity_id, address = score_encoding_sheet.get_score_sheet_address(self.offer_year)
-        for f in self.address_fields:
-            self.assertEqual(getattr(self.entity_address_manag, f), address.get(f))
+        self._assert_correct_address(self.entity_address_manag)
 
     def test_case_customized_address(self):
-        add = ScoreSheetAddressFactory(offer_year=self.offer_year,
-                                       entity_address_choice=None)
+        address = ScoreSheetAddressFactory(offer_year=self.offer_year,
+                                           entity_address_choice=None)
+        self._assert_correct_address(address)
+
+    def _assert_correct_address(self, correct_address):
         entity_id, address = score_encoding_sheet.get_score_sheet_address(self.offer_year)
         for f in self.address_fields:
-            self.assertEqual(getattr(add, f), address.get(f))
+            self.assertEqual(getattr(correct_address, f), address.get(f))
+        keys = address.keys()
+        self.assertIn('email', keys)
+        self.assertIn('recipient', keys)
 
     def test_get_address_as_dict(self):
         address1 = ScoreSheetAddressFactory(offer_year=self.offer_year)

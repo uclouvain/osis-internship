@@ -40,3 +40,5 @@ class EntityFactory(factory.DjangoModelFactory):
     city = factory.Faker('city')
     country = factory.SubFactory(CountryFactory)
     website = factory.Faker('url')
+    phone = factory.Faker('phone_number')
+    fax = factory.Faker('phone_number')

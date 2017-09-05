@@ -96,7 +96,7 @@ class EntityViewTestCase(APITestCase):
         mock_find_by_id.return_value = entity_version
         request = mock.Mock(method='GET')
         response = institution.get_entity_address(request, entity_version.id)
-        address_data = ['location', 'postal_code', 'city', 'country_id', 'phone', 'fax', 'email']
+        address_data = ['location', 'postal_code', 'city', 'country_id', 'phone', 'fax']
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf-8'))
         self.assertIsNotNone(data.get('recipient'))
