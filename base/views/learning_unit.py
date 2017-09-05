@@ -714,6 +714,10 @@ def create_learning_unit(data, learning_container, year):
 
 
 def create_learning_unit_year(academic_year, form, learning_container_year, learning_unit, status):
+    if form.data.get('internship_subtype'):
+        internship_subtype = form.data['internship_subtype']
+    else:
+        internship_subtype = None
     new_learning_unit_year = LearningUnitYear(academic_year=academic_year, learning_unit=learning_unit,
                                               learning_container_year=learning_container_year,
                                               acronym=form.data['acronym'],
@@ -721,7 +725,7 @@ def create_learning_unit_year(academic_year, form, learning_container_year, lear
                                               title_english=form.data['title_english'],
                                               subtype=form.data['subtype'],
                                               credits=form.data['credits'],
-                                              internship_subtype=form.data['internship_subtype'],
+                                              internship_subtype=internship_subtype,
                                               status=status,
                                               session=form.data['session'])
     new_learning_unit_year.save()
@@ -739,7 +743,7 @@ def check_acronym(request):
     incorrect_acronym = False
     learning_unit_years = mdl.learning_unit_year.find_gte_year_acronym(academic_yr, acronym)
     old_learning_unit_years = mdl.learning_unit_year.find_lt_year_acronym(academic_yr, acronym)
-
+    last_using = old_learning_unit_years.last()
     if old_learning_unit_years:
         existed_acronym = True
         valid = True
@@ -749,4 +753,5 @@ def check_acronym(request):
     return JsonResponse({'valid': valid,
                          'existing_acronym': existing_acronym,
                          'incorrect_acronym': incorrect_acronym,
-                         'existed_acronym': existed_acronym}, safe=False)
+                         'existed_acronym': existed_acronym,
+                         'last_using': str(last_using.academic_year)}, safe=False)

@@ -32,11 +32,11 @@ SESSION_1X3 = "13"
 SESSION_12X = "12"
 SESSION_123 = "123"
 
-LEARNING_UNIT_YEAR_SESSION = ((SESSION_P23, SESSION_P23),
-                              (SESSION_XX3, SESSION_XX3),
+LEARNING_UNIT_YEAR_SESSION = ((SESSION_1XX, SESSION_1XX),
                               (SESSION_X2X, SESSION_X2X),
-                              (SESSION_X23, SESSION_X23),
-                              (SESSION_1XX, SESSION_1XX),
-                              (SESSION_1X3, SESSION_1X3),
+                              (SESSION_XX3, SESSION_XX3),
                               (SESSION_12X, SESSION_12X),
-                              (SESSION_123, SESSION_123))
+                              (SESSION_1X3, SESSION_1X3),
+                              (SESSION_X23, SESSION_X23),
+                              (SESSION_123, SESSION_123),
+                              (SESSION_P23, SESSION_P23))
