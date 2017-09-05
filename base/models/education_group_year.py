@@ -80,6 +80,7 @@ class EducationGroupYear(models.Model):
     inter_university_french_community = models.BooleanField(default=False)
     inter_university_belgium = models.BooleanField(default=False)
     inter_university_abroad = models.BooleanField(default=False)
+    primary_language = models.ForeignKey('reference.Language', blank=True, null=True)
 
 
     def __str__(self):
