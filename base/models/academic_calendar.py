@@ -93,10 +93,6 @@ class AcademicCalendar(SerializableModel):
         )
 
 
-def find_highlight_academic_calendar():
-    return get_highlight_academic_calendar().first()
-
-
 def get_highlight_academic_calendar():
     return AcademicCalendar.objects.filter(start_date__lte=timezone.now(), end_date__gte=timezone.now(),
                                            highlight_title__isnull=False, highlight_description__isnull=False,

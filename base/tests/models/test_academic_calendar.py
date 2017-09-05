@@ -73,18 +73,6 @@ class AcademicCalendarTest(TestCase):
         self.assertIsNotNone(db_academic_calendar)
         self.assertEqual(db_academic_calendar, tmp_academic_calendar)
 
-    def test_find_highlight_academic_calendar(self):
-        an_academic_year = AcademicYearFactory(year=timezone.now().year,
-                                               start_date=timezone.now() - datetime.timedelta(days=10),
-                                               end_date=timezone.now() + datetime.timedelta(days=10))
-
-        tmp_academic_calendar = AcademicCalendarFactory.build(academic_year=an_academic_year,
-                                                              title="A calendar event")
-        tmp_academic_calendar.save(functions=[])
-        db_academic_calendar = academic_calendar.find_highlight_academic_calendar()
-        self.assertIsNotNone(db_academic_calendar)
-        self.assertEqual(db_academic_calendar, tmp_academic_calendar)
-
     def test_get_highlight_academic_calendar(self):
         an_academic_year = AcademicYearFactory(year=timezone.now().year,
                                                start_date=timezone.now() - datetime.timedelta(days=10),
@@ -97,6 +85,11 @@ class AcademicCalendarTest(TestCase):
         tmp_academic_calendar_2 = AcademicCalendarFactory.build(academic_year=an_academic_year,
                                                                 title="Second calendar event")
         tmp_academic_calendar_2.save(functions=[])
+
+        tmp_academic_calendar_3 = AcademicCalendarFactory.build(academic_year=an_academic_year,
+                                                                title="A third event which is null",
+                                                                highlight_description=None)
+        tmp_academic_calendar_3.save(functions=[])
 
         db_academic_calendars = list(academic_calendar.get_highlight_academic_calendar())
         self.assertIsNotNone(db_academic_calendars)
