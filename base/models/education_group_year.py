@@ -77,6 +77,10 @@ class EducationGroupYear(models.Model):
     diploma_printing_orientation = models.CharField(max_length=30, choices=diploma_printing_orientation.DIPLOMA_FOCUS, blank=True, null=True)
     diploma_printing_title = models.CharField(max_length=140, blank=True, null=True)
     inter_organization_information = models.CharField(max_length=320, blank=True, null=True)
+    inter_university_french_community = models.BooleanField(default=False)
+    inter_university_belgium = models.BooleanField(default=False)
+    inter_university_abroad = models.BooleanField(default=False)
+
 
     def __str__(self):
         return u"%s - %s" % (self.academic_year, self.acronym)
