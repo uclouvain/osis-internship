@@ -1808,7 +1808,7 @@ msgid "desc_lnk_fixtures_build"
 msgstr "Crée un fichier json avec des fixtures anonymisées"
 
 msgid "end_date_gt_begin_date"
-msgstr "La date de fin doit etre égale ou supérieur à la date de départ"
+msgstr "L'année de fin doit etre égale ou supérieur à l'année de départ"
 
 msgid "session_title"
 msgstr "Session"
