@@ -43,7 +43,7 @@
         <div class="carousel-inner" role="listbox">
             {% for highlight in highlights %}
                 <div class="item {% if forloop.counter0 == 0 %}active{% endif %}">
-                    <div class="jumbotron">
+                    <div class="jumbotron" style="margin-bottom: 0px; text-align: center;">
                         <h1>{{ highlight.highlight_title }}</h1>
                         <p>{{ highlight.highlight_description }}</p>
                         <p><a class="btn btn-primary btn-lg" href="/{{ highlight.highlight_shortcut }}"
@@ -52,7 +52,16 @@
                 </div>
             {% endfor %}
         </div>
+        <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+            <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+        </a>
+        <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+            <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+        </a>
     </div>
+    <br>
 {% endif %}
 <div class="panel panel-default">
     <div class="panel-body">
