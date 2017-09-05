@@ -1,6 +1,6 @@
 ##############################################################################
 #
-#    OSIS stands for Open Student Information System. It's an application
+# OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
@@ -23,24 +23,16 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.test import TestCase
-from base.utils import fixtures_factory
-from base.tests.factories.structure import StructureFactory
-from base.tests.factories.person import PersonFactory
-from reference.tests.factories.country import CountryFactory
-from base.tests.factories.student import StudentFactory
+import string
 
-class TestFixturesFactory(TestCase):
+import factory.fuzzy
 
-    def test_get_students_persons(self):
-        a_person = PersonFactory()
-        persons = [a_person]
-        student = StudentFactory(person=a_person)
-        student.save()
-        self.assertCountEqual(fixtures_factory.get_students_persons([a_person]), [])
 
-    def test_get_students_no_persons(self):
-        a_person = PersonFactory()
-        student = StudentFactory(person=a_person)
-        student.save()
-        self.assertEqual(len(fixtures_factory.get_students_persons([])), 0)
+class LanguageFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = 'reference.Language'
+
+    external_id = factory.fuzzy.FuzzyText(length=10, chars=string.digits)
+    code = factory.Faker('random_element', elements=('ABC', 'DEF', 'GHI'))
+    name = factory.Faker('country')
+    recognized = factory.Faker('boolean', chance_of_getting_true=50)

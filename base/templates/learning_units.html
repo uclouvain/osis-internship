@@ -34,6 +34,15 @@
 {% block content %}
 <div class="page-header">
     <h2>{% trans 'learning_units' %}</h2>
+    {% if request.GET.academic_year_id %}
+        <a href="{% url 'learning_unit_create' academic_year=request.GET.academic_year_id %}"
+           id="lnk_learning_unit_create" class="btn btn-default" role="button" title="{% trans 'learning_unit_create' %}">
+            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
+    {% else %}
+        <a href="{% url 'learning_unit_create' academic_year=current_academic_year.id %}"
+           id="lnk_learning_unit_create" class="btn btn-default" role="button" title="{% trans 'learning_unit_create' %}">
+            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
+    {% endif %}
 </div>
 <div class="panel panel-default">
     <form style="border-bottom: 1px solid #ddd;" method="get" action="{% url 'learning_units'%}" id="form_learning_units" name="search">

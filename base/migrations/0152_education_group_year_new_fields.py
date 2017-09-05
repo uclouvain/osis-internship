@@ -9,7 +9,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('base', '0149_auto_20170830_0958'),
+        ('base', '0151_remove_learningunit_description'),
     ]
 
     operations = [
@@ -150,5 +150,25 @@ class Migration(migrations.Migration):
             model_name='offeryeardomain',
             name='education_group_year',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='base.EducationGroupYear'),
+        ),
+        migrations.AddField(
+            model_name='educationgroupyear',
+            name='inter_university_abroad',
+            field=models.BooleanField(default=False),
+        ),
+        migrations.AddField(
+            model_name='educationgroupyear',
+            name='inter_university_belgium',
+            field=models.BooleanField(default=False),
+        ),
+        migrations.AddField(
+            model_name='educationgroupyear',
+            name='inter_university_french_community',
+            field=models.BooleanField(default=False),
+        ),
+        migrations.AddField(
+            model_name='educationgroupyear',
+            name='primary_language',
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='reference.Language'),
         ),
     ]

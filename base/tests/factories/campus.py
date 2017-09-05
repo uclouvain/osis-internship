@@ -1,6 +1,6 @@
 ##############################################################################
 #
-#    OSIS stands for Open Student Information System. It's an application
+# OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
@@ -23,24 +23,21 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.test import TestCase
-from base.utils import fixtures_factory
-from base.tests.factories.structure import StructureFactory
-from base.tests.factories.person import PersonFactory
-from reference.tests.factories.country import CountryFactory
-from base.tests.factories.student import StudentFactory
+import datetime
+import string
 
-class TestFixturesFactory(TestCase):
+import factory.fuzzy
 
-    def test_get_students_persons(self):
-        a_person = PersonFactory()
-        persons = [a_person]
-        student = StudentFactory(person=a_person)
-        student.save()
-        self.assertCountEqual(fixtures_factory.get_students_persons([a_person]), [])
+from base.tests.factories.organization import OrganizationFactory
+from osis_common.utils.datetime import get_tzinfo
 
-    def test_get_students_no_persons(self):
-        a_person = PersonFactory()
-        student = StudentFactory(person=a_person)
-        student.save()
-        self.assertEqual(len(fixtures_factory.get_students_persons([])), 0)
+
+class CampusFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = 'base.Campus'
+
+    external_id = factory.fuzzy.FuzzyText(length=10, chars=string.digits)
+    changed = factory.fuzzy.FuzzyDateTime(datetime.datetime(2016, 1, 1, tzinfo=get_tzinfo()),
+                                          datetime.datetime(2017, 3, 1, tzinfo=get_tzinfo()))
+    name = factory.Faker('first_name')
+    organization = factory.SubFactory(OrganizationFactory)
