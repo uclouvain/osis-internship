@@ -66,7 +66,7 @@ def save_score_sheet_address(request, offer_year_id):
     entity_version_id_selected = request.POST.get('related_entity')
     context = _get_common_context(request, offer_year_id)
     if entity_version_id_selected:
-        score_encoding_sheet.save_address_from_entity(context.get('offer_year'), entity_version_id_selected)
+        score_encoding_sheet.save_address_from_entity(context.get('offer_year'), entity_version_id_selected, request.POST.get('email'))
         messages.add_message(request, messages.SUCCESS, _('score_sheet_address_saved'))
         return HttpResponseRedirect(reverse("offer_score_encoding_tab", args=[offer_year_id]))
     else:

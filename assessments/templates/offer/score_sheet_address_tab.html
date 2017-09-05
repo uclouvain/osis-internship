@@ -45,17 +45,18 @@
                 <div role="tabpanel" class="tab-pane active" id="identification">
                     <form method="POST" action="{% url 'save_score_sheet_address' offer_year.id %}" id="form_score_sheet_address" novalidate>
                         {% csrf_token %}
-
                         <br>
                         <p>{% trans 'message_address_papersheet' %}</p>
-                        <div class="alert alert-dismissible alert-warning">
+                        <div class="alert alert-dismissible alert-warning text-justify">
                             <button type="button" class="close" data-dismiss="alert">&times;</button>
                             <p>{% trans 'info_address_changed_for_papersheet' as info_address_changed_for_papersheet %}
                                 {{ info_address_changed_for_papersheet | format:offer_year.acronym}}.
+                                <br>
+                                <b>{% trans 'optional_email_field_note' %}</b>
                             </p>
                         </div>
 
-                        <label for="slt_related_entities">{% trans 'reuse_address_entity' %}...</label>
+                        <label for="slt_related_entities">{% trans 'select_an_address' %}...</label>
                         <select class="form-control" id="slt_related_entities" name="related_entity">
                             <option value="" selected>{% trans 'customized' %}</option>
                             {% for version in entity_versions %}
@@ -143,8 +144,8 @@
             $('#id_city'),
             $('#id_country'),
             $('#id_phone'),
-            $('#id_fax'),
-            $('#id_email')];
+            $('#id_fax')
+        ];
 
 
         function disableFormInputsIfReuseAddress(){
@@ -208,7 +209,6 @@
             $('#id_country').val(data.address.country_id);
             $('#id_phone').val(data.address.phone);
             $('#id_fax').val(data.address.fax);
-            $('#id_email').val(data.address.email);
         }
 
 

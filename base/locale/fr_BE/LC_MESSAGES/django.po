@@ -644,7 +644,7 @@ msgid "message"
 msgstr "Message"
 
 msgid "message_address_papersheet"
-msgstr "Réutilisez l'adresse d'une entité liée au programme ou informez l'adresse d'affichage pour la feuille des notes."
+msgstr "Réutilisez l'adresse d'une entité liée au programme ou informez l'adresse d'affichage pour la feuille de notes."
 
 msgid "message_not_resent_no_email"
 msgstr "Le message ne peut être réenvoyé , l'utilisateur n'a pas d'adresse mail."

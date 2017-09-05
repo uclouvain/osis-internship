@@ -29,7 +29,7 @@ from django.db import models
 
 
 class EntityAdmin(admin.ModelAdmin):
-    list_display = ('id', 'external_id', 'organization')
+    list_display = ('id', 'external_id', 'organization', 'location', 'postal_code', 'phone')
     search_fields = ['external_id', 'entityversion__acronym', 'organization__acronym', 'organization__name']
     readonly_fields = ('organization', 'external_id')
 
@@ -45,7 +45,6 @@ class Entity(models.Model):
     country = models.ForeignKey('reference.Country', blank=True, null=True)
     phone = models.CharField(max_length=30, blank=True, null=True)
     fax = models.CharField(max_length=255, blank=True, null=True)
-    email = models.EmailField(max_length=255, blank=True, null=True)
     website = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:

@@ -44,8 +44,10 @@ def get_score_sheet_address(off_year):
         entity = entity_model.get_by_internal_id(entity_id)
         if not entity: # Case no address found for this entity
             entity = entity_model.Entity()
+        email = address.email
         address = entity
         address.recipient = '{} - {}'.format(ent_version.acronym, ent_version.title)
+        address.email = email
     return entity_id, _get_address_as_dict(address)
 
 
@@ -74,14 +76,16 @@ def get_map_entity_with_offer_year_entity_type(off_year):
     return {value: key for key, value in _get_map_offer_year_entity_type_with_entity(off_year).items()}
 
 
-def save_address_from_entity(off_year, entity_version_id_selected):
+def save_address_from_entity(off_year, entity_version_id_selected, email):
     entity_id = entity_version.find_by_id(entity_version_id_selected).entity_id
     entity_id_mapped_with_type = get_map_entity_with_offer_year_entity_type(off_year)
     entity_address_choice = entity_id_mapped_with_type.get(entity_id)
+    new_address = score_sheet_address.ScoreSheetAddress(offer_year=off_year,
+                                                        entity_address_choice=entity_address_choice,
+                                                        email=email)
     address = score_sheet_address.get_from_offer_year(off_year)
-    new_address = score_sheet_address.ScoreSheetAddress(id=address.id,
-                                                        offer_year=off_year,
-                                                        entity_address_choice=entity_address_choice)
+    if address:
+        new_address.id = address.id
     new_address.save()
 
 

@@ -102,5 +102,5 @@ def get_entity_address(request, entity_version_id):
                                'country_id': entity.country_id,
                                'phone': entity.phone,
                                'fax': entity.fax,
-                               'email': entity.email}
+                               }
     return JsonResponse(response)
