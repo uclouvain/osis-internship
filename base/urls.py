@@ -61,6 +61,9 @@ urlpatterns = [
 
     url(r'^learning_units/', include([
         url(r'^$', learning_unit.learning_units, name='learning_units'),
+        url(r'^learning_unit_create/(?P<academic_year>[0-9]+)$', learning_unit.learning_unit_create, name="learning_unit_create"),
+        url(r'^learning_unit_year_add/$', learning_unit.learning_unit_year_add,
+            name='learning_unit_year_add'),
         url(r'^(?P<learning_unit_year_id>[0-9]+)/', include([
             url(r'^$', learning_unit.learning_unit_identification, name='learning_unit'),
             url(r'^formations/$', learning_unit.learning_unit_formations, name="learning_unit_formations"),
@@ -75,7 +78,8 @@ urlpatterns = [
             url(r'^component/edit/$', learning_unit.learning_unit_component_edit, name="learning_unit_component_edit"),
             url(r'^class/edit/$', learning_unit.learning_class_year_edit, name="learning_class_year_edit"),
             url(r'^volumes/$', learning_unit.learning_unit_volumes_management, name="learning_unit_volumes_management"),
-        ]))
+        ])),
+        url(r'^check/$', learning_unit.check_acronym),
     ])),
 
     url(r'^my_osis/', include([

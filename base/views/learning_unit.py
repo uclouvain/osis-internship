@@ -24,33 +24,48 @@
 #
 ##############################################################################
 import datetime
+import re
 from collections import OrderedDict
-
 from django.contrib import messages
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required, permission_required
 from django.http import HttpResponseRedirect
+from django.shortcuts import redirect
 from django.utils.translation import ugettext_lazy as _
 from django.views.decorators.http import require_http_methods
-
 from base import models as mdl
 from base.business import learning_unit_year_with_context
 from attribution import models as mdl_attr
 from base.models import entity_container_year
+from base.models.academic_year import current_academic_years
+from base.models.entity_component_year import EntityComponentYear
+from base.models.entity_container_year import EntityContainerYear
 from base.models.enums import entity_container_year_link_type
 from base.models.enums import learning_container_year_types
+from base.models.enums.entity_container_year_link_type import REQUIREMENT_ENTITY, ALLOCATION_ENTITY
+from base.models.enums.learning_component_year_type import PRACTICAL_EXERCISES, LECTURING
+from base.models.enums.learning_container_year_types import COURSE
+from base.models.enums.learning_unit_year_subtypes import FULL
+from base.models.learning_component_year import LearningComponentYear
+from base.models.learning_container import LearningContainer
+from base.models.learning_container_year import LearningContainerYear
+from base.models.learning_unit import LearningUnit
+from base.models.learning_unit_component import LearningUnitComponent
+from base.models.learning_unit_year import LearningUnitYear
 from cms import models as mdl_cms
 from cms.enums import entity_name
-from base.forms.learning_units import LearningUnitYearForm
+from base.forms.learning_units import LearningUnitYearForm, CreateLearningUnitYearForm
 from base.forms.learning_unit_specifications import LearningUnitSpecificationsForm, LearningUnitSpecificationsEditForm
 from base.forms.learning_unit_pedagogy import LearningUnitPedagogyForm, LearningUnitPedagogyEditForm
 from base.forms.learning_unit_component import LearningUnitComponentEditForm
 from base.forms.learning_class import LearningClassEditForm
 from base.models.enums import learning_unit_year_subtypes
 from cms.models import text_label
-
+from reference.models.language import find_by_id
 from . import layout
+from django.http import JsonResponse
+
 
 UNDEFINED_VALUE = '?'
 
@@ -554,3 +569,184 @@ def learning_class_year_edit(request, learning_unit_year_id):
     form.load_initial()  # Load data from database
     context['form'] = form
     return layout.render(request, "learning_unit/class_edit.html", context)
+
+
+def learning_unit_create(request, academic_year):
+    form = CreateLearningUnitYearForm(initial={'academic_year': academic_year,
+                                               'subtype': FULL,
+                                               'learning_container_year_type': "---------",
+                                               'language': 3})
+    return layout.render(request, "learning_unit/learning_unit_form.html", {'form': form})
+
+
+def learning_unit_year_add(request):
+    if request.POST:
+        form = CreateLearningUnitYearForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            academic_year = data['academic_year']
+            year = academic_year.year
+            current_academic_year = current_academic_years()
+            status = check_status(data)
+            requirement_entity_version = mdl.entity_version.find_by_id(data['requirement_entity'])
+            allocation_entity_version = mdl.entity_version.find_by_id(data['allocation_entity'])
+            new_learning_container = create_learning_container(year, data)
+            new_learning_unit = create_learning_unit(data, new_learning_container, year)
+            while year <= int(data['end_year']) and year < academic_year.year+6:
+                create_learning_unit_structure(allocation_entity_version, data, form, new_learning_container,
+                                               new_learning_unit, requirement_entity_version, status, year)
+                year = year+1
+            return redirect('learning_units')
+        else:
+            return layout.render(request, "learning_unit/learning_unit_form.html", {'form': form})
+    else:
+        return redirect('learning_unit_create')
+
+
+def create_learning_unit_structure(allocation_entity_version, data, form, new_learning_container, new_learning_unit,
+                                   requirement_entity_version, status, year):
+    an_academic_year = mdl.academic_year.find_academic_year_by_year(year)
+    new_learning_container_year = create_learning_container_year(an_academic_year, data,
+                                                                 new_learning_container)
+    new_requirement_entity = create_entity_container_year(requirement_entity_version,
+                                                          new_learning_container_year,
+                                                          REQUIREMENT_ENTITY)
+    create_entity_container_year(allocation_entity_version, new_learning_container_year, ALLOCATION_ENTITY)
+    if data['learning_container_year_type'] == COURSE:
+        create_course(an_academic_year, form, new_learning_container_year, new_learning_unit,
+                      new_requirement_entity, status)
+    else:
+        create_another_type(an_academic_year, form, new_learning_container_year, new_learning_unit,
+                            new_requirement_entity, status)
+
+
+def create_another_type(an_academic_year, form, new_learning_container_year, new_learning_unit, new_requirement_entity,
+                        status):
+    new_learning_component_year = create_learning_component_year(new_learning_container_year,
+                                                                 "NT1", None)
+    create_entity_component_year(new_requirement_entity, new_learning_component_year)
+    new_learning_unit_year = create_learning_unit_year(an_academic_year, form,
+                                                       new_learning_container_year,
+                                                       new_learning_unit,
+                                                       status)
+    create_learning_unit_component(new_learning_unit_year, new_learning_component_year, None)
+
+
+def create_course(an_academic_year, form, new_learning_container_year, new_learning_unit,
+                  new_requirement_entity, status):
+    new_lecturing = create_learning_component_year(new_learning_container_year, "CM1", LECTURING)
+    new_practical_exercise = create_learning_component_year(new_learning_container_year, "TP1",
+                                                            PRACTICAL_EXERCISES)
+    create_entity_component_year(new_requirement_entity, new_lecturing)
+    create_entity_component_year(new_requirement_entity, new_practical_exercise)
+    new_learning_unit_year = create_learning_unit_year(an_academic_year, form,
+                                                       new_learning_container_year,
+                                                       new_learning_unit,
+                                                       status)
+    create_learning_unit_component(new_learning_unit_year, new_lecturing, LECTURING)
+    create_learning_unit_component(new_learning_unit_year, new_practical_exercise, PRACTICAL_EXERCISES)
+
+
+def check_status(data):
+    if data['status'] == 'on':
+        status = True
+    else:
+        status = False
+    return status
+
+
+def create_learning_component_year(learning_container_year, acronym, type):
+    new_lecturing = LearningComponentYear(learning_container_year=learning_container_year,
+                                          acronym=acronym,
+                                          type=type)
+    new_lecturing.save()
+    return new_lecturing
+
+
+def create_learning_unit_component(learning_unit_year, learning_component_year, type):
+    new_learning_unit_component = LearningUnitComponent(learning_unit_year=learning_unit_year,
+                                                        learning_component_year=learning_component_year,
+                                                        type=type)
+    new_learning_unit_component.save()
+    return new_learning_unit_component
+
+
+def create_entity_component_year(entity_container_year, learning_component_year):
+    new_entity_component_year = EntityComponentYear(entity_container_year=entity_container_year,
+                                                    learning_component_year=learning_component_year)
+    new_entity_component_year.save()
+    return new_entity_component_year
+
+
+def create_learning_container(year, data):
+    new_learning_container = LearningContainer(auto_renewal_until=int(data['end_year']), start_year=year)
+    new_learning_container.save()
+    return new_learning_container
+
+
+def create_learning_container_year(academic_year, data, learning_container):
+    a_language = find_by_id(data['language'])
+    new_learning_container_year = LearningContainerYear(academic_year=academic_year,
+                                                        learning_container=learning_container,
+                                                        title=data['title'],
+                                                        acronym=data['acronym'],
+                                                        container_type=data['learning_container_year_type'],
+                                                        language=a_language)
+    new_learning_container_year.save()
+    return new_learning_container_year
+
+
+def create_entity_container_year(entity_version, learning_container_year, type):
+    new_entity_container_year = EntityContainerYear(entity=entity_version.entity,
+                                                    learning_container_year=learning_container_year,
+                                                    type=type)
+    new_entity_container_year.save()
+    return new_entity_container_year
+
+
+def create_learning_unit(data, learning_container, year):
+    new_learning_unit = LearningUnit(acronym=data['acronym'], title=data['title'], start_year=year,
+                                     end_year=int(data['end_year']), periodicity=data['periodicity'],
+                                     learning_container=learning_container, faculty_remark=data['faculty_remark'],
+                                     other_remark=data['other_remark'])
+    new_learning_unit.save()
+    return new_learning_unit
+
+
+def create_learning_unit_year(academic_year, form, learning_container_year, learning_unit, status):
+    new_learning_unit_year = LearningUnitYear(academic_year=academic_year, learning_unit=learning_unit,
+                                              learning_container_year=learning_container_year,
+                                              acronym=form.data['acronym'],
+                                              title=form.data['title'],
+                                              title_english=form.data['title_english'],
+                                              subtype=form.data['subtype'],
+                                              credits=form.data['credits'],
+                                              internship_subtype=form.data['internship_subtype'],
+                                              status=status,
+                                              session=form.data['session'])
+    new_learning_unit_year.save()
+    return new_learning_unit_year
+
+
+def check_acronym(request):
+    acronym = request.GET['acronym']
+    year_id = request.GET['year_id']
+    academic_yr = mdl.academic_year.find_academic_year_by_id(year_id)
+
+    valid = True
+    existed_acronym = False
+    existing_acronym = False
+    incorrect_acronym = False
+    learning_unit_years = mdl.learning_unit_year.find_gte_year_acronym(academic_yr, acronym)
+    old_learning_unit_years = mdl.learning_unit_year.find_lt_year_acronym(academic_yr, acronym)
+
+    if old_learning_unit_years:
+        existed_acronym = True
+        valid = True
+    if learning_unit_years:
+        existing_acronym = True
+        valid = False
+    return JsonResponse({'valid': valid,
+                         'existing_acronym': existing_acronym,
+                         'incorrect_acronym': incorrect_acronym,
+                         'existed_acronym': existed_acronym}, safe=False)

@@ -23,12 +23,15 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+import datetime
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.contrib import admin
 from django.db.models import Q
 from django.utils import timezone
 from base.models.enums import entity_type
+from base.models.enums.organization_type import MAIN
+from osis_common.utils.datetime import get_tzinfo
 
 
 class EntityVersionAdmin(admin.ModelAdmin):
@@ -247,3 +250,12 @@ def _match_dates(osis_date, esb_date):
         return esb_date is None
     else:
         return osis_date.strftime('%Y-%m-%d') == esb_date
+
+
+def find_main_entities_version():
+    entities_version = find_latest_version(date=datetime.datetime.now(get_tzinfo()))\
+        .filter(entity_type__in=[entity_type.SECTOR, entity_type.FACULTY, entity_type.SCHOOL,
+                                 entity_type.INSTITUTE, entity_type.DOCTORAL_COMMISSION],
+                entity__organization__type=MAIN)
+    return entities_version
+

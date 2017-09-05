@@ -25,16 +25,23 @@
 ##############################################################################
 import datetime
 from unittest import mock
-
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
 from django.test import TestCase, RequestFactory
-
+from base.forms.learning_units import CreateLearningUnitYearForm
 from base.models import learning_unit_component
 from base.models import learning_unit_component_class
-from base.models.enums import learning_container_year_types
+from base.models.enums import learning_container_year_types, organization_type, entity_type
 from base.models.enums import learning_unit_year_subtypes
+from base.models.enums.internship_subtypes import TEACHING_INTERNSHIP
+from base.models.enums.learning_container_year_types import COURSE
+from base.models.enums.learning_unit_periodicity import ANNUAL
+from base.models.enums.learning_unit_year_subtypes import FULL
+from base.models.enums.learning_unit_year_session import SESSION_P23
+from base.models.learning_unit_year import LearningUnitYear
 from base.tests.factories.academic_year import AcademicYearFactory
+from base.tests.factories.campus import CampusFactory
+from base.tests.factories.entity import EntityFactory
 from base.tests.factories.entity_version import EntityVersionFactory
 from base.tests.factories.learning_unit_component_class import LearningUnitComponentClassFactory
 from base.tests.factories.learning_unit_year import LearningUnitYearFactory
@@ -46,9 +53,11 @@ from base.tests.factories.learning_unit_component import LearningUnitComponentFa
 from base.tests.factories.entity_component_year import EntityComponentYearFactory
 from base.tests.factories.entity_container_year import EntityContainerYearFactory
 from base.models.enums import entity_container_year_link_type
+from base.tests.factories.organization import OrganizationFactory
 from base.tests.factories.user import SuperUserFactory
 from base.views import learning_unit as learning_unit_view
 from django.utils.translation import ugettext_lazy as _
+from reference.tests.factories.language import LanguageFactory
 
 
 class LearningUnitViewTestCase(TestCase):
@@ -59,8 +68,15 @@ class LearningUnitViewTestCase(TestCase):
                                                          year=today.year)
         self.learning_container_yr = LearningContainerYearFactory(academic_year=self.current_academic_year)
         self.learning_component_yr = LearningComponentYearFactory(learning_container_year=self.learning_container_yr)
+        self.organization = OrganizationFactory(type=organization_type.MAIN)
+        self.entity = EntityFactory(organization=self.organization)
         self.entity_container_yr = EntityContainerYearFactory(learning_container_year=self.learning_container_yr,
-                                                         type=entity_container_year_link_type.REQUIREMENT_ENTITY)
+                                                              type=entity_container_year_link_type.REQUIREMENT_ENTITY,
+                                                              entity=self.entity)
+        self.entity_version = EntityVersionFactory(entity=self.entity, entity_type=entity_type.SCHOOL, start_date=today,
+                                                   end_date=today.replace(year=today.year + 1))
+        self.campus = CampusFactory(organization=self.organization)
+        self.language = LanguageFactory()
         self.a_superuser = SuperUserFactory()
         self.client.force_login(self.a_superuser)
 
@@ -620,3 +636,41 @@ class LearningUnitViewTestCase(TestCase):
                                                       'learning_class_year_id={}'.format(learning_class_yr.id)), data={})
 
         self.assertRaises(ObjectDoesNotExist, learning_unit_component_class.LearningUnitComponentClass.objects.filter(pk=a_link.id).first())
+
+    def get_base_form_data(self, end_year):
+        return {"acronym": "LTAU2000",
+                "end_year": end_year,
+                "learning_container_year_type": COURSE,
+                "academic_year": self.current_academic_year.id,
+                "status": True,
+                "periodicity": ANNUAL,
+                "credits": "5",
+                "campus": self.campus.id,
+                "internship_subtype": TEACHING_INTERNSHIP,
+                "title": "LAW",
+                "title_english": "LAW",
+                "requirement_entity": self.entity_version.id,
+                "allocation_entity": self.entity_version.id,
+                "subtype": FULL,
+                "language": self.language.id,
+                "session": SESSION_P23,
+                "faculty_remark": "faculty remark",
+                "other_remark": "other remark"}
+
+    def get_valid_data(self):
+        return self.get_base_form_data(end_year=str(self.current_academic_year.end_date.year))
+
+    def get_faulty_end_year(self):
+        return self.get_base_form_data(end_year=str(self.current_academic_year.end_date.year-2))
+
+    def test_learning_unit_year_form(self):
+        form = CreateLearningUnitYearForm(data=self.get_valid_data())
+        self.assertTrue(form.is_valid(), form.errors)
+        form = CreateLearningUnitYearForm(data=self.get_faulty_end_year())
+        self.assertFalse(form.is_valid(), form.errors)
+        url = reverse('learning_unit_year_add')
+        response = self.client.post(url,
+                                    data=self.get_base_form_data(end_year=str(self.current_academic_year.end_date.year-1)))
+        self.assertEqual(response.status_code, 302)
+        count_learning_unit_year = LearningUnitYear.objects.all().count()
+        self.assertEqual(count_learning_unit_year, 1)

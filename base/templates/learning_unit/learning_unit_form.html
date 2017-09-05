@@ -1,0 +1,274 @@
+{% extends "layout.html" %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% comment "License" %}
+* OSIS stands for Open Student Information System. It's an application
+* designed to manage the core business of higher education institutions,
+* such as universities, faculties, institutes and professional schools.
+* The core business involves the administration of students, teachers,
+* courses, programs and so on.
+*
+* Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* A copy of this license - GNU General Public License - is available
+* at the root of the source code of this program.  If not,
+* see http://www.gnu.org/licenses/.
+{% endcomment %}
+
+{% block breadcrumb %}
+<li><a href="{% url 'catalog' %}" id="lnk_catalog">{% trans 'formation_catalogue'%}</a></li>
+<li><a href="{% url 'learning_units' %}" id="lnk_learning_units">{% trans 'learning_units'%}</a></li>
+<li id="lnk_learning_unit">{% trans 'learning_unit' %}</li>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h2>{% trans 'create_learning_unit' %}</h2>
+</div>
+<div class="panel panel-default">
+    <div class="panel-body">
+        <form method="post" action="{% url 'learning_unit_year_add' %}" id="LearningUnitYearForm">
+            {% csrf_token %}
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <label>{% trans 'basic_informations_title' %}</label>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label {% if form.errors.learning_container_year_type %}
+                                        style="color:red;"
+                                   {% endif %}>
+                                {% trans 'type' %}
+                            </label>
+                            {{ form.learning_container_year_type }}
+                        </div>
+                        <div class="col-md-3">
+                            <label>{% trans 'campus' %}</label>
+                            {{ form.campus }}
+                        </div>
+                        <div class="col-md-2">
+                            <label>{% trans 'academic_year' %}</label>
+                            {{ form.academic_year }}
+                        </div>
+                        <div class="col-md-2">
+                            <label {% if form.errors.end_year %}
+                                        style="color:red;"
+                                   {% endif %}>
+                                {% trans 'end_year_title' %}
+                            </label>
+                            {{ form.end_year }}
+                            <label {% if form.errors.end_year %}
+                                        style="color:red;"
+                                   {% endif %}>
+                                {{ form.errors.end_year }}
+                            </label>
+                        </div>
+                        <div class="col-md-2">
+                            <label>{% trans 'periodicity' %}</label>
+                            {{ form.periodicity }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3" id="is_not_internship" style="display: none;">
+                            <label>{% trans 'internship_subtype' %}</label>
+                            {{ form.internship_subtype }}
+                        </div>
+                        <div class="col-md-3">
+                            <label>{% trans 'language' %}</label>
+                            {{ form.language }}
+                        </div>
+                        <div class="col-md-1">
+                            <label {% if form.errors.credits %}
+                                        style="color:red;"
+                                   {% endif %}>
+                                {% trans 'credits' %}
+                            </label>
+                            {{ form.credits }}
+                        </div>
+                        <div class="col-md-2">
+                            <label>{% trans 'session_title' %}</label>
+                            {{ form.session }}
+                        </div>
+                        <div class="col-md-1" style="margin-top:30px;">
+                            <label>{% trans 'active_title' %}</label>
+                            {{ form.status }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default" id="for_titles" style="display: none;">
+                <div class="panel-heading">
+                    <label>{% trans 'titles' %}</label>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label {% if form.errors.acronym %}
+                                        style="color:red;"
+                                   {% endif %}>
+                                {% trans 'acronym' %}
+                                &nbsp;
+                                <abbr title="{% trans 'acronym_rules' %}">
+                                    <span class="glyphicon glyphicon-question-sign pull-right"
+                                          style="font-size: 14pt;" aria-hidden="true"></span>
+                                </abbr>
+                            </label>
+                            {{ form.acronym }}
+                        </div>
+                    </div>
+                    <br>
+                    <div>
+                        <label {% if form.errors.title %}
+                                        style="color:red;"
+                                   {% endif %}>
+                            {% trans 'title' %}
+                        </label>
+                        {{ form.title }}
+                    </div>
+                    <br>
+                    <div>
+                        <label {% if form.errors.title_english %}
+                                        style="color:red;"
+                                   {% endif %}>
+                            {% trans 'title_in_english' %}
+                        </label>
+                        {{ form.title_english }}
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default" id="for_structure" style="display: none;">
+                <div class="panel-heading">
+                    <label>{% trans 'structure_title' %}</label>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>{% trans 'requirement_entity' %}</label>
+                            {{ form.requirement_entity }}
+                        </div>
+                        <div class="col-md-6">
+                            <label>{% trans 'allocation_entity' %}</label>
+                            {{ form.allocation_entity }}
+                        </div>
+                    </div>
+                    <br>
+                </div>
+            </div>
+            <div class="panel panel-default" id="for_remark" style="display: none;">
+                <div class="panel-heading">
+                    <label>{% trans 'remarks_title' %}</label>
+                </div>
+                <div class="panel-body">
+                    <div>
+                        <label>{% trans 'faculty_remark' %}</label>
+                        {{ form.faculty_remark }}{{ form.errors.faculty_remark }}
+                    </div>
+                    <br>
+                    <div>
+                        <label>{% trans 'other_remark' %}</label>
+                        {{ form.other_remark }}{{ form.errors.other_remark }}
+                    </div>
+                </div>
+            </div>
+            {{ form.subtype }}
+            <div class="panel-body">
+                <button type="submit" id="learning_unit_year_add" class="btn btn-primary" name="action" value="add" role="button"
+                            title="{% trans 'add' %}">{% trans 'save' %}</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+<script>
+    const blank = "---------";
+    const partim = "PARTIM";
+    const internship = "INTERNSHIP";
+    $( document ).ready(function() {
+        if('{{form.learning_container_year_type.value}}' != partim && '{{form.learning_container_year_type.value}}' != blank){
+            document.getElementById('for_titles').style.display = "block";
+            document.getElementById('for_structure').style.display = "block";
+            document.getElementById('for_remark').style.display = "block";
+        }
+
+        if('{{form.learning_container_year_type.value}}' == internship)
+            document.getElementById('is_not_internship').style.display = "block";
+        else
+            document.getElementById('is_not_internship').style.display = "none";
+    });
+
+    function showDiv(elem){
+       if(elem != partim || elem != blank){
+            document.getElementById('for_titles').style.display = "block";
+            document.getElementById('for_structure').style.display = "block";
+            document.getElementById('for_remark').style.display = "block";
+       }else{
+            document.getElementById('for_titles').style.display = "none";
+            document.getElementById('for_structure').style.display = "none";
+            document.getElementById('for_remark').style.display = "none";
+       }
+
+       if(elem == internship)
+            document.getElementById('is_not_internship').style.display = "block";
+       else
+            document.getElementById('is_not_internship').style.display = "none";
+    }
+
+    $(document).ready(function() {
+        $('#acronym').on("click",function() {
+            var message = "";
+            var messageFunc = function () { return message; };
+
+            jQuery.validator.addMethod("check_acronym", function(val) {
+                var res;
+                $.ajax({
+                    async:false,
+                    url: "/learning_units/check?acronym=" + val + "&year_id=" + $('#academic_year').val()
+                }).then(function (data) {
+                    var newMessage = [];
+                    if (data['valid']){
+                        res = true;
+                        $(".error").css("color","black");
+                        if(data['existed_acronym'] && !data['existing_acronym']){
+                            $(".error").css("color","orange");
+                            newMessage.push("{% trans 'existed_acronym' %}");
+                        }
+                    }else{
+                        res = false;
+                        $(".error").css("color","red");
+                        if(data['existing_acronym']){
+                            newMessage.push("{% trans 'existing_acronym' %}");
+                        }
+                    }
+                    message = newMessage.join("   ");
+                });
+            }, messageFunc);
+
+
+            $( "#LearningUnitYearForm" ).validate({
+                invalidHandler: function(form, validator) {
+                    var errors = validator.numberOfInvalids();
+                    if (errors) {
+                        newMessage.push("{% trans 'existed_acronym' %}");
+                    }
+                },
+                rules:{
+                    acronym:{ check_acronym: true },
+                },
+            }).element("#acronym");
+        });
+    });
+</script>
+{% endblock %}
