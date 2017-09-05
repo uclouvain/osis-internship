@@ -197,6 +197,7 @@ class CreateLearningUnitYearForm(forms.ModelForm):
                   'requirement_entity', 'subtype', 'language', 'session', 'faculty_remark', 'other_remark', ]
         widgets = {'acronym': forms.TextInput(attrs={'class': 'form-control',
                                                      'id': 'acronym',
+                                                     'maxlength': "15",
                                                      'required': True}),
                    'academic_year': forms.Select(attrs={'class': 'form-control',
                                                         'id': 'academic_year',

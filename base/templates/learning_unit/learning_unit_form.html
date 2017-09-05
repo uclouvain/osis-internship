@@ -235,7 +235,7 @@
                 var res;
                 $.ajax({
                     async:false,
-                    url: "/learning_units/learning_unit_check?acronym=" + val + "&year_id=" + $('#academic_year').val()
+                    url: "/learning_units/check?acronym=" + val + "&year_id=" + $('#academic_year').val()
                 }).then(function (data) {
                     var newMessage = [];
                     if (data['valid']){
@@ -250,9 +250,6 @@
                         $(".error").css("color","red");
                         if(data['existing_acronym']){
                             newMessage.push("{% trans 'existing_acronym' %}");
-                        }
-                        if(data['incorrect_acronym']){
-                            newMessage.push("{% trans 'incorrect_acronym' %}");
                         }
                     }
                     message = newMessage.join("   ");

@@ -592,7 +592,7 @@ def learning_unit_year_add(request):
             allocation_entity_version = mdl.entity_version.find_by_id(data['allocation_entity'])
             new_learning_container = create_learning_container(year, data)
             new_learning_unit = create_learning_unit(data, new_learning_container, year)
-            while year <= int(data['end_year']) and year < current_academic_year[0].year+6:
+            while year <= int(data['end_year']) and year < academic_year.year+6:
                 create_learning_unit_structure(allocation_entity_version, data, form, new_learning_container,
                                                new_learning_unit, requirement_entity_version, status, year)
                 year = year+1
@@ -740,9 +740,6 @@ def check_acronym(request):
     learning_unit_years = mdl.learning_unit_year.find_gte_year_acronym(academic_yr, acronym)
     old_learning_unit_years = mdl.learning_unit_year.find_lt_year_acronym(academic_yr, acronym)
 
-    if len(acronym) > 15:
-        incorrect_acronym = True
-        valid = False
     if old_learning_unit_years:
         existed_acronym = True
         valid = True
