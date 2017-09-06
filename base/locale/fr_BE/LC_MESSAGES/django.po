@@ -1826,4 +1826,8 @@ msgid "new_learning_unit"
 msgstr "Nouvelle unité d'enseignement"
 
 
+msgid "previous"
+msgstr "Précédent"
 
+msgid "next"
+msgstr "Suivant"
