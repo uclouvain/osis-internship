@@ -80,7 +80,10 @@ VOLUME_FOR_UNKNOWN_QUADRIMESTER = -1
 @login_required
 @permission_required('base.can_access_learningunit', raise_exception=True)
 def learning_units(request):
-    form = LearningUnitYearForm(request.GET)
+    if request.GET.get('academic_year_id'):
+        form = LearningUnitYearForm(request.GET)
+    else:
+        form = LearningUnitYearForm()
     found_learning_units = None
     if form.is_valid():
         found_learning_units = form.get_learning_units()
