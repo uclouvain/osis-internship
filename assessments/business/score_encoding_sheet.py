@@ -28,7 +28,7 @@ from django.utils.translation import ugettext as _
 from attribution.models import attribution
 from base.models import entity as entity_model, entity_version as entity_version, person_address, session_exam_calendar, offer_year_entity
 from base.models.exam_enrollment import justification_label_authorized, get_deadline
-from assessments.business.score_encoding_list import sort_for_encodings
+from assessments.business.score_encoding_list import sort_encodings
 from assessments.models import score_sheet_address
 from assessments.models.enums.score_sheet_address_choices import *
 from base.business import entity_version as entity_version_business
@@ -96,7 +96,7 @@ def get_entity_version_choices(offer_year):
 
 def scores_sheet_data(exam_enrollments, tutor=None):
     date_format = str(_('date_format'))
-    exam_enrollments = sort_for_encodings(exam_enrollments)
+    exam_enrollments = sort_encodings(exam_enrollments)
     data = {'tutor_global_id': tutor.person.global_id if tutor else ''}
     now = timezone.now()
     data['publication_date'] = '%s/%s/%s' % (now.day, now.month, now.year)

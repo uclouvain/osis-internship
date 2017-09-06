@@ -68,7 +68,11 @@
                         <br>
                         <div id="warning_no_address_found" class="alert alert-dismissible alert-warning">
                             <button type="button" class="close" data-dismiss="alert">&times;</button>
-                            <p>{% trans 'no_entity_address_found' %}</p>
+                            <p><span class="fa fa-warning" aria-hidden="true"></span> {% trans 'no_entity_address_found' %}</p>
+                        </div>
+                        <div id="warning_no_current_entity_version_found" class="alert alert-dismissible alert-warning">
+                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                            <p><span class="fa fa-warning" aria-hidden="true"></span> {% trans 'no_current_entity_version_found' %}</p>
                         </div>
                         <br>
                         <div class="row">
@@ -134,6 +138,7 @@
     <script type="text/javascript">
 
         $('#warning_no_address_found').hide();
+        $('#warning_no_current_entity_version_found').hide();
 
         window.onload = disableFormInputsIfReuseAddress;
 
@@ -162,11 +167,13 @@
                     data: null,
                     dataType: 'json',
                     success: function (data) {
+                        if ( ! data.entity_version_exists_now){
+                            showEntityVersionNotExistsMsg();
+                        }
                         if (Object.keys(data.address).length != 0) {
                             disableFormInputs();
                             setFormFieldsValues(data);
-                        }
-                        else{
+                        } else{
                             setFormFieldsValuesToNone();
                             disableFormInputs();
                             showNoAddressFoundMsg();
@@ -191,6 +198,11 @@
 
         function showNoAddressFoundMsg(){
             $('#warning_no_address_found').show().delay(5000).hide(400);
+        }
+
+
+        function showEntityVersionNotExistsMsg(){
+            $('#warning_no_current_entity_version_found').show().delay(10000).hide(400);
         }
 
 

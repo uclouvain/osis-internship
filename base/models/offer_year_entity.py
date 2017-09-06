@@ -34,6 +34,7 @@ class OfferYearEntityAdmin(admin.ModelAdmin):
     fieldsets = ((None, {'fields': ('offer_year', 'entity', 'type')}),)
     search_fields = ['type', 'entity__entityversion__acronym', 'offer_year__acronym']
     list_filter = ('type', 'offer_year__academic_year',)
+    raw_id_fields = ('offer_year', 'entity')
 
 
 class OfferYearEntity(models.Model):

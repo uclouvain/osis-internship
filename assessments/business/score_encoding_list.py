@@ -70,7 +70,7 @@ def get_scores_encoding_list(user, **kwargs):
 
     # Append deadline/deadline_tutor for each exam enrollments
     enrollments = _append_session_exam_deadline(list(enrollments))
-    enrollments = sort_for_encodings(enrollments)
+    enrollments = sort_encodings(enrollments)
 
     return ScoresEncodingList(**{
         'academic_year': current_academic_year,
@@ -264,7 +264,7 @@ class ScoresEncodingList:
         return list(filter(lambda e: e.is_final, self.enrollments))
 
 
-def sort_for_encodings(exam_enrollments):
+def sort_encodings(exam_enrollments):
     """
     Sort the list by
      0. LearningUnitYear.acronym

@@ -716,6 +716,9 @@ msgstr "Nom complet"
 msgid "national_register"
 msgstr "Numéro de registre nationnal"
 
+msgid "no_current_entity_version_found"
+msgstr "L'entité sélectionnée n'existe plus aujourd'hui (fin de validité dépassée)."
+
 msgid "no_data_for_this_academic_year"
 msgstr "Aucune données pour cette année académique"
 

@@ -24,6 +24,7 @@
 #
 ##############################################################################
 import json
+import datetime
 
 from django.contrib.auth.decorators import login_required, permission_required
 from django.http import JsonResponse
@@ -31,6 +32,8 @@ from base import models as mdl
 from base.models import entity_version as entity_version_mdl
 from base.models.enums import entity_type
 from . import layout
+from django.contrib import messages
+from django.utils.translation import ugettext_lazy as _
 
 
 @login_required
@@ -93,8 +96,11 @@ def entity_diagram(request, entity_version_id):
 def get_entity_address(request, entity_version_id):
     version = entity_version_mdl.find_by_id(entity_version_id)
     entity = version.entity
-    response = {'recipient': '{} - {}'.format(version.acronym, version.title),
-                'address': {}}
+    response = {
+        'entity_version_exists_now': version.exists_now(),
+        'recipient': '{} - {}'.format(version.acronym, version.title),
+        'address': {}
+    }
     if entity and entity.has_address():
         response['address'] = {'location': entity.location,
                                'postal_code': entity.postal_code,
