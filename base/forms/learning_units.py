@@ -56,7 +56,7 @@ class LearningUnitYearForm(forms.Form):
 
     def clean_academic_year_id(self):
         data_cleaned = self.cleaned_data.get('academic_year_id')
-        if data_cleaned == 'all':
+        if data_cleaned == '0':
             return None
         return data_cleaned
 

@@ -80,10 +80,7 @@ VOLUME_FOR_UNKNOWN_QUADRIMESTER = -1
 @login_required
 @permission_required('base.can_access_learningunit', raise_exception=True)
 def learning_units(request):
-    if request.GET.get('academic_year_id'):
-        form = LearningUnitYearForm(request.GET)
-    else:
-        form = LearningUnitYearForm()
+    form = LearningUnitYearForm(request.GET)
     found_learning_units = None
     if form.is_valid():
         found_learning_units = form.get_learning_units()
@@ -586,7 +583,6 @@ def learning_unit_year_add(request):
             data = form.cleaned_data
             academic_year = data['academic_year']
             year = academic_year.year
-            current_academic_year = current_academic_years()
             status = check_status(data)
             requirement_entity_version = mdl.entity_version.find_by_id(data['requirement_entity'])
             allocation_entity_version = mdl.entity_version.find_by_id(data['allocation_entity'])
