@@ -94,10 +94,13 @@ class AcademicCalendar(SerializableModel):
         )
 
 
-def get_highlight_academic_calendar():
-    return AcademicCalendar.objects.filter(start_date__lte=timezone.now(), end_date__gte=timezone.now(),
-                                           highlight_title__isnull=False, highlight_description__isnull=False,
-                                           highlight_shortcut__isnull=False).order_by('end_date')
+def find_highlight_academic_calendar():
+    today = timezone.now()
+    return AcademicCalendar.objects.filter(start_date__lte=today, end_date__gte=today) \
+        .exclude(highlight_title__isnull=True).exclude(highlight_title__exact='') \
+        .exclude(highlight_description__isnull=True).exclude(highlight_description__exact='') \
+        .exclude(highlight_shortcut__isnull=True).exclude(highlight_shortcut__exact='') \
+        .order_by('end_date')
 
 
 def find_academic_calendar_by_academic_year(academic_year_id):

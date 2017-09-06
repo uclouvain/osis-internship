@@ -1820,3 +1820,9 @@ msgstr "Other"
 
 msgid "new_learning_unit"
 msgstr "New learning unit"
+
+msgid "previous"
+msgstr "Previous"
+
+msgid "next"
+msgstr "Next"
