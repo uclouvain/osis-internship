@@ -13,6 +13,7 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+        migrations.RunSQL("UPDATE base_entity SET country = NULL"),
         migrations.CreateModel(
             name='OfferYearEntity',
             fields=[
