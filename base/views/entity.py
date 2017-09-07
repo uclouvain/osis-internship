@@ -51,7 +51,9 @@ def create_full_entity(request):
         'location': request.data.get('location'),
         'postal_code': request.data.get('postal_code'),
         'city': request.data.get('city'),
-        'country': request.data.get('country')
+        'country_id': request.data.get('country_id'),
+        'phone': request.data.get('phone'),
+        'fax': request.data.get('fax')
     }
     entity_serializer = EntitySerializer(data=entity_data)
     if entity_serializer.is_valid():
@@ -64,6 +66,7 @@ def create_full_entity(request):
 
 
 def update_existing_entity(existing_entity, request):
+    _update_entity(existing_entity, request.data)
     new_versions_count = create_versions_of_existing_entity(request, existing_entity)
     updated_versions_count = update_end_date_of_existing_versions(request, existing_entity)
     entity_serializer = EntitySerializer(existing_entity)
@@ -71,6 +74,14 @@ def update_existing_entity(existing_entity, request):
     data['new_versions_count'] = new_versions_count
     data['updated_versions_count'] = updated_versions_count
     return Response(data=data, status=status.HTTP_200_OK)
+
+
+def _update_entity(existing_entity, data):
+    fields_to_update = ['website', 'location', 'postal_code', 'city', 'country_id', 'phone', 'fax']
+    for f_name in fields_to_update:
+        value = data.get(f_name)
+        setattr(existing_entity, f_name, value)
+    existing_entity.save()
 
 
 def create_versions_of_existing_entity(request, same_entity):

@@ -29,6 +29,7 @@ from django.db import models
 from django.contrib import admin
 from django.db.models import Q
 from django.utils import timezone
+from base.models import academic_year
 from base.models.enums import entity_type
 from base.models.enums.organization_type import MAIN
 from osis_common.utils.datetime import get_tzinfo
@@ -66,6 +67,10 @@ class EntityVersion(models.Model):
             super(EntityVersion, self).save()
         else:
             raise AttributeError('EntityVersion invalid parameters')
+
+    def exists_now(self):
+        now = datetime.datetime.now().date()
+        return (not self.end_date) or (self.end_date and self.start_date < now < self.end_date)
 
     def can_save_entity_version(self):
         return self.count_entity_versions_same_entity_overlapping_dates() == 0 and \
@@ -180,6 +185,11 @@ def find_latest_version(date):
                                 .order_by('-start_date')
 
 
+def get_last_version(entity):
+    return EntityVersion.objects.filter(entity=entity).latest('start_date')
+    # find_latest_version(academic_year.current_academic_year().start_date).get(entity=entity)
+
+
 def search(**kwargs):
     queryset = EntityVersion.objects
 
@@ -256,6 +266,6 @@ def find_main_entities_version():
     entities_version = find_latest_version(date=datetime.datetime.now(get_tzinfo()))\
         .filter(entity_type__in=[entity_type.SECTOR, entity_type.FACULTY, entity_type.SCHOOL,
                                  entity_type.INSTITUTE, entity_type.DOCTORAL_COMMISSION],
-                entity__organization__type=MAIN)
+                entity__organization__type=MAIN).order_by('acronym')
     return entities_version
 

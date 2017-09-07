@@ -101,7 +101,7 @@ def home(request):
     if academic_yr:
         calendar_events = mdl.academic_calendar.find_academic_calendar_by_academic_year_with_dates(academic_yr.id)
     return layout.render(request, "home.html", {'academic_calendar': calendar_events,
-                                                'highlight': mdl.academic_calendar.find_highlight_academic_calendar()})
+                                                'highlights': mdl.academic_calendar.find_highlight_academic_calendar()})
 
 
 def log_out(request):

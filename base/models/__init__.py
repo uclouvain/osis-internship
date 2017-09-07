@@ -52,6 +52,7 @@ from base.models import offer_type
 from base.models import offer_year
 from base.models import offer_year_calendar
 from base.models import offer_year_domain
+from base.models import offer_year_entity
 from base.models import organization
 from base.models import organization_address
 from base.models import person
