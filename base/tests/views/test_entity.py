@@ -60,7 +60,7 @@ class EntityViewTestCase(APITestCase):
             'location': entity_version.entity.location,
             'postal_code': entity_version.entity.postal_code,
             'city': entity_version.entity.city,
-            'country': entity_version.entity.country,
+            'country': entity_version.entity.country_id,
             'website': entity_version.entity.website
         }
         response = self.client.post(

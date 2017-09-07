@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# OSIS stands for Open Student Information System. It's an application
+#    OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
@@ -23,22 +23,31 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+import operator
+import datetime
 import factory
-from base.tests.factories.organization import OrganizationFactory
+import factory.fuzzy
+import string
+from assessments.models.enums import score_sheet_address_choices
+from base.tests.factories.offer_year import OfferYearFactory
+from osis_common.utils.datetime import get_tzinfo
 from reference.tests.factories.country import CountryFactory
 
 
-class EntityFactory(factory.DjangoModelFactory):
+class ScoreSheetAddressFactory(factory.DjangoModelFactory):
     class Meta:
-        model = 'base.Entity'
-        django_get_or_create = ('external_id',)
+        model = 'assessments.ScoreSheetAddress'
 
-    organization = factory.SubFactory(OrganizationFactory)
-    external_id = factory.Faker('text', max_nb_chars=255)
-    location = factory.Faker('street_address')
-    postal_code = factory.Faker('zipcode')
-    city = factory.Faker('city')
+    external_id = factory.fuzzy.FuzzyText(length=10, chars=string.digits)
+    changed = factory.fuzzy.FuzzyDateTime(datetime.datetime(2016, 1, 1, tzinfo=get_tzinfo()),
+                                          datetime.datetime(2017, 3, 1, tzinfo=get_tzinfo()))
+    offer_year = factory.SubFactory(OfferYearFactory)
+    entity_address_choice = factory.Iterator(score_sheet_address_choices.CHOICES, getter=operator.itemgetter(0))
+    recipient = factory.Sequence(lambda n: 'Recipient - %d' % n)
+    location = factory.Sequence(lambda n: 'Location - %d' % n)
+    postal_code = factory.Sequence(lambda n: 'Postal code - %d' % n)
+    city = factory.Sequence(lambda n: 'City - %d' % n)
     country = factory.SubFactory(CountryFactory)
-    website = factory.Faker('url')
-    phone = factory.Faker('phone_number')
-    fax = factory.Faker('phone_number')
+    phone = factory.Sequence(lambda n: 'Phone - %d' % n)
+    fax = factory.Sequence(lambda n: 'Fax - %d' % n)
+    email = factory.Sequence(lambda n: 'Email - %d' % n)

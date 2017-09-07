@@ -29,11 +29,11 @@ Utility files for mail sending
 """
 
 from django.utils.translation import ugettext as _
+from assessments.business import score_encoding_sheet
 
 from osis_common.models import message_history as message_history_mdl
 from osis_common.messaging import message_config, send_message as message_service
 from base.models import person as person_mdl
-from base.models import exam_enrollment as exam_enrollment_mdl
 from osis_common.document import paper_sheet
 
 
@@ -151,7 +151,8 @@ def send_message_after_all_encoded_by_manager(persons, enrollments, learning_uni
 def build_scores_sheet_attachment(list_exam_enrollments):
     name = "%s.pdf" % _('scores_sheet')
     mimetype = "application/pdf"
-    content = paper_sheet.build_pdf(exam_enrollment_mdl.scores_sheet_data(list_exam_enrollments, tutor=None))
+    content = paper_sheet.build_pdf(
+        score_encoding_sheet.scores_sheet_data(list_exam_enrollments, tutor=None))
     return (name, content, mimetype)
 
 

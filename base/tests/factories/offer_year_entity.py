@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# OSIS stands for Open Student Information System. It's an application
+#    OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
@@ -23,17 +23,24 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+import datetime
+import operator
 import factory
+import factory.fuzzy
+import string
+from base.models.enums import offer_year_entity_type
+from base.tests.factories.entity import EntityFactory
+from base.tests.factories.offer_year import OfferYearFactory
+from osis_common.utils.datetime import get_tzinfo
 
 
-class CountryFactory(factory.DjangoModelFactory):
+class OfferYearEntityFactory(factory.DjangoModelFactory):
     class Meta:
-        model = 'reference.Country'
+        model = 'base.OfferYearEntity'
 
-    external_id = factory.Faker('text', max_nb_chars=100)
-    iso_code = factory.Faker('lexify', text="??")
-    name = factory.Sequence(lambda n: 'Country - %d' % n)
-    nationality = factory.Faker('text', max_nb_chars=80)
-    european_union = factory.Faker('boolean', chance_of_getting_true=50)
-    dialing_code = factory.Faker('random_element', elements=('+32', '+33', '+1'))
-    cref_code = factory.Faker('random_element', elements=('ABC', 'D3F', 'K-M'))
+    external_id = factory.fuzzy.FuzzyText(length=10, chars=string.digits)
+    changed = factory.fuzzy.FuzzyDateTime(datetime.datetime(2016, 1, 1, tzinfo=get_tzinfo()),
+                                          datetime.datetime(2017, 3, 1, tzinfo=get_tzinfo()))
+    offer_year = factory.SubFactory(OfferYearFactory)
+    entity = factory.SubFactory(EntityFactory)
+    type = factory.Iterator(offer_year_entity_type.TYPES, getter=operator.itemgetter(0))
