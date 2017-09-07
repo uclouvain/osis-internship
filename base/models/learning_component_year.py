@@ -33,7 +33,7 @@ from base.models import learning_class_year
 class LearningComponentYearAdmin(admin.ModelAdmin):
     list_display = ('learning_container_year', 'title', 'acronym', 'type', 'comment')
     fieldsets = ((None, {'fields': ('learning_container_year', 'title', 'acronym',
-                                    'type', 'comment', 'planned_classes')}),)
+                                    'type', 'comment', 'planned_classes', 'hourly_volume_partial')}),)
     search_fields = ['acronym', 'learning_container_year__acronym']
     raw_id_fields = ('learning_container_year',)
     list_filter = ('learning_container_year__academic_year',)
@@ -43,11 +43,12 @@ class LearningComponentYear(models.Model):
     external_id = models.CharField(max_length=100, blank=True, null=True)
     learning_container_year = models.ForeignKey('LearningContainerYear')
     title = models.CharField(max_length=255, blank=True, null=True)
-    acronym = models.CharField(max_length=3, blank=True, null=True)
+    acronym = models.CharField(max_length=4, blank=True, null=True)
     type = models.CharField(max_length=30, choices=learning_component_year_type.LEARNING_COMPONENT_YEAR_TYPES,
                             blank=True, null=True)
     comment = models.CharField(max_length=255, blank=True, null=True)
     planned_classes = models.IntegerField(blank=True, null=True)
+    hourly_volume_partial = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
     deleted = models.BooleanField(default=False)
 
     def __str__(self):

@@ -26,6 +26,7 @@
 from django.conf.urls import url, include
 
 from base.views import learning_unit, offer, common, institution, organization, academic_calendar, my_osis, entity, student
+from base.utils import fixtures_factory
 
 urlpatterns = [
     url(r'^$', common.home, name='home'),
@@ -45,12 +46,24 @@ urlpatterns = [
     url(r'^admin/', include([
         url(r'^data/$', common.data, name='data'),
         url(r'^data/maintenance$', common.data_maintenance, name='data_maintenance'),
+        url(r'^data/fixtures/make$', fixtures_factory.make_fixtures, name='make_fixtures'),
         url(r'^storage/$', common.storage, name='storage'),
     ])),
 
     url(r'^api/v1/entities/$', entity.post_entities, name='post_entities'),
 
     url(r'^catalog/$', common.catalog, name='catalog'),
+
+    url(r'^entities/', include([
+        url(r'^$', institution.entities, name='entities'),
+        url(r'^search$', institution.entities_search, name='entities_search'),
+        url(r'^(?P<entity_version_id>[0-9]+)/', include([
+            url(r'^$', institution.entity_read, name='entity_read'),
+            url(r'^address/$', institution.get_entity_address, name='entity_address'),
+            url(r'^diagram/$', institution.entity_diagram, name='entity_diagram'),
+            url(r'^versions/$', institution.entities_version, name='entities_version'),
+        ]))
+    ])),
 
     url(r'^institution/', include([
         url(r'^$', institution.institution, name='institution'),
@@ -59,6 +72,9 @@ urlpatterns = [
 
     url(r'^learning_units/', include([
         url(r'^$', learning_unit.learning_units, name='learning_units'),
+        url(r'^learning_unit_create/(?P<academic_year>[0-9]+)$', learning_unit.learning_unit_create, name="learning_unit_create"),
+        url(r'^learning_unit_year_add/$', learning_unit.learning_unit_year_add,
+            name='learning_unit_year_add'),
         url(r'^(?P<learning_unit_year_id>[0-9]+)/', include([
             url(r'^$', learning_unit.learning_unit_identification, name='learning_unit'),
             url(r'^formations/$', learning_unit.learning_unit_formations, name="learning_unit_formations"),
@@ -72,7 +88,9 @@ urlpatterns = [
             url(r'^specifications/edit/$', learning_unit.learning_unit_specifications_edit, name="learning_unit_specifications_edit"),
             url(r'^component/edit/$', learning_unit.learning_unit_component_edit, name="learning_unit_component_edit"),
             url(r'^class/edit/$', learning_unit.learning_class_year_edit, name="learning_class_year_edit"),
-        ]))
+            url(r'^volumes/$', learning_unit.learning_unit_volumes_management, name="learning_unit_volumes_management"),
+        ])),
+        url(r'^check/$', learning_unit.check_acronym),
     ])),
 
     url(r'^my_osis/', include([
@@ -101,7 +119,8 @@ urlpatterns = [
         url(r'^search$', offer.offers_search, name='offers_search'),
         url(r'^(?P<offer_year_id>[0-9]+)/', include([
             url(r'^$', offer.offer_read, name='offer_read'),
-            url(r'^score_encoding/$', offer.score_encoding, name='offer_score_encoding'),
+            url(r'^academic_calendar/$', offer.offer_academic_calendar_tab, name='offer_academic_calendar_tab'),
+            url(r'^program_managers/$', offer.offer_program_managers_tab, name='offer_program_managers_tab'),
         ]))
     ])),
 
@@ -132,16 +151,6 @@ urlpatterns = [
                 name='organization_address_create'),
             url(r'^delete/$', organization.organization_address_delete,
                 name='organization_address_delete')
-        ]))
-    ])),
-
-    url(r'^entities/', include([
-        url(r'^$', institution.entities, name='entities'),
-        url(r'^search$', institution.entities_search, name='entities_search'),
-        url(r'^(?P<entity_version_id>[0-9]+)/', include([
-            url(r'^$', institution.entity_read, name='entity_read'),
-            url(r'^diagram/$', institution.entity_diagram, name='entity_diagram'),
-            url(r'^versions/$', institution.entities_version, name='entities_version'),
         ]))
     ])),
 

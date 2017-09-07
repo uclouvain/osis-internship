@@ -25,6 +25,7 @@
 ##############################################################################
 import copy
 from decimal import Decimal, Context, Inexact
+import unicodedata
 from base.models import academic_year, session_exam_calendar, exam_enrollment, program_manager, tutor, offer_year, \
                         learning_unit_year
 from base.models.enums import exam_enrollment_justification_type
@@ -69,7 +70,7 @@ def get_scores_encoding_list(user, **kwargs):
 
     # Append deadline/deadline_tutor for each exam enrollments
     enrollments = _append_session_exam_deadline(list(enrollments))
-    enrollments = exam_enrollment.sort_for_encodings(enrollments)
+    enrollments = sort_encodings(enrollments)
 
     return ScoresEncodingList(**{
         'academic_year': current_academic_year,
@@ -261,3 +262,40 @@ class ScoresEncodingList:
     @property
     def enrollment_encoded(self):
         return list(filter(lambda e: e.is_final, self.enrollments))
+
+
+def sort_encodings(exam_enrollments):
+    """
+    Sort the list by
+     0. LearningUnitYear.acronym
+     1. offerYear.acronym
+     2. student.lastname
+     3. sutdent.firstname
+    :param exam_enrollments: List of examEnrollments to sort
+    :return:
+    """
+    def _sort(key):
+        learn_unit_acronym = key.learning_unit_enrollment.learning_unit_year.acronym
+        off_enroll = key.learning_unit_enrollment.offer_enrollment
+        acronym = off_enroll.offer_year.acronym
+        last_name = off_enroll.student.person.last_name
+        first_name = off_enroll.student.person.first_name
+        last_name = _normalize_string(last_name) if last_name else None
+        first_name = _normalize_string(first_name) if first_name else None
+        return "%s %s %s %s" % (learn_unit_acronym if learn_unit_acronym else '',
+                                acronym if acronym else '',
+                                last_name.upper() if last_name else '',
+                                first_name.upper() if first_name else '')
+
+    return sorted(exam_enrollments, key=lambda k: _sort(k))
+
+
+def _normalize_string(string):
+    """
+    Remove accents in the string passed in parameter.
+    For example : 'é - è' ==> 'e - e'  //  'àç' ==> 'ac'
+    :param string: The string to normalize.
+    :return: The normalized string
+    """
+    string = string.replace(" ", "")
+    return ''.join((c for c in unicodedata.normalize('NFD', string) if unicodedata.category(c) != 'Mn'))

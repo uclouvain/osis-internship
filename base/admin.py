@@ -113,6 +113,9 @@ admin.site.register(offer_year_calendar.OfferYearCalendar,
 admin.site.register(offer_year_domain.OfferYearDomain,
                     offer_year_domain.OfferYearDomainAdmin)
 
+admin.site.register(offer_year_entity.OfferYearEntity,
+                    offer_year_entity.OfferYearEntityAdmin)
+
 admin.site.register(organization.Organization,
                     organization.OrganizationAdmin)
 

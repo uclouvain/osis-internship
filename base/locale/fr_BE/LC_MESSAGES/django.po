@@ -52,6 +52,9 @@ msgstr "A=Absent"
 msgid "academic_calendar"
 msgstr "Calendrier académique"
 
+msgid "academic_year_small"
+msgstr "Anac."
+
 msgid "academic_calendar_management"
 msgstr "Gestion du calendrier académique"
 
@@ -206,6 +209,9 @@ msgstr "Date de création"
 
 msgid "credits"
 msgstr "Crédits"
+
+msgid "customized"
+msgstr "Personnalisée"
 
 msgid "data"
 msgstr "Données"
@@ -509,7 +515,9 @@ msgid "info_address_changed_for_papersheet"
 msgstr "Ce formulaire de modification des coordonnées d’une entité administrative du programme d’étude %s "
        "impacte uniquement l’affichage des coordonnées sur la feuille de notes. Cela ne modifie donc pas "
        "les coordonnées officielles d’une entité/structure. Par ailleurs, la liste déroulante "
-       "« Réutiliser l’adresse de … » permet de faciliter l’encodage de l’adresse à partir de données préexistantes"
+       "« Veuillez sélectionner une adresse … » permet de faciliter l’encodage de l’adresse à partir de données "
+       "préexistantes. Si l'adresse d'une entité change, l'adresse affichée sur les feuilles de notes sera impactée "
+       "également"
 
 msgid "inject"
 msgstr "Injecter"
@@ -636,7 +644,7 @@ msgid "message"
 msgstr "Message"
 
 msgid "message_address_papersheet"
-msgstr "Réutilisez l'adresse d'une entité liée au programme ou informez l'adresse d'affichage pour la feuille des notes"
+msgstr "Réutilisez l'adresse d'une entité liée au programme ou informez l'adresse d'affichage pour la feuille de notes."
 
 msgid "message_not_resent_no_email"
 msgstr "Le message ne peut être réenvoyé , l'utilisateur n'a pas d'adresse mail."
@@ -708,11 +716,17 @@ msgstr "Nom complet"
 msgid "national_register"
 msgstr "Numéro de registre nationnal"
 
+msgid "no_current_entity_version_found"
+msgstr "L'entité sélectionnée n'existe plus aujourd'hui (fin de validité dépassée)."
+
 msgid "no_data_for_this_academic_year"
 msgstr "Aucune données pour cette année académique"
 
 msgid "no_dubble_score_encoded_comparison_impossible"
 msgstr "Aucune note n'a été double encodée ; aucune comparaison à effectuer."
+
+msgid "no_entity_address_found"
+msgstr "Aucune adresse trouvée pour l'entité sélectionnée."
 
 msgid "no_exam_session_opened_for_the_moment"
 msgstr "Aucune session d'encodage de notes ouverte pour le moment. "
@@ -1650,7 +1664,7 @@ msgid "requirement_entity"
 msgstr "Entité resp. cahier de charges"
 
 msgid "requirement_entity_small"
-msgstr "Ent. ch."
+msgstr "Ent. charge"
 
 msgid "allocation_entity"
 msgstr "Entité resp. de l'attribution"
@@ -1768,3 +1782,63 @@ msgstr "partie 2"
 
 msgid "title_official"
 msgstr "Intitulé officiel"
+
+msgid "create_learning_unit"
+msgstr "Création d'une unité d'enseignement"
+
+msgid "existed_acronym"
+msgstr "Sigle a déjà existé pour "
+
+msgid "existing_acronym"
+msgstr "Sigle déja existant"
+
+msgid "acronym_rules"
+msgstr "Site en une lettre\n"
+       "Sigle en min 2 et max 4 lettres\n"
+       "Code numérique en 4 chiffres"
+
+msgid "end_year_title"
+msgstr "Année de fin"
+
+msgid "basic_informations_title"
+msgstr "Informations de base"
+
+msgid "active_title"
+msgstr "Actif"
+
+msgid "titles"
+msgstr "Intitulés"
+
+msgid "structure_title"
+msgstr "Structure"
+
+msgid "fixtures_build"
+msgstr "Créer des fixtures anonymisées"
+
+msgid "desc_lnk_fixtures_build"
+msgstr "Crée un fichier json avec des fixtures anonymisées"
+
+msgid "end_date_gt_begin_date"
+msgstr "L'année de fin doit etre égale ou supérieur à l'année de départ"
+
+msgid "session_title"
+msgstr "Session"
+
+msgid "remarks_title"
+msgstr "Remarques"
+
+msgid "faculty_remark"
+msgstr "Faculté"
+
+msgid "other_remark"
+msgstr "Autre"
+
+msgid "new_learning_unit"
+msgstr "Nouvelle unité d'enseignement"
+
+
+msgid "previous"
+msgstr "Précédent"
+
+msgid "next"
+msgstr "Suivant"

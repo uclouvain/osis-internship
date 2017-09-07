@@ -117,18 +117,20 @@
                                 <tr class="class_year class_year_head collapse collapse_classes{{ component_number }}">
                                     <td rowspan="{{ classes_count }}"></td>
                                     <td rowspan="{{ classes_count }}">{% trans 'classes' %}</td>
-                                    <td>{% trans 'code' %}</td>
-                                    <td colspan="6">{% trans 'description' %}</td>
+                                    <td colspan="2">{% trans 'code' %}</td>
+                                    <td colspan="5">{% trans 'description' %}</td>
                                     <td>{% trans 'lu_usage' %}</td>
                                     <td></td>
                                 </tr>
                             {% for learning_class_year in component.learning_component_year.classes|dictsort:"acronym" %}
                                 <tr class="class_year collapse collapse_classes{{ component_number }}">
-                                    <td>
-                                        /{% if component.learning_component_year.type_letter_acronym %}{{ component.learning_component_year.type_letter_acronym }}{% endif %}
-                                        {{ learning_class_year.acronym }}
+                                    <td colspan="2">
+                                        /{% if component.learning_component_year.type_letter_acronym %}
+                                            {{ component.learning_component_year.type_letter_acronym }}
+                                         {% endif %}
+                                         - {{ learning_class_year.acronym }}
                                     </td>
-                                    <td colspan="6">
+                                    <td colspan="5">
                                         {{ learning_class_year.description|default_if_none:'' }}
                                     </td>
                                     <td>{{ learning_class_year.used_by_learning_units_year }}</td>
@@ -147,6 +149,11 @@
                     </tbody>
                     {% endfor %}
                 </table>
+                <a href="{% url 'learning_unit_volumes_management' learning_unit_year.id %}"
+                   id="lnk_learning_unit_create" class="btn btn-default pull-right" role="button"
+                   title="{% trans 'learning_unit_create' %}">
+                    Gérer les volumes
+                </a>
             </div>
         </div>
     </div>
