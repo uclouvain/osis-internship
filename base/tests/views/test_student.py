@@ -98,7 +98,7 @@ class StudentViewTestCase(TestCase):
 
     @mock.patch('requests.get', side_effect=Exception)
     def test_student_picture(self, mock_request_get):
-        student = StudentFactory(person=PersonFactory(last_name='Durant', first_name='Thomas'))
+        student = StudentFactory(person=PersonFactory(last_name='Durant', first_name='Thomas', gender='M'))
 
         request = RequestFactory().get(reverse('student_picture', args=[student.id]))
         request.user = self.program_manager_1.person.user
