@@ -93,3 +93,11 @@ class ScoreSheetAddressTest(TestCase):
         fields = score_encoding_sheet._get_address_as_dict(address1).keys()
         for f in self.address_fields:
             self.assertIn(f, fields)
+
+    def test_get_serialized_address(self):
+        score_sheet_addr = ScoreSheetAddressFactory(offer_year=self.offer_year,
+                                                    entity_address_choice=None)
+        address = score_encoding_sheet._get_serialized_address(self.offer_year)
+        self.assertEqual(address.get('country'), score_sheet_addr.country.name)
+        for f in self.address_fields:
+            self.assertIn(f, address)
