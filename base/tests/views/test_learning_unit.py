@@ -57,6 +57,8 @@ from base.tests.factories.organization import OrganizationFactory
 from base.tests.factories.user import SuperUserFactory
 from base.views import learning_unit as learning_unit_view
 from django.utils.translation import ugettext_lazy as _
+
+from reference.tests.factories.country import CountryFactory
 from reference.tests.factories.language import LanguageFactory
 
 
@@ -69,7 +71,8 @@ class LearningUnitViewTestCase(TestCase):
         self.learning_container_yr = LearningContainerYearFactory(academic_year=self.current_academic_year)
         self.learning_component_yr = LearningComponentYearFactory(learning_container_year=self.learning_container_yr)
         self.organization = OrganizationFactory(type=organization_type.MAIN)
-        self.entity = EntityFactory(organization=self.organization)
+        self.country = CountryFactory()
+        self.entity = EntityFactory(country=self.country, organization=self.organization)
         self.entity_container_yr = EntityContainerYearFactory(learning_container_year=self.learning_container_yr,
                                                               type=entity_container_year_link_type.REQUIREMENT_ENTITY,
                                                               entity=self.entity)
@@ -536,14 +539,25 @@ class LearningUnitViewTestCase(TestCase):
 
     def _prepare_context_learning_units_search(self):
         # Create a structure [Entity / Entity version]
-        ssh_entity_v = EntityVersionFactory(acronym="SSH", end_date=None)
+        ssh_entity = EntityFactory(country=self.country)
+        ssh_entity_v = EntityVersionFactory(acronym="SSH", end_date=None, entity=ssh_entity)
 
-        agro_entity_v = EntityVersionFactory(parent=ssh_entity_v.entity, acronym="AGRO", end_date=None)
-        envi_entity_v = EntityVersionFactory(parent=agro_entity_v.entity, acronym="ENVI", end_date=None)
-        ages_entity_v = EntityVersionFactory(parent=agro_entity_v.entity, acronym="AGES", end_date=None)
+        agro_entity = EntityFactory(country=self.country)
+        envi_entity = EntityFactory(country=self.country)
+        ages_entity = EntityFactory(country=self.country)
+        agro_entity_v = EntityVersionFactory(entity=agro_entity, parent=ssh_entity_v.entity, acronym="AGRO",
+                                             end_date=None)
+        envi_entity_v = EntityVersionFactory(entity=envi_entity, parent=agro_entity_v.entity, acronym="ENVI",
+                                             end_date=None)
+        ages_entity_v = EntityVersionFactory(entity=ages_entity, parent=agro_entity_v.entity, acronym="AGES",
+                                             end_date=None)
 
-        espo_entity_v = EntityVersionFactory(parent=ssh_entity_v.entity, acronym="ESPO", end_date=None)
-        drt_entity_v = EntityVersionFactory(parent=ssh_entity_v.entity, acronym="DRT", end_date=None)
+        espo_entity = EntityFactory(country=self.country)
+        drt_entity = EntityFactory(country=self.country)
+        espo_entity_v = EntityVersionFactory(entity=espo_entity, parent=ssh_entity_v.entity, acronym="ESPO",
+                                             end_date=None)
+        drt_entity_v = EntityVersionFactory(entity=drt_entity, parent=ssh_entity_v.entity, acronym="DRT",
+                                            end_date=None)
 
         # Create UE and put entity charge [AGRO]
         l_container_yr = LearningContainerYearFactory(acronym="LBIR1100", academic_year=self.current_academic_year,
