@@ -651,6 +651,7 @@ class LearningUnitViewTestCase(TestCase):
                 "title_english": "LAW",
                 "requirement_entity": self.entity_version.id,
                 "allocation_entity": self.entity_version.id,
+                "additional_entity": self.entity_version.id,
                 "subtype": FULL,
                 "language": self.language.id,
                 "session": SESSION_P23,
