@@ -74,11 +74,12 @@
 			<td align="left">
 			{% if mandate.state == "TO_DO" %}
 				<button type="submit" class="btn btn-success" title="{% trans 'accept'%}" id="bt_mandate_accept"
-				name="bt_mandate_accept" onclick="return confirm('{% trans 'confirm_accept' %}')">
-				<span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span> {% trans 'accept'%}</button>
-				<button type="submit" class="btn btn-danger" title="{% trans 'decline'%}"
-				id="bt_mandate_decline" name="bt_mandate_decline" onclick="return confirm('{% trans 'confirm_decline' %}')">
-				<span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span> {% trans 'decline'%}</button>
+						name="bt_mandate_accept" onclick="return confirm('{% trans 'confirm_accept' %}')">
+					<span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span> {% trans 'accept'%}</button>
+				<button type="submit" class="btn btn-danger" title="{% trans 'decline'%}" id="bt_mandate_decline"
+						name="bt_mandate_decline" onclick="return confirm('{% trans 'confirm_decline' %}')">
+					<span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span> {% trans 'decline'%}
+				</button>
 			{% elif mandate.state == "TRTS" %}
 				<a href="{% url 'form_part1_edit' %}">
                     <button type="button" class="btn btn-link btn-lg" title="{% trans 'edit'%}" id="bt_mandate_edit">

@@ -22,6 +22,9 @@ msgstr "(for the 2nd renewal)"
 msgid "absences"
 msgstr "Absences"
 
+msgid "accept"
+msgstr "Accept"
+
 msgid "action"
 msgstr "Action"
 
@@ -118,6 +121,15 @@ msgstr "Conference(s)"
 msgid "confidential"
 msgstr "Confidentiel"
 
+msgid "confirm_accept"
+msgstr "Are you sure you want to accept ? This action can not be undone."
+
+msgid "confirm_decline"
+msgstr "Are you sure you want to decline ? This action can not be undone."
+
+msgid "confirm_removal"
+msgstr "Are you sure you want to delete this learning unit ?"
+
 msgid "confirm_reviewer_addition"
 msgstr "Are you sure you want to add this reviewer ? This action can not be undone."
 
@@ -168,6 +180,9 @@ msgstr "Dean of faculty"
 
 msgid "deans"
 msgstr "Deans of faculty"
+
+msgid "decline"
+msgstr "Decline"
 
 msgid "DECLINED"
 msgstr "Declined by the assistant"
@@ -294,6 +309,9 @@ msgstr "Grade"
 
 msgid "head_institute"
 msgstr "Head of institute"
+
+msgid "hours_per_year"
+msgstr "Hours per year"
 
 msgid "hours_per_year_message"
 msgstr "Enter the number of hours per annum"
@@ -500,7 +518,7 @@ msgid "save"
 msgstr "Save"
 
 msgid "save_before_link"
-msgstr "Do you want to save changed data before changing item ?"
+msgstr "Click on OK to save changed data before changing item. Click on Cancel to continue without saving."
 
 msgid "scientific_internships"
 msgstr "Research stay(s) and/or scientific training"
@@ -510,6 +528,9 @@ msgstr "Juries and scientific commissions participation"
 
 msgid "search_by_email_or_last_name"
 msgstr "search by email or last name"
+
+msgid "search_by_acronym"
+msgstr "search by acronym"
 
 msgid "sector_representation"
 msgstr "Sector representation activities"
@@ -581,10 +602,10 @@ msgid "supervisor_email_address"
 msgstr "Supervisor email address"
 
 msgid "supervision_review"
-msgstr "Avis doyen de faculté"
+msgstr "Avis doyen de facult?"
 
 msgid "support_committee_reports"
-msgstr "Rapport du comité d'encadrement"
+msgstr "Rapport du comit? d'encadrement"
 
 msgid "svr"
 msgstr "SVR"
@@ -616,6 +637,9 @@ msgstr "Total should equal 100"
 msgid "TRTS"
 msgstr "Assistant"
 
+msgid "tutoring_learning_units"
+msgstr "Tutoring learning units"
+
 msgid "tutoring_percent"
 msgstr "Tutoring percentage"
 
@@ -640,9 +664,6 @@ msgstr "Validate and submit"
 msgid "various"
 msgstr "Various"
 
-msgid "verify_address_message"
-msgstr "Si l'information concernant votre adresse est incorrecte ou incomplète, merci de signaler la modification par l'intermédiaire de votre guichet employé."
-
 msgid "vice_rector"
 msgstr "Vice-rector"
 
@@ -651,6 +672,9 @@ msgstr "Sector vice-rector"
 
 msgid "VICE_RECTOR_ASSISTANT"
 msgstr "DAS/CAS"
+
+msgid "view"
+msgstr "Voir"
 
 msgid "yes"
 msgstr "Yes"
