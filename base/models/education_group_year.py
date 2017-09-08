@@ -32,12 +32,12 @@ from base.models.enums import academic_type, fee, internship_presence, schedule_
 class EducationGroupYearAdmin(admin.ModelAdmin):
     list_display = ('acronym', 'title', 'academic_year', 'education_group_type', 'changed')
     fieldsets = ((None, {'fields': ('academic_year', 'acronym', 'title', 'education_group_type', 'education_group',
-                                    'start_year', 'end_year', 'active', 'partial_deliberation', 'admission_exam',
+                                    'active', 'partial_deliberation', 'admission_exam',
                                     'funding', 'funding_direction', 'funding_cud', 'funding_direction_cud',
                                     'academic_type', 'university_certificate', 'fee_type', 'enrollment_campus',
                                     'main_teaching_campus', 'dissertation', 'internship',
                                     'schedule_type', 'english_activities', 'other_language_activities',
-                                    'other_campus_activities', 'professionnal_title', 'joint_diploma',
+                                    'other_campus_activities', 'professional_title', 'joint_diploma',
                                     'diploma_printing_orientation', 'diploma_printing_title',
                                     'inter_organization_information', 'inter_university_french_community',
                                     'inter_university_belgium', 'inter_university_abroad', 'primary_language')}),)
@@ -54,8 +54,6 @@ class EducationGroupYear(models.Model):
     academic_year = models.ForeignKey('AcademicYear')
     education_group = models.ForeignKey('EducationGroup')
     education_group_type = models.ForeignKey('OfferType', blank=True, null=True)
-    start_year = models.IntegerField(blank=True, null=True)
-    end_year = models.IntegerField(blank=True, null=True)
     active = models.CharField(max_length=20, choices=active_status.ACTIVE_STATUS_LIST, default=active_status.ACTIVE)
     partial_deliberation = models.BooleanField(default=False)
     admission_exam = models.BooleanField(default=False)
@@ -74,7 +72,7 @@ class EducationGroupYear(models.Model):
     english_activities = models.CharField(max_length=20, choices=activity_presence.ACTIVITY_PRESENCES, blank=True, null=True)
     other_language_activities = models.CharField(max_length=20, choices=activity_presence.ACTIVITY_PRESENCES, blank=True, null=True)
     other_campus_activities = models.CharField(max_length=20, choices=activity_presence.ACTIVITY_PRESENCES, blank=True, null=True)
-    professionnal_title = models.CharField(max_length=320, blank=True, null=True)
+    professional_title = models.CharField(max_length=320, blank=True, null=True)
     joint_diploma = models.BooleanField(default=False)
     diploma_printing_orientation = models.CharField(max_length=30, choices=diploma_printing_orientation.DIPLOMA_FOCUS, blank=True, null=True)
     diploma_printing_title = models.CharField(max_length=140, blank=True, null=True)
@@ -83,7 +81,6 @@ class EducationGroupYear(models.Model):
     inter_university_belgium = models.BooleanField(default=False)
     inter_university_abroad = models.BooleanField(default=False)
     primary_language = models.ForeignKey('reference.Language', blank=True, null=True)
-
 
     def __str__(self):
         return u"%s - %s" % (self.academic_year, self.acronym)

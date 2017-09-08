@@ -17,6 +17,16 @@ class Migration(migrations.Migration):
             model_name='educationgroup',
             name='uuid',
         ),
+        migrations.AddField(
+            model_name='educationgroup',
+            name='start_year',
+            field=models.IntegerField(blank=True, null=True),
+        ),
+        migrations.AddField(
+            model_name='educationgroup',
+            name='end_year',
+            field=models.IntegerField(blank=True, null=True),
+        ),
         migrations.RemoveField(
             model_name='educationgroupyear',
             name='uuid',
@@ -50,11 +60,6 @@ class Migration(migrations.Migration):
             model_name='educationgroupyear',
             name='dissertation',
             field=models.BooleanField(default=False),
-        ),
-        migrations.AddField(
-            model_name='educationgroupyear',
-            name='end_year',
-            field=models.IntegerField(blank=True, null=True),
         ),
         migrations.AddField(
             model_name='educationgroupyear',
@@ -128,18 +133,13 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name='educationgroupyear',
-            name='professionnal_title',
+            name='professional_title',
             field=models.CharField(blank=True, max_length=320, null=True),
         ),
         migrations.AddField(
             model_name='educationgroupyear',
             name='schedule_type',
             field=models.CharField(choices=[('DAILY', 'DAILY'), ('SHIFTED', 'SHIFTED'), ('ADAPTED', 'ADAPTED')], default='DAILY', max_length=20),
-        ),
-        migrations.AddField(
-            model_name='educationgroupyear',
-            name='start_year',
-            field=models.IntegerField(blank=True, null=True),
         ),
         migrations.AddField(
             model_name='educationgroupyear',
