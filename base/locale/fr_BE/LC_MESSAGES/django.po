@@ -1842,3 +1842,6 @@ msgstr "Précédent"
 
 msgid "next"
 msgstr "Suivant"
+
+msgid "learning_localisation"
+msgstr "Lieu d'enseignement"

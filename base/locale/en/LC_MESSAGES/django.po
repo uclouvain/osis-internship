@@ -1835,3 +1835,6 @@ msgstr "Previous"
 
 msgid "next"
 msgstr "Next"
+
+msgid "learning_localisation"
+msgstr "Learning localisation"
