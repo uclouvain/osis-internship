@@ -95,3 +95,28 @@ class StudentViewTestCase(TestCase):
 
         self.assertEqual(template, 'student/student.html')
         self.assertEqual(context['student'], student)
+
+    @mock.patch('requests.get', side_effect=Exception)
+    def test_student_picture(self, mock_request_get):
+        student = StudentFactory(person=PersonFactory(last_name='Durant', first_name='Thomas', gender='M'))
+
+        request = RequestFactory().get(reverse('student_picture', args=[student.id]))
+        request.user = self.program_manager_1.person.user
+
+        from base.views.student import student_picture
+        from django.contrib.staticfiles.storage import staticfiles_storage
+
+        response = student_picture(request, student.id)
+
+        self.assertTrue(mock_request_get.called)
+        self.assertEqual(response.url, staticfiles_storage.url('img/men_unknown.png'))
+
+    def test_student_picture_for_non_existent_student(self):
+        non_existent_student_id = 42
+        request = RequestFactory().get(reverse('student_picture', args=[non_existent_student_id]))
+        request.user = self.program_manager_1.person.user
+
+        from base.views.student import student_picture
+        from django.http import Http404
+
+        self.assertRaises(Http404, student_picture, request, non_existent_student_id)

@@ -210,6 +210,9 @@ msgstr "Date de création"
 msgid "credits"
 msgstr "Crédits"
 
+msgid "customized"
+msgstr "Personnalisée"
+
 msgid "data"
 msgstr "Données"
 
@@ -512,7 +515,9 @@ msgid "info_address_changed_for_papersheet"
 msgstr "Ce formulaire de modification des coordonnées d’une entité administrative du programme d’étude %s "
        "impacte uniquement l’affichage des coordonnées sur la feuille de notes. Cela ne modifie donc pas "
        "les coordonnées officielles d’une entité/structure. Par ailleurs, la liste déroulante "
-       "« Réutiliser l’adresse de … » permet de faciliter l’encodage de l’adresse à partir de données préexistantes"
+       "« Veuillez sélectionner une adresse … » permet de faciliter l’encodage de l’adresse à partir de données "
+       "préexistantes. Si l'adresse d'une entité change, l'adresse affichée sur les feuilles de notes sera impactée "
+       "également"
 
 msgid "inject"
 msgstr "Injecter"
@@ -639,7 +644,7 @@ msgid "message"
 msgstr "Message"
 
 msgid "message_address_papersheet"
-msgstr "Réutilisez l'adresse d'une entité liée au programme ou informez l'adresse d'affichage pour la feuille des notes"
+msgstr "Réutilisez l'adresse d'une entité liée au programme ou informez l'adresse d'affichage pour la feuille de notes."
 
 msgid "message_not_resent_no_email"
 msgstr "Le message ne peut être réenvoyé , l'utilisateur n'a pas d'adresse mail."
@@ -711,11 +716,17 @@ msgstr "Nom complet"
 msgid "national_register"
 msgstr "Numéro de registre nationnal"
 
+msgid "no_current_entity_version_found"
+msgstr "L'entité sélectionnée n'existe plus aujourd'hui (fin de validité dépassée)."
+
 msgid "no_data_for_this_academic_year"
 msgstr "Aucune données pour cette année académique"
 
 msgid "no_dubble_score_encoded_comparison_impossible"
 msgstr "Aucune note n'a été double encodée ; aucune comparaison à effectuer."
+
+msgid "no_entity_address_found"
+msgstr "Aucune adresse trouvée pour l'entité sélectionnée."
 
 msgid "no_exam_session_opened_for_the_moment"
 msgstr "Aucune session d'encodage de notes ouverte pour le moment. "
@@ -1831,3 +1842,78 @@ msgstr "Précédent"
 
 msgid "next"
 msgstr "Suivant"
+
+msgid "NON_ACADEMIC"
+msgstr "Non academique autre"
+
+msgid "NON_ACADEMIC_CREF"
+msgstr "Non académique CREF"
+
+msgid "ACADEMIC"
+msgstr "Académique"
+
+msgid "ACTIVE"
+msgstr "Actif"
+
+msgid "INACTIVE"
+msgstr "Inactif"
+
+msgid "RE_REGISTRATION"
+msgstr "Ré-inscription"
+
+msgid "OPTIONAL"
+msgstr "Optionnel"
+
+msgid "NO_PRINT"
+msgstr "Pas d'impression"
+
+msgid "IN_HEADING_2_OF_DIPLOMA"
+msgstr "Dans rubrique 2 du diplôme"
+
+msgid "IN_EXPECTED_FORM"
+msgstr "Sous forme d'attendu"
+
+msgid "FEE_1"
+msgstr "Rôle"
+
+msgid "FEE_2"
+msgstr "Rôle + examen"
+
+msgid "FEE_3"
+msgstr "AESS, CAPAES ou fin de cycle"
+
+msgid "FEE_4"
+msgstr "Minerval sans examen"
+
+msgid "FEE_5"
+msgstr "Minerval complet"
+
+msgid "FEE_6"
+msgstr "certificat universitaire"
+
+msgid "FEE_7"
+msgstr "Master complémentaire spécialisation médicale"
+
+msgid "FEE_8"
+msgstr "Concours d’accès"
+
+msgid "FEE_10"
+msgstr "10 CU 30 crédits"
+
+msgid "FEE_11"
+msgstr "11 Certificat compétence méd"
+
+msgid "FEE_12"
+msgstr "12 Offres ISA : 12BA et 21MS"
+
+msgid "FEE_13"
+msgstr "13 Offres ISA : 13BA et 22MS"
+
+msgid "DAILY"
+msgstr "Horaire de jour"
+
+msgid "SHIFTED"
+msgstr "Horaire décalé"
+
+msgid "ADAPTED"
+msgstr "Horaire adapté"

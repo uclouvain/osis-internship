@@ -24,7 +24,6 @@
 #
 ##############################################################################
 import copy
-import json
 import logging
 import pika
 import pika.exceptions
@@ -43,6 +42,7 @@ from psycopg2._psycopg import OperationalError as PsycopOperationalError, Interf
 import time
 
 from assessments.business import score_encoding_progress, score_encoding_list, score_encoding_export
+from assessments.business import score_encoding_sheet
 from attribution import models as mdl_attr
 from base import models as mdl
 from base.utils import send_mail
@@ -411,7 +411,7 @@ def notes_printing(request, learning_unit_year_id=None, tutor_id=None, offer_id=
         offer_year_id=offer_id
     )
     tutor = mdl.tutor.find_by_user(request.user) if not is_program_manager else None
-    sheet_data = mdl.exam_enrollment.scores_sheet_data(scores_list_encoded.enrollments, tutor=tutor)
+    sheet_data = score_encoding_sheet.scores_sheet_data(scores_list_encoded.enrollments, tutor=tutor)
     return paper_sheet.print_notes(sheet_data)
 
 
@@ -622,7 +622,7 @@ def get_json_data_scores_sheets(tutor_global_id):
             exam_enrollments = list(mdl.exam_enrollment.find_for_score_encodings(number_session,
                                                                                  tutor=tutor,
                                                                                  academic_year=academic_yr))
-            return mdl.exam_enrollment.scores_sheet_data(exam_enrollments, tutor=tutor)
+            return score_encoding_sheet.scores_sheet_data(exam_enrollments, tutor=tutor)
         else:
             return {}
     except (PsycopOperationalError, PsycopInterfaceError, DjangoOperationalError, DjangoInterfaceError):

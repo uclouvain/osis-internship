@@ -35,6 +35,7 @@ from backoffice.settings.base import ESB_STUDENT_API, ESB_AUTHORIZATION
 from base import models as mdl
 from . import layout
 
+
 @login_required
 @permission_required('base.can_access_student', raise_exception=True)
 def students(request):
@@ -74,12 +75,14 @@ def student_read(request, student_id):
 def student_picture(request, student_id):
     student = mdl.student.find_by_id(student_id)
     if student:
-        url = "{url}/{registration_id}/photo".format(url=ESB_STUDENT_API, registration_id=student.registration_id)
-        response = requests.get(url, headers={"Authorization": ESB_AUTHORIZATION})
-        result = response.json()
-        if response.status_code == 200 and result.get('photo_url'):
-            return _get_image(result.get('photo_url'), student)
-        return _default_image(student)
+        try:
+            url = "{url}/{registration_id}/photo".format(url=ESB_STUDENT_API, registration_id=student.registration_id)
+            response = requests.get(url, headers={"Authorization": ESB_AUTHORIZATION})
+            result = response.json()
+            if response.status_code == 200 and result.get('photo_url'):
+                return _get_image(result.get('photo_url'), student)
+        finally:
+            return _default_image(student)
     raise Http404()
 
 
