@@ -81,9 +81,8 @@ def student_picture(request, student_id):
             result = response.json()
             if response.status_code == 200 and result.get('photo_url'):
                 return _get_image(result.get('photo_url'), student)
-        except Exception:
-            pass
-        return _default_image(student)
+        finally:
+            return _default_image(student)
     raise Http404()
 
 
