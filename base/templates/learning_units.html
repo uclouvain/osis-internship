@@ -38,7 +38,7 @@
             <h2>{% trans 'learning_units' %}</h2>
         </div>
         <div class="col-md-1" style="margin-top:20px;">
-            {% if request.GET.academic_year_id and request.GET.academic_year_id == 0 %}
+            {% if request.GET.academic_year_id and request.GET.academic_year_id != '0' %}
                 <a href="{% url 'learning_unit_create' academic_year=request.GET.academic_year_id %}"
                    id="lnk_learning_unit_create" class="btn btn-default pull-right" role="button" title="{% trans 'new_learning_unit' %}">
                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
