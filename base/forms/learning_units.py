@@ -171,9 +171,11 @@ class CreateLearningUnitYearForm(forms.ModelForm):
     end_year = forms.CharField(widget=forms.DateInput(attrs={'class': 'form-control',
                                                              'id': 'end_year'}))
     faculty_remark = forms.CharField(required=False, widget=forms.Textarea(attrs={'class': 'form-control',
-                                                                                  'id': 'faculty_remark'}))
+                                                                                  'id': 'faculty_remark',
+                                                                                  'rows': 2}))
     other_remark = forms.CharField(required=False, widget=forms.Textarea(attrs={'class': 'form-control',
-                                                                                'id': 'other_remark'}))
+                                                                                'id': 'other_remark',
+                                                                                'rows': 2}))
     periodicity = forms.CharField(widget=forms.Select(attrs={'class': 'form-control',
                                                              'id': 'periodicity'},
                                                       choices=PERIODICITY_TYPES))

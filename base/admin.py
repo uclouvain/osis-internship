@@ -36,7 +36,8 @@ admin.site.register(academic_year.AcademicYear,
 admin.site.register(campus.Campus,
                     campus.CampusAdmin)
 
-admin.site.register(education_group.EducationGroup)
+admin.site.register(education_group.EducationGroup,
+                    education_group.EducationGroupAdmin)
 
 admin.site.register(education_group_year.EducationGroupYear,
                     education_group_year.EducationGroupYearAdmin)
