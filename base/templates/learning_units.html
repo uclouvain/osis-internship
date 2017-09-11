@@ -38,7 +38,7 @@
             <h2>{% trans 'learning_units' %}</h2>
         </div>
         <div class="col-md-1" style="margin-top:20px;">
-            {% if request.GET.academic_year_id and request.GET.academic_year_id == 0 %}
+            {% if request.GET.academic_year_id and request.GET.academic_year_id != '0' %}
                 <a href="{% url 'learning_unit_create' academic_year=request.GET.academic_year_id %}"
                    id="lnk_learning_unit_create" class="btn btn-default pull-right" role="button" title="{% trans 'new_learning_unit' %}">
                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
@@ -170,7 +170,7 @@
             <thead>
                 <th>{% trans 'academic_year_small'%}</th>
                 <th>{% trans 'code'%}</th>
-                <th>{% trans 'title'%}</th>
+                <th  id="lu_title_sort" ">{% trans 'title'%}</th>
                 <th>{% trans 'type'%}</th>
                 <th>{% trans 'subtype'%}</th>
                 <th>{% trans 'requirement_entity_small'%}</th>
@@ -223,6 +223,9 @@
     {
         $('#table_learning_units').DataTable(
             {
+                columnDefs: [
+                    { targets: 2, type: 'diacritics-neutralise'}
+                ],
                 "stateSave": true,
                 "paging" : false,
                 "ordering" : true,

@@ -35,6 +35,7 @@ from base.tests.factories.entity import EntityFactory
 from base.tests.factories.entity_version import EntityVersionFactory
 from base.tests.factories.offer_year import OfferYearFactory
 from base.tests.factories.offer_year_entity import OfferYearEntityFactory
+from reference.tests.factories.country import CountryFactory
 
 
 class ScoreSheetAddressTest(TestCase):
@@ -51,7 +52,8 @@ class ScoreSheetAddressTest(TestCase):
 
     def _create_data_for_entity_address(self, entity_type):
         past_date = datetime.datetime(year=2015, month=1, day=1)
-        entity = EntityFactory()
+        country = CountryFactory()
+        entity = EntityFactory(country=country)
         EntityVersionFactory(entity=entity,
                              start_date=past_date,
                              end_date=None)
@@ -86,10 +88,19 @@ class ScoreSheetAddressTest(TestCase):
     def test_get_address_as_dict(self):
         address1 = ScoreSheetAddressFactory(offer_year=self.offer_year)
         self._assert_address_fields_are_in_object(address1)
-        address2 = EntityFactory()
+        country = CountryFactory()
+        address2 = EntityFactory(country=country)
         self._assert_address_fields_are_in_object(address2)
 
     def _assert_address_fields_are_in_object(self, address1):
         fields = score_encoding_sheet._get_address_as_dict(address1).keys()
         for f in self.address_fields:
             self.assertIn(f, fields)
+
+    def test_get_serialized_address(self):
+        score_sheet_addr = ScoreSheetAddressFactory(offer_year=self.offer_year,
+                                                    entity_address_choice=None)
+        address = score_encoding_sheet._get_serialized_address(self.offer_year)
+        self.assertEqual(address.get('country'), score_sheet_addr.country.name)
+        for f in self.address_fields:
+            self.assertIn(f, address)
