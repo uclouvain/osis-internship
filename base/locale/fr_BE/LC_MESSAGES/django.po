@@ -1843,7 +1843,7 @@ msgstr "Précédent"
 msgid "next"
 msgstr "Suivant"
 
-msgid "learning_localisation"
+msgid "learning_location"
 msgstr "Lieu d'enseignement"
 
 msgid "NON_ACADEMIC"

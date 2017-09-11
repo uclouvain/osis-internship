@@ -1836,8 +1836,8 @@ msgstr "Previous"
 msgid "next"
 msgstr "Next"
 
-msgid "learning_localisation"
-msgstr "Learning localisation"
+msgid "learning_location"
+msgstr "Learning location"
 
 msgid "NON_ACADEMIC"
 msgstr "Non academic"
