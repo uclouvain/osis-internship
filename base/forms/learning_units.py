@@ -188,10 +188,14 @@ class CreateLearningUnitYearForm(forms.ModelForm):
     allocation_entity = forms.ChoiceField(choices=lazy(create_main_entities_version_list, tuple),
                                           widget=forms.Select(attrs={'class': 'form-control',
                                                                      'id': 'allocation_entity'}))
-    additional_entity = forms.ChoiceField(choices=lazy(create_main_entities_version_list, tuple),
-                                          required=False,
-                                          widget=forms.Select(attrs={'class': 'form-control',
-                                                                     'id': 'allocation_entity'}))
+    additional_entity_1 = forms.ChoiceField(choices=lazy(create_main_entities_version_list, tuple),
+                                            required=False,
+                                            widget=forms.Select(attrs={'class': 'form-control',
+                                                                       'id': 'allocation_entity'}))
+    additional_entity_2 = forms.ChoiceField(choices=lazy(create_main_entities_version_list, tuple),
+                                            required=False,
+                                            widget=forms.Select(attrs={'class': 'form-control',
+                                                                       'id': 'allocation_entity'}))
     language = forms.ChoiceField(choices=lazy(create_languages_list, tuple),
                                  widget=forms.Select(attrs={'class': 'form-control',
                                                             'id': 'language'}))
@@ -199,9 +203,9 @@ class CreateLearningUnitYearForm(forms.ModelForm):
     class Meta:
         model = mdl.learning_unit_year.LearningUnitYear
         fields = ['learning_container_year_type', 'acronym', 'academic_year', 'status', 'internship_subtype',
-                  'end_year', 'periodicity', 'credits', 'campus', 'title', 'title_english', 'additional_entity',
-                  'allocation_entity', 'requirement_entity', 'subtype', 'language', 'session', 'faculty_remark',
-                  'other_remark', ]
+                  'end_year', 'periodicity', 'credits', 'campus', 'title', 'title_english', 'additional_entity_1',
+                  'additional_entity_2', 'allocation_entity', 'requirement_entity', 'subtype', 'language', 'session',
+                  'faculty_remark', 'other_remark', ]
         widgets = {'acronym': forms.TextInput(attrs={'class': 'form-control',
                                                      'id': 'acronym',
                                                      'maxlength': "15",

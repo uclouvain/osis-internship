@@ -152,17 +152,41 @@
                 </div>
                 <div class="panel-body">
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <label>{% trans 'requirement_entity' %}</label>
                             {{ form.requirement_entity }}
+                            <label {% if form.errors.requirement_entity %}
+                                        style="color:red;"
+                                   {% endif %}>
+                                {{ form.errors.requirement_entity }}
+                            </label>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <label>{% trans 'allocation_entity' %}</label>
                             {{ form.allocation_entity }}
+                            <label {% if form.errors.allocation_entity %}
+                                        style="color:red;"
+                                   {% endif %}>
+                                {{ form.errors.allocation_entity }}
+                            </label>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <label>{% trans 'additional_requirement_entity' %}</label>
-                            {{ form.additional_entity }}
+                            {{ form.additional_entity_1 }}
+                            <label {% if form.errors.additional_entity_1 %}
+                                        style="color:red;"
+                                   {% endif %}>
+                                {{ form.errors.additional_entity_2 }}
+                            </label>
+                        </div>
+                        <div class="col-md-3">
+                            <label>{% trans 'additional_requirement_entity' %}</label>
+                            {{ form.additional_entity_2 }}
+                            <label {% if form.errors.additional_entity_2 %}
+                                        style="color:red;"
+                                   {% endif %}>
+                                {{ form.errors.additional_entity_2 }}
+                            </label>
                         </div>
                     </div>
                     <br>
