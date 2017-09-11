@@ -1843,6 +1843,9 @@ msgstr "Précédent"
 msgid "next"
 msgstr "Suivant"
 
+msgid "learning_location"
+msgstr "Lieu d'enseignement"
+
 msgid "NON_ACADEMIC"
 msgstr "Non academique autre"
 
