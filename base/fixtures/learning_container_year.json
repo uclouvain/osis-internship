@@ -318,5 +318,20 @@
       "language": null,
       "campus": 7
     }
+  },
+  {
+    "model": "base.learningcontaineryear",
+    "pk": 21,
+    "fields": {
+      "academic_year": 2,
+      "learning_container": 22,
+      "container_type": "OTHER_COLLECTIVE",
+      "title": "Topics in Political Economy (Andreu Arenas)",
+      "title_english": "Topics in Political Economy (Andreu Arenas)",
+      "acronym": "LECON3999",
+      "changed": null,
+      "language": null,
+      "campus": 7
+    }
   }
 ]

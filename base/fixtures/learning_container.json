@@ -198,5 +198,21 @@
       "auto_renewal_until": null,
       "start_year": null
     }
+  },
+  {
+    "model": "base.learningcontainer",
+    "pk": 21,
+    "fields": {
+      "auto_renewal_until": null,
+      "start_year": null
+    }
+  },
+  {
+    "model": "base.learningcontainer",
+    "pk": 22,
+    "fields": {
+      "auto_renewal_until": null,
+      "start_year": null
+    }
   }
 ]
