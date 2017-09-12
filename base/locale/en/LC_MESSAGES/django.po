@@ -1797,3 +1797,9 @@ msgstr "C.P. [Full] >= C.P. [Partim]"
 
 msgid "entity_requirement_full_must_be_greater_or_equal_to_partim"
 msgstr "Requirement entity [Full] >= Requirement entity [Partim]"
+
+msgid "volumes_management"
+msgstr "Volumes management"
+
+msgid "volumes_validation_success"
+msgstr "Filled data fit the hourly volumes calculation rules."

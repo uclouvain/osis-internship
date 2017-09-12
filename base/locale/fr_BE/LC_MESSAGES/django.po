@@ -1778,6 +1778,12 @@ msgstr "Créer des fixtures anonymisées"
 msgid "desc_lnk_fixtures_build"
 msgstr "Crée un fichier json avec des fixtures anonymisées"
 
+msgid "volumes_management"
+msgstr "Gestion des volumes"
+
+msgid "volumes_validation_success"
+msgstr "Les données entrées respectent les règles de calculs des volumes horaires."
+
 msgid "vol_tot_not_equal_to_q1_q2"
 msgstr "Vol.tot = Q1 + Q2"
 

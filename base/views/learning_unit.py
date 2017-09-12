@@ -31,7 +31,7 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required, permission_required
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.utils.translation import ugettext_lazy as _
 from django.views.decorators.http import require_http_methods
 
@@ -122,6 +122,17 @@ def learning_unit_components(request, learning_unit_year_id):
     context['tab_active'] = 'components'
     context['experimental_phase'] = True
     return layout.render(request, "learning_unit/components.html", context)
+
+
+@login_required
+@permission_required('base.can_access_learningunit', raise_exception=True)
+def volumes_validation(request, learning_unit_year_id):
+    volumes_encoded = _extract_volumes_from_data(request)
+    volumes_grouped_by_lunityear = learning_unit_year_volumes.get_volumes_grouped_by_lunityear(learning_unit_year_id,
+                                                                                               volumes_encoded)
+    return JsonResponse({
+        'errors': learning_unit_year_volumes.validate(volumes_grouped_by_lunityear)
+    })
 
 
 @login_required

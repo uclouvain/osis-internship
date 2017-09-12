@@ -75,6 +75,7 @@ urlpatterns = [
             url(r'^component/edit/$', learning_unit.learning_unit_component_edit, name="learning_unit_component_edit"),
             url(r'^class/edit/$', learning_unit.learning_class_year_edit, name="learning_class_year_edit"),
             url(r'^volumes/$', learning_unit.learning_unit_volumes_management, name="learning_unit_volumes_management"),
+            url(r'^volumes_validation/$', learning_unit.volumes_validation, name="volumes_validation"),
         ]))
     ])),
 

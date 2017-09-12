@@ -48,22 +48,25 @@ VALID_VOLUMES_KEYS = [
 
 
 def update_volumes(learning_unit_year_id, updated_volumes):
-    # Retrieve value from database
-    volumes_grouped_by_lunityear = _get_volumes_from_db(learning_unit_year_id)
-
-    for lunityear in volumes_grouped_by_lunityear:
-        # Format str to Decimal
-        updated_volume = updated_volumes.get(lunityear.id)
-        # Replace volumes database by volumes entered by user
-        lunityear.components = _set_volume_to_components(lunityear.components, updated_volume)
-
-    errors = _validate(volumes_grouped_by_lunityear)
+    volumes_grouped_by_lunityear = get_volumes_grouped_by_lunityear(learning_unit_year_id, updated_volumes)
+    errors = validate(volumes_grouped_by_lunityear)
     if not errors:
         _save(volumes_grouped_by_lunityear)
     return errors
 
 
-def _validate(volumes_grouped_by_lunityear):
+def get_volumes_grouped_by_lunityear(learning_unit_year_id, updated_volumes):
+    # Retrieve value from database
+    volumes_grouped_by_lunityear = _get_volumes_from_db(learning_unit_year_id)
+    for lunityear in volumes_grouped_by_lunityear:
+        # Format str to Decimal
+        updated_volume = updated_volumes.get(lunityear.id)
+        # Replace volumes database by volumes entered by user
+        lunityear.components = _set_volume_to_components(lunityear.components, updated_volume)
+    return volumes_grouped_by_lunityear
+
+
+def validate(volumes_grouped_by_lunityear):
     errors = []
     learning_unit_year_parent = _get_learning_unit_parent(volumes_grouped_by_lunityear)
 
@@ -218,26 +221,30 @@ def _validate_parent_partim_by_type(learning_unit_year_parent, learning_unit_yea
 def _validate_parent_partim_component(parent_component, partim_component):
     errors = []
 
-    if parent_component.get('VOLUME_TOTAL', 0) <= partim_component.get('VOLUME_TOTAL', 0):
-        errors.append("{}".format(_('vol_tot_full_must_be_greater_than_partim')))
+    partim_vol_tot = partim_component.get('VOLUME_TOTAL', 0)
+    if partim_vol_tot:
+        if parent_component.get('VOLUME_TOTAL', 0) <= partim_vol_tot:
+            errors.append("{}".format(_('vol_tot_full_must_be_greater_than_partim')))
 
-    if parent_component.get('VOLUME_Q1', 0) < partim_component.get('VOLUME_Q1', 0):
-        errors.append("{}".format(_('vol_q1_full_must_be_greater_or_equal_to_partim')))
+        if parent_component.get('VOLUME_Q1', 0) < partim_component.get('VOLUME_Q1', 0):
+            errors.append("{}".format(_('vol_q1_full_must_be_greater_or_equal_to_partim')))
 
-    if parent_component.get('VOLUME_Q2', 0) < partim_component.get('VOLUME_Q2', 0):
-        errors.append("{}".format(_('vol_q2_full_must_be_greater_or_equal_to_partim')))
+        if parent_component.get('VOLUME_Q2', 0) < partim_component.get('VOLUME_Q2', 0):
+            errors.append("{}".format(_('vol_q2_full_must_be_greater_or_equal_to_partim')))
 
-    if parent_component.get('PLANNED_CLASSES', 0) < partim_component.get('PLANNED_CLASSES', 0):
+    partim_planned_classes = partim_component.get('PLANNED_CLASSES', 0)
+    if partim_planned_classes and parent_component.get('PLANNED_CLASSES', 0) < partim_planned_classes:
         errors.append("{}".format(_('planned_classes_full_must_be_greater_or_equal_to_partim')))
 
-    if parent_component.get('VOLUME_' + entity_types.REQUIREMENT_ENTITY, 0) < \
-            partim_component.get('VOLUME_' + entity_types.REQUIREMENT_ENTITY, 0):
+    partim_volume_entity = partim_component.get('VOLUME_' + entity_types.REQUIREMENT_ENTITY, 0)
+    if partim_volume_entity and parent_component.get('VOLUME_' + entity_types.REQUIREMENT_ENTITY, 0) < \
+            partim_volume_entity:
         errors.append("{}".format(_('entity_requirement_full_must_be_greater_or_equal_to_partim')))
 
     # Verify if we have additional_requirement entity
     additional_requirement_entity_1_key = 'VOLUME_' + entity_types.ADDITIONAL_REQUIREMENT_ENTITY_1
     if additional_requirement_entity_1_key in parent_component or \
-        additional_requirement_entity_1_key in partim_component :
+        additional_requirement_entity_1_key in partim_component:
 
         if parent_component.get(additional_requirement_entity_1_key, 0) < partim_component.get(additional_requirement_entity_1_key, 0):
             errors.append("{}".format(_('entity_requirement_full_must_be_greater_or_equal_to_partim')))

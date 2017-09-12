@@ -27,6 +27,7 @@
 {% url 'learning_unit' learning_unit_year_id=learning_unit_year.id as url_identification %}
 {% url 'learning_unit_formations' learning_unit_year_id=learning_unit_year.id as url_formations %}
 {% url 'learning_unit_components' learning_unit_year_id=learning_unit_year.id as url_components %}
+{% url 'learning_unit_volumes_management' learning_unit_year_id=learning_unit_year.id as url_volumes_management %}
 {% url 'learning_unit_pedagogy' learning_unit_year_id=learning_unit_year.id as url_pedagogy %}
 {% url 'learning_unit_attributions' learning_unit_year_id=learning_unit_year.id as url_attributions %}
 {% url 'learning_unit_proposals' learning_unit_year_id=learning_unit_year.id as url_proposals %}
@@ -44,7 +45,7 @@
 		{% trans 'trainings' %}
 	</a>
     </li>
-    <li role="presentation" {% if request.path == url_components %} class="active" {% endif %}>
+    <li role="presentation" {% if request.path == url_components or request.path == url_volumes_management %} class="active" {% endif %}>
         <a href="{{url_components}}"  role="tab">
 	 	{% trans 'components' %}
 	</a>

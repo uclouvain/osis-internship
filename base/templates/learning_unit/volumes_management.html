@@ -33,15 +33,27 @@
 {% block content %}
 
 {% include "learning_unit/header.html" %}
+
 {% include "template_messages.html" %}
+
 <div class="panel panel-default">
     <div class="panel-body" id="tabs">
         {% include "learning_unit/tabs.html" %}
         <div class="tab-content" id="tab_content">
             <div role="tabpanel" class="tab-pane active" id="components">
-                <h4>Gestion des volumes</h4>
+                <h4>{% trans 'volumes_management' %}</h4>
+
+                <div id="form_validation_errors" class="alert alert-dismissible alert-danger">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                </div>
+                <div id="form_validation_success" class="alert alert-dismissible alert-success">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <p><span class="fa fa-check-circle" aria-hidden="true"></span> {% trans 'volumes_validation_success' %}</p>
+                </div>
+
                 <form role="form" method="POST"
-                      action="{% url 'learning_unit_volumes_management' learning_unit_year_id=learning_unit_year.id%}" >
+                      action="{% url 'learning_unit_volumes_management' learning_unit_year_id=learning_unit_year.id%}"
+                      data-validate-url="{% url 'volumes_validation' learning_unit_year_id=learning_unit_year.id %}">
                     {% csrf_token %}
                     <table class="table volumes">
                         {% for learning_unit in learning_units %}
@@ -109,30 +121,35 @@
                                         </td>
                                         <td></td>
                                         <td>
-                                            <input class="form-control" name="VOLUME_TOTAL_{{learning_unit.id}}_{{component.id}}" type="text"
+                                            <input id="VOLUME_TOTAL_{{learning_unit.id}}_{{component.id}}"
+                                                   class="form-control" name="VOLUME_TOTAL_{{learning_unit.id}}_{{component.id}}" type="text"
                                                    value="{{ data.VOLUME_TOTAL | default_if_none:0 }}">
                                         </td>
                                         <td></td>
                                         <td>
-                                            <input class="form-control" name="VOLUME_Q1_{{learning_unit.id}}_{{component.id}}" type="text"
+                                            <input id="VOLUME_Q1_{{learning_unit.id}}_{{component.id}}"
+                                                   class="form-control" name="VOLUME_Q1_{{learning_unit.id}}_{{component.id}}" type="text"
                                                    value="{{ data.VOLUME_Q1 | default_if_none:0 }}">
                                         </td>
                                         <td></td>
                                         <td>
-                                            <input class="form-control" name="VOLUME_Q2_{{learning_unit.id}}_{{component.id}}" type="text"
+                                            <input id="VOLUME_Q2_{{learning_unit.id}}_{{component.id}}"
+                                                   class="form-control" name="VOLUME_Q2_{{learning_unit.id}}_{{component.id}}" type="text"
                                                    value="{{ data.VOLUME_Q2 | default_if_none:0 }}">
                                         </td>
                                         <td></td>
                                         <td></td>
                                         <td>
-                                            <input class="form-control" name="PLANNED_CLASSES_{{learning_unit.id}}_{{component.id}}" type="text"
+                                            <input id="PLANNED_CLASSES_{{learning_unit.id}}_{{component.id}}"
+                                                   class="form-control" name="PLANNED_CLASSES_{{learning_unit.id}}_{{component.id}}" type="text"
                                                    value="{{ data.PLANNED_CLASSES | default_if_none:0 }}">
                                         </td>
                                         <td></td>
                                         <td></td>
                                         {% if learning_unit.entities.REQUIREMENT_ENTITY %}
                                         <td>
-                                            <input class="form-control" name="VOLUME_REQUIREMENT_ENTITY_{{learning_unit.id}}_{{component.id}}" type="text"
+                                            <input id="VOLUME_REQUIREMENT_ENTITY_{{learning_unit.id}}_{{component.id}}"
+                                                   class="form-control" name="VOLUME_REQUIREMENT_ENTITY_{{learning_unit.id}}_{{component.id}}" type="text"
                                                    value="{{ data.VOLUME_REQUIREMENT_ENTITY | default_if_none:0 }}">
                                         </td>
                                         {% endif %}
@@ -140,7 +157,8 @@
                                         {% if learning_unit.entities.ADDITIONAL_REQUIREMENT_ENTITY_1 %}
                                         <td></td>
                                         <td>
-                                            <input class="form-control" name="VOLUME_ADDITIONAL_REQUIREMENT_ENTITY_1_{{learning_unit.id}}_{{component.id}}" type="text"
+                                            <input id="VOLUME_ADDITIONAL_REQUIREMENT_ENTITY_1_{{learning_unit.id}}_{{component.id}}"
+                                                   class="form-control" name="VOLUME_ADDITIONAL_REQUIREMENT_ENTITY_1_{{learning_unit.id}}_{{component.id}}" type="text"
                                                    value="{{ data.VOLUME_ADDITIONAL_REQUIREMENT_ENTITY_1 | default_if_none:0 }}">
                                         </td>
                                         {% endif %}
@@ -148,13 +166,15 @@
                                         {% if learning_unit.entities.ADDITIONAL_REQUIREMENT_ENTITY_2 %}
                                         <td></td>
                                         <td>
-                                            <input class="form-control" name="VOLUME_ADDITIONAL_REQUIREMENT_ENTITY_2_{{learning_unit.id}}_{{component.id}}" type="text"
+                                            <input id="VOLUME_ADDITIONAL_REQUIREMENT_ENTITY_2_{{learning_unit.id}}_{{component.id}}"
+                                                   class="form-control" name="VOLUME_ADDITIONAL_REQUIREMENT_ENTITY_2_{{learning_unit.id}}_{{component.id}}" type="text"
                                                    value="{{ data.VOLUME_ADDITIONAL_REQUIREMENT_ENTITY_2 | default_if_none:0 }}">
                                         </td>
                                         {% endif %}
                                         <td></td>
                                         <td>
-                                            <input class="form-control" name="VOLUME_TOTAL_REQUIREMENT_ENTITIES_{{learning_unit.id}}_{{component.id}}" type="text"
+                                            <input id="VOLUME_TOTAL_REQUIREMENT_ENTITIES_{{learning_unit.id}}_{{component.id}}"
+                                                   class="form-control" name="VOLUME_TOTAL_REQUIREMENT_ENTITIES_{{learning_unit.id}}_{{component.id}}" type="text"
                                                    value="{{ data.VOLUME_TOTAL_REQUIREMENT_ENTITIES | default_if_none:0 }}">
                                         </td>
                                         <td></td>
@@ -166,12 +186,58 @@
                     <div class="pull-right">
                         <a class="btn btn-default" href="{% url 'learning_unit_components' learning_unit_year_id=learning_unit_year.id%}"
                            title="{% trans 'cancel'%}">{% trans 'cancel'%}</a>
-                        <button class="btn btn-primary" type="submit" title="{% trans 'save'%}">{% trans 'save' %}</button>
+                        <button id="btn_save_volumes" class="btn btn-primary" type="submit" title="{% trans 'save'%}">{% trans 'save' %}</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block script %}
+    <script type="text/javascript">
+
+        $('#form_validation_errors').hide();
+        $('#form_validation_success').hide();
+        $('form :input').change(validate_form);
+        $("#btn_save_volumes").prop('disabled', true);
+
+
+        function validate_form(e) {
+            var form = $(this).closest("form");
+            $("#btn_save_volumes").prop('disabled', true);
+            $.ajax({
+                url: form.attr("data-validate-url"),
+                data: form.serialize(),
+                type: 'post',
+                dataType: 'json',
+                success: function (data) {
+                    var success_block = $("#form_validation_success");
+                    if (data.errors && data.errors.length > 0) {
+                        success_block.hide();
+                        showErrors(data);
+                        $("#VOLUME_TOTAL_3788_11344").className = "form-control text-danger";
+                    } else {
+                        $("#btn_save_volumes").prop('disabled', false);
+                        $("#form_validation_errors").hide();
+                        success_block.show();
+                    }
+                }
+            });
+
+        }
+
+        function showErrors(data){
+            var errors_block = $("#form_validation_errors");
+            var text = '';
+            for (var i = 0; i < data.errors.length; i++) {
+                text += '<p> <span class="fa fa-warning" aria-hidden="true"></span> ' +  data.errors[i] + '</p>';
+            }
+            errors_block.html(text);
+            errors_block.show();
+        }
+
+    </script>
 {% endblock %}
 
