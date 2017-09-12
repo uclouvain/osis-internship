@@ -84,10 +84,10 @@ class LearningUnitYearForm(forms.Form):
                                              to_attr='entity_containers_year')
 
         clean_data['learning_container_year_id'] = _get_filter_learning_container_ids(clean_data)
-        learning_units = mdl.learning_unit_year.search(**clean_data)\
-                                               .select_related('academic_year', 'learning_container_year')\
-                                               .prefetch_related(entity_container_prefetch)\
-                                               .order_by('academic_year__year', 'acronym')
+        learning_units = mdl.learning_unit_year.search(**clean_data) \
+            .select_related('academic_year', 'learning_container_year') \
+            .prefetch_related(entity_container_prefetch) \
+            .order_by('academic_year__year', 'acronym')
         return [_append_latest_entities(learning_unit) for learning_unit in learning_units]
 
 
@@ -149,12 +149,16 @@ def _get_latest_entity_version(entity_container_year):
 
 
 def create_main_campuses_list():
-    return [(None, "---------"), ]+[(elem.id, elem.name) for elem in find_main_campuses()]
+    return [(None, "---------"), ] + [(elem.id, elem.name) for elem in find_main_campuses()]
 
 
 def create_main_entities_version_list():
-    return [(None, "---------"), ]+[(entity_version.id, entity_version.acronym) for entity_version
-                                    in find_main_entities_version()]
+    return [(None, "---------"), ] + [(entity_version.id, entity_version.acronym) for entity_version
+                                      in find_main_entities_version()]
+
+
+def create_learning_container_year_type_list():
+    return ((None, "---------"),) + LEARNING_CONTAINER_YEAR_TYPES
 
 
 def create_languages_list():
@@ -162,12 +166,11 @@ def create_languages_list():
 
 
 class CreateLearningUnitYearForm(forms.ModelForm):
-
-    learning_container_year_type = forms.CharField(
-        widget=forms.Select(attrs={'class': 'form-control', 'required': True,
-                                   'onchange': 'showDiv(this.value)',
-                                   'id': 'learning_container_year_type'},
-                            choices=(("---------", "---------"),) + LEARNING_CONTAINER_YEAR_TYPES))
+    learning_container_year_type = forms.ChoiceField(choices=lazy(create_learning_container_year_type_list, tuple),
+                                                     error_messages={'required': _('LU_ERRORS_REQUIRED')},
+                                                     widget=forms.Select(attrs={'class': 'form-control',
+                                                                                'onchange': 'showDiv(this.value)',
+                                                                                'id': 'learning_container_year_type'}))
     end_year = forms.CharField(widget=forms.DateInput(attrs={'class': 'form-control',
                                                              'id': 'end_year'}))
     faculty_remark = forms.CharField(required=False, widget=forms.Textarea(attrs={'class': 'form-control',
