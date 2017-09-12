@@ -232,5 +232,32 @@
       "end_date": "2017-09-28",
       "customized": false
     }
+  },
+  {
+    "model": "base.offeryearcalendar",
+    "pk": 19,
+    "fields": {
+      "external_id": null,
+      "changed": "2016-05-03T18:31:16.193Z",
+      "academic_calendar": 35,
+      "offer_year": 4,
+      "start_date": "2017-08-01",
+      "end_date": "2017-09-28",
+      "customized": false
+    }
+  },
+  {
+    "model": "base.offeryearcalendar",
+    "pk": 20,
+    "fields": {
+      "external_id": null,
+      "changed": "2016-05-03T18:31:16.193Z",
+      "academic_calendar": 34,
+      "offer_year": 5,
+      "start_date": "2017-08-01",
+      "end_date": "2017-09-28",
+      "customized": false
+    }
   }
+
 ]

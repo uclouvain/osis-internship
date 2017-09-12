@@ -1,0 +1,119 @@
+[
+  {
+    "model": "cms.textlabel",
+    "pk": 1,
+    "fields": {
+      "external_id": "osis.cms.text_label_learning_unit_year_themes_discussed",
+      "changed": null,
+      "parent": null,
+      "entity": "learning_unit_year",
+      "label": "themes_discussed",
+      "order": 1,
+      "published": true
+    }
+  },
+  {
+    "model": "cms.textlabel",
+    "pk": 2,
+    "fields": {
+      "external_id": "osis.cms.text_label_learning_unit_year_skills_to_be_acquired",
+      "changed": null,
+      "parent": null,
+      "entity": "learning_unit_year",
+      "label": "skills_to_be_acquired",
+      "order": 1,
+      "published": true
+    }
+  },
+  {
+    "model": "cms.textlabel",
+    "pk": 3,
+    "fields": {
+      "external_id": "osis.cms.text_label_learning_unit_year_prerequisite",
+      "changed": null,
+      "parent": null,
+      "entity": "learning_unit_year",
+      "label": "prerequisite",
+      "order": 1,
+      "published": true
+    }
+  },
+  {
+    "model": "cms.textlabel",
+    "pk": 4,
+    "fields": {
+      "external_id": "osis.cms.text_label_learning_unit_year_resume",
+      "changed": null,
+      "parent": null,
+      "entity": "learning_unit_year",
+      "label": "resume",
+      "order": 1,
+      "published": true
+    }
+  },
+  {
+    "model": "cms.textlabel",
+    "pk": 5,
+    "fields": {
+      "external_id": "osis.cms.text_label_learning_unit_year_bibliography",
+      "changed": null,
+      "parent": null,
+      "entity": "learning_unit_year",
+      "label": "bibliography",
+      "order": 1,
+      "published": true
+    }
+  },
+  {
+    "model": "cms.textlabel",
+    "pk": 6,
+    "fields": {
+      "external_id": "osis.cms.text_label_learning_unit_year_teaching_methods",
+      "changed": null,
+      "parent": null,
+      "entity": "learning_unit_year",
+      "label": "teaching_methods",
+      "order": 1,
+      "published": true
+    }
+  },
+  {
+    "model": "cms.textlabel",
+    "pk": 7,
+    "fields": {
+      "external_id": "osis.cms.text_label_learning_unit_year_evaluation_methods",
+      "changed": null,
+      "parent": null,
+      "entity": "learning_unit_year",
+      "label": "evaluation_methods",
+      "order": 1,
+      "published": true
+    }
+  },
+  {
+    "model": "cms.textlabel",
+    "pk": 8,
+    "fields": {
+      "external_id": "osis.cms.text_label_learning_unit_year_other_informations",
+      "changed": null,
+      "parent": null,
+      "entity": "learning_unit_year",
+      "label": "other_informations",
+      "order": 1,
+      "published": true
+    }
+  },
+  {
+    "model": "cms.textlabel",
+    "pk": 9,
+    "fields": {
+      "external_id": "osis.cms.text_label_learning_unit_year_online_resources",
+      "changed": null,
+      "parent": null,
+      "entity": "learning_unit_year",
+      "label": "online_resources",
+      "order": 1,
+      "published": true
+    }
+  }
+]

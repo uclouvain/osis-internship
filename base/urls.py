@@ -26,7 +26,6 @@
 from django.conf.urls import url, include
 
 from base.views import learning_unit, offer, common, institution, organization, academic_calendar, my_osis, entity, student
-from base.utils import fixtures_factory
 
 urlpatterns = [
     url(r'^$', common.home, name='home'),
@@ -46,7 +45,6 @@ urlpatterns = [
     url(r'^admin/', include([
         url(r'^data/$', common.data, name='data'),
         url(r'^data/maintenance$', common.data_maintenance, name='data_maintenance'),
-        url(r'^data/fixtures/make$', fixtures_factory.make_fixtures, name='make_fixtures'),
         url(r'^storage/$', common.storage, name='storage'),
     ])),
 

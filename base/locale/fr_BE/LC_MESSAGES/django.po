@@ -1812,12 +1812,6 @@ msgstr "Intitulés"
 msgid "structure_title"
 msgstr "Structure"
 
-msgid "fixtures_build"
-msgstr "Créer des fixtures anonymisées"
-
-msgid "desc_lnk_fixtures_build"
-msgstr "Crée un fichier json avec des fixtures anonymisées"
-
 msgid "end_date_gt_begin_date"
 msgstr "L'année de fin doit etre égale ou supérieur à l'année de départ"
 
