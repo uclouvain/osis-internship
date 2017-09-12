@@ -67,8 +67,13 @@
                             </label>
                         </div>
                         <div class="col-md-3">
-                            <label>{% trans 'internship_subtype' %}</label>
+                            <label {% if form.errors.internship_subtype %}style="color:red;"{% endif %}>
+                                {% trans 'internship_subtype' %}
+                            </label>
                             {{ form.internship_subtype }}
+                            <label {% if form.errors.internship_subtype %}style="color:red;"{% endif %}>
+                                {{ form.errors.internship_subtype }}
+                            </label>
                         </div>
                         <div class="col-md-3">
                             <label>{% trans 'learning_localisation' %}</label>

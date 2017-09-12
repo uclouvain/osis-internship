@@ -33,7 +33,7 @@ from base import models as mdl
 from base.models.campus import find_main_campuses
 from base.models.entity_version import find_main_entities_version
 from base.models.enums import entity_container_year_link_type
-from base.models.enums.learning_container_year_types import LEARNING_CONTAINER_YEAR_TYPES
+from base.models.enums.learning_container_year_types import LEARNING_CONTAINER_YEAR_TYPES, INTERNSHIP
 from base.models.enums.learning_unit_periodicity import PERIODICITY_TYPES
 from reference.models.language import find_all_languages
 
@@ -246,6 +246,10 @@ class CreateLearningUnitYearForm(forms.ModelForm):
                 return False
             elif academic_year.year > int(self.data['end_year']):
                 self._errors['end_year'] = _('end_date_gt_begin_date')
+                return False
+            elif self.cleaned_data['learning_container_year_type'] == INTERNSHIP \
+                    and not (self.cleaned_data['internship_subtype']):
+                self._errors['internship_subtype'] = _('LU_ERRORS_REQUIRED')
                 return False
             else:
                 return True
