@@ -602,10 +602,10 @@ msgid "supervisor_email_address"
 msgstr "Supervisor email address"
 
 msgid "supervision_review"
-msgstr "Avis doyen de facult?"
+msgstr "Review of the dean of faculty"
 
 msgid "support_committee_reports"
-msgstr "Rapport du comit? d'encadrement"
+msgstr "Report of the support committee"
 
 msgid "svr"
 msgstr "SVR"
@@ -674,7 +674,7 @@ msgid "VICE_RECTOR_ASSISTANT"
 msgstr "DAS/CAS"
 
 msgid "view"
-msgstr "Voir"
+msgstr "View"
 
 msgid "yes"
 msgstr "Yes"
