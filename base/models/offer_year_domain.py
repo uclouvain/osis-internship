@@ -40,6 +40,7 @@ class OfferYearDomain(SerializableModel):
     changed = models.DateTimeField(null=True, auto_now=True)
     domain = models.ForeignKey('reference.Domain', blank=True, null=True)
     offer_year = models.ForeignKey('base.OfferYear', blank=True, null=True)
+    education_group_year = models.ForeignKey('base.EducationGroupYear', blank=True, null=True)
 
     def __str__(self):
         return u"%s - %s" % (self.domain, self.offer_year)

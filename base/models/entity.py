@@ -29,7 +29,7 @@ from django.db import models
 
 
 class EntityAdmin(admin.ModelAdmin):
-    list_display = ('id', 'external_id', 'organization')
+    list_display = ('id', 'external_id', 'organization', 'location', 'postal_code', 'phone')
     search_fields = ['external_id', 'entityversion__acronym', 'organization__acronym', 'organization__name']
     readonly_fields = ('organization', 'external_id')
 
@@ -42,11 +42,16 @@ class Entity(models.Model):
     location = models.CharField(max_length=255, blank=True, null=True)
     postal_code = models.CharField(max_length=20, blank=True, null=True)
     city = models.CharField(max_length=255, blank=True, null=True)
-    country = models.CharField(max_length=255, blank=True, null=True)
+    country = models.ForeignKey('reference.Country', blank=True, null=True)
+    phone = models.CharField(max_length=30, blank=True, null=True)
+    fax = models.CharField(max_length=255, blank=True, null=True)
     website = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
         verbose_name_plural = "entities"
+
+    def has_address(self):
+        return self.location and self.postal_code and self.city
 
     def __str__(self):
         return "{0} - {1}".format(self.id, self.external_id)

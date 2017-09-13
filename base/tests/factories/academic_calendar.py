@@ -38,6 +38,7 @@ def generate_start_date(academic_calendar):
     else:
         return datetime.date(timezone.now().year, 9, 30)
 
+
 def generate_end_date(academic_calendar):
     if academic_calendar.academic_year:
         return academic_calendar.academic_year.end_date

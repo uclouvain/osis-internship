@@ -25,6 +25,7 @@
 ##############################################################################
 import factory
 from base.tests.factories.organization import OrganizationFactory
+from reference.tests.factories.country import CountryFactory
 
 
 class EntityFactory(factory.DjangoModelFactory):
@@ -37,5 +38,7 @@ class EntityFactory(factory.DjangoModelFactory):
     location = factory.Faker('street_address')
     postal_code = factory.Faker('zipcode')
     city = factory.Faker('city')
-    country = factory.Faker('country')
+    country = factory.SubFactory(CountryFactory)
     website = factory.Faker('url')
+    phone = factory.Faker('phone_number')
+    fax = factory.Faker('phone_number')

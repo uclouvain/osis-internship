@@ -31,8 +31,8 @@ class CountryFactory(factory.DjangoModelFactory):
         model = 'reference.Country'
 
     external_id = factory.Faker('text', max_nb_chars=100)
-    iso_code = factory.Faker('lexify', text="??")
-    name = factory.Faker('country')
+    iso_code = factory.Sequence(lambda n: str(n)[-2:])
+    name = factory.Sequence(lambda n: 'Country - %d' % n)
     nationality = factory.Faker('text', max_nb_chars=80)
     european_union = factory.Faker('boolean', chance_of_getting_true=50)
     dialing_code = factory.Faker('random_element', elements=('+32', '+33', '+1'))

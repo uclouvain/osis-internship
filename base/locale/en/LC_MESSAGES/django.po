@@ -216,6 +216,9 @@ msgstr "Creation date"
 msgid "credits"
 msgstr "Credits"
 
+msgid "customized"
+msgstr "Customized"
+
 msgid "data"
 msgstr "Data"
 
@@ -705,11 +708,17 @@ msgstr "Full name"
 msgid "national_register"
 msgstr "National register's number"
 
+msgid "no_current_entity_version_found"
+msgstr "The selected entity no longer exists today (end date passed)."
+
 msgid "no_data_for_this_academic_year"
 msgstr "No data for this academic year"
 
 msgid "no_dubble_score_encoded_comparison_impossible"
 msgstr "No dubble score encoded ; nothing to compare."
+
+msgid "no_entity_address_found"
+msgstr "No address found for the selected entity."
 
 msgid "no_exam_session_opened_for_the_moment"
 msgstr "No scores' encoding session opened for the moment."
@@ -1768,6 +1777,35 @@ msgstr "part 2"
 msgid "title_official"
 msgstr "Official title"
 
+msgid "create_learning_unit"
+msgstr "Create Learning Unit"
+
+msgid "existed_acronym"
+msgstr "Existed acronym for "
+
+msgid "existing_acronym"
+msgstr "Existing acronym"
+
+msgid "acronym_rules"
+msgstr "Site with one letter\n"
+       "Acronym with min 2 et max 4 letters\n"
+       "Number Code with 4 digit"
+
+msgid "end_year_title"
+msgstr "End year"
+
+msgid "basic_informations_title"
+msgstr "Basics informations"
+
+msgid "active_title"
+msgstr "Active"
+
+msgid "titles"
+msgstr "Titles"
+
+msgid "structure_title"
+msgstr "Structure"
+
 msgid "fixtures_build"
 msgstr "Build anonymized fixtures"
 
@@ -1803,3 +1841,106 @@ msgstr "Volumes management"
 
 msgid "volumes_validation_success"
 msgstr "Filled data fit the hourly volumes calculation rules."
+
+msgid "end_date_gt_begin_date"
+msgstr "The end year must be equals or upper than the start year"
+
+msgid "session_title"
+msgstr "Session"
+
+msgid "remarks_title"
+msgstr "Remarks"
+
+msgid "faculty_remark"
+msgstr "Faculty"
+
+msgid "other_remark"
+msgstr "Other"
+
+msgid "new_learning_unit"
+msgstr "New learning unit"
+
+msgid "previous"
+msgstr "Previous"
+
+msgid "next"
+msgstr "Next"
+
+msgid "learning_location"
+msgstr "Learning location"
+
+msgid "NON_ACADEMIC"
+msgstr "Non academic"
+
+msgid "NON_ACADEMIC_CREF"
+msgstr "Non academic CREF"
+
+msgid "ACADEMIC"
+msgstr "Academic"
+
+msgid "ACTIVE"
+msgstr "Active"
+
+msgid "INACTIVE"
+msgstr "Inactive"
+
+msgid "RE_REGISTRATION"
+msgstr "Re-registration"
+
+msgid "OPTIONAL"
+msgstr "Optional"
+
+msgid "NO_PRINT"
+msgstr "No printing"
+
+msgid "IN_HEADING_2_OF_DIPLOMA"
+msgstr ""
+
+msgid "IN_EXPECTED_FORM"
+msgstr ""
+
+msgid "FEE_1"
+msgstr "Role"
+
+msgid "FEE_2"
+msgstr "Role + exam"
+
+msgid "FEE_3"
+msgstr "AESS, CAPAES or end-of-cycle"
+
+msgid "FEE_4"
+msgstr "School fees without any exam"
+
+msgid "FEE_5"
+msgstr "Full school fees"
+
+msgid "FEE_6"
+msgstr "University certificate"
+
+msgid "FEE_7"
+msgstr "Complementary master with medical specialization"
+
+msgid "FEE_8"
+msgstr "Admission exam"
+
+msgid "FEE_10"
+msgstr "CU 30 credits"
+
+msgid "FEE_11"
+msgstr "Medical skills certificate"
+
+msgid "FEE_12"
+msgstr "ISA offers: 12BA et 21MS"
+
+msgid "FEE_13"
+msgstr "ISA offers: 13BA et 22MS"
+
+msgid "DAILY"
+msgstr "Daily"
+
+msgid "SHIFTED"
+msgstr "Shifted"
+
+msgid "ADAPTED"
+msgstr "Adapted"
+

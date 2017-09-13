@@ -23,6 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from base.forms import bootstrap
 from base.models import academic_calendar, offer_year_calendar
 from django.utils.translation import ugettext_lazy as _
 from base.models.offer_year_calendar import save_from_academic_calendar
@@ -30,17 +31,7 @@ from django import forms
 from base.models import academic_year
 
 
-class BootstrapModelForm(forms.ModelForm):
-
-    def __init__(self, *args, **kwargs):
-        super(BootstrapModelForm, self).__init__(*args, **kwargs)
-        for field in iter(self.fields):
-            self.fields[field].widget.attrs.update({
-                'class': 'form-control'
-            })
-
-
-class AcademicCalendarForm(BootstrapModelForm):
+class AcademicCalendarForm(bootstrap.BootstrapModelForm):
     academic_year = forms.ModelChoiceField(queryset=academic_year.AcademicYear.objects.all().order_by('year'),
                                            widget=forms.Select(), empty_label=None)
 

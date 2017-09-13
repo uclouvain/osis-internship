@@ -83,6 +83,15 @@ msgstr "Firstname"
 msgid "middlename"
 msgstr "Middlename"
 
+msgid "optional_email_field_note"
+msgstr "NOTE : the 'Email' field is optional. You can fill in this field if you want it to appear on the score sheet."
+
+msgid "score_sheet_address_saved"
+msgstr "Score sheet address was successfully saved."
+
+msgid "select_an_address"
+msgstr "Please select an address"
+
 
 
 

@@ -31,12 +31,38 @@
 {% endblock %}
 
 {% block content %}
-{% if highlight %}
-    <div class="jumbotron">
-        <h1>{{ highlight.highlight_title }}</h1>
-        <p>{{ highlight.highlight_description }}</p>
-        <p><a class="btn btn-primary btn-lg" href="/{{ highlight.highlight_shortcut }}" role="button">{% trans 'go' %}</a></p>
+{% if highlights %}
+    <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+        <ol class="carousel-indicators">
+            {% for highlight in highlights %}
+                <li data-target="#carousel-example-generic" data-slide-to="{{ forloop.counter0 }}"
+                    {% if forloop.counter0 == 0 %}class="active"{% endif %}></li>
+            {% endfor %}
+        </ol>
+
+        <div class="carousel-inner" role="listbox">
+            {% for highlight in highlights %}
+            <div class="item {% if forloop.counter0 == 0 %}active{% endif %}">
+                <img src="{% static 'img/carousel_background.jpg' %}" style="height: 400px; width: 100%">
+                <div class="carousel-caption">
+                    <h3>{{ highlight.highlight_title }}</h3>
+                    <p>{{ highlight.highlight_description }}</p>
+                    <p><a class="btn btn-primary btn-lg" href="/{{ highlight.highlight_shortcut }}"
+                          role="button">{% trans 'go' %}</a></p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+            <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+            <span class="sr-only">{% trans 'previous' %}</span>
+        </a>
+        <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+            <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+            <span class="sr-only">{% trans 'next' %}</span>
+        </a>
     </div>
+    <br>
 {% endif %}
 <div class="panel panel-default">
     <div class="panel-body">

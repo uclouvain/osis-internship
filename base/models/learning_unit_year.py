@@ -33,7 +33,7 @@ class LearningUnitYearAdmin(SerializableModelAdmin):
     list_display = ('external_id', 'acronym', 'title', 'academic_year', 'credits', 'changed', 'structure', 'status')
     fieldsets = ((None, {'fields': ('academic_year', 'learning_unit', 'acronym', 'title', 'title_english', 'credits',
                                     'decimal_scores', 'structure', 'learning_container_year',
-                                    'subtype', 'status', 'internship_subtype' )}),)
+                                    'subtype', 'status', 'internship_subtype', 'session')}),)
     list_filter = ('academic_year', 'vacant', 'in_charge', 'decimal_scores')
     raw_id_fields = ('learning_unit', 'learning_container_year', 'structure')
     search_fields = ['acronym', 'structure__acronym', 'external_id']
@@ -131,3 +131,13 @@ def search(academic_year_id=None, acronym=None, learning_container_year_id=None,
         queryset = queryset.filter(learning_container_year__container_type=container_type)
 
     return queryset.select_related('learning_container_year')
+
+
+def find_gte_year_acronym(academic_yr, acronym):
+    return LearningUnitYear.objects.filter(academic_year__year__gte=academic_yr.year,
+                                           acronym__iexact=acronym)
+
+
+def find_lt_year_acronym(academic_yr, acronym):
+    return LearningUnitYear.objects.filter(academic_year__year__lt=academic_yr.year,
+                                           acronym__iexact=acronym).order_by('academic_year')

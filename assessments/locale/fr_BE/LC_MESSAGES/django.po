@@ -82,3 +82,12 @@ msgstr "Prénom"
 
 msgid "middlename"
 msgstr "Autres prénoms"
+
+msgid "optional_email_field_note"
+msgstr "NOTE : l'Email est un champ facultatif à spécifier si vous souhaitez qu'il soit indiqué sur la feuille de notes."
+
+msgid "score_sheet_address_saved"
+msgstr "L'adresse à afficher sur les feuilles de notes a été sauvegardée avec succès."
+
+msgid "select_an_address"
+msgstr "Veuillez sélectionner une adresse"
