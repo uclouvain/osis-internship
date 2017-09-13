@@ -46,7 +46,7 @@
                 </div>
                 <div class="panel-body">
                     <div class="row">
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <label>
                                 {% trans 'acronym' %}*
                             </label>
@@ -57,13 +57,13 @@
                             </abbr>
                             {{ form.acronym }}
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <label {% if form.errors.learning_container_year_type %}style="color:red;"{% endif %}>
                                 {% trans 'type' %}*
                             </label>
                             {{ form.learning_container_year_type }}
                             <label {% if form.errors.learning_container_year_type %}style="color:red;"{% endif %}>
-                                {{ form.errors.learning_container_year_type }}
+                                {{ form.errors.learning_container_year_type| striptags }}
                             </label>
                         </div>
                         <div class="col-md-3">
@@ -72,7 +72,7 @@
                             </label>
                             {{ form.internship_subtype }}
                             <label {% if form.errors.internship_subtype %}style="color:red;"{% endif %}>
-                                {{ form.errors.internship_subtype }}
+                                {{ form.errors.internship_subtype| striptags }}
                             </label>
                         </div>
                         <div class="col-md-3">
@@ -81,16 +81,7 @@
                             </label>
                             {{ form.campus }}
                             <label {% if form.errors.campus %}style="color:red;"{% endif %}>
-                                {{ form.errors.campus }}
-                            </label>
-                        </div>
-                        <div class="col-md-2">
-                            <label {% if form.errors.credits %}style="color:red;"{% endif %}>
-                                {% trans 'credits' %}*
-                            </label>
-                            {{ form.credits }}
-                            <label {% if form.errors.credits %}style="color:red;"{% endif %}>
-                                {{ form.errors.credits }}
+                                {{ form.errors.campus| striptags }}
                             </label>
                         </div>
                     </div>
@@ -108,18 +99,29 @@
                             <label>{% trans 'periodicity' %}</label>
                             {{ form.periodicity }}
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <label>{% trans 'language' %}</label>
                             {{ form.language }}
+                        </div>
+                        <div class="col-md-2">
+                            <label {% if form.errors.credits %}style="color:red;"{% endif %}>
+                                {% trans 'credits' %}*
+                            </label>
+                            {{ form.credits }}
+                            <label {% if form.errors.credits %}style="color:red;"{% endif %}>
+                                {{ form.errors.credits| striptags }}
+                            </label>
                         </div>
                         <div class="col-md-2">
                             <label>{% trans 'session_title' %}</label>
                             {{ form.session }}
                         </div>
-                        <div class="col-md-1" style="margin-top:30px;">
-                            {{ form.status }}
-                            <label>{% trans 'active_title' %}</label>
-                        </div>
+                    </div>
+                    <br>
+                    <div>
+                        {{ form.status }}
+                        <label>{% trans 'active_title' %}</label>
+                    </div>
                     </div>
                 </div>
             </div>
