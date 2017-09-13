@@ -588,8 +588,12 @@ def learning_unit_year_add(request):
             status = check_status(data)
             requirement_entity_version = mdl.entity_version.find_by_id(data['requirement_entity'])
             allocation_entity_version = mdl.entity_version.find_by_id(data['allocation_entity'])
-            additional_entity_version_1 = mdl.entity_version.find_by_id(data['additional_entity_1'])
-            additional_entity_version_2 = mdl.entity_version.find_by_id(data['additional_entity_2'])
+            additional_entity_version_1 = None
+            additional_entity_version_2 = None
+            if data['additional_entity_1']:
+                additional_entity_version_1 = mdl.entity_version.find_by_id(data['additional_entity_1'])
+            if data['additional_entity_2']:
+                additional_entity_version_2 = mdl.entity_version.find_by_id(data['additional_entity_2'])
             new_learning_container = create_learning_container(year, data)
             new_learning_unit = create_learning_unit(data, new_learning_container, year)
             while year <= int(data['end_year']) and year < academic_year.year+6:
