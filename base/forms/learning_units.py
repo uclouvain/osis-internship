@@ -236,8 +236,9 @@ class CreateLearningUnitYearForm(forms.ModelForm):
                    'subtype': forms.HiddenInput()
                    }
         error_messages = {
+            'acronym': {"required": _('This field is required.')},
+            'learning_container_year_type': {"required": _('This field is required.')},
             'title': {"required": _('This field is required.')},
-            'learning_container_year_type': {"required": _('This field is required.')}
         }
 
     def is_valid(self):

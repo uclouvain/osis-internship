@@ -131,8 +131,13 @@
                 </div>
                 <div class="panel-body">
                     <div>
-                        <label>{% trans 'title' %}</label>
+                        <label {% if form.errors.credits %}style="color:red;"{% endif %}>
+                            {% trans 'title' %}
+                        </label>
                         {{ form.title }}
+                        <label {% if form.errors.title %}style="color:red;"{% endif %}>
+                                {{ form.errors.title| striptags }}
+                        </label>
                     </div>
                     <br>
                     <div>
@@ -254,6 +259,12 @@
                 },
                 rules:{
                     acronym:{ check_acronym: true },
+                },
+                messages:{
+                    acronym:{
+                                check_acronym: "Please provide a password",
+                                required: "{% trans 'This field is required.' %}",
+                    },
                 },
             }).element("#acronym");
         });
