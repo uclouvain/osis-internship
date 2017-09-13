@@ -8,7 +8,7 @@ window.addEventListener("resize", function(){
 /*
  * carouselId: String id of a carousel of jumbotrons
  * Normalize the size of the jumbtrons composing the carousel by setting their height
- * equal to the height of the biggest one. 
+ * equal to the height of the biggest one.
  */
 function normalizeCarouselHeight(carouselId){
   var slidesHeight = [];
@@ -19,7 +19,7 @@ function normalizeCarouselHeight(carouselId){
     slidesHeight.push($(this).height());
   });
 
-  maxHeight = Math.max.apply(null, slidesHeight);
+  const maxHeight = Math.max.apply(null, slidesHeight);
 
   $(carouselId +' .jumbotron').each(function()
   {
