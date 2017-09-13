@@ -57,7 +57,7 @@
                             </abbr>
                             {{ form.acronym }}
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <label {% if form.errors.learning_container_year_type %}style="color:red;"{% endif %}>
                                 {% trans 'type' %}*
                             </label>
@@ -76,12 +76,22 @@
                             </label>
                         </div>
                         <div class="col-md-3">
-                            <label>{% trans 'learning_location' %}</label>
+                            <label {% if form.errors.campus %}style="color:red;"{% endif %}>
+                                {% trans 'learning_location' %}*
+                            </label>
                             {{ form.campus }}
+                            <label {% if form.errors.campus %}style="color:red;"{% endif %}>
+                                {{ form.errors.campus }}
+                            </label>
                         </div>
-                        <div class="col-md-1">
-                            <label>{% trans 'credits' %}</label>
+                        <div class="col-md-2">
+                            <label {% if form.errors.credits %}style="color:red;"{% endif %}>
+                                {% trans 'credits' %}*
+                            </label>
                             {{ form.credits }}
+                            <label {% if form.errors.credits %}style="color:red;"{% endif %}>
+                                {{ form.errors.credits }}
+                            </label>
                         </div>
                     </div>
                     <br>
@@ -136,7 +146,7 @@
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-md-3">
-                            <label>{% trans 'requirement_entity' %}</label>
+                            <label>{% trans 'requirement_entity' %}*</label>
                             {{ form.requirement_entity }}
                         </div>
                         <div class="col-md-3">
