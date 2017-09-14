@@ -284,5 +284,20 @@
       "learning_unit": 13,
       "learning_container_year": 21
     }
+  },
+  {
+    "model": "base.learningunityear",
+    "pk": 23,
+    "fields": {
+      "acronym": "LAGES2530",
+      "title": "Communication des savoirs scientifiques",
+      "credits": "4.00",
+      "decimal_scores": false,
+      "academic_year": 2,
+      "learning_unit": 14,
+      "learning_container_year": 22,
+      "subtype": "FULL",
+      "status": true
+    }
   }
 ]

@@ -61,6 +61,33 @@
       "learning_unit_component": 6,
       "allocation_charge": "20.00"
     }
+  },
+  {
+    "model": "attribution.attributioncharge",
+    "pk": 8,
+    "fields": {
+      "attribution": 13,
+      "learning_unit_component": 6,
+      "allocation_charge": "20.00"
+    }
+  },
+  {
+    "model": "attribution.attributioncharge",
+    "pk": 9,
+    "fields": {
+      "attribution": 11,
+      "learning_unit_component": 21,
+      "allocation_charge": "20.00"
+    }
+  },
+  {
+    "model": "attribution.attributioncharge",
+    "pk": 10,
+    "fields": {
+      "attribution": 12,
+      "learning_unit_component": 22,
+      "allocation_charge": "20.00"
+    }
   }
 ]
 

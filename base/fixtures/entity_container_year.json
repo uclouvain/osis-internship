@@ -3,8 +3,6 @@
     "model": "base.entitycontaineryear",
     "pk": 1,
     "fields": {
-      "external_id": "osis.entity_container_year_186588_2015_REQUIREMENT_ENTITY",
-      "changed": null,
       "entity": 1,
       "learning_container_year": 1,
       "type": "REQUIREMENT_ENTITY"
@@ -14,8 +12,6 @@
     "model": "base.entitycontaineryear",
     "pk": 2,
     "fields": {
-      "external_id": "osis.entity_container_year_186588_2015_ALLOCATION_ENTITY",
-      "changed": null,
       "entity": 1,
       "learning_container_year": 1,
       "type": "ALLOCATION_ENTITY"
@@ -25,8 +21,6 @@
     "model": "base.entitycontaineryear",
     "pk": 3,
     "fields": {
-      "external_id": "osis.entity_container_year_59900_2015_REQUIREMENT_ENTITY",
-      "changed": null,
       "entity": 2,
       "learning_container_year": 2,
       "type": "REQUIREMENT_ENTITY"
@@ -36,8 +30,6 @@
     "model": "base.entitycontaineryear",
     "pk": 4,
     "fields": {
-      "external_id": "osis.entity_container_year_59900_2015_ALLOCATION_ENTITY",
-      "changed": null,
       "entity": 2,
       "learning_container_year": 2,
       "type": "ALLOCATION_ENTITY"
@@ -47,8 +39,6 @@
     "model": "base.entitycontaineryear",
     "pk": 5,
     "fields": {
-      "external_id": "osis.entity_container_year_52759_2015_REQUIREMENT_ENTITY",
-      "changed": null,
       "entity": 3,
       "learning_container_year": 3,
       "type": "REQUIREMENT_ENTITY"
@@ -58,8 +48,6 @@
     "model": "base.entitycontaineryear",
     "pk": 6,
     "fields": {
-      "external_id": "osis.entity_container_year_52759_2015_ALLOCATION_ENTITY",
-      "changed": null,
       "entity": 3,
       "learning_container_year": 3,
       "type": "ALLOCATION_ENTITY"
@@ -69,8 +57,6 @@
     "model": "base.entitycontaineryear",
     "pk": 7,
     "fields": {
-      "external_id": "osis.entity_container_year_29036_2015_REQUIREMENT_ENTITY",
-      "changed": null,
       "entity": 4,
       "learning_container_year": 4,
       "type": "REQUIREMENT_ENTITY"
@@ -80,8 +66,6 @@
     "model": "base.entitycontaineryear",
     "pk": 8,
     "fields": {
-      "external_id": "osis.entity_container_year_29036_2015_ALLOCATION_ENTITY",
-      "changed": null,
       "entity": 4,
       "learning_container_year": 4,
       "type": "ALLOCATION_ENTITY"
@@ -91,8 +75,6 @@
     "model": "base.entitycontaineryear",
     "pk": 9,
     "fields": {
-      "external_id": "osis.entity_container_year_91888_2015_REQUIREMENT_ENTITY",
-      "changed": null,
       "entity": 5,
       "learning_container_year": 5,
       "type": "REQUIREMENT_ENTITY"
@@ -102,11 +84,36 @@
     "model": "base.entitycontaineryear",
     "pk": 10,
     "fields": {
-      "external_id": "osis.entity_container_year_91888_2015_ALLOCATION_ENTITY",
-      "changed": null,
       "entity": 5,
       "learning_container_year": 5,
       "type": "ALLOCATION_ENTITY"
+    }
+  },
+  {
+    "model": "base.entitycontaineryear",
+    "pk": 11,
+    "fields": {
+      "entity": 5,
+      "learning_container_year": 20,
+      "type": "ALLOCATION_ENTITY"
+    }
+  },
+  {
+    "model": "base.entitycontaineryear",
+    "pk": 12,
+    "fields": {
+      "entity": 5,
+      "learning_container_year": 22,
+      "type": "ALLOCATION_ENTITY"
+    }
+  },
+  {
+    "model": "base.entitycontaineryear",
+    "pk": 13,
+    "fields": {
+      "entity": 5,
+      "learning_container_year": 22,
+      "type": "REQUIREMENT_ENTITY"
     }
   }
 ]

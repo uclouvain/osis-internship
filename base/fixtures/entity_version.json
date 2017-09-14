@@ -3,8 +3,6 @@
     "model": "base.entityversion",
     "pk": 1,
     "fields": {
-      "external_id": "osis.entity_version_SCHOOL_385",
-      "changed": null,
       "entity": 6,
       "title": "Indian Institute of Technology, Delhi",
       "acronym": "XIITD",
@@ -18,8 +16,6 @@
     "model": "base.entityversion",
     "pk": 2,
     "fields": {
-      "external_id": "osis.entity_version_SCHOOL_383",
-      "changed": null,
       "entity": 4,
       "title": "Universita degli studi del Piemonte Orientale \"Amedeo Avogradro\"",
       "acronym": "XUPOB",
@@ -33,8 +29,6 @@
     "model": "base.entityversion",
     "pk": 3,
     "fields": {
-      "external_id": "osis.entity_version_SCHOOL_384",
-      "changed": null,
       "entity": 5,
       "title": "Arzana s.r.l.",
       "acronym": "XAAAB",
@@ -48,8 +42,6 @@
     "model": "base.entityversion",
     "pk": 4,
     "fields": {
-      "external_id": "osis.entity_version_SCHOOL_380",
-      "changed": null,
       "entity": 1,
       "title": "Universita Commerciale \"Luigi Bocconi\" Milano",
       "acronym": "XUCLB",
@@ -63,8 +55,6 @@
     "model": "base.entityversion",
     "pk": 5,
     "fields": {
-      "external_id": "osis.entity_version_SCHOOL_381",
-      "changed": null,
       "entity": 2,
       "title": "Universita degli studi di Palermo",
       "acronym": "XUPAB",
@@ -78,8 +68,6 @@
     "model": "base.entityversion",
     "pk": 6,
     "fields": {
-      "external_id": "osis.entity_version_SCHOOL_382",
-      "changed": null,
       "entity": 3,
       "title": "Istituto Superiore di Educazione Fisica Torino",
       "acronym": "XISEF",

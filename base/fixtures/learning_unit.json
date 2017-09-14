@@ -7,7 +7,10 @@
       "title": "Spectroscopie atmosph\u00e9rique et t\u00e9l\u00e9d\u00e9tection spatiale (ULB)",
       "start_year": 2009,
       "end_year": 2099,
-      "learning_container": 1
+      "learning_container": 1,
+      "periodicity": "ANNUAL",
+      "faculty_remark": null,
+      "other_remark": null
     }
   },
   {
@@ -18,7 +21,10 @@
       "title": "Recent Continental Philosophy",
       "start_year": 2008,
       "end_year": 2099,
-      "learning_container": 2
+      "learning_container": 2,
+      "periodicity": "ANNUAL",
+      "faculty_remark": null,
+      "other_remark": null
     }
   },
   {
@@ -29,7 +35,10 @@
       "title": "Traduccion espanol-franc\u00e9s (105620) (6)",
       "start_year": 2009,
       "end_year": 2099,
-      "learning_container": 3
+      "learning_container": 3,
+      "periodicity": "ANNUAL",
+      "faculty_remark": null,
+      "other_remark": null
     }
   },
   {
@@ -40,7 +49,10 @@
       "title": "S\u00e9minaire approfondi: Questions approfondies de psychologie de la personnalit\u00e9",
       "start_year": 2009,
       "end_year": 2099,
-      "learning_container": 4
+      "learning_container": 4,
+      "periodicity": "ANNUAL",
+      "faculty_remark": null,
+      "other_remark": null
     }
   },
   {
@@ -51,7 +63,10 @@
       "title": "Introduction aux syst\u00e8mes d'information",
       "start_year": 2012,
       "end_year": 2099,
-      "learning_container": 5
+      "learning_container": 5,
+      "periodicity": "ANNUAL",
+      "faculty_remark": null,
+      "other_remark": null
     }
   },
   {
@@ -62,7 +77,10 @@
       "title": "S\u00e9minaires de chimie analytique Partim B",
       "start_year": 2009,
       "end_year": 2099,
-      "learning_container": 6
+      "learning_container": 6,
+      "periodicity": "ANNUAL",
+      "faculty_remark": null,
+      "other_remark": null
     }
   },
   {
@@ -73,7 +91,10 @@
       "title": "Stage en Master: partim A",
       "start_year": 2014,
       "end_year": 2099,
-      "learning_container": 7
+      "learning_container": 7,
+      "periodicity": "ANNUAL",
+      "faculty_remark": null,
+      "other_remark": null
     }
   },
   {
@@ -84,7 +105,10 @@
       "title": "Ontwerp van constructiecomponenten: beton, deel 2 (Katholieke Universiteit te Leuven)\r",
       "start_year": 2010,
       "end_year": 2099,
-      "learning_container": 8
+      "learning_container": 8,
+      "periodicity": "ANNUAL",
+      "faculty_remark": null,
+      "other_remark": "Diverses remarques"
     }
   },
   {
@@ -95,7 +119,10 @@
       "title": "Estudios de mercado y gesti\u00f3n de calidad en la industria alimentaria",
       "start_year": 2011,
       "end_year": 2099,
-      "learning_container": 9
+      "learning_container": 9,
+      "periodicity": "ANNUAL",
+      "faculty_remark": null,
+      "other_remark": null
     }
   },
   {
@@ -106,7 +133,10 @@
       "title": "Elektrische actuatoren: gevorderde aspecten en toepassingen m.i.v. transport (Katholieke Universiteit te Leuven)\r",
       "start_year": 2010,
       "end_year": 2099,
-      "learning_container": 10
+      "learning_container": 10,
+      "periodicity": "ANNUAL",
+      "faculty_remark": "Remarque facultaire",
+      "other_remark": null
     }
   },
   {
@@ -117,7 +147,10 @@
       "title": "Stages en médecine",
       "start_year": 2010,
       "end_year": 2099,
-      "learning_container": 11
+      "learning_container": 11,
+      "periodicity": "ANNUAL",
+      "faculty_remark": null,
+      "other_remark": null
     }
   },
   {
@@ -128,7 +161,10 @@
       "title": "Séminaire d'intégration pharmaceutique",
       "start_year": 2010,
       "end_year": 2099,
-      "learning_container": 11
+      "learning_container": 11,
+      "periodicity": "ANNUAL",
+      "faculty_remark": null,
+      "other_remark": null
     }
   },
   {
@@ -139,7 +175,25 @@
       "title": "Topics in Political Economy (Andreu Arenas)",
       "start_year": 2016,
       "end_year": 2099,
-      "learning_container": 22
+      "learning_container": 22,
+      "periodicity": "ANNUAL",
+      "faculty_remark": null,
+      "other_remark": null
+    }
+  }
+,
+  {
+    "model": "base.learningunit",
+    "pk": 14,
+    "fields": {
+      "acronym": "LAGES2530",
+      "title": "Communication des savoirs scientifiques",
+      "start_year": 1995,
+      "end_year": 2099,
+      "learning_container": 23,
+      "periodicity": "ANNUAL",
+      "faculty_remark": null,
+      "other_remark": null
     }
   }
 ]

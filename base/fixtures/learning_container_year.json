@@ -333,5 +333,20 @@
       "language": null,
       "campus": 7
     }
+  },
+  {
+    "model": "base.learningcontaineryear",
+    "pk": 22,
+    "fields": {
+      "academic_year": 2,
+      "learning_container": 23,
+      "container_type": "COURSE",
+      "title": "Communication des savoirs scientifiques",
+      "title_english": null,
+      "acronym": "LAGES2530",
+      "changed": null,
+      "language": null,
+      "campus": 7
+    }
   }
 ]

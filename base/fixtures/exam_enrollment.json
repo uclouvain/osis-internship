@@ -3,8 +3,6 @@
     "model": "base.examenrollment",
     "pk": 1,
     "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T14:50:22.403Z",
       "score_draft": null,
       "score_reencoded": null,
       "score_final": null,
@@ -19,8 +17,6 @@
     "model": "base.examenrollment",
     "pk": 2,
     "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T14:51:23.960Z",
       "score_draft": null,
       "score_reencoded": null,
       "score_final": null,
@@ -35,8 +31,6 @@
     "model": "base.examenrollment",
     "pk": 3,
     "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T14:51:23.960Z",
       "score_draft": null,
       "score_reencoded": null,
       "score_final": null,
@@ -51,8 +45,6 @@
     "model": "base.examenrollment",
     "pk": 4,
     "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T14:52:33.413Z",
       "score_draft": null,
       "score_reencoded": null,
       "score_final": null,
@@ -67,8 +59,6 @@
     "model": "base.examenrollment",
     "pk": 5,
     "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T14:52:33.413Z",
       "score_draft": null,
       "score_reencoded": null,
       "score_final": null,
@@ -83,8 +73,6 @@
     "model": "base.examenrollment",
     "pk": 6,
     "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T14:52:33.413Z",
       "score_draft": null,
       "score_reencoded": null,
       "score_final": null,
@@ -99,8 +87,6 @@
     "model": "base.examenrollment",
     "pk": 7,
     "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T14:52:33.413Z",
       "score_draft": null,
       "score_reencoded": null,
       "score_final": null,
@@ -115,8 +101,6 @@
     "model": "base.examenrollment",
     "pk": 8,
     "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T14:52:33.413Z",
       "score_draft": null,
       "score_reencoded": null,
       "score_final": null,
@@ -131,8 +115,6 @@
     "model": "base.examenrollment",
     "pk": 9,
     "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T14:52:33.413Z",
       "score_draft": null,
       "score_reencoded": null,
       "score_final": null,
@@ -147,8 +129,6 @@
     "model": "base.examenrollment",
     "pk": 10,
     "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T14:52:33.413Z",
       "score_draft": null,
       "score_reencoded": null,
       "score_final": null,
@@ -163,8 +143,6 @@
     "model": "base.examenrollment",
     "pk": 11,
     "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T14:52:33.413Z",
       "score_draft": null,
       "score_reencoded": null,
       "score_final": null,
@@ -179,8 +157,6 @@
     "model": "base.examenrollment",
     "pk": 12,
     "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T14:52:33.413Z",
       "score_draft": null,
       "score_reencoded": null,
       "score_final": null,
@@ -195,8 +171,6 @@
     "model": "base.examenrollment",
     "pk": 13,
     "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T14:52:33.413Z",
       "score_draft": null,
       "score_reencoded": null,
       "score_final": null,
@@ -211,8 +185,6 @@
     "model": "base.examenrollment",
     "pk": 14,
     "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T14:52:33.413Z",
       "score_draft": null,
       "score_reencoded": null,
       "score_final": null,
@@ -227,8 +199,6 @@
     "model": "base.examenrollment",
     "pk": 15,
     "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T14:52:33.413Z",
       "score_draft": null,
       "score_reencoded": null,
       "score_final": null,
@@ -243,8 +213,6 @@
     "model": "base.examenrollment",
     "pk": 16,
     "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T14:52:33.413Z",
       "score_draft": null,
       "score_reencoded": null,
       "score_final": null,

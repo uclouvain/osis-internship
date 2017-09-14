@@ -3,8 +3,6 @@
     "model": "base.educationgroup",
     "pk": 1,
     "fields": {
-      "external_id": "osis.educationgroup_39301",
-      "changed": null,
       "start_year": 1990,
       "end_year": 2099
     }
@@ -13,8 +11,6 @@
     "model": "base.educationgroup",
     "pk": 2,
     "fields": {
-      "external_id": "osis.educationgroup_41051",
-      "changed": null,
       "start_year": 1990,
       "end_year": 2099
     }
@@ -23,8 +19,6 @@
     "model": "base.educationgroup",
     "pk": 3,
     "fields": {
-      "external_id": "osis.educationgroup_42751",
-      "changed": null,
       "start_year": 1900,
       "end_year": 2099
     }
@@ -33,8 +27,6 @@
     "model": "base.educationgroup",
     "pk": 4,
     "fields": {
-      "external_id": "osis.educationgroup_46901",
-      "changed": null,
       "start_year": 1900,
       "end_year": 2099
     }
@@ -43,8 +35,6 @@
     "model": "base.educationgroup",
     "pk": 5,
     "fields": {
-      "external_id": "osis.educationgroup_48101",
-      "changed": null,
       "start_year": 1990,
       "end_year": 2099
     }
@@ -53,8 +43,6 @@
     "model": "base.educationgroup",
     "pk": 6,
     "fields": {
-      "external_id": "osis.educationgroup_53301",
-      "changed": null,
       "start_year": 1999,
       "end_year": 2099
     }
@@ -63,8 +51,6 @@
     "model": "base.educationgroup",
     "pk": 7,
     "fields": {
-      "external_id": "osis.educationgroup_53351",
-      "changed": null,
       "start_year": 1999,
       "end_year": 2099
     }
@@ -73,8 +59,6 @@
     "model": "base.educationgroup",
     "pk": 8,
     "fields": {
-      "external_id": "osis.educationgroup_54501",
-      "changed": null,
       "start_year": 2002,
       "end_year": 2099
     }
@@ -83,8 +67,6 @@
     "model": "base.educationgroup",
     "pk": 9,
     "fields": {
-      "external_id": "osis.educationgroup_54551",
-      "changed": null,
       "start_year": 2002,
       "end_year": 2099
     }
@@ -93,8 +75,6 @@
     "model": "base.educationgroup",
     "pk": 10,
     "fields": {
-      "external_id": "osis.educationgroup_54601",
-      "changed": null,
       "start_year": 2002,
       "end_year": 2099
     }

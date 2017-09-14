@@ -3,8 +3,6 @@
     "model": "reference.gradetype",
     "pk": 1,
     "fields": {
-      "uuid": "0ec06dca-5f9b-412a-afa1-1ea026207b08",
-      "external_id": "osis.reference.grade_type_high_educ_non_univ_1",
       "name": "Graduat",
       "coverage": "HIGH_EDUC_NOT_UNIVERSITY",
       "adhoc": false,
@@ -16,8 +14,6 @@
     "model": "reference.gradetype",
     "pk": 2,
     "fields": {
-      "uuid": "da66e0c2-d4c9-4e91-aa32-1b9ecce05951",
-      "external_id": "osis.reference.grade_type_high_educ_non_univ_11",
       "name": "Baccalaureat",
       "coverage": "HIGH_EDUC_NOT_UNIVERSITY",
       "adhoc": false,
@@ -29,8 +25,6 @@
     "model": "reference.gradetype",
     "pk": 3,
     "fields": {
-      "uuid": "7beb2975-08f1-40d7-9b26-23fc82b607ba",
-      "external_id": "osis.reference.grade_type_high_educ_non_univ_21",
       "name": "Master",
       "coverage": "HIGH_EDUC_NOT_UNIVERSITY",
       "adhoc": false,
@@ -42,8 +36,6 @@
     "model": "reference.gradetype",
     "pk": 4,
     "fields": {
-      "uuid": "3e3e9191-a58a-41e0-9d57-2864de4e9af4",
-      "external_id": "osis.reference.grade_type_high_educ_non_univ_31",
       "name": "Autres",
       "coverage": "HIGH_EDUC_NOT_UNIVERSITY",
       "adhoc": false,
@@ -55,8 +47,6 @@
     "model": "reference.gradetype",
     "pk": 5,
     "fields": {
-      "uuid": "ba031be4-e4a0-4d7d-b644-71add7eb7a42",
-      "external_id": "osis.reference.grade_type_university_67",
       "name": "Formation continue (non academique)",
       "coverage": "UNIVERSITY",
       "adhoc": false,
@@ -68,8 +58,6 @@
     "model": "reference.gradetype",
     "pk": 6,
     "fields": {
-      "uuid": "d6ce154b-35d3-4a16-9ac3-cac875b0858e",
-      "external_id": "osis.reference.grade_type_university_1",
       "name": "Etudes de base de premier cycle",
       "coverage": "UNIVERSITY",
       "adhoc": false,
@@ -81,8 +69,6 @@
     "model": "reference.gradetype",
     "pk": 7,
     "fields": {
-      "uuid": "ab9a22b0-423c-421d-a046-98dddad1d0ed",
-      "external_id": "osis.reference.grade_type_university_2",
       "name": "Etudes de base de deuxieme cycle",
       "coverage": "UNIVERSITY",
       "adhoc": false,
@@ -94,8 +80,6 @@
     "model": "reference.gradetype",
     "pk": 8,
     "fields": {
-      "uuid": "5e77c2b2-58b8-44c9-aaba-e510aa17219f",
-      "external_id": "osis.reference.grade_type_university_3",
       "name": "A.E.S.S.",
       "coverage": "UNIVERSITY",
       "adhoc": false,
@@ -107,8 +91,6 @@
     "model": "reference.gradetype",
     "pk": 9,
     "fields": {
-      "uuid": "956bd5c4-b717-4a38-a4e5-011aaa8e3bb2",
-      "external_id": "osis.reference.grade_type_university_41",
       "name": "Etudes complementaires de premier cycle",
       "coverage": "UNIVERSITY",
       "adhoc": false,
@@ -120,8 +102,6 @@
     "model": "reference.gradetype",
     "pk": 10,
     "fields": {
-      "uuid": "407324f1-b2ad-4c1a-8187-4e108810f0f2",
-      "external_id": "osis.reference.grade_type_university_42",
       "name": "Etudes complementaires de deuxieme cycle",
       "coverage": "UNIVERSITY",
       "adhoc": false,
@@ -133,8 +113,6 @@
     "model": "reference.gradetype",
     "pk": 11,
     "fields": {
-      "uuid": "b894c3c4-fc68-467d-b67f-a0b984fe20a6",
-      "external_id": "osis.reference.grade_type_university_51",
       "name": "Etudes specialisees de troisieme cycle",
       "coverage": "UNIVERSITY",
       "adhoc": false,
@@ -146,8 +124,6 @@
     "model": "reference.gradetype",
     "pk": 12,
     "fields": {
-      "uuid": "b097098a-1ff9-4e93-ae3c-80f43c6163e5",
-      "external_id": "osis.reference.grade_type_university_52",
       "name": "Etudes approfondies de troisieme cycle",
       "coverage": "UNIVERSITY",
       "adhoc": false,
@@ -159,8 +135,6 @@
     "model": "reference.gradetype",
     "pk": 13,
     "fields": {
-      "uuid": "e6c0ddb4-7dfe-4934-93b6-3062506d5ead",
-      "external_id": "osis.reference.grade_type_university_61",
       "name": "Docteur",
       "coverage": "UNIVERSITY",
       "adhoc": false,
@@ -172,8 +146,6 @@
     "model": "reference.gradetype",
     "pk": 14,
     "fields": {
-      "uuid": "8caf39f3-f47d-4232-af0e-0d0d88b79d43",
-      "external_id": "osis.reference.grade_type_university_62",
       "name": "A.E.S.",
       "coverage": "UNIVERSITY",
       "adhoc": false,
@@ -185,8 +157,6 @@
     "model": "reference.gradetype",
     "pk": 15,
     "fields": {
-      "uuid": "3fbf27f1-d96a-4e77-a61c-654babd11a70",
-      "external_id": "osis.reference.grade_type_university_69",
       "name": "Autre (non academique)",
       "coverage": "UNIVERSITY",
       "adhoc": false,
@@ -198,8 +168,6 @@
     "model": "reference.gradetype",
     "pk": 16,
     "fields": {
-      "uuid": "cd3b3515-5638-4af6-9bd4-c9c087addc50",
-      "external_id": "osis.reference.grade_type_university_70",
       "name": "Bachelier",
       "coverage": "UNIVERSITY",
       "adhoc": false,
@@ -211,8 +179,6 @@
     "model": "reference.gradetype",
     "pk": 17,
     "fields": {
-      "uuid": "0933e18e-4bfd-49e3-b84d-71c123a87447",
-      "external_id": "osis.reference.grade_type_university_72",
       "name": "Annee preparatoire a un 2eme cycle",
       "coverage": "UNIVERSITY",
       "adhoc": false,
@@ -224,8 +190,6 @@
     "model": "reference.gradetype",
     "pk": 18,
     "fields": {
-      "uuid": "b3692a5e-c265-48e2-8cf7-338c7fd9ea16",
-      "external_id": "osis.reference.grade_type_university_75",
       "name": "Master en 60 credits",
       "coverage": "UNIVERSITY",
       "adhoc": false,
@@ -237,8 +201,6 @@
     "model": "reference.gradetype",
     "pk": 19,
     "fields": {
-      "uuid": "eaf883ed-cbcb-495c-b7d6-d191bc566198",
-      "external_id": "osis.reference.grade_type_university_80",
       "name": "Master en 120 credits",
       "coverage": "UNIVERSITY",
       "adhoc": false,
@@ -250,8 +212,6 @@
     "model": "reference.gradetype",
     "pk": 20,
     "fields": {
-      "uuid": "4e8df3d2-03bd-44d5-b0fe-350d562dd0fe",
-      "external_id": "osis.reference.grade_type_university_81",
       "name": "Master en 120 credits a finalite didactique",
       "coverage": "UNIVERSITY",
       "adhoc": false,
@@ -263,8 +223,6 @@
     "model": "reference.gradetype",
     "pk": 21,
     "fields": {
-      "uuid": "a51d9864-ee8a-468a-b580-67ea63b6919e",
-      "external_id": "osis.reference.grade_type_university_82",
       "name": "Master en 120 credits a finalite specialisee",
       "coverage": "UNIVERSITY",
       "adhoc": false,
@@ -276,8 +234,6 @@
     "model": "reference.gradetype",
     "pk": 22,
     "fields": {
-      "uuid": "032b52fd-4d8a-40af-99b9-1e449ab912e6",
-      "external_id": "osis.reference.grade_type_university_83",
       "name": "Master en 120 credits a finalite approfondie",
       "coverage": "UNIVERSITY",
       "adhoc": false,
@@ -289,8 +245,6 @@
     "model": "reference.gradetype",
     "pk": 23,
     "fields": {
-      "uuid": "e8dc3087-4c48-4a5b-8c12-a069038953f8",
-      "external_id": "osis.reference.grade_type_university_84",
       "name": "Master en 180 ou 240 credits",
       "coverage": "UNIVERSITY",
       "adhoc": false,
@@ -302,8 +256,6 @@
     "model": "reference.gradetype",
     "pk": 24,
     "fields": {
-      "uuid": "2603a03e-cb44-40aa-af26-eb48602c29d7",
-      "external_id": "osis.reference.grade_type_university_85",
       "name": "Annee supplementaire a un 2eme cycle",
       "coverage": "UNIVERSITY",
       "adhoc": false,
@@ -315,8 +267,6 @@
     "model": "reference.gradetype",
     "pk": 25,
     "fields": {
-      "uuid": "9d7e729d-27b3-4268-a19c-11968ff15667",
-      "external_id": "osis.reference.grade_type_university_87",
       "name": "Master complementaire",
       "coverage": "UNIVERSITY",
       "adhoc": false,
@@ -328,8 +278,6 @@
     "model": "reference.gradetype",
     "pk": 26,
     "fields": {
-      "uuid": "412a3c20-c5a7-42c5-b7d1-ee08b6cf79da",
-      "external_id": "osis.reference.grade_type_university_90",
       "name": "Agregation de l'enseignement secondaire superieur (AESS)",
       "coverage": "UNIVERSITY",
       "adhoc": false,
@@ -341,8 +289,6 @@
     "model": "reference.gradetype",
     "pk": 27,
     "fields": {
-      "uuid": "ed1b3348-dd2d-4d3a-a7c1-3c25ada604b7",
-      "external_id": "osis.reference.grade_type_university_91",
       "name": "Certificat d'aptitude pedagogique approprie a l'enseignement superieur (CAPAES)",
       "coverage": "UNIVERSITY",
       "adhoc": false,
@@ -354,8 +300,6 @@
     "model": "reference.gradetype",
     "pk": 28,
     "fields": {
-      "uuid": "f82adcb2-839f-4ad2-bca4-3812bae2eb91",
-      "external_id": "osis.reference.grade_type_university_95",
       "name": "Annee supplementaire a un 3eme cycle",
       "coverage": "UNIVERSITY",
       "adhoc": false,
@@ -367,8 +311,6 @@
     "model": "reference.gradetype",
     "pk": 29,
     "fields": {
-      "uuid": "7c4bffba-6df3-4d39-9c34-9fd190c5ac16",
-      "external_id": "osis.reference.grade_type_university_98",
       "name": "Formations doctorales (Certificat de formation a la recherche)",
       "coverage": "UNIVERSITY",
       "adhoc": false,
@@ -380,8 +322,6 @@
     "model": "reference.gradetype",
     "pk": 30,
     "fields": {
-      "uuid": "bc7ca1c2-a404-4899-8fc3-3be42fd01df9",
-      "external_id": "osis.reference.grade_type_university_99",
       "name": "Docteur",
       "coverage": "UNIVERSITY",
       "adhoc": false,
@@ -393,8 +333,6 @@
     "model": "reference.gradetype",
     "pk": 31,
     "fields": {
-      "uuid": "a053eaaf-04b9-496f-a38c-39f2df8985b9",
-      "external_id": "osis.reference.grade_type_university_66",
       "name": "Certificats de medecine clinique / Certificats interuniversitaires de formation medicale specialisee",
       "coverage": "UNIVERSITY",
       "adhoc": false,
@@ -406,8 +344,6 @@
     "model": "reference.gradetype",
     "pk": 32,
     "fields": {
-      "uuid": "2865e7c8-0f7c-41ca-a3f5-9e553d14b0b4",
-      "external_id": "osis.reference.grade_type_university_76",
       "name": "Medecin",
       "coverage": "UNIVERSITY",
       "adhoc": false,
@@ -419,8 +355,6 @@
     "model": "reference.gradetype",
     "pk": 33,
     "fields": {
-      "uuid": "3c21f3e3-2dc1-454d-a1f3-69ec58235373",
-      "external_id": "osis.reference.grade_type_university_77",
       "name": "Medecin veterinaire",
       "coverage": "UNIVERSITY",
       "adhoc": false,
