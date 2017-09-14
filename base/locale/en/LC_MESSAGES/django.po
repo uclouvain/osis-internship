@@ -1908,3 +1908,6 @@ msgstr "Shifted"
 msgid "ADAPTED"
 msgstr "Adapted"
 
+msgid "field_is_required"
+msgstr "This field is required"
+
