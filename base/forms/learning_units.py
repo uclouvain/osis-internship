@@ -33,7 +33,7 @@ from base import models as mdl
 from base.models.campus import find_main_campuses
 from base.models.entity_version import find_main_entities_version
 from base.models.enums import entity_container_year_link_type
-from base.models.enums.learning_container_year_types import LEARNING_CONTAINER_YEAR_TYPES
+from base.models.enums.learning_container_year_types import LEARNING_CONTAINER_YEAR_TYPES, INTERNSHIP
 from base.models.enums.learning_unit_periodicity import PERIODICITY_TYPES
 from reference.models.language import find_all_languages
 
@@ -84,10 +84,10 @@ class LearningUnitYearForm(forms.Form):
                                              to_attr='entity_containers_year')
 
         clean_data['learning_container_year_id'] = _get_filter_learning_container_ids(clean_data)
-        learning_units = mdl.learning_unit_year.search(**clean_data)\
-                                               .select_related('academic_year', 'learning_container_year')\
-                                               .prefetch_related(entity_container_prefetch)\
-                                               .order_by('academic_year__year', 'acronym')
+        learning_units = mdl.learning_unit_year.search(**clean_data) \
+            .select_related('academic_year', 'learning_container_year') \
+            .prefetch_related(entity_container_prefetch) \
+            .order_by('academic_year__year', 'acronym')
         return [_append_latest_entities(learning_unit) for learning_unit in learning_units]
 
 
@@ -149,12 +149,16 @@ def _get_latest_entity_version(entity_container_year):
 
 
 def create_main_campuses_list():
-    return [(None, "---------"), ]+[(elem.id, elem.name) for elem in find_main_campuses()]
+    return [(None, "---------"), ] + [(elem.id, elem.name) for elem in find_main_campuses()]
 
 
 def create_main_entities_version_list():
-    return [(None, "---------"), ]+[(entity_version.id, entity_version.acronym) for entity_version
-                                    in find_main_entities_version()]
+    return [(None, "---------"), ] + [(entity_version.id, entity_version.acronym) for entity_version
+                                      in find_main_entities_version()]
+
+
+def create_learning_container_year_type_list():
+    return ((None, "---------"),) + LEARNING_CONTAINER_YEAR_TYPES
 
 
 def create_languages_list():
@@ -162,12 +166,11 @@ def create_languages_list():
 
 
 class CreateLearningUnitYearForm(forms.ModelForm):
-
-    learning_container_year_type = forms.CharField(
-        widget=forms.Select(attrs={'class': 'form-control', 'required': True,
-                                   'onchange': 'showDiv(this.value)',
-                                   'id': 'learning_container_year_type'},
-                            choices=(("---------", "---------"),) + LEARNING_CONTAINER_YEAR_TYPES))
+    learning_container_year_type = forms.ChoiceField(choices=lazy(create_learning_container_year_type_list, tuple),
+                                                     error_messages={'required': _('This field is required.')},
+                                                     widget=forms.Select(attrs={'class': 'form-control',
+                                                                                'onchange': 'showDiv(this.value)',
+                                                                                'id': 'learning_container_year_type'}))
     faculty_remark = forms.CharField(required=False, widget=forms.Textarea(attrs={'class': 'form-control',
                                                                                   'id': 'faculty_remark',
                                                                                   'rows': 2}))
@@ -178,6 +181,7 @@ class CreateLearningUnitYearForm(forms.ModelForm):
                                                              'id': 'periodicity'},
                                                       choices=PERIODICITY_TYPES))
     campus = forms.ChoiceField(choices=lazy(create_main_campuses_list, tuple),
+                               error_messages={'required': _('This field is required.')},
                                widget=forms.Select(attrs={'class': 'form-control',
                                                           'id': 'campus'}))
     requirement_entity = forms.ChoiceField(choices=lazy(create_main_entities_version_list, tuple),
@@ -229,6 +233,10 @@ class CreateLearningUnitYearForm(forms.ModelForm):
                                                   'required': True}),
                    'subtype': forms.HiddenInput()
                    }
+        error_messages = {
+            'title': {"required": _('This field is required.')},
+            'learning_container_year_type': {"required": _('This field is required.')}
+        }
 
     def is_valid(self):
         valid = super(CreateLearningUnitYearForm, self).is_valid()
@@ -238,6 +246,11 @@ class CreateLearningUnitYearForm(forms.ModelForm):
         if valid:
             if self.cleaned_data['acronym'].lower() in learning_unit_years_list:
                 self._errors['acronym'] = _('existing_acronym')
+            elif self.cleaned_data['learning_container_year_type'] == INTERNSHIP \
+                    and not (self.cleaned_data['internship_subtype']):
+                self._errors['internship_subtype'] = _('This field is required.')
+            elif not self.cleaned_data['credits']:
+                self._errors['credits'] = _('This field is required.')
                 return False
             else:
                 return True
