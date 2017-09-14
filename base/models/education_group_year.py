@@ -27,6 +27,7 @@ from django.db import models
 from django.contrib import admin
 from base.models.enums import academic_type, fee, internship_presence, schedule_type, activity_presence, \
     diploma_printing_orientation, active_status
+from base.models import offer_year_domain as mdl_offer_year_domain
 
 
 class EducationGroupYearAdmin(admin.ModelAdmin):
@@ -84,3 +85,18 @@ class EducationGroupYear(models.Model):
 
     def __str__(self):
         return u"%s - %s" % (self.academic_year, self.acronym)
+
+    @property
+    def domains(self):
+        domains = mdl_offer_year_domain.find_by_education_group_year(self)
+        ch = ''
+        for offer_yr_domain in domains:
+            ch = "{} ".format(offer_yr_domain.domain)
+        return ch
+
+
+def find_by_id(an_id):
+    try:
+        return EducationGroupYear.objects.get(pk=an_id)
+    except EducationGroupYear.DoesNotExist:
+        return None

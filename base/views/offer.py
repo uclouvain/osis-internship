@@ -73,6 +73,7 @@ def offer_read(request, offer_year_id):
 
 def _offer_identification_tab(request, offer_year_id):
     offer_year = mdl.offer_year.find_by_id(offer_year_id)
+    offer_year = mdl.education_group_year.find_by_id('1')
     return layout.render(request, "offer/tab_identification.html", locals())
 
 

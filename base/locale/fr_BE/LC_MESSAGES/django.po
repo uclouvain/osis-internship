@@ -1920,3 +1920,54 @@ msgstr "Horaire décalé"
 
 msgid "ADAPTED"
 msgstr "Horaire adapté"
+
+msgid "title_in_french"
+msgstr "Intitulé en français"
+
+msgid "schedule_type"
+msgstr "Type horaire"
+
+msgid "enrollment_campus"
+msgstr "Lieu d'inscription"
+
+msgid "other_campus_activities"
+msgstr "Activités sur d'autres sites"
+
+msgid "unspecified"
+msgstr "Indéterminé"
+
+msgid "university_certificate"
+msgstr "Certificat universitaire"
+
+msgid "studies_domain"
+msgstr "Domaine d'études"
+
+msgid "primary_language"
+msgstr "Langue principale"
+
+msgid "other_language_activities"
+msgstr "Activité dans d'autres langues"
+
+msgid "funding"
+msgstr "Finançable"
+
+msgid "funding_cud"
+msgstr "Financement CUD"
+
+msgid "funding_direction"
+msgstr "Orientation de financement"
+
+msgid "cud_funding_direction"
+msgstr "Orientation CUD"
+
+msgid "active_status"
+msgstr "Actif"
+
+msgid "partial_deliberation"
+msgstr "Sous-épreuve"
+
+msgid "admission_exam"
+msgstr "Concours"
+
+msgid "academic_type"
+msgstr "Nature"
