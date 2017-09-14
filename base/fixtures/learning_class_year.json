@@ -1,0 +1,165 @@
+[
+  {
+    "model": "base.learningclassyear",
+    "pk": 1,
+    "fields": {
+      "learning_component_year": 1,
+      "acronym": "1",
+      "description": null
+    }
+  },
+  {
+    "model": "base.learningclassyear",
+    "pk": 2,
+    "fields": {
+      "learning_component_year": 1,
+      "acronym": "1",
+      "description": null
+    }
+  },
+  {
+    "model": "base.learningclassyear",
+    "pk": 3,
+    "fields": {
+      "learning_component_year": 5,
+      "acronym": "1",
+      "description": null
+    }
+  },
+  {
+    "model": "base.learningclassyear",
+    "pk": 4,
+    "fields": {
+      "learning_component_year": 8,
+      "acronym": "1",
+      "description": null
+    }
+  },
+  {
+    "model": "base.learningclassyear",
+    "pk": 5,
+    "fields": {
+      "learning_component_year": 10,
+      "acronym": "1",
+      "description": null
+    }
+  },
+  {
+    "model": "base.learningclassyear",
+    "pk": 6,
+    "fields": {
+      "learning_component_year": 12,
+      "acronym": "1",
+      "description": null
+    }
+  },
+  {
+    "model": "base.learningclassyear",
+    "pk": 7,
+    "fields": {
+      "learning_component_year": 12,
+      "acronym": "1",
+      "description": null
+    }
+  },
+  {
+    "model": "base.learningclassyear",
+    "pk": 8,
+    "fields": {
+      "learning_component_year": 14,
+      "acronym": "1",
+      "description": null
+    }
+  },
+  {
+    "model": "base.learningclassyear",
+    "pk": 9,
+    "fields": {
+      "external_id": "osis.learning_class_year_217826_2016_LECTURING",
+      "learning_component_year": 17,
+      "acronym": "1",
+      "description": null
+    }
+  },
+  {
+    "model": "base.learningclassyear",
+    "pk": 10,
+    "fields": {
+      "learning_component_year": 17,
+      "acronym": "1",
+      "description": null
+    }
+  },
+  {
+    "model": "base.learningclassyear",
+    "pk": 11,
+    "fields": {
+      "learning_component_year": 19,
+      "acronym": "1",
+      "description": null
+    }
+  },
+  {
+    "model": "base.learningclassyear",
+    "pk": 12,
+    "fields": {
+      "learning_component_year": 19,
+      "acronym": "1",
+      "description": null
+    }
+  },
+  {
+    "model": "base.learningclassyear",
+    "pk": 13,
+    "fields": {
+      "learning_component_year": 21,
+      "acronym": "1",
+      "description": null
+    }
+  },
+  {
+    "model": "base.learningclassyear",
+    "pk": 14,
+    "fields": {
+      "learning_component_year": 21,
+      "acronym": "1",
+      "description": null
+    }
+  },
+  {
+    "model": "base.learningclassyear",
+    "pk": 15,
+    "fields": {
+      "learning_component_year": 26,
+      "acronym": "1",
+      "description": null
+    }
+  },
+  {
+    "model": "base.learningclassyear",
+    "pk": 16,
+    "fields": {
+      "learning_component_year": 26,
+      "acronym": "1",
+      "description": null
+    }
+  },
+  {
+    "model": "base.learningclassyear",
+    "pk": 17,
+    "fields": {
+      "learning_component_year": 31,
+      "acronym": "1",
+      "description": null
+    }
+  },
+  {
+    "model": "base.learningclassyear",
+    "pk": 18,
+    "fields": {
+      "learning_component_year": 31,
+      "acronym": "1",
+      "description": "Description"
+    }
+  }
+]
