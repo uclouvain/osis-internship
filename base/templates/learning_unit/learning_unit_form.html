@@ -116,7 +116,7 @@
                             </label>
                         </div>
                         <div class="col-md-2">
-                            <label>{% trans 'session_title' %}</label>
+                            <label>{% trans 'session_title' %}*</label>
                             {{ form.session }}
                         </div>
                     </div>
@@ -135,7 +135,7 @@
                 <div class="panel-body">
                     <div>
                         <label {% if form.errors.title %}style="color:red;"{% endif %}>
-                            {% trans 'title' %}
+                            {% trans 'title' %}*
                         </label>
                         {{ form.title }}
                         <label {% if form.errors.title %}style="color:red;"{% endif %}>
