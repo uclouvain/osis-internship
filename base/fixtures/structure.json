@@ -128,5 +128,57 @@
       "part_of": 3,
       "type": "FACULTY"
     }
+  },
+  {
+    "model": "base.structure",
+    "pk": 11,
+    "fields": {
+      "external_id": "osis.structure_1807",
+      "changed": null,
+      "acronym": "UCL",
+      "title": "Secteur UCL",
+      "organization": 6,
+      "part_of": null,
+      "type": "UNDEFINED"
+    }
+  },
+  {
+    "model": "base.structure",
+    "pk": 12,
+    "fields": {
+      "external_id": "osis.structure_1806",
+      "changed": null,
+      "acronym": "SSH",
+      "title": "Secteur des sciences humaines",
+      "organization": 6,
+      "part_of": null,
+      "type": "SECTOR"
+    }
+  },
+  {
+    "model": "base.structure",
+    "pk": 13,
+    "fields": {
+      "external_id": "osis.structure_1882",
+      "changed": null,
+      "acronym": "ESPO",
+      "title": "Faculté des sciences économiques, sociales, politiques et de communication",
+      "organization": 6,
+      "part_of": 12,
+      "type": "FACULTY"
+    }
+  },
+  {
+    "model": "base.structure",
+    "pk": 14,
+    "fields": {
+      "external_id": "osis.structure_1939",
+      "changed": null,
+      "acronym": "COMU",
+      "title": "Ecole de Communication",
+      "organization": 6,
+      "part_of": 13,
+      "type": "PROGRAM_COMMISSION"
+    }
   }
 ]
