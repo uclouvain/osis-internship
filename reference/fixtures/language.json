@@ -1,90 +1,29 @@
 [
-  {
-    "model": "reference.language",
-    "pk": 1,
-    "fields": {
-      "name": "Français",
-      "code": "fr"
+    {
+        "model": "reference.language",
+        "pk": 1,
+        "fields": {
+            "code": "FR",
+            "name": "Français",
+            "recognized": false
+        }
+    },
+    {
+        "model": "reference.language",
+        "pk": 2,
+        "fields": {
+            "code": "EN",
+            "name": "Anglais",
+            "recognized": false
+        }
+    },
+    {
+        "model": "reference.language",
+        "pk": 3,
+        "fields": {
+            "code": "ZH",
+            "name": "Chinois",
+            "recognized": false
+        }
     }
-  },
-  {
-    "model": "reference.language",
-    "pk": 2,
-    "fields": {
-      "name": "Néerlandais",
-      "code": "nl"
-    }
-  },
-  {
-    "model": "reference.language",
-    "pk": 3,
-    "fields": {
-      "name": "Anglais",
-      "code": "en"
-    }
-  },
-  {
-    "model": "reference.language",
-    "pk": 4,
-    "fields": {
-      "name": "Allemand",
-      "code": "de"
-    }
-  },
-  {
-    "model": "reference.language",
-    "pk": 5,
-    "fields": {
-      "name": "Italien",
-      "code": "it"
-    }
-  },
-  {
-    "model": "reference.language",
-    "pk": 6,
-    "fields": {
-      "name": "Espagnol",
-      "code": "es"
-    }
-  },
-  {
-    "model": "reference.language",
-    "pk": 7,
-    "fields": {
-      "name": "Portuguais",
-      "code": "pt"
-    }
-  },
-  {
-    "model": "reference.language",
-    "pk": 8,
-    "fields": {
-      "name": "Russe",
-      "code": "ru"
-    }
-  },
-  {
-    "model": "reference.language",
-    "pk": 9,
-    "fields": {
-      "name": "Chinois",
-      "code": "zh"
-    }
-  },
-  {
-    "model": "reference.language",
-    "pk": 10,
-    "fields": {
-      "name": "Japonais",
-      "code": "ja"
-    }
-  },
-  {
-    "model": "reference.language",
-    "pk": 11,
-    "fields": {
-      "name": "Vietnamien",
-      "code": "vi"
-    }
-  }
 ]

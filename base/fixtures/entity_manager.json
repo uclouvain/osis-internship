@@ -1,0 +1,27 @@
+[
+  {
+    "model": "base.entitymanager",
+    "pk": 1,
+    "fields": {
+      "person": 1,
+      "structure": 1
+      }
+  },
+  {
+    "model": "base.entitymanager",
+    "pk": 1,
+    "fields": {
+      "person": 1,
+      "structure": 2
+    }
+  },
+  {
+    "model": "base.entitymanager",
+    "pk": 1,
+    "fields": {
+      "person": 2,
+      "structure": 14
+    }
+  }
+
+]

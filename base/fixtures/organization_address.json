@@ -3,7 +3,7 @@
     "model": "base.organizationaddress",
     "pk": 1,
     "fields": {
-      "organization": 1,
+      "organization": 6,
       "label": "Contact",
       "location": "Place de l'Université 1-B",
       "postal_code": "1348",
