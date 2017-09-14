@@ -24,6 +24,7 @@
 #
 ##############################################################################
 import datetime
+import re
 from collections import OrderedDict
 from django.contrib import messages
 from django.conf import settings
@@ -762,6 +763,9 @@ def check_acronym(request):
     learning_unit_years = mdl.learning_unit_year.find_gte_year_acronym(academic_yr, acronym)
     old_learning_unit_years = mdl.learning_unit_year.find_lt_year_acronym(academic_yr, acronym)
     last_using = old_learning_unit_years.last()
+    if not re.search(r"^[LM][A-Z]{2,4}[0-9]{4}$", acronym):
+        incorrect_acronym = True
+        valid = False
     if old_learning_unit_years:
         existed_acronym = True
         valid = True

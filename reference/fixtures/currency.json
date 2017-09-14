@@ -3,8 +3,8 @@
     "model": "reference.currency",
     "pk": 1,
     "fields": {
-      "code": "ARS",
-      "name": "Argentine peso",
+      "code": "USD",
+      "name": "United States Dollar",
       "symbol": "$"
     }
   },
@@ -33,51 +33,6 @@
       "code": "EUR",
       "name": "Euro",
       "symbol": "€"
-    }
-  },
-  {
-    "model": "reference.currency",
-    "pk": 5,
-    "fields": {
-      "code": "GBP",
-      "name": "Pound Sterling",
-      "symbol": "£"
-    }
-  },
-  {
-    "model": "reference.currency",
-    "pk": 6,
-    "fields": {
-      "code": "JPY",
-      "name": "Japanese Yen",
-      "symbol": "¥"
-    }
-  },
-  {
-    "model": "reference.currency",
-    "pk": 7,
-    "fields": {
-      "code": "NGN",
-      "name": "Nigerian naira",
-      "symbol": "₦"
-    }
-  },
-  {
-    "model": "reference.currency",
-    "pk": 8,
-    "fields": {
-      "code": "USD",
-      "name": "United States Dollar",
-      "symbol": "$"
-    }
-  },
-  {
-    "model": "reference.currency",
-    "pk": 9,
-    "fields": {
-      "code": "RUB",
-      "name": "Russian Ruble",
-      "symbol": "руб"
     }
   }
 ]
