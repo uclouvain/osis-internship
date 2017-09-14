@@ -23,6 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from collections import OrderedDict
 from django.db import models
 
 from base import models as mdl
@@ -97,7 +98,7 @@ def _get_latest_entity_version(entity_container_year):
 
 
 def _append_components(learning_unit):
-    learning_unit.components = {}
+    learning_unit.components = OrderedDict()
     if learning_unit.learning_unit_components:
         for learning_unit_component in learning_unit.learning_unit_components:
             component = learning_unit_component.learning_component_year

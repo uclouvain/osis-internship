@@ -1818,8 +1818,38 @@ msgstr "Créer des fixtures anonymisées"
 msgid "desc_lnk_fixtures_build"
 msgstr "Crée un fichier json avec des fixtures anonymisées"
 
+msgid "partial_volume_1"
+msgstr "Volume Q1"
+
+msgid "partial_volume_2"
+msgstr "Volume Q2"
+
+msgid "partial_volume_1Q"
+msgstr "Q1"
+
+msgid "partial_volume_2Q"
+msgstr "Q2"
+
+msgid "planned_classes"
+msgstr "Classes prévues"
+
+msgid "planned_classes_pc"
+msgstr "P.C."
+
+msgid "total_volume"
+msgstr "Volume total"
+
+msgid "total_volume_charge"
+msgstr "Volume de charge total"
+
+msgid "total_volume_voltot"
+msgstr "Vol.tot"
+
+msgid "vol_charge"
+msgstr "Vol.charge"
+
 msgid "volumes_management"
-msgstr "Gestion des volumes"
+msgstr "Gestion des volumes horaires"
 
 msgid "volumes_validation_success"
 msgstr "Les données entrées respectent les règles de calculs des volumes horaires."

@@ -27,21 +27,21 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-{% include "learning_unit/breadcrumb.html" %}
+    <li><a href="{% url 'catalog' %}" id="lnk_catalog">{% trans 'formation_catalogue' %}</a></li>
+    <li><a href="{% url 'learning_units' %}" id="lnk_learning_units">{% trans 'learning_units' %}</a></li>
+    <li><a href="{% url 'learning_unit_components' learning_unit_year_id=learning_unit_year.id %}" id="lnk_learning_unit">{{ learning_unit_year.acronym }}</a></li>
+    <li class="active">{% trans 'volumes_management' %}</li>
 {% endblock %}
 
 {% block content %}
-
-{% include "learning_unit/header.html" %}
 
 {% include "template_messages.html" %}
 
 <div class="panel panel-default">
     <div class="panel-body" id="tabs">
-        {% include "learning_unit/tabs.html" %}
         <div class="tab-content" id="tab_content">
             <div role="tabpanel" class="tab-pane active" id="components">
-                <h4>{% trans 'volumes_management' %}</h4>
+                <h4 class="text-center">{% trans 'volumes_management' %}</h4>
 
                 <div id="form_validation_errors" class="alert alert-dismissible alert-danger">
                     <button type="button" class="close" data-dismiss="alert">&times;</button>
@@ -52,7 +52,7 @@
                 </div>
 
                 <form role="form" method="POST"
-                      action="{% url 'learning_unit_volumes_management' learning_unit_year_id=learning_unit_year.id%}"
+                      action="{% url 'learning_unit_volumes_management' learning_unit_year_id=learning_unit_year.id %}"
                       data-validate-url="{% url 'volumes_validation' learning_unit_year_id=learning_unit_year.id %}">
                     {% csrf_token %}
                     <table class="table volumes">
@@ -60,27 +60,27 @@
                             <tbody>
                                 <tr>
                                     <td>
-                                        {{ learning_unit.acronym }}
+                                        <b>{{ learning_unit.acronym }}</b>
                                     </td>
-                                    <td>[</td>
-                                    <td>
-                                        <abbr title="Volume total">Vol.tot</abbr>
+                                    <td></td>
+                                    <td style="background-color: #d7d9db">
+                                        <abbr title="{% trans 'total_volume' %}">{% trans 'total_volume_voltot' %}</abbr>
                                     </td>
                                     <td>=</td>
                                     <td>
-                                        <abbr title="Volume Q1">Q1</abbr>
+                                        <abbr title="{% trans 'partial_volume_1' %}">{% trans 'partial_volume_1Q' %}</abbr>
                                     </td>
                                     <td>+</td>
                                     <td>
-                                        <abbr title="Volume Q2">Q2</abbr>
+                                        <abbr title="{% trans 'partial_volume_2' %}">{% trans 'partial_volume_2Q' %}</abbr>
                                     </td>
-                                    <td>]</td>
+                                    <td></td>
                                     <td>*</td>
-                                    <td>
-                                        <abbr title="Classes prévues">C.P.</abbr>
+                                    <td style="background-color: #cce6ff">
+                                        <abbr title="{% trans 'planned_classes' %}">{% trans 'planned_classes_pc' %}</abbr>
                                     </td>
                                     <td>=</td>
-                                    <td>[</td>
+                                    <td></td>
                                     {% if learning_unit.entities.REQUIREMENT_ENTITY %}
                                     <td>
                                         <abbr title="{{learning_unit.entities.REQUIREMENT_ENTITY.title|default_if_none:''}}">
@@ -107,10 +107,9 @@
                                     </td>
                                     {% endif %}
                                     <td>=</td>
-                                    <td>
-                                        <abbr title="Volume de charge total">Vol.charge</abbr>
+                                    <td style="background-color: #d7d9db">
+                                        <abbr title="{% trans 'total_volume_charge' %}">{% trans 'vol_charge' %}</abbr>
                                     </td>
-                                    <td>]</td>
                                 </tr>
                                 {% for component, data in learning_unit.components.items %}
                                     <tr>
@@ -120,7 +119,7 @@
                                             </abbr>
                                         </td>
                                         <td></td>
-                                        <td>
+                                        <td style="background-color: #d7d9db">
                                             <input id="VOLUME_TOTAL_{{learning_unit.id}}_{{component.id}}"
                                                    class="form-control" name="VOLUME_TOTAL_{{learning_unit.id}}_{{component.id}}" type="text"
                                                    value="{{ data.VOLUME_TOTAL | default_if_none:0 }}">
@@ -139,7 +138,7 @@
                                         </td>
                                         <td></td>
                                         <td></td>
-                                        <td>
+                                        <td style="background-color: #cce6ff">
                                             <input id="PLANNED_CLASSES_{{learning_unit.id}}_{{component.id}}"
                                                    class="form-control" name="PLANNED_CLASSES_{{learning_unit.id}}_{{component.id}}" type="text"
                                                    value="{{ data.PLANNED_CLASSES | default_if_none:0 }}">
@@ -172,12 +171,11 @@
                                         </td>
                                         {% endif %}
                                         <td></td>
-                                        <td>
+                                        <td style="background-color: #d7d9db">
                                             <input id="VOLUME_TOTAL_REQUIREMENT_ENTITIES_{{learning_unit.id}}_{{component.id}}"
                                                    class="form-control" name="VOLUME_TOTAL_REQUIREMENT_ENTITIES_{{learning_unit.id}}_{{component.id}}" type="text"
                                                    value="{{ data.VOLUME_TOTAL_REQUIREMENT_ENTITIES | default_if_none:0 }}">
                                         </td>
-                                        <td></td>
                                     </tr>
                                 {% endfor %}
                             </tbody>
@@ -216,7 +214,7 @@
                     var success_block = $("#form_validation_success");
                     if (data.errors && data.errors.length > 0) {
                         success_block.hide();
-                        showErrors(data);
+                        showFormErrors(data);
                         $("#VOLUME_TOTAL_3788_11344").className = "form-control text-danger";
                     } else {
                         $("#btn_save_volumes").prop('disabled', false);
@@ -228,7 +226,7 @@
 
         }
 
-        function showErrors(data){
+        function showFormErrors(data){
             var errors_block = $("#form_validation_errors");
             var text = '';
             for (var i = 0; i < data.errors.length; i++) {

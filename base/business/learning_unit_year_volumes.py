@@ -158,11 +158,14 @@ def _validate_components_data(l_unit_year):
 
     for component, data in l_unit_year.components.items():
         if not _is_tot_annual_equal_to_q1_q2(**data):
-            errors.append("[{} {}] {}".format(l_unit_year.acronym, component.acronym, _('vol_tot_not_equal_to_q1_q2')))
+            errors.append("<b>{}/{}:</b> {}".format(l_unit_year.acronym, component.acronym, _('vol_tot_not_equal_to_q1_q2')))
         if not _is_tot_req_entities_equal_to_vol_req_entity(**data):
-            errors.append("[{} {}] {}".format(l_unit_year.acronym, component.acronym, _('vol_tot_req_entities_not_equal_to_entity')))
+            types = [entity_types.REQUIREMENT_ENTITY, entity_types.ADDITIONAL_REQUIREMENT_ENTITY_1, entity_types.ADDITIONAL_REQUIREMENT_ENTITY_2]
+            error_msg = ' + '.join([l_unit_year.entities.get(t).acronym for t in types if l_unit_year.entities.get(t)])
+            error_msg += ' = {}'.format(_('vol_charge'))
+            errors.append("<b>{}/{}:</b> {}".format(l_unit_year.acronym, component.acronym, error_msg))
         if not _is_tot_req_entities_equal_to_tot_annual_mult_cp(**data):
-            errors.append("[{} {}] {}".format(l_unit_year.acronym, component.acronym, _('vol_tot_req_entities_not_equal_to_vol_tot_mult_cp')))
+            errors.append("<b>{}/{}:</b> {}".format(l_unit_year.acronym, component.acronym, _('vol_tot_req_entities_not_equal_to_vol_tot_mult_cp')))
     return errors
 
 
@@ -213,7 +216,7 @@ def _validate_parent_partim_by_type(learning_unit_year_parent, learning_unit_yea
                                                learning_unit_year_partim.components[partim_component])
 
     # Prefix with acronym learning unit + acronym component
-    return ["[{} {} / {} {}] {}".format(learning_unit_year_parent.acronym, parent_component.acronym,
+    return ["<b>{} {} / {} {}:</b> {}".format(learning_unit_year_parent.acronym, parent_component.acronym,
                                         learning_unit_year_partim.acronym, partim_component.acronym, error)
             for error in errors]
 
