@@ -115,11 +115,13 @@
                                 {{ form.fax }}
                             </div>
                             <div class="col-md-6">
-                                <label for="id_email">{% trans 'email' %}</label>
+                                <label for="id_email">xxxx{% trans 'email' %}</label>
                                 {{ form.email }}
+                                <span style="color:red;">{{ form.email.errors }}</span>
                             </div>
                         </div>
                         <br>
+                        <span style="visibility:hidden;display:none;">{{ form.offer_year }}</span>
                         {% if is_program_manager %}
                             <button type="submit" class="btn btn-primary" id="bt_save_score_encoding_address">
                                 <span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span> {% trans 'save' %}</button>
@@ -181,6 +183,7 @@
                         $('#id_recipient').val(data.recipient);
                     },
                     error: function (xhr, status, error) {
+                        console.log('test error');
                         setFormFieldsValuesToNone();
                         disableFormInputs();
                         showNoAddressFoundMsg();
@@ -214,6 +217,7 @@
 
 
         function setFormFieldsValues(data){
+            console.log('kkk');
             $('#id_recipient').val(data.recipient);
             $('#id_location').val(data.address.location);
             $('#id_postal_code').val(data.address.postal_code);

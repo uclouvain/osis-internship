@@ -32,7 +32,7 @@ from django.views.decorators.http import require_http_methods
 from base import models as mdl
 from reference import models as mdl_ref
 from base.views import layout
-from assessments.forms import score_sheet_address
+from assessments.forms import score_sheet_address, score_sheet_address_entity
 from assessments.business import score_encoding_sheet
 from django.utils.translation import ugettext_lazy as _
 from assessments.models import score_sheet_address as score_sheet_address_model
@@ -45,6 +45,8 @@ from assessments.models import score_sheet_address as score_sheet_address_model
 def offer_score_encoding_tab(request, offer_year_id):
     context = _get_common_context(request, offer_year_id)
     entity_id_selected, address = score_encoding_sheet.get_score_sheet_address(context.get('offer_year'))
+    if not address.get('offer_year'):
+        address['offer_year'] = offer_year_id
     form = score_sheet_address.ScoreSheetAddressForm(initial=address)
     context.update({'entity_id_selected': entity_id_selected, 'form': form})
     return layout.render(request, "offer/score_sheet_address_tab.html", context)
