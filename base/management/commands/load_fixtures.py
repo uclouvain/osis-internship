@@ -41,6 +41,7 @@ class Command(BaseCommand):
             'offer',
             'offer_year',
             'offer_year_calendar',
+            'offer_year_entity',
             'grade_type',
             'offer_enrollment',
             'learning_unit_enrollment',
