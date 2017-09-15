@@ -53,9 +53,8 @@ def manager_offer_parameters(request):
 @login_required
 @user_passes_test(adviser.is_manager)
 def manager_offer_parameters_edit(request, pk):
-    try:
-        offer_prop = OfferProposition.objects.get(id=pk)
-    except ObjectDoesNotExist:
+    offer_prop = offer_proposition.find_by_id(pk)
+    if offer_prop is None:
         return redirect('dissertations')
     if request.method == "POST":
         form = ManagerOfferPropositionForm(request.POST, instance=offer_prop)

@@ -101,9 +101,9 @@ def dissertations(request):
 @login_required
 @user_passes_test(adviser.is_manager)
 def manager_dissertations_detail(request, pk):
-    try:
-        dissert = Dissertation.objects.get(id=pk)
-    except ObjectDoesNotExist:
+
+    dissert = dissertation.find_by_id(pk)
+    if dissert is None:
         return redirect('manager_dissertations_list')
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
@@ -188,9 +188,8 @@ def manager_dissertations_detail(request, pk):
 @login_required
 @user_passes_test(adviser.is_manager)
 def manager_dissertations_detail_updates(request, pk):
-    try:
-        dissert = Dissertation.objects.get(id=pk)
-    except ObjectDoesNotExist:
+    dissert = dissertation.find_by_id(pk)
+    if dissert is None:
         return redirect('manager_dissertations_list')
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
@@ -205,9 +204,8 @@ def manager_dissertations_detail_updates(request, pk):
 @login_required
 @user_passes_test(adviser.is_manager)
 def manager_dissertations_edit(request, pk):
-    try:
-        dissert = Dissertation.objects.get(id=pk)
-    except ObjectDoesNotExist:
+    dissert = dissertation.find_by_id(pk)
+    if dissert is None:
         return redirect('manager_dissertations_list')
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
@@ -240,9 +238,8 @@ def manager_dissertations_edit(request, pk):
 @login_required
 @user_passes_test(adviser.is_manager)
 def manager_dissertations_jury_edit(request, pk):
-    try:
-        dissert_role = DissertationRole.objects.get(id=pk)
-    except ObjectDoesNotExist:
+    dissert_role = dissertation_role.get_by_id(pk)
+    if dissert_role is None:
         return redirect('manager_dissertations_list')
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
@@ -261,9 +258,8 @@ def manager_dissertations_jury_edit(request, pk):
 @login_required
 @user_passes_test(adviser.is_manager)
 def manager_dissertations_jury_new(request, pk):
-    try:
-        dissert = Dissertation.objects.get(id=pk)
-    except ObjectDoesNotExist:
+    dissert = dissertation.find_by_id(pk)
+    if dissert is None:
         return redirect('manager_dissertations_list')
     count_dissertation_role = dissertation_role.count_by_dissertation(dissert)
     person = mdl.person.find_by_user(request.user)
@@ -455,9 +451,8 @@ def manager_dissertations_search(request):
 @login_required
 @user_passes_test(adviser.is_manager)
 def manager_dissertations_delete(request, pk):
-    try:
-        dissert = Dissertation.objects.get(id=pk)
-    except ObjectDoesNotExist:
+    dissert = dissertation.find_by_id(pk)
+    if dissert is None:
         return redirect('manager_dissertations_list')
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
@@ -473,9 +468,8 @@ def manager_dissertations_delete(request, pk):
 @login_required
 @user_passes_test(adviser.is_manager)
 def manager_dissertations_role_delete(request, pk):
-    try:
-        dissert_role = DissertationRole.objects.get(id=pk)
-    except ObjectDoesNotExist:
+    dissert_role = dissertation_role.get_by_id(pk)
+    if dissert_role is None:
         return redirect('manager_dissertations_list')
     dissert = dissert_role.dissertation
     person = mdl.person.find_by_user(request.user)
@@ -492,9 +486,8 @@ def manager_dissertations_role_delete(request, pk):
 @login_required
 @user_passes_test(adviser.is_manager)
 def manager_dissertations_to_dir_submit(request, pk):
-    try:
-        dissert = Dissertation.objects.get(id=pk)
-    except ObjectDoesNotExist:
+    dissert = dissertation.find_by_id(pk)
+    if dissert is None:
         return redirect('manager_dissertations_list')
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
@@ -522,9 +515,8 @@ def manager_dissertations_to_dir_submit(request, pk):
 @login_required
 @user_passes_test(adviser.is_manager)
 def manager_dissertations_to_dir_submit_list(request, pk):
-    try:
-        dissert = Dissertation.objects.get(id=pk)
-    except ObjectDoesNotExist:
+    dissert = dissertation.find_by_id(pk)
+    if dissert is None:
         return redirect('manager_dissertations_list')
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
@@ -541,9 +533,8 @@ def manager_dissertations_to_dir_submit_list(request, pk):
 @login_required
 @user_passes_test(adviser.is_manager)
 def manager_dissertations_to_dir_ok(request, pk):
-    try:
-        dissert = Dissertation.objects.get(id=pk)
-    except ObjectDoesNotExist:
+    dissert = dissertation.find_by_id(pk)
+    if dissert is None:
         return redirect('manager_dissertations_list')
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
@@ -573,10 +564,9 @@ def manager_dissertations_to_dir_ok(request, pk):
 @login_required
 @user_passes_test(adviser.is_manager)
 def manager_dissertations_accept_comm_list(request, pk):
-    try:
-        dissert = Dissertation.objects.get(id=pk)
-    except ObjectDoesNotExist:
-        return redirect('manager_dissertations_wait_comm_list')
+    dissert = dissertation.find_by_id(pk)
+    if dissert is None:
+        return redirect('manager_dissertations_list')
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
     if (adviser_can_manage(dissert, adv)):
@@ -591,9 +581,8 @@ def manager_dissertations_accept_comm_list(request, pk):
 @login_required
 @user_passes_test(adviser.is_manager)
 def manager_dissertations_accept_eval_list(request, pk):
-    try:
-        dissert = Dissertation.objects.get(id=pk)
-    except ObjectDoesNotExist:
+    dissert = dissertation.find_by_id(pk)
+    if dissert is None:
         return redirect('manager_dissertations_list')
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
@@ -610,9 +599,8 @@ def manager_dissertations_accept_eval_list(request, pk):
 @login_required
 @user_passes_test(adviser.is_manager)
 def manager_dissertations_to_dir_ko(request, pk):
-    try:
-        dissert = Dissertation.objects.get(id=pk)
-    except ObjectDoesNotExist:
+    dissert = dissertation.find_by_id(pk)
+    if dissert is None:
         return redirect('manager_dissertations_list')
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
@@ -756,9 +744,8 @@ def adviser_can_manage(dissertation,adviser):
 @login_required
 @user_passes_test(adviser.is_teacher)
 def dissertations_detail(request, pk):
-    try:
-        dissert = Dissertation.objects.get(id=pk)
-    except ObjectDoesNotExist:
+    dissert = dissertation.find_by_id(pk)
+    if dissert is None:
         return redirect('dissertations_list')
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
@@ -793,9 +780,8 @@ def dissertations_detail(request, pk):
 @login_required
 @user_passes_test(adviser.is_teacher)
 def dissertations_detail_updates(request, pk):
-    try:
-        dissert = Dissertation.objects.get(id=pk)
-    except ObjectDoesNotExist:
+    dissert = dissertation.find_by_id(pk)
+    if dissert is None:
         return redirect('dissertations_list')
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
@@ -811,9 +797,8 @@ def dissertations_detail_updates(request, pk):
 @login_required
 @user_passes_test(adviser.is_teacher)
 def dissertations_delete(request, pk):
-    try:
-        dissert = Dissertation.objects.get(id=pk)
-    except ObjectDoesNotExist:
+    dissert = dissertation.find_by_id(pk)
+    if dissert is None:
         return redirect('dissertations_list')
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
@@ -828,9 +813,8 @@ def dissertations_delete(request, pk):
 @login_required
 @user_passes_test(adviser.is_teacher)
 def dissertations_to_dir_ok(request, pk):
-    try:
-        dissert = Dissertation.objects.get(id=pk)
-    except ObjectDoesNotExist:
+    dissert = dissertation.find_by_id(pk)
+    if dissert is None:
         return redirect('dissertations_list')
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
@@ -863,9 +847,8 @@ def dissertations_to_dir_ok(request, pk):
 @login_required
 @user_passes_test(adviser.is_teacher)
 def dissertations_to_dir_ko(request, pk):
-    try:
-        dissert = Dissertation.objects.get(id=pk)
-    except ObjectDoesNotExist:
+    dissert = dissertation.find_by_id(pk)
+    if dissert is None:
         return redirect('dissertations_list')
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
@@ -909,9 +892,8 @@ def dissertations_wait_list(request):
 @login_required
 @user_passes_test(adviser.is_teacher)
 def dissertations_role_delete(request, pk):
-    try:
-        dissert_role = DissertationRole.objects.get(id=pk)
-    except ObjectDoesNotExist:
+    dissert_role = dissertation_role.get_by_id(pk)
+    if dissert_role is None:
         return redirect('dissertations_list')
     dissert = dissert_role.dissertation
     person = mdl.person.find_by_user(request.user)
@@ -929,9 +911,8 @@ def dissertations_role_delete(request, pk):
 @login_required
 @user_passes_test(adviser.is_teacher)
 def dissertations_jury_new(request, pk):
-    try:
-        dissert = Dissertation.objects.get(id=pk)
-    except ObjectDoesNotExist:
+    dissert = dissertation.find_by_id(pk)
+    if dissert is None:
         return redirect('dissertations_list')
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)

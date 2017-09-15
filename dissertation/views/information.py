@@ -262,9 +262,8 @@ def manager_informations_add_person(request):
 @login_required
 @user_passes_test(adviser.is_manager)
 def manager_informations_detail(request, pk):
-    try:
-        adv = Adviser.objects.get(id=pk)
-    except ObjectDoesNotExist:
+    adv = adviser.get_by_id(pk)
+    if adv is None:
         return redirect('manager_informations')
     return layout.render(request, 'manager_informations_detail.html',
                          {'adviser': adv,
@@ -275,9 +274,8 @@ def manager_informations_detail(request, pk):
 @login_required
 @user_passes_test(adviser.is_manager)
 def manager_informations_edit(request, pk):
-    try:
-        adv = Adviser.objects.get(id=pk)
-    except ObjectDoesNotExist:
+    adv = adviser.get_by_id(pk)
+    if adv is None:
         return redirect('manager_informations')
     if request.method == "POST":
         form = ManagerAdviserForm(request.POST, instance=adv)
@@ -357,9 +355,8 @@ def manager_informations_detail_list_wait(request, pk):
 @login_required
 @user_passes_test(adviser.is_manager)
 def manager_informations_detail_stats(request, pk):
-    try:
-        adv = Adviser.objects.get(id=pk)
-    except ObjectDoesNotExist:
+    adv = adviser.get_by_id(pk)
+    if adv is None:
         return redirect('manager_informations')
     advisers_pro = dissertation_role.search_by_adviser_and_role_stats(adv, 'PROMOTEUR')
     count_advisers_pro = dissertation_role.count_by_adviser_and_role_stats(adv, 'PROMOTEUR')

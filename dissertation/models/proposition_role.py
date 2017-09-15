@@ -23,6 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.core.exceptions import ObjectDoesNotExist
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 from django.db import models
 from .enums import status_types
@@ -85,3 +86,9 @@ def count_by_status_adviser_proposition(status, adviser, proposition_dissertatio
                                   .filter(status=status)\
                                   .filter(adviser=adviser)\
                                   .count()
+
+def get_by_id (prop_role_id):
+    try:
+        return PropositionRole.objects.get(prop_role_id)
+    except ObjectDoesNotExist:
+        return None
