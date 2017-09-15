@@ -1,0 +1,98 @@
+[
+  {
+    "model": "base.entity",
+    "pk": 1,
+    "fields": {
+      "organization": 1,
+      "external_id": "osis.entity_SCHOOL_380",
+      "changed": null,
+      "location": null,
+      "postal_code": null,
+      "city": null,
+      "country": null,
+      "phone": null,
+      "fax": null,
+      "website": null
+    }
+  },
+  {
+    "model": "base.entity",
+    "pk": 2,
+    "fields": {
+      "organization": 2,
+      "external_id": "osis.entity_SCHOOL_381",
+      "changed": null,
+      "location": null,
+      "postal_code": null,
+      "city": null,
+      "country": null,
+      "phone": null,
+      "fax": null,
+      "website": null
+    }
+  },
+  {
+    "model": "base.entity",
+    "pk": 3,
+    "fields": {
+      "organization": 3,
+      "external_id": "osis.entity_SCHOOL_382",
+      "changed": null,
+      "location": null,
+      "postal_code": null,
+      "city": null,
+      "country": null,
+      "phone": null,
+      "fax": null,
+      "website": null
+    }
+  },
+  {
+    "model": "base.entity",
+    "pk": 4,
+    "fields": {
+      "organization": 4,
+      "external_id": "osis.entity_SCHOOL_383",
+      "changed": null,
+      "location": null,
+      "postal_code": null,
+      "city": null,
+      "country": null,
+      "phone": null,
+      "fax": null,
+      "website": null
+    }
+  },
+  {
+    "model": "base.entity",
+    "pk": 5,
+    "fields": {
+      "organization": 5,
+      "external_id": "osis.entity_SCHOOL_384",
+      "changed": null,
+      "location": null,
+      "postal_code": null,
+      "city": null,
+      "country": null,
+      "phone": null,
+      "fax": null,
+      "website": null
+    }
+  },
+  {
+    "model": "base.entity",
+    "pk": 6,
+    "fields": {
+      "organization": 6,
+      "external_id": "osis.entity_SCHOOL_385",
+      "changed": null,
+      "location": null,
+      "postal_code": null,
+      "city": null,
+      "country": null,
+      "phone": null,
+      "fax": null,
+      "website": null
+    }
+  }
+]
