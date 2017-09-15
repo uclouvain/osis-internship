@@ -216,9 +216,9 @@
         $('#acronym').on("click",function() {
             var message = "";
             var messageFunc = function () { return message; };
-
             jQuery.validator.addMethod("check_acronym", function(val) {
-                if(val.length>6){
+
+                if(/^[LMNPWX][A-Z]{2,4}\d{4}$/.test(val)){
                     var res;
                     $.ajax({
                         async:false,
@@ -241,6 +241,9 @@
                         }
                         message = newMessage.join("   ");
                     });
+                }
+                else {
+                    message = "{% trans 'invalid_acronym' %}"
                 }
             }, messageFunc);
 
