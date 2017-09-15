@@ -37,17 +37,20 @@ from base.business import entity_version as entity_version_business
 def get_score_sheet_address(off_year):
     address = score_sheet_address.get_from_offer_year(off_year)
     entity_id = None
-    if address and not address.customized:
-        map_offer_year_entity_type_with_entity_id = _get_map_offer_year_entity_type_with_entity(off_year)
-        entity_id = map_offer_year_entity_type_with_entity_id[address.entity_address_choice]
-        ent_version = entity_version.get_last_version(entity_id)
-        entity = entity_model.get_by_internal_id(entity_id)
-        if not entity: # Case no address found for this entity
-            entity = entity_model.Entity()
-        email = address.email
-        address = entity
-        address.recipient = '{} - {}'.format(ent_version.acronym, ent_version.title)
-        address.email = email
+    if address is None:
+        address = off_year.id
+    else:
+        if address and not address.customized:
+            map_offer_year_entity_type_with_entity_id = _get_map_offer_year_entity_type_with_entity(off_year)
+            entity_id = map_offer_year_entity_type_with_entity_id[address.entity_address_choice]
+            ent_version = entity_version.get_last_version(entity_id)
+            entity = entity_model.get_by_internal_id(entity_id)
+            if not entity: # Case no address found for this entity
+                entity = entity_model.Entity()
+            email = address.email
+            address = entity
+            address.recipient = '{} - {}'.format(ent_version.acronym, ent_version.title)
+            address.email = email
     return entity_id, _get_address_as_dict(address)
 
 
@@ -83,7 +86,7 @@ def save_address_from_entity(off_year, entity_version_id_selected, email):
     new_address = score_sheet_address.ScoreSheetAddress(offer_year=off_year,
                                                         entity_address_choice=entity_address_choice,
                                                         email=email)
-    address = score_sheet_address.get_from_offer_year(off_year)
+   address = score_sheet_address.get_from_offer_year(off_year)
     if address:
         new_address.id = address.id
     new_address.save()
