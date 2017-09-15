@@ -167,7 +167,6 @@ def create_languages_list():
 
 class CreateLearningUnitYearForm(forms.ModelForm):
     learning_container_year_type = forms.ChoiceField(choices=lazy(create_learning_container_year_type_list, tuple),
-                                                     error_messages={'required': _('field_is_required')},
                                                      widget=forms.Select(attrs={'class': 'form-control',
                                                                                 'onchange': 'showDiv(this.value)',
                                                                                 'id': 'learning_container_year_type'}))
@@ -183,7 +182,6 @@ class CreateLearningUnitYearForm(forms.ModelForm):
                                                              'id': 'periodicity'},
                                                       choices=PERIODICITY_TYPES))
     campus = forms.ChoiceField(choices=lazy(create_main_campuses_list, tuple),
-                               error_messages={'required': _('field_is_required')},
                                widget=forms.Select(attrs={'class': 'form-control',
                                                           'id': 'campus'}))
     requirement_entity = forms.ChoiceField(choices=lazy(create_main_entities_version_list, tuple),
@@ -210,7 +208,7 @@ class CreateLearningUnitYearForm(forms.ModelForm):
                   'end_year', 'periodicity', 'credits', 'campus', 'title', 'title_english', 'additional_entity_1',
                   'additional_entity_2', 'allocation_entity', 'requirement_entity', 'subtype', 'language', 'session',
                   'faculty_remark', 'other_remark', ]
-        widgets = {'acronym': forms.TextInput(attrs={'class': 'form-control',
+        widgets = {'acronym': forms.TextInput(attrs={'class': 'form-control form-acronym',
                                                      'id': 'acronym',
                                                      'maxlength': "15",
                                                      'required': True}),
@@ -235,11 +233,6 @@ class CreateLearningUnitYearForm(forms.ModelForm):
                                                   'required': True}),
                    'subtype': forms.HiddenInput()
                    }
-        error_messages = {
-            'acronym': {"required": _('field_is_required')},
-            'learning_container_year_type': {"required": _('field_is_required')},
-            'title': {"required": _('field_is_required')},
-        }
 
     def is_valid(self):
         valid = super(CreateLearningUnitYearForm, self).is_valid()
