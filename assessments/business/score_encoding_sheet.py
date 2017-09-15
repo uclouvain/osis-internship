@@ -86,7 +86,7 @@ def save_address_from_entity(off_year, entity_version_id_selected, email):
     new_address = score_sheet_address.ScoreSheetAddress(offer_year=off_year,
                                                         entity_address_choice=entity_address_choice,
                                                         email=email)
-   address = score_sheet_address.get_from_offer_year(off_year)
+    address = score_sheet_address.get_from_offer_year(off_year)
     if address:
         new_address.id = address.id
     new_address.save()
