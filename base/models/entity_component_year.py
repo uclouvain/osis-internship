@@ -32,6 +32,7 @@ class EntityComponentYearAdmin(admin.ModelAdmin):
                     'hourly_volume_partial')
     search_fields = ['entity_container_year__learning_container_year__acronym']
     raw_id_fields = ('entity_container_year', 'learning_component_year')
+    list_filter = ('entity_container_year__learning_container_year__academic_year',)
 
 
 class EntityComponentYear(models.Model):
