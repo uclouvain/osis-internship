@@ -153,7 +153,7 @@ def volumes_validation(request, learning_unit_year_id):
 @permission_required('base.can_access_learningunit', raise_exception=True)
 def learning_unit_volumes_management(request, learning_unit_year_id):
     if request.method == 'POST':
-        learning_unit_volumes_management_edit(request, learning_unit_year_id)
+        _learning_unit_volumes_management_edit(request, learning_unit_year_id)
 
     context = _get_common_context_learning_unit_year(learning_unit_year_id)
     context['learning_units'] = learning_unit_year_with_context.get_with_context(
@@ -164,7 +164,7 @@ def learning_unit_volumes_management(request, learning_unit_year_id):
     return layout.render(request, "learning_unit/volumes_management.html", context)
 
 
-def learning_unit_volumes_management_edit(request, learning_unit_year_id):
+def _learning_unit_volumes_management_edit(request, learning_unit_year_id):
     errors = None
     volumes_encoded = _extract_volumes_from_data(request)
 
