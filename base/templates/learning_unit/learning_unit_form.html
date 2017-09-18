@@ -56,6 +56,10 @@
                                       style="font-size: 14pt;" aria-hidden="true"></span>
                             </abbr>
                             {{ form.acronym }}
+                            {% if form.acronym.errors %}
+                                <label class='error' for='{{ form.acronym.name }}' generated="true">{{ form.acronym.errors|join:". " }}</label>
+                            {% endif %}
+
                         </div>
                         <div class="col-md-3">
                             <label {% if form.errors.learning_container_year_type %}style="color:red;"{% endif %}>
@@ -198,6 +202,7 @@
     const blank = "---------";
     const partim = "PARTIM";
     const internship = "INTERNSHIP";
+    var old_acronym = ""
     $( document ).ready(function() {
         if('{{form.learning_container_year_type.value}}' == internship)
             document.getElementById('internship').disabled = false;
@@ -213,12 +218,13 @@
     }
 
     $(document).ready(function() {
-        $('#acronym').on("click",function() {
+
+        $('#acronym').on("input",function() { //click
             var message = "";
             var messageFunc = function () { return message; };
 
             jQuery.validator.addMethod("check_acronym", function(val) {
-                if(val.length>6){
+                if(val.length>6 && val != old_acronym){
                     var res;
                     $.ajax({
                         async:false,
@@ -231,7 +237,9 @@
                             if(data['existed_acronym'] && !data['existing_acronym']){
                                 $(".error").css("color","orange");
                                 newMessage.push("{% trans 'existed_acronym' %}"+data['last_using']);
+
                             }
+
                         }else{
                             res = false;
                             $(".error").css("color","red");
@@ -239,6 +247,8 @@
                                 newMessage.push("{% trans 'existing_acronym' %}");
                             }
                         }
+                        old_acronym = val;
+
                         message = newMessage.join("   ");
                     });
                 }

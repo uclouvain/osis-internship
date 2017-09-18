@@ -690,3 +690,17 @@ class LearningUnitViewTestCase(TestCase):
         self.assertEqual(response.status_code, 302)
         count_learning_unit_year = LearningUnitYear.objects.all().count()
         self.assertEqual(count_learning_unit_year, 1)
+
+
+    def get_empty_acronym(self):
+        faultyDict = dict(self.get_valid_data())
+        faultyDict["acronym"] = ""
+        return faultyDict
+
+    def test_learning_unit_acronym_form(self):
+        form = CreateLearningUnitYearForm ( data=self.get_valid_data () )
+        self.assertTrue ( form.is_valid () , form.errors )
+
+        form = CreateLearningUnitYearForm ( data=self.get_empty_acronym () )
+        self.assertFalse ( form.is_valid () , form.errors )
+        self.assertEqual(form.errors['acronym'], [_('This field is required.')])

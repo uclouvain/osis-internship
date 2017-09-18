@@ -247,7 +247,7 @@ class CreateLearningUnitYearForm(forms.ModelForm):
         learning_unit_years_list = [learning_unit_year.acronym.lower() for learning_unit_year in learning_unit_years]
         if valid:
             if self.cleaned_data['acronym'].lower() in learning_unit_years_list:
-                self._errors['acronym'] = _('existing_acronym')
+                self.add_error('acronym', _('existing_acronym'))
             elif academic_year.year > int(self.data['end_year']):
                 self._errors['end_year'] = _('end_date_gt_begin_date')
             elif self.cleaned_data['learning_container_year_type'] == INTERNSHIP \
