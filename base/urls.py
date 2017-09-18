@@ -88,7 +88,9 @@ urlpatterns = [
             url(r'^specifications/edit/$', learning_unit.learning_unit_specifications_edit, name="learning_unit_specifications_edit"),
             url(r'^component/edit/$', learning_unit.learning_unit_component_edit, name="learning_unit_component_edit"),
             url(r'^class/edit/$', learning_unit.learning_class_year_edit, name="learning_class_year_edit"),
-            url(r'^volumes/$', learning_unit.learning_unit_volumes_management, name="learning_unit_volumes_management"),
+            url(r'^volumes/', include([
+                url(u'^$', learning_unit.learning_unit_volumes_management, name="learning_unit_volumes_management"),
+                url(u'^validation/$', learning_unit.volumes_validation, name="volumes_validation")])),
         ])),
         url(r'^check/$', learning_unit.check_acronym),
     ])),
