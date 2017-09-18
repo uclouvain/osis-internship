@@ -1908,3 +1908,5 @@ msgstr "Shifted"
 msgid "ADAPTED"
 msgstr "Adapted"
 
+msgid "LU_WARNING_INVALID_ACRONYM"
+msgstr "The acronym, if it is entered, must at least count 3 characters"

@@ -75,6 +75,8 @@ VOLUME_REMAINING_KEY = 'volume_remaining'
 
 VOLUME_FOR_UNKNOWN_QUADRIMESTER = -1
 
+MAX_RECORDS = 1000
+
 
 @login_required
 @permission_required('base.can_access_learningunit', raise_exception=True)
@@ -86,7 +88,8 @@ def learning_units(request):
     found_learning_units = None
     if form.is_valid():
         found_learning_units = form.get_learning_units()
-        _check_if_display_message(request, found_learning_units)
+        if not _check_if_display_message(request, found_learning_units):
+            found_learning_units = None
 
     context = _get_common_context_list_learning_unit_years()
 
@@ -271,6 +274,11 @@ def learning_unit_specifications_edit(request, learning_unit_year_id):
 def _check_if_display_message(request, found_learning_units):
     if not found_learning_units:
         messages.add_message(request, messages.WARNING, _('no_result'))
+    else:
+        if len(found_learning_units) > MAX_RECORDS:
+            messages.add_message(request, messages.WARNING, _('too_many_results'))
+            return False
+    return True
 
 
 def _get_common_context_list_learning_unit_years():
