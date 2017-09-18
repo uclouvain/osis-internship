@@ -50,8 +50,8 @@ class PropositionRole(SerializableModel):
 
 
 def count_by_dissertation(dissertation):
-    return PropositionRole.objects.filter(proposition_dissertation=dissertation.proposition_dissertation)\
-                                  .count()
+    return PropositionRole.objects.filter(proposition_dissertation=dissertation.proposition_dissertation) \
+        .count()
 
 
 def search_by_dissertation(dissertation):
@@ -59,8 +59,8 @@ def search_by_dissertation(dissertation):
 
 
 def count_by_proposition(prop_dissert):
-    return PropositionRole.objects.filter(proposition_dissertation=prop_dissert)\
-                                  .count()
+    return PropositionRole.objects.filter(proposition_dissertation=prop_dissert) \
+        .count()
 
 
 def search_by_proposition(prop_dissert):
@@ -74,21 +74,22 @@ def add(status, adviser, proposition_dissertation):
 
 
 def delete(status, proposition_dissertation):
-    roles = PropositionRole.objects.filter(proposition_dissertation=proposition_dissertation)\
-                                   .filter(status=status)
+    roles = PropositionRole.objects.filter(proposition_dissertation=proposition_dissertation) \
+        .filter(status=status)
 
     for role in roles:
         role.delete()
 
 
 def count_by_status_adviser_proposition(status, adviser, proposition_dissertation):
-    return PropositionRole.objects.filter(proposition_dissertation=proposition_dissertation)\
-                                  .filter(status=status)\
-                                  .filter(adviser=adviser)\
-                                  .count()
+    return PropositionRole.objects.filter(proposition_dissertation=proposition_dissertation) \
+        .filter(status=status) \
+        .filter(adviser=adviser) \
+        .count()
 
-def get_by_id (prop_role_id):
+
+def get_by_id(prop_role_id):
     try:
-        return PropositionRole.objects.get(prop_role_id)
+        return PropositionRole.objects.get(pk=prop_role_id)
     except ObjectDoesNotExist:
         return None
