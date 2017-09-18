@@ -1979,3 +1979,6 @@ msgstr "Horaire décalé"
 
 msgid "ADAPTED"
 msgstr "Horaire adapté"
+
+msgid "field_is_required"
+msgstr "Ce champ est obligatoire."
