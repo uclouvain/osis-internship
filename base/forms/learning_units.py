@@ -186,6 +186,7 @@ class CreateLearningUnitYearForm(forms.ModelForm):
                                            widget=forms.Select(attrs={'class': 'form-control',
                                                                       'id': 'requirement_entity'}))
     allocation_entity = forms.ChoiceField(choices=lazy(create_main_entities_version_list, tuple),
+                                          required=False,
                                           widget=forms.Select(attrs={'class': 'form-control',
                                                                      'id': 'allocation_entity'}))
     additional_entity_1 = forms.ChoiceField(choices=lazy(create_main_entities_version_list, tuple),
