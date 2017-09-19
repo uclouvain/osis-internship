@@ -54,17 +54,48 @@ REGISTRATION_ID_2 = "00000002"
 
 class TestUploadXls(TestCase):
     def setUp(self):
-        self.an_academic_year = AcademicYearFakerFactory(year=2017,
-                                                         start_date=datetime.date(year=2017, month=9, day=1),
-                                                         end_date=datetime.date(year=2018, month=10, day=1))
-        self.a_learning_unit_year = LearningUnitYearFakerFactory(academic_year=self.an_academic_year,
+        an_academic_year = AcademicYearFakerFactory(year=2017,
+                                                    start_date=datetime.date(year=2017, month=9, day=1),
+                                                    end_date=datetime.date(year=2018, month=10, day=1))
+        a_learning_unit_year = LearningUnitYearFakerFactory(academic_year=an_academic_year,
                                                             acronym=LEARNING_UNIT_ACRONYM)
 
-        self.tutor = TutorFactory()
-        user = self.tutor.person.user
+        tutor = TutorFactory()
+
+        an_academic_calendar = create_academic_calendar(an_academic_year, start_date=datetime.date.today(),
+                                                        end_date=datetime.date.today() + datetime.timedelta(days=20),
+                                                        reference=academic_calendar_type.SCORES_EXAM_SUBMISSION)
+        SessionExamCalendarFactory(number_session=number_session.ONE,
+                                   academic_calendar=an_academic_calendar)
+        AttributionFactory(learning_unit_year=a_learning_unit_year,
+                           tutor=tutor)
+        a_session_exam = SessionExamFactory(number_session=number_session.ONE,
+                                            learning_unit_year=a_learning_unit_year)
+
+        student_1 = StudentFactory(registration_id=REGISTRATION_ID_1)
+        student_2 = StudentFactory(registration_id=REGISTRATION_ID_2)
+
+        an_offer_year = OfferYearFactory(academic_year=an_academic_year,
+                                         acronym=OFFER_ACRONYM)
+        offer_enrollment_1 = OfferEnrollmentFactory(offer_year=an_offer_year,
+                                                    student=student_1)
+        offer_enrollment_2 = OfferEnrollmentFactory(offer_year=an_offer_year,
+                                                    student=student_2)
+
+        learning_unit_enrollment_1 = LearningUnitEnrollment(learning_unit_year=a_learning_unit_year,
+                                                            offer_enrollment=offer_enrollment_1)
+        learning_unit_enrollment_2 = LearningUnitEnrollment(learning_unit_year=a_learning_unit_year,
+                                                            offer_enrollment=offer_enrollment_2)
+
+        ExamEnrollmentFactory(session_exam=a_session_exam,
+                              learning_unit_enrollment=learning_unit_enrollment_1)
+        ExamEnrollmentFactory(session_exam=a_session_exam,
+                              learning_unit_enrollment=learning_unit_enrollment_2)
+
+        user = tutor.person.user
         self.client = Client()
         self.client.force_login(user=user)
-        self.url = reverse('upload_encoding', kwargs={'learning_unit_year_id': self.a_learning_unit_year.id})
+        self.url = reverse('upload_encoding', kwargs={'learning_unit_year_id': a_learning_unit_year.id})
 
     def test_with_no_file_uploaded(self):
         response = self.client.post(self.url, {'file': ''}, follow=True)
@@ -84,42 +115,21 @@ class TestUploadXls(TestCase):
             self.assertEqual(messages[0].message, _('no_score_injected'))
 
     def test_with_incorrect_justification(self):
-        an_academic_calendar = create_academic_calendar(self.an_academic_year,start_date= datetime.date.today(),
-                                                        end_date=datetime.date.today()+datetime.timedelta(days=20),
-                                                        reference=academic_calendar_type.SCORES_EXAM_SUBMISSION)
-        a_session_exam_calendar = SessionExamCalendarFactory(number_session=number_session.ONE,
-                                                             academic_calendar=an_academic_calendar)
-        an_attribution = AttributionFactory(learning_unit_year=self.a_learning_unit_year,
-                                            tutor=self.tutor)
-        a_session_exam = SessionExamFactory(number_session=number_session.ONE,
-                                            learning_unit_year=self.a_learning_unit_year)
-        student_1 = StudentFactory(registration_id=REGISTRATION_ID_1)
-        student_2 = StudentFactory(registration_id=REGISTRATION_ID_2)
-        an_offer_year = OfferYearFactory(academic_year=self.an_academic_year,
-                                         acronym=OFFER_ACRONYM)
-
-        offer_enrollment_1 = OfferEnrollmentFactory(offer_year=an_offer_year,
-                                                    student=student_1)
-
-        offer_enrollment_2 = OfferEnrollmentFactory(offer_year=an_offer_year,
-                                                    student=student_2)
-
-        learning_unit_enrollment_1 = LearningUnitEnrollment(learning_unit_year=self.a_learning_unit_year,
-                                                            offer_enrollment=offer_enrollment_1)
-        learning_unit_enrollment_2 = LearningUnitEnrollment(learning_unit_year=self.a_learning_unit_year,
-                                                            offer_enrollment=offer_enrollment_2)
-
-        ExamEnrollmentFactory(session_exam=a_session_exam,
-                              learning_unit_enrollment=learning_unit_enrollment_1)
-
-        ExamEnrollmentFactory(session_exam=a_session_exam,
-                              learning_unit_enrollment=learning_unit_enrollment_2)
-
-        INCORRECT_LINE = 13
+        INCORRECT_LINE = '13'
         with open("assessments/tests/resources/incorrect_justification.xlsx", 'rb') as score_sheet:
             response = self.client.post(self.url, {'file': score_sheet}, follow=True)
             messages = list(response.context['messages'])
 
             messages_tag_and_content = [(m.tags, m.message) for m in messages]
             self.assertIn(('error', "%s : %s %s" % (_('justification_invalid_value'), _('Line'), INCORRECT_LINE)),
+                          messages_tag_and_content)
+
+    def test_with_numbers_outside_scope(self):
+        INCORRECT_LINES = '12, 13'
+        with open("assessments/tests/resources/incorrect_scores.xlsx", 'rb') as score_sheet:
+            response = self.client.post(self.url, {'file': score_sheet}, follow=True)
+            messages = list(response.context['messages'])
+
+            messages_tag_and_content = [(m.tags, m.message) for m in messages]
+            self.assertIn(('error', "%s : %s %s" % (_('scores_must_be_between_0_and_20'), _('Line'), INCORRECT_LINES)),
                           messages_tag_and_content)
