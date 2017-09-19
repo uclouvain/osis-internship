@@ -131,7 +131,7 @@ def _get_all_data(worksheet):
 
 def __save_xls_scores(request, file_name, learning_unit_year_id):
     try:
-        workbook = load_workbook(file_name, read_only=True)
+        workbook = load_workbook(file_name, read_only=True, data_only=True)
     except KeyError:
         messages.add_message(request, messages.ERROR, _('file_must_be_xlsx'))
         return False
