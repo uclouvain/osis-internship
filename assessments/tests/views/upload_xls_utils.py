@@ -29,23 +29,44 @@ from django.test import TestCase, Client
 from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 
-from base.tests.factories.user import UserFactory
 from base.tests.factories.academic_year import AcademicYearFakerFactory
+from base.tests.models.test_academic_calendar import create_academic_calendar
+from base.tests.factories.session_exam_calendar import SessionExamCalendarFactory
+from base.tests.factories.tutor import TutorFactory
+from base.tests.factories.student import StudentFactory
 from base.tests.factories.learning_unit_year import LearningUnitYearFakerFactory
+from attribution.tests.factories.attribution import AttributionFactory
+from base.tests.factories.session_examen import SessionExamFactory
+from base.tests.factories.offer_year import OfferYearFactory
+from base.tests.factories.offer_enrollment import OfferEnrollmentFactory
+from base.tests.factories.learning_unit_enrollment import LearningUnitEnrollment
+from base.tests.factories.exam_enrollment import ExamEnrollmentFactory
+
+from base.models.enums import number_session, academic_calendar_type
 
 
+OFFER_ACRONYM = "OSIS2MA"
 LEARNING_UNIT_ACRONYM = "LOSIS1211"
+
+REGISTRATION_ID_1 = "00000001"
+REGISTRATION_ID_2 = "00000002"
 
 
 class TestUploadXls(TestCase):
     def setUp(self):
-        user = UserFactory()
+        self.an_academic_year = AcademicYearFakerFactory(year=2017,
+                                                         start_date=datetime.date(year=2017, month=9, day=1),
+                                                         end_date=datetime.date(year=2018, month=10, day=1))
+        self.a_learning_unit_year = LearningUnitYearFakerFactory(academic_year=self.an_academic_year,
+                                                            acronym=LEARNING_UNIT_ACRONYM)
+
+        self.tutor = TutorFactory()
+        user = self.tutor.person.user
         self.client = Client()
         self.client.force_login(user=user)
-        self.url = reverse('upload_encoding', kwargs={'learning_unit_year_id': 1})
+        self.url = reverse('upload_encoding', kwargs={'learning_unit_year_id': self.a_learning_unit_year.id})
 
     def test_with_no_file_uploaded(self):
-        # with open("assessments/tests/resources/empty_scores.xlsx", 'rb') as score_sheet:
         response = self.client.post(self.url, {'file': ''}, follow=True)
         messages = list(response.context['messages'])
 
@@ -54,11 +75,6 @@ class TestUploadXls(TestCase):
         self.assertEqual(messages[0].message, _('no_file_submitted'))
 
     def test_with_no_scores_encoded(self):
-        an_academic_year = AcademicYearFakerFactory(year=2017,
-                                                    start_date=datetime.date(year=2017, month=9, day=1),
-                                                    end_date=datetime.date(year=2018, month=10, day=1))
-        a_learning_unit_year = LearningUnitYearFakerFactory(academic_year=an_academic_year,
-                                                            acronym=LEARNING_UNIT_ACRONYM)
         with open("assessments/tests/resources/empty_scores.xlsx", 'rb') as score_sheet:
             response = self.client.post(self.url, {'file': score_sheet}, follow=True)
             messages = list(response.context['messages'])
@@ -66,3 +82,44 @@ class TestUploadXls(TestCase):
             self.assertEqual(len(messages), 1)
             self.assertEqual(messages[0].tags, 'error')
             self.assertEqual(messages[0].message, _('no_score_injected'))
+
+    def test_with_incorrect_justification(self):
+        an_academic_calendar = create_academic_calendar(self.an_academic_year,start_date= datetime.date.today(),
+                                                        end_date=datetime.date.today()+datetime.timedelta(days=20),
+                                                        reference=academic_calendar_type.SCORES_EXAM_SUBMISSION)
+        a_session_exam_calendar = SessionExamCalendarFactory(number_session=number_session.ONE,
+                                                             academic_calendar=an_academic_calendar)
+        an_attribution = AttributionFactory(learning_unit_year=self.a_learning_unit_year,
+                                            tutor=self.tutor)
+        a_session_exam = SessionExamFactory(number_session=number_session.ONE,
+                                            learning_unit_year=self.a_learning_unit_year)
+        student_1 = StudentFactory(registration_id=REGISTRATION_ID_1)
+        student_2 = StudentFactory(registration_id=REGISTRATION_ID_2)
+        an_offer_year = OfferYearFactory(academic_year=self.an_academic_year,
+                                         acronym=OFFER_ACRONYM)
+
+        offer_enrollment_1 = OfferEnrollmentFactory(offer_year=an_offer_year,
+                                                    student=student_1)
+
+        offer_enrollment_2 = OfferEnrollmentFactory(offer_year=an_offer_year,
+                                                    student=student_2)
+
+        learning_unit_enrollment_1 = LearningUnitEnrollment(learning_unit_year=self.a_learning_unit_year,
+                                                            offer_enrollment=offer_enrollment_1)
+        learning_unit_enrollment_2 = LearningUnitEnrollment(learning_unit_year=self.a_learning_unit_year,
+                                                            offer_enrollment=offer_enrollment_2)
+
+        ExamEnrollmentFactory(session_exam=a_session_exam,
+                              learning_unit_enrollment=learning_unit_enrollment_1)
+
+        ExamEnrollmentFactory(session_exam=a_session_exam,
+                              learning_unit_enrollment=learning_unit_enrollment_2)
+
+        INCORRECT_LINE = 13
+        with open("assessments/tests/resources/incorrect_justification.xlsx", 'rb') as score_sheet:
+            response = self.client.post(self.url, {'file': score_sheet}, follow=True)
+            messages = list(response.context['messages'])
+
+            messages_tag_and_content = [(m.tags, m.message) for m in messages]
+            self.assertIn(('error', "%s : %s %s" % (_('justification_invalid_value'), _('Line'), INCORRECT_LINE)),
+                          messages_tag_and_content)
