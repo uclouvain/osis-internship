@@ -29,6 +29,8 @@ from django.test import TestCase, Client
 from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 
+from base.models.exam_enrollment import ExamEnrollment
+
 from base.tests.factories.academic_year import AcademicYearFakerFactory
 from base.tests.models.test_academic_calendar import create_academic_calendar
 from base.tests.factories.session_exam_calendar import SessionExamCalendarFactory
@@ -42,7 +44,7 @@ from base.tests.factories.offer_enrollment import OfferEnrollmentFactory
 from base.tests.factories.learning_unit_enrollment import LearningUnitEnrollment
 from base.tests.factories.exam_enrollment import ExamEnrollmentFactory
 
-from base.models.enums import number_session, academic_calendar_type
+from base.models.enums import number_session, academic_calendar_type, exam_enrollment_justification_type
 
 
 OFFER_ACRONYM = "OSIS2MA"
@@ -50,6 +52,10 @@ LEARNING_UNIT_ACRONYM = "LOSIS1211"
 
 REGISTRATION_ID_1 = "00000001"
 REGISTRATION_ID_2 = "00000002"
+
+
+def _get_list_tag_and_content(messages):
+    return [(m.tags, m.message) for m in messages]
 
 
 class TestUploadXls(TestCase):
@@ -120,7 +126,7 @@ class TestUploadXls(TestCase):
             response = self.client.post(self.url, {'file': score_sheet}, follow=True)
             messages = list(response.context['messages'])
 
-            messages_tag_and_content = [(m.tags, m.message) for m in messages]
+            messages_tag_and_content = _get_list_tag_and_content(messages)
             self.assertIn(('error', "%s : %s %s" % (_('justification_invalid_value'), _('Line'), INCORRECT_LINE)),
                           messages_tag_and_content)
 
@@ -130,6 +136,29 @@ class TestUploadXls(TestCase):
             response = self.client.post(self.url, {'file': score_sheet}, follow=True)
             messages = list(response.context['messages'])
 
-            messages_tag_and_content = [(m.tags, m.message) for m in messages]
+            messages_tag_and_content = _get_list_tag_and_content(messages)
             self.assertIn(('error', "%s : %s %s" % (_('scores_must_be_between_0_and_20'), _('Line'), INCORRECT_LINES)),
                           messages_tag_and_content)
+
+    def test_with_correct_score_sheet(self):
+        NUMBER_SCORES = "2"
+        SCORE_1 = 16
+        SCORE_2 = exam_enrollment_justification_type.ABSENCE_UNJUSTIFIED
+        with open("assessments/tests/resources/correct_score_sheet.xlsx", 'rb') as score_sheet:
+            response = self.client.post(self.url, {'file': score_sheet}, follow=True)
+            messages = list(response.context['messages'])
+
+            messages_tag_and_content = _get_list_tag_and_content(messages)
+            self.assertIn(('success', '%s %s' % (NUMBER_SCORES, _('score_saved'))),
+                          messages_tag_and_content)
+
+            exam_enrollment_1 = ExamEnrollment.objects.get(
+                learning_unit_enrollment__offer_enrollment__student__registration_id=REGISTRATION_ID_1
+            )
+            self.assertEqual(exam_enrollment_1.score_draft, SCORE_1)
+
+            exam_enrollment_2 = ExamEnrollment.objects.get(
+                learning_unit_enrollment__offer_enrollment__student__registration_id=REGISTRATION_ID_2
+            )
+            self.assertEqual(exam_enrollment_2.justification_draft, SCORE_2)
+
