@@ -24,9 +24,11 @@
 #
 ##############################################################################
 import datetime
+import re
 from collections import OrderedDict
 from django.contrib import messages
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required, permission_required
 from django.http import HttpResponseRedirect
@@ -34,6 +36,7 @@ from django.shortcuts import redirect
 from django.utils.translation import ugettext_lazy as _
 from django.views.decorators.http import require_http_methods
 from base import models as mdl
+from base.business import learning_unit_year_volumes
 from base.business import learning_unit_year_with_context
 from attribution import models as mdl_attr
 from base.models import entity_container_year
@@ -141,7 +144,21 @@ def learning_unit_components(request, learning_unit_year_id):
 
 @login_required
 @permission_required('base.can_access_learningunit', raise_exception=True)
+def volumes_validation(request, learning_unit_year_id):
+    volumes_encoded = _extract_volumes_from_data(request)
+    volumes_grouped_by_lunityear = learning_unit_year_volumes.get_volumes_grouped_by_lunityear(learning_unit_year_id,
+                                                                                               volumes_encoded)
+    return JsonResponse({
+        'errors': learning_unit_year_volumes.validate(volumes_grouped_by_lunityear)
+    })
+
+
+@login_required
+@permission_required('base.can_access_learningunit', raise_exception=True)
 def learning_unit_volumes_management(request, learning_unit_year_id):
+    if request.method == 'POST':
+        _learning_unit_volumes_management_edit(request, learning_unit_year_id)
+
     context = _get_common_context_learning_unit_year(learning_unit_year_id)
     context['learning_units'] = learning_unit_year_with_context.get_with_context(
         learning_container_year_id=context['learning_unit_year'].learning_container_year_id
@@ -149,6 +166,42 @@ def learning_unit_volumes_management(request, learning_unit_year_id):
     context['tab_active'] = 'components'
     context['experimental_phase'] = True
     return layout.render(request, "learning_unit/volumes_management.html", context)
+
+
+def _learning_unit_volumes_management_edit(request, learning_unit_year_id):
+    errors = None
+    volumes_encoded = _extract_volumes_from_data(request)
+
+    try:
+        errors = learning_unit_year_volumes.update_volumes(learning_unit_year_id, volumes_encoded)
+    except Exception as e:
+        error_msg = e.messages[0] if isinstance(e, ValidationError) else e.args[0]
+        messages.add_message(request, messages.ERROR, _(error_msg))
+
+    if errors:
+        for error_msg in errors:
+            messages.add_message(request, messages.ERROR, error_msg)
+
+
+def _extract_volumes_from_data(request):
+    volumes = {}
+    post_data = request.POST.dict()
+
+    for param, value in post_data.items():
+        param_splitted = param.rsplit("_", 2)
+        key = param_splitted[0]
+        if _is_a_valid_volume_key(key) and len(param_splitted) == 3:   # KEY_[LEARNINGUNITYEARID]_[LEARNINGCOMPONENTID]
+            learning_unit_year_id = int(param_splitted[1])
+            component_id = int(param_splitted[2])
+            volumes.setdefault(learning_unit_year_id, {}).setdefault(component_id, {}).update({key: value})
+    return volumes
+
+
+def _is_a_valid_volume_key(post_key):
+    return post_key in learning_unit_year_volumes.VALID_VOLUMES_KEYS
+
+def _perserve_volume_encoded(request, context):
+    pass
 
 
 @login_required
@@ -756,11 +809,9 @@ def check_acronym(request):
     acronym = request.GET['acronym']
     year_id = request.GET['year_id']
     academic_yr = mdl.academic_year.find_academic_year_by_id(year_id)
-
     valid = True
     existed_acronym = False
     existing_acronym = False
-    incorrect_acronym = False
     learning_unit_years = mdl.learning_unit_year.find_gte_year_acronym(academic_yr, acronym)
     old_learning_unit_years = mdl.learning_unit_year.find_lt_year_acronym(academic_yr, acronym)
     last_using = old_learning_unit_years.last()
@@ -772,6 +823,5 @@ def check_acronym(request):
         valid = False
     return JsonResponse({'valid': valid,
                          'existing_acronym': existing_acronym,
-                         'incorrect_acronym': incorrect_acronym,
                          'existed_acronym': existed_acronym,
                          'last_using': str(last_using.academic_year)}, safe=False)
