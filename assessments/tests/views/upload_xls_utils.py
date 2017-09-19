@@ -144,6 +144,28 @@ class TestUploadXls(TestCase):
             self.assertIn(('error', "%s : %s %s" % (_('scores_must_be_between_0_and_20'), _('Line'), INCORRECT_LINES)),
                           messages_tag_and_content)
 
+    def test_with_correct_score_sheet(self):
+        NUMBER_SCORES = "2"
+        SCORE_1 = 16
+        SCORE_2 = exam_enrollment_justification_type.ABSENCE_UNJUSTIFIED
+        with open("assessments/tests/resources/correct_score_sheet.xlsx", 'rb') as score_sheet:
+            response = self.client.post(self.url, {'file': score_sheet}, follow=True)
+            messages = list(response.context['messages'])
+
+            messages_tag_and_content = _get_list_tag_and_content(messages)
+            self.assertIn(('success', '%s %s' % (NUMBER_SCORES, _('score_saved'))),
+                          messages_tag_and_content)
+
+            exam_enrollment_1 = ExamEnrollment.objects.get(
+                learning_unit_enrollment__offer_enrollment__student__registration_id=REGISTRATION_ID_1
+            )
+            self.assertEqual(exam_enrollment_1.score_draft, SCORE_1)
+
+            exam_enrollment_2 = ExamEnrollment.objects.get(
+                learning_unit_enrollment__offer_enrollment__student__registration_id=REGISTRATION_ID_2
+            )
+            self.assertEqual(exam_enrollment_2.justification_draft, SCORE_2)
+
     def test_with_formula(self):
         NUMBER_SCORES = "2"
         SCORE_1 = 15
@@ -166,11 +188,11 @@ class TestUploadXls(TestCase):
             )
             self.assertEqual(exam_enrollment_2.score_draft, SCORE_2)
 
-    def test_with_correct_score_sheet(self):
+    def test_with_complex_formula(self):
         NUMBER_SCORES = "2"
-        SCORE_1 = 16
-        SCORE_2 = exam_enrollment_justification_type.ABSENCE_UNJUSTIFIED
-        with open("assessments/tests/resources/correct_score_sheet.xlsx", 'rb') as score_sheet:
+        SCORE_1 = 15
+        SCORE_2 = 17
+        with open("assessments/tests/resources/score_sheet_with_complex_formula.xlsx", 'rb') as score_sheet:
             response = self.client.post(self.url, {'file': score_sheet}, follow=True)
             messages = list(response.context['messages'])
 
@@ -186,6 +208,8 @@ class TestUploadXls(TestCase):
             exam_enrollment_2 = ExamEnrollment.objects.get(
                 learning_unit_enrollment__offer_enrollment__student__registration_id=REGISTRATION_ID_2
             )
-            self.assertEqual(exam_enrollment_2.justification_draft, SCORE_2)
+            self.assertEqual(exam_enrollment_2.score_draft, SCORE_2)
+
+
 
 
