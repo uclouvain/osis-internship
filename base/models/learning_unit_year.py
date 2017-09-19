@@ -30,12 +30,12 @@ from base.models.enums import learning_unit_year_subtypes, learning_container_ye
 
 
 class LearningUnitYearAdmin(SerializableModelAdmin):
-    list_display = ('external_id', 'acronym', 'title', 'academic_year', 'credits', 'changed', 'structure', 'status')
+    list_display = ('external_id', 'acronym', 'title', 'academic_year', 'credits', 'changed', 'structure', 'entity', 'status')
     fieldsets = ((None, {'fields': ('academic_year', 'learning_unit', 'acronym', 'title', 'title_english', 'credits',
-                                    'decimal_scores', 'structure', 'learning_container_year',
+                                    'decimal_scores', 'structure', 'entity', 'learning_container_year',
                                     'subtype', 'status', 'internship_subtype', 'session')}),)
     list_filter = ('academic_year', 'vacant', 'in_charge', 'decimal_scores')
-    raw_id_fields = ('learning_unit', 'learning_container_year', 'structure')
+    raw_id_fields = ('learning_unit', 'learning_container_year', 'structure', 'entity')
     search_fields = ['acronym', 'structure__acronym', 'external_id']
 
 
@@ -56,6 +56,7 @@ class LearningUnitYear(SerializableModel):
     vacant = models.BooleanField(default=False)
     in_charge = models.BooleanField(default=False)
     structure = models.ForeignKey('Structure', blank=True, null=True)
+    entity = models.ForeignKey('Entity', blank=True, null=True)
     internship_subtype = models.CharField(max_length=50, blank=True, null=True,
                                choices=internship_subtypes.INTERNSHIP_SUBTYPES)
     status = models.BooleanField(default=False)
