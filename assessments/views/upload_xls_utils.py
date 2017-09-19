@@ -59,6 +59,7 @@ INFORMATIVE_JUSTIFICATION_ALIASES = {
     'M': justification_types.ABSENCE_JUSTIFIED
 }
 
+
 @login_required
 @require_http_methods(["POST"])
 def upload_scores_file(request, learning_unit_year_id=None):
@@ -296,11 +297,12 @@ def _update_row(user, row, enrollments_managed_grouped, is_program_manager):
     if xls_justification and _is_informative_justification(enrollment, xls_justification, is_program_manager):
        return False
 
+    #TODO ensure that score is not a formula.
+
     enrollment.score_encoded = xls_score
     enrollment.justification_encoded = None
     if xls_justification:
         enrollment.justification_encoded = _get_justification_from_aliases(enrollment, xls_justification)
-
     return score_encoding_list.update_enrollment(
         enrollment=enrollment,
         user=user
@@ -346,7 +348,7 @@ def _show_error_messages(request, errors_list):
     for message, error in errors_list_grouped.items():
         rows_number = sorted(error.get('rows_number', []))
         str_rows_number_formated = ', '.join([str(nb) for nb in rows_number])
-        messages.add_message(request, error.get('level'), "%s : %s %s" % (message,_('Line'),
+        messages.add_message(request, error.get('level'), "%s : %s %s" % (message, _('Line'),
                                                                           str_rows_number_formated))
 
 
