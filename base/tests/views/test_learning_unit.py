@@ -70,12 +70,22 @@ class LearningUnitViewTestCase(TestCase):
                                                          year=today.year)
         self.learning_container_yr = LearningContainerYearFactory(academic_year=self.current_academic_year)
         self.learning_component_yr = LearningComponentYearFactory(learning_container_year=self.learning_container_yr)
+        self.learning_component_yr_2 = LearningComponentYearFactory(learning_container_year=self.learning_container_yr)
+        self.learning_component_yr_3 = LearningComponentYearFactory(learning_container_year=self.learning_container_yr)
         self.organization = OrganizationFactory(type=organization_type.MAIN)
         self.country = CountryFactory()
         self.entity = EntityFactory(country=self.country, organization=self.organization)
+        self.entity_2 = EntityFactory(country=self.country, organization=self.organization)
+        self.entity_3 = EntityFactory(country=self.country, organization=self.organization)
         self.entity_container_yr = EntityContainerYearFactory(learning_container_year=self.learning_container_yr,
                                                               type=entity_container_year_link_type.REQUIREMENT_ENTITY,
                                                               entity=self.entity)
+        self.entity_container_yr_2 = EntityContainerYearFactory(learning_container_year=self.learning_container_yr,
+                                                              type=entity_container_year_link_type.REQUIREMENT_ENTITY,
+                                                              entity=self.entity_2)
+        self.entity_container_yr_3 = EntityContainerYearFactory(learning_container_year=self.learning_container_yr,
+                                                              type=entity_container_year_link_type.REQUIREMENT_ENTITY,
+                                                              entity=self.entity_3)
         self.entity_version = EntityVersionFactory(entity=self.entity, entity_type=entity_type.SCHOOL, start_date=today,
                                                    end_date=today.replace(year=today.year + 1))
         self.campus = CampusFactory(organization=self.organization)
@@ -323,8 +333,8 @@ class LearningUnitViewTestCase(TestCase):
         self.assertEqual(data.get(learning_unit_view.VOLUME_PARTIAL_KEY), learning_unit_view.UNDEFINED_VALUE)
         self.assertEqual(data.get(learning_unit_view.VOLUME_REMAINING_KEY), learning_unit_view.UNDEFINED_VALUE)
 
-        entity_component_yr = EntityComponentYearFactory(learning_component_year=self.learning_component_yr,
-                                                         entity_container_year=self.entity_container_yr,
+        entity_component_yr = EntityComponentYearFactory(learning_component_year=self.learning_component_yr_2,
+                                                         entity_container_year=self.entity_container_yr_2,
                                                          hourly_volume_total=15,
                                                          hourly_volume_partial=15)
         data = learning_unit_view.volumes(entity_component_yr)
@@ -333,8 +343,8 @@ class LearningUnitViewTestCase(TestCase):
         self.assertEqual(data.get(learning_unit_view.VOLUME_PARTIAL_KEY), 15)
         self.assertEqual(data.get(learning_unit_view.VOLUME_REMAINING_KEY), '-')
 
-        entity_component_yr = EntityComponentYearFactory(learning_component_year=self.learning_component_yr,
-                                                         entity_container_year=self.entity_container_yr,
+        entity_component_yr = EntityComponentYearFactory(learning_component_year=self.learning_component_yr_3,
+                                                         entity_container_year=self.entity_container_yr_3,
                                                          hourly_volume_total=15,
                                                          hourly_volume_partial=10)
         data = learning_unit_view.volumes(entity_component_yr)
@@ -360,8 +370,8 @@ class LearningUnitViewTestCase(TestCase):
                                    entity_container_year=self.entity_container_yr,
                                    hourly_volume_total=15.00,
                                    hourly_volume_partial=0.00)
-        EntityComponentYearFactory(learning_component_year=self.learning_component_yr,
-                                   entity_container_year=self.entity_container_yr,
+        EntityComponentYearFactory(learning_component_year=self.learning_component_yr_2,
+                                   entity_container_year=self.entity_container_yr_2,
                                    hourly_volume_total=15.00,
                                    hourly_volume_partial=0.00)
         learning_unit_yr = LearningUnitYearFactory(academic_year=self.current_academic_year,
@@ -376,8 +386,8 @@ class LearningUnitViewTestCase(TestCase):
                                    entity_container_year=self.entity_container_yr,
                                    hourly_volume_total=30.00,
                                    hourly_volume_partial=30.00)
-        EntityComponentYearFactory(learning_component_year=self.learning_component_yr,
-                                   entity_container_year=self.entity_container_yr,
+        EntityComponentYearFactory(learning_component_year=self.learning_component_yr_2,
+                                   entity_container_year=self.entity_container_yr_2,
                                    hourly_volume_total=15.00,
                                    hourly_volume_partial=15.00)
         learning_unit_yr = LearningUnitYearFactory(academic_year=self.current_academic_year,
@@ -404,8 +414,8 @@ class LearningUnitViewTestCase(TestCase):
                                    entity_container_year=self.entity_container_yr,
                                    hourly_volume_total=30.00,
                                    hourly_volume_partial=30.00)
-        EntityComponentYearFactory(learning_component_year=self.learning_component_yr,
-                                   entity_container_year=self.entity_container_yr,
+        EntityComponentYearFactory(learning_component_year=self.learning_component_yr_2,
+                                   entity_container_year=self.entity_container_yr_2,
                                    hourly_volume_partial=0.00)
         learning_unit_yr = LearningUnitYearFactory(academic_year=self.current_academic_year,
                                                    acronym='LBIOLA',

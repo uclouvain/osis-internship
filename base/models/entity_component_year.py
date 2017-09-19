@@ -46,6 +46,9 @@ class EntityComponentYear(models.Model):
     def __str__(self):
         return u"%s - %s" % (self.entity_container_year, self.learning_component_year)
 
+    class Meta:
+        unique_together = ('entity_container_year', 'learning_component_year',)
+
 
 def find_by_learning_container_year(learning_container_yr):
     return EntityComponentYear.objects.filter(learning_component_year__learning_container_year=learning_container_yr)
