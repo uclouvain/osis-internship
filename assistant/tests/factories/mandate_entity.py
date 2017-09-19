@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -23,18 +23,14 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-
-from assistant.models import academic_assistant
-from assistant.models import assistant_document_file
-from assistant.models import assistant_mandate
-from assistant.models import manager
-from assistant.models import mandate_structure
-from assistant.models import mandate_entity
-from assistant.models import message
-from assistant.models import review
-from assistant.models import reviewer
-from assistant.models import settings
-from assistant.models import tutoring_learning_unit_year
+import factory
+import factory.fuzzy
+from assistant.tests.factories.assistant_mandate import AssistantMandateFactory
+from base.tests.factories.entity import EntityFactory
 
 
-
+class MandateEntityFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = 'assistant.MandateEntity'
+    assistant_mandate = factory.SubFactory(AssistantMandateFactory)
+    entity = factory.SubFactory(EntityFactory)
