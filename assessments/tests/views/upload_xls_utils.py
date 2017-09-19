@@ -60,16 +60,20 @@ def _get_list_tag_and_content(messages):
 
 class TestUploadXls(TestCase):
     def setUp(self):
-        an_academic_year = AcademicYearFakerFactory(year=2017,
-                                                    start_date=datetime.date(year=2017, month=9, day=1),
-                                                    end_date=datetime.date(year=2018, month=10, day=1))
+        today = datetime.datetime.today()
+        half_year = datetime.timedelta(days=180)
+        twenty_days = datetime.timedelta(days=20)
+
+        an_academic_year = AcademicYearFakerFactory(year=today.year,
+                                                    start_date=today - half_year,
+                                                    end_date=today + half_year)
         a_learning_unit_year = LearningUnitYearFakerFactory(academic_year=an_academic_year,
                                                             acronym=LEARNING_UNIT_ACRONYM)
 
         tutor = TutorFactory()
 
-        an_academic_calendar = create_academic_calendar(an_academic_year, start_date=datetime.date.today(),
-                                                        end_date=datetime.date.today() + datetime.timedelta(days=20),
+        an_academic_calendar = create_academic_calendar(an_academic_year, start_date=today - twenty_days,
+                                                        end_date=today + twenty_days,
                                                         reference=academic_calendar_type.SCORES_EXAM_SUBMISSION)
         SessionExamCalendarFactory(number_session=number_session.ONE,
                                    academic_calendar=an_academic_calendar)
