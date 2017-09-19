@@ -58,10 +58,13 @@
                             {{ form.acronym }}
                         </div>
                         <div class="col-md-3">
-                            <label>
+                            <label {% if form.errors.learning_container_year_type %}style="color:red;"{% endif %}>
                                 {% trans 'type' %}*
                             </label>
                             {{ form.learning_container_year_type }}
+                            <label {% if form.errors.learning_container_year_type %}style="color:red;"{% endif %}>
+                                {{ form.errors.learning_container_year_type| striptags }}
+                            </label>
                         </div>
                         <div class="col-md-3">
                             <label>
@@ -70,10 +73,13 @@
                             {{ form.internship_subtype }}
                         </div>
                         <div class="col-md-3">
-                            <label>
+                            <label {% if form.errors.campus %}style="color:red;"{% endif %}>
                                 {% trans 'learning_location' %}*
                             </label>
                             {{ form.campus }}
+                            <label {% if form.errors.campus %}style="color:red;"{% endif %}>
+                                {{ form.errors.campus| striptags }}
+                            </label>
                         </div>
                     </div>
                     <br>
@@ -97,8 +103,13 @@
                             {{ form.credits }}
                         </div>
                         <div class="col-md-2">
-                            <label>{% trans 'session_title' %}*</label>
+                            <label {% if form.errors.session %}style="color:red;"{% endif %}>
+                                {% trans 'session_title' %}*
+                            </label>
                             {{ form.session }}
+                            <label {% if form.errors.session %}style="color:red;"{% endif %}>
+                                {{ form.errors.session| striptags }}
+                            </label>
                         </div>
                         <div class="col-md-2">
                             {{ form.status }}
@@ -113,10 +124,13 @@
                 </div>
                 <div class="panel-body">
                     <div>
-                        <label>
+                        <label {% if form.errors.title %}style="color:red;"{% endif %}>
                             {% trans 'title' %}*
                         </label>
                         {{ form.title }}
+                        <label {% if form.errors.title %}style="color:red;"{% endif %}>
+                                {{ form.errors.title| striptags }}
+                        </label>
                     </div>
                     <br>
                     <div>
@@ -132,8 +146,13 @@
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-md-3">
-                            <label>{% trans 'requirement_entity' %}*</label>
+                            <label {% if form.errors.requirement_entity %}style="color:red;"{% endif %}>
+                                {% trans 'requirement_entity' %}*
+                            </label>
                             {{ form.requirement_entity }}
+                            <label {% if form.errors.requirement_entity %}style="color:red;"{% endif %}>
+                                {{ form.errors.requirement_entity| striptags }}
+                            </label>
                         </div>
                         <div class="col-md-3">
                             <label>{% trans 'allocation_entity' %}</label>
@@ -200,8 +219,9 @@
         $('#acronym').on("keyup",function() {
             var message = "";
             var messageFunc = function () { return message; };
+
             jQuery.validator.addMethod("check_acronym", function(val) {
-                $(".form-acronym").css("color","black");
+                $(".error").css("color","black");
                 if(val.length>6){
                     var res;
                     $.ajax({
@@ -211,14 +231,15 @@
                         var newMessage = [];
                         if (data['valid']){
                             res = true;
-                            if(data['existed_acronym'] && !data['existing_acronym']){
-                                $(".form-acronym").css("color","orange");
+                            $(".error").css("color","black");
+                            if(data['existed_acronym']){
+                                $(".error").css("color","orange");
                                 newMessage.push("{% trans 'existed_acronym' %}"+data['last_using']);
                             }
                         }else{
                             res = false;
+                            $(".error").css("color","red");
                             if(data['existing_acronym']){
-                                $(".form-acronym").css("color","red");
                                 newMessage.push("{% trans 'existing_acronym' %}");
                             }
                         }
@@ -227,9 +248,13 @@
                 }
             }, messageFunc);
 
+
             $( "#LearningUnitYearForm" ).validate({
                 invalidHandler: function(form, validator) {
                     var errors = validator.numberOfInvalids();
+                    if (errors) {
+                        newMessage.push("{% trans 'existed_acronym' %}");
+                    }
                 },
                 rules:{
                     acronym:{ check_acronym: true },
@@ -239,12 +264,12 @@
                 },
             }).element("#acronym");
         });
-
         $('#academic_year').on("click",function() {
             var message = "";
             var messageFunc = function () { return message; };
+
             jQuery.validator.addMethod("check_acronym", function(val) {
-                $(".form-acronym").css("color","black");
+                $(".error").css("color","black");
                 if(val.length>6){
                     var res;
                     $.ajax({
@@ -252,18 +277,17 @@
                         url: "/learning_units/check?acronym=" + val + "&year_id=" + $('#academic_year').val()
                     }).then(function (data) {
                         var newMessage = [];
-                        $(".form-acronym").css("color","black");
                         if (data['valid']){
                             res = true;
+                            $(".error").css("color","black");
                             if(data['existed_acronym'] && !data['existing_acronym']){
-                                $(".form-acronym").css("color","orange");
-                                $("input['acronym'].error").css("color","orange");
+                                $(".error").css("color","orange");
                                 newMessage.push("{% trans 'existed_acronym' %}"+data['last_using']);
                             }
                         }else{
                             res = false;
+                            $(".error").css("color","red");
                             if(data['existing_acronym']){
-                                $(".form-acronym").css("color","red");
                                 newMessage.push("{% trans 'existing_acronym' %}");
                             }
                         }
@@ -272,9 +296,13 @@
                 }
             }, messageFunc);
 
+
             $( "#LearningUnitYearForm" ).validate({
                 invalidHandler: function(form, validator) {
                     var errors = validator.numberOfInvalids();
+                    if (errors) {
+                        newMessage.push("{% trans 'existed_acronym' %}");
+                    }
                 },
                 rules:{
                     acronym:{ check_acronym: true },
