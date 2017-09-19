@@ -639,10 +639,12 @@ def learning_unit_year_add(request):
             academic_year = data['academic_year']
             year = academic_year.year
             status = check_status(data)
-            requirement_entity_version = mdl.entity_version.find_by_id(data['requirement_entity'])
-            allocation_entity_version = mdl.entity_version.find_by_id(data['allocation_entity'])
             additional_entity_version_1 = None
             additional_entity_version_2 = None
+            allocation_entity_version = None
+            requirement_entity_version = mdl.entity_version.find_by_id(data['requirement_entity'])
+            if data['allocation_entity']:
+                allocation_entity_version = mdl.entity_version.find_by_id(data['allocation_entity'])
             if data['additional_entity_1']:
                 additional_entity_version_1 = mdl.entity_version.find_by_id(data['additional_entity_1'])
             if data['additional_entity_2']:
