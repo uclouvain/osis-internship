@@ -670,7 +670,8 @@ def create_learning_unit_structure(additional_entity_version_1, additional_entit
     new_requirement_entity = create_entity_container_year(requirement_entity_version,
                                                           new_learning_container_year,
                                                           REQUIREMENT_ENTITY)
-    create_entity_container_year(allocation_entity_version, new_learning_container_year, ALLOCATION_ENTITY)
+    if allocation_entity_version:
+        create_entity_container_year(allocation_entity_version, new_learning_container_year, ALLOCATION_ENTITY)
     if additional_entity_version_1:
         create_entity_container_year(additional_entity_version_1, new_learning_container_year,
                                      ADDITIONAL_REQUIREMENT_ENTITY_1)
