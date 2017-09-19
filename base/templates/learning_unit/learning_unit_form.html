@@ -203,7 +203,7 @@
     }
 
     $(document).ready(function() {
-        $('#acronym').on("keyup",function() {
+        $('#LearningUnitYearForm').on("keyup",function() {
             var message = "";
             var messageFunc = function () { return message; };
             jQuery.validator.addMethod("check_acronym", function(val) {
@@ -217,14 +217,14 @@
                         var newMessage = [];
                         if (data['valid']){
                             res = true;
-                            if(data['existed_acronym'] && !data['existing_acronym']){
-                                $(".form-acronym").css("color","orange");
+                            if(data['existed_acronym']){
+                                $(".error").css("color","orange");
                                 newMessage.push("{% trans 'existed_acronym' %}"+data['last_using']);
                             }
                         }else{
                             res = false;
                             if(data['existing_acronym']){
-                                $(".form-acronym").css("color","red");
+                                $(".error").css("color","red");
                                 newMessage.push("{% trans 'existing_acronym' %}");
                             }
                         }
@@ -242,11 +242,11 @@
                 },
                 messages:{
                     acronym:{ required: "{% trans 'field_is_required' %}" },
-                },
+                }
             }).element("#acronym");
         });
 
-        $('#academic_year').on("click",function() {
+        $('#LearningUnitYearForm').on("click",function() {
             var message = "";
             var messageFunc = function () { return message; };
             jQuery.validator.addMethod("check_acronym", function(val) {
@@ -261,15 +261,14 @@
                         $(".form-acronym").css("color","black");
                         if (data['valid']){
                             res = true;
-                            if(data['existed_acronym'] && !data['existing_acronym']){
-                                $(".form-acronym").css("color","orange");
-                                $("input['acronym'].error").css("color","orange");
+                            if(data['existed_acronym']){
+                                $(".error").css("color","orange");
                                 newMessage.push("{% trans 'existed_acronym' %}"+data['last_using']);
                             }
                         }else{
                             res = false;
                             if(data['existing_acronym']){
-                                $(".form-acronym").css("color","red");
+                                $(".error").css("color","red");
                                 newMessage.push("{% trans 'existing_acronym' %}");
                             }
                         }
@@ -287,7 +286,7 @@
                 },
                 messages:{
                     acronym:{ required: "{% trans 'field_is_required' %}" },
-                },
+                }
             }).element("#acronym");
         });
     });
