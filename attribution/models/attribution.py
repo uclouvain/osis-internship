@@ -27,7 +27,9 @@ from itertools import chain
 from django.db import models
 from django.db.models import Q
 from attribution.models.enums import function
+from base.models import entity_container_year
 from base.models.academic_year import current_academic_years
+from base.models.enums import entity_container_year_link_type
 from base.models.learning_unit_year import LearningUnitYear
 from base.models.person import Person
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
@@ -109,12 +111,6 @@ def find_all_tutors_by_learning_unit_year(a_learning_unit_year):
     return [[attribution.tutor, attribution.score_responsible] for attribution in result]
 
 
-def find_attribution_distinct(structure):
-    attribution = Attribution.objects.filter(learning_unit_year__structure=structure) \
-        .distinct("learning_unit_year__structure__acronym")
-    return attribution
-
-
 def find_responsible(a_learning_unit_year):
     tutors_list = find_all_responsibles_by_learning_unit_year(a_learning_unit_year)
     if tutors_list:
@@ -165,8 +161,11 @@ def search_scores_responsible(learning_unit_title, course_code, entities, tutor,
                                 Q(last_name__icontains=responsible)))
     if entities:
         entities_ids = [entity.id for entity in entities]
-        queryset = queryset \
-            .filter(learning_unit_year__entity__id__in=entities_ids)
+        l_container_year_ids = entity_container_year.search(link_type=entity_container_year_link_type.ALLOCATION_ENTITY,
+                                                            entity_id=entities_ids)\
+                                                    .values_list('learning_container_year_id', flat=True)
+        queryset = queryset.filter(learning_unit_year__learning_container_year__id__in=l_container_year_ids)
+
     return queryset.distinct("learning_unit_year")
 
 
