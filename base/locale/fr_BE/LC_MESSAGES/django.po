@@ -1676,7 +1676,7 @@ msgid "with_entity_subordinated_small"
 msgstr "Avec ent. subord."
 
 msgid "additional_requirement_entity"
-msgstr "Entité complémentaire"
+msgstr "Entité resp. cahier de charges complémentaire"
 
 msgid "academic_end_year"
 msgstr "Anac de fin"
