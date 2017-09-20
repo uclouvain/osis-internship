@@ -327,7 +327,11 @@ def learning_unit_specifications_edit(request, learning_unit_year_id):
 def _check_if_display_message(request, found_learning_units):
     if not found_learning_units:
         messages.add_message(request, messages.WARNING, _('no_result'))
-
+    else:
+        if len(found_learning_units) > MAX_RECORDS:
+            messages.add_message(request, messages.WARNING, _('too_many_results'))
+            return False
+    return True
 
 def _get_common_context_list_learning_unit_years():
     today = datetime.date.today()
