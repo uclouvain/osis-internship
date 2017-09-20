@@ -185,8 +185,14 @@ def find_latest_version(date):
                                 .order_by('-start_date')
 
 
-def get_last_version(entity):
-    return EntityVersion.objects.filter(entity=entity).latest('start_date')
+def get_last_version(entity, date=None):
+    qs = EntityVersion.objects.filter(entity=entity)
+
+    if date:
+        qs = qs.filter(Q(end_date__gte=date) | Q(end_date__isnull=True),
+                       start_date__lte=date)
+
+    return qs.latest('start_date')
     # find_latest_version(academic_year.current_academic_year().start_date).get(entity=entity)
 
 

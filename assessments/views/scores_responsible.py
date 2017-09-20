@@ -46,13 +46,14 @@ def scores_responsible(request):
 @user_passes_test(is_entity_manager)
 def scores_responsible_search(request):
     entities_manager = mdl_base.entity_manager.find_by_user(request.user)
-    structures = mdl_base.structure.find_all_structure_parents(entities_manager)
+    entities = [entity_manager.entity for entity_manager in entities_manager]
+    entities_with_descendants = mdl_base.entity.find_descendants(entities)
     academic_year = mdl_base.academic_year.current_academic_year()
     if request.GET:
         attributions_searched = mdl_attr.attribution.search_scores_responsible(
             learning_unit_title=request.GET.get('learning_unit_title'),
             course_code=request.GET.get('course_code'),
-            structures=structures,
+            entities=entities_with_descendants,
             tutor=request.GET.get('tutor'),
             responsible=request.GET.get('scores_responsible'))
         dict_attribution = create_attributions_list(attributions_searched)
@@ -86,11 +87,12 @@ def create_attributions_list(attributions):
 @user_passes_test(is_entity_manager)
 def scores_responsible_management(request):
     entities_manager = mdl_base.entity_manager.find_by_user(request.user)
+    entities = [entity_manager.entity for entity_manager in entities_manager]
+    entities_with_descendants = mdl_base.entity.find_descendants(entities)
+
     learning_unit_year_id = request.GET.get('learning_unit_year').strip('learning_unit_year_')
     a_learning_unit_year = mdl_base.learning_unit_year.find_by_id(learning_unit_year_id)
-    structures = mdl_base.structure.find_all_structure_parents(entities_manager)
-    entities_list = [structure.acronym for structure in structures]
-    if a_learning_unit_year.structure.acronym in entities_list:
+    if a_learning_unit_year.entity in entities_with_descendants:
         attributions = mdl_attr.attribution.find_all_responsible_by_learning_unit_year(a_learning_unit_year)
         academic_year = mdl_base.academic_year.current_academic_year()
         return layout.render(request, 'scores_responsible_edit.html',

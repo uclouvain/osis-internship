@@ -86,10 +86,11 @@ class ScoresResponsibleViewTestCase(TestCase):
 
     def test_create_attributions_list(self):
         entities_manager = mdl_base.entity_manager.find_by_user(self.user)
-        structures = mdl_base.structure.find_all_structure_parents(entities_manager)
+        entities = [entity_manager.entity for entity_manager in entities_manager]
+        entities_with_descendants = mdl_base.entity.find_descendants(entities)
         attributions_searched = attribution.search_scores_responsible(learning_unit_title=None,
                                                                       course_code=None,
-                                                                      structures=structures,
+                                                                      entities=entities_with_descendants,
                                                                       tutor=None,
                                                                       responsible=None)
         dictionary = scores_responsible.create_attributions_list(attributions_searched)

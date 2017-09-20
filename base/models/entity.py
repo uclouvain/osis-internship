@@ -26,6 +26,9 @@
 from django.contrib import admin
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
+from django.utils import timezone
+
+from base.models import entity_version
 
 
 class EntityAdmin(admin.ModelAdmin):
@@ -85,3 +88,25 @@ def get_by_external_id(external_id):
         return Entity.objects.get(external_id__exact=external_id)
     except ObjectDoesNotExist:
         return None
+
+
+def find_descendants(entities, date=None, with_entities=True):
+    if date is None:
+        date = timezone.now().date()
+
+    entities_descendants = set()
+    for entity in entities:
+        entities_descendants |= _find_descendants(entity, date, with_entities)
+    return list(entities_descendants)
+
+
+def _find_descendants(entity, date=None, with_entities=True):
+    entities_descendants = set()
+    try:
+        entity_vers = entity_version.get_last_version(entity, date=date)
+        if with_entities:
+            entities_descendants.add(entity_vers.entity)
+        entities_descendants |= {entity_version_descendant.entity for entity_version_descendant in
+                                 entity_vers.find_descendants(date=date)}
+    finally:
+        return entities_descendants

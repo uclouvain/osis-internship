@@ -137,7 +137,7 @@ def is_score_responsible(user, learning_unit_year):
     return attributions > 0
 
 
-def search_scores_responsible(learning_unit_title, course_code, structures, tutor, responsible):
+def search_scores_responsible(learning_unit_title, course_code, entities, tutor, responsible):
     queryset = Attribution.objects.filter(learning_unit_year__academic_year=current_academic_years())
     if learning_unit_title:
         queryset = queryset.filter(learning_unit_year__title__icontains=learning_unit_title)
@@ -163,10 +163,10 @@ def search_scores_responsible(learning_unit_title, course_code, structures, tuto
                 .filter(score_responsible=True, tutor__person__in=Person.objects
                         .filter(Q(first_name__icontains=responsible) |
                                 Q(last_name__icontains=responsible)))
-    if structures:
-        entities_list = [structure.acronym for structure in structures]
+    if entities:
+        entities_ids = [entity.id for entity in entities]
         queryset = queryset \
-            .filter(learning_unit_year__structure__acronym__in=entities_list)
+            .filter(learning_unit_year__entity__id__in=entities_ids)
     return queryset.distinct("learning_unit_year")
 
 
