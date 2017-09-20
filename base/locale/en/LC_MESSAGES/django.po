@@ -1803,9 +1803,6 @@ msgstr "Active"
 msgid "titles"
 msgstr "Titles"
 
-msgid "structure_title"
-msgstr "Structure"
-
 msgid "fixtures_build"
 msgstr "Build anonymized fixtures"
 
@@ -1977,3 +1974,5 @@ msgstr "Adapted"
 msgid "field_is_required"
 msgstr "This field is required"
 
+msgid "associated_entity"
+msgstr "Associated entity"

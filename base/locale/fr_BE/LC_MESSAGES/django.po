@@ -1809,9 +1809,6 @@ msgstr "Actif"
 msgid "titles"
 msgstr "Intitulés"
 
-msgid "structure_title"
-msgstr "Structure"
-
 msgid "fixtures_build"
 msgstr "Créer des fixtures anonymisées"
 
@@ -1982,3 +1979,6 @@ msgstr "Horaire adapté"
 
 msgid "field_is_required"
 msgstr "Ce champ est obligatoire."
+
+msgid "associated_entity"
+msgstr "Les entités associées"
