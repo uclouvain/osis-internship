@@ -214,7 +214,7 @@
         function validate_acronym () {
             $('#acronym_message').removeClass("error-message").text("");
 
-            if($('#acronym').val().length>6) {
+	    if(/{{ form.acronym_regex }}/.test($('#acronym').val())) {
                 $.ajax({
                     url: "/learning_units/check?acronym=" + $('#acronym').val() + "&year_id=" + $('#academic_year').val()
                 }).done(function(data){

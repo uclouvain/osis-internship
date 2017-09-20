@@ -1792,6 +1792,9 @@ msgstr "Sigle a déjà existé pour "
 msgid "existing_acronym"
 msgstr "Sigle déja existant"
 
+msgid "invalid_acronym"
+msgstr "Sigle non valide"
+
 msgid "acronym_rules"
 msgstr "Site en une lettre\n"
        "Sigle en min 2 et max 4 lettres\n"

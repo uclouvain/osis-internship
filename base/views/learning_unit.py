@@ -815,17 +815,17 @@ def check_acronym(request):
     learning_unit_years = mdl.learning_unit_year.find_gte_year_acronym(academic_yr, acronym)
     old_learning_unit_years = mdl.learning_unit_year.find_lt_year_acronym(academic_yr, acronym)
     last_using = old_learning_unit_years.last()
-    last_using_academic_year = ""
     if old_learning_unit_years:
         existed_acronym = True
         valid = True
     if learning_unit_years:
         existing_acronym = True
         valid = False
+    last_academic_year = ""
     if last_using:
-        last_using_academic_year = str(last_using_academic_year)
+       last_academic_year = str(last_using.academic_year)
 
     return JsonResponse({'valid': valid,
                          'existing_acronym': existing_acronym,
                          'existed_acronym': existed_acronym,
-                         'last_using': last_using_academic_year}, safe=False)
+                         'last_using': last_academic_year}, safe=False)

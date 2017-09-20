@@ -679,6 +679,16 @@ class LearningUnitViewTestCase(TestCase):
     def get_faulty_end_year(self):
         return self.get_base_form_data(end_year=str(self.current_academic_year.end_date.year-2))
 
+    def get_faulty_acronym(self):
+        faultyDict = dict(self.get_valid_data())
+        faultyDict["acronym"] = "LTA200"
+        return faultyDict
+
+    def get_empty_acronym(self):
+        faultyDict = dict(self.get_valid_data())
+        faultyDict["acronym"] = ""
+        return faultyDict
+
     def test_learning_unit_year_form(self):
         form = CreateLearningUnitYearForm(data=self.get_valid_data())
         self.assertTrue(form.is_valid(), form.errors)
@@ -691,12 +701,6 @@ class LearningUnitViewTestCase(TestCase):
         count_learning_unit_year = LearningUnitYear.objects.all().count()
         self.assertEqual(count_learning_unit_year, 1)
 
-
-    def get_empty_acronym(self):
-        faultyDict = dict(self.get_valid_data())
-        faultyDict["acronym"] = ""
-        return faultyDict
-
     def test_learning_unit_acronym_form(self):
         form = CreateLearningUnitYearForm ( data=self.get_valid_data () )
         self.assertTrue ( form.is_valid () , form.errors )
@@ -704,3 +708,6 @@ class LearningUnitViewTestCase(TestCase):
         form = CreateLearningUnitYearForm ( data=self.get_empty_acronym () )
         self.assertFalse ( form.is_valid () , form.errors )
         self.assertEqual(form.errors['acronym'], [_('This field is required.')])
+
+        form=CreateLearningUnitYearForm(data=self.get_faulty_acronym())
+        self.assertFalse(form.is_valid(), form.errors)

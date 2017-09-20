@@ -192,12 +192,15 @@ class CreateLearningUnitYearForm(forms.ModelForm):
                                  widget=forms.Select(attrs={'class': 'form-control',
                                                             'id': 'language'}))
 
+    acronym_regex = "^[LMNPWX][A-Z]{2,4}\d{4}$"
+
     class Meta:
         model = mdl.learning_unit_year.LearningUnitYear
         fields = ['learning_container_year_type', 'acronym', 'academic_year', 'status', 'internship_subtype',
                   'end_year', 'periodicity', 'credits', 'campus', 'title', 'title_english', 'additional_entity_1',
                   'additional_entity_2', 'allocation_entity', 'requirement_entity', 'subtype', 'language', 'session',
                   'faculty_remark', 'other_remark', ]
+
         widgets = {'acronym': forms.TextInput(attrs={'class': 'form-control form-acronym',
                                                      'id': 'acronym',
                                                      'maxlength': "15",
@@ -225,6 +228,7 @@ class CreateLearningUnitYearForm(forms.ModelForm):
                    }
 
     def is_valid(self):
+
         valid = super(CreateLearningUnitYearForm, self).is_valid()
         academic_year = mdl.academic_year.find_academic_year_by_id(self.data['academic_year'])
         learning_unit_years = mdl.learning_unit_year.find_gte_year_acronym(academic_year, self.data['acronym'])
@@ -232,6 +236,8 @@ class CreateLearningUnitYearForm(forms.ModelForm):
         if valid:
             if self.cleaned_data['acronym'].lower() in learning_unit_years_list:
                 self.add_error('acronym', _('existing_acronym'))
+            elif not re.match(self.acronym_regex, self.cleaned_data['acronym']):
+                self.add_error('acronym', _('invalid_acronym'))
             elif academic_year.year > int(self.data['end_year']):
                 self._errors['end_year'] = _('end_date_gt_begin_date')
             elif self.cleaned_data['learning_container_year_type'] == INTERNSHIP \
