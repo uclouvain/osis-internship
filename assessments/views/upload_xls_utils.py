@@ -297,8 +297,6 @@ def _update_row(user, row, enrollments_managed_grouped, is_program_manager):
     if xls_justification and _is_informative_justification(enrollment, xls_justification, is_program_manager):
        return False
 
-    #TODO ensure that score is not a formula.
-
     enrollment.score_encoded = xls_score
     enrollment.justification_encoded = None
     if xls_justification:
