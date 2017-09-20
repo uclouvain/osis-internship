@@ -78,6 +78,8 @@ VOLUME_REMAINING_KEY = 'volume_remaining'
 
 VOLUME_FOR_UNKNOWN_QUADRIMESTER = -1
 
+MAX_RECORDS = 1000
+
 
 @login_required
 @permission_required('base.can_access_learningunit', raise_exception=True)
@@ -89,7 +91,8 @@ def learning_units(request):
     found_learning_units = None
     if form.is_valid():
         found_learning_units = form.get_learning_units()
-        _check_if_display_message(request, found_learning_units)
+        if not _check_if_display_message(request, found_learning_units):
+            found_learning_units = None
 
     context = _get_common_context_list_learning_unit_years()
 
