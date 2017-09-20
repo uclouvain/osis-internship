@@ -35,6 +35,7 @@ from base.models.enums import entity_container_year_link_type
 from base.models.enums.learning_container_year_types import LEARNING_CONTAINER_YEAR_TYPES, INTERNSHIP
 from base.models.enums.learning_unit_periodicity import PERIODICITY_TYPES
 from reference.models.language import find_all_languages
+import re
 
 
 class LearningUnitYearForm(forms.Form):

@@ -214,7 +214,7 @@
         function validate_acronym () {
             $('#acronym_message').removeClass("error-message").text("");
 
-	    if(/{{ form.acronym_regex }}/.test($('#acronym').val())) {
+	        if(/{{ form.acronym_regex }}/.test($('#acronym').val())) {
                 $.ajax({
                     url: "/learning_units/check?acronym=" + $('#acronym').val() + "&year_id=" + $('#academic_year').val()
                 }).done(function(data){
@@ -234,6 +234,8 @@
                 });
             } else {
                 window.valid_acronym = false;
+                $('#acronym_message').addClass("error").text("{% trans 'invalid_acronym' %}");
+                $("#acronym_message").css("color","red");
             }
         };
 
