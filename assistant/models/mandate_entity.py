@@ -26,7 +26,6 @@
 from django.db import models
 from base.models import entity_version
 
-
 class MandateEntity(models.Model):
     assistant_mandate = models.ForeignKey('AssistantMandate')
     entity = models.ForeignKey('base.Entity')
@@ -36,7 +35,10 @@ class MandateEntity(models.Model):
         return self.__str__()
 
     def __str__(self):
-        return u"%s - %s" % (self.assistant_mandate.assistant, entity_version.find(self.entity).acronym)
+        version = entity_version.get_by_entity_and_date(self.entity, self.assistant_mandate.academic_year.start_date)
+        if version is None:
+            version = entity_version.get_last_version(self.entity)
+        return u"%s - %s" % (self.assistant_mandate.assistant, version.acronym)
 
 
 def find_by_mandate(mandate):

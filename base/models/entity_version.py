@@ -190,6 +190,19 @@ def get_last_version(entity):
     # find_latest_version(academic_year.current_academic_year().start_date).get(entity=entity)
 
 
+def get_by_entity_and_date(entity, date):
+    if date is None:
+        date = timezone.now()
+    try:
+        entity_version = EntityVersion.objects.get(entity=entity,
+                                                   start_date__lte=date,
+                                                   end_date__gte=date
+                                                   )
+    except ObjectDoesNotExist:
+        return None
+    return entity_version
+
+
 def search(**kwargs):
     queryset = EntityVersion.objects
 
