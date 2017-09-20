@@ -1786,6 +1786,9 @@ msgstr "Existed acronym for "
 msgid "existing_acronym"
 msgstr "Existing acronym"
 
+msgid "invalid_acronym"
+msgstr "Invalid acronym"
+
 msgid "acronym_rules"
 msgstr "Site with one letter\n"
        "Acronym with min 2 et max 4 letters\n"
