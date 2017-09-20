@@ -194,10 +194,8 @@ def get_by_entity_and_date(entity, date):
     if date is None:
         date = timezone.now()
     try:
-        entity_version = EntityVersion.objects.get(entity=entity,
-                                                   start_date__lte=date,
-                                                   end_date__gte=date
-                                                   )
+        entity_version = EntityVersion.objects.filter(Q(end_date__gte=date) | Q(end_date__isnull=True),
+                                                      entity=entity, start_date__lte=date)
     except ObjectDoesNotExist:
         return None
     return entity_version

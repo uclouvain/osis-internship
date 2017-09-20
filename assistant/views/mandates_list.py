@@ -25,7 +25,7 @@
 ##############################################################################
 from assistant.models import assistant_mandate
 from django.core.urlresolvers import reverse
-from base.models import academic_year
+from base.models import academic_year, entity_version
 from assistant.forms import MandatesArchivesForm
 from django.views.generic import ListView
 from django.views.generic.edit import FormMixin
@@ -69,6 +69,17 @@ class MandatesListView(LoginRequiredMixin, UserPassesTestMixin, ListView, FormMi
         context = super(MandatesListView, self).get_context_data(**kwargs)
         context['year'] = academic_year.find_academic_year_by_id(
                 self.request.session.get('selected_academic_year')).year
+        start_date = academic_year.find_academic_year_by_id(int(self.request.session.get(
+            'selected_academic_year'))).start_date
+        for mandate in context['object_list']:
+            entities = []
+            entities_id = mandate.mandateentity_set.all().order_by('id')
+            for entity in entities_id:
+                current_entityversion = entity_version.get_by_entity_and_date(entity.entity, start_date)[0]
+                if current_entityversion is None:
+                    current_entityversion = entity_version.get_last_version(entity.entity)
+                entities.append(current_entityversion)
+            mandate.entities = entities
         return context
 
     def get_initial(self):
