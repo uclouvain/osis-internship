@@ -204,6 +204,8 @@ class CreateLearningUnitYearForm(forms.ModelForm):
                                  widget=forms.Select(attrs={'class': 'form-control',
                                                             'id': 'language'}))
 
+    acronym_regex = "^[LMNPWX][A-Z]{2,4}\d{4}$"
+
     class Meta:
         model = mdl.learning_unit_year.LearningUnitYear
         fields = ['learning_container_year_type', 'acronym', 'academic_year', 'status', 'internship_subtype',
@@ -250,7 +252,7 @@ class CreateLearningUnitYearForm(forms.ModelForm):
         if valid:
             if self.cleaned_data['acronym'].lower() in learning_unit_years_list:
                 self._errors['acronym'] = _('existing_acronym')
-            elif not re.match("^[LMNPWX][A-Z]{2,4}\d{4}$", self.cleaned_data['acronym']):
+            elif not re.match(self.acronym_regex, self.cleaned_data['acronym']):
                 self._errors['acronym'] = _('invalid_acronym')
             elif academic_year.year > int(self.data['end_year']):
                 self._errors['end_year'] = _('end_date_gt_begin_date')

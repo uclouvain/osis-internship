@@ -218,7 +218,7 @@
             var messageFunc = function () { return message; };
             jQuery.validator.addMethod("check_acronym", function(val) {
 
-                if(/^[LMNPWX][A-Z]{2,4}\d{4}$/.test(val)){
+                if(/{{ form.acronym_regex }}/.test(val)){
                     var res;
                     $.ajax({
                         async:false,
