@@ -167,7 +167,6 @@ def create_languages_list():
 
 class CreateLearningUnitYearForm(forms.ModelForm):
     learning_container_year_type = forms.ChoiceField(choices=lazy(create_learning_container_year_type_list, tuple),
-                                                     error_messages={'required': _('This field is required.')},
                                                      widget=forms.Select(attrs={'class': 'form-control',
                                                                                 'onchange': 'showDiv(this.value)',
                                                                                 'id': 'learning_container_year_type'}))
@@ -183,7 +182,6 @@ class CreateLearningUnitYearForm(forms.ModelForm):
                                                              'id': 'periodicity'},
                                                       choices=PERIODICITY_TYPES))
     campus = forms.ChoiceField(choices=lazy(create_main_campuses_list, tuple),
-                               error_messages={'required': _('This field is required.')},
                                widget=forms.Select(attrs={'class': 'form-control',
                                                           'id': 'campus'}))
     requirement_entity = forms.ChoiceField(choices=lazy(create_main_entities_version_list, tuple),
@@ -213,7 +211,7 @@ class CreateLearningUnitYearForm(forms.ModelForm):
                   'additional_entity_2', 'allocation_entity', 'requirement_entity', 'subtype', 'language', 'session',
                   'faculty_remark', 'other_remark', ]
 
-        widgets = {'acronym': forms.TextInput(attrs={'class': 'form-control',
+        widgets = {'acronym': forms.TextInput(attrs={'class': 'form-control form-acronym',
                                                      'id': 'acronym',
                                                      'maxlength': "15",
                                                      'required': True}),
@@ -238,10 +236,6 @@ class CreateLearningUnitYearForm(forms.ModelForm):
                                                   'required': True}),
                    'subtype': forms.HiddenInput()
                    }
-        error_messages = {
-            'title': {"required": _('This field is required.')},
-            'learning_container_year_type': {"required": _('This field is required.')}
-        }
 
     def is_valid(self):
 
@@ -258,9 +252,9 @@ class CreateLearningUnitYearForm(forms.ModelForm):
                 self._errors['end_year'] = _('end_date_gt_begin_date')
             elif self.cleaned_data['learning_container_year_type'] == INTERNSHIP \
                     and not (self.cleaned_data['internship_subtype']):
-                self._errors['internship_subtype'] = _('This field is required.')
+                self._errors['internship_subtype'] = _('field_is_required')
             elif not self.cleaned_data['credits']:
-                self._errors['credits'] = _('This field is required.')
+                self._errors['credits'] = _('field_is_required')
                 return False
             else:
                 return True

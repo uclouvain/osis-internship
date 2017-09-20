@@ -30,11 +30,11 @@ from django.db import models
 
 
 class OfferYearEntityAdmin(admin.ModelAdmin):
-    list_display = ('offer_year', 'entity', 'type',)
-    fieldsets = ((None, {'fields': ('offer_year', 'entity', 'type')}),)
-    search_fields = ['type', 'entity__entityversion__acronym', 'offer_year__acronym']
+    list_display = ('offer_year', 'entity', 'type', 'education_group_year')
+    fieldsets = ((None, {'fields': ('offer_year', 'entity', 'type', 'education_group_year')}),)
+    search_fields = ['type', 'entity__entityversion__acronym', 'offer_year__acronym', 'education_group_year__acronym']
     list_filter = ('type', 'offer_year__academic_year',)
-    raw_id_fields = ('offer_year', 'entity')
+    raw_id_fields = ('offer_year', 'entity', 'education_group_year')
 
 
 class OfferYearEntity(models.Model):
@@ -43,6 +43,7 @@ class OfferYearEntity(models.Model):
     offer_year = models.ForeignKey('OfferYear')
     entity = models.ForeignKey('Entity')
     type = models.CharField(max_length=30, blank=True, null=True, choices=offer_year_entity_type.TYPES)
+    education_group_year = models.ForeignKey('EducationGroupYear', blank=True, null=True)
 
     class Meta:
         unique_together = ('offer_year', 'type')
