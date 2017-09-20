@@ -1982,3 +1982,6 @@ msgstr "Horaire adapté"
 
 msgid "field_is_required"
 msgstr "Ce champ est obligatoire."
+
+msgid "LU_WARNING_INVALID_ACRONYM"
+msgstr "Si l'acronym est introduit, il doit au minimum faire 3 caractères"
