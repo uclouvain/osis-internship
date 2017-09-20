@@ -23,7 +23,6 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import re
 from django import forms
 from django.core.exceptions import ValidationError
 from django.db.models import Prefetch
@@ -51,7 +50,7 @@ class LearningUnitYearForm(forms.Form):
         data_cleaned = self.cleaned_data.get('acronym')
         data_cleaned = _treat_empty_or_str_none_as_none(data_cleaned)
         if data_cleaned and len(data_cleaned) < MIN_ACRONYM_LENGTH:
-            raise ValidationError('LU_ERRORS_INVALID_SEARCH')
+            raise ValidationError(_('LU_WARNING_INVALID_ACRONYM'))
         return data_cleaned
 
     def clean_academic_year_id(self):
@@ -68,7 +67,6 @@ class LearningUnitYearForm(forms.Form):
 
     def clean(self):
         clean_data = _clean_data(self.cleaned_data)
-        is_valid_search(**clean_data)
         return clean_data
 
     def get_learning_units(self):
@@ -89,14 +87,6 @@ class LearningUnitYearForm(forms.Form):
             .prefetch_related(entity_container_prefetch) \
             .order_by('academic_year__year', 'acronym')
         return [_append_latest_entities(learning_unit) for learning_unit in learning_units]
-
-
-def is_valid_search(**search_filter):
-    MINIMUM_FILTER = 2
-    IGNORE_FILTERS = ['with_entity_subordinated']
-
-    if sum(1 for key, value in search_filter.items() if key not in IGNORE_FILTERS and value) < MINIMUM_FILTER:
-        raise ValidationError('LU_ERRORS_INVALID_SEARCH')
 
 
 def _clean_data(datas_to_clean):
