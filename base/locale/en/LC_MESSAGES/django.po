@@ -1786,6 +1786,9 @@ msgstr "Existed acronym for "
 msgid "existing_acronym"
 msgstr "Existing acronym"
 
+msgid "invalid_acronym"
+msgstr "Invalid acronym"
+
 msgid "acronym_rules"
 msgstr "Site with one letter\n"
        "Acronym with min 2 et max 4 letters\n"
@@ -1977,3 +1980,5 @@ msgstr "Adapted"
 msgid "field_is_required"
 msgstr "This field is required"
 
+msgid "LU_WARNING_INVALID_ACRONYM"
+msgstr "The acronym, if it is entered, must at least count 3 characters"
