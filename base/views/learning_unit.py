@@ -333,7 +333,6 @@ def _check_if_display_message(request, found_learning_units):
             return False
     return True
 
-
 def _get_common_context_list_learning_unit_years():
     today = datetime.date.today()
     date_ten_years_before = today.replace(year=today.year-10)
@@ -647,10 +646,12 @@ def learning_unit_year_add(request):
             academic_year = data['academic_year']
             year = academic_year.year
             status = check_status(data)
-            requirement_entity_version = mdl.entity_version.find_by_id(data['requirement_entity'])
-            allocation_entity_version = mdl.entity_version.find_by_id(data['allocation_entity'])
             additional_entity_version_1 = None
             additional_entity_version_2 = None
+            allocation_entity_version = None
+            requirement_entity_version = mdl.entity_version.find_by_id(data['requirement_entity'])
+            if data['allocation_entity']:
+                allocation_entity_version = mdl.entity_version.find_by_id(data['allocation_entity'])
             if data['additional_entity_1']:
                 additional_entity_version_1 = mdl.entity_version.find_by_id(data['additional_entity_1'])
             if data['additional_entity_2']:
@@ -678,7 +679,8 @@ def create_learning_unit_structure(additional_entity_version_1, additional_entit
     new_requirement_entity = create_entity_container_year(requirement_entity_version,
                                                           new_learning_container_year,
                                                           REQUIREMENT_ENTITY)
-    create_entity_container_year(allocation_entity_version, new_learning_container_year, ALLOCATION_ENTITY)
+    if allocation_entity_version:
+        create_entity_container_year(allocation_entity_version, new_learning_container_year, ALLOCATION_ENTITY)
     if additional_entity_version_1:
         create_entity_container_year(additional_entity_version_1, new_learning_container_year,
                                      ADDITIONAL_REQUIREMENT_ENTITY_1)
@@ -813,20 +815,18 @@ def check_acronym(request):
     existed_acronym = False
     existing_acronym = False
     learning_unit_years = mdl.learning_unit_year.find_gte_year_acronym(academic_yr, acronym)
-    old_learning_unit_years = mdl.learning_unit_year.find_lt_year_acronym(academic_yr, acronym)
-    last_using = old_learning_unit_years.last()
-    if old_learning_unit_years:
+    old_learning_unit_year = mdl.learning_unit_year.find_lt_year_acronym(academic_yr, acronym).last()
+    if old_learning_unit_year:
+        last_using = str(old_learning_unit_year.academic_year)
+    else:
+        last_using = ""
+    if old_learning_unit_year:
         existed_acronym = True
         valid = True
     if learning_unit_years:
         existing_acronym = True
         valid = False
-
-    last_academic_year = ""
-    if last_using:
-       last_academic_year = str(last_using.academic_year)
-
     return JsonResponse({'valid': valid,
                          'existing_acronym': existing_acronym,
                          'existed_acronym': existed_acronym,
-                         'last_using': last_academic_year}, safe=False)
+                         'last_using': last_using}, safe=False)
