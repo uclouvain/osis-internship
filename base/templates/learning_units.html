@@ -75,6 +75,7 @@
                 <div class="col-md-2">
                     <label for="id_acronym">{% trans 'acronym'%}</label>
                     {{ form.acronym }}
+                    <span class="warning">{{ form.acronym.errors |escape  }}</span>
                 </div>
 
                 <div class="col-md-4">
