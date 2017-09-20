@@ -23,6 +23,8 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+import re
+
 from django import forms
 from django.core.exceptions import ValidationError
 from django.db.models import Prefetch
@@ -239,6 +241,8 @@ class CreateLearningUnitYearForm(forms.ModelForm):
         if valid:
             if self.cleaned_data['acronym'].lower() in learning_unit_years_list:
                 self._errors['acronym'] = _('existing_acronym')
+            elif not re.match(self.acronym_regex, self.cleaned_data['acronym']):
+                self._errors['acronym'] = _('invalid_acronym')
             elif self.cleaned_data['learning_container_year_type'] == INTERNSHIP \
                     and not (self.cleaned_data['internship_subtype']):
                 self._errors['internship_subtype'] = _('field_is_required')

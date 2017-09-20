@@ -679,9 +679,9 @@ class LearningUnitViewTestCase(TestCase):
         return self.get_base_form_data()
 
     def get_faulty_acronym(self):
-        faultyDict = dict(self.get_valid_data())
-        faultyDict["acronym"] = "LTA200"
-        return faultyDict
+        faultydict = dict(self.get_valid_data())
+        faultydict["acronym"] = "LTA200"
+        return faultydict
 
     def test_learning_unit_year_form(self):
         form = CreateLearningUnitYearForm(data=self.get_valid_data())
@@ -694,7 +694,7 @@ class LearningUnitViewTestCase(TestCase):
 
     def test_learning_unit_acronym_form(self):
         form = CreateLearningUnitYearForm(data=self.get_valid_data())
-        self.assertTrue(form.is_valid(), form.errors )
+        self.assertTrue(form.is_valid(), form.errors)
 
-        form=CreateLearningUnitYearForm(data=self.get_faulty_acronym())
+        form = CreateLearningUnitYearForm(data=self.get_faulty_acronym())
         self.assertFalse(form.is_valid(), form.errors)
