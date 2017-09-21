@@ -183,7 +183,6 @@
                         $('#id_recipient').val(data.recipient);
                     },
                     error: function (xhr, status, error) {
-                        console.log('test error');
                         setFormFieldsValuesToNone();
                         disableFormInputs();
                         showNoAddressFoundMsg();
@@ -217,7 +216,6 @@
 
 
         function setFormFieldsValues(data){
-            console.log('kkk');
             $('#id_recipient').val(data.recipient);
             $('#id_location').val(data.address.location);
             $('#id_postal_code').val(data.address.postal_code);

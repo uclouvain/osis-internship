@@ -44,7 +44,9 @@ from assessments.models import score_sheet_address as score_sheet_address_model
 @require_http_methods(["GET"])
 def offer_score_encoding_tab(request, offer_year_id):
     context = _get_common_context(request, offer_year_id)
-    entity_id_selected, address = score_encoding_sheet.get_score_sheet_address(context.get('offer_year'))
+    dict = score_encoding_sheet.get_score_sheet_address(context.get('offer_year'))
+    entity_id_selected = dict['entity_id_selected']
+    address = dict['address']
     if not address.get('offer_year'):
         address['offer_year'] = offer_year_id
     form = score_sheet_address.ScoreSheetAddressForm(initial=address)
@@ -99,7 +101,9 @@ def _save_from_entity_address(context, entity_version_id_selected, offer_year_id
 
 def incorrect_email_management(context_param, email_encode, offer_year_id):
     context = context_param
-    entity_id_selected, address = score_encoding_sheet.get_score_sheet_address(offer_year_id)
+    dict = score_encoding_sheet.get_score_sheet_address(offer_year_id)
+    entity_id_selected = dict['entity_id_selected']
+    address = dict['address']
     address['email'] = email_encode
     if not address.get('offer_year'):
         address['offer_year'] = offer_year_id

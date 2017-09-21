@@ -51,7 +51,8 @@ def get_score_sheet_address(off_year):
             address = entity
             address.recipient = '{} - {}'.format(ent_version.acronym, ent_version.title)
             address.email = email
-    return entity_id, _get_address_as_dict(address)
+    return {'entity_id_selected': entity_id,
+            'address': _get_address_as_dict(address)}
 
 
 def _get_address_as_dict(address):
@@ -200,7 +201,7 @@ def scores_sheet_data(exam_enrollments, tutor=None):
 
 
 def _get_serialized_address(off_year):
-    address = get_score_sheet_address(off_year)[1]
+    address = get_score_sheet_address(off_year)['address']
     country = address.get('country')
     address['country'] = country.name if country else ''
     return address
