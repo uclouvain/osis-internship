@@ -232,7 +232,7 @@ def manager_dissertations_edit(request, pk):
 @login_required
 @user_passes_test(adviser.is_manager)
 def manager_dissertations_jury_edit(request, pk):
-    dissert_role = dissertation_role.get_by_id(pk)
+    dissert_role = dissertation_role.find_by_id(pk)
     redirect_if_none(dissert_role,'manager_dissertations_list')
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
@@ -459,7 +459,7 @@ def manager_dissertations_delete(request, pk):
 @login_required
 @user_passes_test(adviser.is_manager)
 def manager_dissertations_role_delete(request, pk):
-    dissert_role = dissertation_role.get_by_id(pk)
+    dissert_role = dissertation_role.find_by_id(pk)
     redirect_if_none(dissert_role, 'manager_dissertations_list')
     dissert = dissert_role.dissertation
     person = mdl.person.find_by_user(request.user)
@@ -870,7 +870,7 @@ def dissertations_wait_list(request):
 @login_required
 @user_passes_test(adviser.is_teacher)
 def dissertations_role_delete(request, pk):
-    dissert_role = dissertation_role.get_by_id(pk)
+    dissert_role = dissertation_role.find_by_id(pk)
     redirect_if_none(dissert_role,'dissertations_list')
     dissert = dissert_role.dissertation
     person = mdl.person.find_by_user(request.user)
