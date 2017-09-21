@@ -23,6 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from dissertation.utils.request import redirect_if_none
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from base import models as mdl
@@ -211,8 +212,7 @@ def manager_proposition_dissertations_jury_new(request, pk):
 @user_passes_test(adviser.is_manager)
 def manager_proposition_dissertations_role_delete(request, pk):
     prop_role = proposition_role.get_by_id(pk)
-    if prop_role is None:
-        return redirect('manager_proposition_dissertations')
+    redirect_if_none(prop_role, 'manager_proposition_dissertations')
     proposition = prop_role.proposition_dissertation
     prop_role.delete()
     return redirect('manager_proposition_dissertation_detail', pk=proposition.pk)
@@ -310,8 +310,7 @@ def proposition_dissertations(request):
 @user_passes_test(adviser.is_teacher)
 def proposition_dissertation_delete(request, pk):
     proposition = proposition_dissertation.find_by_id(pk)
-    if proposition is None:
-        return redirect('proposition_dissertations')
+    redirect_if_none(proposition, 'proposition_dissertations')
     proposition.deactivate()
     return redirect('proposition_dissertations')
 
@@ -320,8 +319,7 @@ def proposition_dissertation_delete(request, pk):
 @user_passes_test(adviser.is_teacher)
 def proposition_dissertation_detail(request, pk):
     proposition = proposition_dissertation.find_by_id(pk)
-    if proposition is None:
-        return redirect('proposition_dissertations')
+    redirect_if_none(proposition, 'proposition_dissertations')
     offer_propositions = proposition_offer.find_by_proposition_dissertation(proposition)
     count_use = dissertation.count_by_proposition(proposition)
     percent = count_use * 100 / proposition.max_number_student if proposition.max_number_student else 0
@@ -348,8 +346,7 @@ def proposition_dissertation_detail(request, pk):
 @user_passes_test(adviser.is_teacher)
 def proposition_dissertation_edit(request, pk):
     proposition = proposition_dissertation.find_by_id(pk)
-    if proposition is None:
-        return redirect('proposition_dissertations')
+    redirect_if_none(proposition, 'proposition_dissertations')
     adv = get_current_adviser(request)
     offer_propositions = offer_proposition.find_all_ordered_by_acronym()
     offer_propositions_group = offer_proposition_group.find_all_ordered_by_name_short()
@@ -439,8 +436,7 @@ def proposition_dissertations_search(request):
 @user_passes_test(adviser.is_teacher)
 def proposition_dissertations_jury_edit(request, pk):
     prop_role = proposition_role.get_by_id(pk)
-    if prop_role is None:
-        return redirect('proposition_dissertations')
+    redirect_if_none(prop_role, 'proposition_dissertations')
     proposition = prop_role.proposition_dissertation
     return redirect('proposition_dissertation_detail', pk=proposition.pk)
 
@@ -449,8 +445,7 @@ def proposition_dissertations_jury_edit(request, pk):
 @user_passes_test(adviser.is_teacher)
 def proposition_dissertations_jury_new(request, pk):
     proposition = proposition_dissertation.find_by_id(pk)
-    if proposition is None:
-        return redirect('proposition_dissertations')
+    redirect_if_none(proposition, 'proposition_dissertations')
     count_proposition_role = PropositionRole.objects.filter(proposition_dissertation=proposition).count()
     adv = get_current_adviser(request)
     if proposition.author == adv or proposition.creator == adv.person:
@@ -481,8 +476,7 @@ def proposition_dissertations_jury_new(request, pk):
 @user_passes_test(adviser.is_teacher)
 def proposition_dissertations_role_delete(request, pk):
     prop_role = proposition_role.get_by_id(pk)
-    if prop_role is None:
-        return redirect('proposition_dissertations')
+    redirect_if_none(prop_role, 'proposition_dissertations')
     proposition = prop_role.proposition_dissertation
     adv = get_current_adviser(request)
 

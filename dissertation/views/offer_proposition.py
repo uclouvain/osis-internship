@@ -23,17 +23,16 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from dissertation.utils.request import redirect_if_none
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from base import models as mdl
 from dissertation.models import adviser
 from dissertation.models import faculty_adviser
-from dissertation.models.offer_proposition import OfferProposition
 from dissertation.models import offer_proposition
 from dissertation.forms import ManagerOfferPropositionForm
 from django.contrib.auth.decorators import user_passes_test
 from base.views import layout
-from django.core.exceptions import ObjectDoesNotExist
 
 ###########################
 #      MANAGER VIEWS      #
@@ -54,8 +53,7 @@ def manager_offer_parameters(request):
 @user_passes_test(adviser.is_manager)
 def manager_offer_parameters_edit(request, pk):
     offer_prop = offer_proposition.find_by_id(pk)
-    if offer_prop is None:
-        return redirect('dissertations')
+    redirect_if_none(offer_prop, 'dissertations')
     if request.method == "POST":
         form = ManagerOfferPropositionForm(request.POST, instance=offer_prop)
         if form.is_valid():

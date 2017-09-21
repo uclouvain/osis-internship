@@ -23,6 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from dissertation.utils.request import redirect_if_none
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from dissertation.models.adviser import Adviser, search_adviser
@@ -35,7 +36,6 @@ from dissertation.forms import AdviserForm, ManagerAdviserForm, ManagerAddAdvise
 from django.contrib.auth.decorators import user_passes_test
 from base.views import layout
 from base.models.enums import person_source_type
-from django.core.exceptions import ObjectDoesNotExist
 
 
 ###########################
@@ -263,8 +263,7 @@ def manager_informations_add_person(request):
 @user_passes_test(adviser.is_manager)
 def manager_informations_detail(request, pk):
     adv = adviser.get_by_id(pk)
-    if adv is None:
-        return redirect('manager_informations')
+    redirect_if_none(adv, 'manager_dissertations')
     return layout.render(request, 'manager_informations_detail.html',
                          {'adviser': adv,
                           'first_name': adv.person.first_name.title(),
@@ -275,8 +274,7 @@ def manager_informations_detail(request, pk):
 @user_passes_test(adviser.is_manager)
 def manager_informations_edit(request, pk):
     adv = adviser.get_by_id(pk)
-    if adv is None:
-        return redirect('manager_informations')
+    redirect_if_none(adv, 'manager_informations')
     if request.method == "POST":
         form = ManagerAdviserForm(request.POST, instance=adv)
         if form.is_valid():
@@ -320,9 +318,8 @@ def manager_informations_detail_list(request, pk):
     person = mdl.person.find_by_user(request.user)
     connected_adviser = adviser.search_by_person(person)
     offers = faculty_adviser.search_by_adviser(connected_adviser)
-    try:
-        adv = Adviser.objects.get(id=pk)
-    except ObjectDoesNotExist:
+    adv = adviser.get_by_id(pk)
+    if adv is None:
         return redirect('manager_informations')
 
     adv_list_disserts_pro = dissertation_role.search_by_adviser_and_role_and_offers(adv, 'PROMOTEUR', offers)
@@ -341,11 +338,9 @@ def manager_informations_detail_list_wait(request, pk):
     person = mdl.person.find_by_user(request.user)
     connected_adviser = adviser.search_by_person(person)
     offers = faculty_adviser.search_by_adviser(connected_adviser)
-    try:
-        adv = Adviser.objects.get(id=pk)
-    except ObjectDoesNotExist:
+    adv = adviser.get_by_id(pk)
+    if adv is None:
         return redirect('manager_informations')
-
     disserts_role = dissertation_role.search_by_adviser_and_role_and_waiting(adv, offers)
 
     return layout.render(request, "manager_informations_detail_list_wait.html",
@@ -356,8 +351,7 @@ def manager_informations_detail_list_wait(request, pk):
 @user_passes_test(adviser.is_manager)
 def manager_informations_detail_stats(request, pk):
     adv = adviser.get_by_id(pk)
-    if adv is None:
-        return redirect('manager_informations')
+    redirect_if_none(adv, 'manager_informations')
     advisers_pro = dissertation_role.search_by_adviser_and_role_stats(adv, 'PROMOTEUR')
     count_advisers_pro = dissertation_role.count_by_adviser_and_role_stats(adv, 'PROMOTEUR')
     count_advisers_pro_request = dissertation_role.count_by_adviser(adv, 'PROMOTEUR', 'DIR_SUBMIT')
