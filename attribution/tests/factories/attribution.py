@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -23,21 +23,31 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from base.forms import bootstrap
-from assessments.models import score_sheet_address
-from django import forms
-from reference.models import country
+import string
+import factory
+import factory.fuzzy
+from faker import Faker
+
+from base.tests.factories.learning_unit_year import LearningUnitYearFakerFactory
+from base.tests.factories.tutor import TutorFactory
+from osis_common.utils.datetime import get_tzinfo
+from attribution.models.enums import function
 
 
-class ScoreSheetAddressForm(bootstrap.BootstrapModelForm):
-    country = forms.ModelChoiceField(queryset=country.find_all(), required=False)
-    recipient = forms.CharField(max_length=255)
-    location = forms.CharField(max_length=255)
-    postal_code = forms.CharField(max_length=255)
-    city = forms.CharField(max_length=255)
-    offer_year = forms.CharField()
-    email = forms.EmailField(required=False)
+fake = Faker()
 
+
+class AttributionFactory(factory.django.DjangoModelFactory):
     class Meta:
-        model = score_sheet_address.ScoreSheetAddress
-        exclude = ['external_id', 'changed']
+        model = "attribution.Attribution"
+
+    external_id = factory.fuzzy.FuzzyText(length=10, chars=string.digits)
+    changed = fake.date_time_this_decade(before_now=True, after_now=True, tzinfo=get_tzinfo())
+    start_date = None
+    end_date = None
+    start_year = None
+    end_year = None
+    function = factory.Iterator(function.FUNCTIONS, getter=lambda c: c[0])
+    learning_unit_year = factory.SubFactory(LearningUnitYearFakerFactory)
+    tutor = factory.SubFactory(TutorFactory)
+    score_responsible = False
