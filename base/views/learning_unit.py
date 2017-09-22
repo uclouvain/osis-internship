@@ -28,6 +28,7 @@ import re
 from collections import OrderedDict
 from django.contrib import messages
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required, permission_required
 from django.http import HttpResponseRedirect
@@ -35,15 +36,16 @@ from django.shortcuts import redirect
 from django.utils.translation import ugettext_lazy as _
 from django.views.decorators.http import require_http_methods
 from base import models as mdl
+from base.business import learning_unit_year_volumes
 from base.business import learning_unit_year_with_context
 from attribution import models as mdl_attr
 from base.models import entity_container_year
-from base.models.academic_year import current_academic_years
 from base.models.entity_component_year import EntityComponentYear
 from base.models.entity_container_year import EntityContainerYear
 from base.models.enums import entity_container_year_link_type
 from base.models.enums import learning_container_year_types
-from base.models.enums.entity_container_year_link_type import REQUIREMENT_ENTITY, ALLOCATION_ENTITY
+from base.models.enums.entity_container_year_link_type import REQUIREMENT_ENTITY, ALLOCATION_ENTITY, \
+    ADDITIONAL_REQUIREMENT_ENTITY_1, ADDITIONAL_REQUIREMENT_ENTITY_2
 from base.models.enums.learning_component_year_type import PRACTICAL_EXERCISES, LECTURING
 from base.models.enums.learning_container_year_types import COURSE
 from base.models.enums.learning_unit_year_subtypes import FULL
@@ -76,6 +78,8 @@ VOLUME_REMAINING_KEY = 'volume_remaining'
 
 VOLUME_FOR_UNKNOWN_QUADRIMESTER = -1
 
+MAX_RECORDS = 1000
+
 
 @login_required
 @permission_required('base.can_access_learningunit', raise_exception=True)
@@ -87,7 +91,8 @@ def learning_units(request):
     found_learning_units = None
     if form.is_valid():
         found_learning_units = form.get_learning_units()
-        _check_if_display_message(request, found_learning_units)
+        if not _check_if_display_message(request, found_learning_units):
+            found_learning_units = None
 
     context = _get_common_context_list_learning_unit_years()
 
@@ -139,7 +144,21 @@ def learning_unit_components(request, learning_unit_year_id):
 
 @login_required
 @permission_required('base.can_access_learningunit', raise_exception=True)
+def volumes_validation(request, learning_unit_year_id):
+    volumes_encoded = _extract_volumes_from_data(request)
+    volumes_grouped_by_lunityear = learning_unit_year_volumes.get_volumes_grouped_by_lunityear(learning_unit_year_id,
+                                                                                               volumes_encoded)
+    return JsonResponse({
+        'errors': learning_unit_year_volumes.validate(volumes_grouped_by_lunityear)
+    })
+
+
+@login_required
+@permission_required('base.can_access_learningunit', raise_exception=True)
 def learning_unit_volumes_management(request, learning_unit_year_id):
+    if request.method == 'POST':
+        _learning_unit_volumes_management_edit(request, learning_unit_year_id)
+
     context = _get_common_context_learning_unit_year(learning_unit_year_id)
     context['learning_units'] = learning_unit_year_with_context.get_with_context(
         learning_container_year_id=context['learning_unit_year'].learning_container_year_id
@@ -147,6 +166,42 @@ def learning_unit_volumes_management(request, learning_unit_year_id):
     context['tab_active'] = 'components'
     context['experimental_phase'] = True
     return layout.render(request, "learning_unit/volumes_management.html", context)
+
+
+def _learning_unit_volumes_management_edit(request, learning_unit_year_id):
+    errors = None
+    volumes_encoded = _extract_volumes_from_data(request)
+
+    try:
+        errors = learning_unit_year_volumes.update_volumes(learning_unit_year_id, volumes_encoded)
+    except Exception as e:
+        error_msg = e.messages[0] if isinstance(e, ValidationError) else e.args[0]
+        messages.add_message(request, messages.ERROR, _(error_msg))
+
+    if errors:
+        for error_msg in errors:
+            messages.add_message(request, messages.ERROR, error_msg)
+
+
+def _extract_volumes_from_data(request):
+    volumes = {}
+    post_data = request.POST.dict()
+
+    for param, value in post_data.items():
+        param_splitted = param.rsplit("_", 2)
+        key = param_splitted[0]
+        if _is_a_valid_volume_key(key) and len(param_splitted) == 3:   # KEY_[LEARNINGUNITYEARID]_[LEARNINGCOMPONENTID]
+            learning_unit_year_id = int(param_splitted[1])
+            component_id = int(param_splitted[2])
+            volumes.setdefault(learning_unit_year_id, {}).setdefault(component_id, {}).update({key: value})
+    return volumes
+
+
+def _is_a_valid_volume_key(post_key):
+    return post_key in learning_unit_year_volumes.VALID_VOLUMES_KEYS
+
+def _perserve_volume_encoded(request, context):
+    pass
 
 
 @login_required
@@ -272,7 +327,11 @@ def learning_unit_specifications_edit(request, learning_unit_year_id):
 def _check_if_display_message(request, found_learning_units):
     if not found_learning_units:
         messages.add_message(request, messages.WARNING, _('no_result'))
-
+    else:
+        if len(found_learning_units) > MAX_RECORDS:
+            messages.add_message(request, messages.WARNING, _('too_many_results'))
+            return False
+    return True
 
 def _get_common_context_list_learning_unit_years():
     today = datetime.date.today()
@@ -584,17 +643,33 @@ def learning_unit_year_add(request):
         form = CreateLearningUnitYearForm(request.POST)
         if form.is_valid():
             data = form.cleaned_data
+            current_academic_year = mdl.academic_year.current_academic_year()
             academic_year = data['academic_year']
             year = academic_year.year
             status = check_status(data)
+            additional_entity_version_1 = None
+            additional_entity_version_2 = None
+            allocation_entity_version = None
             requirement_entity_version = mdl.entity_version.find_by_id(data['requirement_entity'])
-            allocation_entity_version = mdl.entity_version.find_by_id(data['allocation_entity'])
-            new_learning_container = create_learning_container(year, data)
+            if data['allocation_entity']:
+                allocation_entity_version = mdl.entity_version.find_by_id(data['allocation_entity'])
+            if data['additional_entity_1']:
+                additional_entity_version_1 = mdl.entity_version.find_by_id(data['additional_entity_1'])
+            if data['additional_entity_2']:
+                additional_entity_version_2 = mdl.entity_version.find_by_id(data['additional_entity_2'])
+            new_learning_container = create_learning_container(year)
             new_learning_unit = create_learning_unit(data, new_learning_container, year)
-            while year <= int(data['end_year']) and year < academic_year.year+6:
-                create_learning_unit_structure(allocation_entity_version, data, form, new_learning_container,
+            if year < current_academic_year.year:
+                create_learning_unit_structure(additional_entity_version_1, additional_entity_version_2,
+                                               allocation_entity_version, data, form, new_learning_container,
                                                new_learning_unit, requirement_entity_version, status, year)
-                year = year+1
+            else:
+                while year < current_academic_year.year+6:
+                    if year > current_academic_year.year:
+                        create_learning_unit_structure(additional_entity_version_1, additional_entity_version_2,
+                                                       allocation_entity_version, data, form, new_learning_container,
+                                                       new_learning_unit, requirement_entity_version, status, year)
+                    year = year+1
             return redirect('learning_units')
         else:
             return layout.render(request, "learning_unit/learning_unit_form.html", {'form': form})
@@ -602,15 +677,23 @@ def learning_unit_year_add(request):
         return redirect('learning_unit_create')
 
 
-def create_learning_unit_structure(allocation_entity_version, data, form, new_learning_container, new_learning_unit,
-                                   requirement_entity_version, status, year):
+def create_learning_unit_structure(additional_entity_version_1, additional_entity_version_2, allocation_entity_version,
+                                   data, form, new_learning_container, new_learning_unit, requirement_entity_version,
+                                   status, year):
     an_academic_year = mdl.academic_year.find_academic_year_by_year(year)
     new_learning_container_year = create_learning_container_year(an_academic_year, data,
                                                                  new_learning_container)
     new_requirement_entity = create_entity_container_year(requirement_entity_version,
                                                           new_learning_container_year,
                                                           REQUIREMENT_ENTITY)
-    create_entity_container_year(allocation_entity_version, new_learning_container_year, ALLOCATION_ENTITY)
+    if allocation_entity_version:
+        create_entity_container_year(allocation_entity_version, new_learning_container_year, ALLOCATION_ENTITY)
+    if additional_entity_version_1:
+        create_entity_container_year(additional_entity_version_1, new_learning_container_year,
+                                     ADDITIONAL_REQUIREMENT_ENTITY_1)
+    if additional_entity_version_2:
+        create_entity_container_year(additional_entity_version_2, new_learning_container_year,
+                                     ADDITIONAL_REQUIREMENT_ENTITY_2)
     if data['learning_container_year_type'] == COURSE:
         create_course(an_academic_year, form, new_learning_container_year, new_learning_unit,
                       new_requirement_entity, status)
@@ -677,8 +760,8 @@ def create_entity_component_year(entity_container_year, learning_component_year)
     return new_entity_component_year
 
 
-def create_learning_container(year, data):
-    new_learning_container = LearningContainer(auto_renewal_until=int(data['end_year']), start_year=year)
+def create_learning_container(year):
+    new_learning_container = LearningContainer(start_year=year)
     new_learning_container.save()
     return new_learning_container
 
@@ -705,9 +788,8 @@ def create_entity_container_year(entity_version, learning_container_year, type):
 
 def create_learning_unit(data, learning_container, year):
     new_learning_unit = LearningUnit(acronym=data['acronym'], title=data['title'], start_year=year,
-                                     end_year=int(data['end_year']), periodicity=data['periodicity'],
-                                     learning_container=learning_container, faculty_remark=data['faculty_remark'],
-                                     other_remark=data['other_remark'])
+                                     periodicity=data['periodicity'], learning_container=learning_container,
+                                     faculty_remark=data['faculty_remark'], other_remark=data['other_remark'])
     new_learning_unit.save()
     return new_learning_unit
 
@@ -735,15 +817,16 @@ def check_acronym(request):
     acronym = request.GET['acronym']
     year_id = request.GET['year_id']
     academic_yr = mdl.academic_year.find_academic_year_by_id(year_id)
-
     valid = True
     existed_acronym = False
     existing_acronym = False
-    incorrect_acronym = False
     learning_unit_years = mdl.learning_unit_year.find_gte_year_acronym(academic_yr, acronym)
-    old_learning_unit_years = mdl.learning_unit_year.find_lt_year_acronym(academic_yr, acronym)
-    last_using = old_learning_unit_years.last()
-    if old_learning_unit_years:
+    old_learning_unit_year = mdl.learning_unit_year.find_lt_year_acronym(academic_yr, acronym).last()
+    if old_learning_unit_year:
+        last_using = str(old_learning_unit_year.academic_year)
+    else:
+        last_using = ""
+    if old_learning_unit_year:
         existed_acronym = True
         valid = True
     if learning_unit_years:
@@ -751,6 +834,5 @@ def check_acronym(request):
         valid = False
     return JsonResponse({'valid': valid,
                          'existing_acronym': existing_acronym,
-                         'incorrect_acronym': incorrect_acronym,
                          'existed_acronym': existed_acronym,
-                         'last_using': str(last_using.academic_year)}, safe=False)
+                         'last_using': last_using}, safe=False)

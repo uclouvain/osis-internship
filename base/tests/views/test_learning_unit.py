@@ -57,19 +57,25 @@ from base.tests.factories.organization import OrganizationFactory
 from base.tests.factories.user import SuperUserFactory
 from base.views import learning_unit as learning_unit_view
 from django.utils.translation import ugettext_lazy as _
+
+from reference.tests.factories.country import CountryFactory
 from reference.tests.factories.language import LanguageFactory
 
 
 class LearningUnitViewTestCase(TestCase):
     def setUp(self):
         today = datetime.date.today()
+        self.academic_year = AcademicYearFactory(start_date=today.replace(year=today.year-2),
+                                                 end_date=today.replace(year=today.year-1),
+                                                 year=today.year-2)
         self.current_academic_year = AcademicYearFactory(start_date=today,
-                                                         end_date=today.replace(year=today.year + 1),
+                                                         end_date=today.replace(year=today.year+1),
                                                          year=today.year)
         self.learning_container_yr = LearningContainerYearFactory(academic_year=self.current_academic_year)
         self.learning_component_yr = LearningComponentYearFactory(learning_container_year=self.learning_container_yr)
         self.organization = OrganizationFactory(type=organization_type.MAIN)
-        self.entity = EntityFactory(organization=self.organization)
+        self.country = CountryFactory()
+        self.entity = EntityFactory(country=self.country, organization=self.organization)
         self.entity_container_yr = EntityContainerYearFactory(learning_container_year=self.learning_container_yr,
                                                               type=entity_container_year_link_type.REQUIREMENT_ENTITY,
                                                               entity=self.entity)
@@ -100,7 +106,7 @@ class LearningUnitViewTestCase(TestCase):
 
         self.assertEqual(template, 'learning_units.html')
         self.assertEqual(context['current_academic_year'], self.current_academic_year)
-        self.assertEqual(len(context['academic_years']), 1)
+        self.assertEqual(len(context['academic_years']), 2)
 
     @mock.patch('django.contrib.auth.decorators')
     @mock.patch('base.views.layout.render')
@@ -121,7 +127,7 @@ class LearningUnitViewTestCase(TestCase):
         request, template, context = mock_render.call_args[0]
 
         self.assertEqual(template, 'learning_units.html')
-        self.assertEqual(context['academic_years'].count(), 1)
+        self.assertEqual(context['academic_years'].count(), 2)
         self.assertEqual(context['current_academic_year'], self.current_academic_year)
         self.assertEqual(len(context['types']),
                          len(learning_unit_year_subtypes.LEARNING_UNIT_YEAR_SUBTYPES))
@@ -536,14 +542,25 @@ class LearningUnitViewTestCase(TestCase):
 
     def _prepare_context_learning_units_search(self):
         # Create a structure [Entity / Entity version]
-        ssh_entity_v = EntityVersionFactory(acronym="SSH", end_date=None)
+        ssh_entity = EntityFactory(country=self.country)
+        ssh_entity_v = EntityVersionFactory(acronym="SSH", end_date=None, entity=ssh_entity)
 
-        agro_entity_v = EntityVersionFactory(parent=ssh_entity_v.entity, acronym="AGRO", end_date=None)
-        envi_entity_v = EntityVersionFactory(parent=agro_entity_v.entity, acronym="ENVI", end_date=None)
-        ages_entity_v = EntityVersionFactory(parent=agro_entity_v.entity, acronym="AGES", end_date=None)
+        agro_entity = EntityFactory(country=self.country)
+        envi_entity = EntityFactory(country=self.country)
+        ages_entity = EntityFactory(country=self.country)
+        agro_entity_v = EntityVersionFactory(entity=agro_entity, parent=ssh_entity_v.entity, acronym="AGRO",
+                                             end_date=None)
+        envi_entity_v = EntityVersionFactory(entity=envi_entity, parent=agro_entity_v.entity, acronym="ENVI",
+                                             end_date=None)
+        ages_entity_v = EntityVersionFactory(entity=ages_entity, parent=agro_entity_v.entity, acronym="AGES",
+                                             end_date=None)
 
-        espo_entity_v = EntityVersionFactory(parent=ssh_entity_v.entity, acronym="ESPO", end_date=None)
-        drt_entity_v = EntityVersionFactory(parent=ssh_entity_v.entity, acronym="DRT", end_date=None)
+        espo_entity = EntityFactory(country=self.country)
+        drt_entity = EntityFactory(country=self.country)
+        espo_entity_v = EntityVersionFactory(entity=espo_entity, parent=ssh_entity_v.entity, acronym="ESPO",
+                                             end_date=None)
+        drt_entity_v = EntityVersionFactory(entity=drt_entity, parent=ssh_entity_v.entity, acronym="DRT",
+                                            end_date=None)
 
         # Create UE and put entity charge [AGRO]
         l_container_yr = LearningContainerYearFactory(acronym="LBIR1100", academic_year=self.current_academic_year,
@@ -637,11 +654,10 @@ class LearningUnitViewTestCase(TestCase):
 
         self.assertRaises(ObjectDoesNotExist, learning_unit_component_class.LearningUnitComponentClass.objects.filter(pk=a_link.id).first())
 
-    def get_base_form_data(self, end_year):
+    def get_base_form_data(self):
         return {"acronym": "LTAU2000",
-                "end_year": end_year,
                 "learning_container_year_type": COURSE,
-                "academic_year": self.current_academic_year.id,
+                "academic_year": self.academic_year.id,
                 "status": True,
                 "periodicity": ANNUAL,
                 "credits": "5",
@@ -651,6 +667,8 @@ class LearningUnitViewTestCase(TestCase):
                 "title_english": "LAW",
                 "requirement_entity": self.entity_version.id,
                 "allocation_entity": self.entity_version.id,
+                "additional_entity_1": self.entity_version.id,
+                "additional_entity_2": self.entity_version.id,
                 "subtype": FULL,
                 "language": self.language.id,
                 "session": SESSION_P23,
@@ -658,19 +676,25 @@ class LearningUnitViewTestCase(TestCase):
                 "other_remark": "other remark"}
 
     def get_valid_data(self):
-        return self.get_base_form_data(end_year=str(self.current_academic_year.end_date.year))
+        return self.get_base_form_data()
 
-    def get_faulty_end_year(self):
-        return self.get_base_form_data(end_year=str(self.current_academic_year.end_date.year-2))
+    def get_faulty_acronym(self):
+        faultydict = dict(self.get_valid_data())
+        faultydict["acronym"] = "LTA200"
+        return faultydict
 
     def test_learning_unit_year_form(self):
         form = CreateLearningUnitYearForm(data=self.get_valid_data())
         self.assertTrue(form.is_valid(), form.errors)
-        form = CreateLearningUnitYearForm(data=self.get_faulty_end_year())
-        self.assertFalse(form.is_valid(), form.errors)
         url = reverse('learning_unit_year_add')
-        response = self.client.post(url,
-                                    data=self.get_base_form_data(end_year=str(self.current_academic_year.end_date.year-1)))
+        response = self.client.post(url, data=self.get_base_form_data())
         self.assertEqual(response.status_code, 302)
         count_learning_unit_year = LearningUnitYear.objects.all().count()
         self.assertEqual(count_learning_unit_year, 1)
+
+    def test_learning_unit_acronym_form(self):
+        form = CreateLearningUnitYearForm(data=self.get_valid_data())
+        self.assertTrue(form.is_valid(), form.errors)
+
+        form = CreateLearningUnitYearForm(data=self.get_faulty_acronym())
+        self.assertFalse(form.is_valid(), form.errors)

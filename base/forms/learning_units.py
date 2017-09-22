@@ -24,6 +24,7 @@
 #
 ##############################################################################
 import re
+
 from django import forms
 from django.core.exceptions import ValidationError
 from django.db.models import Prefetch
@@ -33,7 +34,7 @@ from base import models as mdl
 from base.models.campus import find_main_campuses
 from base.models.entity_version import find_main_entities_version
 from base.models.enums import entity_container_year_link_type
-from base.models.enums.learning_container_year_types import LEARNING_CONTAINER_YEAR_TYPES
+from base.models.enums.learning_container_year_types import LEARNING_CONTAINER_YEAR_TYPES, INTERNSHIP
 from base.models.enums.learning_unit_periodicity import PERIODICITY_TYPES
 from reference.models.language import find_all_languages
 
@@ -51,7 +52,7 @@ class LearningUnitYearForm(forms.Form):
         data_cleaned = self.cleaned_data.get('acronym')
         data_cleaned = _treat_empty_or_str_none_as_none(data_cleaned)
         if data_cleaned and len(data_cleaned) < MIN_ACRONYM_LENGTH:
-            raise ValidationError('LU_ERRORS_INVALID_SEARCH')
+            raise ValidationError(_('LU_WARNING_INVALID_ACRONYM'))
         return data_cleaned
 
     def clean_academic_year_id(self):
@@ -68,7 +69,6 @@ class LearningUnitYearForm(forms.Form):
 
     def clean(self):
         clean_data = _clean_data(self.cleaned_data)
-        is_valid_search(**clean_data)
         return clean_data
 
     def get_learning_units(self):
@@ -84,19 +84,11 @@ class LearningUnitYearForm(forms.Form):
                                              to_attr='entity_containers_year')
 
         clean_data['learning_container_year_id'] = _get_filter_learning_container_ids(clean_data)
-        learning_units = mdl.learning_unit_year.search(**clean_data)\
-                                               .select_related('academic_year', 'learning_container_year')\
-                                               .prefetch_related(entity_container_prefetch)\
-                                               .order_by('academic_year__year', 'acronym')
+        learning_units = mdl.learning_unit_year.search(**clean_data) \
+            .select_related('academic_year', 'learning_container_year') \
+            .prefetch_related(entity_container_prefetch) \
+            .order_by('academic_year__year', 'acronym')
         return [_append_latest_entities(learning_unit) for learning_unit in learning_units]
-
-
-def is_valid_search(**search_filter):
-    MINIMUM_FILTER = 2
-    IGNORE_FILTERS = ['with_entity_subordinated']
-
-    if sum(1 for key, value in search_filter.items() if key not in IGNORE_FILTERS and value) < MINIMUM_FILTER:
-        raise ValidationError('LU_ERRORS_INVALID_SEARCH')
 
 
 def _clean_data(datas_to_clean):
@@ -149,12 +141,16 @@ def _get_latest_entity_version(entity_container_year):
 
 
 def create_main_campuses_list():
-    return [(None, "---------"), ]+[(elem.id, elem.name) for elem in find_main_campuses()]
+    return [(None, "---------"), ] + [(elem.id, elem.name) for elem in find_main_campuses()]
 
 
 def create_main_entities_version_list():
-    return [(None, "---------"), ]+[(entity_version.id, entity_version.acronym) for entity_version
-                                    in find_main_entities_version()]
+    return [(None, "---------"), ] + [(entity_version.id, entity_version.acronym) for entity_version
+                                      in find_main_entities_version()]
+
+
+def create_learning_container_year_type_list():
+    return ((None, "---------"),) + LEARNING_CONTAINER_YEAR_TYPES
 
 
 def create_languages_list():
@@ -162,18 +158,16 @@ def create_languages_list():
 
 
 class CreateLearningUnitYearForm(forms.ModelForm):
-
-    learning_container_year_type = forms.CharField(
-        widget=forms.Select(attrs={'class': 'form-control', 'required': True,
-                                   'onchange': 'showDiv(this.value)',
-                                   'id': 'learning_container_year_type'},
-                            choices=(("---------", "---------"),) + LEARNING_CONTAINER_YEAR_TYPES))
-    end_year = forms.CharField(widget=forms.DateInput(attrs={'class': 'form-control',
-                                                             'id': 'end_year'}))
+    learning_container_year_type = forms.ChoiceField(choices=lazy(create_learning_container_year_type_list, tuple),
+                                                     widget=forms.Select(attrs={'class': 'form-control',
+                                                                                'onchange': 'showDiv(this.value)',
+                                                                                'id': 'learning_container_year_type'}))
     faculty_remark = forms.CharField(required=False, widget=forms.Textarea(attrs={'class': 'form-control',
-                                                                                  'id': 'faculty_remark'}))
+                                                                                  'id': 'faculty_remark',
+                                                                                  'rows': 2}))
     other_remark = forms.CharField(required=False, widget=forms.Textarea(attrs={'class': 'form-control',
-                                                                                'id': 'other_remark'}))
+                                                                                'id': 'other_remark',
+                                                                                'rows': 2}))
     periodicity = forms.CharField(widget=forms.Select(attrs={'class': 'form-control',
                                                              'id': 'periodicity'},
                                                       choices=PERIODICITY_TYPES))
@@ -182,20 +176,37 @@ class CreateLearningUnitYearForm(forms.ModelForm):
                                                           'id': 'campus'}))
     requirement_entity = forms.ChoiceField(choices=lazy(create_main_entities_version_list, tuple),
                                            widget=forms.Select(attrs={'class': 'form-control',
-                                                                      'id': 'requirement_entity'}))
+                                                                      'id': 'requirement_entity',
+                                                                      'onchange': 'showAdditionalEntity1(this.value)'}))
     allocation_entity = forms.ChoiceField(choices=lazy(create_main_entities_version_list, tuple),
+                                          required=False,
                                           widget=forms.Select(attrs={'class': 'form-control',
                                                                      'id': 'allocation_entity'}))
+    additional_entity_1 = forms.ChoiceField(choices=lazy(create_main_entities_version_list, tuple),
+                                            required=False,
+                                            widget=forms.Select(attrs={'class': 'form-control',
+                                                                       'id': 'allocation_entity_1',
+                                                                       'disabled': 'disabled',
+                                                                       'onchange': 'showAdditionalEntity2(this.value)'}))
+    additional_entity_2 = forms.ChoiceField(choices=lazy(create_main_entities_version_list, tuple),
+                                            required=False,
+                                            widget=forms.Select(attrs={'class': 'form-control',
+                                                                       'id': 'allocation_entity_2',
+                                                                       'disabled': 'disabled'}))
     language = forms.ChoiceField(choices=lazy(create_languages_list, tuple),
                                  widget=forms.Select(attrs={'class': 'form-control',
                                                             'id': 'language'}))
 
+    acronym_regex = "^[LMNPWX][A-Z]{2,4}\d{4}$"
+
     class Meta:
         model = mdl.learning_unit_year.LearningUnitYear
         fields = ['learning_container_year_type', 'acronym', 'academic_year', 'status', 'internship_subtype',
-                  'end_year', 'periodicity', 'credits', 'campus', 'title', 'title_english', 'allocation_entity',
-                  'requirement_entity', 'subtype', 'language', 'session', 'faculty_remark', 'other_remark', ]
-        widgets = {'acronym': forms.TextInput(attrs={'class': 'form-control',
+                  'periodicity', 'credits', 'campus', 'title', 'title_english', 'additional_entity_1',
+                  'additional_entity_2', 'allocation_entity', 'requirement_entity', 'subtype', 'language', 'session',
+                  'faculty_remark', 'other_remark', ]
+
+        widgets = {'acronym': forms.TextInput(attrs={'class': 'form-control form-acronym',
                                                      'id': 'acronym',
                                                      'maxlength': "15",
                                                      'required': True}),
@@ -222,6 +233,7 @@ class CreateLearningUnitYearForm(forms.ModelForm):
                    }
 
     def is_valid(self):
+
         valid = super(CreateLearningUnitYearForm, self).is_valid()
         academic_year = mdl.academic_year.find_academic_year_by_id(self.data['academic_year'])
         learning_unit_years = mdl.learning_unit_year.find_gte_year_acronym(academic_year, self.data['acronym'])
@@ -229,9 +241,13 @@ class CreateLearningUnitYearForm(forms.ModelForm):
         if valid:
             if self.cleaned_data['acronym'].lower() in learning_unit_years_list:
                 self._errors['acronym'] = _('existing_acronym')
-                return False
-            elif academic_year.year > int(self.data['end_year']):
-                self._errors['end_year'] = _('end_date_gt_begin_date')
+            elif not re.match(self.acronym_regex, self.cleaned_data['acronym']):
+                self._errors['acronym'] = _('invalid_acronym')
+            elif self.cleaned_data['learning_container_year_type'] == INTERNSHIP \
+                    and not (self.cleaned_data['internship_subtype']):
+                self._errors['internship_subtype'] = _('field_is_required')
+            elif not self.cleaned_data['credits']:
+                self._errors['credits'] = _('field_is_required')
                 return False
             else:
                 return True

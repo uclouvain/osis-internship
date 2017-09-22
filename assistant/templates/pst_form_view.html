@@ -125,7 +125,7 @@
                     {% trans 'renewal_type' %}
                 </div>
                 <div class="col-md-9">
-                    {{ mandate.renewal_type }}
+                    {% trans mandate.renewal_type %}
                 </div>
             </div>
             {% for structure in mandate.mandatestructure_set.all|dictsort:"structure.type" %}
@@ -140,7 +140,7 @@
             {% endfor %}
             <div class="row" style="padding-top: 2px;">
                 <div class="col-md-3">
-                    {% trans 'full_time_equivalent' %}
+                    {% trans 'fulltime_equivalent' %}
                 </div>
                 <div class="col-md-9">
                     {{mandate.fulltime_equivalent}}
@@ -181,7 +181,7 @@
                         {% trans 'expected_registering_date' %}
                     </div>
                     <div class="col-md-3">
-                        {{ assistant.expected_phd_date }}
+                        {{ assistant.expected_phd_date|default_if_none:"n/a" }}
                     </div>
                 </div>
                 <div class="row" style="padding-top: 2px;">
@@ -189,7 +189,7 @@
                         {% trans 'supervisor' %}
                     </div>
                     <div class="col-md-9">
-                        {{ assistant.supervisor }}
+                        {{ assistant.supervisor|default_if_none:"n/a" }}
                     </div>
                 </div>
                 <div class="row" style="padding-top: 2px;">
@@ -197,7 +197,7 @@
                         {% trans 'phd_inscription_date' %}
                     </div>
                     <div class="col-md-9">
-                        {{ assistant.phd_inscription_date }}
+                        {{ assistant.phd_inscription_date|default_if_none:"n/a" }}
                     </div>
                 </div>
                 <div class="row" style="padding-top: 2px;">
@@ -205,7 +205,7 @@
                         {% trans 'confirmatory_test_date' %}<h6>{% trans '2nd_renewal' %}</h6>
                     </div>
                     <div class="col-md-9">
-                        {{ assistant.confirmation_test_date }}
+                        {{ assistant.confirmation_test_date|default_if_none:"n/a" }}
                     </div>
                 </div>
                 <div class="row" style="padding-top: 2px;">
@@ -213,7 +213,7 @@
                         {% trans 'thesis_defence_date' %}
                     </div>
                     <div class="col-md-9">
-                        {{ assistant.thesis_date }}
+                        {{ assistant.thesis_date|default_if_none:"n/a" }}
                     </div>
                 </div>
             </div>
@@ -229,7 +229,7 @@
                     {% trans 'function_outside_university' %}
                 </div>
                 <div class="col-md-6">
-                    {{ mandate.external_functions }}
+                    {{ mandate.external_functions|default_if_none:"n/a" }}
                 </div>
             </div>
             <div class="row" style="padding-top: 2px;">
@@ -237,7 +237,7 @@
                     {% trans 'external_post' %}
                 </div>
                 <div class="col-md-6">
-                    {{ mandate.external_contract }}
+                    {{ mandate.external_contract|default_if_none:"n/a" }}
                 </div>
             </div>
         </div>
@@ -283,7 +283,7 @@
         <div class="panel-default">
             <div class="panel-heading">
                 <h4>{% trans 'representation_activities' %}</h4>
-                <h6>({% trans 'hours per year' %})</h6>
+                <h6>({% trans 'hours_per_year' %})</h6>
             </div>
         </div>
         <div class="form-group" style="padding-top: 10px;">
@@ -331,7 +331,7 @@
         <div class="panel-default">
             <div class="panel-heading">
                 <h4>{% trans 'service_activities' %}</h4>
-                <h6> ({% trans 'hours per year' %})</h6>
+                <h6> ({% trans 'hours_per_year' %})</h6>
             </div>
         </div>
         <div class="form-group" style="padding-top: 10px;">
@@ -387,7 +387,7 @@
                     {% trans 'formations' %}
                 </div>
                 <div class="col-md-6">
-                    {{ mandate.formations }}
+                    {{ mandate.formations|default_if_none:"n/a" }}
                 </div>
             </div>
         </div>
@@ -441,7 +441,7 @@
                     {% trans 'activities_report_remark' %}
                 </div>
                 <div class="col-md-7">
-                    {{ mandate.activities_report_remark }}
+                    {{ mandate.activities_report_remark|default_if_none:"n/a" }}
                 </div>
             </div>
         </div>

@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -23,24 +23,10 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.test import TestCase
-from base.utils import fixtures_factory
-from base.tests.factories.structure import StructureFactory
-from base.tests.factories.person import PersonFactory
-from reference.tests.factories.country import CountryFactory
-from base.tests.factories.student import StudentFactory
+DAILY = 'DAILY'
+SHIFTED = 'SHIFTED'
+ADAPTED = 'ADAPTED'
 
-class TestFixturesFactory(TestCase):
-
-    def test_get_students_persons(self):
-        a_person = PersonFactory()
-        persons = [a_person]
-        student = StudentFactory(person=a_person)
-        student.save()
-        self.assertCountEqual(fixtures_factory.get_students_persons([a_person]), [])
-
-    def test_get_students_no_persons(self):
-        a_person = PersonFactory()
-        student = StudentFactory(person=a_person)
-        student.save()
-        self.assertEqual(len(fixtures_factory.get_students_persons([])), 0)
+SCHEDULE_TYPES = ((DAILY, DAILY),
+                  (SHIFTED, SHIFTED),
+                  (ADAPTED, ADAPTED))
