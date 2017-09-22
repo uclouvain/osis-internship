@@ -15,5 +15,5 @@ class Migration(migrations.Migration):
     operations = [
         migrations.RunSQL(
             "delete from base_learningunitcomponent where base_learningunitcomponent.learning_component_year_id is null;"
-        )
-
+        ),
+    ]
