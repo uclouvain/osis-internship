@@ -258,7 +258,7 @@ create other users.
 
 To load the demonstration data that already contains a superuser:
 
-    (venv)$ python manage.py loaddata demo_data.json
+    (venv)$ python manage.py load_fixtures
 
 The demonstration data create a super user with the following credentials:
 
