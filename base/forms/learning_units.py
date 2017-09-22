@@ -71,7 +71,9 @@ class LearningUnitYearForm(forms.Form):
         clean_data = _clean_data(self.cleaned_data)
         return clean_data
 
-    def get_learning_units(self):
+
+
+    def get_activity_learning_units(self):
         clean_data = self.cleaned_data
 
         entity_container_prefetch = Prefetch('learning_container_year__entitycontaineryear_set',
@@ -90,6 +92,25 @@ class LearningUnitYearForm(forms.Form):
             .order_by('academic_year__year', 'acronym')
         return [_append_latest_entities(learning_unit) for learning_unit in learning_units]
 
+
+    def get_service_course_learning_units(self):
+        clean_data = self.cleaned_data
+
+        entity_container_prefetch = Prefetch('learning_container_year__entitycontaineryear_set',
+                                             queryset=mdl.entity_container_year.search(
+                                                 link_type=[entity_container_year_link_type.ALLOCATION_ENTITY,
+                                                            entity_container_year_link_type.REQUIREMENT_ENTITY])
+                                             .prefetch_related(
+                                                 Prefetch('entity__entityversion_set', to_attr='entity_versions')
+                                             ),
+                                             to_attr='entity_containers_year')
+
+        clean_data['learning_container_year_id'] = _get_filter_learning_container_ids(clean_data)
+        learning_units = mdl.learning_unit_year.search(**clean_data) \
+            .select_related('academic_year', 'learning_container_year') \
+            .prefetch_related(entity_container_prefetch) \
+            .order_by('academic_year__year', 'acronym')
+        return [_append_latest_entities(learning_unit) for learning_unit in learning_units]
 
 def _clean_data(datas_to_clean):
     return {key: _treat_empty_or_str_none_as_none(value) for (key, value) in datas_to_clean.items()}
@@ -227,6 +248,7 @@ class CreateLearningUnitYearForm(forms.ModelForm):
                                                   'required': True}),
                    'subtype': forms.HiddenInput()
                    }
+
 
     def is_valid(self):
 
