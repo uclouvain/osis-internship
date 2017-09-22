@@ -89,10 +89,6 @@
                             {{ form.academic_year }}
                         </div>
                         <div class="col-md-2">
-                            <label>{% trans 'end_year_title' %}</label>
-                            {{ form.end_year }}
-                        </div>
-                        <div class="col-md-2">
                             <label>{% trans 'periodicity' %}</label>
                             {{ form.periodicity }}
                         </div>
@@ -115,12 +111,10 @@
                                 {{ form.errors.session| striptags }}
                             </label>
                         </div>
-                    </div>
-                    <br>
-                    <div>
-                        {{ form.status }}
-                        <label>{% trans 'active_title' %}</label>
-                    </div>
+                        <div class="col-md-2">
+                            {{ form.status }}
+                            <label>{% trans 'active_title' %}</label>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -162,8 +162,6 @@ class CreateLearningUnitYearForm(forms.ModelForm):
                                                      widget=forms.Select(attrs={'class': 'form-control',
                                                                                 'onchange': 'showDiv(this.value)',
                                                                                 'id': 'learning_container_year_type'}))
-    end_year = forms.CharField(widget=forms.DateInput(attrs={'class': 'form-control',
-                                                             'id': 'end_year'}))
     faculty_remark = forms.CharField(required=False, widget=forms.Textarea(attrs={'class': 'form-control',
                                                                                   'id': 'faculty_remark',
                                                                                   'rows': 2}))
@@ -200,7 +198,7 @@ class CreateLearningUnitYearForm(forms.ModelForm):
     class Meta:
         model = mdl.learning_unit_year.LearningUnitYear
         fields = ['learning_container_year_type', 'acronym', 'academic_year', 'status', 'internship_subtype',
-                  'end_year', 'periodicity', 'credits', 'campus', 'title', 'title_english', 'additional_entity_1',
+                  'periodicity', 'credits', 'campus', 'title', 'title_english', 'additional_entity_1',
                   'additional_entity_2', 'allocation_entity', 'requirement_entity', 'subtype', 'language', 'session',
                   'faculty_remark', 'other_remark', ]
 
@@ -241,8 +239,6 @@ class CreateLearningUnitYearForm(forms.ModelForm):
                 self._errors['acronym'] = _('existing_acronym')
             elif not re.match(self.acronym_regex, self.cleaned_data['acronym']):
                 self._errors['acronym'] = _('invalid_acronym')
-            elif academic_year.year > int(self.data['end_year']):
-                self._errors['end_year'] = _('end_date_gt_begin_date')
             elif self.cleaned_data['learning_container_year_type'] == INTERNSHIP \
                     and not (self.cleaned_data['internship_subtype']):
                 self._errors['internship_subtype'] = _('field_is_required')
