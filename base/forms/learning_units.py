@@ -23,6 +23,8 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+import re
+
 from django import forms
 from django.core.exceptions import ValidationError
 from django.db.models import Prefetch
@@ -161,8 +163,6 @@ class CreateLearningUnitYearForm(forms.ModelForm):
                                                      widget=forms.Select(attrs={'class': 'form-control',
                                                                                 'onchange': 'showDiv(this.value)',
                                                                                 'id': 'learning_container_year_type'}))
-    end_year = forms.CharField(widget=forms.DateInput(attrs={'class': 'form-control',
-                                                             'id': 'end_year'}))
     faculty_remark = forms.CharField(required=False, widget=forms.Textarea(attrs={'class': 'form-control',
                                                                                   'id': 'faculty_remark',
                                                                                   'rows': 2}))
@@ -177,18 +177,23 @@ class CreateLearningUnitYearForm(forms.ModelForm):
                                                           'id': 'campus'}))
     requirement_entity = forms.ChoiceField(choices=lazy(create_main_entities_version_list, tuple),
                                            widget=forms.Select(attrs={'class': 'form-control',
-                                                                      'id': 'requirement_entity'}))
+                                                                      'id': 'requirement_entity',
+                                                                      'onchange': 'showAdditionalEntity1(this.value)'}))
     allocation_entity = forms.ChoiceField(choices=lazy(create_main_entities_version_list, tuple),
+                                          required=False,
                                           widget=forms.Select(attrs={'class': 'form-control',
                                                                      'id': 'allocation_entity'}))
     additional_entity_1 = forms.ChoiceField(choices=lazy(create_main_entities_version_list, tuple),
                                             required=False,
                                             widget=forms.Select(attrs={'class': 'form-control',
-                                                                       'id': 'allocation_entity'}))
+                                                                       'id': 'allocation_entity_1',
+                                                                       'disabled': 'disabled',
+                                                                       'onchange': 'showAdditionalEntity2(this.value)'}))
     additional_entity_2 = forms.ChoiceField(choices=lazy(create_main_entities_version_list, tuple),
                                             required=False,
                                             widget=forms.Select(attrs={'class': 'form-control',
-                                                                       'id': 'allocation_entity'}))
+                                                                       'id': 'allocation_entity_2',
+                                                                       'disabled': 'disabled'}))
     language = forms.ChoiceField(choices=lazy(create_languages_list, tuple),
                                  widget=forms.Select(attrs={'class': 'form-control',
                                                             'id': 'language'}))
@@ -198,7 +203,7 @@ class CreateLearningUnitYearForm(forms.ModelForm):
     class Meta:
         model = mdl.learning_unit_year.LearningUnitYear
         fields = ['learning_container_year_type', 'acronym', 'academic_year', 'status', 'internship_subtype',
-                  'end_year', 'periodicity', 'credits', 'campus', 'title', 'title_english', 'additional_entity_1',
+                  'periodicity', 'credits', 'campus', 'title', 'title_english', 'additional_entity_1',
                   'additional_entity_2', 'allocation_entity', 'requirement_entity', 'subtype', 'language', 'session',
                   'faculty_remark', 'other_remark', ]
 
@@ -239,8 +244,6 @@ class CreateLearningUnitYearForm(forms.ModelForm):
                 self.add_error('acronym', _('existing_acronym'))
             elif not re.match(self.acronym_regex, self.cleaned_data['acronym']):
                 self.add_error('acronym', _('invalid_acronym'))
-            elif academic_year.year > int(self.data['end_year']):
-                self._errors['end_year'] = _('end_date_gt_begin_date')
             elif self.cleaned_data['learning_container_year_type'] == INTERNSHIP \
                     and not (self.cleaned_data['internship_subtype']):
                 self._errors['internship_subtype'] = _('field_is_required')

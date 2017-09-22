@@ -117,9 +117,11 @@
                             <div class="col-md-6">
                                 <label for="id_email">{% trans 'email' %}</label>
                                 {{ form.email }}
+                                <span style="color:red;">{{ form.email.errors }}</span>
                             </div>
                         </div>
                         <br>
+                        <span style="visibility:hidden;display:none;">{{ form.offer_year }}</span>
                         {% if is_program_manager %}
                             <button type="submit" class="btn btn-primary" id="bt_save_score_encoding_address">
                                 <span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span> {% trans 'save' %}</button>

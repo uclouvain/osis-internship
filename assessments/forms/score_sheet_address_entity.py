@@ -26,18 +26,12 @@
 from base.forms import bootstrap
 from assessments.models import score_sheet_address
 from django import forms
-from reference.models import country
 
 
-class ScoreSheetAddressForm(bootstrap.BootstrapModelForm):
-    country = forms.ModelChoiceField(queryset=country.find_all(), required=False)
-    recipient = forms.CharField(max_length=255)
-    location = forms.CharField(max_length=255)
-    postal_code = forms.CharField(max_length=255)
-    city = forms.CharField(max_length=255)
-    offer_year = forms.CharField()
+class ScoreSheetAddressEntityForm(bootstrap.BootstrapModelForm):
     email = forms.EmailField(required=False)
 
     class Meta:
         model = score_sheet_address.ScoreSheetAddress
-        exclude = ['external_id', 'changed']
+        exclude = ['external_id', 'changed', 'country', 'recipient', 'location', 'postal_code', 'city', 'offer_year']
+
