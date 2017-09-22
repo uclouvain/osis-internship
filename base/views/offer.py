@@ -56,6 +56,7 @@ def offers_search(request):
     academic_years = mdl.academic_year.find_academic_years()
 
     offer_years = mdl.offer_year.search(entity=entity, academic_yr=academic_yr, acronym=acronym)
+    
     return layout.render(request, "offers.html", {'academic_year': academic_yr,
                                                   'entity_acronym': entity,
                                                   'code': acronym,
@@ -99,5 +100,3 @@ def offer_year_calendar_read(request, id):
                                                                   offer_year=offer_year_calendar.offer_year)
     return layout.render(request, "offer_year_calendar.html", {'offer_year_calendar':   offer_year_calendar,
                                                                'is_programme_manager': is_programme_manager})
-
-

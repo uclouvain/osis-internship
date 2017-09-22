@@ -82,25 +82,3 @@ def find_by_education_group_year_first(education_group_yr, typ):
     results = find_by_education_group_year(education_group_yr, typ)
     if results:
         return results.first()
-
-
-# def search(entity=None, academic_yr=None, acronym=None):
-#     """
-#     Offers are organized hierarchically. This function returns only root offers.
-#     """
-#     out = None
-#     queryset = OfferYearEntity.objects
-#
-#     if entity:
-#         queryset = queryset.filter(entity__acronym__icontains=entity, type=offer_year_entity_type.ENTITY_MANAGEMENT)
-#
-#     if academic_yr:
-#         queryset = queryset.filter(education_group_year__academic_year=academic_yr)
-#
-#     if acronym:
-#         queryset = queryset.filter(education_group_year__acronym__icontains=acronym)
-#
-#     if entity or academic_yr or acronym:
-#         out = queryset.order_by('education_group_year__acronym')
-#
-#     return out
