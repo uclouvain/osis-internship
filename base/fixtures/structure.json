@@ -180,5 +180,31 @@
       "part_of": 13,
       "type": "PROGRAM_COMMISSION"
     }
+  },
+  {
+    "model": "base.structure",
+    "pk": 15,
+    "fields": {
+      "external_id": "osis.structure_1852",
+      "changed": null,
+      "acronym": "DRT",
+      "title": "Faculté de droit et de criminologie",
+      "organization": 6,
+      "part_of": 12,
+      "type": "FACULTY"
+    }
+  },
+  {
+    "model": "base.structure",
+    "pk": 16,
+    "fields": {
+      "external_id": "osis.structure_2046",
+      "changed": null,
+      "acronym": "BUDR",
+      "title": "Commission d'enseignement pour le droit",
+      "organization": 6,
+      "part_of": 15,
+      "type": "PROGRAM_COMMISSION"
+    }
   }
 ]

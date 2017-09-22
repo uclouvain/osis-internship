@@ -244,7 +244,7 @@
 
             jQuery.validator.addMethod("check_acronym", function(val) {
                 $(".error").css("color","black");
-                if(val.length>6){
+                if(/{{ form.acronym_regex }}/.test(val)){
                     var res;
                     $.ajax({
                         async:false,
@@ -269,7 +269,8 @@
                     });
                 }
                 else {
-                    message = "{% trans 'invalid_acronym' %}"
+                    $(".error").css("color","red");
+                    message = "{% trans 'invalid_acronym' %}";
                 }
             }, messageFunc);
 
@@ -295,7 +296,7 @@
 
             jQuery.validator.addMethod("check_acronym", function(val) {
                 $(".error").css("color","black");
-                if(val.length>6){
+                if(/{{ form.acronym_regex }}/.test(val)){
                     var res;
                     $.ajax({
                         async:false,
@@ -318,6 +319,10 @@
                         }
                         message = newMessage.join("   ");
                     });
+                }
+                else {
+                    $(".error").css("color","red");
+                    message = "{% trans 'invalid_acronym' %}";
                 }
             }, messageFunc);
 
