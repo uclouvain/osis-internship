@@ -30,11 +30,11 @@ from django.db import models
 
 
 class OfferYearEntityAdmin(admin.ModelAdmin):
-    list_display = ('offer_year', 'entity', 'type',)
-    fieldsets = ((None, {'fields': ('offer_year', 'entity', 'type')}),)
-    search_fields = ['type', 'entity__entityversion__acronym', 'offer_year__acronym']
+    list_display = ('offer_year', 'entity', 'type', 'education_group_year')
+    fieldsets = ((None, {'fields': ('offer_year', 'entity', 'type', 'education_group_year')}),)
+    search_fields = ['type', 'entity__entityversion__acronym', 'offer_year__acronym', 'education_group_year__acronym']
     list_filter = ('type', 'offer_year__academic_year',)
-    raw_id_fields = ('offer_year', 'entity')
+    raw_id_fields = ('offer_year', 'entity', 'education_group_year')
 
 
 class OfferYearEntity(models.Model):
@@ -43,6 +43,7 @@ class OfferYearEntity(models.Model):
     offer_year = models.ForeignKey('OfferYear')
     entity = models.ForeignKey('Entity')
     type = models.CharField(max_length=30, blank=True, null=True, choices=offer_year_entity_type.TYPES)
+    education_group_year = models.ForeignKey('EducationGroupYear', blank=True, null=True)
 
     class Meta:
         unique_together = ('offer_year', 'type')
@@ -71,3 +72,35 @@ def get_from_offer_year_and_type(offer_year, type):
         return OfferYearEntity.objects.get(offer_year=offer_year, type=type)
     except ObjectDoesNotExist:
         return None
+
+
+def find_by_education_group_year(education_group_yr, typ):
+    return OfferYearEntity.objects.filter(education_group_year=education_group_yr, type=typ)
+
+
+def find_by_education_group_year_first(education_group_yr, typ):
+    results = find_by_education_group_year(education_group_yr, typ)
+    if results:
+        return results.first()
+
+
+# def search(entity=None, academic_yr=None, acronym=None):
+#     """
+#     Offers are organized hierarchically. This function returns only root offers.
+#     """
+#     out = None
+#     queryset = OfferYearEntity.objects
+#
+#     if entity:
+#         queryset = queryset.filter(entity__acronym__icontains=entity, type=offer_year_entity_type.ENTITY_MANAGEMENT)
+#
+#     if academic_yr:
+#         queryset = queryset.filter(education_group_year__academic_year=academic_yr)
+#
+#     if acronym:
+#         queryset = queryset.filter(education_group_year__acronym__icontains=acronym)
+#
+#     if entity or academic_yr or acronym:
+#         out = queryset.order_by('education_group_year__acronym')
+#
+#     return out

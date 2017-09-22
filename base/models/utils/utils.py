@@ -23,20 +23,9 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
-from django.contrib import admin
+from enum import Enum
 
-
-class EducationGroupAdmin(admin.ModelAdmin):
-    list_display = ('id', 'changed', 'start_year', 'end_year')
-
-
-class EducationGroup(models.Model):
-    external_id = models.CharField(max_length=100, blank=True, null=True)
-    changed = models.DateTimeField(null=True, auto_now=True)
-    start_year = models.IntegerField(blank=True, null=True)
-    end_year = models.IntegerField(blank=True, null=True)
-
-    def __str__(self):
-        return "{}".format(self.id)
-
+class ChoiceEnum(Enum):
+    @classmethod
+    def choices(cls):
+        return tuple((x.name, x.value) for x in cls)

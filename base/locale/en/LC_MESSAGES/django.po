@@ -1964,3 +1964,33 @@ msgstr "Admission exam"
 
 msgid "academic_type"
 msgstr "Academic type"
+
+msgid "keywords"
+msgstr "Keywords"
+
+msgid "training_type"
+msgstr "Type of training"
+
+msgid "QUADRIMESTER"
+msgstr "Quadrimester(s)"
+
+msgid "TRIMESTER"
+msgstr "Trimester(s)"
+
+msgid "MONTH"
+msgstr "Month(s)"
+
+msgid "WEEK"
+msgstr "Week(s)"
+
+msgid "DAY"
+msgstr "Day(s)"
+
+msgid "administration_entity"
+msgstr "Administration entity"
+
+msgid "management_entity"
+msgstr "Management entity"
+
+msgid "enrollment_enabled"
+msgstr "Enrollment enabled"

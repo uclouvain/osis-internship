@@ -55,8 +55,7 @@ def offers_search(request):
 
     academic_years = mdl.academic_year.find_academic_years()
 
-    offer_years = mdl.offer_year.search(entity=entity, academic_yr=academic_yr, acronym=acronym)
-
+    offer_years = get_education_group_years(academic_yr, acronym, entity)
     return layout.render(request, "offers.html", {'academic_year': academic_yr,
                                                   'entity_acronym': entity,
                                                   'code': acronym,
@@ -72,8 +71,7 @@ def offer_read(request, offer_year_id):
 
 
 def _offer_identification_tab(request, offer_year_id):
-    offer_year = mdl.offer_year.find_by_id(offer_year_id)
-    offer_year = mdl.education_group_year.find_by_id('1')
+    offer_year = mdl.education_group_year.find_by_id(offer_year_id)
     return layout.render(request, "offer/tab_identification.html", locals())
 
 
@@ -101,3 +99,13 @@ def offer_year_calendar_read(request, id):
                                                                   offer_year=offer_year_calendar.offer_year)
     return layout.render(request, "offer_year_calendar.html", {'offer_year_calendar':   offer_year_calendar,
                                                                'is_programme_manager': is_programme_manager})
+
+
+def get_education_group_years(academic_yr, acronym, entity):
+    if entity:
+        offer_year_entities = mdl.offer_year_entity.search(entity=entity, academic_yr=academic_yr, acronym=acronym)
+        offer_years = [oye.education_group_year for oye in offer_year_entities]
+    else:
+        offer_years = mdl.education_group_year.search(academic_yr=academic_yr, acronym=acronym)
+    return offer_years
+

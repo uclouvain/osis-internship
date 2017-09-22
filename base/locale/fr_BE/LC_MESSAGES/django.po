@@ -1971,3 +1971,33 @@ msgstr "Concours"
 
 msgid "academic_type"
 msgstr "Nature"
+
+msgid "keywords"
+msgstr "Mots clés"
+
+msgid "training_type"
+msgstr "Type of training"
+
+msgid "QUADRIMESTER"
+msgstr "Quadrimestre(s)"
+
+msgid "TRIMESTER"
+msgstr "Trimestre(s)"
+
+msgid "MONTH"
+msgstr "Mois"
+
+msgid "WEEK"
+msgstr "Semaine(s)"
+
+msgid "DAY"
+msgstr "Jour(s)"
+
+msgid "administration_entity"
+msgstr "Entité d'administration"
+
+msgid "management_entity"
+msgstr "Entité académique"
+
+msgid "enrollment_enabled"
+msgstr "Inscriptible"
