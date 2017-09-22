@@ -34,11 +34,11 @@ class Migration(migrations.Migration):
             name='title_english',
             field=models.CharField(blank=True, max_length=240, null=True),
         ),
-        operations = [
+
         migrations.AddField(
             model_name='educationgroupyear',
             name='enrollment_enabled',
             field=models.BooleanField(default=False),
         ),
     ]
-    ]
+
