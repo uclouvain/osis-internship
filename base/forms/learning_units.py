@@ -38,6 +38,7 @@ from base.models.enums.learning_container_year_types import LEARNING_CONTAINER_Y
 from base.models.enums.learning_unit_periodicity import PERIODICITY_TYPES
 from reference.models.language import find_all_languages
 
+MAX_RECORDS = 1000
 
 class LearningUnitYearForm(forms.Form):
     academic_year_id = forms.CharField(max_length=10, required=False)
@@ -87,7 +88,7 @@ class LearningUnitYearForm(forms.Form):
         learning_units = mdl.learning_unit_year.search(**clean_data) \
             .select_related('academic_year', 'learning_container_year') \
             .prefetch_related(entity_container_prefetch) \
-            .order_by('academic_year__year', 'acronym')
+            .order_by('academic_year__year', 'acronym')[:MAX_RECORDS + 1]
         return [_append_latest_entities(learning_unit) for learning_unit in learning_units]
 
 
