@@ -1676,7 +1676,7 @@ msgid "with_entity_subordinated_small"
 msgstr "Avec ent. subord."
 
 msgid "additional_requirement_entity"
-msgstr "Entité complémentaire"
+msgstr "Entité resp. cahier de charges complémentaire"
 
 msgid "academic_end_year"
 msgstr "Anac de fin"
@@ -1811,9 +1811,6 @@ msgstr "Actif"
 
 msgid "titles"
 msgstr "Intitulés"
-
-msgid "structure_title"
-msgstr "Structure"
 
 msgid "fixtures_build"
 msgstr "Créer des fixtures anonymisées"
@@ -2006,6 +2003,9 @@ msgstr "Application pour charges d'enseignement"
 
 msgid "field_is_required"
 msgstr "Ce champ est obligatoire."
+
+msgid "associated_entity"
+msgstr "Les entités associées"
 
 msgid "LU_WARNING_INVALID_ACRONYM"
 msgstr "Si l'acronym est introduit, il doit au minimum faire 3 caractères"

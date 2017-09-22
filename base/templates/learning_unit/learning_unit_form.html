@@ -82,7 +82,6 @@
                             </label>
                         </div>
                     </div>
-                    <br>
                     <div class="row">
                         <div class="col-md-2">
                             <label>{% trans 'academic_year' %}</label>
@@ -132,7 +131,6 @@
                                 {{ form.errors.title| striptags }}
                         </label>
                     </div>
-                    <br>
                     <div>
                         <label>{% trans 'title_in_english' %}</label>
                         {{ form.title_english }}
@@ -141,11 +139,11 @@
             </div>
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <label>{% trans 'structure_title' %}</label>
+                    <label>{% trans 'associated_entity' %}</label>
                 </div>
                 <div class="panel-body">
                     <div class="row">
-                        <div class="col-md-3">
+                        <div class="col-md-6">
                             <label {% if form.errors.requirement_entity %}style="color:red;"{% endif %}>
                                 {% trans 'requirement_entity' %}*
                             </label>
@@ -154,20 +152,22 @@
                                 {{ form.errors.requirement_entity| striptags }}
                             </label>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-6">
                             <label>{% trans 'allocation_entity' %}</label>
                             {{ form.allocation_entity }}
                         </div>
-                        <div class="col-md-3">
-                            <label>{% trans 'additional_requirement_entity' %}</label>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>{% trans 'additional_requirement_entity' %} 1</label>
                             {{ form.additional_entity_1 }}
                         </div>
-                        <div class="col-md-3">
-                            <label>{% trans 'additional_requirement_entity' %}</label>
+                        <div class="col-md-6">
+                            <label>{% trans 'additional_requirement_entity' %} 2</label>
                             {{ form.additional_entity_2 }}
                         </div>
                     </div>
-                    <br>
+
                 </div>
             </div>
             <div class="panel panel-default">
@@ -198,14 +198,22 @@
 {% endblock %}
 {% block script %}
 <script>
-    const blank = "---------";
-    const partim = "PARTIM";
     const internship = "INTERNSHIP";
     $( document ).ready(function() {
         if('{{form.learning_container_year_type.value}}' == internship)
             document.getElementById('internship').disabled = false;
         else
             document.getElementById('internship').disabled = true;
+
+        if('{{form.requirement_entity.value}}' =="0")
+            document.getElementById('allocation_entity_1').disabled = false;
+        else
+            document.getElementById('allocation_entity_1').disabled = true;
+
+        if('{{form.additional_entity_1.value}}' =="0")
+            document.getElementById('allocation_entity_2').disabled = false;
+        else
+            document.getElementById('allocation_entity_2').disabled = true;
     });
 
     function showDiv(elem){
@@ -213,6 +221,20 @@
             document.getElementById('internship').disabled = false;
        else
             document.getElementById('internship').disabled = true;
+    }
+
+    function showAdditionalEntity1(elem){
+       if(elem != "")
+            document.getElementById('allocation_entity_1').disabled = false;
+       else
+            document.getElementById('allocation_entity_1').disabled = true;
+    }
+
+    function showAdditionalEntity2(elem){
+       if(elem != "")
+            document.getElementById('allocation_entity_2').disabled = false;
+       else
+            document.getElementById('allocation_entity_2').disabled = true;
     }
 
     $(document).ready(function() {

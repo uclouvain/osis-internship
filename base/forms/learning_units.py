@@ -176,7 +176,8 @@ class CreateLearningUnitYearForm(forms.ModelForm):
                                                           'id': 'campus'}))
     requirement_entity = forms.ChoiceField(choices=lazy(create_main_entities_version_list, tuple),
                                            widget=forms.Select(attrs={'class': 'form-control',
-                                                                      'id': 'requirement_entity'}))
+                                                                      'id': 'requirement_entity',
+                                                                      'onchange': 'showAdditionalEntity1(this.value)'}))
     allocation_entity = forms.ChoiceField(choices=lazy(create_main_entities_version_list, tuple),
                                           required=False,
                                           widget=forms.Select(attrs={'class': 'form-control',
@@ -184,11 +185,14 @@ class CreateLearningUnitYearForm(forms.ModelForm):
     additional_entity_1 = forms.ChoiceField(choices=lazy(create_main_entities_version_list, tuple),
                                             required=False,
                                             widget=forms.Select(attrs={'class': 'form-control',
-                                                                       'id': 'allocation_entity'}))
+                                                                       'id': 'allocation_entity_1',
+                                                                       'disabled': 'disabled',
+                                                                       'onchange': 'showAdditionalEntity2(this.value)'}))
     additional_entity_2 = forms.ChoiceField(choices=lazy(create_main_entities_version_list, tuple),
                                             required=False,
                                             widget=forms.Select(attrs={'class': 'form-control',
-                                                                       'id': 'allocation_entity'}))
+                                                                       'id': 'allocation_entity_2',
+                                                                       'disabled': 'disabled'}))
     language = forms.ChoiceField(choices=lazy(create_languages_list, tuple),
                                  widget=forms.Select(attrs={'class': 'form-control',
                                                             'id': 'language'}))
