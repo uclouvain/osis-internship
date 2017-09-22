@@ -26,7 +26,6 @@
 from django.conf.urls import url, include
 
 from base.views import learning_unit, offer, common, institution, organization, academic_calendar, my_osis, entity, student
-from base.utils import fixtures_factory
 
 urlpatterns = [
     url(r'^$', common.home, name='home'),
@@ -46,7 +45,6 @@ urlpatterns = [
     url(r'^admin/', include([
         url(r'^data/$', common.data, name='data'),
         url(r'^data/maintenance$', common.data_maintenance, name='data_maintenance'),
-        url(r'^data/fixtures/make$', fixtures_factory.make_fixtures, name='make_fixtures'),
         url(r'^storage/$', common.storage, name='storage'),
     ])),
 
@@ -90,7 +88,9 @@ urlpatterns = [
             url(r'^specifications/edit/$', learning_unit.learning_unit_specifications_edit, name="learning_unit_specifications_edit"),
             url(r'^component/edit/$', learning_unit.learning_unit_component_edit, name="learning_unit_component_edit"),
             url(r'^class/edit/$', learning_unit.learning_class_year_edit, name="learning_class_year_edit"),
-            url(r'^volumes/$', learning_unit.learning_unit_volumes_management, name="learning_unit_volumes_management"),
+            url(r'^volumes/', include([
+                url(u'^$', learning_unit.learning_unit_volumes_management, name="learning_unit_volumes_management"),
+                url(u'^validation/$', learning_unit.volumes_validation, name="volumes_validation")])),
         ])),
         url(r'^check/$', learning_unit.check_acronym),
     ])),

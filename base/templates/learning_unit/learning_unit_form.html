@@ -46,76 +46,71 @@
                 </div>
                 <div class="panel-body">
                     <div class="row">
-                        <div class="col-md-2">
-                            <label {% if form.errors.acronym %}
-                                        style="color:red;"
-                                   {% endif %}>
-                                {% trans 'acronym' %}
-                                &nbsp;
-                                <abbr title="{% trans 'acronym_rules' %}">
-                                    <span class="glyphicon glyphicon-question-sign pull-right"
-                                          style="font-size: 14pt;" aria-hidden="true"></span>
-                                </abbr>
+                        <div class="col-md-3">
+                            <label>
+                                {% trans 'acronym' %}*
                             </label>
+                            &nbsp;
+                            <abbr title="{% trans 'acronym_rules' %}">
+                                <span class="glyphicon glyphicon-question-sign pull-right"
+                                      style="font-size: 14pt;" aria-hidden="true"></span>
+                            </abbr>
                             {{ form.acronym }}
                         </div>
                         <div class="col-md-3">
-                            <label {% if form.errors.learning_container_year_type %}
-                                        style="color:red;"
-                                   {% endif %}>
-                                {% trans 'type' %}
+                            <label {% if form.errors.learning_container_year_type %}style="color:red;"{% endif %}>
+                                {% trans 'type' %}*
                             </label>
                             {{ form.learning_container_year_type }}
+                            <label {% if form.errors.learning_container_year_type %}style="color:red;"{% endif %}>
+                                {{ form.errors.learning_container_year_type| striptags }}
+                            </label>
                         </div>
                         <div class="col-md-3">
-                            <label>{% trans 'internship_subtype' %}</label>
+                            <label>
+                                {% trans 'internship_subtype' %}
+                            </label>
                             {{ form.internship_subtype }}
                         </div>
                         <div class="col-md-3">
-                            <label>{% trans 'learning_location' %}</label>
-                            {{ form.campus }}
-                        </div>
-                        <div class="col-md-1">
-                            <label {% if form.errors.credits %}
-                                        style="color:red;"
-                                   {% endif %}>
-                                {% trans 'credits' %}
+                            <label {% if form.errors.campus %}style="color:red;"{% endif %}>
+                                {% trans 'learning_location' %}*
                             </label>
-                            {{ form.credits }}{{ form.errors.credits }}
+                            {{ form.campus }}
+                            <label {% if form.errors.campus %}style="color:red;"{% endif %}>
+                                {{ form.errors.campus| striptags }}
+                            </label>
                         </div>
                     </div>
-                    <br>
                     <div class="row">
                         <div class="col-md-2">
                             <label>{% trans 'academic_year' %}</label>
                             {{ form.academic_year }}
                         </div>
                         <div class="col-md-2">
-                            <label {% if form.errors.end_year %}
-                                        style="color:red;"
-                                   {% endif %}>
-                                {% trans 'end_year_title' %}
-                            </label>
-                            {{ form.end_year }}
-                            <label {% if form.errors.end_year %}
-                                        style="color:red;"
-                                   {% endif %}>
-                                {{ form.errors.end_year }}
-                            </label>
-                        </div>
-                        <div class="col-md-2">
                             <label>{% trans 'periodicity' %}</label>
                             {{ form.periodicity }}
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <label>{% trans 'language' %}</label>
                             {{ form.language }}
                         </div>
                         <div class="col-md-2">
-                            <label>{% trans 'session_title' %}</label>
-                            {{ form.session }}
+                            <label>
+                                {% trans 'credits' %}*
+                            </label>
+                            {{ form.credits }}
                         </div>
-                        <div class="col-md-1" style="margin-top:30px;">
+                        <div class="col-md-2">
+                            <label {% if form.errors.session %}style="color:red;"{% endif %}>
+                                {% trans 'session_title' %}*
+                            </label>
+                            {{ form.session }}
+                            <label {% if form.errors.session %}style="color:red;"{% endif %}>
+                                {{ form.errors.session| striptags }}
+                            </label>
+                        </div>
+                        <div class="col-md-2">
                             {{ form.status }}
                             <label>{% trans 'active_title' %}</label>
                         </div>
@@ -128,68 +123,51 @@
                 </div>
                 <div class="panel-body">
                     <div>
-                        <label {% if form.errors.title %}
-                                        style="color:red;"
-                                   {% endif %}>
-                            {% trans 'title' %}
+                        <label {% if form.errors.title %}style="color:red;"{% endif %}>
+                            {% trans 'title' %}*
                         </label>
                         {{ form.title }}
-                    </div>
-                    <br>
-                    <div>
-                        <label {% if form.errors.title_english %}
-                                        style="color:red;"
-                                   {% endif %}>
-                            {% trans 'title_in_english' %}
+                        <label {% if form.errors.title %}style="color:red;"{% endif %}>
+                                {{ form.errors.title| striptags }}
                         </label>
+                    </div>
+                    <div>
+                        <label>{% trans 'title_in_english' %}</label>
                         {{ form.title_english }}
                     </div>
                 </div>
             </div>
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <label>{% trans 'structure_title' %}</label>
+                    <label>{% trans 'associated_entity' %}</label>
                 </div>
                 <div class="panel-body">
                     <div class="row">
-                        <div class="col-md-3">
-                            <label>{% trans 'requirement_entity' %}</label>
+                        <div class="col-md-6">
+                            <label {% if form.errors.requirement_entity %}style="color:red;"{% endif %}>
+                                {% trans 'requirement_entity' %}*
+                            </label>
                             {{ form.requirement_entity }}
-                            <label {% if form.errors.requirement_entity %}
-                                        style="color:red;"
-                                   {% endif %}>
-                                {{ form.errors.requirement_entity }}
+                            <label {% if form.errors.requirement_entity %}style="color:red;"{% endif %}>
+                                {{ form.errors.requirement_entity| striptags }}
                             </label>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-6">
                             <label>{% trans 'allocation_entity' %}</label>
                             {{ form.allocation_entity }}
-                            <label {% if form.errors.allocation_entity %}
-                                        style="color:red;"
-                                   {% endif %}>
-                                {{ form.errors.allocation_entity }}
-                            </label>
-                        </div>
-                        <div class="col-md-3">
-                            <label>{% trans 'additional_requirement_entity' %}</label>
-                            {{ form.additional_entity_1 }}
-                            <label {% if form.errors.additional_entity_1 %}
-                                        style="color:red;"
-                                   {% endif %}>
-                                {{ form.errors.additional_entity_2 }}
-                            </label>
-                        </div>
-                        <div class="col-md-3">
-                            <label>{% trans 'additional_requirement_entity' %}</label>
-                            {{ form.additional_entity_2 }}
-                            <label {% if form.errors.additional_entity_2 %}
-                                        style="color:red;"
-                                   {% endif %}>
-                                {{ form.errors.additional_entity_2 }}
-                            </label>
                         </div>
                     </div>
-                    <br>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>{% trans 'additional_requirement_entity' %} 1</label>
+                            {{ form.additional_entity_1 }}
+                        </div>
+                        <div class="col-md-6">
+                            <label>{% trans 'additional_requirement_entity' %} 2</label>
+                            {{ form.additional_entity_2 }}
+                        </div>
+                    </div>
+
                 </div>
             </div>
             <div class="panel panel-default">
@@ -200,11 +178,11 @@
                     <div class="row">
                         <div class="col-md-6">
                             <label>{% trans 'faculty_remark' %}</label>
-                            {{ form.faculty_remark }}{{ form.errors.faculty_remark }}
+                            {{ form.faculty_remark }}
                         </div>
                         <div class="col-md-6">
                             <label>{% trans 'other_remark' %}</label>
-                            {{ form.other_remark }}{{ form.errors.other_remark }}
+                            {{ form.other_remark }}
                         </div>
                     </div>
                 </div>
@@ -220,14 +198,22 @@
 {% endblock %}
 {% block script %}
 <script>
-    const blank = "---------";
-    const partim = "PARTIM";
     const internship = "INTERNSHIP";
     $( document ).ready(function() {
         if('{{form.learning_container_year_type.value}}' == internship)
             document.getElementById('internship').disabled = false;
         else
             document.getElementById('internship').disabled = true;
+
+        if('{{form.requirement_entity.value}}' =="0")
+            document.getElementById('allocation_entity_1').disabled = false;
+        else
+            document.getElementById('allocation_entity_1').disabled = true;
+
+        if('{{form.additional_entity_1.value}}' =="0")
+            document.getElementById('allocation_entity_2').disabled = false;
+        else
+            document.getElementById('allocation_entity_2').disabled = true;
     });
 
     function showDiv(elem){
@@ -237,13 +223,80 @@
             document.getElementById('internship').disabled = true;
     }
 
+    function showAdditionalEntity1(elem){
+       if(elem != "")
+            document.getElementById('allocation_entity_1').disabled = false;
+       else
+            document.getElementById('allocation_entity_1').disabled = true;
+    }
+
+    function showAdditionalEntity2(elem){
+       if(elem != "")
+            document.getElementById('allocation_entity_2').disabled = false;
+       else
+            document.getElementById('allocation_entity_2').disabled = true;
+    }
+
     $(document).ready(function() {
-        $('#acronym').on("click",function() {
+        $('#acronym').on("keyup",function() {
             var message = "";
             var messageFunc = function () { return message; };
 
             jQuery.validator.addMethod("check_acronym", function(val) {
-                if(val.length>6){
+                $(".error").css("color","black");
+                if(/{{ form.acronym_regex }}/.test(val)){
+                    var res;
+                    $.ajax({
+                        async:false,
+                        url: "/learning_units/check?acronym=" + val + "&year_id=" + $('#academic_year').val()
+                    }).then(function (data) {
+                        var newMessage = [];
+                        if (data['valid']){
+                            res = true;
+                            $(".error").css("color","black");
+                            if(data['existed_acronym']){
+                                $(".error").css("color","orange");
+                                newMessage.push("{% trans 'existed_acronym' %}"+data['last_using']);
+                            }
+                        }else{
+                            res = false;
+                            $(".error").css("color","red");
+                            if(data['existing_acronym']){
+                                newMessage.push("{% trans 'existing_acronym' %}");
+                            }
+                        }
+                        message = newMessage.join("   ");
+                    });
+                }
+                else {
+                    $(".error").css("color","red");
+                    message = "{% trans 'invalid_acronym' %}";
+                }
+            }, messageFunc);
+
+
+            $( "#LearningUnitYearForm" ).validate({
+                invalidHandler: function(form, validator) {
+                    var errors = validator.numberOfInvalids();
+                    if (errors) {
+                        newMessage.push("{% trans 'existed_acronym' %}");
+                    }
+                },
+                rules:{
+                    acronym:{ check_acronym: true },
+                },
+                messages:{
+                    acronym:{ required: "{% trans 'field_is_required' %}" },
+                },
+            }).element("#acronym");
+        });
+        $('#academic_year').on("click",function() {
+            var message = "";
+            var messageFunc = function () { return message; };
+
+            jQuery.validator.addMethod("check_acronym", function(val) {
+                $(".error").css("color","black");
+                if(/{{ form.acronym_regex }}/.test(val)){
                     var res;
                     $.ajax({
                         async:false,
@@ -267,6 +320,10 @@
                         message = newMessage.join("   ");
                     });
                 }
+                else {
+                    $(".error").css("color","red");
+                    message = "{% trans 'invalid_acronym' %}";
+                }
             }, messageFunc);
 
 
@@ -279,6 +336,9 @@
                 },
                 rules:{
                     acronym:{ check_acronym: true },
+                },
+                messages:{
+                    acronym:{ required: "{% trans 'field_is_required' %}" },
                 },
             }).element("#acronym");
         });
