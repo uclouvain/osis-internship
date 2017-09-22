@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -23,21 +23,31 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from base.forms import bootstrap
-from assessments.models import score_sheet_address
-from django import forms
-from reference.models import country
+from faker import Faker
+import factory
+import factory.fuzzy
+import string
+
+from base.tests.factories.session_examen import SessionExamFactory
+from base.tests.factories.learning_unit_enrollment import LearningUnitEnrollment
+from base.models.enums import exam_enrollment_state
+from osis_common.utils.datetime import get_tzinfo
 
 
-class ScoreSheetAddressForm(bootstrap.BootstrapModelForm):
-    country = forms.ModelChoiceField(queryset=country.find_all(), required=False)
-    recipient = forms.CharField(max_length=255)
-    location = forms.CharField(max_length=255)
-    postal_code = forms.CharField(max_length=255)
-    city = forms.CharField(max_length=255)
-    offer_year = forms.CharField()
-    email = forms.EmailField(required=False)
+fake = Faker()
 
+
+class ExamEnrollmentFactory(factory.DjangoModelFactory):
     class Meta:
-        model = score_sheet_address.ScoreSheetAddress
-        exclude = ['external_id', 'changed']
+        model = 'base.ExamEnrollment'
+
+    external_id = factory.fuzzy.FuzzyText(length=10, chars=string.digits)
+    changed = fake.date_time_this_decade(before_now=True, after_now=True, tzinfo=get_tzinfo())
+    score_draft = None
+    score_reencoded = None
+    score_final = None
+    justification_reencoded = None
+    justification_final = None
+    session_exam = factory.SubFactory(SessionExamFactory)
+    learning_unit_enrollment = factory.SubFactory(LearningUnitEnrollment)
+    enrollment_state = exam_enrollment_state.ENROLLED

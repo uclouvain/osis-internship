@@ -74,7 +74,33 @@
       "entity_type": "SCHOOL",
       "parent": null,
       "start_date": "2017-09-10",
-      "end_date": "2017-09-10"
+      "end_date": null
+    }
+  },
+  {
+    "model": "base.entityversion",
+    "pk": 7,
+    "fields": {
+      "entity": 8,
+      "title": "Faculté de droit et de criminologie",
+      "acronym": "DRT",
+      "entity_type": "FACULTY",
+      "parent": 7,
+      "start_date": "2010-01-01",
+      "end_date": null
+    }
+  },
+  {
+    "model": "base.entityversion",
+    "pk": 8,
+    "fields": {
+      "entity": 7,
+      "title": "Commission d'enseignement pour le droit",
+      "acronym": "BUDR",
+      "entity_type": "SCHOOL",
+      "parent": 7,
+      "start_date": "2010-01-01",
+      "end_date": null
     }
   }
 ]

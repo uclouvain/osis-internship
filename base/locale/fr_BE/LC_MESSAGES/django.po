@@ -1983,6 +1983,27 @@ msgstr "Horaire décalé"
 msgid "ADAPTED"
 msgstr "Horaire adapté"
 
+msgid "academic_calendar_type"
+msgstr "Type d'événement"
+
+msgid "DELIBERATION"
+msgstr "Délibération"
+
+msgid "DISSERTATION_SUBMISSION"
+msgstr "Soumission de mémoires"
+
+msgid "EXAM_ENROLLMENTS"
+msgstr "Inscription aux examens"
+
+msgid "SCORES_EXAM_DIFFUSION"
+msgstr "Diffusion des notes d'examen"
+
+msgid "SCORES_EXAM_SUBMISSION"
+msgstr "Soumission des feuilles de note"
+
+msgid "TEACHING_CHARGE_APPLICATION"
+msgstr "Application pour charges d'enseignement"
+
 msgid "field_is_required"
 msgstr "Ce champ est obligatoire."
 

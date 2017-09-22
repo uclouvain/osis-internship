@@ -1977,6 +1977,27 @@ msgstr "Shifted"
 msgid "ADAPTED"
 msgstr "Adapted"
 
+msgid "academic_calendar_type"
+msgstr "Type of event"
+
+msgid "DELIBERATION"
+msgstr "Deliberation"
+
+msgid "DISSERTATION_SUBMISSION"
+msgstr "Submission of disserations"
+
+msgid "EXAM_ENROLLMENTS"
+msgstr "Exam enrollments"
+
+msgid "SCORES_EXAM_DIFFUSION"
+msgstr "Diffusion of exam scores"
+
+msgid "SCORES_EXAM_SUBMISSION"
+msgstr "Submission of exam scores"
+
+msgid "TEACHING_CHARGE_APPLICATION"
+msgstr "Teaching charge application"
+
 msgid "field_is_required"
 msgstr "This field is required"
 
