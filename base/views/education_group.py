@@ -30,22 +30,22 @@ from . import layout
 
 @login_required
 @permission_required('base.can_access_offer', raise_exception=True)
-def offers(request):
+def education_groups(request):
     academic_yr = None
     academic_years = mdl.academic_year.find_academic_years()
 
     academic_year_calendar = mdl.academic_year.current_academic_year()
     if academic_year_calendar:
         academic_yr = academic_year_calendar.id
-    return layout.render(request, "offers.html", {'academic_year': academic_yr,
+    return layout.render(request, "education_groups.html", {'academic_year': academic_yr,
                                                   'academic_years': academic_years,
-                                                  'offers': [],
+                                                  'education_group_years': [],
                                                   'init': "1"})
 
 
 @login_required
 @permission_required('base.can_access_offer', raise_exception=True)
-def offers_search(request):
+def education_groups_search(request):
     entity = request.GET['entity_acronym']
 
     academic_yr = None
@@ -55,48 +55,35 @@ def offers_search(request):
 
     academic_years = mdl.academic_year.find_academic_years()
 
-    offer_years = mdl.offer_year.search(entity=entity, academic_yr=academic_yr, acronym=acronym)
+    education_group_years = get_education_group_years(academic_yr, acronym, entity)
 
-    return layout.render(request, "offers.html", {'academic_year': academic_yr,
+    return layout.render(request, "education_groups.html", {'academic_year': academic_yr,
                                                   'entity_acronym': entity,
                                                   'code': acronym,
                                                   'academic_years': academic_years,
-                                                  'offer_years': offer_years,
+                                                  'education_group_years': education_group_years,
                                                   'init': "0"})
 
 
 @login_required
 @permission_required('base.can_access_offer', raise_exception=True)
-def offer_read(request, offer_year_id):
-    return _offer_identification_tab(request, offer_year_id)
+def education_group_read(request, education_group_year_id):
+    return _education_group_identification_tab(request, education_group_year_id)
 
 
-def _offer_identification_tab(request, offer_year_id):
-    offer_year = mdl.offer_year.find_by_id(offer_year_id)
-    return layout.render(request, "offer/tab_identification.html", locals())
+def _education_group_identification_tab(request, education_group_year_id):
+    education_group_year = mdl.education_group_year.find_by_id(education_group_year_id)
+    return layout.render(request, "education_group/tab_identification.html", locals())
 
 
-@login_required
-@permission_required('base.can_access_offer', raise_exception=True)
-def offer_academic_calendar_tab(request, offer_year_id):
-    offer_year = mdl.offer_year.find_by_id(offer_year_id)
-    offer_year_events = mdl.offer_year_calendar.find_offer_year_events(offer_year)
-    return layout.render(request, "offer/tab_academic_calendar.html", locals())
+def get_education_group_years(academic_yr, acronym, entity):
 
-
-@login_required
-@permission_required('base.can_access_offer', raise_exception=True)
-def offer_program_managers_tab(request, offer_year_id):
-    offer_year = mdl.offer_year.find_by_id(offer_year_id)
-    program_managers = mdl.program_manager.find_by_offer_year(offer_year)
-    return layout.render(request, "offer/tab_program_managers.html", locals())
-
-
-@login_required
-@permission_required('base.can_access_offer', raise_exception=True)
-def offer_year_calendar_read(request, id):
-    offer_year_calendar = mdl.offer_year_calendar.find_by_id(id)
-    is_programme_manager = mdl.program_manager.is_program_manager(request.user,
-                                                                  offer_year=offer_year_calendar.offer_year)
-    return layout.render(request, "offer_year_calendar.html", {'offer_year_calendar':   offer_year_calendar,
-                                                               'is_programme_manager': is_programme_manager})
+    if entity:
+        education_group_year_entitys = []
+        education_group_years = mdl.education_group_year.search(academic_yr=academic_yr, acronym=acronym)
+        for education_group_yr in education_group_years:
+            if education_group_yr.management_entity and education_group_yr.management_entity.acronym.upper() == entity.upper():
+                education_group_year_entitys.append(education_group_yr)
+        return education_group_year_entitys
+    else:
+        return mdl.education_group_year.search(academic_yr=academic_yr, acronym=acronym)

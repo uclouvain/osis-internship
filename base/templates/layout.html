@@ -95,6 +95,9 @@
                                 {% if perms.base.can_access_offer %}
                                     <li><a href="{% url 'offers' %}" id="lnk_dropdown_offers">{% trans 'offers' %}</a></li>
                                 {% endif %}
+                                {% if perms.base.can_access_education_group %}
+                                    <li><a href="{% url 'education_groups' %}" id="lnk_dropdown_educationgroups">{% trans 'offers' %} (educationGroup)</a></li>
+                                {% endif %}
                                 {% if perms.base.can_access_learningunit %}
                                     <li><a href="{% url 'learning_units' %}"
                                            id="lnk_dropdown_learning_units">{% trans 'learning_units' %}</a></li>
