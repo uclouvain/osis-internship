@@ -31,13 +31,15 @@ import datetime
 from base.models import entity_version
 from base.tests.factories.entity import EntityFactory
 from base.tests.factories.entity_version import EntityVersionFactory
+from reference.tests.factories.country import CountryFactory
 
 
 class EntityVersionTest(TestCase):
 
     def setUp(self):
-        self.entities = [EntityFactory() for x in range(3)]
-        self.parent = EntityFactory()
+        self.country = CountryFactory()
+        self.entities = [EntityFactory(country=self.country) for x in range(3)]
+        self.parent = EntityFactory(country=self.country)
         self.start_date = datetime.date(2015, 1, 1)
         self.end_date = datetime.date(2015, 12, 31)
         self.date_in_2015 = factory.fuzzy.FuzzyDate(datetime.date(2015, 1, 1),

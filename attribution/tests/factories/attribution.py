@@ -23,24 +23,31 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.test import TestCase
-from base.utils import fixtures_factory
-from base.tests.factories.structure import StructureFactory
-from base.tests.factories.person import PersonFactory
-from reference.tests.factories.country import CountryFactory
-from base.tests.factories.student import StudentFactory
+import string
+import factory
+import factory.fuzzy
+from faker import Faker
 
-class TestFixturesFactory(TestCase):
+from base.tests.factories.learning_unit_year import LearningUnitYearFakerFactory
+from base.tests.factories.tutor import TutorFactory
+from osis_common.utils.datetime import get_tzinfo
+from attribution.models.enums import function
 
-    def test_get_students_persons(self):
-        a_person = PersonFactory()
-        persons = [a_person]
-        student = StudentFactory(person=a_person)
-        student.save()
-        self.assertCountEqual(fixtures_factory.get_students_persons([a_person]), [])
 
-    def test_get_students_no_persons(self):
-        a_person = PersonFactory()
-        student = StudentFactory(person=a_person)
-        student.save()
-        self.assertEqual(len(fixtures_factory.get_students_persons([])), 0)
+fake = Faker()
+
+
+class AttributionFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = "attribution.Attribution"
+
+    external_id = factory.fuzzy.FuzzyText(length=10, chars=string.digits)
+    changed = fake.date_time_this_decade(before_now=True, after_now=True, tzinfo=get_tzinfo())
+    start_date = None
+    end_date = None
+    start_year = None
+    end_year = None
+    function = factory.Iterator(function.FUNCTIONS, getter=lambda c: c[0])
+    learning_unit_year = factory.SubFactory(LearningUnitYearFakerFactory)
+    tutor = factory.SubFactory(TutorFactory)
+    score_responsible = False

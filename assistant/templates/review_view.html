@@ -113,8 +113,17 @@
 </div>
 <div class="panel panel-default">
     <div class="panel-body">
+        <h4>
+            {% if review.reviewer is None %}
+                {{ review.mandate.assistant.supervisor }}
+            {% else %}
+                {{ review.reviewer.person }} - {{ review.reviewer.structure }}
+            {% endif %}
+        </h4>
         <div class="form-group">
-            <label for="txt_advice">{% trans 'advice' %}</label>
+            <label for="txt_advice">
+                {% trans 'advice' %}
+            </label>
             <div class="controls">
                 {% if review.advice == "FAVORABLE" %}
                     <span class="glyphicon glyphicon-thumbs-up" style="font-size: 14pt; color: green" aria-hidden="true"></span>

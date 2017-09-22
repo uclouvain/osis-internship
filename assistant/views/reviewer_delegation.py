@@ -85,7 +85,6 @@ def user_is_reviewer_and_can_delegate(user):
 def add_reviewer_for_structure(request):
     structure_id = request.POST.get("structure_id")
     related_structure = structure.find_by_id(structure_id)
-    print(related_structure)
     year = academic_year.current_academic_year().year
     try:
         reviewer.can_delegate_to_structure(reviewer.find_by_person(request.user.person), related_structure)
