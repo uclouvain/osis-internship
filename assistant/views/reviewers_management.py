@@ -63,7 +63,7 @@ class ReviewersListView(LoginRequiredMixin, UserPassesTestMixin, ListView, FormM
 def reviewers_index(request):
     all_reviewers = reviewer.find_reviewers()
     initial_formset_content = [{'action': None,
-                                'structure': rev.structure,
+                                'entity': rev.entity,
                                 'role': rev.role,
                                 'person': rev.person,
                                 'id': rev.id,

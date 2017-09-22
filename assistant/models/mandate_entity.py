@@ -38,7 +38,7 @@ class MandateEntity(models.Model):
         version = entity_version.get_by_entity_and_date(self.entity, self.assistant_mandate.academic_year.start_date)
         if version is None:
             version = entity_version.get_last_version(self.entity)
-        return u"%s - %s" % (self.assistant_mandate.assistant, version.acronym)
+        return u"%s - %s" % (self.assistant_mandate.assistant, version[0].acronym)
 
 
 def find_by_mandate(mandate):

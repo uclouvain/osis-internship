@@ -28,8 +28,8 @@ from django.core.exceptions import ValidationError
 from django.forms import ModelForm, Textarea
 from django.forms.models import inlineformset_factory
 from django.utils.translation import ugettext as _
-from base.models import structure, academic_year
-from base.models.enums import structure_type
+from base.models import structure, academic_year, entity
+from base.models.enums import structure_type, entity_type
 from assistant import models as mdl
 from assistant.models.enums import review_advice_choices, assistant_type
 from assistant.models.enums import assistant_mandate_renewal, reviewer_role, assistant_phd_inscription
@@ -187,7 +187,6 @@ class AssistantFormPart4(ModelForm):
             self.fields[field].widget.attrs['class'] = 'form-control'
 
 
-
 class TutoringLearningUnitForm(ModelForm):
     sessions_number = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'input session_number',
                                                                          'style': 'width:6ch'}))
@@ -291,28 +290,32 @@ class AssistantFormPart6(ModelForm):
 
 class ReviewerDelegationForm(ModelForm):
     role = forms.CharField(widget=forms.HiddenInput(), required=True)
-    structure = forms.ModelChoiceField(widget=forms.HiddenInput(), required=True,
-                                       queryset=structure.find_structures())
+    entity = forms.ModelChoiceField(widget=forms.HiddenInput(), required=True,
+                                       queryset=(
+        entity.search(entity_type=entity_type.INSTITUTE) |
+        entity.search(entity_type=entity_type.FACULTY) |
+        entity.search(entity_type=entity_type.SCHOOL) |
+        entity.search(entity_type=entity_type.PLATFORM) |
+        entity.search(entity_type=entity_type.POLE)))
 
     class Meta:
         model = mdl.reviewer.Reviewer
-        fields = ('structure', 'role')
+        fields = ('entity', 'role')
         exclude = ['person']
         widgets = {
-            'structure': forms.HiddenInput()
+            'entity': forms.HiddenInput()
         }
 
 
 class ReviewerForm(ModelForm):
     role = forms.ChoiceField(required=True, choices=reviewer_role.ROLE_CHOICES)
-    structure = forms.ModelChoiceField(required=True, queryset=(
-        structure.find_by_types([structure_type.INSTITUTE,
-                                 structure_type.FACULTY,
-                                 structure_type.SECTOR])))
+    entity = forms.ModelChoiceField(required=True, queryset=(
+        entity.search(entity_type=entity_type.INSTITUTE) | entity.search(entity_type=entity_type.FACULTY) |
+        entity.search(entity_type=entity_type.SECTOR)))
 
     class Meta:
         model = mdl.reviewer.Reviewer
-        fields = ('structure', 'role')
+        fields = ('entity', 'role')
         exclude = ['person']
 
     def __init__(self, *args, **kwargs):
@@ -328,12 +331,12 @@ class ReviewerReplacementForm(ModelForm):
     class Meta:
         model = mdl.reviewer.Reviewer
         fields = ('id',)
-        exclude = ('person', 'structure', 'role')
+        exclude = ('person', 'entity', 'role')
 
 
 class ReviewersFormset(ModelForm):
     role = forms.ChoiceField(required=False)
-    structure = forms.ChoiceField(required=False)
+    entity = forms.ChoiceField(required=False)
     person = forms.ChoiceField(required=False)
     id = forms.IntegerField(required=False)
     ACTIONS = (
@@ -346,7 +349,7 @@ class ReviewersFormset(ModelForm):
 
     class Meta:
         model = mdl.reviewer.Reviewer
-        exclude = ('structure', 'role', 'person')
+        exclude = ('entity', 'role', 'person')
 
 
 class SettingsForm(ModelForm):
