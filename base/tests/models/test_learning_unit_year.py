@@ -31,6 +31,7 @@ from base.tests.factories.academic_year import AcademicYearFactory
 from base.tests.factories.learning_unit import LearningUnitFactory
 from base.tests.factories.learning_unit_year import LearningUnitYearFactory
 from base.tests.factories.learning_container_year import LearningContainerYearFactory
+from base.tests.factories.learning_container import LearningContainerFactory
 
 
 def create_learning_unit_year(acronym, title, academic_year):
@@ -63,3 +64,12 @@ class LearningUnitYearTest(TestCase):
         self.assertFalse(l_unit_1.subdivision)
         self.assertEqual(l_unit_2.subdivision, 'A')
         self.assertEqual(l_unit_3.subdivision, 'B')
+
+    def test_find_reference_fac(self):
+        l_container = L
+        l_container_year = LearningContainerYearFactory(acronym="LDROI1001",
+                                                        academic_year=self.academic_year)
+        l_unit_yr = LearningUnitYearFactory(acronym="LDROI1001",
+                                            learning_container_year= l_container_year,
+                                            academic_year=self.academic_year,
+                                            learning_unit=LearningUnitFactory())

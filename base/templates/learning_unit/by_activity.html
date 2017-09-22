@@ -158,7 +158,7 @@
             </thead>
             {% for learning_unit in learning_units %}
             <tr>
-                <td>{{learning_unit.academic_year.name}}</td>
+                <td>{{ learning_unit.faculty_reference}}*****  {{learning_unit.academic_year.name}}</td>
                 <td>
                     <a href="{% url 'learning_unit' learning_unit.id %}"
                        id="lnk_learning_unit_{{learning_unit.id}}">{{ learning_unit.acronym }}</a>

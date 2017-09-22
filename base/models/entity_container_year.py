@@ -54,6 +54,7 @@ class EntityContainerYear(models.Model):
 
 
 def find_last_entity_version_grouped_by_linktypes(learning_container_year, link_type=None):
+    print(find_last_entity_version_grouped_by_linktypes)
     lcy_start_date = learning_container_year.academic_year.start_date
     entity_container_years = search(learning_container_year=learning_container_year, link_type=link_type)\
         .prefetch_related(
@@ -65,6 +66,7 @@ def find_last_entity_version_grouped_by_linktypes(learning_container_year, link_
 
 
 def search(*args, **kwargs):
+    print('search')
     ids = kwargs.get('ids')
     learning_container_year = kwargs.get('learning_container_year')
     link_type = kwargs.get('link_type')
@@ -88,7 +90,9 @@ def search(*args, **kwargs):
             queryset = queryset.filter(entity__in=entity_id)
         elif entity_id:
             queryset = queryset.filter(entity=entity_id)
-
+    print(learning_container_year)
+    print(entity_id)
+    print(link_type)
     return queryset.select_related('learning_container_year__academic_year', 'entity')
 
 
@@ -100,7 +104,9 @@ def _get_latest_entity_version(entity_container_year):
 
 
 def find_requirement_entity(learning_container_year):
+    print('find_requirement_entity')
     results = find_last_entity_version_grouped_by_linktypes(learning_container_year, entity_container_year_link_type.REQUIREMENT_ENTITY)
+    print(results)
     return next(iter(results.values()), None)
 
 
@@ -119,3 +125,18 @@ def find_by_learning_container_year(a_learning_container_year, a_entity_containe
     return EntityContainerYear.objects.filter(learning_container_year=a_learning_container_year,
                                               type=a_entity_container_year_link_type)
 
+def find_requirement_entity2(learning_container_year):
+    lcy_start_date = learning_container_year.academic_year.start_date
+    link_type = entity_container_year_link_type.REQUIREMENT_ENTITY
+    entity_container_years = search(learning_container_year=learning_container_year, link_type=link_type) \
+        .prefetch_related(
+        Prefetch('entity__entityversion_set',
+                 queryset=entity_version.find_latest_version(lcy_start_date),
+                 to_attr="entity_versions")
+    )
+    print('ici')
+    for e in entity_container_years:
+        print('ici2')
+
+        print(e.entity)
+    return None

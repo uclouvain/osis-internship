@@ -26,8 +26,9 @@
 from django.db import models
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 from base.models.enums import learning_unit_year_subtypes, learning_container_year_types, internship_subtypes, \
-    learning_unit_year_session
-
+    learning_unit_year_session, entity_type
+from base.models import entity_container_year as mdl_entity_container_year
+from base.models import entity_version as mdl_entity_version
 
 class LearningUnitYearAdmin(SerializableModelAdmin):
     list_display = ('external_id', 'acronym', 'title', 'academic_year', 'credits', 'changed', 'structure', 'status')
@@ -87,6 +88,43 @@ class LearningUnitYear(SerializableModel):
         return LearningUnitYear.objects.filter(
             learning_container_year=self.learning_container_year
         ).order_by('acronym')
+
+    @property
+    def faculty_reference(self):
+        print('faculty_reference1')
+        faculty_ref = None
+
+        entity_container_yr = mdl_entity_container_year.find_requirement_entity2(self.learning_container_year)
+        print('2')
+        print(entity_container_yr)
+        if entity_container_yr:
+            print(entity_container_yr)
+            if entity_container_yr.entity:
+                print(entity_container_yr.entity)
+                entity_version = mdl_entity_version.get_last_version(entity_container_yr.entity)
+                faculty_ref = entity_version.entity
+                if entity_version:
+                    if entity_version.entity_type == entity_type.FACULTY:
+                        faculty_ref = entity_version.entity
+                    else:
+                        f = check_parent(entity_version.parent)
+                        if f:
+                            faculty_ref= f
+
+
+
+        return faculty_ref
+
+def check_parent(parent_entity):
+    entity_version = mdl_entity_version.get_last_version(parent_entity)
+
+    if entity_version:
+        if entity_version.entity_type == entity_type.FACULTY:
+            return entity_version.entity
+        else:
+            return check_parent(entity_version.parent)
+    return None
+
 
 
 def find_by_id(learning_unit_year_id):
