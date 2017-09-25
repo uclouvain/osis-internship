@@ -49,7 +49,7 @@ def entity_manager_entities(apps, schema_editor):
     dict_enti = {}
     for ent in all_entitites:
         if not dict_enti.get(ent['acronym']):
-            dict_enti[ent['acronym']] = ent['entity_id']
+            dict_enti[ent['acronym'].upper()] = ent['entity_id']
 
     for entity_manager in entity_managers:
         structure_acronym = None
@@ -58,7 +58,7 @@ def entity_manager_entities(apps, schema_editor):
             structure_acronym = struct['acronym']
             break
 
-        if structure_acronym:
+        if structure_acronym and structure_acronym in dict_enti:
             _add_entity_manager_entity(entity_manager, dict_enti[structure_acronym])
 
 
