@@ -57,14 +57,66 @@ div[class^="django-ckeditor-widget"] > div {
     width:100%!important;
 }
 
-.success-color {
-    color: #5cb85c;
+tbody.used_component{
+    background-color: #ececec;
 }
 
-.warning-color {
-    color: #f0ad4e;
+tbody.used_component tr.class_year{
+    background-color: #ecfcfc;
 }
 
-.danger-color {
-    color: #d9534f;
+tbody.unused_component{
+    background-color: #f3f3f3;
+    color: #909090;
+}
+
+tbody.unused_component tr.class_year{
+    background-color: #f3fcfc;
+}
+
+tr.class_year{
+    font-size: 80%;
+}
+
+tr.class_year_head{
+    font-weight: bold;
+}
+
+table.volumes tr td{
+    text-align: center;
+}
+
+table.volumes tbody{
+    border-top: 2px solid #c0c0c0;
+    border-bottom: 2px solid #c0c0c0;
+}
+
+table.volumes tbody tr td{
+    background-color: #f3fcfc;
+}
+
+table.volumes tbody tr td:nth-child(1),
+table.volumes tbody tr td:nth-child(9),
+table.volumes tbody tr td:nth-child(11){
+    background-color: #f3f3f3;
+}
+
+table.volumes thead{
+    border: 2px solid #ddd;
+}
+
+.badge.fixed_width{
+    width: 60px;
+}
+
+.badge.success-color {
+    background-color: #5cb85c;
+}
+
+.badge.warning-color {
+    background-color: #f0ad4e;
+}
+
+.badge.danger-color {
+    background-color: #d9534f;
 }

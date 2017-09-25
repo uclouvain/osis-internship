@@ -70,6 +70,9 @@ msgstr "Ajouter un sujet"
 msgid "add_proposition_dissertation_jury_member"
 msgstr "Ajouter un membre au jury"
 
+msgid "advanced_search"
+msgstr "Recherche avancée"
+
 msgid "adviser"
 msgstr "Enseignant"
 

@@ -28,19 +28,26 @@
 <div class="modal-dialog" role="document" style="width:850px;">
     <div class="modal-content">
         <form class="class-form" role="form" method="POST"
-              action="{% url 'learning_class_year_edit' learning_unit_year_id=form.learning_unit_year.id%}?learning_class_year_id={{form.learning_class_year.id}}&learning_component_year_id={{form.learning_component_year.id}}">
+              action="{% url 'learning_class_year_edit' learning_unit_year_id=form.learning_unit_year.id%}?learning_class_year_id={{form.instance.id}}&learning_component_year_id={{form.learning_component_year.id}}">
 
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" title="{% trans 'close'%}">×</button>
-                <h4>{{form.title}}</h4>
+                <h4>
+                    {% trans 'classe'%}
+                    {% if learning_component_year.type_letter_acronym %}
+                        : {{ learning_component_year.type_letter_acronym }}
+                    {% endif %}
+                    {% if form.instance.acronym %}
+                        {{ form.instance.acronym }}
+                    {% endif %}
+                </h4>
             </div>
             <div class="modal-body">
                 {% csrf_token %}
+                <label>{% trans 'description'%}</label><br>
+                    {{ form.description }}
                 <br>
-                {{ form.used_by }} <label>{% trans 'lu_usage'%} {{ learning_unit_year.acronym }}</label>
-                {% if form.message %}
-                    <label class="alert-warning">({{ form.message }})</label>
-                {% endif %}
+                    {{ form.used_by }} <label>{% trans 'used_by' %} {{ learning_unit_year.acronym }}</label>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-primary" type="submit" title="{% trans 'save'%}">{% trans 'save' %}</button>

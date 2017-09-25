@@ -35,16 +35,16 @@
 {% block content %}
 <ul class="nav nav-tabs ">
 <li><a href="{% url 'assistant_mandates' %}">{% trans 'my_mandates' %}</a></li>
-<li><a href="{% url 'form_part1_edit' mandate.id %}">{% trans 'assistant_form_part1' %}</a></li>
-<li><a href="{% url 'mandate_learning_units' mandate.id %}">{% trans 'learning_units' %}</a></li>
-<li><a href="{% url 'form_part3_edit' mandate.id %}">{% trans 'assistant_form_part3' %}</a></li>
-<li class="active"><a href="{% url 'form_part4_edit' mandate.id %}">{% trans 'assistant_form_part4' %}</a></li>
-<li><a href="{% url 'form_part5_edit' mandate.id %}">{% trans 'assistant_form_part5' %}</a></li>
-<li><a href="{% url 'form_part6_edit' mandate.id %}">{% trans 'assistant_form_part6' %}</a></li>
+<li><a href="{% url 'form_part1_edit' %}">{% trans 'assistant_form_part1' %}</a></li>
+<li><a href="{% url 'mandate_learning_units' %}">{% trans 'learning_units' %}</a></li>
+<li><a href="{% url 'form_part3_edit' %}">{% trans 'assistant_form_part3' %}</a></li>
+<li class="active"><a href="{% url 'form_part4_edit' %}">{% trans 'assistant_form_part4' %}</a></li>
+<li><a href="{% url 'form_part5_edit' %}">{% trans 'assistant_form_part5' %}</a></li>
+<li><a href="{% url 'form_part6_edit' %}">{% trans 'assistant_form_part6' %}</a></li>
 </ul>
 <div class="panel panel-default">
 	<div class="panel-body">
- 		<form id="pst-form-part4" method="POST" enctype="multipart/form-data" action="{% url 'form_part4_save' mandate.id %}">
+ 		<form id="pst-form-part4" method="POST" enctype="multipart/form-data" action="{% url 'form_part4_save' %}">
  		{% csrf_token %}
  		{{ form.non_field_errors }}
  		<div class="panel-default">
@@ -92,7 +92,7 @@
                 <div class="col-md-2" style="text-align: left">
                     <a class="btn btn-default btn-danger btn-sm" id="btn_delete_file" style="margin-right: 5px;"
                        title="{% trans 'delete'%}"
-                       onclick="location.href='{% url 'assistant_file_delete' mandate.id file.id 'form_part4_edit' %}';">
+                       onclick="location.href='{% url 'assistant_file_delete' file.id 'form_part4_edit' %}';">
                     <span class="glyphicon glyphicon-remove" aria-hidden="true" id="spn_delete_file"></span>
                         {% trans 'delete_file' %}</a>
                 </div>

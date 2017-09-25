@@ -35,9 +35,8 @@ from assistant.models.enums import message_type
 from assistant.models.manager import Manager
 from assistant.models.message import Message
 from assistant.views.messages import show_history
-from base.models import academic_year
-from base.models.academic_year import AcademicYear
 from base.models.person import Person
+from base.tests.factories.academic_year import AcademicYearFactory
 
 
 class MessagesViewTestCase(TestCase):
@@ -49,10 +48,7 @@ class MessagesViewTestCase(TestCase):
         )
         self.person = Person.objects.create(user=self.user, first_name='first_name', last_name='last_name')
         self.manager = Manager.objects.create(person=self.person)
-        self.academic_year = AcademicYear.objects.create(year=2016, start_date=date(2016, 9, 1),
-                                                         end_date=date(2017, 8, 31))
-        self.academic_year.save()
-        self.current_academic_year = academic_year.current_academic_year()
+        self.current_academic_year = AcademicYearFactory()
         self.message = Message.objects.create(
             sender=self.manager,
             type=message_type.TO_ALL_ASSISTANTS,
@@ -69,12 +65,15 @@ class MessagesViewTestCase(TestCase):
         self.message.save()
 
     def test_messages_history_view_basic(self):
+        self.client.force_login(self.user)
         request = self.factory.get('/assistants/manager/messages/history')
+        request.user = self.user
         with self.assertTemplateUsed('messages.html'):
             response = show_history(request)
             self.assertEqual(response.status_code, 200)
 
     def test_messages_history_view_returns_messages(self):
+        self.client.force_login(self.user)
         response = self.client.get(reverse('messages_history'))
         messages = response.context['sent_messages']
         self.assertIs(type(messages), QuerySet)

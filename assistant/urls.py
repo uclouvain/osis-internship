@@ -33,7 +33,6 @@ from assistant.views import assistant_mandate_reviews
 from assistant.utils import send_email, import_xls_file_data
 
 urlpatterns = [
-    # S'il vous plaît, organiser les urls par ordre alphabétique.
     url(r'^$', home.assistant_home, name='assistants_home'),
     url(r'^access_denied$', home.access_denied, name='access_denied'),
     url(r'^api/get_persons/', get_persons.get_persons, name='get_persons'),
@@ -42,23 +41,23 @@ urlpatterns = [
     url(r'^assistant/', include([
         url(r'^$', assistant.AssistantMandatesListView.as_view(), name='assistant_mandates'),
         url(r'^document_file/', include([
-            url(r'^delete/(?P<mandate_id>\d+)/(?P<document_file_id>\d+)/(?P<url>[\w\-]+)/$',
+            url(r'^delete/(?P<document_file_id>\d+)/(?P<url>[\w\-]+)/$',
                 upload_assistant_file.delete, name='assistant_file_delete'),
             url(r'^download/(?P<document_file_id>\d+)/$', upload_assistant_file.download,
                 name='assistant_file_download'),
             url(r'^upload/$', upload_assistant_file.save_uploaded_file, name='assistant_file_upload'),
         ])),
         url(r'^form/', include([
-            url(r'^part1/(?P<mandate_id>\d+)/', include([
+            url(r'^part1/', include([
                 url(r'^edit/$', assistant_form.form_part1_edit, name='form_part1_edit'),
                 url(r'^save/$', assistant_form.form_part1_save, name='form_part1_save'),
             ])),
             url(r'^part2/', include([
                 url(r'^get_learning_units_year/', assistant_form.get_learning_units_year,
                     name='get_learning_units_year'),
-                url(r'^(?P<mandate_id>\d+)/$', assistant.AssistantLearningUnitsListView.as_view(),
+                url(r'^$', assistant.AssistantLearningUnitsListView.as_view(),
                     name='mandate_learning_units'),
-                url(r'^(?P<mandate_id>\d+)/add/$', assistant_form.tutoring_learning_unit_add,
+                url(r'^add/$', assistant_form.tutoring_learning_unit_add,
                     name='tutoring_learning_unit_add'),
                 url(r'^(?P<tutoring_learning_unit_id>\d+)/delete/$', assistant_form.tutoring_learning_unit_delete,
                     name='tutoring_learning_unit_delete'),
@@ -67,24 +66,24 @@ urlpatterns = [
                 url(r'^save/$', assistant_form.tutoring_learning_unit_save,
                     name='tutoring_learning_unit_save'),
             ])),
-            url(r'^part3/(?P<mandate_id>\d+)/', include([
+            url(r'^part3/', include([
                 url(r'^edit/$', assistant_form.form_part3_edit, name='form_part3_edit'),
                 url(r'^save/$', assistant_form.form_part3_save, name='form_part3_save'),
             ])),
-            url(r'^part4/(?P<mandate_id>\d+)/', include([
+            url(r'^part4/', include([
                 url(r'^edit/$', assistant_form.form_part4_edit, name='form_part4_edit'),
                 url(r'^save/$', assistant_form.form_part4_save, name='form_part4_save'),
             ])),
-            url(r'^part5/(?P<mandate_id>\d+)/', include([
+            url(r'^part5/', include([
                 url(r'^edit/$', assistant_form.form_part5_edit, name='form_part5_edit'),
                 url(r'^save/$', assistant_form.form_part5_save, name='form_part5_save'),
             ])),
-            url(r'^part6/(?P<mandate_id>\d+)/', include([
+            url(r'^part6/', include([
                 url(r'^edit/$', assistant_form.form_part6_edit, name='form_part6_edit'),
                 url(r'^save/$', assistant_form.form_part6_save, name='form_part6_save'),
             ])),
         ])),
-        url(r'^mandate/(?P<mandate_id>\d+)/', include([
+        url(r'^mandate/', include([
             url(r'^change_state/$', assistant.mandate_change_state, name='mandate_change_state'),
             url(r'^reviews/$', assistant_mandate_reviews.reviews_view,
                 name='assistant_mandate_reviews'),
@@ -95,8 +94,8 @@ urlpatterns = [
         url(r'^$', home.manager_home, name='manager_home'),
         url(r'^mandates/', include([
             url(r'^$', mandates_list.MandatesListView.as_view(), name='mandates_list'),
-            url(r'^(?P<mandate_id>\d+)/edit/$', mandate.mandate_edit, name='mandate_read'),
-            url(r'^(?P<mandate_id>\d+)/save/$', mandate.mandate_save, name='mandate_save'),
+            url(r'^edit/$', mandate.mandate_edit, name='mandate_read'),
+            url(r'^save/$', mandate.mandate_save, name='mandate_save'),
             url(r'^load/$', mandate.load_mandates, name='load_mandates'),
             url(r'^upload/$', import_xls_file_data.upload_mandates_file, name='upload_mandates_file'),
             url(r'^export/$', mandate.export_mandates, name='export_mandates'),
@@ -121,12 +120,12 @@ urlpatterns = [
     url(r'^phd_supervisor/', include([
         url(r'^assistants/$', phd_supervisor_assistants_list.AssistantsListView.as_view(),
             name='phd_supervisor_assistants_list'),
-        url(r'^pst_form/(?P<mandate_id>\d+)/$', phd_supervisor_review.pst_form_view,
+        url(r'^pst_form/$', phd_supervisor_review.pst_form_view,
             name='phd_supervisor_pst_form_view'),
         url(r'^review/', include([
-            url(r'^(?P<mandate_id>\d+)/$', phd_supervisor_review.review_view, name='phd_supervisor_review_view'),
-            url(r'^edit/(?P<mandate_id>\d+)/$', phd_supervisor_review.review_edit, name='phd_supervisor_review_edit'),
-            url(r'^save/(?P<review_id>\d+)/(?P<mandate_id>\d+)/$', phd_supervisor_review.review_save,
+            url(r'^view/$', phd_supervisor_review.review_view, name='phd_supervisor_review_view'),
+            url(r'^edit/$', phd_supervisor_review.review_edit, name='phd_supervisor_review_edit'),
+            url(r'^save/$', phd_supervisor_review.review_save,
                 name='phd_supervisor_review_save'),
         ])),
     ])),
@@ -134,13 +133,13 @@ urlpatterns = [
     url(r'^reviewer/', include([
         url(r'^$', reviewer_mandates_list.MandatesListView.as_view(), name='reviewer_mandates_list'),
         url(r'^delegation/$', reviewer_delegation.StructuresListView.as_view(), name='reviewer_delegation'),
-        url(r'^pst_form/(?P<mandate_id>\d+)/$', reviewer_review.pst_form_view, name='pst_form_view'),
-        url(r'^delegate/(?P<structure_id>\d+)/add/$', reviewer_delegation.add_reviewer_for_structure,
+        url(r'^pst_form/$', reviewer_review.pst_form_view, name='pst_form_view'),
+        url(r'^delegate/add/$', reviewer_delegation.add_reviewer_for_structure,
             name='reviewer_delegation_add'),
-        url(r'^review/(?P<mandate_id>\d+)/', include([
-            url(r'^(?P<role>[\w{}.-]{1,40})/view/$', reviewer_review.review_view, name='review_view'),
+        url(r'^review/', include([
+            url(r'^view/$', reviewer_review.review_view, name='review_view'),
             url(r'^edit/$', reviewer_review.review_edit, name='review_edit'),
-            url(r'^(?P<review_id>\d+)/save/$', reviewer_review.review_save, name='review_save'),
+            url(r'^save/$', reviewer_review.review_save, name='review_save'),
         ])),
     ])),
 ]

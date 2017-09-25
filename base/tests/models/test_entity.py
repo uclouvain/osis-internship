@@ -32,6 +32,7 @@ from base.models import entity
 from base.models.enums import entity_type
 from base.tests.factories.entity import EntityFactory
 from base.tests.factories.entity_version import EntityVersionFactory
+from reference.tests.factories.country import CountryFactory
 
 
 class EntityTest(TestCase):
@@ -43,8 +44,9 @@ class EntityTest(TestCase):
                                                     timezone.make_aware(datetime.datetime(2015, 12, 30))).fuzz()
         self.date_in_2017 = factory.fuzzy.FuzzyDate(timezone.make_aware(datetime.datetime(2017, 1, 1)),
                                                     timezone.make_aware(datetime.datetime(2017, 12, 30))).fuzz()
-        self.parent = EntityFactory()
-        self.children = [EntityFactory() for x in range(4)]
+        self.country = CountryFactory()
+        self.parent = EntityFactory(country=self.country)
+        self.children = [EntityFactory(country=self.country) for x in range(4)]
         self.types_dict = dict(entity_type.ENTITY_TYPES)
         types = [self.types_dict['SECTOR'],
                  self.types_dict['FACULTY'],

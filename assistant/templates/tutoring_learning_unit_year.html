@@ -34,14 +34,14 @@
 {% block content %}
 <ul class="nav nav-tabs ">
 <li><a href="{% url 'assistant_mandates' %}">{% trans 'my_mandates' %}</a></li>
-<li><a href="{% url 'form_part1_edit' mandate_id %}">{% trans 'assistant_form_part1' %}</a></li>
-<li class="active"><a href="{% url 'mandate_learning_units' mandate_id %}">{% trans 'learning_units' %}</a></li>
+<li><a href="{% url 'form_part1_edit' %}">{% trans 'assistant_form_part1' %}</a></li>
+<li class="active"><a href="{% url 'mandate_learning_units' %}">{% trans 'learning_units' %}</a></li>
 {% if assistant_type == "ASSISTANT" %}
-    <li><a href="{% url 'form_part3_edit' mandate_id %}">{% trans 'assistant_form_part3' %}</a></li>
+    <li><a href="{% url 'form_part3_edit' %}">{% trans 'assistant_form_part3' %}</a></li>
 {% endif %}
-<li><a href="{% url 'form_part4_edit' mandate_id %}">{% trans 'assistant_form_part4' %}</a></li>
-<li><a href="{% url 'form_part5_edit' mandate_id %}">{% trans 'assistant_form_part5' %}</a></li>
-<li><a href="{% url 'form_part6_edit' mandate_id %}">{% trans 'assistant_form_part6' %}</a></li>
+<li><a href="{% url 'form_part4_edit'%}">{% trans 'assistant_form_part4' %}</a></li>
+<li><a href="{% url 'form_part5_edit' %}">{% trans 'assistant_form_part5' %}</a></li>
+<li><a href="{% url 'form_part6_edit' %}">{% trans 'assistant_form_part6' %}</a></li>
 </ul>
     <div class="panel panel-default">
         <div class="panel-body">
@@ -69,7 +69,7 @@
                        placeholder="{% trans 'search_by_acronym' %}">
                 <input type="hidden" name="learning_unit_year_id" id="learning_unit_year_id" />
             {% endif %}
-            {{ form.mandate_id.as_hidden }}
+
             {{ form.non_field_errors }}
         </div>
         <div class="form-group">
@@ -116,8 +116,9 @@
         </div>
         <button type="submit" class="btn btn-primary" title="{% trans 'save'%}" id="bt_save_tutoring_learning_unit">
         <span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'save'%}</button>
-        <a class="btn btn-default" id="lnk_cancel" href="{% url 'mandate_learning_units' mandate_id %}">
+        <a class="btn btn-default" id="lnk_cancel" href="{% url 'mandate_learning_units' %}">
         <span class="glyphicon glyphicon-cancel" aria-hidden="true"></span> {% trans 'cancel'%}</a>
+        <input type="hidden" name="mandate_id" value="{{ mandate_id }}">
     </form>
     </div>
 </div>

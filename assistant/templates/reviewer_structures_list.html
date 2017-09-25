@@ -39,7 +39,7 @@
 {% block content %}
 <div class="page-header">
     <h6>{% trans 'connected_as' %} {{ current_reviewer.person }} ({% trans current_reviewer.role %}) - {{ current_reviewer.structure.acronym }}</h6>
-    <h3>{% trans 'assistantship_mandate_renewal' %} {{ year|add:1 }}</h3>
+    <h3>{% trans 'assistant_mandates_renewals' %} {{ year|add:1 }}</h3>
     <ul class="nav nav-tabs">
         <li><a href="{% url 'reviewer_mandates_list' %}">{% trans 'reviewer_mandates_list' %}</a></li>
         {% if is_supervisor %}
@@ -69,16 +69,22 @@
                     {% if "ASSISTANT" in rev.role %}
                     {{ rev.person }}
                     {% elif structure.reviewer_set.all|length < 2 %}
-                    <a href="{% url 'reviewer_delegation_add' structure.id %}">
-                    <button type="button" class="btn btn-link" title="{% trans 'add'%}" id="bt_delegation_add">
-                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                    </button></a>
+                    <form id=structure.id method="POST" action="{% url 'reviewer_delegation_add' %}">
+                    {{ form.non_field_errors }}
+ 		            {% csrf_token %}
+                    <input type="hidden" name="structure_id" value="{{ structure.id }}">
+                    <button type="submit" class="btn btn-link" title="{% trans 'edit'%}">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> {% trans 'add'%}
+                    </button></form>
                     {% endif %}
                 {% empty %}
-                    <a href="{% url 'reviewer_delegation_add' structure.id %}">
-                    <button type="button" class="btn btn-link" title="{% trans 'add'%}" id="bt_delegation_add">
-                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                    </button></a>
+                    <form id=structure.id method="POST" action="{% url 'reviewer_delegation_add' %}">
+                    {{ form.non_field_errors }}
+ 		            {% csrf_token %}
+                    <input type="hidden" name="structure_id" value="{{ structure.id }}">
+                    <button type="submit" class="btn btn-link" title="{% trans 'edit'%}">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> {% trans 'add'%}
+                    </button></form>
                     </td>
                     </tr>
                 {% endfor %}

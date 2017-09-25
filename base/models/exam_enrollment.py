@@ -23,22 +23,21 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import unicodedata
 from decimal import *
+
 from django.db import models
 from django.db.models import When, Case, Q, Sum, Count, IntegerField, F
 from django.contrib import admin
 from django.utils.translation import ugettext as _
-from django.utils import timezone
+
 from django.core.validators import MaxValueValidator, MinValueValidator
-from base.models import person, person_address, session_exam_calendar, session_exam_deadline, \
+
+from base.models import person, session_exam_deadline, \
                         academic_year as academic_yr, offer_year, program_manager, tutor
 from attribution.models import attribution
 from base.models.enums import exam_enrollment_state as enrollment_states, exam_enrollment_justification_type as justification_types
-
 from base.models.exceptions import JustificationValueException
 from base.models.utils.admin_extentions import remove_delete_action
-
 
 JUSTIFICATION_ABSENT_FOR_TUTOR = _('absent')
 
@@ -364,7 +363,7 @@ def find_for_score_encodings(session_exam_number,
                                              enrollment_state=enrollment_states.ENROLLED)
     if learning_unit_year_id:
         queryset = queryset.filter(learning_unit_enrollment__learning_unit_year_id=learning_unit_year_id)
-    elif learning_unit_year_ids:
+    elif learning_unit_year_ids is not None:
         queryset = queryset.filter(learning_unit_enrollment__learning_unit_year_id__in=learning_unit_year_ids)
 
     if tutor:
@@ -415,183 +414,6 @@ def find_for_score_encodings(session_exam_number,
                    .select_related('session_exam')\
                    .select_related('learning_unit_enrollment__offer_enrollment__student__person')\
                    .select_related('learning_unit_enrollment__learning_unit_year')
-
-
-def group_by_learning_unit_year_id(exam_enrollments):
-    """
-    :param exam_enrollments: List of examEnrollments to regroup by earningunitYear.id
-    :return: A dictionary where the key is LearningUnitYear.id and the value is a list of examEnrollment
-    """
-    enrollments_by_learn_unit = {}  # {<learning_unit_year_id> : [<ExamEnrollment>]}
-    for exam_enroll in exam_enrollments:
-        key = exam_enroll.session_exam.learning_unit_year.id
-        if key not in enrollments_by_learn_unit.keys():
-            enrollments_by_learn_unit[key] = [exam_enroll]
-        else:
-            enrollments_by_learn_unit[key].append(exam_enroll)
-    return enrollments_by_learn_unit
-
-
-def scores_sheet_data(exam_enrollments, tutor=None):
-    date_format = str(_('date_format'))
-    exam_enrollments = sort_for_encodings(exam_enrollments)
-    data = {'tutor_global_id': tutor.person.global_id if tutor else ''}
-    now = timezone.now()
-    data['publication_date'] = '%s/%s/%s' % (now.day, now.month, now.year)
-    data['institution'] = str(_('ucl_denom_location'))
-    data['link_to_regulation'] = str(_('link_to_RGEE'))
-    data['justification_legend'] = _('justification_legend') % justification_label_authorized()
-
-    # Will contain lists of examEnrollments splitted by learningUnitYear
-    enrollments_by_learn_unit = group_by_learning_unit_year_id(
-        exam_enrollments)  # {<learning_unit_year_id> : [<ExamEnrollment>]}
-
-    learning_unit_years = []
-    for exam_enrollments in enrollments_by_learn_unit.values():
-        # exam_enrollments contains all ExamEnrollment for a learningUnitYear
-        learn_unit_year_dict = {}
-        # We can take the first element of the list 'exam_enrollments' to get the learning_unit_yr
-        # because all exam_enrollments have the same learningUnitYear
-        learning_unit_yr = exam_enrollments[0].session_exam.learning_unit_year
-        scores_responsible = attribution.find_responsible(learning_unit_yr.id)
-        scores_responsible_address = None
-        person = None
-        if scores_responsible:
-            person = scores_responsible.person
-            scores_responsible_address = person_address.find_by_person_label(scores_responsible.person, 'PROFESSIONAL')
-
-        learn_unit_year_dict['academic_year'] = str(learning_unit_yr.academic_year)
-
-        learn_unit_year_dict['scores_responsible'] = {
-            'first_name': person.first_name if person and person.first_name else '',
-            'last_name': person.last_name if person and person.last_name else ''}
-
-        learn_unit_year_dict['scores_responsible']['address'] = {'location': scores_responsible_address.location
-                                                                 if scores_responsible_address else '',
-                                                                 'postal_code': scores_responsible_address.postal_code
-                                                                 if scores_responsible_address else '',
-                                                                 'city': scores_responsible_address.city
-                                                                 if scores_responsible_address else ''}
-        learn_unit_year_dict['session_number'] = exam_enrollments[0].session_exam.number_session
-        learn_unit_year_dict['acronym'] = learning_unit_yr.acronym
-        learn_unit_year_dict['title'] = learning_unit_yr.title
-        learn_unit_year_dict['decimal_scores'] = learning_unit_yr.decimal_scores
-
-        programs = []
-
-        # Will contain lists of examEnrollments by offerYear (=Program)
-        enrollments_by_program = {}  # {<offer_year_id> : [<ExamEnrollment>]}
-        for exam_enroll in exam_enrollments:
-            key = exam_enroll.learning_unit_enrollment.offer_enrollment.offer_year.id
-            if key not in enrollments_by_program.keys():
-                enrollments_by_program[key] = [exam_enroll]
-            else:
-                enrollments_by_program[key].append(exam_enroll)
-
-        for list_enrollments in enrollments_by_program.values():  # exam_enrollments by OfferYear
-            exam_enrollment = list_enrollments[0]
-            offer_year = exam_enrollment.learning_unit_enrollment.offer_enrollment.offer_year
-            number_session = exam_enrollment.session_exam.number_session
-            deliberation_date = session_exam_calendar.find_deliberation_date(number_session, offer_year)
-            if deliberation_date:
-                deliberation_date = deliberation_date.strftime(date_format)
-            else:
-                deliberation_date = _('not_passed')
-
-            program = {'acronym': exam_enrollment.learning_unit_enrollment.offer_enrollment.offer_year.acronym,
-                       'deliberation_date': deliberation_date,
-                       'address': {'recipient': offer_year.recipient,
-                                   'location': offer_year.location,
-                                   'postal_code': offer_year.postal_code,
-                                   'city': offer_year.city,
-                                   'phone': offer_year.phone,
-                                   'fax': offer_year.fax,
-                                   'email': offer_year.email}}
-            enrollments = []
-            for exam_enrol in list_enrollments:
-                student = exam_enrol.learning_unit_enrollment.student
-                score = ''
-                if exam_enrol.score_final is not None:
-                    if learning_unit_yr.decimal_scores:
-                        score = str(exam_enrol.score_final)
-                    else:
-                        score = str(int(exam_enrol.score_final))
-
-                # Compute deadline score encoding
-                deadline = get_deadline(exam_enrol)
-                if deadline:
-                    deadline = deadline.strftime(date_format)
-
-                enrollments.append({
-                    "registration_id": student.registration_id,
-                    "last_name": student.person.last_name,
-                    "first_name": student.person.first_name,
-                    "score": score,
-                    "justification": _(exam_enrol.justification_final) if exam_enrol.justification_final else '',
-                    "deadline": deadline if deadline else ''
-                })
-            program['enrollments'] = enrollments
-            programs.append(program)
-            programs = sorted(programs, key=lambda k: k['acronym'])
-        learn_unit_year_dict['programs'] = programs
-        learning_unit_years.append(learn_unit_year_dict)
-    learning_unit_years = sorted(learning_unit_years, key=lambda k: k['acronym'])
-    data['learning_unit_years'] = learning_unit_years
-    return data
-
-
-def _normalize_string(string):
-    """
-    Remove accents in the string passed in parameter.
-    For example : 'é - è' ==> 'e - e'  //  'àç' ==> 'ac'
-    :param string: The string to normalize.
-    :return: The normalized string
-    """
-    string = string.replace(" ", "")
-    return ''.join((c for c in unicodedata.normalize('NFD', string) if unicodedata.category(c) != 'Mn'))
-
-
-def sort_by_offer_acronym_last_name_first_name(exam_enrollments):
-    def _sort(key):
-        off_enroll = key.learning_unit_enrollment.offer_enrollment
-        last_name = off_enroll.student.person.last_name
-        first_name = off_enroll.student.person.first_name
-        last_name = _normalize_string(last_name) if last_name else None
-        first_name = _normalize_string(first_name) if first_name else None
-        offer_year_acronym = key.learning_unit_enrollment.offer_enrollment.offer_year.acronym
-        learn_unit_acronym = key.learning_unit_enrollment.learning_unit_year.acronym
-        return "%s %s %s %s" % (offer_year_acronym if offer_year_acronym else '',
-                                last_name.upper() if last_name else '',
-                                first_name.upper() if first_name else '',
-                                learn_unit_acronym if learn_unit_acronym else '')
-
-    return sorted(exam_enrollments, key=lambda k: _sort(k))
-
-
-def sort_for_encodings(exam_enrollments):
-    """
-    Sort the list by
-     0. LearningUnitYear.acronym
-     1. offerYear.acronym
-     2. student.lastname
-     3. sutdent.firstname
-    :param exam_enrollments: List of examEnrollments to sort
-    :return:
-    """
-    def _sort(key):
-        learn_unit_acronym = key.learning_unit_enrollment.learning_unit_year.acronym
-        off_enroll = key.learning_unit_enrollment.offer_enrollment
-        acronym = off_enroll.offer_year.acronym
-        last_name = off_enroll.student.person.last_name
-        first_name = off_enroll.student.person.first_name
-        last_name = _normalize_string(last_name) if last_name else None
-        first_name = _normalize_string(first_name) if first_name else None
-        return "%s %s %s %s" % (learn_unit_acronym if learn_unit_acronym else '',
-                                acronym if acronym else '',
-                                last_name.upper() if last_name else '',
-                                first_name.upper() if first_name else '')
-
-    return sorted(exam_enrollments, key=lambda k: _sort(k))
 
 
 def find_by_student(a_student):

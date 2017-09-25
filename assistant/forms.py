@@ -86,7 +86,8 @@ def get_field_qs(field, **kwargs):
         return forms.ModelChoiceField(queryset=structure.find_by_types([structure_type.INSTITUTE,
                                                                         structure_type.POLE,
                                                                         structure_type.PROGRAM_COMMISSION,
-                                                                        structure_type.FACULTY
+                                                                        structure_type.FACULTY,
+                                                                        structure_type.SECTOR
                                                                         ]))
     return field.formfield(**kwargs)
 
@@ -95,7 +96,7 @@ structure_inline_formset = inlineformset_factory(mdl.assistant_mandate.Assistant
                                                  mdl.mandate_structure.MandateStructure,
                                                  formfield_callback=get_field_qs,
                                                  fields=('structure', 'assistant_mandate'),
-                                                 extra=2, can_delete=True, min_num=1, max_num=4)
+                                                 extra=1, can_delete=True, min_num=1, max_num=4)
 
 
 class AssistantFormPart1(ModelForm):

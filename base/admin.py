@@ -36,7 +36,8 @@ admin.site.register(academic_year.AcademicYear,
 admin.site.register(campus.Campus,
                     campus.CampusAdmin)
 
-admin.site.register(education_group.EducationGroup)
+admin.site.register(education_group.EducationGroup,
+                    education_group.EducationGroupAdmin)
 
 admin.site.register(education_group_year.EducationGroupYear,
                     education_group_year.EducationGroupYearAdmin)
@@ -112,6 +113,9 @@ admin.site.register(offer_year_calendar.OfferYearCalendar,
 
 admin.site.register(offer_year_domain.OfferYearDomain,
                     offer_year_domain.OfferYearDomainAdmin)
+
+admin.site.register(offer_year_entity.OfferYearEntity,
+                    offer_year_entity.OfferYearEntityAdmin)
 
 admin.site.register(organization.Organization,
                     organization.OrganizationAdmin)

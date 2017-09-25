@@ -35,7 +35,7 @@ def academic_years(start_year, auto_renewal_until):
         start_yr = ''
         end_year = ''
         if start_year:
-            start_yr = "{} {}-{}".format(_('of').title(), start_year, str(start_year+1)[-2:])
+            start_yr = "{} {}-{}".format(_('from').title(), start_year, str(start_year+1)[-2:])
         if auto_renewal_until:
             end_year = "{} {}-{}".format(_('to'), auto_renewal_until, str(auto_renewal_until+1)[-2:])
         return "{} {}".format(start_yr, end_year)
