@@ -30,10 +30,14 @@ from django.contrib.auth.views import login as django_login
 from django.contrib.auth import authenticate, logout
 from django.shortcuts import redirect
 from django.utils import translation
-from git import Repo
+import git
 from . import layout
 from base import models as mdl
 from base.models.utils import native
+import logging
+
+
+logger = logging.getLogger(settings.DEFAULT_LOGGER)
 
 
 def page_not_found(request):
@@ -181,10 +185,16 @@ def storage(request):
 def get_current_version():
     release_tag = None
     global release_tag
-    repo = Repo('.')
-    tags = repo.tags
-    heads = repo.heads
-    if hasattr(heads, 'master'):
-        master = heads.master
-        release_tag = next((tag for tag in tags if tag.commit == master.commit), None)
-    return release_tag
+    try:
+        repo = git.Repo('.')
+        tags = repo.tags
+        heads = repo.heads
+        if hasattr(heads, 'master'):
+            master = heads.master
+            release_tag = next((tag for tag in tags if tag.commit == master.commit), None)
+    except git.GitError as err:
+        logger.warning('GitError : {}'.format(err))
+    except Exception as err:
+        logger.warning('Exception occured when getting release version'.format(err))
+    finally:
+        return release_tag
