@@ -16,10 +16,4 @@ class Migration(migrations.Migration):
         migrations.RunSQL(
             "delete from base_learningunitcomponent where base_learningunitcomponent.learning_component_year_id is null;"
         ),
-        migrations.AlterField(
-            model_name='learningunitcomponent',
-            name='learning_component_year',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='base.LearningComponentYear'),
-        ),
     ]
-
