@@ -2091,3 +2091,6 @@ msgstr "Entité académique"
 
 msgid "enrollment_enabled"
 msgstr "Inscriptible"
+
+msgid "formations"
+msgstr "Formations"

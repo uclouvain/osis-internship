@@ -2083,3 +2083,6 @@ msgstr "Management entity"
 
 msgid "enrollment_enabled"
 msgstr "Enrollment enabled"
+
+msgid "formations"
+msgstr "Formations"

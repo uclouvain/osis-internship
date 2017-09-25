@@ -47,7 +47,6 @@ def education_groups(request):
 @permission_required('base.can_access_offer', raise_exception=True)
 def education_groups_search(request):
     entity = request.GET['entity_acronym']
-
     academic_yr = None
     if request.GET.get('academic_year', None):
         academic_yr = int(request.GET['academic_year'])
@@ -77,7 +76,6 @@ def _education_group_identification_tab(request, education_group_year_id):
 
 
 def get_education_group_years(academic_yr, acronym, entity):
-
     if entity:
         education_group_year_entitys = []
         education_group_years = mdl.education_group_year.search(academic_yr=academic_yr, acronym=acronym)

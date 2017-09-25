@@ -14,6 +14,6 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AlterModelOptions(
             name='educationgroup',
-            options={'permissions': (('can_access_education_group', 'Can access education_group'))},
+            options={'permissions': (('can_access_education_group', 'Can access education_group'),)},
         ),
     ]
