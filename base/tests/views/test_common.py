@@ -54,12 +54,12 @@ class ErrorViewTestCase(TestCase):
         else:
             self.assertIs(release_tag, None)
 
-    @patch("base.views.common.Repo", side_effect=GitError)
+    @patch("git.Repo", side_effect=GitError)
     def test_get_current_version_with_exception_raised(self, mock_repo):
         self.assertEqual(get_current_version(), None)
         self.assertTrue(mock_repo.called)
 
-    @patch("base.views.common.Repo")
+    @patch("git.Repo")
     def test_get_current_version_with_empty_result(self, mock_repo):
         mock_repo.tags = MagicMock(return_value=[])
         mock_repo.heads = MagicMock(return_value=[])

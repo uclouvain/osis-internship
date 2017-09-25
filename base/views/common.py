@@ -30,8 +30,7 @@ from django.contrib.auth.views import login as django_login
 from django.contrib.auth import authenticate, logout
 from django.shortcuts import redirect
 from django.utils import translation
-from git import Repo
-from git.exc import GitError
+import git
 from . import layout
 from base import models as mdl
 from base.models.utils import native
@@ -187,13 +186,13 @@ def get_current_version():
     release_tag = None
     global release_tag
     try:
-        repo = Repo('.')
+        repo = git.Repo('.')
         tags = repo.tags
         heads = repo.heads
         if hasattr(heads, 'master'):
             master = heads.master
             release_tag = next((tag for tag in tags if tag.commit == master.commit), None)
-    except GitError as err:
+    except git.GitError as err:
         logger.warning('GitError : {}'.format(err))
     except Exception as err:
         logger.warning('Exception occured when getting release version'.format(err))
