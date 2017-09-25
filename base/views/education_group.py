@@ -29,6 +29,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from base.forms.education_groups import EducationGroupFilter, MAX_RECORDS
 from base.models import academic_year
+from base.models.enums import education_group_types
 
 from . import layout
 
@@ -40,7 +41,8 @@ def education_groups(request):
         form = EducationGroupFilter(request.GET)
     else:
         current_academic_year = academic_year.current_academic_year()
-        form = EducationGroupFilter(initial={'academic_year': current_academic_year})
+        form = EducationGroupFilter(initial={'academic_year': current_academic_year,
+                                             'type': education_group_types.TRAINING})
 
     object_list = None
     if form.is_valid():

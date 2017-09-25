@@ -39,37 +39,44 @@
 </div>
 <div class="panel panel-default">
     <div class="panel-body">
-        <div class="row">
-            <form method="get" action="{% url 'education_groups'%}">
+        <form method="get" action="{% url 'education_groups'%}">
+            <div class="row">
                 <div class="col-md-2">
                     <label for="slt_academic_year">{% trans 'academic_year_small'%}</label>
                     {{form.academic_year}}
                 </div>
                 <div class="col-md-2">
-                    <label for="id_entity">{% trans 'entity_management' %}</label>
-                    {{form.entity_management}}
-                </div>
-                <div class="col-md-2">
                     <label for="id_acronym">{% trans 'acronym'%}</label>
                      {{form.acronym}}
                 </div>
-                <div class="col-md-2">
+                <div class="col-md-4">
                     <label for="id_title">{% trans 'title'%}</label>
                      {{form.title}}
                 </div>
-                <div class="col-md-2">
-                    <label for="id_type">{% trans 'type'%}</label>
-                     {{form.education_group_type}}
+                 <div class="col-md-2">
+                    <label for="id_of_type">{% trans 'of_type'%}</label>
+                     {{form.type}}
                 </div>
                 <div class="col-md-2">
-                    <button type="submit" id="bt_submit_education_groups_search" class="btn btn-primary pull-right" role="button">
+                    <label for="id_education_group_type">{% trans 'type'%}</label>
+                     {{form.education_group_type}}
+                </div>
+            </div>
+            <div class="row" style="margin-top:10px;">
+                <div class="col-md-2">
+                    <label for="id_entity">{% trans 'entity_management' %}</label>
+                    {{form.entity_management}}
+                </div>
+                <div class="col-md-10 text-right" style="line-height:55px;">
+                    <button type="submit" id="bt_submit_education_groups_search"
+                            class="btn btn-primary" role="button" style="vertical-align:bottom;">
                             <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
                     </button>
                 </div>
-            </form>
-        </div>
-
-        <div class="row" style="margin-top:10px;">
+            </div>
+        </form>
+        <hr style="margin:10px -15px 10px -15px;">
+        <div class="row">
             {% include "template_messages.html" %}
 
             {% if object_list %}

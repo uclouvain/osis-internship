@@ -31,6 +31,7 @@ from base.models import education_group_year
 from base.models import entity_version
 from base.models import offer_type
 from base.models import offer_year_entity
+from base.models.enums import education_group_types
 from base.models.enums import offer_year_entity_type
 
 MAX_RECORDS = 1000
@@ -43,6 +44,8 @@ class EducationGroupFilter(forms.Form):
     education_group_type = forms.ModelChoiceField(queryset=offer_type.find_all(), required=False,
                                                   widget=forms.Select(attrs={'class': 'form-control'}),
                                                   empty_label='')
+    type = forms.ChoiceField((('', ''),) + education_group_types.TYPES, required=False,
+                             widget=forms.Select(attrs={'class': 'form-control'}))
     acronym = title = entity_management = forms.CharField(
         widget=forms.TextInput(attrs={'size': '10', 'class': 'form-control'}),
         max_length=20, required=False)
