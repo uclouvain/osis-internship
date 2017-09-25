@@ -46,23 +46,6 @@ class AttributionCharge(SerializableModel):
         return u"%s" % str(self.attribution)
 
 
-def search(attribution=None, learning_unit_component=None):
-
-    queryset = AttributionCharge.objects
-
-    if attribution:
-        queryset = queryset.filter(attribution=attribution)
-
-    if learning_unit_component:
-        queryset = queryset.filter(learning_unit_component=learning_unit_component)
-
-    return queryset
-
-
-def find_first_by_learning_unit_component(attribution=None, learning_unit_component=None):
-    return search(attribution, learning_unit_component).first()
-
-
 def find_by_component_type(an_attribution=None, a_learning_unit_component_type=None):
     return AttributionCharge.objects.filter(attribution=an_attribution,
                                             learning_unit_component__learning_unit_year=an_attribution.learning_unit_year,
