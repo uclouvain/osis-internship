@@ -179,3 +179,10 @@ def is_manager(user):
 
 def is_teacher(user):
     return _has_role(user, 'PRF')
+
+
+def get_by_id(adviser_id):
+    try:
+        return Adviser.objects.get(pk=adviser_id)
+    except ObjectDoesNotExist:
+        return None

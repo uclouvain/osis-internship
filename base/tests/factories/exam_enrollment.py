@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -23,35 +23,31 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from faker import Faker
+import factory
+import factory.fuzzy
+import string
 
-from django.shortcuts import get_object_or_404, redirect
-from django.contrib.auth.decorators import login_required
-from base.models.student import find_by_offer_year
-from base.models.offer_year import OfferYear
-from django.contrib.auth.decorators import user_passes_test
-from dissertation.models.adviser import is_manager
-from django.http import JsonResponse
-
-
-@login_required
-@user_passes_test(is_manager)
-def get_students_list_in_offer_year(request, offer_year_start_id):
-    offer_year_start = get_object_or_404(OfferYear, pk=offer_year_start_id)
-    students_list = find_by_offer_year(offer_year_start)
-    data=[]
-    if students_list:
-        for student in students_list:
-            data.append({'person_id': student.id,
-                         'first_name': student.person.first_name,
-                         'last_name': student.person.last_name,
-                         'registration_id': student.registration_id})
-
-    else:
-        data = False
-
-    return JsonResponse({'res': data})
+from base.tests.factories.session_examen import SessionExamFactory
+from base.tests.factories.learning_unit_enrollment import LearningUnitEnrollment
+from base.models.enums import exam_enrollment_state
+from osis_common.utils.datetime import get_tzinfo
 
 
-def redirect_if_none(object, target):
-    if object is None:
-        return redirect(target)
+fake = Faker()
+
+
+class ExamEnrollmentFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = 'base.ExamEnrollment'
+
+    external_id = factory.fuzzy.FuzzyText(length=10, chars=string.digits)
+    changed = fake.date_time_this_decade(before_now=True, after_now=True, tzinfo=get_tzinfo())
+    score_draft = None
+    score_reencoded = None
+    score_final = None
+    justification_reencoded = None
+    justification_final = None
+    session_exam = factory.SubFactory(SessionExamFactory)
+    learning_unit_enrollment = factory.SubFactory(LearningUnitEnrollment)
+    enrollment_state = exam_enrollment_state.ENROLLED

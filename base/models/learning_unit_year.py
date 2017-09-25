@@ -57,7 +57,7 @@ class LearningUnitYear(SerializableModel):
     in_charge = models.BooleanField(default=False)
     structure = models.ForeignKey('Structure', blank=True, null=True)
     internship_subtype = models.CharField(max_length=50, blank=True, null=True,
-                                          choices=internship_subtypes.INTERNSHIP_SUBTYPES)
+                               choices=internship_subtypes.INTERNSHIP_SUBTYPES)
     status = models.BooleanField(default=False)
     session = models.CharField(max_length=50, blank=True, null=True,
                                choices=learning_unit_year_session.LEARNING_UNIT_YEAR_SESSION)

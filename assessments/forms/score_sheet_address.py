@@ -35,8 +35,9 @@ class ScoreSheetAddressForm(bootstrap.BootstrapModelForm):
     location = forms.CharField(max_length=255)
     postal_code = forms.CharField(max_length=255)
     city = forms.CharField(max_length=255)
-    offer_year_id = forms.HiddenInput()
+    offer_year = forms.CharField()
+    email = forms.EmailField(required=False)
 
     class Meta:
         model = score_sheet_address.ScoreSheetAddress
-        exclude = ['external_id', 'changed', 'offer_year']
+        exclude = ['external_id', 'changed']

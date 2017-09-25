@@ -41,11 +41,11 @@ class AssistantFormViewTestCase(TestCase):
     def setUp(self):
         self.factory = RequestFactory()
         self.settings = SettingsFactory()
-        self.assistant_mandate = AssistantMandateFactory()
         today = datetime.date.today()
         self.current_academic_year = AcademicYearFactory(start_date=today,
                                                          end_date=today.replace(year=today.year + 1),
                                                          year=today.year)
+        self.assistant_mandate = AssistantMandateFactory(academic_year=self.current_academic_year)
         LearningUnitYearFactory(academic_year=self.current_academic_year, acronym="LBIR1210")
         LearningUnitYearFactory(academic_year=self.current_academic_year, acronym="LBIR1211")
 
