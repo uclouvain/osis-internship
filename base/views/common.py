@@ -89,7 +89,7 @@ def login(request):
         if person:
             if person.language:
                 user_language = person.language
-                translation.anotctivate(user_language)
+                translation.activate(user_language)
                 request.session[translation.LANGUAGE_SESSION_KEY] = user_language
     elif settings.OVERRIDED_LOGIN_URL:
         return redirect(settings.OVERRIDED_LOGIN_URL)
@@ -189,6 +189,5 @@ def get_current_version():
         for tag in tags:
             if tag.commit == master.commit:
                 release_tag = str(tag)
-                print("Release Tag is "+release_tag)
                 break
     return release_tag
