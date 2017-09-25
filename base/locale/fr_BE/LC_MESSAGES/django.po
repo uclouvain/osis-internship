@@ -2094,3 +2094,9 @@ msgstr "Inscriptible"
 
 msgid "formations"
 msgstr "Formations"
+
+msgid "formations_lnk"
+msgstr "Formations"
+
+msgid "desc_lnk_formations"
+msgstr "Organisation des formations"
