@@ -186,8 +186,5 @@ def get_current_version():
     heads = repo.heads
     if hasattr(heads, 'master'):
         master = heads.master
-        for tag in tags:
-            if tag.commit == master.commit:
-                release_tag = str(tag)
-                break
+        release_tag = next((tag for tag in tags if tag.commit == master.commit), None)
     return release_tag
