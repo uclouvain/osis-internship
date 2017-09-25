@@ -23,8 +23,6 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import re
-
 from django import forms
 from django.core.exceptions import ValidationError
 from django.db.models import Prefetch
@@ -49,10 +47,10 @@ class LearningUnitYearForm(forms.Form):
     with_entity_subordinated = forms.BooleanField(required=False)
 
     def clean_acronym(self):
-        MIN_ACRONYM_LENGTH = 3
+        min_acronym_length = 3
         data_cleaned = self.cleaned_data.get('acronym')
         data_cleaned = _treat_empty_or_str_none_as_none(data_cleaned)
-        if data_cleaned and len(data_cleaned) < MIN_ACRONYM_LENGTH:
+        if data_cleaned and len(data_cleaned) < min_acronym_length:
             raise ValidationError(_('LU_WARNING_INVALID_ACRONYM'))
         return data_cleaned
 
@@ -107,8 +105,8 @@ def _get_filter_learning_container_ids(filter_data):
     if requirement_entity_acronym:
         entity_ids = _get_entities_ids(requirement_entity_acronym, with_entity_subordinated)
         return list(mdl.entity_container_year.search(link_type=entity_container_year_link_type.REQUIREMENT_ENTITY,
-                                                     entity_id=entity_ids) \
-                    .values_list('learning_container_year', flat=True).distinct())
+                                                     entity_id=entity_ids).values_list('learning_container_year',
+                                                                                       flat=True).distinct())
     return None
 
 
@@ -188,7 +186,8 @@ class CreateLearningUnitYearForm(forms.ModelForm):
                                             widget=forms.Select(attrs={'class': 'form-control',
                                                                        'id': 'allocation_entity_1',
                                                                        'disabled': 'disabled',
-                                                                       'onchange': 'showAdditionalEntity2(this.value)'}))
+                                                                       'onchange': 'showAdditionalEntity2(this.value)'})
+                                            )
     additional_entity_2 = forms.ChoiceField(choices=lazy(create_main_entities_version_list, tuple),
                                             required=False,
                                             widget=forms.Select(attrs={'class': 'form-control',
