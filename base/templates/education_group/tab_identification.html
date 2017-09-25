@@ -93,36 +93,48 @@
                                             {% endif %}
                                         </div>
                                         <div class="col-md-6">
-                                            <input type="checkbox"
-                                                   {% if education_group_year.enrollment_enabled %}
-                                                    checked
-                                                   {% endif %}>
                                             <label>{% trans 'enrollment_enabled' %}</label><br>
-                                            <input type="checkbox"
-                                                   {% if education_group_year.partial_deliberation %}
-                                                        checked
-                                                   {% endif %}>
+                                            {% if education_group_year.enrollment_enabled %}
+                                                 {% trans 'yes'%}
+                                            {% else %}
+                                                {% trans 'no'%}
+                                            {% endif %}
+                                            <br><br>
                                             <label>{% trans 'partial_deliberation' %}</label><br>
-                                            <input type="checkbox"
-                                                   {% if education_group_year.admission_exam %}
-                                                        checked
-                                                   {% endif %}>
+                                            {% if education_group_year.partial_deliberation %}
+                                                {% trans 'yes'%}
+                                            {% else %}
+                                                {% trans 'no'%}
+                                            {% endif %}
+                                            <br><br>
                                             <label>{% trans 'admission_exam' %}</label><br>
-                                            <input type="checkbox"
-                                                   {% if education_group_year.university_certificate %}
-                                                        checked
-                                                   {% endif %}>
+                                            {% if education_group_year.admission_exam %}
+                                                {% trans 'yes'%}
+                                            {% else %}
+                                                {% trans 'no'%}
+                                            {% endif %}
+                                            <br><br>
                                             <label>{% trans 'university_certificate' %}</label><br>
-                                            <input type="checkbox"
-                                                   {% if education_group_year.dissertation %}
-                                                        checked
-                                                   {% endif %}>
+                                            {% if education_group_year.university_certificate %}
+                                                {% trans 'yes'%}
+                                            {% else %}
+                                                {% trans 'no'%}
+                                            {% endif %}
+                                            <br><br>
                                             <label>{% trans 'dissertation' %}</label><br>
-                                            <input type="checkbox"
-                                                   {% if education_group_year.internship %}
-                                                        checked
-                                                   {% endif %}>
+                                            {% if education_group_year.dissertation %}
+                                                {% trans 'yes'%}
+                                            {% else %}
+                                                {% trans 'no'%}
+                                            {% endif %}
+                                            <br><br>
                                             <label>{% trans 'internship' %}</label><br>
+                                            {% if education_group_year.internship %}
+                                                {% trans 'yes'%}
+                                            {% else %}
+                                                {% trans 'no'%}
+                                            {% endif %}
+                                            <br><br>
                                         </div>
                                     </div>
                                 </div>
@@ -134,15 +146,10 @@
                                 <div class="panel-body">
                                     <div class="row">
                                         <div class="col-md-6">
-                                            {% if education_group_year.active %}
-                                                <span class="glyphicon glyphicon-ok-circle" aria-hidden="true" style="color:green;"
-                                                      title="{% trans  'active' %}"></span>
-                                            {% else %}
-                                                <span class="glyphicon glyphicon-ok-circle" aria-hidden="true" style="color:gray;"
-                                                      title="{% trans  'inactive' %}"></span>
-                                            {% endif %}
-
-                                            &nbsp;<label>{% trans 'active_status'%}</label>
+                                            <label>{% trans 'status'%}</label><br>
+                                            {%if education_group_year.active%}
+                                                {% trans education_group_year.active %}
+                                            {% endif%}
                                         </div>
                                         <div class="col-md-6">
                                             <label>{% trans 'schedule_type'%}</label><br>
@@ -205,11 +212,12 @@
                             </div>
                             <div class="panel panel-default">
                                 <div class="panel-body">
-                                    <input type="checkbox"
-                                           {% if education_group_year.funding %}
-                                           checked
-                                           {% endif %}>
-                                    <label>{% trans 'funding' %}</label>
+                                    <label>{% trans 'funding' %}</label><br>
+                                    {% if education_group_year.funding %}
+                                        {% trans 'yes'%}
+                                    {% else %}
+                                        {% trans 'no'%}
+                                    {% endif %}
                                     <br><br>
                                     <label>{% trans 'funding_direction' %}</label><br>
                                     {% if education_group_year.funding_direction %}
@@ -218,11 +226,13 @@
                                         &nbsp;
                                     {%endif%}
                                     <br>
-                                    <input type="checkbox"
-                                           {% if education_group_year.funding_cud %}
-                                           checked
-                                           {% endif %}>
-                                    <label>{% trans 'funding_cud' %}</label>
+                                    <label>{% trans 'funding_cud' %}</label><br>
+                                    {% if education_group_year.funding_cud %}
+                                        {% trans 'yes'%}
+                                    {%else%}
+                                        {% trans 'no'%}
+                                    {% endif %}
+
                                     <br><br>
                                     <label>{% trans 'cud_funding_direction' %}</label><br>
                                     {% if education_group_year.funding_direction_cud %}

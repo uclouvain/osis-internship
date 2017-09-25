@@ -2042,13 +2042,13 @@ msgid "funding"
 msgstr "Finançable"
 
 msgid "funding_cud"
-msgstr "Financement CUD"
+msgstr "Financement coopération internationale CCD/CUD"
 
 msgid "funding_direction"
 msgstr "Orientation de financement"
 
 msgid "cud_funding_direction"
-msgstr "Orientation CUD"
+msgstr "Orientation coopération internationale CCD/CUD"
 
 msgid "active_status"
 msgstr "Actif"

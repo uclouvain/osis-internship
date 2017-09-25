@@ -2034,13 +2034,13 @@ msgid "funding"
 msgstr "Funding"
 
 msgid "funding_cud"
-msgstr "Funding CUD"
+msgstr "Funding international cooperation CCD/CUD"
 
 msgid "funding_direction"
 msgstr "Funding direction"
 
 msgid "cud_funding_direction"
-msgstr "Funding CUD direction"
+msgstr "Funding international cooperation CCD/CUD direction"
 
 msgid "active_status"
 msgstr "Active"
