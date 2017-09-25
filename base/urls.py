@@ -25,7 +25,8 @@
 ##############################################################################
 from django.conf.urls import url, include
 
-from base.views import learning_unit, offer, common, institution, organization, academic_calendar, my_osis, entity, student
+from base.views import learning_unit, offer, common, institution, organization, academic_calendar, \
+    my_osis, entity, student, education_group
 
 urlpatterns = [
     url(r'^$', common.home, name='home'),
@@ -51,6 +52,10 @@ urlpatterns = [
     url(r'^api/v1/entities/$', entity.post_entities, name='post_entities'),
 
     url(r'^catalog/$', common.catalog, name='catalog'),
+
+    url(r'^education_groups/', include([
+        url(r'^$', education_group.education_groups, name='education_groups')
+    ])),
 
     url(r'^entities/', include([
         url(r'^$', institution.entities, name='entities'),

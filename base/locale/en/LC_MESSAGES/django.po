@@ -2003,3 +2003,9 @@ msgstr "Associated entity"
 
 msgid "LU_WARNING_INVALID_ACRONYM"
 msgstr "The acronym, if it is entered, must at least count 3 characters"
+
+msgid "education_groups"
+msgstr "Education groups"
+
+msgid "entity_management"
+msgstr "Entity management"

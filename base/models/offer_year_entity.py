@@ -56,7 +56,10 @@ def search(**kwargs):
     queryset = OfferYearEntity.objects
 
     if 'entity' in kwargs:
-        queryset = queryset.filter(entity__exact=kwargs['entity'])
+        if isinstance(kwargs['entity'], list):
+            queryset = queryset.filter(entity__in=kwargs['entity'])
+        else:
+            queryset = queryset.filter(entity=kwargs['entity'])
 
     if 'offer_year' in kwargs:
         queryset = queryset.filter(offer_year=kwargs['offer_year'])

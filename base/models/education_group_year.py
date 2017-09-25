@@ -84,3 +84,27 @@ class EducationGroupYear(models.Model):
 
     def __str__(self):
         return u"%s - %s" % (self.academic_year, self.acronym)
+
+
+def search(*args, **kwargs):
+    qs = EducationGroupYear.objects
+
+    if "id" in kwargs:
+        if isinstance(kwargs['id'], list):
+            qs = qs.filter(id__in=kwargs['id'])
+        else:
+            qs = qs.filter(id=kwargs['id'])
+    if "academic_year" in kwargs:
+        qs = qs.filter(academic_year=kwargs['academic_year'])
+    if "acronym" in kwargs:
+        qs = qs.filter(acronym__icontains=kwargs['acronym'])
+    if "title" in kwargs:
+        qs = qs.filter(title__icontains=kwargs['title'])
+    if "education_group_type" in kwargs:
+        if isinstance(kwargs['education_group_type'], list):
+            qs = qs.filter(education_group_type__in=kwargs['education_group_type'])
+        else:
+            qs = qs.filter(education_group_type=kwargs['education_group_type'])
+
+    return qs.select_related('education_group_type', 'academic_year')
+
