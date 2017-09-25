@@ -41,7 +41,6 @@ import logging
 logger = logging.getLogger(settings.DEFAULT_LOGGER)
 
 
-
 def page_not_found(request):
     response = layout.render(request, 'page_not_found.html', {})
     response.status_code = 404
