@@ -284,14 +284,16 @@ def find_first_latest_version_by_period(ent,start_date, end_date):
 
 
 def find_parent_faculty_version(entity_ver, academic_yr):
-    if entity_ver.parent is None:
-        return None
-    else:
-        entity_parent_version = find_first_latest_version_by_period(entity_ver.parent, academic_yr.start_date, academic_yr.end_date)
-        if entity_parent_version is None:
+    if entity_ver:
+        if entity_ver.parent is None:
             return None
         else:
-            if entity_parent_version.entity_type == entity_type.FACULTY:
-                return entity_parent_version
+            entity_parent_version = find_first_latest_version_by_period(entity_ver.parent, academic_yr.start_date, academic_yr.end_date)
+            if entity_parent_version is None:
+                return None
             else:
-                return find_parent_faculty_version(entity_parent_version, academic_yr)
+                if entity_parent_version.entity_type == entity_type.FACULTY:
+                    return entity_parent_version
+                else:
+                    return find_parent_faculty_version(entity_parent_version, academic_yr)
+    return None

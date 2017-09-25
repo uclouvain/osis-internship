@@ -91,16 +91,11 @@ class LearningUnitYear(SerializableModel):
 
     @property
     def faculty_reference(self):
-        print('faculty_reference1')
         faculty_ref = None
 
         entity_container_yr = mdl_entity_container_year.find_requirement_entity2(self.learning_container_year)
-        print('2')
-        print(entity_container_yr)
         if entity_container_yr:
-            print(entity_container_yr)
             if entity_container_yr.entity:
-                print(entity_container_yr.entity)
                 entity_version = mdl_entity_version.get_last_version(entity_container_yr.entity)
                 faculty_ref = entity_version.entity
                 if entity_version:
@@ -181,30 +176,21 @@ def find_lt_year_acronym(academic_yr, acronym):
                                            acronym__iexact=acronym).order_by('academic_year')
 
 def is_service_course(learning_unit_yr):
-    print('is_service_course')
-    print(learning_unit_yr.learning_container_year.academic_year.start_date)
     entity_container_yr = mdl_entity_container_year.find_requirement_entity(learning_unit_yr.learning_container_year)
-    print(entity_container_yr)
-    print('avant if')
+
     if entity_container_yr:
-        print('if1')
-        print(entity_container_yr)
         if entity_container_yr.entity:
-            print('if2')
-            print(entity_container_yr.entity)
-            entity_version = mdl_entity_version.find_first_latest_version_by_period(entity_container_yr.entity,learning_unit_yr.academic_year.start_date,learning_unit_yr.academic_year.end_date)
+            entity_version = mdl_entity_version.find_first_latest_version_by_period(entity_container_yr.entity,
+                                                                                    learning_unit_yr.academic_year.start_date,
+                                                                                    learning_unit_yr.academic_year.end_date)
             enti = mdl_entity_version.find_parent_faculty_version(entity_version,learning_unit_yr.academic_year)
             if enti is None:
-                print('if3')
                 enti = entity_container_yr.entity
-
-            enti_v = mdl_entity_version.get_last_version(enti)
-            print(enti_v.acronym)
+            enti_v = mdl_entity_version.get_last_version(enti.entity)
             entity_allocation = mdl_entity_container_year.find_allocation_entity(learning_unit_yr.learning_container_year)
-            entity_allocation_v = mdl_entity_version.get_last_version(entity_allocation)
-            for e in enti.find_descendants(None):
+            entity_allocation_v = mdl_entity_version.get_last_version(entity_allocation.entity)
+            for e in enti_v.find_descendants(learning_unit_yr.academic_year.start_date):
                 if e == entity_allocation_v:
-                    print('if4')
                     return False
     return True
 
