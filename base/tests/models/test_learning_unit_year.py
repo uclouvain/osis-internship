@@ -32,6 +32,12 @@ from base.tests.factories.learning_unit import LearningUnitFactory
 from base.tests.factories.learning_unit_year import LearningUnitYearFactory
 from base.tests.factories.learning_container_year import LearningContainerYearFactory
 from base.tests.factories.learning_container import LearningContainerFactory
+from base.tests.factories.entity_container_year import EntityContainerYearFactory
+from base.tests.factories.entity import EntityFactory
+from base.tests.factories.entity_version import EntityVersionFactory
+from base.models.enums import entity_container_year_link_type
+from base.models import learning_unit_year
+import datetime
 
 
 def create_learning_unit_year(acronym, title, academic_year):
@@ -48,28 +54,52 @@ class LearningUnitYearTest(TestCase):
         self.academic_year = AcademicYearFactory(year=timezone.now().year)
         self.learning_unit_year = LearningUnitYearFactory(acronym="LDROI1004", title="Juridic law courses",
                                                           academic_year=self.academic_year)
+    #
+    # def test_find_by_tutor_with_none_argument(self):
+    #     self.assertEquals(attribution.find_by_tutor(None), None)
+    #
+    # def test_subdivision_computation(self):
+    #     l_container_year = LearningContainerYearFactory(acronym="LBIR1212", academic_year=self.academic_year)
+    #     l_unit_1 = LearningUnitYearFactory(acronym="LBIR1212", learning_container_year= l_container_year,
+    #                             academic_year=self.academic_year)
+    #     l_unit_2 = LearningUnitYearFactory(acronym="LBIR1212A", learning_container_year= l_container_year,
+    #                             academic_year=self.academic_year)
+    #     l_unit_3 = LearningUnitYearFactory(acronym="LBIR1212B", learning_container_year= l_container_year,
+    #                             academic_year=self.academic_year)
+    #
+    #     self.assertFalse(l_unit_1.subdivision)
+    #     self.assertEqual(l_unit_2.subdivision, 'A')
+    #     self.assertEqual(l_unit_3.subdivision, 'B')
+    #
+    # def test_find_reference_fac(self):
+    #     l_container = L
+    #     l_container_year = LearningContainerYearFactory(acronym="LDROI1001",
+    #                                                     academic_year=self.academic_year)
+    #     l_unit_yr = LearningUnitYearFactory(acronym="LDROI1001",
+    #                                         learning_container_year= l_container_year,
+    #                                         academic_year=self.academic_year,
+    #                                         learning_unit=LearningUnitFactory())
 
-    def test_find_by_tutor_with_none_argument(self):
-        self.assertEquals(attribution.find_by_tutor(None), None)
-
-    def test_subdivision_computation(self):
-        l_container_year = LearningContainerYearFactory(acronym="LBIR1212", academic_year=self.academic_year)
-        l_unit_1 = LearningUnitYearFactory(acronym="LBIR1212", learning_container_year= l_container_year,
-                                academic_year=self.academic_year)
-        l_unit_2 = LearningUnitYearFactory(acronym="LBIR1212A", learning_container_year= l_container_year,
-                                academic_year=self.academic_year)
-        l_unit_3 = LearningUnitYearFactory(acronym="LBIR1212B", learning_container_year= l_container_year,
-                                academic_year=self.academic_year)
-
-        self.assertFalse(l_unit_1.subdivision)
-        self.assertEqual(l_unit_2.subdivision, 'A')
-        self.assertEqual(l_unit_3.subdivision, 'B')
-
-    def test_find_reference_fac(self):
-        l_container = L
+    def test_is_service_course(self):
+        l_container = LearningContainerFactory()
         l_container_year = LearningContainerYearFactory(acronym="LDROI1001",
+                                                        learning_container=l_container,
                                                         academic_year=self.academic_year)
         l_unit_yr = LearningUnitYearFactory(acronym="LDROI1001",
                                             learning_container_year= l_container_year,
                                             academic_year=self.academic_year,
                                             learning_unit=LearningUnitFactory())
+        entity = EntityFactory()
+        year = self.academic_year.year
+        EntityVersionFactory(entity=entity,
+                             parent=None,
+                             acronym="Entity V_{}".format(year),
+                             start_date=self.academic_year.start_date,
+                             end_date=self.academic_year.end_date)
+
+        EntityContainerYearFactory(
+            entity=entity,
+            learning_container_year=l_container_year,
+            type=entity_container_year_link_type.REQUIREMENT_ENTITY
+        )
+        learning_unit_year.is_service_course(l_unit_yr)

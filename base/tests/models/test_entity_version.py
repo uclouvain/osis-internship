@@ -36,6 +36,7 @@ from base.tests.factories.academic_year import AcademicYearFactory
 
 now = datetime.datetime.now()
 
+
 class EntityVersionTest(TestCase):
 
     def setUp(self):
@@ -59,14 +60,12 @@ class EntityVersionTest(TestCase):
                                 end_date=self.end_date
                                 )
                                 for x in range(3)]
-        self.parent_entity_version = EntityVersionFactory(
-                                        entity=self.parent,
-                                        acronym="ENTITY_PARENT",
-                                        title="This is the entity parent version",
-                                        entity_type="SECTOR",
-                                        start_date=self.start_date,
-                                        end_date=self.end_date
-                                        )
+        self.parent_entity_version = EntityVersionFactory(entity=self.parent,
+                                                          acronym="ENTITY_PARENT",
+                                                          title="This is the entity parent version",
+                                                          entity_type="SECTOR",
+                                                          start_date=self.start_date,
+                                                          end_date=self.end_date)
 
     def test_create_entity_version_same_entity_same_dates(self):
         with self.assertRaisesMessage(AttributeError, 'EntityVersion invalid parameters'):
@@ -236,14 +235,13 @@ class EntityVersionTest(TestCase):
 
     def test_find_parent_faculty_version(self):
         start_date = datetime.datetime(now.year - 1, now.month, 16)
-        end_date = datetime.datetime(now.year , now.month, 27)
+        end_date = datetime.datetime(now.year, now.month, 27)
 
         ac_yr = AcademicYearFactory(year=(now.year - 1),
-                            start_date=datetime.datetime(now.year - 1, now.month, 15),
-                            end_date=datetime.datetime(now.year, now.month, 28))
+                                    start_date=datetime.datetime(now.year - 1, now.month, 15),
+                                    end_date=datetime.datetime(now.year, now.month, 28))
 
         entity_faculty = EntityFactory(country=self.country)
-        entity_faculty.save()
         entity_faculty_version = EntityVersionFactory(
             entity=entity_faculty,
             acronym="ENTITY_FACULTY",
@@ -254,15 +252,13 @@ class EntityVersionTest(TestCase):
             end_date=end_date
         )
         entity_school_child_level1 = EntityFactory(country=self.country)
-        entity_school_version_level1 = EntityVersionFactory(
-            entity=entity_school_child_level1,
-            acronym="ENTITY_LEVEL1",
-            title="This is the entity version level1 ",
-            entity_type="SCHOOL",
-            parent=entity_faculty,
-            start_date=start_date,
-            end_date=end_date
-        )
+        EntityVersionFactory(entity=entity_school_child_level1,
+                             acronym="ENTITY_LEVEL1",
+                             title="This is the entity version level1 ",
+                             entity_type="SCHOOL",
+                             parent=entity_faculty,
+                             start_date=start_date,
+                             end_date=end_date)
         entity_school_child_level2 = EntityFactory(country=self.country)
         entity_school_version_level2 = EntityVersionFactory(
             entity=entity_school_child_level2,
@@ -273,60 +269,57 @@ class EntityVersionTest(TestCase):
             start_date=start_date,
             end_date=end_date
         )
-        print(entity_faculty_version)
+
         self.assertEqual(entity_version.find_parent_faculty_version(entity_school_version_level2, ac_yr),
                          entity_faculty_version)
-        print(entity_faculty_version)
 
-    #
-    # def test_find_parent_faculty_version_no_parent(self):
-    #     start_date = datetime.datetime(now.year - 1, now.month, 16)
-    #     end_date = datetime.datetime(now.year , now.month, 27)
-    #
-    #     ac_yr = AcademicYearFactory(year=(now.year - 1),
-    #                                 start_date=datetime.datetime(now.year - 1, now.month, 15),
-    #                                 end_date=datetime.datetime(now.year, now.month, 28))
-    #     entity_school_no_parent = EntityFactory(country=self.country)
-    #     entity_school_version_no_parent = EntityVersionFactory(
-    #         entity=entity_school_no_parent,
-    #         acronym="ENTITY_LEVEL2",
-    #         title="This is the entity version level 2",
-    #         entity_type="SCHOOL",
-    #         parent=None,
-    #         start_date=start_date,
-    #         end_date=end_date
-    #     )
-    #
-    #     self.assertIsNone(entity_version.find_parent_faculty_version(entity_school_version_no_parent, ac_yr))
-    #
-    # def test_find_parent_faculty_version_no_faculty_parent(self):
-    #
-    #     start_date = datetime.datetime(now.year - 1, now.month, 16)
-    #     end_date = datetime.datetime(now.year , now.month, 27)
-    #
-    #     ac_yr = AcademicYearFactory(year=(now.year - 1),
-    #                                 start_date=datetime.datetime(now.year - 1, now.month, 15),
-    #                                 end_date=datetime.datetime(now.year, now.month, 28))
-    #
-    #     entity_faculty = EntityFactory(country=self.country)
-    #     entity_faculty_version = EntityVersionFactory(
-    #         entity=entity_faculty,
-    #         acronym="ENTITY_NOT_FACULTY",
-    #         title="This is not an entity faculty ",
-    #         entity_type="SCHOOL",
-    #         parent=None,
-    #         start_date=start_date,
-    #         end_date=end_date
-    #     )
-    #     entity_school_child_level1 = EntityFactory(country=self.country)
-    #     entity_school_version_level1 = EntityVersionFactory(
-    #         entity=entity_school_child_level1,
-    #         acronym="ENTITY_LEVEL1",
-    #         title="This is the entity version level1 ",
-    #         entity_type="SCHOOL",
-    #         parent=entity_faculty,
-    #         start_date=start_date,
-    #         end_date=end_date
-    #     )
-    #     self.assertIsNone(entity_version.find_parent_faculty_version(entity_school_version_level1, ac_yr))
-    #
+
+    def test_find_parent_faculty_version_no_parent(self):
+        start_date = datetime.datetime(now.year - 1, now.month, 16)
+        end_date = datetime.datetime(now.year, now.month, 27)
+
+        ac_yr = AcademicYearFactory(year=(now.year - 1),
+                                    start_date=datetime.datetime(now.year - 1, now.month, 15),
+                                    end_date=datetime.datetime(now.year, now.month, 28))
+        entity_school_no_parent = EntityFactory(country=self.country)
+        entity_school_version_no_parent = EntityVersionFactory(
+            entity=entity_school_no_parent,
+            acronym="ENTITY_LEVEL2",
+            title="This is the entity version level 2",
+            entity_type="SCHOOL",
+            parent=None,
+            start_date=start_date,
+            end_date=end_date
+        )
+
+        self.assertIsNone(entity_version.find_parent_faculty_version(entity_school_version_no_parent, ac_yr))
+
+    def test_find_parent_faculty_version_no_faculty_parent(self):
+
+        start_date = datetime.datetime(now.year - 1, now.month, 16)
+        end_date = datetime.datetime(now.year, now.month, 27)
+
+        ac_yr = AcademicYearFactory(year=(now.year - 1),
+                                    start_date=datetime.datetime(now.year - 1, now.month, 15),
+                                    end_date=datetime.datetime(now.year, now.month, 28))
+
+        entity_parent = EntityFactory(country=self.country)
+        EntityVersionFactory(entity=entity_parent,
+                             acronym="ENTITY_NOT_FACULTY",
+                             title="This is not an entity faculty ",
+                             entity_type="SCHOOL",
+                             parent=None,
+                             start_date=start_date,
+                             end_date=end_date)
+        entity_school_child_level1 = EntityFactory(country=self.country)
+        entity_school_version_level1 = EntityVersionFactory(
+            entity=entity_school_child_level1,
+            acronym="ENTITY_LEVEL1",
+            title="This is the entity version level1 ",
+            entity_type="SCHOOL",
+            parent=entity_parent,
+            start_date=start_date,
+            end_date=end_date
+        )
+        self.assertIsNone(entity_version.find_parent_faculty_version(entity_school_version_level1, ac_yr))
+
