@@ -210,11 +210,12 @@ def create_assistant_mandate_if_not_exists(record, assistant):
 
 def link_mandate_to_entity(mandate, entity=None):
     if entity != 'None':
-        mandate_entities = assistant_mdl.mandate_entity.find_by_mandate_and_entity(mandate, entity)
-        if len(mandate_entities) == 0:
-            mandate_entity = assistant_mdl.mandate_entity.MandateEntity()
-        else:
+        type = mdl.entity_version.get_by_entity_and_date(entity, None)
+        mandate_entities = assistant_mdl.mandate_entity.find_by_mandate_and_type(mandate, type[0].entity_type)
+        if len(mandate_entities) > 0:
             mandate_entity = mandate_entities[0]
+            mandate_entity.delete()
+        mandate_entity = assistant_mdl.mandate_entity.MandateEntity()
         mandate_entity.assistant_mandate = mandate
         mandate_entity.entity = entity
         mandate_entity.save()
