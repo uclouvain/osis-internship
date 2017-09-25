@@ -25,11 +25,12 @@
 ##############################################################################
 from django import forms
 from django.core.exceptions import ValidationError
-from django.forms import ModelForm, Textarea
+from django.forms import ModelForm, Textarea, ModelChoiceField
 from django.forms.models import inlineformset_factory
 from django.utils.translation import ugettext as _
-from base.models import structure, academic_year, entity
-from base.models.enums import structure_type, entity_type
+from base.models import academic_year, entity
+from base.models.enums import entity_type
+from base.business.entity_version import find_last_versions_from_entites
 from assistant import models as mdl
 from assistant.models.enums import review_advice_choices, assistant_type
 from assistant.models.enums import assistant_mandate_renewal, reviewer_role, assistant_phd_inscription
@@ -75,28 +76,35 @@ class MandateForm(ModelForm):
             self.fields[field].widget.attrs['class'] = 'form-control'
 
 
-class MandateStructureForm(ModelForm):
+class EntityChoiceField(ModelChoiceField):
+    def label_from_instance(self, obj):
+        return "{0} ({1})".format(obj.acronym, obj.title)
+
+
+class MandateEntityForm(ModelForm):
     class Meta:
-        model = mdl.mandate_structure.MandateStructure
-        fields = ('structure', 'assistant_mandate')
+        model = mdl.mandate_entity.MandateEntity
+        fields = ('entity', 'assistant_mandate')
 
 
 def get_field_qs(field, **kwargs):
-    if field.name == 'structure':
-        return forms.ModelChoiceField(queryset=structure.find_by_types([structure_type.INSTITUTE,
-                                                                        structure_type.POLE,
-                                                                        structure_type.PROGRAM_COMMISSION,
-                                                                        structure_type.FACULTY,
-                                                                        structure_type.SECTOR
-                                                                        ]))
+    if field.name == 'entity':
+
+        return EntityChoiceField(queryset=find_last_versions_from_entites(
+            entity.search(entity_type=entity_type.SECTOR) |
+            entity.search(entity_type=entity_type.FACULTY) |
+            entity.search(entity_type=entity_type.SCHOOL) |
+            entity.search(entity_type=entity_type.INSTITUTE) |
+            entity.search(entity_type=entity_type.POLE)))
+
     return field.formfield(**kwargs)
 
 
-structure_inline_formset = inlineformset_factory(mdl.assistant_mandate.AssistantMandate,
-                                                 mdl.mandate_structure.MandateStructure,
-                                                 formfield_callback=get_field_qs,
-                                                 fields=('structure', 'assistant_mandate'),
-                                                 extra=1, can_delete=True, min_num=1, max_num=4)
+entity_inline_formset = inlineformset_factory(mdl.assistant_mandate.AssistantMandate,
+                                              mdl.mandate_entity.MandateEntity,
+                                              formfield_callback=get_field_qs,
+                                              fields=('entity', 'assistant_mandate'),
+                                              extra=1, can_delete=True, min_num=1, max_num=5)
 
 
 class AssistantFormPart1(ModelForm):
@@ -290,8 +298,7 @@ class AssistantFormPart6(ModelForm):
 
 class ReviewerDelegationForm(ModelForm):
     role = forms.CharField(widget=forms.HiddenInput(), required=True)
-    entity = forms.ModelChoiceField(widget=forms.HiddenInput(), required=True,
-                                       queryset=(
+    entity = forms.ModelChoiceField(widget=forms.HiddenInput(), required=True, queryset=(
         entity.search(entity_type=entity_type.INSTITUTE) |
         entity.search(entity_type=entity_type.FACULTY) |
         entity.search(entity_type=entity_type.SCHOOL) |
@@ -309,9 +316,10 @@ class ReviewerDelegationForm(ModelForm):
 
 class ReviewerForm(ModelForm):
     role = forms.ChoiceField(required=True, choices=reviewer_role.ROLE_CHOICES)
-    entity = forms.ModelChoiceField(required=True, queryset=(
-        entity.search(entity_type=entity_type.INSTITUTE) | entity.search(entity_type=entity_type.FACULTY) |
-        entity.search(entity_type=entity_type.SECTOR)))
+    entities = \
+        entity.search(entity_type=entity_type.INSTITUTE) | entity.search(entity_type=entity_type.FACULTY) | \
+        entity.search(entity_type=entity_type.SECTOR)
+    entity = EntityChoiceField(required=True, queryset=find_last_versions_from_entites(entities))
 
     class Meta:
         model = mdl.reviewer.Reviewer
@@ -336,7 +344,7 @@ class ReviewerReplacementForm(ModelForm):
 
 class ReviewersFormset(ModelForm):
     role = forms.ChoiceField(required=False)
-    entity = forms.ChoiceField(required=False)
+    entity = forms.CharField(required=False)
     person = forms.ChoiceField(required=False)
     id = forms.IntegerField(required=False)
     ACTIONS = (

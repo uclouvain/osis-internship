@@ -23,9 +23,17 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from base.models import entity_version, offer_year_entity
+from django.db.models import Max, F
+from base.models import entity_version, offer_year_entity, entity
 
 
 def find_from_offer_year(offer_year):
     return [entity_version.get_last_version(off_year_entity.entity)
             for off_year_entity in offer_year_entity.search(offer_year=offer_year).distinct('entity')]
+
+
+def find_last_versions_from_entites(entities):
+    return entity.Entity.objects.filter(pk__in=entities).\
+        annotate(most_recent_version=Max('entityversion__start_date')).\
+        annotate(acronym=F('entityversion__acronym')).annotate(title=F('entityversion__title')).\
+        order_by('entityversion__title')

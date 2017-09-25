@@ -58,7 +58,7 @@
         {% for reviewer in reviewers_formset %}
             <tr>
             <td>{{ reviewer.person.value }}{{ reviewer.access }}</td>
-            <td>{{ reviewer.entity.value.entityversion_set }}</td>
+            <td>{{ reviewer.entity.value }}</td>
             <td>{% trans reviewer.role.value %}</td>
             <td>{{ reviewer.action }}</td>
             {{ reviewer.id.as_hidden }}

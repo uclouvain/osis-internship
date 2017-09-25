@@ -33,7 +33,7 @@ from openpyxl.writer.excel import save_virtual_workbook
 from base.models.enums import structure_type
 from base.models import academic_year
 from base.views import layout
-from assistant.forms import MandateForm, structure_inline_formset
+from assistant.forms import MandateForm, entity_inline_formset
 from assistant import models as assistant_mdl
 from assistant.models import assistant_mandate, mandate_structure, review
 from assistant.models.enums import assistant_type, reviewer_role
@@ -58,7 +58,7 @@ def mandate_edit(request):
                                 'contract_duration': mandate.contract_duration,
                                 'contract_duration_fte': mandate.contract_duration_fte
                                 }, prefix="mand", instance=mandate)
-    formset = structure_inline_formset(instance=mandate, prefix="struct")
+    formset = entity_inline_formset(instance=mandate, prefix="entity")
     
     return layout.render(request, 'mandate_form.html', {'mandate': mandate, 'form': form, 'formset': formset})
 
@@ -68,7 +68,7 @@ def mandate_save(request):
     mandate_id = request.POST.get("mandate_id")
     mandate = assistant_mdl.assistant_mandate.find_mandate_by_id(mandate_id)
     form = MandateForm(data=request.POST, instance=mandate, prefix='mand')
-    formset = structure_inline_formset(request.POST, request.FILES, instance=mandate, prefix='struct')
+    formset = entity_inline_formset(request.POST, request.FILES, instance=mandate, prefix='entity')
     if form.is_valid():
         form.save()
         if formset.is_valid():
@@ -115,7 +115,7 @@ def generate_xls():
                       _("others_status"),
                       _("sector"),
                       _("faculty"),
-                      _("program_commission"),
+                      _("school"),
                       _("institute"),
                       _("pole"),
                       _("phd_supervisor"),
