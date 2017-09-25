@@ -643,6 +643,7 @@ def learning_unit_year_add(request):
         form = CreateLearningUnitYearForm(request.POST)
         if form.is_valid():
             data = form.cleaned_data
+            current_academic_year = mdl.academic_year.current_academic_year()
             academic_year = data['academic_year']
             year = academic_year.year
             status = check_status(data)
@@ -656,13 +657,19 @@ def learning_unit_year_add(request):
                 additional_entity_version_1 = mdl.entity_version.find_by_id(data['additional_entity_1'])
             if data['additional_entity_2']:
                 additional_entity_version_2 = mdl.entity_version.find_by_id(data['additional_entity_2'])
-            new_learning_container = create_learning_container(year, data)
+            new_learning_container = create_learning_container(year)
             new_learning_unit = create_learning_unit(data, new_learning_container, year)
-            while year <= int(data['end_year']) and year < academic_year.year+6:
+            if year < current_academic_year.year:
                 create_learning_unit_structure(additional_entity_version_1, additional_entity_version_2,
                                                allocation_entity_version, data, form, new_learning_container,
                                                new_learning_unit, requirement_entity_version, status, year)
-                year = year+1
+            else:
+                while year < current_academic_year.year+6:
+                    if year > current_academic_year.year:
+                        create_learning_unit_structure(additional_entity_version_1, additional_entity_version_2,
+                                                       allocation_entity_version, data, form, new_learning_container,
+                                                       new_learning_unit, requirement_entity_version, status, year)
+                    year = year+1
             return redirect('learning_units')
         else:
             return layout.render(request, "learning_unit/learning_unit_form.html", {'form': form})
@@ -753,8 +760,8 @@ def create_entity_component_year(entity_container_year, learning_component_year)
     return new_entity_component_year
 
 
-def create_learning_container(year, data):
-    new_learning_container = LearningContainer(auto_renewal_until=int(data['end_year']), start_year=year)
+def create_learning_container(year):
+    new_learning_container = LearningContainer(start_year=year)
     new_learning_container.save()
     return new_learning_container
 
@@ -781,9 +788,8 @@ def create_entity_container_year(entity_version, learning_container_year, type):
 
 def create_learning_unit(data, learning_container, year):
     new_learning_unit = LearningUnit(acronym=data['acronym'], title=data['title'], start_year=year,
-                                     end_year=int(data['end_year']), periodicity=data['periodicity'],
-                                     learning_container=learning_container, faculty_remark=data['faculty_remark'],
-                                     other_remark=data['other_remark'])
+                                     periodicity=data['periodicity'], learning_container=learning_container,
+                                     faculty_remark=data['faculty_remark'], other_remark=data['other_remark'])
     new_learning_unit.save()
     return new_learning_unit
 
@@ -826,6 +832,7 @@ def check_acronym(request):
     if learning_unit_years:
         existing_acronym = True
         valid = False
+
     return JsonResponse({'valid': valid,
                          'existing_acronym': existing_acronym,
                          'existed_acronym': existed_acronym,
