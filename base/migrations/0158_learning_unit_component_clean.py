@@ -6,6 +6,25 @@ from django.db import migrations, models
 import django.db.models.deletion
 
 
+def _find_learningunitcomponent(LearningUnitComponent):
+    return LearningUnitComponent.objects.filter(learning_component_year__isnull=True)
+
+
+def _delete_attribution_charges(AttributionCharge, learningunitcomponent):
+    attribution_charges = AttributionCharge.objects.filter(learning_unit_component=learningunitcomponent)
+    for attribution_charge in attribution_charges:
+        attribution_charge.delete()
+
+
+def delete_learningunitcomponent(apps, schema_editor):
+    LearningUnitComponent = apps.get_model('base', 'learningunitcomponent')
+    AttributionCharge = apps.get_model('attribution', 'attributioncharge')
+
+    learningunitcomponents = _find_learningunitcomponent(LearningUnitComponent)
+    for learningunitcomponent in learningunitcomponents:
+        attribution_charges = _delete_attribution_charges(AttributionCharge, learningunitcomponent)
+        learningunitcomponent.delete()
+
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -13,7 +32,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunSQL(
-            "delete from base_learningunitcomponent where base_learningunitcomponent.learning_component_year_id is null;"
-        ),
+        migrations.RunPython(delete_learningunitcomponent),
     ]
