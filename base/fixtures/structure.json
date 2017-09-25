@@ -206,5 +206,18 @@
       "part_of": 15,
       "type": "PROGRAM_COMMISSION"
     }
+  },
+  {
+    "model": "base.structure",
+    "pk": 17,
+    "fields": {
+      "external_id": "osis.structure_4453",
+      "changed": null,
+      "acronym": "FARM",
+      "title": "Ecole de pharmacie",
+      "organization": 6,
+      "part_of": 15,
+      "type": "PROGRAM_COMMISSION"
+    }
   }
 ]
