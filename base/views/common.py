@@ -30,6 +30,7 @@ from django.contrib.auth.views import login as django_login
 from django.contrib.auth import authenticate, logout
 from django.shortcuts import redirect
 from django.utils import translation
+from git import Repo
 from . import layout
 from base import models as mdl
 from base.models.utils import native
@@ -74,7 +75,8 @@ def common_context_processor(request):
         sentry_dns = ''
     return {'installed_apps': settings.INSTALLED_APPS,
             'environment': env,
-            'sentry_dns': sentry_dns}
+            'sentry_dns': sentry_dns,
+            'release_tag': release_tag}
 
 
 def login(request):
@@ -174,3 +176,15 @@ def storage(request):
             row.append('')
 
     return layout.render(request, "admin/storage.html", {'table': table})
+
+
+def get_current_version():
+    release_tag = None
+    global release_tag
+    repo = Repo('.')
+    tags = repo.tags
+    heads = repo.heads
+    if hasattr(heads, 'master'):
+        master = heads.master
+        release_tag = next((tag for tag in tags if tag.commit == master.commit), None)
+    return release_tag
