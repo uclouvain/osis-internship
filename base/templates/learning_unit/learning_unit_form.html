@@ -56,6 +56,10 @@
                                       style="font-size: 14pt;" aria-hidden="true"></span>
                             </abbr>
                             {{ form.acronym }}
+                            <span class='error' id="{{ form.acronym.name }}_message" for='{{ form.acronym.name }}' generated="true"/>
+                            {% if form.acronym.errors %}
+                                <label class='error' for='{{ form.acronym.name }}' generated="true">{{ form.acronym.errors|join:". " }}</label>
+                            {% endif %}
                         </div>
                         <div class="col-md-3">
                             <label {% if form.errors.learning_container_year_type %}style="color:red;"{% endif %}>
@@ -115,7 +119,6 @@
                             <label>{% trans 'active_title' %}</label>
                         </div>
                     </div>
-                </div>
             </div>
             <div class="panel panel-default">
                 <div class="panel-heading">
@@ -222,6 +225,7 @@
        else
             document.getElementById('internship').disabled = true;
     }
+    window.valid_acronym = false;
 
     function showAdditionalEntity1(elem){
        if(elem != "")
@@ -238,109 +242,47 @@
     }
 
     $(document).ready(function() {
-        $('#acronym').on("keyup",function() {
-            var message = "";
-            var messageFunc = function () { return message; };
-
-            jQuery.validator.addMethod("check_acronym", function(val) {
-                $(".error").css("color","black");
-                if(/{{ form.acronym_regex }}/.test(val)){
-                    var res;
-                    $.ajax({
-                        async:false,
-                        url: "/learning_units/check?acronym=" + val + "&year_id=" + $('#academic_year').val()
-                    }).then(function (data) {
-                        var newMessage = [];
-                        if (data['valid']){
-                            res = true;
-                            $(".error").css("color","black");
-                            if(data['existed_acronym']){
-                                $(".error").css("color","orange");
-                                newMessage.push("{% trans 'existed_acronym' %}"+data['last_using']);
-                            }
-                        }else{
-                            res = false;
-                            $(".error").css("color","red");
-                            if(data['existing_acronym']){
-                                newMessage.push("{% trans 'existing_acronym' %}");
-                            }
-                        }
-                        message = newMessage.join("   ");
-                    });
-                }
-                else {
-                    $(".error").css("color","red");
-                    message = "{% trans 'invalid_acronym' %}";
-                }
-            }, messageFunc);
-
-
-            $( "#LearningUnitYearForm" ).validate({
-                invalidHandler: function(form, validator) {
-                    var errors = validator.numberOfInvalids();
-                    if (errors) {
-                        newMessage.push("{% trans 'existed_acronym' %}");
-                    }
-                },
-                rules:{
-                    acronym:{ check_acronym: true },
-                },
-                messages:{
-                    acronym:{ required: "{% trans 'field_is_required' %}" },
-                },
-            }).element("#acronym");
+        $(function () {
+            $('#LearningUnitYearForm').validate();
         });
-        $('#academic_year').on("click",function() {
-            var message = "";
-            var messageFunc = function () { return message; };
 
-            jQuery.validator.addMethod("check_acronym", function(val) {
-                $(".error").css("color","black");
-                if(/{{ form.acronym_regex }}/.test(val)){
-                    var res;
-                    $.ajax({
-                        async:false,
-                        url: "/learning_units/check?acronym=" + val + "&year_id=" + $('#academic_year').val()
-                    }).then(function (data) {
-                        var newMessage = [];
-                        if (data['valid']){
-                            res = true;
-                            $(".error").css("color","black");
-                            if(data['existed_acronym'] && !data['existing_acronym']){
-                                $(".error").css("color","orange");
-                                newMessage.push("{% trans 'existed_acronym' %}"+data['last_using']);
-                            }
-                        }else{
-                            res = false;
-                            $(".error").css("color","red");
-                            if(data['existing_acronym']){
-                                newMessage.push("{% trans 'existing_acronym' %}");
-                            }
+        function validate_acronym () {
+            $('#acronym_message').removeClass("error-message").text("");
+
+	        if(/{{ form.acronym_regex }}/.test($('#acronym').val())) {
+                $.ajax({
+                    url: "/learning_units/check?acronym=" + $('#acronym').val() + "&year_id=" + $('#academic_year').val()
+                }).done(function(data){
+                    if (data['valid']){
+                        window.valid_acronym = true;
+                        if(data['existed_acronym'] && !data['existing_acronym']){
+                            $('#acronym_message').addClass("error").text("{% trans 'existed_acronym' %}"+data['last_using']);
+                            $("#acronym_message").css("color","orange");
                         }
-                        message = newMessage.join("   ");
-                    });
-                }
-                else {
-                    $(".error").css("color","red");
-                    message = "{% trans 'invalid_acronym' %}";
-                }
-            }, messageFunc);
-
-
-            $( "#LearningUnitYearForm" ).validate({
-                invalidHandler: function(form, validator) {
-                    var errors = validator.numberOfInvalids();
-                    if (errors) {
-                        newMessage.push("{% trans 'existed_acronym' %}");
+                    }else{
+                        window.valid_acronym = false;
+                        if(data['existing_acronym']){
+                            $('#acronym_message').addClass("error").text("{% trans 'existing_acronym' %}");
+                            $("#acronym_message").css("color","red");
+                        }
                     }
-                },
-                rules:{
-                    acronym:{ check_acronym: true },
-                },
-                messages:{
-                    acronym:{ required: "{% trans 'field_is_required' %}" },
-                },
-            }).element("#acronym");
+                });
+            } else {
+                window.valid_acronym = false;
+                $('#acronym_message').addClass("error").text("{% trans 'invalid_acronym' %}");
+                $("#acronym_message").css("color","red");
+            }
+        };
+
+        $('#acronym').change(validate_acronym);
+        $('#academic_year').change(validate_acronym);
+
+        $("#LearningUnitYearForm").submit(function( event ) {
+            if (!window.valid_acronym) {
+                $("#acronym").focus();
+            }
+            return window.valid_acronym;
+
         });
     });
 </script>

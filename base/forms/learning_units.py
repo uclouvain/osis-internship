@@ -37,6 +37,7 @@ from base.models.enums import entity_container_year_link_type
 from base.models.enums.learning_container_year_types import LEARNING_CONTAINER_YEAR_TYPES, INTERNSHIP
 from base.models.enums.learning_unit_periodicity import PERIODICITY_TYPES
 from reference.models.language import find_all_languages
+import re
 
 
 class LearningUnitYearForm(forms.Form):
@@ -240,9 +241,9 @@ class CreateLearningUnitYearForm(forms.ModelForm):
         learning_unit_years_list = [learning_unit_year.acronym.lower() for learning_unit_year in learning_unit_years]
         if valid:
             if self.cleaned_data['acronym'].lower() in learning_unit_years_list:
-                self._errors['acronym'] = _('existing_acronym')
+                self.add_error('acronym', _('existing_acronym'))
             elif not re.match(self.acronym_regex, self.cleaned_data['acronym']):
-                self._errors['acronym'] = _('invalid_acronym')
+                self.add_error('acronym', _('invalid_acronym'))
             elif self.cleaned_data['learning_container_year_type'] == INTERNSHIP \
                     and not (self.cleaned_data['internship_subtype']):
                 self._errors['internship_subtype'] = _('field_is_required')
