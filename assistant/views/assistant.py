@@ -28,6 +28,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.urlresolvers import reverse
 from django.forms import forms
 from base.models import person, academic_year
+from base.business.entity_version import find_versions_from_entites
 from base.models.enums import entity_type
 from django.core.exceptions import ObjectDoesNotExist
 from assistant.models import academic_assistant, assistant_mandate, assistant_document_file
@@ -62,6 +63,11 @@ class AssistantMandatesListView(LoginRequiredMixin, UserPassesTestMixin, ListVie
         context = super(AssistantMandatesListView, self).get_context_data(**kwargs)
         context['assistant'] = academic_assistant.find_by_person(person.find_by_user(self.request.user))
         context['can_see_file'] = settings.assistants_can_see_file()
+        for mandate in context['object_list']:
+            print(mandate.id)
+            print(mandate.academic_year.start_date)
+            entities_id = mandate.mandateentity_set.all().order_by('id').values_list('entity', flat=True)
+            mandate.entities = find_versions_from_entites(entities_id, mandate.academic_year.start_date)
         return context
 
 
