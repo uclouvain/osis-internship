@@ -37,6 +37,8 @@ from base.models.enums.learning_unit_periodicity import PERIODICITY_TYPES
 from reference.models.language import find_all_languages
 import re
 
+MIN_ACRONYM_LENGTH = 3
+
 
 class LearningUnitYearForm(forms.Form):
     academic_year_id = forms.CharField(max_length=10, required=False)
@@ -47,10 +49,9 @@ class LearningUnitYearForm(forms.Form):
     with_entity_subordinated = forms.BooleanField(required=False)
 
     def clean_acronym(self):
-        min_acronym_length = 3
         data_cleaned = self.cleaned_data.get('acronym')
         data_cleaned = _treat_empty_or_str_none_as_none(data_cleaned)
-        if data_cleaned and len(data_cleaned) < min_acronym_length:
+        if data_cleaned and len(data_cleaned) < MIN_ACRONYM_LENGTH:
             raise ValidationError(_('LU_WARNING_INVALID_ACRONYM'))
         return data_cleaned
 
