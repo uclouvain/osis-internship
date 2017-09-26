@@ -80,6 +80,10 @@ class EntityChoiceField(ModelChoiceField):
     def label_from_instance(self, obj):
         return "{0} ({1})".format(obj.acronym, obj.title)
 
+    def __init__(self, *args, **kwargs):
+        super(EntityChoiceField, self).__init__(*args, **kwargs)
+        self.widget.attrs['class'] = 'form-control'
+
 
 class MandateEntityForm(ModelForm):
     class Meta:
@@ -89,14 +93,12 @@ class MandateEntityForm(ModelForm):
 
 def get_field_qs(field, **kwargs):
     if field.name == 'entity':
-
         return EntityChoiceField(queryset=find_last_versions_from_entites(
             entity.search(entity_type=entity_type.SECTOR) |
             entity.search(entity_type=entity_type.FACULTY) |
             entity.search(entity_type=entity_type.SCHOOL) |
             entity.search(entity_type=entity_type.INSTITUTE) |
             entity.search(entity_type=entity_type.POLE)))
-
     return field.formfield(**kwargs)
 
 
@@ -142,7 +144,6 @@ RADIO_SELECT_REQUIRED = dict(
 class AssistantFormPart3(ModelForm):
     PARAMETERS = dict(required=False, widget=forms.DateInput(format='%d/%m/%Y', attrs={'placeholder': 'dd/mm/yyyy'}),
                       input_formats=['%d/%m/%Y'])
-
     inscription = forms.ChoiceField(choices=assistant_phd_inscription.PHD_INSCRIPTION_CHOICES, **RADIO_SELECT_REQUIRED)
     expected_phd_date = forms.DateField(**PARAMETERS)
     thesis_date = forms.DateField(**PARAMETERS)
