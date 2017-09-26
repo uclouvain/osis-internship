@@ -112,17 +112,17 @@ class LearningUnitYear(SerializableModel):
         #
         #
         # return faculty_ref
-    @property
-    def get_parent_faculty_version(self):
-        print(self.learning_container_year.id)
-        entity_container_yr = mdl_entity_container_year.find_by_learning_container_year(self.learning_container_year,
-                                                                                        entity_container_year_link_type.REQUIREMENT_ENTITY)
-
-        if entity_container_yr:
-            entity_version = mdl_entity_version.get_last_version(parent_entity)
-            return mdl_entity_version.find_parent_faculty_version(entity_version, self.academic_year)
-
-        return None
+    # @property
+    # def get_parent_faculty_version(self):
+    #     print(self.learning_container_year.id)
+    #     entity_container_yr = mdl_entity_container_year.find_by_learning_container_year(self.learning_container_year,
+    #                                                                                     entity_container_year_link_type.REQUIREMENT_ENTITY)
+    #
+    #     if entity_container_yr:
+    #         entity_version = mdl_entity_version.get_last_version(parent_entity)
+    #         return mdl_entity_version.find_parent_faculty_version(entity_version, self.academic_year)
+    #
+    #     return None
 
 def check_parent(parent_entity):
     entity_version = mdl_entity_version.get_last_version(parent_entity)
@@ -197,7 +197,7 @@ def is_service_course(learning_unit_yr):
     entity_container_yr = mdl_entity_container_year.find_requirement_entity(learning_unit_yr.learning_container_year)
 
     enti = mdl_entity_version.find_parent_faculty_version(entity_version,
-                                                          learning_unit_yr.academic_year)
+                                                          learning_unit_yr.learning_container_year)
 
     if enti is None:
         enti = entity_container_yr.entity
@@ -208,6 +208,7 @@ def is_service_course(learning_unit_yr):
     entity_allocation_v = mdl_entity_version.get_last_version(entity_allocation.entity)
     for e in enti_v.find_descendants(learning_unit_yr.academic_year.start_date):
         if e == entity_allocation_v:
+
             return False
     return True
 

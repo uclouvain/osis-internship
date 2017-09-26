@@ -28,7 +28,7 @@
 
 {% block content %}
 <div class="panel panel-default">
-    <form style="border-bottom: 1px solid #ddd;" method="get" action="{% url 'learning_units'%}" id="form_learning_units" name="search">
+    <form style="border-bottom: 1px solid #ddd;" method="get" action="{% url 'learning_units_service_course'%}" id="form_learning_units" name="search">
         <div class="panel-body">
             <div class="row">
                 <div class="col-md-2">
@@ -112,15 +112,12 @@
                     <label for="id_requirement_entity_acronym">{% trans 'requirement_entity_small' %}</label>
                     {{ form.requirement_entity_acronym }}
                 </div>
-                <div class="col-md-7">
-                    <div style="display:inline-block;">
-                        <input type="checkbox" id="id_with_entity_subordinated"
-                               name="with_entity_subordinated" style="margin-top:37px;"
-                               {% if request.GET.with_entity_subordinated and 'on' == request.GET.with_entity_subordinated %}
-                        checked
-                        {% endif %} >
-                        <label>{% trans 'with_entity_subordinated_small' %}</label>
-                    </div>
+                <div class="col-md-2">
+                    <label for="id_allocation_entity_acronym">{% trans 'allocation_entity_small' %}</label>
+                    {{ form.allocation_entity_acronym }}
+                </div>
+                <div class="col-md-5">
+
                 </div>
                 <div class="col-md-1 text-right" style="line-height:55px;">
                     <button type="submit" id="bt_submit_learning_unit_search" style="vertical-align:bottom;"
