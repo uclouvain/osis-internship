@@ -30,12 +30,13 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.utils.translation import ugettext as _
 from openpyxl import Workbook
 from openpyxl.writer.excel import save_virtual_workbook
-from base.models.enums import structure_type
+from base.models.enums import entity_type
 from base.models import academic_year
+from base.business.entity_version import find_versions_from_entites
 from base.views import layout
 from assistant.forms import MandateForm, entity_inline_formset
 from assistant import models as assistant_mdl
-from assistant.models import assistant_mandate, mandate_structure, review
+from assistant.models import assistant_mandate, review
 from assistant.models.enums import assistant_type, reviewer_role
 
 
@@ -177,7 +178,7 @@ def construct_line(mandate):
             mandate.comment,
             mandate.other_status,
             ]
-    line += get_structures_for_mandate(mandate)
+    line += get_entities_for_mandate(mandate)
     line += get_assistant_doctorate_details(mandate)
     line += [mandate.external_functions,
              mandate.external_contract]
@@ -190,18 +191,30 @@ def construct_line(mandate):
     return line
 
 
-def get_structures_for_mandate(mandate):
-    sector = mandate_structure.find_by_mandate_and_type(mandate, structure_type.SECTOR).first()
-    structures = [sector.structure.acronym] if sector is not None else ['']
-    faculty = mandate_structure.find_by_mandate_and_type(mandate, structure_type.FACULTY).first()
-    structures += [faculty.structure.acronym] if faculty is not None else ['']
-    program_commission = mandate_structure.find_by_mandate_and_type(mandate, structure_type.PROGRAM_COMMISSION).first()
-    structures += [program_commission.structure.acronym] if program_commission is not None else ['']
-    institute = mandate_structure.find_by_mandate_and_type(mandate, structure_type.INSTITUTE).first()
-    structures += [institute.structure.acronym] if institute is not None else ['']
-    pole = mandate_structure.find_by_mandate_and_type(mandate, structure_type.POLE).first()
-    structures += [pole.structure.acronym] if pole is not None else ['']
-    return structures
+def get_entities_for_mandate(mandate):
+    entities_id = mandate.mandateentity_set.all().order_by('id').values_list('entity', flat=True)
+    entities = find_versions_from_entites(entities_id, mandate.academic_year.start_date)
+    i = 0
+    mandate_entities = []
+    for ent in entities:
+        if ent.entity_type == entity_type.SECTOR:
+            mandate_entities = [ent.acronym]
+        elif ent.entity_type == entity_type.FACULTY:
+            mandate_entities += [ent.acronym]
+        elif ent.entity_type == entity_type.SCHOOL:
+            for j in range(i, 1):
+                mandate_entities += ['']
+            mandate_entities += [ent.acronym]
+        elif ent.entity_type == entity_type.INSTITUTE:
+            for j in range(i, 2):
+                mandate_entities += ['']
+            mandate_entities += [ent.acronym]
+        elif ent.entity_type == entity_type.POLE:
+            for j in range(i, 3):
+                mandate_entities += ['']
+            mandate_entities += [ent.acronym]
+        i += 1
+    return mandate_entities
 
 
 def get_assistant_doctorate_details(mandate):
