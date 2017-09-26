@@ -28,6 +28,7 @@ from django.db import models
 
 from base import models as mdl
 from base.models.enums import entity_container_year_link_type as entity_types
+from django.utils.translation import ugettext_lazy as _
 
 
 class LearningUnitYearWithContext:
@@ -63,7 +64,9 @@ def get_with_context(**learning_unit_year_data):
                             queryset=mdl.entity_component_year.EntityComponentYear.objects.all()
                             .select_related('entity_container_year'),
                             to_attr='entity_components_year'
-                            )
+                            ),
+            models.Prefetch('learning_component_year__learningclassyear_set',
+                            to_attr="classes")
         ),
         to_attr='learning_unit_components'
     )
@@ -121,6 +124,7 @@ def _append_components(learning_unit):
                 'VOLUME_' + entity_types.ADDITIONAL_REQUIREMENT_ENTITY_1: vol_add_req_entity_1,
                 'VOLUME_' + entity_types.ADDITIONAL_REQUIREMENT_ENTITY_2: vol_add_req_entity_2,
                 'VOLUME_TOTAL_REQUIREMENT_ENTITIES': volume_total_charge,
+                'VOLUME_QUARTER' : _get_volume_quarter_str(volume_total,volume_partial),
             }
     return learning_unit
 
@@ -145,3 +149,14 @@ def _get_floated_only_element_of_list(a_list, default=None):
     elif len_of_list == 1:
         return float(a_list[0]) if a_list[0] else 0.0
     raise ValueError("The provided list should contain 0 or 1 elements")
+
+
+def _get_volume_quarter_str(volume_total, volume_partial):
+    if not volume_total:
+        return _('partial_or_remaining')
+    elif volume_total == volume_partial:
+        return _('partial')
+    elif not volume_partial:
+        return _('remaining')
+    else:
+        return _('partial_remaining')

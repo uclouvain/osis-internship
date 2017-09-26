@@ -136,7 +136,9 @@ def learning_unit_formations(request, learning_unit_year_id):
 @permission_required('base.can_access_learningunit', raise_exception=True)
 def learning_unit_components(request, learning_unit_year_id):
     context = _get_common_context_learning_unit_year(learning_unit_year_id)
-    context['components'] = get_same_container_year_components(context['learning_unit_year'], True)
+    context['learning_units'] = learning_unit_year_with_context.get_with_context(
+        learning_container_year_id=context['learning_unit_year'].learning_container_year_id
+    )
     context['tab_active'] = 'components'
     context['experimental_phase'] = True
     return layout.render(request, "learning_unit/components.html", context)
@@ -199,6 +201,7 @@ def _extract_volumes_from_data(request):
 
 def _is_a_valid_volume_key(post_key):
     return post_key in learning_unit_year_volumes.VALID_VOLUMES_KEYS
+
 
 def _perserve_volume_encoded(request, context):
     pass
