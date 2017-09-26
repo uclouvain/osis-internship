@@ -9,7 +9,7 @@
   },
   {
     "model": "base.entitymanager",
-    "pk": 1,
+    "pk": 2,
     "fields": {
       "person": 1,
       "structure": 2
@@ -17,11 +17,18 @@
   },
   {
     "model": "base.entitymanager",
-    "pk": 1,
+    "pk": 3,
     "fields": {
       "person": 2,
       "structure": 14
     }
+  },
+  {
+    "model": "base.entitymanager",
+    "pk": 4,
+    "fields": {
+      "person": 5,
+      "structure": 17
+    }
   }
-
 ]
