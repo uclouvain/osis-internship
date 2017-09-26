@@ -91,7 +91,12 @@ class LearningUnitYearForm(forms.Form):
             .select_related('academic_year', 'learning_container_year') \
             .prefetch_related(entity_container_prefetch) \
             .order_by('academic_year__year', 'acronym')
-        return [_append_latest_entities(learning_unit) for learning_unit in learning_units]
+        list_results = [_append_latest_entities(learning_unit) for learning_unit in learning_units]
+        print('ici')
+        for l in list_results:
+            print(l)
+            print(l.entities['PARENT_FACULTY'].acronym)
+        return list_results
 
 
     def get_service_course_learning_units(self):
@@ -111,7 +116,12 @@ class LearningUnitYearForm(forms.Form):
             .select_related('academic_year', 'learning_container_year') \
             .prefetch_related(entity_container_prefetch) \
             .order_by('academic_year__year', 'acronym')
-        return [_append_latest_entities(learning_unit) for learning_unit in learning_units]
+        list_results = [_append_latest_entities(learning_unit) for learning_unit in learning_units]
+        list_results_2 = []
+        for l in list_results:
+            print(l)
+            print(l.entities['PARENT_FACULTY'].acronym)
+        return list_results
 
 def _clean_data(datas_to_clean):
     return {key: _treat_empty_or_str_none_as_none(value) for (key, value) in datas_to_clean.items()}
@@ -152,7 +162,14 @@ def _append_latest_entities(learning_unit):
             link_type = entity_container_yr.type
             latest_version = _get_latest_entity_version(entity_container_yr)
             learning_unit.entities[link_type] = latest_version
-    learning_unit.entities['PARENT_FACULTY'] = mdl.entity_version.find_by_id(1)
+    if entity_container_year_link_type.REQUIREMENT_ENTITY in learning_unit.entities:
+        print('kkkkkk')
+        print(learning_unit.entities[entity_container_year_link_type.REQUIREMENT_ENTITY])
+        learning_unit.entities['PARENT_FACULTY'] = mdl.entity_version.find_parent_faculty_version(learning_unit.entities[entity_container_year_link_type.REQUIREMENT_ENTITY],
+                                                                                                  learning_unit.learning_container_year)
+        print(learning_unit.entities['PARENT_FACULTY'])
+
+        learning_unit.entities['SERVICE_COURSE'] = mdl.learning_unit_year.is_service_course(learning_unit)
     return learning_unit
 
 

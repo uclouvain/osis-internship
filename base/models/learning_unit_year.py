@@ -119,11 +119,9 @@ class LearningUnitYear(SerializableModel):
                                                                                         entity_container_year_link_type.REQUIREMENT_ENTITY)
 
         if entity_container_yr:
-            print('if')
             entity_version = mdl_entity_version.get_last_version(parent_entity)
             return mdl_entity_version.find_parent_faculty_version(entity_version, self.academic_year)
-        else:
-            print('if 2')
+
         return None
 
 def check_parent(parent_entity):
@@ -196,14 +194,11 @@ def is_service_course(learning_unit_yr):
     print(learning_unit_yr.entities)
 
     entity_version = learning_unit_yr.entities['REQUIREMENT_ENTITY']
-    print(entity_version)
     entity_container_yr = mdl_entity_container_year.find_requirement_entity(learning_unit_yr.learning_container_year)
-
 
     enti = mdl_entity_version.find_parent_faculty_version(entity_version,
                                                           learning_unit_yr.academic_year)
-    print('apres find_parent_faculty_version')
-    print(enti)
+
     if enti is None:
         enti = entity_container_yr.entity
     else:
