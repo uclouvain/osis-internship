@@ -30,7 +30,7 @@ from django.forms.models import inlineformset_factory
 from django.utils.translation import ugettext as _
 from base.models import academic_year, entity
 from base.models.enums import entity_type
-from base.business.entity_version import find_last_versions_from_entites
+from base.business.entity_version import find_versions_from_entites
 from assistant import models as mdl
 from assistant.models.enums import review_advice_choices, assistant_type
 from assistant.models.enums import assistant_mandate_renewal, reviewer_role, assistant_phd_inscription
@@ -85,20 +85,14 @@ class EntityChoiceField(ModelChoiceField):
         self.widget.attrs['class'] = 'form-control'
 
 
-class MandateEntityForm(ModelForm):
-    class Meta:
-        model = mdl.mandate_entity.MandateEntity
-        fields = ('entity', 'assistant_mandate')
-
-
 def get_field_qs(field, **kwargs):
     if field.name == 'entity':
-        return EntityChoiceField(queryset=find_last_versions_from_entites(
+        return EntityChoiceField(queryset=find_versions_from_entites(
             entity.search(entity_type=entity_type.SECTOR) |
             entity.search(entity_type=entity_type.FACULTY) |
             entity.search(entity_type=entity_type.SCHOOL) |
             entity.search(entity_type=entity_type.INSTITUTE) |
-            entity.search(entity_type=entity_type.POLE)))
+            entity.search(entity_type=entity_type.POLE), None))
     return field.formfield(**kwargs)
 
 
@@ -320,7 +314,7 @@ class ReviewerForm(ModelForm):
     entities = \
         entity.search(entity_type=entity_type.INSTITUTE) | entity.search(entity_type=entity_type.FACULTY) | \
         entity.search(entity_type=entity_type.SECTOR)
-    entity = EntityChoiceField(required=True, queryset=find_last_versions_from_entites(entities))
+    entity = EntityChoiceField(required=True, queryset=find_versions_from_entites(entities, None))
 
     class Meta:
         model = mdl.reviewer.Reviewer

@@ -33,10 +33,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import user_passes_test
 from django.shortcuts import render, redirect
 from django.utils.translation import ugettext as _
-from django.db.models import Max, F
 
 from base.models import academic_year, person, entity_version
-from base.business.entity_version import find_last_versions_from_entites
 from assistant.forms import MandatesArchivesForm, ReviewersFormset, ReviewerForm, ReviewerReplacementForm
 from assistant.models import reviewer, review
 from assistant.utils import manager_access
