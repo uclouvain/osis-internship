@@ -60,6 +60,7 @@ class AcademicYear(SerializableModel):
         return u"%s-%s" % (self.year, str(self.year + 1)[-2:])
 
     class Meta:
+        ordering = ["year"]
         permissions = (
             ("can_access_academicyear", "Can access academic year"),
         )
