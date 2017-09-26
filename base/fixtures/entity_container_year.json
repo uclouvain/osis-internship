@@ -115,5 +115,24 @@
       "learning_container_year": 22,
       "type": "REQUIREMENT_ENTITY"
     }
+  },
+  {
+    "model": "base.entitycontaineryear",
+    "pk": 14,
+    "fields": {
+      "entity": 7,
+      "learning_container_year": 23,
+      "type": "REQUIREMENT_ENTITY"
+    }
+  },
+  {
+    "model": "base.entitycontaineryear",
+    "pk": 15,
+    "fields": {
+      "entity": 7,
+      "learning_container_year": 23,
+      "type": "ALLOCATION_ENTITY"
+    }
   }
+
 ]

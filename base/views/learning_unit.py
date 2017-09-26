@@ -135,6 +135,7 @@ def volumes_validation(request, learning_unit_year_id):
 @login_required
 @permission_required('base.can_access_learningunit', raise_exception=True)
 def learning_unit_volumes_management(request, learning_unit_year_id):
+    print('learning_unit_volumes_management')
     if request.method == 'POST':
         _learning_unit_volumes_management_edit(request, learning_unit_year_id)
 
@@ -313,6 +314,7 @@ def _check_if_display_message(request, found_learning_units):
     return True
 
 def _get_common_context_list_learning_unit_years():
+    print('_get_common_context_list_learning_unit_years')
     today = datetime.date.today()
     date_ten_years_before = today.replace(year=today.year-10)
     academic_years = mdl.academic_year.find_academic_years()\
@@ -325,6 +327,7 @@ def _get_common_context_list_learning_unit_years():
 
 
 def _get_common_context_learning_unit_year(learning_unit_year_id):
+    print('_get_common_context_learning_unit_year')
     learning_unit_year = mdl.learning_unit_year.find_by_id(learning_unit_year_id)
 
     context = {

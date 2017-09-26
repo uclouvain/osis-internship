@@ -180,8 +180,7 @@
       "faculty_remark": null,
       "other_remark": null
     }
-  }
-,
+  },
   {
     "model": "base.learningunit",
     "pk": 14,
@@ -191,6 +190,20 @@
       "start_year": 1995,
       "end_year": 2099,
       "learning_container": 23,
+      "periodicity": "ANNUAL",
+      "faculty_remark": null,
+      "other_remark": null
+    }
+  },
+  {
+    "model": "base.learningunit",
+    "pk": 15,
+    "fields": {
+      "acronym": "LDROI1001",
+      "title": "Introduction au droit - Partie I",
+      "start_year": 2004,
+      "end_year": 2099,
+      "learning_container": 24,
       "periodicity": "ANNUAL",
       "faculty_remark": null,
       "other_remark": null

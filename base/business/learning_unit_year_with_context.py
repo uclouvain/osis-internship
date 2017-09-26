@@ -36,6 +36,7 @@ class LearningUnitYearWithContext:
 
 
 def get_with_context(**learning_unit_year_data):
+    print('get_with_context')
     entity_container_prefetch = models.Prefetch(
         'learning_container_year__entitycontaineryear_set',
         queryset=mdl.entity_container_year
@@ -81,12 +82,14 @@ def get_with_context(**learning_unit_year_data):
 
 
 def _append_latest_entities(learning_unit):
+    print('_append_latest_entities')
     learning_unit.entities = {}
     if learning_unit.learning_container_year and learning_unit.learning_container_year.entity_containers_year:
         for entity_container_yr in learning_unit.learning_container_year.entity_containers_year:
             link_type = entity_container_yr.type
             latest_version = _get_latest_entity_version(entity_container_yr)
             learning_unit.entities[link_type] = latest_version
+
     return learning_unit
 
 

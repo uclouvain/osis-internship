@@ -152,6 +152,7 @@ def _append_latest_entities(learning_unit):
             link_type = entity_container_yr.type
             latest_version = _get_latest_entity_version(entity_container_yr)
             learning_unit.entities[link_type] = latest_version
+    learning_unit.entities['PARENT_FACULTY'] = mdl.entity_version.find_by_id(1)
     return learning_unit
 
 

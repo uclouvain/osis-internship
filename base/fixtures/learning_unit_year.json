@@ -299,5 +299,22 @@
       "subtype": "FULL",
       "status": true
     }
+  },
+  {
+    "model": "base.learningunityear",
+    "pk": 24,
+    "fields": {
+      "acronym": "LDROI1001",
+      "title": "Introduction au droit - Partie II",
+      "title_english": "Introduction to Law: Part II",
+      "credits": "7.00",
+      "decimal_scores": false,
+      "academic_year": 3,
+      "learning_unit": 15,
+      "learning_container_year": 23,
+      "subtype": "FULL",
+      "status": true,
+      "structure": 16
+    }
   }
 ]
