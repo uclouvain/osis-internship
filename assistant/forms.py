@@ -345,6 +345,7 @@ class ReviewerReplacementForm(ModelForm):
 class ReviewersFormset(ModelForm):
     role = forms.ChoiceField(required=False)
     entity = forms.CharField(required=False)
+    entity_version = forms.CharField(required=False)
     person = forms.ChoiceField(required=False)
     id = forms.IntegerField(required=False)
     ACTIONS = (
