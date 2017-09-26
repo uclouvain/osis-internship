@@ -9,7 +9,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('base', '0157_learning_unit_component_clean'),
+        ('base', '0159_learning_component_year_not_null'),
     ]
 
     operations = [
