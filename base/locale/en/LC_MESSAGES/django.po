@@ -1661,7 +1661,7 @@ msgid "allocation_entity"
 msgstr "Allocation entity"
 
 msgid "additional_requirement_entity"
-msgstr "Additional entity"
+msgstr "Additional requirement entity"
 
 msgid "requirement_entity_small"
 msgstr "Req. Entity"
@@ -1805,9 +1805,6 @@ msgstr "Active"
 
 msgid "titles"
 msgstr "Titles"
-
-msgid "structure_title"
-msgstr "Structure"
 
 msgid "fixtures_build"
 msgstr "Build anonymized fixtures"
@@ -2000,6 +1997,9 @@ msgstr "Teaching charge application"
 
 msgid "field_is_required"
 msgstr "This field is required"
+
+msgid "associated_entity"
+msgstr "Associated entity"
 
 msgid "LU_WARNING_INVALID_ACRONYM"
 msgstr "The acronym, if it is entered, must at least count 3 characters"

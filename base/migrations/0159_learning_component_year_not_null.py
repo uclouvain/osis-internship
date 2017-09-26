@@ -9,13 +9,10 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('base', '0156_offeryearentity_education_group_year'),
+        ('base', '0158_learning_unit_component_clean'),
     ]
 
     operations = [
-        migrations.RunSQL(
-            "delete from base_learningunitcomponent where base_learningunitcomponent.learning_component_year_id is null;"
-        ),
         migrations.AlterField(
             model_name='learningunitcomponent',
             name='learning_component_year',

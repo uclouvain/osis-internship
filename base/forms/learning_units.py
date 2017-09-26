@@ -37,6 +37,7 @@ from base.models.enums import entity_container_year_link_type
 from base.models.enums.learning_container_year_types import LEARNING_CONTAINER_YEAR_TYPES, INTERNSHIP
 from base.models.enums.learning_unit_periodicity import PERIODICITY_TYPES
 from reference.models.language import find_all_languages
+import re
 
 
 class LearningUnitYearForm(forms.Form):
@@ -197,7 +198,8 @@ class CreateLearningUnitYearForm(forms.ModelForm):
                                                           'id': 'campus'}))
     requirement_entity = forms.ChoiceField(choices=lazy(create_main_entities_version_list, tuple),
                                            widget=forms.Select(attrs={'class': 'form-control',
-                                                                      'id': 'requirement_entity'}))
+                                                                      'id': 'requirement_entity',
+                                                                      'onchange': 'showAdditionalEntity1(this.value)'}))
     allocation_entity = forms.ChoiceField(choices=lazy(create_main_entities_version_list, tuple),
                                           required=False,
                                           widget=forms.Select(attrs={'class': 'form-control',
@@ -205,11 +207,14 @@ class CreateLearningUnitYearForm(forms.ModelForm):
     additional_entity_1 = forms.ChoiceField(choices=lazy(create_main_entities_version_list, tuple),
                                             required=False,
                                             widget=forms.Select(attrs={'class': 'form-control',
-                                                                       'id': 'allocation_entity'}))
+                                                                       'id': 'allocation_entity_1',
+                                                                       'disabled': 'disabled',
+                                                                       'onchange': 'showAdditionalEntity2(this.value)'}))
     additional_entity_2 = forms.ChoiceField(choices=lazy(create_main_entities_version_list, tuple),
                                             required=False,
                                             widget=forms.Select(attrs={'class': 'form-control',
-                                                                       'id': 'allocation_entity'}))
+                                                                       'id': 'allocation_entity_2',
+                                                                       'disabled': 'disabled'}))
     language = forms.ChoiceField(choices=lazy(create_languages_list, tuple),
                                  widget=forms.Select(attrs={'class': 'form-control',
                                                             'id': 'language'}))
@@ -258,9 +263,9 @@ class CreateLearningUnitYearForm(forms.ModelForm):
         learning_unit_years_list = [learning_unit_year.acronym.lower() for learning_unit_year in learning_unit_years]
         if valid:
             if self.cleaned_data['acronym'].lower() in learning_unit_years_list:
-                self._errors['acronym'] = _('existing_acronym')
+                self.add_error('acronym', _('existing_acronym'))
             elif not re.match(self.acronym_regex, self.cleaned_data['acronym']):
-                self._errors['acronym'] = _('invalid_acronym')
+                self.add_error('acronym', _('invalid_acronym'))
             elif self.cleaned_data['learning_container_year_type'] == INTERNSHIP \
                     and not (self.cleaned_data['internship_subtype']):
                 self._errors['internship_subtype'] = _('field_is_required')

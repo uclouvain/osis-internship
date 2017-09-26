@@ -25,6 +25,7 @@
 ##############################################################################
 from dissertation.utils import emails_dissert
 from dissertation.models.dissertation_role import get_promoteur_by_dissertation
+from django.core.exceptions import ObjectDoesNotExist
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 from django.db import models
 from django.db.models import Q
@@ -237,4 +238,7 @@ def get_next_status(dissert, operation):
 
 
 def find_by_id(dissertation_id):
-    return Dissertation.objects.get(pk=dissertation_id)
+    try:
+        return Dissertation.objects.get(pk=dissertation_id)
+    except ObjectDoesNotExist:
+        return None
