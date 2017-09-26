@@ -23,13 +23,15 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from assistant.models import assistant_mandate
 from django.core.urlresolvers import reverse
-from base.models import academic_year, entity_version
-from assistant.forms import MandatesArchivesForm
 from django.views.generic import ListView
 from django.views.generic.edit import FormMixin
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+
+from base.models import academic_year, entity_version
+from base.business.entity_version import find_last_versions_from_entites
+from assistant.forms import MandatesArchivesForm
+from assistant.models import assistant_mandate
 from assistant.utils import manager_access
 
 
@@ -72,14 +74,15 @@ class MandatesListView(LoginRequiredMixin, UserPassesTestMixin, ListView, FormMi
         start_date = academic_year.find_academic_year_by_id(int(self.request.session.get(
             'selected_academic_year'))).start_date
         for mandate in context['object_list']:
-            entities = []
-            entities_id = mandate.mandateentity_set.all().order_by('id')
-            for entity in entities_id:
+            entities_id = mandate.mandateentity_set.all().order_by('id').values_list('entity', flat=True)
+            mandate.entities = find_last_versions_from_entites(entities_id)
+            """for entity in entities_id:
                 current_entityversion = entity_version.get_by_entity_and_date(entity.entity, start_date)[0]
                 if current_entityversion is None:
                     current_entityversion = entity_version.get_last_version(entity.entity)
                 entities.append(current_entityversion)
             mandate.entities = entities
+            """
         return context
 
     def get_initial(self):
