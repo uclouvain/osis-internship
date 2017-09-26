@@ -363,5 +363,35 @@
       "language": null,
       "campus": 7
     }
+  },
+  {
+    "model": "base.learningcontaineryear",
+    "pk": 24,
+    "fields": {
+      "academic_year": 3,
+      "learning_container": 25,
+      "container_type": "COURSE",
+      "title": "Philosophie et anthropologie philosophique",
+      "title_english": "Philosophy and Philosophical Anthropology",
+      "acronym": "LDROI1006",
+      "changed": null,
+      "language": null,
+      "campus": 7
+    }
+  },
+  {
+    "model": "base.learningcontaineryear",
+    "pk": 25,
+    "fields": {
+      "academic_year": 3,
+      "learning_container": 26,
+      "container_type": "PARTIM",
+      "title": "Philosophie et anthropologie philosophique",
+      "title_english": null,
+      "acronym": "LDROI1006L",
+      "changed": null,
+      "language": null,
+      "campus": 7
+    }
   }
 ]

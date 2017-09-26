@@ -214,6 +214,26 @@
       "auto_renewal_until": null,
       "start_year": null
     }
+  },
+  {
+    "model": "base.learningcontainer",
+    "pk": 25,
+    "fields": {
+      "external_id": "osis.learning_container_30548",
+      "auto_renewal_until": null,
+      "start_year": null
+    }
+  },
+  {
+    "model": "base.learningcontainer",
+    "pk": 26,
+    "fields": {
+      "external_id": "osis.learning_container_48",
+      "auto_renewal_until": null,
+      "start_year": null
+    }
   }
+
+
 ]
 

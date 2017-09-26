@@ -108,7 +108,7 @@
       "country": null,
       "phone": null,
       "fax": null,
-      "website": null
+      "website": "budr"
     }
   },
   {
@@ -205,6 +205,38 @@
       "phone": "010478600",
       "fax": null,
       "website": "SSS"
+    }
+  },
+  {
+    "model": "base.entity",
+    "pk": 14,
+    "fields": {
+      "organization": 6,
+      "external_id": "osis.entity_4071",
+      "changed": null,
+      "location": "Place Montesquieu 2/L2.07.01",
+      "postal_code": "1348",
+      "city": "Louvain-la-Neuve",
+      "country": 1,
+      "phone": "010478600",
+      "fax": null,
+      "website": "EFIL"
+    }
+  },
+  {
+    "model": "base.entity",
+    "pk": 15,
+    "fields": {
+      "organization": 6,
+      "external_id": "osis.entity_4291",
+      "changed": null,
+      "location": "Place Montesquieu 2/L2.07.01",
+      "postal_code": "1348",
+      "city": "Louvain-la-Neuve",
+      "country": 1,
+      "phone": "010478600",
+      "fax": null,
+      "website": "FIAL"
     }
   }
 ]

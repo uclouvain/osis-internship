@@ -167,5 +167,31 @@
       "start_date": "2010-01-01",
       "end_date": null
     }
+  },
+  {
+    "model": "base.entityversion",
+    "pk": 14,
+    "fields": {
+      "entity": 14,
+      "title": "Ecole de philosophie",
+      "acronym": "EFIL",
+      "entity_type": "SCHOOL",
+      "parent": 15,
+      "start_date": "2010-01-01",
+      "end_date": null
+    }
+  },
+  {
+    "model": "base.entityversion",
+    "pk": 15,
+    "fields": {
+      "entity": 15,
+      "title": "Faculté de philosophie, arts et lettres ",
+      "acronym": "FIAL",
+      "entity_type": "FACULTY",
+      "parent": 12,
+      "start_date": "2010-01-01",
+      "end_date": null
+    }
   }
 ]
