@@ -37,18 +37,22 @@ from base.business import entity_version as entity_version_business
 def get_score_sheet_address(off_year):
     address = score_sheet_address.get_from_offer_year(off_year)
     entity_id = None
-    if address and not address.customized:
-        map_offer_year_entity_type_with_entity_id = _get_map_offer_year_entity_type_with_entity(off_year)
-        entity_id = map_offer_year_entity_type_with_entity_id[address.entity_address_choice]
-        ent_version = entity_version.get_last_version(entity_id)
-        entity = entity_model.get_by_internal_id(entity_id)
-        if not entity: # Case no address found for this entity
-            entity = entity_model.Entity()
-        email = address.email
-        address = entity
-        address.recipient = '{} - {}'.format(ent_version.acronym, ent_version.title)
-        address.email = email
-    return entity_id, _get_address_as_dict(address)
+    if address is None:
+        address = off_year.id
+    else:
+        if address and not address.customized:
+            map_offer_year_entity_type_with_entity_id = _get_map_offer_year_entity_type_with_entity(off_year)
+            entity_id = map_offer_year_entity_type_with_entity_id[address.entity_address_choice]
+            ent_version = entity_version.get_last_version(entity_id)
+            entity = entity_model.get_by_internal_id(entity_id)
+            if not entity: # Case no address found for this entity
+                entity = entity_model.Entity()
+            email = address.email
+            address = entity
+            address.recipient = '{} - {}'.format(ent_version.acronym, ent_version.title)
+            address.email = email
+    return {'entity_id_selected': entity_id,
+            'address': _get_address_as_dict(address)}
 
 
 def _get_address_as_dict(address):
@@ -197,7 +201,7 @@ def scores_sheet_data(exam_enrollments, tutor=None):
 
 
 def _get_serialized_address(off_year):
-    address = get_score_sheet_address(off_year)[1]
+    address = get_score_sheet_address(off_year)['address']
     country = address.get('country')
     address['country'] = country.name if country else ''
     return address

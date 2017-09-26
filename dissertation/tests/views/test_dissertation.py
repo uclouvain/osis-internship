@@ -52,7 +52,7 @@ class DissertationViewTestCase(TestCase):
         self.offer2 = OfferFactory(title="test_offer2")
         self.academic_year1 = AcademicYearFactory()
         self.academic_year2 = AcademicYearFactory(year=self.academic_year1.year-1)
-        offer_year_start1 = OfferYearFactory(acronym="test_offer1", offer=self.offer1, id='5',
+        offer_year_start1 = OfferYearFactory(acronym="test_offer1", offer=self.offer1,
                                              academic_year=self.academic_year1)
         offer_year_start2 = OfferYearFactory(academic_year=self.academic_year2, acronym="test_offer2", offer=self.offer1)
         self.offer_proposition1 = OfferPropositionFactory(offer=self.offer1)

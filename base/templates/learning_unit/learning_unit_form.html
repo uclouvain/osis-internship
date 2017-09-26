@@ -56,12 +56,19 @@
                                       style="font-size: 14pt;" aria-hidden="true"></span>
                             </abbr>
                             {{ form.acronym }}
+                            <span class='error' id="{{ form.acronym.name }}_message" for='{{ form.acronym.name }}' generated="true"/>
+                            {% if form.acronym.errors %}
+                                <label class='error' for='{{ form.acronym.name }}' generated="true">{{ form.acronym.errors|join:". " }}</label>
+                            {% endif %}
                         </div>
                         <div class="col-md-3">
-                            <label>
+                            <label {% if form.errors.learning_container_year_type %}style="color:red;"{% endif %}>
                                 {% trans 'type' %}*
                             </label>
                             {{ form.learning_container_year_type }}
+                            <label {% if form.errors.learning_container_year_type %}style="color:red;"{% endif %}>
+                                {{ form.errors.learning_container_year_type| striptags }}
+                            </label>
                         </div>
                         <div class="col-md-3">
                             <label>
@@ -70,21 +77,19 @@
                             {{ form.internship_subtype }}
                         </div>
                         <div class="col-md-3">
-                            <label>
+                            <label {% if form.errors.campus %}style="color:red;"{% endif %}>
                                 {% trans 'learning_location' %}*
                             </label>
                             {{ form.campus }}
+                            <label {% if form.errors.campus %}style="color:red;"{% endif %}>
+                                {{ form.errors.campus| striptags }}
+                            </label>
                         </div>
                     </div>
-                    <br>
                     <div class="row">
                         <div class="col-md-2">
                             <label>{% trans 'academic_year' %}</label>
                             {{ form.academic_year }}
-                        </div>
-                        <div class="col-md-2">
-                            <label>{% trans 'end_year_title' %}</label>
-                            {{ form.end_year }}
                         </div>
                         <div class="col-md-2">
                             <label>{% trans 'periodicity' %}</label>
@@ -101,17 +106,19 @@
                             {{ form.credits }}
                         </div>
                         <div class="col-md-2">
-                            <label>{% trans 'session_title' %}*</label>
+                            <label {% if form.errors.session %}style="color:red;"{% endif %}>
+                                {% trans 'session_title' %}*
+                            </label>
                             {{ form.session }}
+                            <label {% if form.errors.session %}style="color:red;"{% endif %}>
+                                {{ form.errors.session| striptags }}
+                            </label>
+                        </div>
+                        <div class="col-md-2">
+                            {{ form.status }}
+                            <label>{% trans 'active_title' %}</label>
                         </div>
                     </div>
-                    <br>
-                    <div>
-                        {{ form.status }}
-                        <label>{% trans 'active_title' %}</label>
-                    </div>
-                    </div>
-                </div>
             </div>
             <div class="panel panel-default">
                 <div class="panel-heading">
@@ -119,12 +126,14 @@
                 </div>
                 <div class="panel-body">
                     <div>
-                        <label>
+                        <label {% if form.errors.title %}style="color:red;"{% endif %}>
                             {% trans 'title' %}*
                         </label>
                         {{ form.title }}
+                        <label {% if form.errors.title %}style="color:red;"{% endif %}>
+                                {{ form.errors.title| striptags }}
+                        </label>
                     </div>
-                    <br>
                     <div>
                         <label>{% trans 'title_in_english' %}</label>
                         {{ form.title_english }}
@@ -133,28 +142,35 @@
             </div>
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <label>{% trans 'structure_title' %}</label>
+                    <label>{% trans 'associated_entity' %}</label>
                 </div>
                 <div class="panel-body">
                     <div class="row">
-                        <div class="col-md-3">
-                            <label>{% trans 'requirement_entity' %}*</label>
+                        <div class="col-md-6">
+                            <label {% if form.errors.requirement_entity %}style="color:red;"{% endif %}>
+                                {% trans 'requirement_entity' %}*
+                            </label>
                             {{ form.requirement_entity }}
+                            <label {% if form.errors.requirement_entity %}style="color:red;"{% endif %}>
+                                {{ form.errors.requirement_entity| striptags }}
+                            </label>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-6">
                             <label>{% trans 'allocation_entity' %}</label>
                             {{ form.allocation_entity }}
                         </div>
-                        <div class="col-md-3">
-                            <label>{% trans 'additional_requirement_entity' %}</label>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>{% trans 'additional_requirement_entity' %} 1</label>
                             {{ form.additional_entity_1 }}
                         </div>
-                        <div class="col-md-3">
-                            <label>{% trans 'additional_requirement_entity' %}</label>
+                        <div class="col-md-6">
+                            <label>{% trans 'additional_requirement_entity' %} 2</label>
                             {{ form.additional_entity_2 }}
                         </div>
                     </div>
-                    <br>
+
                 </div>
             </div>
             <div class="panel panel-default">
@@ -185,14 +201,22 @@
 {% endblock %}
 {% block script %}
 <script>
-    const blank = "---------";
-    const partim = "PARTIM";
     const internship = "INTERNSHIP";
     $( document ).ready(function() {
         if('{{form.learning_container_year_type.value}}' == internship)
             document.getElementById('internship').disabled = false;
         else
             document.getElementById('internship').disabled = true;
+
+        if('{{form.requirement_entity.value}}' =="0")
+            document.getElementById('allocation_entity_1').disabled = false;
+        else
+            document.getElementById('allocation_entity_1').disabled = true;
+
+        if('{{form.additional_entity_1.value}}' =="0")
+            document.getElementById('allocation_entity_2').disabled = false;
+        else
+            document.getElementById('allocation_entity_2').disabled = true;
     });
 
     function showDiv(elem){
@@ -201,98 +225,64 @@
        else
             document.getElementById('internship').disabled = true;
     }
+    window.valid_acronym = false;
+
+    function showAdditionalEntity1(elem){
+       if(elem != "")
+            document.getElementById('allocation_entity_1').disabled = false;
+       else
+            document.getElementById('allocation_entity_1').disabled = true;
+    }
+
+    function showAdditionalEntity2(elem){
+       if(elem != "")
+            document.getElementById('allocation_entity_2').disabled = false;
+       else
+            document.getElementById('allocation_entity_2').disabled = true;
+    }
 
     $(document).ready(function() {
-        $('#acronym').on("keyup",function() {
-            var message = "";
-            var messageFunc = function () { return message; };
-            jQuery.validator.addMethod("check_acronym", function(val) {
-
-                $(".form-acronym").css("color","black");
-                if(/{{ form.acronym_regex }}/.test(val)){
-                    var res;
-                    $.ajax({
-                        async:false,
-                        url: "/learning_units/check?acronym=" + val + "&year_id=" + $('#academic_year').val()
-                    }).then(function (data) {
-                        var newMessage = [];
-                        if (data['valid']){
-                            res = true;
-                            if(data['existed_acronym'] && !data['existing_acronym']){
-                                $(".form-acronym").css("color","orange");
-                                newMessage.push("{% trans 'existed_acronym' %}"+data['last_using']);
-                            }
-                        }else{
-                            res = false;
-                            if(data['existing_acronym']){
-                                $(".form-acronym").css("color","red");
-                                newMessage.push("{% trans 'existing_acronym' %}");
-                            }
-                        }
-                        message = newMessage.join("   ");
-                    });
-                }
-                else {
-                    message = "{% trans 'invalid_acronym' %}"
-                }
-            }, messageFunc);
-
-            $( "#LearningUnitYearForm" ).validate({
-                invalidHandler: function(form, validator) {
-                    var errors = validator.numberOfInvalids();
-                },
-                rules:{
-                    acronym:{ check_acronym: true },
-                },
-                messages:{
-                    acronym:{ required: "{% trans 'field_is_required' %}" },
-                },
-            }).element("#acronym");
+        $(function () {
+            $('#LearningUnitYearForm').validate();
         });
 
-        $('#academic_year').on("click",function() {
-            var message = "";
-            var messageFunc = function () { return message; };
-            jQuery.validator.addMethod("check_acronym", function(val) {
-                $(".form-acronym").css("color","black");
-                if(val.length>6){
-                    var res;
-                    $.ajax({
-                        async:false,
-                        url: "/learning_units/check?acronym=" + val + "&year_id=" + $('#academic_year').val()
-                    }).then(function (data) {
-                        var newMessage = [];
-                        $(".form-acronym").css("color","black");
-                        if (data['valid']){
-                            res = true;
-                            if(data['existed_acronym'] && !data['existing_acronym']){
-                                $(".form-acronym").css("color","orange");
-                                $("input['acronym'].error").css("color","orange");
-                                newMessage.push("{% trans 'existed_acronym' %}"+data['last_using']);
-                            }
-                        }else{
-                            res = false;
-                            if(data['existing_acronym']){
-                                $(".form-acronym").css("color","red");
-                                newMessage.push("{% trans 'existing_acronym' %}");
-                            }
-                        }
-                        message = newMessage.join("   ");
-                    });
-                }
-            }, messageFunc);
+        function validate_acronym () {
+            $('#acronym_message').removeClass("error-message").text("");
 
-            $( "#LearningUnitYearForm" ).validate({
-                invalidHandler: function(form, validator) {
-                    var errors = validator.numberOfInvalids();
-                },
-                rules:{
-                    acronym:{ check_acronym: true },
-                },
-                messages:{
-                    acronym:{ required: "{% trans 'field_is_required' %}" },
-                },
-            }).element("#acronym");
+	        if(/{{ form.acronym_regex }}/.test($('#acronym').val())) {
+                $.ajax({
+                    url: "/learning_units/check?acronym=" + $('#acronym').val() + "&year_id=" + $('#academic_year').val()
+                }).done(function(data){
+                    if (data['valid']){
+                        window.valid_acronym = true;
+                        if(data['existed_acronym'] && !data['existing_acronym']){
+                            $('#acronym_message').addClass("error").text("{% trans 'existed_acronym' %}"+data['last_using']);
+                            $("#acronym_message").css("color","orange");
+                        }
+                    }else{
+                        window.valid_acronym = false;
+                        if(data['existing_acronym']){
+                            $('#acronym_message').addClass("error").text("{% trans 'existing_acronym' %}");
+                            $("#acronym_message").css("color","red");
+                        }
+                    }
+                });
+            } else {
+                window.valid_acronym = false;
+                $('#acronym_message').addClass("error").text("{% trans 'invalid_acronym' %}");
+                $("#acronym_message").css("color","red");
+            }
+        };
+
+        $('#acronym').change(validate_acronym);
+        $('#academic_year').change(validate_acronym);
+
+        $("#LearningUnitYearForm").submit(function( event ) {
+            if (!window.valid_acronym) {
+                $("#acronym").focus();
+            }
+            return window.valid_acronym;
+
         });
     });
 </script>

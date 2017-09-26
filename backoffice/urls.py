@@ -39,19 +39,19 @@ urlpatterns = (
     url(r'^logout/$', common.log_out, name='logout'),
     url(r'^logged_out/$', common.logged_out, name='logged_out'),
 
-    url(r'^'+settings.ADMIN_URL, admin.site.urls),
+    url(r'^' + settings.ADMIN_URL, admin.site.urls),
     url(r'', include('base.urls')),
     url(r'^jsi18n/$', javascript_catalog, js_info_dict, name='javascript-catalog'),
 )
 
 if 'assistant' in settings.INSTALLED_APPS:
-    urlpatterns += (url(r'^assistants/', include('assistant.urls')), )
+    urlpatterns += (url(r'^assistants/', include('assistant.urls')),)
 if 'internship' in settings.INSTALLED_APPS:
-    urlpatterns += (url(r'^internships/', include('internship.urls')), )
+    urlpatterns += (url(r'^internships/', include('internship.urls')),)
 if 'dissertation' in settings.INSTALLED_APPS:
-    urlpatterns += (url(r'^dissertation/', include('dissertation.urls')), )
+    urlpatterns += (url(r'^dissertation/', include('dissertation.urls')),)
 if 'assessments' in settings.INSTALLED_APPS:
-    urlpatterns += (url(r'^assessments/', include('assessments.urls')), )
+    urlpatterns += (url(r'^assessments/', include('assessments.urls')),)
 
 handler404 = 'base.views.common.page_not_found'
 handler403 = 'base.views.common.access_denied'
@@ -64,4 +64,7 @@ admin.site.index_title = 'Louvain'
 
 if settings.DEBUG and 'debug_toolbar' in settings.INSTALLED_APPS:
     import debug_toolbar
-    urlpatterns += (url(r'^__debug__/', include(debug_toolbar.urls)), )
+
+    urlpatterns += (url(r'^__debug__/', include(debug_toolbar.urls)),)
+
+common.get_current_version()

@@ -23,7 +23,6 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from itertools import chain
 from django.db import models
 from django.db.models import Q
 from attribution.models.enums import function
