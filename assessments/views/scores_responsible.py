@@ -92,7 +92,7 @@ def scores_responsible_management(request):
 
     learning_unit_year_id = request.GET.get('learning_unit_year').strip('learning_unit_year_')
     a_learning_unit_year = mdl_base.learning_unit_year.find_by_id(learning_unit_year_id)
-    if a_learning_unit_year.entity in entities_with_descendants:
+    if a_learning_unit_year.allocation_entity in entities_with_descendants:
         attributions = mdl_attr.attribution.find_all_responsible_by_learning_unit_year(a_learning_unit_year)
         academic_year = mdl_base.academic_year.current_academic_year()
         return layout.render(request, 'scores_responsible_edit.html',
