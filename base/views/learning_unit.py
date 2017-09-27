@@ -39,6 +39,7 @@ from base import models as mdl
 from base.business import learning_unit_year_volumes
 from base.business import learning_unit_year_with_context
 from attribution import models as mdl_attr
+from base.business.learning_unit_year_with_context import volume_learning_component_year
 from base.models import entity_container_year
 from base.models.entity_component_year import EntityComponentYear
 from base.models.entity_container_year import EntityContainerYear
@@ -136,6 +137,8 @@ def learning_unit_formations(request, learning_unit_year_id):
 @permission_required('base.can_access_learningunit', raise_exception=True)
 def learning_unit_components(request, learning_unit_year_id):
     context = _get_common_context_learning_unit_year(learning_unit_year_id)
+    context['components'] = get_same_container_year_components(context['learning_unit_year'], True)
+
     context['learning_units'] = learning_unit_year_with_context.get_with_context(
         learning_container_year_id=context['learning_unit_year'].learning_container_year_id
     )
@@ -360,8 +363,15 @@ def _get_common_context_learning_unit_year(learning_unit_year_id):
 
 
 def get_same_container_year_components(learning_unit_year, with_classes=False):
+    """
+    Recoit un object learning unit year
+    :param learning_unit_year:
+    :param with_classes:
+    :return:
+    """
     learning_container_year = learning_unit_year.learning_container_year
     components = []
+    #charge le learning components year (list) avec classes a partir de learning container year
     learning_components_year = mdl.learning_component_year.find_by_learning_container_year(learning_container_year, with_classes)
 
     for learning_component_year in learning_components_year:
@@ -371,7 +381,7 @@ def get_same_container_year_components(learning_unit_year, with_classes=False):
                 learning_class_year.is_used_by_full_learning_unit_year = _is_used_by_full_learning_unit_year(learning_class_year)
 
         entity_container_yrs = mdl.entity_container_year.find_by_learning_container_year(
-            learning_component_year.learning_container_year,
+            learning_component_year.learning_container_year, # pourquoi pas learning_container_year ?
             entity_container_year_link_type.REQUIREMENT_ENTITY)
         entity_component_yr = mdl.entity_component_year.find_by_entity_container_years(entity_container_yrs,
                                                                                        learning_component_year).first()
@@ -379,7 +389,7 @@ def get_same_container_year_components(learning_unit_year, with_classes=False):
 
         components.append({'learning_component_year': learning_component_year,
                            'entity_component_yr': entity_component_yr,
-                           'volumes': volumes(entity_component_yr),
+                           'volumes': volume_learning_component_year(learning_component_year), #volumes(entity_component_yr),  #
                            'learning_unit_usage': _learning_unit_usage(learning_component_year),
                            'used_by_learning_unit': used_by_learning_unit
                            })
@@ -466,7 +476,6 @@ def volumes(entity_component_yr):
                 VOLUME_PARTIAL_KEY: format_volume_zero(entity_component_yr.hourly_volume_partial),
                 VOLUME_REMAINING_KEY: format_volume_remaining(entity_component_yr)}
 
-
 def unknown_volume_partial(entity_component_yr):
     return entity_component_yr.hourly_volume_partial == VOLUME_FOR_UNKNOWN_QUADRIMESTER
 
@@ -479,7 +488,7 @@ def format_nominal_volume(entity_component_yr):
     else:
         return 'partial_remaining'
 
-
+#la methode de calcul du volume doit etre changee
 def format_volume_remaining(entity_component_yr):
     volume_remaining = entity_component_yr.hourly_volume_total - entity_component_yr.hourly_volume_partial
     if volume_remaining == 0:
@@ -564,7 +573,7 @@ def get_components_identification(learning_unit_yr):
                                                                                                learning_component_year).first()
                 components.append({'learning_component_year': learning_component_year,
                                    'entity_component_yr': entity_component_yr,
-                                   'volumes': volumes(entity_component_yr),
+                                   'volumes': volume_learning_component_year(learning_component_year),
                                    'learning_unit_usage': _learning_unit_usage(learning_component_year)})
     return components
 

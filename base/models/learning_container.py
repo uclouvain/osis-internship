@@ -28,7 +28,7 @@ from django.contrib import admin
 
 
 class LearningContainerAdmin(admin.ModelAdmin):
-    list_display = ('external_id',)
+    list_display = ('id', 'external_id',)
     fieldsets = ((None, {'fields': ('external_id',)}),)
     search_fields = ['external_id']
 
@@ -40,7 +40,7 @@ class LearningContainer(models.Model):
     start_year = models.IntegerField(null=True)
 
     def __str__(self):
-        return u"%s" % self.external_id
+        return u"%s-%s" % (self.id, self.external_id)
 
 
 def find_by_id(learning_container_id):

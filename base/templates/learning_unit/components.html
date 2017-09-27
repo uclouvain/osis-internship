@@ -54,63 +54,60 @@
                             <th></th>
                         </tr>
                     </thead>
-                    {% for learning_unit_year in learning_units %}
-                        {% for component, data in learning_unit_year.components.items %}
-                            {% ifchanged component.type %}
-                                {% if forloop.counter > 1 %}
-                                    <tr style="height: 1px;font-size: 1px;"><td colspan="11">&nbsp;</td></tr>
-                                {% endif %}
-                            {% endifchanged %}
-                            {% if learning_unit_year.learning_unit %}
-                                <tbody class="used_component">
-                            {% else %}
-                                <tbody class="unused_component">
+                    {% for component in components %}
+                        {% ifchanged component.learning_component_year.type %}
+                            {% if forloop.counter > 1 %}
+                                <tr style="height: 1px;font-size: 1px;"><td colspan="11">&nbsp;</td></tr>
                             {% endif %}
-
+                        {% endifchanged %}
+                        {% if component.used_by_learning_unit %}
+                            <tbody class="used_component">
+                        {% else %}
+                            <tbody class="unused_component">
+                        {% endif %}
                         <tr>
                             <td>
-                                {% if component.real_classes %}
+                                {% if component.learning_component_year.classes %}
                                     <a role="button" data-toggle="collapse" href=".collapse_classes{{ forloop.counter0 }}"
                                         aria-expanded="false" aria-controls="collapse_classes{{ forloop.counter0 }}" style="border:0;padding:0;"
                                         onclick="changeOrientation(expandButton{{ forloop.counter0 }})">
                                         <span id="expandButton{{ forloop.counter0 }}" class="glyphicon glyphicon-expand" aria-hidden="true"></span>
                                     </a>
                                 {% endif %}
-
                             </td>
-                            <td>{% if component.type %}
-                                    {% trans component.type %}
+                            <td>{% if component.learning_component_year.type %}
+                                    {% trans component.learning_component_year.type %}
                                 {% endif %}
                             </td>
-                            <td>/{{ component.acronym  | default_if_none:'' }}</td>
+                            <td>/{{ component.learning_component_year.acronym  | default_if_none:'' }}</td>
                             <td>
                                 <span data-toggle="tooltip" data-html="true"
-                                   title="{{ component.comment  | default_if_none:'' }}">
-                                    {{ component.comment  | default_if_none:'' | truncatechars:15 }}
+                                   title="{{ component.learning_component_year.comment  | default_if_none:'' }}">
+                                    {{ component.learning_component_year.comment  | default_if_none:'' | truncatechars:15 }}
                                 </span>
                             </td>
-                            <td>{{ data.VOLUME_TOTAL | default_if_none:'0'}}</td>
-                            <td>{{ data.VOLUME_QUARTER | default_if_none:'0' }}</td>
-                            <td>{{ data.VOLUME_Q1 | default_if_none:'0' }}</td>
-                            <td>{{ data.VOLUME_Q2 | default_if_none:'0' }}</td>
+                            <td>{{ component.volumes.VOLUME_TOTAL | default_if_none:'0'}}</td>
+                            <td>{{ component.volumes.VOLUME_QUARTER | default_if_none:'0' }}</td>
+                            <td>{{ component.volumes.VOLUME_Q1 | default_if_none:'0' }}</td>
+                            <td>{{ component.volumes.VOLUME_Q2 | default_if_none:'0' }}</td>
                             <td>
-                                <span class="badge fixed_width {{ component.planned_classes |get_css_class:component.real_classes }}">
-                                    {{ component.real_classes| default_if_none:'0' }} / {{ component.planned_classes| default_if_none:'0' }}
+                                <span class="badge fixed_width {{ component.learning_component_year.planned_classes |get_css_class:component.learning_component_year.real_classes }}">
+                                    {{ component.learning_component_year.real_classes| default_if_none:'0' }} /
+                                        {{ component.learning_component_year.planned_classes| default_if_none:'0' }}
                                 </span>
                             </td>
-                            <td>{{ learning_unit_year.acronym }}</td>
+                            <td>{{ component.learning_unit_usage }}</td>
                             <td>
                                 {% if perms.base.change_learningcomponentyear %}
                                     <a class="component-edit-btn pull-right" href="#"
-                                       data-form="{% url 'learning_unit_component_edit' learning_unit_year_id=learning_unit_year.id %}?learning_component_year_id={{component.id}}"
+                                       data-form="{% url 'learning_unit_component_edit' learning_unit_year_id=learning_unit_year.id %}?learning_component_year_id={{component.learning_component_year.id}}"
                                        title="{% trans 'edit' %}">
                                         <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
                                     </a>
                                 {% endif %}
                             </td>
                         </tr>
-
-                        {% with component_number=forloop.counter0 classes_count=component.classes|length|add:"1" %}
+                        {% with component_number=forloop.counter0 classes_count=component.learning_component_year.classes|length|add:"1" %}
                                 <tr class="class_year class_year_head collapse collapse_classes{{ component_number }}">
                                     <td rowspan="{{ classes_count }}"></td>
                                     <td rowspan="{{ classes_count }}">{% trans 'classes' %}</td>
@@ -119,11 +116,11 @@
                                     <td>{% trans 'lu_usage' %}</td>
                                     <td></td>
                                 </tr>
-                            {% for learning_class_year in component.classes|dictsort:"acronym" %}
+                            {% for learning_class_year in component.learning_component_year.classes|dictsort:"acronym" %}
                                 <tr class="class_year collapse collapse_classes{{ component_number }}">
                                     <td colspan="2">
-                                        /{% if component.type_letter_acronym %}
-                                            {{ component.type_letter_acronym }}
+                                        /{% if component.learning_component_year.type_letter_acronym %}
+                                            {{ component.learning_component_year.type_letter_acronym }}
                                          {% endif %}
                                          - {{ learning_class_year.acronym }}
                                     </td>
@@ -134,7 +131,7 @@
                                     <td>
                                         {% if perms.base.change_learningclassyear and component.used_by_learning_unit %}
                                             <a class="class-edit-btn pull-right" href="#"
-                                               data-form="{% url 'learning_class_year_edit' learning_unit_year_id=learning_unit_year.id %}?learning_class_year_id={{learning_class_year.id}}&learning_component_year_id={{component.id}}"
+                                               data-form="{% url 'learning_class_year_edit' learning_unit_year_id=learning_unit_year.id %}?learning_class_year_id={{learning_class_year.id}}&learning_component_year_id={{component.learning_component_year.id}}"
                                                title="{% trans 'edit' %}">
                                                 <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
                                             </a>
@@ -143,11 +140,7 @@
                                 </tr>
                             {% endfor %}
                         {% endwith %}
-
-
-                        {% endfor %}
-                        </tbody>
-
+                    </tbody>
                     {% endfor %}
                 </table>
                 <a href="{% url 'learning_unit_volumes_management' learning_unit_year.id %}"

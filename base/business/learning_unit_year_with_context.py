@@ -27,9 +27,18 @@ from collections import OrderedDict
 from django.db import models
 
 from base import models as mdl
+from base.models.entity_component_year import EntityComponentYear
 from base.models.enums import entity_container_year_link_type as entity_types
 from django.utils.translation import ugettext_lazy as _
 
+UNDEFINED_VALUE = '?'
+
+HOURLY_VOLUME_KEY = 'HOURLY_VOLUME'
+TOTAL_VOLUME_KEY = 'TOTAL_VOLUME'
+VOLUME_PARTIAL_KEY = 'VOLUME_Q1'
+VOLUME_REMAINING_KEY = 'VOLUME_Q2'
+
+VOLUME_FOR_UNKNOWN_QUADRIMESTER = -1
 
 class LearningUnitYearWithContext:
     def __init__(self, **kwargs):
@@ -105,28 +114,34 @@ def _append_components(learning_unit):
     if learning_unit.learning_unit_components:
         for learning_unit_component in learning_unit.learning_unit_components:
             component = learning_unit_component.learning_component_year
-            entity_components_year = component.entity_components_year
-            requirement_entities_volumes = _get_requirement_entities_volumes(entity_components_year)
-            vol_req_entity = requirement_entities_volumes.get(entity_types.REQUIREMENT_ENTITY, 0) or 0
-            vol_add_req_entity_1 = requirement_entities_volumes.get(entity_types.ADDITIONAL_REQUIREMENT_ENTITY_1, 0) or 0
-            vol_add_req_entity_2 = requirement_entities_volumes.get(entity_types.ADDITIONAL_REQUIREMENT_ENTITY_2, 0) or 0
-            volume_total_charge = vol_req_entity + vol_add_req_entity_1 + vol_add_req_entity_2
-            volume_partial = float(component.hourly_volume_partial) if component.hourly_volume_partial else 0
-            planned_classes = component.planned_classes or 1
-            volume_total = volume_total_charge / planned_classes
-
-            learning_unit.components[component] = {
-                'VOLUME_TOTAL': volume_total,
-                'VOLUME_Q1': volume_partial,
-                'VOLUME_Q2': volume_total - volume_partial,
-                'PLANNED_CLASSES': planned_classes,
-                'VOLUME_' + entity_types.REQUIREMENT_ENTITY: vol_req_entity,
-                'VOLUME_' + entity_types.ADDITIONAL_REQUIREMENT_ENTITY_1: vol_add_req_entity_1,
-                'VOLUME_' + entity_types.ADDITIONAL_REQUIREMENT_ENTITY_2: vol_add_req_entity_2,
-                'VOLUME_TOTAL_REQUIREMENT_ENTITIES': volume_total_charge,
-                'VOLUME_QUARTER' : _get_volume_quarter_str(volume_total,volume_partial),
-            }
+            learning_unit.components[component] = volume_learning_component_year(component)
     return learning_unit
+
+
+def volume_learning_component_year(learning_component_year):
+    entity_components_year = EntityComponentYear.objects.filter(learning_component_year=learning_component_year)\
+        .prefetch_related('entity_container_year')
+    requirement_entities_volumes = _get_requirement_entities_volumes(entity_components_year)
+    vol_req_entity = requirement_entities_volumes.get(entity_types.REQUIREMENT_ENTITY, 0)
+    vol_add_req_entity_1 = requirement_entities_volumes.get(entity_types.ADDITIONAL_REQUIREMENT_ENTITY_1, 0)
+    vol_add_req_entity_2 = requirement_entities_volumes.get(entity_types.ADDITIONAL_REQUIREMENT_ENTITY_2, 0)
+    volume_total_charge = vol_req_entity + vol_add_req_entity_1 + vol_add_req_entity_2
+    volume_partial = float(learning_component_year.hourly_volume_partial) \
+        if learning_component_year.hourly_volume_partial else 0
+    planned_classes = learning_component_year.planned_classes or 1
+    volume_total = volume_total_charge / planned_classes
+
+    return {
+        'VOLUME_TOTAL': volume_total,
+        'VOLUME_Q1': volume_partial,
+        'VOLUME_Q2': volume_total - volume_partial,
+        'PLANNED_CLASSES': planned_classes,
+        'VOLUME_' + entity_types.REQUIREMENT_ENTITY: vol_req_entity,
+        'VOLUME_' + entity_types.ADDITIONAL_REQUIREMENT_ENTITY_1: vol_add_req_entity_1,
+        'VOLUME_' + entity_types.ADDITIONAL_REQUIREMENT_ENTITY_2: vol_add_req_entity_2,
+        'VOLUME_TOTAL_REQUIREMENT_ENTITIES': volume_total_charge,
+        'VOLUME_QUARTER': _get_volume_quarter_str(volume_total , volume_partial),
+    }
 
 
 def _get_requirement_entities_volumes(entity_components_year):
