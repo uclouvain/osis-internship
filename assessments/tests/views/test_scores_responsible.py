@@ -24,12 +24,14 @@
 #
 ##############################################################################
 import datetime
+
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 from assessments.views import scores_responsible
 from attribution.models import attribution
 from attribution.tests.models import test_attribution
 from base import models as mdl_base
+from base.models.entity_container_year import EntityContainerYear
 from base.models.enums import entity_container_year_link_type
 from base.tests.factories import structure, user
 from base.tests.factories.academic_year import AcademicYearFactory
@@ -88,8 +90,13 @@ class ScoresResponsibleViewTestCase(TestCase):
     def test_scores_responsible_search_without_elements(self):
         self.client.force_login(self.user)
         url = reverse('scores_responsible_search')
-        response = self.client.get(url+"?course_code=%s&learning_unit_title=%s&tutor=%s&scores_responsible=%s"
-                                   % ("", "", "", ""))
+        data = {
+            'course_code': '',
+            'learning_unit_title': '',
+            'tutor': '',
+            'scores_responsible': ''
+        }
+        response = self.client.get(url, data=data)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.context[-1]['dict_attribution']), 2)
 
@@ -108,8 +115,22 @@ class ScoresResponsibleViewTestCase(TestCase):
     def test_scores_responsible_management(self):
         self.client.force_login(self.user)
         url = reverse('scores_responsible_management')
-        response = self.client.get(url, data={'learning_unit_year': "learning_unit_year_%d" % self.learning_unit_year.id})
+        data = {
+            'learning_unit_year': "learning_unit_year_%d" % self.learning_unit_year.id
+        }
+        response = self.client.get(url, data=data)
         self.assertEqual(response.status_code, 200)
+
+    def test_scores_responsible_management_with_wrong_learning_unit_year(self):
+        self.client.force_login(self.user)
+        url = reverse('scores_responsible_management')
+        # Remove all entity container year
+        EntityContainerYear.objects.all().delete()
+        data = {
+            'learning_unit_year': "learning_unit_year_%d" % self.learning_unit_year.id
+        }
+        response = self.client.get(url, data=data)
+        self.assertEqual(response.status_code, 302)# Return "AccessDenied"
 
     def test_scores_responsible_add(self):
         self.client.force_login(self.user)

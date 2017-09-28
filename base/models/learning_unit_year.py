@@ -93,10 +93,11 @@ class LearningUnitYear(SerializableModel):
 
     @property
     def allocation_entity(self):
-        return entity_container_year.search(
+        entity_container_yr = entity_container_year.search(
             link_type=entity_container_year_link_type.ALLOCATION_ENTITY,
             learning_container_year=self.learning_container_year
         ).first()
+        return entity_container_yr.entity if entity_container_yr else None
 
 
 def find_by_id(learning_unit_year_id):
