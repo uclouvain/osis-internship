@@ -199,7 +199,7 @@ def is_service_course(learning_unit_yr):
     enti = mdl_entity_version.find_parent_faculty_version(entity_version,
                                                           learning_unit_yr.learning_container_year)
 
-    if enti is None:
+    if enti is None and entity_container_yr:
         enti = entity_container_yr.entity
     else:
         enti = enti.entity
