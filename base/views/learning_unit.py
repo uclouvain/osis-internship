@@ -643,7 +643,7 @@ def learning_unit_year_add(request):
         form = CreateLearningUnitYearForm(request.POST)
         if form.is_valid():
             data = form.cleaned_data
-            current_academic_year = mdl.academic_year.current_academic_year()
+            starting_academic_year = mdl.academic_year.starting_academic_year()
             academic_year = data['academic_year']
             year = academic_year.year
             status = check_status(data)
@@ -659,17 +659,11 @@ def learning_unit_year_add(request):
                 additional_entity_version_2 = mdl.entity_version.find_by_id(data['additional_entity_2'])
             new_learning_container = create_learning_container(year)
             new_learning_unit = create_learning_unit(data, new_learning_container, year)
-            if year < current_academic_year.year:
+            while year < starting_academic_year.year+6:
                 create_learning_unit_structure(additional_entity_version_1, additional_entity_version_2,
                                                allocation_entity_version, data, form, new_learning_container,
                                                new_learning_unit, requirement_entity_version, status, year)
-            else:
-                while year < current_academic_year.year+6:
-                    if year > current_academic_year.year:
-                        create_learning_unit_structure(additional_entity_version_1, additional_entity_version_2,
-                                                       allocation_entity_version, data, form, new_learning_container,
-                                                       new_learning_unit, requirement_entity_version, status, year)
-                    year = year+1
+                year = year+1
             return redirect('learning_units')
         else:
             return layout.render(request, "learning_unit/learning_unit_form.html", {'form': form})
