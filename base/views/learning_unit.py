@@ -660,9 +660,11 @@ def learning_unit_year_add(request):
             new_learning_container = create_learning_container(year)
             new_learning_unit = create_learning_unit(data, new_learning_container, year)
             while year < starting_academic_year.year+6:
-                create_learning_unit_structure(additional_entity_version_1, additional_entity_version_2,
-                                               allocation_entity_version, data, form, new_learning_container,
-                                               new_learning_unit, requirement_entity_version, status, year)
+                academic_year = mdl.academic_year.find_academic_year_by_year(year)
+                if academic_year:
+                    create_learning_unit_structure(additional_entity_version_1, additional_entity_version_2,
+                                                   allocation_entity_version, data, form, new_learning_container,
+                                                   new_learning_unit, requirement_entity_version, status, academic_year)
                 year = year+1
             return redirect('learning_units')
         else:
@@ -673,9 +675,8 @@ def learning_unit_year_add(request):
 
 def create_learning_unit_structure(additional_entity_version_1, additional_entity_version_2, allocation_entity_version,
                                    data, form, new_learning_container, new_learning_unit, requirement_entity_version,
-                                   status, year):
-    an_academic_year = mdl.academic_year.find_academic_year_by_year(year)
-    new_learning_container_year = create_learning_container_year(an_academic_year, data,
+                                   status, academic_year):
+    new_learning_container_year = create_learning_container_year(academic_year, data,
                                                                  new_learning_container)
     new_requirement_entity = create_entity_container_year(requirement_entity_version,
                                                           new_learning_container_year,
@@ -689,10 +690,10 @@ def create_learning_unit_structure(additional_entity_version_1, additional_entit
         create_entity_container_year(additional_entity_version_2, new_learning_container_year,
                                      ADDITIONAL_REQUIREMENT_ENTITY_2)
     if data['learning_container_year_type'] == COURSE:
-        create_course(an_academic_year, form, new_learning_container_year, new_learning_unit,
+        create_course(academic_year, form, new_learning_container_year, new_learning_unit,
                       new_requirement_entity, status)
     else:
-        create_another_type(an_academic_year, form, new_learning_container_year, new_learning_unit,
+        create_another_type(academic_year, form, new_learning_container_year, new_learning_unit,
                             new_requirement_entity, status)
 
 

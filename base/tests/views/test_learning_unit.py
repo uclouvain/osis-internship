@@ -657,7 +657,7 @@ class LearningUnitViewTestCase(TestCase):
     def get_base_form_data(self):
         return {"acronym": "LTAU2000",
                 "learning_container_year_type": COURSE,
-                "academic_year": self.academic_year.id,
+                "academic_year": self.current_academic_year.id,
                 "status": True,
                 "periodicity": ANNUAL,
                 "credits": "5",
