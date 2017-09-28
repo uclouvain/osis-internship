@@ -299,3 +299,5 @@ REST_FRAMEWORK = {
 #ESB Configuration
 ESB_AUTHORIZATION = os.environ.get('ESB_AUTHORIZATION')
 ESB_STUDENT_API = os.environ.get('ESB_STUDENT_API')
+
+RELEASE_TAG = os.environ.get('RELEASE_TAG')
