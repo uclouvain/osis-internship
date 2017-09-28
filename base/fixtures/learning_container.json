@@ -3,7 +3,6 @@
     "model": "base.learningcontainer",
     "pk": 1,
     "fields": {
-      "external_id": "osis.learning_container_1",
       "auto_renewal_until": null,
       "start_year": null
     }
@@ -12,7 +11,6 @@
     "model": "base.learningcontainer",
     "pk": 2,
     "fields": {
-      "external_id": "osis.learning_container_2",
       "auto_renewal_until": null,
       "start_year": 2012
     }
@@ -21,7 +19,6 @@
     "model": "base.learningcontainer",
     "pk": 3,
     "fields": {
-      "external_id": "osis.learning_container_3",
       "auto_renewal_until": null,
       "start_year": null
     }
@@ -30,7 +27,6 @@
     "model": "base.learningcontainer",
     "pk": 4,
     "fields": {
-      "external_id": "osis.learning_container_4",
       "auto_renewal_until": null,
       "start_year": 2013
     }
@@ -39,7 +35,6 @@
     "model": "base.learningcontainer",
     "pk": 5,
     "fields": {
-      "external_id": "osis.learning_container_5",
       "auto_renewal_until": null,
       "start_year": null
     }
@@ -48,7 +43,6 @@
     "model": "base.learningcontainer",
     "pk": 6,
     "fields": {
-      "external_id": "osis.learning_container_6",
       "auto_renewal_until": null,
       "start_year": null
     }
@@ -57,7 +51,6 @@
     "model": "base.learningcontainer",
     "pk": 7,
     "fields": {
-      "external_id": "osis.learning_container_7",
       "auto_renewal_until": null,
       "start_year": 2014
     }
@@ -66,7 +59,6 @@
     "model": "base.learningcontainer",
     "pk": 8,
     "fields": {
-      "external_id": "osis.learning_container_8",
       "auto_renewal_until": null,
       "start_year": null
     }
@@ -75,7 +67,6 @@
     "model": "base.learningcontainer",
     "pk": 9,
     "fields": {
-      "external_id": "osis.learning_container_9",
       "auto_renewal_until": null,
       "start_year": null
     }
@@ -84,7 +75,6 @@
     "model": "base.learningcontainer",
     "pk": 10,
     "fields": {
-      "external_id": "osis.learning_container_10",
       "auto_renewal_until": null,
       "start_year": 2013
     }
@@ -93,7 +83,6 @@
     "model": "base.learningcontainer",
     "pk": 11,
     "fields": {
-      "external_id": "osis.learning_container_11",
       "auto_renewal_until": null,
       "start_year": 2013
     }
@@ -102,7 +91,6 @@
     "model": "base.learningcontainer",
     "pk": 12,
     "fields": {
-      "external_id": "osis.learning_container_12",
       "auto_renewal_until": null,
       "start_year": 2013
     }
@@ -111,7 +99,6 @@
     "model": "base.learningcontainer",
     "pk": 13,
     "fields": {
-      "external_id": "osis.learning_container_13",
       "auto_renewal_until": null,
       "start_year": 2005
     }
@@ -120,7 +107,6 @@
     "model": "base.learningcontainer",
     "pk": 14,
     "fields": {
-      "external_id": "osis.learning_container_14",
       "auto_renewal_until": null,
       "start_year": null
     }
@@ -129,7 +115,6 @@
     "model": "base.learningcontainer",
     "pk": 15,
     "fields": {
-      "external_id": "osis.learning_container_15",
       "auto_renewal_until": null,
       "start_year": 2013
     }
@@ -138,7 +123,6 @@
     "model": "base.learningcontainer",
     "pk": 16,
     "fields": {
-      "external_id": "osis.learning_container_16",
       "auto_renewal_until": null,
       "start_year": null
     }
@@ -147,7 +131,6 @@
     "model": "base.learningcontainer",
     "pk": 17,
     "fields": {
-      "external_id": "osis.learning_container_17",
       "auto_renewal_until": null,
       "start_year": null
     }
@@ -156,7 +139,6 @@
     "model": "base.learningcontainer",
     "pk": 18,
     "fields": {
-      "external_id": "osis.learning_container_18",
       "auto_renewal_until": null,
       "start_year": null
     }
@@ -165,7 +147,6 @@
     "model": "base.learningcontainer",
     "pk": 19,
     "fields": {
-      "external_id": "osis.learning_container_19",
       "auto_renewal_until": null,
       "start_year": 2007
     }
@@ -174,7 +155,6 @@
     "model": "base.learningcontainer",
     "pk": 20,
     "fields": {
-      "external_id": "osis.learning_container_20",
       "auto_renewal_until": null,
       "start_year": null
     }
@@ -183,7 +163,6 @@
     "model": "base.learningcontainer",
     "pk": 21,
     "fields": {
-      "external_id": "osis.learning_container_21",
       "auto_renewal_until": null,
       "start_year": null
     }
@@ -192,7 +171,6 @@
     "model": "base.learningcontainer",
     "pk": 22,
     "fields": {
-      "external_id": "osis.learning_container_22",
       "auto_renewal_until": null,
       "start_year": null
     }
@@ -201,7 +179,6 @@
     "model": "base.learningcontainer",
     "pk": 23,
     "fields": {
-      "external_id": "osis.learning_container_23",
       "auto_renewal_until": null,
       "start_year": null
     }
@@ -210,30 +187,10 @@
     "model": "base.learningcontainer",
     "pk": 24,
     "fields": {
-      "external_id": "osis.learning_container_24",
+      "external_id": "osis.learning_container_32082",
+      "changed": null,
       "auto_renewal_until": null,
-      "start_year": null
-    }
-  },
-  {
-    "model": "base.learningcontainer",
-    "pk": 25,
-    "fields": {
-      "external_id": "osis.learning_container_30548",
-      "auto_renewal_until": null,
-      "start_year": null
-    }
-  },
-  {
-    "model": "base.learningcontainer",
-    "pk": 26,
-    "fields": {
-      "external_id": "osis.learning_container_48",
-      "auto_renewal_until": null,
-      "start_year": null
+      "start_year": 2005
     }
   }
-
-
 ]
-

@@ -128,5 +128,165 @@
       "hourly_volume_total": "0.00",
       "hourly_volume_partial": "30.00"
     }
+  },
+  {
+    "model": "base.entitycomponentyear",
+    "pk": 14,
+    "fields": {
+      "entity_container_year": 14,
+      "learning_component_year": 40,
+      "hourly_volume_total": null,
+      "hourly_volume_partial": null
+    }
+  },
+  {
+    "model": "base.entitycomponentyear",
+    "pk": 15,
+    "fields": {
+      "entity_container_year": 15,
+      "learning_component_year": 40,
+      "hourly_volume_total": null,
+      "hourly_volume_partial": null
+    }
+  },
+  {
+    "model": "base.entitycomponentyear",
+    "pk": 16,
+    "fields": {
+      "entity_container_year": 14,
+      "learning_component_year": 41,
+      "hourly_volume_total": null,
+      "hourly_volume_partial": null
+    }
+  },
+  {
+    "model": "base.entitycomponentyear",
+    "pk": 17,
+    "fields": {
+      "entity_container_year": 15,
+      "learning_component_year": 41,
+      "hourly_volume_total": "45.00",
+      "hourly_volume_partial": "0.00"
+    }
+  },
+  {
+    "model": "base.entitycomponentyear",
+    "pk": 18,
+    "fields": {
+      "entity_container_year": 14,
+      "learning_component_year": 38,
+      "hourly_volume_total": null,
+      "hourly_volume_partial": null
+    }
+  },
+  {
+    "model": "base.entitycomponentyear",
+    "pk": 19,
+    "fields": {
+      "entity_container_year": 15,
+      "learning_component_year": 38,
+      "hourly_volume_total": "14.00",
+      "hourly_volume_partial": "0.00"
+    }
+  },
+  {
+    "model": "base.entitycomponentyear",
+    "pk": 20,
+    "fields": {
+      "entity_container_year": 14,
+      "learning_component_year": 39,
+      "hourly_volume_total": null,
+      "hourly_volume_partial": null
+    }
+  },
+  {
+    "model": "base.entitycomponentyear",
+    "pk": 21,
+    "fields": {
+      "entity_container_year": 15,
+      "learning_component_year": 39,
+      "hourly_volume_total": "45.00",
+      "hourly_volume_partial": null
+    }
+  },
+  {
+    "model": "base.entitycomponentyear",
+    "pk": 22,
+    "fields": {
+      "entity_container_year": 14,
+      "learning_component_year": 36,
+      "hourly_volume_total": null,
+      "hourly_volume_partial": null
+    }
+  },
+  {
+    "model": "base.entitycomponentyear",
+    "pk": 23,
+    "fields": {
+      "entity_container_year": 15,
+      "learning_component_year": 36,
+      "hourly_volume_total": null,
+      "hourly_volume_partial": null
+    }
+  },
+  {
+    "model": "base.entitycomponentyear",
+    "pk": 24,
+    "fields": {
+      "entity_container_year": 14,
+      "learning_component_year": 37,
+      "hourly_volume_total": null,
+      "hourly_volume_partial": null
+    }
+  },
+  {
+    "model": "base.entitycomponentyear",
+    "pk": 25,
+    "fields": {
+      "entity_container_year": 15,
+      "learning_component_year": 37,
+      "hourly_volume_total": "90.00",
+      "hourly_volume_partial": "0.00"
+    }
+  },
+  {
+    "model": "base.entitycomponentyear",
+    "pk": 26,
+    "fields": {
+      "entity_container_year": 14,
+      "learning_component_year": 42,
+      "hourly_volume_total": null,
+      "hourly_volume_partial": null
+    }
+  },
+  {
+    "model": "base.entitycomponentyear",
+    "pk": 27,
+    "fields": {
+      "entity_container_year": 15,
+      "learning_component_year": 42,
+      "hourly_volume_total": "14.00",
+      "hourly_volume_partial": "0.00"
+    }
+  },
+  {
+    "model": "base.entitycomponentyear",
+    "pk": 28,
+    "fields": {
+      "entity_container_year": 14,
+      "learning_component_year": 43,
+      "hourly_volume_total": null,
+      "hourly_volume_partial": null
+    }
+  },
+  {
+    "model": "base.entitycomponentyear",
+    "pk": 29,
+    "fields": {
+      "entity_container_year": 15,
+      "learning_component_year": 43,
+      "hourly_volume_total": "90.00",
+      "hourly_volume_partial": "0.00"
+    }
   }
 ]

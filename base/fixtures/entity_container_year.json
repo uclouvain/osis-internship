@@ -122,7 +122,7 @@
     "fields": {
       "entity": 7,
       "learning_container_year": 23,
-      "type": "REQUIREMENT_ENTITY"
+      "type": "ALLOCATION_ENTITY"
     }
   },
   {
@@ -131,44 +131,7 @@
     "fields": {
       "entity": 7,
       "learning_container_year": 23,
-      "type": "ALLOCATION_ENTITY"
-    }
-  },
-  {
-    "model": "base.entitycontaineryear",
-    "pk": 16,
-    "fields": {
-      "entity": 8,
-      "learning_container_year": 24,
       "type": "REQUIREMENT_ENTITY"
-    }
-  },
-  {
-    "model": "base.entitycontaineryear",
-    "pk": 17,
-    "fields": {
-      "entity": 14,
-      "learning_container_year": 24,
-      "type": "ALLOCATION_ENTITY"
-    }
-  },
-  {
-    "model": "base.entitycontaineryear",
-    "pk": 18,
-    "fields": {
-      "entity": 8,
-      "learning_container_year": 25,
-      "type": "REQUIREMENT_ENTITY"
-    }
-  },
-  {
-    "model": "base.entitycontaineryear",
-    "pk": 19,
-    "fields": {
-      "entity": 14,
-      "learning_container_year": 25,
-      "type": "ALLOCATION_ENTITY"
     }
   }
-
 ]
