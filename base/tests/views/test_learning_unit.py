@@ -299,57 +299,6 @@ class LearningUnitViewTestCase(TestCase):
         self.assertEqual(template, 'learning_unit/identification.html')
         self.assertEqual(len(context['learning_container_year_partims']), 3)
 
-    def test_volumes_undefined(self):
-        entity_component_yr = EntityComponentYearFactory(learning_component_year=self.learning_component_yr,
-                                                         entity_container_year=self.entity_container_yr,
-                                                         hourly_volume_total=0.00)
-        data = learning_unit_view.volumes(entity_component_yr)
-        self.assertEqual(data.get(learning_unit_view.HOURLY_VOLUME_KEY), learning_unit_view.UNDEFINED_VALUE)
-        self.assertEqual(data.get(learning_unit_view.TOTAL_VOLUME_KEY), learning_unit_view.UNDEFINED_VALUE)
-        self.assertEqual(data.get(learning_unit_view.VOLUME_PARTIAL_KEY), learning_unit_view.UNDEFINED_VALUE)
-        self.assertEqual(data.get(learning_unit_view.VOLUME_REMAINING_KEY), learning_unit_view.UNDEFINED_VALUE)
-
-    def test_volumes_unknwon_quadrimester(self):
-        entity_component_yr=EntityComponentYearFactory(learning_component_year=self.learning_component_yr,
-                                   entity_container_year=self.entity_container_yr,
-                                   hourly_volume_total=15,
-                                   hourly_volume_partial=-1)
-        data = learning_unit_view.volumes(entity_component_yr)
-        self.assertEqual(data.get(learning_unit_view.HOURLY_VOLUME_KEY), 15)
-        self.assertEqual(data.get(learning_unit_view.TOTAL_VOLUME_KEY), 'partial_or_remaining')
-        self.assertEqual(data.get(learning_unit_view.VOLUME_PARTIAL_KEY), "(15)")
-        self.assertEqual(data.get(learning_unit_view.VOLUME_REMAINING_KEY), "(15)")
-
-    def test_volumes(self):
-        entity_component_yr = EntityComponentYearFactory(learning_component_year=self.learning_component_yr,
-                                                         entity_container_year=self.entity_container_yr,
-                                                         hourly_volume_total=15,
-                                                         hourly_volume_partial=None)
-        data = learning_unit_view.volumes(entity_component_yr)
-        self.assertEqual(data.get(learning_unit_view.HOURLY_VOLUME_KEY), 15)
-        self.assertEqual(data.get(learning_unit_view.TOTAL_VOLUME_KEY), learning_unit_view.UNDEFINED_VALUE)
-        self.assertEqual(data.get(learning_unit_view.VOLUME_PARTIAL_KEY), learning_unit_view.UNDEFINED_VALUE)
-        self.assertEqual(data.get(learning_unit_view.VOLUME_REMAINING_KEY), learning_unit_view.UNDEFINED_VALUE)
-
-        entity_component_yr = EntityComponentYearFactory(learning_component_year=self.learning_component_yr,
-                                                         entity_container_year=self.entity_container_yr_2,
-                                                         hourly_volume_total=15,
-                                                         hourly_volume_partial=15)
-        data = learning_unit_view.volumes(entity_component_yr)
-        self.assertEqual(data.get(learning_unit_view.HOURLY_VOLUME_KEY), 15)
-        self.assertEqual(data.get(learning_unit_view.TOTAL_VOLUME_KEY), 'partial')
-        self.assertEqual(data.get(learning_unit_view.VOLUME_PARTIAL_KEY), 15)
-        self.assertEqual(data.get(learning_unit_view.VOLUME_REMAINING_KEY), '-')
-
-        entity_component_yr = EntityComponentYearFactory(learning_component_year=self.learning_component_yr,
-                                                         entity_container_year=self.entity_container_yr_3,
-                                                         hourly_volume_total=15,
-                                                         hourly_volume_partial=10)
-        data = learning_unit_view.volumes(entity_component_yr)
-        self.assertEqual(data.get(learning_unit_view.HOURLY_VOLUME_KEY), entity_component_yr.hourly_volume_total)
-        self.assertEqual(data.get(learning_unit_view.TOTAL_VOLUME_KEY), 'partial_remaining')
-        self.assertEqual(data.get(learning_unit_view.VOLUME_PARTIAL_KEY), entity_component_yr.hourly_volume_partial)
-        self.assertEqual(data.get(learning_unit_view.VOLUME_REMAINING_KEY), entity_component_yr.hourly_volume_total-entity_component_yr.hourly_volume_partial)
 
     def test_learning_component_year_undefined_value(self):
         EntityComponentYearFactory(learning_component_year=self.learning_component_yr,

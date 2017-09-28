@@ -33,10 +33,14 @@ from django.utils.translation import ugettext_lazy as _
 
 UNDEFINED_VALUE = '?'
 
-HOURLY_VOLUME_KEY = 'HOURLY_VOLUME'
-TOTAL_VOLUME_KEY = 'TOTAL_VOLUME'
+TOTAL_VOLUME_KEY = 'VOLUME_TOTAL'
 VOLUME_PARTIAL_KEY = 'VOLUME_Q1'
 VOLUME_REMAINING_KEY = 'VOLUME_Q2'
+PLANNED_CLASSES_KEY = 'PLANNED_CLASSES'
+VOLUME_TOTAL_REQUIREMENT_ENTITIES_KEY = 'VOLUME_TOTAL_REQUIREMENT_ENTITIES',
+VOLUME_QUARTER_KEY = 'VOLUME_QUARTER'
+
+
 
 VOLUME_FOR_UNKNOWN_QUADRIMESTER = -1
 
@@ -127,20 +131,21 @@ def volume_learning_component_year(learning_component_year):
     vol_add_req_entity_2 = requirement_entities_volumes.get(entity_types.ADDITIONAL_REQUIREMENT_ENTITY_2, 0)
     volume_total_charge = vol_req_entity + vol_add_req_entity_1 + vol_add_req_entity_2
     volume_partial = float(learning_component_year.hourly_volume_partial) \
-        if learning_component_year.hourly_volume_partial else 0
+        if learning_component_year.hourly_volume_partial is not None else UNDEFINED_VALUE
     planned_classes = learning_component_year.planned_classes or 1
     volume_total = volume_total_charge / planned_classes
+    volume_remaining = volume_total - volume_partial if volume_partial is not UNDEFINED_VALUE else UNDEFINED_VALUE
 
     return {
-        'VOLUME_TOTAL': volume_total,
-        'VOLUME_Q1': volume_partial,
-        'VOLUME_Q2': volume_total - volume_partial,
-        'PLANNED_CLASSES': planned_classes,
+        TOTAL_VOLUME_KEY: volume_total,
+        VOLUME_PARTIAL_KEY: volume_partial,
+        VOLUME_REMAINING_KEY: volume_remaining,
+        PLANNED_CLASSES_KEY: planned_classes,
         'VOLUME_' + entity_types.REQUIREMENT_ENTITY: vol_req_entity,
         'VOLUME_' + entity_types.ADDITIONAL_REQUIREMENT_ENTITY_1: vol_add_req_entity_1,
         'VOLUME_' + entity_types.ADDITIONAL_REQUIREMENT_ENTITY_2: vol_add_req_entity_2,
-        'VOLUME_TOTAL_REQUIREMENT_ENTITIES': volume_total_charge,
-        'VOLUME_QUARTER': _get_volume_quarter_str(volume_total , volume_partial),
+        VOLUME_TOTAL_REQUIREMENT_ENTITIES_KEY: volume_total_charge,
+        VOLUME_QUARTER_KEY: _get_volume_quarter_str(volume_total, volume_partial),
     }
 
 
@@ -167,11 +172,13 @@ def _get_floated_only_element_of_list(a_list, default=None):
 
 
 def _get_volume_quarter_str(volume_total, volume_partial):
-    if not volume_total:
+    if not volume_total :
+        return UNDEFINED_VALUE
+    elif volume_partial is UNDEFINED_VALUE:
         return _('partial_or_remaining')
     elif volume_total == volume_partial:
         return _('partial')
-    elif not volume_partial:
+    elif volume_partial == 0:
         return _('remaining')
     else:
         return _('partial_remaining')
