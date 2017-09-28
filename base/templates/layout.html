@@ -252,9 +252,12 @@
                 <a href="http://uclouvain.github.io/osis/" target="_blank"
                    id="lnk_osis_website">{% trans 'website' %}</a> |
                 <a href="https://github.com/uclouvain/osis" target="_blank"
-                   id="lnk_osis_source_code">{% trans 'source_code' %}</a> |
+                   id="lnk_osis_source_code">{% trans 'source_code' %}</a>
+                {% if release_tag %}
+                |
                 <a href="https://github.com/uclouvain/osis/releases/tag/{{ release_tag }}" target="_blank"
                    id="lnk_latest_tag">v{{ release_tag }}</a>
+                {% endif %}
             </p>
 
             <p class="navbar-text pull-right"><span class="glyphicon glyphicon-copyright-mark"></span>  {% now "Y" %}  <a
