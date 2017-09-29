@@ -180,7 +180,7 @@
                 <th>{% trans 'active'|title%}</th>
             </thead>
             {% for learning_unit in learning_units %}
-            <tr>
+            <tr data-id="{{learning_unit.id}}">
                 <td>{{learning_unit.academic_year.name}}</td>
                 <td>
                     <a href="{% url 'learning_unit' learning_unit.id %}"
@@ -239,6 +239,7 @@
                     }
                 }
             })
+        setEventKeepIds('table_learning_units', 'learningUnitIds')
     ;});
 </script>
 {% endblock %}

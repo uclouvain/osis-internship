@@ -139,3 +139,24 @@ var browser_supported_versions = {
     safari: 8,
     edge: 24
 }
+
+function setEventKeepIds(domTableId, localStorageKey) {
+    //Check if localstorage is supported
+    if(typeof localStorage!='undefined') {
+        var table = $('#' + domTableId)
+        if (table != undefined) {
+            table.on('order.dt', function() {
+                var orderList = [];
+                table.find('tr').each(function() {
+                    var id = $(this).attr('data-id');
+                    if (id != undefined) {
+                         orderList.push(id);
+                    }
+                });
+                if(orderList.length > 0){
+                    localStorage.setItem(localStorageKey, JSON.stringify(orderList));
+                }
+            });
+        }
+    }
+}
