@@ -39,8 +39,7 @@
 {% endblock %}
 {% block content %}
 <div class="page-header">
-    <h6>{% trans 'connected_as' %} {{ reviewer.person }} ({% trans reviewer.role %}) -
-        {{ reviewer.structure.acronym }}</h6>
+    <h6>{% trans 'connected_as' %} {{ reviewer.person }} ({% trans reviewer.role %}) - {{ entity.acronym }}</h6>
     <h3>{% trans 'assistant_mandates_renewals' %} {{ year|add:1 }}</h3>
 </div>
 <div class="panel panel-default">

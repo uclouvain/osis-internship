@@ -64,8 +64,6 @@ class AssistantMandatesListView(LoginRequiredMixin, UserPassesTestMixin, ListVie
         context['assistant'] = academic_assistant.find_by_person(person.find_by_user(self.request.user))
         context['can_see_file'] = settings.assistants_can_see_file()
         for mandate in context['object_list']:
-            print(mandate.id)
-            print(mandate.academic_year.start_date)
             entities_id = mandate.mandateentity_set.all().order_by('id').values_list('entity', flat=True)
             mandate.entities = find_versions_from_entites(entities_id, mandate.academic_year.start_date)
         return context

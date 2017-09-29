@@ -98,7 +98,6 @@ def add_reviewer_for_structure(request):
         return redirect('assistants_home')
     if request.POST:
         form = ReviewerDelegationForm(data=request.POST)
-        print(form.errors)
         if form.is_valid():
             new_reviewer = form.save(commit=False)
             if request.POST.get('person_id'):
@@ -126,10 +125,12 @@ def add_reviewer_for_structure(request):
             else:
                 role = reviewer_role.RESEARCH_ASSISTANT
             form = ReviewerDelegationForm(initial={'entity': related_entity, 'year': year, 'role': role})
+            reviewer_entity = entity_version.get_last_version(this_reviewer.entity)
             return render(request, "reviewer_add_reviewer.html", {
                 'form': form,
                 'year': year,
                 'related_entity': related_entity,
+                'entity': reviewer_entity,
                 'current_entity_version': current_entity_version,
                 'reviewer': reviewer.find_by_person(request.user.person)
             })
