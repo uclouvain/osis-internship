@@ -39,3 +39,8 @@ class EducationGroup(models.Model):
 
     def __str__(self):
         return "{}".format(self.id)
+
+    class Meta:
+        permissions = (
+            ("can_access_education_group", "Can access education_group"),
+        )

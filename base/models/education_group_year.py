@@ -26,7 +26,12 @@
 from django.db import models
 from django.contrib import admin
 from base.models.enums import academic_type, fee, internship_presence, schedule_type, activity_presence, \
-    diploma_printing_orientation, active_status
+    diploma_printing_orientation, active_status, duration_unit
+from base.models import offer_year_domain as mdl_offer_year_domain
+from base.models import offer_year_entity as mdl_offer_year_entity
+from base.models import entity_version as mdl_entity_version
+from base.models.enums import education_group_categories
+from base.models.enums import offer_year_entity_type
 
 
 class EducationGroupYearAdmin(admin.ModelAdmin):
@@ -40,7 +45,8 @@ class EducationGroupYearAdmin(admin.ModelAdmin):
                                     'other_campus_activities', 'professional_title', 'joint_diploma',
                                     'diploma_printing_orientation', 'diploma_printing_title',
                                     'inter_organization_information', 'inter_university_french_community',
-                                    'inter_university_belgium', 'inter_university_abroad', 'primary_language')}),)
+                                    'inter_university_belgium', 'inter_university_abroad', 'primary_language',
+                                    'keywords', 'duration', 'duration_unit', 'title_english', 'enrollment_enabled')}),)
     list_filter = ('academic_year', 'education_group_type')
     raw_id_fields = ('education_group_type', 'academic_year', 'education_group')
     search_fields = ['acronym']
@@ -51,8 +57,10 @@ class EducationGroupYear(models.Model):
     changed = models.DateTimeField(null=True, auto_now=True)
     acronym = models.CharField(max_length=15, db_index=True)
     title = models.CharField(max_length=255)
+    title_english = models.CharField(max_length=240, blank=True, null=True)
     academic_year = models.ForeignKey('AcademicYear')
     education_group = models.ForeignKey('EducationGroup')
+    category = models.CharField(max_length=20, choices=education_group_categories.CATEGORIES, blank=True, null=True)
     education_group_type = models.ForeignKey('OfferType', blank=True, null=True)
     active = models.CharField(max_length=20, choices=active_status.ACTIVE_STATUS_LIST, default=active_status.ACTIVE)
     partial_deliberation = models.BooleanField(default=False)
@@ -81,9 +89,47 @@ class EducationGroupYear(models.Model):
     inter_university_belgium = models.BooleanField(default=False)
     inter_university_abroad = models.BooleanField(default=False)
     primary_language = models.ForeignKey('reference.Language', blank=True, null=True)
+    keywords = models.CharField(max_length=320, blank=True, null=True)
+    duration = models.IntegerField(blank=True, null=True)
+    duration_unit = models.CharField(max_length=40,
+                                     choices=duration_unit.DurationUnits.choices(),
+                                     default=duration_unit.DurationUnits.QUADRIMESTER,
+                                     blank=True, null=True)
+    enrollment_enabled = models.BooleanField(default=False)
 
     def __str__(self):
         return u"%s - %s" % (self.academic_year, self.acronym)
+
+    @property
+    def domains(self):
+        domains = mdl_offer_year_domain.find_by_education_group_year(self)
+        ch = ''
+        for offer_yr_domain in domains:
+            ch = "{}-{} ".format(offer_yr_domain.domain.decree, offer_yr_domain.domain.name)
+        return ch
+
+    @property
+    def administration_entity(self):
+        result = mdl_offer_year_entity.find_by_education_group_year_first(self, offer_year_entity_type.ENTITY_ADMINISTRATION)
+        if result:
+            ev = mdl_entity_version.get_last_version(result.entity)
+            return ev
+        return None
+
+    @property
+    def management_entity(self):
+        result = mdl_offer_year_entity.find_by_education_group_year_first(self, offer_year_entity_type.ENTITY_MANAGEMENT)
+        if result:
+            ev = mdl_entity_version.get_last_version(result.entity)
+            return ev
+        return None
+
+
+def find_by_id(an_id):
+    try:
+        return EducationGroupYear.objects.get(pk=an_id)
+    except EducationGroupYear.DoesNotExist:
+        return None
 
 
 def search(*args, **kwargs):
@@ -100,6 +146,11 @@ def search(*args, **kwargs):
         qs = qs.filter(acronym__icontains=kwargs['acronym'])
     if "title" in kwargs:
         qs = qs.filter(title__icontains=kwargs['title'])
+    if "category" in kwargs:
+        if isinstance(kwargs['category'], list):
+            qs = qs.filter(category__in=kwargs['category'])
+        else:
+            qs = qs.filter(category=kwargs['category'])
     if "education_group_type" in kwargs:
         if isinstance(kwargs['education_group_type'], list):
             qs = qs.filter(education_group_type__in=kwargs['education_group_type'])

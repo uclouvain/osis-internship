@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -23,12 +23,21 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-TRAINING = "TRAINING"
-MINI_TRAINING = "MINI_TRAINING"
-GROUP = "GROUP"
+import factory
+import factory.fuzzy
+from base.tests.factories.academic_year import AcademicYearFactory
+from base.tests.factories.education_group import EducationGroupFactory
 
-TYPES = (
-    (TRAINING, TRAINING),
-    (MINI_TRAINING, MINI_TRAINING),
-    (GROUP, GROUP),
-)
+
+def generate_title(education_group_year):
+    return '{obj.academic_year} {obj.acronym}'.format(obj=education_group_year).lower()
+
+
+class EducationGroupYearFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = "base.EducationGroupYear"
+
+    education_group = factory.SubFactory(EducationGroupFactory)
+    academic_year = factory.SubFactory(AcademicYearFactory)
+    acronym = factory.Sequence(lambda n: 'Education %d' % n)
+    title = factory.LazyAttribute(generate_title)

@@ -55,9 +55,16 @@
         <div class="row">
             {%  if perms.base.can_access_academicyear %}
             <div class="col-md-1"><i class="fa fa-calendar" style="font-size: 400%; color: #6699FF;"></i></div>
-            <div class="col-md-11">
+            <div class="col-md-5">
                 <h4 class="media-heading"><a href="{% url 'academic_year' %}" id="lnk_academic_year">{% trans 'academic_year' %}</a></h4>
                 <p>{% trans 'desc_lnk_academic_year' %}</p>
+            </div>
+            {% endif %}
+            {%  if perms.base.can_access_education_group %}
+            <div class="col-md-1"><i class="fa fa-map" style="font-size: 400%; color: #6699FF;"></i></div>
+            <div class="col-md-5">
+                <h4 class="media-heading"><a href="{% url 'education_groups' %}" id="lnk_education_groups">{% trans 'formations_lnk' %}</a></h4>
+                <p>{% trans 'desc_lnk_formations' %}</p>
             </div>
             {% endif %}
         </div>

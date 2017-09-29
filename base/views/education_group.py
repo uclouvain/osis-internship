@@ -24,12 +24,12 @@
 #
 ##############################################################################
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required, permission_required
 from django.utils.translation import ugettext_lazy as _
+from django.contrib.auth.decorators import login_required, permission_required
+from base import models as mdl
 
 from base.forms.education_groups import EducationGroupFilter, MAX_RECORDS
-from base.models import academic_year
-from base.models.enums import education_group_types
+from base.models.enums import education_group_categories
 
 from . import layout
 
@@ -40,9 +40,9 @@ def education_groups(request):
     if request.GET:
         form = EducationGroupFilter(request.GET)
     else:
-        current_academic_year = academic_year.current_academic_year()
+        current_academic_year = mdl.academic_year.current_academic_year()
         form = EducationGroupFilter(initial={'academic_year': current_academic_year,
-                                             'type': education_group_types.TRAINING})
+                                             'category': education_group_categories.TRAINING})
 
     object_list = None
     if form.is_valid():
@@ -65,3 +65,25 @@ def _check_if_display_message(request, education_groups):
         messages.add_message(request, messages.WARNING, _('too_many_results'))
         return False
     return True
+
+@login_required
+@permission_required('base.can_access_offer', raise_exception=True)
+def education_group_read(request, education_group_year_id):
+    return _education_group_identification_tab(request, education_group_year_id)
+
+
+def _education_group_identification_tab(request, education_group_year_id):
+    education_group_year = mdl.education_group_year.find_by_id(education_group_year_id)
+    return layout.render(request, "education_group/tab_identification.html", locals())
+
+
+def get_education_group_years(academic_yr, acronym, entity):
+    if entity:
+        education_group_year_entitys = []
+        education_group_years = mdl.education_group_year.search(academic_yr=academic_yr, acronym=acronym)
+        for education_group_yr in education_group_years:
+            if education_group_yr.management_entity and education_group_yr.management_entity.acronym.upper() == entity.upper():
+                education_group_year_entitys.append(education_group_yr)
+        return education_group_year_entitys
+    else:
+        return mdl.education_group_year.search(academic_yr=academic_yr, acronym=acronym)

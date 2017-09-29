@@ -25,14 +25,11 @@
 ##############################################################################
 from django import forms
 from django.db import models
+from django.utils.translation import ugettext_lazy as _
 
-from base.models import academic_year
-from base.models import education_group_year
-from base.models import entity_version
-from base.models import offer_type
-from base.models import offer_year_entity
-from base.models.enums import education_group_types
-from base.models.enums import offer_year_entity_type
+from base.models import academic_year, education_group_year, entity_version, offer_type, offer_year_entity
+from base.models.enums import education_group_categories, offer_year_entity_type
+
 
 MAX_RECORDS = 1000
 
@@ -40,15 +37,21 @@ MAX_RECORDS = 1000
 class EducationGroupFilter(forms.Form):
     academic_year = forms.ModelChoiceField(queryset=academic_year.find_academic_years(),required=False,
                                            widget=forms.Select(attrs={'class': 'form-control'}),
-                                           empty_label='')
+                                           empty_label=_('all_label'))
     education_group_type = forms.ModelChoiceField(queryset=offer_type.find_all(), required=False,
                                                   widget=forms.Select(attrs={'class': 'form-control'}),
-                                                  empty_label='')
-    type = forms.ChoiceField((('', ''),) + education_group_types.TYPES, required=False,
-                             widget=forms.Select(attrs={'class': 'form-control'}))
+                                                  empty_label=_('all_label'))
+    category = forms.ChoiceField((('', _('all_label')),) + education_group_categories.CATEGORIES, required=False,
+                                 widget=forms.Select(attrs={'class': 'form-control'}))
     acronym = title = entity_management = forms.CharField(
         widget=forms.TextInput(attrs={'size': '10', 'class': 'form-control'}),
         max_length=20, required=False)
+
+    def clean_category(self):
+        data_cleaned = self.cleaned_data.get('category')
+        if data_cleaned:
+            return data_cleaned
+        return None
 
     def get_object_list(self):
         clean_data = {key: value for key, value in self.cleaned_data.items() if value is not None}

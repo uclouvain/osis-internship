@@ -53,10 +53,6 @@ urlpatterns = [
 
     url(r'^catalog/$', common.catalog, name='catalog'),
 
-    url(r'^education_groups/', include([
-        url(r'^$', education_group.education_groups, name='education_groups')
-    ])),
-
     url(r'^entities/', include([
         url(r'^$', institution.entities, name='entities'),
         url(r'^search$', institution.entities_search, name='entities_search'),
@@ -128,6 +124,12 @@ urlpatterns = [
             url(r'^$', offer.offer_read, name='offer_read'),
             url(r'^academic_calendar/$', offer.offer_academic_calendar_tab, name='offer_academic_calendar_tab'),
             url(r'^program_managers/$', offer.offer_program_managers_tab, name='offer_program_managers_tab'),
+        ]))
+    ])),
+    url(r'^educationgroups/', include([
+        url(r'^$', education_group.education_groups, name='education_groups'),
+        url(r'^(?P<education_group_year_id>[0-9]+)/', include([
+            url(r'^$', education_group.education_group_read, name='education_group_read'),
         ]))
     ])),
 

@@ -49,13 +49,13 @@
                     <label for="id_acronym">{% trans 'acronym'%}</label>
                      {{form.acronym}}
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label for="id_title">{% trans 'title'%}</label>
                      {{form.title}}
                 </div>
-                 <div class="col-md-2">
-                    <label for="id_of_type">{% trans 'of_type'%}</label>
-                     {{form.type}}
+                 <div class="col-md-3">
+                    <label for="id_of_type">{% trans 'of_category'%}</label>
+                     {{form.category}}
                 </div>
                 <div class="col-md-2">
                     <label for="id_education_group_type">{% trans 'type'%}</label>
@@ -91,13 +91,16 @@
                         <th>{% trans 'entity_management'%}</th>
                     </tr>
                 </thead>
-                {% for education_group in object_list %}
+                {% for education_group_year in object_list %}
                     <tr>
-                        <td>{{ education_group.academic_year}}</td>
-                        <td>{{ education_group.acronym }}</a></td>
-                        <td>{{ education_group.title }}</a></td>
-                        <td>{{ education_group.education_group_type.name }}</td>
-                        <td>{{ education_group.entity_management.acronym }}</td>
+                        <td>{{ education_group_year.academic_year}}</td>
+                        <td>
+				            <a href="{% url 'education_group_read' education_group_year_id=education_group_year.id %}"
+                               id="lnk_offer_{education_group_year.id}}">{{ education_group_year.acronym }}</a>
+			            </td>
+                        <td>{{ education_group_year.title }}</a></td>
+                        <td>{{ education_group_year.education_group_type.name }}</td>
+                        <td>{{ education_group_year.entity_management.acronym }}</td>
                     </tr>
                 {% endfor %}
             </table>
