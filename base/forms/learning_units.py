@@ -98,6 +98,8 @@ class LearningUnitYearForm(forms.Form):
                                              ),
                                              to_attr='entity_containers_year')
         clean_data['learning_container_year_id'] = _get_filter_learning_container_ids(clean_data)
+        print('coucou')
+        print(clean_data['learning_container_year_id'])
         learning_units = mdl.learning_unit_year.search(**clean_data) \
             .select_related('academic_year', 'learning_container_year') \
             .prefetch_related(entity_container_prefetch) \
@@ -128,13 +130,30 @@ def _treat_empty_or_str_none_as_none(data):
 
 def _get_filter_learning_container_ids(filter_data):
     requirement_entity_acronym = filter_data.get('requirement_entity_acronym')
+    allocation_entity_acronym = filter_data.get('allocation_entity_acronym')
     with_entity_subordinated = filter_data.get('with_entity_subordinated', False)
+    if allocation_entity_acronym and requirement_entity_acronym:
+        entity_allocation_ids = _get_entities_ids(allocation_entity_acronym, with_entity_subordinated)
+        entity_requirement_ids = _get_entities_ids(requirement_entity_acronym, with_entity_subordinated)
+        if len(entity_allocation_ids) >0 and len(entity_requirement_ids) > 0:
+            return list(mdl.entity_container_year.search(link_type=        [entity_container_year_link_type.ALLOCATION_ENTITY,
+                                                                            entity_container_year_link_type.REQUIREMENT_ENTITY],
+                                                         entity_id=entity_allocation_ids+entity_requirement_ids) \
+                        .values_list('learning_container_year', flat=True).distinct())
+        else:
+            return []
+    else:
+        if allocation_entity_acronym:
+            entity_ids = _get_entities_ids(allocation_entity_acronym, with_entity_subordinated)
+            return list(mdl.entity_container_year.search(link_type=entity_container_year_link_type.ALLOCATION_ENTITY,
+                                                         entity_id=entity_ids) \
+                        .values_list('learning_container_year', flat=True).distinct())
 
-    if requirement_entity_acronym:
-        entity_ids = _get_entities_ids(requirement_entity_acronym, with_entity_subordinated)
-        return list(mdl.entity_container_year.search(link_type=entity_container_year_link_type.REQUIREMENT_ENTITY,
-                                                     entity_id=entity_ids) \
-                    .values_list('learning_container_year', flat=True).distinct())
+        if requirement_entity_acronym:
+            entity_ids = _get_entities_ids(requirement_entity_acronym, with_entity_subordinated)
+            return list(mdl.entity_container_year.search(link_type=entity_container_year_link_type.REQUIREMENT_ENTITY,
+                                                         entity_id=entity_ids) \
+                        .values_list('learning_container_year', flat=True).distinct())
     return None
 
 

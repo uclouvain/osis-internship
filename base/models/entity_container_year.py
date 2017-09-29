@@ -117,14 +117,3 @@ def find_all_additional_requirement_entities(learning_container_year):
 def find_by_learning_container_year(a_learning_container_year, a_entity_container_year_link_type):
     return EntityContainerYear.objects.filter(learning_container_year=a_learning_container_year,
                                               type=a_entity_container_year_link_type)
-
-def find_requirement_entity2(learning_container_year):
-    lcy_start_date = learning_container_year.academic_year.start_date
-    link_type = entity_container_year_link_type.REQUIREMENT_ENTITY
-    entity_container_years = search(learning_container_year=learning_container_year, link_type=link_type) \
-        .prefetch_related(
-        Prefetch('entity__entityversion_set',
-                 queryset=entity_version.find_latest_version(lcy_start_date),
-                 to_attr="entity_versions")
-    )
-    return None
