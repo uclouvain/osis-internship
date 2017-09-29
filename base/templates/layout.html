@@ -95,6 +95,9 @@
                                 {% if perms.base.can_access_offer %}
                                     <li><a href="{% url 'offers' %}" id="lnk_dropdown_offers">{% trans 'offers' %}</a></li>
                                 {% endif %}
+                                {% if perms.base.can_access_education_group %}
+                                    <li><a href="{% url 'education_groups' %}" id="lnk_dropdown_educationgroups">{% trans 'formations' %}</a></li>
+                                {% endif %}
                                 {% if perms.base.can_access_learningunit %}
                                     <li><a href="{% url 'learning_units' %}"
                                            id="lnk_dropdown_learning_units">{% trans 'learning_units' %}</a></li>
@@ -249,9 +252,11 @@
                 <a href="http://uclouvain.github.io/osis/" target="_blank"
                    id="lnk_osis_website">{% trans 'website' %}</a> |
                 <a href="https://github.com/uclouvain/osis" target="_blank"
-                   id="lnk_osis_source_code">{% trans 'source_code' %}</a> |
-                <a href="https://github.com/uclouvain/osis/releases/tag/{{ release_tag }}" target="_blank"
+                   id="lnk_osis_source_code">{% trans 'source_code' %}</a>
+                {% if release_tag %}
+                |<a href="https://github.com/uclouvain/osis/releases/tag/{{ release_tag }}" target="_blank"
                    id="lnk_latest_tag">v{{ release_tag }}</a>
+                {% endif %}
             </p>
 
             <p class="navbar-text pull-right"><span class="glyphicon glyphicon-copyright-mark"></span>  {% now "Y" %}  <a

@@ -23,8 +23,6 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import re
-
 from django import forms
 from django.core.exceptions import ValidationError
 from django.db.models import Prefetch
@@ -41,6 +39,7 @@ import re
 from base.models import entity_container_year as mdl_entity_container_year
 from base.models import entity_version as mdl_entity_version
 
+MIN_ACRONYM_LENGTH = 3
 
 SERVICE_COURSE = 'SERVICE_COURSE'
 PARENT_FACULTY = 'PARENT_FACULTY'
@@ -55,7 +54,6 @@ class LearningUnitYearForm(forms.Form):
     with_entity_subordinated = forms.BooleanField(required=False)
 
     def clean_acronym(self):
-        MIN_ACRONYM_LENGTH = 3
         data_cleaned = self.cleaned_data.get('acronym')
         data_cleaned = _treat_empty_or_str_none_as_none(data_cleaned)
         if data_cleaned and len(data_cleaned) < MIN_ACRONYM_LENGTH:
@@ -89,6 +87,7 @@ class LearningUnitYearForm(forms.Form):
 
     def get_learning_units(self):
         clean_data = self.cleaned_data
+
         entity_container_prefetch = Prefetch('learning_container_year__entitycontaineryear_set',
                                              queryset=mdl.entity_container_year.search(
                                                  link_type=[entity_container_year_link_type.ALLOCATION_ENTITY,
@@ -98,8 +97,6 @@ class LearningUnitYearForm(forms.Form):
                                              ),
                                              to_attr='entity_containers_year')
         clean_data['learning_container_year_id'] = _get_filter_learning_container_ids(clean_data)
-        print('coucou')
-        print(clean_data['learning_container_year_id'])
         learning_units = mdl.learning_unit_year.search(**clean_data) \
             .select_related('academic_year', 'learning_container_year') \
             .prefetch_related(entity_container_prefetch) \
@@ -149,11 +146,11 @@ def _get_filter_learning_container_ids(filter_data):
                                                          entity_id=entity_ids) \
                         .values_list('learning_container_year', flat=True).distinct())
 
-        if requirement_entity_acronym:
-            entity_ids = _get_entities_ids(requirement_entity_acronym, with_entity_subordinated)
-            return list(mdl.entity_container_year.search(link_type=entity_container_year_link_type.REQUIREMENT_ENTITY,
-                                                         entity_id=entity_ids) \
-                        .values_list('learning_container_year', flat=True).distinct())
+    if requirement_entity_acronym:
+        entity_ids = _get_entities_ids(requirement_entity_acronym, with_entity_subordinated)
+        return list(mdl.entity_container_year.search(link_type=entity_container_year_link_type.REQUIREMENT_ENTITY,
+                                                     entity_id=entity_ids) \
+                    .values_list('learning_container_year', flat=True).distinct())
     return None
 
 
@@ -263,7 +260,8 @@ class CreateLearningUnitYearForm(forms.ModelForm):
                                             widget=forms.Select(attrs={'class': 'form-control',
                                                                        'id': 'allocation_entity_1',
                                                                        'disabled': 'disabled',
-                                                                       'onchange': 'showAdditionalEntity2(this.value)'}))
+                                                                       'onchange': 'showAdditionalEntity2(this.value)'})
+                                            )
     additional_entity_2 = forms.ChoiceField(choices=lazy(create_main_entities_version_list, tuple),
                                             required=False,
                                             widget=forms.Select(attrs={'class': 'form-control',
@@ -317,7 +315,7 @@ class CreateLearningUnitYearForm(forms.ModelForm):
         if valid:
             if self.cleaned_data['acronym'].lower() in learning_unit_years_list:
                 self.add_error('acronym', _('existing_acronym'))
-            elif not re.match(self.acronym_regex, self.cleaned_data['acronym']):
+            elif not re.match(self.acronym_regex, self.cleaned_data['acronym'].upper()):
                 self.add_error('acronym', _('invalid_acronym'))
             elif self.cleaned_data['learning_container_year_type'] == INTERNSHIP \
                     and not (self.cleaned_data['internship_subtype']):

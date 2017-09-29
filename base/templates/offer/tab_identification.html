@@ -25,54 +25,54 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-    {% include "offer/breadcrumb.html" %}
+{% include "offer/breadcrumb.html" %}
 {% endblock %}
 
 {% block content %}
 
-    {% include "offer/header.html" %}
+{% include "offer/header.html" %}
 
-    <div class="panel panel-default">
-        <div class="panel-body" id="tabs">
+<div class="panel panel-default">
+    <div class="panel-body" id="tabs">
 
-            {% include "offer/tabs.html" %}
+        {% include "offer/tabs.html" %}
 
-            <div class="tab-content" id="tab_content">
-                <div role="tabpanel" class="tab-pane active" id="identification">
+        <div class="tab-content" id="tab_content">
+            <div role="tabpanel" class="tab-pane active" id="identification">
 
-                    <br>
-                    <div class="row">
-                        <div class="col-md-3">
-                            <label>{% trans 'academic_year'%}</label><br>
-                            {{ offer_year.academic_year }}
-                        </div>
-                        <div class="col-md-3">
-                            <label>{% trans 'acronym' %}</label><br>
-                            {{ offer_year.acronym }}
-                        </div>
-                        <div class="col-md-6">
-                            <label>{% trans 'structure' %}</label><br>
-                            {{ offer_year.entity_management }}
-                        </div>
+                <br>
+                <div class="row">
+                    <div class="col-md-3">
+                        <label>{% trans 'academic_year'%}</label><br>
+                        {{ offer_year.academic_year }}
                     </div>
-
-                    <br>
-                    <label>{% trans 'international_title'%}</label><br>
-                    {{ offer_year.title_international | default_if_none:'-' }}
-
-                    <br>
-                    <label>{% trans 'short_title'%}</label><br>
-                    {{ offer_year.title_short | default_if_none:'-' }}
-
-                    <br>
-                    <label>{% trans 'printable_title'%}</label><br>
-                    {{ offer_year.title_printable | default_if_none:'-' }}
-
-                    <br>
-                    <label>{% trans 'grade'%}</label><br>
-                    {{ offer_year.get_grade_display | default_if_none:'-' }}
+                    <div class="col-md-3">
+                        <label>{% trans 'acronym' %}</label><br>
+                        {{ offer_year.acronym }}
+                    </div>
+                    <div class="col-md-6">
+                        <label>{% trans 'structure' %}</label><br>
+                        {{ offer_year.entity_management }}
+                    </div>
                 </div>
+
+                <br>
+                <label>{% trans 'international_title'%}</label><br>
+                {{ offer_year.title_international | default_if_none:'-' }}
+
+                <br>
+                <label>{% trans 'short_title'%}</label><br>
+                {{ offer_year.title_short | default_if_none:'-' }}
+
+                <br>
+                <label>{% trans 'printable_title'%}</label><br>
+                {{ offer_year.title_printable | default_if_none:'-' }}
+
+                <br>
+                <label>{% trans 'grade'%}</label><br>
+                {{ offer_year.get_grade_display | default_if_none:'-' }}
             </div>
         </div>
     </div>
+</div>
 {% endblock %}
