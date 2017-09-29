@@ -109,7 +109,7 @@ class ScoresResponsibleViewTestCase(TestCase):
                                                                       entities=entities_with_descendants,
                                                                       tutor=None,
                                                                       responsible=None)
-        dictionary = scores_responsible.create_attributions_list(attributions_searched)
+        dictionary = scores_responsible.get_attributions_list(attributions_searched)
         self.assertIsNotNone(dictionary)
 
     def test_scores_responsible_management(self):
