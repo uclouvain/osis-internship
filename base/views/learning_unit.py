@@ -69,7 +69,7 @@ from . import layout
 from django.http import JsonResponse
 
 
-UNDEFINED_VALUE = '?'
+UNDEFINED_VALUE = ''
 
 HOURLY_VOLUME_KEY = 'hourly_volume'
 TOTAL_VOLUME_KEY = 'total_volume'
