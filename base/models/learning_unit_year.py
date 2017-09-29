@@ -30,7 +30,6 @@ from base.models.enums import learning_unit_year_subtypes, learning_container_ye
 from base.models import entity_container_year as mdl_entity_container_year
 from base.models import entity_version as mdl_entity_version
 
-from base.models.enums import entity_container_year_link_type
 
 class LearningUnitYearAdmin(SerializableModelAdmin):
     list_display = ('external_id', 'acronym', 'title', 'academic_year', 'credits', 'changed', 'structure', 'status')
@@ -91,38 +90,10 @@ class LearningUnitYear(SerializableModel):
             learning_container_year=self.learning_container_year
         ).order_by('acronym')
 
-    @property
-    def is_service_course(self):
-        return is_service_course(self)
-        # faculty_ref = None
-        #
-        # entity_container_yr = mdl_entity_container_year.find_requirement_entity2(self.learning_container_year)
-        # if entity_container_yr:
-        #     if entity_container_yr.entity:
-        #         entity_version = mdl_entity_version.get_last_version(entity_container_yr.entity)
-        #         faculty_ref = entity_version.entity
-        #         if entity_version:
-        #             if entity_version.entity_type == entity_type.FACULTY:
-        #                 faculty_ref = entity_version.entity
-        #             else:
-        #                 f = check_parent(entity_version.parent)
-        #                 if f:
-        #                     faculty_ref= f
-        #
-        #
-        #
-        # return faculty_ref
     # @property
-    # def get_parent_faculty_version(self):
-    #     print(self.learning_container_year.id)
-    #     entity_container_yr = mdl_entity_container_year.find_by_learning_container_year(self.learning_container_year,
-    #                                                                                     entity_container_year_link_type.REQUIREMENT_ENTITY)
-    #
-    #     if entity_container_yr:
-    #         entity_version = mdl_entity_version.get_last_version(parent_entity)
-    #         return mdl_entity_version.find_parent_faculty_version(entity_version, self.academic_year)
-    #
-    #     return None
+    # def is_service_course(self):
+    #     return is_service_course(self)
+
 
 def check_parent(parent_entity):
     entity_version = mdl_entity_version.get_last_version(parent_entity)
@@ -133,7 +104,6 @@ def check_parent(parent_entity):
         else:
             return check_parent(entity_version.parent)
     return None
-
 
 
 def find_by_id(learning_unit_year_id):
@@ -189,26 +159,6 @@ def find_lt_year_acronym(academic_yr, acronym):
     return LearningUnitYear.objects.filter(academic_year__year__lt=academic_yr.year,
                                            acronym__iexact=acronym).order_by('academic_year')
 
-def is_service_course(learning_unit_yr):
-    print('is_service_course')
-    print(learning_unit_yr.entities)
 
-    entity_version = learning_unit_yr.entities['REQUIREMENT_ENTITY']
-    entity_container_yr = mdl_entity_container_year.find_requirement_entity(learning_unit_yr.learning_container_year)
 
-    enti = mdl_entity_version.find_parent_faculty_version(entity_version,
-                                                          learning_unit_yr.learning_container_year)
-
-    if enti is None and entity_container_yr:
-        enti = entity_container_yr.entity
-    else:
-        enti = enti.entity
-    enti_v = mdl_entity_version.get_last_version(enti)
-    entity_allocation = mdl_entity_container_year.find_allocation_entity(learning_unit_yr.learning_container_year)
-    entity_allocation_v = mdl_entity_version.get_last_version(entity_allocation.entity)
-    for e in enti_v.find_descendants(learning_unit_yr.academic_year.start_date):
-        if e == entity_allocation_v:
-
-            return False
-    return True
 

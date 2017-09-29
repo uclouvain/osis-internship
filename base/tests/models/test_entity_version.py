@@ -234,12 +234,11 @@ class EntityVersionTest(TestCase):
             self.assertEqual(child.get_parent_version(date=self.date_in_2017), None)
 
     def test_find_parent_faculty_version(self):
-        start_date = datetime.datetime(now.year - 1, now.month, 16)
-        end_date = datetime.datetime(now.year, now.month, 27)
+        ac_yr = AcademicYearFactory()
+        start_date = ac_yr.start_date
+        end_date = ac_yr.end_date
 
-        ac_yr = AcademicYearFactory(year=(now.year - 1),
-                                    start_date=datetime.datetime(now.year - 1, now.month, 15),
-                                    end_date=datetime.datetime(now.year, now.month, 28))
+
 
         entity_faculty = EntityFactory(country=self.country)
         entity_faculty_version = EntityVersionFactory(

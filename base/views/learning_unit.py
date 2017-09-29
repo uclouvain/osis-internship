@@ -840,7 +840,6 @@ def learning_units_search(request, search_type):
             found_learning_units = form.get_activity_learning_units()
         else:
             if search_type == 2:
-                print('search_type == 2')
                 found_learning_units = form.get_service_course_learning_units()
         _check_if_display_message(request, found_learning_units)
 

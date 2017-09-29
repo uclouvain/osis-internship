@@ -38,6 +38,12 @@ from base.models.enums.learning_container_year_types import LEARNING_CONTAINER_Y
 from base.models.enums.learning_unit_periodicity import PERIODICITY_TYPES
 from reference.models.language import find_all_languages
 import re
+from base.models import entity_container_year as mdl_entity_container_year
+from base.models import entity_version as mdl_entity_version
+
+
+SERVICE_COURSE = 'SERVICE_COURSE'
+PARENT_FACULTY = 'PARENT_FACULTY'
 
 
 class LearningUnitYearForm(forms.Form):
@@ -78,10 +84,8 @@ class LearningUnitYearForm(forms.Form):
         clean_data = _clean_data(self.cleaned_data)
         return clean_data
 
-
     def get_activity_learning_units(self):
         return self.get_learning_units()
-
 
     def get_learning_units(self):
         clean_data = self.cleaned_data
@@ -106,11 +110,12 @@ class LearningUnitYearForm(forms.Form):
         list_results = self.get_learning_units()
         list_results_2 = []
         for l in list_results:
-            if 'SERVICE_COURSE' in l.entities:
-                if l.entities['SERVICE_COURSE']:
+            if SERVICE_COURSE in l.entities:
+                if l.entities[SERVICE_COURSE]:
                     list_results_2.append(l)
 
         return list_results_2
+
 
 
 def _clean_data(datas_to_clean):
@@ -144,6 +149,27 @@ def _get_entities_ids(requirement_entity_acronym, with_entity_subordinated):
             entities_ids |= {descendant.entity.id for descendant in all_descendants}
     return list(entities_ids)
 
+def is_service_course(learning_unit_yr):
+    entity_version = learning_unit_yr.entities['REQUIREMENT_ENTITY']
+    entity_container_yr = mdl_entity_container_year.find_requirement_entity(learning_unit_yr.learning_container_year)
+
+    enti = mdl_entity_version.find_parent_faculty_version(entity_version,
+                                                          learning_unit_yr.learning_container_year.academic_year)
+
+    if enti is None and entity_container_yr:
+        enti = entity_container_yr.entity
+    else:
+        enti = enti.entity
+
+    requirement_entity = mdl_entity_version.get_last_version(enti)
+    entity_containter_yr_allocation = mdl_entity_container_year.find_allocation_entity(learning_unit_yr.learning_container_year)
+    if entity_containter_yr_allocation:
+
+        allocation_entity = mdl_entity_version.get_last_version(entity_containter_yr_allocation.entity)
+        for entity_descendant in requirement_entity.find_descendants(learning_unit_yr.academic_year.start_date):
+            if entity_descendant == allocation_entity:
+                return False
+    return True
 
 def _append_latest_entities(learning_unit):
     learning_unit.entities = {}
@@ -154,13 +180,13 @@ def _append_latest_entities(learning_unit):
             learning_unit.entities[link_type] = latest_version
     if entity_container_year_link_type.REQUIREMENT_ENTITY in learning_unit.entities:
         entity_parent = mdl.entity_version.find_parent_faculty_version(learning_unit.entities[entity_container_year_link_type.REQUIREMENT_ENTITY],
-                                                                                                  learning_unit.learning_container_year)
+                                                                                                  learning_unit.learning_container_year.academic_year)
         if entity_parent:
-            learning_unit.entities['PARENT_FACULTY'] = entity_parent
+            learning_unit.entities[PARENT_FACULTY] = entity_parent
         else:
-            learning_unit.entities['PARENT_FACULTY'] =learning_unit.entities[entity_container_year_link_type.REQUIREMENT_ENTITY]
+            learning_unit.entities[PARENT_FACULTY] = learning_unit.entities[entity_container_year_link_type.REQUIREMENT_ENTITY]
 
-        learning_unit.entities['SERVICE_COURSE'] = mdl.learning_unit_year.is_service_course(learning_unit)
+        learning_unit.entities['SERVICE_COURSE'] = is_service_course(learning_unit)
     return learning_unit
 
 
@@ -263,7 +289,6 @@ class CreateLearningUnitYearForm(forms.ModelForm):
                    'subtype': forms.HiddenInput()
                    }
 
-
     def is_valid(self):
 
         valid = super(CreateLearningUnitYearForm, self).is_valid()
@@ -284,3 +309,4 @@ class CreateLearningUnitYearForm(forms.ModelForm):
             else:
                 return True
         return False
+

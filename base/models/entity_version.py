@@ -283,20 +283,20 @@ def find_first_latest_version_by_period(ent,start_date, end_date):
         .order_by('-start_date').first()
 
 
-def find_parent_faculty_version(child_entity_ver, lcy):
+def find_parent_faculty_version(child_entity_ver, academic_yr):
     if child_entity_ver:
         if child_entity_ver.parent is None:
             return None
         else:
             entity_parent_version = find_latest_version_by_entity(child_entity_ver.parent,
-                                                         lcy.academic_year.start_date)
+                                                                  academic_yr.start_date)
             if entity_parent_version is None:
                 return None
             else:
                 if entity_parent_version.entity_type == entity_type.FACULTY:
                     return entity_parent_version
                 else:
-                    return find_parent_faculty_version(entity_parent_version, lcy)
+                    return find_parent_faculty_version(entity_parent_version, academic_yr)
     return None
 
 
