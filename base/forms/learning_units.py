@@ -229,7 +229,7 @@ class CreateLearningUnitYearForm(forms.ModelForm):
                                                            'required': False}),
                    'session': forms.Select(attrs={'class': 'form-control',
                                                   'id': 'session',
-                                                  'required': True}),
+                                                  'required': False}),
                    'subtype': forms.HiddenInput()
                    }
 
