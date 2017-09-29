@@ -132,12 +132,20 @@ def _get_filter_learning_container_ids(filter_data):
     if allocation_entity_acronym and requirement_entity_acronym:
         entity_allocation_ids = _get_entities_ids(allocation_entity_acronym, with_entity_subordinated)
         entity_requirement_ids = _get_entities_ids(requirement_entity_acronym, with_entity_subordinated)
-        if len(entity_allocation_ids) >0 and len(entity_requirement_ids) > 0:
-            return list(mdl.entity_container_year.search(link_type=        [entity_container_year_link_type.ALLOCATION_ENTITY,
-                                                                            entity_container_year_link_type.REQUIREMENT_ENTITY],
-                                                         entity_id=entity_allocation_ids+entity_requirement_ids) \
+        if len(entity_allocation_ids) > 0 and len(entity_requirement_ids) > 0:
+            print('if')
+            requirement_list= list(mdl.entity_container_year.search(link_type=entity_container_year_link_type.REQUIREMENT_ENTITY,
+                                                         entity_id=entity_requirement_ids) \
                         .values_list('learning_container_year', flat=True).distinct())
+            allocation_list= list(mdl.entity_container_year.search(link_type=entity_container_year_link_type.ALLOCATION_ENTITY,
+                                                      entity_id=entity_allocation_ids) \
+                     .values_list('learning_container_year', flat=True).distinct())
+            if len(requirement_list) > 0 and len(allocation_list)>0:
+                return list(set().union(requirement_list,allocation_list))
+            else:
+                return []
         else:
+            print('else')
             return []
     else:
         if allocation_entity_acronym:
