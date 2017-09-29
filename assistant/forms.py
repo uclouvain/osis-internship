@@ -28,9 +28,8 @@ from django.core.exceptions import ValidationError
 from django.forms import ModelForm, Textarea, ModelChoiceField
 from django.forms.models import inlineformset_factory
 from django.utils.translation import ugettext as _
-from base.models import academic_year, entity
+from base.models import academic_year, entity, entity_version
 from base.models.enums import entity_type
-from base.business.entity_version import find_versions_from_entites
 from assistant import models as mdl
 from assistant.models.enums import review_advice_choices, assistant_type
 from assistant.models.enums import assistant_mandate_renewal, reviewer_role, assistant_phd_inscription
@@ -87,7 +86,7 @@ class EntityChoiceField(ModelChoiceField):
 
 def get_field_qs(field, **kwargs):
     if field.name == 'entity':
-        return EntityChoiceField(queryset=find_versions_from_entites(
+        return EntityChoiceField(queryset=entity_version.find_versions_from_entites(
             entity.search(entity_type=entity_type.SECTOR) |
             entity.search(entity_type=entity_type.FACULTY) |
             entity.search(entity_type=entity_type.SCHOOL) |
@@ -314,7 +313,7 @@ class ReviewerForm(ModelForm):
     entities = \
         entity.search(entity_type=entity_type.INSTITUTE) | entity.search(entity_type=entity_type.FACULTY) | \
         entity.search(entity_type=entity_type.SECTOR)
-    entity = EntityChoiceField(required=True, queryset=find_versions_from_entites(entities, None))
+    entity = EntityChoiceField(required=True, queryset=entity_version.find_versions_from_entites(entities, None))
 
     class Meta:
         model = mdl.reviewer.Reviewer

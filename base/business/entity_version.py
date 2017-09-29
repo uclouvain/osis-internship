@@ -23,24 +23,9 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.utils import timezone
-from django.db.models import F, Case, When, Q
-from base.models import entity_version, offer_year_entity, entity
-from base.models.enums import entity_type
+from base.models import entity_version, offer_year_entity
 
 
 def find_from_offer_year(offer_year):
     return [entity_version.get_last_version(off_year_entity.entity)
             for off_year_entity in offer_year_entity.search(offer_year=offer_year).distinct('entity')]
-
-
-def find_versions_from_entites(entities, date):
-    if date is None:
-        date = timezone.now()
-    order_list = [entity_type.SECTOR, entity_type.FACULTY, entity_type.SCHOOL, entity_type.INSTITUTE, entity_type.POLE]
-    preserved = Case(*[When(entity_type=pk, then=pos) for pos, pk in enumerate(order_list)])
-    return entity.Entity.objects.filter(pk__in=entities).\
-        filter(Q(entityversion__end_date__gte=date) | Q(entityversion__end_date__isnull=True),
-               entityversion__start_date__lte=date).\
-        annotate(acronym=F('entityversion__acronym')).annotate(title=F('entityversion__title')).\
-        annotate(entity_type=F('entityversion__entity_type')).order_by(preserved)

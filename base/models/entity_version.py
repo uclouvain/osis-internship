@@ -27,9 +27,9 @@ import datetime
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.contrib import admin
-from django.db.models import Q
+from django.db.models import Q, F, Case, When
 from django.utils import timezone
-from base.models import academic_year
+from base.models import entity, academic_year
 from base.models.enums import entity_type
 from base.models.enums.organization_type import MAIN
 from osis_common.utils.datetime import get_tzinfo
@@ -183,6 +183,18 @@ def find_latest_version(date):
     return EntityVersion.objects.filter(Q(end_date__gte=date) | Q(end_date__isnull=True),
                                         start_date__lte=date)\
                                 .order_by('-start_date')
+
+
+def find_versions_from_entites(entities, date):
+    if date is None:
+        date = timezone.now()
+    order_list = [entity_type.SECTOR, entity_type.FACULTY, entity_type.SCHOOL, entity_type.INSTITUTE, entity_type.POLE]
+    preserved = Case(*[When(entity_type=pk, then=pos) for pos, pk in enumerate(order_list)])
+    return entity.Entity.objects.filter(pk__in=entities).\
+        filter(Q(entityversion__end_date__gte=date) | Q(entityversion__end_date__isnull=True),
+               entityversion__start_date__lte=date).\
+        annotate(acronym=F('entityversion__acronym')).annotate(title=F('entityversion__title')).\
+        annotate(entity_type=F('entityversion__entity_type')).order_by(preserved)
 
 
 def get_last_version(entity):

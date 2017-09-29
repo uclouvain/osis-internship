@@ -32,7 +32,6 @@ from openpyxl import Workbook
 from openpyxl.writer.excel import save_virtual_workbook
 from base.models.enums import entity_type
 from base.models import academic_year
-from base.business.entity_version import find_versions_from_entites
 from base.views import layout
 from assistant.forms import MandateForm, entity_inline_formset
 from assistant import models as assistant_mdl
