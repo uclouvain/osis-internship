@@ -23,6 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from datetime import timedelta
 from unittest.mock import patch
 
 from django.contrib.auth.models import Permission
@@ -54,7 +55,9 @@ from base.tests.factories.student import StudentFactory
 class OnlineEncodingTest(TestCase):
     def setUp(self):
         self.request_factory = RequestFactory()
-        academic_year = AcademicYearFactory(year=timezone.now().year - 1)
+        start_date = timezone.now() - timedelta(days=2)
+        end_date = timezone.now() + timedelta(days=5)
+        academic_year = AcademicYearFactory(year=timezone.now().year, start_date=start_date, end_date=end_date)
         academic_calendar = AcademicCalendarFactory.build(title="Submission of score encoding - 1",
                                                           start_date=academic_year.start_date,
                                                           end_date=academic_year.end_date,
@@ -291,8 +294,10 @@ class OutsideEncodingPeriodTest(TestCase):
         add_permission(self.user, "can_access_scoreencoding")
         self.client.force_login(self.user)
 
-        # Create context
-        academic_year = AcademicYearFactory(year=timezone.now().year - 1)
+        # Create context out of range
+        start_date = timezone.now() - timedelta(days=2)
+        end_date = timezone.now() + timedelta(days=5)
+        academic_year = AcademicYearFactory(year=timezone.now().year, start_date=start_date, end_date=end_date)
         academic_calendar = AcademicCalendarFactory.build(title="Submission of score encoding - 1",
                                                           academic_year=academic_year,
                                                           reference=academic_calendar_type.SCORES_EXAM_SUBMISSION)
@@ -320,7 +325,9 @@ class GetScoreEncodingViewProgramManagerTest(TestCase):
         self.client.force_login(self.user)
 
         # Set user as program manager of two offer
-        academic_year = AcademicYearFactory(year=timezone.now().year - 1)
+        start_date = timezone.now() - timedelta(days=5)
+        end_date = timezone.now() + timedelta(days=30)
+        academic_year = AcademicYearFactory(year=timezone.now().year, start_date=start_date, end_date=end_date)
         self.offer_year_bio2ma = OfferYearFactory(acronym="BIO2MA", title="Master en Biologie",
                                                   academic_year=academic_year)
         self.offer_year_bio2bac = OfferYearFactory(acronym="BIO2BAC", title="Bachelier en Biologie",
