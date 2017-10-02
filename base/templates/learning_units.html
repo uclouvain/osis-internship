@@ -180,7 +180,7 @@
                 <th>{% trans 'active'|title%}</th>
             </thead>
             {% for learning_unit in learning_units %}
-            <tr data-id="{{learning_unit.id}}">
+            <tr data-id="{{learning_unit.id}}" data-value="{{learning_unit.acronym}}">
                 <td>{{learning_unit.academic_year.name}}</td>
                 <td>
                     <a href="{% url 'learning_unit' learning_unit.id %}"
@@ -220,8 +220,10 @@
 
 {% block script %}
 <script>
-    $(document).ready(function()
-    {
+    $(document).ready(function() {
+        // Must be always DataTable declaration !!!
+        setEventKeepIds('table_learning_units', 'learningUnitIds')
+
         $('#table_learning_units').DataTable(
             {
                 columnDefs: [
@@ -239,7 +241,7 @@
                     }
                 }
             })
-        setEventKeepIds('table_learning_units', 'learningUnitIds')
+
     ;});
 </script>
 {% endblock %}

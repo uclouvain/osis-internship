@@ -26,7 +26,7 @@
     <div class="col-md-1">
         <ul class="pager">
             <li class="previous" >
-                <a href="#" data-toggle="tooltip" data-placement="top" title="">
+                <a id="previousNavLink" data-toggle="tooltip" data-placement="top" title="">
                     <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
                 </a>
             </li>
@@ -38,7 +38,7 @@
     <div class="col-md-1">
         <ul class="pager">
             <li class="next">
-                <a href="#" data-toggle="tooltip" data-placement="top" title="">
+                <a id="nextNavLink" data-toggle="tooltip" data-placement="top" title="">
                     <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
                 </a>
             </li>
@@ -46,12 +46,60 @@
     </div>
 </div>
 
-<script>
+<script type="text/javascript">
+    var findCurrentIndex = function(objectIds) {
+        var currentId = {{ current_id|default:'undefined' }}
+        if (currentId && objectIds) {
+            currentId = parseInt(currentId)
+            for (var i = 0, len = objectIds.length; i < len; i++) {
+                if (parseInt(objectIds[i].id) === currentId){
+                    return i;
+                }
+            }
+        }
+        return undefined;
+    }
+    var disableNavLink = function(domId) {
+        var elem = document.getElementById(domId);
+        elem.parentElement.className += ' disabled';
+    }
+    var enableNavLink = function(domId, url, title){
+        if (url != undefined){
+            var elem = document.getElementById(domId);
+            elem.setAttribute('href', url)
+            elem.setAttribute('title', title)
+        }
+    }
+    var setPreviousLink = function(objectIds, currentIndex) {
+        if (currentIndex > 0) {
+            previousObject =  objectIds[currentIndex - 1];
+            previousUrl = "{{request.path}}".replace(objectIds[currentIndex].id, previousObject.id);
+            previousTitle = previousObject.value;
+            enableNavLink('previousNavLink', previousUrl, previousTitle);
+        } else {
+            disableNavLink('previousNavLink');
+        }
+    }
+    var setNextLink = function(objectIds, currentIndex) {
+        if (currentIndex + 1 < objectIds.length) {
+            nextObject =  objectIds[currentIndex + 1];
+            nextUrl = "{{request.path}}".replace(objectIds[currentIndex].id, nextObject.id);
+            nextTitle = nextObject.value;
+            enableNavLink('nextNavLink', nextUrl, nextTitle);
+        } else {
+            disableNavLink('nextNavLink');
+        }
+    }
+
     if(typeof localStorage!='undefined') {
         var key = "{{local_storage_key|default:'undefined'}}";
         if(key && key in localStorage){
-            ids = JSON.parse(localStorage.getItem(key));
-            console.log(ids);
+            objectIds = JSON.parse(localStorage.getItem(key));
+            currentIndex = findCurrentIndex(objectIds);
+            if (currentIndex != undefined) {
+                setPreviousLink(objectIds, currentIndex);
+                setNextLink(objectIds, currentIndex);
+            }
         }
     }
 </script>

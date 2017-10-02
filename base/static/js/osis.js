@@ -141,16 +141,18 @@ var browser_supported_versions = {
 }
 
 function setEventKeepIds(domTableId, localStorageKey) {
-    //Check if localstorage is supported
-    if(typeof localStorage!='undefined') {
+    if(typeof localStorage!=undefined) {
+        if (domTableId == undefined || localStorageKey == undefined){ return;}
+
         var table = $('#' + domTableId)
         if (table != undefined) {
-            table.on('order.dt', function() {
+            table.on('init.dt order.dt', function() {
                 var orderList = [];
                 table.find('tr').each(function() {
                     var id = $(this).attr('data-id');
+                    var value = $(this).attr('data-value');
                     if (id != undefined) {
-                         orderList.push(id);
+                         orderList.push({'id': id, 'value': value});
                     }
                 });
                 if(orderList.length > 0){
