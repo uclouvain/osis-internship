@@ -25,7 +25,7 @@
 <div class="row page-header" style="margin-top:25px;">
     <div class="col-md-1">
         <ul class="pager">
-            <li class="previous" >
+            <li class="previous disabled" >
                 <a id="previousNavLink" data-toggle="tooltip" data-placement="top" title="">
                     <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
                 </a>
@@ -37,7 +37,7 @@
     </div>
     <div class="col-md-1">
         <ul class="pager">
-            <li class="next">
+            <li class="next disabled">
                 <a id="nextNavLink" data-toggle="tooltip" data-placement="top" title="">
                     <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
                 </a>
@@ -59,15 +59,13 @@
         }
         return undefined;
     }
-    var disableNavLink = function(domId) {
-        var elem = document.getElementById(domId);
-        elem.parentElement.className += ' disabled';
-    }
     var enableNavLink = function(domId, url, title){
         if (url != undefined){
             var elem = document.getElementById(domId);
             elem.setAttribute('href', url)
             elem.setAttribute('title', title)
+            //Remove disabled property
+            elem.parentElement.classList.remove('disabled');
         }
     }
     var setPreviousLink = function(objectIds, currentIndex) {
@@ -76,8 +74,6 @@
             previousUrl = "{{request.path}}".replace(objectIds[currentIndex].id, previousObject.id);
             previousTitle = previousObject.value;
             enableNavLink('previousNavLink', previousUrl, previousTitle);
-        } else {
-            disableNavLink('previousNavLink');
         }
     }
     var setNextLink = function(objectIds, currentIndex) {
@@ -86,11 +82,8 @@
             nextUrl = "{{request.path}}".replace(objectIds[currentIndex].id, nextObject.id);
             nextTitle = nextObject.value;
             enableNavLink('nextNavLink', nextUrl, nextTitle);
-        } else {
-            disableNavLink('nextNavLink');
         }
     }
-
     if(typeof localStorage!='undefined') {
         var key = "{{local_storage_key|default:'undefined'}}";
         if(key && key in localStorage){
