@@ -107,7 +107,7 @@
                         </div>
                         <div class="col-md-2">
                             <label {% if form.errors.session %}style="color:red;"{% endif %}>
-                                {% trans 'session_title' %}*
+                                {% trans 'session_title' %}
                             </label>
                             {{ form.session }}
                             <label {% if form.errors.session %}style="color:red;"{% endif %}>
@@ -245,11 +245,14 @@
         $(function () {
             $('#LearningUnitYearForm').validate();
         });
+        $.extend($.validator.messages, {
+            required: "{% trans 'field_is_required' %}"
+        });
 
         function validate_acronym () {
             $('#acronym_message').removeClass("error-message").text("");
 
-	        if(/{{ form.acronym_regex }}/.test($('#acronym').val())) {
+	        if(/{{ form.acronym_regex }}/.test($('#acronym').val().toUpperCase())) {
                 $.ajax({
                     url: "/learning_units/check?acronym=" + $('#acronym').val() + "&year_id=" + $('#academic_year').val()
                 }).done(function(data){

@@ -67,4 +67,3 @@ if settings.DEBUG and 'debug_toolbar' in settings.INSTALLED_APPS:
 
     urlpatterns += (url(r'^__debug__/', include(debug_toolbar.urls)),)
 
-common.get_current_version()

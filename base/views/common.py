@@ -77,6 +77,7 @@ def common_context_processor(request):
         sentry_dns = settings.SENTRY_PUBLIC_DNS
     else:
         sentry_dns = ''
+    release_tag = settings.RELEASE_TAG if hasattr(settings, 'RELEASE_TAG') else None
     return {'installed_apps': settings.INSTALLED_APPS,
             'environment': env,
             'sentry_dns': sentry_dns,
@@ -181,20 +182,3 @@ def storage(request):
 
     return layout.render(request, "admin/storage.html", {'table': table})
 
-
-def get_current_version():
-    release_tag = None
-    global release_tag
-    try:
-        repo = git.Repo('.')
-        tags = repo.tags
-        heads = repo.heads
-        if hasattr(heads, 'master'):
-            master = heads.master
-            release_tag = next((tag for tag in tags if tag.commit == master.commit), None)
-    except git.GitError as err:
-        logger.warning('GitError : {}'.format(err))
-    except Exception as err:
-        logger.warning('Exception occured when getting release version'.format(err))
-    finally:
-        return release_tag

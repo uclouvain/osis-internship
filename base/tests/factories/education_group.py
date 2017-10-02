@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -23,28 +23,20 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
-from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
+import factory
+import factory.fuzzy
+import string
+import datetime
+from osis_common.utils.datetime import get_tzinfo
+from django.utils import timezone
 
 
-class OfferYearDomainAdmin(SerializableModelAdmin):
-    list_display = ('domain', 'offer_year', 'education_group_year', 'changed')
-    fieldsets = ((None, {'fields': ('domain', 'offer_year', 'education_group_year')}),)
-    list_filter = ('offer_year__academic_year',)
-    raw_id_fields = ('domain', 'offer_year')
-    search_fields = ['domain__name', 'offer_year__acronym']
+class EducationGroupFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = "base.EducationGroup"
 
-
-class OfferYearDomain(SerializableModel):
-    external_id = models.CharField(max_length=100, blank=True, null=True)
-    changed = models.DateTimeField(null=True, auto_now=True)
-    domain = models.ForeignKey('reference.Domain', blank=True, null=True)
-    offer_year = models.ForeignKey('base.OfferYear', blank=True, null=True)
-    education_group_year = models.ForeignKey('base.EducationGroupYear', blank=True, null=True)
-
-    def __str__(self):
-        return u"%s - %s" % (self.domain, self.offer_year)
-
-
-def find_by_education_group_year(education_group_yr):
-    return OfferYearDomain.objects.filter(education_group_year=education_group_yr)
+    external_id = factory.fuzzy.FuzzyText(length=10, chars=string.digits)
+    changed = factory.fuzzy.FuzzyDateTime(datetime.datetime(2016, 1, 1, tzinfo=get_tzinfo()),
+                                          datetime.datetime(2017, 3, 1, tzinfo=get_tzinfo()))
+    start_year = factory.fuzzy.FuzzyInteger(2000, timezone.now().year)
+    end_year = factory.fuzzy.FuzzyInteger(2000, timezone.now().year)
