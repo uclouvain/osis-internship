@@ -24,7 +24,7 @@
 #
 ##############################################################################
 
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from base.models.student import find_by_offer_year
 from base.models.offer_year import OfferYear
@@ -50,3 +50,8 @@ def get_students_list_in_offer_year(request, offer_year_start_id):
         data = False
 
     return JsonResponse({'res': data})
+
+
+def redirect_if_none(object, target):
+    if object is None:
+        return redirect(target)

@@ -123,4 +123,3 @@ def academic_calendar_form(request, academic_calendar_id):
             academic_cal_form.save()
             return academic_calendar_read(request, academic_cal_form.instance.id)
     return layout.render(request, "academic_calendar_form.html", {'form': academic_cal_form})
-

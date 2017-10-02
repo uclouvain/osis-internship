@@ -24,6 +24,7 @@
 #
 ##############################################################################
 from dissertation.models import proposition_offer
+from django.core.exceptions import ObjectDoesNotExist
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 from django.db import models
 from django.db.models import Q
@@ -155,8 +156,10 @@ def get_created_for_teacher(adviser):
 
 
 def find_by_id(proposition_id):
-    return PropositionDissertation.objects.get(pk=proposition_id)
-
+    try:
+        return PropositionDissertation.objects.get(pk=proposition_id)
+    except ObjectDoesNotExist:
+        return None
 
 def search_by_offers(offers):
     proposition_ids = proposition_offer.find_by_offers(offers).values('proposition_dissertation_id')
