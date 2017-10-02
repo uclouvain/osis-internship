@@ -24,7 +24,6 @@
 #
 ##############################################################################
 import datetime
-import re
 from collections import OrderedDict
 from django.contrib import messages
 from django.conf import settings
@@ -57,7 +56,7 @@ from base.models.learning_unit_component import LearningUnitComponent
 from base.models.learning_unit_year import LearningUnitYear
 from cms import models as mdl_cms
 from cms.enums import entity_name
-from base.forms.learning_units import LearningUnitYearForm, CreateLearningUnitYearForm
+from base.forms.learning_units import LearningUnitYearForm, CreateLearningUnitYearForm, MAX_RECORDS
 from base.forms.learning_unit_specifications import LearningUnitSpecificationsForm, LearningUnitSpecificationsEditForm
 from base.forms.learning_unit_pedagogy import LearningUnitPedagogyForm, LearningUnitPedagogyEditForm
 from base.forms.learning_unit_component import LearningUnitComponentEditForm
@@ -77,8 +76,6 @@ VOLUME_PARTIAL_KEY = 'volume_partial'
 VOLUME_REMAINING_KEY = 'volume_remaining'
 
 VOLUME_FOR_UNKNOWN_QUADRIMESTER = -1
-
-MAX_RECORDS = 1000
 
 
 @login_required
