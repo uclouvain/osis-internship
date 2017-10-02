@@ -47,6 +47,12 @@
 </div>
 
 <script type="text/javascript">
+    var removeNavButtons = function() {
+        var previousElem = document.getElementById("previousNavLink")
+        previousElem.style.display = "none";
+        var nextElem = document.getElementById("nextNavLink")
+        nextElem.style.display = "none";
+    }
     var findCurrentIndex = function(objectIds) {
         var currentId = {{ current_id|default:'undefined' }}
         if (currentId && objectIds) {
@@ -93,7 +99,13 @@
                 setPreviousLink(objectIds, currentIndex);
                 setNextLink(objectIds, currentIndex);
             }
+        } else{
+            //Key not found on localstorage
+            removeNavButtons();
         }
+    } else {
+        //localstorage not supported by navigator
+        removeNavButtons();
     }
 </script>
 
