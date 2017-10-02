@@ -73,7 +73,9 @@ class MultipleAcademicYearTest(TestCase):
 
 class SingleAcademicYearTest(TestCase):
     def test_starting_equalto_current(self):
-        academic_yr = AcademicYearFactory(year=timezone.now().year-1)
+        start_date = timezone.now() - datetime.timedelta(days=5)
+        end_date = start_date + datetime.timedelta(days=220)
+        academic_yr = AcademicYearFactory(year=start_date.year, start_date=start_date, end_date=end_date)
         starting_academic_year = academic_year.starting_academic_year()
         self.assertEqual(starting_academic_year.year, academic_yr.year)
 
