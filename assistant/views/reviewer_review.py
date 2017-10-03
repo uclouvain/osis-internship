@@ -185,7 +185,6 @@ def pst_form_view(request):
     current_role = current_reviewer.role
     entity = entity_version.get_last_version(current_reviewer.entity)
     learning_units = tutoring_learning_unit_year.find_by_mandate(mandate)
-    print(mandate_id)
     phd_files = assistant_document_file.find_by_assistant_mandate_and_description(mandate,
                                                                                   document_type.PHD_DOCUMENT)
     research_files = assistant_document_file.find_by_assistant_mandate_and_description(mandate,
