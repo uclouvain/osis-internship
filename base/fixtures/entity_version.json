@@ -74,7 +74,59 @@
       "entity_type": "SCHOOL",
       "parent": null,
       "start_date": "2017-09-10",
-      "end_date": "2017-09-10"
+      "end_date": null
+    }
+  },
+  {
+    "model": "base.entityversion",
+    "pk": 7,
+    "fields": {
+      "entity": 8,
+      "title": "Faculté de droit et de criminologie",
+      "acronym": "DRT",
+      "entity_type": "FACULTY",
+      "parent": 7,
+      "start_date": "2010-01-01",
+      "end_date": null
+    }
+  },
+  {
+    "model": "base.entityversion",
+    "pk": 8,
+    "fields": {
+      "entity": 7,
+      "title": "Commission d'enseignement pour le droit",
+      "acronym": "BUDR",
+      "entity_type": "SCHOOL",
+      "parent": 7,
+      "start_date": "2010-01-01",
+      "end_date": null
+    }
+  },
+  {
+    "model": "base.entityversion",
+    "pk": 9,
+    "fields": {
+      "entity": 9,
+      "title": "Faculté de pharmacie et des sciences biomédicales",
+      "acronym": "FASB",
+      "entity_type": "FACULTY",
+      "parent": 7,
+      "start_date": "2010-01-01",
+      "end_date": null
+    }
+  },
+  {
+    "model": "base.entityversion",
+    "pk": 10,
+    "fields": {
+      "entity": 10,
+      "title": "Ecole de pharmacie ",
+      "acronym": "FARM",
+      "entity_type": "SCHOOL",
+      "parent": 9,
+      "start_date": "2010-01-01",
+      "end_date": null
     }
   }
 ]

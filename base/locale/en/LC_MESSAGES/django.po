@@ -1661,7 +1661,7 @@ msgid "allocation_entity"
 msgstr "Allocation entity"
 
 msgid "additional_requirement_entity"
-msgstr "Additional entity"
+msgstr "Additional requirement entity"
 
 msgid "requirement_entity_small"
 msgstr "Req. Entity"
@@ -1805,9 +1805,6 @@ msgstr "Active"
 
 msgid "titles"
 msgstr "Titles"
-
-msgid "structure_title"
-msgstr "Structure"
 
 msgid "fixtures_build"
 msgstr "Build anonymized fixtures"
@@ -1977,8 +1974,121 @@ msgstr "Shifted"
 msgid "ADAPTED"
 msgstr "Adapted"
 
+msgid "academic_calendar_type"
+msgstr "Type of event"
+
+msgid "DELIBERATION"
+msgstr "Deliberation"
+
+msgid "DISSERTATION_SUBMISSION"
+msgstr "Submission of disserations"
+
+msgid "EXAM_ENROLLMENTS"
+msgstr "Exam enrollments"
+
+msgid "SCORES_EXAM_DIFFUSION"
+msgstr "Diffusion of exam scores"
+
+msgid "SCORES_EXAM_SUBMISSION"
+msgstr "Submission of exam scores"
+
+msgid "TEACHING_CHARGE_APPLICATION"
+msgstr "Teaching charge application"
+
 msgid "field_is_required"
 msgstr "This field is required"
 
+msgid "associated_entity"
+msgstr "Associated entity"
+
 msgid "LU_WARNING_INVALID_ACRONYM"
 msgstr "The acronym, if it is entered, must at least count 3 characters"
+msgid "title_in_french"
+msgstr "Title in French"
+
+msgid "schedule_type"
+msgstr "Schedule type"
+
+msgid "enrollment_campus"
+msgstr "Enrollment campus"
+
+msgid "other_campus_activities"
+msgstr "Activities on other campus"
+
+msgid "unspecified"
+msgstr "Unspecified"
+
+msgid "university_certificate"
+msgstr "University certificate"
+
+msgid "studies_domain"
+msgstr "Studies domain"
+
+msgid "primary_language"
+msgstr "Primary language"
+
+msgid "other_language_activities"
+msgstr "Other languages activities"
+
+msgid "funding"
+msgstr "Funding"
+
+msgid "funding_cud"
+msgstr "Funding international cooperation CCD/CUD"
+
+msgid "funding_direction"
+msgstr "Funding direction"
+
+msgid "cud_funding_direction"
+msgstr "Funding international cooperation CCD/CUD direction"
+
+msgid "active_status"
+msgstr "Active"
+
+msgid "partial_deliberation"
+msgstr "Partial deliberation"
+
+msgid "admission_exam"
+msgstr "Admission exam"
+
+msgid "academic_type"
+msgstr "Academic type"
+
+msgid "keywords"
+msgstr "Keywords"
+
+msgid "training_type"
+msgstr "Type of training"
+
+msgid "QUADRIMESTER"
+msgstr "Quadrimester(s)"
+
+msgid "TRIMESTER"
+msgstr "Trimester(s)"
+
+msgid "MONTH"
+msgstr "Month(s)"
+
+msgid "WEEK"
+msgstr "Week(s)"
+
+msgid "DAY"
+msgstr "Day(s)"
+
+msgid "administration_entity"
+msgstr "Administration entity"
+
+msgid "management_entity"
+msgstr "Management entity"
+
+msgid "enrollment_enabled"
+msgstr "Enrollment enabled"
+
+msgid "formations"
+msgstr "Formations"
+
+msgid "formations_lnk"
+msgstr "Formations"
+
+msgid "desc_lnk_formations"
+msgstr "Organization of formations"

@@ -28,6 +28,7 @@ from django.core.urlresolvers import reverse
 from django.test.utils import override_settings
 from django.contrib.auth.models import User, Permission
 
+
 class ErrorViewTestCase(TestCase):
     def setUp(self):
         self.user = User.objects.create_user('tmp', 'tmp@gmail.com', 'tmp')
@@ -39,3 +40,5 @@ class ErrorViewTestCase(TestCase):
         self.client.login(username='tmp', password='tmp')
         response = self.client.get(reverse('academic_calendar_read', args=[46898]), follow=True)
         self.assertEqual(response.status_code, 404)
+
+

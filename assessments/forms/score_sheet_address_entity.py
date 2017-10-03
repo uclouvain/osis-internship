@@ -23,40 +23,15 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
+from base.forms import bootstrap
+from assessments.models import score_sheet_address
+from django import forms
 
 
-class MandateStructure(models.Model):
-    assistant_mandate = models.ForeignKey('AssistantMandate')
-    structure = models.ForeignKey('base.Structure')
+class ScoreSheetAddressEntityForm(bootstrap.BootstrapModelForm):
+    email = forms.EmailField(required=False)
 
-    @property
-    def name(self):
-        return self.__str__()
+    class Meta:
+        model = score_sheet_address.ScoreSheetAddress
+        exclude = ['external_id', 'changed', 'country', 'recipient', 'location', 'postal_code', 'city', 'offer_year']
 
-    def __str__(self):
-        return u"%s - %s" % (self.assistant_mandate.assistant, self.structure.acronym)
-
-
-def find_by_mandate(mandate):
-    return MandateStructure.objects.filter(assistant_mandate=mandate)
-
-
-def find_by_mandate_and_structure(mandate, structure):
-    return MandateStructure.objects.filter(assistant_mandate=mandate, structure=structure)
-
-
-def find_by_mandate_and_type(mandate, type):
-    return MandateStructure.objects.filter(assistant_mandate=mandate, structure__type=type)
-
-
-def find_by_mandate_and_part_of_type(mandate, type):
-    return MandateStructure.objects.filter(assistant_mandate=mandate, structure__part_of__type=type)
-
-
-def find_by_mandate_and_part_of_struct(mandate, struct):
-    return MandateStructure.objects.filter(assistant_mandate=mandate, structure__part_of=struct)
-
-
-def find_by_structure(structure):
-    return MandateStructure.objects.filter(structure=structure)

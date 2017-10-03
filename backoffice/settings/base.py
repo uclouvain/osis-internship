@@ -99,8 +99,7 @@ QUEUES_TESTING_TIMEOUT = float(os.environ.get('QUEUES_TESTING_TIMEOUT', 0.1))
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': []
-        ,
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'debug': DEBUG,
@@ -237,7 +236,7 @@ CKEDITOR_CONFIGS = {
         'toolbar': 'Custom',
         'toolbar_Custom': [
             ['Bold', 'Italic', 'Underline'],
-            ['NumberedList','BulletedList'],
+            ['NumberedList', 'BulletedList'],
             ['Link', 'Unlink']
         ]
     }
@@ -300,3 +299,5 @@ REST_FRAMEWORK = {
 #ESB Configuration
 ESB_AUTHORIZATION = os.environ.get('ESB_AUTHORIZATION')
 ESB_STUDENT_API = os.environ.get('ESB_STUDENT_API')
+
+RELEASE_TAG = os.environ.get('RELEASE_TAG')

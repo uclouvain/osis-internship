@@ -78,5 +78,22 @@
       "start_year": 2002,
       "end_year": 2099
     }
+  },
+  {
+    "model": "base.educationgroup",
+    "pk": 11,
+    "fields": {
+      "start_year": 2002,
+      "end_year": 2099
+    }
+  },
+  {
+    "model": "base.educationgroup",
+    "pk": 12,
+    "fields": {
+      "start_year": 2002,
+      "end_year": 2099
+    }
   }
+
 ]

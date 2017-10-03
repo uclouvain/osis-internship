@@ -23,14 +23,31 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+import string
 import factory
 import factory.fuzzy
-from assistant.tests.factories.assistant_mandate import AssistantMandateFactory
-from base.tests.factories.structure import StructureFactory
+from faker import Faker
+
+from base.tests.factories.learning_unit_year import LearningUnitYearFakerFactory
+from base.tests.factories.tutor import TutorFactory
+from osis_common.utils.datetime import get_tzinfo
+from attribution.models.enums import function
 
 
-class MandateStructureFactory(factory.DjangoModelFactory):
+fake = Faker()
+
+
+class AttributionFactory(factory.django.DjangoModelFactory):
     class Meta:
-        model = 'assistant.MandateStructure'
-    assistant_mandate = factory.SubFactory(AssistantMandateFactory)
-    structure = factory.SubFactory(StructureFactory)
+        model = "attribution.Attribution"
+
+    external_id = factory.fuzzy.FuzzyText(length=10, chars=string.digits)
+    changed = fake.date_time_this_decade(before_now=True, after_now=True, tzinfo=get_tzinfo())
+    start_date = None
+    end_date = None
+    start_year = None
+    end_year = None
+    function = factory.Iterator(function.FUNCTIONS, getter=lambda c: c[0])
+    learning_unit_year = factory.SubFactory(LearningUnitYearFakerFactory)
+    tutor = factory.SubFactory(TutorFactory)
+    score_responsible = False

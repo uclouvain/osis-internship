@@ -23,23 +23,31 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.test import TestCase
-from assistant.tests.factories.assistant_mandate import AssistantMandateFactory
-from assistant.tests.factories.mandate_structure import MandateStructureFactory
-from base.tests.factories.structure import StructureFactory
-from base.models.enums import structure_type
-from assistant.models import mandate_structure
+from faker import Faker
+import factory
+import factory.fuzzy
+import string
+
+from base.tests.factories.session_examen import SessionExamFactory
+from base.tests.factories.learning_unit_enrollment import LearningUnitEnrollment
+from base.models.enums import exam_enrollment_state
+from osis_common.utils.datetime import get_tzinfo
 
 
-class TestMandateStructureFactory(TestCase):
+fake = Faker()
 
-    def setUp(self):
-        self.assistant_mandate = AssistantMandateFactory()
-        self.structure = StructureFactory(type=structure_type.FACULTY)
-        self.mandate_structure = MandateStructureFactory(assistant_mandate=self.assistant_mandate,
-                                                         structure=self.structure)
 
-    def test_find_by_mandate_and_type(self):
-        self.assertEqual(self.mandate_structure,
-                         mandate_structure.find_by_mandate_and_type(self.assistant_mandate,
-                                                                    structure_type.FACULTY).first())
+class ExamEnrollmentFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = 'base.ExamEnrollment'
+
+    external_id = factory.fuzzy.FuzzyText(length=10, chars=string.digits)
+    changed = fake.date_time_this_decade(before_now=True, after_now=True, tzinfo=get_tzinfo())
+    score_draft = None
+    score_reencoded = None
+    score_final = None
+    justification_reencoded = None
+    justification_final = None
+    session_exam = factory.SubFactory(SessionExamFactory)
+    learning_unit_enrollment = factory.SubFactory(LearningUnitEnrollment)
+    enrollment_state = exam_enrollment_state.ENROLLED

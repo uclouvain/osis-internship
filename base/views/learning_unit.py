@@ -24,7 +24,6 @@
 #
 ##############################################################################
 import datetime
-import re
 from collections import OrderedDict
 from django.contrib import messages
 from django.conf import settings
@@ -58,7 +57,7 @@ from base.models.learning_unit_component import LearningUnitComponent
 from base.models.learning_unit_year import LearningUnitYear
 from cms import models as mdl_cms
 from cms.enums import entity_name
-from base.forms.learning_units import LearningUnitYearForm, CreateLearningUnitYearForm
+from base.forms.learning_units import LearningUnitYearForm, CreateLearningUnitYearForm, MAX_RECORDS
 from base.forms.learning_unit_specifications import LearningUnitSpecificationsForm, LearningUnitSpecificationsEditForm
 from base.forms.learning_unit_pedagogy import LearningUnitPedagogyForm, LearningUnitPedagogyEditForm
 from base.forms.learning_unit_component import LearningUnitComponentEditForm
@@ -70,7 +69,7 @@ from . import layout
 from django.http import JsonResponse
 
 
-UNDEFINED_VALUE = '?'
+UNDEFINED_VALUE = ''
 
 HOURLY_VOLUME_KEY = 'hourly_volume'
 TOTAL_VOLUME_KEY = 'total_volume'
@@ -78,8 +77,6 @@ VOLUME_PARTIAL_KEY = 'volume_partial'
 VOLUME_REMAINING_KEY = 'volume_remaining'
 
 VOLUME_FOR_UNKNOWN_QUADRIMESTER = -1
-
-MAX_RECORDS = 1000
 
 
 @login_required
@@ -338,7 +335,6 @@ def _check_if_display_message(request, found_learning_units):
             messages.add_message(request, messages.WARNING, _('too_many_results'))
             return False
     return True
-
 
 def _get_common_context_list_learning_unit_years():
     today = datetime.date.today()
@@ -606,23 +602,27 @@ def learning_unit_year_add(request):
         form = CreateLearningUnitYearForm(request.POST)
         if form.is_valid():
             data = form.cleaned_data
+            starting_academic_year = mdl.academic_year.starting_academic_year()
             academic_year = data['academic_year']
             year = academic_year.year
             status = check_status(data)
-            requirement_entity_version = mdl.entity_version.find_by_id(data['requirement_entity'])
-            allocation_entity_version = mdl.entity_version.find_by_id(data['allocation_entity'])
             additional_entity_version_1 = None
             additional_entity_version_2 = None
+            allocation_entity_version = None
+            requirement_entity_version = mdl.entity_version.find_by_id(data['requirement_entity'])
+            if data['allocation_entity']:
+                allocation_entity_version = mdl.entity_version.find_by_id(data['allocation_entity'])
             if data['additional_entity_1']:
                 additional_entity_version_1 = mdl.entity_version.find_by_id(data['additional_entity_1'])
             if data['additional_entity_2']:
                 additional_entity_version_2 = mdl.entity_version.find_by_id(data['additional_entity_2'])
-            new_learning_container = create_learning_container(year, data)
+            new_learning_container = create_learning_container(year)
             new_learning_unit = create_learning_unit(data, new_learning_container, year)
-            while year <= int(data['end_year']) and year < academic_year.year+6:
+            while year < starting_academic_year.year+6:
+                academic_year = mdl.academic_year.find_academic_year_by_year(year)
                 create_learning_unit_structure(additional_entity_version_1, additional_entity_version_2,
                                                allocation_entity_version, data, form, new_learning_container,
-                                               new_learning_unit, requirement_entity_version, status, year)
+                                               new_learning_unit, requirement_entity_version, status, academic_year)
                 year = year+1
             return redirect('learning_units')
         else:
@@ -633,14 +633,14 @@ def learning_unit_year_add(request):
 
 def create_learning_unit_structure(additional_entity_version_1, additional_entity_version_2, allocation_entity_version,
                                    data, form, new_learning_container, new_learning_unit, requirement_entity_version,
-                                   status, year):
-    an_academic_year = mdl.academic_year.find_academic_year_by_year(year)
-    new_learning_container_year = create_learning_container_year(an_academic_year, data,
+                                   status, academic_year):
+    new_learning_container_year = create_learning_container_year(academic_year, data,
                                                                  new_learning_container)
     new_requirement_entity = create_entity_container_year(requirement_entity_version,
                                                           new_learning_container_year,
                                                           REQUIREMENT_ENTITY)
-    create_entity_container_year(allocation_entity_version, new_learning_container_year, ALLOCATION_ENTITY)
+    if allocation_entity_version:
+        create_entity_container_year(allocation_entity_version, new_learning_container_year, ALLOCATION_ENTITY)
     if additional_entity_version_1:
         create_entity_container_year(additional_entity_version_1, new_learning_container_year,
                                      ADDITIONAL_REQUIREMENT_ENTITY_1)
@@ -648,10 +648,10 @@ def create_learning_unit_structure(additional_entity_version_1, additional_entit
         create_entity_container_year(additional_entity_version_2, new_learning_container_year,
                                      ADDITIONAL_REQUIREMENT_ENTITY_2)
     if data['learning_container_year_type'] == COURSE:
-        create_course(an_academic_year, form, new_learning_container_year, new_learning_unit,
+        create_course(academic_year, form, new_learning_container_year, new_learning_unit,
                       new_requirement_entity, status)
     else:
-        create_another_type(an_academic_year, form, new_learning_container_year, new_learning_unit,
+        create_another_type(academic_year, form, new_learning_container_year, new_learning_unit,
                             new_requirement_entity, status)
 
 
@@ -713,8 +713,8 @@ def create_entity_component_year(entity_container_year, learning_component_year)
     return new_entity_component_year
 
 
-def create_learning_container(year, data):
-    new_learning_container = LearningContainer(auto_renewal_until=int(data['end_year']), start_year=year)
+def create_learning_container(year):
+    new_learning_container = LearningContainer(start_year=year)
     new_learning_container.save()
     return new_learning_container
 
@@ -724,7 +724,7 @@ def create_learning_container_year(academic_year, data, learning_container):
     new_learning_container_year = LearningContainerYear(academic_year=academic_year,
                                                         learning_container=learning_container,
                                                         title=data['title'],
-                                                        acronym=data['acronym'],
+                                                        acronym=data['acronym'].upper(),
                                                         container_type=data['learning_container_year_type'],
                                                         language=a_language)
     new_learning_container_year.save()
@@ -740,10 +740,9 @@ def create_entity_container_year(entity_version, learning_container_year, type):
 
 
 def create_learning_unit(data, learning_container, year):
-    new_learning_unit = LearningUnit(acronym=data['acronym'], title=data['title'], start_year=year,
-                                     end_year=int(data['end_year']), periodicity=data['periodicity'],
-                                     learning_container=learning_container, faculty_remark=data['faculty_remark'],
-                                     other_remark=data['other_remark'])
+    new_learning_unit = LearningUnit(acronym=data['acronym'].upper(), title=data['title'], start_year=year,
+                                     periodicity=data['periodicity'], learning_container=learning_container,
+                                     faculty_remark=data['faculty_remark'], other_remark=data['other_remark'])
     new_learning_unit.save()
     return new_learning_unit
 
@@ -755,7 +754,7 @@ def create_learning_unit_year(academic_year, form, learning_container_year, lear
         internship_subtype = None
     new_learning_unit_year = LearningUnitYear(academic_year=academic_year, learning_unit=learning_unit,
                                               learning_container_year=learning_container_year,
-                                              acronym=form.data['acronym'],
+                                              acronym=form.data['acronym'].upper(),
                                               title=form.data['title'],
                                               title_english=form.data['title_english'],
                                               subtype=form.data['subtype'],
@@ -775,20 +774,19 @@ def check_acronym(request):
     existed_acronym = False
     existing_acronym = False
     learning_unit_years = mdl.learning_unit_year.find_gte_year_acronym(academic_yr, acronym)
-    old_learning_unit_years = mdl.learning_unit_year.find_lt_year_acronym(academic_yr, acronym)
-    last_using = old_learning_unit_years.last()
-    if old_learning_unit_years:
+    old_learning_unit_year = mdl.learning_unit_year.find_lt_year_acronym(academic_yr, acronym).last()
+    if old_learning_unit_year:
+        last_using = str(old_learning_unit_year.academic_year)
+    else:
+        last_using = ""
+    if old_learning_unit_year:
         existed_acronym = True
         valid = True
     if learning_unit_years:
         existing_acronym = True
         valid = False
 
-    last_academic_year = ""
-    if last_using:
-       last_academic_year = str(last_using.academic_year)
-
     return JsonResponse({'valid': valid,
                          'existing_acronym': existing_acronym,
                          'existed_acronym': existed_acronym,
-                         'last_using': last_academic_year}, safe=False)
+                         'last_using': last_using}, safe=False)

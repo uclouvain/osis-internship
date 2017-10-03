@@ -38,7 +38,7 @@
 {% endblock %}
 {% block content %}
 <div class="page-header">
-    <h6>{% trans 'connected_as' %} {{ current_reviewer.person }} ({% trans current_reviewer.role %}) - {{ current_reviewer.structure.acronym }}</h6>
+    <h6>{% trans 'connected_as' %} {{ current_reviewer.person }} ({% trans current_reviewer.role %}) - {{ entity.acronym }}</h6>
     <h3>{% trans 'assistant_mandates_renewals' %} {{ year|add:1 }}</h3>
     <ul class="nav nav-tabs">
         <li><a href="{% url 'reviewer_mandates_list' %}">{% trans 'reviewer_mandates_list' %}</a></li>
@@ -60,28 +60,28 @@
             </tr>
             </thead>
             <tbody>
-            {% for structure in object_list %}
+            {% for entity_version in object_list %}
                 <tr>
-                <td>{{ structure.title }}</td>
-                <td>{{ structure.acronym }}</td>
+                <td>{{ entity_version.title }}</td>
+                <td>{{ entity_version.acronym }}</td>
                 <td align="center">
-                {% for rev in structure.reviewer_set.all %}
+                {% for rev in entity_version.entity.reviewer_set.all %}
                     {% if "ASSISTANT" in rev.role %}
                     {{ rev.person }}
-                    {% elif structure.reviewer_set.all|length < 2 %}
-                    <form id=structure.id method="POST" action="{% url 'reviewer_delegation_add' %}">
+                    {% elif entity.reviewer_set.all|length < 2 %}
+                    <form id=entity_version.entity.id method="POST" action="{% url 'reviewer_delegation_add' %}">
                     {{ form.non_field_errors }}
  		            {% csrf_token %}
-                    <input type="hidden" name="structure_id" value="{{ structure.id }}">
+                    <input type="hidden" name="entity_id" value="{{ entity_version.entity.id }}">
                     <button type="submit" class="btn btn-link" title="{% trans 'edit'%}">
                         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> {% trans 'add'%}
                     </button></form>
                     {% endif %}
                 {% empty %}
-                    <form id=structure.id method="POST" action="{% url 'reviewer_delegation_add' %}">
+                    <form id=entity.id method="POST" action="{% url 'reviewer_delegation_add' %}">
                     {{ form.non_field_errors }}
  		            {% csrf_token %}
-                    <input type="hidden" name="structure_id" value="{{ structure.id }}">
+                    <input type="hidden" name="entity_id" value="{{ entity_version.entity.id }}">
                     <button type="submit" class="btn btn-link" title="{% trans 'edit'%}">
                         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> {% trans 'add'%}
                     </button></form>

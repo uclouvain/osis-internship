@@ -28,7 +28,7 @@ from assistant.models import academic_assistant
 from assistant.models import assistant_document_file
 from assistant.models import assistant_mandate
 from assistant.models import manager
-from assistant.models import mandate_structure
+from assistant.models import mandate_entity
 from assistant.models import message
 from assistant.models import review
 from assistant.models import reviewer

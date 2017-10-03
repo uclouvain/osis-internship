@@ -1676,7 +1676,7 @@ msgid "with_entity_subordinated_small"
 msgstr "Avec ent. subord."
 
 msgid "additional_requirement_entity"
-msgstr "Entité complémentaire"
+msgstr "Entité resp. cahier de charges complémentaire"
 
 msgid "academic_end_year"
 msgstr "Anac de fin"
@@ -1812,9 +1812,6 @@ msgstr "Actif"
 msgid "titles"
 msgstr "Intitulés"
 
-msgid "structure_title"
-msgstr "Structure"
-
 msgid "fixtures_build"
 msgstr "Créer des fixtures anonymisées"
 
@@ -1898,6 +1895,7 @@ msgstr "Autre"
 
 msgid "new_learning_unit"
 msgstr "Nouvelle unité d'enseignement"
+
 
 msgid "previous"
 msgstr "Précédent"
@@ -1983,8 +1981,122 @@ msgstr "Horaire décalé"
 msgid "ADAPTED"
 msgstr "Horaire adapté"
 
+msgid "academic_calendar_type"
+msgstr "Type d'événement"
+
+msgid "DELIBERATION"
+msgstr "Délibération"
+
+msgid "DISSERTATION_SUBMISSION"
+msgstr "Soumission de mémoires"
+
+msgid "EXAM_ENROLLMENTS"
+msgstr "Inscription aux examens"
+
+msgid "SCORES_EXAM_DIFFUSION"
+msgstr "Diffusion des notes d'examen"
+
+msgid "SCORES_EXAM_SUBMISSION"
+msgstr "Soumission des feuilles de note"
+
+msgid "TEACHING_CHARGE_APPLICATION"
+msgstr "Application pour charges d'enseignement"
+
 msgid "field_is_required"
 msgstr "Ce champ est obligatoire."
 
+msgid "associated_entity"
+msgstr "Les entités associées"
+
 msgid "LU_WARNING_INVALID_ACRONYM"
 msgstr "Si l'acronym est introduit, il doit au minimum faire 3 caractères"
+
+msgid "title_in_french"
+msgstr "Intitulé en français"
+
+msgid "schedule_type"
+msgstr "Type horaire"
+
+msgid "enrollment_campus"
+msgstr "Lieu d'inscription"
+
+msgid "other_campus_activities"
+msgstr "Activités sur d'autres sites"
+
+msgid "unspecified"
+msgstr "Indéterminé"
+
+msgid "university_certificate"
+msgstr "Certificat universitaire"
+
+msgid "studies_domain"
+msgstr "Domaine d'études"
+
+msgid "primary_language"
+msgstr "Langue principale"
+
+msgid "other_language_activities"
+msgstr "Activité dans d'autres langues"
+
+msgid "funding"
+msgstr "Finançable"
+
+msgid "funding_cud"
+msgstr "Financement coopération internationale CCD/CUD"
+
+msgid "funding_direction"
+msgstr "Orientation de financement"
+
+msgid "cud_funding_direction"
+msgstr "Orientation coopération internationale CCD/CUD"
+
+msgid "active_status"
+msgstr "Actif"
+
+msgid "partial_deliberation"
+msgstr "Sous-épreuve"
+
+msgid "admission_exam"
+msgstr "Concours"
+
+msgid "academic_type"
+msgstr "Nature"
+
+msgid "keywords"
+msgstr "Mots clés"
+
+msgid "training_type"
+msgstr "Type of training"
+
+msgid "QUADRIMESTER"
+msgstr "Quadrimestre(s)"
+
+msgid "TRIMESTER"
+msgstr "Trimestre(s)"
+
+msgid "MONTH"
+msgstr "Mois"
+
+msgid "WEEK"
+msgstr "Semaine(s)"
+
+msgid "DAY"
+msgstr "Jour(s)"
+
+msgid "administration_entity"
+msgstr "Entité d'administration"
+
+msgid "management_entity"
+msgstr "Entité académique"
+
+msgid "enrollment_enabled"
+msgstr "Inscriptible"
+
+msgid "formations"
+msgstr "Formations"
+
+msgid "formations_lnk"
+msgstr "Formations"
+
+msgid "desc_lnk_formations"
+msgstr "Organisation des formations"
