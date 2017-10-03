@@ -38,7 +38,7 @@
 <div class="page-header">
     {% if current_reviewer %}
         <h6>{% trans 'connected_as' %} {{ current_reviewer.person }} ({% trans current_reviewer.role %}) -
-            {{ current_reviewer.structure.acronym }}</h6>
+            {{ entity.acronym }}</h6>
     {% endif %}
     <h3>{% trans 'assistant_mandates_renewals' %} {{ year|add:1 }}</h3>
     {% if is_reviewer %}

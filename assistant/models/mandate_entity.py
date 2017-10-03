@@ -24,39 +24,38 @@
 #
 ##############################################################################
 from django.db import models
+from base.models import entity_version
 
-
-class MandateStructure(models.Model):
+class MandateEntity(models.Model):
     assistant_mandate = models.ForeignKey('AssistantMandate')
-    structure = models.ForeignKey('base.Structure')
+    entity = models.ForeignKey('base.Entity')
 
     @property
     def name(self):
         return self.__str__()
 
     def __str__(self):
-        return u"%s - %s" % (self.assistant_mandate.assistant, self.structure.acronym)
+        version = entity_version.get_by_entity_and_date(self.entity, self.assistant_mandate.academic_year.start_date)
+        if version is None:
+            version = entity_version.get_last_version(self.entity)
+        return u"%s - %s" % (self.assistant_mandate.assistant, version[0].acronym)
 
 
 def find_by_mandate(mandate):
-    return MandateStructure.objects.filter(assistant_mandate=mandate)
+    return MandateEntity.objects.filter(assistant_mandate=mandate)
 
 
-def find_by_mandate_and_structure(mandate, structure):
-    return MandateStructure.objects.filter(assistant_mandate=mandate, structure=structure)
+def find_by_mandate_and_entity(mandate, entity):
+    return MandateEntity.objects.filter(assistant_mandate=mandate, entity=entity)
 
 
 def find_by_mandate_and_type(mandate, type):
-    return MandateStructure.objects.filter(assistant_mandate=mandate, structure__type=type)
+    return MandateEntity.objects.filter(assistant_mandate=mandate, entity__entityversion__entity_type=type)
 
 
-def find_by_mandate_and_part_of_type(mandate, type):
-    return MandateStructure.objects.filter(assistant_mandate=mandate, structure__part_of__type=type)
+def find_by_mandate_and_part_of_entity(mandate, entity):
+    return MandateEntity.objects.filter(assistant_mandate=mandate, entity__entityversion__parent=entity)
 
 
-def find_by_mandate_and_part_of_struct(mandate, struct):
-    return MandateStructure.objects.filter(assistant_mandate=mandate, structure__part_of=struct)
-
-
-def find_by_structure(structure):
-    return MandateStructure.objects.filter(structure=structure)
+def find_by_entity(entity):
+    return MandateEntity.objects.filter(entity=entity)

@@ -488,5 +488,125 @@
       "hourly_volume_partial": null,
       "deleted": false
     }
+  },
+  {
+    "model": "base.learningcomponentyear",
+    "pk": 36,
+    "fields": {
+      "external_id": "osis.learning_component_year_32082_207028_PRACTICAL_EXERCISES_2017",
+      "learning_container_year": 23,
+      "title": null,
+      "acronym": "TP4",
+      "type": "PRACTICAL_EXERCISES",
+      "comment": null,
+      "planned_classes": 1,
+      "hourly_volume_partial": null,
+      "deleted": true
+    }
+  },
+  {
+    "model": "base.learningcomponentyear",
+    "pk": 37,
+    "fields": {
+      "external_id": "osis.learning_component_year_32082_207028_LECTURING_2017",
+      "learning_container_year": 23,
+      "title": null,
+      "acronym": "CM4",
+      "type": "LECTURING",
+      "comment": null,
+      "planned_classes": 1,
+      "hourly_volume_partial": null,
+      "deleted": false
+    }
+  },
+  {
+    "model": "base.learningcomponentyear",
+    "pk": 38,
+    "fields": {
+      "external_id": "osis.learning_component_year_32082_41641_PRACTICAL_EXERCISES_2017",
+      "learning_container_year": 23,
+      "title": null,
+      "acronym": "TP3",
+      "type": "PRACTICAL_EXERCISES",
+      "comment": null,
+      "planned_classes": 1,
+      "hourly_volume_partial": null,
+      "deleted": false
+    }
+  },
+  {
+    "model": "base.learningcomponentyear",
+    "pk": 39,
+    "fields": {
+      "external_id": "osis.learning_component_year_32082_41641_LECTURING_2017",
+      "learning_container_year": 23,
+      "title": null,
+      "acronym": "CM3",
+      "type": "LECTURING",
+      "comment": null,
+      "planned_classes": 1,
+      "hourly_volume_partial": null,
+      "deleted": false
+    }
+  },
+  {
+    "model": "base.learningcomponentyear",
+    "pk": 40,
+    "fields": {
+      "external_id": "osis.learning_component_year_32082_41637_PRACTICAL_EXERCISES_2017",
+      "learning_container_year": 23,
+      "title": null,
+      "acronym": "TP2",
+      "type": "PRACTICAL_EXERCISES",
+      "comment": null,
+      "planned_classes": null,
+      "hourly_volume_partial": null,
+      "deleted": true
+    }
+  },
+  {
+    "model": "base.learningcomponentyear",
+    "pk": 41,
+    "fields": {
+      "external_id": "osis.learning_component_year_32082_41637_LECTURING_2017",
+      "learning_container_year": 23,
+      "title": null,
+      "acronym": "CM2",
+      "type": "LECTURING",
+      "comment": null,
+      "planned_classes": 1,
+      "hourly_volume_partial": null,
+      "deleted": false
+    }
+  },
+  {
+    "model": "base.learningcomponentyear",
+    "pk": 42,
+    "fields": {
+      "external_id": "osis.learning_component_year_32082_32082_PRACTICAL_EXERCISES_2017",
+      "learning_container_year": 23,
+      "title": null,
+      "acronym": "TP",
+      "type": "PRACTICAL_EXERCISES",
+      "comment": null,
+      "planned_classes": 1,
+      "hourly_volume_partial": null,
+      "deleted": false
+    }
+  },
+  {
+    "model": "base.learningcomponentyear",
+    "pk": 43,
+    "fields": {
+      "external_id": "osis.learning_component_year_32082_32082_LECTURING_2017",
+      "learning_container_year": 23,
+      "title": null,
+      "acronym": "CM",
+      "type": "LECTURING",
+      "comment": null,
+      "planned_classes": 1,
+      "hourly_volume_partial": null,
+      "deleted": false
+    }
   }
 ]

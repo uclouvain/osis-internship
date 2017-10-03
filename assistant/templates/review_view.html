@@ -42,7 +42,7 @@
 {% endblock %}
 {% block content %}
 <div class="page-header">
-    <h6>{% trans 'connected_as' %} {{ current_reviewer.person }} ({% trans current_reviewer.role %}) - {{ current_reviewer.structure.acronym }}</h6>
+    <h6>{% trans 'connected_as' %} {{ current_reviewer.person }} ({% trans current_reviewer.role %}) - {{ entity.acronym }}</h6>
     <h3>{% trans 'assistant_mandates_renewals' %} ({{ year }})</h3>
     <h4>{{ assistant.person }}</h4>
     <ul class="nav nav-tabs">

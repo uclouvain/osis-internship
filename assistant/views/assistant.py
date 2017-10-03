@@ -27,15 +27,17 @@ from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.urlresolvers import reverse
 from django.forms import forms
-from base.models import person, academic_year
-from base.models.enums import structure_type
+
+import base.models.entity
+from base.models import person, academic_year, entity_version
+from base.models.enums import entity_type
 from django.core.exceptions import ObjectDoesNotExist
 from assistant.models import academic_assistant, assistant_mandate, assistant_document_file
 from django.views.generic.list import ListView
 from django.views.generic.edit import FormMixin
 from django.http.response import HttpResponseRedirect
 from assistant.models import tutoring_learning_unit_year
-from assistant.models import settings, mandate_structure, reviewer
+from assistant.models import settings, reviewer, mandate_entity
 from assistant.models.enums import document_type, assistant_mandate_state, reviewer_role
 from assistant.utils.send_email import send_message
 
@@ -62,6 +64,9 @@ class AssistantMandatesListView(LoginRequiredMixin, UserPassesTestMixin, ListVie
         context = super(AssistantMandatesListView, self).get_context_data(**kwargs)
         context['assistant'] = academic_assistant.find_by_person(person.find_by_user(self.request.user))
         context['can_see_file'] = settings.assistants_can_see_file()
+        for mandate in context['object_list']:
+            entities_id = mandate.mandateentity_set.all().order_by('id').values_list('entity', flat=True)
+            mandate.entities = base.models.entity.find_versions_from_entites(entities_id, mandate.academic_year.start_date)
         return context
 
 
@@ -83,10 +88,10 @@ def mandate_change_state(request):
         mandate.state = assistant_mandate_state.TRTS
     elif 'bt_mandate_decline' in request.POST:
         mandate.state = assistant_mandate_state.DECLINED
-        faculty = mandate_structure.find_by_mandate_and_type(mandate, structure_type.FACULTY)
+        faculty = mandate_entity.find_by_mandate_and_type(mandate, entity_type.FACULTY)
         if faculty:
-            faculty_dean = reviewer.find_by_structure_and_role(faculty.first().
-                                                               structure, reviewer_role.SUPERVISION).first()
+            faculty_dean = reviewer.find_by_entity_and_role(
+                faculty.first().structure, reviewer_role.SUPERVISION).first()
             assistant = academic_assistant.find_by_person(person.find_by_user(request.user))
             html_template_ref = 'assistant_dean_assistant_decline_html'
             txt_template_ref = 'assistant_dean_assistant_decline_txt'

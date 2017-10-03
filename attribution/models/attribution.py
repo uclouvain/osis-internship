@@ -24,9 +24,13 @@
 #
 ##############################################################################
 from django.db import models
+from django.db.models import F
+from django.db.models import Prefetch
 from django.db.models import Q
 from attribution.models.enums import function
-from base.models.academic_year import current_academic_years
+from base.models import entity_container_year
+from base.models.academic_year import current_academic_year
+from base.models.enums import entity_container_year_link_type
 from base.models.learning_unit_year import LearningUnitYear
 from base.models.person import Person
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
@@ -108,12 +112,6 @@ def find_all_tutors_by_learning_unit_year(a_learning_unit_year):
     return [[attribution.tutor, attribution.score_responsible] for attribution in result]
 
 
-def find_attribution_distinct(structure):
-    attribution = Attribution.objects.filter(learning_unit_year__structure=structure) \
-        .distinct("learning_unit_year__structure__acronym")
-    return attribution
-
-
 def find_responsible(a_learning_unit_year):
     tutors_list = find_all_responsibles_by_learning_unit_year(a_learning_unit_year)
     if tutors_list:
@@ -129,15 +127,14 @@ def find_tutor(a_learning_unit_year):
 
 
 def is_score_responsible(user, learning_unit_year):
-    attributions = Attribution.objects.filter(learning_unit_year=learning_unit_year) \
-        .filter(score_responsible=True) \
-        .filter(tutor__person__user=user) \
-        .count()
-    return attributions > 0
+    return Attribution.objects.filter(learning_unit_year=learning_unit_year,
+                                      score_responsible=True,
+                                      tutor__person__user=user)\
+                              .count() > 0
 
 
-def search_scores_responsible(learning_unit_title, course_code, structures, tutor, responsible):
-    queryset = Attribution.objects.filter(learning_unit_year__academic_year=current_academic_years())
+def search_scores_responsible(learning_unit_title, course_code, entities, tutor, responsible):
+    queryset = Attribution.objects.filter(learning_unit_year__academic_year=current_academic_year())
     if learning_unit_title:
         queryset = queryset.filter(learning_unit_year__title__icontains=learning_unit_title)
     if course_code:
@@ -162,18 +159,30 @@ def search_scores_responsible(learning_unit_title, course_code, structures, tuto
                 .filter(score_responsible=True, tutor__person__in=Person.objects
                         .filter(Q(first_name__icontains=responsible) |
                                 Q(last_name__icontains=responsible)))
-    if structures:
-        entities_list = [structure.acronym for structure in structures]
-        queryset = queryset \
-            .filter(learning_unit_year__structure__acronym__in=entities_list)
-    return queryset.distinct("learning_unit_year")
+    if entities:
+        entities_ids = [entity.id for entity in entities]
+        l_container_year_ids = entity_container_year.search(link_type=entity_container_year_link_type.ALLOCATION_ENTITY,
+                                                            entity_id=entities_ids)\
+                                                    .values_list('learning_container_year_id', flat=True)
+        queryset = queryset.filter(learning_unit_year__learning_container_year__id__in=l_container_year_ids)
+
+    # Prefetch entity version
+    queryset = queryset.prefetch_related(
+        Prefetch('learning_unit_year__learning_container_year__entitycontaineryear_set',
+                 queryset=entity_container_year.search(link_type=entity_container_year_link_type.ALLOCATION_ENTITY)
+                 .prefetch_related(
+                     Prefetch('entity__entityversion_set', to_attr='entity_versions')
+                 ), to_attr='entities_containers_year')
+    )
+    return queryset.select_related('learning_unit_year')\
+                   .distinct("learning_unit_year")
 
 
 def find_all_responsible_by_learning_unit_year(learning_unit_year):
     all_tutors = Attribution.objects.filter(learning_unit_year=learning_unit_year) \
         .distinct("tutor").values_list('id', flat=True)
-    result = Attribution.objects.filter(id__in=all_tutors).order_by("tutor__person")
-    return result
+    return Attribution.objects.filter(id__in=all_tutors).prefetch_related('tutor')\
+                              .order_by("tutor__person")
 
 
 def find_by_tutor(tutor):
@@ -184,12 +193,10 @@ def find_by_tutor(tutor):
 
 
 def clear_responsible_by_learning_unit_year(learning_unit_year):
-    attributions = Attribution.objects.filter(learning_unit_year=learning_unit_year,
-                                              score_responsible=True,
-                                              learning_unit_year__academic_year=current_academic_years())
-    for attribution in attributions:
-        attribution.score_responsible = False
-        attribution.save()
+    Attribution.objects.filter(learning_unit_year=learning_unit_year,
+                               score_responsible=True,
+                               learning_unit_year__academic_year=current_academic_year())\
+                       .update(score_responsible=False)
 
 
 def find_by_id(attribution_id):

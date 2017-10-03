@@ -40,7 +40,7 @@ class LearningContainer(models.Model):
     start_year = models.IntegerField(null=True)
 
     def __str__(self):
-        return u"%s" % self.external_id
+        return u"%s" % (self.external_id)
 
 
 def find_by_id(learning_container_id):

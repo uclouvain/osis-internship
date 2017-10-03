@@ -299,5 +299,72 @@
       "subtype": "FULL",
       "status": true
     }
+  },
+  {
+    "model": "base.learningunityear",
+    "pk": 24,
+    "fields": {
+      "acronym": "LDROI1222",
+      "title": "Communication des savoirs scientifiques",
+      "credits": "4.00",
+      "decimal_scores": false,
+      "academic_year": 3,
+      "learning_unit": 15,
+      "learning_container_year": 23,
+      "subtype": "FULL",
+      "status": true
+    }
+  },
+  {
+    "model": "base.learningunityear",
+    "pk": 25,
+    "fields": {
+      "acronym": "LDROI1001",
+      "title": "Introduction au droit - Partie II",
+      "title_english": "Introduction to Law: Part II",
+      "credits": "7.00",
+      "decimal_scores": false,
+      "academic_year": 3,
+      "learning_unit": 16,
+      "learning_container_year": 24,
+      "subtype": "FULL",
+      "status": true,
+      "structure": 16
+    }
+  },
+  {
+    "model": "base.learningunityear",
+    "pk": 26,
+    "fields": {
+      "acronym": "LDROI1006",
+      "title": "Philosophie et anthropologie philosophique",
+      "title_english": "Philosophy and Philosophical Anthropology",
+      "credits": "6.00",
+      "decimal_scores": false,
+      "academic_year": 3,
+      "learning_unit": 17,
+      "learning_container_year": 24,
+      "subtype": "FULL",
+      "status": true,
+      "structure": 15
+    }
+  },
+  {
+    "model": "base.learningunityear",
+    "pk": 27,
+    "fields": {
+      "acronym": "LDROI1006L",
+      "title": "Philosophie et anthropologie philosophique",
+      "title_english": null,
+      "credits": "6.00",
+      "decimal_scores": false,
+      "academic_year": 3,
+      "learning_unit": 18,
+      "learning_container_year": 25,
+      "subtype": "PARTIM",
+      "status": true,
+      "structure": 16
+    }
   }
+
 ]
