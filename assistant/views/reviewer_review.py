@@ -35,8 +35,8 @@ from base.models import person, entity_version
 from base.models.enums import entity_type
 from assistant.forms import ReviewForm
 from assistant.models import assistant_mandate, review, mandate_entity, tutoring_learning_unit_year
-from assistant.models import reviewer, settings
-from assistant.models.enums import review_status, assistant_mandate_state, reviewer_role
+from assistant.models import reviewer, settings, assistant_document_file
+from assistant.models.enums import review_status, assistant_mandate_state, reviewer_role, document_type
 
 
 def user_is_reviewer_and_procedure_is_open(user):
@@ -185,6 +185,12 @@ def pst_form_view(request):
     current_role = current_reviewer.role
     entity = entity_version.get_last_version(current_reviewer.entity)
     learning_units = tutoring_learning_unit_year.find_by_mandate(mandate)
+    phd_files = assistant_document_file.find_by_assistant_mandate_and_description(mandate,
+                                                                                  document_type.PHD_DOCUMENT)
+    research_files = assistant_document_file.find_by_assistant_mandate_and_description(mandate,
+                                                                                       document_type.RESEARCH_DOCUMENT)
+    tutoring_files = assistant_document_file.find_by_assistant_mandate_and_description(mandate,
+                                                                                       document_type.TUTORING_DOCUMENT)
     assistant = mandate.assistant
     menu = generate_reviewer_menu_tabs(current_role, mandate, None)
     return render(request, 'pst_form_view.html', {'menu': menu,
@@ -193,6 +199,9 @@ def pst_form_view(request):
                                                   'assistant': assistant, 'mandate': mandate,
                                                   'learning_units': learning_units,
                                                   'entity': entity,
+                                                  'phd_files': phd_files,
+                                                  'research_files': research_files,
+                                                  'tutoring_files': tutoring_files,
                                                   'current_reviewer': current_reviewer,
                                                   'role': current_role,
                                                   'year': mandate.academic_year.year + 1})
