@@ -41,9 +41,9 @@ from base.models import entity_version as mdl_entity_version
 
 MIN_ACRONYM_LENGTH = 3
 
+MAX_RECORDS = 1000
 SERVICE_COURSE = 'SERVICE_COURSE'
 PARENT_FACULTY = 'PARENT_FACULTY'
-
 
 class LearningUnitYearForm(forms.Form):
     academic_year_id = forms.CharField(max_length=10, required=False)
@@ -96,11 +96,12 @@ class LearningUnitYearForm(forms.Form):
                                                  Prefetch('entity__entityversion_set', to_attr='entity_versions')
                                              ),
                                              to_attr='entity_containers_year')
+
         clean_data['learning_container_year_id'] = _get_filter_learning_container_ids(clean_data)
         learning_units = mdl.learning_unit_year.search(**clean_data) \
             .select_related('academic_year', 'learning_container_year') \
             .prefetch_related(entity_container_prefetch) \
-            .order_by('academic_year__year', 'acronym')
+            .order_by('academic_year__year', 'acronym')[:MAX_RECORDS + 1]
         list_results = [_append_latest_entities(learning_unit) for learning_unit in learning_units]
 
         return list_results
@@ -310,7 +311,7 @@ class CreateLearningUnitYearForm(forms.ModelForm):
                                                            'required': False}),
                    'session': forms.Select(attrs={'class': 'form-control',
                                                   'id': 'session',
-                                                  'required': True}),
+                                                  'required': False}),
                    'subtype': forms.HiddenInput()
                    }
 

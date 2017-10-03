@@ -34,7 +34,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test, permission_required
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse, reverse_lazy
-from django.db import connection
+from django.db import connection, close_old_connections
 from django.db.utils import OperationalError as DjangoOperationalError, InterfaceError as DjangoInterfaceError
 from django.http import HttpResponseRedirect
 from django.utils.translation import ugettext_lazy as _
@@ -48,7 +48,6 @@ from base import models as mdl
 from base.utils import send_mail
 from base.views import layout
 from osis_common.document import paper_sheet
-from osis_common.models.queue_exception import QueueException
 from osis_common.queue.queue_sender import send_message
 
 logger = logging.getLogger(settings.DEFAULT_LOGGER)
@@ -624,19 +623,20 @@ def get_json_data_scores_sheets(tutor_global_id):
                                                                                  academic_year=academic_yr))
             return score_encoding_sheet.scores_sheet_data(exam_enrollments, tutor=tutor)
         else:
+
             return {}
     except (PsycopOperationalError, PsycopInterfaceError, DjangoOperationalError, DjangoInterfaceError):
         queue_exception_logger.error('Postgres Error during get_json_data_scores_sheets on global_id {} => retried'.format(tutor_global_id))
         trace = traceback.format_exc()
         queue_exception_logger.error(trace)
-        connection.close()
-        time.sleep(1)
         return get_json_data_scores_sheets(tutor_global_id)
     except Exception:
         logger.warning('(Not PostgresError) during get_json_data_scores_sheets on global_id {}'.format(tutor_global_id))
         trace = traceback.format_exc()
         logger.error(trace)
         return {}
+    finally:
+        close_old_connections()
 
 
 def send_json_scores_sheets_to_response_queue(global_id):

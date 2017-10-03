@@ -25,35 +25,40 @@
 ##############################################################################
 from django.contrib import admin
 from django.db import models
-from django.db.models import Q
 
-from assistant.models import mandate_structure, assistant_mandate
+from base.models import entity_version
+from base.models.enums import entity_type
+from assistant.models import assistant_mandate, mandate_entity
 from assistant.models.enums import reviewer_role
-from base.models import structure
 
 
 class ReviewerAdmin(admin.ModelAdmin):
-    list_display = ('person', 'structure', 'role')
+    list_display = ('person', 'entity', 'role')
     fieldsets = (
-        (None, {'fields': ('person', 'structure', 'role')}),)
+        (None, {'fields': ('person', 'entity', 'role')}),)
     raw_id_fields = ('person', )
     search_fields = ['person__first_name', 'person__last_name',
-                     'person__global_id', 'structure__acronym']
+                     'person__global_id', 'entity__entityversion__acronym']
 
     def get_form(self, request, obj=None, **kwargs):
         form = super(ReviewerAdmin, self).get_form(request, obj, **kwargs)
-        form.base_fields['structure'].queryset = structure.Structure.objects.filter(
-            Q(type='INSTITUTE') | Q(type='FACULTY') | Q(type='SECTOR') | Q(type='POLE') | Q(type='PROGRAM_COMMISSION'))
+        form.base_fields['entity'].queryset = \
+            entity_version.search_entities(type=entity_type.INSTITUTE) | \
+            entity_version.search_entities(type=entity_type.FACULTY) | \
+            entity_version.search_entities(type=entity_type.SECTOR) | \
+            entity_version.search_entities(type=entity_type.POLE) | \
+            entity_version.search_entities(type=entity_type.SCHOOL)
         return form
 
 
 class Reviewer(models.Model):
     person = models.ForeignKey('base.Person')
     role = models.CharField(max_length=30, choices=reviewer_role.ROLE_CHOICES)
-    structure = models.ForeignKey('base.Structure', blank=True, null=True)
+    entity = models.ForeignKey('base.Entity', blank=True, null=True)
 
     def __str__(self):
-        return u"%s - %s : %s" % (self.person, self.structure, self.role)
+        version = entity_version.get_last_version(self.entity)
+        return u"%s - %s : %s" % (self.person, version.entity, self.role)
 
 
 def find_reviewers():
@@ -71,10 +76,11 @@ def find_by_person(person):
 def can_edit_review(reviewer_id, mandate_id):
     if assistant_mandate.find_mandate_by_id(mandate_id).state not in find_by_id(reviewer_id).role:
         return None
-    if not mandate_structure.find_by_mandate_and_structure(
-                                assistant_mandate.find_mandate_by_id(mandate_id), find_by_id(reviewer_id).structure):
-        if not mandate_structure.find_by_mandate_and_part_of_struct(
-                assistant_mandate.find_mandate_by_id(mandate_id), find_by_id(reviewer_id).structure):
+
+    if not mandate_entity.find_by_mandate_and_entity(assistant_mandate.find_mandate_by_id(mandate_id),
+                                                     find_by_id(reviewer_id).entity):
+        if not mandate_entity.find_by_mandate_and_part_of_entity(
+                assistant_mandate.find_mandate_by_id(mandate_id), find_by_id(reviewer_id).entity):
             return None
         else:
             return find_by_id(reviewer_id)
@@ -86,23 +92,17 @@ def find_by_role(role):
     return Reviewer.objects.filter(role=role)
 
 
-def find_by_structure_and_role(struct, role):
-    return Reviewer.objects.filter(structure=struct, role=role)
+def find_by_entity_and_role(entity, role):
+    return Reviewer.objects.filter(entity=entity, role=role)
 
 
-def can_delegate_to_structure(reviewer, struct):
-    """
-    Détermine si le reviewer passé en argmument peut déléguer son rôle pour la structure.
-    Pour pouvoir déléguer :
-    - Le reviewer doit avoir un rôle de SUPERVISION ou de RESEARCH.
-    - Il doit avoir ce rôle pour la structure passée en argument ou cette dernière doit faire partie
-    d'une structure pour laquelle le reviewer a ce rôle.
-    """
+def can_delegate_to_entity(reviewer, entity):
     if reviewer.role != reviewer_role.SUPERVISION and reviewer.role != reviewer_role.RESEARCH:
         return False
-    if struct == reviewer.structure:
+    current_version = entity_version.get_last_version(entity)
+    if entity == reviewer.entity:
         return True
-    if struct.part_of == reviewer.structure:
+    if current_version.parent == reviewer.entity:
         return True
     else:
         return False

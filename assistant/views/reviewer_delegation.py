@@ -32,12 +32,13 @@ from django.shortcuts import render, redirect
 from django.utils.translation import ugettext as _
 from django.views.generic import ListView
 
+from base.models import academic_year, person, entity, entity_version
 from assistant.forms import ReviewerDelegationForm
 from assistant.models import assistant_mandate
 from assistant.models import reviewer
 from assistant.models import settings
 from assistant.models.enums import reviewer_role
-from base.models import academic_year, structure, person
+
 
 
 class StructuresListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
@@ -61,13 +62,17 @@ class StructuresListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
                                                                        academic_year.current_academic_year())) > 0:
             self.is_supervisor = True
         rev = reviewer.find_by_person(self.request.user.person)
-        queryset = structure.Structure.objects.filter(Q(id=rev.structure.id) | Q(part_of_id=rev.structure.id))
+        main_entity_version = entity_version.get_last_version(rev.entity)
+        queryset = entity_version.EntityVersion.find_direct_children(main_entity_version, None)
+        queryset.insert(0, main_entity_version)
         return queryset
 
     def get_context_data(self, **kwargs):
         context = super(StructuresListView, self).get_context_data(**kwargs)
         context['year'] = academic_year.current_academic_year().year
         context['current_reviewer'] = reviewer.find_by_person(self.request.user.person)
+        entity = entity_version.get_last_version(context['current_reviewer'].entity)
+        context['entity'] = entity
         context['is_supervisor'] = self.is_supervisor
         return context
 
@@ -83,11 +88,12 @@ def user_is_reviewer_and_can_delegate(user):
 
 @user_passes_test(user_is_reviewer_and_can_delegate, login_url='assistants_home')
 def add_reviewer_for_structure(request):
-    structure_id = request.POST.get("structure_id")
-    related_structure = structure.find_by_id(structure_id)
+    entity_id = request.POST.get("entity_id")
+    related_entity = entity.get_by_internal_id(entity_id)
+    current_entity_version = entity_version.get_last_version(entity.get_by_internal_id(entity_id))
     year = academic_year.current_academic_year().year
     try:
-        reviewer.can_delegate_to_structure(reviewer.find_by_person(request.user.person), related_structure)
+        reviewer.can_delegate_to_entity(reviewer.find_by_person(request.user.person), related_entity)
     except:
         return redirect('assistants_home')
     if request.POST:
@@ -103,7 +109,8 @@ def add_reviewer_for_structure(request):
                     return render(request, "reviewer_add_reviewer.html", {
                         'form': form,
                         'year': year,
-                        'related_structure': related_structure,
+                        'related_entity': related_entity,
+                        'current_entity_version': current_entity_version,
                         'reviewer': reviewer.find_by_person(request.user.person)
                     })
                 except reviewer.Reviewer.DoesNotExist:
@@ -117,10 +124,13 @@ def add_reviewer_for_structure(request):
                 role = reviewer_role.SUPERVISION_ASSISTANT
             else:
                 role = reviewer_role.RESEARCH_ASSISTANT
-            form = ReviewerDelegationForm(initial={'structure': related_structure, 'year': year, 'role': role})
+            form = ReviewerDelegationForm(initial={'entity': related_entity, 'year': year, 'role': role})
+            reviewer_entity = entity_version.get_last_version(this_reviewer.entity)
             return render(request, "reviewer_add_reviewer.html", {
                 'form': form,
                 'year': year,
-                'related_structure': related_structure,
+                'related_entity': related_entity,
+                'entity': reviewer_entity,
+                'current_entity_version': current_entity_version,
                 'reviewer': reviewer.find_by_person(request.user.person)
             })

@@ -24,7 +24,6 @@
 #
 ##############################################################################
 import datetime
-import re
 from collections import OrderedDict
 from django.contrib import messages
 from django.conf import settings
@@ -57,7 +56,7 @@ from base.models.learning_unit_component import LearningUnitComponent
 from base.models.learning_unit_year import LearningUnitYear
 from cms import models as mdl_cms
 from cms.enums import entity_name
-from base.forms.learning_units import LearningUnitYearForm, CreateLearningUnitYearForm
+from base.forms.learning_units import LearningUnitYearForm, CreateLearningUnitYearForm, MAX_RECORDS
 from base.forms.learning_unit_specifications import LearningUnitSpecificationsForm, LearningUnitSpecificationsEditForm
 from base.forms.learning_unit_pedagogy import LearningUnitPedagogyForm, LearningUnitPedagogyEditForm
 from base.forms.learning_unit_component import LearningUnitComponentEditForm
@@ -69,7 +68,7 @@ from . import layout
 from django.http import JsonResponse
 
 
-UNDEFINED_VALUE = '?'
+UNDEFINED_VALUE = ''
 
 HOURLY_VOLUME_KEY = 'hourly_volume'
 TOTAL_VOLUME_KEY = 'total_volume'
@@ -77,8 +76,6 @@ VOLUME_PARTIAL_KEY = 'volume_partial'
 VOLUME_REMAINING_KEY = 'volume_remaining'
 
 VOLUME_FOR_UNKNOWN_QUADRIMESTER = -1
-
-MAX_RECORDS = 1000
 
 
 @login_required
@@ -622,7 +619,7 @@ def learning_unit_year_add(request):
         form = CreateLearningUnitYearForm(request.POST)
         if form.is_valid():
             data = form.cleaned_data
-            current_academic_year = mdl.academic_year.current_academic_year()
+            starting_academic_year = mdl.academic_year.starting_academic_year()
             academic_year = data['academic_year']
             year = academic_year.year
             status = check_status(data)
@@ -638,17 +635,12 @@ def learning_unit_year_add(request):
                 additional_entity_version_2 = mdl.entity_version.find_by_id(data['additional_entity_2'])
             new_learning_container = create_learning_container(year)
             new_learning_unit = create_learning_unit(data, new_learning_container, year)
-            if year < current_academic_year.year:
+            while year < starting_academic_year.year+6:
+                academic_year = mdl.academic_year.find_academic_year_by_year(year)
                 create_learning_unit_structure(additional_entity_version_1, additional_entity_version_2,
                                                allocation_entity_version, data, form, new_learning_container,
-                                               new_learning_unit, requirement_entity_version, status, year)
-            else:
-                while year < current_academic_year.year+6:
-                    if year > current_academic_year.year:
-                        create_learning_unit_structure(additional_entity_version_1, additional_entity_version_2,
-                                                       allocation_entity_version, data, form, new_learning_container,
-                                                       new_learning_unit, requirement_entity_version, status, year)
-                    year = year+1
+                                               new_learning_unit, requirement_entity_version, status, academic_year)
+                year = year+1
             return redirect('learning_units')
         else:
             return layout.render(request, "learning_unit/learning_unit_form.html", {'form': form})
@@ -658,9 +650,8 @@ def learning_unit_year_add(request):
 
 def create_learning_unit_structure(additional_entity_version_1, additional_entity_version_2, allocation_entity_version,
                                    data, form, new_learning_container, new_learning_unit, requirement_entity_version,
-                                   status, year):
-    an_academic_year = mdl.academic_year.find_academic_year_by_year(year)
-    new_learning_container_year = create_learning_container_year(an_academic_year, data,
+                                   status, academic_year):
+    new_learning_container_year = create_learning_container_year(academic_year, data,
                                                                  new_learning_container)
     new_requirement_entity = create_entity_container_year(requirement_entity_version,
                                                           new_learning_container_year,
@@ -674,10 +665,10 @@ def create_learning_unit_structure(additional_entity_version_1, additional_entit
         create_entity_container_year(additional_entity_version_2, new_learning_container_year,
                                      ADDITIONAL_REQUIREMENT_ENTITY_2)
     if data['learning_container_year_type'] == COURSE:
-        create_course(an_academic_year, form, new_learning_container_year, new_learning_unit,
+        create_course(academic_year, form, new_learning_container_year, new_learning_unit,
                       new_requirement_entity, status)
     else:
-        create_another_type(an_academic_year, form, new_learning_container_year, new_learning_unit,
+        create_another_type(academic_year, form, new_learning_container_year, new_learning_unit,
                             new_requirement_entity, status)
 
 
@@ -750,7 +741,7 @@ def create_learning_container_year(academic_year, data, learning_container):
     new_learning_container_year = LearningContainerYear(academic_year=academic_year,
                                                         learning_container=learning_container,
                                                         title=data['title'],
-                                                        acronym=data['acronym'],
+                                                        acronym=data['acronym'].upper(),
                                                         container_type=data['learning_container_year_type'],
                                                         language=a_language)
     new_learning_container_year.save()
@@ -766,7 +757,7 @@ def create_entity_container_year(entity_version, learning_container_year, type):
 
 
 def create_learning_unit(data, learning_container, year):
-    new_learning_unit = LearningUnit(acronym=data['acronym'], title=data['title'], start_year=year,
+    new_learning_unit = LearningUnit(acronym=data['acronym'].upper(), title=data['title'], start_year=year,
                                      periodicity=data['periodicity'], learning_container=learning_container,
                                      faculty_remark=data['faculty_remark'], other_remark=data['other_remark'])
     new_learning_unit.save()
@@ -780,7 +771,7 @@ def create_learning_unit_year(academic_year, form, learning_container_year, lear
         internship_subtype = None
     new_learning_unit_year = LearningUnitYear(academic_year=academic_year, learning_unit=learning_unit,
                                               learning_container_year=learning_container_year,
-                                              acronym=form.data['acronym'],
+                                              acronym=form.data['acronym'].upper(),
                                               title=form.data['title'],
                                               title_english=form.data['title_english'],
                                               subtype=form.data['subtype'],
