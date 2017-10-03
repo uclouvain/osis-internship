@@ -24,12 +24,13 @@
 #
 ##############################################################################
 import datetime
+
+from django.contrib import admin
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
-from django.contrib import admin
-from django.db.models import Q, F, Case, When
+from django.db.models import Q
 from django.utils import timezone
-from base.models import entity, academic_year
+
 from base.models.enums import entity_type
 from base.models.enums.organization_type import MAIN
 from osis_common.utils.datetime import get_tzinfo
@@ -148,7 +149,6 @@ class EntityVersion(models.Model):
         if self.parent:
             find_parent_faculty_version(self.parent, date)
 
-
     def _contains_given_date(self, date):
         if self.start_date and self.end_date:
             return self.start_date <= date <= self.end_date
@@ -193,20 +193,14 @@ def find_latest_version(date):
                                 .order_by('-start_date')
 
 
-def find_versions_from_entites(entities, date):
-    if date is None:
-        date = timezone.now()
-    order_list = [entity_type.SECTOR, entity_type.FACULTY, entity_type.SCHOOL, entity_type.INSTITUTE, entity_type.POLE]
-    preserved = Case(*[When(entity_type=pk, then=pos) for pos, pk in enumerate(order_list)])
-    return entity.Entity.objects.filter(pk__in=entities).\
-        filter(Q(entityversion__end_date__gte=date) | Q(entityversion__end_date__isnull=True),
-               entityversion__start_date__lte=date).\
-        annotate(acronym=F('entityversion__acronym')).annotate(title=F('entityversion__title')).\
-        annotate(entity_type=F('entityversion__entity_type')).order_by(preserved)
+def get_last_version(entity, date=None):
+    qs = EntityVersion.objects.filter(entity=entity)
 
+    if date:
+        qs = qs.filter(Q(end_date__gte=date) | Q(end_date__isnull=True),
+                       start_date__lte=date)
 
-def get_last_version(entity):
-    return EntityVersion.objects.filter(entity=entity).latest('start_date')
+    return qs.latest('start_date')
     # find_latest_version(academic_year.current_academic_year().start_date).get(entity=entity)
 
 
@@ -299,6 +293,7 @@ def find_main_entities_version():
                                  entity_type.INSTITUTE, entity_type.DOCTORAL_COMMISSION],
                 entity__organization__type=MAIN).order_by('acronym')
     return entities_version
+
 
 def find_first_latest_version_by_period(ent,start_date, end_date):
     return EntityVersion.objects.filter(Q(end_date__lte=end_date) | Q(end_date__isnull=True),

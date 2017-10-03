@@ -27,6 +27,8 @@ from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.urlresolvers import reverse
 from django.forms import forms
+
+import base.models.entity
 from base.models import person, academic_year, entity_version
 from base.models.enums import entity_type
 from django.core.exceptions import ObjectDoesNotExist
@@ -64,7 +66,7 @@ class AssistantMandatesListView(LoginRequiredMixin, UserPassesTestMixin, ListVie
         context['can_see_file'] = settings.assistants_can_see_file()
         for mandate in context['object_list']:
             entities_id = mandate.mandateentity_set.all().order_by('id').values_list('entity', flat=True)
-            mandate.entities = entity_version.find_versions_from_entites(entities_id, mandate.academic_year.start_date)
+            mandate.entities = base.models.entity.find_versions_from_entites(entities_id, mandate.academic_year.start_date)
         return context
 
 

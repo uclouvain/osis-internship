@@ -55,8 +55,7 @@ def find_entity_manager_by_user(a_user):
 
 def find_by_user(a_user):
     return EntityManager.objects.filter(person__user=a_user)\
-        .select_related('person')\
-        .select_related('structure')\
+        .select_related('person', 'structure', 'entity')\
         .order_by('structure__acronym')
 
 

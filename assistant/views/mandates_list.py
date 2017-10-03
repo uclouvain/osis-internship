@@ -28,6 +28,7 @@ from django.views.generic import ListView
 from django.views.generic.edit import FormMixin
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
+import base.models.entity
 from base.models import academic_year, entity_version
 from assistant.forms import MandatesArchivesForm
 from assistant.models import assistant_mandate
@@ -74,7 +75,7 @@ class MandatesListView(LoginRequiredMixin, UserPassesTestMixin, ListView, FormMi
             'selected_academic_year'))).start_date
         for mandate in context['object_list']:
             entities_id = mandate.mandateentity_set.all().order_by('id').values_list('entity', flat=True)
-            mandate.entities = entity_version.find_versions_from_entites(entities_id, start_date)
+            mandate.entities = base.models.entity.find_versions_from_entites(entities_id, start_date)
         return context
 
     def get_initial(self):

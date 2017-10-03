@@ -24,11 +24,12 @@
 #
 ##############################################################################
 from django.db import models
+
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
+
+from base.models import entity_container_year
 from base.models.enums import learning_unit_year_subtypes, learning_container_year_types, internship_subtypes, \
-    learning_unit_year_session, entity_type
-from base.models import entity_container_year as mdl_entity_container_year
-from base.models import entity_version as mdl_entity_version
+    learning_unit_year_session, entity_container_year_link_type
 
 
 class LearningUnitYearAdmin(SerializableModelAdmin):
@@ -90,20 +91,13 @@ class LearningUnitYear(SerializableModel):
             learning_container_year=self.learning_container_year
         ).order_by('acronym')
 
-    # @property
-    # def is_service_course(self):
-    #     return is_service_course(self)
-
-
-def check_parent(parent_entity):
-    entity_version = mdl_entity_version.get_last_version(parent_entity)
-
-    if entity_version:
-        if entity_version.entity_type == entity_type.FACULTY:
-            return entity_version.entity
-        else:
-            return check_parent(entity_version.parent)
-    return None
+    @property
+    def allocation_entity(self):
+        entity_container_yr = entity_container_year.search(
+            link_type=entity_container_year_link_type.ALLOCATION_ENTITY,
+            learning_container_year=self.learning_container_year
+        ).first()
+        return entity_container_yr.entity if entity_container_yr else None
 
 
 def find_by_id(learning_unit_year_id):
@@ -158,7 +152,3 @@ def find_gte_year_acronym(academic_yr, acronym):
 def find_lt_year_acronym(academic_yr, acronym):
     return LearningUnitYear.objects.filter(academic_year__year__lt=academic_yr.year,
                                            acronym__iexact=acronym).order_by('academic_year')
-
-
-
-
