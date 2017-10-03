@@ -36,7 +36,7 @@
 {% endblock %}
 {% block content %}
 <div class="page-header">
-    <h6>{% trans 'connected_as' %} {{ reviewer.person }} ({% trans reviewer.role %}) - {{ reviewer.structure.acronym }}</h6>
+    <h6>{% trans 'connected_as' %} {{ reviewer.person }} ({% trans reviewer.role %}) - {{ entity.acronym }}</h6>
     <h3>{% trans 'assistant_mandates_renewals' %} {{ year|add:1 }}</h3>
 
     <ul class="nav nav-tabs">
@@ -65,7 +65,7 @@
         <thead>
         <tr>
         <th>{% trans 'assistant_title' %}</th>
-        <th>{% trans 'structures' %}</th>
+        <th>{% trans 'entities' %}</th>
         <th>{% trans 'assistant_type' %}</th>
         <th>{% trans 'renewal_type' %}</th>
         <th>{% trans 'contract_duration' %}</th>
@@ -82,8 +82,10 @@
             <td>{{ mandate.assistant.person }}</td>
             <td>
                 <ul>
-                    {% for struct in mandate.mandatestructure_set.all|dictsort:"id" %}
-                        <li>{% trans struct.structure.type %} : {{ struct.structure.acronym }}</li>
+                    {% for entity in mandate.entities %}
+                        <li>
+                        {% trans entity.entity_type %} : {{ entity.acronym }}
+                        </li>
                     {% endfor %}
                 </ul>
             </td>

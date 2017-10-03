@@ -1896,7 +1896,6 @@ msgstr "Autre"
 msgid "new_learning_unit"
 msgstr "Nouvelle unité d'enseignement"
 
-
 msgid "previous"
 msgstr "Précédent"
 
@@ -2100,3 +2099,11 @@ msgstr "Formations"
 
 msgid "desc_lnk_formations"
 msgstr "Organisation des formations"
+
+msgid "activity_search"
+msgstr "Recherche - Activité"
+
+msgid "service_course_search"
+msgstr "Recherche - Cours de service"
+
+

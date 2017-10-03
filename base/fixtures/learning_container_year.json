@@ -348,5 +348,66 @@
       "language": null,
       "campus": 7
     }
+  },
+  {
+    "model": "base.learningcontaineryear",
+    "pk": 23,
+    "fields": {
+      "external_id": "osis.learning_container_year_32082_LDROI_1222_2017",
+      "academic_year": 3,
+      "learning_container": 24,
+      "container_type": "COURSE",
+      "title": "Droit constitutionnel",
+      "title_english": "Constitutional Law",
+      "acronym": "LDROI1222",
+      "changed": null,
+      "language": 3,
+      "campus": 3
+    }
+  },
+  {
+    "model": "base.learningcontaineryear",
+    "pk": 24,
+    "fields": {
+      "academic_year": 3,
+      "learning_container": 24,
+      "container_type": "COURSE",
+      "title": "Introduction au droit - Partie I",
+      "title_english": "Introduction to Law - Part I",
+      "acronym": "LDROI1001",
+      "changed": null,
+      "language": null,
+      "campus": 7
+    }
+  },
+  {
+    "model": "base.learningcontaineryear",
+    "pk": 25,
+    "fields": {
+      "academic_year": 3,
+      "learning_container": 25,
+      "container_type": "COURSE",
+      "title": "Philosophie et anthropologie philosophique",
+      "title_english": "Philosophy and Philosophical Anthropology",
+      "acronym": "LDROI1006",
+      "changed": null,
+      "language": null,
+      "campus": 7
+    }
+  },
+  {
+    "model": "base.learningcontaineryear",
+    "pk": 26,
+    "fields": {
+      "academic_year": 3,
+      "learning_container": 26,
+      "container_type": "PARTIM",
+      "title": "Philosophie et anthropologie philosophique",
+      "title_english": null,
+      "acronym": "LDROI1006L",
+      "changed": null,
+      "language": null,
+      "campus": 7
+    }
   }
 ]

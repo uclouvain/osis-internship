@@ -84,7 +84,7 @@
             </div>
             {{ formset.management_form }}
             <div class="form-group">
-                <label for="txt_structures">{% trans 'structures' %}</label>
+                <label for="txt_structures">{% trans 'entities' %}</label>
                 {% for form in formset %}
                     {% for field in form %}
                         {% if field.name == "DELETE" %}

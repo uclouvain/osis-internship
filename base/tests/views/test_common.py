@@ -27,10 +27,6 @@ from django.test import TestCase
 from django.core.urlresolvers import reverse
 from django.test.utils import override_settings
 from django.contrib.auth.models import User, Permission
-from git import Repo
-from git.exc import GitError
-from base.views.common import get_current_version
-from unittest.mock import patch, MagicMock
 
 
 class ErrorViewTestCase(TestCase):
@@ -45,24 +41,4 @@ class ErrorViewTestCase(TestCase):
         response = self.client.get(reverse('academic_calendar_read', args=[46898]), follow=True)
         self.assertEqual(response.status_code, 404)
 
-    def test_get_current_version(self):
-        repo = Repo('.')
-        heads = repo.heads
-        release_tag = get_current_version()
-        if hasattr(heads, 'master'):
-            self.assertIsNot(release_tag, None)
-        else:
-            self.assertIs(release_tag, None)
-
-    @patch("git.Repo", side_effect=GitError)
-    def test_get_current_version_with_exception_raised(self, mock_repo):
-        self.assertEqual(get_current_version(), None)
-        self.assertTrue(mock_repo.called)
-
-    @patch("git.Repo")
-    def test_get_current_version_with_empty_result(self, mock_repo):
-        mock_repo.tags = MagicMock(return_value=[])
-        mock_repo.heads = MagicMock(return_value=[])
-        self.assertEqual(get_current_version(), None)
-        self.assertTrue(mock_repo.called)
 
