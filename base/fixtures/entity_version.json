@@ -85,7 +85,7 @@
       "title": "Faculté de droit et de criminologie",
       "acronym": "DRT",
       "entity_type": "FACULTY",
-      "parent": 7,
+      "parent": 12,
       "start_date": "2010-01-01",
       "end_date": null
     }
@@ -98,7 +98,7 @@
       "title": "Commission d'enseignement pour le droit",
       "acronym": "BUDR",
       "entity_type": "SCHOOL",
-      "parent": 7,
+      "parent": 8,
       "start_date": "2010-01-01",
       "end_date": null
     }
@@ -111,7 +111,7 @@
       "title": "Faculté de pharmacie et des sciences biomédicales",
       "acronym": "FASB",
       "entity_type": "FACULTY",
-      "parent": 7,
+      "parent": 13,
       "start_date": "2010-01-01",
       "end_date": null
     }
@@ -121,11 +121,167 @@
     "pk": 10,
     "fields": {
       "entity": 10,
-      "title": "Ecole de pharmacie ",
+      "title": "Ecole de pharmacie",
       "acronym": "FARM",
       "entity_type": "SCHOOL",
       "parent": 9,
       "start_date": "2010-01-01",
+      "end_date": null
+    }
+  },
+  {
+    "model": "base.entityversion",
+    "pk": 11,
+    "fields": {
+      "entity": 11,
+      "title": "Secteur UCL",
+      "acronym": "UCL",
+      "entity_type": null,
+      "parent": null,
+      "start_date": "2010-01-01",
+      "end_date": null
+    }
+  },
+  {
+    "model": "base.entityversion",
+    "pk": 12,
+    "fields": {
+      "entity": 12,
+      "title": "Secteur des sciences humaines",
+      "acronym": "SSH",
+      "entity_type": "SECTOR",
+      "parent": 11,
+      "start_date": "2010-01-01",
+      "end_date": null
+    }
+  },
+  {
+    "model": "base.entityversion",
+    "pk": 13,
+    "fields": {
+      "entity": 13,
+      "title": "Secteur des sciences de la santé",
+      "acronym": "SSS",
+      "entity_type": "SECTOR",
+      "parent": 11,
+      "start_date": "2010-01-01",
+      "end_date": null
+    }
+  },
+  {
+    "model": "base.entityversion",
+    "pk": 14,
+    "fields": {
+      "entity": 14,
+      "title": "Ecole de philosophie",
+      "acronym": "EFIL",
+      "entity_type": "SCHOOL",
+      "parent": 15,
+      "start_date": "2010-01-01",
+      "end_date": null
+    }
+  },
+  {
+    "model": "base.entityversion",
+    "pk": 15,
+    "fields": {
+      "entity": 15,
+      "title": "Faculté de philosophie, arts et lettres",
+      "acronym": "FIAL",
+      "entity_type": "FACULTY",
+      "parent": 12,
+      "start_date": "2010-01-01",
+      "end_date": null
+    }
+  },
+  {
+    "model": "base.entityversion",
+    "pk": 16,
+    "fields": {
+      "entity": 15,
+      "title": "Faculté de médecine et médecine dentaire",
+      "acronym": "MEDE",
+      "entity_type": "FACULTY",
+      "parent": 13,
+      "start_date": "2010-01-01",
+      "end_date": null
+    }
+  },
+  {
+    "model": "base.entityversion",
+    "pk": 17,
+    "fields": {
+      "entity": 17,
+      "title": "Faculté de santé publique",
+      "acronym": "FSP",
+      "entity_type": "FACULTY",
+      "parent": 13,
+      "start_date": "2010-01-01",
+      "end_date": null
+    }
+  },
+  {
+    "model": "base.entityversion",
+    "pk": 18,
+    "fields": {
+      "entity": 18,
+      "title": "Faculté de psychologie et des sciences de l'éducation",
+      "acronym": "PSP",
+      "entity_type": "FACULTY",
+      "parent": 12,
+      "start_date": "2010-01-01",
+      "end_date": null
+    }
+  },
+  {
+    "model": "base.entityversion",
+    "pk": 19,
+    "fields": {
+      "entity": 19,
+      "title": "Faculté de théologie",
+      "acronym": "TECO",
+      "entity_type": "FACULTY",
+      "parent": 12,
+      "start_date": "2010-01-01",
+      "end_date": null
+    }
+  },
+  {
+    "model": "base.entityversion",
+    "pk": 20,
+    "fields": {
+      "entity": 20,
+      "title": "Faculté des sciences économiques, sociales, politiques et de communication",
+      "acronym": "ESPO",
+      "entity_type": "FACULTY",
+      "parent": 12,
+      "start_date": "2010-01-01",
+      "end_date": null
+    }
+  },
+  {
+    "model": "base.entityversion",
+    "pk": 21,
+    "fields": {
+      "entity": 21,
+      "title": "Administration de l'enseignement et de la formation",
+      "acronym": "ADEF",
+      "entity_type": "LOGISTICS_ENTITY",
+      "parent": null,
+      "start_date": "2010-01-01",
+      "end_date": "2017-03-20"
+    }
+  },
+  {
+    "model": "base.entityversion",
+    "pk": 22,
+    "fields": {
+      "entity": 21,
+      "title": "Administration de l'enseignement et de la formation",
+      "acronym": "ADEF",
+      "entity_type": "LOGISTICS_ENTITY",
+      "parent": null,
+      "start_date": "2017-03-21",
       "end_date": null
     }
   }

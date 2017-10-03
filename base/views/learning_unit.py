@@ -81,28 +81,7 @@ VOLUME_FOR_UNKNOWN_QUADRIMESTER = -1
 @login_required
 @permission_required('base.can_access_learningunit', raise_exception=True)
 def learning_units(request):
-    if request.GET.get('academic_year_id'):
-        form = LearningUnitYearForm(request.GET)
-    else:
-        form = LearningUnitYearForm()
-    found_learning_units = None
-    if form.is_valid():
-        found_learning_units = form.get_learning_units()
-        if not _check_if_display_message(request, found_learning_units):
-            found_learning_units = None
-
-    context = _get_common_context_list_learning_unit_years()
-
-    context.update({
-        'form': form,
-        'academic_years': mdl.academic_year.find_academic_years(),
-        'container_types': learning_container_year_types.LEARNING_CONTAINER_YEAR_TYPES,
-        'types': learning_unit_year_subtypes.LEARNING_UNIT_YEAR_SUBTYPES,
-        'learning_units': found_learning_units,
-        'current_academic_year': mdl.academic_year.current_academic_year(),
-        'experimental_phase': True
-    })
-    return layout.render(request, "learning_units.html", context)
+    return learning_units_search(request, 1)
 
 
 @login_required
@@ -828,3 +807,42 @@ def check_acronym(request):
                          'existing_acronym': existing_acronym,
                          'existed_acronym': existed_acronym,
                          'last_using': last_using}, safe=False)
+
+
+@login_required
+@permission_required('base.can_access_learningunit', raise_exception=True)
+def learning_units_activity(request):
+    return learning_units_search(request, 1)
+
+
+@login_required
+@permission_required('base.can_access_learningunit', raise_exception=True)
+def learning_units_service_course(request):
+    return learning_units_search(request, 2)
+
+def learning_units_search(request, search_type):
+    if request.GET.get('academic_year_id'):
+        form = LearningUnitYearForm(request.GET)
+    else:
+        form = LearningUnitYearForm()
+    found_learning_units = None
+    if form.is_valid():
+        if search_type == 1:
+            found_learning_units = form.get_activity_learning_units()
+        else:
+            if search_type == 2:
+                found_learning_units = form.get_service_course_learning_units()
+        _check_if_display_message(request, found_learning_units)
+
+    context = _get_common_context_list_learning_unit_years()
+    context.update({
+        'form': form,
+        'academic_years': mdl.academic_year.find_academic_years(),
+        'container_types': learning_container_year_types.LEARNING_CONTAINER_YEAR_TYPES,
+        'types': learning_unit_year_subtypes.LEARNING_UNIT_YEAR_SUBTYPES,
+        'learning_units': found_learning_units,
+        'current_academic_year': mdl.academic_year.current_academic_year(),
+        'experimental_phase': True,
+        'search_type': search_type
+    })
+    return layout.render(request, "learning_units.html", context)

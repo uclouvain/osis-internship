@@ -2003,6 +2003,7 @@ msgstr "Associated entity"
 
 msgid "LU_WARNING_INVALID_ACRONYM"
 msgstr "The acronym, if it is entered, must at least count 3 characters"
+
 msgid "title_in_french"
 msgstr "Title in French"
 
@@ -2092,3 +2093,11 @@ msgstr "Formations"
 
 msgid "desc_lnk_formations"
 msgstr "Organization of formations"
+
+msgid "activity_search"
+msgstr "Activity - Search"
+
+msgid "service_course_search"
+msgstr "Service cours - Search"
+
+

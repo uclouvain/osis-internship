@@ -141,6 +141,14 @@ class EntityVersion(models.Model):
         else:
             return None
 
+    def get_parent_faculty_version(self, date=None):
+        if date is None:
+            date = timezone.now().date()
+
+        if self.parent:
+            find_parent_faculty_version(self.parent, date)
+
+
     def _contains_given_date(self, date):
         if self.start_date and self.end_date:
             return self.start_date <= date <= self.end_date
@@ -292,3 +300,30 @@ def find_main_entities_version():
                 entity__organization__type=MAIN).order_by('acronym')
     return entities_version
 
+def find_first_latest_version_by_period(ent,start_date, end_date):
+    return EntityVersion.objects.filter(Q(end_date__lte=end_date) | Q(end_date__isnull=True),
+                                        start_date__gte=start_date, entity=ent) \
+        .order_by('-start_date').first()
+
+
+def find_parent_faculty_version(child_entity_ver, academic_yr):
+    if child_entity_ver:
+        if child_entity_ver.parent is None:
+            return None
+        else:
+            entity_parent_version = find_latest_version_by_entity(child_entity_ver.parent,
+                                                                  academic_yr.start_date)
+            if entity_parent_version is None:
+                return None
+            else:
+                if entity_parent_version.entity_type == entity_type.FACULTY:
+                    return entity_parent_version
+                else:
+                    return find_parent_faculty_version(entity_parent_version, academic_yr)
+    return None
+
+
+def find_latest_version_by_entity(ent,date):
+    return EntityVersion.objects.filter(Q(end_date__gte=date) | Q(end_date__isnull=True),
+                                        start_date__lte=date, entity=ent) \
+        .first()
