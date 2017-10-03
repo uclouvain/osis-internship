@@ -23,15 +23,16 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from assistant.models import reviewer, mandate_structure
-from base.models import academic_year
-from assistant.forms import MandatesArchivesForm
 from django.views.generic import ListView
 from django.core.urlresolvers import reverse
 from django.views.generic.edit import FormMixin
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import ObjectDoesNotExist
+
+from base.models import academic_year, entity_version
 from assistant.models import settings, assistant_mandate
+from assistant.models import reviewer, mandate_entity
+from assistant.forms import MandatesArchivesForm
 
 
 class MandatesListView(LoginRequiredMixin, UserPassesTestMixin, ListView, FormMixin):
@@ -57,7 +58,7 @@ class MandatesListView(LoginRequiredMixin, UserPassesTestMixin, ListView, FormMi
         if len(assistant_mandate.find_for_supervisor_for_academic_year(self.request.user.person,
                                                                        academic_year.current_academic_year())) > 0:
             self.is_supervisor = True
-        mandates_id = mandate_structure.find_by_structure(current_reviewer.structure).values_list(
+        mandates_id = mandate_entity.find_by_entity(current_reviewer.entity).values_list(
             'assistant_mandate_id', flat=True)
         if form.is_valid():
             self.request.session['selected_academic_year'] = form.cleaned_data[
@@ -87,6 +88,8 @@ class MandatesListView(LoginRequiredMixin, UserPassesTestMixin, ListView, FormMi
         can_delegate = reviewer.can_delegate(current_reviewer)
         context['can_delegate'] = can_delegate
         context['reviewer'] = current_reviewer
+        entity = entity_version.get_last_version(current_reviewer.entity)
+        context['entity'] = entity
         context['phd_list'] = phd_list
         context['research_list'] = research_list
         context['supervision_list'] = supervision_list
@@ -94,6 +97,17 @@ class MandatesListView(LoginRequiredMixin, UserPassesTestMixin, ListView, FormMi
         context['is_supervisor'] = self.is_supervisor
         context['year'] = academic_year.find_academic_year_by_id(
             self.request.session.get('selected_academic_year')).year
+        start_date = academic_year.find_academic_year_by_id(int(self.request.session.get(
+            'selected_academic_year'))).start_date
+        for mandate in context['object_list']:
+            entities = []
+            entities_id = mandate.mandateentity_set.all().order_by('id')
+            for entity in entities_id:
+                current_entityversion = entity_version.get_by_entity_and_date(entity.entity, start_date)[0]
+                if current_entityversion is None:
+                    current_entityversion = entity_version.get_last_version(entity.entity)
+                entities.append(current_entityversion)
+            mandate.entities = entities
         return context
 
     def get_initial(self):

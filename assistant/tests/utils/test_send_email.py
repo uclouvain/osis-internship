@@ -84,11 +84,6 @@ class SendEmailTestCase(TestCase):
         self.reviewer = Reviewer.objects.create(person=self.person, role='SUPERVISION')
         self.reviewer.save()
 
-        add_message_template_for_assistants_html()
-        add_message_template_for_assistants_txt()
-        add_message_template_for_phd_supervisor_html()
-        add_message_template_for_phd_supervisor_txt()
-
     @patch("base.models.academic_year.current_academic_year")
     @patch("osis_common.messaging.send_message.EmailMultiAlternatives", autospec=True)
     def test_with_one_assistant(self, mock_class, mock_current_ac_year):
@@ -110,109 +105,11 @@ class SendEmailTestCase(TestCase):
     @patch("osis_common.messaging.send_message.EmailMultiAlternatives", autospec=True)
     def test_with_one_phd_supervisor(self, mock_class, mock_current_ac_year):
         mock_current_ac_year.return_value = self.current_academic_year
-        html_template_ref = 'assistant_phd_supervisor_review_html'
-        txt_template_ref = 'assistant_phd_supervisor_review_txt'
+        html_template_ref = 'assistant_phd_supervisor_html'
+        txt_template_ref = 'assistant_phd_supervisor_txt'
         send_email.send_message(self.phd_supervisor, html_template_ref, txt_template_ref)
         mock_class.send.return_value = None
         self.assertIsInstance(mock_class, EmailMultiAlternatives)
         call_args = mock_class.call_args
         recipients = call_args[0][3]
         self.assertEqual(len(recipients), 1)
-
-
-def add_message_template_for_assistants_txt():
-    msg_template = message_template.MessageTemplate(
-        reference="assistant_assistants_startup_normal_renewal_txt",
-        template="<p><em>Ceci est un message automatique g&eacute;n&eacute;r&eacute; "
-                 "renouvellement des mandats des assistant·e·s dont le contrat arrive à échéance"
-                 "<strong> entre le {{ start_date }} et le {{ end_date }}</strong> vient de débuter. "
-                 "Elle s'effectue intégralement par voie électronique.</em></p>\r\n\r\n"
-                 "</p>\r\n\r\n<p>&nbsp;</p>",
-        format="PLAIN",
-        language="en"
-    )
-    msg_template.save()
-    msg_template = message_template.MessageTemplate(
-        reference="assistant_assistants_startup_normal_renewal_txt",
-        template="<p><em>Ceci est un message automatique g&eacute;n&eacute;r&eacute; "
-                 "renouvellement des mandats des assistant·e·s dont le contrat arrive à échéance"
-                 "<strong> entre le {{ start_date }} et le {{ end_date }}</strong> vient de débuter. "
-                 "Elle s'effectue intégralement par voie électronique.</em></p>\r\n\r\n"
-                 "</p>\r\n\r\n<p>&nbsp;</p>",
-        format="PLAIN",
-        language="fr-be"
-    )
-    msg_template.save()
-
-
-def add_message_template_for_assistants_html():
-    msg_template = message_template.MessageTemplate(
-        reference="assistant_assistants_startup_normal_renewal_html",
-        template="<p>{% autoescape off %}<em>Ceci est un message automatique g&eacute;n&eacute;r&eacute; "
-                 "renouvellement des mandats des assistant·e·s dont le contrat arrive à échéance"
-                 "<strong> entre le {{ start_date }} et le {{ end_date }}</strong> vient de débuter. "
-                 "Elle s'effectue intégralement par voie électronique.</em></p>\r\n\r\n"
-                 "</p>\r\n\r\n<p>&nbsp;{% endautoescape %}</p>",
-        format="HTML",
-        language="fr-be"
-    )
-    msg_template.save()
-    msg_template = message_template.MessageTemplate(
-        reference="assistant_assistants_startup_normal_renewal_html",
-        template="<p>{% autoescape off %}<em>Ceci est un message automatique g&eacute;n&eacute;r&eacute; "
-                 "renouvellement des mandats des assistant·e·s dont le contrat arrive à échéance"
-                 "<strong> entre le {{ start_date }} et le {{ end_date }}</strong> vient de débuter. "
-                 "Elle s'effectue intégralement par voie électronique.</em></p>\r\n\r\n"
-                 "</p>\r\n\r\n<p>&nbsp;{% endautoescape %}</p>",
-        format="HTML",
-        language="en"
-    )
-    msg_template.save()
-
-
-def add_message_template_for_phd_supervisor_html():
-    msg_template = message_template.MessageTemplate(
-        reference="assistant_phd_supervisor_review_html",
-        template="<p>{% autoescape off %}Bonjour {{ first_name }} {{ last_name }}"
-                 "<em>Ceci est un message automatique g&eacute;n&eacute;r&eacute; "
-                 "https://osis.uclouvain.be/assistants/phd_supervisor/assistants_list/"
-                 "</p>\r\n\r\n<p>&nbsp;{% endautoescape %}</p>",
-        format="HTML",
-        language="fr-be"
-    )
-    msg_template.save()
-    msg_template = message_template.MessageTemplate(
-        reference="assistant_phd_supervisor_review_html",
-        template="<p>{% autoescape off %}Bonjour {{ first_name }} {{ last_name }}"
-                 "<em>This is an automatic message."
-                 "https://osis.uclouvain.be/assistants/phd_supervisor/assistants_list/"
-                 "</p>\r\n\r\n<p>&nbsp;{% endautoescape %}</p>",
-        format="HTML",
-        language="en"
-    )
-    msg_template.save()
-
-
-def add_message_template_for_phd_supervisor_txt():
-    msg_template = message_template.MessageTemplate(
-        reference="assistant_phd_supervisor_review_txt",
-        template="<p><em>Ceci est un message automatique g&eacute;n&eacute;r&eacute; "
-                 "renouvellement des mandats des assistant·e·s dont le contrat arrive à échéance"
-                 "<strong> entre le {{ start_date }} et le {{ end_date }}</strong> vient de débuter. "
-                 "Elle s'effectue intégralement par voie électronique.</em></p>\r\n\r\n"
-                 "</p>\r\n\r\n<p>&nbsp;</p>",
-        format="PLAIN",
-        language="fr-be"
-    )
-    msg_template.save()
-    msg_template = message_template.MessageTemplate(
-        reference="assistant_phd_supervisor_review_txt",
-        template="<p><em>Ceci est un message automatique g&eacute;n&eacute;r&eacute; "
-                 "renouvellement des mandats des assistant·e·s dont le contrat arrive à échéance"
-                 "<strong> entre le {{ start_date }} et le {{ end_date }}</strong> vient de débuter. "
-                 "Elle s'effectue intégralement par voie électronique.</em></p>\r\n\r\n"
-                 "</p>\r\n\r\n<p>&nbsp;</p>",
-        format="PLAIN",
-        language="en"
-    )
-    msg_template.save()

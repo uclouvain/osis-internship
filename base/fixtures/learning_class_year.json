@@ -161,5 +161,66 @@
       "acronym": "1",
       "description": "Description"
     }
+  },
+
+  {
+    "model": "base.learningclassyear",
+    "pk": 19,
+    "fields": {
+      "external_id": "osis.learning_class_year_207028_2017_LECTURING",
+      "learning_component_year": 37,
+      "acronym": "1",
+      "description": null
+    }
+  },
+  {
+    "model": "base.learningclassyear",
+    "pk": 20,
+    "fields": {
+      "external_id": "osis.learning_class_year_41641_2017_PRACTICAL_EXERCISES",
+      "learning_component_year": 38,
+      "acronym": "1",
+      "description": null
+    }
+  },
+  {
+    "model": "base.learningclassyear",
+    "pk": 21,
+    "fields": {
+      "external_id": "osis.learning_class_year_41641_2017_LECTURING",
+      "learning_component_year": 39,
+      "acronym": "1",
+      "description": null
+    }
+  },
+  {
+    "model": "base.learningclassyear",
+    "pk": 22,
+    "fields": {
+      "external_id": "osis.learning_class_year_41637_2017_LECTURING",
+      "learning_component_year": 41,
+      "acronym": "1",
+      "description": null
+    }
+  },
+  {
+    "model": "base.learningclassyear",
+    "pk": 23,
+    "fields": {
+      "external_id": "osis.learning_class_year_32082_2017_PRACTICAL_EXERCISES",
+      "learning_component_year": 42,
+      "acronym": "1",
+      "description": null
+    }
+  },
+  {
+    "model": "base.learningclassyear",
+    "pk": 24,
+    "fields": {
+      "external_id": "osis.learning_class_year_32082_2017_LECTURING",
+      "learning_component_year": 43,
+      "acronym": "1",
+      "description": null
+    }
   }
 ]
