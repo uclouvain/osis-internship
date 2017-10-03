@@ -25,15 +25,42 @@
 ##############################################################################
 from django.test import TestCase
 from base.business import learning_unit_year_with_context
-from base.models.enums import entity_container_year_link_type as entity_types
+from base.models.enums import entity_container_year_link_type as entity_types , organization_type, \
+    entity_container_year_link_type
+from base.tests.factories.entity import EntityFactory
 from base.tests.factories.entity_component_year import EntityComponentYearFactory
 from base.tests.factories.entity_container_year import EntityContainerYearFactory
 from base.tests.factories.learning_component_year import LearningComponentYearFactory
 from base.tests.factories.learning_container_year import LearningContainerYearFactory
 from base.tests.factories.academic_year import AcademicYearFactory
+import datetime
+from django.utils.translation import ugettext_lazy as _
+
+from base.tests.factories.organization import OrganizationFactory
+from reference.tests.factories.country import CountryFactory
 
 
 class LearningUnitYearWithContextTestCase(TestCase):
+    def setUp(self):
+        today = datetime.date.today()
+        self.current_academic_year = AcademicYearFactory(start_date=today,
+                                                         end_date=today.replace(year=today.year + 1),
+                                                         year=today.year)
+        self.learning_container_yr = LearningContainerYearFactory(academic_year=self.current_academic_year)
+        self.organization = OrganizationFactory(type=organization_type.MAIN)
+        self.country = CountryFactory()
+        self.entity = EntityFactory(country=self.country, organization=self.organization)
+        self.entity_container_yr = EntityContainerYearFactory(learning_container_year=self.learning_container_yr,
+                                                              type=entity_container_year_link_type.REQUIREMENT_ENTITY,
+                                                              entity=self.entity)
+        self.learning_component_yr = LearningComponentYearFactory(learning_container_year=self.learning_container_yr,
+                                                                  hourly_volume_partial=-1, planned_classes=1)
+        self.entity_component_yr = EntityComponentYearFactory(learning_component_year=self.learning_component_yr,
+                                                              entity_container_year=self.entity_container_yr,
+                                                              hourly_volume_total=None)
+
+        self.entity_components_yr = [self.entity_component_yr,]
+
     def test_get_floated_only_element_of_list(self):
         a_list = []
         self.assertIsNone(learning_unit_year_with_context._get_floated_only_element_of_list(a_list))
@@ -71,3 +98,56 @@ class LearningUnitYearWithContextTestCase(TestCase):
 
         self.assertDictEqual(learning_unit_year_with_context._get_requirement_entities_volumes(components),
                              wanted_response)
+
+    def test_volumes_unknwon_quadrimester(self):
+        self.learning_component_yr.hourly_volume_partial = -1
+        self.entity_component_yr.hourly_volume_total = 30
+
+        data = learning_unit_year_with_context.volume_learning_component_year(self.learning_component_yr,
+                                                                              self.entity_components_yr)
+        self.assertEqual(data.get(learning_unit_year_with_context.TOTAL_VOLUME_KEY), 30)
+        self.assertEqual(data.get(learning_unit_year_with_context.VOLUME_QUARTER_KEY), _('partial_or_remaining'))
+        self.assertEqual(data.get(learning_unit_year_with_context.VOLUME_PARTIAL_KEY),
+                         learning_unit_year_with_context.VOLUME_FOR_UNKNOWN_QUADRIMESTER)
+        self.assertEqual(data.get(learning_unit_year_with_context.VOLUME_REMAINING_KEY),
+                         learning_unit_year_with_context.VOLUME_FOR_UNKNOWN_QUADRIMESTER)
+
+    def test_volumes_undefined(self):
+        self.learning_component_yr.hourly_volume_partial = None
+        self.entity_component_yr.hourly_volume_total = 15
+
+        data = learning_unit_year_with_context.volume_learning_component_year(self.learning_component_yr,
+                                                                              self.entity_components_yr)
+        self.assertEqual(data.get(learning_unit_year_with_context.TOTAL_VOLUME_KEY), 15)
+        self.assertEqual(data.get(learning_unit_year_with_context.VOLUME_QUARTER_KEY),
+                         learning_unit_year_with_context.UNDEFINED_VALUE)
+        self.assertEqual(data.get(learning_unit_year_with_context.VOLUME_PARTIAL_KEY),
+                         learning_unit_year_with_context.UNDEFINED_VALUE)
+        self.assertEqual(data.get(learning_unit_year_with_context.VOLUME_REMAINING_KEY),
+                         learning_unit_year_with_context.UNDEFINED_VALUE)
+
+    def test_volumes(self):
+        self.learning_component_yr.hourly_volume_partial = 0
+        self.entity_component_yr.hourly_volume_total = 15
+        data = learning_unit_year_with_context.volume_learning_component_year(self.learning_component_yr,
+                                                                              self.entity_components_yr)
+        self.assertEqual(data.get(learning_unit_year_with_context.TOTAL_VOLUME_KEY), 15)
+        self.assertEqual(data.get(learning_unit_year_with_context.VOLUME_QUARTER_KEY), _('remaining'))
+        self.assertEqual(data.get(learning_unit_year_with_context.VOLUME_PARTIAL_KEY), 0)
+        self.assertEqual(data.get(learning_unit_year_with_context.VOLUME_REMAINING_KEY), 15)
+
+        self.learning_component_yr.hourly_volume_partial=15
+        data = learning_unit_year_with_context.volume_learning_component_year(self.learning_component_yr,
+                                                                              self.entity_components_yr)
+        self.assertEqual(data.get(learning_unit_year_with_context.TOTAL_VOLUME_KEY), 15)
+        self.assertEqual(data.get(learning_unit_year_with_context.VOLUME_PARTIAL_KEY), 15)
+        self.assertEqual(data.get(learning_unit_year_with_context.VOLUME_QUARTER_KEY), _('partial'))
+        self.assertEqual(data.get(learning_unit_year_with_context.VOLUME_REMAINING_KEY), 0)
+
+        self.learning_component_yr.hourly_volume_partial=12
+        data = learning_unit_year_with_context.volume_learning_component_year(self.learning_component_yr,
+                                                                              self.entity_components_yr)
+        self.assertEqual(data.get(learning_unit_year_with_context.TOTAL_VOLUME_KEY), 15)
+        self.assertEqual(data.get(learning_unit_year_with_context.VOLUME_QUARTER_KEY), _('partial_remaining'))
+        self.assertEqual(data.get(learning_unit_year_with_context.VOLUME_PARTIAL_KEY), 12)
+        self.assertEqual(data.get(learning_unit_year_with_context.VOLUME_REMAINING_KEY), 3)
