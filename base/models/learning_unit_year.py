@@ -28,9 +28,8 @@ from django.db import models
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 
 from base.models import entity_container_year
-from base.models import entity_version as mdl_entity_version
 from base.models.enums import learning_unit_year_subtypes, learning_container_year_types, internship_subtypes, \
-    learning_unit_year_session, entity_container_year_link_type, entity_type
+    learning_unit_year_session, entity_container_year_link_type
 
 
 class LearningUnitYearAdmin(SerializableModelAdmin):
@@ -99,17 +98,6 @@ class LearningUnitYear(SerializableModel):
             learning_container_year=self.learning_container_year
         ).first()
         return entity_container_yr.entity if entity_container_yr else None
-
-
-def check_parent(parent_entity):
-    entity_version = mdl_entity_version.get_last_version(parent_entity)
-
-    if entity_version:
-        if entity_version.entity_type == entity_type.FACULTY:
-            return entity_version.entity
-        else:
-            return check_parent(entity_version.parent)
-    return None
 
 
 def find_by_id(learning_unit_year_id):
