@@ -43,6 +43,7 @@ from base.tests.factories.offer_enrollment import OfferEnrollmentFactory
 from base.tests.factories.offer_year import OfferYearFactory
 from base.tests.factories.offer_year_entity import OfferYearEntityFactory
 from base.tests.factories.person import PersonFactory
+from base.tests.factories.person_address import PersonAddressFactory
 from base.tests.factories.session_examen import SessionExamFactory
 from base.tests.factories.student import StudentFactory
 from base.tests.factories.tutor import TutorFactory
@@ -124,7 +125,8 @@ class ScoreSheetDataTest(TestCase):
     def setUp(self):
         self.academic_year = AcademicYearFactory()
         self.offer_year = OfferYearFactory(academic_year=self.academic_year)
-        self.learning_unit_year = LearningUnitYearFactory(academic_year=self.academic_year, acronym="LBIR1100")
+        self.learning_unit_year = LearningUnitYearFactory(academic_year=self.academic_year, acronym="LBIR1100",
+                                                          decimal_scores=False)
         # Create tutor and score responsible
         _create_attribution(self.learning_unit_year, person=PersonFactory(last_name='Alibra', first_name='Paul'))
         _create_attribution(self.learning_unit_year, person=PersonFactory(last_name='Durant', first_name='Thomas'),
@@ -147,7 +149,7 @@ class ScoreSheetDataTest(TestCase):
         l_unit_enrollment = LearningUnitEnrollmentFactory(offer_enrollment=offer_enrollment, learning_unit_year=self.learning_unit_year)
         ExamEnrollmentFactory(learning_unit_enrollment=l_unit_enrollment, session_exam=self.session_exam)
 
-    def test_scores_sheet_data(self):
+    def test_scores_sheet_data_no_decimal_scores(self):
         #Get all exam enrollments
         exam_enrollments = ExamEnrollment.objects.all()
         data_computed = score_encoding_sheet.scores_sheet_data(exam_enrollments)
@@ -156,12 +158,18 @@ class ScoreSheetDataTest(TestCase):
         # Publication date should be today
         self.assertEqual(data_computed['publication_date'], timezone.now().strftime("%-d/%m/%Y"))
         self.assertEqual(len(data_computed['learning_unit_years']), 1)
-        # Check if the score responsible
+        self.assertFalse(data_computed['learning_unit_years'][0]['decimal_scores'])
+        # Check the score responsible and the address
         score_responsible = data_computed['learning_unit_years'][0]['scores_responsible']
         self.assertEqual(score_responsible['first_name'], "Thomas")
         self.assertEqual(score_responsible['last_name'], "Durant")
+        self.assertEqual(score_responsible['address']['city'], "Louvain-la-neuve")
 
 
 def _create_attribution(learning_unit_year, person, is_score_responsible=False):
+    # Create tutor
     tutor = TutorFactory(person=person)
+    # Create two address [One private - One Professional]
+    PersonAddressFactory(person=person, label='PROFESSIONAL', city="Louvain-la-neuve")
+    PersonAddressFactory(person=person, label='PRIVATE', city="Bruxelles")
     return AttributionFactory(learning_unit_year=learning_unit_year, tutor=tutor, score_responsible=is_score_responsible)
