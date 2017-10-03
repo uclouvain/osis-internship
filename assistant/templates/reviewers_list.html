@@ -49,7 +49,7 @@
         <thead>
         <tr>
         <th>{% trans 'name' %}</th>
-        <th>{% trans 'structure' %}</th>
+        <th>{% trans 'entity' %}</th>
         <th>{% trans 'role' %}</th>
         <th>{% trans 'action' %}</th>
         </tr>
@@ -58,10 +58,11 @@
         {% for reviewer in reviewers_formset %}
             <tr>
             <td>{{ reviewer.person.value }}{{ reviewer.access }}</td>
-            <td>{{ reviewer.structure.value }}</td>
+            <td>{{ reviewer.entity_version.value.acronym }} - {{ reviewer.entity_version.value.title }}</td>
             <td>{% trans reviewer.role.value %}</td>
             <td>{{ reviewer.action }}</td>
             {{ reviewer.id.as_hidden }}
+            {{ reviewer.entity_version.as_hidden }}
         {% endfor %}
         </tbody>
         </table>

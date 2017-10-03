@@ -23,14 +23,15 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from base.models import academic_year
 from django.views.generic import ListView
 from django.forms import forms
 from django.core.urlresolvers import reverse
 from django.views.generic.edit import FormMixin
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import ObjectDoesNotExist
+
 from assistant.models import settings, assistant_mandate, reviewer
+from base.models import academic_year, entity_version
 
 
 class AssistantsListView(LoginRequiredMixin, UserPassesTestMixin, ListView, FormMixin):
@@ -65,6 +66,11 @@ class AssistantsListView(LoginRequiredMixin, UserPassesTestMixin, ListView, Form
         context['year'] = academic_year.current_academic_year().year
         context['is_reviewer'] = self.is_reviewer
         context['current_reviewer'] = self.reviewer
+        if self.reviewer:
+            entity = entity_version.get_last_version(self.reviewer.entity)
+        else:
+            entity = None
+        context['entity'] = entity
         if self.is_reviewer:
             can_delegate = reviewer.can_delegate(reviewer.find_by_person(self.request.user.person))
             context['can_delegate'] = can_delegate

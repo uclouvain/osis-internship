@@ -26,11 +26,11 @@
 import factory
 import factory.fuzzy
 from assistant.tests.factories.assistant_mandate import AssistantMandateFactory
-from base.tests.factories.structure import StructureFactory
+from base.tests.factories.entity import EntityFactory
 
 
-class MandateStructureFactory(factory.DjangoModelFactory):
+class MandateEntityFactory(factory.DjangoModelFactory):
     class Meta:
-        model = 'assistant.MandateStructure'
+        model = 'assistant.MandateEntity'
     assistant_mandate = factory.SubFactory(AssistantMandateFactory)
-    structure = factory.SubFactory(StructureFactory)
+    entity = factory.SubFactory(EntityFactory)
