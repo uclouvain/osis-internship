@@ -32,7 +32,7 @@ from base.tests.factories.offer_enrollment import OfferEnrollmentFactory
 from osis_common.utils.datetime import get_tzinfo
 
 
-class LearningUnitEnrollment(factory.django.DjangoModelFactory):
+class LearningUnitEnrollmentFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = "base.LearningUnitEnrollment"
 

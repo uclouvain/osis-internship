@@ -41,7 +41,7 @@ from attribution.tests.factories.attribution import AttributionFactory
 from base.tests.factories.session_examen import SessionExamFactory
 from base.tests.factories.offer_year import OfferYearFactory
 from base.tests.factories.offer_enrollment import OfferEnrollmentFactory
-from base.tests.factories.learning_unit_enrollment import LearningUnitEnrollment
+from base.tests.factories.learning_unit_enrollment import LearningUnitEnrollmentFactory
 from base.tests.factories.exam_enrollment import ExamEnrollmentFactory
 
 from base.models.enums import number_session, academic_calendar_type, exam_enrollment_justification_type
@@ -92,10 +92,10 @@ class TestUploadXls(TestCase):
         offer_enrollment_2 = OfferEnrollmentFactory(offer_year=an_offer_year,
                                                     student=student_2)
 
-        learning_unit_enrollment_1 = LearningUnitEnrollment(learning_unit_year=a_learning_unit_year,
-                                                            offer_enrollment=offer_enrollment_1)
-        learning_unit_enrollment_2 = LearningUnitEnrollment(learning_unit_year=a_learning_unit_year,
-                                                            offer_enrollment=offer_enrollment_2)
+        learning_unit_enrollment_1 = LearningUnitEnrollmentFactory(learning_unit_year=a_learning_unit_year,
+                                                                   offer_enrollment=offer_enrollment_1)
+        learning_unit_enrollment_2 = LearningUnitEnrollmentFactory(learning_unit_year=a_learning_unit_year,
+                                                                   offer_enrollment=offer_enrollment_2)
 
         ExamEnrollmentFactory(session_exam=a_session_exam,
                               learning_unit_enrollment=learning_unit_enrollment_1)
