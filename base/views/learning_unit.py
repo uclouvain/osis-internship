@@ -69,9 +69,6 @@ from . import layout
 from django.http import JsonResponse
 
 
-UNDEFINED_VALUE = ''
-
-
 @login_required
 @permission_required('base.can_access_learningunit', raise_exception=True)
 def learning_units(request):
@@ -111,7 +108,6 @@ def learning_unit_identification(request, learning_unit_year_id):
     context['show_subtype'] = _show_subtype(learning_unit_year)
     context.update(_get_all_attributions(learning_unit_year))
     context['components'] = get_components_identification(learning_unit_year)
-    #context['volume_distribution'] = volume_distribution(learning_unit_year)
 
     return layout.render(request, "learning_unit/identification.html", context)
 
@@ -358,11 +354,6 @@ def get_same_container_year_components(learning_unit_year, with_classes=False):
                 learning_class_year.used_by_learning_units_year = _learning_unit_usage_by_class(learning_class_year)
                 learning_class_year.is_used_by_full_learning_unit_year = _is_used_by_full_learning_unit_year(learning_class_year)
 
-        entity_container_yrs = mdl.entity_container_year.find_by_learning_container_year(
-            learning_component_year.learning_container_year,
-            entity_container_year_link_type.REQUIREMENT_ENTITY)
-        # entity_component_yr = mdl.entity_component_year.find_by_entity_container_years(entity_container_yrs,
-        #                                                                               learning_component_year).first()
         used_by_learning_unit = mdl.learning_unit_component.search(learning_component_year, learning_unit_year)
 
         entity_components_yr = EntityComponentYear.objects.filter(learning_component_year=learning_component_year)

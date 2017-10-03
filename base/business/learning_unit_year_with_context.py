@@ -76,9 +76,7 @@ def get_with_context(**learning_unit_year_data):
                             queryset=mdl.entity_component_year.EntityComponentYear.objects.all()
                             .select_related('entity_container_year'),
                             to_attr='entity_components_year'
-                            ),
-            models.Prefetch('learning_component_year__learningclassyear_set',
-                            to_attr="classes")
+                            )
         ),
         to_attr='learning_unit_components'
     )
