@@ -87,7 +87,6 @@ def _append_latest_entities(learning_unit):
             link_type = entity_container_yr.type
             latest_version = _get_latest_entity_version(entity_container_yr)
             learning_unit.entities[link_type] = latest_version
-
     return learning_unit
 
 

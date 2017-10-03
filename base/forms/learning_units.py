@@ -117,7 +117,6 @@ class LearningUnitYearForm(forms.Form):
         return list_results_2
 
 
-
 def _clean_data(datas_to_clean):
     return {key: _treat_empty_or_str_none_as_none(value) for (key, value) in datas_to_clean.items()}
 
@@ -134,7 +133,6 @@ def _get_filter_learning_container_ids(filter_data):
         entity_allocation_ids = _get_entities_ids(allocation_entity_acronym, with_entity_subordinated)
         entity_requirement_ids = _get_entities_ids(requirement_entity_acronym, with_entity_subordinated)
         if len(entity_allocation_ids) > 0 and len(entity_requirement_ids) > 0:
-            print('if')
             requirement_list= list(mdl.entity_container_year.search(link_type=entity_container_year_link_type.REQUIREMENT_ENTITY,
                                                          entity_id=entity_requirement_ids) \
                         .values_list('learning_container_year', flat=True).distinct())
@@ -146,7 +144,6 @@ def _get_filter_learning_container_ids(filter_data):
             else:
                 return []
         else:
-            print('else')
             return []
     else:
         if allocation_entity_acronym:

@@ -88,6 +88,7 @@ def search(*args, **kwargs):
             queryset = queryset.filter(entity__in=entity_id)
         elif entity_id:
             queryset = queryset.filter(entity=entity_id)
+
     return queryset.select_related('learning_container_year__academic_year', 'entity')
 
 
