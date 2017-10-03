@@ -25,12 +25,12 @@
 ##############################################################################
 from django.db import models
 
-from base.models import entity_container_year, entity_version as mdl_entity_version
-from base.models.enums import entity_container_year_link_type
-from base.models.enums import entity_type
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
+
+from base.models import entity_container_year
+from base.models import entity_version as mdl_entity_version
 from base.models.enums import learning_unit_year_subtypes, learning_container_year_types, internship_subtypes, \
-    learning_unit_year_session
+    learning_unit_year_session, entity_container_year_link_type, entity_type
 
 
 class LearningUnitYearAdmin(SerializableModelAdmin):

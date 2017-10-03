@@ -29,7 +29,7 @@ from django.db import models
 from django.contrib import admin
 from django.db.models import Q, F, Case, When
 from django.utils import timezone
-from base.models import entity, academic_year
+from base.models import entity
 from base.models.enums import entity_type
 from base.models.enums.organization_type import MAIN
 from osis_common.utils.datetime import get_tzinfo
@@ -147,7 +147,6 @@ class EntityVersion(models.Model):
 
         if self.parent:
             find_parent_faculty_version(self.parent, date)
-
 
     def _contains_given_date(self, date):
         if self.start_date and self.end_date:
@@ -305,6 +304,7 @@ def find_main_entities_version():
                                  entity_type.INSTITUTE, entity_type.DOCTORAL_COMMISSION],
                 entity__organization__type=MAIN).order_by('acronym')
     return entities_version
+
 
 def find_first_latest_version_by_period(ent,start_date, end_date):
     return EntityVersion.objects.filter(Q(end_date__lte=end_date) | Q(end_date__isnull=True),
