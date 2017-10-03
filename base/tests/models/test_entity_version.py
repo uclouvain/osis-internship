@@ -237,9 +237,6 @@ class EntityVersionTest(TestCase):
         ac_yr = AcademicYearFactory()
         start_date = ac_yr.start_date
         end_date = ac_yr.end_date
-
-
-
         entity_faculty = EntityFactory(country=self.country)
         entity_faculty_version = EntityVersionFactory(
             entity=entity_faculty,
@@ -321,4 +318,3 @@ class EntityVersionTest(TestCase):
             end_date=end_date
         )
         self.assertIsNone(entity_version.find_parent_faculty_version(entity_school_version_level1, ac_yr))
-
