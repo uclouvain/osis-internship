@@ -23,46 +23,48 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.contrib import messages
+from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.decorators import login_required, permission_required
 from base import models as mdl
+
+from base.forms.education_groups import EducationGroupFilter, MAX_RECORDS
+from base.models.enums import education_group_categories
+
 from . import layout
 
 
 @login_required
 @permission_required('base.can_access_offer', raise_exception=True)
 def education_groups(request):
-    academic_yr = None
-    academic_years = mdl.academic_year.find_academic_years()
+    if request.GET:
+        form = EducationGroupFilter(request.GET)
+    else:
+        current_academic_year = mdl.academic_year.current_academic_year()
+        form = EducationGroupFilter(initial={'academic_year': current_academic_year,
+                                             'category': education_group_categories.TRAINING})
 
-    academic_year_calendar = mdl.academic_year.current_academic_year()
-    if academic_year_calendar:
-        academic_yr = academic_year_calendar.id
-    return layout.render(request, "education_groups.html", {'academic_year': academic_yr,
-                                                  'academic_years': academic_years,
-                                                  'education_group_years': [],
-                                                  'init': "1"})
+    object_list = None
+    if form.is_valid():
+       object_list = form.get_object_list()
+       if not _check_if_display_message(request, object_list):
+           object_list = None
+
+    context = {
+        'form': form,
+        'object_list': object_list,
+        'experimental_phase': True
+    }
+    return layout.render(request, "education_groups.html", context)
 
 
-@login_required
-@permission_required('base.can_access_offer', raise_exception=True)
-def education_groups_search(request):
-    entity = request.GET['entity_acronym']
-    academic_yr = None
-    if request.GET.get('academic_year', None):
-        academic_yr = int(request.GET['academic_year'])
-    acronym = request.GET['code']
-
-    academic_years = mdl.academic_year.find_academic_years()
-
-    education_group_years = get_education_group_years(academic_yr, acronym, entity)
-
-    return layout.render(request, "education_groups.html", {'academic_year': academic_yr,
-                                                  'entity_acronym': entity,
-                                                  'code': acronym,
-                                                  'academic_years': academic_years,
-                                                  'education_group_years': education_group_years,
-                                                  'init': "0"})
-
+def _check_if_display_message(request, education_groups):
+    if not education_groups:
+        messages.add_message(request, messages.WARNING, _('no_result'))
+    elif len(education_groups) > MAX_RECORDS:
+        messages.add_message(request, messages.WARNING, _('too_many_results'))
+        return False
+    return True
 
 @login_required
 @permission_required('base.can_access_offer', raise_exception=True)

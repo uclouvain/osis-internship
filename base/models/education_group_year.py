@@ -30,6 +30,7 @@ from base.models.enums import academic_type, fee, internship_presence, schedule_
 from base.models import offer_year_domain as mdl_offer_year_domain
 from base.models import offer_year_entity as mdl_offer_year_entity
 from base.models import entity_version as mdl_entity_version
+from base.models.enums import education_group_categories
 from base.models.enums import offer_year_entity_type
 
 
@@ -59,6 +60,7 @@ class EducationGroupYear(models.Model):
     title_english = models.CharField(max_length=240, blank=True, null=True)
     academic_year = models.ForeignKey('AcademicYear')
     education_group = models.ForeignKey('EducationGroup')
+    category = models.CharField(max_length=20, choices=education_group_categories.CATEGORIES, blank=True, null=True)
     education_group_type = models.ForeignKey('OfferType', blank=True, null=True)
     active = models.CharField(max_length=20, choices=active_status.ACTIVE_STATUS_LIST, default=active_status.ACTIVE)
     partial_deliberation = models.BooleanField(default=False)
@@ -130,17 +132,30 @@ def find_by_id(an_id):
         return None
 
 
-def search(academic_yr=None, acronym=None):
-    out = None
-    queryset = EducationGroupYear.objects
+def search(*args, **kwargs):
+    qs = EducationGroupYear.objects
 
-    if academic_yr:
-        queryset = queryset.filter(academic_year=academic_yr)
+    if "id" in kwargs:
+        if isinstance(kwargs['id'], list):
+            qs = qs.filter(id__in=kwargs['id'])
+        else:
+            qs = qs.filter(id=kwargs['id'])
+    if "academic_year" in kwargs:
+        qs = qs.filter(academic_year=kwargs['academic_year'])
+    if "acronym" in kwargs:
+        qs = qs.filter(acronym__icontains=kwargs['acronym'])
+    if "title" in kwargs:
+        qs = qs.filter(title__icontains=kwargs['title'])
+    if "category" in kwargs:
+        if isinstance(kwargs['category'], list):
+            qs = qs.filter(category__in=kwargs['category'])
+        else:
+            qs = qs.filter(category=kwargs['category'])
+    if "education_group_type" in kwargs:
+        if isinstance(kwargs['education_group_type'], list):
+            qs = qs.filter(education_group_type__in=kwargs['education_group_type'])
+        else:
+            qs = qs.filter(education_group_type=kwargs['education_group_type'])
 
-    if acronym:
-        queryset = queryset.filter(acronym__icontains=acronym)
+    return qs.select_related('education_group_type', 'academic_year')
 
-    if academic_yr or acronym:
-        out = queryset.order_by('acronym')
-
-    return out

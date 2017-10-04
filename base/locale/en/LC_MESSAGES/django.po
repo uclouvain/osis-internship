@@ -2094,10 +2094,17 @@ msgstr "Formations"
 msgid "desc_lnk_formations"
 msgstr "Organization of formations"
 
+msgid "education_groups"
+msgstr "Education groups"
+
+msgid "entity_management"
+msgstr "Entity management"
+
+msgid "of_category"
+msgstr "Education group type"
+
 msgid "activity_search"
 msgstr "Activity - Search"
 
 msgid "service_course_search"
 msgstr "Service cours - Search"
-
-

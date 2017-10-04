@@ -39,33 +39,11 @@ def save(self, *args, **kwargs):
 
 
 class EducationGroupViewTestCase(TestCase):
-    @mock.patch('django.contrib.auth.decorators')
-    @mock.patch('base.views.layout.render')
-    def test_education_groups(self, mock_render, mock_decorators):
-        mock_decorators.login_required = lambda x: x
-        mock_decorators.permission_required = lambda *args, **kwargs: lambda func: func
-
+    def setUp(self):
         today = datetime.date.today()
-        academic_year = AcademicYearFactory(start_date=today,
-                                            end_date=today.replace(year=today.year + 1),
-                                            year=today.year)
-
-        request_factory = RequestFactory()
-
-        request = request_factory.get(reverse('offers'))
-        request.user = mock.Mock()
-
-        from base.views.education_group import education_groups
-
-        education_groups(request)
-
-        self.assertTrue(mock_render.called)
-
-        request, template, context = mock_render.call_args[0]
-
-        self.assertEqual(template, 'education_groups.html')
-        self.assertEqual(len(context['education_group_years']), 0)
-        self.assertEqual(context['academic_year'], academic_year.id)
+        self.academic_year = AcademicYearFactory(start_date=today,
+                                                 end_date=today.replace(year=today.year + 1),
+                                                 year=today.year)
 
     @mock.patch('django.contrib.auth.decorators')
     @mock.patch('base.views.layout.render')
@@ -74,27 +52,60 @@ class EducationGroupViewTestCase(TestCase):
         mock_decorators.permission_required = lambda *args, **kwargs: lambda func: func
 
         request_factory = RequestFactory()
-        today = datetime.date.today()
-        academic_year = AcademicYearFactory(start_date=today,
-                                            end_date=today.replace(year=today.year + 1),
-                                            year=today.year)
 
-        request = request_factory.get(reverse('education_groups_search'), data={
-            'entity_acronym': 'entity',
-            'code': 'code',
-            'academic_year': academic_year.id,
+        # Create educations group year
+        EducationGroupYearFactory(acronym='EDPH2', academic_year=self.academic_year)
+        EducationGroupYearFactory(acronym='ARKE2A', academic_year=self.academic_year)
+        EducationGroupYearFactory(acronym='HIST2A', academic_year=self.academic_year)
+
+        request = request_factory.get(reverse('education_groups'), data={
+            'acronym': 'EDPH2',
+            'academic_year': self.academic_year.id,
+            'type': '' #Simulate all type
         })
         request.user = mock.Mock()
 
-        from base.views.education_group import education_groups_search
-        education_groups_search(request)
+        from base.views.education_group import education_groups
+        education_groups(request)
 
         self.assertTrue(mock_render.called)
 
         request, template, context = mock_render.call_args[0]
 
         self.assertEqual(template, 'education_groups.html')
-        self.assertCountEqual(context['education_group_years'], [])
+        self.assertEqual(len(context['object_list']), 1)
+
+    @mock.patch('django.contrib.auth.decorators')
+    @mock.patch('base.views.layout.render')
+    def test_education_groups_search_empty_result(self, mock_render, mock_decorators):
+        from django.contrib.messages.storage.fallback import FallbackStorage
+
+        mock_decorators.login_required = lambda x: x
+        mock_decorators.permission_required = lambda *args, **kwargs: lambda func: func
+
+        request_factory = RequestFactory()
+        request = request_factory.get(reverse('education_groups'), data={
+            'acronym': '',
+            'academic_year': self.academic_year.id,
+            'type': '' #Simulate all type
+        })
+        request.user = mock.Mock()
+
+        # Need session in order to store messages
+        setattr(request, 'session', {})
+        setattr(request, '_messages', FallbackStorage(request))
+
+        from base.views.education_group import education_groups
+        education_groups(request)
+
+        self.assertTrue(mock_render.called)
+
+        request, template, context = mock_render.call_args[0]
+
+        self.assertEqual(template, 'education_groups.html')
+        self.assertFalse(context['object_list'])
+        # It should have one message ['no_result']
+        self.assertEqual(len(request._messages), 1)
 
     @mock.patch('django.contrib.auth.decorators')
     @mock.patch('base.views.layout.render')
@@ -106,11 +117,7 @@ class EducationGroupViewTestCase(TestCase):
         mock_decorators.login_required = lambda x: x
         mock_decorators.permission_required = lambda *args, **kwargs: lambda func: func
 
-        today = datetime.date.today()
-        academic_year = AcademicYearFactory(start_date=today,
-                                            end_date=today.replace(year=today.year + 1),
-                                            year=today.year)
-        education_group_year = EducationGroupYearFactory(academic_year=academic_year)
+        education_group_year = EducationGroupYearFactory(academic_year=self.academic_year)
 
         request = mock.Mock(method='GET')
 

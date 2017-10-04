@@ -25,8 +25,8 @@
 ##############################################################################
 from django.conf.urls import url, include
 
-from base.views import learning_unit, offer, common, institution, organization, academic_calendar, my_osis, entity, \
-    student, education_group
+from base.views import learning_unit, offer, common, institution, organization, academic_calendar, \
+    my_osis, entity, student, education_group
 
 urlpatterns = [
     url(r'^$', common.home, name='home'),
@@ -130,7 +130,6 @@ urlpatterns = [
     ])),
     url(r'^educationgroups/', include([
         url(r'^$', education_group.education_groups, name='education_groups'),
-        url(r'^search$', education_group.education_groups_search, name='education_groups_search'),
         url(r'^(?P<education_group_year_id>[0-9]+)/', include([
             url(r'^$', education_group.education_group_read, name='education_group_read'),
         ]))

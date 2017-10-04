@@ -2100,10 +2100,17 @@ msgstr "Formations"
 msgid "desc_lnk_formations"
 msgstr "Organisation des formations"
 
+msgid "education_groups"
+msgstr "Organisations de formations"
+
+msgid "entity_management"
+msgstr "Fac. gestion"
+
+msgid "of_category"
+msgstr "Type d'organisation de formation"
+
 msgid "activity_search"
 msgstr "Recherche - Activité"
 
 msgid "service_course_search"
 msgstr "Recherche - Cours de service"
-
-
