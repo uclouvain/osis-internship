@@ -30,10 +30,11 @@ from django.http.response import HttpResponseRedirect
 from django.shortcuts import render
 from django.utils import timezone
 from base.models import academic_year
+from base.models.enums import entity_type
 from assistant.forms import ReviewForm
-from assistant.models import assistant_mandate, review, tutoring_learning_unit_year, mandate_structure, reviewer
-from assistant.models import settings
-from assistant.models.enums import review_status, assistant_mandate_state, reviewer_role
+from assistant.models import assistant_mandate, review, tutoring_learning_unit_year, mandate_entity
+from assistant.models import settings, assistant_document_file
+from assistant.models.enums import review_status, assistant_mandate_state, reviewer_role, document_type
 
 
 def user_is_phd_supervisor_and_procedure_is_open(user):
@@ -57,6 +58,7 @@ def review_view(request):
     except ObjectDoesNotExist:
         current_review = None
     assistant = mandate.assistant
+    current_person = request.user.person
     menu = generate_phd_supervisor_menu_tabs(mandate, current_role)
     return render(request, 'review_view.html', {'review': current_review,
                                                 'role': current_role,
@@ -64,6 +66,7 @@ def review_view(request):
                                                 'menu_type': 'phd_supervisor_menu',
                                                 'mandate_id': mandate.id,
                                                 'mandate_state': mandate.state,
+                                                'current_person': current_person,
                                                 'assistant': assistant,
                                                 'year': mandate.academic_year.year + 1
                                                 })
@@ -82,10 +85,10 @@ def review_edit(request):
             reviewer=None,
             status=review_status.IN_PROGRESS
         )
-    current_reviewer = reviewer.find_by_person(request.user.person)
     previous_mandates = assistant_mandate.find_before_year_for_assistant(mandate.academic_year.year, mandate.assistant)
     menu = generate_phd_supervisor_menu_tabs(mandate, reviewer_role.PHD_SUPERVISOR)
     assistant = mandate.assistant
+    current_person = request.user.person
     form = ReviewForm(initial={'mandate': mandate,
                                'reviewer': existing_review.reviewer,
                                'status': existing_review.status,
@@ -97,11 +100,11 @@ def review_edit(request):
     return render(request, 'review_form.html', {'review': existing_review,
                                                 'role': reviewer_role.PHD_SUPERVISOR,
                                                 'year': mandate.academic_year.year + 1,
-                                                'current_reviewer': current_reviewer,
                                                 'absences': mandate.absences,
                                                 'comment': mandate.comment,
                                                 'mandate_id': mandate.id,
                                                 'previous_mandates': previous_mandates,
+                                                'current_person': current_person,
                                                 'assistant': assistant,
                                                 'menu': menu,
                                                 'menu_type': 'phd_supervisor_menu',
@@ -114,6 +117,7 @@ def review_save(request):
     review_id = request.POST.get("review_id")
     rev = review.find_by_id(review_id)
     mandate = assistant_mandate.find_mandate_by_id(mandate_id)
+    current_person = request.user.person
     form = ReviewForm(data=request.POST, instance=rev, prefix='rev')
     menu = generate_phd_supervisor_menu_tabs(mandate, reviewer_role.PHD_SUPERVISOR)
     previous_mandates = assistant_mandate.find_before_year_for_assistant(mandate.academic_year.year, mandate.assistant)
@@ -122,9 +126,9 @@ def review_save(request):
         if 'validate_and_submit' in request.POST:
             current_review.status = review_status.DONE
             current_review.save()
-            if mandate_structure.find_by_mandate_and_type(mandate, 'INSTITUTE'):
+            if mandate_entity.find_by_mandate_and_type(mandate, entity_type.INSTITUTE):
                 mandate.state = assistant_mandate_state.RESEARCH
-            elif mandate_structure.find_by_mandate_and_part_of_type(mandate, 'INSTITUTE'):
+            elif mandate_entity.find_by_mandate_and_type(mandate, entity_type.POLE):
                 mandate.state = assistant_mandate_state.RESEARCH
             else:
                 mandate.state = assistant_mandate_state.SUPERVISION
@@ -138,6 +142,7 @@ def review_save(request):
         return render(request, "review_form.html", {'review': rev,
                                                     'role': mandate.state,
                                                     'year': mandate.academic_year.year + 1,
+                                                    'current_person': current_person,
                                                     'absences': mandate.absences,
                                                     'comment': mandate.comment,
                                                     'mandate_id': mandate.id,
@@ -153,15 +158,24 @@ def pst_form_view(request):
     mandate_id = request.POST.get("mandate_id")
     mandate = assistant_mandate.find_mandate_by_id(mandate_id)
     current_role = reviewer_role.PHD_SUPERVISOR
-    current_reviewer = reviewer.find_by_person(request.user.person)
+    current_person = request.user.person
     learning_units = tutoring_learning_unit_year.find_by_mandate(mandate)
     assistant = mandate.assistant
+    phd_files = assistant_document_file.find_by_assistant_mandate_and_description(mandate,
+                                                                                  document_type.PHD_DOCUMENT)
+    research_files = assistant_document_file.find_by_assistant_mandate_and_description(mandate,
+                                                                                       document_type.RESEARCH_DOCUMENT)
+    tutoring_files = assistant_document_file.find_by_assistant_mandate_and_description(mandate,
+                                                                                       document_type.TUTORING_DOCUMENT)
     menu = generate_phd_supervisor_menu_tabs(mandate, None)
     return render(request, 'pst_form_view.html', {'menu': menu,
                                                   'mandate_id': mandate.id,
                                                   'assistant': assistant, 'mandate': mandate,
                                                   'learning_units': learning_units,
-                                                  'current_reviewer': current_reviewer,
+                                                  'current_person': current_person,
+                                                  'phd_files': phd_files,
+                                                  'research_files': research_files,
+                                                  'tutoring_files': tutoring_files,
                                                   'role': current_role,
                                                   'menu_type': 'phd_supervisor_menu',
                                                   'year': mandate.academic_year.year + 1})

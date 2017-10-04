@@ -1915,7 +1915,7 @@ msgid "INACTIVE"
 msgstr "Inactive"
 
 msgid "RE_REGISTRATION"
-msgstr "Re-registration"
+msgstr "Active only for re-registration"
 
 msgid "OPTIONAL"
 msgstr "Optional"
@@ -2092,6 +2092,12 @@ msgstr "Formations"
 
 msgid "desc_lnk_formations"
 msgstr "Organization of formations"
+
+msgid "activity_search"
+msgstr "Activity - Search"
+
+msgid "service_course_search"
+msgstr "Service cours - Search"
 
 msgid "education_groups"
 msgstr "Education groups"

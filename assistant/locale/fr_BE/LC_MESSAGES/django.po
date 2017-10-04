@@ -314,6 +314,9 @@ msgstr "Grade"
 msgid "head_institute"
 msgstr "Président d'institut"
 
+msgid "help_mandates_selectedfiles"
+msgstr "Veuillez sélectionner le fichier XLSX"
+
 msgid "hours_per_year"
 msgstr "nombre d'heures par an"
 
@@ -361,6 +364,9 @@ msgstr "Mandat"
 
 msgid "mandates"
 msgstr "Mandats"
+
+msgid "mandates_injection"
+msgstr "Importation des mandats d'assistant"
 
 msgid "mandates_list"
 msgstr "Liste des mandats"

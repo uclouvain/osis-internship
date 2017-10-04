@@ -30,12 +30,13 @@ from django.core.urlresolvers import reverse
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render
 from django.utils import timezone
-from base.models import person
-from base.models.enums import structure_type
+
+from base.models import person, entity_version
+from base.models.enums import entity_type
 from assistant.forms import ReviewForm
-from assistant.models import assistant_mandate, review, mandate_structure, tutoring_learning_unit_year
-from assistant.models import reviewer, settings
-from assistant.models.enums import review_status, assistant_mandate_state, reviewer_role
+from assistant.models import assistant_mandate, review, mandate_entity, tutoring_learning_unit_year
+from assistant.models import reviewer, settings, assistant_document_file
+from assistant.models.enums import review_status, assistant_mandate_state, reviewer_role, document_type
 
 
 def user_is_reviewer_and_procedure_is_open(user):
@@ -54,6 +55,7 @@ def review_view(request):
     role = request.POST.get("role")
     mandate = assistant_mandate.find_mandate_by_id(mandate_id)
     current_reviewer = reviewer.find_by_person(request.user.person)
+    entity = entity_version.get_last_version(current_reviewer.entity)
     current_role = current_reviewer.role
     if role == reviewer_role.PHD_SUPERVISOR:
         try:
@@ -71,6 +73,7 @@ def review_view(request):
                                                 'mandate_id': mandate.id,
                                                 'mandate_state': mandate.state,
                                                 'current_reviewer': current_reviewer,
+                                                'entity': entity,
                                                 'assistant': assistant,
                                                 'year': mandate.academic_year.year + 1
                                                 })
@@ -83,6 +86,7 @@ def review_edit(request):
     current_reviewer = reviewer.can_edit_review(
         reviewer.find_by_person(person.find_by_user(request.user)).id, mandate_id
     )
+    entity = entity_version.get_last_version(current_reviewer.entity)
     delegate_role = current_reviewer.role + "_ASSISTANT"
     existing_review = review.find_review_for_mandate_by_role(mandate, delegate_role)
     if existing_review is None:
@@ -112,6 +116,7 @@ def review_edit(request):
                                                 'previous_mandates': previous_mandates,
                                                 'assistant': assistant,
                                                 'current_reviewer': current_reviewer,
+                                                'entity': entity,
                                                 'menu': menu,
                                                 'menu_type': 'reviewer_menu',
                                                 'form': form})
@@ -128,6 +133,7 @@ def review_save(request):
     form = ReviewForm(data=request.POST, instance=rev, prefix='rev')
     previous_mandates = assistant_mandate.find_before_year_for_assistant(mandate.academic_year.year, mandate.assistant)
     role = current_reviewer.role
+    entity = entity_version.get_last_version(current_reviewer.entity)
     menu = generate_reviewer_menu_tabs(role, mandate, role)
     if form.is_valid():
         current_review = form.save(commit=False)
@@ -135,9 +141,9 @@ def review_save(request):
             current_review.status = review_status.DONE
             current_review.save()
             if mandate.state == assistant_mandate_state.PHD_SUPERVISOR:
-                if mandate_structure.find_by_mandate_and_type(mandate, 'INSTITUTE'):
+                if mandate_entity.find_by_mandate_and_type(mandate, entity_type.INSTITUTE):
                     mandate.state = assistant_mandate_state.RESEARCH
-                elif mandate_structure.find_by_mandate_and_part_of_type(mandate, 'INSTITUTE'):
+                elif mandate_entity.find_by_mandate_and_type(mandate, entity_type.POLE):
                     mandate.state = assistant_mandate_state.RESEARCH
                 else:
                     mandate.state = assistant_mandate_state.SUPERVISION
@@ -165,6 +171,7 @@ def review_save(request):
                                                     'mandate_id': mandate.id,
                                                     'previous_mandates': previous_mandates,
                                                     'assistant': mandate.assistant,
+                                                    'entity': entity,
                                                     'menu': menu,
                                                     'menu_type': 'reviewer_menu',
                                                     'form': form})
@@ -176,7 +183,14 @@ def pst_form_view(request):
     mandate = assistant_mandate.find_mandate_by_id(mandate_id)
     current_reviewer = reviewer.find_by_person(request.user.person)
     current_role = current_reviewer.role
+    entity = entity_version.get_last_version(current_reviewer.entity)
     learning_units = tutoring_learning_unit_year.find_by_mandate(mandate)
+    phd_files = assistant_document_file.find_by_assistant_mandate_and_description(mandate,
+                                                                                  document_type.PHD_DOCUMENT)
+    research_files = assistant_document_file.find_by_assistant_mandate_and_description(mandate,
+                                                                                       document_type.RESEARCH_DOCUMENT)
+    tutoring_files = assistant_document_file.find_by_assistant_mandate_and_description(mandate,
+                                                                                       document_type.TUTORING_DOCUMENT)
     assistant = mandate.assistant
     menu = generate_reviewer_menu_tabs(current_role, mandate, None)
     return render(request, 'pst_form_view.html', {'menu': menu,
@@ -184,6 +198,10 @@ def pst_form_view(request):
                                                   'mandate_id': mandate.id,
                                                   'assistant': assistant, 'mandate': mandate,
                                                   'learning_units': learning_units,
+                                                  'entity': entity,
+                                                  'phd_files': phd_files,
+                                                  'research_files': research_files,
+                                                  'tutoring_files': tutoring_files,
                                                   'current_reviewer': current_reviewer,
                                                   'role': current_role,
                                                   'year': mandate.academic_year.year + 1})
@@ -196,7 +214,7 @@ def generate_reviewer_menu_tabs(role, mandate, active_item: None):
     mandate_states = {}
     if mandate.assistant.supervisor:
         mandate_states.update({assistant_mandate_state.PHD_SUPERVISOR: 1})
-    if mandate_structure.find_by_mandate_and_type(mandate, structure_type.INSTITUTE):
+    if mandate_entity.find_by_mandate_and_type(mandate, entity_type.INSTITUTE):
         mandate_states.update({assistant_mandate_state.RESEARCH: 2,
                                assistant_mandate_state.SUPERVISION: 3,
                                assistant_mandate_state.VICE_RECTOR: 4})
