@@ -41,9 +41,3 @@ def score_display(value, decimal_option):
         except:
             return value
 
-@register.filter
-def disabled(value):
-    if value is None:
-        return ""
-    else:
-        return "disabled"

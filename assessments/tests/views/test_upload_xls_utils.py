@@ -41,7 +41,7 @@ from attribution.tests.factories.attribution import AttributionFactory
 from base.tests.factories.session_examen import SessionExamFactory
 from base.tests.factories.offer_year import OfferYearFactory
 from base.tests.factories.offer_enrollment import OfferEnrollmentFactory
-from base.tests.factories.learning_unit_enrollment import LearningUnitEnrollment
+from base.tests.factories.learning_unit_enrollment import LearningUnitEnrollmentFactory
 from base.tests.factories.exam_enrollment import ExamEnrollmentFactory
 
 from base.models.enums import number_session, academic_calendar_type, exam_enrollment_justification_type
@@ -92,10 +92,10 @@ class TestUploadXls(TestCase):
         offer_enrollment_2 = OfferEnrollmentFactory(offer_year=an_offer_year,
                                                     student=student_2)
 
-        learning_unit_enrollment_1 = LearningUnitEnrollment(learning_unit_year=a_learning_unit_year,
-                                                            offer_enrollment=offer_enrollment_1)
-        learning_unit_enrollment_2 = LearningUnitEnrollment(learning_unit_year=a_learning_unit_year,
-                                                            offer_enrollment=offer_enrollment_2)
+        learning_unit_enrollment_1 = LearningUnitEnrollmentFactory(learning_unit_year=a_learning_unit_year,
+                                                                   offer_enrollment=offer_enrollment_1)
+        learning_unit_enrollment_2 = LearningUnitEnrollmentFactory(learning_unit_year=a_learning_unit_year,
+                                                                   offer_enrollment=offer_enrollment_2)
 
         ExamEnrollmentFactory(session_exam=a_session_exam,
                               learning_unit_enrollment=learning_unit_enrollment_1)
@@ -114,6 +114,15 @@ class TestUploadXls(TestCase):
         self.assertEqual(len(messages), 1)
         self.assertEqual(messages[0].tags, 'error')
         self.assertEqual(messages[0].message, _('no_file_submitted'))
+
+    def test_with_incorrect_format_file(self):
+        with open("assessments/tests/resources/bad_format.txt", 'rb') as score_sheet:
+            response = self.client.post(self.url, {'file': score_sheet}, follow=True)
+            messages = list(response.context['messages'])
+
+            self.assertEqual(len(messages), 1)
+            self.assertEqual(messages[0].tags, 'error')
+            self.assertEqual(messages[0].message, _('file_must_be_xlsx'))
 
     def test_with_no_scores_encoded(self):
         with open("assessments/tests/resources/empty_scores.xlsx", 'rb') as score_sheet:
@@ -205,3 +214,4 @@ class TestUploadXls(TestCase):
                 learning_unit_enrollment__offer_enrollment__student__registration_id=REGISTRATION_ID_1
             )
             self.assertEqual(exam_enrollment_1.score_draft, SCORE_1)
+
