@@ -115,6 +115,15 @@ class TestUploadXls(TestCase):
         self.assertEqual(messages[0].tags, 'error')
         self.assertEqual(messages[0].message, _('no_file_submitted'))
 
+    def test_with_incorrect_format_file(self):
+        with open("assessments/tests/resources/bad_format.txt", 'rb') as score_sheet:
+            response = self.client.post(self.url, {'file': score_sheet}, follow=True)
+            messages = list(response.context['messages'])
+
+            self.assertEqual(len(messages), 1)
+            self.assertEqual(messages[0].tags, 'error')
+            self.assertEqual(messages[0].message, _('file_must_be_xlsx'))
+
     def test_with_no_scores_encoded(self):
         with open("assessments/tests/resources/empty_scores.xlsx", 'rb') as score_sheet:
             response = self.client.post(self.url, {'file': score_sheet}, follow=True)
@@ -205,3 +214,4 @@ class TestUploadXls(TestCase):
                 learning_unit_enrollment__offer_enrollment__student__registration_id=REGISTRATION_ID_1
             )
             self.assertEqual(exam_enrollment_1.score_draft, SCORE_1)
+

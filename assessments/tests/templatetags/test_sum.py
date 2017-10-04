@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2017-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -23,10 +23,37 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django import template
+from django.test import TestCase
+from django.template import Context, Template
 
-register = template.Library()
 
-@register.filter
-def percentage(value):
-    return "{0:.0f}%".format(value)
+class SumTagTests(TestCase):
+    def test_sum_with_b_none_value(self):
+        out = Template(
+            "{% load sum %}"
+            "{{ a | sum:b }}"
+        ).render(Context({
+            'a': 15,
+            'b': None
+        }))
+        self.assertEqual(out, "15")
+
+    def test_sum_with_a_none_value(self):
+        out = Template(
+            "{% load sum %}"
+            "{{ a | sum:b }}"
+        ).render(Context({
+            'a': None,
+            'b': 15
+        }))
+        self.assertEqual(out, "")
+
+    def test_sum_with_a_and_b_value(self):
+        out = Template(
+            "{% load sum %}"
+            "{{ a | sum:b }}"
+        ).render(Context({
+            'a': 16,
+            'b': 15
+        }))
+        self.assertEqual(out, "31")
