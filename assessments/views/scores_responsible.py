@@ -28,6 +28,7 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from attribution import models as mdl_attr
 from base import models as mdl_base
+from base.business.entity_version import find_entity_version_according_academic_year
 from base.models.entity_manager import is_entity_manager
 from base.views import layout
 
@@ -37,6 +38,7 @@ from base.views import layout
 def scores_responsible(request):
     entities_manager = mdl_base.entity_manager.find_by_user(request.user)
     academic_year = mdl_base.academic_year.current_academic_year()
+    _append_entity_version(entities_manager, academic_year)
     return layout.render(request, 'scores_responsible.html', {"entities_manager": entities_manager,
                                                               "academic_year": academic_year,
                                                               "init": "0"})
@@ -46,10 +48,12 @@ def scores_responsible(request):
 @user_passes_test(is_entity_manager)
 def scores_responsible_search(request):
     entities_manager = mdl_base.entity_manager.find_by_user(request.user)
-    entities = [entity_manager.entity for entity_manager in entities_manager]
-    entities_with_descendants = mdl_base.entity.find_descendants(entities)
     academic_year = mdl_base.academic_year.current_academic_year()
+    _append_entity_version(entities_manager, academic_year)
+
     if request.GET:
+        entities = [entity_manager.entity for entity_manager in entities_manager]
+        entities_with_descendants = mdl_base.entity.find_descendants(entities)
         attributions = list(mdl_attr.attribution.search_scores_responsible(
             learning_unit_title=request.GET.get('learning_unit_title'),
             course_code=request.GET.get('course_code'),
@@ -137,3 +141,12 @@ def scores_responsible_add(request, pk):
                                    request.POST.get('learning_unit_title'),
                                    request.POST.get('tutor'),
                                    request.POST.get('scores_responsible')))
+
+
+def _append_entity_version(entities_manager, academic_year):
+    for entity_manager in entities_manager:
+        if hasattr(entity_manager.entity, 'entity_versions') and entity_manager.entity.entity_versions:
+            entity_manager.entity_version = find_entity_version_according_academic_year(
+                entity_manager.entity.entity_versions, academic_year)
+        else:
+            entity_manager.entity_version = None

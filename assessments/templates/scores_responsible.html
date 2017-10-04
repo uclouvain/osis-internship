@@ -34,7 +34,17 @@
 {% block content %}
 <div class="page-header">
     <h2>{% trans 'scores_responsibles' %} -
-        <label>{% for entity in entities_manager %}{% if forloop.last %}{{entity.structure.acronym}}{% else %}{{entity.structure.acronym}}, {% endif %}{% endfor %}</label> ({{ academic_year }})</h2>
+        <label>
+            {% for entity in entities_manager %}
+                {% if forloop.last %}
+                    {{entity.entity_version.acronym}}
+                {% else %}
+                    {{entity.entity_version.acronym}},
+                {% endif %}
+           {% endfor %}
+        </label>
+        ({{ academic_year }})
+    </h2>
 </div>
 <div class="panel panel-default">
     <div class="panel-body">

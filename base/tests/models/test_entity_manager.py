@@ -42,12 +42,12 @@ class EntityManagerTest(TestCase):
         self.user.save()
 
     def test_no_entity_manager_for_the_user(self):
-        self.assertIsNone(entity_manager.find_entity_manager_by_user(self.user))
+        self.assertFalse(entity_manager.is_entity_manager(self.user))
 
     def test_entity_manager_for_the_user(self):
         a_person = PersonFactory(user=self.user)
-        entity_mgr = EntityManagerFactory(person=a_person, structure=StructureFactory())
-        self.assertEqual(entity_manager.find_entity_manager_by_user(self.user), entity_mgr)
+        EntityManagerFactory(person=a_person)
+        self.assertTrue(entity_manager.is_entity_manager(self.user))
 
 
 def add_permission(user, codename):
