@@ -142,13 +142,6 @@ class EntityVersion(models.Model):
         else:
             return None
 
-    def get_parent_faculty_version(self, date=None):
-        if date is None:
-            date = timezone.now().date()
-
-        if self.parent:
-            find_parent_faculty_version(self.parent, date)
-
     def _contains_given_date(self, date):
         if self.start_date and self.end_date:
             return self.start_date <= date <= self.end_date
@@ -320,5 +313,6 @@ def find_parent_faculty_version(child_entity_ver, academic_yr):
 
 def find_latest_version_by_entity(ent,date):
     return EntityVersion.objects.filter(Q(end_date__gte=date) | Q(end_date__isnull=True),
-                                        start_date__lte=date, entity=ent) \
+                                        start_date__lte=date, entity=ent).select_related('entity',
+                                                                                         'parent') \
         .first()

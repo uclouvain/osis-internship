@@ -84,9 +84,9 @@ class LearningUnitYearForm(forms.Form):
         return clean_data
 
     def get_activity_learning_units(self):
-        return self.get_learning_units()
+        return self.get_learning_units(False)
 
-    def get_learning_units(self):
+    def get_learning_units(self, service_course_search):
         clean_data = self.cleaned_data
 
         entity_container_prefetch = Prefetch('learning_container_year__entitycontaineryear_set',
@@ -103,12 +103,12 @@ class LearningUnitYearForm(forms.Form):
             .select_related('academic_year', 'learning_container_year') \
             .prefetch_related(entity_container_prefetch) \
             .order_by('academic_year__year', 'acronym')[:MAX_RECORDS + 1]
-        list_results = [_append_latest_entities(learning_unit) for learning_unit in learning_units]
+        list_results = [_append_latest_entities(learning_unit, service_course_search) for learning_unit in learning_units]
 
         return list_results
 
     def get_service_course_learning_units(self):
-        list_results = self.get_learning_units()
+        list_results = self.get_learning_units(True)
         list_results_2 = []
         for l in list_results:
             if SERVICE_COURSE in l.entities:
@@ -194,22 +194,23 @@ def is_service_course(learning_unit_yr):
                 return False
     return True
 
-def _append_latest_entities(learning_unit):
+def _append_latest_entities(learning_unit, service_course_search):
     learning_unit.entities = {}
     if learning_unit.learning_container_year and learning_unit.learning_container_year.entity_containers_year:
         for entity_container_yr in learning_unit.learning_container_year.entity_containers_year:
             link_type = entity_container_yr.type
             latest_version = _get_latest_entity_version(entity_container_yr)
             learning_unit.entities[link_type] = latest_version
-    if entity_container_year_link_type.REQUIREMENT_ENTITY in learning_unit.entities:
-        entity_parent = mdl.entity_version.find_parent_faculty_version(learning_unit.entities[entity_container_year_link_type.REQUIREMENT_ENTITY],
-                                                                                                  learning_unit.learning_container_year.academic_year)
-        if entity_parent:
-            learning_unit.entities[PARENT_FACULTY] = entity_parent
-        else:
-            learning_unit.entities[PARENT_FACULTY] = learning_unit.entities[entity_container_year_link_type.REQUIREMENT_ENTITY]
+    if service_course_search:
+        if entity_container_year_link_type.REQUIREMENT_ENTITY in learning_unit.entities:
+            entity_parent = mdl.entity_version.find_parent_faculty_version(learning_unit.entities[entity_container_year_link_type.REQUIREMENT_ENTITY],
+                                                                                                      learning_unit.learning_container_year.academic_year)
+            if entity_parent:
+                learning_unit.entities[PARENT_FACULTY] = entity_parent
+            else:
+                learning_unit.entities[PARENT_FACULTY] = learning_unit.entities[entity_container_year_link_type.REQUIREMENT_ENTITY]
 
-        learning_unit.entities['SERVICE_COURSE'] = is_service_course(learning_unit)
+            learning_unit.entities['SERVICE_COURSE'] = is_service_course(learning_unit)
     return learning_unit
 
 
