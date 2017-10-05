@@ -2114,3 +2114,15 @@ msgstr "Recherche - Activité"
 
 msgid "service_course_search"
 msgstr "Recherche - Cours de service"
+
+msgid "diplomas_certificates"
+msgstr "Diplômes /  Certificats"
+
+msgid "diploma_title"
+msgstr "Intitulé du diplôme/du certificat"
+
+msgid "professionnal_title"
+msgstr "Titre professionnel"
+
+msgid "university_certificate_desc"
+msgstr "Mène à diplôme/à certificat"
