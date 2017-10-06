@@ -35,7 +35,6 @@ from base.models.enums import entity_type
 MAX_RECORDS = 1000
 
 EDUCATION_GROUP_CATEGORIES = (
-    ('', _('all')),
     (education_group_categories.TRAINING, _('TRAINING')),
     (education_group_categories.MINI_TRAINING, _('MINI_TRAINING')),
     (education_group_categories.GROUP, _('GROUP')),
