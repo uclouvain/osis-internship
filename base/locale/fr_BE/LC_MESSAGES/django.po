@@ -2114,3 +2114,12 @@ msgstr "Recherche - Activité"
 
 msgid "service_course_search"
 msgstr "Recherche - Cours de service"
+
+msgid "TRAINING"
+msgstr "Formation"
+
+msgid "MINI_TRAINING"
+msgstr "Mini formation"
+
+msgid "GROUP"
+msgstr "Groupe"
