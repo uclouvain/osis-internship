@@ -94,13 +94,13 @@ class LearningUnitYearForm(forms.Form):
                                                  link_type=[entity_container_year_link_type.ALLOCATION_ENTITY,
                                                             entity_container_year_link_type.REQUIREMENT_ENTITY])
                                              .prefetch_related(
-                                                 Prefetch('entity__entityversion_set', to_attr='entity_versions')
+                                                 Prefetch('entity__entityversion_set', queryset=mdl_entity_version.search(), to_attr='entity_versions')
                                              ),
                                              to_attr='entity_containers_year')
 
         clean_data['learning_container_year_id'] = _get_filter_learning_container_ids(clean_data)
         learning_units = mdl.learning_unit_year.search(**clean_data) \
-            .select_related('academic_year', 'learning_container_year') \
+            .select_related('academic_year', 'learning_container_year', 'learning_container_year__academic_year') \
             .prefetch_related(entity_container_prefetch) \
             .order_by('academic_year__year', 'acronym')[:MAX_RECORDS + 1]
         list_results = [_append_latest_entities(learning_unit, service_course_search) for learning_unit in learning_units]

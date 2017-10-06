@@ -229,7 +229,7 @@ def search(**kwargs):
     if 'end_date' in kwargs:
             queryset = queryset.filter(end_date__exact=kwargs['end_date'])
 
-    return queryset
+    return queryset.select_related('parent')
 
 
 def count(**kwargs):
