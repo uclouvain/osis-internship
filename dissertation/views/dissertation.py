@@ -23,7 +23,6 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from dissertation.utils.request import redirect_if_none
 from django.shortcuts import redirect
 from base.models.academic_year import find_academic_years, find_academic_year_by_id
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -97,9 +96,9 @@ def dissertations(request):
 @login_required
 @user_passes_test(adviser.is_manager)
 def manager_dissertations_detail(request, pk):
-
     dissert = dissertation.find_by_id(pk)
-    redirect_if_none(dissert,'manager_dissertations_list')
+    if dissert is None:
+        return redirect('manager_dissertations_list')
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
     if adviser_can_manage(dissert,adv):
@@ -185,7 +184,8 @@ def manager_dissertations_detail(request, pk):
 @user_passes_test(adviser.is_manager)
 def manager_dissertations_detail_updates(request, pk):
     dissert = dissertation.find_by_id(pk)
-    redirect_if_none(dissert, 'manager_dissertations_list')
+    if dissert is None:
+        return redirect('manager_dissertations_list')
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
     dissertation_updates = dissertation_update.search_by_dissertation(dissert)
@@ -200,7 +200,8 @@ def manager_dissertations_detail_updates(request, pk):
 @user_passes_test(adviser.is_manager)
 def manager_dissertations_edit(request, pk):
     dissert = dissertation.find_by_id(pk)
-    redirect_if_none(dissert, 'manager_dissertations_list')
+    if dissert is None:
+        return redirect('manager_dissertations_list')
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
     if adviser_can_manage(dissert,adv):
@@ -233,7 +234,8 @@ def manager_dissertations_edit(request, pk):
 @user_passes_test(adviser.is_manager)
 def manager_dissertations_jury_edit(request, pk):
     dissert_role = dissertation_role.find_by_id(pk)
-    redirect_if_none(dissert_role,'manager_dissertations_list')
+    if dissert_role is None:
+        return redirect('dissertations_list')
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
     if adviser_can_manage(dissert_role.dissertation,adv):
@@ -252,7 +254,8 @@ def manager_dissertations_jury_edit(request, pk):
 @user_passes_test(adviser.is_manager)
 def manager_dissertations_jury_new(request, pk):
     dissert = dissertation.find_by_id(pk)
-    redirect_if_none(dissert, 'manager_dissertations_list')
+    if dissert is None:
+        return redirect('manager_dissertations_list')
     count_dissertation_role = dissertation_role.count_by_dissertation(dissert)
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
@@ -444,7 +447,8 @@ def manager_dissertations_search(request):
 @user_passes_test(adviser.is_manager)
 def manager_dissertations_delete(request, pk):
     dissert = dissertation.find_by_id(pk)
-    redirect_if_none(dissert,'manager_dissertations_list')
+    if dissert is None:
+        return redirect('manager_dissertations_list')
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
     if (adviser_can_manage(dissert, adv)):
@@ -460,7 +464,8 @@ def manager_dissertations_delete(request, pk):
 @user_passes_test(adviser.is_manager)
 def manager_dissertations_role_delete(request, pk):
     dissert_role = dissertation_role.find_by_id(pk)
-    redirect_if_none(dissert_role, 'manager_dissertations_list')
+    if dissert_role is None:
+        return redirect('manager_dissertations_list')
     dissert = dissert_role.dissertation
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
@@ -477,7 +482,8 @@ def manager_dissertations_role_delete(request, pk):
 @user_passes_test(adviser.is_manager)
 def manager_dissertations_to_dir_submit(request, pk):
     dissert = dissertation.find_by_id(pk)
-    redirect_if_none(dissert, 'manager_dissertations_list')
+    if dissert is None:
+        return redirect('manager_dissertations_list')
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
     if (adviser_can_manage(dissert, adv)):
@@ -505,7 +511,8 @@ def manager_dissertations_to_dir_submit(request, pk):
 @user_passes_test(adviser.is_manager)
 def manager_dissertations_to_dir_submit_list(request, pk):
     dissert = dissertation.find_by_id(pk)
-    redirect_if_none(dissert, 'manager_dissertations_list')
+    if dissert is None:
+        return redirect('manager_dissertations_list')
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
     if (adviser_can_manage(dissert, adv)):
@@ -522,7 +529,8 @@ def manager_dissertations_to_dir_submit_list(request, pk):
 @user_passes_test(adviser.is_manager)
 def manager_dissertations_to_dir_ok(request, pk):
     dissert = dissertation.find_by_id(pk)
-    redirect_if_none(dissert, 'manager_dissertations_list')
+    if dissert is None:
+        return redirect('manager_dissertations_list')
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
     if (adviser_can_manage(dissert, adv)):
@@ -552,7 +560,8 @@ def manager_dissertations_to_dir_ok(request, pk):
 @user_passes_test(adviser.is_manager)
 def manager_dissertations_accept_comm_list(request, pk):
     dissert = dissertation.find_by_id(pk)
-    redirect_if_none(dissert, 'manager_dissertations_list')
+    if dissert is None:
+        return redirect('manager_dissertations_list')
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
     if (adviser_can_manage(dissert, adv)):
@@ -568,7 +577,8 @@ def manager_dissertations_accept_comm_list(request, pk):
 @user_passes_test(adviser.is_manager)
 def manager_dissertations_accept_eval_list(request, pk):
     dissert = dissertation.find_by_id(pk)
-    redirect_if_none(dissert, 'manager_dissertations_list')
+    if dissert is None:
+        return redirect('manager_dissertations_list')
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
     if (adviser_can_manage(dissert, adv)):
@@ -585,7 +595,8 @@ def manager_dissertations_accept_eval_list(request, pk):
 @user_passes_test(adviser.is_manager)
 def manager_dissertations_to_dir_ko(request, pk):
     dissert = dissertation.find_by_id(pk)
-    redirect_if_none(dissert, 'manager_dissertations_list')
+    if dissert is None:
+        return redirect('manager_dissertations_list')
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
     if (adviser_can_manage(dissert, adv)):
@@ -728,7 +739,8 @@ def adviser_can_manage(dissertation,adviser):
 @user_passes_test(adviser.is_teacher)
 def dissertations_detail(request, pk):
     dissert = dissertation.find_by_id(pk)
-    redirect_if_none(dissert, 'dissertations_list')
+    if dissert is None:
+        return redirect('dissertations_list')
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
 
@@ -763,7 +775,8 @@ def dissertations_detail(request, pk):
 @user_passes_test(adviser.is_teacher)
 def dissertations_detail_updates(request, pk):
     dissert = dissertation.find_by_id(pk)
-    redirect_if_none(dissert, 'dissertations_list')
+    if dissert is None:
+        return redirect('dissertations_list')
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
     if teacher_is_promotor(adv, dissert):
@@ -779,7 +792,8 @@ def dissertations_detail_updates(request, pk):
 @user_passes_test(adviser.is_teacher)
 def dissertations_delete(request, pk):
     dissert = dissertation.find_by_id(pk)
-    redirect_if_none(dissert, 'dissertations_list')
+    if dissert is None:
+        return redirect('dissertations_list')
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
     if teacher_is_promotor(adv, dissert):
@@ -794,7 +808,8 @@ def dissertations_delete(request, pk):
 @user_passes_test(adviser.is_teacher)
 def dissertations_to_dir_ok(request, pk):
     dissert = dissertation.find_by_id(pk)
-    redirect_if_none(dissert, 'dissertations_list')
+    if dissert is None:
+        return redirect('dissertations_list')
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
 
@@ -827,7 +842,8 @@ def dissertations_to_dir_ok(request, pk):
 @user_passes_test(adviser.is_teacher)
 def dissertations_to_dir_ko(request, pk):
     dissert = dissertation.find_by_id(pk)
-    redirect_if_none(dissert, 'dissertations_list')
+    if dissert is None:
+        return redirect('dissertations_list')
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
 
@@ -871,7 +887,8 @@ def dissertations_wait_list(request):
 @user_passes_test(adviser.is_teacher)
 def dissertations_role_delete(request, pk):
     dissert_role = dissertation_role.find_by_id(pk)
-    redirect_if_none(dissert_role,'dissertations_list')
+    if dissert_role is None:
+        return redirect('dissertations_list')
     dissert = dissert_role.dissertation
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
@@ -889,7 +906,8 @@ def dissertations_role_delete(request, pk):
 @user_passes_test(adviser.is_teacher)
 def dissertations_jury_new(request, pk):
     dissert = dissertation.find_by_id(pk)
-    redirect_if_none(dissert, 'dissertations_list')
+    if dissert is None:
+        return redirect('dissertations_list')
     person = mdl.person.find_by_user(request.user)
     adv = adviser.search_by_person(person)
     offer_prop = offer_proposition.get_by_dissertation(dissert)

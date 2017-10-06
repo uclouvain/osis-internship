@@ -23,7 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from dissertation.utils.request import redirect_if_none
+
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from base import models as mdl
@@ -53,7 +53,8 @@ def manager_offer_parameters(request):
 @user_passes_test(adviser.is_manager)
 def manager_offer_parameters_edit(request, pk):
     offer_prop = offer_proposition.find_by_id(pk)
-    redirect_if_none(offer_prop, 'dissertations')
+    if offer_prop is None:
+        return redirect('dissertations')
     if request.method == "POST":
         form = ManagerOfferPropositionForm(request.POST, instance=offer_prop)
         if form.is_valid():
