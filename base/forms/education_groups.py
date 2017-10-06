@@ -34,7 +34,6 @@ from base.models.enums import education_group_categories, offer_year_entity_type
 MAX_RECORDS = 1000
 
 EDUCATION_GROUP_CATEGORIES = (
-    ('', _('all_label')),
     (education_group_categories.TRAINING, _('TRAINING')),
     (education_group_categories.MINI_TRAINING, _('MINI_TRAINING')),
     (education_group_categories.GROUP, _('GROUP')),
@@ -52,6 +51,12 @@ class EducationGroupFilter(forms.Form):
     acronym = title = entity_management = forms.CharField(
         widget=forms.TextInput(attrs={'size': '10', 'class': 'form-control'}),
         max_length=20, required=False)
+
+    def clean_entity_management(self):
+        data_cleaned = self.cleaned_data.get('entity_management')
+        if data_cleaned:
+            return data_cleaned.upper()
+        return None
 
     def clean_category(self):
         data_cleaned = self.cleaned_data.get('category')
