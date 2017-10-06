@@ -2109,6 +2109,14 @@ msgstr "Activity - Search"
 msgid "service_course_search"
 msgstr "Service cours - Search"
 
+msgid "TRAINING"
+msgstr "Training"
+
+msgid "MINI_TRAINING"
+msgstr "Mini training"
+
+msgid "GROUP"
+msgstr "Group"
 msgid "diplomas_certificates"
 msgstr "Diplomas /  Certificates"
 
@@ -2138,3 +2146,4 @@ msgstr "Separate diploma"
 
 msgid "NOT_CONCERNED"
 msgstr "Not concerned"
+

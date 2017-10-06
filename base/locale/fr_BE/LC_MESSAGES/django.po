@@ -2115,6 +2115,15 @@ msgstr "Recherche - Activité"
 msgid "service_course_search"
 msgstr "Recherche - Cours de service"
 
+msgid "TRAINING"
+msgstr "Formation"
+
+msgid "MINI_TRAINING"
+msgstr "Mini formation"
+
+msgid "GROUP"
+msgstr "Groupe"
+
 msgid "diplomas_certificates"
 msgstr "Diplômes /  Certificats"
 
@@ -2135,7 +2144,6 @@ msgstr "Pour tous les étudiants"
 
 msgid "diploma"
 msgstr "Diplôme"
-
 
 msgid "UNIQUE"
 msgstr "Diplôme unique"
