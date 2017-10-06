@@ -2130,3 +2130,11 @@ msgstr "For all students"
 msgid "diploma"
 msgstr "Diploma"
 
+msgid "UNIQUE"
+msgstr "Unique diploma"
+
+msgid "SEPARATE"
+msgstr "Separate diploma"
+
+msgid "NOT_CONCERNED"
+msgstr "Not concerned"

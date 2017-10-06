@@ -2135,3 +2135,13 @@ msgstr "Pour tous les étudiants"
 
 msgid "diploma"
 msgstr "Diplôme"
+
+
+msgid "UNIQUE"
+msgstr "Diplôme unique"
+
+msgid "SEPARATE"
+msgstr "Diplôme séparé"
+
+msgid "NOT_CONCERNED"
+msgstr "Non concerné"
