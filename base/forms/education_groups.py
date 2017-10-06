@@ -28,12 +28,14 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 from base.models import academic_year, education_group_year, entity_version, offer_type, offer_year_entity
+from base.models import entity
 from base.models.enums import education_group_categories, offer_year_entity_type
-
+from base.models.enums import entity_type
 
 MAX_RECORDS = 1000
 
 EDUCATION_GROUP_CATEGORIES = (
+    ('', _('all')),
     (education_group_categories.TRAINING, _('TRAINING')),
     (education_group_categories.MINI_TRAINING, _('MINI_TRAINING')),
     (education_group_categories.GROUP, _('GROUP')),
@@ -91,8 +93,10 @@ def _get_filter_entity_management(entity_management):
 
 
 def _get_entities_ids(entity_management):
-    entity_versions = entity_version.search(acronym=entity_management)
-    return list(entity_versions.values_list('entity_id', flat=True).distinct())
+    entity_versions = entity_version.search(acronym=entity_management, entity_type=entity_type.FACULTY)\
+                                    .select_related('entity').distinct('entity')
+    entities = entity.find_descendants([ent_v.entity for ent_v in entity_versions])
+    return [ent.id for ent in entities] if entities else []
 
 
 def _append_entity_management(education_group):
