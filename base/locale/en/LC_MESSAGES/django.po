@@ -2120,3 +2120,13 @@ msgstr "Professionnal title"
 
 msgid "university_certificate_desc"
 msgstr "University certificat"
+
+msgid "program_coorganization"
+msgstr "Program co-organization with other institutes"
+
+msgid "for_all_students"
+msgstr "For all students"
+
+msgid "diploma"
+msgstr "Diploma"
+

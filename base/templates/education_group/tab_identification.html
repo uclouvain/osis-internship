@@ -139,6 +139,44 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+                                   {% if coorganizations %}
+                                        <table class="table">
+                                            <thead>
+                                                <th>{% trans 'institution'%}</th>
+                                                <th></th>
+                                                <th>{% trans 'for_all_students'%}</th>
+                                                <th>{% trans 'enrollment_campus'%}</th>
+                                                <th>{% trans 'diploma' %}</th>
+                                            </thead>
+                                        {% for coorganization in coorganizations %}
+                                            <tr>
+                                                <td>
+                                                    {{coorganization.col1}}
+                                                </td>
+                                                <td>
+                                                    {{coorganization.col2}}
+                                                </td>
+                                                <td>
+                                                    {% if coorganization.col3 %}
+                                                        {% trans coorganization.col3 %}
+                                                    {% endif%}
+                                                </td>
+                                                <td>
+                                                    {% if coorganization.col4 %}
+                                                        {% trans coorganization.col4 %}
+                                                    {% endif%}
+                                                </td>
+                                                <td>
+                                                    {{coorganization.col5}}
+                                                </td>
+                                            </tr>
+                                        {% endfor%}
+                                        </table>
+                                   {% endif%}
+                                </div>
+                            </div>
 
                         </div>
                         <div class="col-md-6">

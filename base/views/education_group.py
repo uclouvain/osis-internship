@@ -74,6 +74,7 @@ def education_group_read(request, education_group_year_id):
 
 def _education_group_identification_tab(request, education_group_year_id):
     education_group_year = mdl.education_group_year.find_by_id(education_group_year_id)
+    coorganizations = [{'col1':'col1','col2':'col2','col3':'YES', 'col4':'NO', 'col5':'col5'}]
     return layout.render(request, "education_group/tab_identification.html", locals())
 
 
