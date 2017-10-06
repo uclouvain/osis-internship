@@ -95,7 +95,7 @@ urlpatterns = [
                 url(u'^$', learning_unit.learning_unit_volumes_management, name="learning_unit_volumes_management"),
                 url(u'^validation/$', learning_unit.volumes_validation, name="volumes_validation")])),
         ])),
-        url(r'^check/$', learning_unit.check_acronym),
+        url(r'^check/$', learning_unit.check_acronym, name="check_acronym"),
     ])),
 
     url(r'^my_osis/', include([
