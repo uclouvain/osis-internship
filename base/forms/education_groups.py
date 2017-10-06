@@ -33,6 +33,12 @@ from base.models.enums import education_group_categories, offer_year_entity_type
 
 MAX_RECORDS = 1000
 
+EDUCATION_GROUP_CATEGORIES = (
+    ('', _('all_label')),
+    (education_group_categories.TRAINING, _('TRAINING')),
+    (education_group_categories.MINI_TRAINING, _('MINI_TRAINING')),
+    (education_group_categories.GROUP, _('GROUP')),
+)
 
 class EducationGroupFilter(forms.Form):
     academic_year = forms.ModelChoiceField(queryset=academic_year.find_academic_years(),required=False,
@@ -41,7 +47,7 @@ class EducationGroupFilter(forms.Form):
     education_group_type = forms.ModelChoiceField(queryset=offer_type.find_all(), required=False,
                                                   widget=forms.Select(attrs={'class': 'form-control'}),
                                                   empty_label=_('all_label'))
-    category = forms.ChoiceField((('', _('all_label')),) + education_group_categories.CATEGORIES, required=False,
+    category = forms.ChoiceField(EDUCATION_GROUP_CATEGORIES, required=False,
                                  widget=forms.Select(attrs={'class': 'form-control'}))
     acronym = title = entity_management = forms.CharField(
         widget=forms.TextInput(attrs={'size': '10', 'class': 'form-control'}),

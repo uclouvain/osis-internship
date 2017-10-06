@@ -2108,3 +2108,12 @@ msgstr "Activity - Search"
 
 msgid "service_course_search"
 msgstr "Service cours - Search"
+
+msgid "TRAINING"
+msgstr "Training"
+
+msgid "MINI_TRAINING"
+msgstr "Mini training"
+
+msgid "GROUP"
+msgstr "Group"
