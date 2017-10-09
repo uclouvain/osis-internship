@@ -80,7 +80,7 @@ def _education_group_identification_tab(request, education_group_year_id):
     for coorganization in coorganizations_list:
         coorganizations.append({'coorganization':coorganization,
                                 'address' : mdl.organization_address.find_by_organization(coorganization.organization).first()})
-    # coorganizations = [{'col1':'col1','col2':'col2','col3':'YES', 'col4':'NO', 'col5':'col5'}]
+
     return layout.render(request, "education_group/tab_identification.html", locals())
 
 
