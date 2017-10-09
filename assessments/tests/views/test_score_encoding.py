@@ -23,6 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from datetime import timedelta
 from unittest.mock import patch
 
 from django.contrib.auth.models import Permission
@@ -30,6 +31,7 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.test import TestCase, RequestFactory
 from django.utils import timezone
+from django.utils.translation import ugettext_lazy as _
 from assessments.business.score_encoding_list import ScoresEncodingList
 
 from base.tests.models import test_exam_enrollment, test_offer_enrollment, \
@@ -54,7 +56,7 @@ from base.tests.factories.student import StudentFactory
 class OnlineEncodingTest(TestCase):
     def setUp(self):
         self.request_factory = RequestFactory()
-        academic_year = AcademicYearFactory(year=timezone.now().year - 1)
+        academic_year = _get_academic_year()
         academic_calendar = AcademicCalendarFactory.build(title="Submission of score encoding - 1",
                                                           start_date=academic_year.start_date,
                                                           end_date=academic_year.end_date,
@@ -291,13 +293,13 @@ class OutsideEncodingPeriodTest(TestCase):
         add_permission(self.user, "can_access_scoreencoding")
         self.client.force_login(self.user)
 
-        # Create context
-        academic_year = AcademicYearFactory(year=timezone.now().year - 1)
-        academic_calendar = AcademicCalendarFactory.build(title="Submission of score encoding - 1",
-                                                          academic_year=academic_year,
+        # Create context out of range
+        self.academic_year = _get_academic_year()
+        self.academic_calendar = AcademicCalendarFactory.build(title="Submission of score encoding - 1",
+                                                          academic_year=self.academic_year,
                                                           reference=academic_calendar_type.SCORES_EXAM_SUBMISSION)
-        academic_calendar.save(functions=[])
-        self.session_exam_calendar = SessionExamCalendarFactory(academic_calendar=academic_calendar,
+        self.academic_calendar.save(functions=[])
+        self.session_exam_calendar = SessionExamCalendarFactory(academic_calendar=self.academic_calendar,
                                                                 number_session=number_session.ONE)
 
     def test_redirection_to_current_exam_session(self):
@@ -311,6 +313,43 @@ class OutsideEncodingPeriodTest(TestCase):
         response = self.client.get(url)
         self.assertRedirects(response, "%s?next=%s" % (reverse('outside_scores_encodings_period'), reverse('scores_encoding')))  # Redirection
 
+    def test_message_score_encoding_not_open(self):
+        self.session_exam_calendar.delete()
+        url = reverse('outside_scores_encodings_period')
+        response = self.client.get(url)
+        messages = list(response.context['messages'])
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(messages[0].tags, 'warning')
+        self.assertEqual(messages[0].message, _('score_encoding_period_not_open'))
+
+    def test_multiple_messages_outside_encoding_period(self):
+        date_format = str(_('date_format'))
+
+        # Submission of score encoding - 1 [Two day before today]
+        self.academic_calendar.end_date = timezone.now() - timedelta(days=2)
+        self.academic_calendar.save(functions=[])
+
+        # Create submission of score encoding - 2 [Start in 100 days]
+        ac = AcademicCalendarFactory.build(title="Submission of score encoding - 2",
+                                           academic_year=self.academic_year,
+                                           start_date=timezone.now() + timedelta(days=100),
+                                           end_date=timezone.now() + timedelta(days=130),
+                                           reference=academic_calendar_type.SCORES_EXAM_SUBMISSION)
+        ac.save(functions=[])
+        SessionExamCalendarFactory(academic_calendar=ac, number_session=number_session.TWO)
+
+        url = reverse('scores_encoding')
+        response = self.client.get(url, follow=True)
+        messages = list(response.context['messages'])
+
+        self.assertEqual(len(messages), 2)
+        self.assertEqual(messages[0].tags, 'warning')
+        end_date_str = self.academic_calendar.end_date.strftime(date_format)
+        self.assertEqual(messages[0].message, _('outside_scores_encodings_period_latest_session') % (1, end_date_str))
+        self.assertEqual(messages[1].tags, 'warning')
+        start_date_str = ac.start_date.strftime(date_format)
+        self.assertEqual(messages[1].message, _('outside_scores_encodings_period_closest_session') % (2, start_date_str))
+
 
 class GetScoreEncodingViewProgramManagerTest(TestCase):
     def setUp(self):
@@ -320,7 +359,7 @@ class GetScoreEncodingViewProgramManagerTest(TestCase):
         self.client.force_login(self.user)
 
         # Set user as program manager of two offer
-        academic_year = AcademicYearFactory(year=timezone.now().year - 1)
+        academic_year = _get_academic_year()
         self.offer_year_bio2ma = OfferYearFactory(acronym="BIO2MA", title="Master en Biologie",
                                                   academic_year=academic_year)
         self.offer_year_bio2bac = OfferYearFactory(acronym="BIO2BAC", title="Bachelier en Biologie",
@@ -419,6 +458,12 @@ def prepare_exam_enrollment_for_double_encoding_validation(exam_enrollment):
     exam_enrollment.score_reencoded = 14
     exam_enrollment.score_draft = 14
     exam_enrollment.save()
+
+
+def _get_academic_year():
+    start_date = timezone.now() - timedelta(days=5)
+    end_date = timezone.now() + timedelta(days=220)
+    return AcademicYearFactory(year=timezone.now().year, start_date=start_date, end_date=end_date)
 
 
 def add_permission(user, codename):

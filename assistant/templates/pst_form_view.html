@@ -42,44 +42,79 @@
 {% endblock %}
 {% block content %}
 <div class="page-header">
-    <h6>{% trans 'connected_as' %} {{ current_reviewer.person }} ({% trans current_reviewer.role %}) - {{ current_reviewer.structure.acronym }}</h6>
-    <h3>{% trans 'assistant_mandates_renewal' %} ({{ year }})</h3>
+    {% if current_reviewer %}
+        <h6>{% trans 'connected_as' %} {{ current_reviewer.person }} ({% trans current_reviewer.role %}) - {{ entity.acronym }}</h6>
+    {% else %}
+        <h6>{% trans 'connected_as' %} {{ current_person }} ({% trans role %})</h6>
+    {% endif %}
+    <h3>{% trans 'assistant_mandates_renewals' %} ({{ year }})</h3>
     <h4>{{ assistant.person }}</h4>
     <ul class="nav nav-tabs">
-	<li class="active"><a href="#">{% trans 'assistant_form' %}</a></li>
-    {% for dict in menu %}
-        <li class={{ dict.class}}>
-        {% if menu_type == 'phd_supervisor_menu' %}
-            {% if dict.action == 'edit' %}
-                <a href="{% url 'phd_supervisor_review_edit' mandate_id=mandate_id %}">
-            {% elif dict.action == 'view' %}
-                <a href="{% url 'phd_supervisor_review_view' mandate_id=mandate_id %}">
-            {% else %}
-                <a href="#">
-            {% endif %}
+	    {% if menu_type == 'phd_supervisor_menu' %}
+            <li class="active"><a href="#">
+                <form method="POST" action="{% url 'phd_supervisor_pst_form_view' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="mandate_id" value="{{ mandate_id }}">
+                    <button type="submit" class="btn btn-link" title="{% trans 'view'%}">
+                        {% trans 'assistant_form' %}
+                    </button>
+                </form>
+                </a>
+            </li>
         {% else %}
-            {% if dict.action == 'edit' %}
-                <a href="{% url 'review_edit' mandate_id=mandate_id %}">
-            {% elif dict.action == 'view' %}
-                <a href="{% url 'review_view' mandate_id=mandate_id role=dict.item %}">
-            {% else %}
-                <a href="#">
-            {% endif %}
+	        <li class="active"><a href="#">
+                <form method="POST" action="{% url 'pst_form_view' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="mandate_id" value="{{ mandate_id }}">
+                    <button type="submit" class="btn btn-link" title="{% trans 'view'%}">
+                        {% trans 'assistant_form' %}
+                    </button>
+                </form>
+                </a>
+            </li>
         {% endif %}
-        {% if dict.item == 'PHD_SUPERVISOR' %}
-            <strong>{% trans 'phd_supervisor_review' %}</strong></a>
-        {% elif dict.item == 'RESEARCH' %}
-            <strong>{% trans 'research_review' %}</strong></a>
-        {% elif dict.item == 'SUPERVISION' %}
-            <strong>{% trans 'supervision_review' %}</strong></a>
-        {% elif dict.item == 'VICE_RECTOR' %}
-            <strong>{% trans 'sector_vice_rector_review' %}</strong></a>
-        {% endif %}
-        </li>
-    {% endfor %}
-</ul>
+        {% for dict in menu %}
+            <li class={{ dict.class}}><a href="#">
+                {% if menu_type == 'phd_supervisor_menu' %}
+                    {% if dict.action == 'edit' %}
+                        <form method="POST" action="{% url 'phd_supervisor_review_edit' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="mandate_id" value="{{ mandate_id }}">
+                            <button type="submit" class="btn btn-link" title="{% trans 'edit'%}">
+                    {% elif dict.action == 'view' %}
+                        <form method="POST" action="{% url 'phd_supervisor_review_view' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="mandate_id" value="{{ mandate_id }}">
+                            <button type="submit" class="btn btn-link" title="{% trans 'view'%}">
+                    {% endif %}
+                {% else %}
+                    {% if dict.action == 'edit' %}
+                        <form method="POST" action="{% url 'review_edit' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="mandate_id" value="{{ mandate_id }}">
+                            <button type="submit" class="btn btn-link" title="{% trans 'edit'%}">
+                    {% elif dict.action == 'view' %}
+                        <form method="POST" action="{% url 'review_view' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="mandate_id" value="{{ mandate_id }}">
+                            <input type="hidden" name="role" value="{{ dict.item }}">
+                            <button type="submit" class="btn btn-link" title="{% trans 'view'%}">
+                    {% endif %}
+                {% endif %}
+                {% if dict.item == 'PHD_SUPERVISOR' %}
+                    {% trans 'phd_supervisor_review' %}
+                {% elif dict.item == 'RESEARCH' %}
+                    {% trans 'research_review' %}
+                {% elif dict.item == 'SUPERVISION' %}
+                    {% trans 'supervision_review' %}
+                {% elif dict.item == 'VICE_RECTOR' %}
+                    {% trans 'sector_vice_rector_review' %}
+                {% endif %}
+                </button></form></a>
+            </li>
+        {% endfor %}
+    </ul>
 </div>
-
 <div class="panel panel-default">
     <div class="panel-body">
   		<div class="panel-default">
@@ -93,7 +128,7 @@
                     {% trans 'renewal_type' %}
                 </div>
                 <div class="col-md-9">
-                    {{ mandate.renewal_type }}
+                    {% trans mandate.renewal_type %}
                 </div>
             </div>
             {% for structure in mandate.mandatestructure_set.all|dictsort:"structure.type" %}
@@ -108,7 +143,7 @@
             {% endfor %}
             <div class="row" style="padding-top: 2px;">
                 <div class="col-md-3">
-                    {% trans 'full_time_equivalent' %}
+                    {% trans 'fulltime_equivalent' %}
                 </div>
                 <div class="col-md-9">
                     {{mandate.fulltime_equivalent}}
@@ -149,7 +184,7 @@
                         {% trans 'expected_registering_date' %}
                     </div>
                     <div class="col-md-3">
-                        {{ assistant.expected_phd_date }}
+                        {{ assistant.expected_phd_date|default_if_none:"n/a" }}
                     </div>
                 </div>
                 <div class="row" style="padding-top: 2px;">
@@ -157,7 +192,7 @@
                         {% trans 'supervisor' %}
                     </div>
                     <div class="col-md-9">
-                        {{ assistant.supervisor }}
+                        {{ assistant.supervisor|default_if_none:"n/a" }}
                     </div>
                 </div>
                 <div class="row" style="padding-top: 2px;">
@@ -165,7 +200,7 @@
                         {% trans 'phd_inscription_date' %}
                     </div>
                     <div class="col-md-9">
-                        {{ assistant.phd_inscription_date }}
+                        {{ assistant.phd_inscription_date|default_if_none:"n/a" }}
                     </div>
                 </div>
                 <div class="row" style="padding-top: 2px;">
@@ -173,7 +208,7 @@
                         {% trans 'confirmatory_test_date' %}<h6>{% trans '2nd_renewal' %}</h6>
                     </div>
                     <div class="col-md-9">
-                        {{ assistant.confirmation_test_date }}
+                        {{ assistant.confirmation_test_date|default_if_none:"n/a" }}
                     </div>
                 </div>
                 <div class="row" style="padding-top: 2px;">
@@ -181,10 +216,99 @@
                         {% trans 'thesis_defence_date' %}
                     </div>
                     <div class="col-md-9">
-                        {{ assistant.thesis_date }}
+                        {{ assistant.thesis_date|default_if_none:"n/a" }}
                     </div>
                 </div>
             </div>
+            {% if phd_files.all %}
+                <div class="row" style="padding-top: 10px;">
+                    <div class="col-md-12">
+                    {% trans 'support_committee_reports' %}
+                    </div>
+                </div>
+                <div class="row" style="padding-top: 2px;">
+                    <ul>
+                        {% for file in phd_files %}
+                            <li>
+                                <a href="{% url 'assistant_file_download' document_file_id=file.id %}">
+                                    {{ file.document_file }}</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+            <div class="panel-default">
+  			        <div class="panel-heading">
+  				        <h4>{% trans 'research' %}</h4>
+    		        </div>
+            </div>
+            <div class="form-group" style="padding-top: 10px;">
+                <div class="row" style="padding-top: 2px;">
+                    <div class="col-md-3">
+                        {% trans 'scientific_internships' %}
+                    </div>
+                    <div class="col-md-9">
+                        {{ mandate.internships|default_if_none:"n/a" }}
+                    </div>
+                </div>
+                <div class="row" style="padding-top: 2px;">
+                    <div class="col-md-3">
+                        {% trans 'conferences_contributor' %}
+                    </div>
+                    <div class="col-md-3">
+                        {{ mandate.conferences|default_if_none:"n/a" }}
+                    </div>
+                </div>
+                <div class="row" style="padding-top: 2px;">
+                    <div class="col-md-3">
+                        {% trans 'publications_in_progress' %}
+                    </div>
+                    <div class="col-md-9">
+                        {{ mandate.publications|default_if_none:"n/a" }}
+                    </div>
+                </div>
+                <div class="row" style="padding-top: 2px;">
+                    <div class="col-md-3">
+                        {% trans 'awards' %}
+                    </div>
+                    <div class="col-md-9">
+                        {{ mandate.awards|default_if_none:"n/a" }}
+                    </div>
+                </div>
+                <div class="row" style="padding-top: 2px;">
+                    <div class="col-md-3">
+                        {% trans 'framing_participation' %}
+                    </div>
+                    <div class="col-md-9">
+                        {{ mandate.framing|default_if_none:"n/a" }}
+                    </div>
+                </div>
+                <div class="row" style="padding-top: 2px;">
+                    <div class="col-md-3">
+                        {% trans 'remark' %}
+                    </div>
+                    <div class="col-md-9">
+                        {{ mandate.remark|default_if_none:"n/a" }}
+                    </div>
+                </div>
+            </div>
+            {% if research_files.all %}
+                <div class="row" style="padding-top: 10px;">
+                    <div class="col-md-12">
+                        {% trans 'dial_publications' %}
+                    </div>
+                </div>
+                <div class="row" style="padding-top: 2px;">
+                    <ul>
+                        {% for file in research_files %}
+                        <li>
+                            <a href="{% url 'assistant_file_download' document_file_id=file.id %}">
+                                {{ file.document_file }}</a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
         {% endif %}
         <div class="panel-default">
   			<div class="panel-heading">
@@ -197,7 +321,7 @@
                     {% trans 'function_outside_university' %}
                 </div>
                 <div class="col-md-6">
-                    {{ mandate.external_functions }}
+                    {{ mandate.external_functions|default_if_none:"n/a" }}
                 </div>
             </div>
             <div class="row" style="padding-top: 2px;">
@@ -205,7 +329,7 @@
                     {% trans 'external_post' %}
                 </div>
                 <div class="col-md-6">
-                    {{ mandate.external_contract }}
+                    {{ mandate.external_contract|default_if_none:"n/a" }}
                 </div>
             </div>
         </div>
@@ -248,10 +372,27 @@
             </tbody>
             </table>
         </div>
+        {% if tutoring_files.all %}
+            <div class="row" style="padding-top: 10px;">
+                <div class="col-md-12">
+                    {% trans 'tutoring_reports' %}
+                </div>
+            </div>
+            <div class="row" style="padding-top: 2px;">
+                <ul>
+                    {% for file in tutoring_files %}
+                        <li>
+                            <a href="{% url 'assistant_file_download' document_file_id=file.id %}">
+                                {{ file.document_file }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
         <div class="panel-default">
             <div class="panel-heading">
                 <h4>{% trans 'representation_activities' %}</h4>
-                <h6>({% trans 'hours per year' %})</h6>
+                <h6>({% trans 'hours_per_year' %})</h6>
             </div>
         </div>
         <div class="form-group" style="padding-top: 10px;">
@@ -299,7 +440,7 @@
         <div class="panel-default">
             <div class="panel-heading">
                 <h4>{% trans 'service_activities' %}</h4>
-                <h6> ({% trans 'hours per year' %})</h6>
+                <h6> ({% trans 'hours_per_year' %})</h6>
             </div>
         </div>
         <div class="form-group" style="padding-top: 10px;">
@@ -355,7 +496,7 @@
                     {% trans 'formations' %}
                 </div>
                 <div class="col-md-6">
-                    {{ mandate.formations }}
+                    {{ mandate.formations|default_if_none:"n/a" }}
                 </div>
             </div>
         </div>
@@ -373,14 +514,16 @@
                     {{ mandate.tutoring_percent }} %
                 </div>
             </div>
-            <div class="row" style="padding-top: 2px;">
-                <div class="col-md-5">
-                    {% trans 'research_percent' %}
+            {% if mandate.assistant_type == 'ASSISTANT' %}
+                <div class="row" style="padding-top: 2px;">
+                    <div class="col-md-5">
+                        {% trans 'research_percent' %}
+                    </div>
+                    <div class="col-md-7">
+                        {{ mandate.research_percent }} %
+                    </div>
                 </div>
-                <div class="col-md-7">
-                    {{ mandate.research_percent }} %
-                </div>
-            </div>
+            {% endif %}
             <div class="row" style="padding-top: 2px;">
                 <div class="col-md-5">
                     {% trans 'service_activities_percent' %}
@@ -409,7 +552,7 @@
                     {% trans 'activities_report_remark' %}
                 </div>
                 <div class="col-md-7">
-                    {{ mandate.activities_report_remark }}
+                    {{ mandate.activities_report_remark|default_if_none:"n/a" }}
                 </div>
             </div>
         </div>

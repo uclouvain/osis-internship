@@ -52,6 +52,9 @@ msgstr "A=Absent"
 msgid "academic_calendar"
 msgstr "Calendrier académique"
 
+msgid "academic_year_small"
+msgstr "Anac."
+
 msgid "academic_calendar_management"
 msgstr "Gestion du calendrier académique"
 
@@ -206,6 +209,9 @@ msgstr "Date de création"
 
 msgid "credits"
 msgstr "Crédits"
+
+msgid "customized"
+msgstr "Personnalisée"
 
 msgid "data"
 msgstr "Données"
@@ -460,6 +466,9 @@ msgstr "Produire le fichier Excel"
 msgid "global_identifiant"
 msgstr "Identifiant global"
 
+msgid "fgs"
+msgstr "FGS"
+
 msgid "go"
 msgstr "Continuer"
 
@@ -506,7 +515,9 @@ msgid "info_address_changed_for_papersheet"
 msgstr "Ce formulaire de modification des coordonnées d’une entité administrative du programme d’étude %s "
        "impacte uniquement l’affichage des coordonnées sur la feuille de notes. Cela ne modifie donc pas "
        "les coordonnées officielles d’une entité/structure. Par ailleurs, la liste déroulante "
-       "« Réutiliser l’adresse de … » permet de faciliter l’encodage de l’adresse à partir de données préexistantes"
+       "« Veuillez sélectionner une adresse … » permet de faciliter l’encodage de l’adresse à partir de données "
+       "préexistantes. Si l'adresse d'une entité change, l'adresse affichée sur les feuilles de notes sera impactée "
+       "également"
 
 msgid "inject"
 msgstr "Injecter"
@@ -633,7 +644,7 @@ msgid "message"
 msgstr "Message"
 
 msgid "message_address_papersheet"
-msgstr "Réutilisez l'adresse d'une entité liée au programme ou informez l'adresse d'affichage pour la feuille des notes"
+msgstr "Réutilisez l'adresse d'une entité liée au programme ou informez l'adresse d'affichage pour la feuille de notes."
 
 msgid "message_not_resent_no_email"
 msgstr "Le message ne peut être réenvoyé , l'utilisateur n'a pas d'adresse mail."
@@ -699,14 +710,23 @@ msgstr "Mes études"
 msgid "name"
 msgstr "Nom"
 
+msgid "full_name"
+msgstr "Nom complet"
+
 msgid "national_register"
 msgstr "Numéro de registre nationnal"
+
+msgid "no_current_entity_version_found"
+msgstr "L'entité sélectionnée n'existe plus aujourd'hui (fin de validité dépassée)."
 
 msgid "no_data_for_this_academic_year"
 msgstr "Aucune données pour cette année académique"
 
 msgid "no_dubble_score_encoded_comparison_impossible"
 msgstr "Aucune note n'a été double encodée ; aucune comparaison à effectuer."
+
+msgid "no_entity_address_found"
+msgstr "Aucune adresse trouvée pour l'entité sélectionnée."
 
 msgid "no_exam_session_opened_for_the_moment"
 msgstr "Aucune session d'encodage de notes ouverte pour le moment. "
@@ -931,6 +951,10 @@ msgstr "Rechercher/mettre à jour la liste"
 
 msgid "registration_id"
 msgstr "NOMA"
+
+msgid "identification_number"
+msgstr "Matricule"
+
 
 msgid "registration_id_not_access_or_not_exist"
 msgstr "Étudiant non inscrit à l'examen"
@@ -1515,8 +1539,15 @@ msgstr "Conform. horaires"
 msgid "planned_classrooms"
 msgstr "Classes prévues"
 
+msgid "real_on_planned_classrooms"
+msgstr "Classes effectives/prévues"
+
+
 msgid "classes"
 msgstr "Classes"
+
+msgid "class"
+msgstr "Classe"
 
 msgid "learning_unit_code"
 msgstr "Code de l'UE"
@@ -1633,7 +1664,7 @@ msgid "requirement_entity"
 msgstr "Entité resp. cahier de charges"
 
 msgid "requirement_entity_small"
-msgstr "Ent. ch."
+msgstr "Ent. charge"
 
 msgid "allocation_entity"
 msgstr "Entité resp. de l'attribution"
@@ -1645,7 +1676,7 @@ msgid "with_entity_subordinated_small"
 msgstr "Avec ent. subord."
 
 msgid "additional_requirement_entity"
-msgstr "Entité complémentaire"
+msgstr "Entité resp. cahier de charges complémentaire"
 
 msgid "academic_end_year"
 msgstr "Anac de fin"
@@ -1686,9 +1717,6 @@ msgstr "Classes effectives"
 msgid "lu_usage"
 msgstr "Utilisation par les UE"
 
-msgid "used_by_partim"
-msgstr "Utilisation par partim "
-
 msgid "academic_years"
 msgstr "Années académiques"
 
@@ -1708,10 +1736,10 @@ msgid "component"
 msgstr "Composant"
 
 msgid "used_by"
-msgstr "Réutilisé par l'unité d'enseignement"
+msgstr "Utilisation par l'unité d'enseignement"
 
 msgid "offers_enrollments"
-msgstr "Inscriptions aux offres"
+msgstr "Inscriptions aux formations"
 
 msgid "learning_units_enrollments"
 msgstr "Inscription aux unités d'enseignement"
@@ -1737,9 +1765,6 @@ msgstr "Etudiants"
 msgid "student_title"
 msgstr "Etudiant"
 
-msgid "link_creation_impossible"
-msgstr "L'unité d'enseignement ci-dessus n'utilise pas ce composant"
-
 msgid "classe"
 msgstr "Classe"
 
@@ -1757,3 +1782,344 @@ msgstr "partie 2"
 
 msgid "title_official"
 msgstr "Intitulé officiel"
+
+msgid "create_learning_unit"
+msgstr "Création d'une unité d'enseignement"
+
+msgid "existed_acronym"
+msgstr "Sigle a déjà existé pour "
+
+msgid "existing_acronym"
+msgstr "Sigle déja existant"
+
+msgid "invalid_acronym"
+msgstr "Sigle non valide"
+
+msgid "acronym_rules"
+msgstr "Site en une lettre\n"
+       "Sigle en min 2 et max 4 lettres\n"
+       "Code numérique en 4 chiffres"
+
+msgid "end_year_title"
+msgstr "Année de fin"
+
+msgid "basic_informations_title"
+msgstr "Informations de base"
+
+msgid "active_title"
+msgstr "Actif"
+
+msgid "titles"
+msgstr "Intitulés"
+
+msgid "fixtures_build"
+msgstr "Créer des fixtures anonymisées"
+
+msgid "desc_lnk_fixtures_build"
+msgstr "Crée un fichier json avec des fixtures anonymisées"
+
+msgid "partial_volume_1"
+msgstr "Volume Q1"
+
+msgid "partial_volume_2"
+msgstr "Volume Q2"
+
+msgid "partial_volume_1Q"
+msgstr "Q1"
+
+msgid "partial_volume_2Q"
+msgstr "Q2"
+
+msgid "planned_classes"
+msgstr "Classes prévues"
+
+msgid "planned_classes_pc"
+msgstr "P.C."
+
+msgid "total_volume"
+msgstr "Volume total"
+
+msgid "total_volume_charge"
+msgstr "Volume de charge total"
+
+msgid "total_volume_voltot"
+msgstr "Vol.tot"
+
+msgid "vol_charge"
+msgstr "Vol.charge"
+
+msgid "volumes_management"
+msgstr "Gestion des volumes horaires"
+
+msgid "volumes_validation_success"
+msgstr "Les données entrées respectent les règles de calculs des volumes horaires."
+
+msgid "vol_tot_not_equal_to_q1_q2"
+msgstr "Vol.tot = Q1 + Q2"
+
+msgid "vol_tot_req_entities_not_equal_to_entity"
+msgstr "Le volume total de charge n'est pas égal à la somme des volumes de charge"
+
+msgid "vol_tot_req_entities_not_equal_to_vol_tot_mult_cp"
+msgstr "Vol.charge = Vol.tot * C.P"
+
+msgid "vol_tot_full_must_be_greater_than_partim"
+msgstr "Vol.tot du cours principal > Vol.tot du partim"
+
+msgid "vol_q1_full_must_be_greater_or_equal_to_partim"
+msgstr "Q1 du cours principal >= Q1 du partim"
+
+msgid "vol_q2_full_must_be_greater_or_equal_to_partim"
+msgstr "Q2 du cours principal >= Q2 du partim"
+
+msgid "planned_classes_full_must_be_greater_or_equal_to_partim"
+msgstr "C.P. du cours principal >= C.P. du partim"
+
+msgid "entity_requirement_full_must_be_greater_or_equal_to_partim"
+msgstr "Entité de charge du cours principal >= Entité de charge du partim"
+
+msgid "end_date_gt_begin_date"
+msgstr "L'année de fin doit etre égale ou supérieur à l'année de départ"
+
+msgid "session_title"
+msgstr "Session"
+
+msgid "remarks_title"
+msgstr "Remarques"
+
+msgid "faculty_remark"
+msgstr "Faculté"
+
+msgid "other_remark"
+msgstr "Autre"
+
+msgid "new_learning_unit"
+msgstr "Nouvelle unité d'enseignement"
+
+msgid "previous"
+msgstr "Précédent"
+
+msgid "next"
+msgstr "Suivant"
+
+msgid "learning_location"
+msgstr "Lieu d'enseignement"
+
+msgid "NON_ACADEMIC"
+msgstr "Non academique autre"
+
+msgid "NON_ACADEMIC_CREF"
+msgstr "Non académique CREF"
+
+msgid "ACADEMIC"
+msgstr "Académique"
+
+msgid "ACTIVE"
+msgstr "Actif"
+
+msgid "INACTIVE"
+msgstr "Inactif"
+
+msgid "RE_REGISTRATION"
+msgstr "Actif uniquement pour des réinscriptions"
+
+msgid "OPTIONAL"
+msgstr "Optionnel"
+
+msgid "NO_PRINT"
+msgstr "Pas d'impression"
+
+msgid "IN_HEADING_2_OF_DIPLOMA"
+msgstr "Dans rubrique 2 du diplôme"
+
+msgid "IN_EXPECTED_FORM"
+msgstr "Sous forme d'attendu"
+
+msgid "FEE_1"
+msgstr "Rôle"
+
+msgid "FEE_2"
+msgstr "Rôle + examen"
+
+msgid "FEE_3"
+msgstr "AESS, CAPAES ou fin de cycle"
+
+msgid "FEE_4"
+msgstr "Minerval sans examen"
+
+msgid "FEE_5"
+msgstr "Minerval complet"
+
+msgid "FEE_6"
+msgstr "certificat universitaire"
+
+msgid "FEE_7"
+msgstr "Master complémentaire spécialisation médicale"
+
+msgid "FEE_8"
+msgstr "Concours d’accès"
+
+msgid "FEE_10"
+msgstr "10 CU 30 crédits"
+
+msgid "FEE_11"
+msgstr "11 Certificat compétence méd"
+
+msgid "FEE_12"
+msgstr "12 Offres ISA : 12BA et 21MS"
+
+msgid "FEE_13"
+msgstr "13 Offres ISA : 13BA et 22MS"
+
+msgid "DAILY"
+msgstr "Horaire de jour"
+
+msgid "SHIFTED"
+msgstr "Horaire décalé"
+
+msgid "ADAPTED"
+msgstr "Horaire adapté"
+
+msgid "academic_calendar_type"
+msgstr "Type d'événement"
+
+msgid "DELIBERATION"
+msgstr "Délibération"
+
+msgid "DISSERTATION_SUBMISSION"
+msgstr "Soumission de mémoires"
+
+msgid "EXAM_ENROLLMENTS"
+msgstr "Inscription aux examens"
+
+msgid "SCORES_EXAM_DIFFUSION"
+msgstr "Diffusion des notes d'examen"
+
+msgid "SCORES_EXAM_SUBMISSION"
+msgstr "Soumission des feuilles de note"
+
+msgid "TEACHING_CHARGE_APPLICATION"
+msgstr "Application pour charges d'enseignement"
+
+msgid "field_is_required"
+msgstr "Ce champ est obligatoire."
+
+msgid "associated_entity"
+msgstr "Les entités associées"
+
+msgid "LU_WARNING_INVALID_ACRONYM"
+msgstr "Si l'acronym est introduit, il doit au minimum faire 3 caractères"
+
+msgid "title_in_french"
+msgstr "Intitulé en français"
+
+msgid "schedule_type"
+msgstr "Type horaire"
+
+msgid "enrollment_campus"
+msgstr "Lieu d'inscription"
+
+msgid "other_campus_activities"
+msgstr "Activités sur d'autres sites"
+
+msgid "unspecified"
+msgstr "Indéterminé"
+
+msgid "university_certificate"
+msgstr "Certificat universitaire"
+
+msgid "studies_domain"
+msgstr "Domaine d'études"
+
+msgid "primary_language"
+msgstr "Langue principale"
+
+msgid "other_language_activities"
+msgstr "Activité dans d'autres langues"
+
+msgid "funding"
+msgstr "Finançable"
+
+msgid "funding_cud"
+msgstr "Financement coopération internationale CCD/CUD"
+
+msgid "funding_direction"
+msgstr "Orientation de financement"
+
+msgid "cud_funding_direction"
+msgstr "Orientation coopération internationale CCD/CUD"
+
+msgid "active_status"
+msgstr "Actif"
+
+msgid "partial_deliberation"
+msgstr "Sous-épreuve"
+
+msgid "admission_exam"
+msgstr "Concours"
+
+msgid "academic_type"
+msgstr "Nature"
+
+msgid "keywords"
+msgstr "Mots clés"
+
+msgid "training_type"
+msgstr "Type de formation"
+
+msgid "QUADRIMESTER"
+msgstr "Quadrimestre(s)"
+
+msgid "TRIMESTER"
+msgstr "Trimestre(s)"
+
+msgid "MONTH"
+msgstr "Mois"
+
+msgid "WEEK"
+msgstr "Semaine(s)"
+
+msgid "DAY"
+msgstr "Jour(s)"
+
+msgid "administration_entity"
+msgstr "Entité d'administration"
+
+msgid "management_entity"
+msgstr "Entité académique"
+
+msgid "enrollment_enabled"
+msgstr "Inscriptible"
+
+msgid "formations"
+msgstr "Formations"
+
+msgid "formations_lnk"
+msgstr "Formations"
+
+msgid "desc_lnk_formations"
+msgstr "Organisation des formations"
+
+msgid "education_groups"
+msgstr "Organisations de formations"
+
+msgid "entity_management"
+msgstr "Fac. gestion"
+
+msgid "of_category"
+msgstr "Type d'organisation de formation"
+
+msgid "activity_search"
+msgstr "Recherche - Activité"
+
+msgid "service_course_search"
+msgstr "Recherche - Cours de service"
+
+msgid "TRAINING"
+msgstr "Formation"
+
+msgid "MINI_TRAINING"
+msgstr "Mini formation"
+
+msgid "GROUP"
+msgstr "Groupe"

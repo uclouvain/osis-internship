@@ -45,7 +45,7 @@
 <div class="panel panel-default">
     <div class="panel-body">
         <h3>{{ mandate.assistant.person }} ({{ mandate.assistant.person.gender }})</h3>
-        <form method="post" action=" {% url 'mandate_save' mandate.id %} ">
+        <form method="post" action=" {% url 'mandate_save' %} ">
             {% csrf_token %}
             {{ mandate.assistant.person.email }}
             <div class="form-group">
@@ -84,7 +84,7 @@
             </div>
             {{ formset.management_form }}
             <div class="form-group">
-                <label for="txt_structures">{% trans 'structures' %}</label>
+                <label for="txt_structures">{% trans 'entities' %}</label>
                 {% for form in formset %}
                     {% for field in form %}
                         {% if field.name == "DELETE" %}
@@ -107,6 +107,7 @@
                  <label for="txt_other_status">{% trans 'other_status' %}</label>
                  {{ form.other_status }}<span class="error">{{ form.other_status.errors }}</span>
             </div>
+            <input type="hidden" name="mandate_id" value="{{ mandate.id }}">
             <button type="submit" class="btn btn-primary" title="{% trans 'save'%}" id="bt_mandate_save"><span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'save'%}</button>
             <a class="btn btn-default" id="lnk_mandate_cancel" href="{% url 'mandates_list' %}">
                 <span class="glyphicon glyphicon-cancel" aria-hidden="true"></span> {% trans 'cancel'%}</a>

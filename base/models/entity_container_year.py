@@ -32,9 +32,11 @@ from base.models.enums import entity_container_year_link_type
 
 
 class EntityContainerYearAdmin(admin.ModelAdmin):
-    list_display = ('learning_container_year', 'entity', 'type')
-    fieldsets = ((None, {'fields': ('entity',)}),)
+    list_display = ('external_id', 'learning_container_year', 'entity', 'type')
+    fieldsets = ((None, {'fields': ('entity', 'learning_container_year', 'type')}),)
     search_fields = ['learning_container_year__acronym', 'type']
+    list_filter = ('learning_container_year__academic_year',)
+    raw_id_fields = ('entity', 'learning_container_year')
 
 
 class EntityContainerYear(models.Model):
@@ -116,4 +118,3 @@ def find_all_additional_requirement_entities(learning_container_year):
 def find_by_learning_container_year(a_learning_container_year, a_entity_container_year_link_type):
     return EntityContainerYear.objects.filter(learning_container_year=a_learning_container_year,
                                               type=a_entity_container_year_link_type)
-

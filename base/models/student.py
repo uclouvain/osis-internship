@@ -46,6 +46,11 @@ class Student(SerializableModel):
     def __str__(self):
         return u"%s (%s)" % (self.person, self.registration_id)
 
+    class Meta:
+        permissions = (
+            ("can_access_student", "Can access student"),
+        )
+
 
 def find_by(registration_id=None, person_name=None, person_username=None, person_first_name=None, full_registration=None):
     """

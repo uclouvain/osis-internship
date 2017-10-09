@@ -23,12 +23,17 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+import datetime
+
+from django.contrib import admin
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
-from django.contrib import admin
 from django.db.models import Q
 from django.utils import timezone
+
 from base.models.enums import entity_type
+from base.models.enums.organization_type import MAIN
+from osis_common.utils.datetime import get_tzinfo
 
 
 class EntityVersionAdmin(admin.ModelAdmin):
@@ -63,6 +68,10 @@ class EntityVersion(models.Model):
             super(EntityVersion, self).save()
         else:
             raise AttributeError('EntityVersion invalid parameters')
+
+    def exists_now(self):
+        now = datetime.datetime.now().date()
+        return (not self.end_date) or (self.end_date and self.start_date < now < self.end_date)
 
     def can_save_entity_version(self):
         return self.count_entity_versions_same_entity_overlapping_dates() == 0 and \
@@ -177,6 +186,28 @@ def find_latest_version(date):
                                 .order_by('-start_date')
 
 
+def get_last_version(entity, date=None):
+    qs = EntityVersion.objects.filter(entity=entity)
+
+    if date:
+        qs = qs.filter(Q(end_date__gte=date) | Q(end_date__isnull=True),
+                       start_date__lte=date)
+
+    return qs.latest('start_date')
+    # find_latest_version(academic_year.current_academic_year().start_date).get(entity=entity)
+
+
+def get_by_entity_and_date(entity, date):
+    if date is None:
+        date = timezone.now()
+    try:
+        entity_version = EntityVersion.objects.filter(Q(end_date__gte=date) | Q(end_date__isnull=True),
+                                                      entity=entity, start_date__lte=date)
+    except ObjectDoesNotExist:
+        return None
+    return entity_version
+
+
 def search(**kwargs):
     queryset = EntityVersion.objects
 
@@ -198,7 +229,7 @@ def search(**kwargs):
     if 'end_date' in kwargs:
             queryset = queryset.filter(end_date__exact=kwargs['end_date'])
 
-    return queryset
+    return queryset.select_related('parent')
 
 
 def count(**kwargs):
@@ -247,3 +278,41 @@ def _match_dates(osis_date, esb_date):
         return esb_date is None
     else:
         return osis_date.strftime('%Y-%m-%d') == esb_date
+
+
+def find_main_entities_version():
+    entities_version = find_latest_version(date=datetime.datetime.now(get_tzinfo()))\
+        .filter(entity_type__in=[entity_type.SECTOR, entity_type.FACULTY, entity_type.SCHOOL,
+                                 entity_type.INSTITUTE, entity_type.DOCTORAL_COMMISSION],
+                entity__organization__type=MAIN).order_by('acronym')
+    return entities_version
+
+
+def find_first_latest_version_by_period(ent,start_date, end_date):
+    return EntityVersion.objects.filter(Q(end_date__lte=end_date) | Q(end_date__isnull=True),
+                                        start_date__gte=start_date, entity=ent) \
+        .order_by('-start_date').first()
+
+
+def find_parent_faculty_version(child_entity_ver, academic_yr):
+    if child_entity_ver:
+        if child_entity_ver.parent is None:
+            return None
+        else:
+            entity_parent_version = find_latest_version_by_entity(child_entity_ver.parent,
+                                                                  academic_yr.start_date)
+            if entity_parent_version is None:
+                return None
+            else:
+                if entity_parent_version.entity_type == entity_type.FACULTY:
+                    return entity_parent_version
+                else:
+                    return find_parent_faculty_version(entity_parent_version, academic_yr)
+    return None
+
+
+def find_latest_version_by_entity(ent,date):
+    return EntityVersion.objects.filter(Q(end_date__gte=date) | Q(end_date__isnull=True),
+                                        start_date__lte=date, entity=ent).select_related('entity',
+                                                                                         'parent') \
+        .first()

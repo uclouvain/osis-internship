@@ -24,7 +24,7 @@
 #
 ##############################################################################
 from django.conf.urls import url, include
-from assessments.views import score_encoding, upload_xls_utils, pgm_manager_administration
+from assessments.views import score_encoding, upload_xls_utils, pgm_manager_administration, score_sheet
 from django.views.i18n import javascript_catalog
 
 from assessments.views import scores_responsible
@@ -67,6 +67,13 @@ urlpatterns = [
     ])),
 
     url(r'^jsi18n/', javascript_catalog, js_info_dict),
+
+    url(r'^offers/', include([
+        url(r'^(?P<offer_year_id>[0-9]+)/', include([
+            url(r'^score_encoding/$', score_sheet.offer_score_encoding_tab, name='offer_score_encoding_tab'),
+            url(r'^score_sheet_address/save/$', score_sheet.save_score_sheet_address, name='save_score_sheet_address'),
+        ]))
+    ])),
 
     url(r'^pgm_manager/', include([
         url(r'^$', pgm_manager_administration.pgm_manager_administration, name='pgm_manager'),

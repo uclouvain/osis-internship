@@ -41,12 +41,12 @@ def download(request, document_file_id):
 
 
 @login_required
-def delete(request, mandate_id, document_file_id, url):
+def delete(request, document_file_id, url):
     assistant_mandate_document = mdl.assistant_document_file.find_by_id(document_file_id)
     document = document_file.find_by_id(assistant_mandate_document.document_file.id)
     assistant_mandate_document.delete()
     document.delete()
-    return HttpResponseRedirect(reverse(url, kwargs={'mandate_id': mandate_id}))
+    return HttpResponseRedirect(reverse(url))
 
 
 @login_required

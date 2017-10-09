@@ -3,8 +3,6 @@
     "model": "base.academiccalendar",
     "pk": 1,
     "fields": {
-      "external_id": "2015_Submission of exam scores - exam session 1",
-      "changed": "2016-05-03T09:57:28.828Z",
       "academic_year": 1,
       "title": "Submission of exam scores - exam session 1",
       "description": "",
@@ -19,8 +17,6 @@
     "model": "base.academiccalendar",
     "pk": 2,
     "fields": {
-      "external_id": "2015_Submission of exam scores - exam session 2",
-      "changed": "2016-05-03T09:57:28.828Z",
       "academic_year": 1,
       "title": "Submission of exam scores - exam session 2",
       "description": "",
@@ -35,8 +31,6 @@
     "model": "base.academiccalendar",
     "pk": 3,
     "fields": {
-      "external_id": "2015_Submission of exam scores - exam session 3",
-      "changed": "2016-05-03T09:57:28.828Z",
       "academic_year": 1,
       "title": "Submission of exam scores - exam session 3",
       "description": "",
@@ -51,9 +45,7 @@
     "model": "base.academiccalendar",
     "pk": 4,
     "fields": {
-      "external_id": "2015_Submission of exam scores - exam session 1",
-      "changed": "2016-05-03T09:57:28.828Z",
-      "academic_year": 2,
+      "academic_year": 1,
       "title": "Submission of exam scores - exam session 1",
       "description": "",
       "start_date": "2017-01-01",
@@ -67,9 +59,7 @@
     "model": "base.academiccalendar",
     "pk": 5,
     "fields": {
-      "external_id": "2015_Submission of exam scores - exam session 2",
-      "changed": "2016-05-03T09:57:28.828Z",
-      "academic_year": 2,
+      "academic_year": 1,
       "title": "Submission of exam scores - exam session 2",
       "description": "",
       "start_date": "2017-05-15",
@@ -83,9 +73,7 @@
     "model": "base.academiccalendar",
     "pk": 6,
     "fields": {
-      "external_id": "2015_Submission of exam scores - exam session 3",
-      "changed": "2016-05-03T09:57:28.828Z",
-      "academic_year": 2,
+      "academic_year": 1,
       "title": "Submission of exam scores - exam session 3",
       "description": "",
       "start_date": "2017-08-01",
@@ -99,8 +87,6 @@
     "model": "base.academiccalendar",
     "pk": 7,
     "fields": {
-      "external_id": "2015_Deliberations - exam session 1",
-      "changed": "2016-05-03T09:57:28.828Z",
       "academic_year": 1,
       "title": "Deliberations - exam session 1",
       "description": "",
@@ -115,8 +101,6 @@
     "model": "base.academiccalendar",
     "pk": 8,
     "fields": {
-      "external_id": "2015_Deliberations - exam session 2",
-      "changed": "2016-05-03T09:57:28.828Z",
       "academic_year": 1,
       "title": "Deliberations - exam session 2",
       "description": "",
@@ -131,8 +115,6 @@
     "model": "base.academiccalendar",
     "pk": 9,
     "fields": {
-      "external_id": "2015_Deliberations - exam session 3",
-      "changed": "2016-05-03T09:57:28.828Z",
       "academic_year": 1,
       "title": "Deliberations - exam session 3",
       "description": "",
@@ -147,8 +129,6 @@
     "model": "base.academiccalendar",
     "pk": 10,
     "fields": {
-      "external_id": "2015_Diffusion of exam scores - exam session 1",
-      "changed": "2016-05-03T09:57:28.828Z",
       "academic_year": 1,
       "title": "Diffusion of exam scores - exam session 1",
       "description": "",
@@ -163,8 +143,6 @@
     "model": "base.academiccalendar",
     "pk": 11,
     "fields": {
-      "external_id": "2015_Diffusion of exam scores - exam session 2",
-      "changed": "2016-05-03T09:57:28.828Z",
       "academic_year": 1,
       "title": "Diffusion of exam scores - exam session 2",
       "description": "",
@@ -179,8 +157,6 @@
     "model": "base.academiccalendar",
     "pk": 12,
     "fields": {
-      "external_id": "2015_Diffusion of exam scores - exam session 3",
-      "changed": "2016-05-03T09:57:28.828Z",
       "academic_year": 1,
       "title": "Diffusion of exam scores - exam session 3",
       "description": "",
@@ -195,8 +171,6 @@
     "model": "base.academiccalendar",
     "pk": 13,
     "fields": {
-      "external_id": "2015_Exam enrollments - exam session 1",
-      "changed": "2016-05-03T09:57:28.828Z",
       "academic_year": 1,
       "title": "Exam enrollments - exam session 1",
       "description": "",
@@ -211,8 +185,6 @@
     "model": "base.academiccalendar",
     "pk": 14,
     "fields": {
-      "external_id": "2015_Exam enrollments - exam session 2",
-      "changed": "2016-05-03T09:57:28.828Z",
       "academic_year": 1,
       "title": "Exam enrollments - exam session 2",
       "description": "",
@@ -227,8 +199,6 @@
     "model": "base.academiccalendar",
     "pk": 15,
     "fields": {
-      "external_id": "2015_Exam enrollments - exam session 3",
-      "changed": "2016-05-03T09:57:28.828Z",
       "academic_year": 1,
       "title": "Exam enrollments - exam session 3",
       "description": "",
@@ -243,8 +213,6 @@
     "model": "base.academiccalendar",
     "pk": 16,
     "fields": {
-      "external_id": "2015_Submission of academic dissertations - exam sess 1",
-      "changed": "2016-05-03T09:57:28.828Z",
       "academic_year": 1,
       "title": "Submission of academic dissertations - exam sess 1",
       "description": "",
@@ -259,9 +227,246 @@
     "model": "base.academiccalendar",
     "pk": 17,
     "fields": {
-      "external_id": "2015_Submission of academic dissertations - exam sess 2",
-      "changed": "2016-05-03T09:57:28.828Z",
       "academic_year": 1,
+      "title": "Submission of academic dissertations - exam sess 2",
+      "description": "",
+      "start_date": null,
+      "end_date": null,
+      "highlight_title": null,
+      "highlight_description": null,
+      "highlight_shortcut": null
+    }
+  },
+
+  {
+    "model": "base.academiccalendar",
+    "pk": 18,
+    "fields": {
+      "academic_year": 2,
+      "title": "Submission of exam scores - exam session 1",
+      "description": "",
+      "start_date": "2016-01-01",
+      "end_date": "2016-02-20",
+      "highlight_title": null,
+      "highlight_description": null,
+      "highlight_shortcut": null
+    }
+  },
+  {
+    "model": "base.academiccalendar",
+    "pk": 19,
+    "fields": {
+      "academic_year": 2,
+      "title": "Submission of exam scores - exam session 2",
+      "description": "",
+      "start_date": "2016-05-15",
+      "end_date": "2016-07-02",
+      "highlight_title": "2\u00e8me session d'examens!",
+      "highlight_description": "La deuxi\u00e8me session d'examens est ouverte. Vous pouvez encoder les notes en ligne, par fichier excel et par feuille de notes.",
+      "highlight_shortcut": "studies/assessments/scores_encoding"
+    }
+  },
+  {
+    "model": "base.academiccalendar",
+    "pk": 20,
+    "fields": {
+      "academic_year": 2,
+      "title": "Submission of exam scores - exam session 3",
+      "description": "",
+      "start_date": "2016-08-01",
+      "end_date": "2016-09-28",
+      "highlight_title": null,
+      "highlight_description": null,
+      "highlight_shortcut": null
+    }
+  },
+  {
+    "model": "base.academiccalendar",
+    "pk": 21,
+    "fields": {
+      "academic_year": 2,
+      "title": "Submission of exam scores - exam session 1",
+      "description": "",
+      "start_date": "2017-01-01",
+      "end_date": "2017-02-20",
+      "highlight_title": null,
+      "highlight_description": null,
+      "highlight_shortcut": null
+    }
+  },
+  {
+    "model": "base.academiccalendar",
+    "pk": 23,
+    "fields": {
+      "academic_year": 2,
+      "title": "Submission of exam scores - exam session 2",
+      "description": "",
+      "start_date": "2017-05-15",
+      "end_date": "2017-07-02",
+      "highlight_title": "2\u00e8me session d'examens!",
+      "highlight_description": "La deuxi\u00e8me session d'examens est ouverte. Vous pouvez encoder les notes en ligne, par fichier excel et par feuille de notes.",
+      "highlight_shortcut": "studies/assessments/scores_encoding"
+    }
+  },
+  {
+    "model": "base.academiccalendar",
+    "pk": 24,
+    "fields": {
+      "academic_year": 2,
+      "title": "Submission of exam scores - exam session 3",
+      "description": "",
+      "start_date": "2017-08-01",
+      "end_date": "2017-09-28",
+      "highlight_title": null,
+      "highlight_description": null,
+      "highlight_shortcut": null
+    }
+  },
+  {
+    "model": "base.academiccalendar",
+    "pk": 25,
+    "fields": {
+      "academic_year": 1,
+      "title": "Deliberations - exam session 1",
+      "description": "",
+      "start_date": null,
+      "end_date": null,
+      "highlight_title": "sqdf",
+      "highlight_description": "qsdf",
+      "highlight_shortcut": "/studies/assessments/"
+    }
+  },
+  {
+    "model": "base.academiccalendar",
+    "pk": 26,
+    "fields": {
+      "academic_year": 2,
+      "title": "Deliberations - exam session 2",
+      "description": "",
+      "start_date": "2016-04-13",
+      "end_date": "2016-04-29",
+      "highlight_title": null,
+      "highlight_description": null,
+      "highlight_shortcut": null
+    }
+  },
+  {
+    "model": "base.academiccalendar",
+    "pk": 27,
+    "fields": {
+      "academic_year": 2,
+      "title": "Deliberations - exam session 3",
+      "description": "",
+      "start_date": null,
+      "end_date": null,
+      "highlight_title": null,
+      "highlight_description": null,
+      "highlight_shortcut": null
+    }
+  },
+  {
+    "model": "base.academiccalendar",
+    "pk": 28,
+    "fields": {
+      "academic_year": 2,
+      "title": "Diffusion of exam scores - exam session 1",
+      "description": "",
+      "start_date": null,
+      "end_date": null,
+      "highlight_title": null,
+      "highlight_description": null,
+      "highlight_shortcut": null
+    }
+  },
+  {
+    "model": "base.academiccalendar",
+    "pk": 29,
+    "fields": {
+      "academic_year": 2,
+      "title": "Diffusion of exam scores - exam session 2",
+      "description": "",
+      "start_date": null,
+      "end_date": null,
+      "highlight_title": null,
+      "highlight_description": null,
+      "highlight_shortcut": null
+    }
+  },
+  {
+    "model": "base.academiccalendar",
+    "pk": 30,
+    "fields": {
+      "academic_year": 2,
+      "title": "Diffusion of exam scores - exam session 3",
+      "description": "",
+      "start_date": null,
+      "end_date": null,
+      "highlight_title": null,
+      "highlight_description": null,
+      "highlight_shortcut": null
+    }
+  },
+  {
+    "model": "base.academiccalendar",
+    "pk": 31,
+    "fields": {
+      "academic_year": 2,
+      "title": "Exam enrollments - exam session 1",
+      "description": "",
+      "start_date": null,
+      "end_date": null,
+      "highlight_title": null,
+      "highlight_description": null,
+      "highlight_shortcut": null
+    }
+  },
+  {
+    "model": "base.academiccalendar",
+    "pk": 32,
+    "fields": {
+      "academic_year": 2,
+      "title": "Exam enrollments - exam session 2",
+      "description": "",
+      "start_date": null,
+      "end_date": null,
+      "highlight_title": null,
+      "highlight_description": null,
+      "highlight_shortcut": null
+    }
+  },
+  {
+    "model": "base.academiccalendar",
+    "pk": 33,
+    "fields": {
+      "academic_year": 2,
+      "title": "Exam enrollments - exam session 3",
+      "description": "",
+      "start_date": null,
+      "end_date": null,
+      "highlight_title": null,
+      "highlight_description": null,
+      "highlight_shortcut": null
+    }
+  },
+  {
+    "model": "base.academiccalendar",
+    "pk": 34,
+    "fields": {
+      "academic_year": 2,
+      "title": "Submission of academic dissertations - exam sess 1",
+      "description": "",
+      "start_date": null,
+      "end_date": null,
+      "highlight_title": null,
+      "highlight_description": null,
+      "highlight_shortcut": null
+    }
+  },
+  {
+    "model": "base.academiccalendar",
+    "pk": 35,
+    "fields": {
+      "academic_year": 2,
       "title": "Submission of academic dissertations - exam sess 2",
       "description": "",
       "start_date": null,

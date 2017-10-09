@@ -95,6 +95,9 @@
                                 {% if perms.base.can_access_offer %}
                                     <li><a href="{% url 'offers' %}" id="lnk_dropdown_offers">{% trans 'offers' %}</a></li>
                                 {% endif %}
+                                {% if perms.base.can_access_education_group %}
+                                    <li><a href="{% url 'education_groups' %}" id="lnk_dropdown_educationgroups">{% trans 'formations' %}</a></li>
+                                {% endif %}
                                 {% if perms.base.can_access_learningunit %}
                                     <li><a href="{% url 'learning_units' %}"
                                            id="lnk_dropdown_learning_units">{% trans 'learning_units' %}</a></li>
@@ -117,8 +120,10 @@
                                     <li><a href="{% url 'assessments' %}"
                                            id="lnk_dropdown_evaluations">{% trans 'evaluations' %}</a></li>
                                 {% endif %}
-                                <li><a href="{% url 'students' %}"
-                                       id="lnk_dropdown_students">{% trans 'students_title' %}</a></li>
+                                {% if perms.base.can_access_student %}
+                                    <li><a href="{% url 'students' %}"
+                                           id="lnk_dropdown_students">{% trans 'students_title' %}</a></li>
+                                {% endif %}
                                 {% if 'internship' in installed_apps and perms.internship.can_access_internship %}
                                     <li><a href="{% url 'internship' %}"
                                            id="lnk_dropdown_internships">{% trans 'internships' %}</a></li>
@@ -247,8 +252,12 @@
                 <a href="http://uclouvain.github.io/osis/" target="_blank"
                    id="lnk_osis_website">{% trans 'website' %}</a> |
                 <a href="https://github.com/uclouvain/osis" target="_blank"
-                   id="lnk_osis_source_code">{% trans 'source_code' %}
-                </a></p>
+                   id="lnk_osis_source_code">{% trans 'source_code' %}</a>
+                {% if release_tag %}
+                |<a href="https://github.com/uclouvain/osis/releases/tag/{{ release_tag }}" target="_blank"
+                   id="lnk_latest_tag">v{{ release_tag }}</a>
+                {% endif %}
+            </p>
 
             <p class="navbar-text pull-right"><span class="glyphicon glyphicon-copyright-mark"></span>  {% now "Y" %}  <a
                     href="http://www.uclouvain.be" target="_blank" id="lnk_ucl">Université catholique de Louvain</a></p>
@@ -262,6 +271,8 @@
     <script type="text/javascript" src="{% static 'js/dataTables.bootstrap.min.js' %}"></script>
     <script type="text/javascript" src="{% static "ckeditor/ckeditor-init.js" %}"></script>
     <script type="text/javascript" src="{% static "ckeditor/ckeditor/ckeditor.js" %}"></script>
+    <script type="text/javascript" src="{% static 'js/jquery-validation/jquery.validate.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/diacritics-sort.js' %}"></script>
     {% block script %}
     {% endblock %}
     {% analytical_body_bottom %}

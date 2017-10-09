@@ -61,10 +61,11 @@ class AcademicCalendar(SerializableModel):
     description = models.TextField(blank=True, null=True)
     start_date = models.DateField(auto_now=False, blank=True, null=True, auto_now_add=False)
     end_date = models.DateField(auto_now=False, blank=True, null=True, auto_now_add=False)
-    highlight_title = models.CharField(max_length=255, blank=True, null=True)
+    highlight_title = models.CharField(max_length=50, blank=True, null=True)
     highlight_description = models.CharField(max_length=255, blank=True, null=True)
     highlight_shortcut = models.CharField(max_length=255, blank=True, null=True)
-    reference = models.CharField(choices=academic_calendar_type.ACADEMIC_CALENDAR_TYPES, max_length=50, blank=True, null=True)
+    reference = models.CharField(choices=academic_calendar_type.ACADEMIC_CALENDAR_TYPES, max_length=50, blank=True,
+                                 null=True)
 
     def save(self, *args, **kwargs):
         if FUNCTIONS not in kwargs.keys():
@@ -94,9 +95,12 @@ class AcademicCalendar(SerializableModel):
 
 
 def find_highlight_academic_calendar():
-    return AcademicCalendar.objects.filter(start_date__lte=timezone.now(), end_date__gte=timezone.now(),
-                                           highlight_title__isnull=False, highlight_description__isnull=False,
-                                           highlight_shortcut__isnull=False).order_by('end_date').first()
+    today = timezone.now()
+    return AcademicCalendar.objects.filter(start_date__lte=today, end_date__gte=today) \
+        .exclude(highlight_title__isnull=True).exclude(highlight_title__exact='') \
+        .exclude(highlight_description__isnull=True).exclude(highlight_description__exact='') \
+        .exclude(highlight_shortcut__isnull=True).exclude(highlight_shortcut__exact='') \
+        .order_by('end_date')
 
 
 def find_academic_calendar_by_academic_year(academic_year_id):

@@ -28,7 +28,6 @@
 {% block style %}
 <link rel="stylesheet" href="{% static 'css/dataTables.bootstrap.min.css' %}">
 {% endblock %}
-
 {% block breadcrumb %}
   <li><a href="{% url 'studies' %}" id="lnk_studies">{% trans 'student_path' %}</a></li>
   <li><a href="{% url 'dissertations' %}" id="lnk_dissertations">{% trans 'dissertations' %}</a></li>
@@ -54,10 +53,60 @@
       <form method="get" action="{% url 'manager_dissertations_search'%}">
         <div class="row">
           <div class="col-md-10">
-            <input class="form-control" id="txt_search" placeholder="{% trans 'search' %}" name="search"
-            value="{{ request.GET.search }}">
+              <input class="form-control" id="txt_search" placeholder="{% trans 'search' %}" name="search"
+                     value="{{ request.GET.search }}">
           </div>
-          <div class="col-md-2">
+          <div id="to_hide">
+              <div class="col-md-3" >
+                  <label for="academic_year">{% trans 'academic_year' %}</label>
+                      <select name="academic_year" id="academic_year" class="form-control">
+                        <option value=""></option>
+                      {% for academic_year in academic_year_10y %}
+                        <option value="{{ academic_year.id }}"
+                                {% if academic_year_search  == academic_year.id %}
+                                selected
+                                {% endif %} >
+                            {{ academic_year }}</option>
+                      {% endfor %}
+                      </select>
+                  {{ academic_year }}
+              </div>
+              <div class="col-md-3">
+                  <label for="offer_prop_search">{% trans 'offers' %}</label>
+                      <select name="offer_prop_search" id="offer_prop_search" class="form-control">
+                        <option value=""></option>
+                      {% for offer_prop in offer_props %}
+                        <option value='{{ offer_prop.id }}'
+                                {% if offer_prop_search  == offer_prop.id %}
+                                selected
+                                {% endif %} >
+                            {{ offer_prop.acronym }}
+                        </option>
+                      {% endfor %}
+                      </select>
+                  {{ academic_year }}
+              </div>
+              <div class="col-md-4">
+                  <label for="status_search">{% trans 'status' %}</label>
+                  <select name="status_search" id="status_search" class="form-control">
+                    <option value=""></option>
+                    <option value="DRAFT"{% if status_search  ==  "DARFT" %} selected {% endif %}>{% trans 'draft'%}</option>
+                    <option value="DIR_SUBMIT"{% if status_search  ==  "DIR_SUBMIT" %} selected {% endif %}>{% trans 'submitted_to_director'%}</option>
+                    <option value="DIR_KO"{% if status_search  ==  "DIR_KO" %} selected {% endif %}>{% trans 'refused_by_director'%}</option>
+                    <option value="COM_SUBMIT"{% if status_search  ==  "COM_SUBMIT" %} selected {% endif %}>{% trans 'submitted_to_commission'%}</option>
+                    <option value="COM_KO"{% if status_search  ==  "COM_KO" %} selected {% endif %}>{% trans 'refused_by_commission'%}</option>
+                    <option value="EVA_SUBMIT"{% if status_search  ==  "EVA_SUBMIT" %} selected {% endif %}>{% trans 'submitted_to_first_year_evaluation'%}</option>
+                    <option value="EVA_KO"{% if status_search  ==  "EVA_KO" %} selected {% endif %}>{% trans 'refused_by_first_year_evaluation'%}</option>
+                    <option value="TO_RECEIVE"{% if status_search  ==  "TO_RECEIVE" %} selected {% endif %}>{% trans 'to_be_received'%}</option>
+                    <option value="TO_DEFEND"{% if status_search  ==  "TO_DEFEND" %} selected {% endif %}>{% trans 'to_be_defended'%}</option>
+                    <option value="DEFENDED"{% if status_search  ==  "DEFENDED" %} selected {% endif %}>{% trans 'defended'%}</option>
+                    <option value="ENDED"{% if status_search  ==  "ENDED" %} selected {% endif %}>{% trans 'ended'%}</option>
+                    <option value="ENDED_WIN"{% if status_search  ==  "ENDED_WIN" %} selected {% endif %}>{% trans 'ended_win'%}</option>
+                    <option value="ENDED_LOS"{% if status_search  ==  "ENDED_LOS" %} selected {% endif %}>{% trans 'ended_los'%}</option>
+                  </select>
+              </div>
+          </div>
+          <div class="pull-right col-md-2">
             <button type="submit" id="bt_submit_manager_information_search" class="btn btn-primary" role="button"
             title="{% trans 'search' %}"><span class="glyphicon glyphicon-search"
             aria-hidden="true"></span></button>
@@ -66,13 +115,18 @@
             aria-hidden="true" ></span></button>
 
             <a href="{% url 'manager_dissertations_new' %}" id="lnk_manager_dissertations_new" class="btn btn-default"
-            role="button" title="{% trans 'create_dissertation'%}" style="margin-left:1em;"><span class="glyphicon glyphicon-plus"
+            role="button" title="{% trans 'create_dissertation'%}" style="margin-left:1em;" value='hide/show'><span class="glyphicon glyphicon-plus"
             aria-hidden="true"></span></a>
           </div>
-        </div>
-      </form>
-    </div>
 
+        </div>
+            <div id="hideshow">
+                <a id="" role="button">
+                <h5>{% trans 'advanced_search' %}
+                <i class="glyphicon glyphicon-collapse-down"></i></h5>
+                </a>
+            </div>
+      </form>
 
         {% if dissertations|length == 0 %}
           <br>
@@ -87,7 +141,7 @@
               <th>{% trans 'proposition_dissertation'%}</th>
             </thead>
             {% for dissertation in dissertations %}
-              <tr>
+            <tr class="visible" style="display: table-row;">
                 <td>
                     <a href="{% url 'manager_dissertations_detail' pk=dissertation.pk %}">
                         {{ dissertation.title }}
@@ -137,7 +191,9 @@
             {% endfor %}
           </table>
         {% endif %}
+    </div>
   </div>
+
 {% endblock %}
 {% block script %}
 <script type="text/javascript" src="{% static 'js/jquery.dataTables.min.js' %}"></script>
@@ -154,16 +210,16 @@
                 "language":
                 {
 
-                "sProcessing":     "{% trans 'datatable_processing'%}",
-                "sSearch":         "{% trans 'datatable_search'%}",
-                "sLengthMenu":     "{% trans 'datatable_lengthmenu'%}",
-                "sInfo":           "{% trans 'datatable_info'%}",
-                "sInfoEmpty":      "{% trans 'datatable_infoempty'%}",
-                "sInfoFiltered":   "{% trans 'datatable_infofiltered'%}",
-                "sInfoPostFix":    "{% trans 'datatable_infopostfix'%}",
-                "sLoadingRecords": "{% trans 'datatable_loadingrecords'%}",
-                "sZeroRecords":    "{% trans 'datatable_zerorecords'%}",
-                "sEmptyTable":     "{% trans 'datatable_emptytable'%}",
+                    "sProcessing":     "{% trans 'datatable_processing'%}",
+                    "sSearch":         "{% trans 'datatable_search'%}",
+                    "sLengthMenu":     "&nbsp;&nbsp;&nbsp;_MENU_ &eacute;l&eacute;ments",
+                    "sInfo":           "{% trans 'datatable_info'%}",
+                    "sInfoEmpty":      "{% trans 'datatable_infoempty'%}",
+                    "sInfoFiltered":   "{% trans 'datatable_infofiltered'%}",
+                    "sInfoPostFix":    "{% trans 'datatable_infopostfix'%}",
+                    "sLoadingRecords": "{% trans 'datatable_loadingrecords'%}",
+                    "sZeroRecords":    "{% trans 'datatable_zerorecords'%}",
+                    "sEmptyTable":     "{% trans 'datatable_emptytable'%}",
                 "oPaginate": {
                     "sFirst":      "{% trans 'datatable_first'%}",
                     "sPrevious":   "{% trans 'datatable_previous'%}",
@@ -171,11 +227,17 @@
                     "sLast":       "{% trans 'datatable_last'%}"
                             },
             "oAria": {
-                "sSortAscending":  "{% trans 'datatable_sortascending'%}",
-                "sSortDescending": "{% trans 'datatable_sortdescending'%}",
+                    "sSortAscending":  "{% trans 'datatable_sortascending'%}",
+                    "sSortDescending": "{% trans 'datatable_sortdescending'%}",
                     }
                 }
-            })
-    ;});
+            });
+      jQuery('#hideshow').on('click', function(event) {
+             jQuery('#to_hide').toggle('show');
+             jQuery('#BR_DIV').toggle('show');
+             $("i", this).toggleClass("glyphicon glyphicon-collapse-down glyphicon glyphicon-expand");
+        });
+    });
+
 </script>
 {% endblock %}

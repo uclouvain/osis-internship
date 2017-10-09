@@ -36,17 +36,17 @@
 <ul class="nav nav-tabs ">
 	<li><a href="{% url 'assistant_mandates' %}">{% trans 'my_mandates' %}</a></li>
 	<li class="active"><a href="#">{% trans 'assistant_form_part1' %}</a></li>
-	<li><a href="{% url 'mandate_learning_units' mandate.id %}">{% trans 'learning_units' %}</a></li>
+	<li><a href="{% url 'mandate_learning_units' %}">{% trans 'learning_units' %}</a></li>
 	{% if mandate.assistant_type == "ASSISTANT" %}
-		<li><a href="{% url 'form_part3_edit' mandate.id %}">{% trans 'assistant_form_part3' %}</a></li>
-		<li><a href="{% url 'form_part4_edit' mandate.id %}">{% trans 'assistant_form_part4' %}</a></li>
+		<li><a href="{% url 'form_part3_edit' %}">{% trans 'assistant_form_part3' %}</a></li>
+		<li><a href="{% url 'form_part4_edit' %}">{% trans 'assistant_form_part4' %}</a></li>
 	{% endif %}
-	<li><a href="{% url 'form_part5_edit' mandate.id %}">{% trans 'assistant_form_part5' %}</a></li>
-	<li><a href="{% url 'form_part6_edit' mandate.id %}">{% trans 'assistant_form_part6' %}</a></li>
+	<li><a href="{% url 'form_part5_edit' %}">{% trans 'assistant_form_part5' %}</a></li>
+	<li><a href="{% url 'form_part6_edit' %}">{% trans 'assistant_form_part6' %}</a></li>
 </ul>
 <div class="panel panel-default">
 	<div class="panel-body">
- 		<form id="pst-form-part1" method="POST" action="{% url 'form_part1_save' mandate.id %}">
+ 		<form id="pst-form-part1" method="POST" action="{% url 'form_part1_save' %}">
  		{% csrf_token %}
  		{{ form.non_field_errors }}
  		<div class="panel-default">
@@ -56,7 +56,6 @@
   		</div>
 		<div class="form-group" style="padding-top: 15px;">
     		<div class="controls" id="person">{{assistant.person}}</div>
-			<p  style="margin-top: 10px;">{% trans 'verify_address_message' %}</p>
     	</div>
 		<div class="panel-default">
   			<div class="panel-heading">
@@ -67,7 +66,7 @@
 			<label style="padding-top: 5px" for="renewal_type">{% trans 'renewal_type' %}
 			</label>
 			<div class="controls" id="renewal_type">
-				{{ mandate.renewal_type }}
+				{% trans mandate.renewal_type %}
 			</div>
 			{% for structure in mandate.mandatestructure_set.all|dictsort:"id" %}
 				<label style="padding-top: 15px" for="structures">
@@ -116,6 +115,7 @@
         <button type="submit" class="btn btn-primary" title="{% trans 'save'%}" id="bt_pstform_part1_save">
             <span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'save'%}
         </button>
+		<input type="hidden" name="mandate_id" value="{{ mandate.id }}">
     </form>
 	</div>
 </div>

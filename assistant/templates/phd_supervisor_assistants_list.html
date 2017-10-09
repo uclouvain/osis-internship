@@ -36,7 +36,11 @@
 {% endblock %}
 {% block content %}
 <div class="page-header">
-    <h3>{% trans 'assistantship_mandate_renewal' %} {{ year|add:1 }}</h3>
+    {% if current_reviewer %}
+        <h6>{% trans 'connected_as' %} {{ current_reviewer.person }} ({% trans current_reviewer.role %}) -
+            {{ entity.acronym }}</h6>
+    {% endif %}
+    <h3>{% trans 'assistant_mandates_renewals' %} {{ year|add:1 }}</h3>
     {% if is_reviewer %}
         <ul class="nav nav-tabs">
             <li><a href="{% url 'reviewer_mandates_list' %}">{% trans 'reviewer_mandates_list' %}</a></li>
@@ -67,29 +71,46 @@
         <tbody>
         {% for mandate in object_list %}
             <tr>
-            <td>{{ mandate.sap_id }}</td>
-            <td>{{ mandate.assistant.person }}</td><td><ul>
-            {% for struct in mandate.mandatestructure_set.all|dictsort:"id" %}
-                <li>{% trans struct.structure.type %} : {{ struct.structure.acronym }}</li>
-            {% endfor %}
-            </ul> </td>
+                <td>{{ mandate.sap_id }}</td>
+                <td>{{ mandate.assistant.person }}</td>
+                <td>
+                    <ul>
+                        {% for struct in mandate.mandatestructure_set.all|dictsort:"id" %}
+                            <li>{% trans struct.structure.type %} : {{ struct.structure.acronym }}</li>
+                        {% endfor %}
+                    </ul>
+                </td>
             <td>{% trans mandate.assistant_type %}</td>
             <td>{{ mandate.contract_duration }}</td>
             <td>{{ mandate.contract_duration_fte }}</td>
             <td>{% trans mandate.state %}</td>
             {% if mandate.assistant.supervisor == request.user.person and mandate.state == "PHD_SUPERVISOR" %}
-                <td align="center"><a href="{% url 'phd_supervisor_review_edit' mandate.id %}">
-                <button type="button" class="btn btn-link btn-lg" title="{% trans 'edit'%}" id="bt_review_edit">
-                <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-                </button>{% trans 'edit'%}</a></td><td></td>
+                <td align="center">
+                    <form method="POST" action="{% url 'phd_supervisor_review_edit' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="mandate_id" value="{{ mandate.id }}">
+                        <button type="submit" class="btn btn-link" title="{% trans 'edit'%}">
+                            <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                            {% trans 'edit'%}
+                        </button>
+                    </form>
+                </td>
+                <td></td>
             {% elif mandate.state != "TRTS" and mandate.state != "TO_DO" and mandate.state != "DECLINED" %}
-                <td></td><td align="center">
-                <a href="{% url 'phd_supervisor_review_view' mandate_id=mandate.id %}">
-                <button type="button" class="btn btn-link btn-lg" title="{% trans 'view'%}" id="bt_view_view">
-                <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
-                </button>{% trans 'view'%}</a></td>
+                <td></td>
+                <td align="center">
+                    <form method="POST" action="{% url 'phd_supervisor_review_view' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="mandate_id" value="{{ mandate.id }}">
+                        <button type="submit" class="btn btn-link" title="{% trans 'view'%}">
+                            <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+                            {% trans 'view'%}
+                        </button>
+                    </form>
+                </td>
             {% else %}
-                <td></td><td></td>
+                <td></td>
+                <td></td>
             {% endif %}
             </tr>
         {% endfor %}

@@ -30,9 +30,14 @@ from django.contrib.auth.views import login as django_login
 from django.contrib.auth import authenticate, logout
 from django.shortcuts import redirect
 from django.utils import translation
+import git
 from . import layout
 from base import models as mdl
 from base.models.utils import native
+import logging
+
+
+logger = logging.getLogger(settings.DEFAULT_LOGGER)
 
 
 def page_not_found(request):
@@ -72,9 +77,11 @@ def common_context_processor(request):
         sentry_dns = settings.SENTRY_PUBLIC_DNS
     else:
         sentry_dns = ''
+    release_tag = settings.RELEASE_TAG if hasattr(settings, 'RELEASE_TAG') else None
     return {'installed_apps': settings.INSTALLED_APPS,
             'environment': env,
-            'sentry_dns': sentry_dns}
+            'sentry_dns': sentry_dns,
+            'release_tag': release_tag}
 
 
 def login(request):
@@ -101,7 +108,7 @@ def home(request):
     if academic_yr:
         calendar_events = mdl.academic_calendar.find_academic_calendar_by_academic_year_with_dates(academic_yr.id)
     return layout.render(request, "home.html", {'academic_calendar': calendar_events,
-                                                'highlight': mdl.academic_calendar.find_highlight_academic_calendar()})
+                                                'highlights': mdl.academic_calendar.find_highlight_academic_calendar()})
 
 
 def log_out(request):
@@ -174,3 +181,4 @@ def storage(request):
             row.append('')
 
     return layout.render(request, "admin/storage.html", {'table': table})
+

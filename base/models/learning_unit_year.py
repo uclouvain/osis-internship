@@ -24,18 +24,22 @@
 #
 ##############################################################################
 from django.db import models
+
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
-from base.models.enums import learning_unit_year_subtypes, learning_container_year_types, internship_subtypes
+
+from base.models import entity_container_year
+from base.models.enums import learning_unit_year_subtypes, learning_container_year_types, internship_subtypes, \
+    learning_unit_year_session, entity_container_year_link_type
 
 
 class LearningUnitYearAdmin(SerializableModelAdmin):
-    list_display = ('acronym', 'title', 'academic_year', 'credits', 'changed', 'structure', 'status')
+    list_display = ('external_id', 'acronym', 'title', 'academic_year', 'credits', 'changed', 'structure', 'status')
     fieldsets = ((None, {'fields': ('academic_year', 'learning_unit', 'acronym', 'title', 'title_english', 'credits',
                                     'decimal_scores', 'structure', 'learning_container_year',
-                                    'subtype', 'status', 'internship_subtype' )}),)
+                                    'subtype', 'status', 'internship_subtype', 'session')}),)
     list_filter = ('academic_year', 'vacant', 'in_charge', 'decimal_scores')
     raw_id_fields = ('learning_unit', 'learning_container_year', 'structure')
-    search_fields = ['acronym', 'structure__acronym']
+    search_fields = ['acronym', 'structure__acronym', 'external_id']
 
 
 class LearningUnitYear(SerializableModel):
@@ -58,6 +62,8 @@ class LearningUnitYear(SerializableModel):
     internship_subtype = models.CharField(max_length=50, blank=True, null=True,
                                choices=internship_subtypes.INTERNSHIP_SUBTYPES)
     status = models.BooleanField(default=False)
+    session = models.CharField(max_length=50, blank=True, null=True,
+                               choices=learning_unit_year_session.LEARNING_UNIT_YEAR_SESSION)
 
     def __str__(self):
         return u"%s - %s" % (self.academic_year, self.acronym)
@@ -71,11 +77,27 @@ class LearningUnitYear(SerializableModel):
     @property
     def parent(self):
         if self.subdivision:
-            return LearningUnitYear.objects.filter(subtype=learning_unit_year_subtypes.FULL,
-                                                      learning_container_year=self.learning_container_year,
-                                                      learning_container_year__acronym=self.learning_container_year.acronym,
-                                                      learning_container_year__container_type=learning_container_year_types.COURSE).first()
+            return LearningUnitYear.objects.filter(
+                subtype=learning_unit_year_subtypes.FULL,
+                learning_container_year=self.learning_container_year,
+                learning_container_year__acronym=self.learning_container_year.acronym,
+                learning_container_year__container_type=learning_container_year_types.COURSE
+            ).first()
         return None
+
+    @property
+    def same_container_learning_unit_years(self):
+        return LearningUnitYear.objects.filter(
+            learning_container_year=self.learning_container_year
+        ).order_by('acronym')
+
+    @property
+    def allocation_entity(self):
+        entity_container_yr = entity_container_year.search(
+            link_type=entity_container_year_link_type.ALLOCATION_ENTITY,
+            learning_container_year=self.learning_container_year
+        ).first()
+        return entity_container_yr.entity if entity_container_yr else None
 
 
 def find_by_id(learning_unit_year_id):
@@ -120,3 +142,13 @@ def search(academic_year_id=None, acronym=None, learning_container_year_id=None,
         queryset = queryset.filter(learning_container_year__container_type=container_type)
 
     return queryset.select_related('learning_container_year')
+
+
+def find_gte_year_acronym(academic_yr, acronym):
+    return LearningUnitYear.objects.filter(academic_year__year__gte=academic_yr.year,
+                                           acronym__iexact=acronym)
+
+
+def find_lt_year_acronym(academic_yr, acronym):
+    return LearningUnitYear.objects.filter(academic_year__year__lt=academic_yr.year,
+                                           acronym__iexact=acronym).order_by('academic_year')

@@ -33,167 +33,43 @@
 
 {% block content %}
 <div class="page-header">
-    <h2>{% trans 'learning_units' %}</h2>
-</div>
-<div class="panel panel-default">
-    <form method="get" action="{% url 'learning_units'%}" id="form_learning_units" name="search">
-        <div class="panel-body">
-            <div class="row">
-                <div class="col-md-2">
-                    <label for="slt_academic_year">{% trans 'academic_year'%}</label>
-                    <select class="form-control" id="slt_academic_year" name="academic_year_id">
-                        <option value="all">{% trans 'all_label' %}</option>
-                        {% for ac_year in academic_years %}
-                            <option
-                                {% if request.GET.academic_year_id and ac_year.id == request.GET.academic_year_id|add:"0" %}
-                                    selected
-                                {% endif %}
-                                {% if not request.GET.academic_year_id and ac_year.id == current_academic_year.id %}
-                                    selected
-                                {% endif %}
-                                value="{{ ac_year.id }}">{{ ac_year }}
-                            </option>
-                        {% endfor %}
-                    </select>
-                </div>
-
-                <div class="col-md-2">
-                    <label for="id_acronym">{% trans 'acronym'%}</label>
-                    {{ form.acronym }}
-                </div>
-
-                <div class="col-md-2">
-                    <label for="id_title">{% trans 'title' %}</label>
-                    {{ form.title }}
-                </div>
-
-                <div class="col-md-2">
-                    <label for="id_container_type">{% trans 'type' %}</label>
-                    <select class="form-control" id="slt_container_type" name="container_type">
-                        <option value="">{% trans 'all_label' %}</option>
-                        {% for container_type in container_types %}
-                            <option
-                                {% if request.GET.container_type and container_type.0 == request.GET.container_type %}
-                                    selected
-                                {% endif %}
-                                value="{{ container_type.0 }}">{% trans container_type.1 %}
-                            </option>
-                        {% endfor %}
-                    </select>
-                </div>
-
-                <div class="col-md-2">
-                    <label for="id_subtype">{% trans 'subtype' %}</label>
-                    <select class="form-control" id="slt_type" name="subtype">
-                        <option value="">{% trans 'all_label' %}</option>
-                        {% for type in types %}
-                            <option
-                                {% if request.GET.subtype and type.0 == request.GET.subtype %}
-                                    selected
-                                {% endif %}
-                                value="{{ type.0 }}">{% trans type.1 %}
-                            </option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="col-md-1">
-                    <label for="id_status">{% trans 'status' %}</label>
-                    <select class="form-control" id="slt_status" name="status">
-                        <option value="">{% trans 'all_label' %}</option>
-                        <option value="True"
-                                {% if request.GET.status == 'True' %}
-                                    selected
-                                {% endif %}>{% trans 'active'|title %}</option>
-                        <option value="False"
-                                {% if request.GET.status == 'False' %}
-                                selected
-                                {% endif %}>{% trans 'inactive' %}</option>
-
-                    </select>
-                 </div>
-                 <div class="col-md-1">
-                    <label for="id_requirement_entity_acronym">{% trans 'requirement_entity_small' %}</label>
-                    {{ form.requirement_entity_acronym }}
-
-
-                </div>
-
-            </div>
-            <div class="pull-right">
-                <div style="display:inline-block;">
-                    <input type="checkbox" id="id_with_entity_subordinated"
-                       name="with_entity_subordinated" style="margin-top:5px;"
-                        {% if request.GET.with_entity_subordinated and 'on' == request.GET.with_entity_subordinated %}
-                                checked
-                        {% endif %} >
-                    <label>{% trans 'with_entity_subordinated_small' %}</label>
-                </div>
-
-                <button type="submit" id="bt_submit_learning_unit_search"
-                        class="btn btn-primary pull-rigth" style="margin-top:23px;" role="button"
-                        title="{% trans 'learning_unit_search' %}">
-                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
-            </div>
+    <div class="row">
+        <div class="col-md-11">
+            <h2>{% trans 'learning_units' %}</h2>
         </div>
-    </form>
-    <div>
-        {% include "template_messages.html" %}
-        {% if form.non_field_errors %}
-        <div id="pnl_error_messages" class="alert alert-warning" role="alert">
-            {% for error in form.non_field_errors %}
-                {% trans error|escape %}<br>
-            {% endfor %}
+        <div class="col-md-1" style="margin-top:20px;">
+            {% if request.GET.academic_year_id and request.GET.academic_year_id != '0' %}
+                <a href="{% url 'learning_unit_create' academic_year=request.GET.academic_year_id %}"
+                   id="lnk_learning_unit_create" class="btn btn-default pull-right" role="button" title="{% trans 'new_learning_unit' %}">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
+            {% else %}
+                <a href="{% url 'learning_unit_create' academic_year=current_academic_year.id %}"
+                   id="lnk_learning_unit_create" class="btn btn-default pull-right" role="button" title="{% trans 'new_learning_unit' %}">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
+            {% endif %}
         </div>
-        {% endif %}
-
-        {% if learning_units %}
-        <table id="table_learning_units" class="table table-striped table-hover">
-            <thead>
-                <th>{% trans 'academic_year'%}</th>
-                <th>{% trans 'code'%}</th>
-                <th>{% trans 'title'%}</th>
-                <th>{% trans 'type'%}</th>
-                <th>{% trans 'subtype'%}</th>
-                <th>{% trans 'requirement_entity_small'%}</th>
-                <th>{% trans 'allocation_entity_small'%}</th>
-                <th>{% trans 'credits'%}</th>
-                <th>{% trans 'active'|title%}</th>
-            </thead>
-            {% for learning_unit in learning_units %}
-            <tr>
-                <td>{{learning_unit.academic_year.name}}</td>
-                <td>
-                    <a href="{% url 'learning_unit' learning_unit.id %}"
-                       id="lnk_learning_unit_{{learning_unit.id}}">{{ learning_unit.acronym }}</a>
-                </td>
-                <td>{{ learning_unit.title }}</td>
-                <td>
-                    {% with learning_unit.learning_container_year.container_type|default_if_none:'-' as type %}
-                        {% trans type %}
-                    {% endwith %}
-                </td>
-                <td>
-                    {% with learning_unit.subtype|default_if_none:'-' as subtype %}
-                        {% trans subtype %}
-                    {% endwith %}
-                </td>
-                <td>{{learning_unit.entities.REQUIREMENT_ENTITY.acronym|default_if_none:'-'}}</td>
-                <td>{{learning_unit.entities.ALLOCATION_ENTITY.acronym|default_if_none:'-'}}</td>
-                <td>{% if learning_unit.credits %}{{ learning_unit.credits }}{% endif %}</td>
-                <td>{% if learning_unit.status %}
-                        <span class="glyphicon glyphicon-ok-circle" aria-hidden="true" style="color:green;"
-                              title="{% trans  'active' %}"></span>
-                    {% else %}
-                        <span class="glyphicon glyphicon-ok-circle" aria-hidden="true" style="color:gray;"
-                              title="{% trans  'inactive' %}"></span>
-                    {% endif %}
-                </td>
-            </tr>
-            {% endfor %}
-        </table>
-        {% endif %}
     </div>
 </div>
+
+<ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" {% if search_type == 1 %} class="active" {% endif %}>
+        <a href="{% url 'learning_units_activity'%}" role="tab" id="lnk_activity_search">
+            {% trans 'activity_search'%}
+        </a>
+    </li>
+    <li role="presentation" {% if search_type == 2 %} class="active" {% endif %}>
+        <a href="{% url 'learning_units_service_course'%}" role="tab" id="lnk_service_course_search">
+            {% trans 'service_course_search'%}
+        </a>
+    </li>
+</ul>
+{% if search_type == 1 %}
+    {% include 'learning_unit/by_activity.html' %}
+{% endif %}
+{% if search_type == 2 %}
+    {% include 'learning_unit/by_service_course.html' %}
+{% endif %}
+
 {% endblock %}
 
 {% block script %}
@@ -202,18 +78,18 @@
     {
         $('#table_learning_units').DataTable(
             {
-                stateSave: true,
-                "aoColumnDefs": [
-                    { 'bSortable': false, 'aTargets': [ 4 ] }
+                columnDefs: [
+                    { targets: 2, type: 'diacritics-neutralise'}
                 ],
+                "stateSave": true,
                 "paging" : false,
                 "ordering" : true,
                 "info"  : false,
                 "searching" : false,
-                "language":
-                {"oAria":{
-                    "sSortAscending":  "{% trans 'datatable_sortascending'%}",
-                    "sSortDescending": "{% trans 'datatable_sortdescending'%}",
+                "language": {
+                    "oAria": {
+                        "sSortAscending":  "{% trans 'datatable_sortascending'%}",
+                        "sSortDescending": "{% trans 'datatable_sortdescending'%}",
                     }
                 }
             })

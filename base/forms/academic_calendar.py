@@ -23,26 +23,26 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from base.models import academic_calendar, offer_year_calendar
+from operator import itemgetter
+
 from django.utils.translation import ugettext_lazy as _
-from base.models.offer_year_calendar import save_from_academic_calendar
 from django import forms
-from base.models import academic_year
+from django.db.models.fields import BLANK_CHOICE_DASH
 
 
-class BootstrapModelForm(forms.ModelForm):
-
-    def __init__(self, *args, **kwargs):
-        super(BootstrapModelForm, self).__init__(*args, **kwargs)
-        for field in iter(self.fields):
-            self.fields[field].widget.attrs.update({
-                'class': 'form-control'
-            })
+from base.forms import bootstrap
+from base.models import academic_calendar, offer_year_calendar, academic_year
+from base.models.enums import academic_calendar_type
 
 
-class AcademicCalendarForm(BootstrapModelForm):
+class AcademicCalendarForm(bootstrap.BootstrapModelForm):
+    REFERENCE_CHOICE_FIELD = BLANK_CHOICE_DASH + \
+        sorted([(a, _(b)) for (a, b) in academic_calendar_type.ACADEMIC_CALENDAR_TYPES],
+               key=itemgetter(1))
+
     academic_year = forms.ModelChoiceField(queryset=academic_year.AcademicYear.objects.all().order_by('year'),
                                            widget=forms.Select(), empty_label=None)
+    reference = forms.ChoiceField(choices=REFERENCE_CHOICE_FIELD, required=False)
 
     class Meta:
         model = academic_calendar.AcademicCalendar
@@ -51,7 +51,7 @@ class AcademicCalendarForm(BootstrapModelForm):
     def save(self, commit=True):
         instance = super(AcademicCalendarForm, self).save(commit=False)
         if commit:
-            instance.save(functions=[save_from_academic_calendar])
+            instance.save(functions=[offer_year_calendar.save_from_academic_calendar])
         return instance
 
     def end_date_gt_last_offer_year_calendar_end_date(self):
@@ -68,7 +68,6 @@ class AcademicCalendarForm(BootstrapModelForm):
             self._errors['end_date'] = error_msg
             return False
         return True
-
 
     def end_date_gt_start_date(self):
         if self.cleaned_data['end_date'] <= self.cleaned_data['start_date']:

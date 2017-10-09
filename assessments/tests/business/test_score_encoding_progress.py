@@ -30,6 +30,7 @@ from django.test import TestCase
 
 from assessments.business import score_encoding_progress
 from base.models.enums import number_session, academic_calendar_type
+from base.tests.factories.person import PersonFactory
 from base.tests.models import test_exam_enrollment, test_offer_enrollment,\
                               test_learning_unit_enrollment
 from attribution.tests.models import test_attribution
@@ -75,14 +76,14 @@ class ScoreEncodingProgressTest(TestCase):
             academic_year=self.academic_year
         )
         self._create_context_exam_enrollments(self.learning_unit_year, self.offer_year_2, 8, 5)
-
         self.program_manager = ProgramManagerFactory(offer_year=self.offer_year)
         ProgramManagerFactory(
             offer_year=self.offer_year_2,
             person=self.program_manager.person
         )
-        # Tutor have an attribution to LBIR1210
-        self.tutor = TutorFactory()
+        # Tutor [Tom Dupont] have an attribution to LBIR1210
+        person = PersonFactory( last_name="Dupont", first_name="Thierry")
+        self.tutor = TutorFactory(person=person)
         test_attribution.create_attribution(tutor=self.tutor, learning_unit_year=self.learning_unit_year,
                                             score_responsible=True)
 
@@ -177,15 +178,32 @@ class ScoreEncodingProgressTest(TestCase):
         test_attribution.create_attribution(tutor=TutorFactory(), learning_unit_year=self.learning_unit_year_2)
         test_attribution.create_attribution(tutor=TutorFactory(), learning_unit_year=self.learning_unit_year_2)
 
-        progress_list = score_encoding_progress.get_scores_encoding_progress(
-            user=self.program_manager.person.user,
-            offer_year_id=None,
-            number_session=number_session.ONE,
-            academic_year=self.academic_year
-        )
-        progress_list = score_encoding_progress.append_related_tutors_and_score_responsibles(progress_list)
-        tutors = list(score_encoding_progress.find_related_tutors(progress_list))
+        tutors = list(score_encoding_progress.find_related_tutors(self.program_manager.person.user, self.academic_year,
+                                                                  number_session.ONE))
         self.assertEqual(len(tutors), 5)
+
+    def test_order_find_related_tutors_somebody(self):
+        # Create tutor - Dupont Tom
+        tutor_five = TutorFactory(person=PersonFactory(last_name='Dupont', first_name='Tom'))
+        test_attribution.create_attribution(tutor=tutor_five, learning_unit_year=self.learning_unit_year)
+        # Create tutor - Dupont Albert
+        tutor_third = TutorFactory(person=PersonFactory(last_name='Dupont', first_name='Albert'))
+        test_attribution.create_attribution(tutor=tutor_third, learning_unit_year=self.learning_unit_year)
+        # Create tutor - Armand Zoe
+        tutor_second = TutorFactory(person=PersonFactory(last_name='Armand', first_name='Zoe'))
+        test_attribution.create_attribution(tutor=tutor_second, learning_unit_year=self.learning_unit_year_2)
+        # Create tutor - SOMEBODY_GID [Specific case: Must be at top of list - Global_id: 99999998]
+        tutor_first = TutorFactory(person=PersonFactory(last_name='SOMEBODY_GID', first_name='SOMEBODY_GID', global_id='99999998'))
+        test_attribution.create_attribution(tutor=tutor_first, learning_unit_year=self.learning_unit_year_2)
+
+        tutors = list(score_encoding_progress.find_related_tutors(self.program_manager.person.user, self.academic_year,
+                                                                  number_session.ONE))
+        self.assertEqual(len(tutors), 5)
+        self.assertEqual(tutors[0], tutor_first)#SOMEBODY_GID
+        self.assertEqual(tutors[1], tutor_second)#Armand Zoe
+        self.assertEqual(tutors[2], tutor_third) #Dupont Albert
+        self.assertEqual(tutors[3], self.tutor)#Dupont Thierry [ Set in setUp fct ]
+        self.assertEqual(tutors[4], tutor_five)#Dupont Tom
 
     def test_get_scores_encoding_progress_tutor(self):
         progress_list = score_encoding_progress.get_scores_encoding_progress(

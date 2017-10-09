@@ -24,7 +24,6 @@
 #
 ##############################################################################
 import copy
-import json
 import logging
 import pika
 import pika.exceptions
@@ -35,7 +34,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test, permission_required
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse, reverse_lazy
-from django.db import connection
+from django.db import connection, close_old_connections
 from django.db.utils import OperationalError as DjangoOperationalError, InterfaceError as DjangoInterfaceError
 from django.http import HttpResponseRedirect
 from django.utils.translation import ugettext_lazy as _
@@ -43,12 +42,12 @@ from psycopg2._psycopg import OperationalError as PsycopOperationalError, Interf
 import time
 
 from assessments.business import score_encoding_progress, score_encoding_list, score_encoding_export
+from assessments.business import score_encoding_sheet
 from attribution import models as mdl_attr
 from base import models as mdl
 from base.utils import send_mail
 from base.views import layout
 from osis_common.document import paper_sheet
-from osis_common.models.queue_exception import QueueException
 from osis_common.queue.queue_sender import send_message
 
 logger = logging.getLogger(settings.DEFAULT_LOGGER)
@@ -123,14 +122,15 @@ def scores_encoding(request):
         if learning_unit_year_acronym:
             learning_unit_year_acronym = learning_unit_year_acronym.strip() if isinstance(learning_unit_year_acronym, str)\
                                          else learning_unit_year_acronym
-            learning_unit_year_ids = mdl.learning_unit_year.search(acronym=learning_unit_year_acronym) \
-                                                           .values_list('id', flat=True)
+            learning_unit_year_ids = list(mdl.learning_unit_year.search(academic_year_id=academic_yr.id,
+                                                                        acronym=learning_unit_year_acronym) \
+                                                                .values_list('id', flat=True))
         if tutor_id and tutor_id != NOBODY:
-            learning_unit_year_ids_filter_by_tutor = mdl_attr.attribution.search(tutor=tutor_id) \
-                .distinct('learning_unit_year') \
-                .values_list('learning_unit_year_id', flat=True)
-            learning_unit_year_ids = learning_unit_year_ids_filter_by_tutor if not learning_unit_year_ids else \
-                set(learning_unit_year_ids) & set(learning_unit_year_ids_filter_by_tutor)
+            learning_unit_year_ids_filter_by_tutor = \
+                mdl_attr.attribution.search(tutor=tutor_id, list_learning_unit_year=learning_unit_year_ids) \
+                                    .distinct('learning_unit_year') \
+                                    .values_list('learning_unit_year_id', flat=True)
+            learning_unit_year_ids = list(learning_unit_year_ids_filter_by_tutor)
 
         score_encoding_progress_list = score_encoding_progress.get_scores_encoding_progress(
             user=request.user,
@@ -150,7 +150,7 @@ def scores_encoding(request):
             score_encoding_progress_list = score_encoding_progress.\
                 filter_only_without_attribution(score_encoding_progress_list)
 
-        all_tutors = score_encoding_progress.find_related_tutors(score_encoding_progress_list)
+        all_tutors = score_encoding_progress.find_related_tutors(request.user, academic_yr, number_session)
 
         all_offers = mdl.offer_year.find_by_user(request.user, academic_yr=academic_yr)
 
@@ -168,7 +168,7 @@ def scores_encoding(request):
     elif mdl.tutor.is_tutor(request.user):
         tutor = mdl.tutor.find_by_user(request.user)
         score_encoding_progress_list = score_encoding_progress.get_scores_encoding_progress(user=request.user,
-                                                                                            offer_year_id=offer_year_id,
+                                                                                            offer_year_id=None,
                                                                                             number_session=number_session,
                                                                                             academic_year=academic_yr)
         all_offers = score_encoding_progress.find_related_offer_years(score_encoding_progress_list)
@@ -176,10 +176,13 @@ def scores_encoding(request):
         context.update({'tutor': tutor,
                         'offer_year_list': all_offers,
                         'offer_year_id': offer_year_id})
-
+    if score_encoding_progress_list:
+        filtered_list = [score_encoding for score_encoding in score_encoding_progress_list if score_encoding.offer_year_id == offer_year_id]
+    else:
+        filtered_list = []
     context.update({
         'notes_list': score_encoding_progress.group_by_learning_unit_year(score_encoding_progress_list)
-                      if not offer_year_id else score_encoding_progress_list
+        if not offer_year_id else filtered_list
     })
 
     return layout.render(request, template_name, context)
@@ -407,7 +410,7 @@ def notes_printing(request, learning_unit_year_id=None, tutor_id=None, offer_id=
         offer_year_id=offer_id
     )
     tutor = mdl.tutor.find_by_user(request.user) if not is_program_manager else None
-    sheet_data = mdl.exam_enrollment.scores_sheet_data(scores_list_encoded.enrollments, tutor=tutor)
+    sheet_data = score_encoding_sheet.scores_sheet_data(scores_list_encoded.enrollments, tutor=tutor)
     return paper_sheet.print_notes(sheet_data)
 
 
@@ -618,21 +621,22 @@ def get_json_data_scores_sheets(tutor_global_id):
             exam_enrollments = list(mdl.exam_enrollment.find_for_score_encodings(number_session,
                                                                                  tutor=tutor,
                                                                                  academic_year=academic_yr))
-            return mdl.exam_enrollment.scores_sheet_data(exam_enrollments, tutor=tutor)
+            return score_encoding_sheet.scores_sheet_data(exam_enrollments, tutor=tutor)
         else:
+
             return {}
     except (PsycopOperationalError, PsycopInterfaceError, DjangoOperationalError, DjangoInterfaceError):
         queue_exception_logger.error('Postgres Error during get_json_data_scores_sheets on global_id {} => retried'.format(tutor_global_id))
         trace = traceback.format_exc()
         queue_exception_logger.error(trace)
-        connection.close()
-        time.sleep(1)
         return get_json_data_scores_sheets(tutor_global_id)
     except Exception:
         logger.warning('(Not PostgresError) during get_json_data_scores_sheets on global_id {}'.format(tutor_global_id))
         trace = traceback.format_exc()
         logger.error(trace)
         return {}
+    finally:
+        close_old_connections()
 
 
 def send_json_scores_sheets_to_response_queue(global_id):

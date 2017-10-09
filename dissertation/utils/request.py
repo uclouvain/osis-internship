@@ -24,7 +24,7 @@
 #
 ##############################################################################
 
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from base.models.student import find_by_offer_year
 from base.models.offer_year import OfferYear

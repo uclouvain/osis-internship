@@ -34,17 +34,5 @@
       "currency": 2,
       "continent": 7
     }
-  },
-  {
-    "model": "reference.country",
-    "pk": 4,
-    "fields": {
-      "name": "Russie",
-      "european_union": "False",
-      "iso_code": "RU",
-      "nationality": "russe",
-      "currency": 9,
-      "continent": 4
-    }
   }
 ]

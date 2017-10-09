@@ -22,6 +22,9 @@ msgstr "(pour le 2ème renouvellement)"
 msgid "absences"
 msgstr "Absences"
 
+msgid "accept"
+msgstr "Accepter"
+
 msgid "action"
 msgstr "Action"
 
@@ -121,6 +124,15 @@ msgstr "Conférence(s) auxquelle(s) j'ai contribué par communication ou poster,
 msgid "confidential"
 msgstr "Confidentiel"
 
+msgid "confirm_accept"
+msgstr "Êtes-vous certain de vouloir accepter la demande de renouvellement ? Cette action est irréversible."
+
+msgid "confirm_decline"
+msgstr "Êtes-vous certain de vouloir décliner la demande de renouvellement ? Cette action est irréversible."
+
+msgid "confirm_removal"
+msgstr "Êtes-vous certain de vouloir supprimer ce cours ?"
+
 msgid "confirm_reviewer_addition"
 msgstr "Êtes-vous certain de vouloir ajouter cet évaluateur ? Cette action est irréversible."
 
@@ -171,6 +183,9 @@ msgstr "Doyen de faculté"
 
 msgid "deans"
 msgstr "Doyens de faculté"
+
+msgid "decline"
+msgstr "Décliner"
 
 msgid "DECLINED"
 msgstr "Décliné par l'assistant"
@@ -299,6 +314,12 @@ msgstr "Grade"
 msgid "head_institute"
 msgstr "Président d'institut"
 
+msgid "help_mandates_selectedfiles"
+msgstr "Veuillez sélectionner le fichier XLSX"
+
+msgid "hours_per_year"
+msgstr "nombre d'heures par an"
+
 msgid "hours_per_year_message"
 msgstr "Veuillez introduire le nombre d'heures par an"
 
@@ -330,7 +351,7 @@ msgid "institution"
 msgstr "Institution"
 
 msgid "justification_required_if_conditional_or_negative"
-msgstr "Une justification est requise si l'avis est négatif ou conditionnel"
+msgstr "Une justification est requise si l'avis est défavorable ou conditionnel"
 
 msgid "learning_unit_required"
 msgstr "La rubrique \"Unités d'enseignement\" doit être complétée"
@@ -343,6 +364,9 @@ msgstr "Mandat"
 
 msgid "mandates"
 msgstr "Mandats"
+
+msgid "mandates_injection"
+msgstr "Importation des mandats d'assistant"
 
 msgid "mandates_list"
 msgstr "Liste des mandats"
@@ -507,13 +531,16 @@ msgid "save"
 msgstr "Sauver"
 
 msgid "save_before_link"
-msgstr "Voulez-vous sauvegarder les données modifiées avant de changer de rubrique ?"
+msgstr "Cliquez sur OK pour sauvegarder les données modifiées avant de changer de rubrique. Cliquez sur Annuler pour continuer sans sauvegarder."
 
 msgid "scientific_internships"
 msgstr "Séjour(s) et/ou stage(s) scientifiques"
 
 msgid "scientific_jury_service"
 msgstr "Participation à des jurys et/ou des commissions scientifiques"
+
+msgid "search_by_acronym"
+msgstr "recherche par acronyme du cours"
 
 msgid "search_by_email_or_last_name"
 msgstr "recherche par email ou nom de famille"
@@ -620,8 +647,8 @@ msgstr "Début"
 msgid "total_must_be_100_message"
 msgstr "Le total doit être égal à 100"
 
-msgid "tutoring"
-msgstr "Ens."
+msgid "tutoring_learning_units"
+msgstr "Unités de cours"
 
 msgid "tutoring_percent"
 msgstr "Pourcentage pour l'enseignement"
@@ -647,9 +674,6 @@ msgstr "Valider et soumettre"
 msgid "various"
 msgstr "Divers"
 
-msgid "verify_address_message"
-msgstr "Si l'information concernant votre adresse est incorrecte ou incomplète, merci de signaler la modification par l'intermédiaire de votre guichet employé."
-
 msgid "vice_rector"
 msgstr "Vice-recteur"
 
@@ -658,6 +682,9 @@ msgstr "Vice-recteur de secteur"
 
 msgid "VICE_RECTOR_ASSISTANT"
 msgstr "DAS/CAS"
+
+msgid "view"
+msgstr "Voir"
 
 msgid "yes"
 msgstr "Oui"

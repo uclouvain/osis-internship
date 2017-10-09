@@ -28,8 +28,8 @@ from osis_common.models.serializable_model import SerializableModel, Serializabl
 
 
 class OfferYearDomainAdmin(SerializableModelAdmin):
-    list_display = ('domain', 'offer_year', 'changed')
-    fieldsets = ((None, {'fields': ('domain', 'offer_year')}),)
+    list_display = ('domain', 'offer_year', 'education_group_year', 'changed')
+    fieldsets = ((None, {'fields': ('domain', 'offer_year', 'education_group_year')}),)
     list_filter = ('offer_year__academic_year',)
     raw_id_fields = ('domain', 'offer_year')
     search_fields = ['domain__name', 'offer_year__acronym']
@@ -40,7 +40,11 @@ class OfferYearDomain(SerializableModel):
     changed = models.DateTimeField(null=True, auto_now=True)
     domain = models.ForeignKey('reference.Domain', blank=True, null=True)
     offer_year = models.ForeignKey('base.OfferYear', blank=True, null=True)
+    education_group_year = models.ForeignKey('base.EducationGroupYear', blank=True, null=True)
 
     def __str__(self):
         return u"%s - %s" % (self.domain, self.offer_year)
 
+
+def find_by_education_group_year(education_group_yr):
+    return OfferYearDomain.objects.filter(education_group_year=education_group_yr)

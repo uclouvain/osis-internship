@@ -32,7 +32,6 @@ class AcademicAssistantFactory(factory.DjangoModelFactory):
     class Meta:
         model = 'assistant.AcademicAssistant'
 
-
     person = factory.SubFactory(PersonFactory, first_name=factory.Sequence(lambda n: 'firstname{0}'.format(n)),
                                 last_name=factory.Sequence(lambda n: 'lastname{0}'.format(n)))
     inscription = factory.Iterator(assistant_phd_inscription.PHD_INSCRIPTION_CHOICES, getter=lambda c: c[0])

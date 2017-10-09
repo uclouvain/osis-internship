@@ -43,55 +43,86 @@
 {% endblock %}
 {% block content %}
 <div class="page-header">
-    <h6>{% trans 'connected_as' %} {{ current_reviewer.person }} ({% trans current_reviewer.role %}) - {{ current_reviewer.structure.acronym }}</h6>
-    <h3>{% trans 'assistants_mandates_renewal' %} ({{ year }})</h3>
-    <h4>{{ assistant.person }}</h4>
-</div>
-<ul class="nav nav-tabs">
-    {% if menu_type == 'phd_supervisor_menu' %}
-        <li><a href="{% url 'phd_supervisor_pst_form_view' mandate_id=mandate_id %}">{% trans 'assistant_form' %}</a>
-        </li>
+    {% if current_reviewer %}
+        <h6>{% trans 'connected_as' %} {{ current_reviewer.person }} ({% trans current_reviewer.role %}) - {{ entity.acronym }}</h6>
     {% else %}
-	    <li><a href="{% url 'pst_form_view' mandate_id=mandate_id %}">{% trans 'assistant_form' %}</a></li>
+        <h6>{% trans 'connected_as' %} {{ current_person }} ({% trans role %})</h6>
     {% endif %}
-    {% for dict in menu %}
-        <li class={{ dict.class}}>
-        {% if menu_type == 'phd_supervisor_menu' %}
-            {% if dict.action == 'edit' %}
-                <a href="{% url 'phd_supervisor_review_edit' mandate_id=mandate_id %}">
-            {% elif dict.action == 'view' %}
-                <a href="{% url 'phd_supervisor_review_view' mandate_id=mandate_id %}">
-            {% else %}
-                <a href="#">
-            {% endif %}
+    <h3>{% trans 'assistant_mandates_renewals' %} ({{ year }})</h3>
+    <h4>{{ assistant.person }}</h4>
+    <ul class="nav nav-tabs">
+	    {% if menu_type == 'phd_supervisor_menu' %}
+            <li><a href="#">
+                <form method="POST" action="{% url 'phd_supervisor_pst_form_view' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="mandate_id" value="{{ mandate_id }}">
+                    <button type="submit" class="btn btn-link" title="{% trans 'view'%}">
+                        {% trans 'assistant_form' %}
+                    </button>
+                </form>
+                </a>
+            </li>
         {% else %}
-            {% if dict.action == 'edit' %}
-                <a href="{% url 'review_edit' mandate_id=mandate_id %}">
-            {% elif dict.action == 'view' %}
-                <a href="{% url 'review_view' mandate_id=mandate_id role=dict.item %}">
-            {% else %}
-                <a href="#">
-            {% endif %}
+	        <li><a href="#">
+                <form method="POST" action="{% url 'pst_form_view' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="mandate_id" value="{{ mandate_id }}">
+                    <button type="submit" class="btn btn-link" title="{% trans 'view'%}">
+                        {% trans 'assistant_form' %}
+                    </button>
+                </form>
+                </a>
+            </li>
         {% endif %}
-        {% if dict.item == 'PHD_SUPERVISOR' %}
-            <strong>{% trans 'phd_supervisor_review' %}</strong></a>
-        {% elif dict.item == 'RESEARCH' %}
-            <strong>{% trans 'research_review' %}</strong></a>
-        {% elif dict.item == 'SUPERVISION' %}
-            <strong>{% trans 'supervision_review' %}</strong></a>
-        {% elif dict.item == 'VICE_RECTOR' %}
-            <strong>{% trans 'sector_vice_rector_review' %}</strong></a>
-        {% endif %}
-        </li>
-    {% endfor %}
-</ul>
+        {% for dict in menu %}
+            <li class={{ dict.class}}><a href="#">
+                {% if menu_type == 'phd_supervisor_menu' %}
+                    {% if dict.action == 'edit' %}
+                        <form method="POST" action="{% url 'phd_supervisor_review_edit' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="mandate_id" value="{{ mandate_id }}">
+                            <button type="submit" class="btn btn-link" title="{% trans 'edit'%}">
+                    {% elif dict.action == 'view' %}
+                        <form method="POST" action="{% url 'phd_supervisor_review_view' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="mandate_id" value="{{ mandate_id }}">
+                            <button type="submit" class="btn btn-link" title="{% trans 'view'%}">
+                    {% endif %}
+                {% else %}
+                    {% if dict.action == 'edit' %}
+                        <form method="POST" action="{% url 'review_edit' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="mandate_id" value="{{ mandate_id }}">
+                            <button type="submit" class="btn btn-link" title="{% trans 'edit'%}">
+                    {% elif dict.action == 'view' %}
+                        <form method="POST" action="{% url 'review_view' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="mandate_id" value="{{ mandate_id }}">
+                            <input type="hidden" name="role" value="{{ dict.item }}">
+                            <button type="submit" class="btn btn-link" title="{% trans 'view'%}">
+                    {% endif %}
+                {% endif %}
+                {% if dict.item == 'PHD_SUPERVISOR' %}
+                    {% trans 'phd_supervisor_review' %}
+                {% elif dict.item == 'RESEARCH' %}
+                    {% trans 'research_review' %}
+                {% elif dict.item == 'SUPERVISION' %}
+                    {% trans 'supervision_review' %}
+                {% elif dict.item == 'VICE_RECTOR' %}
+                    {% trans 'sector_vice_rector_review' %}
+                {% endif %}
+                </button></form></a>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+
 <div class="panel panel-default">
     <div class="panel-body">
         {% if menu_type == 'phd_supervisor_menu' %}
-            <form method="post" action=
-                    "{% url 'phd_supervisor_review_save' review_id=review.id mandate_id=mandate_id %} ">
+            <form method="post" action="{% url 'phd_supervisor_review_save' %}">
         {% else %}
-            <form method="post" action=" {% url 'review_save' review_id=review.id mandate_id=mandate_id %} ">
+            <form method="post" action=" {% url 'review_save' %} ">
         {% endif %}
         {% csrf_token %}
         {% for hidden in form.hidden_fields %}
@@ -161,6 +192,8 @@
                     onclick="return confirm('{% trans 'confirm_validation' %}')">
             <span class="glyphicon glyphicon-saved" aria-hidden="true"></span>{% trans 'validate_and_submit'%}</button>
         {% endif %}
+        <input type="hidden" name="mandate_id" value="{{mandate_id | default_if_none:''}}">
+        <input type="hidden" name="review_id" value="{{review.id | default_if_none:''}}">
 	    </form>
 	</div>
 </div>

@@ -7,7 +7,7 @@
       "changed": "2016-05-03T14:25:31.160Z",
       "number_session": 3,
       "learning_unit_year": 1,
-      "offer_year_calendar": 7
+      "offer_year": 1
     }
   },
   {
@@ -18,7 +18,7 @@
       "changed": "2016-05-03T14:25:31.160Z",
       "number_session": 3,
       "learning_unit_year": 2,
-      "offer_year_calendar": 7
+      "offer_year": 1
     }
   },
   {
@@ -29,7 +29,7 @@
       "changed": "2016-05-03T14:26:10.108Z",
       "number_session": 3,
       "learning_unit_year": 3,
-      "offer_year_calendar": 7
+      "offer_year": 1
     }
   },
   {
@@ -40,7 +40,7 @@
       "changed": "2016-05-03T14:26:30.519Z",
       "number_session": 3,
       "learning_unit_year": 4,
-      "offer_year_calendar": 7
+      "offer_year": 1
     }
   },
   {
@@ -51,7 +51,7 @@
       "changed": "2016-05-03T14:25:31.160Z",
       "number_session": 3,
       "learning_unit_year": 5,
-      "offer_year_calendar": 8
+      "offer_year": 2
     }
   },
   {
@@ -62,7 +62,7 @@
       "changed": "2016-05-03T14:25:31.160Z",
       "number_session": 3,
       "learning_unit_year": 6,
-      "offer_year_calendar": 8
+      "offer_year": 2
     }
   },
   {
@@ -73,7 +73,7 @@
       "changed": "2016-05-03T14:26:10.108Z",
       "number_session": 3,
       "learning_unit_year": 7,
-      "offer_year_calendar": 8
+      "offer_year": 2
     }
   },
   {
@@ -84,7 +84,7 @@
       "changed": "2016-05-03T14:26:30.519Z",
       "number_session": 3,
       "learning_unit_year": 8,
-      "offer_year_calendar": 8
+      "offer_year": 2
     }
   },
   {
@@ -95,7 +95,7 @@
       "changed": "2016-05-03T14:25:31.160Z",
       "number_session": 3,
       "learning_unit_year": 9,
-      "offer_year_calendar": 9
+      "offer_year": 3
     }
   },
   {
@@ -106,7 +106,7 @@
       "changed": "2016-05-03T14:25:31.160Z",
       "number_session": 3,
       "learning_unit_year": 10,
-      "offer_year_calendar": 9
+      "offer_year": 3
     }
   },
   {
@@ -117,7 +117,7 @@
       "changed": "2016-05-03T14:25:31.160Z",
       "number_session": 1,
       "learning_unit_year": 11,
-      "offer_year_calendar": 10
+      "offer_year": 3
     }
   },
   {
@@ -128,7 +128,7 @@
       "changed": "2016-05-03T14:25:31.160Z",
       "number_session": 1,
       "learning_unit_year": 12,
-      "offer_year_calendar": 10
+      "offer_year": 3
     }
   },
   {
@@ -139,7 +139,7 @@
       "changed": "2016-05-03T14:26:10.108Z",
       "number_session": 1,
       "learning_unit_year": 13,
-      "offer_year_calendar": 10
+      "offer_year": 3
     }
   },
   {
@@ -150,7 +150,7 @@
       "changed": "2016-05-03T14:26:30.519Z",
       "number_session": 1,
       "learning_unit_year": 14,
-      "offer_year_calendar": 10
+      "offer_year": 3
     }
   },
   {
@@ -161,172 +161,7 @@
       "changed": "2016-05-03T14:25:31.160Z",
       "number_session": 1,
       "learning_unit_year": 15,
-      "offer_year_calendar": 10
-    }
-  },
-  {
-    "model": "base.sessionexam",
-    "pk": 16,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T14:25:31.160Z",
-      "number_session": 2,
-      "learning_unit_year": 16,
-      "offer_year_calendar": 14
-    }
-  },
-  {
-    "model": "base.sessionexam",
-    "pk": 17,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T14:26:10.108Z",
-      "number_session": 2,
-      "learning_unit_year": 17,
-      "offer_year_calendar": 14
-    }
-  },
-  {
-    "model": "base.sessionexam",
-    "pk": 18,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T14:26:30.519Z",
-      "number_session": 2,
-      "learning_unit_year": 18,
-      "offer_year_calendar": 14
-    }
-  },
-  {
-    "model": "base.sessionexam",
-    "pk": 19,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T14:25:31.160Z",
-      "number_session": 2,
-      "learning_unit_year": 19,
-      "offer_year_calendar": 15
-    }
-  },
-  {
-    "model": "base.sessionexam",
-    "pk": 20,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T14:25:31.160Z",
-      "number_session": 2,
-      "learning_unit_year": 20,
-      "offer_year_calendar": 15
-    }
-  },{
-    "model": "base.sessionexam",
-    "pk": 21,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T14:25:31.160Z",
-      "number_session": 3,
-      "learning_unit_year": 11,
-      "offer_year_calendar": 16
-    }
-  },
-  {
-    "model": "base.sessionexam",
-    "pk": 22,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T14:25:31.160Z",
-      "number_session": 3,
-      "learning_unit_year": 12,
-      "offer_year_calendar": 16
-    }
-  },
-  {
-    "model": "base.sessionexam",
-    "pk": 23,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T14:26:10.108Z",
-      "number_session": 3,
-      "learning_unit_year": 13,
-      "offer_year_calendar": 16
-    }
-  },
-  {
-    "model": "base.sessionexam",
-    "pk": 24,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T14:26:30.519Z",
-      "number_session": 2,
-      "learning_unit_year": 14,
-      "offer_year_calendar": 16
-    }
-  },
-  {
-    "model": "base.sessionexam",
-    "pk": 25,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T14:25:31.160Z",
-      "number_session": 3,
-      "learning_unit_year": 15,
-      "offer_year_calendar": 16
-    }
-  },
-  {
-    "model": "base.sessionexam",
-    "pk": 26,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T14:25:31.160Z",
-      "number_session": 3,
-      "learning_unit_year": 16,
-      "offer_year_calendar": 17
-    }
-  },
-  {
-    "model": "base.sessionexam",
-    "pk": 27,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T14:26:10.108Z",
-      "number_session": 3,
-      "learning_unit_year": 17,
-      "offer_year_calendar": 17
-    }
-  },
-  {
-    "model": "base.sessionexam",
-    "pk": 28,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T14:26:30.519Z",
-      "number_session": 2,
-      "learning_unit_year": 18,
-      "offer_year_calendar": 17
-    }
-  },
-  {
-    "model": "base.sessionexam",
-    "pk": 29,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T14:25:31.160Z",
-      "number_session": 3,
-      "learning_unit_year": 19,
-      "offer_year_calendar": 18
-    }
-  },
-  {
-    "model": "base.sessionexam",
-    "pk": 30,
-    "fields": {
-      "external_id": null,
-      "changed": "2016-05-03T14:25:31.160Z",
-      "number_session": 3,
-      "learning_unit_year": 20,
-      "offer_year_calendar": 18
+      "offer_year": 3
     }
   }
-
 ]

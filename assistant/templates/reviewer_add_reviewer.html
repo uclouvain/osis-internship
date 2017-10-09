@@ -39,18 +39,20 @@
 {% endblock %}
 {% block content %}
 <div class="page-header">
-    <h6>{% trans 'connected_as' %} {{ reviewer.person }} ({% trans reviewer.role %}) - {{ reviewer.structure.acronym }}</h6>
-    <h3>{% trans 'assistantship_mandate_renewal' %} {{ year|add:1 }}</h3>
+    <h6>{% trans 'connected_as' %} {{ reviewer.person }} ({% trans reviewer.role %}) - {{ entity.acronym }}</h6>
+    <h3>{% trans 'assistant_mandates_renewals' %} {{ year|add:1 }}</h3>
 </div>
 <div class="panel panel-default">
     <div class="panel-body">
-    <h5>{% trans 'choose_person_as_reviewer_for' %} {{related_structure.title}} ({{related_structure.acronym}})</h5>
-    <form method="POST" action="{% url 'reviewer_delegation_add' related_structure.id %}">
+    <h5>{% trans 'choose_person_as_reviewer_for' %} {{current_entity_version.title}}
+        ({{current_entity_version.acronym}})</h5>
+    <form method="POST" action="{% url 'reviewer_delegation_add' %}">
     {{ form.non_field_errors }}
  		{% csrf_token %}
  		{% for hidden in form.hidden_fields %}
 			{{ hidden }}
 		{% endfor %}
+    <input type="hidden" value="{{ related_entity.id | default_if_none:'' }}" name="entity_id" >
 	<div class="form-group">
 		<label for="search_persons">{% trans 'person' %}</label>
 		<input id="search_persons" name="search_persons" size="100" class="form-control"

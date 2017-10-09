@@ -35,13 +35,14 @@ start_date = timezone.now()
 end_date = start_date.replace(year=start_date.year + 1)
 
 
-def create_academic_calendar(an_academic_year, start_date=datetime.date(2000, 1, 1), end_date=datetime.date(2099, 1, 1)):
+def create_academic_calendar(an_academic_year, start_date=datetime.date(2000, 1, 1), end_date=datetime.date(2099, 1, 1),
+                             reference=None):
     if an_academic_year:
         start_date = an_academic_year.start_date
         end_date = an_academic_year.end_date
 
     an_academic_calendar = academic_calendar.AcademicCalendar(academic_year=an_academic_year, start_date=start_date,
-                                                              end_date=end_date)
+                                                              end_date=end_date, reference=reference)
     an_academic_calendar.save(functions=[])
     return an_academic_calendar
 
@@ -78,12 +79,27 @@ class AcademicCalendarTest(TestCase):
                                                start_date=timezone.now() - datetime.timedelta(days=10),
                                                end_date=timezone.now() + datetime.timedelta(days=10))
 
-        tmp_academic_calendar = AcademicCalendarFactory.build(academic_year=an_academic_year,
-                                                              title="A calendar event")
-        tmp_academic_calendar.save(functions=[])
-        db_academic_calendar = academic_calendar.find_highlight_academic_calendar()
-        self.assertIsNotNone(db_academic_calendar)
-        self.assertEqual(db_academic_calendar, tmp_academic_calendar)
+        tmp_academic_calendar_1 = AcademicCalendarFactory.build(academic_year=an_academic_year,
+                                                                title="First calendar event")
+        tmp_academic_calendar_1.save(functions=[])
+
+        tmp_academic_calendar_2 = AcademicCalendarFactory.build(academic_year=an_academic_year,
+                                                                title="Second calendar event")
+        tmp_academic_calendar_2.save(functions=[])
+
+        null_academic_calendar = AcademicCalendarFactory.build(academic_year=an_academic_year,
+                                                               title="A third event which is null",
+                                                               highlight_description=None)
+        null_academic_calendar.save(functions=[])
+
+        empty_academic_calendar = AcademicCalendarFactory.build(academic_year=an_academic_year,
+                                                                title="A third event which is null",
+                                                                highlight_title="")
+        empty_academic_calendar.save(functions=[])
+
+        db_academic_calendars = list(academic_calendar.find_highlight_academic_calendar())
+        self.assertIsNotNone(db_academic_calendars)
+        self.assertCountEqual(db_academic_calendars, [tmp_academic_calendar_1, tmp_academic_calendar_2])
 
     def test_find_academic_calendar_by_academic_year(self):
         tmp_academic_year = AcademicYearFactory()

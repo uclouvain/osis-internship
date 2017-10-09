@@ -99,8 +99,7 @@ QUEUES_TESTING_TIMEOUT = float(os.environ.get('QUEUES_TESTING_TIMEOUT', 0.1))
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': []
-        ,
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'debug': DEBUG,
@@ -178,9 +177,7 @@ LOGIN_REDIRECT_URL = os.environ.get('LOGIN_REDIRECT_URL', reverse_lazy('home'))
 LOGOUT_URL = os.environ.get('LOGOUT_URL', reverse_lazy('logout'))
 OVERRIDED_LOGIN_URL = os.environ.get('OVERRIDED_LOGIN_URL', None)
 OVERRIDED_LOGOUT_URL = os.environ.get('OVERRIDED_LOGOUT_URL', None)
-USER_SIGNALS_MANAGER = os.environ.get('USER_SIGNALS_MANAGER', None)
-USER_UPDATED_SIGNAL = os.environ.get('USER_UPDATED_SIGNAL', None)
-USER_CREATED_SIGNAL = os.environ.get('USER_CREATED_SIGNAL', None)
+PERSON_EXTERNAL_ID_PATTERN = os.environ.get('PERSON_EXTERNAL_ID_PATTERN', 'osis.person_{global_id}')
 
 # Field upload settings
 DATA_UPLOAD_MAX_NUMBER_FIELDS = int(os.environ.get('DATA_UPLOAD_MAX_NUMBER_FIELDS', 5000))
@@ -239,7 +236,7 @@ CKEDITOR_CONFIGS = {
         'toolbar': 'Custom',
         'toolbar_Custom': [
             ['Bold', 'Italic', 'Underline'],
-            ['NumberedList','BulletedList'],
+            ['NumberedList', 'BulletedList'],
             ['Link', 'Unlink']
         ]
     }
@@ -298,3 +295,9 @@ REST_FRAMEWORK = {
     ),
     'TEST_REQUEST_DEFAULT_FORMAT': 'json'
 }
+
+#ESB Configuration
+ESB_AUTHORIZATION = os.environ.get('ESB_AUTHORIZATION')
+ESB_STUDENT_API = os.environ.get('ESB_STUDENT_API')
+
+RELEASE_TAG = os.environ.get('RELEASE_TAG')

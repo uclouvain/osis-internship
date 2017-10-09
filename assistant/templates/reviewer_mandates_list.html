@@ -36,8 +36,8 @@
 {% endblock %}
 {% block content %}
 <div class="page-header">
-    <h6>{% trans 'connected_as' %} {{ reviewer.person }} ({% trans reviewer.role %}) - {{ reviewer.structure.acronym }}</h6>
-    <h3>{% trans 'assistantship_mandate_renewal' %} {{ year|add:1 }}</h3>
+    <h6>{% trans 'connected_as' %} {{ reviewer.person }} ({% trans reviewer.role %}) - {{ entity.acronym }}</h6>
+    <h3>{% trans 'assistant_mandates_renewals' %} {{ year|add:1 }}</h3>
 
     <ul class="nav nav-tabs">
             <li class="active"><a href="#">{% trans 'reviewer_mandates_list' %}</a></li>
@@ -65,7 +65,7 @@
         <thead>
         <tr>
         <th>{% trans 'assistant_title' %}</th>
-        <th>{% trans 'structures' %}</th>
+        <th>{% trans 'entities' %}</th>
         <th>{% trans 'assistant_type' %}</th>
         <th>{% trans 'renewal_type' %}</th>
         <th>{% trans 'contract_duration' %}</th>
@@ -79,43 +79,76 @@
         <tbody>
         {% for mandate in object_list %}
             <tr>
-            <td>{{ mandate.assistant.person }}</td><td><ul>
-            {% for struct in mandate.mandatestructure_set.all|dictsort:"id" %}
-                <li>{% trans struct.structure.type %} : {{ struct.structure.acronym }}</li>
-            {% endfor %}
-            </ul> </td>
+            <td>{{ mandate.assistant.person }}</td>
+            <td>
+                <ul>
+                    {% for entity in mandate.entities %}
+                        <li>
+                        {% trans entity.entity_type %} : {{ entity.acronym }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </td>
             <td>{% trans mandate.assistant_type %}</td>
-            <td>{{ mandate.renewal_type }}</td>
-
+            <td>{% trans mandate.renewal_type %}</td>
             <td>{{ mandate.contract_duration }}</td>
             <td>{{ mandate.contract_duration_fte }}</td>
             <td>{% widthratio mandate.fulltime_equivalent 1 100 %}%</td>
             <td>{% trans mandate.state %}</td>
 	        {% if mandate.state in reviewer.role %}
-                <td align="center"><a href="{% url 'review_edit' mandate.id %}">
-                <button type="button" class="btn btn-link btn-lg" title="{% trans 'edit'%}" id="bt_review_edit">
-                <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-                </button>{% trans 'edit'%}</a></td><td></td>
+                <td align="center">
+                    <form method="POST" action="{% url 'review_edit' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="mandate_id" value="{{ mandate.id }}">
+                        <button type="submit" class="btn btn-link" title="{% trans 'edit'%}">
+                            <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                            {% trans 'edit'%}
+                        </button>
+                    </form>
+                </td>
+                <td></td>
             {% elif "RESEARCH" in reviewer.role and mandate.state in research_list %}
-                <td></td><td align="center">
-                <a href="{% url 'review_view' mandate_id=mandate.id role=reviewer.role %}">
-                <button type="button" class="btn btn-link btn-lg" title="{% trans 'view'%}" id="bt_view_view">
-                <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
-                </button>{% trans 'view'%}</a></td>
+                <td></td>
+                <td align="center">
+                    <form method="POST" action="{% url 'review_view' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="mandate_id" value="{{ mandate.id }}">
+                        <input type="hidden" name="role" value="{{ reviewer.role }}">
+                        <button type="submit" class="btn btn-link" title="{% trans 'view'%}">
+                            <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+                            {% trans 'view'%}
+                        </button>
+                    </form>
+                </td>
             {% elif "SUPERVISION" in reviewer.role and mandate.state in supervision_list %}
-                <td></td><td align="center">
-                <a href="{% url 'review_view' mandate_id=mandate.id role=reviewer.role %}">
-                <button type="button" class="btn btn-link btn-lg" title="{% trans 'view'%}" id="bt_view_view">
-                <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
-                </button>{% trans 'view'%}</a></td>
+                <td></td>
+                <td align="center">
+                    <form method="POST" action="{% url 'review_view' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="mandate_id" value="{{ mandate.id }}">
+                        <input type="hidden" name="role" value="{{ reviewer.role }}">
+                        <button type="submit" class="btn btn-link" title="{% trans 'view'%}">
+                            <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+                            {% trans 'view'%}
+                        </button>
+                    </form>
+                </td>
             {% elif "VICE_RECTOR" in reviewer.role and mandate.state in vice_rector_list %}
-                <td></td><td align="center">
-                <a href="{% url 'review_view' mandate_id=mandate.id role=reviewer.role %}">
-                <button type="button" class="btn btn-link btn-lg" title="{% trans 'view'%}" id="bt_view_view">
-                <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
-                </button>{% trans 'view'%}</a></td>
+                <td></td>
+                <td align="center">
+                    <form method="POST" action="{% url 'review_view' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="mandate_id" value="{{ mandate.id }}">
+                        <input type="hidden" name="role" value="{{ reviewer.role }}">
+                        <button type="submit" class="btn btn-link" title="{% trans 'view'%}">
+                            <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+                            {% trans 'view'%}
+                        </button>
+                    </form>
+                </td>
             {% else %}
-                <td></td><td></td>
+                <td></td>
+                <td></td>
             {% endif %}
             </tr>
         {% endfor %}

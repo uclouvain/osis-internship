@@ -25,11 +25,13 @@
 ##############################################################################
 from django import forms
 from django.core.exceptions import ValidationError
-from django.forms import ModelForm, Textarea
+from django.forms import ModelForm, Textarea, ModelChoiceField
 from django.forms.models import inlineformset_factory
 from django.utils.translation import ugettext as _
-from base.models import structure, academic_year
-from base.models.enums import structure_type
+
+import base.models.entity
+from base.models import academic_year, entity, entity_version
+from base.models.enums import entity_type
 from assistant import models as mdl
 from assistant.models.enums import review_advice_choices, assistant_type
 from assistant.models.enums import assistant_mandate_renewal, reviewer_role, assistant_phd_inscription
@@ -75,27 +77,31 @@ class MandateForm(ModelForm):
             self.fields[field].widget.attrs['class'] = 'form-control'
 
 
-class MandateStructureForm(ModelForm):
-    class Meta:
-        model = mdl.mandate_structure.MandateStructure
-        fields = ('structure', 'assistant_mandate')
+class EntityChoiceField(ModelChoiceField):
+    def label_from_instance(self, obj):
+        return "{0} ({1})".format(obj.acronym, obj.title)
+
+    def __init__(self, *args, **kwargs):
+        super(EntityChoiceField, self).__init__(*args, **kwargs)
+        self.widget.attrs['class'] = 'form-control'
 
 
 def get_field_qs(field, **kwargs):
-    if field.name == 'structure':
-        return forms.ModelChoiceField(queryset=structure.find_by_types([structure_type.INSTITUTE,
-                                                                        structure_type.POLE,
-                                                                        structure_type.PROGRAM_COMMISSION,
-                                                                        structure_type.FACULTY
-                                                                        ]))
+    if field.name == 'entity':
+        return EntityChoiceField(queryset=base.models.entity.find_versions_from_entites(
+            entity.search(entity_type=entity_type.SECTOR) |
+            entity.search(entity_type=entity_type.FACULTY) |
+            entity.search(entity_type=entity_type.SCHOOL) |
+            entity.search(entity_type=entity_type.INSTITUTE) |
+            entity.search(entity_type=entity_type.POLE), None))
     return field.formfield(**kwargs)
 
 
-structure_inline_formset = inlineformset_factory(mdl.assistant_mandate.AssistantMandate,
-                                                 mdl.mandate_structure.MandateStructure,
-                                                 formfield_callback=get_field_qs,
-                                                 fields=('structure', 'assistant_mandate'),
-                                                 extra=2, can_delete=True, min_num=1, max_num=4)
+entity_inline_formset = inlineformset_factory(mdl.assistant_mandate.AssistantMandate,
+                                              mdl.mandate_entity.MandateEntity,
+                                              formfield_callback=get_field_qs,
+                                              fields=('entity', 'assistant_mandate'),
+                                              extra=1, can_delete=True, min_num=1, max_num=5)
 
 
 class AssistantFormPart1(ModelForm):
@@ -133,7 +139,6 @@ RADIO_SELECT_REQUIRED = dict(
 class AssistantFormPart3(ModelForm):
     PARAMETERS = dict(required=False, widget=forms.DateInput(format='%d/%m/%Y', attrs={'placeholder': 'dd/mm/yyyy'}),
                       input_formats=['%d/%m/%Y'])
-
     inscription = forms.ChoiceField(choices=assistant_phd_inscription.PHD_INSCRIPTION_CHOICES, **RADIO_SELECT_REQUIRED)
     expected_phd_date = forms.DateField(**PARAMETERS)
     thesis_date = forms.DateField(**PARAMETERS)
@@ -184,7 +189,6 @@ class AssistantFormPart4(ModelForm):
         super(AssistantFormPart4, self).__init__(*args, **kwargs)
         for field in self.fields:
             self.fields[field].widget.attrs['class'] = 'form-control'
-
 
 
 class TutoringLearningUnitForm(ModelForm):
@@ -290,28 +294,32 @@ class AssistantFormPart6(ModelForm):
 
 class ReviewerDelegationForm(ModelForm):
     role = forms.CharField(widget=forms.HiddenInput(), required=True)
-    structure = forms.ModelChoiceField(widget=forms.HiddenInput(), required=True,
-                                       queryset=structure.find_structures())
+    entity = forms.ModelChoiceField(widget=forms.HiddenInput(), required=True, queryset=(
+        entity.search(entity_type=entity_type.INSTITUTE) |
+        entity.search(entity_type=entity_type.FACULTY) |
+        entity.search(entity_type=entity_type.SCHOOL) |
+        entity.search(entity_type=entity_type.PLATFORM) |
+        entity.search(entity_type=entity_type.POLE)))
 
     class Meta:
         model = mdl.reviewer.Reviewer
-        fields = ('structure', 'role')
+        fields = ('entity', 'role')
         exclude = ['person']
         widgets = {
-            'structure': forms.HiddenInput()
+            'entity': forms.HiddenInput()
         }
 
 
 class ReviewerForm(ModelForm):
     role = forms.ChoiceField(required=True, choices=reviewer_role.ROLE_CHOICES)
-    structure = forms.ModelChoiceField(required=True, queryset=(
-        structure.find_by_types([structure_type.INSTITUTE,
-                                 structure_type.FACULTY,
-                                 structure_type.SECTOR])))
+    entities = \
+        entity.search(entity_type=entity_type.INSTITUTE) | entity.search(entity_type=entity_type.FACULTY) | \
+        entity.search(entity_type=entity_type.SECTOR)
+    entity = EntityChoiceField(required=True, queryset=base.models.entity.find_versions_from_entites(entities, None))
 
     class Meta:
         model = mdl.reviewer.Reviewer
-        fields = ('structure', 'role')
+        fields = ('entity', 'role')
         exclude = ['person']
 
     def __init__(self, *args, **kwargs):
@@ -327,12 +335,13 @@ class ReviewerReplacementForm(ModelForm):
     class Meta:
         model = mdl.reviewer.Reviewer
         fields = ('id',)
-        exclude = ('person', 'structure', 'role')
+        exclude = ('person', 'entity', 'role')
 
 
 class ReviewersFormset(ModelForm):
     role = forms.ChoiceField(required=False)
-    structure = forms.ChoiceField(required=False)
+    entity = forms.CharField(required=False)
+    entity_version = forms.CharField(required=False)
     person = forms.ChoiceField(required=False)
     id = forms.IntegerField(required=False)
     ACTIONS = (
@@ -345,7 +354,7 @@ class ReviewersFormset(ModelForm):
 
     class Meta:
         model = mdl.reviewer.Reviewer
-        exclude = ('structure', 'role', 'person')
+        exclude = ('entity', 'role', 'person')
 
 
 class SettingsForm(ModelForm):

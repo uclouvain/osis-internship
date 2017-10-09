@@ -24,6 +24,8 @@
 #
 ##############################################################################
 import factory
+
+from base.tests.factories.entity import EntityFactory
 from base.tests.factories.person import PersonFactory
 from base.tests.factories.structure import StructureFactory
 
@@ -34,3 +36,4 @@ class EntityManagerFactory(factory.django.DjangoModelFactory):
 
     person = factory.SubFactory(PersonFactory)
     structure = factory.SubFactory(StructureFactory)
+    entity = factory.SubFactory(EntityFactory)

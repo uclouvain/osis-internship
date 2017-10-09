@@ -25,7 +25,8 @@
 ##############################################################################
 from django.conf.urls import url, include
 
-from base.views import learning_unit, offer, common, institution, organization, academic_calendar, my_osis, entity, student
+from base.views import learning_unit, offer, common, institution, organization, academic_calendar, \
+    my_osis, entity, student, education_group
 
 urlpatterns = [
     url(r'^$', common.home, name='home'),
@@ -52,6 +53,17 @@ urlpatterns = [
 
     url(r'^catalog/$', common.catalog, name='catalog'),
 
+    url(r'^entities/', include([
+        url(r'^$', institution.entities, name='entities'),
+        url(r'^search$', institution.entities_search, name='entities_search'),
+        url(r'^(?P<entity_version_id>[0-9]+)/', include([
+            url(r'^$', institution.entity_read, name='entity_read'),
+            url(r'^address/$', institution.get_entity_address, name='entity_address'),
+            url(r'^diagram/$', institution.entity_diagram, name='entity_diagram'),
+            url(r'^versions/$', institution.entities_version, name='entities_version'),
+        ]))
+    ])),
+
     url(r'^institution/', include([
         url(r'^$', institution.institution, name='institution'),
         url(r'^mandates/$', institution.mandates, name='mandates'),
@@ -59,6 +71,13 @@ urlpatterns = [
 
     url(r'^learning_units/', include([
         url(r'^$', learning_unit.learning_units, name='learning_units'),
+        url(r'^by_activity/', learning_unit.learning_units_activity, name='learning_units_activity'),
+        url(r'^by_service_course/', learning_unit.learning_units_service_course, name='learning_units_service_course'),
+        url(r'^new/', include([
+            url(r'^academic_year_id=(?P<academic_year>[0-9]+)$', learning_unit.learning_unit_create,
+                name="learning_unit_create"),
+            url(r'^learning_unit_year_add/$', learning_unit.learning_unit_year_add, name='learning_unit_year_add')
+        ])),
         url(r'^(?P<learning_unit_year_id>[0-9]+)/', include([
             url(r'^$', learning_unit.learning_unit_identification, name='learning_unit'),
             url(r'^formations/$', learning_unit.learning_unit_formations, name="learning_unit_formations"),
@@ -72,7 +91,11 @@ urlpatterns = [
             url(r'^specifications/edit/$', learning_unit.learning_unit_specifications_edit, name="learning_unit_specifications_edit"),
             url(r'^component/edit/$', learning_unit.learning_unit_component_edit, name="learning_unit_component_edit"),
             url(r'^class/edit/$', learning_unit.learning_class_year_edit, name="learning_class_year_edit"),
-        ]))
+            url(r'^volumes/', include([
+                url(u'^$', learning_unit.learning_unit_volumes_management, name="learning_unit_volumes_management"),
+                url(u'^validation/$', learning_unit.volumes_validation, name="volumes_validation")])),
+        ])),
+        url(r'^check/$', learning_unit.check_acronym, name="check_acronym"),
     ])),
 
     url(r'^my_osis/', include([
@@ -101,7 +124,14 @@ urlpatterns = [
         url(r'^search$', offer.offers_search, name='offers_search'),
         url(r'^(?P<offer_year_id>[0-9]+)/', include([
             url(r'^$', offer.offer_read, name='offer_read'),
-            url(r'^score_encoding/$', offer.score_encoding, name='offer_score_encoding'),
+            url(r'^academic_calendar/$', offer.offer_academic_calendar_tab, name='offer_academic_calendar_tab'),
+            url(r'^program_managers/$', offer.offer_program_managers_tab, name='offer_program_managers_tab'),
+        ]))
+    ])),
+    url(r'^educationgroups/', include([
+        url(r'^$', education_group.education_groups, name='education_groups'),
+        url(r'^(?P<education_group_year_id>[0-9]+)/', include([
+            url(r'^$', education_group.education_group_read, name='education_group_read'),
         ]))
     ])),
 
@@ -135,22 +165,13 @@ urlpatterns = [
         ]))
     ])),
 
-    url(r'^entities/', include([
-        url(r'^$', institution.entities, name='entities'),
-        url(r'^search$', institution.entities_search, name='entities_search'),
-        url(r'^(?P<entity_version_id>[0-9]+)/', include([
-            url(r'^$', institution.entity_read, name='entity_read'),
-            url(r'^diagram/$', institution.entity_diagram, name='entity_diagram'),
-            url(r'^versions/$', institution.entities_version, name='entities_version'),
-        ]))
-    ])),
-
     url(r'^studies/$', common.studies, name='studies'),
     url(r'^students/', include([
         url(r'^$', student.students, name='students'),
         url(r'^search$', student.student_search, name='students_search'),
-        url(r'^(?P<registration_id>[0-9]+)/', include([
+        url(r'^(?P<student_id>[0-9]+)/', include([
             url(r'^$', student.student_read, name='student_read'),
+            url(r'^picture$', student.student_picture, name='student_picture'),
         ]))
     ])),
 ]
