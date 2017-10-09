@@ -25,10 +25,12 @@
 ##############################################################################
 from django import forms
 from django.db import models
+from django.utils.functional import lazy
 from django.utils.translation import ugettext_lazy as _
 
 from base.models import academic_year, education_group_year, entity_version, offer_type, offer_year_entity
 from base.models import entity
+from base.models.entity_version import find_last_faculty_entities_version
 from base.models.enums import education_group_categories, offer_year_entity_type
 from base.models.enums import entity_type
 
@@ -40,6 +42,12 @@ EDUCATION_GROUP_CATEGORIES = (
     (education_group_categories.GROUP, _('GROUP')),
 )
 
+
+def create_entity_management_list():
+    return [(None, "---------"), ] + [(entity_version.acronym, entity_version.acronym) for entity_version
+                                      in find_last_faculty_entities_version()]
+
+
 class EducationGroupFilter(forms.Form):
     academic_year = forms.ModelChoiceField(queryset=academic_year.find_academic_years(),required=False,
                                            widget=forms.Select(attrs={'class': 'form-control'}),
@@ -49,9 +57,14 @@ class EducationGroupFilter(forms.Form):
                                                   empty_label=_('all_label'))
     category = forms.ChoiceField(EDUCATION_GROUP_CATEGORIES, required=False,
                                  widget=forms.Select(attrs={'class': 'form-control'}))
-    acronym = title = entity_management = forms.CharField(
+    acronym = title = forms.CharField(
         widget=forms.TextInput(attrs={'size': '10', 'class': 'form-control'}),
         max_length=20, required=False)
+
+    entity_management = forms.ChoiceField(choices=lazy(create_entity_management_list, tuple),
+                                          required=False,
+                                          widget=forms.Select(attrs={'class': 'form-control',
+                                                                     'id': 'entity_management'}))
 
     def clean_entity_management(self):
         data_cleaned = self.cleaned_data.get('entity_management')
@@ -86,7 +99,7 @@ class EducationGroupFilter(forms.Form):
 
 def _get_filter_entity_management(entity_management):
     entity_ids = _get_entities_ids(entity_management)
-    return list(offer_year_entity.search(link_type=offer_year_entity_type.ENTITY_MANAGEMENT,
+    return list(offer_year_entity.search(link_type=None,
                                          entity=entity_ids)\
                 .values_list('education_group_year', flat=True).distinct())
 
