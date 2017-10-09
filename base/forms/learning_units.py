@@ -109,17 +109,17 @@ class LearningUnitYearForm(forms.Form):
 
     def get_service_course_learning_units(self):
         list_results = self.get_learning_units(True)
-        list_results_2 = []
+        service_courses = []
         for l in list_results:
             if SERVICE_COURSE in l.entities:
                 if l.entities[SERVICE_COURSE]:
                     if self.cleaned_data.get('allocation_entity_acronym'):
                         if l.entities['ALLOCATION_ENTITY'].acronym == self.cleaned_data.get('allocation_entity_acronym'):
-                            list_results_2.append(l)
+                            service_courses.append(l)
                     else:
-                        list_results_2.append(l)
+                        service_courses.append(l)
 
-        return list_results_2
+        return service_courses
 
 
 def _clean_data(datas_to_clean):
@@ -172,7 +172,6 @@ def is_service_course(learning_unit_yr):
 
         allocation_entity = mdl_entity_version.get_last_version(entity_containter_yr_allocation.entity)
         for entity_descendant in requirement_entity.find_descendants(learning_unit_yr.academic_year.start_date):
-            print(allocation_entity)
             if entity_descendant == allocation_entity:
                 return False
     return True
