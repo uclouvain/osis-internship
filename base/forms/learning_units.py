@@ -112,9 +112,9 @@ class LearningUnitYearForm(forms.Form):
         service_courses = []
         for l in list_results:
             if SERVICE_COURSE in l.entities:
-                if l.entities[SERVICE_COURSE]:
+                if l.entities[SERVICE_COURSE] and entity_container_year_link_type.ALLOCATION_ENTITY in l.entities:
                     if self.cleaned_data.get('allocation_entity_acronym'):
-                        if l.entities['ALLOCATION_ENTITY'].acronym == self.cleaned_data.get('allocation_entity_acronym'):
+                        if l.entities[entity_container_year_link_type.ALLOCATION_ENTITY].acronym == self.cleaned_data.get('allocation_entity_acronym'):
                             service_courses.append(l)
                     else:
                         service_courses.append(l)
