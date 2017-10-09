@@ -109,13 +109,17 @@ class LearningUnitYearForm(forms.Form):
 
     def get_service_course_learning_units(self):
         list_results = self.get_learning_units(True)
-        list_results_2 = []
+        service_courses = []
         for l in list_results:
             if SERVICE_COURSE in l.entities:
                 if l.entities[SERVICE_COURSE]:
-                    list_results_2.append(l)
+                    if self.cleaned_data.get('allocation_entity_acronym'):
+                        if l.entities['ALLOCATION_ENTITY'].acronym == self.cleaned_data.get('allocation_entity_acronym'):
+                            service_courses.append(l)
+                    else:
+                        service_courses.append(l)
 
-        return list_results_2
+        return service_courses
 
 
 def _clean_data(datas_to_clean):
@@ -130,28 +134,6 @@ def _get_filter_learning_container_ids(filter_data):
     requirement_entity_acronym = filter_data.get('requirement_entity_acronym')
     allocation_entity_acronym = filter_data.get('allocation_entity_acronym')
     with_entity_subordinated = filter_data.get('with_entity_subordinated', False)
-    if allocation_entity_acronym and requirement_entity_acronym:
-        entity_allocation_ids = _get_entities_ids(allocation_entity_acronym, with_entity_subordinated)
-        entity_requirement_ids = _get_entities_ids(requirement_entity_acronym, with_entity_subordinated)
-        if len(entity_allocation_ids) > 0 and len(entity_requirement_ids) > 0:
-            requirement_list= list(mdl.entity_container_year.search(link_type=entity_container_year_link_type.REQUIREMENT_ENTITY,
-                                                         entity_id=entity_requirement_ids) \
-                        .values_list('learning_container_year', flat=True).distinct())
-            allocation_list= list(mdl.entity_container_year.search(link_type=entity_container_year_link_type.ALLOCATION_ENTITY,
-                                                      entity_id=entity_allocation_ids) \
-                     .values_list('learning_container_year', flat=True).distinct())
-            if len(requirement_list) > 0 and len(allocation_list)>0:
-                return list(set().union(requirement_list,allocation_list))
-            else:
-                return []
-        else:
-            return []
-    else:
-        if allocation_entity_acronym:
-            entity_ids = _get_entities_ids(allocation_entity_acronym, with_entity_subordinated)
-            return list(mdl.entity_container_year.search(link_type=entity_container_year_link_type.ALLOCATION_ENTITY,
-                                                         entity_id=entity_ids) \
-                        .values_list('learning_container_year', flat=True).distinct())
 
     if requirement_entity_acronym:
         entity_ids = _get_entities_ids(requirement_entity_acronym, with_entity_subordinated)
@@ -203,8 +185,9 @@ def _append_latest_entities(learning_unit, service_course_search):
             learning_unit.entities[link_type] = latest_version
     if service_course_search:
         if entity_container_year_link_type.REQUIREMENT_ENTITY in learning_unit.entities:
-            entity_parent = mdl.entity_version.find_parent_faculty_version(learning_unit.entities[entity_container_year_link_type.REQUIREMENT_ENTITY],
-                                                                                                      learning_unit.learning_container_year.academic_year)
+            entity_parent = mdl.entity_version\
+                .find_parent_faculty_version(learning_unit.entities[entity_container_year_link_type.REQUIREMENT_ENTITY],
+                                             learning_unit.learning_container_year.academic_year)
             if entity_parent:
                 learning_unit.entities[PARENT_FACULTY] = entity_parent
             else:
