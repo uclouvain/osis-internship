@@ -24,6 +24,8 @@
 #
 ##############################################################################
 import datetime
+from django.core.exceptions import ObjectDoesNotExist
+from django.db import connection
 from django.test import TestCase
 from django.contrib.auth.models import User
 from base.tests.factories import tutor, user, structure, entity_manager, academic_year, learning_unit_year
@@ -88,3 +90,19 @@ class AttributionTest(TestCase):
 
     def test_is_score_responsible_without_attribution(self):
         self.assertFalse(attribution.is_score_responsible(self.user, self.learning_unit_year_without_attribution))
+
+    def test_attribution_deleted_field(self):
+        attribution_id = self.attribution.id
+        self.attribution.deleted = True
+        self.attribution.save()
+
+        with self.assertRaises(ObjectDoesNotExist):
+            attribution.Attribution.objects.get(id=attribution_id)
+
+        with connection.cursor() as cursor:
+            cursor.execute("select id, deleted from attribution_attribution where id=%s", [attribution_id])
+            row = cursor.fetchone()
+            db_attribution_id = row[0]
+            db_attribution_deleted = row[1]
+        self.assertEqual(db_attribution_id, attribution_id)
+        self.assertTrue(db_attribution_deleted)

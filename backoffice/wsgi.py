@@ -59,8 +59,11 @@ except ImportError as ie:
 
 from django.conf import settings
 LOGGER = logging.getLogger(settings.DEFAULT_LOGGER)
+import pudb
+pudb.set_trace()
 
 if hasattr(settings, 'QUEUES') and settings.QUEUES:
+
     from osis_common.queue import queue_listener, callbacks
     # migration queue used to migrate data between osis ans osis_portal
     try:
