@@ -40,6 +40,8 @@ class EducationGroupOrganizationAdmin(admin.ModelAdmin):
 
 
 class EducationGroupOrganization(models.Model):
+    external_id = models.CharField(max_length=100, blank=True, null=True)
+    changed = models.DateTimeField(null=True, auto_now=True)
     education_group_year = models.ForeignKey('EducationGroupYear')
     organization = models.ForeignKey('Organization')
     all_students = models.BooleanField(default=False)
