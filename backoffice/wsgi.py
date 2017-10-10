@@ -59,8 +59,6 @@ except ImportError as ie:
 
 from django.conf import settings
 LOGGER = logging.getLogger(settings.DEFAULT_LOGGER)
-import pudb
-pudb.set_trace()
 
 if hasattr(settings, 'QUEUES') and settings.QUEUES:
 
