@@ -249,7 +249,7 @@
                         <div class="panel-body">
                             <label>{% trans 'program_coorganization' %}</label>
                             {% if coorganizations %}
-                            <table class="table">
+                            <table class="table" id="tbl_coorganization">
                                 <thead>
                                 <th>{% trans 'institution'%}</th>
                                 <th></th>
@@ -300,4 +300,29 @@
             </div>
         </div>
     </div>
+{% endblock %}
+{% block script %}
+<script>
+    $(document).ready(function()
+    {
+        $('#tbl_coorganization').DataTable(
+                {
+                    columnDefs: [
+                        { targets: 1, type: 'diacritics-neutralise'},
+                        { orderable: false, targets: [1]}
+                    ],
+                    "stateSave": true,
+                    "paging" : false,
+                    "ordering" : true,
+                    "info"  : false,
+                    "searching" : false,
+                    "language": {
+                        "oAria": {
+                            "sSortAscending":  "{% trans 'datatable_sortascending'%}",
+                            "sSortDescending": "{% trans 'datatable_sortdescending'%}",
+                        }
+                    }
+                })
+        ;});
+</script>
 {% endblock %}
