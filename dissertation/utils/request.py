@@ -50,8 +50,3 @@ def get_students_list_in_offer_year(request, offer_year_start_id):
         data = False
 
     return JsonResponse({'res': data})
-
-
-def redirect_if_none(object, target):
-    if object is None:
-        return redirect(target)

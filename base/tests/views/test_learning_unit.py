@@ -381,7 +381,7 @@ class LearningUnitViewTestCase(TestCase):
         learning_unit_yr = LearningUnitYearFactory(academic_year=self.current_academic_year,
                                                    learning_container_year=self.learning_container_yr)
         learning_unit_compnt = LearningUnitComponentFactory(learning_unit_year=learning_unit_yr,
-                                                               learning_component_year=self.learning_component_yr)
+                                                            learning_component_year=self.learning_component_yr)
         url = reverse('learning_unit_component_edit', args=[learning_unit_yr.id])
         qs = 'learning_component_year_id={}'.format(self.learning_component_yr.id)
 
@@ -579,3 +579,122 @@ class LearningUnitViewTestCase(TestCase):
         form = CreateLearningUnitYearForm(data=self.get_faulty_acronym())
         self.assertFalse(form.is_valid(), form.errors)
         self.assertEqual(form.errors['acronym'], [_('invalid_acronym')])
+
+    def test_learning_unit_check_acronym(self):
+        kwargs = {'HTTP_X_REQUESTED_WITH': 'XMLHttpRequest'}
+
+        url = reverse('check_acronym')
+        get_data = {'acronym': 'goodacronym', 'year_id': self.academic_year_1.id}
+        response = self.client.get(url, get_data, **kwargs)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertJSONEqual(
+            str(response.content , encoding='utf8'),
+            {'valid': True,
+             'existing_acronym': False,
+             'existed_acronym': False,
+             'last_using': ""}
+        )
+
+        learning_unit_container_year = LearningContainerYearFactory(
+            academic_year=self.current_academic_year
+        )
+        learning_unit_year = LearningUnitYearFactory(
+            acronym="LCHIM1210",
+            learning_container_year=learning_unit_container_year,
+            subtype=learning_unit_year_subtypes.FULL,
+            academic_year=self.current_academic_year
+        )
+        learning_unit_year.save()
+
+        get_data = {'acronym': 'LCHIM1210', 'year_id': self.current_academic_year.id}
+        response = self.client.get(url, get_data, **kwargs)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertJSONEqual(
+            str(response.content , encoding='utf8'),
+            {'valid': False,
+             'existing_acronym': True,
+             'existed_acronym': False,
+             'last_using': ""}
+        )
+
+        learning_unit_year = LearningUnitYearFactory(
+            acronym="LCHIM1211",
+            learning_container_year=learning_unit_container_year,
+            subtype=learning_unit_year_subtypes.FULL,
+            academic_year=self.current_academic_year
+        )
+        learning_unit_year.save()
+
+        get_data = {'acronym': 'LCHIM1211', 'year_id': self.academic_year_6.id}
+        response = self.client.get(url, get_data, **kwargs)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertJSONEqual(
+            str(response.content , encoding='utf8'),
+            {'valid': True,
+             'existing_acronym': False,
+             'existed_acronym': True,
+             'last_using': str(self.current_academic_year)}
+        )
+
+    def _get_volumes_data(self, learning_units_year):
+        if not isinstance(learning_units_year, list):
+            learning_units_year = [learning_units_year]
+        data = {}
+        for learning_unit_year in learning_units_year:
+            data['VOLUME_TOTAL_REQUIREMENT_ENTITIES_{}_{}'.format(learning_unit_year.id, self.learning_component_yr.id)] = [60]
+            data['VOLUME_Q1_{}_{}'.format(learning_unit_year.id, self.learning_component_yr.id)] = [10]
+            data['VOLUME_Q2_{}_{}'.format(learning_unit_year.id, self.learning_component_yr.id)] = [20]
+            data['VOLUME_TOTAL_{}_{}'.format(learning_unit_year.id, self.learning_component_yr.id)] = [30]
+            data['PLANNED_CLASSES_{}_{}'.format(learning_unit_year.id, self.learning_component_yr.id)] = [2]
+        return data
+
+    @mock.patch('django.contrib.auth.decorators')
+    @mock.patch('base.views.layout.render')
+    @mock.patch('base.models.program_manager.is_program_manager')
+    def test_get_learning_unit_volumes_management(self, mock_program_manager, mock_render, mock_decorators):
+        mock_decorators.login_required = lambda x: x
+        mock_decorators.permission_required = lambda *args, **kwargs: lambda func: func
+        mock_program_manager.return_value = True
+
+        learning_unit_year = LearningUnitYearFactory(academic_year=self.current_academic_year,
+                                                     learning_container_year=self.learning_container_yr)
+        learning_unit_year.save()
+
+        request_factory = RequestFactory()
+        url = reverse("learning_unit_volumes_management" , args=[learning_unit_year.id])
+        # GET request
+        request = request_factory.get(url)
+        request.user = mock.Mock()
+        from base.views.learning_unit import learning_unit_volumes_management
+        learning_unit_volumes_management(request, learning_unit_year.id)
+        self.assertTrue(mock_render.called)
+        request, template, context = mock_render.call_args[0]
+        self.assertEqual(template, 'learning_unit/volumes_management.html')
+        self.assertEqual(context['tab_active'], 'components')
+
+        # POST request
+        request = request_factory.post(url, self._get_volumes_data([learning_unit_year]))
+        request.user = mock.Mock()
+        learning_unit_volumes_management(request, learning_unit_year.id)
+        self.assertTrue(mock_render.called)
+
+    def test_volumes_validation(self):
+        learning_unit_year = LearningUnitYearFactory(academic_year=self.current_academic_year,
+                                                     learning_container_year=self.learning_container_yr)
+        learning_unit_year.save()
+
+        kwargs = {'HTTP_X_REQUESTED_WITH': 'XMLHttpRequest'}
+        url = reverse("volumes_validation", args=[learning_unit_year.id])
+
+        data = self._get_volumes_data(learning_unit_year)
+        #TODO inject wrong data
+        response = self.client.get(url, data, **kwargs)
+        self.assertEqual(response.status_code, 200)
+        self.assertJSONEqual(
+            str(response.content, encoding='utf8'),
+            {'errors': [],
+             }
+        )
