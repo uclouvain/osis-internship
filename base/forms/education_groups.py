@@ -30,7 +30,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from base.models import academic_year, education_group_year, entity_version, offer_type, offer_year_entity
 from base.models import entity
-from base.models.entity_version import find_last_faculty_entities_version
+from base.models.entity_version import find_last_faculty_entities_version, find_latest_version_by_entity
 from base.models.enums import education_group_categories, offer_year_entity_type
 from base.models.enums import entity_type
 
@@ -99,8 +99,7 @@ class EducationGroupFilter(forms.Form):
 
 def _get_filter_entity_management(entity_management):
     entity_ids = _get_entities_ids(entity_management)
-    return list(offer_year_entity.search(link_type=None,
-                                         entity=entity_ids)\
+    return list(offer_year_entity.search(link_type=offer_year_entity_type.ENTITY_MANAGEMENT, entity=entity_ids)
                 .values_list('education_group_year', flat=True).distinct())
 
 

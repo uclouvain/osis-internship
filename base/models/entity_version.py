@@ -289,8 +289,8 @@ def find_main_entities_version():
 
 
 def find_last_faculty_entities_version():
-    entities_version = find_latest_version(date=datetime.datetime.now(get_tzinfo()))\
-        .filter(entity_type=entity_type.FACULTY, entity__organization__type=MAIN).order_by('acronym')
+    entities_version = EntityVersion.objects.filter(entity_type=entity_type.FACULTY,
+                                                    entity__organization__type=MAIN).order_by('entity', '-start_date').distinct('entity')
     return entities_version
 
 
