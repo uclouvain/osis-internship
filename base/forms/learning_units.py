@@ -25,7 +25,7 @@
 ##############################################################################
 import re
 from django import forms
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from django.db.models import Prefetch
 from django.utils.functional import lazy
 from django.utils.translation import ugettext_lazy as _
@@ -152,6 +152,7 @@ class LearningUnitYearForm(forms.Form):
 
         return list_results
 
+
 def _clean_data(datas_to_clean):
     return {key: _treat_empty_or_str_none_as_none(value) for (key, value) in datas_to_clean.items()}
 
@@ -190,6 +191,7 @@ def _get_entities_ids(requirement_entity_acronym, with_entity_subordinated):
             entities_ids |= {descendant.entity.id for descendant in all_descendants}
     return list(entities_ids)
 
+
 def is_service_course(learning_unit_yr):
     requirement_entity_version = learning_unit_yr.entities[entity_container_year_link_type.REQUIREMENT_ENTITY]
 
@@ -216,6 +218,7 @@ def is_service_course(learning_unit_yr):
                 return False
 
     return True
+
 
 def _append_latest_entities(learning_unit, service_course_search):
     learning_unit.entities = {}
@@ -346,8 +349,11 @@ class CreateLearningUnitYearForm(forms.ModelForm):
     def is_valid(self):
 
         valid = super(CreateLearningUnitYearForm, self).is_valid()
-        academic_year = mdl.academic_year.find_academic_year_by_id(self.data['academic_year'])
-        learning_unit_years = mdl.learning_unit_year.find_gte_year_acronym(academic_year, self.data['acronym'])
+        try:
+            academic_year = mdl.academic_year.find_academic_year_by_id(self.data.get('academic_year'))
+        except ObjectDoesNotExist:
+            return False
+        learning_unit_years = mdl.learning_unit_year.find_gte_year_acronym(academic_year, self.data.get('acronym'))
         learning_unit_years_list = [learning_unit_year.acronym.lower() for learning_unit_year in learning_unit_years]
         if valid:
             if self.cleaned_data['acronym'].lower() in learning_unit_years_list:
