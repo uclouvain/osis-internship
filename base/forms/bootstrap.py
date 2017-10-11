@@ -33,3 +33,12 @@ class BootstrapModelForm(forms.ModelForm):
         for field in iter(self.fields):
             attr_class = self.fields[field].widget.attrs.get('class') or ''
             self.fields[field].widget.attrs['class'] = attr_class + ' form-control'
+
+
+class BootstrapForm(forms.Form):
+
+    def __init__(self, *args, **kwargs):
+        super(BootstrapForm, self).__init__(*args, **kwargs)
+        for field in iter(self.fields):
+            attr_class = self.fields[field].widget.attrs.get('class') or ''
+            self.fields[field].widget.attrs['class'] = attr_class + ' form-control'

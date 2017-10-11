@@ -25,12 +25,13 @@
 ##############################################################################
 from django import forms
 from django.db import models
-from django.utils.functional import lazy
+from django.forms import ModelChoiceField
 from django.utils.translation import ugettext_lazy as _
 
+from base.forms.bootstrap import BootstrapForm
 from base.models import academic_year, education_group_year, entity_version, offer_type, offer_year_entity
 from base.models import entity
-from base.models.entity_version import find_last_faculty_entities_version, find_latest_version_by_entity
+from base.models.entity_version import find_last_faculty_entities_version, EntityVersion
 from base.models.enums import education_group_categories, offer_year_entity_type
 from base.models.enums import entity_type
 
@@ -43,33 +44,26 @@ EDUCATION_GROUP_CATEGORIES = (
 )
 
 
-def create_entity_management_list():
-    return [(None, "---------"), ] + [(entity_version.acronym, entity_version.acronym) for entity_version
-                                      in find_last_faculty_entities_version()]
+class EntityManagementModelChoiceField(ModelChoiceField):
+    def label_from_instance(self, obj):
+        return obj.acronym
 
 
-class EducationGroupFilter(forms.Form):
-    academic_year = forms.ModelChoiceField(queryset=academic_year.find_academic_years(),required=False,
-                                           widget=forms.Select(attrs={'class': 'form-control'}),
+class EducationGroupFilter(BootstrapForm):
+    academic_year = forms.ModelChoiceField(queryset=academic_year.find_academic_years(), required=False,
                                            empty_label=_('all_label'))
     education_group_type = forms.ModelChoiceField(queryset=offer_type.find_all(), required=False,
-                                                  widget=forms.Select(attrs={'class': 'form-control'}),
                                                   empty_label=_('all_label'))
-    category = forms.ChoiceField(EDUCATION_GROUP_CATEGORIES, required=False,
-                                 widget=forms.Select(attrs={'class': 'form-control'}))
+    category = forms.ChoiceField(EDUCATION_GROUP_CATEGORIES, required=False)
     acronym = title = forms.CharField(
         widget=forms.TextInput(attrs={'size': '10', 'class': 'form-control'}),
         max_length=20, required=False)
-
-    entity_management = forms.ChoiceField(choices=lazy(create_entity_management_list, tuple),
-                                          required=False,
-                                          widget=forms.Select(attrs={'class': 'form-control',
-                                                                     'id': 'entity_management'}))
+    entity_management = EntityManagementModelChoiceField(queryset=find_last_faculty_entities_version(), required=False)
 
     def clean_entity_management(self):
         data_cleaned = self.cleaned_data.get('entity_management')
         if data_cleaned:
-            return data_cleaned.upper()
+            return data_cleaned
         return None
 
     def clean_category(self):
@@ -104,7 +98,7 @@ def _get_filter_entity_management(entity_management):
 
 
 def _get_entities_ids(entity_management):
-    entity_versions = entity_version.search(acronym=entity_management, entity_type=entity_type.FACULTY)\
+    entity_versions = entity_version.search(acronym__in=entity_management, entity_type=entity_type.FACULTY)\
                                     .select_related('entity').distinct('entity')
     entities = entity.find_descendants([ent_v.entity for ent_v in entity_versions])
     return [ent.id for ent in entities] if entities else []
@@ -113,14 +107,15 @@ def _get_entities_ids(entity_management):
 def _append_entity_management(education_group):
     education_group.entity_management = None
     if education_group.offer_year_entities:
-        education_group.entity_management = _find_entity_version_according_academic_year(education_group.offer_year_entities[0].entity,
+        education_group.entity_management = _find_entity_version_according_academic_year(education_group.
+                                                                                         offer_year_entities[0].entity,
                                                                                          education_group.academic_year)
     return education_group
 
 
-def _find_entity_version_according_academic_year(entity, academic_year):
-    if entity.entity_versions:
-        return next((entity_vers for entity_vers in entity.entity_versions
-                     if entity_vers.start_date <= academic_year.start_date and
-                        (entity_vers.end_date is None or entity_vers.end_date > academic_year.end_date)), None)
+def _find_entity_version_according_academic_year(an_entity, an_academic_year):
+    if an_entity.entity_versions:
+        return next((entity_vers for entity_vers in an_entity.entity_versions
+                     if entity_vers.start_date <= an_academic_year.start_date and
+                     (entity_vers.end_date is None or entity_vers.end_date > an_academic_year.end_date)), None)
     return None
