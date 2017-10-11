@@ -46,6 +46,13 @@ class EntityTest(TestCase):
                                                     timezone.make_aware(datetime.datetime(2017, 12, 30))).fuzz()
         self.country = CountryFactory()
         self.parent = EntityFactory(country=self.country)
+        EntityVersionFactory(
+            entity=self.parent,
+            parent=None,
+            acronym="ROOT_ENTITY",
+            start_date=self.start_date,
+            end_date=self.end_date
+        )
         self.children = [EntityFactory(country=self.country) for x in range(4)]
         self.types_dict = dict(entity_type.ENTITY_TYPES)
         types = [self.types_dict['SECTOR'],
@@ -82,4 +89,48 @@ class EntityTest(TestCase):
         an_entity = EntityFactory()
         self.assertEqual(entity.get_by_internal_id(an_entity.id), an_entity)
         self.assertEqual(entity.get_by_internal_id(an_entity.id+1), None)
+
+    def test_find_descendants_with_parent(self):
+        entities_with_descendants = entity.find_descendants([self.parent], date=self.date_in_2015)
+        self.assertEqual(len(entities_with_descendants), 5)
+
+    def test_find_descendants_without_parent(self):
+        entities_with_descendants = entity.find_descendants([self.parent], date=self.date_in_2015, with_entities=False)
+        self.assertEqual(len(entities_with_descendants), 4)
+
+    def test_find_descendants_out_date(self):
+        entities_with_descendants = entity.find_descendants([self.parent], date=self.date_in_2017)
+        self.assertFalse(entities_with_descendants)
+
+    def test_find_descendants_with_multiple_parent(self):
+        parent_2 = EntityFactory(country=self.country)
+        EntityVersionFactory(entity=parent_2, parent=None, acronym="ROOT_ENTITY_2", start_date=self.start_date,
+                             end_date=self.end_date)
+        ### Create one child entity with parent ROOT_ENTITY_2
+        child = EntityFactory(country=self.country)
+        EntityVersionFactory(entity=child, parent=parent_2, acronym="CHILD_OF_ROOT_2", start_date=self.start_date,
+                             end_date=self.end_date)
+        ### Create one child entity with parent CHILD_OF_ROOT_2
+        child_2 = EntityFactory(country=self.country)
+        EntityVersionFactory(entity=child_2, parent=child, acronym="CHILD_OF_CHILD", start_date=self.start_date,
+                             end_date=self.end_date)
+        entities_with_descendants = entity.find_descendants([self.parent, parent_2], date=self.date_in_2015)
+        self.assertEqual(len(entities_with_descendants), 8)# 5 for parent + 3 for parent_2
+
+    def test_find_descendants_with_multiple_parent_get_without_parents(self):
+        parent_2 = EntityFactory(country=self.country)
+        EntityVersionFactory(entity=parent_2, parent=None, acronym="ROOT_ENTITY_2", start_date=self.start_date,
+                             end_date=self.end_date)
+        ### Create one child entity
+        child = EntityFactory(country=self.country)
+        EntityVersionFactory(entity=child, parent=parent_2, acronym="CHILD_OF_ROOT_2", start_date=self.start_date,
+                             end_date=self.end_date)
+        ### Create one child entity with parent CHILD_OF_ROOT_2
+        child_2 = EntityFactory(country=self.country)
+        EntityVersionFactory(entity=child_2, parent=child, acronym="CHILD_OF_CHILD", start_date=self.start_date,
+                             end_date=self.end_date)
+        entities_with_descendants = entity.find_descendants([self.parent, parent_2], date=self.date_in_2015,
+                                                            with_entities=False)
+        self.assertEqual(len(entities_with_descendants), 6)  # 4 for parent + 2 for parent_2
+
 

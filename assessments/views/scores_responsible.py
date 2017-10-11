@@ -28,6 +28,7 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from attribution import models as mdl_attr
 from base import models as mdl_base
+from base.business.entity_version import find_entity_version_according_academic_year
 from base.models.entity_manager import is_entity_manager
 from base.views import layout
 
@@ -37,6 +38,7 @@ from base.views import layout
 def scores_responsible(request):
     entities_manager = mdl_base.entity_manager.find_by_user(request.user)
     academic_year = mdl_base.academic_year.current_academic_year()
+    _append_entity_version(entities_manager, academic_year)
     return layout.render(request, 'scores_responsible.html', {"entities_manager": entities_manager,
                                                               "academic_year": academic_year,
                                                               "init": "0"})
@@ -46,16 +48,20 @@ def scores_responsible(request):
 @user_passes_test(is_entity_manager)
 def scores_responsible_search(request):
     entities_manager = mdl_base.entity_manager.find_by_user(request.user)
-    structures = mdl_base.structure.find_all_structure_parents(entities_manager)
     academic_year = mdl_base.academic_year.current_academic_year()
+    _append_entity_version(entities_manager, academic_year)
+
     if request.GET:
-        attributions_searched = mdl_attr.attribution.search_scores_responsible(
+        entities = [entity_manager.entity for entity_manager in entities_manager]
+        entities_with_descendants = mdl_base.entity.find_descendants(entities)
+        attributions = list(mdl_attr.attribution.search_scores_responsible(
             learning_unit_title=request.GET.get('learning_unit_title'),
             course_code=request.GET.get('course_code'),
-            structures=structures,
+            entities=entities_with_descendants,
             tutor=request.GET.get('tutor'),
-            responsible=request.GET.get('scores_responsible'))
-        dict_attribution = create_attributions_list(attributions_searched)
+            responsible=request.GET.get('scores_responsible')
+        ))
+        dict_attribution = get_attributions_list(attributions)
         return layout.render(request, 'scores_responsible.html', {"entities_manager": entities_manager,
                                                                   "academic_year": academic_year,
                                                                   "dict_attribution": dict_attribution,
@@ -70,27 +76,36 @@ def scores_responsible_search(request):
                                                                   "init": "0"})
 
 
-def create_attributions_list(attributions):
+def get_attributions_list(attributions):
     dict_attribution = dict()
     for attribution in attributions:
         tutors = mdl_attr.attribution.find_all_tutors_by_learning_unit_year(attribution.learning_unit_year)
+        entity_v = _get_entity_version(attribution.learning_unit_year.learning_container_year)
         dict_attribution[attribution] = [attribution.learning_unit_year.id,
-                                         attribution.learning_unit_year.structure.acronym,
+                                         entity_v.acronym,
                                          attribution.learning_unit_year.acronym,
                                          attribution.learning_unit_year.title,
                                          tutors]
     return dict_attribution
 
 
+def _get_entity_version(learning_container_year_prefetched):
+    if learning_container_year_prefetched.entities_containers_year:
+        entity = learning_container_year_prefetched.entities_containers_year[0].entity
+        if entity.entity_versions:
+            return next((entity_v for entity_v in entity.entity_versions), None)
+    return None
+
+
 @login_required
 @user_passes_test(is_entity_manager)
 def scores_responsible_management(request):
     entities_manager = mdl_base.entity_manager.find_by_user(request.user)
+    entities = [entity_manager.entity for entity_manager in entities_manager]
+    entities_with_descendants = mdl_base.entity.find_descendants(entities)
     learning_unit_year_id = request.GET.get('learning_unit_year').strip('learning_unit_year_')
     a_learning_unit_year = mdl_base.learning_unit_year.find_by_id(learning_unit_year_id)
-    structures = mdl_base.structure.find_all_structure_parents(entities_manager)
-    entities_list = [structure.acronym for structure in structures]
-    if a_learning_unit_year.structure.acronym in entities_list:
+    if a_learning_unit_year.allocation_entity in entities_with_descendants:
         attributions = mdl_attr.attribution.find_all_responsible_by_learning_unit_year(a_learning_unit_year)
         academic_year = mdl_base.academic_year.current_academic_year()
         return layout.render(request, 'scores_responsible_edit.html',
@@ -126,3 +141,12 @@ def scores_responsible_add(request, pk):
                                    request.POST.get('learning_unit_title'),
                                    request.POST.get('tutor'),
                                    request.POST.get('scores_responsible')))
+
+
+def _append_entity_version(entities_manager, academic_year):
+    for entity_manager in entities_manager:
+        if hasattr(entity_manager.entity, 'entity_versions') and entity_manager.entity.entity_versions:
+            entity_manager.entity_version = find_entity_version_according_academic_year(
+                entity_manager.entity.entity_versions, academic_year)
+        else:
+            entity_manager.entity_version = None

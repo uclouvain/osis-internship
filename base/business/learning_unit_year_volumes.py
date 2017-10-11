@@ -125,7 +125,8 @@ def _format_volumes(volumes):
         volumes_formated['PLANNED_CLASSES'] = int(volumes.get('PLANNED_CLASSES', 0))
     except Exception:
         raise ValueError("planned_classes_must_be_integer")
-    volumes_formated.update({k: _validate_decimals(volume) for k, volume in volumes.items() if k != "PLANNED_CLASSES"})
+    volumes_formated.update({k: _validate_decimals(volume) for k, volume in volumes.items()
+                             if k not in ("PLANNED_CLASSES", "VOLUME_QUARTER")})
 
     return volumes_formated
 

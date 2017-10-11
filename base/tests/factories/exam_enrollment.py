@@ -29,7 +29,7 @@ import factory.fuzzy
 import string
 
 from base.tests.factories.session_examen import SessionExamFactory
-from base.tests.factories.learning_unit_enrollment import LearningUnitEnrollment
+from base.tests.factories.learning_unit_enrollment import LearningUnitEnrollmentFactory
 from base.models.enums import exam_enrollment_state
 from osis_common.utils.datetime import get_tzinfo
 
@@ -49,5 +49,5 @@ class ExamEnrollmentFactory(factory.DjangoModelFactory):
     justification_reencoded = None
     justification_final = None
     session_exam = factory.SubFactory(SessionExamFactory)
-    learning_unit_enrollment = factory.SubFactory(LearningUnitEnrollment)
+    learning_unit_enrollment = factory.SubFactory(LearningUnitEnrollmentFactory)
     enrollment_state = exam_enrollment_state.ENROLLED

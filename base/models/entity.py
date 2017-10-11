@@ -26,6 +26,11 @@
 from django.contrib import admin
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
+from django.db.models import Case, When, Q, F
+from django.utils import timezone
+
+from base.models import entity_version
+from base.models.enums import entity_type
 
 
 class EntityAdmin(admin.ModelAdmin):
@@ -85,3 +90,37 @@ def get_by_external_id(external_id):
         return Entity.objects.get(external_id__exact=external_id)
     except ObjectDoesNotExist:
         return None
+
+
+def find_descendants(entities, date=None, with_entities=True):
+    if date is None:
+        date = timezone.now().date()
+
+    entities_descendants = set()
+    for entity in entities:
+        entities_descendants |= _find_descendants(entity, date, with_entities)
+    return list(entities_descendants)
+
+
+def _find_descendants(entity, date=None, with_entities=True):
+    entities_descendants = set()
+    try:
+        entity_vers = entity_version.get_last_version(entity, date=date)
+        if with_entities:
+            entities_descendants.add(entity_vers.entity)
+        entities_descendants |= {entity_version_descendant.entity for entity_version_descendant in
+                                 entity_vers.find_descendants(date=date)}
+    finally:
+        return entities_descendants
+
+
+def find_versions_from_entites(entities, date):
+    if date is None:
+        date = timezone.now()
+    order_list = [entity_type.SECTOR, entity_type.FACULTY, entity_type.SCHOOL, entity_type.INSTITUTE, entity_type.POLE]
+    preserved = Case(*[When(entity_type=pk, then=pos) for pos, pk in enumerate(order_list)])
+    return Entity.objects.filter(pk__in=entities).\
+        filter(Q(entityversion__end_date__gte=date) | Q(entityversion__end_date__isnull=True),
+               entityversion__start_date__lte=date).\
+        annotate(acronym=F('entityversion__acronym')).annotate(title=F('entityversion__title')).\
+        annotate(entity_type=F('entityversion__entity_type')).order_by(preserved)

@@ -42,7 +42,11 @@
 {% endblock %}
 {% block content %}
 <div class="page-header">
-    <h6>{% trans 'connected_as' %} {{ current_reviewer.person }} ({% trans current_reviewer.role %}) - {{ current_reviewer.structure.acronym }}</h6>
+    {% if current_reviewer %}
+        <h6>{% trans 'connected_as' %} {{ current_reviewer.person }} ({% trans current_reviewer.role %}) - {{ entity.acronym }}</h6>
+    {% else %}
+        <h6>{% trans 'connected_as' %} {{ current_person }} ({% trans role %})</h6>
+    {% endif %}
     <h3>{% trans 'assistant_mandates_renewals' %} ({{ year }})</h3>
     <h4>{{ assistant.person }}</h4>
     <ul class="nav nav-tabs">
@@ -111,7 +115,6 @@
         {% endfor %}
     </ul>
 </div>
-
 <div class="panel panel-default">
     <div class="panel-body">
   		<div class="panel-default">
@@ -217,6 +220,95 @@
                     </div>
                 </div>
             </div>
+            {% if phd_files.all %}
+                <div class="row" style="padding-top: 10px;">
+                    <div class="col-md-12">
+                    {% trans 'support_committee_reports' %}
+                    </div>
+                </div>
+                <div class="row" style="padding-top: 2px;">
+                    <ul>
+                        {% for file in phd_files %}
+                            <li>
+                                <a href="{% url 'assistant_file_download' document_file_id=file.id %}">
+                                    {{ file.document_file }}</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+            <div class="panel-default">
+  			        <div class="panel-heading">
+  				        <h4>{% trans 'research' %}</h4>
+    		        </div>
+            </div>
+            <div class="form-group" style="padding-top: 10px;">
+                <div class="row" style="padding-top: 2px;">
+                    <div class="col-md-3">
+                        {% trans 'scientific_internships' %}
+                    </div>
+                    <div class="col-md-9">
+                        {{ mandate.internships|default_if_none:"n/a" }}
+                    </div>
+                </div>
+                <div class="row" style="padding-top: 2px;">
+                    <div class="col-md-3">
+                        {% trans 'conferences_contributor' %}
+                    </div>
+                    <div class="col-md-3">
+                        {{ mandate.conferences|default_if_none:"n/a" }}
+                    </div>
+                </div>
+                <div class="row" style="padding-top: 2px;">
+                    <div class="col-md-3">
+                        {% trans 'publications_in_progress' %}
+                    </div>
+                    <div class="col-md-9">
+                        {{ mandate.publications|default_if_none:"n/a" }}
+                    </div>
+                </div>
+                <div class="row" style="padding-top: 2px;">
+                    <div class="col-md-3">
+                        {% trans 'awards' %}
+                    </div>
+                    <div class="col-md-9">
+                        {{ mandate.awards|default_if_none:"n/a" }}
+                    </div>
+                </div>
+                <div class="row" style="padding-top: 2px;">
+                    <div class="col-md-3">
+                        {% trans 'framing_participation' %}
+                    </div>
+                    <div class="col-md-9">
+                        {{ mandate.framing|default_if_none:"n/a" }}
+                    </div>
+                </div>
+                <div class="row" style="padding-top: 2px;">
+                    <div class="col-md-3">
+                        {% trans 'remark' %}
+                    </div>
+                    <div class="col-md-9">
+                        {{ mandate.remark|default_if_none:"n/a" }}
+                    </div>
+                </div>
+            </div>
+            {% if research_files.all %}
+                <div class="row" style="padding-top: 10px;">
+                    <div class="col-md-12">
+                        {% trans 'dial_publications' %}
+                    </div>
+                </div>
+                <div class="row" style="padding-top: 2px;">
+                    <ul>
+                        {% for file in research_files %}
+                        <li>
+                            <a href="{% url 'assistant_file_download' document_file_id=file.id %}">
+                                {{ file.document_file }}</a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
         {% endif %}
         <div class="panel-default">
   			<div class="panel-heading">
@@ -280,6 +372,23 @@
             </tbody>
             </table>
         </div>
+        {% if tutoring_files.all %}
+            <div class="row" style="padding-top: 10px;">
+                <div class="col-md-12">
+                    {% trans 'tutoring_reports' %}
+                </div>
+            </div>
+            <div class="row" style="padding-top: 2px;">
+                <ul>
+                    {% for file in tutoring_files %}
+                        <li>
+                            <a href="{% url 'assistant_file_download' document_file_id=file.id %}">
+                                {{ file.document_file }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
         <div class="panel-default">
             <div class="panel-heading">
                 <h4>{% trans 'representation_activities' %}</h4>
@@ -405,14 +514,16 @@
                     {{ mandate.tutoring_percent }} %
                 </div>
             </div>
-            <div class="row" style="padding-top: 2px;">
-                <div class="col-md-5">
-                    {% trans 'research_percent' %}
+            {% if mandate.assistant_type == 'ASSISTANT' %}
+                <div class="row" style="padding-top: 2px;">
+                    <div class="col-md-5">
+                        {% trans 'research_percent' %}
+                    </div>
+                    <div class="col-md-7">
+                        {{ mandate.research_percent }} %
+                    </div>
                 </div>
-                <div class="col-md-7">
-                    {{ mandate.research_percent }} %
-                </div>
-            </div>
+            {% endif %}
             <div class="row" style="padding-top: 2px;">
                 <div class="col-md-5">
                     {% trans 'service_activities_percent' %}

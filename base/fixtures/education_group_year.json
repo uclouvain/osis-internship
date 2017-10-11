@@ -21,7 +21,7 @@
       "enrollment_campus": 7,
       "main_teaching_campus": 7,
       "dissertation": false,
-      "internship": "false",
+      "internship": "NO",
       "schedule_type": "DAILY",
       "english_activities": null,
       "other_language_activities": null,
@@ -34,7 +34,11 @@
       "inter_university_french_community": false,
       "inter_university_belgium": false,
       "inter_university_abroad": false,
-      "primary_language": null
+      "primary_language": null,
+      "keywords": null,
+      "duration":1,
+      "duration_unit": "QUADRIMESTER",
+      "category": "TRAINING"
     }
   },
   {
@@ -59,7 +63,7 @@
       "enrollment_campus": 3,
       "main_teaching_campus": 3,
       "dissertation": false,
-      "internship": "false",
+      "internship": "YES",
       "schedule_type": "DAILY",
       "english_activities": null,
       "other_language_activities": null,
@@ -72,7 +76,11 @@
       "inter_university_french_community": false,
       "inter_university_belgium": false,
       "inter_university_abroad": false,
-      "primary_language": null
+      "primary_language": null,
+      "keywords": null,
+      "duration":1,
+      "duration_unit": "QUADRIMESTER",
+      "category": "TRAINING"
     }
   },
   {
@@ -97,7 +105,7 @@
       "enrollment_campus": 3,
       "main_teaching_campus": 3,
       "dissertation": false,
-      "internship": "false",
+      "internship": "NO",
       "schedule_type": "DAILY",
       "english_activities": null,
       "other_language_activities": null,
@@ -110,7 +118,11 @@
       "inter_university_french_community": false,
       "inter_university_belgium": false,
       "inter_university_abroad": false,
-      "primary_language": null
+      "primary_language": null,
+      "keywords": null,
+      "duration":1,
+      "duration_unit": "QUADRIMESTER",
+      "category": "TRAINING"
     }
   },
   {
@@ -135,7 +147,7 @@
       "enrollment_campus": 7,
       "main_teaching_campus": 7,
       "dissertation": false,
-      "internship": "false",
+      "internship": "NO",
       "schedule_type": "DAILY",
       "english_activities": null,
       "other_language_activities": null,
@@ -148,7 +160,11 @@
       "inter_university_french_community": false,
       "inter_university_belgium": false,
       "inter_university_abroad": false,
-      "primary_language": null
+      "primary_language": null,
+      "keywords": null,
+      "duration":1,
+      "duration_unit": "QUADRIMESTER",
+      "category": "TRAINING"
     }
   },
   {
@@ -173,7 +189,7 @@
       "enrollment_campus": 3,
       "main_teaching_campus": 3,
       "dissertation": false,
-      "internship": "false",
+      "internship": "OPTIONAL",
       "schedule_type": "DAILY",
       "english_activities": null,
       "other_language_activities": null,
@@ -186,7 +202,11 @@
       "inter_university_french_community": false,
       "inter_university_belgium": false,
       "inter_university_abroad": false,
-      "primary_language": null
+      "primary_language": null,
+      "keywords": null,
+      "duration":1,
+      "duration_unit": "QUADRIMESTER",
+      "category": "TRAINING"
     }
   },
   {
@@ -211,7 +231,7 @@
       "enrollment_campus": 3,
       "main_teaching_campus": 3,
       "dissertation": false,
-      "internship": "false",
+      "internship": "NO",
       "schedule_type": "DAILY",
       "english_activities": null,
       "other_language_activities": null,
@@ -224,7 +244,11 @@
       "inter_university_french_community": false,
       "inter_university_belgium": false,
       "inter_university_abroad": false,
-      "primary_language": null
+      "primary_language": null,
+      "keywords": null,
+      "duration":1,
+      "duration_unit": "QUADRIMESTER",
+      "category": "TRAINING"
     }
   },
   {
@@ -249,7 +273,7 @@
       "enrollment_campus": 3,
       "main_teaching_campus": 3,
       "dissertation": false,
-      "internship": "false",
+      "internship": "NO",
       "schedule_type": "DAILY",
       "english_activities": null,
       "other_language_activities": null,
@@ -262,7 +286,11 @@
       "inter_university_french_community": false,
       "inter_university_belgium": false,
       "inter_university_abroad": false,
-      "primary_language": null
+      "primary_language": null,
+      "keywords": null,
+      "duration":1,
+      "duration_unit": "QUADRIMESTER",
+      "category": "TRAINING"
     }
   },
   {
@@ -300,7 +328,11 @@
       "inter_university_french_community": false,
       "inter_university_belgium": false,
       "inter_university_abroad": false,
-      "primary_language": null
+      "primary_language": null,
+      "keywords": null,
+      "duration":1,
+      "duration_unit": "MONTH",
+      "category": "TRAINING"
     }
   },
   {
@@ -325,7 +357,7 @@
       "enrollment_campus": 3,
       "main_teaching_campus": 3,
       "dissertation": false,
-      "internship": "false",
+      "internship": "NO",
       "schedule_type": "DAILY",
       "english_activities": null,
       "other_language_activities": null,
@@ -338,7 +370,11 @@
       "inter_university_french_community": false,
       "inter_university_belgium": false,
       "inter_university_abroad": false,
-      "primary_language": null
+      "primary_language": null,
+      "keywords": null,
+      "duration":1,
+      "duration_unit": "TRIMESTER",
+      "category": "TRAINING"
     }
   },
   {
@@ -363,7 +399,7 @@
       "enrollment_campus": 7,
       "main_teaching_campus": 7,
       "dissertation": false,
-      "internship": "false",
+      "internship": "NO",
       "schedule_type": "DAILY",
       "english_activities": null,
       "other_language_activities": null,
@@ -376,7 +412,11 @@
       "inter_university_french_community": false,
       "inter_university_belgium": false,
       "inter_university_abroad": false,
-      "primary_language": null
+      "primary_language": null,
+      "keywords": null,
+      "duration":1,
+      "duration_unit": "QUADRIMESTER",
+      "category": "TRAINING"
     }
   },
   {
@@ -401,7 +441,7 @@
       "enrollment_campus": 3,
       "main_teaching_campus": 3,
       "dissertation": false,
-      "internship": "false",
+      "internship": "NO",
       "schedule_type": "DAILY",
       "english_activities": null,
       "other_language_activities": null,
@@ -414,7 +454,11 @@
       "inter_university_french_community": false,
       "inter_university_belgium": false,
       "inter_university_abroad": false,
-      "primary_language": null
+      "primary_language": null,
+      "keywords": null,
+      "duration":1,
+      "duration_unit": "QUADRIMESTER",
+      "category": "TRAINING"
     }
   },
   {
@@ -439,7 +483,7 @@
       "enrollment_campus": 3,
       "main_teaching_campus": 3,
       "dissertation": false,
-      "internship": "false",
+      "internship": "NO",
       "schedule_type": "DAILY",
       "english_activities": null,
       "other_language_activities": null,
@@ -452,7 +496,11 @@
       "inter_university_french_community": false,
       "inter_university_belgium": false,
       "inter_university_abroad": false,
-      "primary_language": null
+      "primary_language": null,
+      "keywords": null,
+      "duration":1,
+      "duration_unit": "QUADRIMESTER",
+      "category": "TRAINING"
     }
   },
   {
@@ -490,7 +538,11 @@
       "inter_university_french_community": false,
       "inter_university_belgium": false,
       "inter_university_abroad": false,
-      "primary_language": null
+      "primary_language": null,
+      "keywords": null,
+      "duration":1,
+      "duration_unit": "QUADRIMESTER",
+      "category": "TRAINING"
     }
   },
   {
@@ -515,7 +567,7 @@
       "enrollment_campus": 3,
       "main_teaching_campus": 3,
       "dissertation": false,
-      "internship": "false",
+      "internship": "NO",
       "schedule_type": "DAILY",
       "english_activities": null,
       "other_language_activities": null,
@@ -528,7 +580,11 @@
       "inter_university_french_community": false,
       "inter_university_belgium": false,
       "inter_university_abroad": false,
-      "primary_language": null
+      "primary_language": null,
+      "keywords": null,
+      "duration":1,
+      "duration_unit": "QUADRIMESTER",
+      "category": "TRAINING"
     }
   },
   {
@@ -553,7 +609,7 @@
       "enrollment_campus": 3,
       "main_teaching_campus": 3,
       "dissertation": false,
-      "internship": "false",
+      "internship": "NO",
       "schedule_type": "DAILY",
       "english_activities": null,
       "other_language_activities": null,
@@ -566,7 +622,11 @@
       "inter_university_french_community": false,
       "inter_university_belgium": false,
       "inter_university_abroad": false,
-      "primary_language": null
+      "primary_language": null,
+      "keywords": null,
+      "duration":1,
+      "duration_unit": "QUADRIMESTER",
+      "category": "TRAINING"
     }
   },
   {
@@ -591,7 +651,7 @@
       "enrollment_campus": 7,
       "main_teaching_campus": 7,
       "dissertation": false,
-      "internship": "false",
+      "internship": "NO",
       "schedule_type": "DAILY",
       "english_activities": null,
       "other_language_activities": null,
@@ -604,7 +664,11 @@
       "inter_university_french_community": false,
       "inter_university_belgium": false,
       "inter_university_abroad": false,
-      "primary_language": null
+      "primary_language": null,
+      "keywords": null,
+      "duration":1,
+      "duration_unit": "QUADRIMESTER",
+      "category": "TRAINING"
     }
   },
   {
@@ -629,7 +693,7 @@
       "enrollment_campus": 3,
       "main_teaching_campus": 3,
       "dissertation": false,
-      "internship": "false",
+      "internship": "NO",
       "schedule_type": "DAILY",
       "english_activities": null,
       "other_language_activities": null,
@@ -642,7 +706,11 @@
       "inter_university_french_community": false,
       "inter_university_belgium": false,
       "inter_university_abroad": false,
-      "primary_language": null
+      "primary_language": null,
+      "keywords": null,
+      "duration":1,
+      "duration_unit": "QUADRIMESTER",
+      "category": "TRAINING"
     }
   },
   {
@@ -667,7 +735,7 @@
       "enrollment_campus": 3,
       "main_teaching_campus": 3,
       "dissertation": false,
-      "internship": "false",
+      "internship": "NO",
       "schedule_type": "DAILY",
       "english_activities": null,
       "other_language_activities": null,
@@ -680,7 +748,11 @@
       "inter_university_french_community": false,
       "inter_university_belgium": false,
       "inter_university_abroad": false,
-      "primary_language": null
+      "primary_language": null,
+      "keywords": null,
+      "duration":1,
+      "duration_unit": "QUADRIMESTER",
+      "category": "TRAINING"
     }
   },
   {
@@ -705,7 +777,7 @@
       "enrollment_campus": 3,
       "main_teaching_campus": 3,
       "dissertation": false,
-      "internship": "false",
+      "internship": "NO",
       "schedule_type": "DAILY",
       "english_activities": null,
       "other_language_activities": null,
@@ -718,7 +790,11 @@
       "inter_university_french_community": false,
       "inter_university_belgium": false,
       "inter_university_abroad": false,
-      "primary_language": null
+      "primary_language": null,
+      "keywords": null,
+      "duration":1,
+      "duration_unit": "QUADRIMESTER",
+      "category": "TRAINING"
     }
   },
   {
@@ -743,7 +819,7 @@
       "enrollment_campus": 3,
       "main_teaching_campus": 3,
       "dissertation": false,
-      "internship": "false",
+      "internship": "NO",
       "schedule_type": "DAILY",
       "english_activities": null,
       "other_language_activities": null,
@@ -756,7 +832,11 @@
       "inter_university_french_community": false,
       "inter_university_belgium": false,
       "inter_university_abroad": false,
-      "primary_language": null
+      "primary_language": null,
+      "keywords": null,
+      "duration":1,
+      "duration_unit": "QUADRIMESTER",
+      "category": "TRAINING"
     }
   },
   {
@@ -781,7 +861,7 @@
       "enrollment_campus": 3,
       "main_teaching_campus": 3,
       "dissertation": false,
-      "internship": "false",
+      "internship": "NO",
       "schedule_type": "DAILY",
       "english_activities": null,
       "other_language_activities": null,
@@ -794,7 +874,11 @@
       "inter_university_french_community": false,
       "inter_university_belgium": false,
       "inter_university_abroad": false,
-      "primary_language": null
+      "primary_language": null,
+      "keywords": "Activité",
+      "duration":1,
+      "duration_unit": "QUADRIMESTER",
+      "category": "TRAINING"
     }
   },
   {
@@ -819,7 +903,7 @@
       "enrollment_campus": 3,
       "main_teaching_campus": 3,
       "dissertation": false,
-      "internship": "false",
+      "internship": "NO",
       "schedule_type": "DAILY",
       "english_activities": null,
       "other_language_activities": null,
@@ -832,7 +916,11 @@
       "inter_university_french_community": false,
       "inter_university_belgium": false,
       "inter_university_abroad": false,
-      "primary_language": null
+      "primary_language": null,
+      "keywords": "Droit",
+      "duration":1,
+      "duration_unit": "QUADRIMESTER",
+      "category": "TRAINING"
     }
   }
 ]

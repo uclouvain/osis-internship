@@ -23,27 +23,34 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django import template
+from unittest.mock import Mock
 
-register = template.Library()
-
-
-@register.filter
-def lookup(d, key):
-    try:
-        return d[key].acronym
-    except:
-        return '?'
+from django.test import TestCase
+from django.template import Context, Template
 
 
-@register.filter
-def lookup_session(d, key):
-    return d[key].id
+class CheckTagTests(TestCase):
+    def test_check_tag_empty(self):
+        out = Template(
+            "{% load check %}"
+            "{{ offers_on|is_checked:pgm_id }}"
+        ).render(Context({
+            'offers_on': [],
+            'pgm_id': 15
+        }))
+        self.assertEqual(out, "")
 
+    def test_check_tag_checked(self):
+        mock = Mock()
+        mock.id = 56
+        mock_2 = Mock()
+        mock_2.id = 15
 
-@register.filter
-def lookup_id(d, key):
-    try:
-        return d[key].id
-    except:
-        return '?'
+        out = Template(
+            "{% load check %}"
+            "{{ offers_on|is_checked:pgm_id }}"
+        ).render(Context({
+            'offers_on': [mock, mock_2],
+            'pgm_id': 15
+        }))
+        self.assertEqual(out, "checked")

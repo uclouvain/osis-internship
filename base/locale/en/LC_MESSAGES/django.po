@@ -1915,7 +1915,7 @@ msgid "INACTIVE"
 msgstr "Inactive"
 
 msgid "RE_REGISTRATION"
-msgstr "Re-registration"
+msgstr "Active only for re-registration"
 
 msgid "OPTIONAL"
 msgstr "Optional"
@@ -2003,6 +2003,7 @@ msgstr "Associated entity"
 
 msgid "LU_WARNING_INVALID_ACRONYM"
 msgstr "The acronym, if it is entered, must at least count 3 characters"
+
 msgid "title_in_french"
 msgstr "Title in French"
 
@@ -2092,3 +2093,27 @@ msgstr "Formations"
 
 msgid "desc_lnk_formations"
 msgstr "Organization of formations"
+
+msgid "education_groups"
+msgstr "Education groups"
+
+msgid "entity_management"
+msgstr "Entity management"
+
+msgid "of_category"
+msgstr "Education group type"
+
+msgid "activity_search"
+msgstr "Activity - Search"
+
+msgid "service_course_search"
+msgstr "Service cours - Search"
+
+msgid "TRAINING"
+msgstr "Training"
+
+msgid "MINI_TRAINING"
+msgstr "Mini training"
+
+msgid "GROUP"
+msgstr "Group"

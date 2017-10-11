@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -23,14 +23,12 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import factory
-import factory.fuzzy
-from assistant.tests.factories.assistant_mandate import AssistantMandateFactory
-from base.tests.factories.structure import StructureFactory
+TRAINING = "TRAINING"
+MINI_TRAINING = "MINI_TRAINING"
+GROUP = "GROUP"
 
-
-class MandateStructureFactory(factory.DjangoModelFactory):
-    class Meta:
-        model = 'assistant.MandateStructure'
-    assistant_mandate = factory.SubFactory(AssistantMandateFactory)
-    structure = factory.SubFactory(StructureFactory)
+CATEGORIES = (
+    (TRAINING, TRAINING),
+    (MINI_TRAINING, MINI_TRAINING),
+    (GROUP, GROUP),
+)

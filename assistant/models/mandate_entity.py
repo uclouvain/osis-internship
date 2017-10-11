@@ -23,14 +23,39 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django import template
-from base.models.program_manager import is_program_manager
+from django.db import models
+from base.models import entity_version
 
-register = template.Library()
+class MandateEntity(models.Model):
+    assistant_mandate = models.ForeignKey('AssistantMandate')
+    entity = models.ForeignKey('base.Entity')
+
+    @property
+    def name(self):
+        return self.__str__()
+
+    def __str__(self):
+        version = entity_version.get_by_entity_and_date(self.entity, self.assistant_mandate.academic_year.start_date)
+        if version is None:
+            version = entity_version.get_last_version(self.entity)
+        return u"%s - %s" % (self.assistant_mandate.assistant, version[0].acronym)
 
 
-@register.assignment_tag(takes_context=True)
-def programme_manager(context):
-    request = context['request']
-    enrollment = context['enrollment']
-    return is_program_manager(request.user, offer_year=enrollment.learning_unit_enrollment.offer_enrollment.offer_year)
+def find_by_mandate(mandate):
+    return MandateEntity.objects.filter(assistant_mandate=mandate)
+
+
+def find_by_mandate_and_entity(mandate, entity):
+    return MandateEntity.objects.filter(assistant_mandate=mandate, entity=entity)
+
+
+def find_by_mandate_and_type(mandate, type):
+    return MandateEntity.objects.filter(assistant_mandate=mandate, entity__entityversion__entity_type=type)
+
+
+def find_by_mandate_and_part_of_entity(mandate, entity):
+    return MandateEntity.objects.filter(assistant_mandate=mandate, entity__entityversion__parent=entity)
+
+
+def find_by_entity(entity):
+    return MandateEntity.objects.filter(entity=entity)

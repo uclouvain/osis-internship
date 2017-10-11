@@ -23,40 +23,37 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
+from django.test import TestCase
+from django.template import Context, Template
 
 
-class MandateStructure(models.Model):
-    assistant_mandate = models.ForeignKey('AssistantMandate')
-    structure = models.ForeignKey('base.Structure')
+class SumTagTests(TestCase):
+    def test_sum_with_b_none_value(self):
+        out = Template(
+            "{% load sum %}"
+            "{{ a | sum:b }}"
+        ).render(Context({
+            'a': 15,
+            'b': None
+        }))
+        self.assertEqual(out, "15")
 
-    @property
-    def name(self):
-        return self.__str__()
+    def test_sum_with_a_none_value(self):
+        out = Template(
+            "{% load sum %}"
+            "{{ a | sum:b }}"
+        ).render(Context({
+            'a': None,
+            'b': 15
+        }))
+        self.assertEqual(out, "")
 
-    def __str__(self):
-        return u"%s - %s" % (self.assistant_mandate.assistant, self.structure.acronym)
-
-
-def find_by_mandate(mandate):
-    return MandateStructure.objects.filter(assistant_mandate=mandate)
-
-
-def find_by_mandate_and_structure(mandate, structure):
-    return MandateStructure.objects.filter(assistant_mandate=mandate, structure=structure)
-
-
-def find_by_mandate_and_type(mandate, type):
-    return MandateStructure.objects.filter(assistant_mandate=mandate, structure__type=type)
-
-
-def find_by_mandate_and_part_of_type(mandate, type):
-    return MandateStructure.objects.filter(assistant_mandate=mandate, structure__part_of__type=type)
-
-
-def find_by_mandate_and_part_of_struct(mandate, struct):
-    return MandateStructure.objects.filter(assistant_mandate=mandate, structure__part_of=struct)
-
-
-def find_by_structure(structure):
-    return MandateStructure.objects.filter(structure=structure)
+    def test_sum_with_a_and_b_value(self):
+        out = Template(
+            "{% load sum %}"
+            "{{ a | sum:b }}"
+        ).render(Context({
+            'a': 16,
+            'b': 15
+        }))
+        self.assertEqual(out, "31")

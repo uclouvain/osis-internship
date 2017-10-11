@@ -25,8 +25,8 @@
 ##############################################################################
 from django.conf.urls import url, include
 
-from base.views import learning_unit, offer, common, institution, organization, academic_calendar, my_osis, entity, \
-    student, education_group
+from base.views import learning_unit, offer, common, institution, organization, academic_calendar, \
+    my_osis, entity, student, education_group
 
 urlpatterns = [
     url(r'^$', common.home, name='home'),
@@ -71,6 +71,8 @@ urlpatterns = [
 
     url(r'^learning_units/', include([
         url(r'^$', learning_unit.learning_units, name='learning_units'),
+        url(r'^by_activity/', learning_unit.learning_units_activity, name='learning_units_activity'),
+        url(r'^by_service_course/', learning_unit.learning_units_service_course, name='learning_units_service_course'),
         url(r'^new/', include([
             url(r'^academic_year_id=(?P<academic_year>[0-9]+)$', learning_unit.learning_unit_create,
                 name="learning_unit_create"),
@@ -93,7 +95,7 @@ urlpatterns = [
                 url(u'^$', learning_unit.learning_unit_volumes_management, name="learning_unit_volumes_management"),
                 url(u'^validation/$', learning_unit.volumes_validation, name="volumes_validation")])),
         ])),
-        url(r'^check/$', learning_unit.check_acronym),
+        url(r'^check/$', learning_unit.check_acronym, name="check_acronym"),
     ])),
 
     url(r'^my_osis/', include([
@@ -128,7 +130,6 @@ urlpatterns = [
     ])),
     url(r'^educationgroups/', include([
         url(r'^$', education_group.education_groups, name='education_groups'),
-        url(r'^search$', education_group.education_groups_search, name='education_groups_search'),
         url(r'^(?P<education_group_year_id>[0-9]+)/', include([
             url(r'^$', education_group.education_group_read, name='education_group_read'),
         ]))

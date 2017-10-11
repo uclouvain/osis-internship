@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2017-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -23,10 +23,14 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django import template
+import factory
+import factory.fuzzy
+from assistant.tests.factories.assistant_mandate import AssistantMandateFactory
+from base.tests.factories.entity import EntityFactory
 
-register = template.Library()
 
-@register.filter
-def percentage(value):
-    return "{0:.0f}%".format(value)
+class MandateEntityFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = 'assistant.MandateEntity'
+    assistant_mandate = factory.SubFactory(AssistantMandateFactory)
+    entity = factory.SubFactory(EntityFactory)

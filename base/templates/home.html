@@ -32,7 +32,7 @@
 
 {% block content %}
 {% if highlights %}
-    <div id="carousel_academic_event" class="carousel slide" data-ride="carousel">
+    <div id="carousel_academic_event" class="carousel slide" data-ride="carousel" data-interval="3000">
         <ol class="carousel-indicators">
             {% for highlight in highlights %}
                 <li data-target="#carousel_academic_event" data-slide-to="{{ forloop.counter0 }}"

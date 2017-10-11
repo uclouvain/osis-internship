@@ -31,6 +31,7 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.test import TestCase, RequestFactory
 from django.utils import timezone
+from django.utils.translation import ugettext_lazy as _
 from assessments.business.score_encoding_list import ScoresEncodingList
 
 from base.tests.models import test_exam_enrollment, test_offer_enrollment, \
@@ -293,12 +294,12 @@ class OutsideEncodingPeriodTest(TestCase):
         self.client.force_login(self.user)
 
         # Create context out of range
-        academic_year = _get_academic_year()
-        academic_calendar = AcademicCalendarFactory.build(title="Submission of score encoding - 1",
-                                                          academic_year=academic_year,
+        self.academic_year = _get_academic_year()
+        self.academic_calendar = AcademicCalendarFactory.build(title="Submission of score encoding - 1",
+                                                          academic_year=self.academic_year,
                                                           reference=academic_calendar_type.SCORES_EXAM_SUBMISSION)
-        academic_calendar.save(functions=[])
-        self.session_exam_calendar = SessionExamCalendarFactory(academic_calendar=academic_calendar,
+        self.academic_calendar.save(functions=[])
+        self.session_exam_calendar = SessionExamCalendarFactory(academic_calendar=self.academic_calendar,
                                                                 number_session=number_session.ONE)
 
     def test_redirection_to_current_exam_session(self):
@@ -311,6 +312,43 @@ class OutsideEncodingPeriodTest(TestCase):
         url = reverse('scores_encoding')
         response = self.client.get(url)
         self.assertRedirects(response, "%s?next=%s" % (reverse('outside_scores_encodings_period'), reverse('scores_encoding')))  # Redirection
+
+    def test_message_score_encoding_not_open(self):
+        self.session_exam_calendar.delete()
+        url = reverse('outside_scores_encodings_period')
+        response = self.client.get(url)
+        messages = list(response.context['messages'])
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(messages[0].tags, 'warning')
+        self.assertEqual(messages[0].message, _('score_encoding_period_not_open'))
+
+    def test_multiple_messages_outside_encoding_period(self):
+        date_format = str(_('date_format'))
+
+        # Submission of score encoding - 1 [Two day before today]
+        self.academic_calendar.end_date = timezone.now() - timedelta(days=2)
+        self.academic_calendar.save(functions=[])
+
+        # Create submission of score encoding - 2 [Start in 100 days]
+        ac = AcademicCalendarFactory.build(title="Submission of score encoding - 2",
+                                           academic_year=self.academic_year,
+                                           start_date=timezone.now() + timedelta(days=100),
+                                           end_date=timezone.now() + timedelta(days=130),
+                                           reference=academic_calendar_type.SCORES_EXAM_SUBMISSION)
+        ac.save(functions=[])
+        SessionExamCalendarFactory(academic_calendar=ac, number_session=number_session.TWO)
+
+        url = reverse('scores_encoding')
+        response = self.client.get(url, follow=True)
+        messages = list(response.context['messages'])
+
+        self.assertEqual(len(messages), 2)
+        self.assertEqual(messages[0].tags, 'warning')
+        end_date_str = self.academic_calendar.end_date.strftime(date_format)
+        self.assertEqual(messages[0].message, _('outside_scores_encodings_period_latest_session') % (1, end_date_str))
+        self.assertEqual(messages[1].tags, 'warning')
+        start_date_str = ac.start_date.strftime(date_format)
+        self.assertEqual(messages[1].message, _('outside_scores_encodings_period_closest_session') % (2, start_date_str))
 
 
 class GetScoreEncodingViewProgramManagerTest(TestCase):

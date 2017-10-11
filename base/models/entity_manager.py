@@ -24,6 +24,8 @@
 #
 ##############################################################################
 from django.db import models
+from django.db.models import Prefetch
+
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 
 
@@ -47,19 +49,17 @@ def get_perms(model):
     return model._meta.permissions
 
 
-def find_entity_manager_by_user(a_user):
-    return EntityManager.objects.filter(person__user=a_user)\
-        .select_related('person')\
-        .select_related('structure').first()
-
-
-def find_by_user(a_user):
-    return EntityManager.objects.filter(person__user=a_user)\
-        .select_related('person')\
-        .select_related('structure')\
-        .order_by('structure__acronym')
+def find_by_user(a_user, with_entity_version=True):
+    qs = EntityManager.objects.filter(person__user=a_user)\
+                              .select_related('person', 'structure', 'entity')\
+                              .order_by('structure__acronym')
+    if with_entity_version:
+        qs = qs.prefetch_related(
+            Prefetch('entity__entityversion_set', to_attr='entity_versions')
+        )
+    return qs
 
 
 def is_entity_manager(user):
-    entities_manager = find_entity_manager_by_user(user)
-    return entities_manager if entities_manager else False
+    return EntityManager.objects.filter(person__user=user).count() > 0
+

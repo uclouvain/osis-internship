@@ -23,7 +23,6 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from dissertation.utils.request import redirect_if_none
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from dissertation.models.adviser import Adviser, search_adviser
@@ -263,7 +262,8 @@ def manager_informations_add_person(request):
 @user_passes_test(adviser.is_manager)
 def manager_informations_detail(request, pk):
     adv = adviser.get_by_id(pk)
-    redirect_if_none(adv, 'manager_dissertations')
+    if adv is None:
+        return redirect('manager_informations')
     return layout.render(request, 'manager_informations_detail.html',
                          {'adviser': adv,
                           'first_name': adv.person.first_name.title(),
@@ -274,7 +274,8 @@ def manager_informations_detail(request, pk):
 @user_passes_test(adviser.is_manager)
 def manager_informations_edit(request, pk):
     adv = adviser.get_by_id(pk)
-    redirect_if_none(adv, 'manager_informations')
+    if adv is None:
+        return redirect('manager_informations')
     if request.method == "POST":
         form = ManagerAdviserForm(request.POST, instance=adv)
         if form.is_valid():
@@ -351,7 +352,8 @@ def manager_informations_detail_list_wait(request, pk):
 @user_passes_test(adviser.is_manager)
 def manager_informations_detail_stats(request, pk):
     adv = adviser.get_by_id(pk)
-    redirect_if_none(adv, 'manager_informations')
+    if adv is None:
+        return redirect('manager_informations')
     advisers_pro = dissertation_role.search_by_adviser_and_role_stats(adv, 'PROMOTEUR')
     count_advisers_pro = dissertation_role.count_by_adviser_and_role_stats(adv, 'PROMOTEUR')
     count_advisers_pro_request = dissertation_role.count_by_adviser(adv, 'PROMOTEUR', 'DIR_SUBMIT')

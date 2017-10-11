@@ -1896,7 +1896,6 @@ msgstr "Autre"
 msgid "new_learning_unit"
 msgstr "Nouvelle unité d'enseignement"
 
-
 msgid "previous"
 msgstr "Précédent"
 
@@ -1922,7 +1921,7 @@ msgid "INACTIVE"
 msgstr "Inactif"
 
 msgid "RE_REGISTRATION"
-msgstr "Ré-inscription"
+msgstr "Actif uniquement pour des réinscriptions"
 
 msgid "OPTIONAL"
 msgstr "Optionnel"
@@ -2066,7 +2065,7 @@ msgid "keywords"
 msgstr "Mots clés"
 
 msgid "training_type"
-msgstr "Type of training"
+msgstr "Type de formation"
 
 msgid "QUADRIMESTER"
 msgstr "Quadrimestre(s)"
@@ -2100,3 +2099,27 @@ msgstr "Formations"
 
 msgid "desc_lnk_formations"
 msgstr "Organisation des formations"
+
+msgid "education_groups"
+msgstr "Organisations de formations"
+
+msgid "entity_management"
+msgstr "Fac. gestion"
+
+msgid "of_category"
+msgstr "Type d'organisation de formation"
+
+msgid "activity_search"
+msgstr "Recherche - Activité"
+
+msgid "service_course_search"
+msgstr "Recherche - Cours de service"
+
+msgid "TRAINING"
+msgstr "Formation"
+
+msgid "MINI_TRAINING"
+msgstr "Mini formation"
+
+msgid "GROUP"
+msgstr "Groupe"

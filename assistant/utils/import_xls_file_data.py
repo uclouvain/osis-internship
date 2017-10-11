@@ -34,7 +34,7 @@ from django.utils.translation import ugettext as _
 from assistant.forms import MandateFileForm
 from assistant.utils import manager_access
 from assistant.models.enums import assistant_type, assistant_phd_inscription, assistant_mandate_renewal
-from base.models.enums import structure_type
+from base.models.enums import entity_type
 
 COLS_NUMBER = 22
 ASSISTANTS_IMPORTED = 0
@@ -42,7 +42,7 @@ MANDATES_IMPORTED = 0
 ASSISTANTS_UPDATED = 0
 MANDATES_UPDATED = 0
 PERSONS_NOT_FOUND = 0
-COLS_TITLES = ['SECTOR', 'FACULTY', 'PROGRAM_COMMISSION', 'INSTITUTE', 'POLE', 'SAP_ID', 'GLOBAL_ID', 'LAST_NAME',
+COLS_TITLES = ['SECTOR', 'FACULTY', 'SCHOOL', 'INSTITUTE', 'POLE', 'SAP_ID', 'GLOBAL_ID', 'LAST_NAME',
                'FIRST_NAME', 'FULLTIME_EQUIVALENT', 'ENTRY_DATE', 'END_DATE', 'ASSISTANT_TYPE_CODE', 'SCALE',
                'CONTRACT_DURATION', 'CONTRACT_DURATION_FTE', 'RENEWAL_TYPE', 'ABSENCES', 'COMMENT', 'OTHER_STATUS',
                'EMAIL', 'FGS']
@@ -97,34 +97,37 @@ def read_xls_mandates(request, file_name):
             assistant = create_academic_assistant_if_not_exists(current_record)
             if assistant:
                 mandate = create_assistant_mandate_if_not_exists(current_record, assistant)
-                faculty = search_structure_by_acronym_and_type(current_record.get('FACULTY'),
-                                                               structure_type.FACULTY)
+                sector = search_entity_by_acronym_and_type(current_record.get('SECTOR'),
+                                                            entity_type.SECTOR)
+                if sector:
+                    link_mandate_to_entity(mandate, sector)
+                faculty = search_entity_by_acronym_and_type(current_record.get('FACULTY'),
+                                                            entity_type.FACULTY)
                 if faculty:
-                    link_mandate_to_structure(mandate, faculty.part_of)
-                    link_mandate_to_structure(mandate, faculty)
-                program_commission = search_structure_by_acronym_and_type(current_record.get('PROGRAM_COMMISSION'),
-                                                                          structure_type.PROGRAM_COMMISSION)
-                if program_commission:
-                    link_mandate_to_structure(mandate, program_commission)
+                    link_mandate_to_entity(mandate, faculty)
+                school = search_entity_by_acronym_and_type(current_record.get('SCHOOL'),
+                                                                       entity_type.SCHOOL)
+                if school:
+                    link_mandate_to_entity(mandate, school)
 
-                institute = search_structure_by_acronym_and_type(current_record.get('INSTITUTE'),
-                                                                 structure_type.INSTITUTE)
+                institute = search_entity_by_acronym_and_type(current_record.get('INSTITUTE'),
+                                                              entity_type.INSTITUTE)
                 if institute:
-                    link_mandate_to_structure(mandate, institute)
+                    link_mandate_to_entity(mandate, institute)
 
-                pole = search_structure_by_acronym_and_type(current_record.get('POLE'), structure_type.POLE)
+                pole = search_entity_by_acronym_and_type(current_record.get('POLE'), entity_type.POLE)
                 if pole:
-                    link_mandate_to_structure(mandate, pole)
+                    link_mandate_to_entity(mandate, pole)
 
         current_row += 1
 
 
-def search_structure_by_acronym_and_type(acronym, type):
+def search_entity_by_acronym_and_type(acronym, type):
     if not acronym:
         return None
-    results = mdl.structure.search(acronym=acronym, type=type)
-    if len(results) > 0:
-        return results[0]
+    entities = mdl.entity_version.search(entity_type=type, acronym=acronym)
+    if len(entities) > 0:
+        return entities[0].entity
     else:
         return None
 
@@ -205,17 +208,18 @@ def create_assistant_mandate_if_not_exists(record, assistant):
     return mandate
 
 
-def link_mandate_to_structure(mandate, structure=None):
-    if structure != 'None':
-        mandate_structures = assistant_mdl.mandate_structure.find_by_mandate_and_structure(mandate, structure)
-        if len(mandate_structures) == 0:
-            mandate_structure = assistant_mdl.mandate_structure.MandateStructure()
-        else:
-            mandate_structure = mandate_structures[0]
-        mandate_structure.assistant_mandate = mandate
-        mandate_structure.structure = structure
-        mandate_structure.save()
-        return mandate_structure
+def link_mandate_to_entity(mandate, entity=None):
+    if entity != 'None':
+        type = mdl.entity_version.get_by_entity_and_date(entity, None)
+        mandate_entities = assistant_mdl.mandate_entity.find_by_mandate_and_type(mandate, type[0].entity_type)
+        if len(mandate_entities) > 0:
+            mandate_entity = mandate_entities[0]
+            mandate_entity.delete()
+        mandate_entity = assistant_mdl.mandate_entity.MandateEntity()
+        mandate_entity.assistant_mandate = mandate
+        mandate_entity.entity = entity
+        mandate_entity.save()
+        return mandate_entity
     else:
         return None
 

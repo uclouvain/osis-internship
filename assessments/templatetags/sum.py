@@ -30,6 +30,8 @@ register = template.Library()
 @register.filter
 def sum(value, args):
     """ Template tag used to sum its two arguments. """
+    if value is None:
+        return ""
     if args is None:
         return value
     return value + args

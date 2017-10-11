@@ -23,9 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from assistant.models import reviewer, review
 from django.core.urlresolvers import reverse
-from assistant.forms import MandatesArchivesForm, ReviewersFormset, ReviewerForm, ReviewerReplacementForm
 from django.views.generic import ListView
 from django.http import HttpResponseRedirect
 from django.forms.formsets import formset_factory
@@ -34,8 +32,11 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import user_passes_test
 from django.shortcuts import render, redirect
-from base.models import academic_year, person
 from django.utils.translation import ugettext as _
+
+from base.models import academic_year, person, entity_version
+from assistant.forms import MandatesArchivesForm, ReviewersFormset, ReviewerForm, ReviewerReplacementForm
+from assistant.models import reviewer, review
 from assistant.utils import manager_access
 
 
@@ -63,7 +64,8 @@ class ReviewersListView(LoginRequiredMixin, UserPassesTestMixin, ListView, FormM
 def reviewers_index(request):
     all_reviewers = reviewer.find_reviewers()
     initial_formset_content = [{'action': None,
-                                'structure': rev.structure,
+                                'entity': rev.entity,
+                                'entity_version': entity_version.get_last_version(rev.entity),
                                 'role': rev.role,
                                 'person': rev.person,
                                 'id': rev.id,
@@ -93,10 +95,12 @@ def reviewer_action(request):
                     year = academic_year.current_academic_year().year
                     reviewer_id = reviewer_form.cleaned_data.get('id')
                     this_reviewer = reviewer.find_by_id(reviewer_id)
+                    entity = entity_version.get_last_version(this_reviewer.entity)
                     form = ReviewerReplacementForm(initial={'person': this_reviewer.person,
                                                             'id': this_reviewer.id}, prefix="rev",
                                                    instance=this_reviewer)
                     return render(request, "manager_replace_reviewer.html", {'reviewer': this_reviewer,
+                                                                             'entity': entity,
                                                                              'year': year,
                                                                              'form': form})
     return HttpResponseRedirect(reverse('reviewers_list'))

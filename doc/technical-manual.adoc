@@ -229,22 +229,11 @@ Start the virtual environment and install the dependencies:
     $ source venv/bin/activate
     (venv)$ pip install -r requirements.txt
 
-Install phantomjs:
-
-1. Download phantomjs from : http://phantomjs.org/download.html
-2. Move the executable file in /usr/local/bin
-3. Add the path to your .bash_profile or .profile
-
 Create the data structure in the database:
 
     (venv)$ python manage.py migrate
 
-At this point we have two options:
-
-1. we create a super user and go on with an empty database or
-2. we load the demonstration data that already contains a superuser
-
-To create the super user and continue with an empty database:
+To create the super user:
 
     (venv)$ python manage.py createsuperuser
        Username (leave blank to use '[linux-user]'):
@@ -256,18 +245,16 @@ To create the super user and continue with an empty database:
 You will need this user to login on OSIS for the first time and be able to
 create other users.
 
-To load the demonstration data that already contains a superuser:
+To load the demonstration data:
 
     (venv)$ python manage.py load_fixtures
 
-The demonstration data create a super user with the following credentials:
+The demonstration data also create several other users.
 
-    Username: osis
-    Password: osisosis
+Before running the application we have a last step to do, which is running compiling 
+the translation files:
 
-The demonstration data also create several other users. The password for each
-user is the username typed twice (e.g. user: `antonin`  password:
-`antoninantonin`).
+    (venv)$ python manage.py compilemessages
 
 Now, we can run the application:
 
