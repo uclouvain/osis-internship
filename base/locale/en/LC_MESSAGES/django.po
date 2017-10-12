@@ -2127,10 +2127,10 @@ msgid "professionnal_title"
 msgstr "Professionnal title"
 
 msgid "university_certificate_desc"
-msgstr "University certificat"
+msgstr "University certificate"
 
 msgid "program_coorganization"
-msgstr "Program co-organization with other institutes"
+msgstr "Program organized with other institutes"
 
 msgid "for_all_students"
 msgstr "For all students"

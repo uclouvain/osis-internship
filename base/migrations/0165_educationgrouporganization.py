@@ -27,4 +27,9 @@ class Migration(migrations.Migration):
                 ('changed', models.DateTimeField(auto_now=True, null=True)),
             ],
         ),
+        migrations.AddField(
+            model_name='organization',
+            name='logo',
+            field=models.ImageField(blank=True, null=True, upload_to='organization_logos'),
+        ),
     ]
