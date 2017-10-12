@@ -87,3 +87,14 @@ def get_education_group_years(academic_yr, acronym, entity):
         return education_group_year_entitys
     else:
         return mdl.education_group_year.search(academic_yr=academic_yr, acronym=acronym)
+
+
+@login_required
+@permission_required('base.can_access_offer', raise_exception=True)
+def education_group_diplomas(request, education_group_year_id):
+    return _education_group_diplomas_tab(request, education_group_year_id)
+
+
+def _education_group_diplomas_tab(request, education_group_year_id):
+    education_group_year = mdl.education_group_year.find_by_id(education_group_year_id)
+    return layout.render(request, "education_group/tab_diplomas.html", locals())
