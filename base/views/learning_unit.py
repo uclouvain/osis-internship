@@ -70,6 +70,8 @@ from reference.models.language import find_by_id
 from . import layout
 from django.http import JsonResponse
 
+LEARNING_UNIT_CREATION_SPAN_YEARS = 6
+
 
 @login_required
 @permission_required('base.can_access_learningunit', raise_exception=True)
@@ -539,7 +541,7 @@ def learning_unit_year_add(request):
             additional_entity_version_2 = mdl.entity_version.find_by_id(data['additional_entity_2'])
         new_learning_container = create_learning_container(year)
         new_learning_unit = create_learning_unit(data, new_learning_container, year)
-        while year < starting_academic_year.year+6:
+        while year < starting_academic_year.year + LEARNING_UNIT_CREATION_SPAN_YEARS:
             academic_year = mdl.academic_year.find_academic_year_by_year(year)
             create_learning_unit_structure(additional_entity_version_1, additional_entity_version_2,
                                            allocation_entity_version, data, form, new_learning_container,
