@@ -192,10 +192,29 @@
             </div>
             {{ form.subtype }}
             <div class="panel-body">
-                <button type="submit" id="learning_unit_year_add" class="btn btn-primary" name="action" value="add" role="button"
-                            title="{% trans 'add' %}">{% trans 'save' %}</button>
+                <button type="button" id="learning_unit_year_add" class="btn btn-primary" title="{% trans 'add' %}">{% trans 'save' %}</button>
             </div>
         </form>
+
+        <!-- Modal -->
+        <div class="modal fade" id="prolongOrCreateModal" tabindex="-1" role="dialog" aria-labelledby="prolongOrCreateModalLabel">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              </div>
+              <div class="modal-body">
+                {% trans 'prolong_or_create_learning_unit_message' %}
+              </div>
+              <div class="modal-footer">
+                  <button type="submit" id="buttonCreate" class="btn btn-primary" form="LearningUnitYearForm" value="Submit">{% trans 'create' %}</button>
+                  <button type="button" class="btn btn-info" data-dismiss="modal">{% trans 'prolong' %}</button>
+                  <button type="button" class="btn btn-default" data-dismiss="modal">{% trans 'cancel' %}</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
     </div>
 </div>
 {% endblock %}
@@ -226,6 +245,7 @@
             document.getElementById('internship').disabled = true;
     }
     window.valid_acronym = false;
+    window.acronym_already_used = false;
 
     function showAdditionalEntity1(elem){
        if(elem != "")
@@ -250,6 +270,7 @@
         });
 
         function validate_acronym () {
+            window.acronym_already_used = false;
             $('#acronym_message').removeClass("error-message").text("");
 
 	        if(/{{ form.acronym_regex }}/.test($('#acronym').val().toUpperCase())) {
@@ -261,12 +282,14 @@
                         if(data['existed_acronym'] && !data['existing_acronym']){
                             $('#acronym_message').addClass("error").text("{% trans 'existed_acronym' %}"+data['last_using']);
                             $("#acronym_message").css("color","orange");
+                            window.acronym_already_used = true;
                         }
                     }else{
                         window.valid_acronym = false;
                         if(data['existing_acronym']){
                             $('#acronym_message').addClass("error").text("{% trans 'existing_acronym' %}");
                             $("#acronym_message").css("color","red");
+                            window.acronym_already_used = true;
                         }
                     }
                 });
@@ -286,6 +309,18 @@
             }
             return window.valid_acronym;
 
+        });
+
+        $('#learning_unit_year_add').click(function() {
+            if(window.acronym_already_used){
+                $("#prolongOrCreateModal").modal();
+            } else {
+                $("#LearningUnitYearForm").submit();
+            }
+        });
+
+        $('#buttonCreate').click(function() {
+            $("#prolongOrCreateModal").modal('hide');
         });
     });
 </script>

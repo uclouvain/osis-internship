@@ -2117,3 +2117,13 @@ msgstr "Mini training"
 
 msgid "GROUP"
 msgstr "Group"
+
+msgid "prolong_or_create_learning_unit_message"
+msgstr "The acronym <b>already exists</b>. You can either <b>create</b> a new learning unit using that acronym or "
+       "you can prolong the learning unit of the same acronym ?"
+
+msgid "create"
+msgstr "Create"
+
+msgid "prolong"
+msgstr "Prolong"
