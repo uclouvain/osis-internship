@@ -56,15 +56,9 @@ class EducationGroupFilter(BootstrapForm):
                                                   empty_label=_('all_label'))
     category = forms.ChoiceField(EDUCATION_GROUP_CATEGORIES, required=False)
     acronym = title = forms.CharField(
-        widget=forms.TextInput(attrs={'size': '10', 'class': 'form-control'}),
+        widget=forms.TextInput(attrs={'size': '10'}),
         max_length=20, required=False)
     entity_management = EntityManagementModelChoiceField(queryset=find_last_faculty_entities_version(), required=False)
-
-    def clean_entity_management(self):
-        data_cleaned = self.cleaned_data.get('entity_management')
-        if data_cleaned:
-            return data_cleaned
-        return None
 
     def clean_category(self):
         data_cleaned = self.cleaned_data.get('category')
@@ -98,7 +92,7 @@ def _get_filter_entity_management(entity_management):
 
 
 def _get_entities_ids(entity_management):
-    entity_versions = entity_version.search(acronym__in=entity_management, entity_type=entity_type.FACULTY)\
+    entity_versions = entity_version.search(acronym=entity_management.acronym, entity_type=entity_type.FACULTY)\
                                     .select_related('entity').distinct('entity')
     entities = entity.find_descendants([ent_v.entity for ent_v in entity_versions])
     return [ent.id for ent in entities] if entities else []
