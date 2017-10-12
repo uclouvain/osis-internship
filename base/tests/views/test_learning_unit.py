@@ -51,7 +51,6 @@ from base.tests.factories.learning_component_year import LearningComponentYearFa
 from base.tests.factories.learning_container import LearningContainerFactory
 from base.tests.factories.learning_container_year import LearningContainerYearFactory
 from base.tests.factories.learning_unit_component import LearningUnitComponentFactory
-from base.tests.factories.entity_component_year import EntityComponentYearFactory
 from base.tests.factories.entity_container_year import EntityContainerYearFactory
 from base.models.enums import entity_container_year_link_type
 from base.tests.factories.organization import OrganizationFactory
