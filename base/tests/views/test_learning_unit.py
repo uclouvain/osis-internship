@@ -785,7 +785,6 @@ class LearningUnitYearAdd(TestCase):
 
     def test_when_valid_form_data(self):
         today = datetime.date.today()
-        current_academic_year = AcademicYearFakerFactory()
         academic_year_1 = AcademicYearFactory.build(start_date=today.replace(year=today.year + 1),
                                                     end_date=today.replace(year=today.year + 2),
                                                     year=today.year + 1)
