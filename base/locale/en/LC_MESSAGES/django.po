@@ -2117,3 +2117,15 @@ msgstr "Mini training"
 
 msgid "GROUP"
 msgstr "Group"
+
+msgid "diplomas_certificates"
+msgstr "Diplomas /  Certificates"
+
+msgid "diploma_title"
+msgstr "Diploma title"
+
+msgid "professionnal_title"
+msgstr "Professionnal title"
+
+msgid "university_certificate_desc"
+msgstr "University certificat"

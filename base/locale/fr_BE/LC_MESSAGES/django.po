@@ -2123,3 +2123,15 @@ msgstr "Mini formation"
 
 msgid "GROUP"
 msgstr "Groupe"
+
+msgid "diplomas_certificates"
+msgstr "Diplômes /  Certificats"
+
+msgid "diploma_title"
+msgstr "Intitulé du diplôme/du certificat"
+
+msgid "professionnal_title"
+msgstr "Titre professionnel"
+
+msgid "university_certificate_desc"
+msgstr "Mène à diplôme/à certificat"
