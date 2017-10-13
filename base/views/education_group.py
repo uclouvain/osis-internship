@@ -46,9 +46,9 @@ def education_groups(request):
 
     object_list = None
     if form.is_valid():
-       object_list = form.get_object_list()
-       if not _check_if_display_message(request, object_list):
-           object_list = None
+        object_list = form.get_object_list()
+        if not _check_if_display_message(request, object_list):
+            object_list = None
 
     context = {
         'form': form,
@@ -58,13 +58,14 @@ def education_groups(request):
     return layout.render(request, "education_groups.html", context)
 
 
-def _check_if_display_message(request, education_groups):
-    if not education_groups:
+def _check_if_display_message(request, an_education_groups):
+    if not an_education_groups:
         messages.add_message(request, messages.WARNING, _('no_result'))
-    elif len(education_groups) > MAX_RECORDS:
+    elif len(an_education_groups) > MAX_RECORDS:
         messages.add_message(request, messages.WARNING, _('too_many_results'))
         return False
     return True
+
 
 @login_required
 @permission_required('base.can_access_offer', raise_exception=True)
@@ -88,7 +89,8 @@ def get_education_group_years(academic_yr, acronym, entity):
         education_group_year_entitys = []
         education_group_years = mdl.education_group_year.search(academic_yr=academic_yr, acronym=acronym)
         for education_group_yr in education_group_years:
-            if education_group_yr.management_entity and education_group_yr.management_entity.acronym.upper() == entity.upper():
+            if education_group_yr.management_entity and\
+                            education_group_yr.management_entity.acronym.upper() == entity.upper():
                 education_group_year_entitys.append(education_group_yr)
         return education_group_year_entitys
     else:
