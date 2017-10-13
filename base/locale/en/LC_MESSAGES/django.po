@@ -2117,10 +2117,7 @@ msgstr "Mini training"
 
 msgid "GROUP"
 msgstr "Group"
-<<<<<<< HEAD
-=======
 
->>>>>>> ff991dd5cbb1841b7e9ab278a61123d12b164656
 msgid "diplomas_certificates"
 msgstr "Diplomas /  Certificates"
 
