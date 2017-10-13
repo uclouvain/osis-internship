@@ -25,6 +25,8 @@
 * see http://www.gnu.org/licenses/.
 {% endcomment %}
 
-<div class="page-header">
-    <h2>{{ learning_unit_year.acronym }} - {{ learning_unit_year.title }} - {{ current_academic_year }}</h2>
-</div>
+{% with current_academic_year|slugify as current_yr %}
+    {% with current_id=learning_unit_year.id local_storage_key="learningUnitIds" header_title=learning_unit_year.acronym|add:" - "|add:learning_unit_year.title|add:" - "|add:current_yr %}
+        {% include "template_nav_header.html" %}
+    {% endwith %}
+{% endwith %}
