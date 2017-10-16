@@ -35,8 +35,7 @@ from base.tests.factories.entity import EntityFactory
 from base.tests.factories.entity_version import EntityVersionFactory
 from base.models.enums import entity_container_year_link_type
 from reference.tests.factories.country import CountryFactory
-from base.forms.learning_units import LearningUnitYearForm
-from base.forms.learning_units import is_service_course
+from base.forms.learning_units import LearningUnitYearForm, is_service_course
 
 ACRONYM_LU = "LDROI1001"
 

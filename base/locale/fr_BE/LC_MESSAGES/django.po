@@ -2124,6 +2124,16 @@ msgstr "Mini formation"
 msgid "GROUP"
 msgstr "Groupe"
 
+msgid "prolong_or_create_learning_unit_message"
+msgstr "Le sigle utilisé est <b>déjà existant</b>. Souhaitez-vous <b>créer</b> une nouvelle unité d'enseignement en utilisant ce sigle"
+       " ou bien <b>prolonger</b> l'unité d'enseignement de même sigle ? "
+
+msgid "create"
+msgstr "Créer"
+
+msgid "prolong"
+msgstr "Prolonger"
+
 msgid "diplomas_certificates"
 msgstr "Diplômes /  Certificats"
 
