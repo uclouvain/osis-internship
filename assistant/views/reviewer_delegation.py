@@ -38,6 +38,7 @@ from assistant.models import assistant_mandate
 from assistant.models import reviewer
 from assistant.models import settings
 from assistant.models.enums import reviewer_role
+from assistant.utils.send_email import send_message
 
 
 
@@ -117,6 +118,10 @@ def add_reviewer_for_structure(request):
                     pass
                 new_reviewer.person = this_person
                 new_reviewer.save()
+                html_template_ref = 'assistant_reviewers_startup_html'
+                txt_template_ref = 'assistant_reviewers_startup_txt'
+                send_message(person=this_person, html_template_ref=html_template_ref,
+                             txt_template_ref=txt_template_ref)
                 return redirect('reviewer_delegation')
         else:
             this_reviewer = reviewer.find_by_person(person=request.user.person)
