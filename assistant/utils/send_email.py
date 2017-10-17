@@ -67,7 +67,6 @@ def send_message_to_reviewers(request):
     txt_template_ref = 'assistant_reviewers_startup_txt'
     reviewers = reviewer.find_reviewers()
     for rev in reviewers:
-        print(rev.person)
         send_message(rev.person, html_template_ref, txt_template_ref)
     save_message_history(request, message_type.TO_ALL_REVIEWERS)
     return redirect('messages_history')

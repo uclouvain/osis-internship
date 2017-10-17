@@ -2117,3 +2117,43 @@ msgstr "Mini training"
 
 msgid "GROUP"
 msgstr "Group"
+
+msgid "prolong_or_create_learning_unit_message"
+msgstr "The acronym <b>already exists</b>. You can either <b>create</b> a new learning unit using that acronym or "
+       "you can prolong the learning unit of the same acronym ?"
+
+msgid "create"
+msgstr "Create"
+
+msgid "prolong"
+msgstr "Prolong"
+
+msgid "diplomas_certificates"
+msgstr "Diplomas /  Certificates"
+
+msgid "diploma_title"
+msgstr "Diploma title"
+
+msgid "professionnal_title"
+msgstr "Professionnal title"
+
+msgid "university_certificate_desc"
+msgstr "University certificate"
+
+msgid "program_coorganization"
+msgstr "Program organized with other institutes"
+
+msgid "for_all_students"
+msgstr "For all students"
+
+msgid "diploma"
+msgstr "Diploma"
+
+msgid "UNIQUE"
+msgstr "Unique diploma"
+
+msgid "SEPARATE"
+msgstr "Separate diploma"
+
+msgid "NOT_CONCERNED"
+msgstr "Not concerned"

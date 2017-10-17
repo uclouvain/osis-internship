@@ -2123,3 +2123,43 @@ msgstr "Mini formation"
 
 msgid "GROUP"
 msgstr "Groupe"
+
+msgid "prolong_or_create_learning_unit_message"
+msgstr "Le sigle utilisé est <b>déjà existant</b>. Souhaitez-vous <b>créer</b> une nouvelle unité d'enseignement en utilisant ce sigle"
+       " ou bien <b>prolonger</b> l'unité d'enseignement de même sigle ? "
+
+msgid "create"
+msgstr "Créer"
+
+msgid "prolong"
+msgstr "Prolonger"
+
+msgid "diplomas_certificates"
+msgstr "Diplômes /  Certificats"
+
+msgid "diploma_title"
+msgstr "Intitulé du diplôme/du certificat"
+
+msgid "professionnal_title"
+msgstr "Titre professionnel"
+
+msgid "university_certificate_desc"
+msgstr "Mène à diplôme/à certificat"
+
+msgid "program_coorganization"
+msgstr "Programme co-organisés avec d'autres institutions"
+
+msgid "for_all_students"
+msgstr "Pour tous les étudiants"
+
+msgid "diploma"
+msgstr "Diplôme"
+
+msgid "UNIQUE"
+msgstr "Diplôme unique"
+
+msgid "SEPARATE"
+msgstr "Diplôme séparé"
+
+msgid "NOT_CONCERNED"
+msgstr "Non concerné"

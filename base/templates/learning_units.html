@@ -76,6 +76,9 @@
 <script>
     $(document).ready(function()
     {
+	 // Must be always DataTable declaration !!!
+        setEventKeepIds('table_learning_units', 'learningUnitIds')
+
         $('#table_learning_units').DataTable(
             {
                 columnDefs: [
