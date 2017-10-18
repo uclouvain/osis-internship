@@ -24,25 +24,19 @@
 #
 ##############################################################################
 
-def group_periods_by_consecutives(periods, length=1):
-    if length==1:
-        for period in periods:
-            yield [period]
-    else:
-        for i in xrange(len(periods) - (length - 1)):
-            if all(map(lambda period: int(periods[i].name[1:]) + 1 == int(periods[i + 1].name[1:]), periods[i: i + length])):
-                yield periods[i: i + length]
+import unittest
+from internship.utils.period_place_utils import *
+from django.test import TestCase
 
-def group_periods(periods, length=1):
-    if length==1:
-        for period in periods:
-            yield [period]
-    else:
-        for i in xrange(len(periods) - (length - 1)):
-            yield periods[i: i + length]
+class PeriodUtilsTestCase(TestCase):
+    def setUp(self):
+        self.period_places = [ {"id": 1, "number_places": 1}, {"id": 2, "number_places": 0}]
+        self.unavailable_period_places = [ {"id": 1, "number_places": -1}, {"id": 2, "number_places": 0}]
 
-def get_periods_from_affectations(affectations):
-    return list(map(lambda affectation: affectation.period, affectations))
+    def test_filters_unavailable_periods(self):
+        expected = [{"id": 1, "number_places": 1}]
+        self.assertEqual(expected, sort_period_places(self.period_places))
 
-def map_period_ids(periods):
-    return list(map(lambda period: period.id, periods))
+    def test_filters_negative_places(self):
+        expected = []
+        self.assertEqual(expected, sort_period_places(self.unavailable_period_places))

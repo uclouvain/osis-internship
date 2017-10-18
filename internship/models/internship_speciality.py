@@ -29,8 +29,8 @@ from django.core.exceptions import ObjectDoesNotExist
 
 
 class InternshipSpecialityAdmin(SerializableModelAdmin):
-    list_display = ('learning_unit', 'name', 'acronym', 'mandatory', 'order_position', 'cohort')
-    fieldsets = ((None, {'fields': ('learning_unit', 'name', 'acronym', 'mandatory', 'order_position', 'cohort')}),)
+    list_display = ('learning_unit', 'name', 'acronym', 'mandatory', 'cohort')
+    fieldsets = ((None, {'fields': ('learning_unit', 'name', 'acronym', 'mandatory', 'cohort')}),)
     raw_id_fields = ('learning_unit',)
 
 
@@ -39,7 +39,6 @@ class InternshipSpeciality(SerializableModel):
     name = models.CharField(max_length=125, blank=False, null=False)
     acronym = models.CharField(max_length=125, blank=False, null=False)
     mandatory = models.BooleanField(default=False)
-    order_position = models.IntegerField(default=0)
 
     cohort = models.ForeignKey('internship.cohort', null=False, on_delete=models.CASCADE)
 
@@ -50,12 +49,6 @@ class InternshipSpeciality(SerializableModel):
 def search(**kwargs):
     kwargs = {k: v for k, v in kwargs.items() if v}
     return InternshipSpeciality.objects.filter(**kwargs).select_related("learning_unit").order_by('acronym', 'name')
-
-
-def search_order_by_position(**kwargs):
-    kwargs = {k: v for k, v in kwargs.items() if v}
-    return InternshipSpeciality.objects.filter(**kwargs).select_related("learning_unit").order_by('order_position')
-
 
 def find_all(cohort):
     return InternshipSpeciality.objects.filter(cohort=cohort).select_related("learning_unit").order_by('acronym', 'name')

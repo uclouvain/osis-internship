@@ -648,7 +648,7 @@ def get_student_mandatory_choices(cohort, priority):
     # Sort he dict of student (this optimize the final result)
     global specialities_dict
 
-    all_specialities = mdl_internship.internship_speciality.search_order_by_position(cohort=cohort, mandatory=True)
+    all_specialities = mdl_internship.internship_speciality.search(cohort=cohort, mandatory=True)
     orders = []
 
     for speciality in all_specialities:
@@ -1204,7 +1204,8 @@ def assign_automatically_internships(request, cohort_id):
             times = 1
             start_date_time = datetime.now()
             period_ids = mdl_internship.period.Period.objects.filter(cohort=cohort).values_list("id", flat=True)
-            mdl_internship.internship_student_affectation_stat.find_non_mandatory_affectations(period_ids=period_ids).delete()
+            current_affectations = mdl_internship.internship_student_affectation_stat.find_non_mandatory_affectations(period_ids=period_ids)
+            current_affectations._raw_delete(current_affectations.db)
             solver = AssignmentSolver(cohort)
             solver.solve()
             solver.persist_solution()

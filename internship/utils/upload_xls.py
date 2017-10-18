@@ -164,22 +164,17 @@ def upload_internships_file(request, cohort_id):
     if request.method == 'POST':
         file_name = request.FILES['file']
         data = request.POST
-        internship_id = data["internship_id"]
-        if internship_id != "":
-            internship = Internship.objects.filter(pk=internship_id).first()
-        else:
-            internship = None
 
         if file_name is not None:
             if ".xls" not in str(file_name):
                 messages.add_message(request, messages.ERROR, _('file_must_be_xls'))
             else:
-                __save_xls_internships(request, file_name, request.user, cohort, internship)
+                __save_xls_internships(request, file_name, request.user, cohort)
 
     return HttpResponseRedirect(reverse('internships', kwargs={'cohort_id': cohort.id}))
 
 
-def __save_xls_internships(request, file_name, user, cohort, internship):
+def __save_xls_internships(request, file_name, user, cohort):
     workbook = openpyxl.load_workbook(file_name, read_only=True)
     worksheet = workbook.active
     col_reference = 0
@@ -211,10 +206,7 @@ def __save_xls_internships(request, file_name, user, cohort, internship):
 
                 master_value = row[col_master].value
 
-                if internship != None and internship.speciality != None:
-                    speciality = mdl.internship_speciality.search(pk=internship.speciality_id)
-                else:
-                    speciality = mdl.internship_speciality.search(acronym__exact=spec_value, cohort=cohort)
+                speciality = mdl.internship_speciality.search(acronym__exact=spec_value, cohort=cohort)
 
                 number_place = 0
                 periods = mdl.period.Period.objects.filter(cohort=cohort)
@@ -239,7 +231,6 @@ def __save_xls_internships(request, file_name, user, cohort, internship):
                     internship_offer.maximum_enrollments = number_place
                     internship_offer.master = master_value
                     internship_offer.cohort = cohort
-                    internship_offer.internship = internship
                     internship_offer.selectable = True
                     internship_offer.save()
 

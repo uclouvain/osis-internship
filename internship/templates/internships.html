@@ -216,17 +216,6 @@
                             <h4 class="modal-title" id="uploadScroresLabel">{% trans 'internships_injection' %}</h4>
                         </div>
                         <div class="modal-body">
-                            <label for="internship_id">{% trans "select_internship "%}</label>
-                            <div class="form-group">
-                              <select name="internship_id">
-                                <option value="">{% trans 'non_mandatory' %}</option>
-                                {% for internship in internships %}
-                                  <option value="{{ internship.id }}">
-                                    {{ internship.name }}
-                                  </option>
-                                {% endfor %}
-                              </select>
-                            </div>
                             <div class="form-group">
                               <label for="fle_scores_input_file" class="btn btn-default" >{% trans 'choose_file' %}</label>
                               <input type="file" id="fle_scores_input_file" name="file" style="display:none" />

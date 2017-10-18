@@ -34,6 +34,7 @@
                             <th>{% trans 'name' %}</th>
                             <th>{% trans 'speciality' %}</th>
                             <th>{% trans 'length_in_periods' %}</th>
+                            <th>{% trans 'position' %}</th>
                             <th>&nbsp;</th>
                         </tr>
                         </thead>
@@ -42,6 +43,8 @@
                             <tr>
                                 <td>{{ internship.name }}</td>
                                 <td>{{ internship.speciality }}</td>
+                                <td>{{ internship.length_in_periods }}</td>
+                                <td>{{ internship.position }}</td>
                                 <td align="right">
                                     <a class="btn btn-warning" id="lnk_internship_edit"
                                        href="{% url 'internship-edit' cohort_id=internship.cohort.id internship_id=internship.id %}"><span class="glyphicon glyphicon-pencil" aria-hidden="true" />

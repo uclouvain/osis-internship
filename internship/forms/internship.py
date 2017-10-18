@@ -37,6 +37,7 @@ class InternshipForm(forms.ModelForm):
             'speciality',
             'alternate_speciality',
             'length_in_periods',
+            'position'
         ]
 
     def __init__(self, *args, **kwargs):
