@@ -49,8 +49,8 @@ def generate_homepage():
             <head>
                 <meta charset="utf-8">
                 <title>OSIS - Internship - Documentation</title>
-                <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" 
-                      integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" 
+                <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"
+                      integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M"
                       crossorigin="anonymous">
             </head>
             <body>
@@ -77,11 +77,23 @@ def initialize_content():
         subprocess.check_output(['xdg-open', DOCUMENTATION_FILE.format(sys.argv[1])])
 
 
+def show_help():
+    if len(sys.argv) > 1 and sys.argv[1] == "help":
+        print("Examples of use:")
+        print("  $ python3 build.py             Generates all artifacts.")
+        print("  $ python3 build.py html        Generates all artifacts and opens the html artifact.")
+        print("  $ python3 build.py pdf         Generates all artifacts and opens the pdf artifact.")
+        print("  $ python3 build.py html index  Generates all artifacts and opens the index page artifact.")
+        return True
+    return False
+
+
 def build():
-    generate_pdf()
-    generate_html()
-    generate_homepage()
-    initialize_content()
+    if not show_help():
+        generate_pdf()
+        generate_html()
+        generate_homepage()
+        initialize_content()
 
 
 build()
