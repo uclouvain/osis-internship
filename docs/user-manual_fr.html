@@ -448,24 +448,33 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_consultation_des_résultats">1.8. Consultation des résultats</a></li>
 </ul>
 </li>
-<li><a href="#_gestion_journalière">2. Gestion journalière</a>
-<ul class="sectlevel2">
-<li><a href="#_gestion_des_affectations">2.1. Gestion des affectations</a></li>
-</ul>
-</li>
+<li><a href="#_gestion_journalière">2. Gestion journalière</a></li>
 <li><a href="#_la_conception_technique_de_l_application">3. La conception technique de l&#8217;application</a>
 <ul class="sectlevel2">
-<li><a href="#_l_algorithme_d_affectation">3.1. L’algorithme d’affectation</a></li>
-<li><a href="#_modèle_de_données">3.2. Modèle de données</a></li>
-<li><a href="#_l_architecture_logiciel">3.3. L&#8217;architecture logiciel</a>
+<li><a href="#_l_algorithme_d_affectation">3.1. L’algorithme d’affectation</a>
 <ul class="sectlevel3">
-<li><a href="#_l_urls">3.3.1. L&#8217;URLs</a></li>
-<li><a href="#_sécurité">3.3.2. Sécurité</a>
-<ul class="sectlevel4">
-<li><a href="#_l_authentification">L&#8217;authentification</a></li>
-<li><a href="#_l_authorisation">L&#8217;authorisation</a></li>
+<li><a href="#_les_définitions">3.1.1. Les définitions</a></li>
 </ul>
 </li>
+<li><a href="#_modèle_de_données">3.2. Modèle de données</a></li>
+<li><a href="#_l_architecture_logiciel">3.3. L&#8217;architecture logiciel</a></li>
+<li><a href="#_sécurité">3.4. Sécurité</a>
+<ul class="sectlevel3">
+<li><a href="#_l_authentification">3.4.1. L&#8217;authentification</a></li>
+<li><a href="#_l_authorisation">3.4.2. L&#8217;authorisation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#_les_annexes">Les annexes</a>
+<ul class="sectlevel2">
+<li><a href="#_greedy">Greedy</a>
+<ul class="sectlevel3">
+<li><a href="#_Étape_1_stages_obligatoires_etudiants_prioritaires_erasmus">Étape 1: Stages obligatoires - Etudiants prioritaires Erasmus</a></li>
+<li><a href="#_Étape_2_stages_obligatoires_etudiants_prioritaires_sociaux">Étape 2: Stages obligatoires - Etudiants prioritaires sociaux</a></li>
+<li><a href="#_Étape_3_stages_obligatoires_tous_les_autres">Étape 3: Stages obligatoires – Tous les autres</a></li>
+<li><a href="#_Étape_4_stages_au_choix_etudiants_prioritaires_sociaux">Étape 4: Stages au choix - Etudiants prioritaires sociaux</a></li>
+<li><a href="#_Étape_5_stages_au_choix_tous_les_autres">Étape 5: Stages au choix - Tous les autres</a></li>
 </ul>
 </li>
 </ul>
@@ -717,15 +726,33 @@ de stage, mais toujours en adéquation avec le besoin de l&#8217;étudiant.</p>
 </div>
 <div class="sect2">
 <h3 id="_affectation_des_stages_aux_autres_étudiants">1.6. Affectation des stages aux autres étudiants</h3>
-
+<div class="paragraph">
+<p>Pour les étudiants non-prioritaires, les affectations sont fait automatiquement
+par l&#8217;application. L&#8217;algorithme essaye de trouver une solution optimale pour
+chaque étudiant en terme de spécialité, lieu et période. Il y a de contrainte
+qu&#8217;impeche de toujours respecter le premier choix de tous les étudiants. Par
+exemple, si le nombre d&#8217;étudiants est plus grand que le nombre de places
+disponibles. Pour mieux satisfaire toutes les demandes des étudiants avec les
+offres limitées, nous essayons de trouver une solution avec le coût le plus
+faible possible et qui satisfait les différentes contraintes, tout en respectant
+le mieux possible les souhaits des étudiants.</p>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_publication_des_résultats">1.7. Publication des résultats</h3>
-
+<div class="paragraph">
+<p>Une fois que tous les affectations sont faits, tous les resultats sons publiés
+en même temps sur le portail de l&#8217;université et disponibles pour les étudiants
+impliqués.</p>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_consultation_des_résultats">1.8. Consultation des résultats</h3>
-
+<div class="paragraph">
+<p>Les étudiants se connectent sur le portail UCL pour consulter les résultats des
+affectations. Les données sont disponible en mode lecture. En cas de correction
+ou de modification en general, une demande devra être fait au secretariat.</p>
+</div>
 </div>
 </div>
 </div>
@@ -736,10 +763,6 @@ de stage, mais toujours en adéquation avec le besoin de l&#8217;étudiant.</p>
 <p>La gestion journalière couvre toutes les fonctionnalités de maintenance de
 données en dehors de l&#8217;exécution du processus.</p>
 </div>
-<div class="sect2">
-<h3 id="_gestion_des_affectations">2.1. Gestion des affectations</h3>
-
-</div>
 </div>
 </div>
 <div class="sect1">
@@ -748,20 +771,192 @@ données en dehors de l&#8217;exécution du processus.</p>
 <div class="sect2">
 <h3 id="_l_algorithme_d_affectation">3.1. L’algorithme d’affectation</h3>
 <div class="paragraph">
-<p>Les étudiants doivent pour chaque stage encoder 4 choix d&#8217;hôpitaux.
-C&#8217;est-à-dire que pour le stage en pédiatrie ils doivent proposer 4 hôpitaux ou
-ils aimeraient faire leur stage. Et ainsi de suite pour les autres stages (en
-médecine générale, en gériatrie, etc.) Le secrétariat de médecine va
-sélectionner pour la suite quels étudiants sont prioritaires ou quels sont les
-choix prioritaires. Un étudiant prioritaire est par exemple un étudiant qui va
-faire un stage à l&#8217;étranger. L&#8217;algorithme doit donc d&#8217;abord assigner des stages
-aux étudiant prioritaires. Ensuite l&#8217;algorithme prend un étudiant au hasard et
-essaie de lui assigner un stage en essayant de lui donner son premier choix,
-son second choix, troisième choix et enfin quatrième choix. S’il ne trouve
-rien, il change de spécialité et essaie de lui donner aussi son premier choix
-et ainsi de suite. S’il ne trouve rien, il lui assigne alors hôpital erreur.
-Dès que l&#8217;algorithme parvient à assigner un stage à un étudiant, il en
-sélectionne un autre.</p>
+<p>Pour de satisfaire toutes les demandes des étudiants nous essayons de trouver
+une solution avec le coût le plus faible et qui satisfait les différents
+contraintes. Le coût est mesuré par la somme de tous les points d&#8217;une solution.
+Les points sont ajoutés à une solution quand les contraintes ne sont pas
+respectées. La pondération des différents contraintes est la suivante:</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 2. Pondération des contraintes</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Choix</th>
+<th class="tableblock halign-left valign-top">Point</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Premier</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deuxième</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Troisième</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Quatrième</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Hors choix</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Quand les désidératas des étudiants ne peuvent pas être respectés, un autre lieu
+stage doit être imposé. L&#8217;étudiant sera placé dans l&#8217;hôpital proche de son
+adresse légale. Cette solution ajoute 10 points (hors choix) + 1 points par 50
+kilomètre entre son adresse légale et l&#8217;adresse de l&#8217;hôpital.</p>
+</div>
+<div class="paragraph">
+<p>Chaque étudiant doit choisir 6 stages au choix, par ordre de préférence, de 1 à
+6. Seulement 4 stages seront pris. S&#8217;il est impossible de respecter les 4
+premiers choix on va ajouter 2 points pour le choix 5 et 3 points pour le choix
+6.</p>
+</div>
+<div class="paragraph">
+<p>On a également les différentes contraintes faibles, par exemple l&#8217;étudiant doit
+faire au minimum 2 mois dans le même hôpital. Si ce n&#8217;est par le cas on ajoute
+5 points.</p>
+</div>
+<div class="sect3">
+<h4 id="_les_définitions">3.1.1. Les définitions</h4>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>L’offre</strong> est représentée par un ensemble de stages qui sont proposées par les
+différents acteurs. Chaque stage possède une spécialité, un lieu, une période
+et un nombre de places minimales et maximales.</p>
+</li>
+<li>
+<p><strong>La demande</strong> est représentée par un ensemble des choix des étudiants. Elle est
+divisée en 2 catégories :</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Les stages obligatoires : chaque étudiant pour chaque spécialité obligatoire
+doit donner une liste ordonnée de 4 lieux de stages, par ordre de préférence
+allant de de 1 à 4.</p>
+</li>
+<li>
+<p>Les stages au choix : chaque étudiant doit choisir 6 spécialités au choix,
+par ordre de préférence allant de 1 à 6. Si l’étudiant souhaite, il peut
+choisir plusieurs fois la même spécialité.  Ensuite pour chaque spécialité,
+l’étudiant doit donner une liste ordonnée de 4 lieux de stages, par ordre de
+préférence allant de de 1 à 4.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Une solution</strong> c’est un ensemble des différents choix qui satisfont au mieux
+toutes les demandes des étudiants. Elle doit respecter toutes les contraintes
+fortes et un maximum de contraintes souples. Dans une solution on retrouve,
+pour chaque étudiant, un triplet qui contient une spécialité, un lieu et une
+période.</p>
+</li>
+<li>
+<p><strong>Les contraintes fortes</strong> :</p>
+<div class="ulist">
+<ul>
+<li>
+<p>chaque étudiant doit avoir 12 périodes (P) de stages attribuées et réparties
+sur 12 mois (1 période par mois). Les stages se répartissent obligatoirement
+comme suite en « stages obligatoires » (8 P) et "stages au choix" (4 P).</p>
+</li>
+<li>
+<p>les stages obligatoires doivent se dérouler dans la première partie de
+l’année  (janvier – aout) et être suivis par les stages au choix (septembre
+– décembre).</p>
+</li>
+<li>
+<p>Pour les stages au choix, la priorité doit être donnée aux étudiants qui
+présentent un concours dans la spécialité choisi pour le stage au choix.</p>
+</li>
+<li>
+<p>Pour les étudiants prioritaires, il faut pouvoir attribuer manuellement
+certains stages (spécialité, lieu, période), avant l’attribution par le
+logiciel, des stages aux étudiants. Les étudiants prioritaires pour
+lesquels, pour certaines spécialités, le lieu est unique et doit donc
+impérativement être respecté. Les modifications manuelles ne pourront pas
+être modifiées par le logiciel.</p>
+</li>
+<li>
+<p>Les 2 périodes de stage obligatoire « Urgence », doivent être effectuées
+l’une à la suite de l’autre dans un même hôpital.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Les contraintes souples</strong> :</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Il faut éviter que l’étudiant ne passe qu’un mois dans un même hôpital. Si
+cette contrainte n’est pas respectée on ajoute une pénalité de 5 points.</p>
+</li>
+<li>
+<p>L’étudiant émet des désidératas concernant le lieu de stage obligatoires et
+concernant la spécialité et les lieux de stages au choix. Ces désidératas
+devraient être respectés le plus possible en fonction d’un ordre de
+préférence allant de 1 à 4. Si le 1er choix n’est pas respecté, on ajoute :</p>
+<div class="ulist">
+<ul>
+<li>
+<p>1 point de pénalité pour le 2ème choix</p>
+</li>
+<li>
+<p>2 points de pénalité pour le 3ème choix</p>
+</li>
+<li>
+<p>3 points de pénalité pour le 4ème choix</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>En cas d’impossibilité de respecter les désidératas des étudiants, un autre
+lieu stage doit être imposé. L’étudiant sera placé dans l’hôpital proche de
+son adresse légale. On ajoute une pénalité de 10 points + 1 point par 50
+kilomètre entre son adresse légale et l’adresse de l’hôpital.</p>
+</li>
+<li>
+<p>Chaque étudiant doit choisir 6 stages au choix, par ordre de préférence
+allant de 1 à 6. Seulement 4 stages seront pris, s’il est impossible de
+respecter les 4 premiers choix de stage on va ajouter :</p>
+<div class="ulist">
+<ul>
+<li>
+<p>2 points de pénalité pour le choix 5</p>
+</li>
+<li>
+<p>3 points de pénalité pour le choix 6</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Si l’offre est plus petite que la demande, certains étudiants seront ajoutés
+dans un hôpital fictif nommé « error », cet hôpital possède une capacité
+infinie. Si cette contrainte n’est pas respectée (l’offre &lt; la demande) on
+ajoute une pénalité de 1000 points.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
 </div>
 </div>
 <div class="sect2">
@@ -788,40 +983,16 @@ d&#8217;OSIS. Heureusement, l&#8217;application est conçue de manière à pouvo
 facilement découplée à l&#8217;avenir en utilisant, par exemple, des services web
 parce la demande de données est très faible.</p>
 </div>
-<div class="sect3">
-<h4 id="_l_urls">3.3.1. L&#8217;URLs</h4>
-<table class="tableblock frame-all grid-all spread">
-<caption class="title">Table 2. Les URLS vers tous les écrans</caption>
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">URL</th>
-<th class="tableblock halign-left valign-top">Template</th>
-<th class="tableblock halign-left valign-top">Titre</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Médecine interne (MI)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">3</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-</tbody>
-</table>
 </div>
-<div class="sect3">
-<h4 id="_sécurité">3.3.2. Sécurité</h4>
+<div class="sect2">
+<h3 id="_sécurité">3.4. Sécurité</h3>
 <div class="paragraph">
 <p>Toutes les fonctionnalités de l&#8217;application sont limitées aux utilisateurs et
 aux responsabilités bien connus. À cause de ça, la sécurité de l&#8217;application est
 organisé en deux parties:</p>
 </div>
-<div class="sect4">
-<h5 id="_l_authentification">L&#8217;authentification</h5>
+<div class="sect3">
+<h4 id="_l_authentification">3.4.1. L&#8217;authentification</h4>
 <div class="paragraph">
 <p>OSIS utilise le single-sign-on de l&#8217;UCL qui est integré avec le cadastre
 unique des utilisateurs informatique de l&#8217;université. L&#8217;application Internship
@@ -830,8 +1001,8 @@ l&#8217;instituition. Il n&#8217;y a aucun moyen de créer de nouveaux utilisate
 l&#8217;application, sans passer par les processus standard de l&#8217;université.</p>
 </div>
 </div>
-<div class="sect4">
-<h5 id="_l_authorisation">L&#8217;authorisation</h5>
+<div class="sect3">
+<h4 id="_l_authorisation">3.4.2. L&#8217;authorisation</h4>
 <div class="paragraph">
 <p>L&#8217;authorisation est gérer par Django, qui organise les utilisateurs dans les
 groupes correspondent aux roles défini par l&#8217;application. Il y a deux rôles
@@ -856,12 +1027,124 @@ ouvert au monde exterieur.</p>
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="_les_annexes">Les annexes</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_greedy">Greedy</h3>
+<div class="paragraph">
+<p>La construction de la solution initiale se fera en 5 étapes. A chaque étape on
+parcourt chacune des spécialités. Pour chaque spécialité on parcourt tous les
+étudiants. Pour éviter que les étudiants au début de la liste aient toujours
+leur premier choix (premier arrivé, premier servi), nous allons commencer le
+parcours à un endroit choisi au hasard. La suite des opérations est différente
+pour chaque étape.</p>
+</div>
+<div class="sect3">
+<h4 id="_Étape_1_stages_obligatoires_etudiants_prioritaires_erasmus">Étape 1: Stages obligatoires - Etudiants prioritaires Erasmus</h4>
+<div class="paragraph">
+<p>Pour ces étudiants les stages (la spécialité, le lieu et la période) sont fixés.
+On les ajouté dans la solution initiale tel quel.  Pour chaque stage ajouté on
+met à jour le nombre de places disponibles pour un lieu / période / spécialité
+donné (table de stages).</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_Étape_2_stages_obligatoires_etudiants_prioritaires_sociaux">Étape 2: Stages obligatoires - Etudiants prioritaires sociaux</h4>
+<div class="paragraph">
+<p>Ces étudiants ont déjà une spécialité et un lieu choisis. L’algorithme doit
+choisir seulement la période de stage. Pour le choix de période on favorise les
+solutions qui permettent d’avoir au moins 2 mois de stage consécutifs dans un
+même hôpital.</p>
+</div>
+<div class="paragraph">
+<p>Pour chaque période disponible, l’algorithme va regarder les périodes P – 1 et
+P + 1 et vérifier si une de ces périodes périodes est déjà attribuée à
+l’étudiant dans ce même hôpital. Si ce’est le cas, la période est candidate.
+Ensuite parmi les périodes candidates, on va choisir les périodes qui ont plus
+grand nombre de places disponibles. Si plusieurs périodes on le même nombre
+d’offres, on choisit une période au hasard. Pour fini on met à jour la table de
+stages.</p>
+</div>
+<div class="paragraph">
+<p>Voici un exemple:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Si c’est le premier stage de l’étudiant dans cet hôpital, on choisit les
+périodes dont P-1 et P+1 sont encore libres (afin de favoriser les deux mois
+consécutifs dans un même hôpital). Si ex-equo, on choisit la période qui a le
+plus grande nombre de places. Dans l’exemple c’est sont les périodes P2, P5 et
+P6 (bleu) avec à chaque fois 23 places disponibles. Ensuite on choisit une
+période au hasard parmi P2, P5 et P6 et on décrémente le nombre de places
+disponibles. Les périodes en rouge ne sont pas disponibles, par exemple si une
+spécialité n’est pas disponible.</p>
+</li>
+</ul>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/greedy-example.png" alt="Example 1">
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Si l’étudiant a déjà d’autres stages dans l’hôpital, on va favoriser les
+périodes qui sont adjacentes avec les autres périodes de l’étudiant dans cet
+hôpital. Dans l’exemple on voit que l’étudiant a déjà fait 3 autres stages
+pendant les périodes P1, P4 et P8 (en vert), dans ce cas-là on va favoriser
+les stages P2, P5 et P7 (en bleu). Ensuite parmi ces 3, on va choisir les
+périodes qui ont la plus grande nombre de places disponibles (P2 et P4). Elles
+ont toutes les deux 23 places disponibles, dans ce cas on choisit une période
+au hasard parmi ces deux-là.</p>
+</li>
+</ul>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/greedy-example-2.png" alt="Example 2">
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_Étape_3_stages_obligatoires_tous_les_autres">Étape 3: Stages obligatoires – Tous les autres</h4>
+<div class="paragraph">
+<p>Pour ces étudiants, pour la spécialité concernée, l’algorithme doit choisir un
+lieu et une période. Premièrement, il faut choisir un lieu. L’algorithme va
+toujours essayer de faire un choix qui minimise le coût total de la solution.
+Par exemple le premier choix n’est pas toujours le meilleur option, parfois
+c’est mieux de choisir le 2ème, 3ème ou même 4ème choix et avoir 2 stages
+consécutifs. Ensuite, la période est choisie de même manière que précédemment
+(&#8594; Stages obligatoires - Etudiants prioritaires sociaux).  Pour finir on met à
+jour la table de stages.</p>
+</div>
+<div class="paragraph">
+<p>YDE : On pourrait être proactif et favoriser un second ou 3ème choix qui permet
+d’avoir deux mois consécutif dans le même hôpital.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_Étape_4_stages_au_choix_etudiants_prioritaires_sociaux">Étape 4: Stages au choix - Etudiants prioritaires sociaux</h4>
+<div class="paragraph">
+<p>Ce n&#8217;est pas encore fait.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_Étape_5_stages_au_choix_tous_les_autres">Étape 5: Stages au choix - Tous les autres</h4>
+<div class="paragraph">
+<p>Ce n&#8217;est pas encore fait.</p>
+</div>
+</div>
+</div>
+</div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
 Version 1.0<br>
-Last updated 2017-10-18 14:10:48 CEST
+Last updated 2017-10-23 16:12:16 CEST
 </div>
 </div>
 </body>
