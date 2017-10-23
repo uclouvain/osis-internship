@@ -32,8 +32,10 @@ DOCUMENTATION_FILE = 'user-manual_fr.{}'
 
 def generate_pdf():
     print("Generating PDF...")
-    subprocess.check_output(['asciidoctor-pdf', '-a', 'pdf-stylesdir=resources/themes', '-a', 'pdf-styles=osis',
-                             DOCUMENTATION_FILE.format("adoc")])
+    path = get_path()
+    subprocess.check_output(['asciidoctor-pdf',
+                             '-a', 'pdf-stylesdir={}resources/themes'.format(path),
+                             '-a', 'pdf-styles=osis', "{}{}".format(path, DOCUMENTATION_FILE.format("adoc"))])
     print("PDF file generated.")
 
 
@@ -70,22 +72,36 @@ def generate_homepage():
 
 
 def initialize_content():
-    length_args = len(sys.argv)
-    if length_args > 2 and sys.argv[1] == 'html' and sys.argv[2] == 'index':
-        subprocess.check_output(['xdg-open', 'index.html'])
-    elif len(sys.argv) > 1:
-        subprocess.check_output(['xdg-open', DOCUMENTATION_FILE.format(sys.argv[1])])
+    if "-v" in sys.argv:
+        v_idx = sys.argv.index("-v")
+        if sys.argv[v_idx + 1] == "index":
+            subprocess.check_output(['xdg-open', 'index.html'])
+        else:
+            subprocess.check_output(['xdg-open', DOCUMENTATION_FILE.format(sys.argv[v_idx + 1])])
 
 
 def show_help():
-    if len(sys.argv) > 1 and sys.argv[1] == "help":
+    if "-h" in sys.argv:
         print("Examples of use:")
-        print("  $ python3 build.py             Generates all artifacts.")
-        print("  $ python3 build.py html        Generates all artifacts and opens the html artifact.")
-        print("  $ python3 build.py pdf         Generates all artifacts and opens the pdf artifact.")
-        print("  $ python3 build.py html index  Generates all artifacts and opens the index page artifact.")
+        print()
+        print("  $ python3 build.py           Generates all artifacts.")
+        print("  $ python3 build.py -v html   Generates all artifacts and opens the html artifact.")
+        print("  $ python3 build.py -v index  Generates all artifacts and opens the index page artifact.")
+        print("  $ python3 build.py -v pdf    Generates all artifacts and opens the pdf artifact.")
+        print()
+        print("If you are running the build outside of the folder internship/docs: ")
+        print()
+        print("  $ python3 build.py -p [path-to-docs]")
         return True
+
     return False
+
+
+def get_path():
+    if "-p" in sys.argv:
+        return sys.argv[sys.argv.index("-p") + 1]
+    else:
+        return ""
 
 
 def build():
@@ -96,4 +112,5 @@ def build():
         initialize_content()
 
 
-build()
+if __name__ == '__main__':
+    build()
