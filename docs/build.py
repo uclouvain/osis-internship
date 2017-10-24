@@ -28,25 +28,7 @@ import subprocess
 
 
 DOCUMENTATION_FILE = 'user-manual_fr.{}'
-
-
-def generate_pdf():
-    print("Generating PDF...")
-    path = get_path()
-    subprocess.check_output(['asciidoctor-pdf',
-                             '-a', 'pdf-stylesdir={}resources/themes'.format(path),
-                             '-a', 'pdf-styles=osis', "{}{}".format(path, DOCUMENTATION_FILE.format("adoc"))])
-    print("PDF file generated.")
-
-
-def generate_html():
-    print("Generating HTML...")
-    subprocess.check_output(['asciidoctor', DOCUMENTATION_FILE.format("adoc")])
-    print("HTML file generated.")
-
-
-def generate_homepage():
-    message = """
+HOMEPAGE_CONTENT = """
         <html lang="en">
             <head>
                 <meta charset="utf-8">
@@ -65,10 +47,32 @@ def generate_homepage():
                     <h3><a href="{}">Documentation en PDF</a></h3>
                 </div>
             </body>
-        </html>""".format(DOCUMENTATION_FILE.format("html"), DOCUMENTATION_FILE.format("pdf"))
+        </html>"""
 
-    with open('index.html', 'w') as html_file:
-        html_file.write(message)
+
+def generate_pdf():
+    print("Generating PDF...")
+    path = get_path()
+    subprocess.check_output(['asciidoctor-pdf',
+                             '-a', 'pdf-stylesdir={}resources/themes'.format(path),
+                             '-a', 'pdf-styles=osis', "{}{}".format(path, DOCUMENTATION_FILE.format("adoc"))])
+    print("PDF file generated.")
+
+
+def generate_html():
+    print("Generating HTML...")
+    path = get_path()
+    subprocess.check_output(['asciidoctor', "{}{}".format(path, DOCUMENTATION_FILE.format("adoc"))])
+    print("HTML file generated.")
+
+
+def generate_homepage():
+    print("Generating Homepage...")
+    path = get_path()
+    with open('{}index.html'.format(path), 'w') as html_file:
+        html_file.write(HOMEPAGE_CONTENT.format(DOCUMENTATION_FILE.format("html"),
+                                                DOCUMENTATION_FILE.format("pdf")))
+    print("Homepage generated.")
 
 
 def initialize_content():
@@ -93,7 +97,6 @@ def show_help():
         print()
         print("  $ python3 build.py -p [path-to-docs]")
         return True
-
     return False
 
 

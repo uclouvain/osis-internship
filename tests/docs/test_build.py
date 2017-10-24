@@ -23,25 +23,44 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+import sys
 import unittest
 import os.path
-from internship.docs import build
+from mock import patch
+from internship.docs.build import build, generate_pdf, generate_homepage, generate_html, get_path, show_help
 
 
 class TestDocumentationBuild(unittest.TestCase):
 
     def test_generate_pdf(self):
-        build.generate_pdf()
-        self.assertTrue(os.path.isfile("internship/docs/user_manual_fr.pdf"))
+        testargs = ["-p", "internship/docs/"]
+        with patch.object(sys, 'argv', testargs):
+            generate_pdf()
+        self.assertTrue(os.path.isfile("internship/docs/user-manual_fr.pdf"))
 
     def test_generate_html(self):
-        self.assertFalse(True)
+        testargs = ["-p", "internship/docs/"]
+        with patch.object(sys, 'argv', testargs):
+            generate_html()
+        self.assertTrue(os.path.isfile("internship/docs/user-manual_fr.html"))
 
     def test_generate_homepage(self):
-        self.assertFalse(True)
+        testargs = ["-p", "internship/docs/"]
+        with patch.object(sys, 'argv', testargs):
+            generate_homepage()
+        self.assertTrue(os.path.isfile("internship/docs/index.html"))
 
-    def test_initialize_content(self):
-        self.assertFalse(True)
+    def test_get_path(self):
+        self.assertEqual(get_path(), "")
+        testargs = ["-p", "internship/docs/"]
+        with patch.object(sys, 'argv', testargs):
+            self.assertEqual(get_path(), "internship/docs/")
+
+    def test_show_help(self):
+        self.assertFalse(show_help())
+        testargs = ["-h"]
+        with patch.object(sys, 'argv', testargs):
+            self.assertTrue(show_help())
 
 
 if __name__ == '__main__':
