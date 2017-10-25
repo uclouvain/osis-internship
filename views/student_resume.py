@@ -34,48 +34,7 @@ from django.utils.translation import ugettext_lazy as _
 from base import models as mdl
 from internship import models as mdl_int
 from internship.forms.form_student_information import StudentInformationForm
-from internship.views.place import set_organization_address, sort_organizations
-
-
-def set_number_choices(student_informations):
-    """
-        Function to set the variable number_choices for the student in the list
-        to check if he has the right number of choice.
-        Param :
-            student_informations : the list of students present in InternshipStudentInformation
-    """
-    for si in student_informations:
-        student = mdl.student.find_by_person(si.person)
-        choices = mdl_int.internship_choice.find_by_student(student)
-        si.number_choices = len(choices)
-        if student:
-            si.registration_id = student.registration_id
-
-
-def get_number_ok_student(students_list, number_selection):
-    """
-        Function to get the number of student who have the right number of choice and who haven't
-        Params:
-            students_list : the list of student present in InternshipChoice
-            number_selection : the correct number of choices
-        Return of array with two elements :
-            the first is the number of the student with the right number of choices
-            the second is the number of the student with the wrong number of choices
-    """
-    students_list = list(students_list)
-    nbr_student = [0]*2
-    # Set the number of the student who have their all selection of internships
-    # who have a partial selection
-    # who have no selection
-    for sl in students_list:
-        student = mdl.student.find_by_person(sl.student.person)
-        choices = mdl_int.internship_choice.find_by_student(student)
-        sl.number_choices = len(choices)
-        if len(choices) == number_selection:
-            nbr_student[0] += 1
-        else :
-            nbr_student[1] += 1
-    return nbr_student
+from internship.views.place import sort_organizations
 
 
 @login_required
@@ -130,7 +89,7 @@ def internships_student_read(request, cohort_id, student_id):
         order_by("period__date_start")
     periods = mdl_int.period.search(cohort=cohort).order_by("date_start")
     organizations = mdl_int.organization.search(cohort=cohort)
-    set_organization_address(organizations)
+    _set_organization_address(organizations)
 
     # Set the address of the affectation
     for affectation in affectations:
@@ -312,12 +271,29 @@ def get_students_with_status(cohort):
     for student_info in students_informations:
         person = student_info.person
         student = mdl.student.find_by_person(person)
-        student_status = get_student_status(student, cohort)
+        student_status = _get_student_status(student, cohort)
         students_status.append((student, student_status))
     return students_status
 
 
-def get_student_status(student, cohort):
+def _get_student_status(student, cohort):
     internship_ids = mdl_int.internship.Internship.objects.filter(cohort=cohort, pk__gte=1).values_list("pk", flat=True)
     internship_choices_values = mdl_int.internship_choice.get_internship_choices_made(cohort=cohort, student=student).values_list("internship_id", flat=True)
     return len(list(set(internship_ids) - set(internship_choices_values))) == 0
+
+
+def _set_organization_address(organizations):
+    """
+        Function to set the organization address to the organization
+        Param:
+            organizations : list of organizations to get the address
+        Get the address in the OrganizationAddress table and put it
+        Get also the number of student of choose this organization for their internship
+    """
+    for organization in organizations:
+        organization.address = ""
+        organization.student_choice = 0
+        address = mdl_int.organization_address.search(organization=organization)
+        if address:
+            organization.address = address
+        organization.student_choice = len(mdl_int.internship_choice.search(organization=organization))

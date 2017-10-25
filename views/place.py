@@ -35,65 +35,6 @@ from internship.utils import export_utils, export_utils_pdf
 from internship.views.internship import get_all_specialities, set_tabs_name
 
 
-def sort_organizations(organizations):
-    """
-        Function to sort the organization by the reference
-        Param:
-            sort_organizations : list of organizations to sort
-        Get the reference of the organization, transform and sort by the int key
-        Recreate the list with the reference research
-    """
-    tab = []
-    number_ref = []
-    for organization in organizations:
-        if organization is not None:
-            number_ref.append(organization.reference)
-    number_ref = sorted(number_ref, key=int)
-    for i in number_ref:
-        organization = models.organization.search(reference=i)
-        tab.append(organization[0])
-    return tab
-
-
-def set_organization_address(organizations):
-    """
-        Function to set the organization address to the organization
-        Param:
-            organizations : list of organizations to get the address
-        Get the address in the OrganizationAddress table and put it
-        Get also the number of student of choose this organization for their internship
-    """
-    for organization in organizations:
-        organization.address = ""
-        organization.student_choice = 0
-        address = models.organization_address.search(organization=organization)
-        if address:
-            organization.address = address
-        organization.student_choice = len(models.internship_choice.search(organization=organization))
-
-
-def set_speciality_unique(specialities):
-    specialities_size = len(specialities)
-    for element in specialities:
-        name = element.name.split()
-        size = len(name)
-        if name[size - 1].isdigit():
-            temp_name = ""
-            for x in range(0, size - 1):
-                temp_name += name[x] + " "
-            element.name = temp_name
-
-    item_deleted = 0
-    for x in range(1, specialities_size):
-        if specialities[x - 1 - item_deleted] != 0:
-            if specialities[x].name == specialities[x - 1 - item_deleted].name:
-                specialities[x] = 0
-                item_deleted += 1
-
-    specialities = [x for x in specialities if x != 0]
-    return specialities
-
-
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internships_places(request, cohort_id):
@@ -345,3 +286,45 @@ def export_pdf(request, organization_id, speciality_id):
             a.adress = informations.location + " " + informations.postal_code + " " + informations.city
             a.phone_mobile = informations.phone_mobile
     return export_utils_pdf.print_affectations(organization_id, affectations)
+
+
+def sort_organizations(organizations):
+    """
+        Function to sort the organization by the reference
+        Param:
+            sort_organizations : list of organizations to sort
+        Get the reference of the organization, transform and sort by the int key
+        Recreate the list with the reference research
+    """
+    tab = []
+    number_ref = []
+    for organization in organizations:
+        if organization is not None:
+            number_ref.append(organization.reference)
+    number_ref = sorted(number_ref, key=int)
+    for i in number_ref:
+        organization = models.organization.search(reference=i)
+        tab.append(organization[0])
+    return tab
+
+
+def set_speciality_unique(specialities):
+    specialities_size = len(specialities)
+    for element in specialities:
+        name = element.name.split()
+        size = len(name)
+        if name[size - 1].isdigit():
+            temp_name = ""
+            for x in range(0, size - 1):
+                temp_name += name[x] + " "
+            element.name = temp_name
+
+    item_deleted = 0
+    for x in range(1, specialities_size):
+        if specialities[x - 1 - item_deleted] != 0:
+            if specialities[x].name == specialities[x - 1 - item_deleted].name:
+                specialities[x] = 0
+                item_deleted += 1
+
+    specialities = [x for x in specialities if x != 0]
+    return specialities

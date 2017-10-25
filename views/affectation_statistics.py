@@ -66,7 +66,118 @@ periods_dict = {'P1': True, 'P2': True, 'P3': True, 'P4': True, 'P5': True, 'P6'
 costs = {1: 0, 2: 1, 3: 2, 4: 3, 'I': 10, 'C': 5, 'X': 1000}
 
 
-def compute_stats(cohort, sol):
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def assign_automatically_internships(request, cohort_id):
+    cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
+    if request.method == 'POST':
+        start_date_time = datetime.now()
+        period_ids = models.period.Period.objects.filter(cohort=cohort).values_list("id", flat=True)
+        current_affectations = models.internship_student_affectation_stat.find_non_mandatory_affectations(period_ids=period_ids)
+        current_affectations._raw_delete(current_affectations.db)
+        solver = AssignmentSolver(cohort)
+        solver.solve()
+        solver.persist_solution()
+        end_date_time = datetime.now()
+        affectation_generation_time = models.affectation_generation_time.AffectationGenerationTime()
+        affectation_generation_time.cohort = cohort
+        affectation_generation_time.start_date_time = start_date_time
+        affectation_generation_time.end_date_time = end_date_time
+        affectation_generation_time.generated_by = request.user.username
+        affectation_generation_time.save()
+    return redirect(reverse('internship_affectation_statistics',  kwargs={'cohort_id': cohort.id}))
+
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def internship_affectation_statistics(request, cohort_id):
+    cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
+    _init_organizations(cohort)
+    _init_specialities(cohort)
+    sol, table, stats, internship_errors = None, None, None, None
+    periods = models.period.Period.objects.filter(cohort=cohort)
+    period_ids = periods.values_list("id", flat=True)
+
+    student_affectations = InternshipStudentAffectationStat.objects\
+        .filter(period_id__in=period_ids)\
+        .select_related("student", "organization", "speciality", "period")
+
+    if student_affectations.count() > 0:
+        sol, table = _load_solution(student_affectations, cohort)
+        stats = _compute_stats(cohort, sol)
+        # Mange sort of the students
+        sol = OrderedDict(sorted(sol.items(), key=lambda t: t[0].person.last_name))
+        # Mange sort of the organizations
+        table.sort(key=itemgetter(0))
+
+        internship_errors = InternshipStudentAffectationStat.objects \
+            .filter(organization=organizations[hospital_error],
+                    period_id__in=period_ids)
+
+    latest_generation = models.affectation_generation_time.get_latest()
+
+    context = {
+        'section': 'internship',
+        'cohort': cohort,
+        'recap_sol': sol,
+        'stats': stats,
+        'organizations': table,
+        'errors': internship_errors,
+        'latest_generation': latest_generation
+    }
+
+    return render(request, "internship_affectation_statics.html", context)
+
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def internship_affectation_sumup(request, cohort_id):
+    cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
+    all_speciality = list(models.internship_speciality.find_all(cohort=cohort))
+    all_speciality = set_speciality_unique(all_speciality)
+    set_tabs_name(all_speciality)
+    periods = models.period.search(cohort=cohort)
+    organizations = models.organization.search(cohort=cohort)
+    organizations = sort_organizations(organizations)
+    offers = models.internship_offer.search(cohort=cohort)
+    informations = []
+    for organization in organizations:
+        for offer in offers:
+            if offer.organization.reference == organization.reference:
+                informations.append(offer)
+
+    for x in range (0,len(informations)):
+        if informations[x] != 0:
+            if informations[x].speciality.acronym == "MI":
+                informations[x+1] = 0
+                informations[x+2] = 0
+
+    informations = [x for x in informations if x != 0]
+
+    all_affectations = list(models.internship_student_affectation_stat.search())
+    affectations = {}
+    for speciality in all_speciality:
+        temp_affectations = {}
+        for period in periods:
+            temp_temp_affectations = []
+            for aff in all_affectations:
+                if aff.speciality.acronym == speciality.acronym and aff.period == period:
+                    temp_temp_affectations.append(aff)
+            temp_affectations[period.name] = temp_temp_affectations
+        affectations[speciality.name] = temp_affectations
+
+    context = {
+        'section': 'internship',
+        'specialities': all_speciality,
+        'periods': periods,
+        'organizations': informations,
+        'affectations': affectations,
+        'cohort': cohort
+    }
+    return render(request, "internship_affectation_sumup.html", context)
+
+
+def _compute_stats(cohort, sol):
     """
     Compute the statistics of the solution
     """
@@ -169,7 +280,7 @@ def compute_stats(cohort, sol):
 
     # Get number of students socio
     students_socio = set()
-    for speciality, students in get_student_mandatory_choices(cohort, True).items():
+    for speciality, students in _get_student_mandatory_choices(cohort, True).items():
         for choices in students:
             students_socio.add(choices[0].student.id)
     internships = models.internship.Internship.objects.filter(cohort=cohort)
@@ -251,7 +362,7 @@ def compute_stats(cohort, sol):
     return stats
 
 
-def init_organizations(cohort):
+def _init_organizations(cohort):
     """
     Retrieve addresses of all organisation and init the hospital "error".
     """
@@ -265,7 +376,7 @@ def init_organizations(cohort):
         organization_addresses_dic[organization_address.organization] = organization_address
 
 
-def init_specialities(cohort):
+def _init_specialities(cohort):
     """
     Retrieve all internship offers and the id of the speciality "emergency"
     """
@@ -278,7 +389,7 @@ def init_specialities(cohort):
             emergency = speciality.id
 
 
-def get_student_mandatory_choices(cohort, priority):
+def _get_student_mandatory_choices(cohort, priority):
     """
     Return all student's choices of given type.
     :param priority: True if we have to return the choices of priority student,
@@ -341,7 +452,7 @@ def get_student_mandatory_choices(cohort, priority):
     return data
 
 
-def load_solution(data, cohort):
+def _load_solution(data, cohort):
     """ Create the solution and internship_table from db data """
     # Initialise the table of internships.
     periods = models.period.Period.objects.filter(cohort=cohort)
@@ -359,7 +470,7 @@ def load_solution(data, cohort):
         period_name = pid.period.name
         if acronym not in temp_internship_table[organization]:
             temp_internship_table[organization][acronym] = OrderedDict()
-            fill_periods_default_values(acronym, keys, organization, temp_internship_table)
+            _fill_periods_default_values(acronym, keys, organization, temp_internship_table)
 
         temp_internship_table[organization][acronym][period_name]['before'] += pid.number_places
         temp_internship_table[organization][acronym][period_name]['after'] += pid.number_places
@@ -399,120 +510,9 @@ def load_solution(data, cohort):
     return sol, sorted_internship_table
 
 
-def fill_periods_default_values(acronym, keys, organization, temp_internship_table):
+def _fill_periods_default_values(acronym, keys, organization, temp_internship_table):
     for key in keys:
         temp_internship_table[organization][acronym][key] = {
             'before': 0,
             'after': 0,
         }
-
-
-@login_required
-@permission_required('internship.is_internship_manager', raise_exception=True)
-def assign_automatically_internships(request, cohort_id):
-    cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
-    if request.method == 'POST':
-            start_date_time = datetime.now()
-            period_ids = models.period.Period.objects.filter(cohort=cohort).values_list("id", flat=True)
-            current_affectations = models.internship_student_affectation_stat.find_non_mandatory_affectations(period_ids=period_ids)
-            current_affectations._raw_delete(current_affectations.db)
-            solver = AssignmentSolver(cohort)
-            solver.solve()
-            solver.persist_solution()
-            end_date_time = datetime.now()
-            affectation_generation_time = models.affectation_generation_time.AffectationGenerationTime()
-            affectation_generation_time.cohort = cohort
-            affectation_generation_time.start_date_time = start_date_time
-            affectation_generation_time.end_date_time = end_date_time
-            affectation_generation_time.generated_by = request.user.username
-            affectation_generation_time.save()
-    return redirect(reverse('internship_affectation_statistics',  kwargs={'cohort_id': cohort.id}))
-
-
-@login_required
-@permission_required('internship.is_internship_manager', raise_exception=True)
-def internship_affectation_statistics(request, cohort_id):
-    cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
-    init_organizations(cohort)
-    init_specialities(cohort)
-    sol, table, stats, internship_errors = None, None, None, None
-    periods = models.period.Period.objects.filter(cohort=cohort)
-    period_ids = periods.values_list("id", flat=True)
-
-    student_affectations = InternshipStudentAffectationStat.objects\
-        .filter(period_id__in=period_ids)\
-        .select_related("student", "organization", "speciality", "period")
-
-    if student_affectations.count() > 0:
-        sol, table = load_solution(student_affectations, cohort)
-        stats = compute_stats(cohort, sol)
-        # Mange sort of the students
-        sol = OrderedDict(sorted(sol.items(), key=lambda t: t[0].person.last_name))
-        # Mange sort of the organizations
-        table.sort(key=itemgetter(0))
-
-        internship_errors = InternshipStudentAffectationStat.objects \
-            .filter(organization=organizations[hospital_error],
-                    period_id__in=period_ids)
-
-    latest_generation = models.affectation_generation_time.get_latest()
-
-    context = {
-        'section': 'internship',
-        'cohort': cohort,
-        'recap_sol': sol,
-        'stats': stats,
-        'organizations': table,
-        'errors': internship_errors,
-        'latest_generation': latest_generation
-    }
-
-    return render(request, "internship_affectation_statics.html", context)
-
-
-@login_required
-@permission_required('internship.is_internship_manager', raise_exception=True)
-def internship_affectation_sumup(request, cohort_id):
-    cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
-    all_speciality = list(models.internship_speciality.find_all(cohort=cohort))
-    all_speciality = set_speciality_unique(all_speciality)
-    set_tabs_name(all_speciality)
-    periods = models.period.search(cohort=cohort)
-    organizations = models.organization.search(cohort=cohort)
-    organizations = sort_organizations(organizations)
-    offers = models.internship_offer.search(cohort=cohort)
-    informations = []
-    for organization in organizations:
-        for offer in offers:
-            if offer.organization.reference == organization.reference:
-                informations.append(offer)
-
-    for x in range (0,len(informations)):
-        if informations[x] != 0:
-            if informations[x].speciality.acronym == "MI":
-                informations[x+1] = 0
-                informations[x+2] = 0
-
-    informations = [x for x in informations if x != 0]
-
-    all_affectations = list(models.internship_student_affectation_stat.search())
-    affectations = {}
-    for speciality in all_speciality:
-        temp_affectations = {}
-        for period in periods:
-            temp_temp_affectations = []
-            for aff in all_affectations:
-                if aff.speciality.acronym == speciality.acronym and aff.period == period:
-                    temp_temp_affectations.append(aff)
-            temp_affectations[period.name] = temp_temp_affectations
-        affectations[speciality.name] = temp_affectations
-
-    context = {
-        'section': 'internship',
-        'specialities': all_speciality,
-        'periods': periods,
-        'organizations': informations,
-        'affectations': affectations,
-        'cohort': cohort
-    }
-    return render(request, "internship_affectation_sumup.html", context)

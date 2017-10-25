@@ -82,7 +82,7 @@ class XlsPlaceImportTestCase(TestCase):
 
             qs = Organization.objects.all()
             self.assertEqual(qs.count(), 0)
-            save_xls_place(None, self.user, cohort=self.cohort)
+            save_xls_place(None, cohort=self.cohort)
 
             self.assertTrue(mock_load_workbook.called)
             qs = Organization.objects.all()

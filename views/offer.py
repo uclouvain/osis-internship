@@ -31,11 +31,7 @@ from django.views.decorators.http import require_http_methods
 
 from base import models as mdl
 from internship import models as mdl_int
-from internship.views.internship import (get_all_organizations,
-                                         get_all_specialities,
-                                         get_number_choices, get_selectable,
-                                         rebuild_the_lists,
-                                         set_tabs_name, sort_internships)
+from internship.views.internship import get_all_specialities, set_tabs_name
 
 
 @login_required
@@ -43,31 +39,31 @@ from internship.views.internship import (get_all_organizations,
 def internships(request, cohort_id):
     cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)
     organization_sort_value = None
+    speciality_sort_value = None
     # First get the value of the option's value for the sort
     if request.method == 'GET':
         organization_sort_value = request.GET.get('organization_sort')
         if request.GET.get('speciality_sort') != '0':
             speciality_sort_value = request.GET.get('speciality_sort')
-        else:
-            speciality_sort_value = None
+
     # Then select Internship Offer depending of the option
     if organization_sort_value and organization_sort_value != "0":
-        query = mdl_int.internship_offer.search(organization__name = organization_sort_value)
+        query = mdl_int.internship_offer.search(organization__name=organization_sort_value)
     else:
         query = mdl_int.internship_offer.find_internships()
 
     query = query.filter(organization__cohort=cohort)
 
     # Sort the internships by the organization's reference
-    query = sort_internships(query)
+    query = _sort_internships(query)
 
     # Get The number of different choices for the internships
-    get_number_choices(query)
+    _get_number_choices(query)
 
     internships = mdl_int.internship.Internship.objects.filter(cohort=cohort)
 
     all_internships = mdl_int.internship_offer.find_internships().filter(organization__cohort=cohort)
-    all_organizations = get_all_organizations(all_internships)
+    all_organizations = _get_all_organizations(all_internships)
     all_specialities = get_all_specialities(all_internships)
     set_tabs_name(all_specialities)
     all_non_mandatory_speciality = mdl_int.internship_speciality.find_non_mandatory()
@@ -79,7 +75,7 @@ def internships(request, cohort_id):
     all_non_mandatory_internships = all_non_mandatory_internships.filter(organization__cohort=cohort)
     all_non_mandatory_speciality = all_non_mandatory_speciality.filter(cohort=cohort)
 
-    get_number_choices(all_non_mandatory_internships)
+    _get_number_choices(all_non_mandatory_internships)
 
     context = {
         'section': 'internship',
@@ -150,7 +146,7 @@ def internships_save(request, cohort_id):
     # Check if the internships are selectable, if yes students can save their choices
     cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)
     all_internships = mdl_int.internship_offer.search(organization__cohort=cohort)
-    selectable = get_selectable(all_internships)
+    selectable = _get_selectable(all_internships)
 
     if selectable:
         # Get the student
@@ -189,7 +185,7 @@ def internships_save(request, cohort_id):
                 for pref in request.POST.getlist(pref_tab) :
                     preference_list.append(pref)
 
-        rebuild_the_lists(preference_list, speciality_list, organization_list, internship_choice_tab)
+        _rebuild_the_lists(preference_list, speciality_list, organization_list, internship_choice_tab)
         # Rebuild the lists deleting the null value
         organization_list = [x for x in organization_list if x != 0]
         speciality_list = [x for x in speciality_list if x != 0]
@@ -226,7 +222,7 @@ def internships_save(request, cohort_id):
                         if i < len(preference_list):
                             preference_list[i] = 0
 
-        rebuild_the_lists(preference_list, speciality_list, organization_list, internship_choice_tab)
+        _rebuild_the_lists(preference_list, speciality_list, organization_list, internship_choice_tab)
         # Rebuild the lists deleting the null value
         organization_list = [x for x in organization_list if x != 0]
         speciality_list = [x for x in speciality_list if x != 0]
@@ -304,7 +300,7 @@ def internship_save_modification_student(request, cohort_id):
             del fixthis_list[index-1]
         index += 1
 
-    rebuild_the_lists(preference_list, speciality_list, organization_list)
+    _rebuild_the_lists(preference_list, speciality_list, organization_list)
 
     # Create the list of all preference and the internships fixed
     final_preference_list = list()
@@ -355,3 +351,96 @@ def internship_save_modification_student(request, cohort_id):
 
     redirect_url = reverse('internships_modification_student', args=[registration_id[0]])
     return HttpResponseRedirect(redirect_url)
+
+
+def _get_all_organizations(internships):
+    """
+        Function to create the options for the organizations selection list, delete duplicated
+        Param:
+            internships : the interships we want to get the organization
+    """
+    tab = []
+    for internship in internships:
+        tab.append(internship.organization)
+    tab = list(set(tab))
+    return tab
+
+
+def _rebuild_the_lists(preference_list, speciality_list, organization_list, internship_choice_tab=None):
+    """
+        Look over each value of the preference list
+        If the value is 0, the student doesn't choice this organization or speciality
+        So their value is 0
+        Params :
+            preference_list, speciality_list, organization_list, internship_choice_tab :
+            The list to check the choices
+    """
+    index = 0
+    for r in preference_list:
+        if r == "0":
+            speciality_list[index] = 0
+            organization_list[index] = 0
+            if internship_choice_tab:
+                internship_choice_tab[index] = 0
+        index += 1
+
+
+def _sort_internships(sort_internships):
+    """
+        Function to sort internships by the organization's reference.
+        Params :
+            sort_internships : the list of internships to be sorted
+        Extract the ref of the organization, sort based in integer (the ref are in string),
+        delete the dublons recreat the list of internship base of the organization reference
+    """
+    tab = []
+    number_ref = []
+    for sort_internship in sort_internships:
+        if sort_internship is not None:
+            number_ref.append(sort_internship.organization.reference)
+    number_ref = sorted(number_ref, key=int)
+    number_ref = _delete_dublons_keep_order(number_ref)
+    for i in number_ref:
+        internships = mdl_int.internship_offer.search(organization__reference=i)
+        for internship in internships:
+            tab.append(internship)
+    return tab
+
+
+def _get_number_choices(internships):
+    """
+        Set new variables for the param, the number of the first and other choice for one internship
+        Params :
+            internships : the internships we want to compute the number of choices
+    """
+    for internship in internships:
+        number_first_choice = len(mdl_int.internship_choice.search(organization=internship.organization,
+                                                                   speciality__acronym=internship.speciality.acronym,
+                                                                   choice=1))
+        number_other_choice = len(mdl_int.internship_choice.search_other_choices(organization=internship.organization,
+                                                                                 speciality__acronym=internship.speciality.acronym))
+        internship.number_first_choice = number_first_choice
+        internship.number_other_choice = number_other_choice
+
+
+def _delete_dublons_keep_order(seq):
+    """
+        Function to delete the dublons of any list and keep the order of the list.
+        Param:
+            seq : the list where there is dublons
+    """
+    seen = set()
+    seen_add = seen.add
+    return [x for x in seq if not (x in seen or seen_add(x))]
+
+
+def _get_selectable(internships):
+    """
+        Function to check if the internships are selectable.
+        Return the status of the first internship.
+        If there is no internship, return True
+    """
+    if len(internships) > 0:
+        return internships[0].selectable
+    else:
+        return True
