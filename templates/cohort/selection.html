@@ -5,7 +5,6 @@
 {% block breadcrumb %}
     <li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
     <li class="active">{% trans 'internships_managment' %}</li>
-
 {% endblock %}
 
 {% block content %}
@@ -18,13 +17,12 @@
             <div class="row">
                 <div class="col-md-12">
                     <a href="{% url 'cohort_new' %}" id="lnk_cohort_create"
-                       class="btn btn-default" role="button" title="Create a cohort">Add a cohort
-                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
+                       class="btn btn-default" title="Create a cohort">Add a cohort
+                        <span class="glyphicon glyphicon-plus"></span></a>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-12">
-
                     <table class="table table-striped">
                         <thead>
                         <tr>
