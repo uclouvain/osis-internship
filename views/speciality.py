@@ -54,8 +54,7 @@ def speciality_create(request, cohort_id):
     learning_unit = mdl.learning_unit.search(acronym='WMDS2333')
     return render(request, "speciality_create.html", {'section': 'internship',
                                                       'learning_unit': learning_unit.first(),
-                                                      'cohort': cohort,
-                                                      })
+                                                      'cohort': cohort,})
 
 
 @login_required
@@ -99,7 +98,6 @@ def speciality_new(request, cohort_id):
 def speciality_modification(request, cohort_id, speciality_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
     speciality = get_object_or_404(InternshipSpeciality, pk=speciality_id, cohort=cohort)
-    # speciality = mdl_internship.internship_speciality.find_by_id(speciality_id)
     learning_unit = mdl.learning_unit.search(acronym='WMDS2333')
     context = {
         'section': 'internship',

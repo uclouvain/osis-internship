@@ -23,13 +23,13 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-
 from django import forms
-from internship.models.internship_speciality import InternshipSpeciality
+from internship.models import internship_speciality
 
 
 class SpecialityForm(forms.Form):
-    def __init__(self,*args,**kwargs):
+    def __init__(self, *args, **kwargs):
         cohort = kwargs.pop("cohort")
-        super(SpecialityForm,self).__init__(*args,**kwargs)
-        self.fields["speciality"] = forms.ModelChoiceField(queryset=InternshipSpeciality.objects.filter(cohort=cohort).order_by("name"), empty_label=None)
+        super(SpecialityForm, self).__init__(*args, **kwargs)
+        self.fields["speciality"] = forms.ModelChoiceField(queryset=internship_speciality.find_by_cohort(cohort),
+                                                           empty_label=None)

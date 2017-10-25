@@ -88,20 +88,13 @@ def find_intership_by_id(id):
             return i
 
 
-def get_by_id(internship_id):
-    try:
-        return InternshipOffer.objects.get(id=internship_id)
-    except ObjectDoesNotExist:
-        return None
-
-
 def find_by_speciality(speciality):
     return InternshipOffer.objects.filter(speciality=speciality).order_by("organization__reference")
 
 
-def find_by_pk(a_pk):
+def find_by_id(a_id):
     try:
-        return InternshipOffer.objects.get(pk=a_pk)
+        return InternshipOffer.objects.get(pk=a_id)
     except ObjectDoesNotExist:
         return None
 
@@ -116,4 +109,3 @@ def find_all():
 
 def find_by_organization(organization):
     return InternshipOffer.objects.filter(organization=organization)
-

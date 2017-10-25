@@ -30,57 +30,51 @@ from django.shortcuts import get_object_or_404, render
 from django.views.decorators.http import require_http_methods
 
 from base import models as mdl
-from internship import models as mdl_internship
-from internship.models.cohort import Cohort
-from internship.models.internship import Internship
-from internship.models.internship_offer import InternshipOffer
+from internship import models as mdl_int
 from internship.views.internship import (get_all_organizations,
                                          get_all_specialities,
                                          get_number_choices, get_selectable,
                                          rebuild_the_lists,
-                                         set_student_choices_list,
                                          set_tabs_name, sort_internships)
 
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internships(request, cohort_id):
-    # import ipdb
-    # ipdb.set_trace()
-    cohort = get_object_or_404(Cohort, pk=cohort_id)
-
+    cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)
+    organization_sort_value = None
     # First get the value of the option's value for the sort
     if request.method == 'GET':
         organization_sort_value = request.GET.get('organization_sort')
         if request.GET.get('speciality_sort') != '0':
             speciality_sort_value = request.GET.get('speciality_sort')
-        else :
+        else:
             speciality_sort_value = None
     # Then select Internship Offer depending of the option
     if organization_sort_value and organization_sort_value != "0":
-        query = mdl_internship.internship_offer.search(organization__name = organization_sort_value)
+        query = mdl_int.internship_offer.search(organization__name = organization_sort_value)
     else:
-        query = mdl_internship.internship_offer.find_internships()
+        query = mdl_int.internship_offer.find_internships()
 
     query = query.filter(organization__cohort=cohort)
 
     # Sort the internships by the organization's reference
     query = sort_internships(query)
 
-    # Get The number of differents choices for the internships
+    # Get The number of different choices for the internships
     get_number_choices(query)
 
-    internships = Internship.objects.filter(cohort=cohort)
+    internships = mdl_int.internship.Internship.objects.filter(cohort=cohort)
 
-    all_internships = mdl_internship.internship_offer.find_internships().filter(organization__cohort=cohort)
+    all_internships = mdl_int.internship_offer.find_internships().filter(organization__cohort=cohort)
     all_organizations = get_all_organizations(all_internships)
     all_specialities = get_all_specialities(all_internships)
     set_tabs_name(all_specialities)
-    all_non_mandatory_speciality = mdl_internship.internship_speciality.find_non_mandatory()
+    all_non_mandatory_speciality = mdl_int.internship_speciality.find_non_mandatory()
     if speciality_sort_value:
-        all_non_mandatory_internships = mdl_internship.internship_offer.find_non_mandatory_internships(speciality__name=speciality_sort_value)
+        all_non_mandatory_internships = mdl_int.internship_offer.find_non_mandatory_internships(speciality__name=speciality_sort_value)
     else:
-        all_non_mandatory_internships = mdl_internship.internship_offer.find_non_mandatory_internships(speciality__mandatory=0)
+        all_non_mandatory_internships = mdl_int.internship_offer.find_non_mandatory_internships(speciality__mandatory=0)
 
     all_non_mandatory_internships = all_non_mandatory_internships.filter(organization__cohort=cohort)
     all_non_mandatory_speciality = all_non_mandatory_speciality.filter(cohort=cohort)
@@ -105,18 +99,17 @@ def internships(request, cohort_id):
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def student_choice(request, cohort_id, offer_id):
-    cohort = get_object_or_404(Cohort, pk=cohort_id)
+    cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)
     # Get the internship by its id
     # TODO: Check if this algo is ok
-    internship = get_object_or_404(InternshipOffer, pk=offer_id, organization__cohort=cohort)
+    internship = get_object_or_404(mdl_int.internship_offer.InternshipOffer, pk=offer_id, organization__cohort=cohort)
     # Get the students who have choosen this internship
-    students = mdl_internship.internship_choice.search(organization=internship.organization,
-                                                       speciality=internship.speciality)
+    students = mdl_int.internship_choice.search(organization=internship.organization, speciality=internship.speciality)
     number_choices = [None]*5
 
     # Get the choices' number for this internship
     for index in range(1, 5):
-        count = mdl_internship.internship_choice.search(
+        count = mdl_int.internship_choice.search(
             organization=internship.organization,
             speciality=internship.speciality,
             choice=index).count()
@@ -136,10 +129,10 @@ def student_choice(request, cohort_id, offer_id):
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internships_block(request, cohort_id):
-    cohort = get_object_or_404(Cohort, pk=cohort_id)
+    cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)
 
-    number_offers_selectable = mdl_internship.internship_offer.get_number_selectable(cohort)
-    all_internship_offers = mdl_internship.internship_offer.find_all().filter(organization__cohort=cohort)
+    number_offers_selectable = mdl_int.internship_offer.get_number_selectable(cohort)
+    all_internship_offers = mdl_int.internship_offer.find_all().filter(organization__cohort=cohort)
 
     new_selectable_state = number_offers_selectable == 0
 
@@ -155,17 +148,17 @@ def internships_block(request, cohort_id):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internships_save(request, cohort_id):
     # Check if the internships are selectable, if yes students can save their choices
-    cohort = get_object_or_404(Cohort, pk=cohort_id)
-    all_internships = mdl_internship.internship_offer.search(organization__cohort=cohort)
+    cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)
+    all_internships = mdl_int.internship_offer.search(organization__cohort=cohort)
     selectable = get_selectable(all_internships)
 
-    if selectable :
+    if selectable:
         # Get the student
         student = mdl.student.find_by(person_username=request.user)
         # Delete all the student's choices for mandatory internships present in the DB
-        mdl_internship.internship_choice.InternshipChoice.objects.filter(student=student, internship_id=0).delete()
+        mdl_int.internship_choice.InternshipChoice.objects.filter(student=student, internship_id=0).delete()
 
-        #Build the list of the organizations and specialities get by the POST request
+        # Build the list of the organizations and specialities get by the POST request
         organization_list = list()
         speciality_list = list()
         internship_choice_tab = []
@@ -177,7 +170,8 @@ def internships_save(request, cohort_id):
             internship_choice_tab = request.POST.getlist('is_choice')
             internship_choice_tab_del = list(set(internship_choice_tab))
             for choice_tab in internship_choice_tab_del:
-                mdl_internship.internship_choice.InternshipChoice.objects.filter(student=student, internship_choice=choice_tab).delete()
+                mdl_int.internship_choice.InternshipChoice.objects.filter(student=student,
+                                                                          internship_choice=choice_tab).delete()
 
         all_specialities = get_all_specialities(all_internships)
         set_tabs_name(all_specialities)
@@ -206,7 +200,6 @@ def internships_save(request, cohort_id):
             # Check if the student sent correctly send 4 choice.
             # If not, the choices are set to 0
             old_spec=speciality_list[0]
-            new_spec=""
             index = 0
             cumul = 0
             for p in speciality_list:
@@ -215,7 +208,7 @@ def internships_save(request, cohort_id):
                 if old_spec == new_spec:
                     cumul += 1
                     old_spec = new_spec
-                else :
+                else:
                     if cumul < 4:
                         cumul += 1
                         for i in range(index-cumul,index-1):
@@ -244,11 +237,11 @@ def internships_save(request, cohort_id):
 
         # Save the new student's choices
         for x in range(0, index):
-            new_choice = mdl_internship.internship_choice.InternshipChoice()
+            new_choice = mdl_int.internship_choice.InternshipChoice()
             new_choice.student = student[0]
-            organization = mdl_internship.organization.search(reference=organization_list[x])
+            organization = mdl_int.organization.search(reference=organization_list[x])
             new_choice.organization = organization[0]
-            speciality = mdl_internship.internship_speciality.search(name=speciality_list[x])
+            speciality = mdl_int.internship_speciality.search(name=speciality_list[x])
             new_choice.speciality = speciality[0]
             new_choice.choice = preference_list[x]
             new_choice.internship_choice = internship_choice_tab[x]
@@ -263,15 +256,14 @@ def internships_save(request, cohort_id):
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internship_save_modification_student(request, cohort_id):
-    cohort = get_object_or_404(Cohort, pk=cohort_id)
     # Get the student
     registration_id = request.POST.getlist('registration_id')
     student = mdl.student.find_by(registration_id=registration_id[0], full_registration = True)
     # Delete all the student's choices present in the DB
-    mdl_internship.internship_choice.InternshipChoice.objects.filter(student=student).delete()
-    mdl_internship.internship_enrollment.InternshipEnrollment.objects.filter(student=student).delete()
+    mdl_int.internship_choice.InternshipChoice.objects.filter(student=student).delete()
+    mdl_int.internship_enrollment.InternshipEnrollment.objects.filter(student=student).delete()
 
-    #Build the list of the organizations and specialities get by the POST request
+    # Build the list of the organizations and specialities get by the POST request
     organization_list = list()
     speciality_list = list()
     periods_list = list()
@@ -286,7 +278,7 @@ def internship_save_modification_student(request, cohort_id):
     if request.POST.get('fixthis'):
         fixthis_list = request.POST.getlist('fixthis')
 
-    all_internships = mdl_internship.internship_offer.find_internships()
+    all_internships = mdl_int.internship_offer.find_internships()
     all_specialities = get_all_specialities(all_internships)
     set_tabs_name(all_specialities)
 
@@ -327,34 +319,34 @@ def internship_save_modification_student(request, cohort_id):
     # Rebuild the lists deleting the null value
     organization_list = [x for x in organization_list if x != 0]
     speciality_list = [x for x in speciality_list if x != 0]
-    preference_list = [x for x in preference_list if x != '0']
 
     # Save the new choices
     index = final_preference_list.__len__()
     for x in range(0, index):
-        new_choice = mdl_internship.internship_choice.InternshipChoice()
+        new_choice = mdl_int.internship_choice.InternshipChoice()
         new_choice.student = student[0]
-        organization = mdl_internship.organization.search(reference=organization_list[x])
+        organization = mdl_int.organization.search(reference=organization_list[x])
         new_choice.organization = organization[0]
-        speciality = mdl_internship.internship_speciality.search(name=speciality_list[x])
+        speciality = mdl_int.internship_speciality.search(name=speciality_list[x])
         new_choice.speciality = speciality[0]
         new_choice.choice = final_preference_list[x]
         if final_fixthis_list[x] == '1':
             new_choice.priority = True
-        else :
+        else:
             new_choice.priority = False
         new_choice.save()
 
-    # Save in the enrollement if the internships are fixed and a period is selected
+    # Save in the enrollment if the internships are fixed and a period is selected
     index = periods_list.__len__()
     for x in range(0, index):
         if periods_list[x] != '0':
-            new_enrollment = mdl_internship.internship_enrollment.InternshipEnrollment()
+            new_enrollment = mdl_int.internship_enrollment.InternshipEnrollment()
             tab_period = periods_list[x].split('\\n')
-            period = mdl_internship.period.search(name=tab_period[0])
-            organization = mdl_internship.organization.search(reference=tab_period[1])
-            speciality = mdl_internship.internship_speciality.search(name=tab_period[2])
-            internship = mdl_internship.internship_offer.search(speciality__name = speciality[0], organization__reference = organization[0].reference)
+            period = mdl_int.period.search(name=tab_period[0])
+            organization = mdl_int.organization.search(reference=tab_period[1])
+            speciality = mdl_int.internship_speciality.search(name=tab_period[2])
+            internship = mdl_int.internship_offer.search(speciality__name=speciality[0],
+                                                         organization__reference=organization[0].reference)
             new_enrollment.student = student[0]
             new_enrollment.internship_offer = internship[0]
             new_enrollment.place = organization[0]
@@ -363,4 +355,3 @@ def internship_save_modification_student(request, cohort_id):
 
     redirect_url = reverse('internships_modification_student', args=[registration_id[0]])
     return HttpResponseRedirect(redirect_url)
-

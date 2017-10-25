@@ -79,44 +79,6 @@ def get_number_ok_student(students_list, number_selection):
     return nbr_student
 
 
-def get_students():
-    import collections
-    from django.db import connection
-
-    from internship.models.internship_student_information import InternshipStudentInformation
-    from internship.models.internship_choice import InternshipChoice
-    from base.models.student import Student
-
-    connection.queries_log = collections.deque(maxlen=9000)
-    print("before queries", len(connection.queries))
-    qs_student_info = InternshipStudentInformation.objects.prefetch_related('person').all() \
-        .order_by('person__last_name', 'person__first_name')
-
-    person_ids = set(qs_student_info.values_list('person_id', flat=True))
-    qs_student = Student.objects.prefetch_related('person').filter(person_id__in=person_ids)
-
-    # select isi.id, person.id, person.first_name, person.last_name
-    # from internship_internshipstudentinformation isi,
-    #     base_person person,
-    #     base_student student
-    # where isi.person_id = person.id and student.person_id = person.id
-    # order by person.first_name, person.last_name
-
-    student_ids = qs_student.values_list('id', flat=True)
-
-    choices = InternshipChoice.objects.filter(student_id__in=student_ids, internship_choice__gt=0) \
-        .values_list('student_id', 'internship_choice') # .distinct('internship_choice')
-
-    print(choices)
-    # print(student_ids)
-
-    students = [(student, False) for student in qs_student]
-
-    print("after queries", len(connection.queries))
-
-    return students
-
-
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internships_student_resume(request, cohort_id):
@@ -171,7 +133,7 @@ def internships_student_read(request, cohort_id, student_id):
     organizations = mdl_internship.organization.search(cohort=cohort)
     set_organization_address(organizations)
 
-    # Set the adress of the affactation
+    # Set the address of the affectation
     for affectation in affectations:
         for organization in organizations:
             if affectation.organization == organization:

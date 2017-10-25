@@ -26,6 +26,7 @@
 from django.db import models
 from osis_common.models.serializable_model import SerializableModelAdmin, SerializableModel
 
+
 class InternshipAdmin(SerializableModelAdmin):
     list_display = (
             'name',
@@ -33,8 +34,7 @@ class InternshipAdmin(SerializableModelAdmin):
             'alternate_speciality'
             'cohort',
             'length_in_periods')
-    fieldsets = ((None, {'fields':
-        (
+    fieldsets = ((None, {'fields': (
             'name',
             'speciality',
             'alternate_speciality',
@@ -46,11 +46,11 @@ class InternshipAdmin(SerializableModelAdmin):
 class Internship(SerializableModel):
     name = models.CharField(max_length=255, blank=False)
     speciality = models.ForeignKey('internship.InternshipSpeciality', null=True, blank=True)
-    alternate_speciality = models.ForeignKey('internship.InternshipSpeciality', null=True, blank=True, related_name="alternate_speciality")
+    alternate_speciality = models.ForeignKey('internship.InternshipSpeciality', null=True, blank=True,
+                                             related_name="alternate_speciality")
     cohort = models.ForeignKey('internship.Cohort', null=False)
     length_in_periods = models.IntegerField(null=False, default=1)
     position = models.IntegerField(null=False, default=0)
 
     def __str__(self):
         return u"%s" % self.name
-

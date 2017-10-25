@@ -45,9 +45,9 @@ class TestGetById(TestCase):
 
     def test_correct_id(self):
         self.assertEqual(self.speciality_1,
-                         mdl_internship_speciality.find_by_id(self.speciality_1.id))
+                         mdl_internship_speciality.get_by_id(self.speciality_1.id))
         self.assertEqual(self.speciality_2,
-                         mdl_internship_speciality.find_by_id(self.speciality_2.id))
+                         mdl_internship_speciality.get_by_id(self.speciality_2.id))
 
 
 

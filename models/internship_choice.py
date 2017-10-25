@@ -30,8 +30,7 @@ from internship.models import internship
 
 class InternshipChoiceAdmin(SerializableModelAdmin):
     list_display = ('student', 'organization', 'speciality', 'choice', 'internship', 'priority')
-    fieldsets = ((None, {'fields': ('student', 'organization', 'speciality', 'choice', 'internship',
-                                    'priority')}),)
+    fieldsets = ((None, {'fields': ('student', 'organization', 'speciality', 'choice', 'internship', 'priority')}),)
     raw_id_fields = ('student', 'organization', 'speciality')
     list_filter = ('speciality', 'choice', 'internship')
     search_fields = ['student__person__first_name', 'student__person__last_name']
@@ -106,14 +105,17 @@ def get_non_mandatory_internship_choices(cohort):
     return InternshipChoice.objects.filter(internship_id__in=internships.values_list("id", flat=True)).\
         select_related("student", "organization", "speciality", "internship")
 
+
 def find_internship_choices(cohort):
     internships = internship.Internship.objects.filter(cohort=cohort, pk__gte=1)
     return InternshipChoice.objects.filter(internship_id__in=internships.values_list("id", flat=True)).\
         select_related("student", "organization", "speciality", "internship")
 
+
 def get_internship_choices_made(cohort, student):
     internships = internship.Internship.objects.filter(cohort=cohort, pk__gte=1)
-    return InternshipChoice.objects.filter(internship_id__in=internships.values_list("id", flat=True), student=student).distinct()
+    return InternshipChoice.objects.filter(internship_id__in=internships.values_list("id", flat=True),
+                                           student=student).distinct()
 
 
 def get_number_students(cohort):
@@ -121,5 +123,6 @@ def get_number_students(cohort):
 
 
 def get_number_first_choice_by_organization(speciality):
-    return InternshipChoice.objects.filter(choice=1, speciality=speciality).values("organization")\
-        .annotate(models.Count("organization"))
+    return InternshipChoice.objects.filter(choice=1,
+                                           speciality=speciality).values("organization")\
+                                                                 .annotate(models.Count("organization"))

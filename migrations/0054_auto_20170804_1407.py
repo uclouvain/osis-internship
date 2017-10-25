@@ -12,10 +12,6 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name='internshipspeciality',
-            name='order_position',
-        ),
         migrations.AddField(
             model_name='internship',
             name='position',

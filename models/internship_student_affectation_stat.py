@@ -66,6 +66,7 @@ def find_non_mandatory_affectations(period_ids):
     return InternshipStudentAffectationStat.objects.filter(period__id__in=period_ids).\
         select_related("student", "organization", "speciality")
 
+
 def find_affectations(period_ids):
     return InternshipStudentAffectationStat.objects.filter(period__id__in=period_ids).\
         select_related("student", "organization", "speciality")

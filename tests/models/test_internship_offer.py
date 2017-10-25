@@ -62,8 +62,8 @@ class TestInternshipOffer(TestCase):
 
     def test_find_by_pk(self):
         pk = self.offer.pk
-        actual_offer = internship_offer.find_by_pk(pk)
+        actual_offer = internship_offer.find_by_id(pk)
         self.assertEquals(self.offer, actual_offer)
 
         pk = 45
-        self.assertFalse(internship_offer.find_by_pk(pk))
+        self.assertFalse(internship_offer.find_by_id(pk))

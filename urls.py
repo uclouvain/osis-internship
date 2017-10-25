@@ -25,10 +25,8 @@
 ##############################################################################
 from django.conf.urls import include, url
 
-from internship.utils import upload_xls
-from internship.views import (affectation_statistics, home, internship, master,
-                              offer, period, place, speciality, student_resume,
-                              cohort)
+from internship.views import (affectation_statistics, home, internship, master, offer, period, place, speciality,
+                              student_resume, cohort, upload_xls)
 
 urlpatterns = [
     # FIXME: Rename internship by 'home'
@@ -88,7 +86,6 @@ urlpatterns = [
                     name='place_detail_student_choice'),
                 url(r'^create/$', place.organization_create, name='place_create'),
                 url(r'^edit/(?P<organization_id>[0-9]+)/$', place.organization_edit, name='place_edit'),
-                # url(r'^exportpdf/([0-9]+)/([0-9]+)/$', place.export_pdf, name='affectation_download_pdf'),
                 url(r'^exportxls/(?P<organization_id>[0-9]+)/(?P<speciality_id>[0-9]+)/$', place.export_xls,
                     name='affectation_download'),
                 url(r'^exportxls/(?P<organization_id>[0-9]+)/$', place.export_organisation_affectation_as_xls,
@@ -151,7 +148,4 @@ urlpatterns = [
         ])),
 
     ])),
-
-
-        # url(r'^resume/$', student_resume.internships_student_resume, name='internships_student_resume'),
 ]

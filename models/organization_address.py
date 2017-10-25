@@ -24,10 +24,6 @@
 #
 ##############################################################################
 from django.db import models
-import urllib.request
-import unicodedata
-from xml.dom import minidom
-import logging
 from internship.models.organization import Organization
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 
@@ -54,13 +50,10 @@ class OrganizationAddress(SerializableModel):
         return u"%s" % self.organization
 
     def save(self, *args, **kwargs):
-        has_organization = False
-        try:
-            has_organization = (self.organization is not None)
-        except Exception:
+        if self.organization is None:
             self.organization = Organization.objects.latest('id')
 
-        self.label = "Addr"+self.organization.name[:14]
+        self.label = "Addr" + self.organization.name[:14]
         super(OrganizationAddress, self).save(*args, **kwargs)
 
 
