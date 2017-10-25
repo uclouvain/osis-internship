@@ -24,5 +24,6 @@
 #
 ##############################################################################
 
+
 def get_student_affectations(student, affectations):
     return list(filter(lambda affectation: affectation.student_id == student.id, affectations))

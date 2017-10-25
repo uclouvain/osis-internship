@@ -34,10 +34,8 @@ from django.views.decorators.http import require_http_methods
 
 from internship import models as mdl
 from internship.models.cohort import Cohort
-from internship.models.internship import Internship
 
 
-from internship.models.period import Period
 @require_http_methods(['POST'])
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
@@ -73,7 +71,6 @@ def _save_xls_place(file_name, user, cohort):
                 or not _is_registration_id(row[col_reference].value):
             continue
 
-        reference = ""
         if row[col_reference].value < 10:
             reference = "0"+str(row[col_reference].value)
         else:
@@ -86,7 +83,6 @@ def _save_xls_place(file_name, user, cohort):
             organization = mdl.organization.Organization(cohort=cohort)
 
         if row[col_reference].value:
-            reference = ""
             if int(row[col_reference].value) < 10:
                 reference = "0"+str(row[col_reference].value)
             else:
@@ -163,7 +159,6 @@ def upload_internships_file(request, cohort_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
     if request.method == 'POST':
         file_name = request.FILES['file']
-        data = request.POST
 
         if file_name is not None:
             if ".xls" not in str(file_name):
@@ -188,15 +183,12 @@ def __save_xls_internships(request, file_name, user, cohort):
             continue
 
         if row[col_spec].value is not None:
-            check_internship = 0
             if row[col_reference].value:
-                reference = ""
                 if int(row[col_reference].value) < 10:
                     reference = "0"+str(row[col_reference].value)
                 else :
                     reference = str(row[col_reference].value)
                 organization = mdl.organization.search(reference=reference, cohort=cohort)
-                # internship.organization = organization[0]
 
             if len(organization) > 0:
 
@@ -210,7 +202,6 @@ def __save_xls_internships(request, file_name, user, cohort):
 
                 number_place = 0
                 periods = mdl.period.Period.objects.filter(cohort=cohort)
-                number_period = 1
                 for x in range(3, len(periods) + 3):
                     if row[x].value is None:
                         number_place += 0
@@ -280,7 +271,6 @@ def __save_xls_masters(request, file_name, user):
     col_reference = 2
     col_firstname = 3
     col_lastname = 4
-    col_mail = 7
     col_organization_reference = 6
     col_civility = 0
     col_mastery = 1
@@ -306,7 +296,6 @@ def __save_xls_masters(request, file_name, user):
                 master = master_check[0]
 
             if row[col_organization_reference].value:
-                reference = ""
                 check_reference = row[col_organization_reference].value.strip(' ')
                 if check_reference != "":
                     if check_reference[0][0] != "0":

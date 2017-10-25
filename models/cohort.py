@@ -27,6 +27,7 @@ from django.db import models
 
 from osis_common.models.serializable_model import SerializableModel
 
+
 class Cohort(SerializableModel):
     name = models.CharField(max_length=255, null=False)
     description = models.TextField(null=False)
@@ -40,3 +41,7 @@ class Cohort(SerializableModel):
 
     def __str__(self):
         return self.name
+
+
+def find_all():
+    return Cohort.objects.all()

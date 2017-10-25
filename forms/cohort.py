@@ -26,7 +26,7 @@
 from django import forms
 from django.forms import TextInput
 
-from internship.models.cohort import Cohort
+from internship.models import cohort
 
 
 class DateInput(TextInput):
@@ -37,11 +37,11 @@ class CohortForm(forms.ModelForm):
     publication_start_date = forms.DateField(widget=DateInput)
     subscription_start_date = forms.DateField(widget=DateInput)
     subscription_end_date = forms.DateField(widget=DateInput)
-    copy_organizations_from_cohort = forms.ModelChoiceField(queryset=Cohort.objects.all(), empty_label="None", required=False)
-    copy_specialities_from_cohort = forms.ModelChoiceField(queryset=Cohort.objects.all(), empty_label="None", required=False)
+    copy_organizations_from_cohort = forms.ModelChoiceField(queryset=cohort.find_all(), empty_label="None", required=False)
+    copy_specialities_from_cohort = forms.ModelChoiceField(queryset=cohort.find_all(), empty_label="None", required=False)
 
     class Meta:
-        model = Cohort
+        model = cohort.Cohort
         fields = [
             'name',
             'description',

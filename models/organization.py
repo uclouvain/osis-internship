@@ -25,8 +25,7 @@
 ##############################################################################
 from django.db import models
 
-from osis_common.models.serializable_model import (SerializableModel,
-                                                   SerializableModelAdmin)
+from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 
 
 class OrganizationAdmin(SerializableModelAdmin):
@@ -41,7 +40,6 @@ class Organization(SerializableModel):
     website = models.URLField(max_length=255, blank=True, null=True)
     reference = models.CharField(max_length=30, blank=True, null=True)
     type = models.CharField(max_length=30, blank=True, null=True, default="service partner")
-
     cohort = models.ForeignKey('internship.Cohort', null=False, on_delete=models.CASCADE)
 
     def __str__(self):

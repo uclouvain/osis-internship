@@ -23,6 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+import uuid
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.urlresolvers import reverse
 from django.shortcuts import render, get_object_or_404, redirect
@@ -30,10 +31,8 @@ from django.utils.translation import ugettext_lazy as _
 
 from internship.forms.cohort import CohortForm
 from internship.models.cohort import Cohort
-from internship.models.organization import Organization
 from internship.models.organization_address import OrganizationAddress
 from internship.models.internship_speciality import InternshipSpeciality
-import uuid
 
 
 @login_required()
@@ -71,15 +70,17 @@ def edit(request, cohort_id):
 
     return render(request, 'cohort/cohort_form.html', context)
 
+
 def copy_data_if_specified(cohort_form, cohort):
-    if cohort_form.cleaned_data["copy_organizations_from_cohort"] != None:
+    if cohort_form.cleaned_data["copy_organizations_from_cohort"] is not None:
         cohort_id_to_copy_from = int(cohort_form["copy_organizations_from_cohort"].value())
         cohort_to_copy_from = Cohort.objects.get(pk=cohort_id_to_copy_from)
         copy_organizations(cohort_to_copy_from, cohort)
-    if cohort_form.cleaned_data["copy_specialities_from_cohort"] != None:
+    if cohort_form.cleaned_data["copy_specialities_from_cohort"] is not None:
         cohort_id_to_copy_from = int(cohort_form["copy_specialities_from_cohort"].value())
         cohort_to_copy_from = Cohort.objects.get(pk=cohort_id_to_copy_from)
         copy_specialities(cohort_to_copy_from, cohort)
+
 
 def copy_organizations(cohort_from, cohort_to):
     organization_addresses = OrganizationAddress.objects.prefetch_related("organization").filter(organization__cohort=cohort_from)
@@ -95,6 +96,7 @@ def copy_organizations(cohort_from, cohort_to):
         new_address.organization = new_organization
         new_address.save()
 
+
 def copy_specialities(cohort_from, cohort_to):
     specialities = InternshipSpeciality.objects.filter(cohort=cohort_from)
     for speciality in specialities:
@@ -103,4 +105,3 @@ def copy_specialities(cohort_from, cohort_to):
         new_speciality.uuid = uuid.uuid4()
         new_speciality.cohort = cohort_to
         new_speciality.save()
-

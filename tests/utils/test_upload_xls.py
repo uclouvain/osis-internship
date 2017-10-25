@@ -24,19 +24,16 @@
 #
 ##############################################################################
 import functools
-import io
 from unittest import mock
 
 import faker
 import openpyxl
 from django.contrib.auth.models import Permission, User
-from django.core.urlresolvers import reverse
 from django.test import TestCase
-from openpyxl.writer.excel import save_virtual_workbook
 
 from internship.models.organization import Organization
 from internship.tests.factories.cohort import CohortFactory
-from internship.utils.upload_xls import _save_xls_place as save_xls_place
+from internship.views.upload_xls import _save_xls_place as save_xls_place
 
 fake = faker.Faker()
 

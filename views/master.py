@@ -44,12 +44,13 @@ def internships_masters(request, cohort_id):
     # If both exist / if just speciality exist / if just organization exist / if none exist
     if speciality_sort_value and speciality_sort_value != "0":
         if organization_sort_value and organization_sort_value != "0":
-            query = mdl_internship.internship_master.search(speciality = speciality_sort_value, organization__name = organization_sort_value)
+            query = mdl_internship.internship_master.search(speciality=speciality_sort_value,
+                                                            organization__name=organization_sort_value)
         else:
-            query = mdl_internship.internship_master.search(speciality = speciality_sort_value)
+            query = mdl_internship.internship_master.search(speciality=speciality_sort_value)
     else:
         if organization_sort_value and organization_sort_value != "0":
-            query = mdl_internship.internship_master.search(organization__name = organization_sort_value)
+            query = mdl_internship.internship_master.search(organization__name=organization_sort_value)
         else:
             query = mdl_internship.internship_master.find_masters()
 
@@ -98,6 +99,4 @@ def delete_internships_masters(request, cohort_id):
     # Get the first and last name of the master send by the button of deletion
     # Get the master in the DB and delete it
     mdl_internship.internship_master.search(first_name=first_name, last_name=name, organization__cohort=cohort).delete()
-    return HttpResponseRedirect(reverse('internships_masters', kwargs={
-        'cohort_id': cohort_id,
-    }))
+    return HttpResponseRedirect(reverse('internships_masters', kwargs={'cohort_id': cohort_id,}))

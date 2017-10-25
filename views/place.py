@@ -84,7 +84,7 @@ def sorted_organization(sort_organizations, sort_city):
         Check in the list of organization if the city have the same that the sort_city
         if yes, keep it in a list and return this list
     """
-    tab=[]
+    tab = []
     index = 0
     for sort_organization in sort_organizations:
         flag_del = 1
@@ -137,6 +137,7 @@ def set_speciality_unique(specialities):
     specialities = [x for x in specialities if x != 0]
     return specialities
 
+
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internships_places(request, cohort_id):
@@ -167,13 +168,14 @@ def internships_places(request, cohort_id):
     }
     return render(request, "places.html", context)
 
+
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def place_save(request, cohort_id, organization_id, organization_address_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
     if organization_id:
         organization = mdl_internship.organization.find_by_id(organization_id)
-    else :
+    else:
         mdl_internship.organization.Organization.objects.filter(reference=request.POST.get('reference')).delete()
         mdl_internship.organization_address.OrganizationAddress.objects.filter(organization__reference=request.POST.get('reference')).delete()
         organization = mdl_internship.organization.Organization()
@@ -246,10 +248,10 @@ def student_choice(request, cohort_id, organization_id):
     set_tabs_name(all_speciality)
     for al in all_offers:
         number_first_choice = len(mdl_internship.internship_choice.search(organization=al.organization,
-                                                          speciality=al.speciality,
-                                                          choice=1))
+                                                                          speciality=al.speciality,
+                                                                          choice=1))
         number_all_choice = len(mdl_internship.internship_choice.search(organization=al.organization,
-                                                           speciality=al.speciality))
+                                                                        speciality=al.speciality))
         al.number_first_choice = number_first_choice
         al.number_all_choice = number_all_choice
 
@@ -304,7 +306,7 @@ def export_xls(request, cohort_id, organization_id, speciality_id):
     # FIXME: use the cohort and the organization, to be sure we use the right organization and the right cohort.
     cohort = get_object_or_404(Cohort, pk=cohort_id)
     organization = mdl_internship.organization.find_by_id(organization_id)
-    speciality = mdl_internship.internship_speciality.find_by_id(speciality_id)
+    speciality = mdl_internship.internship_speciality.get_by_id(speciality_id)
     if speciality:
         speciality_groups = [group_member.group for group_member
                              in mdl_internship.internship_speciality_group_member.find_by_speciality(speciality)]
@@ -374,7 +376,7 @@ def export_organisation_affectation_as_xls(request, cohort_id, organization_id):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def export_pdf(request, organization_id, speciality_id):
     organization = mdl_internship.organization.find_by_id(organization_id)
-    speciality = mdl_internship.internship_speciality.find_by_id(speciality_id)
+    speciality = mdl_internship.internship_speciality.get_by_id(speciality_id)
     affectations = mdl_internship.internship_student_affectation_stat.search(organization=organization, speciality=speciality)
     for a in affectations:
         a.email = ""

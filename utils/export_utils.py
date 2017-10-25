@@ -23,6 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+import re
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from openpyxl import Workbook
@@ -30,10 +31,8 @@ from openpyxl.writer.excel import save_virtual_workbook
 from openpyxl.styles import Color, Style, PatternFill
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
-import re
 
-from internship.models.organization import Organization
-import internship.models as mdl_internship
+from internship import models
 
 HEADER = [str(_('lastname')),
           str(_('firstname')),
@@ -53,7 +52,7 @@ def export_xls(cohort, organization, affections_by_specialities, file_name):
         })
         return HttpResponseRedirect(redirect_url)
 
-    periods = mdl_internship.period.search(cohort=cohort)
+    periods = models.period.search(cohort=cohort)
 
     workbook = Workbook()
     if workbook.worksheets:
@@ -78,7 +77,9 @@ def export_xls(cohort, organization, affections_by_specialities, file_name):
 
         row_number = 9
         for period in periods:
-            worksheet.append([str(period.name), period.date_start.strftime("%d-%m-%Y"), period.date_end.strftime("%d-%m-%Y")])
+            worksheet.append([str(period.name),
+                              period.date_start.strftime("%d-%m-%Y"),
+                              period.date_end.strftime("%d-%m-%Y")])
             __coloring_non_editable(worksheet, row_number)
             row_number += 1
             for affectation in affectations:
@@ -97,10 +98,10 @@ def export_xls(cohort, organization, affections_by_specialities, file_name):
             worksheet.append([str('')])
             row_number += 1
 
-    #filename_speciality = str(affectations[0].speciality.acronym).strip()
     filename = "affectation_%s_%s.xlsx" % (str(organization.reference),
                                            file_name)
-    response = HttpResponse(save_virtual_workbook(workbook), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response = HttpResponse(save_virtual_workbook(workbook),
+                            content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     response['Content-Disposition'] = 'attachment; filename=%s' % filename
     return response
 
@@ -125,6 +126,7 @@ def __columns_resizing(ws):
     col_first_name.width = 20
     col_phone = ws.column_dimensions['H']
     col_phone.width = 30
+
 
 def __coloring_non_editable(ws, row_number):
     """

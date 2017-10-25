@@ -39,6 +39,7 @@ class InternshipSpeciality(SerializableModel):
     name = models.CharField(max_length=125, blank=False, null=False)
     acronym = models.CharField(max_length=125, blank=False, null=False)
     mandatory = models.BooleanField(default=False)
+    order_position = models.IntegerField(default=0)
 
     cohort = models.ForeignKey('internship.cohort', null=False, on_delete=models.CASCADE)
 
@@ -50,12 +51,13 @@ def search(**kwargs):
     kwargs = {k: v for k, v in kwargs.items() if v}
     return InternshipSpeciality.objects.filter(**kwargs).select_related("learning_unit").order_by('acronym', 'name')
 
+
 def find_all(cohort):
     return InternshipSpeciality.objects.filter(cohort=cohort).select_related("learning_unit").order_by('acronym', 'name')
 
 
-def find_by_id(speciality_id):
-    return InternshipSpeciality.objects.get(pk=speciality_id)
+def find_by_cohort(cohort):
+    return InternshipSpeciality.objects.filter(cohort=cohort).order_by("name")
 
 
 def find_non_mandatory():

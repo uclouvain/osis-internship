@@ -26,7 +26,6 @@
 from django import forms
 
 from internship.models.internship import Internship
-from internship.models.internship_speciality import InternshipSpeciality
 
 
 class InternshipForm(forms.ModelForm):
