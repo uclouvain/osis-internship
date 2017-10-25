@@ -23,11 +23,8 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import copy
-import sys
 from collections import OrderedDict
 from operator import itemgetter
-from random import randint, choice
 from statistics import mean, stdev
 from collections import defaultdict
 from datetime import datetime
@@ -41,7 +38,7 @@ from internship.utils.student_assignment.solver import AssignmentSolver
 
 from internship import models
 from internship.models.internship_student_affectation_stat import InternshipStudentAffectationStat
-from internship.views.internship import calc_dist, set_tabs_name
+from internship.views.internship import set_tabs_name
 from internship.views.place import sort_organizations, set_speciality_unique
 
 # ****************** Global vars ******************
@@ -69,35 +66,6 @@ periods_dict = {'P1': True, 'P2': True, 'P3': True, 'P4': True, 'P5': True, 'P6'
 costs = {1: 0, 2: 1, 3: 2, 4: 3, 'I': 10, 'C': 5, 'X': 1000}
 
 
-# ******************  Classes ******************
-class SolutionsLine:
-    def __init__(self, student, organization, speciality, period, choice, type_of_internship='N', cost=0,
-                 consecutive_month=0):
-        self.student = student
-        self.organization = organization
-        self.speciality = speciality
-        self.period = period
-        self.choice = choice
-        self.cost = cost
-        self.consecutive_month = consecutive_month
-        self.type_of_internship = type_of_internship
-
-    def __repr__(self):
-        return "[" + str(self.period).zfill(2) + "|H:" + str(self.organization.reference).zfill(3) + "|S:" + str(
-            self.speciality.acronym).zfill(2) + "|C:" + str(self.cost).zfill(2) + "(" + str(self.choice) + ")|T:" + str(
-            self.type_of_internship) + "]"
-
-
-class StudentChoice:
-    def __init__(self, student, organization, speciality, choice, priority):
-        self.student = student
-        self.organization = organization
-        self.speciality = speciality
-        self.choice = choice
-        self.priority = priority
-
-
-# ****************** Utils ******************
 def compute_stats(cohort, sol):
     """
     Compute the statistics of the solution
@@ -308,76 +276,6 @@ def init_specialities(cohort):
         specialities_dict[speciality.name] = speciality.id
         if speciality.acronym.strip() == 'UR':
             emergency = speciality.id
-
-
-def get_number_of_period(period):
-    return int(period.replace("P", ""))
-
-
-def get_next_period(period):
-    return "P" + str((get_number_of_period(period) + 1))
-
-
-def get_previous_period(period):
-    return "P" + str((get_number_of_period(period) - 1))
-
-
-def is_same(student_solution, organization, period):
-    """
-    Check if 'studentSolution[period].organization' and 'organization' are the same.
-    :param student_solution: solution of the student(a dict where the key represent the id of the period and
-    the value represents an InternshipEnrollment )
-    :param organization: organisation to compare
-    :param period: id of the period
-    :return: True if 2 organisation are the same, False otherwise
-    """
-    if get_number_of_period(period) < 0 or get_number_of_period(period) > len(periods_dict):
-        return False
-    elif period not in student_solution or student_solution[period].organization != organization:
-        return False
-    else:
-        return True
-
-
-def is_empty_internship(organization, speciality, period):
-    """
-    Check if the internship in the "organization" / "speciality" / "period" is empty.
-    Empty = non student has this internship.
-    :param organization: organization to check
-    :param speciality: speciality to check
-    :param period: id of the period to check
-    :return: True if the internship is empty, false otherwise
-    """
-    return internship_table[organization][speciality][period] == internship_table_original[organization][speciality][
-        period]
-
-
-def get_student_solution_cost(data):
-    """
-    Compute the cost of the student's solution.
-    This function is mainly used to compare different solutions in "iterate_choices".
-    Student solution = 12 periods of internships
-    """
-    score = 0
-    for period, internship in data.items():
-        if internship is not None:
-            # Check if "internship.choice" is an int.
-            if isinstance(internship.choice, int):
-                score = score + costs[internship.choice]
-            # Nonconsecutive organization, check if the previous or next organization is same
-            if not is_same(data, data[period].organization, get_previous_period(period)):
-                if not is_same(data, data[period].organization, get_next_period(period)):
-                    score = score + costs['C']
-            # Imposed organization
-            if data[period].choice == 'I':
-                score = score + costs['I']
-            # Hospital error
-            if data[period].choice == 'X':
-                score = score + costs['X']
-            # Empty internships
-            if is_empty_internship(data[period].organization, data[period].speciality, period):
-                score -= 10
-    return score
 
 
 def get_student_mandatory_choices(cohort, priority):

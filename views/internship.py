@@ -23,10 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from math import acos, cos, degrees, radians, sin
-
 from collections import OrderedDict
-from operator import itemgetter
 
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.urlresolvers import reverse
@@ -42,63 +39,6 @@ from internship.forms.form_select_speciality import SpecialityForm
 from internship.forms.internship import InternshipForm
 
 
-def calc_dist(lat_a, long_a, lat_b, long_b):
-    """
-        Function to compute the distance between two points.
-        Params:
-            lat_a : the latitude of the first adress
-            long_a : the longitude of the first adress
-            lat_b : the latitude of the second adress
-            long_b : the longitude of the second adress
-        Transform the params in radians then compute the sin and cos
-        then transform it in miles or kilometers.
-        Based on :
-            https://gmigdos.wordpress.com/2010/03/31/python-calculate-the-distance-between-2-points-given-their-coordinates/
-    """
-    if lat_a == lat_b and long_a == long_b:
-        # If there is the same adress, there is a chance to have a bug/crash
-        # So it return 100 meters of distance
-        return 0.1
-    else:
-        lat_a = radians(float(lat_a))
-        lat_b = radians(float(lat_b))
-        long_a = float(long_a)
-        long_b = float(long_b)
-        long_diff = radians(long_a - long_b)
-        distance = (sin(lat_a) * sin(lat_b) +
-                    cos(lat_a) * cos(lat_b) * cos(long_diff))
-        # For distance in miles use this
-        # return (degrees(acos(distance)) * 69.09)
-        # For distance in kilometers use this
-        return (degrees(acos(distance)) * 69.09)/0.621371
-
-
-def work_dist(student, organizations):
-    """
-        Function to get the distances between the student and all organization in the DB, sorted asc
-        Params:
-            student : the student we want to get the latitude and longitude of
-            organizations : the organizations in the DB, to compute their latitude/longitude with the student's
-    """
-    # Find the student's informations
-    student_informations = mdl_int.internship_student_information.search(person__last_name=student.person.last_name,
-                                                                         person__first_name=student.person.first_name)
-
-    distance_student_organization = {}
-    # For each organization in the list find the informations
-    for organization in organizations :
-        organization_informations = mdl_int.organization_address.search(organization = organization)
-        # If the latitude is not a fake number, compute the distance between the student and the organization
-        if organization_informations[0].latitude != 999 :
-            distance = calc_dist(student_informations[0].latitude, student_informations[0].longitude,
-                                 organization_informations[0].latitude, organization_informations[0].longitude)
-            distance_student_organization[int(organization.reference)] = distance
-
-    # Sort the distance
-    distance_student_organization = sorted(distance_student_organization.items(), key=itemgetter(1))
-    return distance_student_organization
-
-
 def get_number_choices(internships):
     """
         Set new variables for the param, the number of the first and other choice for one internship
@@ -106,11 +46,11 @@ def get_number_choices(internships):
             internships : the internships we want to compute the number of choices
     """
     for internship in internships:
-        number_first_choice = len(mdl_int.internship_choice.search(organization = internship.organization,
-                                                            speciality__acronym = internship.speciality.acronym,
-                                                           choice=1))
-        number_other_choice = len(mdl_int.internship_choice.search_other_choices(organization = internship.organization,
-                                                            speciality__acronym = internship.speciality.acronym))
+        number_first_choice = len(mdl_int.internship_choice.search(organization=internship.organization,
+                                                                   speciality__acronym=internship.speciality.acronym,
+                                                                   choice=1))
+        number_other_choice = len(mdl_int.internship_choice.search_other_choices(organization=internship.organization,
+                                                                                 speciality__acronym=internship.speciality.acronym))
         internship.number_first_choice = number_first_choice
         internship.number_other_choice = number_other_choice
 
@@ -222,32 +162,6 @@ def sort_internships(sort_internships):
         for internship in internships:
             tab.append(internship)
     return tab
-
-
-def set_student_choices_list(query,student_choice):
-    """
-        Function to set the list of the student's choices
-        Params :
-            query : the list of all internships
-            student_choice : the list of the internships choose by the student
-        Check if the internships and the choice are the same,
-        if yes put the param of the max enrollments and if there are selectable.
-        Then delete the internships in the list of the list of all internships
-        (because it's all ready in the choices list wich it display first)
-    """
-    index = 0
-    for choice in student_choice:
-        for internship in query:
-            if internship.organization == choice.organization and \
-                            internship.speciality == choice.speciality:
-                choice.maximum_enrollments = internship.maximum_enrollments
-                choice.selectable = internship.selectable
-                query[index] = 0
-            index += 1
-        query = [x for x in query if x != 0]
-        index = 0
-    query = [x for x in query if x != 0]
-    return query
 
 
 @login_required
