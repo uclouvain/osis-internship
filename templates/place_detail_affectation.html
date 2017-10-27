@@ -32,21 +32,17 @@
     <li><a href="{% url 'internships_places' cohort_id=cohort.id  %}">{% trans 'places' %}</a></li>
     <li class="active">{{ organization.name }}</li>
 {% endblock %}
+
 {% block content %}
     <div class="page-header">
-        <div class="row">
-            <div class="col-md-6">
-                <h2>{{ organization.name }}</h2>
-            </div>
-            <div class="col-md-6">
-                <a href="{% url 'organisation_affectation_download' cohort_id=cohort.id organization_id=organization.id %}">
-                    <button type="button" class="btn btn-default" style="float: right;margin-top: 15px;">
-                        <span class="glyphicon glyphicon-download" aria-hidden="true"></span> {% trans 'export_organisation_affectation_xls' %}
-                    </button>
-                </a>
-            </div>
-        </div>
+        <h2>{{ organization.name }}</h2>
     </div>
+
+    <a href="{% url 'organisation_affectation_download' cohort_id=cohort.id organization_id=organization.id %}" class="btn btn-default pull-right">
+        <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
+        {% trans 'export_organisation_affectation_xls' %}
+    </a>
+
     <div class="panel panel-default">
         <div class="panel-body">
             <ul class="nav nav-tabs">
@@ -60,11 +56,6 @@
                         <div class="panel panel-default">
                             <div class="tab-content">
                                 <div role="tabpanel" class="tab-pane fade in active" id="profile">
-                                    <a href="{% url 'affectation_download' cohort_id=cohort.id organization_id=organization.id speciality_id=speciality.id %}">
-                                        <button type="button" class="btn btn-default" style="float: right;">
-                                            <span class="glyphicon glyphicon-download" aria-hidden="true"></span> {% trans 'download_xls_file' %}
-                                        </button>
-                                    </a>
                                     <table class="table table-hover">
                                         {% for period in periods %}
                                             <tr>
@@ -87,10 +78,8 @@
                             </div>
                         </div>
                     </div>
-                {%endfor%}
+                {% endfor %}
             </div>
         </div>
     </div>
-    </div>
-
 {% endblock %}

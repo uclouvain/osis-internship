@@ -29,18 +29,15 @@ from internship.views import (affectation_statistics, home, internship, master, 
                               student_resume, cohort, upload_xls)
 
 urlpatterns = [
-    # FIXME: Rename internship by 'home'
     url(r'^$', home.view_cohort_selection, name='internship'),
 
     url(r'^cohorts/', include([
         url(r'^new$', cohort.new, name='cohort_new'),
-
         url(r'^edit/(?P<cohort_id>[0-9]+)$', cohort.edit, name='cohort_edit'),
 
         url(r'^(?P<cohort_id>[0-9]+)/', include([
             url(r'^$', home.cohort_home, name='internships_home'),
 
-            # FIXME: Refactor the urls and the views, because we can have an ambiguity with the name
             url(r'^internships/', include([
                 url(r'^$', internship.internship_list, name='internship-list'),
                 url(r'^new$', internship.internship_new, name='internship-new'),
@@ -86,8 +83,6 @@ urlpatterns = [
                     name='place_detail_student_choice'),
                 url(r'^create/$', place.organization_create, name='place_create'),
                 url(r'^edit/(?P<organization_id>[0-9]+)/$', place.organization_edit, name='place_edit'),
-                url(r'^exportxls/(?P<organization_id>[0-9]+)/(?P<speciality_id>[0-9]+)/$', place.export_xls,
-                    name='affectation_download'),
                 url(r'^exportxls/(?P<organization_id>[0-9]+)/$', place.export_organisation_affectation_as_xls,
                     name='organisation_affectation_download'),
                 url(r'^save/(?P<organization_id>[0-9]+)/(?P<organization_address_id>[0-9]+)/$', place.place_save,

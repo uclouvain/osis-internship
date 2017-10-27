@@ -41,7 +41,7 @@ def new(request):
     form = CohortForm(request.POST or None)
     if form.is_valid():
         cohort = form.save()
-        copy_data_if_specified(form, cohort)
+        _copy_data_if_specified(form, cohort)
         return redirect(reverse('internship'))
 
     context = {
@@ -71,18 +71,18 @@ def edit(request, cohort_id):
     return render(request, 'cohort/cohort_form.html', context)
 
 
-def copy_data_if_specified(cohort_form, cohort):
+def _copy_data_if_specified(cohort_form, cohort):
     if cohort_form.cleaned_data["copy_organizations_from_cohort"] is not None:
         cohort_id_to_copy_from = int(cohort_form["copy_organizations_from_cohort"].value())
         cohort_to_copy_from = Cohort.objects.get(pk=cohort_id_to_copy_from)
-        copy_organizations(cohort_to_copy_from, cohort)
+        _copy_organizations(cohort_to_copy_from, cohort)
     if cohort_form.cleaned_data["copy_specialities_from_cohort"] is not None:
         cohort_id_to_copy_from = int(cohort_form["copy_specialities_from_cohort"].value())
         cohort_to_copy_from = Cohort.objects.get(pk=cohort_id_to_copy_from)
-        copy_specialities(cohort_to_copy_from, cohort)
+        _copy_specialities(cohort_to_copy_from, cohort)
 
 
-def copy_organizations(cohort_from, cohort_to):
+def _copy_organizations(cohort_from, cohort_to):
     organization_addresses = OrganizationAddress.objects.prefetch_related("organization").filter(organization__cohort=cohort_from)
     for organization_address in organization_addresses:
         new_organization = organization_address.organization
@@ -97,7 +97,7 @@ def copy_organizations(cohort_from, cohort_to):
         new_address.save()
 
 
-def copy_specialities(cohort_from, cohort_to):
+def _copy_specialities(cohort_from, cohort_to):
     specialities = InternshipSpeciality.objects.filter(cohort=cohort_from)
     for speciality in specialities:
         new_speciality = speciality

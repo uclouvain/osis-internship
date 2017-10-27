@@ -38,10 +38,10 @@ from internship.models.internship_speciality import InternshipSpeciality
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def specialities(request, cohort_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
-    specialities = mdl_internship.internship_speciality.find_all(cohort=cohort)
+    specialties = mdl_internship.internship_speciality.find_all(cohort=cohort)
     context = {
         'section': 'internship',
-        'specialities': specialities,
+        'specialities': specialties,
         'cohort': cohort,
     }
     return render(request, "specialities.html", context)
