@@ -52,8 +52,7 @@ def internships_places(request, cohort_id):
         organizations = organizations.filter(address__city=city_sort_get)
 
     addresses = models.organization_address.OrganizationAddress.objects.filter(organization__type='service partner',
-                                                                               organization__cohort=cohort) \
-                .distinct('city').order_by('city')
+                                                                               organization__cohort=cohort).distinct('city').order_by('city')
 
     cities = map(operator.attrgetter('city'), addresses)
 
@@ -199,46 +198,6 @@ def student_affectation(request, cohort_id, organization_id):
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
-def export_xls(request, cohort_id, organization_id, speciality_id):
-    # FIXME: use the cohort and the organization, to be sure we use the right organization and the right cohort.
-    cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
-    organization = models.organization.find_by_id(organization_id)
-    speciality = models.internship_speciality.get_by_id(speciality_id)
-    if speciality:
-        speciality_groups = [group_member.group for group_member
-                             in models.internship_speciality_group_member.find_by_speciality(speciality)]
-        specialities = [group_member.speciality for group_member in
-                        models.internship_speciality_group_member.find_distinct_specialities_by_groups(speciality_groups)]
-        specialities = sorted(specialities, key=lambda spec: spec.order_position)
-        affection_by_specialities = [(internship_speciality,
-                                      models.internship_student_affectation_stat.search(organization=organization,
-                                                                                        speciality=internship_speciality))
-                                     for internship_speciality in specialities]
-    else:
-        affection_by_specialities = []
-
-    for speciality, affectations in affection_by_specialities:
-        for affectation in affectations:
-            affectation.email = ""
-            affectation.adress = ""
-            affectation.phone_mobile = ""
-            affectation.master = ""
-            internship_student_information = models.internship_student_information.search(person=affectation.student.person)
-            internship_offer = models.internship_offer.search(organization=affectation.organization, speciality=affectation.speciality)
-            if internship_student_information:
-                informations = internship_student_information.first()
-                affectation.email = informations.email
-                affectation.adress = informations.location + " " + informations.postal_code + " " + informations.city
-                affectation.phone_mobile = informations.phone_mobile
-            if internship_offer:
-                offer = internship_offer.first()
-                affectation.master = offer.master
-    file_name = speciality.acronym.strip().replace(' ', '_')
-    return export_utils.export_xls(cohort, organization, affection_by_specialities, file_name)
-
-
-@login_required
-@permission_required('internship.is_internship_manager', raise_exception=True)
 def export_organisation_affectation_as_xls(request, cohort_id, organization_id):
     cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
     organization = models.organization.find_by_id(organization_id)
@@ -246,8 +205,9 @@ def export_organisation_affectation_as_xls(request, cohort_id, organization_id):
     specialities = list({offer.speciality for offer in internships})
     specialities = sorted(specialities, key=lambda spec: spec.order_position)
     affection_by_specialities = [(internship_speciality,
-                                  list(models.internship_student_affectation_stat.search(organization=organization,
-                                                                          speciality=internship_speciality)))
+                                  list(models.internship_student_affectation_stat.search(
+                                      organization=organization,
+                                      speciality=internship_speciality)))
                                  for internship_speciality in specialities]
     for speciality, affectations in affection_by_specialities:
         for affectation in affectations:

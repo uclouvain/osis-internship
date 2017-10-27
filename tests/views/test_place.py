@@ -136,19 +136,6 @@ class PlaceViewAndUrlTestCase(TestCase):
             'cohort_id': self.cohort.id,
         }))
 
-    def test_export_xls_affectation(self):
-        organization = OrganizationFactory(cohort=self.cohort)
-        speciality = SpecialityFactory()
-
-        url = reverse('affectation_download', kwargs={
-            'cohort_id': self.cohort.id,
-            'organization_id': organization.id,
-            'speciality_id': speciality.id,
-        })
-
-        response = self.client.get(url, follow=True)
-        self.assertEqual(response.status_code, 200)
-
     def test_export_xls_organisation_affectation(self):
         organization = OrganizationFactory(cohort=self.cohort)
 

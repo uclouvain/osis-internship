@@ -83,8 +83,6 @@ urlpatterns = [
                     name='place_detail_student_choice'),
                 url(r'^create/$', place.organization_create, name='place_create'),
                 url(r'^edit/(?P<organization_id>[0-9]+)/$', place.organization_edit, name='place_edit'),
-                url(r'^exportxls/(?P<organization_id>[0-9]+)/(?P<speciality_id>[0-9]+)/$', place.export_xls,
-                    name='affectation_download'),
                 url(r'^exportxls/(?P<organization_id>[0-9]+)/$', place.export_organisation_affectation_as_xls,
                     name='organisation_affectation_download'),
                 url(r'^save/(?P<organization_id>[0-9]+)/(?P<organization_address_id>[0-9]+)/$', place.place_save,

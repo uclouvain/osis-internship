@@ -305,8 +305,10 @@ def _save_xls_internships(file_name, cohort):
                         number_place += int(row[x].value)
 
                 for x in range(0, len(speciality)):
-                    check_internship_offer = models.internship_offer.InternshipOffer.objects.filter(speciality=speciality[x],
-                                                                    organization__reference=organization[0].reference, cohort=cohort)
+                    check_internship_offer = models.internship_offer.InternshipOffer.objects.filter(
+                        speciality=speciality[x],
+                        organization__reference=organization[0].reference,
+                        cohort=cohort)
                     if len(check_internship_offer) != 0:
                         internship_offer = models.internship_offer.find_intership_by_id(check_internship_offer.first().id)
                     else:
