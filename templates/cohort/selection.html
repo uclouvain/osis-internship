@@ -9,16 +9,16 @@
 
 {% block content %}
     <div class="page-header">
-        <h2>{% trans 'select_cohort' %}</h2>
+        <h2>{% trans 'cohorts' %}</h2>
     </div>
 
     <div class="panel panel-default">
         <div class="panel panel-body">
             <div class="row">
                 <div class="col-md-12">
-                    <a href="{% url 'cohort_new' %}" id="lnk_cohort_create"
-                       class="btn btn-default" title="Create a cohort">Add a cohort
-                        <span class="glyphicon glyphicon-plus"></span></a>
+                    <a href="{% url 'cohort_new' %}" id="lnk_cohort_create" class="btn btn-default pull-right" title="Create a cohort">
+                        <span class="glyphicon glyphicon-plus"></span> {% trans 'add' %}
+                    </a>
                 </div>
             </div>
             <div class="row">

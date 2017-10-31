@@ -103,6 +103,19 @@ urlpatterns = [
 
             url(r'^students/', include([
                 url(r'^resume/$', student_resume.internships_student_resume, name='internships_student_resume'),
+                url(r'^(?P<student_id>[0-9]+)/', include([
+                    url(r'^resume/$', student_resume.internships_student_read, name='internships_student_read'),
+
+                    url(r'^information/modification/$', student_resume.internship_student_information_modification,
+                        name='internship_student_information_modification'),
+                    url(r'^information/modification/save/$', student_resume.student_save_information_modification,
+                        name='student_save_information_modification'),
+
+                    url(r'^affectation/modification/$', student_resume.internship_student_affectation_modification,
+                        name='internship_student_affectation_modification'),
+                    url(r'^affectation/modification/save/$', student_resume.student_save_affectation_modification,
+                        name='student_save_affectation_modification'),
+                ])),
             ])),
 
             url(r'^affectation_result/', include([
@@ -112,20 +125,6 @@ urlpatterns = [
                     name='internship_affectation_statistics_generate'),
                 url(r'^sumup/$', affectation_statistics.internship_affectation_sumup,
                     name='internship_affectation_sumup'),
-            ])),
-
-            url(r'^students/', include([
-                url(r'^(?P<student_id>[0-9]+)/', include([
-                    url(r'^affectation/modification/$', student_resume.internship_student_affectation_modification,
-                        name='internship_student_affectation_modification'),
-                    url(r'^information/modification/$', student_resume.internship_student_information_modification,
-                        name='internship_student_information_modification'),
-                    url(r'^resume/$', student_resume.internships_student_read, name='internships_student_read'),
-                    url(r'^save/information/modification/$', student_resume.student_save_information_modification,
-                        name='student_save_information_modification'),
-                    url(r'^save/affectation/modification/$', student_resume.student_save_affectation_modification,
-                        name='student_save_affectation_modification'),
-                ])),
             ])),
 
             url(r'^student/(?P<student_id>[0-9]+)/', include([

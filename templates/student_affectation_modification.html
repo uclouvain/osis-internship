@@ -35,66 +35,73 @@
     </a>
     </li>
 {% endblock %}
+
 {% block content %}
     <div class="page-header">
-        <h2>{{ information.student.person.last_name }} {{ information.student.person.first_name }} ({{ information.contest }})</h2>
+        <h2>{{ information.student.person.last_name }} {{ information.student.person.first_name }}</h2>
     </div>
 
     {% include "template_messages.html" %}
 
     <form method="post" action="{% url 'student_save_affectation_modification' cohort_id=cohort.id student_id=information.student_id %}">
         {% csrf_token %}
-        <div align="right">
-            <button type="submit" class="btn btn-primary" title="{% trans 'Save'%}" id="bt_interships_new">
-                <span class="glyphicon glyphicon-save" aria-hidden="true"/> {% trans 'save'%}
-            </button>
-        </div>
-        {% for period in periods %}
-            <div class="row">
-                <div class="col-md-2">
-                    <label>{% trans 'period' %}</label><br>
-                    <input type="text" size="5" name="period" value="{{ period | default_if_none:'-' }}" disabled>
-                    <input class="hidden" name="period" value={{ period }}>
-                </div>
-                <div class="col-md-3">
-                    <label>{% trans 'speciality' %}</label><br>
-                    <select name="speciality">
-                        <option value=0>--</option>
-                        {% for speciality in specialities %}
-                            <option value="{{speciality.name}}" {% for information in informations %}
-                                {% if information.period == period %}
-                                    {% if speciality.name == information.speciality.name %}
-                                    selected
-                                    {% endif %}
-                                {% endif %}
-                            {%endfor%}>
-                                {{speciality.acronym}}
-                            </option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="col-md-5">
-                    <label>{% trans 'organization' %}</label><br>
-                    <select name="organization">
-                        <option value=0>--</option>
-                        {% for organization in organizations %}
-                            <option value="{{organization.reference}}"
-                                    {% for information in informations %}
-                                        {% if information.period == period %}
-                                            {% if organization.reference == information.organization.reference %}
-                                    selected
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>{% trans 'period' %}</th>
+                    <th>{% trans 'speciality' %}</th>
+                    <th>{% trans 'organization' %}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for period in periods %}
+                    <tr>
+                        <td>
+                            <input type="text" size="5" name="period" value="{{ period | default_if_none:'-' }}" disabled>
+                            <input class="hidden" name="period" value={{ period }}>
+                        </td>
+                        <td>
+                            <select name="speciality">
+                                <option value=0>--</option>
+                                {% for speciality in specialities %}
+                                    <option value="{{speciality.name}}"
+                                        {% for information in informations %}
+                                            {% if information.period == period %}
+                                                {% if speciality.name == information.speciality.name %}
+                                                    selected
+                                                {% endif %}
                                             {% endif %}
-                                        {% endif %}
-                                    {%endfor%}>
-                                {{organization.reference}} {{organization.name}}
-                            </option>
-                        {% endfor %}
-                    </select>
-                </div>
-            </div>
-            <br/>
-        {% endfor %}
+                                        {% endfor %}>
+                                        {{speciality.acronym}}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td>
+                            <select name="organization">
+                                <option value=0>--</option>
+                                {% for organization in organizations %}
+                                    <option value="{{organization.reference}}"
+                                        {% for information in informations %}
+                                            {% if information.period == period %}
+                                                {% if organization.reference == information.organization.reference %}
+                                                    selected
+                                                {% endif %}
+                                            {% endif %}
+                                        {% endfor %}>
+                                        {{organization.reference}} {{organization.name}}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <button type="submit" class="btn btn-primary" title="{% trans 'Save'%}" id="bt_interships_new">
+            <span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'save'%}
+        </button>
     </form>
-    </div>
-    </div>
+    <br>
 {% endblock %}
