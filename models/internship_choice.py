@@ -51,22 +51,6 @@ class InternshipChoice(SerializableModel):
         unique_together = (("student", "internship", "choice"),)
 
 
-def find_by_all_student():
-    return InternshipChoice.objects.all().distinct('student').select_related("student", "organization", "speciality")
-
-
-def find_by_student(s_student):
-    return InternshipChoice.objects.filter(student=s_student)\
-                                   .select_related("student", "organization", "speciality")\
-                                   .order_by('choice')
-
-
-def find_by_student_desc(s_student):
-    return InternshipChoice.objects.filter(student=s_student)\
-                                   .select_related("student", "organization", "speciality")\
-                                   .order_by('-choice')
-
-
 def search(**kwargs):
     kwargs = {k: v for k, v in kwargs.items() if v}
     return InternshipChoice.objects.filter(**kwargs)\
@@ -102,12 +86,6 @@ def search_by_student_or_choice(student=None, internship=None):
 
 def get_non_mandatory_internship_choices(cohort):
     internships = internship.Internship.objects.filter(cohort=cohort, speciality=None, pk__gte=1)
-    return InternshipChoice.objects.filter(internship_id__in=internships.values_list("id", flat=True)).\
-        select_related("student", "organization", "speciality", "internship")
-
-
-def find_internship_choices(cohort):
-    internships = internship.Internship.objects.filter(cohort=cohort, pk__gte=1)
     return InternshipChoice.objects.filter(internship_id__in=internships.values_list("id", flat=True)).\
         select_related("student", "organization", "speciality", "internship")
 
