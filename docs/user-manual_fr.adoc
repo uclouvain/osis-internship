@@ -52,8 +52,10 @@ Les acteurs impliqué dans la gestion des stages sont:
 
 Les acteurs sont classés en deux roles bien distincts:
 
-* Gestionaire de stages
-* Étudiant
+* **Gestionaire de stages**: doyen et personnel administratif. L'accès est
+  limité à l'application OSIS.
+* **Étudiant**: tous les étudiants inscrits aux programmes de master en
+  médecine. L'accès est limité à l'application OSIS-Portal.
 
 :sectnums:
 
@@ -81,35 +83,27 @@ Voici le tableau qui montre la répartition de différents stages.
 |Spécialité |Périodes
 
 |Médecine interne (MI)
-|3
+|P1, P2, P3
 
 |Urgence (UR)
-|2
+|P4, P5
 
 |Chirurgie (CH)
-|1
+|P6
 
 |Gynécologie-obstétrice (GO)
-|1
+|P7
 
 |Pédiatrie (PE)
-|1
+|P8
 
 |Stages au choix (peuvent être dans la même spécialité)
-|4
-
-|*Total*
-|*12*
+|P9, P10, P11, P12
 |===
 
-*L'offre de stages* est un ensemble de stages qui sont proposées par les
-différents acteurs aux étudients. Chaque stage est représenté par:
-
-* Une spécialité
-* Un lieu (ex. hopital)
-* Une période
-* Un nombre de places minimales
-* Un nombre de places maximales
+Pour affecter les étudiants aux differents stages offert par les hôpitaux dans
+les périodes bien determinés, la faculté suivre le processus suivant une fois
+par an, au debut de l'année, entre janvier et fevrier:
 
 image::images/internship-bp.png[Internship Business Process]
 
@@ -186,10 +180,26 @@ Les étudiants se connectent sur le portail UCL pour consulter les résultats de
 affectations. Les données sont disponible en mode lecture. En cas de correction
 ou de modification en general, une demande devra être fait au secretariat.
 
-== Gestion journalière
+== La gestion journalière
 
 La gestion journalière couvre toutes les fonctionnalités de maintenance de
 données en dehors de l'exécution du processus.
+
+=== Gestion des hôpitaux
+
+=== Specialités des stages
+
+=== Les stages
+
+=== Gestion des meittres de stage
+
+=== Bilan des assignations
+
+Des statistique pour avoir une distribuition plus equitable.
+
+=== Assignation des stages
+
+Permutation des stages.
 
 == La conception technique de l'application
 
@@ -320,6 +330,15 @@ Les données sont organisés dans la base de données selon le modèle de donné
 suivant.
 
 image::images/internship-erm.png[Internship Entity Relationship Model]
+
+*L'offre de stages* est un ensemble de stages qui sont proposées par les
+différents acteurs aux étudients. Chaque stage est représenté par:
+
+* Une spécialité
+* Un lieu (ex. hopital)
+* Une période
+* Un nombre de places minimales
+* Un nombre de places maximales
 
 === L'architecture logiciel
 
