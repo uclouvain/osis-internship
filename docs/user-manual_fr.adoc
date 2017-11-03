@@ -1,6 +1,6 @@
 = Open Student Information System : Stages de médecine
 Hildeberto Mendonça <hildeberto.mendonca@uclouvain.be>
-v1.0, 2017-10-16
+v1.0, 2017-11-03
 :toc: left
 :toclevels: 4
 :numbered:
@@ -16,7 +16,7 @@ des stages.
 
 Chaque nouvelle personne qui debarque dans le projet réncontre le défi de tout
 comprendre en posant les mêmes questions encore et encore. Si bien fait et bien
-maintenu, ce document aidera la faculté de médecine à evoluer son application
+maintenu, ce document aidera la faculté de médecine à evoluer s'application
 proprement et continuellement, independant du changement de l'équipe, tout en
 protégeant l'investissement déjà fait.
 
@@ -46,16 +46,16 @@ sont confiés.
 Les acteurs impliqué dans la gestion des stages sont:
 
 * les étudiants inscrits aux programmes de master en médecine
-* les membres de la faculté:
-  - le doyen
-  - le personnel administratif
+* les membres de la faculté: le doyen et le personnel administratif
+* l'administrateur de système: la personne avec un role technique et bien
+  informé par rapport au fonctionnement de l'application.
 
 Les acteurs sont classés en deux roles bien distincts:
 
-* **Gestionaire de stages**: doyen et personnel administratif. L'accès est
-  limité à l'application OSIS.
-* **Étudiant**: tous les étudiants inscrits aux programmes de master en
-  médecine. L'accès est limité à l'application OSIS-Portal.
+* **Gestionaire des stages**: L'accès est limité à l'application OSIS.
+* **Étudiant**: L'accès est limité à l'application OSIS-Portal.
+* **Administrateur**: Accès à l'administration de données brut d'OSIS et
+  OSIS-Portal.
 
 :sectnums:
 
@@ -107,38 +107,64 @@ par an, au debut de l'année, entre janvier et fevrier:
 
 image::images/internship-bp.png[Internship Business Process]
 
+En plus d'expliquer le business de manière explicite, le processus nous aide
+également à identifier les rôles et les tâches dont ils sont responsables. Avec
+cela, les autorisations peuvent être assignées correctement.
+
+Voici une description détaillée des tous les tâches du processus:
+
+[#creation_cohort]
 === Création de cohort
 
 Le terme *Cohort* est utilisé pour definir la période annuel d'organisation des
 stages. Cette période ne coïncide pas avec l'année academique et ça gestion est
-tout à fait specifique au domaine des stages.
+tout à fait specifique au domaine des stages de médecine.
 
 La creation d'un cohort est le premier pas ver l'affectation des stages. Presque
-toutes les données sont liées à cela. À cette étape, le secretariat va créer un
-cohort avec des informations basiques plus les dates qui déterminent le debut,
-la fin et la publication des résultats.
+toutes les données sont liées à cela. À cette étape l'administrateur, sur
+demande du gestionaire des stages, va créer un cohort avec des informations
+basiques, plus les dates qui déterminent le debut, la fin et la publication des
+résultats.
 
+//image::images/creation-cohort.png[Création de cohort]
+
+[#import/students]
 === Importation des données des étudiants
 
-Grace à l'intégration avec OSIS, ce n'est pas necessaire de démander aux
-étudiants de s'inscrire sur l'application. Par contre, la faculté a l'autonomie
-sur certains données des étudiants et leurs états d'inscription aux stages. Pour
-prendre en compte cette particularité, l'application importe un fichier XLS qui
-contient les données necessaires pour la demarche du processus d'affectation.
+Grace à l'importation de données apartir d'un fichier XLS, ce n'est pas
+necessaire de démander aux étudiants de s'inscrire sur l'application. Le fichier
+provient de l'application de gestion de l'université et contient les étudiants
+inscrits sur le programe de master en médecine, essentiel pour la demarche du
+processus d'affectation.
 
-=== Definition de la période de choix et date de publication
+L'importation du fichier XLS est sur la responsabilité de l'administrateur de
+systeme, sur demande du gestionaire des stages qui renvoie le fichier mis à
+jour. Le fichier peux être importé plusieur fois si necessaire. L'application
+s'occupe d'eviter des duplications de données à chaque importation.
 
-Après l'organisation complet du cohort, c'est possible determiné avec precision
-la période de croix et la data de publication des résultats. Les détails de la
-session de choix sont enfin envoyés aux étudiants.
+image::images/import-students.png[Importation des étudiants]
+
+=== Definition des périodes, des hôpitaux et des places disponibles
+
+Avec l'intention d'organiser le cohort pour permettre le bon choix des étudiants
+est l'affectation en suite, le gestionaire des stages s'occupe de determiner les
+dates de debut et fin des périodes et les places disponibles dans les hôpitaux
+pour les different specialités.
+
+Les trois dernières tâches devraient se terminer avant la date de debut de la
+période de choix des stages.
+
+//image::images/periodes.png[Des périodes]
+
+//image::images/specialties-places.png[Des places disponibles]
 
 === Choix des stages par specialité
 
 Precisement à la date de debut de la période de choix, l'application est ouvert
 aux étudiants de médecine qui devront faire leurs choix de stages. L'application
 reste ouvert jusqu'à la fin de la période. Pendant ce temps là, les étudiants
-pouvent changer librement leurs choix et le secretariat ne peux pas acceder les
-choix faits.
+pouvent changer librement leurs choix et le gestionaire des stages s'engage a
+n'est pas modifier les choix faits avan la fin de la période.
 
 === Affectation des stages aux étudiants prioritaires
 
@@ -147,6 +173,8 @@ comme prioritaires. Cela donne une priorité adaptée au besoin particulaire de
 chaque étudiant, mais il n'y a pas d'assurance de recevoir les premiers choix
 (le plus souvent priorité pour les stages proches du domicile légal ou dans un
 hôpital avec logement).
+
+//image::images/bilan-etudiant.png[Bilan de l'étudiant]
 
 L'etudiant devra faire les quatre choix de manière réfléchie et se présenter à
 la faculté dans un periode bien défini afin de discuter avec le secretariat les
@@ -160,7 +188,7 @@ de stage, mais toujours en adéquation avec le besoin de l'étudiant.
 
 Pour les étudiants non-prioritaires, les affectations sont fait automatiquement
 par l'application. L'algorithme essaye de trouver une solution optimale pour
-chaque étudiant en terme de spécialité, lieu et période. Il y a de contrainte
+chaque étudiant en terme de spécialité et période. Il y a de contrainte
 qu'impeche de toujours respecter le premier choix de tous les étudiants. Par
 exemple, si le nombre d'étudiants est plus grand que le nombre de places
 disponibles. Pour mieux satisfaire toutes les demandes des étudiants avec les
@@ -168,11 +196,27 @@ offres limitées, nous essayons de trouver une solution avec le coût le plus
 faible possible et qui satisfait les différentes contraintes, tout en respectant
 le mieux possible les souhaits des étudiants.
 
+//image::images/affectation-stages.png[Affectation des stages]
+
+=== Correction des stages avec problème d'affectation
+
+L'affectation automatique peux avoir de difficulté pour affecter certains
+étudiants à cause des contraints existants. Dans ce cas, les étudiants sont
+affecter à un faux hôpital pour être affecter correctement dans un deuxième
+moment.
+
+La cause principale c'est l'absence de place disponible dans les hôpitaux. Dans
+ce cas, des nouvelles places sont crée en concertation avec les maîtres de
+stage.
+
+Tous les affectations devrons être faits avant la date de publication des
+résultats.
+
 === Publication des résultats
 
-Une fois que tous les affectations sont faits, tous les resultats sons publiés
-en même temps sur le portail de l'université et disponibles pour les étudiants
-impliqués.
+Quand la date de publication des résultats, défini dans le cohorte, est arrivé,
+tous les resultats sons publiés en même temps sur le portail de l'université et
+disponibilizés pour les étudiants impliqués.
 
 === Consultation des résultats
 
@@ -183,23 +227,37 @@ ou de modification en general, une demande devra être fait au secretariat.
 == La gestion journalière
 
 La gestion journalière couvre toutes les fonctionnalités de maintenance de
-données en dehors de l'exécution du processus.
+données en dehors de l'exécution du processus. Ce sont les fonctionnalités
+utilisées au cours de l'année par le gestionaire des stages.
 
-=== Gestion des hôpitaux
+* *Gestion des hôpitaux*: mantenir le données des hôpitaux à jour.
 
-=== Specialités des stages
+//image::images/hospitals.png[Des hôpitauxpériodes]
 
-=== Les stages
+* *Specialités des stages*: mantenir les places disponibles dans les different
+  specialités des hôpitaux.
 
-=== Gestion des meittres de stage
+//image::images/specialties-places.png[Des places disponibles]
 
-=== Bilan des assignations
+* *Les stages*: mantenir les different types de stages.
 
-Des statistique pour avoir une distribuition plus equitable.
+//image::images/internships.png[Les stages]
 
-=== Assignation des stages
+* *Gestion des maîtres de stage*: pas encore disponible, mais bientôt le
+  gestionaire sera capable de maintenir les données des maîtres.
 
-Permutation des stages.
+//image::images/maitres-stages.png[Les maîtres de stage]
+
+* *Bilan des assignations*: un raport avec les affectations des étudiants dans
+  les hôpitaux, classé par especialité.
+
+//image::images/bilan-assignations.png[Bilan des assignations]
+
+* *Assignation des stages*: des modifications dans les affectations de stages
+  selon les particularités de chaque étudiant, principalement les cas de
+  permutation des stages.
+
+//image::images/affectation-stages.png[Affectation des stages]
 
 == La conception technique de l'application
 
@@ -331,15 +389,6 @@ suivant.
 
 image::images/internship-erm.png[Internship Entity Relationship Model]
 
-*L'offre de stages* est un ensemble de stages qui sont proposées par les
-différents acteurs aux étudients. Chaque stage est représenté par:
-
-* Une spécialité
-* Un lieu (ex. hopital)
-* Une période
-* Un nombre de places minimales
-* Un nombre de places maximales
-
 === L'architecture logiciel
 
 La gestion des stages est une app Django. Elle ne tourne pas tout seule, mais
@@ -381,6 +430,7 @@ actuellment:
 
 :sectnums!:
 
+////
 == Les annexes
 
 === Greedy
@@ -459,3 +509,4 @@ Ce n'est pas encore fait.
 ==== Étape 5: Stages au choix - Tous les autres
 
 Ce n'est pas encore fait.
+////
