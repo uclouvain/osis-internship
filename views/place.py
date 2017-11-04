@@ -261,10 +261,11 @@ def sort_organizations(organizations):
     for organization in organizations:
         if organization is not None:
             number_ref.append(organization.reference)
-    number_ref = sorted(number_ref, key=int)
-    for i in number_ref:
-        organization = models.organization.search(reference=i)
-        tab.append(organization[0])
+    if number_ref:
+        number_ref = sorted(number_ref, key=int)
+        for i in number_ref:
+            organization = models.organization.search(reference=i)
+            tab.append(organization[0])
     return tab
 
 

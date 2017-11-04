@@ -34,6 +34,7 @@
     <li><a href="{% url 'internships_places' cohort_id=cohort.id %}">{% trans 'all_places' %}</a></li>
     <li class="active">{% trans 'new_place' %}</li>
 {% endblock %}
+
 {% block content %}
     <div class="page-header">
         {% if organization.id%}

@@ -30,7 +30,6 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import render, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
-from django.utils.translation import ugettext_lazy as _
 from base import models as mdl
 from internship import models as mdl_int
 from internship.forms.form_student_information import StudentInformationForm
@@ -80,8 +79,9 @@ def internships_student_read(request, cohort_id, student_id):
 
     if not student_to_read:
         return render(request, "student_resume.html", {'errors': ['student_not_exists']})
-    information = mdl_int.internship_student_information.search(person = student_to_read.person).first()
-    internship_choices = mdl_int.internship_choice.get_internship_choices_made(cohort=cohort, student=student_to_read).order_by('choice')
+    information = mdl_int.internship_student_information.search(person=student_to_read.person).first()
+    internship_choices = mdl_int.internship_choice.get_choices_made(cohort=cohort,
+                                                                    student=student_to_read).order_by('choice')
     all_speciality = mdl_int.internship_speciality.search(mandatory=True, cohort=cohort)
     internships = mdl_int.internship.Internship.objects.filter(cohort=cohort, pk__gte=1)
 
@@ -172,8 +172,8 @@ def student_save_information_modification(request, cohort_id, student_id):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internship_student_affectation_modification(request, cohort_id, student_id):
     cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)
-    informations = mdl_int.internship_student_affectation_stat.search(student__pk = student_id)
-    internship_choice = mdl_int.internship_choice.search(student__pk = student_id)
+    informations = mdl_int.internship_student_affectation_stat.search(student__pk=student_id)
+    internship_choice = mdl_int.internship_choice.search(student__pk=student_id)
     if not internship_choice:
         student = mdl.student.find_by_id(student_id)
         information = mdl_int.internship_choice.InternshipChoice()
@@ -184,19 +184,18 @@ def internship_student_affectation_modification(request, cohort_id, student_id):
     organizations = sort_organizations(organizations)
 
     specialities = mdl_int.internship_speciality.find_all(cohort=cohort)
-    for speciality in specialities :
-        number=[int(s) for s in speciality.name.split() if s.isdigit()]
+    for speciality in specialities:
+        number = [int(s) for s in speciality.name.split() if s.isdigit()]
         if number:
-            speciality.acronym = speciality.acronym + " " +str(number[0])
+            speciality.acronym = speciality.acronym + " " + str(number[0])
     periods = mdl_int.period.search(cohort=cohort)
     return render(request, "student_affectation_modification.html",
-                  {'information':         information,
-                   'informations':         informations,
-                   'organizations':        organizations,
-                   'specialities':         specialities,
-                   'periods':              periods,
-                   'cohort':               cohort
-                   })
+                  {'student': information,
+                   'informations': informations,
+                   'organizations': organizations,
+                   'specialities': specialities,
+                   'periods': periods,
+                   'cohort': cohort})
 
 
 @login_required
@@ -204,6 +203,7 @@ def internship_student_affectation_modification(request, cohort_id, student_id):
 def student_save_affectation_modification(request, cohort_id, student_id):
     cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)
     student = mdl.student.find_by_id(student_id)
+
     if request.POST.get('period'):
         period_list = request.POST.getlist('period')
     else:
@@ -211,6 +211,7 @@ def student_save_affectation_modification(request, cohort_id, student_id):
 
     if request.POST.get('organization'):
         organization_list = request.POST.getlist('organization')
+
     if request.POST.get('speciality'):
         speciality_list = request.POST.getlist('speciality')
 
@@ -221,10 +222,15 @@ def student_save_affectation_modification(request, cohort_id, student_id):
             organization = mdl_int.organization.search(cohort=cohort, reference=organization_list[x])[0]
             speciality = mdl_int.internship_speciality.search(cohort=cohort, name=speciality_list[x])[0]
             period = mdl_int.period.search(cohort=cohort, name=period_list[x])[0]
-            check_internship_present = mdl_int.internship_offer.search(cohort=cohort, organization=organization, speciality=speciality)
+            check_internship_present = mdl_int.internship_offer.search(cohort=cohort,
+                                                                       organization=organization,
+                                                                       speciality=speciality)
             if len(check_internship_present) == 0:
                 check_error_present = True
-                messages.add_message(request, messages.ERROR, _('%s : %s-%s (%s)=> error') % (speciality.name, organization.reference, organization.name, period.name))
+                messages.add_message(request, messages.ERROR, "{} : {}-{} ({})=> error".format(speciality.name,
+                                                                                               organization.reference,
+                                                                                               organization.name,
+                                                                                               period.name))
 
     if not check_error_present:
         mdl_int.internship_student_affectation_stat.search(student=student).delete()
@@ -259,9 +265,10 @@ def student_save_affectation_modification(request, cohort_id, student_id):
                     affectation_modif.cost = 10
 
                 affectation_modif.save()
-        redirect_url = reverse('internships_student_read', kwargs={"cohort_id":cohort.id, "student_id":student.id})
+        redirect_url = reverse('internships_student_read', kwargs={"cohort_id": cohort.id, "student_id": student.id})
     else:
-        redirect_url = reverse('internship_student_affectation_modification', kwargs={"cohort_id":cohort.id, "student_id":student.id})
+        redirect_url = reverse('internship_student_affectation_modification', kwargs={"cohort_id": cohort.id,
+                                                                                      "student_id": student.id})
     return HttpResponseRedirect(redirect_url)
 
 
@@ -278,8 +285,9 @@ def get_students_with_status(cohort):
 
 def _get_student_status(student, cohort):
     internship_ids = mdl_int.internship.Internship.objects.filter(cohort=cohort, pk__gte=1).values_list("pk", flat=True)
-    internship_choices_values = mdl_int.internship_choice.get_internship_choices_made(cohort=cohort, student=student).values_list("internship_id", flat=True)
-    return len(list(set(internship_ids) - set(internship_choices_values))) == 0
+    choices_values = mdl_int.internship_choice.get_choices_made(cohort=cohort,
+                                                                student=student).values_list("internship_id", flat=True)
+    return len(list(set(internship_ids) - set(choices_values))) == 0
 
 
 def _set_organization_address(organizations):
