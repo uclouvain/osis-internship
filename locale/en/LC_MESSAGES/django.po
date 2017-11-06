@@ -22,6 +22,9 @@ msgstr	 "Academic year"
 msgid	 "activate_internship_selection"
 msgstr	 "Activate internship's selection"
 
+msgid    "add"
+msgstr   "Add"
+
 msgid	 "add_a_hospital"
 msgstr	 "Add a hospital"
 
@@ -75,6 +78,12 @@ msgstr	 "Choose a speciality to see your choices already done."
 
 msgid	 "civility"
 msgstr	 "Civility"
+
+msgid "cohort"
+msgstr "Cohort"
+
+msgid  "cohorts"
+msgstr  "Cohorts"
 
 msgid	 "contest"
 msgstr	 "Contest"
@@ -155,7 +164,7 @@ msgid	 "internships_injection"
 msgstr	 "Internships' injection"
 
 msgid	 "internships_managment"
-msgstr	 "Internships managment"
+msgstr	 "Management of Medicine's Internships"
 
 msgid	 "internships_masters"
 msgstr	 "Internship's masters"
@@ -198,6 +207,9 @@ msgstr	 "You don't have submit your 4 choices for this speciality."
 
 msgid	 "organization"
 msgstr	 "Hospital"
+
+msgid    "period"
+msgstr   "Period"
 
 msgid	 "period_creation"
 msgstr	 "Create a period"
@@ -267,9 +279,6 @@ msgstr	 "capacity"
 
 msgid	 "number_total_student"
 msgstr	 "Number of student who choose this organization"
-
-msgid  "select_cohort"
-msgstr  "Select a student cohort"
 
 msgid "selection_currently_active"
 msgstr "The internships' selection is currently active"

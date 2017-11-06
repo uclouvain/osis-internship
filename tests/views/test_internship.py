@@ -30,13 +30,9 @@ from django.test import TestCase
 from base.tests.models import test_person, test_student
 from internship.models import internship_choice as mdl_internship_choice
 from internship.models import period_internship_places as mdl_period_places
+from internship.tests.factories.internship_choice import create_internship_choice
 from internship.tests.factories.offer import OfferFactory
-from internship.tests.factories.organization import OrganizationFactory
-from internship.tests.factories.speciality import SpecialityFactory
-from internship.tests.models import (test_internship_choice,
-                                     test_internship_offer,
-                                     test_internship_speciality,
-                                     test_organization, test_period)
+from internship.tests.models import (test_internship_offer, test_internship_speciality, test_organization, test_period)
 from internship.tests.factories.cohort import CohortFactory
 from internship.tests.factories.internship import InternshipFactory
 
@@ -181,8 +177,8 @@ class TestModifyStudentChoices(TestCase):
 
     def test_replace_previous_choices(self):
         internship = InternshipFactory(cohort=self.cohort)
-        previous_choice = test_internship_choice.create_internship_choice(test_organization.create_organization(),
-                                                                          self.student, self.speciality_1, internship)
+        previous_choice = create_internship_choice(test_organization.create_organization(),
+                                                   self.student, self.speciality_1, internship)
         kwargs = {
             'cohort_id': self.cohort.id,
             'internship_id': internship.id,

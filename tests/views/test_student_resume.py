@@ -24,16 +24,14 @@
 #
 ##############################################################################
 from django.contrib.auth.models import Permission, User
-from django.core.urlresolvers import resolve, reverse
+from django.core.urlresolvers import reverse
 from django.test import TestCase
-
-from internship.tests.factories.cohort import CohortFactory
-from internship.tests.models import test_organization, test_internship_speciality, test_internship_choice, \
-    test_internship_student_information
+from internship.tests.models import test_organization, test_internship_speciality, test_internship_student_information
 from base.tests.models import test_student
 from internship.views import student_resume
 from internship.tests.factories.cohort import CohortFactory
 from internship.tests.factories.internship import InternshipFactory
+from internship.tests.factories.internship_choice import create_internship_choice
 
 
 class TestStudentResume(TestCase):
@@ -49,21 +47,13 @@ class TestStudentResume(TestCase):
         self.internship_3 = InternshipFactory(cohort=self.cohort)
         self.internship_4 = InternshipFactory(cohort=self.cohort)
 
-        self.choice_1 = test_internship_choice.create_internship_choice(organization, self.student_1, speciality,
-                                                                        internship=self.internship)
-        self.choice_2 = test_internship_choice.create_internship_choice(organization, self.student_1, speciality,
-                                                                        internship=self.internship_2)
-        self.choice_3 = test_internship_choice.create_internship_choice(organization, self.student_1, speciality,
-                                                                        internship=self.internship_3)
-        self.choice_4 = test_internship_choice.create_internship_choice(organization, self.student_1, speciality,
-                                                                        internship=self.internship_4)
-
-        self.choice_5 = test_internship_choice.create_internship_choice(organization, self.student_2, speciality,
-                                                                        internship=self.internship)
-        self.choice_6 = test_internship_choice.create_internship_choice(organization, self.student_2, speciality,
-                                                                        internship=self.internship_2)
-        self.choice_7 = test_internship_choice.create_internship_choice(organization, self.student_2, speciality,
-                                                                        internship=self.internship_3)
+        self.choice_1 = create_internship_choice(organization, self.student_1, speciality, internship=self.internship)
+        self.choice_2 = create_internship_choice(organization, self.student_1, speciality, internship=self.internship_2)
+        self.choice_3 = create_internship_choice(organization, self.student_1, speciality, internship=self.internship_3)
+        self.choice_4 = create_internship_choice(organization, self.student_1, speciality, internship=self.internship_4)
+        self.choice_5 = create_internship_choice(organization, self.student_2, speciality, internship=self.internship)
+        self.choice_6 = create_internship_choice(organization, self.student_2, speciality, internship=self.internship_2)
+        self.choice_7 = create_internship_choice(organization, self.student_2, speciality, internship=self.internship_3)
 
     def test_get_students_status(self):
         expected = []
@@ -77,7 +67,6 @@ class TestStudentResume(TestCase):
         self.assertCountEqual(expected, actual)
         for item_expected in expected:
             self.assertIn(item_expected, actual)
-
 
 
 class StudentResumeViewTestCase(TestCase):
@@ -96,6 +85,3 @@ class StudentResumeViewTestCase(TestCase):
         })
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
-
-
-

@@ -82,7 +82,7 @@ urlpatterns = [
                 url(r'^(?P<organization_id>[0-9]+)/students/choice/$', place.student_choice,
                     name='place_detail_student_choice'),
                 url(r'^create/$', place.organization_create, name='place_create'),
-                url(r'^edit/(?P<organization_id>[0-9]+)/$', place.organization_edit, name='place_edit'),
+                url(r'^(?P<organization_id>[0-9]+)/edit/$', place.organization_edit, name='place_edit'),
                 url(r'^exportxls/(?P<organization_id>[0-9]+)/$', place.export_organisation_affectation_as_xls,
                     name='organisation_affectation_download'),
                 url(r'^save/(?P<organization_id>[0-9]+)/(?P<organization_address_id>[0-9]+)/$', place.place_save,
@@ -103,6 +103,31 @@ urlpatterns = [
 
             url(r'^students/', include([
                 url(r'^resume/$', student_resume.internships_student_resume, name='internships_student_resume'),
+                url(r'^(?P<student_id>[0-9]+)/', include([
+                    url(r'^resume/$', student_resume.internships_student_read, name='internships_student_read'),
+
+                    url(r'^information/modification/$', student_resume.internship_student_information_modification,
+                        name='internship_student_information_modification'),
+                    url(r'^information/modification/save/$', student_resume.student_save_information_modification,
+                        name='student_save_information_modification'),
+
+                    url(r'^affectation/modification/$', student_resume.internship_student_affectation_modification,
+                        name='internship_student_affectation_modification'),
+                    url(r'^affectation/modification/save/$', student_resume.student_save_affectation_modification,
+                        name='student_save_affectation_modification'),
+
+                    url(r'^modification/$', internship.internships_modification_student,
+                        name='internships_modification_student'),
+
+                    url(r'^(?P<internship_id>[0-9]+)/', include([
+                        url(r'^modification/$', internship.internships_modification_student,
+                            name='switch_internship'),
+                        url(r'^switch_speciality/$',
+                            internship.assign_speciality_for_internship, name='switch_speciality'),
+                        url(r'^(?P<speciality_id>[0-9]+)/modification/$',
+                            internship.internships_modification_student, name='specific_internship_student_modification'),
+                    ])),
+                ])),
             ])),
 
             url(r'^affectation_result/', include([
@@ -114,31 +139,6 @@ urlpatterns = [
                     name='internship_affectation_sumup'),
             ])),
 
-            url(r'^students/', include([
-                url(r'^(?P<student_id>[0-9]+)/', include([
-                    url(r'^affectation/modification/$', student_resume.internship_student_affectation_modification,
-                        name='internship_student_affectation_modification'),
-                    url(r'^information/modification/$', student_resume.internship_student_information_modification,
-                        name='internship_student_information_modification'),
-                    url(r'^resume/$', student_resume.internships_student_read, name='internships_student_read'),
-                    url(r'^save/information/modification/$', student_resume.student_save_information_modification,
-                        name='student_save_information_modification'),
-                    url(r'^save/affectation/modification/$', student_resume.student_save_affectation_modification,
-                        name='student_save_affectation_modification'),
-                ])),
-            ])),
-
-            url(r'^student/(?P<student_id>[0-9]+)/', include([
-                url(r'^modification/$', internship.internships_modification_student,
-                    name='internships_modification_student'),
-                url(r'^(?P<internship_id>[0-9]+)/modification/$', internship.internships_modification_student,
-                    name='switch_internship'),
-                url(r'^(?P<internship_id>[0-9]+)/(?P<speciality_id>[0-9]+)/modification/$',
-                    internship.internships_modification_student, name='specific_internship_student_modification'),
-            ])),
-
-            url(r'^switch_speciality/(?P<student_id>[0-9]+)/(?P<internship_id>[0-9]+)/$',
-                internship.assign_speciality_for_internship, name='switch_speciality'),
             url(r'^internships/upload/$', upload_xls.upload_internships_file, name='upload_internship'),
         ])),
 

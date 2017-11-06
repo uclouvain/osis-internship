@@ -22,6 +22,9 @@ msgstr	 "Année académique"
 msgid	 "activate_internship_selection"
 msgstr	 "Activer la sélection des stages"
 
+msgid    "add"
+msgstr   "Ajouter"
+
 msgid	 "add_a_hospital"
 msgstr	 "Ajouter un hôpital"
 
@@ -76,6 +79,12 @@ msgstr	 "Choisissez une spécialité pour voir vos choix déjà effectués."
 msgid	 "civility"
 msgstr	 "Civilité"
 
+msgid "cohort"
+msgstr "Cohorte"
+
+msgid  "cohorts"
+msgstr  "Cohortes"
+
 msgid	 "contest"
 msgstr	 "Concours"
 
@@ -97,11 +106,11 @@ msgstr	 "Détails des choix"
 msgid	 "details"
 msgstr	 "Détails"
 
-msgid	 "email"
-msgstr	 "Email"
-
 msgid	 "edit_places"
 msgstr	 "Modifier nombres de places"
+
+msgid	 "email"
+msgstr	 "Email"
 
 msgid	 "first_choice"
 msgstr	 "Choix préféré"
@@ -155,7 +164,7 @@ msgid	 "internships_injection"
 msgstr	 "Injection des stages"
 
 msgid	 "internships_managment"
-msgstr	 "Gestion des stages"
+msgstr	 "Gestion des stages de médecine"
 
 msgid	 "internships_masters"
 msgstr	 "Maîtres de stages"
@@ -198,6 +207,9 @@ msgstr	 "Vous n'avez pas encore soumis vos 4 choix pour cette spécialité."
 
 msgid	 "organization"
 msgstr	 "Hôpital"
+
+msgid    "period"
+msgstr   "Période"
 
 msgid	 "period_creation"
 msgstr	 "Créer une période"
@@ -270,9 +282,6 @@ msgstr	 "Nombre de 1er choix"
 
 msgid	 "number_total_student"
 msgstr	 "Nombre total d'étudiant ayant choisi cet hôpital"
-
-msgid  "select_cohort"
-msgstr  "Selectionnez une cohorte"
 
 msgid "selection_currently_active"
 msgstr "La sélection des stages est actuellement active"

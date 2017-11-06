@@ -29,6 +29,7 @@
 {% block breadcrumb %}
     <li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
     <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{% trans 'internships_managment' %}</a></li>
+    <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></li>
     <li><a href="{% url 'internships_student_resume' cohort_id=cohort.id  %}">{% trans 'student_sumup' %}</a></li>
     <li class="active"><a href="{% url 'internships_student_read' cohort_id=cohort.id student_id=student.id %}">
         {{ student.person.last_name }} {{ student.person.first_name }}</a></li>
@@ -66,44 +67,9 @@
             <form method="post" action="{% url 'student_save_information_modification' cohort_id=cohort.id student_id=student.id %}">
                 {% csrf_token %}
                 <div class="row">
-                    <div class="col-md-4">
-                        <label for="{{ form.email.id_for_label }}">{% trans 'email' %}</label><br>
-                        <input type="text" id={{ form.email.id_for_label }} name="{{ form.email.html_name }}" value="{{ information.email | default_if_none:'-' }}">
-                    </div>
-                    <div class="col-md-4">
-                        <label for="{{ form.phone_mobile.id_for_label }}">{% trans 'phone_mobile' %}</label><br>
-                        <input for="{{ form.email.id_for_label }}" type="text"  name="{{ form.phone_mobile.html_name }}" value="{{ information.phone_mobile | default_if_none:'-' }}">
-                    </div>
-                    <div class="col-md-4">
-                    </div>
-                </div>
-                <br><br>
-
-                <div class="row">
-                    <label>{% trans 'address' %}</label><br>
-                    <div class="col-md-3">
-                        <label for="{{ form.location.id_for_label }}">{% trans 'location' %}</label><br>
-                        <input for="{{ form.location.id_for_label }}" type="text" name="{{ form.location.html_name }}" value="{{ information.location | default_if_none:'-' }}">
-                    </div>
-                    <div class="col-md-3">
-                        <label for="{{ form.postal_code.id_for_label }}">{% trans 'postal_code' %}</label><br>
-                        <input for="{{ form.postal_code.id_for_label }}" type="text" name="{{ form.postal_code.html_name }}" value="{{ information.postal_code | default_if_none:'-' }}">
-                    </div>
-                    <div class="col-md-3">
-                        <label for="{{ form.city.id_for_label }}">{% trans 'city' %}</label><br>
-                        <input for="{{ form.city.id_for_label }}" type="text" name="{{ form.city.html_name }}" value="{{ information.city | default_if_none:'-' }}">
-                    </div>
-                    <div class="col-md-3">
-                        <label for="{{ form.country.id_for_label }}">{% trans 'country' %}</label><br>
-                        <input for="{{ form.country.id_for_label }}" type="text" name="{{ form.country.html_name }}" value="{{ information.country | default_if_none:'-' }}">
-                    </div>
-                </div>
-                <br>
-
-                <div class="row">
                     <div class="col-md-3">
                         <label for="{{ form.contest.id_for_label }}">{% trans 'contest' %}</label><br>
-                        <select multiple id="{{ form.contest.id_for_label }}" name="{{ form.contest.html_name }}">
+                        <select class="form-control" id="{{ form.contest.id_for_label }}" name="{{ form.contest.html_name }}">
                             {% for x, y in form.fields.contest.choices %}
                                 <option value="{{ x }}" {% if x == information.contest %}selected{% endif %}>
                                 {{ y }}
@@ -111,11 +77,37 @@
                             {% endfor %}
                         </select>
                     </div>
+                    <div class="col-md-6">
+                        <label for="{{ form.email.id_for_label }}">{% trans 'email' %}</label><br>
+                        <input type="text" class="form-control" id={{ form.email.id_for_label }} name="{{ form.email.html_name }}" value="{{ information.email | default_if_none:'-' }}">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="{{ form.phone_mobile.id_for_label }}">{% trans 'phone_mobile' %}</label><br>
+                        <input class="form-control" id="{{ form.email.id_for_label }}" type="text"  name="{{ form.phone_mobile.html_name }}" value="{{ information.phone_mobile | default_if_none:'-' }}">
+                    </div>
                 </div>
                 <br>
-
+                <div class="row">
+                    <div class="col-md-3">
+                        <label for="{{ form.location.id_for_label }}">{% trans 'location' %}</label><br>
+                        <input class="form-control" id="{{ form.location.id_for_label }}" type="text" name="{{ form.location.html_name }}" value="{{ information.location | default_if_none:'-' }}">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="{{ form.postal_code.id_for_label }}">{% trans 'postal_code' %}</label><br>
+                        <input class="form-control" id="{{ form.postal_code.id_for_label }}" type="text" name="{{ form.postal_code.html_name }}" value="{{ information.postal_code | default_if_none:'-' }}">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="{{ form.city.id_for_label }}">{% trans 'city' %}</label><br>
+                        <input class="form-control" id="{{ form.city.id_for_label }}" type="text" name="{{ form.city.html_name }}" value="{{ information.city | default_if_none:'-' }}">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="{{ form.country.id_for_label }}">{% trans 'country' %}</label><br>
+                        <input class="form-control" id="{{ form.country.id_for_label }}" type="text" name="{{ form.country.html_name }}" value="{{ information.country | default_if_none:'-' }}">
+                    </div>
+                </div>
+                <br>
                 <button type="submit" class="btn btn-primary" title="{% trans 'Save'%}" id="bt_interships_new">
-                    <span class="glyphicon glyphicon-save" aria-hidden="true"/> {% trans 'save'%}
+                    <span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'save'%}
                 </button>
             </form>
         </div>

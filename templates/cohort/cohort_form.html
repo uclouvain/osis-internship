@@ -5,18 +5,18 @@
 {% block breadcrumb %}
     <li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
     <li><a href="{% url 'internship' %}">{% trans 'internships_managment' %}</a></li>
-    <li class="active">{{ page_title }}</li>
+    <li class="active">{% trans 'cohort' %}</li>
 {% endblock %}
 
 {% block content %}
     <div class="page-header">
-        <h2>{{ page_title }}</h2>
+        <h2>{% trans 'cohort' %}</h2>
     </div>
 
     <div class="panel panel-default">
         <div class="panel panel-body">
             <form method="POST" class="post-form">
-                {%  csrf_token %}
+                {% csrf_token %}
                 <div class="row">
                     <div class="col-md-8">
                         <label for="txt_name">{{ form.name.label }}</label>
@@ -30,14 +30,12 @@
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="col-md-12">
-                        <label for="txt_description">{{ form.description.label }}</label>
-                        {{ form.description }}
-                        <span class="error" required>{{ form.description.errors }}</span>
-                    </div>
-                </div>
+                <br>
+                <label for="txt_description">{{ form.description.label }}</label>
+                {{ form.description }}
+                <span class="error" required>{{ form.description.errors }}</span>
 
+                <br>
                 <div class="row">
                     <div class="col-md-4">
                         <label for="txt_publication_start_date">{{ form.publication_start_date.label }}</label>
@@ -64,17 +62,14 @@
                     </div>
                   </div>
                 {% endif %}
-                <br />
-                <div class="row">
-                    <div class="col-md-12">
-                        <button type="submit" class="btn btn-primary" title="{%trans 'save' %}" id="bt_cohort_save">
-                            <span class="glyphicon glyphicon-save" aria-hidden="true">{% trans 'save' %}</span>
-                        </button>
-                        <a class="btn btn-default" id="" href="{% url 'internship' %}">
-                            <span class="glyphicon glyphicon-cancel" aria-hidden="true">{% trans 'return' %}</span>
-                        </a>
-                    </div>
-                </div>
+
+                <br>
+                <button type="submit" class="btn btn-primary" title="{%trans 'save' %}" id="bt_cohort_save">
+                    <span class="glyphicon glyphicon-save" aria-hidden="true">{% trans 'save' %}</span>
+                </button>
+                <a class="btn btn-default" id="" href="{% url 'internship' %}">
+                    <span class="glyphicon glyphicon-cancel" aria-hidden="true">{% trans 'return' %}</span>
+                </a>
             </form>
         </div>
     </div>

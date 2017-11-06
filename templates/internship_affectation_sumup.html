@@ -32,6 +32,7 @@
     <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></li>
     <li class="active">{% trans 'assignations_sumup' %}</li>
 {% endblock %}
+
 {% block content %}
     <div class="page-header">
         <h2>{% trans 'assignations_sumup' %}</h2>
