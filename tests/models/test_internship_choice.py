@@ -31,7 +31,7 @@ from base.tests.models import test_student
 from internship.tests.models import test_internship_student_information
 from internship.tests.factories.internship import InternshipFactory
 from internship.tests.factories.cohort import CohortFactory
-from internship.tests.factories import internship_choice
+from internship.tests.factories.internship_choice import create_internship_choice
 
 
 class TestSearchByStudentOrChoice(TestCase):
@@ -46,13 +46,13 @@ class TestSearchByStudentOrChoice(TestCase):
         self.student_information = test_internship_student_information.create_student_information(person=self.student.person, cohort=self.cohort)
         self.other_student_information = test_internship_student_information.create_student_information(person=self.other_student.person, cohort=self.cohort)
 
-        self.choice_1 = internship_choice.create_internship_choice(self.organization, self.student, self.speciality, internship=self.other_internship)
-        self.choice_2 = internship_choice.create_internship_choice(self.organization, self.student, self.speciality, internship=self.internship)
-        self.choice_3 = internship_choice.create_internship_choice(self.organization, self.other_student, self.speciality, internship=self.other_internship)
+        self.choice_1 = create_internship_choice(self.organization, self.student, self.speciality, internship=self.other_internship)
+        self.choice_2 = create_internship_choice(self.organization, self.student, self.speciality, internship=self.internship)
+        self.choice_3 = create_internship_choice(self.organization, self.other_student, self.speciality, internship=self.other_internship)
 
     def test_duplicates_are_forbidden(self):
         with self.assertRaises(IntegrityError):
-            internship_choice.create_internship_choice(self.organization, self.student, self.speciality, internship=self.internship)
+            create_internship_choice(self.organization, self.student, self.speciality, internship=self.internship)
 
     def test_with_only_student(self):
         choices = list(mdl_internship_choice.search_by_student_or_choice(student=self.student))
@@ -69,10 +69,6 @@ class TestSearchByStudentOrChoice(TestCase):
     def test_with_student_and_internship_choice(self):
         choices = list(mdl_internship_choice.search_by_student_or_choice(student=self.student, internship=self.internship))
         self.assertListEqual([self.choice_2], choices)
-
-    def test_get_choices_for_non_mandatory_internship(self):
-        choices = list(mdl_internship_choice.get_non_mandatory_internship_choices(self.cohort))
-        self.assertEqual(len(choices), 3)
 
     def test_get_number_students(self):
         expected = 2

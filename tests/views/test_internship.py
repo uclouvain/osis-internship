@@ -32,7 +32,7 @@ from internship.models import internship_choice as mdl_internship_choice
 from internship.models import period_internship_places as mdl_period_places
 from internship.tests.factories.internship_choice import create_internship_choice
 from internship.tests.factories.offer import OfferFactory
-from internship.tests.models import (test_internship_offer, test_internship_speciality, test_organization, test_period)
+from internship.tests.models import test_internship_offer, test_internship_speciality, test_organization, test_period
 from internship.tests.factories.cohort import CohortFactory
 from internship.tests.factories.internship import InternshipFactory
 

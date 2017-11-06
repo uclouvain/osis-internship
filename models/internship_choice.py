@@ -25,7 +25,7 @@
 ##############################################################################
 from django.db import models
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
-from internship import models as mdl
+from internship.models.internship import Internship
 
 
 class InternshipChoiceAdmin(SerializableModelAdmin):
@@ -84,14 +84,8 @@ def search_by_student_or_choice(student=None, internship=None):
         return None
 
 
-def get_non_mandatory_internship_choices(cohort):
-    internships = mdl.internship.Internship.objects.filter(cohort=cohort, speciality=None, pk__gte=1)
-    return InternshipChoice.objects.filter(internship_id__in=internships.values_list("id", flat=True)).\
-        select_related("student", "organization", "speciality", "internship")
-
-
 def get_choices_made(cohort, student):
-    internships = mdl.internship.Internship.objects.filter(cohort=cohort, pk__gte=1)
+    internships = Internship.objects.filter(cohort=cohort, pk__gte=1)
     return InternshipChoice.objects.filter(internship_id__in=internships.values_list("id", flat=True),
                                            student=student).distinct()
 

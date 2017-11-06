@@ -23,11 +23,11 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from internship.models import internship_choice as mdl_internship_choice
+from internship.models.internship_choice import InternshipChoice
 
 
 def create_internship_choice(organization, student, speciality, internship, choice=1):
-    choice = mdl_internship_choice.InternshipChoice(organization=organization, student=student, speciality=speciality,
-                                                    choice=choice, internship=internship, priority=False)
+    choice = InternshipChoice(organization=organization, student=student, speciality=speciality, choice=choice,
+                              internship=internship, priority=False)
     choice.save()
     return choice

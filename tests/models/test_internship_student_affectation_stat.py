@@ -31,7 +31,7 @@ from internship.tests.factories.internship import InternshipFactory
 from internship.tests.factories.organization import OrganizationFactory
 from internship.tests.factories.speciality import SpecialityFactory
 from internship.tests.factories.period import PeriodFactory
-from internship.tests.factories import internship_choice
+from internship.tests.factories.internship_choice import create_internship_choice
 
 
 class TestInternshipStudentAffectationStat(TestCase):
@@ -52,8 +52,7 @@ class TestInternshipStudentAffectationStat(TestCase):
     def test_build_with_choices(self):
         cohort = CohortFactory()
         internship = InternshipFactory(cohort=cohort)
-        self.choice = internship_choice.create_internship_choice(self.organization, self.student, self.specialty,
-                                                                 internship=internship)
+        self.choice = create_internship_choice(self.organization, self.student, self.specialty, internship=internship)
         student_choices = [self.choice,]
         affectation = internship_student_affectation_stat.build(self.student, self.organization, self.specialty,
                                                                 self.period, student_choices)

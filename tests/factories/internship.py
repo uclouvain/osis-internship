@@ -25,7 +25,6 @@
 ##############################################################################
 import factory
 import factory.fuzzy
-import pendulum
 
 from internship.tests.factories.cohort import CohortFactory
 
