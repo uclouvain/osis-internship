@@ -26,7 +26,6 @@
 
 from django.db import transaction
 from internship.models.internship_student_information import InternshipStudentInformation
-from internship.models.cohort import Cohort
 from internship.models.internship import Internship
 from internship.models.internship_speciality import InternshipSpeciality
 from internship.models.internship_choice import InternshipChoice
@@ -44,36 +43,34 @@ from internship.utils.period_place_utils import *
 from internship.utils.student_utils import *
 import random
 
+
 class AssignmentSolver:
     def __init__(self, cohort):
         self.cohort = cohort
         self.costs  = {1: 0, 2: 1, 3: 2, 4: 3, 'E': 0, 'I': 10, 'X': 1000}
-
-    def initialize_data(self):
         self.affectations = []
-        self.student_informations      = InternshipStudentInformation.objects.filter(cohort=self.cohort).order_by("?")
-        self.person_ids                = self.student_informations.values_list("person_id", flat=True)
-        self.students                  = Student.objects.filter(person_id__in=self.person_ids)
-        self.internships               = Internship.objects.filter(cohort=self.cohort).order_by("position", "name")
-        self.mandatory_internships     = self.internships.exclude(speciality__isnull=True)
+        self.student_informations = InternshipStudentInformation.objects.filter(cohort=self.cohort).order_by("?")
+        self.person_ids = self.student_informations.values_list("person_id", flat=True)
+        self.students = Student.objects.filter(person_id__in=self.person_ids)
+        self.internships = Internship.objects.filter(cohort=self.cohort).order_by("position", "name")
+        self.mandatory_internships = self.internships.exclude(speciality__isnull=True)
         self.non_mandatory_internships = Internship.objects.filter(cohort=self.cohort, speciality__isnull=True)
-        self.non_mandatory_specialities= InternshipSpeciality.objects.filter(cohort=self.cohort, mandatory=False)
-        self.default_organization      = Organization.objects.filter(cohort=self.cohort, reference="999").first()
-        self.forbidden_organizations   = Organization.objects.annotate(reference_length=Length('reference')) \
+        self.non_mandatory_specialities = InternshipSpeciality.objects.filter(cohort=self.cohort, mandatory=False)
+        self.default_organization = Organization.objects.filter(cohort=self.cohort, reference="999").first()
+        self.forbidden_organizations = Organization.objects.annotate(reference_length=Length('reference')) \
                                           .exclude(reference="00").filter(cohort=self.cohort, reference_length=3)
-        self.default_speciality        = InternshipSpeciality.objects.filter(cohort=self.cohort, acronym="MO").first()
-        self.pending_organization      = Organization.objects.filter(cohort=self.cohort, reference="604").first()
-        self.offers                    = InternshipOffer.objects.filter(cohort=self.cohort)
-        self.periods                   = Period.objects.extra(select={"period_number": "CAST(substr(name, 2) AS INTEGER)"}) \
+        self.default_speciality = InternshipSpeciality.objects.filter(cohort=self.cohort, acronym="MO").first()
+        self.pending_organization = Organization.objects.filter(cohort=self.cohort, reference="604").first()
+        self.offers = InternshipOffer.objects.filter(cohort=self.cohort)
+        self.periods = Period.objects.extra(select={"period_number": "CAST(substr(name, 2) AS INTEGER)"}) \
                                           .exclude(name="P12").filter(cohort=self.cohort).order_by("period_number")
-        self.offer_ids                 = self.offers.values_list("id", flat=True)
-        self.available_places          = PeriodInternshipPlaces.objects.filter(internship_offer_id__in=self.offer_ids).values()
-        self.mandatory_periods         = self.periods.exclude(name="P1").exclude(name="P2")
-        self.errors_count              = 0
+        self.offer_ids = self.offers.values_list("id", flat=True)
+        self.available_places = PeriodInternshipPlaces.objects.filter(internship_offer_id__in=self.offer_ids).values()
+        self.mandatory_periods = self.periods.exclude(name="P1").exclude(name="P2")
+        self.errors_count = 0
 
     def solve(self):
-        self.initialize_data()
-        self.assign_enrollments_to_students(self.internships) # 1.
+        self.assign_enrollments_to_students(self.internships)  # 1.
         for internship in self.internships:
             # randomize students for each internship cycle to make sure equity of luck is respected
             self.student_informations = self.student_informations.order_by("?")
@@ -86,54 +83,39 @@ class AssignmentSolver:
         for affectation in self.affectations:
             affectation.save()
 
-    #################################################################################################################
-    ## 1. Secretaries submit mandatory enrollments for some students, we start by saving all those in the solution ##
-    #################################################################################################################
-
     def assign_enrollments_to_students(self, internships):
+        """1. Secretaries submit mandatory enrollments for some students, we start by saving all those in the
+           solution."""
         enrollments = InternshipEnrollment.objects.filter(internship__in=internships)
         for enrollment in enrollments:
-            affectation = self.build_student_affectation(enrollment.place, enrollment.student, enrollment.period, \
-                            enrollment.internship_offer.speciality, "E", True)
-
+            affectation = self.build_student_affectation(enrollment.place, enrollment.student, enrollment.period,
+                                                         enrollment.internship_offer.speciality, "E", True)
             self.update_period_places_for_affectation(affectation)
             self.affectations.append(affectation)
 
-    #################################################################################################################
-    ## 2. Some students are priority students, their choices need to be taken into account before the others       ##
-    #################################################################################################################
-
     def assign_priority_choices_to_students(self, internship):
+        """2. Some students are priority students, their choices need to be taken into account before the others."""
         priority_student_ids = InternshipChoice.objects.filter(internship=internship, priority=True).values("student").distinct()
         for student_id in priority_student_ids:
             student = Student.objects.get(pk=student_id["student"])
             self.assign_offer_to_student_for_internship(student, internship)
 
-    #################################################################################################################
-    ## 3. Do our best to assign the best possible choice to other students                                         ##
-    #################################################################################################################
-
     def assign_best_offer_for_student_choices(self, student_informations, internship):
+        """3. Do our best to assign the best possible choice to other students."""
         for student_information in student_informations:
             student = Student.objects.filter(person_id=student_information.person_id).first()
             self.assign_offer_to_student_for_internship(student, internship)
 
-    #################################################################################################################
-    ## 4. When student has empty periods at the end, affect default speciality and organisation                    ##
-    #################################################################################################################
-
     def assign_default_speciality_and_organization_for_students_with_empty_periods(self, speciality, organization, students, periods):
+        """4. When student has empty periods at the end, affect default speciality and organisation."""
         for student in students:
             if self.student_has_empty_periods(student, self.affectations):
                 empty_periods = self.student_empty_periods(student, self.affectations)
                 affectations = self.build_affectation_for_periods(student, organization, empty_periods, speciality, "I", False)
                 self.affectations.extend(affectations)
 
-    #################################################################################################################
-    ## Assign offer to student for specific internship                                                             ##
-    #################################################################################################################
-
     def assign_offer_to_student_for_internship(self, student, internship):
+        """Assign offer to student for specific internship."""
         choices = InternshipChoice.objects.filter(student=student, internship=internship).order_by("choice")
         affectation = None
         # Mandatory internship
@@ -155,7 +137,9 @@ class AssignmentSolver:
         for choice in choices:
             periods = self.find_first_student_available_periods_for_internship_choice(student, internship, choice)
             if len(periods) > 0:
-                affectations.extend(self.build_affectation_for_periods(student, choice.organization, periods, choice.speciality, choice.choice, choice.priority))
+                affectations.extend(self.build_affectation_for_periods(student, choice.organization, periods,
+                                                                       choice.speciality, choice.choice,
+                                                                       choice.priority))
                 break
 
         # None of student choices available? Try to affect outside of choices
@@ -178,8 +162,8 @@ class AssignmentSolver:
         else:
             return []
 
-    ## Look for available periods for specific choice
     def find_first_student_available_periods_for_internship_choice(self, student, internship, choice):
+        """Look for available periods for specific choice."""
         periods_with_places = self.find_available_periods_for_internship_choice(choice)
 
         return self.first_relevant_periods(student, internship.length_in_periods, periods_with_places)
@@ -192,8 +176,8 @@ class AssignmentSolver:
         offers = self.find_offers_for_speciality(internship.speciality)
         return self.find_available_periods_for_offers(offers)
 
-    ## Difference between the authorized periods and the already affected periods from the student
     def all_available_periods(self, student, internship_length, periods):
+        """Difference between the authorized periods and the already affected periods from the student."""
         student_affectations = get_student_affectations(student, self.affectations)
         unavailable_periods  = get_periods_from_affectations(student_affectations)
         available_periods    = difference(periods, unavailable_periods)
@@ -201,8 +185,8 @@ class AssignmentSolver:
 
         return grouped_periods
 
-    ## Return relevant period groups for student for internship. Can be groups of 1 or 2 periods.
     def first_relevant_periods(self, student, internship_length, periods):
+        """Return relevant period groups for student for internship. Can be groups of 1 or 2 periods."""
         available_periods    = self.all_available_periods(student, internship_length, periods)
 
         if len(available_periods) > 0:
@@ -223,8 +207,8 @@ class AssignmentSolver:
 
     def find_best_available_offer_for_internship_periods(self, internship, choices, periods):
         unavailable_organizations = list(map(lambda choice: choice.organization, choices))
-        available_offers          = self.find_offers_for_available_organizations(internship.speciality, unavailable_organizations)
-        period_places             = self.get_available_period_places_for_periods(available_offers, periods)
+        available_offers = self.find_offers_for_available_organizations(internship.speciality, unavailable_organizations)
+        period_places = self.get_available_period_places_for_periods(available_offers, periods)
 
         if len(period_places) > 0:
             return available_offers.get(pk=period_places[0]["internship_offer_id"])

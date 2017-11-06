@@ -199,11 +199,11 @@
                                     </td>
                                     {% for period, enrollment in periods.items %}
                                         {% if enrollment.choice == 'I' %}
-                                            <td class="internship-{{enrollment.type_of_internship}} period-{{period}} {{enrollment.speciality.acronym}}" style="background-color: #00ff95">
+                                            <td style="background-color: #00ff95">
                                         {% elif enrollment.choice == 'X' %}
-                                            <td class="internship-{{enrollment.type_of_internship}} period-{{period}} {{enrollment.speciality.acronym}}" style="background-color: #ffa8a8">
+                                            <td style="background-color: #ffa8a8">
                                         {% else %}
-                                            <td class="internship-{{enrollment.type_of_internship}} period-{{period}} {{enrollment.speciality.acronym}}">
+                                            <td>
                                         {% endif %}
 
                                         {% if forloop.counter <= 12 %}

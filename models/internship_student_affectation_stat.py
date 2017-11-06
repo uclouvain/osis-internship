@@ -70,3 +70,39 @@ def find_non_mandatory_affectations(period_ids):
 def find_affectations(period_ids):
     return InternshipStudentAffectationStat.objects.filter(period__id__in=period_ids).\
         select_related("student", "organization", "speciality")
+
+
+def find_by_student(student, cohort):
+    return InternshipStudentAffectationStat.objects.filter(student=student, period__cohort=cohort)
+
+
+def delete_affectations(student, cohort):
+    affectations = find_by_student(student, cohort)
+    affectations.delete()
+
+
+def build(student, organization, specialty, period, choices):
+    affectation = InternshipStudentAffectationStat()
+    affectation.student = student
+    affectation.organization = organization
+    affectation.speciality = specialty
+    affectation.period = period
+
+    check_choice = False
+    for choice in choices:
+        if choice.organization == organization:
+            affectation.choice = choice.choice
+            check_choice = True
+            if choice.choice == 1:
+                affectation.cost = 0
+            elif choice.choice == 2:
+                affectation.cost = 1
+            elif choice.choice == 3:
+                affectation.cost = 2
+            elif choice.choice == 4:
+                affectation.cost = 3
+    if not check_choice:
+        affectation.choice = "I"
+        affectation.cost = 10
+
+    return affectation
