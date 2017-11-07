@@ -24,24 +24,26 @@
 #
 ##############################################################################
 
+import random
+
 from django.db import transaction
-from internship.models.internship_student_information import InternshipStudentInformation
+from django.db.models.functions import Length
+
+from base.models.student import Student
 from internship.models.internship import Internship
-from internship.models.internship_speciality import InternshipSpeciality
 from internship.models.internship_choice import InternshipChoice
 from internship.models.internship_enrollment import InternshipEnrollment
 from internship.models.internship_offer import InternshipOffer
-from internship.models.period_internship_places import PeriodInternshipPlaces
+from internship.models.internship_speciality import InternshipSpeciality
+from internship.models.internship_student_affectation_stat import InternshipStudentAffectationStat
+from internship.models.internship_student_information import InternshipStudentInformation
 from internship.models.organization import Organization
 from internship.models.period import Period
-from internship.models.internship_student_affectation_stat import InternshipStudentAffectationStat
-from base.models.student import Student
-from django.db.models.functions import Length
-from internship.utils.list_utils import difference, flatten
-from internship.utils.period_utils import *
-from internship.utils.period_place_utils import *
-from internship.utils.student_utils import *
-import random
+from internship.models.period_internship_places import PeriodInternshipPlaces
+from internship.utils.student_assignment.list_utils import difference, flatten
+from internship.utils.student_assignment.period_place_utils import *
+from internship.utils.student_assignment.period_utils import *
+from internship.utils.student_assignment.student_utils import *
 
 
 class AssignmentSolver:

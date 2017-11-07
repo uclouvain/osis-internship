@@ -24,10 +24,11 @@
 #
 ##############################################################################
 
-import unittest
-from internship.utils.period_utils import *
-from internship.tests.factories.period import PeriodFactory
 from django.test import TestCase
+
+from internship.tests.factories.period import PeriodFactory
+from internship.utils.student_assignment.period_utils import *
+
 
 class PeriodUtilsTestCase(TestCase):
     def setUp(self):
