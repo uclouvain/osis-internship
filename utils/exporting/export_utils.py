@@ -31,7 +31,6 @@ from openpyxl.writer.excel import save_virtual_workbook
 from openpyxl.styles import Color, Style, PatternFill
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
-
 from internship import models
 
 HEADER = [str(_('lastname')),

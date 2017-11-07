@@ -25,7 +25,9 @@
 ##############################################################################
 import sys
 import unittest
+import os
 import os.path
+import subprocess
 from mock import patch
 from internship.docs.build import generate_pdf, generate_homepage, generate_html, get_path, show_help
 
@@ -38,6 +40,9 @@ class TestDocumentationBuild(unittest.TestCase):
         try:
             run_under_args_context(generate_pdf, self.path_args)
             self.assertTrue(os.path.isfile("internship/docs/user-manual_fr.pdf"))
+            os.chdir('internship')
+            subprocess.check_output(['git', 'checkout', '--', 'docs/user-manual_fr.pdf'])
+            os.chdir('..')
         except FileNotFoundError:
             self.assertTrue(True)
 
@@ -45,6 +50,9 @@ class TestDocumentationBuild(unittest.TestCase):
         try:
             run_under_args_context(generate_html, self.path_args)
             self.assertTrue(os.path.isfile("internship/docs/user-manual_fr.html"))
+            os.chdir('internship')
+            subprocess.check_output(['git', 'checkout', '--', 'docs/user-manual_fr.html'])
+            os.chdir('..')
         except FileNotFoundError:
             self.assertTrue(True)
 

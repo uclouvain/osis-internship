@@ -31,7 +31,7 @@ from django.shortcuts import get_object_or_404, render
 from internship import models
 from internship.forms.organization_address_form import OrganizationAddressForm
 from internship.forms.organization_form import OrganizationForm
-from internship.utils import export_utils, export_utils_pdf
+from internship.utils.exporting import export_utils
 from internship.views.internship import get_all_specialities, set_tabs_name
 
 
@@ -227,25 +227,6 @@ def export_organisation_affectation_as_xls(request, cohort_id, organization_id):
                 affectation.master = offer.master
     file_name = organization.name.strip().replace(' ', '_')
     return export_utils.export_xls(cohort, organization, affection_by_specialities, file_name)
-
-
-@login_required
-@permission_required('internship.is_internship_manager', raise_exception=True)
-def export_pdf(request, organization_id, speciality_id):
-    organization = models.organization.find_by_id(organization_id)
-    speciality = models.internship_speciality.get_by_id(speciality_id)
-    affectations = models.internship_student_affectation_stat.search(organization=organization, speciality=speciality)
-    for a in affectations:
-        a.email = ""
-        a.adress = ""
-        a.phone_mobile = ""
-        internship_student_information = models.internship_student_information.search(person=a.student.person)
-        if internship_student_information:
-            informations = internship_student_information.first()
-            a.email = informations.email
-            a.adress = informations.location + " " + informations.postal_code + " " + informations.city
-            a.phone_mobile = informations.phone_mobile
-    return export_utils_pdf.print_affectations(organization_id, affectations)
 
 
 def sort_organizations(organizations):

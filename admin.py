@@ -23,6 +23,8 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from io import StringIO
+
 from django import forms
 from django.conf.urls import url
 from django.contrib import admin
@@ -31,40 +33,29 @@ from django.http import HttpResponseRedirect
 from django.template.response import TemplateResponse
 from django.utils.html import format_html
 from django.utils.translation import ugettext_lazy as _
-from io import StringIO
-
+from internship.utils.importing.import_students import import_csv
 from internship.models import *
 from internship.utils import student_loader
-from internship.utils.import_students import import_csv
 from osis_common.models.serializable_model import SerializableModelAdmin
 
+admin.site.register(internship_offer.InternshipOffer, internship_offer.InternshipOfferAdmin)
 
-admin.site.register(internship_offer.InternshipOffer,
-                    internship_offer.InternshipOfferAdmin)
+admin.site.register(internship_enrollment.InternshipEnrollment, internship_enrollment.InternshipEnrollmentAdmin)
 
-admin.site.register(internship_enrollment.InternshipEnrollment,
-                    internship_enrollment.InternshipEnrollmentAdmin)
+admin.site.register(internship_master.InternshipMaster, internship_master.InternshipMasterAdmin)
 
-admin.site.register(internship_master.InternshipMaster,
-                    internship_master.InternshipMasterAdmin)
+admin.site.register(internship_choice.InternshipChoice, internship_choice.InternshipChoiceAdmin)
 
-admin.site.register(internship_choice.InternshipChoice,
-                    internship_choice.InternshipChoiceAdmin)
-
-admin.site.register(period.Period,
-                    period.PeriodAdmin)
+admin.site.register(period.Period, period.PeriodAdmin)
 
 admin.site.register(period_internship_places.PeriodInternshipPlaces,
                     period_internship_places.PeriodInternshipPlacesAdmin)
 
-admin.site.register(internship_speciality.InternshipSpeciality,
-                    internship_speciality.InternshipSpecialityAdmin)
+admin.site.register(internship_speciality.InternshipSpeciality, internship_speciality.InternshipSpecialityAdmin)
 
-admin.site.register(organization.Organization,
-                    organization.OrganizationAdmin)
+admin.site.register(organization.Organization, organization.OrganizationAdmin)
 
-admin.site.register(organization_address.OrganizationAddress,
-                    organization_address.OrganizationAddressAdmin)
+admin.site.register(organization_address.OrganizationAddress, organization_address.OrganizationAddressAdmin)
 
 admin.site.register(internship_student_information.InternshipStudentInformation,
                     internship_student_information.InternshipStudentInformationAdmin)
@@ -88,12 +79,13 @@ class StudentImportActionForm(forms.Form):
 
 @admin.register(cohort.Cohort)
 class CohortAdmin(SerializableModelAdmin):
-    list_display = ('id', 'name', 'description', 'publication_start_date', 'subscription_start_date', 'subscription_end_date', 'free_internships_number', 'cohort_actions')
+    list_display = ('id', 'name', 'description', 'publication_start_date', 'subscription_start_date',
+                    'subscription_end_date', 'free_internships_number', 'cohort_actions')
     readonly_fields = ('id', 'cohort_actions')
-    fields = ('id', 'name', 'description', 'publication_start_date', 'subscription_start_date', 'subscription_end_date', 'free_internships_number', 'cohort_actions')
+    fields = ('id', 'name', 'description', 'publication_start_date', 'subscription_start_date', 'subscription_end_date',
+              'free_internships_number', 'cohort_actions')
 
     def process_import(self, request, cohort_id):
-
         current_cohort = self.get_object(request, cohort_id)
 
         if request.method != 'POST':
@@ -124,9 +116,7 @@ class CohortAdmin(SerializableModelAdmin):
             'opts': self.model._meta,
         })
 
-        return TemplateResponse(request,
-                                'admin/internship/cohort/import_students.html',
-                                context)
+        return TemplateResponse(request, 'admin/internship/cohort/import_students.html', context)
 
     def get_urls(self):
         urls = super().get_urls()

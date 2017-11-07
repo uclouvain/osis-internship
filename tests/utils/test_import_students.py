@@ -25,7 +25,7 @@
 ##############################################################################
 from unittest import mock
 from unittest.mock import patch
-import unittest
+
 import faker
 import pendulum
 from django.test import TestCase
@@ -37,7 +37,7 @@ class ImportStudentsXLSTestCase(TestCase):
     @patch('base.models.person.Person')
     @patch('internship.models.internship_student_information.InternshipStudentInformation')
     def test_import_students_with_person(self, mock_isi, mock_person):
-        from internship.utils.import_students import import_csv_row
+        from internship.utils.importing.import_students import import_csv_row
         from internship.tests.utils.test_student_loader import _generate_record
 
         mock_person.objects = mock.Mock()
@@ -66,7 +66,7 @@ class ImportStudentsXLSTestCase(TestCase):
     @patch('base.models.person.Person')
     @patch('internship.models.internship_student_information.InternshipStudentInformation')
     def test_no_person_name_with_comma(self, mock_isi, mock_person):
-        from internship.utils.import_students import import_csv_row
+        from internship.utils.importing.import_students import import_csv_row
         from internship.tests.utils.test_student_loader import _generate_record
 
         mock_person.objects = mock.Mock()
@@ -103,7 +103,7 @@ class ImportStudentsXLSTestCase(TestCase):
     @patch('base.models.person.Person')
     @patch('internship.models.internship_student_information.InternshipStudentInformation')
     def test_no_person_name_without_comma(self, mock_isi, mock_person):
-        from internship.utils.import_students import import_csv_row
+        from internship.utils.importing.import_students import import_csv_row
         from internship.tests.utils.test_student_loader import _generate_record
 
         mock_person.objects = mock.Mock()
@@ -137,10 +137,10 @@ class ImportStudentsXLSTestCase(TestCase):
             phone_mobile=row[11], city=row[9], cohort=cohort
         )
 
-    @patch('internship.utils.import_students.import_csv_row')
+    @patch('internship.utils.importing.import_students.import_csv_row')
     def test_import_csv(self, mock_import_csv_row):
         from internship.tests.utils.test_student_loader import create_csv_stream
-        from internship.utils.import_students import import_csv
+        from internship.utils.importing.import_students import import_csv
 
         with create_csv_stream('demo.csv', number=5) as str_io:
             cohort = mock.Mock()
