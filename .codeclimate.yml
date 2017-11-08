@@ -4,3 +4,6 @@ engines:
     checks:
       E501:
         enabled: false
+
+exclude_paths:
+- "migrations"
