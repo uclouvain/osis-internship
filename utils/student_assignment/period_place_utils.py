@@ -30,7 +30,8 @@ def get_period_places_for_offer_ids(offer_ids, period_places):
 
 
 def get_period_places_for_offer_id_and_period_id(offer_id, period_id, period_places):
-    return list(filter(lambda period_place: period_place["period_id"] == period_id and period_place["internship_offer_id"] == offer_id,
+    return list(filter(lambda period_place: period_place["period_id"] == period_id
+                                            and period_place["internship_offer_id"] == offer_id,
                        period_places))
 
 
@@ -39,8 +40,9 @@ def get_period_places_for_period_ids(period_ids, period_places):
 
 
 def get_period_place_for_offer_and_period(offer, period, period_places):
-    return list(filter(lambda period_place: period_place["internship_offer_id"] == offer.id \
-            and period_place["period_id"] == period.id, period_places))[0]
+    return list(filter(lambda period_place: period_place["internship_offer_id"] == offer.id
+                                            and period_place["period_id"] == period.id,
+                       period_places))[0]
 
 
 def get_period_ids_from_period_places(period_places):

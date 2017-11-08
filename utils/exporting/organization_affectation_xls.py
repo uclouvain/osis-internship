@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -42,20 +42,20 @@ def export_xls(cohort, organization, affections_by_specialities):
     if workbook.worksheets:
         workbook.remove_sheet(workbook.worksheets[0])
 
-    for specialty, affectations in affections_by_specialities:
-        create_worksheet(workbook, organization, periods, specialty, affectations)
+    create_worksheets(workbook, organization, periods, affections_by_specialities)
 
     return save_virtual_workbook(workbook)
 
 
-def create_worksheet(workbook, organization, periods, specialty, affectations):
-    pattern = re.compile('Stage en|Intenship in', re.IGNORECASE)
-    sheet_title = pattern.sub('', specialty.name.strip())[0:30]
-    worksheet = workbook.create_sheet(title=sheet_title)
+def create_worksheets(workbook, organization, periods, affections_by_specialities):
+    for specialty, affectations in affections_by_specialities:
+        pattern = re.compile('Stage en|Intenship in', re.IGNORECASE)
+        sheet_title = pattern.sub('', specialty.name.strip())[0:30]
+        worksheet = workbook.create_sheet(title=sheet_title)
 
-    _add_header(worksheet, organization, specialty, affectations)
-    _columns_resizing(worksheet)
-    _add_periods(worksheet, periods, affectations)
+        _add_header(worksheet, organization, specialty, affectations)
+        _columns_resizing(worksheet)
+        _add_periods(worksheet, periods, affectations)
 
 
 def _add_header(worksheet, organization, specialty, affectations):
