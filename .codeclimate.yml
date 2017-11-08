@@ -1,5 +1,6 @@
-pep8:
-  enabled: true
-    checks:
-      E501:
-        enabled: false
+engines:
+  pep8:
+    enabled: true
+      checks:
+        E501:
+          enabled: false
