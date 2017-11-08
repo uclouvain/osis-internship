@@ -27,11 +27,12 @@ import operator
 
 from django.contrib.auth.decorators import login_required, permission_required
 from django.shortcuts import get_object_or_404, render
-
+from django.core.urlresolvers import reverse
+from django.http import HttpResponse, HttpResponseRedirect
 from internship import models
 from internship.forms.organization_address_form import OrganizationAddressForm
 from internship.forms.organization_form import OrganizationForm
-from internship.utils.exporting import export_utils
+from internship.utils.exporting import organization_affectation_xls
 from internship.views.internship import get_all_specialities, set_tabs_name
 
 
@@ -174,7 +175,8 @@ def student_affectation(request, cohort_id, organization_id):
         a.email = ""
         a.adress = ""
         a.phone_mobile = ""
-        internship_student_information= models.internship_student_information.search(person=a.student.person, cohort=cohort)
+        internship_student_information= models.internship_student_information.search(person=a.student.person,
+                                                                                     cohort=cohort)
         if internship_student_information:
             informations = internship_student_information.first()
             a.email = informations.email
@@ -201,22 +203,22 @@ def student_affectation(request, cohort_id, organization_id):
 def export_organisation_affectation_as_xls(request, cohort_id, organization_id):
     cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
     organization = models.organization.find_by_id(organization_id)
-    internships = models.internship_offer.search(organization = organization)
+    internships = models.internship_offer.search(organization=organization)
     specialities = list({offer.speciality for offer in internships})
     specialities = sorted(specialities, key=lambda spec: spec.order_position)
-    affection_by_specialities = [(internship_speciality,
-                                  list(models.internship_student_affectation_stat.search(
-                                      organization=organization,
-                                      speciality=internship_speciality)))
-                                 for internship_speciality in specialities]
-    for speciality, affectations in affection_by_specialities:
+    affections_by_specialities = [(internship_speciality,
+                                   list(models.internship_student_affectation_stat.search(organization=organization,
+                                                                                          speciality=internship_speciality)))
+                                  for internship_speciality in specialities]
+    for speciality, affectations in affections_by_specialities:
         for affectation in affectations:
             affectation.email = ""
             affectation.adress = ""
             affectation.phone_mobile = ""
             affectation.master = ""
             internship_student_information = models.internship_student_information.search(person=affectation.student.person)
-            internship_offer = models.internship_offer.search(organization=affectation.organization, speciality = affectation.speciality)
+            internship_offer = models.internship_offer.search(organization=affectation.organization,
+                                                              speciality=affectation.speciality)
             if internship_student_information:
                 informations = internship_student_information.first()
                 affectation.email = informations.email
@@ -225,8 +227,7 @@ def export_organisation_affectation_as_xls(request, cohort_id, organization_id):
             if internship_offer:
                 offer = internship_offer.first()
                 affectation.master = offer.master
-    file_name = organization.name.strip().replace(' ', '_')
-    return export_utils.export_xls(cohort, organization, affection_by_specialities, file_name)
+    return export_xls(cohort, organization, affections_by_specialities)
 
 
 def sort_organizations(organizations):
@@ -270,3 +271,20 @@ def set_speciality_unique(specialities):
 
     specialities = [x for x in specialities if x != 0]
     return specialities
+
+
+def export_xls(cohort, organization, affections_by_specialities):
+    if not affections_by_specialities:
+        redirect_url = reverse('place_detail_student_affectation', kwargs={
+            'cohort_id': cohort.id,
+            'organization_id': organization.id,
+        })
+        return HttpResponseRedirect(redirect_url)
+    else:
+        virtual_workbook = organization_affectation_xls.export_xls(cohort, organization, affections_by_specialities)
+        response = HttpResponse(virtual_workbook,
+                                content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        file_name_parts = organization.name.strip().replace(' ', '_')
+        file_name = "affectation_{}_{}.xlsx".format(str(organization.reference), file_name_parts)
+        response['Content-Disposition'] = 'attachment; filename={}'.format(file_name)
+        return response
