@@ -35,15 +35,6 @@ def group_periods_by_consecutives(periods, length=1):
                 yield periods[i: i + length]
 
 
-def group_periods(periods, length=1):
-    if length == 1:
-        for period in periods:
-            yield [period]
-    else:
-        for i in range(len(periods) - (length - 1)):
-            yield periods[i: i + length]
-
-
 def get_periods_from_affectations(affectations):
     return list(map(lambda affectation: affectation.period, affectations))
 
