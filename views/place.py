@@ -205,7 +205,7 @@ def export_organisation_affectation_as_xls(request, cohort_id, organization_id):
     organization = models.organization.find_by_id(organization_id)
     internships = models.internship_offer.search(organization=organization)
     specialities = list({offer.speciality for offer in internships})
-    specialities = sorted(specialities, key=lambda spec: spec.order_position)
+    specialities = sorted(specialities, key=lambda spec: spec.name)
     affections_by_specialities = [(internship_speciality,
                                    list(models.internship_student_affectation_stat.search(organization=organization,
                                                                                           speciality=internship_speciality)))

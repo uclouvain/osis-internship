@@ -49,8 +49,9 @@ def export_xls(cohort, organization, affections_by_specialities):
 
 def create_worksheets(workbook, organization, periods, affections_by_specialities):
     for specialty, affectations in affections_by_specialities:
-        pattern = re.compile('Stage en|Intenship in', re.IGNORECASE)
-        sheet_title = pattern.sub('', specialty.name.strip())[0:30]
+        #pattern = re.compile('Stage en|Intenship in', re.IGNORECASE)
+        #sheet_title = pattern.sub('', specialty.name.strip())[0:30]
+        sheet_title = specialty.name.strip()[0:30]
         worksheet = workbook.create_sheet(title=sheet_title)
 
         _add_header(worksheet, organization, specialty, affectations)
