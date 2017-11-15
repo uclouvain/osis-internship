@@ -25,13 +25,10 @@
 ##############################################################################
 from openpyxl import Workbook
 from openpyxl.writer.excel import save_virtual_workbook
-from openpyxl.styles import Color, Style, PatternFill
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 from internship import models
-from internship.utils.exporting.spreadsheet import columns_resizing
-
-MAX_COLUMN_NUMBER = 9
+from internship.utils.exporting.spreadsheet import columns_resizing, add_row, coloring_non_editable_line
 
 
 def export_xls(cohort, organization, affections_by_specialities):
@@ -57,51 +54,38 @@ def create_worksheets(workbook, organization, periods, affections_by_specialitie
 
 
 def _add_header(worksheet, organization, specialty, affectations):
-    _add_row(worksheet, [str(organization.name) if organization else ''])
-    _add_row(worksheet, [str(specialty.name)])
-    _add_row(worksheet)
+    add_row(worksheet, [str(organization.name) if organization else ''])
+    add_row(worksheet, [str(specialty.name)])
+    add_row(worksheet)
     date_format = str(_('date_format'))
     printing_date = timezone.now()
     printing_date = printing_date.strftime(date_format)
-    _add_row(worksheet, [str('%s: %s' % (_('file_production_date'), printing_date))])
-    _add_row(worksheet)
-    _add_row(worksheet, [str(affectations[0].master) if affectations else ''])
-    _add_row(worksheet)
-    _add_row(worksheet)
+    add_row(worksheet, [str('%s: %s' % (_('file_production_date'), printing_date))])
+    add_row(worksheet)
+    add_row(worksheet, [str(affectations[0].master) if affectations else ''])
+    add_row(worksheet)
+    add_row(worksheet)
 
 
 def _add_periods(worksheet, periods, affectations):
     for period in periods:
-        _add_row(worksheet, [str(period.name),
+        add_row(worksheet, [str(period.name),
                              period.date_start.strftime("%d-%m-%Y"),
                              period.date_end.strftime("%d-%m-%Y")])
-        _coloring_non_editable_line(worksheet, worksheet.max_row)
+        coloring_non_editable_line(worksheet, worksheet.max_row, 9)
         _add_affectations(worksheet, period, affectations)
-        _add_row(worksheet)
+        add_row(worksheet)
 
 
 def _add_affectations(worksheet, period, affectations):
     for affectation in affectations:
         if affectation.period.name == period.name:
             student = affectation.student
-            _add_row(worksheet, [str(student.person.last_name),
-                                 str(student.person.first_name),
-                                 student.registration_id,
-                                 affectation.email,
-                                 affectation.adress,
-                                 student.person.gender,
-                                 student.person.birth_date,
-                                 affectation.phone_mobile])
-
-
-def _add_row(worksheet, content=None):
-    if content:
-        worksheet.append(content)
-    else:
-        worksheet.append([str('')])
-
-
-def _coloring_non_editable_line(worksheet, row_number):
-    style_readonly = Style(fill=PatternFill(patternType='solid', fgColor=Color('C1C1C1')))
-    for column_number in range(1, MAX_COLUMN_NUMBER):
-        worksheet.cell(row=row_number, column=column_number).style = style_readonly
+            add_row(worksheet, [str(student.person.last_name),
+                                str(student.person.first_name),
+                                student.registration_id,
+                                affectation.email,
+                                affectation.adress,
+                                student.person.gender,
+                                student.person.birth_date,
+                                affectation.phone_mobile])

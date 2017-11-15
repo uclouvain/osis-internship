@@ -23,8 +23,22 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from openpyxl.styles import Color, Style, PatternFill
 
 
 def columns_resizing(worksheet, column_widths):
     for key in column_widths.keys():
         worksheet.column_dimensions[key].width = column_widths.get(key)
+
+
+def add_row(worksheet, content=None):
+    if content:
+        worksheet.append(content)
+    else:
+        worksheet.append([str('')])
+
+
+def coloring_non_editable_line(worksheet, row_number, max_column_number):
+    style_readonly = Style(fill=PatternFill(patternType='solid', fgColor=Color('C1C1C1')))
+    for column_number in range(1, max_column_number):
+        worksheet.cell(row=row_number, column=column_number).style = style_readonly

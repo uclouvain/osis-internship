@@ -25,11 +25,11 @@
 ##############################################################################
 from openpyxl import Workbook
 from openpyxl.writer.excel import save_virtual_workbook
-from openpyxl.styles import colors, Font
+from openpyxl.styles import Font
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 from internship import models
-from internship.utils.exporting.spreadsheet import columns_resizing
+from internship.utils.exporting.spreadsheet import columns_resizing, add_row
 
 
 def export_xls(cohort):
@@ -43,22 +43,22 @@ def export_xls(cohort):
 
 
 def _add_header(cohort, worksheet):
-    _add_row(worksheet, [str(cohort.name)])
+    add_row(worksheet, [str(cohort.name)])
     cell_title = worksheet["A1"]
     cell_title.font = Font(size=18, bold=True)
     worksheet.row_dimensions[1].height = 30
-    _add_row(worksheet)
+    add_row(worksheet)
     date_format = str(_('date_format'))
     printing_date = timezone.now()
     printing_date = printing_date.strftime(date_format)
-    _add_row(worksheet, [str('%s: %s' % (_('file_production_date'), printing_date))])
-    _add_row(worksheet)
+    add_row(worksheet, [str('%s: %s' % (_('file_production_date'), printing_date))])
+    add_row(worksheet)
 
     periods = models.period.find_by_cohort(cohort)
     column_titles = ["Étudiant", "NOMA"]
     for period in periods:
         column_titles.append(period.name)
-    _add_row(worksheet, column_titles)
+    add_row(worksheet, column_titles)
     cells = worksheet.range("A5:N5")[0]
     for cell in cells:
         cell.font = Font(bold=True)
@@ -71,7 +71,7 @@ def _add_students(cohort, worksheet):
     for student_stat in students_stat:
         if student_stat.student.registration_id != previous_student:
             if len(columns) > 0:
-                _add_row(worksheet, columns)
+                add_row(worksheet, columns)
                 columns = []
             columns.append("{}, {}".format(student_stat.student.person.last_name.upper(),
                                            student_stat.student.person.first_name))
@@ -83,17 +83,10 @@ def _add_students(cohort, worksheet):
 
 
 def _add_period(columns, student_stat):
-    period_number = student_stat.period.number() + 1 # Increment to ignore the two first columns
+    period_number = student_stat.period.number() + 1  # Increment to ignore the two first columns
     if len(columns) < period_number:
         diff = period_number - len(columns)
         while diff > 0:
             columns.append("")
             diff -= 1
     columns.append("{}{}".format(student_stat.speciality.acronym, student_stat.organization.reference))
-
-
-def _add_row(worksheet, content=None):
-    if content:
-        worksheet.append(content)
-    else:
-        worksheet.append([str('')])
