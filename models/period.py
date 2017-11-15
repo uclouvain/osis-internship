@@ -26,7 +26,6 @@
 from django.db import models
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
-from django.core.exceptions import ObjectDoesNotExist
 
 
 class PeriodAdmin(SerializableModelAdmin):
@@ -40,6 +39,9 @@ class Period(SerializableModel):
     date_end = models.DateField(blank=False)
     cohort = models.ForeignKey('internship.cohort', null=False, on_delete=models.CASCADE)
 
+    def number(self):
+        return int(self.name[1])
+
     def __str__(self):
         return u"%s" % self.name
 
@@ -49,10 +51,6 @@ def search(**kwargs):
     return Period.objects.filter(**kwargs).select_related().order_by("date_start")
 
 
-def find_by_id(period_id):
-    return Period.objects.get(pk=period_id)
-
-
 def get_by_name(period_name):
     try:
         return Period.objects.get(name=period_name)
@@ -60,6 +58,10 @@ def get_by_name(period_name):
         return None
     except MultipleObjectsReturned:
         return None
+
+
+def find_by_cohort(cohort):
+    return Period.objects.filter(cohort=cohort).order_by("date_start")
 
 
 def find_all():

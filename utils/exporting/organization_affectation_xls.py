@@ -23,16 +23,15 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import re
 from openpyxl import Workbook
 from openpyxl.writer.excel import save_virtual_workbook
 from openpyxl.styles import Color, Style, PatternFill
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 from internship import models
+from internship.utils.exporting.spreadsheet import columns_resizing
 
 MAX_COLUMN_NUMBER = 9
-COLUMN_WIDTHS = {'A': 18, 'B': 18, 'C': 18, 'D': 40, 'E': 40, 'F': 10, 'G': 20, 'H': 30}
 
 
 def export_xls(cohort, organization, affections_by_specialities):
@@ -53,7 +52,7 @@ def create_worksheets(workbook, organization, periods, affections_by_specialitie
         worksheet = workbook.create_sheet(title=sheet_title)
 
         _add_header(worksheet, organization, specialty, affectations)
-        _columns_resizing(worksheet)
+        columns_resizing(worksheet, {'A': 18, 'B': 18, 'C': 18, 'D': 40, 'E': 40, 'F': 10, 'G': 20, 'H': 30})
         _add_periods(worksheet, periods, affectations)
 
 
@@ -100,11 +99,6 @@ def _add_row(worksheet, content=None):
         worksheet.append(content)
     else:
         worksheet.append([str('')])
-
-
-def _columns_resizing(worksheet):
-    for key in COLUMN_WIDTHS.keys():
-        worksheet.column_dimensions[key].width = COLUMN_WIDTHS.get(key)
 
 
 def _coloring_non_editable_line(worksheet, row_number):
