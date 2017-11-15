@@ -70,8 +70,8 @@ def _add_header(worksheet, organization, specialty, affectations):
 def _add_periods(worksheet, periods, affectations):
     for period in periods:
         add_row(worksheet, [str(period.name),
-                             period.date_start.strftime("%d-%m-%Y"),
-                             period.date_end.strftime("%d-%m-%Y")])
+                            period.date_start.strftime("%d-%m-%Y"),
+                            period.date_end.strftime("%d-%m-%Y")])
         coloring_non_editable_line(worksheet, worksheet.max_row, 9)
         _add_affectations(worksheet, period, affectations)
         add_row(worksheet)
