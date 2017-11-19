@@ -71,13 +71,13 @@ class AssignmentSolver:
         self.errors_count = 0
 
     def solve(self):
-        self.assign_enrollments_to_students(self.internships)# 1.
+        self.assign_enrollments_to_students(self.internships)  # 1.
         for internship in self.internships:
             # randomize students for each internship cycle to make sure equity of luck is respected
             self.student_informations = self.student_informations.order_by("?")
-            self.assign_priority_choices_to_students(internship)# 2.
-            self.assign_best_offer_for_student_choices(self.student_informations, internship)# 3.
-        self.assign_default_speciality_and_organization_for_students_with_empty_periods(self.default_speciality, self.pending_organization, self.students, self.periods)# 4.
+            self.assign_priority_choices_to_students(internship)  # 2.
+            self.assign_best_offer_for_student_choices(self.student_informations, internship)  # 3.
+        self.assign_default_speciality_and_organization_for_students_with_empty_periods(self.default_speciality, self.pending_organization, self.students, self.periods)  # 4.
 
     @transaction.atomic
     def persist_solution(self):
