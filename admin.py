@@ -66,12 +66,6 @@ admin.site.register(internship_student_affectation_stat.InternshipStudentAffecta
 admin.site.register(affectation_generation_time.AffectationGenerationTime,
                     affectation_generation_time.AffectationGenerationTimeAdmin)
 
-admin.site.register(internship_speciality_group.InternshipSpecialityGroup,
-                    internship_speciality_group.InternshipSpecialityGroupAdmin)
-
-admin.site.register(internship_speciality_group_member.InternshipSpecialityGroupMember,
-                    internship_speciality_group_member.InternshipSpecialityGroupMemberAdmin)
-
 
 class StudentImportActionForm(forms.Form):
     file_upload = forms.FileField()

@@ -60,7 +60,7 @@ class SpecialityViewTestCase(TestCase):
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'speciality_create.html')
+        self.assertTemplateUsed(response, 'speciality_form.html')
 
     def test_delete(self):
         specialities = InternshipSpeciality.objects.filter(cohort=self.cohort).count()
@@ -96,7 +96,7 @@ class SpecialityViewTestCase(TestCase):
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'speciality_create.html')
+        self.assertTemplateUsed(response, 'speciality_form.html')
         self.assertEqual(response.context['speciality'], speciality)
 
     def test_new(self):
@@ -111,7 +111,6 @@ class SpecialityViewTestCase(TestCase):
             'learning_unit': learning_unit.acronym,
             'mandatory': True,
             'name': speciality.name,
-            'order_position': speciality.order_position,
             'acronym': speciality.acronym,
         })
         self.assertRedirects(response, reverse('internships_specialities', kwargs={
@@ -130,7 +129,6 @@ class SpecialityViewTestCase(TestCase):
             'learning_unit': speciality.learning_unit.acronym,
             'mandatory': speciality.mandatory,
             'name': 'DEMO',
-            'order_position': speciality.order_position,
             'acronym': speciality.acronym,
         })
 

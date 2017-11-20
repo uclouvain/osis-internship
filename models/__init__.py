@@ -30,8 +30,6 @@ from internship.models import internship_enrollment
 from internship.models import internship_master
 from internship.models import internship_offer
 from internship.models import internship_speciality
-from internship.models import internship_speciality_group
-from internship.models import internship_speciality_group_member
 from internship.models import internship_student_affectation_stat
 from internship.models import internship_student_information
 from internship.models import organization

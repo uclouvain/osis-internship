@@ -52,9 +52,9 @@ def specialities(request, cohort_id):
 def speciality_create(request, cohort_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
     learning_unit = mdl.learning_unit.search(acronym='WMDS2333')
-    return render(request, "speciality_create.html", {'section': 'internship',
-                                                      'learning_unit': learning_unit.first(),
-                                                      'cohort': cohort,})
+    return render(request, "speciality_form.html", {'section': 'internship',
+                                                    'learning_unit': learning_unit.first(),
+                                                    'cohort': cohort})
 
 
 @login_required
@@ -78,7 +78,6 @@ def speciality_save(request, cohort_id, speciality_id):
     speciality.learning_unit = learning_unit.first()
     speciality.name = request.POST.get('name')
     speciality.acronym = request.POST.get('acronym')
-    speciality.order_position = request.POST.get('order_position')
     speciality.mandatory = mandatory
 
     speciality.save()
@@ -105,7 +104,7 @@ def speciality_modification(request, cohort_id, speciality_id):
         'speciality': speciality,
         'cohort': cohort,
     }
-    return render(request, "speciality_create.html", context)
+    return render(request, "speciality_form.html", context)
 
 
 @login_required
@@ -113,6 +112,4 @@ def speciality_modification(request, cohort_id, speciality_id):
 def speciality_delete(request, cohort_id, speciality_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
     mdl_internship.internship_speciality.InternshipSpeciality.objects.filter(pk=speciality_id, cohort_id=cohort_id).delete()
-    return HttpResponseRedirect(reverse('internships_specialities', kwargs={
-        'cohort_id': cohort.id,
-    }))
+    return HttpResponseRedirect(reverse('internships_specialities', kwargs={'cohort_id': cohort.id,}))
