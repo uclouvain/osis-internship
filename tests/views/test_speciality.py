@@ -126,7 +126,6 @@ class SpecialityViewTestCase(TestCase):
         })
 
         response = self.client.post(url, data={
-            'learning_unit': speciality.learning_unit.acronym,
             'mandatory': speciality.mandatory,
             'name': 'DEMO',
             'acronym': speciality.acronym,

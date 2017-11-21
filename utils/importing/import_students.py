@@ -24,6 +24,7 @@
 #
 ##############################################################################
 import csv
+import pendulum
 from base.models import person as mdl_person
 from internship.models import internship_student_information as mdl_isi
 
@@ -39,13 +40,26 @@ def import_csv_row(cohort, row):
     name, gender, birthdate, birthplace, nationality, noma, fgs, street, zipcode, city, country, phone, email = row
     person = mdl_person.find_by_global_id(fgs)
 
-    if person:
-        info = {'person': person,
-                'country': country,
-                'postal_code': zipcode,
-                'email': email,
-                'phone_mobile': phone,
-                'city': city,
-                'cohort': cohort}
+    if not person:
+        if ',' in name:
+            t = name.split(',')
+            last_name, first_name = t[0].strip(), t[1].strip()
+        else:
+            t = name.split()
+            last_name, first_name = ' '.join(t[:-1]).strip(), t[-1].strip()
+        birth_date = pendulum.parse(birthdate).format('%Y-%m-%d')
+        person = mdl_person.Person.objects.create(global_id=fgs,
+                                                  gender = gender,
+                                                  first_name = first_name,
+                                                  last_name = last_name,
+                                                  birth_date = birth_date)
 
-        mdl_isi.InternshipStudentInformation.objects.create(**info)
+    info = {'person': person,
+            'country': country,
+            'postal_code': zipcode,
+            'email': email,
+            'phone_mobile': phone,
+            'city': city,
+            'cohort': cohort}
+
+    mdl_isi.InternshipStudentInformation.objects.create(**info)

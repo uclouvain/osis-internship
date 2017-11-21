@@ -35,7 +35,7 @@ from internship import models as mdl_internship
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def specialities(request, cohort_id):
-    cohort = get_object_or_404(mdl_internship.Cohort, pk=cohort_id)
+    cohort = get_object_or_404(mdl_internship.cohort.Cohort, pk=cohort_id)
     specialties = mdl_internship.internship_speciality.find_all(cohort=cohort)
     context = {
         'section': 'internship',
@@ -48,7 +48,7 @@ def specialities(request, cohort_id):
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def speciality_create(request, cohort_id):
-    cohort = get_object_or_404(mdl_internship.Cohort, pk=cohort_id)
+    cohort = get_object_or_404(mdl_internship.cohort.Cohort, pk=cohort_id)
     learning_unit = mdl.learning_unit.search(acronym='WMDS2333')
     return render(request, "speciality_form.html", {'section': 'internship',
                                                     'learning_unit': learning_unit.first(),
@@ -58,9 +58,13 @@ def speciality_create(request, cohort_id):
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def speciality_save(request, cohort_id, speciality_id):
-    cohort = get_object_or_404(mdl_internship.Cohort, pk=cohort_id)
+    cohort = get_object_or_404(mdl_internship.cohort.Cohort, pk=cohort_id)
     if speciality_id:
-        speciality = mdl_internship.internship_speciality.find_by_id(speciality_id)
+        check_speciality = mdl_internship.internship_speciality.InternshipSpeciality.objects.filter(pk=speciality_id, cohort=cohort).exists()
+        if check_speciality:
+            speciality = mdl_internship.internship_speciality.InternshipSpeciality.objects.get(pk=speciality_id)
+        else:
+            speciality = mdl_internship.internship_speciality.InternshipSpeciality(cohort=cohort)
     else:
         speciality = mdl_internship.internship_speciality.InternshipSpeciality(cohort=cohort)
 
@@ -68,8 +72,8 @@ def speciality_save(request, cohort_id, speciality_id):
     if request.POST.get('mandatory'):
         mandatory = True
 
-    learning_unit_id = int(request.POST.get('learning_unit'))
-    learning_unit = mdl.learning_unit.find_by_id(learning_unit_id)
+    learning_unit = mdl.learning_unit.search(acronym=request.POST.get('learning_unit'))
+
     speciality.learning_unit = learning_unit.first()
     speciality.name = request.POST.get('name')
     speciality.acronym = request.POST.get('acronym')
@@ -87,8 +91,9 @@ def speciality_new(request, cohort_id):
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def speciality_modification(request, cohort_id, speciality_id):
-    cohort = get_object_or_404(mdl_internship.Cohort, pk=cohort_id)
-    speciality = get_object_or_404(mdl_internship.InternshipSpeciality, pk=speciality_id, cohort=cohort)
+    cohort = get_object_or_404(mdl_internship.cohort.Cohort, pk=cohort_id)
+    speciality = get_object_or_404(mdl_internship.internship_speciality.InternshipSpeciality,
+                                   pk=speciality_id, cohort=cohort)
     learning_unit = mdl.learning_unit.search(acronym='WMDS2333')
     context = {
         'section': 'internship',
@@ -102,6 +107,6 @@ def speciality_modification(request, cohort_id, speciality_id):
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def speciality_delete(request, cohort_id, speciality_id):
-    cohort = get_object_or_404(mdl_internship.Cohort, pk=cohort_id)
+    cohort = get_object_or_404(mdl_internship.cohort.Cohort, pk=cohort_id)
     mdl_internship.internship_speciality.InternshipSpeciality.objects.filter(pk=speciality_id, cohort_id=cohort_id).delete()
     return HttpResponseRedirect(reverse('internships_specialities', kwargs={'cohort_id': cohort.id,}))
