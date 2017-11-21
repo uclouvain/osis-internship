@@ -30,7 +30,7 @@ from django.core.exceptions import ObjectDoesNotExist
 
 class InternshipSpecialityAdmin(SerializableModelAdmin):
     list_display = ('learning_unit', 'name', 'acronym', 'mandatory', 'cohort', 'sequence')
-    fieldsets = ((None, {'fields': ('learning_unit', 'name', 'acronym', 'mandatory', 'cohort')}),)
+    fieldsets = ((None, {'fields': ('learning_unit', 'name', 'acronym', 'sequence', 'mandatory', 'cohort')}),)
     raw_id_fields = ('learning_unit',)
 
 
@@ -41,6 +41,12 @@ class InternshipSpeciality(SerializableModel):
     mandatory = models.BooleanField(default=False)
     sequence = models.IntegerField(blank=True, null=True)
     cohort = models.ForeignKey('internship.cohort', null=False, on_delete=models.CASCADE)
+
+    def acronym_with_sequence(self):
+        if self.sequence:
+            return "{}{}".format(self.acronym, self.sequence)
+        else:
+            return self.acronym
 
     def __str__(self):
         return self.name
@@ -65,7 +71,7 @@ def find_non_mandatory():
                                        .order_by('acronym', 'name')
 
 
-def get_by_id(speciality_id):
+def find_by_id(speciality_id):
     try:
         return InternshipSpeciality.objects.get(pk=speciality_id)
     except ObjectDoesNotExist:

@@ -409,3 +409,5 @@ msgstr "Spécialiste"
 msgid "student_max"
 msgstr "Nombre maximum d'étudiants"
 
+msgid "sequence"
+msgstr "Séquence"

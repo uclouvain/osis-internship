@@ -38,48 +38,56 @@
         <h2>{% trans 'speciality' %}</h2>
     </div>
 
-    <form action="{% if speciality.id %}
-                        {% url 'speciality_save' cohort_id=cohort.id speciality_id=speciality.id %}
-                  {% else %}
-                        {% url 'speciality_new' cohort_id=cohort.id %}
-                  {% endif %}" method="post">
-        {% csrf_token %}
-        <div class="row">
-            <div class="col-md-4">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <form action="{% if speciality.id %}
+                                {% url 'speciality_save' cohort_id=cohort.id speciality_id=speciality.id %}
+                          {% else %}
+                                {% url 'speciality_new' cohort_id=cohort.id %}
+                          {% endif %}" method="post">
+                {% csrf_token %}
                 <div class="form-group">
                     <label for="name">{% trans 'learning_unit' %}</label><br>
                     {{ speciality.learning_unit }}
                     <input type="hidden" name="learning_unit" value="{{ speciality.learning_unit }}">
                 </div>
-            </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label for="name">{% trans 'name' %}</label>
-                    <input type="text" name="name" id="name" class="form-control" value="{{ speciality.name | default_if_none:'' }}" required>
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <label for="name">{% trans 'name' %}</label>
+                            <input type="text" name="name" id="name" class="form-control" value="{{ speciality.name | default_if_none:'' }}" required>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="name">{% trans 'sequence' %}</label><br>
+                            <input type="text" name="sequence" id="sequence" class="form-control" value="{{ speciality.sequence | default_if_none:'' }}">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="acronym">{% trans 'acronym' %}</label>
+                            <input type="text" name="acronym" id="acronym" class="form-control" value="{{ speciality.acronym | default_if_none:'' }}" required>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-2">
-                <div class="form-group">
-                    <label for="acronym">{% trans 'acronym' %}</label>
-                    <input type="text" name="acronym" id="acronym" class="form-control" value="{{ speciality.acronym | default_if_none:'' }}" required>
-                </div>
-            </div>
-            <div class="col-md-2">
-                <br>
+
                 <div class="checkbox">
                     <label>
                         <input type="checkbox" name="mandatory" {% if speciality.mandatory %}checked{% endif %}>
                         {% trans 'mandatory' %}
                     </label>
                 </div>
-            </div>
+
+                <br>
+                <button type="submit" class="btn btn-primary" title="{% trans 'Save'%}" id="bt_interships_new">
+                    <span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'save'%}
+                </button>
+                <a href="{% url 'internships_specialities' cohort_id=cohort.id %}" class="btn btn-default" title="{% trans 'return'%}"
+                    id="lnk_internships" >
+                    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span> {% trans 'return' %}
+                </a>
+            </form>
         </div>
-        <button type="submit" class="btn btn-primary" title="{% trans 'Save'%}" id="bt_interships_new">
-            <span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'save'%}
-        </button>
-        <a href="{% url 'internships_specialities' cohort_id=cohort.id %}" class="btn btn-default" title="{% trans 'return'%}"
-            id="lnk_internships" >
-            <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span> {% trans 'return' %}
-        </a>
-    </form>
+    </div>
 {% endblock %}

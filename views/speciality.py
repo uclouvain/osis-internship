@@ -30,14 +30,12 @@ from django.shortcuts import render, get_object_or_404
 
 from base import models as mdl
 from internship import models as mdl_internship
-from internship.models.cohort import Cohort
-from internship.models.internship_speciality import InternshipSpeciality
 
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def specialities(request, cohort_id):
-    cohort = get_object_or_404(Cohort, pk=cohort_id)
+    cohort = get_object_or_404(mdl_internship.Cohort, pk=cohort_id)
     specialties = mdl_internship.internship_speciality.find_all(cohort=cohort)
     context = {
         'section': 'internship',
@@ -50,7 +48,7 @@ def specialities(request, cohort_id):
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def speciality_create(request, cohort_id):
-    cohort = get_object_or_404(Cohort, pk=cohort_id)
+    cohort = get_object_or_404(mdl_internship.Cohort, pk=cohort_id)
     learning_unit = mdl.learning_unit.search(acronym='WMDS2333')
     return render(request, "speciality_form.html", {'section': 'internship',
                                                     'learning_unit': learning_unit.first(),
@@ -60,13 +58,9 @@ def speciality_create(request, cohort_id):
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def speciality_save(request, cohort_id, speciality_id):
-    cohort = get_object_or_404(Cohort, pk=cohort_id)
+    cohort = get_object_or_404(mdl_internship.Cohort, pk=cohort_id)
     if speciality_id:
-        check_speciality = InternshipSpeciality.objects.filter(pk=speciality_id, cohort=cohort).exists()
-        if check_speciality:
-            speciality = InternshipSpeciality.objects.get(pk=speciality_id)
-        else :
-            speciality = mdl_internship.internship_speciality.InternshipSpeciality(cohort=cohort)
+        speciality = mdl_internship.internship_speciality.find_by_id(speciality_id)
     else:
         speciality = mdl_internship.internship_speciality.InternshipSpeciality(cohort=cohort)
 
@@ -74,16 +68,14 @@ def speciality_save(request, cohort_id, speciality_id):
     if request.POST.get('mandatory'):
         mandatory = True
 
-    learning_unit = mdl.learning_unit.search(acronym=request.POST.get('learning_unit'))
+    learning_unit_id = int(request.POST.get('learning_unit'))
+    learning_unit = mdl.learning_unit.find_by_id(learning_unit_id)
     speciality.learning_unit = learning_unit.first()
     speciality.name = request.POST.get('name')
     speciality.acronym = request.POST.get('acronym')
     speciality.mandatory = mandatory
-
     speciality.save()
-    return HttpResponseRedirect(reverse('internships_specialities', kwargs={
-        'cohort_id': cohort.id,
-    }))
+    return HttpResponseRedirect(reverse('internships_specialities', kwargs={'cohort_id': cohort.id,}))
 
 
 @login_required
@@ -95,8 +87,8 @@ def speciality_new(request, cohort_id):
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def speciality_modification(request, cohort_id, speciality_id):
-    cohort = get_object_or_404(Cohort, pk=cohort_id)
-    speciality = get_object_or_404(InternshipSpeciality, pk=speciality_id, cohort=cohort)
+    cohort = get_object_or_404(mdl_internship.Cohort, pk=cohort_id)
+    speciality = get_object_or_404(mdl_internship.InternshipSpeciality, pk=speciality_id, cohort=cohort)
     learning_unit = mdl.learning_unit.search(acronym='WMDS2333')
     context = {
         'section': 'internship',
@@ -110,6 +102,6 @@ def speciality_modification(request, cohort_id, speciality_id):
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def speciality_delete(request, cohort_id, speciality_id):
-    cohort = get_object_or_404(Cohort, pk=cohort_id)
+    cohort = get_object_or_404(mdl_internship.Cohort, pk=cohort_id)
     mdl_internship.internship_speciality.InternshipSpeciality.objects.filter(pk=speciality_id, cohort_id=cohort_id).delete()
     return HttpResponseRedirect(reverse('internships_specialities', kwargs={'cohort_id': cohort.id,}))

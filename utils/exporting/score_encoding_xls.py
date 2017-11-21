@@ -73,8 +73,8 @@ def _add_students(cohort, worksheet):
 
 
 def _add_period(columns, student_stat):
-    _deal_with_empty_periods()
-    columns.append(student_stat.speciality.acronym)
+    _deal_with_empty_periods(columns, student_stat)
+    columns.append(student_stat.speciality.acronym_with_sequence())
     columns.append("{}{}".format(student_stat.speciality.acronym, student_stat.organization.reference))
 
 

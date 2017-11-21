@@ -213,7 +213,7 @@
                                         {% endif %}
 
                                         {% if forloop.counter <= 12 %}
-                                            {{ enrollment.speciality.acronym }}<br>
+                                            <span data-toggle="tooltip" data-placement="top" title="{{ enrollment.speciality.name }}">{{ enrollment.speciality.acronym }}</span><br>
                                             {{ enrollment.organization.reference }}<br>
                                             {{ enrollment.cost }}({{ enrollment.choice.lower }})
                                         {% else %}
