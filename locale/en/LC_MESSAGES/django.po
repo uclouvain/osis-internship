@@ -388,11 +388,14 @@ msgstr "Student does not exists"
 msgid "export_organisation_affectation_xls"
 msgstr "Export Excel file for the organisation"
 
+msgid "export_to_xls"
+msgstr "Export to XLS"
+
 msgid "generalist"
 msgstr "Generalist"
 
-msgid	 "number_first_choice"
-msgstr	 "Number of first choice"
+msgid "number_first_choice"
+msgstr "Number of first choice"
 
 msgid "preference"
 msgstr "Preference"
@@ -406,3 +409,5 @@ msgstr "Specialist"
 msgid "student_max"
 msgstr "Maximum number of students"
 
+msgid "sequence"
+msgstr "Sequence"

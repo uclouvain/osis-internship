@@ -81,7 +81,7 @@
           <div class="modal-body">
             <form  method="post" action="{% url 'internship_affectation_statistics_generate' cohort_id=cohort.id %}" id="generate_solution">
               <label for="executions">{% trans 'executions' %}</label>
-              <input type="number" name="executions" value=1 min=1>
+              <input type="number" id="executions" name="executions" value="1" min="1">
               {% csrf_token %}
             </form>
           </div>
@@ -96,12 +96,12 @@
     <div class="panel panel-default">
         <div class="panel-heading">
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <button type="submit" class="btn btn-primary" title="{% trans 'Send'%}" id="bt_interships_save" onclick="$('#generate').modal('show');">
                         <span class="glyphicon glyphicon-random" aria-hidden="true"></span> {% trans 'generate_solution' %}
                     </button>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-5">
                     <p>{% trans 'latest_generation_start' %} : {{ latest_generation.start_date_time| default_if_none:''|date:"SHORT_DATE_FORMAT" }} {{ latest_generation.start_date_time| default_if_none:''|time:"TIME_FORMAT" }}</p>
                 </div>
                 <div class="col-md-4">
@@ -170,7 +170,13 @@
                         </tbody>
                     </table>
                 </div>
+
                 <div id="tab_students" class="tab-pane fade in">
+                    <br>
+                        <a href="{% url 'export_score_encoding_xls' cohort_id=cohort.id %}" class="btn btn-default">
+                            <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
+                            {% trans 'export_to_xls' %}
+                        </a>
                     <br>
                     <table class="table" id="students">
                         <thead>
@@ -193,7 +199,7 @@
                         </thead>
                         <tbody>
                             {% for student, periods in recap_sol.items %}
-                                <tr id="student_{{student.id}}">
+                                <tr>
                                     <td>
                                         <a href="{% url 'internships_student_read' cohort_id=cohort.id student_id=student.id %}" target="_blank">{{student}}</a>
                                     </td>
@@ -207,9 +213,9 @@
                                         {% endif %}
 
                                         {% if forloop.counter <= 12 %}
-                                            {{ enrollment.speciality.acronym }}<br>
+                                            <span data-toggle="tooltip" data-placement="top" title="{{ enrollment.speciality.name }}">{{ enrollment.speciality.acronym }}</span><br>
                                             {{ enrollment.organization.reference }}<br>
-                                            {{ enrollment.cost }}({{ enrollment.choice.lower }})<br>
+                                            {{ enrollment.cost }}({{ enrollment.choice.lower }})
                                         {% else %}
                                             {{ periods.score }}
                                         {% endif %}

@@ -391,6 +391,9 @@ msgstr "L'étudiant n'existe pas"
 msgid "export_organisation_affectation_xls"
 msgstr "Fichier Excel de toutes les spécialités"
 
+msgid "export_to_xls"
+msgstr "Exporter vers XLS"
+
 msgid "priority"
 msgstr "Prioritaire"
 
@@ -406,3 +409,5 @@ msgstr "Spécialiste"
 msgid "student_max"
 msgstr "Nombre maximum d'étudiants"
 
+msgid "sequence"
+msgstr "Séquence"

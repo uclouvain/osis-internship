@@ -33,11 +33,12 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.core.urlresolvers import reverse
 from django.shortcuts import render, redirect
 from django.shortcuts import get_object_or_404
-
+from django.http import HttpResponse, HttpResponseRedirect
 from internship.utils.student_assignment.solver import AssignmentSolver
 
 from internship import models
 from internship.models.internship_student_affectation_stat import InternshipStudentAffectationStat
+from internship.utils.exporting import score_encoding_xls
 from internship.views.internship import set_tabs_name
 from internship.views.place import sort_organizations, set_speciality_unique
 
@@ -131,6 +132,17 @@ def internship_affectation_statistics(request, cohort_id):
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
+def export_score_encoding_xls(request, cohort_id):
+    cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
+    workbook = score_encoding_xls.export_xls(cohort)
+    response = HttpResponse(workbook, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    file_name = "encodage_notes_{}.xlsx".format(cohort.name.strip().replace(' ', '_'))
+    response['Content-Disposition'] = 'attachment; filename={}'.format(file_name)
+    return response
+
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
 def internship_affectation_sumup(request, cohort_id):
     cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
     all_speciality = list(models.internship_speciality.find_all(cohort=cohort))
@@ -220,59 +232,56 @@ def _compute_stats(cohort, sol):
         mean_array.append(cost)
         # Iterate over all periods of the student
         for period, internship in periods.items():
-            if period is not 'score':
-                if internship is not None:
-                    # First choice
-                    if internship.choice == "1":
-                        # Increment the number of total first choices
-                        first += 1
-                        # Increment the number of total normal first choices
-                        if internship.type_of_internship == "N":
-                            first_n += 1
-                        # Increment the number of total social first choices
-                        if internship.type_of_internship == "S":
-                            first_s += 1
-                    # Second choice
-                    elif internship.choice == "2":
-                        second += 1
-                        if internship.type_of_internship == "N":
-                            second_n += 1
-                        if internship.type_of_internship == "S":
-                            second_s += 1
-                    # Third choice
-                    elif internship.choice == "3":
-                        third += 1
-                        if internship.type_of_internship == "N":
-                            third_n += 1
-                        if internship.type_of_internship == "S":
-                            third_s += 1
-                    # Fourth choice
-                    elif internship.choice == "4":
-                        fourth += 1
-                        if internship.type_of_internship == "N":
-                            fourth_n += 1
-                        if internship.type_of_internship == "S":
-                            fourth_s += 1
-                    # Erasmus
-                    elif internship.choice == 'E':  # Erasmus
-                        erasmus += 1
-                    # Imposed choice
-                    elif internship.choice == 'I':  # Imposed hospital
-                        # Retrieve the addresses of the hospital and the student
-                        addr_student = models.internship_student_information.search(person=student.person)[0]
-                        addr_organization = models.organization_address.search(organization=internship.organization)[0]
-                        # Increment total of imposed choices
-                        imposed_choices += 1
-                        # Add the student to the set "others_students",
-                        # we will use this set to find the number of students
-                        # with imposed choices
-                        others_students.add(student)
-                        others_specialities[internship.speciality] += 1
-                        others_specialities_students[internship.speciality].add(student)
-                    # Hostpital error
-                    if int(internship.organization.reference) == hospital_error:
-                        hospital_error_count += 1
-                    consecutive_month += internship.consecutive_month
+            if period is not 'score' and internship is not None:
+                # First choice
+                if internship.choice == "1":
+                    # Increment the number of total first choices
+                    first += 1
+                    # Increment the number of total normal first choices
+                    if internship.type_of_internship == "N":
+                        first_n += 1
+                    # Increment the number of total social first choices
+                    if internship.type_of_internship == "S":
+                        first_s += 1
+                # Second choice
+                elif internship.choice == "2":
+                    second += 1
+                    if internship.type_of_internship == "N":
+                        second_n += 1
+                    if internship.type_of_internship == "S":
+                        second_s += 1
+                # Third choice
+                elif internship.choice == "3":
+                    third += 1
+                    if internship.type_of_internship == "N":
+                        third_n += 1
+                    if internship.type_of_internship == "S":
+                        third_s += 1
+                # Fourth choice
+                elif internship.choice == "4":
+                    fourth += 1
+                    if internship.type_of_internship == "N":
+                        fourth_n += 1
+                    if internship.type_of_internship == "S":
+                        fourth_s += 1
+                # Erasmus
+                elif internship.choice == 'E':  # Erasmus
+                    erasmus += 1
+                # Imposed choice
+                elif internship.choice == 'I':  # Imposed hospital
+                    # Retrieve the addresses of the hospital and the student
+                    # Increment total of imposed choices
+                    imposed_choices += 1
+                    # Add the student to the set "others_students",
+                    # we will use this set to find the number of students
+                    # with imposed choices
+                    others_students.add(student)
+                    others_specialities[internship.speciality] += 1
+                    others_specialities_students[internship.speciality].add(student)
+                # Hostpital error
+                if int(internship.organization.reference) == hospital_error:
+                    hospital_error_count += 1
+                consecutive_month += internship.consecutive_month
     # Total number of students
     number_of_students = len(sol)
     # Total number of internships
@@ -317,7 +326,6 @@ def _compute_stats(cohort, sol):
     stats['others_students'] = len(others_students)
     stats['others_specialities'] = others_specialities
     stats['others_specialities_students'] = others_specialities_students
-
     stats['mean_stud'] = round(mean(mean_array), 2)
 
     # Compute standard deviation of the score

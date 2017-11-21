@@ -29,9 +29,16 @@ from base.models import person as mdl_person
 from internship.models import internship_student_information as mdl_isi
 
 
+def import_csv(cohort, csvfile):
+    reader = csv.reader(csvfile)
+    next(reader)
+    for row in reader:
+        import_csv_row(cohort, row)
+
+
 def import_csv_row(cohort, row):
     name, gender, birthdate, birthplace, nationality, noma, fgs, street, zipcode, city, country, phone, email = row
-    person = mdl_person.Person.objects.filter(global_id=fgs).first()
+    person = mdl_person.find_by_global_id(fgs)
 
     if not person:
         if ',' in name:
@@ -40,14 +47,12 @@ def import_csv_row(cohort, row):
         else:
             t = name.split()
             last_name, first_name = ' '.join(t[:-1]).strip(), t[-1].strip()
-
         birth_date = pendulum.parse(birthdate).format('%Y-%m-%d')
-
         person = mdl_person.Person.objects.create(global_id=fgs,
-                                                  gender=gender,
-                                                  first_name=first_name,
-                                                  last_name=last_name,
-                                                  birth_date=birth_date)
+                                                  gender = gender,
+                                                  first_name = first_name,
+                                                  last_name = last_name,
+                                                  birth_date = birth_date)
 
     info = {'person': person,
             'country': country,
@@ -58,10 +63,3 @@ def import_csv_row(cohort, row):
             'cohort': cohort}
 
     mdl_isi.InternshipStudentInformation.objects.create(**info)
-
-
-def import_csv(cohort, csvfile):
-    reader = csv.reader(csvfile)
-    next(reader)
-    for row in reader:
-        import_csv_row(cohort, row)

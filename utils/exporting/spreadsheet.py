@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -23,32 +23,22 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.contrib import admin
-from django.db import models
+from openpyxl.styles import Color, Style, PatternFill
 
 
-class InternshipSpecialityGroupMemberAdmin(admin.ModelAdmin):
-    list_display = ('group', 'speciality')
-    fieldsets = ((None, {'fields': ('group', 'speciality')}),)
-    raw_id_fields = ('group', 'speciality')
+def columns_resizing(worksheet, column_widths):
+    for key in column_widths.keys():
+        worksheet.column_dimensions[key].width = column_widths.get(key)
 
 
-class InternshipSpecialityGroupMember(models.Model):
-    speciality = models.ForeignKey('internship.InternshipSpeciality')
-    group = models.ForeignKey('internship.InternshipSpecialityGroup')
-
-    def __str__(self):
-        return u"%s - %s" % (self.speciality.name, self.group.name)
-
-
-def search_by_group_name(group_name):
-    return InternshipSpecialityGroupMember.objects.filter(group__name=group_name)
+def add_row(worksheet, content=None):
+    if content:
+        worksheet.append(content)
+    else:
+        worksheet.append([str('')])
 
 
-def find_by_speciality(speciality):
-    return InternshipSpecialityGroupMember.objects.filter(speciality=speciality)\
-        .order_by('speciality__order_position')
-
-
-def find_distinct_specialities_by_groups(groups):
-    return InternshipSpecialityGroupMember.objects.filter(group__in=groups).distinct('speciality')
+def coloring_non_editable_line(worksheet, row_number, max_column_number):
+    style_readonly = Style(fill=PatternFill(patternType='solid', fgColor=Color('C1C1C1')))
+    for column_number in range(1, max_column_number):
+        worksheet.cell(row=row_number, column=column_number).style = style_readonly

@@ -37,7 +37,6 @@ class SpecialityFactory(factory.django.DjangoModelFactory):
     name = factory.Faker('name')
     acronym = factory.Sequence(lambda n: 'SPEC-%d' % n)
     mandatory = False
-    order_position = factory.Faker('random_int', min=1, max=10)
 
     cohort = factory.SubFactory(CohortFactory)
     learning_unit = factory.SubFactory(LearningUnitFactory)

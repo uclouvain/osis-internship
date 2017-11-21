@@ -28,7 +28,7 @@ import unittest
 import os
 import os.path
 import subprocess
-from mock import patch
+from unittest.mock import patch
 from internship.docs.build import generate_pdf, generate_homepage, generate_html, get_path, show_help
 
 
