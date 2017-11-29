@@ -81,8 +81,7 @@ class AssignmentSolver:
 
     @transaction.atomic
     def persist_solution(self):
-        for affectation in self.affectations:
-            affectation.save()
+        InternshipStudentAffectationStat.objects.bulk_create(self.affectations)
 
     def assign_enrollments_to_students(self, internships):
         """1. Secretaries submit mandatory enrollments for some students, we start by saving all those in the
@@ -157,7 +156,7 @@ class AssignmentSolver:
             if offer:
                 return self.build_affectation_for_periods(student, offer.organization, grouped_periods, offer.speciality, "I", False)
 
-        if internship.speciality:
+        if internship.speciality and student_periods:
             offer = self.find_offer_in_default_organization_for_internship(internship)
             return self.build_affectation_for_periods(student, offer.organization, random.choice(student_periods), offer.speciality, "I", False)
         else:
@@ -299,16 +298,16 @@ class AssignmentSolver:
     #################################################################################################################
 
     def find_offer_for_affectation(self, affectation):
-        return self.offers.get(organization=affectation.organization,
-                               speciality__acronym=affectation.speciality.acronym)
+        return self.offers.filter(organization=affectation.organization,
+                               speciality__acronym=affectation.speciality.acronym).first()
 
     def find_offer_in_default_organization_for_internship(self, internship):
         if internship.speciality:
-            return self.offers.get(organization=self.default_organization,
-                                   speciality__acronym=internship.speciality.acronym)
+            return self.offers.filter(organization=self.default_organization,
+                                   speciality__acronym=internship.speciality.acronym).first()
         else:
-            return self.offers.get(organization=self.default_organization,
-                                   speciality__in=self.specialities)
+            return self.offers.filter(organization=self.default_organization,
+                                   speciality__in=self.specialities).first()
 
     def find_offers_for_available_organizations(self, speciality, unavailable_organizations):
         if speciality:
