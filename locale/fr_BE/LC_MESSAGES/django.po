@@ -232,6 +232,12 @@ msgstr	 "Injection des hôpitaux"
 msgid	 "reference"
 msgstr	 "Référence"
 
+msgid "report_to_hospital"
+msgstr "Rapport pour l'hôpital"
+
+msgid "report_instructions"
+msgstr "Indiquez l'ordre dans lequel les colonnes doivent apparaître dans le rapport destiné à l'hôpital. Les champs sans numéro ne sont pas ajoutés au rapport."
+
 msgid	 "return"
 msgstr	 "Retour"
 
@@ -240,6 +246,9 @@ msgstr	 "2ème choix"
 
 msgid	 "speciality"
 msgstr	 "Spécialité"
+
+msgid "specialty"
+msgstr "Spécialité"
 
 msgid	 "student"
 msgstr	 "Étudiant"
@@ -388,8 +397,11 @@ msgstr "Fin de la dernière génération"
 msgid "student_not_exists"
 msgstr "L'étudiant n'existe pas"
 
-msgid "export_organisation_affectation_xls"
-msgstr "Fichier Excel de toutes les spécialités"
+msgid "export_organisation_affectation_master"
+msgstr "Fichier Excel pour le maitre de stage"
+
+msgid "export_organisation_affectation_hospital"
+msgstr "Fichier Excel pour l'hôpital"
 
 msgid "export_to_xls"
 msgstr "Exporter vers XLS"

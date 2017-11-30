@@ -33,8 +33,8 @@ class InternshipStudentAffectationStatAdmin(SerializableModelAdmin):
     fieldsets = ((None, {'fields': ('student', 'organization', 'speciality', 'period', 'choice', 'cost',
                                     'consecutive_month', 'type_of_internship')}),)
     raw_id_fields = ('student', 'organization', 'speciality', 'period')
-    search_fields = ['student__first_name', 'student__last_name']
-    list_filter = ('period', 'choice')
+    search_fields = ['student__person__first_name', 'student__person__last_name']
+    list_filter = ('period__cohort', 'choice')
 
 
 class InternshipStudentAffectationStat(SerializableModel):
@@ -76,6 +76,13 @@ def find_by_cohort(cohort):
     return InternshipStudentAffectationStat.objects.filter(period__cohort=cohort).order_by("student__person__last_name",
                                                                                            "student__person__first_name",
                                                                                            "period__date_start")
+
+
+def find_by_organization(cohort, organization):
+    return InternshipStudentAffectationStat.objects.filter(period__cohort=cohort,
+                                                           organization=organization).order_by("period__date_start",
+                                                                                               "student__person__last_name",
+                                                                                               "student__person__first_name")
 
 
 def find_by_student(student, cohort):

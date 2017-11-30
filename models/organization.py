@@ -26,6 +26,7 @@
 from django.db import models
 
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
+from internship.models.enums import organization_report_fields
 
 
 class OrganizationAdmin(SerializableModelAdmin):
@@ -41,6 +42,32 @@ class Organization(SerializableModel):
     reference = models.CharField(max_length=30, blank=True, null=True)
     type = models.CharField(max_length=30, blank=True, null=True, default="service partner")
     cohort = models.ForeignKey('internship.Cohort', null=False, on_delete=models.CASCADE)
+    report_period = models.IntegerField(default=1, blank=True, null=True)
+    report_start_date = models.IntegerField(default=2, blank=True, null=True)
+    report_end_date = models.IntegerField(default=3, blank=True, null=True)
+    report_last_name = models.IntegerField(default=4, blank=True, null=True)
+    report_first_name = models.IntegerField(default=5, blank=True, null=True)
+    report_gender = models.IntegerField(default=6, blank=True, null=True)
+    report_specialty = models.IntegerField(default=7, blank=True, null=True)
+    report_birthdate = models.IntegerField(default=8, blank=True, null=True)
+    report_email = models.IntegerField(default=9, blank=True, null=True)
+    report_noma = models.IntegerField(default=10, blank=True, null=True)
+    report_phone = models.IntegerField(default=11, blank=True, null=True)
+    report_address = models.IntegerField(default=12, blank=True, null=True)
+    report_postal_code = models.IntegerField(default=13, blank=True, null=True)
+    report_city = models.IntegerField(default=14, blank=True, null=True)
+
+    def report_sequence(self):
+        """ Returns only the report fields that are numered and ordered as numered."""
+        sequence = [None, None, None, None, None, None, None,
+                    None, None, None, None, None, None, None]
+
+        for field_name in organization_report_fields.REPORT_FIELDS:
+            field = getattr(self, "report_{}".format(field_name))
+            if field:
+                sequence[field - 1] = field_name
+
+        return filter(lambda i: i is not None, sequence)
 
     def __str__(self):
         return self.name

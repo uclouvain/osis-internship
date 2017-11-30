@@ -23,14 +23,22 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.forms import ModelForm
 
-from internship.models.organization import Organization
+PERIOD = "period"
+START_DATE = "start_date"
+END_DATE = "end_date"
+LAST_NAME = "last_name"
+FIRST_NAME = "first_name"
+GENDER = "gender"
+SPECIALTY = "specialty"
+BIRTHDATE = "birthdate"
+EMAIL = "email"
+NOMA = "noma"
+PHONE = "phone"
+ADDRESS = "address"
+POSTAL_CODE = "postal_code"
+CITY = "city"
 
 
-class OrganizationForm(ModelForm):
-    class Meta:
-        model = Organization
-        fields = ['name', 'website', 'reference', 'report_period', 'report_start_date', 'report_end_date',
-                  'report_last_name', 'report_first_name', 'report_gender', 'report_specialty', 'report_birthdate',
-                  'report_email', 'report_noma', 'report_phone', 'report_address', 'report_postal_code', 'report_city']
+REPORT_FIELDS = (PERIOD, START_DATE, END_DATE, LAST_NAME, FIRST_NAME, GENDER, SPECIALTY, BIRTHDATE, EMAIL, NOMA, PHONE,
+                 ADDRESS, POSTAL_CODE, CITY)

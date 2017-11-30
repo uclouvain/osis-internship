@@ -40,9 +40,13 @@
 
     <div class="panel panel-default">
         <div class="panel-heading">
-            <a href="{% url 'organisation_affectation_download' cohort_id=cohort.id organization_id=organization.id %}" class="btn btn-default">
+            <a href="{% url 'export_organisation_affectation_master' cohort_id=cohort.id organization_id=organization.id %}" class="btn btn-default">
                 <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
-                {% trans 'export_organisation_affectation_xls' %}
+                {% trans 'export_organisation_affectation_master' %}
+            </a>
+            <a href="{% url 'export_organisation_affectation_hospital' cohort_id=cohort.id organization_id=organization.id %}" class="btn btn-default">
+                <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
+                {% trans 'export_organisation_affectation_hospital' %}
             </a>
         </div>
         <div class="panel-body">
