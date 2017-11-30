@@ -61,34 +61,11 @@ class Organization(SerializableModel):
         """ Returns only the report fields that are numered and ordered as numered."""
         sequence = [None, None, None, None, None, None, None,
                     None, None, None, None, None, None, None]
-        if self.report_period:
-            sequence[self.report_period - 1] = organization_report_fields.PERIOD
-        if self.report_start_date:
-            sequence[self.report_start_date - 1] = organization_report_fields.START_DATE
-        if self.report_end_date:
-            sequence[self.report_end_date - 1] = organization_report_fields.END_DATE
-        if self.report_last_name:
-            sequence[self.report_last_name - 1] = organization_report_fields.LAST_NAME
-        if self.report_first_name:
-            sequence[self.report_first_name - 1] = organization_report_fields.FIRST_NAME
-        if self.report_gender:
-            sequence[self.report_gender - 1] = organization_report_fields.GENDER
-        if self.report_specialty:
-            sequence[self.report_specialty - 1] = organization_report_fields.SPECIALTY
-        if self.report_birthdate:
-            sequence[self.report_birthdate - 1] = organization_report_fields.BIRTHDATE
-        if self.report_email:
-            sequence[self.report_email - 1] = organization_report_fields.EMAIL
-        if self.report_noma:
-            sequence[self.report_noma - 1] = organization_report_fields.NOMA
-        if self.report_phone:
-            sequence[self.report_phone - 1] = organization_report_fields.PHONE
-        if self.report_address:
-            sequence[self.report_address - 1] = organization_report_fields.ADDRESS
-        if self.report_postal_code:
-            sequence[self.report_postal_code - 1] = organization_report_fields.POSTAL_CODE
-        if self.report_city:
-            sequence[self.report_city - 1] = organization_report_fields.CITY
+
+        for field_name in organization_report_fields.REPORT_FIELDS:
+            field = getattr(self, "report_{}".format(field_name))
+            if field:
+                sequence[field - 1] = field_name
 
         return filter(lambda i: i is not None, sequence)
 
