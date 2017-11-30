@@ -37,7 +37,7 @@ class ImportStudentsXLSTestCase(TestCase):
     @patch('base.models.person.Person')
     @patch('internship.models.internship_student_information.InternshipStudentInformation')
     def test_import_students_with_person(self, mock_isi, mock_person):
-        from internship.utils.importing.import_students import import_csv_row
+        from internship.utils.importing.import_students import _import_csv_row
         from internship.tests.utils.test_student_loader import _generate_record
 
         mock_person.objects = mock.Mock()
@@ -54,7 +54,7 @@ class ImportStudentsXLSTestCase(TestCase):
 
         row = _generate_record()
 
-        import_csv_row(cohort, row)
+        _import_csv_row(cohort, row)
 
         self.assertTrue(mock_isi.objects.create.called)
 
@@ -66,7 +66,7 @@ class ImportStudentsXLSTestCase(TestCase):
     @patch('base.models.person.Person')
     @patch('internship.models.internship_student_information.InternshipStudentInformation')
     def test_no_person_name_with_comma(self, mock_isi, mock_person):
-        from internship.utils.importing.import_students import import_csv_row
+        from internship.utils.importing.import_students import _import_csv_row
         from internship.tests.utils.test_student_loader import _generate_record
 
         mock_person.objects = mock.Mock()
@@ -87,7 +87,7 @@ class ImportStudentsXLSTestCase(TestCase):
         last_name = fake.last_name()
         row[0] = '{}, {}'.format(last_name, first_name)
 
-        import_csv_row(cohort, row)
+        _import_csv_row(cohort, row)
 
         mock_person.objects.create.assert_called_with(
             global_id=row[6], gender=row[1],
@@ -103,7 +103,7 @@ class ImportStudentsXLSTestCase(TestCase):
     @patch('base.models.person.Person')
     @patch('internship.models.internship_student_information.InternshipStudentInformation')
     def test_no_person_name_without_comma(self, mock_isi, mock_person):
-        from internship.utils.importing.import_students import import_csv_row
+        from internship.utils.importing.import_students import _import_csv_row
         from internship.tests.utils.test_student_loader import _generate_record
 
         mock_person.objects = mock.Mock()
@@ -124,7 +124,7 @@ class ImportStudentsXLSTestCase(TestCase):
         last_name = fake.last_name()
         row[0] = '{} {}'.format(last_name, first_name)
 
-        import_csv_row(cohort, row)
+        _import_csv_row(cohort, row)
 
         mock_person.objects.create.assert_called_with(
             global_id=row[6], gender=row[1],
@@ -137,7 +137,7 @@ class ImportStudentsXLSTestCase(TestCase):
             phone_mobile=row[11], city=row[9], cohort=cohort
         )
 
-    @patch('internship.utils.importing.import_students.import_csv_row')
+    @patch('internship.utils.importing.import_students._import_csv_row')
     def test_import_csv(self, mock_import_csv_row):
         from internship.tests.utils.test_student_loader import create_csv_stream
         from internship.utils.importing.import_students import import_csv

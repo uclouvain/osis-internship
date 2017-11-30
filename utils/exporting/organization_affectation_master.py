@@ -31,7 +31,7 @@ from internship import models
 from internship.utils.exporting.spreadsheet import columns_resizing, add_row, coloring_non_editable_line
 
 
-def export_xls(cohort, organization, affections_by_specialities):
+def export_master_xls(cohort, organization, affections_by_specialities):
     periods = models.period.search(cohort=cohort)
 
     workbook = Workbook()

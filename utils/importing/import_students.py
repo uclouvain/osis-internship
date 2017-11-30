@@ -33,10 +33,10 @@ def import_csv(cohort, csvfile):
     reader = csv.reader(csvfile)
     next(reader)
     for row in reader:
-        import_csv_row(cohort, row)
+        _import_csv_row(cohort, row)
 
 
-def import_csv_row(cohort, row):
+def _import_csv_row(cohort, row):
     name, gender, birthdate, birthplace, nationality, noma, fgs, street, zipcode, city, country, phone, email = row
     person = mdl_person.find_by_global_id(fgs)
 

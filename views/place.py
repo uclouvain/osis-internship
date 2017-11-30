@@ -32,7 +32,8 @@ from django.http import HttpResponse, HttpResponseRedirect
 from internship import models
 from internship.forms.organization_address_form import OrganizationAddressForm
 from internship.forms.organization_form import OrganizationForm
-from internship.utils.exporting import organization_affectation_xls
+from internship.utils.exporting import organization_affectation_master
+from internship.utils.exporting import organization_affectation_hospital
 from internship.views.internship import get_all_specialities, set_tabs_name
 
 
@@ -71,6 +72,7 @@ def internships_places(request, cohort_id):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def place_save(request, cohort_id, organization_id, organization_address_id):
     cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
+
     if organization_id:
         organization = models.organization.find_by_id(organization_id)
     else:
@@ -200,7 +202,7 @@ def student_affectation(request, cohort_id, organization_id):
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
-def export_organisation_affectation_as_xls(request, cohort_id, organization_id):
+def export_organisation_affectation_master(request, cohort_id, organization_id):
     cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
     organization = models.organization.find_by_id(organization_id)
     internships = models.internship_offer.search(organization=organization)
@@ -227,7 +229,15 @@ def export_organisation_affectation_as_xls(request, cohort_id, organization_id):
             if internship_offer:
                 offer = internship_offer.first()
                 affectation.master = offer.master
-    return export_xls(cohort, organization, affections_by_specialities)
+    return _export_xls_master(cohort, organization, affections_by_specialities)
+
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def export_organisation_affectation_hospital(request, cohort_id, organization_id):
+    cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
+    organization = models.organization.find_by_id(organization_id)
+    return _export_xls_hospital(cohort, organization)
 
 
 def sort_organizations(organizations):
@@ -273,7 +283,7 @@ def set_speciality_unique(specialities):
     return specialities
 
 
-def export_xls(cohort, organization, affections_by_specialities):
+def _export_xls_master(cohort, organization, affections_by_specialities):
     if not affections_by_specialities:
         redirect_url = reverse('place_detail_student_affectation', kwargs={
             'cohort_id': cohort.id,
@@ -281,10 +291,20 @@ def export_xls(cohort, organization, affections_by_specialities):
         })
         return HttpResponseRedirect(redirect_url)
     else:
-        virtual_workbook = organization_affectation_xls.export_xls(cohort, organization, affections_by_specialities)
-        response = HttpResponse(virtual_workbook,
-                                content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-        file_name_parts = organization.name.strip().replace(' ', '_')
-        file_name = "affectation_{}_{}.xlsx".format(str(organization.reference), file_name_parts)
-        response['Content-Disposition'] = 'attachment; filename={}'.format(file_name)
-        return response
+        virtual_workbook = organization_affectation_master.export_master_xls(cohort, organization,
+                                                                             affections_by_specialities)
+        return _export_xls(organization, virtual_workbook)
+
+
+def _export_xls_hospital(cohort, organization):
+    virtual_workbook = organization_affectation_hospital.export_hospital_xls(cohort, organization)
+    return _export_xls(organization, virtual_workbook)
+
+
+def _export_xls(organization, virtual_workbook):
+    response = HttpResponse(virtual_workbook,
+                            content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    file_name_parts = organization.name.strip().replace(' ', '_')
+    file_name = "affectation_{}_{}.xlsx".format(str(organization.reference), file_name_parts)
+    response['Content-Disposition'] = 'attachment; filename={}'.format(file_name)
+    return response

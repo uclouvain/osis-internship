@@ -38,24 +38,30 @@ from internship.models import *
 from internship.utils import student_loader
 from osis_common.models.serializable_model import SerializableModelAdmin
 
-admin.site.register(internship_offer.InternshipOffer, internship_offer.InternshipOfferAdmin)
+admin.site.register(internship_offer.InternshipOffer,
+                    internship_offer.InternshipOfferAdmin)
 
-admin.site.register(internship_enrollment.InternshipEnrollment, internship_enrollment.InternshipEnrollmentAdmin)
+admin.site.register(internship_enrollment.InternshipEnrollment,
+                    internship_enrollment.InternshipEnrollmentAdmin)
 
-admin.site.register(internship_master.InternshipMaster, internship_master.InternshipMasterAdmin)
+admin.site.register(internship_master.InternshipMaster,
+                    internship_master.InternshipMasterAdmin)
 
-admin.site.register(internship_choice.InternshipChoice, internship_choice.InternshipChoiceAdmin)
+admin.site.register(internship_choice.InternshipChoice,
+                    internship_choice.InternshipChoiceAdmin)
 
 admin.site.register(period.Period, period.PeriodAdmin)
 
 admin.site.register(period_internship_places.PeriodInternshipPlaces,
                     period_internship_places.PeriodInternshipPlacesAdmin)
 
-admin.site.register(internship_speciality.InternshipSpeciality, internship_speciality.InternshipSpecialityAdmin)
+admin.site.register(internship_speciality.InternshipSpeciality,
+                    internship_speciality.InternshipSpecialityAdmin)
 
 admin.site.register(organization.Organization, organization.OrganizationAdmin)
 
-admin.site.register(organization_address.OrganizationAddress, organization_address.OrganizationAddressAdmin)
+admin.site.register(organization_address.OrganizationAddress,
+                    organization_address.OrganizationAddressAdmin)
 
 admin.site.register(internship_student_information.InternshipStudentInformation,
                     internship_student_information.InternshipStudentInformationAdmin)
@@ -90,7 +96,7 @@ class CohortAdmin(SerializableModelAdmin):
                 file_upload = form.cleaned_data['file_upload']
                 try:
                     with StringIO(file_upload.read().decode('utf-8')) as str_io:
-                        result = import_csv(current_cohort, str_io)
+                        import_csv(current_cohort, str_io)
                     self.message_user(request, _('Success'))
                 except student_loader.BadCSVFormat as ex:
                     self.message_user(request, _('Unable to import the CSV file'))

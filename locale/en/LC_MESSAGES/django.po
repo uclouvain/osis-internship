@@ -239,7 +239,10 @@ msgid	 "second_choice"
 msgstr	 "Second choice"
 
 msgid	 "speciality"
-msgstr	 "Speciality"
+msgstr	 "Specialty"
+
+msgid "specialty"
+msgstr "Specialty"
 
 msgid	 "student"
 msgstr	 "Student"
@@ -385,8 +388,11 @@ msgstr "Latest generation end"
 msgid "student_not_exists"
 msgstr "Student does not exists"
 
-msgid "export_organisation_affectation_xls"
-msgstr "Export Excel file for the organisation"
+msgid "export_organisation_affectation_master"
+msgstr "Excel file for the Internship master"
+
+msgid "export_organisation_affectation_hospital"
+msgstr "Excel file for the hospital"
 
 msgid "export_to_xls"
 msgstr "Export to XLS"
@@ -402,6 +408,12 @@ msgstr "Preference"
 
 msgid "priority"
 msgstr "Priority"
+
+msgid "report_to_hospital"
+msgstr "Report to the hospital"
+
+msgid "report_instructions"
+msgstr "Inform the sequence in which the columns must appear in the report to the hospital. Fields without number are not added to the report."
 
 msgid "specialist"
 msgstr "Specialist"
