@@ -49,12 +49,12 @@ class InternshipMaster(SerializableModel):
                          ('GERIATRICS', _('Geriatrics')))
 
     organization = models.ForeignKey('internship.Organization', null=True)
+    speciality = models.ForeignKey('internship.InternshipSpeciality', blank=True, null=True)
     first_name = models.CharField(max_length=50, blank=True, null=True, db_index=True)
     last_name = models.CharField(max_length=50, blank=True, null=True, db_index=True)
     reference = models.CharField(max_length=50, blank=True, null=True)
     civility = models.CharField(max_length=50, blank=True, null=True)
     type_mastery = models.CharField(max_length=50, blank=True, null=True)
-    speciality = models.CharField(max_length=50, blank=True, null=True)
 
     def __str__(self):
         return u"%s" % self.reference
@@ -64,6 +64,20 @@ def find_masters():
     return InternshipMaster.objects.all().select_related("organization")
 
 
-def search(**kwargs):
-    kwargs = {k: v for k, v in kwargs.items() if v}
-    return InternshipMaster.objects.filter(**kwargs).select_related("organization")
+def find_by_id(master_id):
+    return InternshipMaster.objects.get(pk=master_id)
+
+
+def search(cohort, specialty, hospital):
+    masters = InternshipMaster.objects.filter(organization__cohort=cohort)
+
+    if specialty:
+        masters = masters.filter(speciality=specialty)
+
+    if hospital:
+        masters = masters.filter(organization=hospital)
+
+    if specialty or hospital:
+        return masters
+    else:
+        return None

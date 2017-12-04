@@ -85,3 +85,7 @@ def search(**kwargs):
 
 def find_by_id(organization_id):
     return Organization.objects.get(pk=organization_id)
+
+
+def find_by_cohort(cohort):
+    return Organization.objects.filter(cohort=cohort).order_by("reference")
