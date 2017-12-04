@@ -51,6 +51,7 @@
                     </div>
                 </div>
                 {% if form_new %}
+                  <br>
                   <div class="row">
                     <div class="col-md-6">
                       <label for="copy_organizations_from_cohort">{{ form.copy_organizations_from_cohort.label }}</label>
@@ -65,10 +66,10 @@
 
                 <br>
                 <button type="submit" class="btn btn-primary" title="{%trans 'save' %}" id="bt_cohort_save">
-                    <span class="glyphicon glyphicon-save" aria-hidden="true">{% trans 'save' %}</span>
+                    <span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'save' %}
                 </button>
                 <a class="btn btn-default" id="" href="{% url 'internship' %}">
-                    <span class="glyphicon glyphicon-cancel" aria-hidden="true">{% trans 'return' %}</span>
+                    <span class="glyphicon glyphicon-cancel" aria-hidden="true"></span> {% trans 'return' %}
                 </a>
             </form>
         </div>

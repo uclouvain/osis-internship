@@ -66,13 +66,14 @@ def internships_modification_student(request, cohort_id, student_id, internship_
             _save_student_choices(formset, student, internship, speciality, cohort)
 
     student_choices = mdl_int.internship_choice.search_by_student_or_choice(student=student,
-                                                                                   internship=internship)
+                                                                            internship=internship)
 
-    internships = mdl_int.internship.Internship.objects.filter(cohort=cohort, pk__gte=1).order_by("speciality__name", "name")
+    internships = mdl_int.internship.Internship.objects.filter(cohort=cohort, pk__gte=1).order_by("speciality__name",
+                                                                                                  "name")
 
     zipped_data = _prepare_template_data(formset, student_choices, internships_offers, speciality, student,
                                          internship_id)
-    information = mdl_int.internship_student_information.find_by_person_and_cohort(student.person, cohort=cohort)
+    information = mdl_int.internship_student_information.find_by_person(student.person, cohort)
 
     context = {
         "internships": internships,
