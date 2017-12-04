@@ -129,7 +129,7 @@ def internship_student_information_modification(request, cohort_id, student_id):
 def student_save_information_modification(request, cohort_id, student_id):
     cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)
     student = mdl.student.find_by_id(student_id)
-    information = mdl_int.internship_student_information.find_by_person(student.person)
+    information = mdl_int.internship_student_information.find_by_person(student.person, cohort)
     if not information:
         information = mdl_int.internship_student_information.InternshipStudentInformation()
         information.person = student.person
@@ -190,24 +190,25 @@ def student_save_affectation_modification(request, cohort_id, student_id):
     cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)
     student = mdl.student.find_by_id(student_id)
 
-    if request.POST.get('period'):
+    periods = []
+    if 'period' in request.POST:
         periods = request.POST.getlist('period')
-    else:
-        periods = []
 
-    if request.POST.get('organization'):
+    organizations = []
+    if 'organization' in request.POST:
         organizations = request.POST.getlist('organization')
 
-    if request.POST.get('specialty'):
+    specialties = []
+    if 'specialty' in request.POST:
         specialties = request.POST.getlist('specialty')
 
     check_error_present = False
     num_periods = len(periods)
-    for x in range(0, num_periods):
-        if organizations[x]:
-            organization = mdl_int.organization.search(cohort=cohort, reference=organizations[x])[0]
-            specialty = mdl_int.internship_speciality.search(cohort=cohort, name=specialties[x])[0]
-            period = mdl_int.period.search(cohort=cohort, name=periods[x])[0]
+    for num_period in range(0, num_periods):
+        if organizations[num_period]:
+            organization = mdl_int.organization.search(cohort=cohort, reference=organizations[num_period])[0]
+            specialty = mdl_int.internship_speciality.search(cohort=cohort, name=specialties[num_period])[0]
+            period = mdl_int.period.search(cohort=cohort, name=periods[num_period])[0]
             check_internship_present = mdl_int.internship_offer.search(cohort=cohort,
                                                                        organization=organization,
                                                                        speciality=specialty)
@@ -220,11 +221,11 @@ def student_save_affectation_modification(request, cohort_id, student_id):
 
     if not check_error_present:
         mdl_int.internship_student_affectation_stat.delete_affectations(student, cohort)
-        for x in range(0, num_periods):
-            if organizations[x]:
-                organization = mdl_int.organization.search(cohort=cohort, reference=organizations[x])[0]
-                specialty = mdl_int.internship_speciality.search(cohort=cohort, name=specialties[x])[0]
-                period = mdl_int.period.search(cohort=cohort, name=periods[x])[0]
+        for num_period in range(0, num_periods):
+            if organizations[num_period]:
+                organization = mdl_int.organization.search(cohort=cohort, reference=organizations[num_period])[0]
+                specialty = mdl_int.internship_speciality.search(cohort=cohort, name=specialties[num_period])[0]
+                period = mdl_int.period.search(cohort=cohort, name=periods[num_period])[0]
                 student_choices = mdl_int.internship_choice.search(student=student, speciality=specialty)
 
                 affectation = mdl_int.internship_student_affectation_stat.build(student, organization, specialty,

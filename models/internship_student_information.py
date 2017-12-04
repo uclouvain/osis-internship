@@ -69,14 +69,7 @@ def find_all(cohort):
         .order_by('person__last_name', 'person__first_name')
 
 
-def find_by_person(person):
-    try:
-        return InternshipStudentInformation.objects.get(person=person)
-    except ObjectDoesNotExist:
-        return None
-
-
-def find_by_person_and_cohort(person, cohort):
+def find_by_person(person, cohort):
     try:
         return InternshipStudentInformation.objects.get(person=person, cohort=cohort)
     except ObjectDoesNotExist:

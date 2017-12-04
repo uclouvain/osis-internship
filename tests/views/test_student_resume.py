@@ -75,7 +75,6 @@ class StudentResumeViewTestCase(TestCase):
         permission = Permission.objects.get(codename='is_internship_manager')
         self.user.user_permissions.add(permission)
         self.client.force_login(self.user)
-
         self.cohort = CohortFactory()
 
     def test_internships_student_resume(self):
