@@ -214,7 +214,7 @@
 
                                         {% if forloop.counter <= 12 %}
                                             <span data-toggle="tooltip" data-placement="top" title="{{ enrollment.speciality.name }}">{{ enrollment.speciality.acronym }}</span><br>
-                                            {{ enrollment.organization.reference }}<br>
+                                            <span data-toggle="tooltip" data-placement="top" title="{{ enrollment.organization.name }}">{{enrollment.organization.reference }}</span><br>
                                             {{ enrollment.cost }}({{ enrollment.choice.lower }})
                                         {% else %}
                                             {{ periods.score }}
