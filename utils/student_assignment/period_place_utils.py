@@ -56,3 +56,4 @@ def replace_period_place_in_dictionnary(period_place, period_places_dictionnary,
     for period_place_dict in period_places_dictionnary:
         if period_place_dict["id"] == period_place["id"]:
             period_place_dict["number_places"] = new_count
+    return period_places_dictionnary

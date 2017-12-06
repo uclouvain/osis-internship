@@ -271,7 +271,7 @@ class AssignmentSolver:
         offer = self.find_offer_for_affectation(affectation)
         period_place = get_period_place_for_offer_and_period(offer, period, self.available_places)
         period_place["number_places"] -= 1
-        replace_period_place_in_dictionnary(period_place, self.available_places, period_place["number_places"])
+        self.available_places = replace_period_place_in_dictionnary(period_place, self.available_places, period_place["number_places"])
 
     def build_student_affectation(self, organization, student, period, speciality, choice, priority):
         if priority:
@@ -298,19 +298,19 @@ class AssignmentSolver:
     #################################################################################################################
 
     def find_offer_for_affectation(self, affectation):
-        return self.offers.filter(
+        return self.offers.get(
                 organization=affectation.organization,
-                speciality__acronym=affectation.speciality.acronym).first()
+                speciality__acronym=affectation.speciality.acronym)
 
     def find_offer_in_default_organization_for_internship(self, internship):
         if internship.speciality:
-            return self.offers.filter(
+            return self.offers.get(
                     organization=self.default_organization,
-                    speciality__acronym=internship.speciality.acronym).first()
+                    speciality__acronym=internship.speciality.acronym)
         else:
-            return self.offers.filter(
+            return self.offers.get(
                     organization=self.default_organization,
-                    speciality__in=self.specialities).first()
+                    speciality__in=self.specialities)
 
     def find_offers_for_available_organizations(self, speciality, unavailable_organizations):
         if speciality:
