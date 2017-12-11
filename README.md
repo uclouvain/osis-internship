@@ -1,10 +1,6 @@
-# OSIS
+# OSIS Internship
 
-OSIS stands for **Open Student Information System**. It's an application
-designed to manage the core business of higher education institutions, such as universities, faculties, institutes and professional schools. The core business
-involves the administration of students, teachers, courses, programs and so on.
-
-[![Join the chat at https://gitter.im/uclouvain/OSIS-Louvain](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/uclouvain/OSIS-Louvain?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Build Status](https://travis-ci.org/uclouvain/osis.svg?branch=dev)](https://travis-ci.org/uclouvain/osis)
+OSIS Internship is an application that is part of [OSIS].
 
 ## Documentation
 
@@ -24,9 +20,25 @@ OSIS is not a final product yet. It is still an on going project with ambitious
 goals and deadlines. The good news is that we are already using it in production
 because what is available complements or replaces existing business applications.
 
-## Code
+## Test
 
-OSIS is writen in
+To test the entire project before submitting pull request:
+
+    $ python manage.py test
+
+To test the application when an issue is solved:
+
+    $ python manage.py test internship
+
+To test faster when a problem is identified by the tests.
+
+    $ python manage.py test --keepdb internship
+
+To execute a specific test that is under development:
+
+    $ python manage.py test internship.tests.utils.test_integer.IntegerTestCase.test_to_int
+
+[OSIS](https://www.github.com/uclouvain/osis)
 [Python](https://www.python.org/) 3.4,
 [HTML5](https://www.w3.org/TR/html5/) and uses
 [DJango](https://www.djangoproject.com/) 1.11 as web framework.

@@ -1,0 +1,110 @@
+{% extends "layout.html" %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% comment "License" %}
+    * OSIS stands for Open Student Information System. It's an application
+    * designed to manage the core business of higher education institutions,
+    * such as universities, faculties, institutes and professional schools.
+    * The core business involves the administration of students, teachers,
+    * courses, programs and so on.
+    *
+    * Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
+    *
+    * This program is free software: you can redistribute it and/or modify
+    * it under the terms of the GNU General Public License as published by
+    * the Free Software Foundation, either version 3 of the License, or
+    * (at your option) any later version.
+    *
+    * This program is distributed in the hope that it will be useful,
+    * but WITHOUT ANY WARRANTY; without even the implied warranty of
+    * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    * GNU General Public License for more details.
+    *
+    * A copy of this license - GNU General Public License - is available
+    * at the root of the source code of this program.  If not,
+    * see http://www.gnu.org/licenses/.
+{% endcomment %}
+
+{% block breadcrumb %}
+    <li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
+    <li><a href="{% url 'internship' %}">{% trans 'internships_managment' %}</a></li>
+    <li><a href="{% url 'internships_home' cohort_id=current_cohort.id %}">{{ current_cohort.name }}</a></li>
+    <li class="active">{% trans 'internships_masters' %}</li>
+{% endblock %}
+{% block content %}
+    <div class="page-header">
+        <h2>{% trans 'internships_masters' %}</h2>
+    </div>
+
+    <form action="{%url 'internships_masters' cohort_id=current_cohort.id %}" method="get" class="">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="filter_hospital">{% trans 'hospital' %}</label>
+                    <select name="hospital" id="filter_hospital" class="form-control">
+                        <option value="0">--</option>
+                        {% for hospital in hospitals %}
+                            <option value="{{ hospital.id }}" {% if filter_hospital == hospital.id %}selected{% endif %}>
+                                {{ hospital.reference }} - {{ hospital.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="filter_specialty">{% trans 'speciality' %}</label>
+                    <select name="specialty" id="filter_specialty" class="form-control">
+                        <option value="0">--</option>
+                        {% for specialty in specialties %}
+                            <option value="{{ specialty.id }}" {% if filter_specialty == specialty.id %}selected{% endif %}>
+                                {{ specialty }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <button type="submit" class="btn btn-default" style="margin-top: 26px;">
+                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                    {% trans 'search' %}</button>
+                <a href="{% url 'master_new' cohort_id=current_cohort.id %}" class="btn btn-default pull-right" style="margin-top: 26px;">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                    {% trans 'add' %}
+                </a>
+            </div>
+        </div>
+    </form>
+
+    <div class="panel panel-default">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>{% trans 'civility' %}</th>
+                    <th>{% trans 'name' %}</th>
+                    <th>{% trans 'forname' %}</th>
+                    <th>{% trans 'type' %}</th>
+                    <th>{% trans 'speciality' %}</th>
+                    <th>{% trans 'organization' %}</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for allocation in allocations %}
+                <tr>
+                    <td>{% trans allocation.master.civility %}</td>
+                    <td><a href="{% url 'master' cohort_id=current_cohort.id allocation_id=allocation.id %}">{{ allocation.master.last_name }}</a></td>
+                    <td><a href="{% url 'master' cohort_id=current_cohort.id allocation_id=allocation.id %}">{{ allocation.master.first_name }}</a></td>
+                    <td>{{ allocation.master.type_mastery | default_if_none:"" }}</td>
+                    <td>{{ allocation.specialty }}</td>
+                    <td>{{ allocation.organization }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="7">{% trans 'use_filters_no_data' %}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

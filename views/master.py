@@ -24,36 +24,63 @@
 #
 ##############################################################################
 from django.contrib.auth.decorators import login_required, permission_required
-from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect
 from django import shortcuts
-
-from internship import models as mdl_internship
-from internship.models.cohort import Cohort
-from internship.utils import integer
-
-
-@login_required
-@permission_required('internship.is_internship_manager', raise_exception=True)
-def internships_masters(request, cohort_id):
-    cohort = shortcuts.get_object_or_404(Cohort, pk=cohort_id)
-    filter_specialty = request.GET.get('specialty')
-    filter_hospital = request.GET.get('hospital')
-
-    masters = mdl_internship.internship_master.search(cohort, filter_specialty, filter_hospital)
-    specialties = mdl_internship.internship_speciality.find_by_cohort(cohort)
-    hospitals = mdl_internship.organization.find_by_cohort(cohort)
-
-    filter_specialty = integer.to_int(filter_specialty)
-    filter_hospital = integer.to_int(filter_hospital)
-
-    return shortcuts.render(request, "internships_masters.html", locals())
+from reference.models import country
+from internship.models import master_allocation, internship_speciality, organization, cohort
+from internship.forms.master import MasterForm
 
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
-def delete_internships_masters(request, cohort_id):
-    master_id = request.POST.get("id")
-    master = mdl_internship.internship_master.find_by_id(master_id)
-    master.delete()
-    return HttpResponseRedirect(reverse('internships_masters', kwargs={'cohort_id': cohort_id, }))
+def masters(request, cohort_id):
+    current_cohort = shortcuts.get_object_or_404(cohort.Cohort, pk=cohort_id)
+    filter_specialty = int(request.GET.get('specialty', 0))
+    filter_hospital = int(request.GET.get('hospital', 0))
+
+    allocations = master_allocation.search(current_cohort, filter_specialty, filter_hospital)
+    specialties = internship_speciality.find_by_cohort(current_cohort)
+    hospitals = organization.find_by_cohort(current_cohort)
+
+    return shortcuts.render(request, "masters.html", locals())
+
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def master(request, cohort_id, allocation_id):
+    current_cohort = shortcuts.get_object_or_404(cohort.Cohort, pk=cohort_id)
+    allocation = master_allocation.find_by_id(allocation_id)
+
+    allocated_master = allocation.master
+    allocations = master_allocation.find_by_master(allocated_master)
+
+    return shortcuts.render(request, "master.html", locals())
+
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def master_form(request, cohort_id, allocation_id=None):
+    current_cohort = shortcuts.get_object_or_404(cohort.Cohort, pk=cohort_id)
+    if allocation_id:
+        allocated_master = master_allocation.find_by_id(allocation_id).master
+        form = MasterForm(request.POST, instance=allocated_master)
+    else:
+        form = MasterForm(request.POST)
+
+    countries = country.find_all()
+    specialties = internship_speciality.find_by_cohort(current_cohort)
+    hospitals = organization.find_by_cohort(current_cohort)
+    return shortcuts.render(request, "master_form.html", locals())
+
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def master_save(request, cohort_id):
+    current_cohort = shortcuts.get_object_or_404(cohort.Cohort, pk=cohort_id)
+    form = MasterForm(request.POST)
+    errors = []
+    if form.is_valid():
+        form.save()
+    else:
+        errors.append(form.errors)
+
+    return shortcuts.render(request, "master_form.html", locals())

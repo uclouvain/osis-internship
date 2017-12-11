@@ -23,10 +23,12 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django import forms
+from internship.models import internship_master
 
 
-def to_int(a_string):
-    if a_string:
-        return int(a_string)
-    else:
-        return 0
+class MasterForm(forms.ModelForm):
+    class Meta:
+        model = internship_master.InternshipMaster
+        fields = ['first_name', 'last_name', 'civility', 'type_mastery', 'gender', 'email', 'email_private', 'location',
+                  'postal_code', 'city', 'country', 'phone', 'phone_mobile', 'birth_date', 'start_activities']

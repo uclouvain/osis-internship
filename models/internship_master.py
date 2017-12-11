@@ -30,54 +30,35 @@ from osis_common.models.serializable_model import SerializableModel, Serializabl
 
 
 class InternshipMasterAdmin(SerializableModelAdmin):
-    list_display = ('reference', 'organization', 'first_name', 'last_name', 'civility', 'type_mastery', 'speciality')
-    fieldsets = ((None, {'fields': ('reference', 'organization', 'first_name', 'last_name', 'civility', 'type_mastery',
-                                    'speciality')}),)
-    raw_id_fields = ('organization',)
+    list_display = ('first_name', 'last_name', 'civility', 'type_mastery')
+    fieldsets = ((None, {'fields': ('first_name', 'last_name', 'civility', 'type_mastery', 'gender', 'email',
+                                    'email_private', 'location', 'postal_code', 'city', 'country', 'phone',
+                                    'phone_mobile', 'birth_date', 'start_activities')}),)
 
 
 class InternshipMaster(SerializableModel):
-    CIVILITY_CHOICE = (('PROFESSOR', _('Professor')),
-                       ('DOCTOR', _('Doctor')))
-    TYPE_CHOICE = (('SPECIALIST', _('Specialist')),
-                   ('GENERALIST', _('Generalist')))
-    SPECIALITY_CHOICE = (('INTERNAL_MEDICINE', _('Internal Medicine')),
-                         ('SURGERY', _('Surgery')),
-                         ('GYNEC_OBSTETRICS', _('Gynec-Obstetrics')),
-                         ('PEDIATRICS', _('Pediatrics')),
-                         ('EMERGENCY', _('Emergency')),
-                         ('GERIATRICS', _('Geriatrics')))
+    CIVILITY_CHOICE = (('PROFESSOR', _('PROFESSOR')),
+                       ('DOCTOR', _('DOCTOR')))
+    TYPE_CHOICE = (('SPECIALIST', _('SPECIALIST')),
+                   ('GENERALIST', _('GENERALIST')))
+    GENDER_CHOICES = (('F', _('F')),
+                      ('M', _('M')))
 
-    organization = models.ForeignKey('internship.Organization', null=True)
-    speciality = models.ForeignKey('internship.InternshipSpeciality', blank=True, null=True)
     first_name = models.CharField(max_length=50, blank=True, null=True, db_index=True)
     last_name = models.CharField(max_length=50, blank=True, null=True, db_index=True)
-    reference = models.CharField(max_length=50, blank=True, null=True)
-    civility = models.CharField(max_length=50, blank=True, null=True)
-    type_mastery = models.CharField(max_length=50, blank=True, null=True)
+    civility = models.CharField(max_length=50, blank=True, null=True, choices=CIVILITY_CHOICE)
+    type_mastery = models.CharField(max_length=50, blank=True, null=True, choices=TYPE_CHOICE)
+    gender = models.CharField(max_length=1, blank=True, null=True, choices=GENDER_CHOICES)
+    email = models.EmailField(max_length=255, blank=True, null=True)
+    email_private = models.EmailField(max_length=255, blank=True, null=True)
+    location = models.CharField(max_length=255, blank=True, null=True)
+    postal_code = models.CharField(max_length=20, blank=True, null=True)
+    city = models.CharField(max_length=255, blank=True, null=True)
+    country = models.ForeignKey('reference.Country', blank=True, null=True)
+    phone = models.CharField(max_length=30, blank=True, null=True)
+    phone_mobile = models.CharField(max_length=30, blank=True, null=True)
+    birth_date = models.DateField(blank=True, null=True)
+    start_activities = models.DateField(blank=True, null=True)
 
     def __str__(self):
-        return u"%s" % self.reference
-
-
-def find_masters():
-    return InternshipMaster.objects.all().select_related("organization")
-
-
-def find_by_id(master_id):
-    return InternshipMaster.objects.get(pk=master_id)
-
-
-def search(cohort, specialty, hospital):
-    masters = InternshipMaster.objects.filter(organization__cohort=cohort)
-
-    if specialty:
-        masters = masters.filter(speciality=specialty)
-
-    if hospital:
-        masters = masters.filter(organization=hospital)
-
-    if specialty or hospital:
-        return masters
-    else:
-        return None
+        return "{}, {}".format(self.last_name, self.first_name)

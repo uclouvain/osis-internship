@@ -41,7 +41,13 @@ class Organization(SerializableModel):
     website = models.URLField(max_length=255, blank=True, null=True)
     reference = models.CharField(max_length=30, blank=True, null=True)
     type = models.CharField(max_length=30, blank=True, null=True, default="service partner")
+    phone = models.CharField(max_length=30, blank=True, null=True)
+    location = models.CharField(max_length=255, blank=True, null=True)
+    postal_code = models.CharField(max_length=20, blank=True, null=True)
+    city = models.CharField(max_length=255, blank=True, null=True)
+    country = models.ForeignKey('reference.Country', blank=True, null=True)
     cohort = models.ForeignKey('internship.Cohort', null=False, on_delete=models.CASCADE)
+
     report_period = models.IntegerField(default=1, blank=True, null=True)
     report_start_date = models.IntegerField(default=2, blank=True, null=True)
     report_end_date = models.IntegerField(default=3, blank=True, null=True)

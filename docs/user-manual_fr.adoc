@@ -230,9 +230,31 @@ La gestion journalière couvre toutes les fonctionnalités de maintenance de
 données en dehors de l'exécution du processus. Ce sont les fonctionnalités
 utilisées au cours de l'année par le gestionaire des stages.
 
-* *Gestion des hôpitaux*: mantenir le données des hôpitaux à jour.
+=== *Gestion des hôpitaux*
 
-//image::images/hospitals.png[Des hôpitauxpériodes]
+La gestion des hôpitaux est plus que maintenir les données des hôpitaux à jour.
+
+Pour accèder les rapports en format Excel pour les hôpitaux, cliquez sur le 
+botton vers qu'indique les résultats de l'affectation.
+
+image::images/hospitals-view.png[La liste des hôpitaux]
+
+Dans l'écran de résultats de l'affectation il y a deux bottons pour la 
+production de rapport:
+
+1. pour les mêtres de stage avec les affectations groupés par specialité et période.
+2. pour l'hôpital avec une liste des tous les affectation trié par période.
+
+image::images/hospital-affectation-results.png[Les rapports pour l'hôpital]
+
+Le rapport pour l'hôpital peux être configuré dans le formulaire de l'hôpital
+parce que chacun peux avoir un besoin different. 
+
+Il y a un champ númerique pour chaque donnée disponible pour les hôpitaux. Les 
+champs contiennent la sequence dans lequel les données doivent être afficher.
+Les champs laissés vides sont ignorés.
+
+image::images/hospital-report-config.png[La configuration de rapport pour l'hôpital]
 
 * *Specialités des stages*: mantenir les places disponibles dans les different
   specialités des hôpitaux.

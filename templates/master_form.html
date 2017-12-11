@@ -1,0 +1,207 @@
+{% extends "layout.html" %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% comment "License" %}
+    * OSIS stands for Open Student Information System. It's an application
+    * designed to manage the core business of higher education institutions,
+    * such as universities, faculties, institutes and professional schools.
+    * The core business involves the administration of students, teachers,
+    * courses, programs and so on.
+    *
+    * Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
+    *
+    * This program is free software: you can redistribute it and/or modify
+    * it under the terms of the GNU General Public License as published by
+    * the Free Software Foundation, either version 3 of the License, or
+    * (at your option) any later version.
+    *
+    * This program is distributed in the hope that it will be useful,
+    * but WITHOUT ANY WARRANTY; without even the implied warranty of
+    * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    * GNU General Public License for more details.
+    *
+    * A copy of this license - GNU General Public License - is available
+    * at the root of the source code of this program.  If not,
+    * see http://www.gnu.org/licenses/.
+{% endcomment %}
+
+{% block breadcrumb %}
+    <li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
+    <li><a href="{% url 'internship' %}">{% trans 'internships_managment' %}</a></li>
+    <li><a href="{% url 'internships_home' cohort_id=current_cohort.id %}">{{ current_cohort.name }}</a></li>
+    <li class="active">{% trans 'internships_masters' %}</li>
+{% endblock %}
+{% block content %}
+    <div class="page-header">
+        <h2>{% trans 'master' %}</h2>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <form action="{%url 'master_save' cohort_id=current_cohort.id %}" method="POST" class="form">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="civility">{% trans 'civility' %}</label>
+                            <select name="civility" id="civility" class="form-control">
+                                <option value="DOCTOR">{% trans 'DOCTOR' %}</option>
+                                <option value="PROFESSOR">{% trans 'PROFESSOR' %}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <label for="last_name">{% trans 'last_name' %}</label>
+                            <input type="text" name="last_name" id="last_name" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="first_name">{% trans 'first_name' %}</label>
+                            <input type="text" name="first_name" id="first_name" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="birth_date">{% trans 'birth_date' %}</label>
+                            <input type="text" name="birth_date" id="birth_date" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="gender">{% trans 'gender' %}</label>
+                            <select name="gender" id="gender" class="form-control">
+                                <option value="F">{% trans 'female' %}</option>
+                                <option value="M">{% trans 'male' %}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="type_mastery">{% trans 'type' %}</label>
+                            <select name="type_mastery" id="type_mastery" class="form-control">
+                                <option value="GENERALIST">{% trans 'GENERALIST' %}</option>
+                                <option value="SPECIALIST">{% trans 'SPECIALIST' %}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="start_activities">{% trans 'start_activities' %}</label>
+                            <input type="text" name="start_activities" id="start_activities" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="email">{% trans 'email' %}</label>
+                            <input type="text" name="email" id="email" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="email_private">{% trans 'email_private' %}</label>
+                            <input type="text" name="email_private" id="email_private" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="phone">{% trans 'phone' %}</label>
+                            <input type="text" name="phone" id="phone" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="phone_mobile">{% trans 'phone_mobile' %}</label>
+                            <input type="text" name="phone_mobile" id="phone_mobile" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="location">{% trans 'location' %}</label>
+                            <input type="text" name="location" id="location" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="postal_code">{% trans 'postal_code' %}</label>
+                            <input type="text" name="postal_code" id="postal_code" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="city">{% trans 'city' %}</label>
+                            <input type="text" name="city" id="city" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="country">{% trans 'country' %}</label>
+                            <select name="country" id="country" class="form-control">
+                                <option value="">--</option>
+                                {% for country in countries %}
+                                    <option value="{{ country.id }}">{{ country.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">{% trans 'allocation' %}</div>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>{% trans 'hospital' %}</th>
+                                <th>{% trans 'specialty' %}</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <select name="hospital" id="hospital" class="form-control">
+                                        <option value="">--</option>
+                                        {% for hospital in hospitals %}
+                                            <option value="{{ hospital.id }}">{{ hospital.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </td>
+                                <td>
+                                    <select name="specialty" id="specialty" class="form-control">
+                                        <option value="">--</option>
+                                        {% for specialty in specialties %}
+                                            <option value="{{ specialty.id }}">{{ specialty.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-default">
+                                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    <span class="glyphicon glyphicon-save" aria-hidden="true"></span>
+                    {% trans "save" %}
+                </button>
+                <a href="{% url 'internships_masters' cohort_id=current_cohort.id %}" class="btn btn-default">
+                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                    {% trans "cancel" %}
+                </a>
+            </form>
+        </div>
+    </div>
+{% endblock %}

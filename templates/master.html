@@ -1,0 +1,168 @@
+{% extends "layout.html" %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% comment "License" %}
+    * OSIS stands for Open Student Information System. It's an application
+    * designed to manage the core business of higher education institutions,
+    * such as universities, faculties, institutes and professional schools.
+    * The core business involves the administration of students, teachers,
+    * courses, programs and so on.
+    *
+    * Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
+    *
+    * This program is free software: you can redistribute it and/or modify
+    * it under the terms of the GNU General Public License as published by
+    * the Free Software Foundation, either version 3 of the License, or
+    * (at your option) any later version.
+    *
+    * This program is distributed in the hope that it will be useful,
+    * but WITHOUT ANY WARRANTY; without even the implied warranty of
+    * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    * GNU General Public License for more details.
+    *
+    * A copy of this license - GNU General Public License - is available
+    * at the root of the source code of this program.  If not,
+    * see http://www.gnu.org/licenses/.
+{% endcomment %}
+
+{% block breadcrumb %}
+    <li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
+    <li><a href="{% url 'internship' %}">{% trans 'internships_managment' %}</a></li>
+    <li><a href="{% url 'internships_home' cohort_id=current_cohort.id %}">{{ current_cohort.name }}</a></li>
+    <li class="active">{% trans 'internships_masters' %}</li>
+{% endblock %}
+{% block content %}
+    <div class="page-header">
+        <h2>{% trans 'master' %}: {{ allocated_master.last_name | upper }}, {{ allocated_master.first_name }}</h2>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="civility">{% trans 'civility' %}</label>
+                        <div id="civility">{{ allocated_master.civility }}</div>
+                    </div>
+                </div>
+                <div class="col-md-9">
+                    <div class="form-group">
+                        <label for="first_name">{% trans 'full_name' %}</label>
+                        <div id="first_name">{{ allocated_master.last_name | upper }}, {{ allocated_master.first_name }}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="birth_date">{% trans 'birth_date' %}</label>
+                        <div id="birth_date">{{ allocated_master.birth_date }}</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="gender">{% trans 'gender' %}</label>
+                        <div id="gender">{% trans allocated_master.gender %}</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="type_mastery">{% trans 'type' %}</label>
+                        {% if allocated_master.type_mastery %}
+                            <div id="type_mastery">{% trans allocated_master.type_mastery %}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="start_activities">{% trans 'start_activities' %}</label>
+                        <div id="start_activities">{{ allocated_master.start_activities }}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="email">{% trans 'email' %}</label>
+                        <div id="email">{{ allocated_master.email }}</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="email_private">{% trans 'email_private' %}</label>
+                        <div id="email_private">{{ allocated_master.email_private }}</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="phone">{% trans 'phone' %}</label>
+                        <div id="phone">{{ allocated_master.phone }}</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="phone_mobile">{% trans 'phone_mobile' %}</label>
+                        <div id="phone_mobile">{{ allocated_master.phone_mobile }}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="location">{% trans 'location' %}</label>
+                        <div id="location">{{ allocated_master.location }}</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="postal_code">{% trans 'postal_code' %}</label>
+                        <div id="postal_code">{{ allocated_master.postal_code }}</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="city">{% trans 'city' %}</label>
+                        <div id="city">{{ allocated_master.city }}</div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="country">{% trans 'country' %}</label>
+                        <div id="country">{{ allocated_master.country | default_if_none:"" }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">{% trans 'allocation' %}</div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>{% trans 'hospital' %}</th>
+                            <th>{% trans 'specialty' %}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for allocation in allocations %}
+                            <tr>
+                                <td>{{ allocation.organization }}</td>
+                                <td>{{ allocation.specialty }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="panel-footer">
+            <a href="{% url 'master_edit' cohort_id=current_cohort.id allocation_id=allocation.id %}" class="btn btn-default">
+                <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                {% trans "edit" %}</a>
+            <a href="{% url 'internships_masters' cohort_id=current_cohort.id %}" class="btn btn-default">
+                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                {% trans "back" %}
+            </a>
+        </div>
+    </div>
+{% endblock %}
