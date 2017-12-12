@@ -31,6 +31,7 @@
     <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{% trans 'internships_managment' %}</a></li>
     <li class="active">{% trans 'edit_places' %}</li>
 {% endblock %}
+
 {% block content %}
     <div class="page-header">
         <h2>{% trans 'edit_places' %}: {{ internship.organization }} - {{ internship.speciality }}</h2>
