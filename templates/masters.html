@@ -83,7 +83,6 @@
                 <tr>
                     <th>{% trans 'civility' %}</th>
                     <th>{% trans 'name' %}</th>
-                    <th>{% trans 'forname' %}</th>
                     <th>{% trans 'type' %}</th>
                     <th>{% trans 'speciality' %}</th>
                     <th>{% trans 'organization' %}</th>
@@ -93,8 +92,7 @@
             {% for allocation in allocations %}
                 <tr>
                     <td>{% trans allocation.master.civility %}</td>
-                    <td><a href="{% url 'master' cohort_id=current_cohort.id allocation_id=allocation.id %}">{{ allocation.master.last_name }}</a></td>
-                    <td><a href="{% url 'master' cohort_id=current_cohort.id allocation_id=allocation.id %}">{{ allocation.master.first_name }}</a></td>
+                    <td><a href="{% url 'master' cohort_id=current_cohort.id allocation_id=allocation.id %}">{{ allocation.master.last_name | upper }}, {{ allocation.master.first_name }}</a></td>
                     <td>{{ allocation.master.type_mastery | default_if_none:"" }}</td>
                     <td>{{ allocation.specialty }}</td>
                     <td>{{ allocation.organization }}</td>
