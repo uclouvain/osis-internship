@@ -34,33 +34,34 @@
 {% endblock %}
 {% block content %}
     <div class="page-header">
-        <h2>{% trans 'master' %}</h2>
+        <h2>{% trans 'master' %}: <span id="full_name">{{ allocated_master.last_name | upper }}, {{ allocated_master.first_name }}</span> </h2>
     </div>
 
     <div class="panel panel-default">
         <div class="panel-body">
             <form action="{%url 'master_save' cohort_id=current_cohort.id %}" method="POST" class="form">
                 {% csrf_token %}
+                <input type="hidden" name="id" value="{{ allocated_master.id }}">
                 <div class="row">
                     <div class="col-md-3">
                         <div class="form-group">
                             <label for="civility">{% trans 'civility' %}</label>
                             <select name="civility" id="civility" class="form-control">
-                                <option value="DOCTOR">{% trans 'DOCTOR' %}</option>
-                                <option value="PROFESSOR">{% trans 'PROFESSOR' %}</option>
+                                <option value="DOCTOR" {{ doctor_selected }}>{% trans 'DOCTOR' %}</option>
+                                <option value="PROFESSOR" {{ professor_selected }}>{% trans 'PROFESSOR' %}</option>
                             </select>
                         </div>
                     </div>
                     <div class="col-md-5">
                         <div class="form-group">
                             <label for="last_name">{% trans 'last_name' %}</label>
-                            <input type="text" name="last_name" id="last_name" class="form-control">
+                            <input type="text" name="last_name" id="last_name" class="form-control" value="{{ allocated_master.last_name | upper }}">
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="first_name">{% trans 'first_name' %}</label>
-                            <input type="text" name="first_name" id="first_name" class="form-control">
+                            <input type="text" name="first_name" id="first_name" class="form-control" value="{{ allocated_master.first_name }}">
                         </div>
                     </div>
                 </div>
@@ -68,15 +69,15 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <label for="birth_date">{% trans 'birth_date' %}</label>
-                            <input type="text" name="birth_date" id="birth_date" class="form-control">
+                            <input type="date" name="birth_date" id="birth_date" class="form-control" value="{{ allocated_master.birth_date | date:"Y-m-d" }}">
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
                             <label for="gender">{% trans 'gender' %}</label>
                             <select name="gender" id="gender" class="form-control">
-                                <option value="F">{% trans 'female' %}</option>
-                                <option value="M">{% trans 'male' %}</option>
+                                <option value="F" {{ female_selected }}>{% trans 'female' %}</option>
+                                <option value="M" {{ male_selected }}>{% trans 'male' %}</option>
                             </select>
                         </div>
                     </div>
@@ -84,15 +85,15 @@
                         <div class="form-group">
                             <label for="type_mastery">{% trans 'type' %}</label>
                             <select name="type_mastery" id="type_mastery" class="form-control">
-                                <option value="GENERALIST">{% trans 'GENERALIST' %}</option>
-                                <option value="SPECIALIST">{% trans 'SPECIALIST' %}</option>
+                                <option value="GENERALIST" {{ generalist_selected }}>{% trans 'GENERALIST' %}</option>
+                                <option value="SPECIALIST" {{ specialist_selected }}>{% trans 'SPECIALIST' %}</option>
                             </select>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
                             <label for="start_activities">{% trans 'start_activities' %}</label>
-                            <input type="text" name="start_activities" id="start_activities" class="form-control">
+                            <input type="date" name="start_activities" id="start_activities" class="form-control" value="{{ allocated_master.start_activities | date:"Y-m-d"  }}">
                         </div>
                     </div>
                 </div>
@@ -100,25 +101,25 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="email">{% trans 'email' %}</label>
-                            <input type="text" name="email" id="email" class="form-control">
+                            <input type="email" name="email" id="email" class="form-control" value="{{ allocated_master.email }}">
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="email_private">{% trans 'email_private' %}</label>
-                            <input type="text" name="email_private" id="email_private" class="form-control">
+                            <input type="email" name="email_private" id="email_private" class="form-control" value="{{ allocated_master.email_private }}">
                         </div>
                     </div>
                     <div class="col-md-2">
                         <div class="form-group">
                             <label for="phone">{% trans 'phone' %}</label>
-                            <input type="text" name="phone" id="phone" class="form-control">
+                            <input type="text" name="phone" id="phone" class="form-control" value="{{ allocated_master.phone }}">
                         </div>
                     </div>
                     <div class="col-md-2">
                         <div class="form-group">
                             <label for="phone_mobile">{% trans 'phone_mobile' %}</label>
-                            <input type="text" name="phone_mobile" id="phone_mobile" class="form-control">
+                            <input type="text" name="phone_mobile" id="phone_mobile" class="form-control" value="{{ allocated_master.phone_mobile }}">
                         </div>
                     </div>
                 </div>
@@ -126,19 +127,19 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="location">{% trans 'location' %}</label>
-                            <input type="text" name="location" id="location" class="form-control">
+                            <input type="text" name="location" id="location" class="form-control" value="{{ allocated_master.location }}">
                         </div>
                     </div>
                     <div class="col-md-2">
                         <div class="form-group">
                             <label for="postal_code">{% trans 'postal_code' %}</label>
-                            <input type="text" name="postal_code" id="postal_code" class="form-control">
+                            <input type="text" name="postal_code" id="postal_code" class="form-control" value="{{ allocated_master.postal_code }}">
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
                             <label for="city">{% trans 'city' %}</label>
-                            <input type="text" name="city" id="city" class="form-control">
+                            <input type="text" name="city" id="city" class="form-control" value="{{ allocated_master.city }}">
                         </div>
                     </div>
 
@@ -148,7 +149,11 @@
                             <select name="country" id="country" class="form-control">
                                 <option value="">--</option>
                                 {% for country in countries %}
-                                    <option value="{{ country.id }}">{{ country.name }}</option>
+                                    {% if allocated_master.country == country %}
+                                        <option value="{{ country.id }}" selected>{{ country.name }}</option>
+                                    {% else %}
+                                        <option value="{{ country.id }}">{{ country.name }}</option>
+                                    {% endif %}
                                 {% endfor %}
                             </select>
                         </div>
@@ -157,7 +162,7 @@
 
                 <div class="panel panel-default">
                     <div class="panel-heading">{% trans 'allocation' %}</div>
-                    <table class="table">
+                    <table class="table" id="tbl_allocations">
                         <thead>
                             <tr>
                                 <th>{% trans 'hospital' %}</th>
@@ -166,12 +171,49 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
+                            {% for allocation in allocations %}
+                                <tr id="allocation_row_{{ forloop.counter0 }}">
+                                    <td>
+                                        <select name="hospital" id="hospital_{{ forloop.counter0 }}" class="form-control">
+                                            <option value="">--</option>
+                                            {% for hospital in hospitals %}
+                                                {% if allocation.organization == hospital %}
+                                                    <option value="{{ hospital.id }}" selected>{{ hospital.reference }} - {{ hospital.name }}</option>
+                                                {% else %}
+                                                    <option value="{{ hospital.id }}">{{ hospital.name }}</option>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="specialty" id="specialty_{{ forloop.counter0 }}" class="form-control">
+                                            <option value="">--</option>
+                                            {% for specialty in specialties %}
+                                                {% if allocation.specialty == specialty %}
+                                                    <option value="{{ specialty.id }}" selected>{{ specialty.name }}</option>
+                                                {% else %}
+                                                    <option value="{{ specialty.id }}">{{ specialty.name }}</option>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-default" id="remove_allocation_{{ forloop.counter0 }}">
+                                            <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <table class="table" id="tbl_allocation_new">
+                        <tbody>
+                            <tr id="allocation_row_new">
                                 <td>
                                     <select name="hospital" id="hospital" class="form-control">
                                         <option value="">--</option>
                                         {% for hospital in hospitals %}
-                                            <option value="{{ hospital.id }}">{{ hospital.name }}</option>
+                                            <option value="{{ hospital.id }}">{{ hospital.reference }} - {{ hospital.name }}</option>
                                         {% endfor %}
                                     </select>
                                 </td>
@@ -184,7 +226,7 @@
                                     </select>
                                 </td>
                                 <td>
-                                    <button type="button" class="btn btn-default">
+                                    <button type="button" class="btn btn-default" id="add_allocation">
                                         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                                     </button>
                                 </td>
@@ -204,4 +246,54 @@
             </form>
         </div>
     </div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        // Update title as it changes.
+        $("#first_name, #last_name").keyup(function() {
+            $("#full_name").text($("#last_name").val().toUpperCase() + ", " +  $("#first_name").val());
+        });
+
+        // Remove an allocation from the table.
+        var remove_allocation = function() {
+            var id_row = this.id.replace("remove_allocation_", "");
+            $("#allocation_row_"+ id_row).remove();
+        }
+        $('button[id^="remove_allocation_"]').click(remove_allocation);
+
+        // Add an allocation to the table.
+        $("#add_allocation").click(function() {
+            if(!$('#hospital').val() || !$('#specialty').val())
+                return;
+
+            // Take the last id in the table before adding a new row.
+            var newId = 0;
+            if($('#tbl_allocations tr:last').attr("id")) {
+                var lastId = Number($('#tbl_allocations tr:last').attr('id').replace("allocation_row_", ""));
+                newId = lastId + 1;
+            }
+
+            // Add a new row to the table.
+            $('#allocation_row_new').clone().appendTo("#tbl_allocations");
+
+            // Set the ids of the new row.
+            $('#tbl_allocations tr:last').attr('id', 'allocation_row_'+ newId);
+            $('#tbl_allocations #hospital').attr('id', 'hospital_'+ newId);
+            $('#tbl_allocations #specialty').attr('id', 'specialty_'+ newId);
+            $('#tbl_allocations #add_allocation').attr('id', 'remove_allocation_'+ newId);
+
+            // Set the values of the fields in the new row.
+            $('#hospital_'+ newId).val($('#hospital').val());
+            $('#specialty_'+ newId).val($('#specialty').val());
+
+            // Set the remove allocation button.
+            $('#remove_allocation_'+ newId).html('<span class="glyphicon glyphicon-minus" aria-hidden="true"></span>');
+            $('#remove_allocation_'+ newId).click(remove_allocation);
+
+            // Reset the fields.
+            $('#hospital').val("");
+            $('#specialty').val("");
+        });
+    </script>
 {% endblock %}

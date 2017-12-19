@@ -199,6 +199,9 @@ msgstr	 "Name"
 msgid	 "new_internship"
 msgstr	 "New internship"
 
+msgid "no_allocation_found"
+msgstr "No allocation found for the master."
+
 msgid	 "no_result"
 msgstr	 "No result"
 

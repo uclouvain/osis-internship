@@ -42,10 +42,10 @@
             <form method="post" action="{% url 'save_period_places' cohort_id=cohort.id internship_id=internship.id %}">
                 {% csrf_token %}
                 {% for period_name, number_places in period_places%}
-                <div class="col-md-3 form-group">
-                    <label for="id_{{ period_name }}">{{ period_name }}</label>:
-                    <input type="number" class="form-control" id="id_{{ period_name }}" name="{{ period_name }}" value="{{ number_places }}">
-                </div>
+                    <div class="col-md-3 form-group">
+                        <label for="id_{{ period_name }}">{{ period_name }}</label>:
+                        <input type="number" class="form-control" id="id_{{ period_name }}" name="{{ period_name }}" value="{{ number_places }}">
+                    </div>
                 {% endfor %}
                 <button type="submit" class="btn btn-primary">
                     <span class="glyphicon glyphicon-save" aria-hidden="true"/> {% trans 'save'%}

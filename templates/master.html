@@ -150,17 +150,21 @@
                                 <td>{{ allocation.organization }}</td>
                                 <td>{{ allocation.specialty }}</td>
                             </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="5">{% trans 'no_allocation_found' %}</td>
+                            </tr>
                         {% endfor %}
                     </tbody>
                 </table>
             </div>
         </div>
         <div class="panel-footer">
-            <a href="{% url 'master_edit' cohort_id=current_cohort.id allocation_id=allocation.id %}" class="btn btn-default">
+            <a href="{% url 'master_edit' cohort_id=current_cohort.id master_id=allocated_master.id %}" class="btn btn-default">
                 <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
                 {% trans "edit" %}</a>
             <a href="{% url 'internships_masters' cohort_id=current_cohort.id %}" class="btn btn-default">
-                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
                 {% trans "back" %}
             </a>
         </div>

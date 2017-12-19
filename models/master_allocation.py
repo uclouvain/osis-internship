@@ -26,6 +26,7 @@
 from django.db import models
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
+from internship.models.internship_master import InternshipMaster
 
 
 class MasterAllocationAdmin(admin.ModelAdmin):
@@ -44,6 +45,13 @@ class MasterAllocation(models.Model):
     organization = models.ForeignKey('internship.Organization', blank=True, null=True)
     specialty = models.ForeignKey('internship.InternshipSpeciality', blank=True, null=True)
 
+    def save(self, *args, **kwargs):
+        existing = MasterAllocation.objects.filter(master=self.master,
+                                                   organization=self.organization,
+                                                   specialty=self.specialty)
+        if not existing:
+            super(MasterAllocation, self).save(*args, **kwargs)
+
     def __str__(self):
         return "{}, {}".format(self.master.last_name, self.master.first_name)
 
@@ -60,6 +68,11 @@ def find_by_master(a_master):
     return MasterAllocation.objects.filter(master=a_master)
 
 
+def find_unallocated_masters():
+    allocated_masters = (alloc.master.id for alloc in MasterAllocation.objects.all())
+    return InternshipMaster.objects.exclude(id__in=(list(allocated_masters)))
+
+
 def search(cohort, specialty, hospital):
     masters = MasterAllocation.objects.filter(organization__cohort=cohort)
 
@@ -73,3 +86,7 @@ def search(cohort, specialty, hospital):
         return masters
     else:
         return None
+
+
+def clean_allocations(master):
+    find_by_master(master).delete()

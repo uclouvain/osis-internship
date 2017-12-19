@@ -208,6 +208,9 @@ msgstr	 "Nom"
 msgid	 "new_internship"
 msgstr	 "Nouveau stage"
 
+msgid "no_allocation_found"
+msgstr "Aucune allocation trouvée pour le maître."
+
 msgid	 "no_result"
 msgstr	 "Aucun résultat"
 

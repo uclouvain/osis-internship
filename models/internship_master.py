@@ -62,3 +62,7 @@ class InternshipMaster(SerializableModel):
 
     def __str__(self):
         return "{}, {}".format(self.last_name, self.first_name)
+
+
+def get_by_id(master_id):
+    return InternshipMaster.objects.get(pk=master_id)
