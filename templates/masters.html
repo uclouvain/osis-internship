@@ -102,7 +102,7 @@
                         <tr>
                             <td>{% trans master.civility %}</td>
                             <td><a href="{% url 'master' cohort_id=current_cohort.id master_id=master.id %}">{{ master.last_name | upper }}, {{ master.first_name }}</a></td>
-                            <td>{{ master.type_mastery | default_if_none:"" }}</td>
+                            <td>{% trans master.type_mastery %}</td>
                             <td>-</td>
                             <td>-</td>
                         </tr>

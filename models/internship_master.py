@@ -24,8 +24,9 @@
 #
 ##############################################################################
 from django.db import models
-from django.utils.translation import ugettext_lazy as _
-
+from internship.models.enums.civility import Civility
+from internship.models.enums.gender import Gender
+from internship.models.enums.mastery import Mastery
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 
 
@@ -37,18 +38,11 @@ class InternshipMasterAdmin(SerializableModelAdmin):
 
 
 class InternshipMaster(SerializableModel):
-    CIVILITY_CHOICE = (('PROFESSOR', _('PROFESSOR')),
-                       ('DOCTOR', _('DOCTOR')))
-    TYPE_CHOICE = (('SPECIALIST', _('SPECIALIST')),
-                   ('GENERALIST', _('GENERALIST')))
-    GENDER_CHOICES = (('F', _('F')),
-                      ('M', _('M')))
-
     first_name = models.CharField(max_length=50, blank=True, null=True, db_index=True)
     last_name = models.CharField(max_length=50, blank=True, null=True, db_index=True)
-    civility = models.CharField(max_length=50, blank=True, null=True, choices=CIVILITY_CHOICE)
-    type_mastery = models.CharField(max_length=50, blank=True, null=True, choices=TYPE_CHOICE)
-    gender = models.CharField(max_length=1, blank=True, null=True, choices=GENDER_CHOICES)
+    civility = models.CharField(max_length=50, blank=True, null=True, choices=Civility.choices())
+    type_mastery = models.CharField(max_length=50, blank=True, null=True, choices=Mastery.choices())
+    gender = models.CharField(max_length=1, blank=True, null=True, choices=Gender.choices())
     email = models.EmailField(max_length=255, blank=True, null=True)
     email_private = models.EmailField(max_length=255, blank=True, null=True)
     location = models.CharField(max_length=255, blank=True, null=True)

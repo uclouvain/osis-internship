@@ -31,6 +31,9 @@ from django.contrib.auth.decorators import login_required, permission_required
 from reference.models import country
 from internship.models import master_allocation, internship_master, internship_speciality, organization, cohort
 from internship.forms.master import MasterForm
+from internship.models.enums.civility import Civility
+from internship.models.enums.gender import Gender
+from internship.models.enums.mastery import Mastery
 
 
 @login_required
@@ -66,12 +69,12 @@ def master_form(request, cohort_id, master_id=None):
     if master_id:
         allocated_master = internship_master.get_by_id(master_id)
         allocations = master_allocation.find_by_master(allocated_master)
-        doctor_selected = 'selected' if allocated_master.civility == 'DOCTOR' else ''
-        professor_selected = 'selected' if allocated_master.civility == 'PROFESSOR' else ''
-        female_selected = 'selected' if allocated_master.gender == 'F' else ''
-        male_selected = 'selected' if allocated_master.gender == 'M' else ''
-        generalist_selected = 'selected' if allocated_master.type_mastery == 'GENERALIST' else ''
-        specialist_selected = 'selected' if allocated_master.type_mastery == 'SPECIALIST' else ''
+        doctor_selected = 'selected' if allocated_master.civility == Civility.DOCTOR.value else ''
+        professor_selected = 'selected' if allocated_master.civility == Civility.PROFESSOR.value else ''
+        female_selected = 'selected' if allocated_master.gender == Gender.FEMALE.value else ''
+        male_selected = 'selected' if allocated_master.gender == Gender.MALE.value else ''
+        generalist_selected = 'selected' if allocated_master.type_mastery == Mastery.GENERALIST.value else ''
+        specialist_selected = 'selected' if allocated_master.type_mastery == Mastery.SPECIALIST.value else ''
 
     countries = country.find_all()
     specialties = internship_speciality.find_by_cohort(current_cohort)
@@ -98,7 +101,7 @@ def master_save(request, cohort_id):
         errors.append(form.errors)
 
     if errors:
-        return HttpResponseRedirect(reverse("master_edit", args=[current_cohort.id]))
+        return HttpResponseRedirect(reverse("master_edit", args=[current_cohort.id, allocated_master.id]))
 
     return HttpResponseRedirect("{}?hospital={}".format(reverse("internships_masters", args=[current_cohort.id]),
                                                         hospital))
@@ -114,12 +117,12 @@ def _build_allocations(request, allocated_master):
     hospitals = []
     if 'hospital' in request.POST:
         hospitals = request.POST.getlist('hospital')
-        hospitals = list(filter(lambda x: x is not "", hospitals))
+        hospitals = _clean_empty_strings(hospitals)
 
     specialties = []
     if 'specialty' in request.POST:
         specialties = request.POST.getlist('specialty')
-        specialties = list(filter(lambda x: x is not "", specialties))
+        specialties = _clean_empty_strings(specialties)
 
     allocations = []
     for i, a_hospital in enumerate(hospitals):
@@ -131,6 +134,10 @@ def _build_allocations(request, allocated_master):
         allocations.append(allocation)
 
     return allocations
+
+
+def _clean_empty_strings(a_list):
+    return list(filter(lambda x: x is not "", a_list))
 
 
 def _save_allocations(allocations):
