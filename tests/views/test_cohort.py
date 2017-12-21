@@ -38,7 +38,7 @@ import datetime
 
 from internship.tests.factories.organization import OrganizationFactory
 from internship.tests.factories.organization_address import OrganizationAddressFactory
-from internship.tests.factories.speciality import SpecialityFactory
+from internship.tests.factories.speciality import SpecialtyFactory
 
 
 class ViewCohortTestCase(TestCase):
@@ -79,7 +79,7 @@ class ViewCohortTestCase(TestCase):
         organization = OrganizationFactory(cohort=cohort)
         address = OrganizationAddressFactory(organization=organization)
 
-        speciality = SpecialityFactory(cohort=cohort)
+        speciality = SpecialtyFactory(cohort=cohort)
 
         copy_cohort_name = 'Copy of {} {}'.format(cohort.name, timezone.now())
 

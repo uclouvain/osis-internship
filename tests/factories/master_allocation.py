@@ -24,18 +24,17 @@
 #
 ##############################################################################
 import factory
-import factory.fuzzy
+import factory.django
 
-from django.utils.text import slugify
+from internship.tests.factories.organization import OrganizationFactory
+from internship.tests.factories.speciality import SpecialtyFactory
+from internship.tests.factories.master import MasterFactory
 
-from internship.tests.factories.cohort import CohortFactory
 
-
-class OrganizationFactory(factory.django.DjangoModelFactory):
+class MasterAllocationFactory(factory.django.DjangoModelFactory):
     class Meta:
-        model = 'internship.Organization'
+        model = 'internship.MasterAllocation'
 
-    name = factory.Sequence(lambda n: 'Organization %d' % (n,))
-    acronym = factory.LazyAttribute(lambda o: slugify(o.name)[:15])
-    website = factory.Faker('url')
-    cohort = factory.SubFactory(CohortFactory)
+    organization = factory.SubFactory(OrganizationFactory)
+    specialty = factory.SubFactory(SpecialtyFactory)
+    master = factory.SubFactory(MasterFactory)

@@ -30,13 +30,12 @@ from base.tests.factories.learning_unit import LearningUnitFactory
 from internship.tests.factories.cohort import CohortFactory
 
 
-class SpecialityFactory(factory.django.DjangoModelFactory):
+class SpecialtyFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = 'internship.InternshipSpeciality'
 
     name = factory.Faker('name')
     acronym = factory.Sequence(lambda n: 'SPEC-%d' % n)
     mandatory = False
-
     cohort = factory.SubFactory(CohortFactory)
     learning_unit = factory.SubFactory(LearningUnitFactory)

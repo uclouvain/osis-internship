@@ -29,7 +29,7 @@ from internship.models import internship_student_affectation_stat
 from internship.tests.factories.cohort import CohortFactory
 from internship.tests.factories.internship import InternshipFactory
 from internship.tests.factories.organization import OrganizationFactory
-from internship.tests.factories.speciality import SpecialityFactory
+from internship.tests.factories.speciality import SpecialtyFactory
 from internship.tests.factories.period import PeriodFactory
 from internship.tests.factories.internship_choice import create_internship_choice
 
@@ -38,7 +38,7 @@ class TestInternshipStudentAffectationStat(TestCase):
     def setUp(self):
         self.organization = OrganizationFactory()
         self.student = StudentFactory()
-        self.specialty = SpecialityFactory()
+        self.specialty = SpecialtyFactory()
         self.period = PeriodFactory()
 
     def test_build_without_choices(self):

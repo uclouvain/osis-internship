@@ -239,7 +239,6 @@ class TestModifyPeriods(TestCase):
         cohort = CohortFactory()
         internship_offer = OfferFactory(cohort=cohort)
 
-
         kwargs = {
             'internship_id': internship_offer.id,
             'cohort_id': cohort.id,

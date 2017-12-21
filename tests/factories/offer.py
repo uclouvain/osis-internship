@@ -27,7 +27,7 @@ import factory
 import factory.django
 
 from internship.tests.factories.organization import OrganizationFactory
-from internship.tests.factories.speciality import SpecialityFactory
+from internship.tests.factories.speciality import SpecialtyFactory
 from internship.tests.factories.cohort import CohortFactory
 
 
@@ -36,7 +36,7 @@ class OfferFactory(factory.django.DjangoModelFactory):
         model = 'internship.InternshipOffer'
 
     organization = factory.SubFactory(OrganizationFactory)
-    speciality = factory.SubFactory(SpecialityFactory)
+    speciality = factory.SubFactory(SpecialtyFactory)
     cohort = factory.SubFactory(CohortFactory)
 
     title = factory.Faker('sentence', nb_words=6, variable_nb_words=True)

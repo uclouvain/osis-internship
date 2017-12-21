@@ -35,7 +35,7 @@ from internship.tests.factories.organization_address import OrganizationAddressF
 
 
 # This test case is just for the validation of the urls, the parameters and the templates.
-from internship.tests.factories.speciality import SpecialityFactory
+from internship.tests.factories.speciality import SpecialtyFactory
 from internship.tests.utils.test_upload_xls import XlsPlaceImportTestCase
 
 

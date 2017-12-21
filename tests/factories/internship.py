@@ -28,6 +28,7 @@ import factory.fuzzy
 
 from internship.tests.factories.cohort import CohortFactory
 
+
 class InternshipFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = 'internship.Internship'
