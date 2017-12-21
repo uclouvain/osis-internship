@@ -47,6 +47,9 @@ admin.site.register(internship_enrollment.InternshipEnrollment,
 admin.site.register(internship_master.InternshipMaster,
                     internship_master.InternshipMasterAdmin)
 
+admin.site.register(master_allocation.MasterAllocation,
+                    master_allocation.MasterAllocationAdmin)
+
 admin.site.register(internship_choice.InternshipChoice,
                     internship_choice.InternshipChoiceAdmin)
 

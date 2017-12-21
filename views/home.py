@@ -41,7 +41,7 @@ def cohort_home(request, cohort_id):
         'blockable': blockable,
         'cohort': cohort,
     }
-    return render(request, "internships_home.html", context=context)
+    return render(request, "internship/home.html", context=context)
 
 
 @http.require_http_methods(['GET'])

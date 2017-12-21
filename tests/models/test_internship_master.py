@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -23,19 +23,17 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import factory
-import factory.fuzzy
-
-from django.utils.text import slugify
-
-from internship.tests.factories.cohort import CohortFactory
+from django.test.testcases import TestCase
+from internship.models import internship_master
+from internship.tests.factories.master import MasterFactory
 
 
-class OrganizationFactory(factory.django.DjangoModelFactory):
-    class Meta:
-        model = 'internship.Organization'
+class TestInternshipMaster(TestCase):
 
-    name = factory.Sequence(lambda n: 'Organization %d' % (n,))
-    acronym = factory.LazyAttribute(lambda o: slugify(o.name)[:15])
-    website = factory.Faker('url')
-    cohort = factory.SubFactory(CohortFactory)
+    def test_get_by_id(self):
+        master = MasterFactory()
+        persisted_master = internship_master.get_by_id(master.id)
+        self.assertEquals(master.id, persisted_master.id)
+
+        nonexistent_master = internship_master.get_by_id(0)
+        self.assertIsNone(nonexistent_master)

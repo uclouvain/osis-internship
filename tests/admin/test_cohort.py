@@ -23,10 +23,6 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import io
-import unittest
-
-import faker
 from django.contrib.auth.models import Permission, User
 from django.core.urlresolvers import reverse
 from django.test import TestCase
@@ -52,8 +48,7 @@ class CohortAdminTestCase(TestCase):
 
         response = self.client.get(url)
 
-        self.assertTemplateUsed(response,
-                                'admin/internship/cohort/import_students.html')
+        self.assertTemplateUsed(response, 'admin/internship/cohort/import_students.html')
 
     def test_cohort_upload_csv_file(self):
         cohort = CohortFactory()
@@ -68,37 +63,4 @@ class CohortAdminTestCase(TestCase):
             response = self.client.post(url, {'file_upload': str_io})
             cohort_url = reverse('admin:internship_cohort_change',
                                  args=[cohort.id])
-            self.assertRedirects(response, cohort_url)
-
-    @unittest.skip('Remove this test, useless, because we are sure we will receive .csv file')
-    def test_cohort_upload_text_file(self):
-        cohort = CohortFactory()
-
-        self.client.force_login(self.user)
-
-        url = reverse('admin:cohort-import-students',
-                      kwargs={
-                          'cohort_id': cohort.id,
-                      })
-
-        fake = faker.Faker()
-
-        def row_compute():
-            return ' '.join([
-                fake.time(pattern='%Y-%m-%d %H:%M:%S'),
-                '[{}]'.format(fake.numerify(text='########')),
-                fake.random_element(elements=('ERROR', 'WARNING', 'INFO', 'DEBUG')),
-                fake.sentence(nb_words=10, variable_nb_words=True)
-            ])
-
-        text = '\n'.join(row_compute()
-                         for idx in range(fake.random_int(min=10, max=50)))
-
-        with io.StringIO(text) as str_io:
-            response = self.client.post(url, {'file_upload': str_io},
-                                        follow=True)
-
-            cohort_url = reverse('admin:internship_cohort_change',
-                                 args=[cohort.id])
-
             self.assertRedirects(response, cohort_url)

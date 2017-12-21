@@ -23,19 +23,9 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import factory
-import factory.fuzzy
-
-from django.utils.text import slugify
-
-from internship.tests.factories.cohort import CohortFactory
+from osis_common.utils.enumerations import ChoiceEnum
 
 
-class OrganizationFactory(factory.django.DjangoModelFactory):
-    class Meta:
-        model = 'internship.Organization'
-
-    name = factory.Sequence(lambda n: 'Organization %d' % (n,))
-    acronym = factory.LazyAttribute(lambda o: slugify(o.name)[:15])
-    website = factory.Faker('url')
-    cohort = factory.SubFactory(CohortFactory)
+class Civility(ChoiceEnum):
+    PROFESSOR = "PROFESSOR"
+    DOCTOR = "DOCTOR"

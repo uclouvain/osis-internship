@@ -46,9 +46,11 @@ urlpatterns = [
             ])),
 
             url(r'^masters/', include([
-                url(r'^$', master.internships_masters, name='internships_masters'),
-                url(r'^delete/$', master.delete_internships_masters, name='delete_internships_masters'),
-                url(r'^upload/$', upload_xls.upload_masters_file, name='upload_internships_masters'),
+                url(r'^$', master.masters, name='internships_masters'),
+                url(r'^(?P<master_id>[0-9]+)$', master.master, name='master'),
+                url(r'^(?P<master_id>[0-9]+)/form/$', master.master_form, name='master_edit'),
+                url(r'^form/$', master.master_form, name='master_new'),
+                url(r'^save/$', master.master_save, name="master_save")
             ])),
 
             url(r'^offers/', include([

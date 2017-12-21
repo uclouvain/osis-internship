@@ -30,7 +30,7 @@ from django.test import TestCase
 from base.tests.factories.learning_unit import LearningUnitFactory
 from internship.models.internship_speciality import InternshipSpeciality
 from internship.tests.factories.cohort import CohortFactory
-from internship.tests.factories.speciality import SpecialityFactory
+from internship.tests.factories.speciality import SpecialtyFactory
 
 
 class SpecialityViewTestCase(TestCase):
@@ -66,7 +66,7 @@ class SpecialityViewTestCase(TestCase):
         specialities = InternshipSpeciality.objects.filter(cohort=self.cohort).count()
         self.assertEqual(specialities, 0)
 
-        speciality = SpecialityFactory(cohort=self.cohort)
+        speciality = SpecialtyFactory(cohort=self.cohort)
 
         specialities = InternshipSpeciality.objects.filter(cohort=self.cohort).count()
         self.assertEqual(specialities, 1)
@@ -86,7 +86,7 @@ class SpecialityViewTestCase(TestCase):
         }))
 
     def test_modification(self):
-        speciality = SpecialityFactory(cohort=self.cohort)
+        speciality = SpecialtyFactory(cohort=self.cohort)
 
         url = reverse('speciality_modification', kwargs={
             'cohort_id': self.cohort.id,
@@ -101,7 +101,7 @@ class SpecialityViewTestCase(TestCase):
 
     def test_new(self):
         learning_unit = LearningUnitFactory(acronym='DEMO')
-        speciality = SpecialityFactory.build(learning_unit=learning_unit)
+        speciality = SpecialtyFactory.build(learning_unit=learning_unit)
 
         url = reverse('speciality_new', kwargs={
             'cohort_id': self.cohort.id,
@@ -118,7 +118,7 @@ class SpecialityViewTestCase(TestCase):
         }))
 
     def test_save(self):
-        speciality = SpecialityFactory(name='SUPERMAN', cohort=self.cohort)
+        speciality = SpecialtyFactory(name='SUPERMAN', cohort=self.cohort)
 
         url = reverse('speciality_save', kwargs={
             'cohort_id': self.cohort.id,

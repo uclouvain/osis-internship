@@ -23,19 +23,12 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import factory
-import factory.fuzzy
-
-from django.utils.text import slugify
-
-from internship.tests.factories.cohort import CohortFactory
+from django import forms
+from internship.models import internship_master
 
 
-class OrganizationFactory(factory.django.DjangoModelFactory):
+class MasterForm(forms.ModelForm):
     class Meta:
-        model = 'internship.Organization'
-
-    name = factory.Sequence(lambda n: 'Organization %d' % (n,))
-    acronym = factory.LazyAttribute(lambda o: slugify(o.name)[:15])
-    website = factory.Faker('url')
-    cohort = factory.SubFactory(CohortFactory)
+        model = internship_master.InternshipMaster
+        fields = ['first_name', 'last_name', 'civility', 'type_mastery', 'gender', 'email', 'email_private', 'location',
+                  'postal_code', 'city', 'country', 'phone', 'phone_mobile', 'birth_date', 'start_activities']

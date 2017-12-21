@@ -62,7 +62,6 @@ class ViewHomeTest(TestCase):
         self.assertEqual(response.status_code, 404)
         self.assertTemplateUsed(response, 'page_not_found.html')
 
-
     def test_cohort_home(self):
         cohort = CohortFactory()
 

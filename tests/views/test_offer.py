@@ -32,7 +32,7 @@ from django.test import TestCase
 from internship.tests.factories.cohort import CohortFactory
 from internship.tests.factories.offer import OfferFactory
 from internship.tests.factories.organization import OrganizationFactory
-from internship.tests.factories.speciality import SpecialityFactory
+from internship.tests.factories.speciality import SpecialtyFactory
 
 
 class OfferViewTestCase(TestCase):
@@ -55,7 +55,7 @@ class OfferViewTestCase(TestCase):
 
     def test_home_with_offer(self):
         organization = OrganizationFactory(cohort=self.cohort)
-        speciality = SpecialityFactory(cohort=self.cohort)
+        speciality = SpecialtyFactory(cohort=self.cohort)
 
         offer = OfferFactory(organization=organization, speciality=speciality)
 
@@ -92,11 +92,3 @@ class OfferViewTestCase(TestCase):
             'cohort_id': self.cohort.id,
         }))
 
-    @unittest.skip("Refactor the code of the tested view")
-    def test_save_modification_student(self):
-        url = reverse('internship_save_modification_student', kwargs={
-            'cohort_id': self.cohort.id,
-        })
-
-        response = self.client.post(url, data={'registration_id': 0})
-        self.assertRedirects(response, reverse('internships_modification_student', args=[0]))

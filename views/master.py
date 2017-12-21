@@ -23,80 +23,130 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.contrib.auth.decorators import login_required, permission_required
-from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect
 from django import shortcuts
+from django.http import HttpResponseRedirect
+from django.core.urlresolvers import reverse
+from django.contrib.auth.decorators import login_required, permission_required
 
-from internship import models as mdl_internship
-from internship.models.cohort import Cohort
+from reference.models import country
+from internship.models import master_allocation, internship_master, internship_speciality, organization, cohort
+from internship.forms.master import MasterForm
+from internship.models.enums.civility import Civility
+from internship.models.enums.gender import Gender
+from internship.models.enums.mastery import Mastery
 
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
-def internships_masters(request, cohort_id):
-    cohort = shortcuts.get_object_or_404(Cohort, pk=cohort_id)
-    # First get the value of the 2 options for the sort
-    speciality_sort_value = request.GET.get('speciality_sort')
-    organization_sort_value = request.GET.get('organization_sort')
+def masters(request, cohort_id):
+    current_cohort = shortcuts.get_object_or_404(cohort.Cohort, pk=cohort_id)
+    filter_specialty = int(request.GET.get('specialty', 0))
+    filter_hospital = int(request.GET.get('hospital', 0))
 
-    # Then select Internship Master depending of the options
-    # If both exist / if just speciality exist / if just organization exist / if none exist
-    if speciality_sort_value and speciality_sort_value != "0":
-        if organization_sort_value and organization_sort_value != "0":
-            query = mdl_internship.internship_master.search(speciality=speciality_sort_value,
-                                                            organization__name=organization_sort_value)
-        else:
-            query = mdl_internship.internship_master.search(speciality=speciality_sort_value)
+    allocations = master_allocation.search(current_cohort, filter_specialty, filter_hospital)
+    if not filter_specialty and not filter_hospital:
+        unallocated_masters = master_allocation.find_unallocated_masters()
+
+    specialties = internship_speciality.find_by_cohort(current_cohort)
+    hospitals = organization.find_by_cohort(current_cohort)
+
+    return shortcuts.render(request, "masters.html", locals())
+
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def master(request, cohort_id, master_id):
+    current_cohort = shortcuts.get_object_or_404(cohort.Cohort, pk=cohort_id)
+    allocated_master = internship_master.get_by_id(master_id)
+    allocations = master_allocation.find_by_master(allocated_master)
+    return shortcuts.render(request, "master.html", locals())
+
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def master_form(request, cohort_id, master_id=None):
+    current_cohort = shortcuts.get_object_or_404(cohort.Cohort, pk=cohort_id)
+    if master_id:
+        allocated_master = internship_master.get_by_id(master_id)
+        allocations = master_allocation.find_by_master(allocated_master)
+        doctor_selected = 'selected' if allocated_master.civility == Civility.DOCTOR.value else ''
+        professor_selected = 'selected' if allocated_master.civility == Civility.PROFESSOR.value else ''
+        female_selected = 'selected' if allocated_master.gender == Gender.FEMALE.value else ''
+        male_selected = 'selected' if allocated_master.gender == Gender.MALE.value else ''
+        generalist_selected = 'selected' if allocated_master.type_mastery == Mastery.GENERALIST.value else ''
+        specialist_selected = 'selected' if allocated_master.type_mastery == Mastery.SPECIALIST.value else ''
+
+    countries = country.find_all()
+    specialties = internship_speciality.find_by_cohort(current_cohort)
+    hospitals = organization.find_by_cohort(current_cohort)
+    return shortcuts.render(request, "master_form.html", locals())
+
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def master_save(request, cohort_id):
+    current_cohort = shortcuts.get_object_or_404(cohort.Cohort, pk=cohort_id)
+    allocated_master = internship_master.get_by_id(request.POST.get("id")) if request.POST.get("id") else None
+
+    form = MasterForm(request.POST, instance=allocated_master)
+    errors = []
+    hospital = ""
+    if form.is_valid():
+        form.save()
+        master_allocation.clean_allocations(allocated_master)
+        allocations = _build_allocations(request, allocated_master)
+        _save_allocations(allocations)
+        hospital = _extract_hospital_id(allocations)
     else:
-        if organization_sort_value and organization_sort_value != "0":
-            query = mdl_internship.internship_master.search(organization__name=organization_sort_value)
-        else:
-            query = mdl_internship.internship_master.find_masters()
+        errors.append(form.errors)
 
-    # Create the options for the selected list, delete dubblons
-    query_master = mdl_internship.internship_master.find_masters()
+    if errors:
+        return HttpResponseRedirect(reverse("master_edit", args=[current_cohort.id, allocated_master.id]))
 
-    query = query.filter(organization__cohort=cohort)
-    query_master = query_master.filter(organization__cohort=cohort)
-
-    master_specs = []
-    master_organizations = []
-    for master in query_master:
-        master_specs.append(master.speciality)
-        master_organizations.append(master.organization)
-    master_specs = list(set(master_specs))
-    master_specs = sorted(master_specs)
-    master_organizations = list(set(master_organizations))
-    number_ref = []
-    for organization in master_organizations:
-        if organization is not None:
-            number_ref.append(organization.reference)
-    number_ref=sorted(number_ref, key=int)
-    master_organizations = []
-    for i in number_ref:
-        organization = mdl_internship.organization.search(reference=i)
-        master_organizations.append(organization[0])
-
-    context = {
-        'section': 'internship',
-        'all_masters': query,
-        'all_spec': master_specs,
-        'all_organizations': master_organizations,
-        'speciality_sort_value': speciality_sort_value,
-        'organization_sort_value': organization_sort_value,
-        'cohort': cohort,
-    }
-    return shortcuts.render(request, "internships_masters.html", context)
+    return HttpResponseRedirect("{}?hospital={}".format(reverse("internships_masters", args=[current_cohort.id]),
+                                                        hospital))
 
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
-def delete_internships_masters(request, cohort_id):
-    cohort = shortcuts.get_object_or_404(Cohort, pk=cohort_id)
-    first_name = request.POST.get("first_name").replace(" ", "")
-    name = request.POST.get("name").replace(" ", "")
-    # Get the first and last name of the master send by the button of deletion
-    # Get the master in the DB and delete it
-    mdl_internship.internship_master.search(first_name=first_name, last_name=name, organization__cohort=cohort).delete()
-    return HttpResponseRedirect(reverse('internships_masters', kwargs={'cohort_id': cohort_id,}))
+def master_remove(request, cohort_id):
+    return None
+
+
+def _build_allocations(request, allocated_master):
+    hospitals = []
+    if 'hospital' in request.POST:
+        hospitals = request.POST.getlist('hospital')
+        hospitals = _clean_empty_strings(hospitals)
+
+    specialties = []
+    if 'specialty' in request.POST:
+        specialties = request.POST.getlist('specialty')
+        specialties = _clean_empty_strings(specialties)
+
+    allocations = []
+    for i, a_hospital in enumerate(hospitals):
+        hospital = organization.find_by_id(a_hospital)
+        specialty = internship_speciality.find_by_id(specialties[i])
+        allocation = master_allocation.MasterAllocation(master=allocated_master,
+                                                        organization=hospital,
+                                                        specialty=specialty)
+        allocations.append(allocation)
+
+    return allocations
+
+
+def _clean_empty_strings(a_list):
+    return list(filter(lambda x: x is not "", a_list))
+
+
+def _save_allocations(allocations):
+    for allocation in allocations:
+        allocation.save()
+
+
+def _extract_hospital_id(allocations):
+    if allocations:
+        return allocations[0].organization.id
+    else:
+        return 0

@@ -31,9 +31,8 @@ from django.core.urlresolvers import reverse
 from django.test import TestCase, RequestFactory, override_settings
 
 from internship.tests.factories.cohort import CohortFactory
-from internship.tests.factories.master import MasterFactory
+from internship.tests.factories.master_allocation import MasterAllocationFactory
 from internship.tests.factories.organization import OrganizationFactory
-from internship.tests.factories.speciality import SpecialityFactory
 
 
 class MasterTestCase(TestCase):
@@ -42,7 +41,6 @@ class MasterTestCase(TestCase):
         permission = Permission.objects.get(codename='is_internship_manager')
         self.user.user_permissions.add(permission)
         self.client.force_login(self.user)
-
         self.cohort = CohortFactory()
 
     @override_settings(DEBUG=True)
@@ -57,10 +55,6 @@ class MasterTestCase(TestCase):
 
         fake = faker.Faker()
         organization = OrganizationFactory(cohort=self.cohort, reference=fake.random_int(min=10, max=100))
-        # speciality = SpecialityFactory(cohort=self.cohort)
-        master = MasterFactory(organization=organization)
-
-        master2 = MasterFactory()
 
         request_factory = RequestFactory()
         request = request_factory.get(reverse('internships_masters', kwargs={
@@ -68,35 +62,16 @@ class MasterTestCase(TestCase):
         }))
         request.user = mock.Mock()
 
-        from internship.views.master import internships_masters
+        from internship.views.master import masters
 
         reset_queries()
         self.assertEqual(len(connection.queries), 0)
 
-        internships_masters(request, self.cohort.id)
+        masters(request, self.cohort.id)
         self.assertTrue(mock_render.called)
         request, template, context = mock_render.call_args[0]
 
-        self.assertEqual(context['cohort'], self.cohort)
-
-        masters_count = context['all_masters'].count()
-
-        # print("Queries", len(connection.queries))
-        # from pprint import pprint as pp
-        # pp(connection.queries)
-
-        from internship.models.internship_master import InternshipMaster
-        self.assertEqual(masters_count,
-                         InternshipMaster.objects.filter(organization=organization).count())
-
-        specs = InternshipMaster.objects.filter(organization=organization)\
-            .distinct('speciality')\
-            .values_list('speciality', flat=True)\
-            .order_by('speciality')
-
-        self.assertEqual(len(context['all_spec']), specs.count())
-
-        self.assertEqual(set(context['all_spec']), set(list(specs)))
+        self.assertEqual(context['cohort_id'], self.cohort.id)
 
     def test_masters_index(self):
         url = reverse('internships_masters', kwargs={
@@ -105,69 +80,33 @@ class MasterTestCase(TestCase):
 
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'internships_masters.html')
+        self.assertTemplateUsed(response, 'masters.html')
 
     def test_masters_index_with_master(self):
         fake = faker.Faker()
 
         organization = OrganizationFactory(cohort=self.cohort, reference=fake.random_int(min=10, max=100))
-        master = MasterFactory(organization=organization)
+        master = MasterAllocationFactory(organization=organization)
 
-        url = reverse('internships_masters', kwargs={
-            'cohort_id': self.cohort.id
-        })
+        url = "{}?hospital={}".format(reverse('internships_masters', kwargs={'cohort_id': self.cohort.id}),
+                                      organization.id)
 
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'internships_masters.html')
+        self.assertTemplateUsed(response, 'masters.html')
 
-        masters = response.context['all_masters']
+        masters = response.context['allocations']
         self.assertEqual(masters.count(), 1)
         self.assertEqual(masters.first(), master)
 
     def test_masters_index_bad_masters(self):
-        fake = faker.Faker()
-        master = MasterFactory(organization=OrganizationFactory(reference=fake.random_int(min=10, max=100)))
-
         url = reverse('internships_masters', kwargs={
             'cohort_id': self.cohort.id
         })
 
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'internships_masters.html')
+        self.assertTemplateUsed(response, 'masters.html')
 
-        masters = response.context['all_masters']
+        masters = response.context['unallocated_masters']
         self.assertEqual(masters.count(), 0)
-
-
-        url = reverse('internships_masters', kwargs={
-            'cohort_id': master.organization.cohort.id,
-        })
-
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'internships_masters.html')
-
-        masters = response.context['all_masters']
-        self.assertEqual(masters.count(), 1)
-        self.assertEqual(masters.first(), master)
-
-    def test_masters_delete_dont_follow(self):
-        url = reverse('delete_internships_masters', kwargs={
-            'cohort_id': self.cohort.id
-        })
-
-        with mock.patch('internship.models.internship_master.search',
-                        return_value=mock.Mock()) as mock_search:
-            data = {'first_name': 'demo', 'name': 'demo'}
-            response = self.client.post(url, data=data)
-            self.assertRedirects(response, reverse('internships_masters', kwargs={
-                'cohort_id': self.cohort.id,
-            }))
-            self.assertTrue(mock_search.called)
-
-    def test_masters_upload(self):
-        url = reverse('upload_internships_masters', kwargs={
-            'cohort_id': self.cohort.id
-        })
