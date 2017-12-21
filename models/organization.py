@@ -24,7 +24,7 @@
 #
 ##############################################################################
 from django.db import models
-
+from django.core.exceptions import ObjectDoesNotExist
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 from internship.models.enums import organization_report_fields
 
@@ -90,7 +90,10 @@ def search(**kwargs):
 
 
 def find_by_id(organization_id):
-    return Organization.objects.get(pk=organization_id)
+    try:
+        return Organization.objects.get(pk=organization_id)
+    except ObjectDoesNotExist:
+        return None
 
 
 def find_by_cohort(cohort):

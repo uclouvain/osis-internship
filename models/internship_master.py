@@ -24,6 +24,8 @@
 #
 ##############################################################################
 from django.db import models
+from django.core.exceptions import ObjectDoesNotExist
+
 from internship.models.enums.civility import Civility
 from internship.models.enums.gender import Gender
 from internship.models.enums.mastery import Mastery
@@ -59,4 +61,7 @@ class InternshipMaster(SerializableModel):
 
 
 def get_by_id(master_id):
-    return InternshipMaster.objects.get(pk=master_id)
+    try:
+        return InternshipMaster.objects.get(pk=master_id)
+    except ObjectDoesNotExist:
+        return None

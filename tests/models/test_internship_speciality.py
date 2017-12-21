@@ -34,7 +34,7 @@ from internship.tests.factories.speciality import SpecialtyFactory
 def create_speciality(name="chirurgie", cohort=None):
     if cohort is None:
         cohort = CohortFactory()
-    learning_unit = test_learning_unit.create_learning_unit(title="stage medecine", acronym= "WSD")
+    learning_unit = test_learning_unit.create_learning_unit(title="stage medecine", acronym="WSD")
     return SpecialtyFactory(learning_unit=learning_unit, name=name, cohort=cohort)
 
 

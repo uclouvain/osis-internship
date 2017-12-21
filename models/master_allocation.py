@@ -25,7 +25,6 @@
 ##############################################################################
 from django.db import models
 from django.contrib import admin
-from django.utils.translation import ugettext_lazy as _
 from internship.models.internship_master import InternshipMaster
 
 
@@ -36,11 +35,6 @@ class MasterAllocationAdmin(admin.ModelAdmin):
 
 
 class MasterAllocation(models.Model):
-    CIVILITY_CHOICE = (('PROFESSOR', _('Professor')),
-                       ('DOCTOR', _('Doctor')))
-    TYPE_CHOICE = (('SPECIALIST', _('Specialist')),
-                   ('GENERALIST', _('Generalist')))
-
     master = models.ForeignKey('internship.InternshipMaster')
     organization = models.ForeignKey('internship.Organization', blank=True, null=True)
     specialty = models.ForeignKey('internship.InternshipSpeciality', blank=True, null=True)
@@ -54,14 +48,6 @@ class MasterAllocation(models.Model):
 
     def __str__(self):
         return "{}, {}".format(self.master.last_name, self.master.first_name)
-
-
-def find_masters():
-    return MasterAllocation.objects.all().select_related("organization")
-
-
-def find_by_id(master_allocation_id):
-    return MasterAllocation.objects.get(pk=master_allocation_id)
 
 
 def find_by_master(a_master):
