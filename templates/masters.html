@@ -73,6 +73,12 @@
                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                     {% trans 'add' %}
                 </a>
+                {% if perms.base.is_administrator %}
+                    <a href="{% url 'master_import' cohort_id=current_cohort.id %}" class="btn btn-default" style="margin-top: 26px;">
+                        <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span>
+                        {% trans 'import' %}
+                    </a>
+                {% endif %}
             </div>
         </div>
     </form>
@@ -100,9 +106,9 @@
                 {% empty %}
                     {% for master in unallocated_masters %}
                         <tr>
-                            <td>{% trans master.civility %}</td>
+                            <td>{% if master.civility %}{% trans master.civility %}{% endif %}</td>
                             <td><a href="{% url 'master' cohort_id=current_cohort.id master_id=master.id %}">{{ master.last_name | upper }}, {{ master.first_name }}</a></td>
-                            <td>{% trans master.type_mastery %}</td>
+                            <td>{% if master.type_mastery %}{% trans master.type_mastery %}{% endif %}</td>
                             <td>-</td>
                             <td>-</td>
                         </tr>
