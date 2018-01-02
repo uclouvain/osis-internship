@@ -98,3 +98,8 @@ def find_by_id(organization_id):
 
 def find_by_cohort(cohort):
     return Organization.objects.filter(cohort=cohort).order_by("reference")
+
+
+def find_by_reference(cohort, reference):
+    str_reference = str(reference).zfill(2)
+    return Organization.objects.filter(cohort=cohort).filter(reference=str_reference)

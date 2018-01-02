@@ -50,7 +50,8 @@ urlpatterns = [
                 url(r'^(?P<master_id>[0-9]+)$', master.master, name='master'),
                 url(r'^(?P<master_id>[0-9]+)/form/$', master.master_form, name='master_edit'),
                 url(r'^form/$', master.master_form, name='master_new'),
-                url(r'^save/$', master.master_save, name="master_save")
+                url(r'^save/$', master.master_save, name="master_save"),
+                url(r'^import/$', master.master_import, name="master_import")
             ])),
 
             url(r'^offers/', include([

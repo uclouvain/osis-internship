@@ -65,6 +65,10 @@ def find_by_cohort(cohort):
     return InternshipSpeciality.objects.filter(cohort=cohort).order_by("name")
 
 
+def find_by_acronym(cohort, acronym):
+    return InternshipSpeciality.objects.filter(cohort=cohort).filter(acronym=acronym)
+
+
 def find_non_mandatory():
     return InternshipSpeciality.objects.filter(mandatory=False)\
                                        .select_related("learning_unit")\

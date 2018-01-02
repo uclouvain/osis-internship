@@ -43,7 +43,7 @@
                 <div class="col-md-3">
                     <div class="form-group">
                         <label for="civility">{% trans 'civility' %}</label>
-                        <div id="civility">{% trans allocated_master.civility %}</div>
+                        <div id="civility">{% if allocated_master.civility %}{% trans allocated_master.civility %}{% endif %}</div>
                     </div>
                 </div>
                 <div class="col-md-9">
@@ -57,27 +57,27 @@
                 <div class="col-md-3">
                     <div class="form-group">
                         <label for="birth_date">{% trans 'birth_date' %}</label>
-                        <div id="birth_date">{{ allocated_master.birth_date }}</div>
+                        <div id="birth_date">{{ allocated_master.birth_date | default_if_none:"" }}</div>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
                         <label for="gender">{% trans 'gender' %}</label>
-                        <div id="gender">{% trans allocated_master.gender %}</div>
+                        <div id="gender">{% if allocated_master.gender %}{% trans allocated_master.gender %}{% endif %}</div>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
                         <label for="type_mastery">{% trans 'type' %}</label>
                         {% if allocated_master.type_mastery %}
-                            <div id="type_mastery">{% trans allocated_master.type_mastery %}</div>
+                            <div id="type_mastery">{% if allocated_master.type_mastery %}{% trans allocated_master.type_mastery %}{% endif %}</div>
                         {% endif %}
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
                         <label for="start_activities">{% trans 'start_activities' %}</label>
-                        <div id="start_activities">{{ allocated_master.start_activities }}</div>
+                        <div id="start_activities">{{ allocated_master.start_activities | default_if_none:"" }}</div>
                     </div>
                 </div>
             </div>
@@ -85,25 +85,25 @@
                 <div class="col-md-3">
                     <div class="form-group">
                         <label for="email">{% trans 'email' %}</label>
-                        <div id="email">{{ allocated_master.email }}</div>
+                        <div id="email">{{ allocated_master.email | default_if_none:"" }}</div>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
                         <label for="email_private">{% trans 'email_private' %}</label>
-                        <div id="email_private">{{ allocated_master.email_private }}</div>
+                        <div id="email_private">{{ allocated_master.email_private | default_if_none:"" }}</div>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
                         <label for="phone">{% trans 'phone' %}</label>
-                        <div id="phone">{{ allocated_master.phone }}</div>
+                        <div id="phone">{{ allocated_master.phone | default_if_none:"" }}</div>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
                         <label for="phone_mobile">{% trans 'phone_mobile' %}</label>
-                        <div id="phone_mobile">{{ allocated_master.phone_mobile }}</div>
+                        <div id="phone_mobile">{{ allocated_master.phone_mobile | default_if_none:"" }}</div>
                     </div>
                 </div>
             </div>
@@ -111,19 +111,19 @@
                 <div class="col-md-3">
                     <div class="form-group">
                         <label for="location">{% trans 'location' %}</label>
-                        <div id="location">{{ allocated_master.location }}</div>
+                        <div id="location">{{ allocated_master.location | default_if_none:"" }}</div>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
                         <label for="postal_code">{% trans 'postal_code' %}</label>
-                        <div id="postal_code">{{ allocated_master.postal_code }}</div>
+                        <div id="postal_code">{{ allocated_master.postal_code | default_if_none:"" }}</div>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
                         <label for="city">{% trans 'city' %}</label>
-                        <div id="city">{{ allocated_master.city }}</div>
+                        <div id="city">{{ allocated_master.city | default_if_none:"" }}</div>
                     </div>
                 </div>
 
@@ -147,8 +147,8 @@
                     <tbody>
                         {% for allocation in allocations %}
                             <tr>
-                                <td>{{ allocation.organization }}</td>
-                                <td>{{ allocation.specialty }}</td>
+                                <td>{{ allocation.organization | default_if_none:"" }}</td>
+                                <td>{{ allocation.specialty | default_if_none:"" }}</td>
                             </tr>
                         {% empty %}
                             <tr>
