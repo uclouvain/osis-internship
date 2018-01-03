@@ -42,12 +42,12 @@ class TestInternshipMaster(TestCase):
         MasterAllocationFactory(organization=organization, specialty=specialty, master=self.master)
         MasterAllocationFactory(organization=organization, specialty=specialty, master=self.master)
 
-        allocations = master_allocation.find_by_master(self.master)
+        allocations = master_allocation.find_by_master(specialty.cohort, self.master)
         self.assertEquals(1, allocations.count())
 
     def test_find_by_master(self):
-        MasterAllocationFactory(master=self.master)
-        allocations = master_allocation.find_by_master(self.master)
+        allocation = MasterAllocationFactory(master=self.master)
+        allocations = master_allocation.find_by_master(allocation.specialty.cohort, self.master)
         self.assertEquals(self.master, allocations[0].master)
 
     def test_find_unallocated_masters(self):
@@ -55,7 +55,8 @@ class TestInternshipMaster(TestCase):
         self.assertEquals(1, unallocated_masters.count())
 
     def test_clean_allocations(self):
-        MasterAllocationFactory(master=self.master)
-        master_allocation.clean_allocations(self.master)
-        allocations = master_allocation.find_by_master(self.master)
+        allocation = MasterAllocationFactory(master=self.master)
+        cohort = allocation.specialty.cohort
+        master_allocation.clean_allocations(cohort, self.master)
+        allocations = master_allocation.find_by_master(cohort, self.master)
         self.assertEquals(0, allocations.count())

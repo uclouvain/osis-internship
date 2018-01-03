@@ -59,7 +59,7 @@ def masters(request, cohort_id):
 def master(request, cohort_id, master_id):
     current_cohort = shortcuts.get_object_or_404(cohort.Cohort, pk=cohort_id)
     allocated_master = internship_master.get_by_id(master_id)
-    allocations = master_allocation.find_by_master(allocated_master)
+    allocations = master_allocation.find_by_master(current_cohort, allocated_master)
     return shortcuts.render(request, "master.html", locals())
 
 
@@ -69,7 +69,7 @@ def master_form(request, cohort_id, master_id=None):
     current_cohort = shortcuts.get_object_or_404(cohort.Cohort, pk=cohort_id)
     if master_id:
         allocated_master = internship_master.get_by_id(master_id)
-        allocations = master_allocation.find_by_master(allocated_master)
+        allocations = master_allocation.find_by_master(current_cohort, allocated_master)
         doctor_selected = 'selected' if allocated_master.civility == Civility.DOCTOR.value else ''
         professor_selected = 'selected' if allocated_master.civility == Civility.PROFESSOR.value else ''
         female_selected = 'selected' if allocated_master.gender == Gender.FEMALE.value else ''

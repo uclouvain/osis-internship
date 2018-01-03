@@ -23,10 +23,13 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from internship.models import internship_speciality as mdl_internship_speciality
-from base.tests.models import test_learning_unit
 from django.test.testcases import TestCase
 
+from base.tests.models import test_learning_unit
+from base.tests.factories.learning_unit import LearningUnitFactory
+from base.business import learning_unit_deletion
+
+from internship.models import internship_speciality as mdl_internship_speciality
 from internship.tests.factories.cohort import CohortFactory
 from internship.tests.factories.speciality import SpecialtyFactory
 
@@ -49,9 +52,9 @@ class TestGetById(TestCase):
         self.assertEqual(self.speciality_2,
                          mdl_internship_speciality.find_by_id(self.speciality_2.id))
 
+    def test_check_delete_learning_unit_with_internship(self):
+        learning_unit = LearningUnitFactory()
+        speciality = SpecialtyFactory(learning_unit=learning_unit)
 
-
-
-
-
-
+        msg = learning_unit_deletion.check_learning_unit_deletion(learning_unit)
+        self.assertIn(speciality, msg.keys())
