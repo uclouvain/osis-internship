@@ -75,7 +75,7 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <form  method="post" action="{% url 'internship_affectation_statistics_generate' cohort_id=cohort.id %}" id="generate_solution">
+            <form  method="post" action="{% url 'internship_affectation_generate' cohort_id=cohort.id %}" id="generate_solution">
               {% csrf_token %}
             </form>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -108,121 +108,15 @@
 
         <div class="panel-body">
             <ul class="nav nav-tabs">
-                <li class="active"><a data-toggle="tab" href="#tab_hospitals">{% trans 'organizations' %}</a></li>
-                <li><a data-toggle="tab" href="#tab_students">{% trans 'students' %}</a></li>
-                <li><a data-toggle="tab" href="#tab_stats">{% trans 'statistics' %}</a></li>
-                <li><a data-toggle="tab" href="#tab_errors">{% trans 'errors' %}</a></li>
+                <li><a href="{% url 'internship_affectation_hospitals' cohort_id=cohort.id %}">{% trans 'hospitals' %}</a></li>
+                <li><a href="{% url 'internship_affectation_students' cohort_id=cohort.id %}">{% trans 'students' %}</a></li>
+                <li class="active"><a href="#">{% trans 'statistics' %}</a></li>
+                <li><a href="{% url 'internship_affectation_errors' cohort_id=cohort.id %}">{% trans 'errors' %}</a></li>
             </ul>
             <div class="tab-content">
-                <div id="tab_hospitals" class="tab-pane fade in active">
-                    <br>
-                    <table class="table" id="organizations">
-                        <thead>
-                            <tr>
-                                <th>{% trans 'organization' %}</th>
-                                <th>{% trans 'speciality' %}</th>
-                                <th class="no-sort">P1</th>
-                                <th class="no-sort">P2</th>
-                                <th class="no-sort">P3</th>
-                                <th class="no-sort">P4</th>
-                                <th class="no-sort">P5</th>
-                                <th class="no-sort">P6</th>
-                                <th class="no-sort">P7</th>
-                                <th class="no-sort">P8</th>
-                                <th class="no-sort">P9</th>
-                                <th class="no-sort">P10</th>
-                                <th class="no-sort">P11</th>
-                                <th class="no-sort">P12</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for item in organizations %}
-                                <tr>
-                                    <td>{{ item.0 }}</td>
-                                    <td>{{ item.1 }}</td>
-                                    {% for period, places in item.2.items %}
-                                        {% if places.before == places.after and places.before != 0 %}
-                                            <td style="background-color:green;">
-                                        {% elif places.pc > 66 %}
-                                            <td style="background-color:#33cc33;">
-                                        {% elif places.pc > 33 %}
-                                            <td style="background-color:#ffdc33;">
-                                        {% elif places.pc > 0 %}
-                                            <td style="background-color:#ff6600;">
-                                        {% elif places.after < 0 %}
-                                            <td style="background-color:black;color:white">
-                                        {% elif places.pc == 0 %}
-                                            <td style="background-color:#cc0000;">
-                                        {% elif places.before == 0 %}
-                                            <td>
-                                        {% else %}
-                                            <td style="background-color:#33cc33;">
-                                        {% endif %}
-                                            {{ places.after }} / {{ places.before }}
-                                        </td>
-                                    {% endfor %}
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-
-                <div id="tab_students" class="tab-pane fade in">
-                    <br>
-                        <a href="{% url 'export_score_encoding_xls' cohort_id=cohort.id %}" class="btn btn-default">
-                            <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
-                            {% trans 'export_to_xls' %}
-                        </a>
-                    <br>
-                    <table class="table" id="students">
-                        <thead>
-                            <tr>
-                                <th>{% trans 'student' %}</th>
-                                <th>P1</th>
-                                <th>P2</th>
-                                <th>P3</th>
-                                <th>P4</th>
-                                <th>P5</th>
-                                <th>P6</th>
-                                <th>P7</th>
-                                <th>P8</th>
-                                <th>P9</th>
-                                <th>P10</th>
-                                <th>P11</th>
-                                <th>P12</th>
-                                <th>Score</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for student, periods in recap_sol.items %}
-                                <tr>
-                                    <td>
-                                        <a href="{% url 'internships_student_read' cohort_id=cohort.id student_id=student.id %}" target="_blank">{{student}}</a>
-                                    </td>
-                                    {% for period, enrollment in periods.items %}
-                                        {% if enrollment.choice == 'I' %}
-                                            <td style="background-color: #00ff95">
-                                        {% elif enrollment.choice == 'X' %}
-                                            <td style="background-color: #ffa8a8">
-                                        {% else %}
-                                            <td>
-                                        {% endif %}
-
-                                        {% if forloop.counter <= 12 %}
-                                            <span data-toggle="tooltip" data-placement="top" title="{{ enrollment.speciality.name }}">{{ enrollment.speciality.acronym }}</span><br>
-                                            <span data-toggle="tooltip" data-placement="top" title="{{ enrollment.organization.name }}">{{enrollment.organization.reference }}</span><br>
-                                            {{ enrollment.cost }}({{ enrollment.choice.lower }})
-                                        {% else %}
-                                            {{ periods.score }}
-                                        {% endif %}
-                                        </td>
-                                    {% endfor %}
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-                <div id="tab_stats" class="tab-pane fade in">
+                <div id="tab_hospitals" class="tab-pane fade in"></div>
+                <div id="tab_students" class="tab-pane fade in"></div>
+                <div id="tab_stats" class="tab-pane fade in active">
                     <br>
                     <table class="table">
                         <tr class="active">
@@ -353,29 +247,7 @@
                         </tr>
                     </table>
                 </div>
-                <div id="tab_errors" class="tab-pane fade in">
-                    <br>
-                    <table class="table" id="errors" cellspacing="0" width="100%">
-                        <thead>
-                            <tr>
-                                <th>{% trans 'student' %}</th>
-                                <th>{% trans 'speciality' %}</th>
-                                <th class="no-sort">{% trans 'period' %}</th>
-                                <th class="no-sort">{% trans 'organization' %}</th>
-                                <th class="no-sort">{% trans 'type_internship' %}</th>
-                            </tr>
-                        </thead>
-                        {% for internship in errors %}
-                            <tr>
-                                <td><a href="{% url 'internships_student_read' cohort_id=cohort.id student_id=internship.student.id %}" target="_blank">{{internship.student}}</a></td>
-                                <td>{{internship.speciality}}</td>
-                                <td>{{internship.period}}</td>
-                                <td>{{internship.organization}}</td>
-                                <td>{{internship.type_of_internship}}</td>
-                            </tr>
-                        {% endfor %}
-                    </table>
-                </div>
+                <div id="tab_errors" class="tab-pane fade in"></div>
             </div>
         </div>
     </div>

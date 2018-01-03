@@ -27,11 +27,13 @@ from django.test import TestCase
 
 from internship.forms import form_student_information
 from internship.tests.factories.cohort import CohortFactory
+from base.tests.factories.person import PersonFactory
 
 
 class TestFormStudentInformation(TestCase):
     def test_valid_form(self):
         cohort = CohortFactory()
+        person = PersonFactory()
         data = {
             "email": "test@test.com",
             "phone_mobile": "046486313",
@@ -40,6 +42,7 @@ class TestFormStudentInformation(TestCase):
             "city": "city",
             "country": "country",
             "contest": "GENERALIST",
+            "person": person.id,
             'cohort': cohort.id,
         }
         form = form_student_information.StudentInformationForm(data)

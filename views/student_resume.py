@@ -79,19 +79,18 @@ def student_form(request, cohort_id):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def get_student(request):
     registration_id = request.GET.get('id', '')
-    cohort = request.GET.get('cohort', '')
     student = mdl.student.find_by_registration_id(registration_id)
-    data = {}
     if student:
+        cohort = request.GET.get('cohort', '')
         existing_student = mdl_int.internship_student_information.find_by_person(student.person, cohort)
         if not existing_student:
-            data['id'] = student.person.id
-            data['first_name'] = student.person.first_name
-            data['last_name'] = student.person.last_name
-            data['gender'] = student.person.gender
-            data['email'] = student.person.email
-            data['phone_mobile'] = student.person.phone_mobile
-            data['birth_date'] = student.person.birth_date.strftime("%Y-%m-%d")
+            data = {'id': student.person.id,
+                    'first_name': student.person.first_name,
+                    'last_name': student.person.last_name,
+                    'gender': student.person.gender,
+                    'email': student.person.email,
+                    'phone_mobile': student.person.phone_mobile,
+                    'birth_date': student.person.birth_date.strftime("%Y-%m-%d")}
 
             student_address = mdl.person_address.find_by_person(student.person)
             if student_address:

@@ -25,7 +25,7 @@
 ##############################################################################
 from django.conf.urls import include, url
 
-from internship.views import (affectation_statistics, home, internship, master, offer, period, place, speciality,
+from internship.views import (affectation, home, internship, master, offer, period, place, speciality,
                               student_resume, cohort, upload_xls)
 
 urlpatterns = [
@@ -139,14 +139,14 @@ urlpatterns = [
             ])),
 
             url(r'^affectation_result/', include([
-                url(r'^$', affectation_statistics.internship_affectation_statistics,
-                    name='internship_affectation_statistics'),
-                url(r'^score_encoding/xls$', affectation_statistics.export_score_encoding_xls,
-                    name="export_score_encoding_xls"),
-                url(r'^generate/$', affectation_statistics.assign_automatically_internships,
-                    name='internship_affectation_statistics_generate'),
-                url(r'^sumup/$', affectation_statistics.internship_affectation_sumup,
-                    name='internship_affectation_sumup'),
+                url(r'^$', affectation.view_hospitals, name='internship_affectation_hospitals'),
+                url(r'^students/$', affectation.view_students, name='internship_affectation_students'),
+                url(r'^statistics/$', affectation.view_statistics, name='internship_affectation_statistics'),
+                url(r'^errors/$', affectation.view_errors, name='internship_affectation_errors'),
+
+                url(r'^score_encoding/xls$', affectation.export_score_encoding_xls, name="export_score_encoding_xls"),
+                url(r'^generate/$', affectation.run_affectation, name='internship_affectation_generate'),
+                url(r'^sumup/$', affectation.internship_affectation_sumup, name='internship_affectation_sumup'),
             ])),
 
             url(r'^internships/upload/$', upload_xls.upload_internships_file, name='upload_internship'),

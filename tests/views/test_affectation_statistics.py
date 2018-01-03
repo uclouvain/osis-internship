@@ -16,13 +16,13 @@ class ViewAffectationStatisticsTestCase(TestCase):
 
     def test_affectation_result(self):
         cohort = CohortFactory()
-        url = reverse('internship_affectation_statistics', kwargs={
+        url = reverse('internship_affectation_hospitals', kwargs={
             'cohort_id': cohort.id
         })
 
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'internship_affectation_statics.html')
+        self.assertTemplateUsed(response, 'internship_affectation_hospitals.html')
 
     def test_affectation_result_sumup(self):
         cohort = CohortFactory()
