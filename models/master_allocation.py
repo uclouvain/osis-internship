@@ -50,12 +50,12 @@ class MasterAllocation(models.Model):
         return "{} - {} - {}".format(self.master, self.organization, self.specialty)
 
 
-def find_by_master(a_master):
-    return MasterAllocation.objects.filter(master=a_master)
+def find_by_master(cohort, a_master):
+    return MasterAllocation.objects.filter(master=a_master, specialty__cohort=cohort)
 
 
 def find_unallocated_masters():
-    allocated_masters = MasterAllocation.objects.values("pk").distinct() # (alloc.master.id for alloc in MasterAllocation.objects.all())
+    allocated_masters = MasterAllocation.objects.values("pk").distinct()
     return InternshipMaster.objects.exclude(id__in=(list([a['pk'] for a in allocated_masters])))
 
 
@@ -74,5 +74,5 @@ def search(cohort, specialty, hospital):
         return None
 
 
-def clean_allocations(master):
-    find_by_master(master).delete()
+def clean_allocations(cohort, master):
+    find_by_master(cohort, master).delete()
