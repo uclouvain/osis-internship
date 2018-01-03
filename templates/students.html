@@ -72,10 +72,16 @@
                         <span class="glyphicon glyphicon-remove" aria-hidden="true"> : {{students_not_ok}}</span>
                     </span>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-1">
                     <span class="label label-default">
                         <span class="glyphicon glyphicon-ban-circle" aria-hidden="true"> : {{student_without_internship}}</span>
                     </span>
+                </div>
+                <div class="col-md-2">
+                    <a href="{% url 'internship_student_form' cohort_id=cohort.id %}" class="btn btn-default pull-right">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                        {% trans 'add' %}
+                    </a>
                 </div>
             </div>
         </div>
@@ -101,7 +107,7 @@
                         <td>{{ student.person.first_name }}</td>
                         <td>
                             {% if student.registration_id %}
-                                <a class="btn btn-primary" id="lnk_students_choice{{organization.reference}}"
+                                <a class="btn btn-primary" id="lnk_students_choice{{ organization.reference }}"
                                     href="{% url 'internships_student_read' cohort_id=cohort.id student_id=student.id %}">
                                     <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
                                 </a>

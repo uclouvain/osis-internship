@@ -1,0 +1,212 @@
+{% extends "layout.html" %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% comment "License" %}
+    * OSIS stands for Open Student Information System. It's an application
+    * designed to manage the core business of higher education institutions,
+    * such as universities, faculties, institutes and professional schools.
+    * The core business involves the administration of students, teachers,
+    * courses, programs and so on.
+    *
+    * Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
+    *
+    * This program is free software: you can redistribute it and/or modify
+    * it under the terms of the GNU General Public License as published by
+    * the Free Software Foundation, either version 3 of the License, or
+    * (at your option) any later version.
+    *
+    * This program is distributed in the hope that it will be useful,
+    * but WITHOUT ANY WARRANTY; without even the implied warranty of
+    * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    * GNU General Public License for more details.
+    *
+    * A copy of this license - GNU General Public License - is available
+    * at the root of the source code of this program.  If not,
+    * see http://www.gnu.org/licenses/.
+{% endcomment %}
+
+{% block breadcrumb %}
+    <li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
+    <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{% trans 'internships_managment' %}</a></li>
+    <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></li>
+    <li><a href="{% url 'internships_student_resume' cohort_id=cohort.id %}">{% trans 'student_sumup' %}</a></li>
+{% endblock %}
+
+{% block content %}
+    <div class="page-header">
+        <h2>{% trans 'student' %}</h2>
+    </div>
+
+    <form action="{%url 'internship_student_save' cohort_id=cohort.id %}" method="POST" class="form" id="form">
+        {% csrf_token %}
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="registration_id">{% trans 'registration_id' %}</label>
+                            <input type="text" name="registration_id" id="registration_id" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="button" class="btn btn-default" style="margin-top: 25px;" id="btn_search_student">
+                            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                            {% trans 'search' %}
+                        </button>
+                    </div>
+                    <div class="col-md-8">
+                        <p style="margin-top: 30px;"><span id="error_message" class="error"></span></p>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-body">
+                <input type="hidden" name="person" id="person">
+                <input type="hidden" name="cohort" value="{{ cohort.id }}">
+
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <label for="last_name">{% trans 'last_name' %}</label>
+                            <input type="text" name="last_name" id="last_name" class="form-control" value="{{ student.last_name | upper | default_if_none:'' }}" readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="first_name">{% trans 'first_name' %}</label>
+                            <input type="text" name="first_name" id="first_name" class="form-control" value="{{ student.first_name | default_if_none:'' }}" readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="birth_date">{% trans 'birth_date' %}</label>
+                            <input type="date" name="birth_date" id="birth_date" class="form-control" value="{{ student.birth_date | date:'Y-m-d' | default_if_none:'' }}" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="gender">{% trans 'gender' %}</label>
+                            <select name="gender" id="gender" class="form-control" readonly>
+                                <option value="F" {{ female_selected }}>{% trans 'female' %}</option>
+                                <option value="M" {{ male_selected }}>{% trans 'male' %}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <label for="email">{% trans 'email' %}</label>
+                            <input type="email" name="email" id="email" class="form-control" value="{{ student.email | default_if_none:'' }}">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="phone_mobile">{% trans 'phone_mobile' %}</label>
+                            <input type="text" name="phone_mobile" id="phone_mobile" class="form-control" value="{{ student.phone_mobile | default_if_none:'' }}">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="type_mastery">{% trans 'type' %}</label>
+                            <select name="contest" id="type_mastery" class="form-control">
+                                <option value="GENERALIST" {{ generalist_selected }}>{% trans 'GENERALIST' %}</option>
+                                <option value="SPECIALIST" {{ specialist_selected }}>{% trans 'SPECIALIST' %}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="location">{% trans 'location' %}</label>
+                            <input type="text" name="location" id="location" class="form-control" value="{{ student.location | default_if_none:'' }}">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="postal_code">{% trans 'postal_code' %}</label>
+                            <input type="text" name="postal_code" id="postal_code" class="form-control" value="{{ student.postal_code | default_if_none:'' }}">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="city">{% trans 'city' %}</label>
+                            <input type="text" name="city" id="city" class="form-control" value="{{ student.city | default_if_none:'' }}">
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="country">{% trans 'country' %}</label>
+                            <select name="country" id="country" class="form-control">
+                                <option value="">--</option>
+                                {% for country in countries %}
+                                    {% if student.country == country %}
+                                        <option value="{{ country.id }}" selected>{{ country.name }}</option>
+                                    {% else %}
+                                        <option value="{{ country.id }}">{{ country.name }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary" id="btn_submit" disabled>
+                    <span class="glyphicon glyphicon-save" aria-hidden="true"></span>
+                    {% trans "save" %}
+                </button>
+                <a href="{% url 'internships_student_resume' cohort_id=cohort.id %}" class="btn btn-default">
+                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                    {% trans "cancel" %}
+                </a>
+            </div>
+        </div>
+    </form>
+{% endblock %}
+
+{% block script %}
+    <script>
+        $('#btn_search_student').click(function() {
+            var registration_id = $('#registration_id').val();
+
+            $.get("{% url 'internship_student_get' %}?id="+ registration_id.trim() + "&cohort=" + {{ cohort.id }}, function( data ) {
+                if(!data.error) {
+                    $('#person').val(data.id);
+                    $('#last_name').val(data.last_name);
+                    $('#first_name').val(data.first_name);
+                    $('#birth_date').val(data.birth_date);
+                    $('#gender').val(data.gender);
+                    $('#email').val(data.email);
+                    $('#phone_mobile').val(data.phone_mobile);
+                    $('#location').val(data.location);
+                    $('#postal_code').val(data.postal_code);
+                    $('#city').val(data.city);
+                    $('#country').val(data.country);
+
+                    $('#btn_submit').prop('disabled', false);
+                    $('#error_message').text("");
+                }
+                else {
+                    $('#person').val("");
+                    $('#last_name').val("");
+                    $('#first_name').val("");
+                    $('#birth_date').prop('readonly', false);
+                    $('#birth_date').val("");
+                    $('#birth_date').prop('readonly', true);
+                    $('#gender').val("");
+                    $('#email').val("");
+                    $('#phone_mobile').val("");
+                    $('#location').val("");
+                    $('#postal_code').val("");
+                    $('#city').val("");
+                    $('#country').val("");
+
+                    $('#btn_submit').prop('disabled', true);
+                    $('#error_message').text(data.error);
+                }
+            });
+        });
+    </script>
+{% endblock %}

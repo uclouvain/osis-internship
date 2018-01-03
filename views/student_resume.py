@@ -23,13 +23,16 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.http import HttpResponseRedirect
+import json
+from django.http import HttpResponse, HttpResponseRedirect
 from django.views.decorators.http import require_POST
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
 from django.shortcuts import render, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
+from django.utils.translation import ugettext_lazy as _
+from reference.models import country
 from base import models as mdl
 from internship import models as mdl_int
 from internship.forms.form_student_information import StudentInformationForm
@@ -61,7 +64,67 @@ def internships_student_resume(request, cohort_id):
         "number_specialists": number_specialists,
         'cohort': cohort,
     }
-    return render(request, "student_search.html", context)
+    return render(request, "students.html", context)
+
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def student_form(request, cohort_id):
+    cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)
+    countries = country.find_all()
+    return render(request, 'student_form.html', locals())
+
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def get_student(request):
+    registration_id = request.GET.get('id', '')
+    cohort = request.GET.get('cohort', '')
+    student = mdl.student.find_by_registration_id(registration_id)
+    data = {}
+    if student:
+        existing_student = mdl_int.internship_student_information.find_by_person(student.person, cohort)
+        if not existing_student:
+            data['id'] = student.person.id
+            data['first_name'] = student.person.first_name
+            data['last_name'] = student.person.last_name
+            data['gender'] = student.person.gender
+            data['email'] = student.person.email
+            data['phone_mobile'] = student.person.phone_mobile
+            data['birth_date'] = student.person.birth_date.strftime("%Y-%m-%d")
+
+            student_address = mdl.person_address.find_by_person(student.person)
+            if student_address:
+                address = student_address[0]
+                data['location'] = address.location
+                data['postal_code'] = address.postal_code
+                data['city'] = address.city
+                data['country'] = address.country.id
+        else:
+            data = {'error': str(_('student_already_exists'))}
+    else:
+        data = {'error': str(_('student_doesnot_exist'))}
+
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def student_save(request, cohort_id):
+    cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)
+    student = mdl_int.internship_student_information.InternshipStudentInformation(cohort=cohort)
+
+    form = StudentInformationForm(request.POST, instance=student)
+    errors = []
+    if form.is_valid():
+        form.save()
+    else:
+        errors.append(form.errors)
+
+    if errors:
+        return HttpResponseRedirect(reverse("internship_student_form", args=[cohort_id]))
+
+    return HttpResponseRedirect(reverse("internships_student_resume", args=[cohort_id]))
 
 
 @login_required
@@ -77,7 +140,7 @@ def internships_student_read(request, cohort_id, student_id):
             raise PermissionDenied(request)
 
     if not student:
-        return render(request, "student_resume.html", {'errors': ['student_not_exists']})
+        return render(request, "student.html", {'errors': ['student_doesnot_exist']})
     information = mdl_int.internship_student_information.search(person=student.person).first()
     internship_choices = mdl_int.internship_choice.get_choices_made(cohort=cohort,
                                                                     student=student).order_by('choice')
@@ -98,7 +161,7 @@ def internships_student_read(request, cohort_id, student_id):
                 for addr in organization.address:
                     affectation.organization.address = addr
 
-    return render(request, "student_resume.html",
+    return render(request, "student.html",
                            {'student': student,
                             'information': information,
                             'internship_choices': internship_choices,

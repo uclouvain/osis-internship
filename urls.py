@@ -30,6 +30,7 @@ from internship.views import (affectation_statistics, home, internship, master, 
 
 urlpatterns = [
     url(r'^$', home.view_cohort_selection, name='internship'),
+    url(r'^student/get$', student_resume.get_student, name='internship_student_get'),
 
     url(r'^cohorts/', include([
         url(r'^new$', cohort.new, name='cohort_new'),
@@ -107,7 +108,9 @@ urlpatterns = [
             ])),
 
             url(r'^students/', include([
-                url(r'^resume/$', student_resume.internships_student_resume, name='internships_student_resume'),
+                url(r'^$', student_resume.internships_student_resume, name='internships_student_resume'),
+                url(r'^form/$', student_resume.student_form, name='internship_student_form'),
+                url(r'^save/$', student_resume.student_save, name="internship_student_save"),
                 url(r'^(?P<student_id>[0-9]+)/', include([
                     url(r'^resume/$', student_resume.internships_student_read, name='internships_student_read'),
 
