@@ -62,6 +62,7 @@
             </div>
             <div class="panel-body">
                 <input type="hidden" name="person" id="person">
+                <input type="hidden" name="cohort" value="{{ cohort.id }}">
 
                 <div class="row">
                     <div class="col-md-5">
@@ -79,7 +80,7 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <label for="birth_date">{% trans 'birth_date' %}</label>
-                            <input type="date" name="birth_date" id="birth_date" class="form-control" value="{{ student.birth_date | date:'Y-m-d' | default_if_none:"" }}" readonly>
+                            <input type="date" name="birth_date" id="birth_date" class="form-control" value="{{ student.birth_date | date:'Y-m-d' | default_if_none:'' }}" readonly>
                         </div>
                     </div>
                 </div>
@@ -108,7 +109,7 @@
                     <div class="col-md-2">
                         <div class="form-group">
                             <label for="type_mastery">{% trans 'type' %}</label>
-                            <select name="type_mastery" id="type_mastery" class="form-control">
+                            <select name="contest" id="type_mastery" class="form-control">
                                 <option value="GENERALIST" {{ generalist_selected }}>{% trans 'GENERALIST' %}</option>
                                 <option value="SPECIALIST" {{ specialist_selected }}>{% trans 'SPECIALIST' %}</option>
                             </select>
@@ -171,7 +172,6 @@
             var registration_id = $('#registration_id').val();
 
             $.get("{% url 'internship_student_get' %}?id="+ registration_id.trim() + "&cohort=" + {{ cohort.id }}, function( data ) {
-                console.log(data);
                 if(!data.error) {
                     $('#person').val(data.id);
                     $('#last_name').val(data.last_name);
