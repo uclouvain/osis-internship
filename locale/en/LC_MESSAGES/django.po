@@ -262,8 +262,8 @@ msgstr "Specialist"
 msgid "start_activities"
 msgstr "Start Activities"
 
-msgid	 "student"
-msgstr	 "Student"
+msgid "student"
+msgstr "Student"
 
 msgid	 "student_affectation"
 msgstr	 "Internship's affectation"
@@ -403,8 +403,11 @@ msgstr "Latest generation start"
 msgid "latest_generation_end"
 msgstr "Latest generation end"
 
-msgid "student_not_exists"
-msgstr "Student does not exists"
+msgid "student_already_exists"
+msgstr "Student already exists."
+
+msgid "student_doesnot_exist"
+msgstr "Student doesn't exist."
 
 msgid "export_organisation_affectation_master"
 msgstr "Excel file for the Internship master"

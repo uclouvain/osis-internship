@@ -277,8 +277,8 @@ msgstr "Spécialiste"
 msgid "start_activities"
 msgstr "Début des activités"
 
-msgid	 "student"
-msgstr	 "Étudiant"
+msgid "student"
+msgstr "Étudiant"
 
 msgid	 "student_affectation"
 msgstr	 "Affectation de stage"
@@ -427,8 +427,11 @@ msgstr "Début de la dernière génération"
 msgid "latest_generation_end"
 msgstr "Fin de la dernière génération"
 
-msgid "student_not_exists"
-msgstr "L'étudiant n'existe pas"
+msgid "student_already_exists"
+msgstr "L'étudiant existe déjà."
+
+msgid "student_doesnot_exist"
+msgstr "L'étudiant n'existe pas."
 
 msgid "export_organisation_affectation_master"
 msgstr "Fichier Excel pour le maitre de stage"

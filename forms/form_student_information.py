@@ -31,4 +31,4 @@ from internship.models.internship_student_information import InternshipStudentIn
 class StudentInformationForm(ModelForm):
     class Meta:
         model = InternshipStudentInformation
-        fields = ['location', 'postal_code', 'city', 'country', 'email', 'phone_mobile', 'contest']
+        fields = ['location', 'postal_code', 'city', 'country', 'email', 'phone_mobile', 'contest', 'cohort']
