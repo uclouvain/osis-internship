@@ -34,10 +34,10 @@ def export_xls(cohort):
     workbook = Workbook()
     worksheet = workbook.active
     _add_header(cohort, worksheet)
-    _add_students(cohort, worksheet)
     columns_resizing(worksheet, {'A': 32, 'B': 16, 'C': 11, 'D': 5, 'E': 7, 'F': 5, 'G': 7, 'H': 5, 'I': 7, 'J': 5,
-                                 'K':  7, 'L':  5, 'M':  7, 'N': 5, 'O': 7, 'P': 5, 'Q': 7, 'R': 5, 'S': 7, 'T': 5,
-                                 'U':  7, 'V':  5, 'W':  7, 'X': 5, 'Y': 7, 'Z': 5, 'AA': 7})
+                                 'K': 7, 'L': 5, 'M': 7, 'N': 5, 'O': 7, 'P': 5, 'Q': 7, 'R': 5, 'S': 7, 'T': 5,
+                                 'U': 7, 'V': 5, 'W': 7, 'X': 5, 'Y': 7, 'Z': 5, 'AA': 7})
+    _add_students(cohort, worksheet)
     return save_virtual_workbook(workbook)
 
 
@@ -66,10 +66,9 @@ def _add_students(cohort, worksheet):
             columns.append(student_stat.student.person.last_name.upper())
             columns.append(student_stat.student.person.first_name)
             columns.append(student_stat.student.registration_id)
-            _add_period(columns, student_stat)
             previous_student = student_stat.student.registration_id
-        else:
-            _add_period(columns, student_stat)
+        _add_period(columns, student_stat)
+    add_row(worksheet, columns)
 
 
 def _add_period(columns, student_stat):
