@@ -33,7 +33,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.core.urlresolvers import reverse
 from django.shortcuts import render, redirect
 from django.shortcuts import get_object_or_404
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
 from internship.utils.student_assignment.solver import AssignmentSolver
 
 from internship import models
@@ -42,34 +42,12 @@ from internship.utils.exporting import score_encoding_xls
 from internship.views.internship import set_tabs_name
 from internship.views.place import sort_organizations, set_speciality_unique
 
-# ****************** Global vars ******************
-errors = []  # List of all internship added to hospital error, as tuple (student, speciality, period)
-solution = {}  # Dict with the solution => solution[student][period] = SolutionLine
-internship_table = {}  # List of all available internship. Organization, speciality, period
-internship_table_mi = {}  # List of available internship for "MI"
-organizations = {}  # Dict of all organizations
-specialities_dict = {}  # Dict of all specialities
-distance_students = {}  # Dict of distances between students and hospitals
-internship_offer_dic = {}  # Dict of all internship offers
-organization_addresses_dic = {}  # Dict of all organization addresses
-internship_table_original = {}  # Copy of internship_table, is used to know if an internship is empty
-
-# ****************** Constants ******************
-emergency = 15  # Id of the speciality "Urgences"
-hospital_error = 999  # Reference of the hospital "erreur"
-hospital_to_edit = 888  # Reference of the hospital "a_modifier"
-# List of the periods => (name, priority)
-periods_dict = {'P1': True, 'P2': True, 'P3': True, 'P4': True, 'P5': True, 'P6': True, 'P7': True, 'P8': True,
-                'P9': False, 'P10': False, 'P11': False, 'P12': False}
-# The costs used to compute the score of the solution
-# First choice = cost 0, second choice = cost 1, etc
-# I = impose internship, C = non-consecutive internship and X = hospital error
-costs = {1: 0, 2: 1, 3: 2, 4: 3, 'I': 10, 'C': 5, 'X': 1000}
+HOSPITAL_ERROR = 999  # Reference of the hospital "erreur"
 
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
-def assign_automatically_internships(request, cohort_id):
+def run_affectation(request, cohort_id):
     cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
     if request.method == 'POST':
         start_date_time = datetime.now()
@@ -86,15 +64,13 @@ def assign_automatically_internships(request, cohort_id):
         affectation_generation_time.end_date_time = end_date_time
         affectation_generation_time.generated_by = request.user.username
         affectation_generation_time.save()
-    return redirect(reverse('internship_affectation_statistics',  kwargs={'cohort_id': cohort.id}))
+    return redirect(reverse('internship_affectation_hospitals',  kwargs={'cohort_id': cohort.id}))
 
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
-def internship_affectation_statistics(request, cohort_id):
+def view_hospitals(request, cohort_id):
     cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
-    _init_organizations(cohort)
-    _init_specialities(cohort)
     sol, table, stats, internship_errors = None, None, None, None
     periods = models.period.Period.objects.filter(cohort=cohort)
     period_ids = periods.values_list("id", flat=True)
@@ -104,16 +80,38 @@ def internship_affectation_statistics(request, cohort_id):
         .select_related("student", "organization", "speciality", "period")
 
     if student_affectations.count() > 0:
-        sol, table = _load_solution(student_affectations, cohort)
-        stats = _compute_stats(cohort, sol)
-        # Mange sort of the students
-        sol = OrderedDict(sorted(sol.items(), key=lambda t: t[0].person.last_name))
+        table = _load_solution_table(student_affectations, cohort)
         # Mange sort of the organizations
         table.sort(key=itemgetter(0))
 
-        internship_errors = InternshipStudentAffectationStat.objects \
-            .filter(organization=organizations[hospital_error],
-                    period_id__in=period_ids)
+    latest_generation = models.affectation_generation_time.get_latest()
+
+    context = {
+        'section': 'internship',
+        'cohort': cohort,
+        'organizations': table,
+        'latest_generation': latest_generation
+    }
+
+    return render(request, "internship_affectation_hospitals.html", context)
+
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def view_students(request, cohort_id):
+    cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
+    sol, tabl = None, None
+    periods = models.period.Period.objects.filter(cohort=cohort)
+    period_ids = periods.values_list("id", flat=True)
+
+    student_affectations = InternshipStudentAffectationStat.objects\
+        .filter(period_id__in=period_ids)\
+        .select_related("student", "organization", "speciality", "period")
+
+    if student_affectations.count() > 0:
+        sol = _load_solution_sol(student_affectations)
+        # Mange sort of the students
+        sol = OrderedDict(sorted(sol.items(), key=lambda t: t[0].person.last_name))
 
     latest_generation = models.affectation_generation_time.get_latest()
 
@@ -121,13 +119,68 @@ def internship_affectation_statistics(request, cohort_id):
         'section': 'internship',
         'cohort': cohort,
         'recap_sol': sol,
+        'latest_generation': latest_generation
+    }
+
+    return render(request, "internship_affectation_students.html", context)
+
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def view_statistics(request, cohort_id):
+    cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
+    sol, table, stats = None, None, None
+    periods = models.period.Period.objects.filter(cohort=cohort)
+    period_ids = periods.values_list("id", flat=True)
+
+    student_affectations = InternshipStudentAffectationStat.objects\
+        .filter(period_id__in=period_ids)\
+        .select_related("student", "organization", "speciality", "period")
+
+    if student_affectations.count() > 0:
+        sol = _load_solution_sol(student_affectations)
+        stats = _compute_stats(cohort, sol)
+
+    latest_generation = models.affectation_generation_time.get_latest()
+
+    context = {
+        'section': 'internship',
+        'cohort': cohort,
         'stats': stats,
-        'organizations': table,
+        'latest_generation': latest_generation
+    }
+
+    return render(request, "internship_affectation_statistics.html", context)
+
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def view_errors(request, cohort_id):
+    cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
+    internship_errors = None
+    periods = models.period.Period.objects.filter(cohort=cohort)
+    period_ids = periods.values_list("id", flat=True)
+
+    student_affectations = InternshipStudentAffectationStat.objects\
+        .filter(period_id__in=period_ids)\
+        .select_related("student", "organization", "speciality", "period")
+
+    if student_affectations.count() > 0:
+        hospital = models.organization.Organization.objects.filter(reference=HOSPITAL_ERROR, cohort=cohort).first()
+        internship_errors = InternshipStudentAffectationStat.objects \
+            .filter(organization=hospital,
+                    period_id__in=period_ids)
+
+    latest_generation = models.affectation_generation_time.get_latest()
+
+    context = {
+        'section': 'internship',
+        'cohort': cohort,
         'errors': internship_errors,
         'latest_generation': latest_generation
     }
 
-    return render(request, "internship_affectation_statics.html", context)
+    return render(request, "internship_affectation_errors.html", context)
 
 
 @login_required
@@ -279,7 +332,7 @@ def _compute_stats(cohort, sol):
                     others_specialities[internship.speciality] += 1
                     others_specialities_students[internship.speciality].add(student)
                 # Hostpital error
-                if int(internship.organization.reference) == hospital_error:
+                if int(internship.organization.reference) == HOSPITAL_ERROR:
                     hospital_error_count += 1
                 consecutive_month += internship.consecutive_month
     # Total number of students
@@ -370,33 +423,6 @@ def _compute_stats(cohort, sol):
     return stats
 
 
-def _init_organizations(cohort):
-    """
-    Retrieve addresses of all organisation and init the hospital "error".
-    """
-    # Save data directly in global variables
-    global organizations, organization_addresses_dic
-    organizations[hospital_error] = models.organization.Organization.objects.filter(reference=hospital_error, cohort=cohort).first()
-    organizations[hospital_to_edit] = \
-        models.organization.Organization.objects.filter(reference=hospital_to_edit, cohort=cohort).first()
-
-    for organization_address in models.organization_address.OrganizationAddress.objects.filter(organization__cohort=cohort):
-        organization_addresses_dic[organization_address.organization] = organization_address
-
-
-def _init_specialities(cohort):
-    """
-    Retrieve all internship offers and the id of the speciality "emergency"
-    """
-    # Save data directly in global variables
-    global specialities_dict, emergency, internship_offer_dic
-    for speciality in models.internship_speciality.find_all(cohort=cohort):
-        internship_offer_dic[speciality] = models.internship_offer.search(cohort=cohort, speciality=speciality)
-        specialities_dict[speciality.name] = speciality.id
-        if speciality.acronym.strip() == 'UR':
-            emergency = speciality.id
-
-
 def _get_student_mandatory_choices(cohort, priority):
     """
     Return all student's choices of given type.
@@ -443,13 +469,16 @@ def _get_student_mandatory_choices(cohort, priority):
     data = OrderedDict((k, v) for k, v in specialities.items() if v)
 
     # Sort he dict of student (this optimize the final result)
-    global specialities_dict
 
     all_specialities = models.internship_speciality.search(cohort=cohort, mandatory=True)
     orders = []
 
     for speciality in all_specialities:
         orders.append(speciality.name)
+
+    specialities_dict = {}
+    for speciality in models.internship_speciality.find_all(cohort=cohort):
+        specialities_dict[speciality.name] = speciality.id
 
     for key in orders:
         if specialities_dict[key] in data:
@@ -460,9 +489,7 @@ def _get_student_mandatory_choices(cohort, priority):
     return data
 
 
-def _load_solution(data, cohort):
-    """ Create the solution and internship_table from db data """
-    # Initialise the table of internships.
+def _load_solution_table(data, cohort):
     periods = models.period.Period.objects.filter(cohort=cohort)
     period_ids = periods.values_list("id", flat=True)
     period_internship_places = models.period_internship_places.PeriodInternshipPlaces.objects.filter(period_id__in=period_ids).\
@@ -483,19 +510,7 @@ def _load_solution(data, cohort):
         temp_internship_table[organization][acronym][period_name]['before'] += pid.number_places
         temp_internship_table[organization][acronym][period_name]['after'] += pid.number_places
 
-    sol = {}
     for item in data:
-        # Initialize 12 empty period of each student
-        if item.student not in sol:
-            sol[item.student] = OrderedDict()
-            sol[item.student] = {key: None for key in keys}
-            # Sort the periods by name P1, P2, ...
-            sol[item.student] = OrderedDict(sorted(sol[item.student].items(), key=lambda t: int(t[0][1:])))
-            sol[item.student]['score'] = 0
-        # Put the internship in the solution
-        sol[item.student][item.period.name] = item
-        # store the cost of each student
-        sol[item.student]['score'] += item.cost
         # Update the number of available places for given organization, speciality, period
         if item.organization not in temp_internship_table or \
                         item.speciality.acronym not in temp_internship_table[item.organization]:
@@ -515,7 +530,27 @@ def _load_solution(data, cohort):
             sorted_internship_table.append((int(organization.reference), speciality, periods))
     sorted_internship_table.sort(key=itemgetter(0))
 
-    return sol, sorted_internship_table
+    return sorted_internship_table
+
+
+def _load_solution_sol(data):
+    keys = ['P1', 'P2', 'P3', 'P4', 'P5', 'P6', 'P7', 'P8', 'P9', 'P10', 'P11', 'P12']
+
+    sol = {}
+    for item in data:
+        # Initialize 12 empty period of each student
+        if item.student not in sol:
+            sol[item.student] = OrderedDict()
+            sol[item.student] = {key: None for key in keys}
+            # Sort the periods by name P1, P2, ...
+            sol[item.student] = OrderedDict(sorted(sol[item.student].items(), key=lambda t: int(t[0][1:])))
+            sol[item.student]['score'] = 0
+        # Put the internship in the solution
+        sol[item.student][item.period.name] = item
+        # store the cost of each student
+        sol[item.student]['score'] += item.cost
+
+    return sol
 
 
 def _fill_periods_default_values(acronym, keys, organization, temp_internship_table):

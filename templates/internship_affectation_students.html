@@ -1,0 +1,213 @@
+{% extends "layout.html" %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% comment "License" %}
+* OSIS stands for Open Student Information System. It's an application
+* designed to manage the core business of higher education institutions,
+* such as universities, faculties, institutes and professional schools.
+* The core business involves the administration of students, teachers,
+* courses, programs and so on.
+*
+* Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* A copy of this license - GNU General Public License - is available
+* at the root of the source code of this program.  If not,
+* see http://www.gnu.org/licenses/.
+{% endcomment %}
+
+{% block breadcrumb %}
+    <li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
+    <li><a href="{% url 'internship' %}">{% trans 'internships_managment' %}</a></li>
+    <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></li>
+    <li class="active">{% trans 'affectation_result' %}</li>
+{% endblock %}
+
+{% block style %}
+    <link rel="stylesheet" href="{% static 'css/dataTables.bootstrap.min.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="page-header">
+        <h2>{% trans 'affectation_result' %}</h2>
+    </div>
+
+    <style>
+        .dataTables_filter {
+            width: 50%;
+            float: right;
+            text-align: right;
+        }
+    </style>
+
+    <div class="modal fade bs-example-modal-sm" id="PleaseWaitModal" tabindex="-1"
+         role="dialog" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                    <span class="glyphicon glyphicon-time">
+                    </span> {% trans 'please_wait' %}
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-info progress-bar-striped active" style="width: 100%">
+                        </div>
+                    </div>
+                    {% trans 'take_several_minutes' %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" tabindex="-1" role="dialog" id="generate">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <form  method="post" action="{% url 'internship_affectation_generate' cohort_id=cohort.id %}" id="generate_solution">
+              {% csrf_token %}
+            </form>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">{% trans 'generate_solution' %}</h4>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">{% trans 'cancel' %}</button>
+            <button type="button" class="btn btn-primary" onclick="$('#generate').modal('hide');$('#PleaseWaitModal').modal('show');$('#generate_solution').submit()">{% trans 'generate_solution' %}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-primary" title="{% trans 'Send'%}" id="bt_interships_save" onclick="$('#generate').modal('show');">
+                        <span class="glyphicon glyphicon-random" aria-hidden="true"></span> {% trans 'generate_solution' %}
+                    </button>
+                </div>
+                <div class="col-md-5">
+                    <p>{% trans 'latest_generation_start' %} : {{ latest_generation.start_date_time| default_if_none:''|date:"SHORT_DATE_FORMAT" }} {{ latest_generation.start_date_time| default_if_none:''|time:"TIME_FORMAT" }}</p>
+                </div>
+                <div class="col-md-4">
+                    <p>{% trans 'latest_generation_end' %} : {{ latest_generation.end_date_time| default_if_none:''|date:"SHORT_DATE_FORMAT" }} {{ latest_generation.end_date_time| default_if_none:''|time:"TIME_FORMAT" }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel-body">
+            <ul class="nav nav-tabs">
+                <li><a href="{% url 'internship_affectation_hospitals' cohort_id=cohort.id %}">{% trans 'hospitals' %}</a></li>
+                <li class="active"><a data-toggle="tab" href="#tab_students">{% trans 'students' %}</a></li>
+                <li><a href="{% url 'internship_affectation_statistics' cohort_id=cohort.id %}">{% trans 'statistics' %}</a></li>
+                <li><a href="{% url 'internship_affectation_errors' cohort_id=cohort.id %}">{% trans 'errors' %}</a></li>
+            </ul>
+            <div class="tab-content">
+                <div id="tab_hospitals" class="tab-pane fade in"></div>
+                <div id="tab_students" class="tab-pane fade in active">
+                    <br>
+                        <a href="{% url 'export_score_encoding_xls' cohort_id=cohort.id %}" class="btn btn-default">
+                            <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
+                            {% trans 'export_to_xls' %}
+                        </a>
+                    <br>
+                    <table class="table" id="students">
+                        <thead>
+                            <tr>
+                                <th>{% trans 'student' %}</th>
+                                <th>P1</th>
+                                <th>P2</th>
+                                <th>P3</th>
+                                <th>P4</th>
+                                <th>P5</th>
+                                <th>P6</th>
+                                <th>P7</th>
+                                <th>P8</th>
+                                <th>P9</th>
+                                <th>P10</th>
+                                <th>P11</th>
+                                <th>P12</th>
+                                <th>Score</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for student, periods in recap_sol.items %}
+                                <tr>
+                                    <td>
+                                        <a href="{% url 'internships_student_read' cohort_id=cohort.id student_id=student.id %}" target="_blank">{{student}}</a>
+                                    </td>
+                                    {% for period, enrollment in periods.items %}
+                                        {% if enrollment.choice == 'I' %}
+                                            <td style="background-color: #00ff95">
+                                        {% elif enrollment.choice == 'X' %}
+                                            <td style="background-color: #ffa8a8">
+                                        {% else %}
+                                            <td>
+                                        {% endif %}
+
+                                        {% if forloop.counter <= 12 %}
+                                            <span data-toggle="tooltip" data-placement="top" title="{{ enrollment.speciality.name }}">{{ enrollment.speciality.acronym }}</span><br>
+                                            <span data-toggle="tooltip" data-placement="top" title="{{ enrollment.organization.name }}">{{enrollment.organization.reference }}</span><br>
+                                            {{ enrollment.cost }}({{ enrollment.choice.lower }})
+                                        {% else %}
+                                            {{ periods.score }}
+                                        {% endif %}
+                                        </td>
+                                    {% endfor %}
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div id="tab_stats" class="tab-pane fade in"></div>
+                <div id="tab_errors" class="tab-pane fade in"></div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script type="text/javascript" src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/dataTables.bootstrap.min.js' %}"></script>
+    <script>
+        $(document).ready(function() {
+            $('#students').DataTable({
+                paging: false,
+                "columnDefs": [ {
+                    "targets": 'no-sort',
+                    "orderable": false
+                } ],
+                bInfo: false
+            });
+
+            $('#organizations').DataTable({
+                paging: false,
+                "columnDefs": [ {
+                    "targets": 'no-sort',
+                    "orderable": false
+                } ],
+                bInfo: false
+            });
+
+            $('#errors').DataTable({
+                paging: false,
+                "columnDefs": [ {
+                    "targets": 'no-sort',
+                    "orderable": false
+                } ],
+                bInfo: false
+            });
+        } );
+    </script>
+{% endblock %}

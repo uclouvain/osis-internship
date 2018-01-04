@@ -1,0 +1,210 @@
+{% extends "layout.html" %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% comment "License" %}
+* OSIS stands for Open Student Information System. It's an application
+* designed to manage the core business of higher education institutions,
+* such as universities, faculties, institutes and professional schools.
+* The core business involves the administration of students, teachers,
+* courses, programs and so on.
+*
+* Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* A copy of this license - GNU General Public License - is available
+* at the root of the source code of this program.  If not,
+* see http://www.gnu.org/licenses/.
+{% endcomment %}
+
+{% block breadcrumb %}
+    <li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
+    <li><a href="{% url 'internship' %}">{% trans 'internships_managment' %}</a></li>
+    <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></li>
+    <li class="active">{% trans 'affectation_result' %}</li>
+{% endblock %}
+
+{% block style %}
+    <link rel="stylesheet" href="{% static 'css/dataTables.bootstrap.min.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="page-header">
+        <h2>{% trans 'affectation_result' %}</h2>
+    </div>
+
+    <style>
+        .dataTables_filter {
+            width: 50%;
+            float: right;
+            text-align: right;
+        }
+    </style>
+
+    <div class="modal fade bs-example-modal-sm" id="PleaseWaitModal" tabindex="-1"
+         role="dialog" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                    <span class="glyphicon glyphicon-time">
+                    </span> {% trans 'please_wait' %}
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-info progress-bar-striped active" style="width: 100%">
+                        </div>
+                    </div>
+                    {% trans 'take_several_minutes' %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" tabindex="-1" role="dialog" id="generate">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <form  method="post" action="{% url 'internship_affectation_generate' cohort_id=cohort.id %}" id="generate_solution">
+              {% csrf_token %}
+            </form>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">{% trans 'generate_solution' %}</h4>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">{% trans 'cancel' %}</button>
+            <button type="button" class="btn btn-primary" onclick="$('#generate').modal('hide');$('#PleaseWaitModal').modal('show');$('#generate_solution').submit()">{% trans 'generate_solution' %}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-primary" title="{% trans 'Send'%}" id="bt_interships_save" onclick="$('#generate').modal('show');">
+                        <span class="glyphicon glyphicon-random" aria-hidden="true"></span> {% trans 'generate_solution' %}
+                    </button>
+                </div>
+                <div class="col-md-5">
+                    <p>{% trans 'latest_generation_start' %} : {{ latest_generation.start_date_time| default_if_none:''|date:"SHORT_DATE_FORMAT" }} {{ latest_generation.start_date_time| default_if_none:''|time:"TIME_FORMAT" }}</p>
+                </div>
+                <div class="col-md-4">
+                    <p>{% trans 'latest_generation_end' %} : {{ latest_generation.end_date_time| default_if_none:''|date:"SHORT_DATE_FORMAT" }} {{ latest_generation.end_date_time| default_if_none:''|time:"TIME_FORMAT" }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel-body">
+            <ul class="nav nav-tabs">
+                <li class="active"><a data-toggle="tab" href="#tab_hospitals">{% trans 'hospitals' %}</a></li>
+                <li><a href="{% url 'internship_affectation_students' cohort_id=cohort.id %}">{% trans 'students' %}</a></li>
+                <li><a href="{% url 'internship_affectation_statistics' cohort_id=cohort.id %}">{% trans 'statistics' %}</a></li>
+                <li><a href="{% url 'internship_affectation_errors' cohort_id=cohort.id %}">{% trans 'errors' %}</a></li>
+            </ul>
+            <div class="tab-content">
+                <div id="tab_hospitals" class="tab-pane fade in active">
+                    <br>
+                    <table class="table" id="organizations">
+                        <thead>
+                            <tr>
+                                <th>{% trans 'organization' %}</th>
+                                <th>{% trans 'speciality' %}</th>
+                                <th class="no-sort">P1</th>
+                                <th class="no-sort">P2</th>
+                                <th class="no-sort">P3</th>
+                                <th class="no-sort">P4</th>
+                                <th class="no-sort">P5</th>
+                                <th class="no-sort">P6</th>
+                                <th class="no-sort">P7</th>
+                                <th class="no-sort">P8</th>
+                                <th class="no-sort">P9</th>
+                                <th class="no-sort">P10</th>
+                                <th class="no-sort">P11</th>
+                                <th class="no-sort">P12</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in organizations %}
+                                <tr>
+                                    <td>{{ item.0 }}</td>
+                                    <td>{{ item.1 }}</td>
+                                    {% for period, places in item.2.items %}
+                                        {% if places.before == places.after and places.before != 0 %}
+                                            <td style="background-color:green;">
+                                        {% elif places.pc > 66 %}
+                                            <td style="background-color:#33cc33;">
+                                        {% elif places.pc > 33 %}
+                                            <td style="background-color:#ffdc33;">
+                                        {% elif places.pc > 0 %}
+                                            <td style="background-color:#ff6600;">
+                                        {% elif places.after < 0 %}
+                                            <td style="background-color:black;color:white">
+                                        {% elif places.pc == 0 %}
+                                            <td style="background-color:#cc0000;">
+                                        {% elif places.before == 0 %}
+                                            <td>
+                                        {% else %}
+                                            <td style="background-color:#33cc33;">
+                                        {% endif %}
+                                            {{ places.after }} / {{ places.before }}
+                                        </td>
+                                    {% endfor %}
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div id="tab_students" class="tab-pane fade in"></div>
+                <div id="tab_stats" class="tab-pane fade in"></div>
+                <div id="tab_errors" class="tab-pane fade in"></div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script type="text/javascript" src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/dataTables.bootstrap.min.js' %}"></script>
+    <script>
+        $(document).ready(function() {
+            $('#students').DataTable({
+                paging: false,
+                "columnDefs": [ {
+                    "targets": 'no-sort',
+                    "orderable": false
+                } ],
+                bInfo: false
+            });
+
+            $('#organizations').DataTable({
+                paging: false,
+                "columnDefs": [ {
+                    "targets": 'no-sort',
+                    "orderable": false
+                } ],
+                bInfo: false
+            });
+
+            $('#errors').DataTable({
+                paging: false,
+                "columnDefs": [ {
+                    "targets": 'no-sort',
+                    "orderable": false
+                } ],
+                bInfo: false
+            });
+        } );
+    </script>
+{% endblock %}

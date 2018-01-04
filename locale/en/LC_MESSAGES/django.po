@@ -133,7 +133,7 @@ msgstr	 "Select a xlsx file for the internship's masters' injection"
 msgid	 "help_pnl_selectedfiles_places"
 msgstr	 "Select a xlsx file for the hospitals' injection"
 
-msgid	 "hospital_list"
+msgid	 "hospitals"
 msgstr	 "Hospitals"
 
 msgid	 "import_hospital"
