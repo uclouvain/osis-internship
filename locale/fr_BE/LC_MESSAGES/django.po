@@ -142,7 +142,7 @@ msgstr	 "Veuillez sélectionner un fichier xlsx pour l'injection des maîtres de
 msgid	 "help_pnl_selectedfiles_places"
 msgstr	 "Veuillez sélectionner un fichier xlsx pour l'injection des hôpitaux"
 
-msgid	 "hospital_list"
+msgid	 "hospitals"
 msgstr	 "Hôpitaux"
 
 msgid	 "import_hospital"
