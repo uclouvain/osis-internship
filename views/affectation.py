@@ -33,7 +33,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.core.urlresolvers import reverse
 from django.shortcuts import render, redirect
 from django.shortcuts import get_object_or_404
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
 from internship.utils.student_assignment.solver import AssignmentSolver
 
 from internship import models
@@ -80,7 +80,7 @@ def view_hospitals(request, cohort_id):
         .select_related("student", "organization", "speciality", "period")
 
     if student_affectations.count() > 0:
-        sol, table = _load_solution(student_affectations, cohort)
+        table = _load_solution_table(student_affectations, cohort)
         # Mange sort of the organizations
         table.sort(key=itemgetter(0))
 
@@ -109,7 +109,7 @@ def view_students(request, cohort_id):
         .select_related("student", "organization", "speciality", "period")
 
     if student_affectations.count() > 0:
-        sol, table = _load_solution(student_affectations, cohort)
+        sol = _load_solution_sol(student_affectations)
         # Mange sort of the students
         sol = OrderedDict(sorted(sol.items(), key=lambda t: t[0].person.last_name))
 
@@ -138,7 +138,7 @@ def view_statistics(request, cohort_id):
         .select_related("student", "organization", "speciality", "period")
 
     if student_affectations.count() > 0:
-        sol, table = _load_solution(student_affectations, cohort)
+        sol = _load_solution_sol(student_affectations)
         stats = _compute_stats(cohort, sol)
 
     latest_generation = models.affectation_generation_time.get_latest()
@@ -489,9 +489,7 @@ def _get_student_mandatory_choices(cohort, priority):
     return data
 
 
-def _load_solution(data, cohort):
-    """ Create the solution and internship_table from db data """
-    # Initialise the table of internships.
+def _load_solution_table(data, cohort):
     periods = models.period.Period.objects.filter(cohort=cohort)
     period_ids = periods.values_list("id", flat=True)
     period_internship_places = models.period_internship_places.PeriodInternshipPlaces.objects.filter(period_id__in=period_ids).\
@@ -512,19 +510,7 @@ def _load_solution(data, cohort):
         temp_internship_table[organization][acronym][period_name]['before'] += pid.number_places
         temp_internship_table[organization][acronym][period_name]['after'] += pid.number_places
 
-    sol = {}
     for item in data:
-        # Initialize 12 empty period of each student
-        if item.student not in sol:
-            sol[item.student] = OrderedDict()
-            sol[item.student] = {key: None for key in keys}
-            # Sort the periods by name P1, P2, ...
-            sol[item.student] = OrderedDict(sorted(sol[item.student].items(), key=lambda t: int(t[0][1:])))
-            sol[item.student]['score'] = 0
-        # Put the internship in the solution
-        sol[item.student][item.period.name] = item
-        # store the cost of each student
-        sol[item.student]['score'] += item.cost
         # Update the number of available places for given organization, speciality, period
         if item.organization not in temp_internship_table or \
                         item.speciality.acronym not in temp_internship_table[item.organization]:
@@ -544,7 +530,27 @@ def _load_solution(data, cohort):
             sorted_internship_table.append((int(organization.reference), speciality, periods))
     sorted_internship_table.sort(key=itemgetter(0))
 
-    return sol, sorted_internship_table
+    return sorted_internship_table
+
+
+def _load_solution_sol(data):
+    keys = ['P1', 'P2', 'P3', 'P4', 'P5', 'P6', 'P7', 'P8', 'P9', 'P10', 'P11', 'P12']
+
+    sol = {}
+    for item in data:
+        # Initialize 12 empty period of each student
+        if item.student not in sol:
+            sol[item.student] = OrderedDict()
+            sol[item.student] = {key: None for key in keys}
+            # Sort the periods by name P1, P2, ...
+            sol[item.student] = OrderedDict(sorted(sol[item.student].items(), key=lambda t: int(t[0][1:])))
+            sol[item.student]['score'] = 0
+        # Put the internship in the solution
+        sol[item.student][item.period.name] = item
+        # store the cost of each student
+        sol[item.student]['score'] += item.cost
+
+    return sol
 
 
 def _fill_periods_default_values(acronym, keys, organization, temp_internship_table):
