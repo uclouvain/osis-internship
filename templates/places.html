@@ -39,45 +39,27 @@
         <h2>{% trans 'list_of_all_hospital' %}</h2>
     </div>
     {% include "template_messages.html" %}
-    <form action="{%url 'internships_places' cohort_id=cohort.id  %}" method="get">
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="city">{% trans 'city' %}</label>
-                    <select id="city" name="city_sort" onChange="javascript: this.form.submit();" class="form-control">
-                        <option value="0">{% trans 'all_city' %}</option>
-                        {% for address in all_addresses %}
-                            <option value="{{ address }}" {% if address == city_sort_get %}selected{%endif%}>
-                                {{ address }}
-                            </option>
-                        {% endfor %}
-                    </select>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <br>
-                <a href="{% url 'place_create' cohort_id=cohort.id %}" id="lnk_organization_create" class="btn btn-default pull-right" title="{% trans 'create_an_organization'%}">
-                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                    {% trans 'add' %}
-                </a>
-            </div>
-        </div>
-    </form>
+
+    <a href="{% url 'place_create' cohort_id=cohort.id %}" id="lnk_organization_create" class="btn btn-default pull-right" title="{% trans 'create_an_organization'%}">
+        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> {% trans 'add' %}
+    </a>
+    <br>
+    <br>
 
     <div class="panel panel-default">
         <table class="table table-hover">
             <thead>
-            <tr>
-                <th>{% trans 'reference' %}</th>
-                <th>{% trans 'name' %}</th>
-                <th>{% trans 'student_choice' %}</th>
-                <th>{% trans 'affectation_result' %}</th>
-                <th>{% trans 'address' %}</th>
-                <th>{% trans 'postal_code' %}</th>
-                <th>{% trans 'city' %}</th>
-                <th>{% trans 'country' %}</th>
-                <th>{% trans 'url' %}</th>
-            </tr>
+                <tr>
+                    <th>{% trans 'reference' %}</th>
+                    <th>{% trans 'name' %}</th>
+                    <th>{% trans 'student_choice' %}</th>
+                    <th>{% trans 'affectation_result' %}</th>
+                    <th>{% trans 'address' %}</th>
+                    <th>{% trans 'postal_code' %}</th>
+                    <th>{% trans 'location' %}</th>
+                    <th>{% trans 'country' %}</th>
+                    <th>{% trans 'url' %}</th>
+                </tr>
             </thead>
             <tbody>
             {% for organization in all_organizations %}
@@ -107,24 +89,16 @@
                         </a>
                     </td>
                     <td>
-                        {% for address in organization.addresses.all %}
-                            {{address.location}} <br/>
-                        {% endfor %}
+                        {{ organization.location | default_if_none:'' }}
                     </td>
                     <td>
-                        {% for address in organization.addresses.all %}
-                            {{address.postal_code}} <br/>
-                        {% endfor %}
+                        {{ organization.postal_code | default_if_none:'' }}
                     </td>
                     <td>
-                        {% for address in organization.addresses.all %}
-                            {{address.city}} <br/>
-                        {% endfor %}
+                        {{ organization.city | default_if_none:'' }}
                     </td>
                     <td>
-                        {% for address in organization.addresses.all %}
-                            {{address.country}} <br/>
-                        {% endfor %}
+                        {{ organization.country | default_if_none:'' }}
                     </td>
                     <td>
                         {% if organization.website %}

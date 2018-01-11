@@ -80,3 +80,25 @@ def find_by_id(speciality_id):
         return InternshipSpeciality.objects.get(pk=speciality_id)
     except ObjectDoesNotExist:
         return None
+
+
+def set_speciality_unique(specialities):
+    specialities_size = len(specialities)
+    for element in specialities:
+        name = element.name.split()
+        size = len(name)
+        if name[size - 1].isdigit():
+            temp_name = ""
+            for x in range(0, size - 1):
+                temp_name += name[x] + " "
+            element.name = temp_name
+
+    item_deleted = 0
+    for x in range(1, specialities_size):
+        if specialities[x - 1 - item_deleted] != 0:
+            if specialities[x].name == specialities[x - 1 - item_deleted].name:
+                specialities[x] = 0
+                item_deleted += 1
+
+    specialities = [x for x in specialities if x != 0]
+    return specialities

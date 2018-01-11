@@ -27,12 +27,35 @@ from django.db import models
 from django.core.exceptions import ObjectDoesNotExist
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 from internship.models.enums import organization_report_fields
+from internship.models import organization_address
+from reference.models import country
 
 
 class OrganizationAdmin(SerializableModelAdmin):
-    list_display = ('name', 'acronym', 'reference', 'type', 'cohort')
-    fieldsets = ((None, {'fields': ('name', 'acronym', 'reference', 'website', 'type', 'cohort')}),)
-    search_fields = ['acronym', 'name']
+    list_display = ('reference', 'name', 'acronym', 'cohort', 'location', 'postal_code', 'city', 'country')
+    fieldsets = ((None, {'fields': ('name', 'acronym', 'reference', 'website', 'phone', 'location', 'postal_code',
+                                    'city', 'country', 'cohort')}),)
+    search_fields = ['acronym', 'name', 'reference']
+    actions = ['consolidate_addresses']
+
+    def consolidate_addresses(self, request, queryset):
+        """
+        Function temporaire pour consolider les organisations et leur adresses dans une seul table.
+        """
+        for org in queryset:
+            addresses = organization_address.OrganizationAddress.objects.filter(organization=org)
+            if addresses:
+                for address in addresses:
+                    org.location = address.location
+                    org.postal_code = address.postal_code
+                    org.city = address.city
+                    if address.country:
+                        ctry = country.Country.objects.filter(iso_code=address.country).first()
+                        org.country = ctry
+                    org.save()
+                    self.message_user(request, "%s successfully consolidated address." % org.name)
+            else:
+                self.message_user(request, "Address not found.")
 
 
 class Organization(SerializableModel):
@@ -40,7 +63,6 @@ class Organization(SerializableModel):
     acronym = models.CharField(max_length=15, blank=True)
     website = models.URLField(max_length=255, blank=True, null=True)
     reference = models.CharField(max_length=30, blank=True, null=True)
-    type = models.CharField(max_length=30, blank=True, null=True, default="service partner")
     phone = models.CharField(max_length=30, blank=True, null=True)
     location = models.CharField(max_length=255, blank=True, null=True)
     postal_code = models.CharField(max_length=20, blank=True, null=True)
@@ -78,18 +100,13 @@ class Organization(SerializableModel):
     def __str__(self):
         return self.name
 
-    def save(self, *args, **kwargs):
-        self.acronym = self.name[:14]
-        super(Organization, self).save(*args, **kwargs)
-
 
 def search(**kwargs):
     kwargs = {k: v for k, v in kwargs.items() if v}
-    queryset = Organization.objects.filter(**kwargs).select_related()
-    return queryset
+    return Organization.objects.filter(**kwargs).select_related()
 
 
-def find_by_id(organization_id):
+def get_by_id(organization_id):
     try:
         return Organization.objects.get(pk=organization_id)
     except ObjectDoesNotExist:
@@ -103,3 +120,24 @@ def find_by_cohort(cohort):
 def find_by_reference(cohort, reference):
     str_reference = str(reference).zfill(2)
     return Organization.objects.filter(cohort=cohort).filter(reference=str_reference)
+
+
+def sort_organizations(organizations):
+    """
+        Function to sort the organization by the reference
+        Param:
+            sort_organizations : list of organizations to sort
+        Get the reference of the organization, transform and sort by the int key
+        Recreate the list with the reference research
+    """
+    tab = []
+    number_ref = []
+    for organization in organizations:
+        if organization is not None:
+            number_ref.append(organization.reference)
+    if number_ref:
+        number_ref = sorted(number_ref, key=int)
+        for i in number_ref:
+            organization = search(reference=i)
+            tab.append(organization[0])
+    return tab

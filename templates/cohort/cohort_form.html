@@ -19,46 +19,46 @@
                 {% csrf_token %}
                 <div class="row">
                     <div class="col-md-8">
-                        <label for="txt_name">{{ form.name.label }}</label>
+                        <label for="txt_name">{% trans 'name' %}</label>
                         {{ form.name }}
                         <span class="error">{{ form.name.errors }}</span>
                     </div>
                     <div class="col-md-4">
-                        <label for="txt_free_internships_number">{{ form.free_internships_number.label }}</label>
+                        <label for="txt_free_internships_number">{% trans 'number_free_choices' %}</label>
                         {{ form.free_internships_number }}
                         <span class="error" required>{{ form.free_internships_number.errors }}</span>
                     </div>
                 </div>
 
                 <br>
-                <label for="txt_description">{{ form.description.label }}</label>
+                <label for="txt_description">{% trans 'description' %}</label>
                 {{ form.description }}
                 <span class="error" required>{{ form.description.errors }}</span>
 
                 <br>
                 <div class="row">
                     <div class="col-md-4">
-                        <label for="txt_publication_start_date">{{ form.publication_start_date.label }}</label>
-                        {{  form.publication_start_date }}<span class="error" required>{{ form.publication_start_date.errors }}</span>
-                    </div>
-                    <div class="col-md-4">
-                        <label for="txt_subscription_start_date">{{ form.subscription_start_date.label }}</label>
+                        <label for="txt_subscription_start_date">{% trans 'enrolment_start' %}</label>
                         {{  form.subscription_start_date }}<span class="error" required>{{ form.subscription_start_date.errors }}</span>
                     </div>
                     <div class="col-md-4">
-                        <label for="txt_subscription_end_date">{{ form.subscription_end_date.label }}</label>
+                        <label for="txt_subscription_end_date">{% trans 'enrolment_end' %}</label>
                         {{  form.subscription_end_date }}<span class="error" required>{{ form.subscription_end_date.errors }}</span>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="txt_publication_start_date">{% trans 'publication_date' %}</label>
+                        {{  form.publication_start_date }}<span class="error" required>{{ form.publication_start_date.errors }}</span>
                     </div>
                 </div>
                 {% if form_new %}
                   <br>
                   <div class="row">
                     <div class="col-md-6">
-                      <label for="copy_organizations_from_cohort">{{ form.copy_organizations_from_cohort.label }}</label>
+                      <label for="copy_organizations_from_cohort">{% trans 'copy_from_cohort' %}</label>
                       {{ form.copy_organizations_from_cohort }}<span class="error">{{form.copy_organizations_from_cohort.errors}}</span>
                     </div>
                     <div class="col-md-6">
-                      <label for="copy_specialities_from_cohort">{{ form.copy_specialities_from_cohort.label }}</label>
+                      <label for="copy_specialities_from_cohort">{% trans 'copy_from_cohort' %}</label>
                       {{ form.copy_specialities_from_cohort }}<span class="error">{{form.copy_specialities_from_cohort.errors}}</span>
                     </div>
                   </div>

@@ -32,10 +32,6 @@ from openpyxl.writer.excel import save_virtual_workbook
 from internship.tests.factories.cohort import CohortFactory
 from internship.tests.factories.organization import OrganizationFactory
 from internship.tests.factories.organization_address import OrganizationAddressFactory
-
-
-# This test case is just for the validation of the urls, the parameters and the templates.
-from internship.tests.factories.speciality import SpecialtyFactory
 from internship.tests.utils.test_upload_xls import XlsPlaceImportTestCase
 
 
@@ -88,7 +84,7 @@ class PlaceViewAndUrlTestCase(TestCase):
 
     def test_edit(self):
         organization = OrganizationFactory(cohort=self.cohort)
-        organization_address = OrganizationAddressFactory(organization=organization)
+        OrganizationAddressFactory(organization=organization)
 
         kwargs = {
             'cohort_id': self.cohort.id,
@@ -105,8 +101,7 @@ class PlaceViewAndUrlTestCase(TestCase):
 
         kwargs = {
             'cohort_id': self.cohort.id,
-            'organization_id': organization.id,
-            'organization_address_id': organization_address.id,
+            'organization_id': organization.id
         }
         url = reverse('place_save', kwargs=kwargs)
         response = self.client.post(url)
@@ -131,7 +126,6 @@ class PlaceViewAndUrlTestCase(TestCase):
         })
         response = self.client.post(url, {'file': content_of_workbook}, follow=True)
 
-        # print(response.status_code)
         self.assertRedirects(response, reverse('internships_places', kwargs={
             'cohort_id': self.cohort.id,
         }))

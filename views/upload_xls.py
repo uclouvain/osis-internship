@@ -93,7 +93,7 @@ def _save_xls_place(file_name, cohort):
 
         place = models.organization.search(reference=reference)
         if place:
-            organization = models.organization.find_by_id(place[0].id)
+            organization = models.organization.get_by_id(place[0].id)
         else:
             organization = models.organization.Organization(cohort=cohort)
 
@@ -117,8 +117,6 @@ def _save_xls_place(file_name, cohort):
             organization.website = row[col_url].value
         else:
             organization.website = ""
-
-        organization.type = "service partner"
 
         organization.save()
 

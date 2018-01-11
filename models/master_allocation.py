@@ -56,7 +56,8 @@ def find_by_master(cohort, a_master):
 
 def find_unallocated_masters():
     allocated_masters = MasterAllocation.objects.values("pk").distinct()
-    return InternshipMaster.objects.exclude(id__in=(list([a['pk'] for a in allocated_masters])))
+    return InternshipMaster.objects.exclude(id__in=(list([a['pk'] for a in allocated_masters])))\
+                                   .order_by('last_name', 'first_name')
 
 
 def search(cohort, specialty, hospital):

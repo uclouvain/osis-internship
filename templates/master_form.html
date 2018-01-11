@@ -126,7 +126,7 @@
                 <div class="row">
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label for="location">{% trans 'location' %}</label>
+                            <label for="location">{% trans 'address' %}</label>
                             <input type="text" name="location" id="location" class="form-control" value="{{ allocated_master.location | default_if_none:'' }}">
                         </div>
                     </div>
@@ -138,7 +138,7 @@
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label for="city">{% trans 'city' %}</label>
+                            <label for="city">{% trans 'location' %}</label>
                             <input type="text" name="city" id="city" class="form-control" value="{{ allocated_master.city | default_if_none:'' }}">
                         </div>
                     </div>
@@ -180,7 +180,7 @@
                                                 {% if allocation.organization == hospital %}
                                                     <option value="{{ hospital.id }}" selected>{{ hospital.reference }} - {{ hospital.name }}</option>
                                                 {% else %}
-                                                    <option value="{{ hospital.id }}">{{ hospital.name }}</option>
+                                                    <option value="{{ hospital.id }}">{{ hospital.reference }} - {{ hospital.name }}</option>
                                                 {% endif %}
                                             {% endfor %}
                                         </select>

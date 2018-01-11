@@ -89,7 +89,7 @@
                 <br>
                 <div class="row">
                     <div class="col-md-3">
-                        <label for="{{ form.location.id_for_label }}">{% trans 'location' %}</label><br>
+                        <label for="{{ form.location.id_for_label }}">{% trans 'address' %}</label><br>
                         <input class="form-control" id="{{ form.location.id_for_label }}" type="text" name="{{ form.location.html_name }}" value="{{ information.location | default_if_none:'-' }}">
                     </div>
                     <div class="col-md-3">
@@ -97,7 +97,7 @@
                         <input class="form-control" id="{{ form.postal_code.id_for_label }}" type="text" name="{{ form.postal_code.html_name }}" value="{{ information.postal_code | default_if_none:'-' }}">
                     </div>
                     <div class="col-md-3">
-                        <label for="{{ form.city.id_for_label }}">{% trans 'city' %}</label><br>
+                        <label for="{{ form.city.id_for_label }}">{% trans 'location' %}</label><br>
                         <input class="form-control" id="{{ form.city.id_for_label }}" type="text" name="{{ form.city.html_name }}" value="{{ information.city | default_if_none:'-' }}">
                     </div>
                     <div class="col-md-3">

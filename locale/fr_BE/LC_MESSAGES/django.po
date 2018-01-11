@@ -64,194 +64,209 @@ msgstr "Vous avez déjà un stage avec cette préférence dans cette spécialit�
 msgid "block_internship_selection"
 msgstr "Bloquer la sélection des stages"
 
-msgid	 "choice_modification"
-msgstr	 "Modification des choix"
+msgid "choice_modification"
+msgstr "Modification des choix"
 
-msgid	 "choice_receive_by_administration"
-msgstr	 "Choix reçus par l'administration"
+msgid "choice_receive_by_administration"
+msgstr "Choix reçus par l'administration"
 
-msgid	 "choose_a_hospital"
-msgstr	 "Choisir un hôpital"
+msgid "choose_a_hospital"
+msgstr "Choisir un hôpital"
 
-msgid	 "choose_internships"
-msgstr	 "Choisissez vos stages"
+msgid "choose_internships"
+msgstr "Choisissez vos stages"
 
-msgid	 "choose_spec_see_record_choice"
-msgstr	 "Choisissez une spécialité pour voir vos choix déjà effectués."
+msgid "choose_spec_see_record_choice"
+msgstr "Choisissez une spécialité pour voir vos choix déjà effectués."
 
-msgid	 "civility"
-msgstr	 "Civilité"
+msgid "civility"
+msgstr "Civilité"
 
 msgid "cohort"
 msgstr "Cohorte"
 
-msgid  "cohorts"
-msgstr  "Cohortes"
+msgid "cohorts"
+msgstr "Cohortes"
 
-msgid	 "contest"
-msgstr	 "Concours"
+msgid "contest"
+msgstr "Concours"
 
-msgid	 "create_a_speciality"
-msgstr	 "Créer une spécialité"
+msgid "copy_from_cohort"
+msgstr "Copier à partir du cohorte"
 
-msgid	 "current_choices"
-msgstr	 "Choix actuels"
+msgid "create_a_speciality"
+msgstr "Créer une spécialité"
 
-msgid	 "date_end"
-msgstr	 "Date de fin"
+msgid "current_choices"
+msgstr "Choix actuels"
 
-msgid	 "date_start"
-msgstr	 "Date début"
+msgid "date_end"
+msgstr "Date de fin"
 
-msgid	 "detail_choice"
-msgstr	 "Détails des choix"
+msgid "date_start"
+msgstr "Date début"
 
-msgid	 "details"
-msgstr	 "Détails"
+msgid "description"
+msgstr "Déscription"
+
+msgid "detail_choice"
+msgstr "Détails des choix"
+
+msgid "details"
+msgstr "Détails"
 
 msgid "DOCTOR"
 msgstr "Docteur"
 
-msgid	 "edit_places"
-msgstr	 "Modifier nombres de places"
+msgid "edit_places"
+msgstr "Modifier nombres de places"
 
-msgid	 "email"
-msgstr	 "Email"
+msgid "email"
+msgstr "Email"
 
 msgid "email_private"
 msgstr "Private Email"
 
-msgid	 "first_choice"
-msgstr	 "Choix préféré"
+msgid "enrolment_start"
+msgstr "Ouverture des inscriptions"
 
-msgid	 "forname"
-msgstr	 "Prénom"
+msgid "enrolment_end"
+msgstr "Fermeture des inscriptions"
 
-msgid	 "fourth_choice"
-msgstr	 "4ème choix"
+msgid "first_choice"
+msgstr "Choix préféré"
 
-msgid	 "gender"
-msgstr	 "Sexe"
+msgid "fourth_choice"
+msgstr "4ème choix"
 
-msgid	 "help_pnl_selectedfiles_internships"
-msgstr	 "Veuillez sélectionner un fichier xlsx pour l'injection des stages"
+msgid "number_free_choices"
+msgstr "Nombre des stages aux choix"
 
-msgid	 "help_pnl_selectedfiles_masters"
-msgstr	 "Veuillez sélectionner un fichier xlsx pour l'injection des maîtres de stages"
+msgid "gender"
+msgstr "Sexe"
 
-msgid	 "help_pnl_selectedfiles_places"
-msgstr	 "Veuillez sélectionner un fichier xlsx pour l'injection des hôpitaux"
+msgid "help_pnl_selectedfiles_internships"
+msgstr "Veuillez sélectionner un fichier xlsx pour l'injection des stages"
 
-msgid	 "hospitals"
-msgstr	 "Hôpitaux"
+msgid "help_pnl_selectedfiles_masters"
+msgstr "Veuillez sélectionner un fichier xlsx pour l'injection des maîtres de stages"
 
-msgid	 "import_hospital"
-msgstr	 "Importer les hôpitaux"
-
-msgid	 "import_internships"
-msgstr	 "Importer les stages"
-
-msgid	 "import_masters"
-msgstr	 "Importer les maîtres de stage"
-
-msgid	 "internship_block_moment"
-msgstr	 "Les sélections de stage sont bloquées actuellement."
-
-msgid	 "internship_choice"
-msgstr	 "Choix de stage"
-
-msgid	 "internship"
-msgstr	 "Stage"
-
-msgid	 "internship_modification"
-msgstr	 "Modification du stage"
-
-msgid	 "internships"
-msgstr	 "Stages"
-
-msgid	 "internships_injection"
-msgstr	 "Injection des stages"
-
-msgid	 "internships_managment"
-msgstr	 "Gestion des stages de médecine"
-
-msgid	 "internships_masters"
-msgstr	 "Maîtres de stages"
-
-msgid	 "internships_masters_list"
-msgstr	 "Maîtres de stage"
-
-msgid	 "internships_offers"
-msgstr	 "Offres de stage"
-
-msgid	 "internships_specialities"
-msgstr	 "Spécialités"
-
-msgid	 "language"
-msgstr	 "Langue"
-
-msgid	 "list_of_all_hospital"
-msgstr	 "Liste de tous les hôpitaux"
-
-msgid	 "mail"
-msgstr	 "Email"
-
-msgid	 "mandatory"
-msgstr	 "obligatoire"
-
-msgid "master"
-msgstr "Maître"
-
-msgid	 "name"
-msgstr	 "Nom"
-
-msgid	 "new_internship"
-msgstr	 "Nouveau stage"
-
-msgid "no_allocation_found"
-msgstr "Aucune allocation trouvée pour le maître."
-
-msgid	 "no_result"
-msgstr	 "Aucun résultat"
-
-msgid	 "noma"
-msgstr	 "Noma"
-
-msgid	 "not_4_choice_spec"
-msgstr	 "Vous n'avez pas encore soumis vos 4 choix pour cette spécialité."
-
-msgid	 "organization"
-msgstr	 "Hôpital"
+msgid "help_pnl_selectedfiles_places"
+msgstr "Veuillez sélectionner un fichier xlsx pour l'injection des hôpitaux"
 
 msgid "hospital"
 msgstr "Hôpital"
 
-msgid    "period"
-msgstr   "Période"
+msgid "hospitals"
+msgstr "Hôpitaux"
 
-msgid	 "period_creation"
-msgstr	 "Créer une période"
+msgid "import_hospital"
+msgstr "Importer les hôpitaux"
 
-msgid	 "periods"
-msgstr	 "Périodes"
+msgid "import_internships"
+msgstr "Importer les stages"
 
-msgid	 "periods_list"
-msgstr	 "Périodes"
+msgid "import_masters"
+msgstr "Importer les maîtres de stage"
 
-msgid	 "phone_mobile"
-msgstr	 "Numéro de Téléphone / Numéro de portable"
+msgid "internship_block_moment"
+msgstr "Les sélections de stage sont bloquées actuellement."
 
-msgid	 "places"
-msgstr	 "Hôpitaux"
+msgid "internship_choice"
+msgstr	 "Choix de stage"
 
-msgid	 "places_injection"
-msgstr	 "Injection des hôpitaux"
+msgid "internship"
+msgstr "Stage"
+
+msgid "internship_modification"
+msgstr "Modification du stage"
+
+msgid "internships"
+msgstr "Stages"
+
+msgid "internships_injection"
+msgstr "Injection des stages"
+
+msgid "internships_managment"
+msgstr "Gestion des stages de médecine"
+
+msgid "internships_masters"
+msgstr "Maîtres de stages"
+
+msgid "internships_masters_list"
+msgstr "Maîtres de stage"
+
+msgid "internships_offers"
+msgstr "Offres de stage"
+
+msgid "internships_specialities"
+msgstr "Spécialités"
+
+msgid "language"
+msgstr "Langue"
+
+msgid "list_of_all_hospital"
+msgstr "Liste de tous les hôpitaux"
+
+msgid "mail"
+msgstr "Email"
+
+msgid "mandatory"
+msgstr "obligatoire"
+
+msgid "master"
+msgstr "Maître"
+
+msgid "name"
+msgstr "Nom"
+
+msgid "new_internship"
+msgstr "Nouveau stage"
+
+msgid "no_allocation_found"
+msgstr "Aucune allocation trouvée pour le maître."
+
+msgid "no_result"
+msgstr "Aucun résultat"
+
+msgid "noma"
+msgstr "Noma"
+
+msgid "not_4_choice_spec"
+msgstr "Vous n'avez pas encore soumis vos 4 choix pour cette spécialité."
+
+msgid "organization"
+msgstr "Hôpital"
+
+msgid "period"
+msgstr "Période"
+
+msgid "period_creation"
+msgstr "Créer une période"
+
+msgid "periods"
+msgstr "Périodes"
+
+msgid "periods_list"
+msgstr "Périodes"
+
+msgid "phone_mobile"
+msgstr "Numéro de Téléphone / Numéro de portable"
+
+msgid "places"
+msgstr "Hôpitaux"
+
+msgid "places_injection"
+msgstr "Injection des hôpitaux"
 
 msgid "PROFESSOR"
 msgstr "Professeur"
 
-msgid	 "reference"
-msgstr	 "Référence"
+msgid "publication_date"
+msgstr "Date de publication"
+
+msgid "reference"
+msgstr "Référence"
 
 msgid "report_to_hospital"
 msgstr "Rapport pour l'hôpital"
@@ -331,8 +346,8 @@ msgstr "Stages sélectionnés"
 msgid "select_speciality_change_internships"
 msgstr "Sélectionnez une spécialité pour ajouter/modifier vos choix pour ce stage au choix"
 
-msgid "assignations_sumup"
-msgstr "Bilan des assignations"
+msgid "affectation_sumup"
+msgstr "Bilan des affectations"
 
 msgid "download_xls_file"
 msgstr "Télécharger le fichier Excel"
@@ -343,8 +358,8 @@ msgstr "Télécharger le fichier PDF"
 msgid "number_of_student"
 msgstr "Nombre d'étudiant"
 
-msgid "internship_assignation"
-msgstr "Assignation des stages"
+msgid "internship_affectation"
+msgstr "Affectation des stages"
 
 msgid "please_wait"
 msgstr "Merci de patienter"

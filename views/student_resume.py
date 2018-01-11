@@ -36,7 +36,6 @@ from reference.models import country
 from base import models as mdl
 from internship import models as mdl_int
 from internship.forms.form_student_information import StudentInformationForm
-from internship.views.place import sort_organizations
 
 
 @login_required
@@ -229,7 +228,7 @@ def internship_student_affectation_modification(request, cohort_id, student_id):
     else:
         information = internship_choice.first()
     organizations = mdl_int.organization.search(cohort=cohort)
-    organizations = sort_organizations(organizations)
+    organizations = mdl_int.organization.sort_organizations(organizations)
 
     specialities = mdl_int.internship_speciality.find_all(cohort=cohort)
     for speciality in specialities:

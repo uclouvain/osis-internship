@@ -68,14 +68,12 @@ class XlsPlaceImportTestCase(TestCase):
         worksheet = workbook.active
         for row in range(1, 11):
             add_cell = functools.partial(worksheet.cell, row=row)
-            for column, function in columns:
-                add_cell(column=column+1, value=function())
+            for column, func in columns:
+                add_cell(column=column+1, value=func())
 
         return workbook
 
     def test_import_xls_from_python_api(self):
-
-        # workbook.save('/tmp/demo.xls')
         with mock.patch('openpyxl.load_workbook') as mock_load_workbook:
             workbook = self.generate_workbook()
             mock_load_workbook.return_value = workbook

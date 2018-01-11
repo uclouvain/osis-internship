@@ -39,10 +39,10 @@ class TestOrganization(TestCase):
 
     def test_get_by_id(self):
         an_organization = OrganizationFactory()
-        persisted_organization = organization.find_by_id(an_organization.id)
+        persisted_organization = organization.get_by_id(an_organization.id)
         self.assertEquals(an_organization.id, persisted_organization.id)
 
-        nonexistent_organization = organization.find_by_id(0)
+        nonexistent_organization = organization.get_by_id(0)
         self.assertIsNone(nonexistent_organization)
 
     def test_find_by_cohort(self):

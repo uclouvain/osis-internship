@@ -110,7 +110,7 @@
             <div class="row">
                 <div class="col-md-3">
                     <div class="form-group">
-                        <label for="location">{% trans 'location' %}</label>
+                        <label for="location">{% trans 'address' %}</label>
                         <div id="location">{{ allocated_master.location | default_if_none:"" }}</div>
                     </div>
                 </div>
@@ -122,7 +122,7 @@
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
-                        <label for="city">{% trans 'city' %}</label>
+                        <label for="city">{% trans 'location' %}</label>
                         <div id="city">{{ allocated_master.city | default_if_none:"" }}</div>
                     </div>
                 </div>
@@ -147,7 +147,7 @@
                     <tbody>
                         {% for allocation in allocations %}
                             <tr>
-                                <td>{{ allocation.organization | default_if_none:"" }}</td>
+                                <td>{{ allocation.organization.reference | default_if_none:"" }} - {{ allocation.organization | default_if_none:"" }}</td>
                                 <td>{{ allocation.specialty | default_if_none:"" }}</td>
                             </tr>
                         {% empty %}
