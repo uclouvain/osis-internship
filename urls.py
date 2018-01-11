@@ -91,7 +91,7 @@ urlpatterns = [
                     name='export_organisation_affectation_master'),
                 url(r'^exportxls/(?P<organization_id>[0-9]+)/hospital/$', place.export_organisation_affectation_hospital,
                     name='export_organisation_affectation_hospital'),
-                url(r'^save/(?P<organization_id>[0-9]+)/(?P<organization_address_id>[0-9]+)/$', place.place_save,
+                url(r'^save/(?P<organization_id>[0-9]+)/$', place.place_save,
                     name='place_save'),
                 url(r'^save/$', place.organization_new, name='place_save_new'),
                 url(r'^upload/$', upload_xls.upload_places_file, name='upload_places'),

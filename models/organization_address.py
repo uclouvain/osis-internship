@@ -24,7 +24,6 @@
 #
 ##############################################################################
 from django.db import models
-from internship.models.organization import Organization
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 
 
@@ -45,16 +44,10 @@ class OrganizationAddress(SerializableModel):
     latitude = models.FloatField(blank=True, null=True)
     longitude = models.FloatField(blank=True, null=True)
     country = models.CharField(max_length=255)
+    ignore = models.BooleanField(default=False)
 
     def __str__(self):
         return u"%s" % self.organization
-
-    def save(self, *args, **kwargs):
-        if self.organization is None:
-            self.organization = Organization.objects.latest('id')
-
-        self.label = "Addr" + self.organization.name[:14]
-        super(OrganizationAddress, self).save(*args, **kwargs)
 
 
 def search(**kwargs):

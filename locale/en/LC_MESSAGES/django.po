@@ -71,175 +71,190 @@ msgid "choose_spec_see_record_choice"
 msgstr "Choose a speciality to see your choices already done."
 
 msgid "civility"
-msgstr	 "Civility"
+msgstr "Civility"
 
 msgid "cohort"
 msgstr "Cohort"
 
-msgid  "cohorts"
-msgstr  "Cohorts"
+msgid "cohorts"
+msgstr "Cohorts"
 
-msgid	 "contest"
-msgstr	 "Contest"
+msgid "contest"
+msgstr "Contest"
 
-msgid	 "create_a_speciality"
-msgstr	 "Create a speciality"
+msgid "copy_from_cohort"
+msgstr "Copy from cohort"
 
-msgid	 "current_choices"
-msgstr	 "Current choices"
+msgid "create_a_speciality"
+msgstr "Create a speciality"
 
-msgid	 "date_end"
-msgstr	 "Date end"
+msgid "current_choices"
+msgstr "Current choices"
 
-msgid	 "date_start"
-msgstr	 "Date start"
+msgid "date_end"
+msgstr "Date end"
 
-msgid	 "detail_choice"
-msgstr	 "Choice's Details"
+msgid "date_start"
+msgstr "Date start"
 
-msgid	 "details"
-msgstr	 "Details"
+msgid "description"
+msgstr "Description"
+
+msgid "detail_choice"
+msgstr "Choice's Details"
+
+msgid "details"
+msgstr "Details"
 
 msgid "DOCTOR"
 msgstr "Doctor"
 
-msgid	 "email"
-msgstr	 "Email"
+msgid "edit_places"
+msgstr "Edit number of places"
+
+msgid "email"
+msgstr "Email"
 
 msgid "email_private"
 msgstr "Private Email"
 
-msgid	 "edit_places"
-msgstr	 "Edit number of places"
+msgid "enrolment_start"
+msgstr "Enrolment start"
 
-msgid	 "first_choice"
-msgstr	 "First choice"
+msgid "enrolment_end"
+msgstr "Enrolment end"
 
-msgid	 "forname"
-msgstr	 "Firstname"
+msgid "first_choice"
+msgstr "First choice"
 
-msgid	 "fourth_choice"
-msgstr	 "Fourth choice"
+msgid "fourth_choice"
+msgstr "Fourth choice"
 
-msgid	 "gender"
-msgstr	 "Gender"
+msgid "number_free_choices"
+msgstr "Number of free choices"
 
-msgid	 "help_pnl_selectedfiles_internships"
-msgstr	 "Select a xlsx file for the internships' injection"
+msgid "gender"
+msgstr "Gender"
 
-msgid	 "help_pnl_selectedfiles_masters"
-msgstr	 "Select a xlsx file for the internship's masters' injection"
+msgid "help_pnl_selectedfiles_internships"
+msgstr "Select a xlsx file for the internships' injection"
 
-msgid	 "help_pnl_selectedfiles_places"
-msgstr	 "Select a xlsx file for the hospitals' injection"
+msgid "help_pnl_selectedfiles_masters"
+msgstr "Select a xlsx file for the internship's masters' injection"
 
-msgid	 "hospitals"
-msgstr	 "Hospitals"
-
-msgid	 "import_hospital"
-msgstr	 "Import hospitals"
-
-msgid	 "import_internships"
-msgstr	 "Import internships"
-
-msgid	 "import_masters"
-msgstr	 "Import internship's masters"
-
-msgid	 "internship"
-msgstr	 "Internship"
-
-msgid	 "internship_block_moment"
-msgstr	 "internships' selection are currently blocked."
-
-msgid	 "internship_choice"
-msgstr	 "internship's choices"
-
-msgid	 "internship_modification"
-msgstr	 "Internship modification"
-
-msgid	 "internships"
-msgstr	 "Internships"
-
-msgid	 "internships_injection"
-msgstr	 "Internships' injection"
-
-msgid	 "internships_managment"
-msgstr	 "Management of Medicine's Internships"
-
-msgid	 "internships_masters"
-msgstr	 "Internship's masters"
-
-msgid	 "internships_masters_list"
-msgstr	 "Internship's Masters"
-
-msgid	 "internships_offers"
-msgstr	 "Internships offers"
-
-msgid	 "internships_specialities"
-msgstr	 "Specialties"
-
-msgid	 "language"
-msgstr	 "Language"
-
-msgid	 "list_of_all_hospital"
-msgstr	 "List of all hospital"
-
-msgid	 "mail"
-msgstr	 "Email"
-
-msgid	 "mandatory"
-msgstr	 "Mandatory"
-
-msgid "master"
-msgstr "Master"
-
-msgid	 "name"
-msgstr	 "Name"
-
-msgid	 "new_internship"
-msgstr	 "New internship"
-
-msgid "no_allocation_found"
-msgstr "No allocation found for the master."
-
-msgid	 "no_result"
-msgstr	 "No result"
-
-msgid	 "noma"
-msgstr	 "Noma"
-
-msgid	 "not_4_choice_spec"
-msgstr	 "You don't have submit your 4 choices for this speciality."
-
-msgid	 "organization"
-msgstr	 "Hospital"
-
-msgid "PROFESSOR"
-msgstr "Professor"
+msgid "help_pnl_selectedfiles_places"
+msgstr "Select a xlsx file for the hospitals' injection"
 
 msgid "hospital"
 msgstr "Hospital"
 
-msgid    "period"
-msgstr   "Period"
+msgid "hospitals"
+msgstr "Hospitals"
 
-msgid	 "period_creation"
-msgstr	 "Create a period"
+msgid "import_hospital"
+msgstr "Import hospitals"
 
-msgid	 "periods"
-msgstr	 "Periods"
+msgid "import_internships"
+msgstr "Import internships"
 
-msgid	 "periods_list"
-msgstr	 "Periods"
+msgid "import_masters"
+msgstr "Import internship's masters"
 
-msgid	 "phone_mobile"
-msgstr	 "Phone Number / Mobile Number"
+msgid "internship"
+msgstr "Internship"
 
-msgid	 "places"
-msgstr	 "Hospitals"
+msgid "internship_block_moment"
+msgstr "internships' selection are currently blocked."
 
-msgid	 "places_injection"
-msgstr	 "Hospitals' injection"
+msgid "internship_choice"
+msgstr "internship's choices"
+
+msgid "internship_modification"
+msgstr "Internship modification"
+
+msgid "internships"
+msgstr "Internships"
+
+msgid "internships_injection"
+msgstr "Internships' injection"
+
+msgid "internships_managment"
+msgstr "Management of Medicine's Internships"
+
+msgid "internships_masters"
+msgstr "Internship's masters"
+
+msgid "internships_masters_list"
+msgstr "Internship's Masters"
+
+msgid "internships_offers"
+msgstr "Internships offers"
+
+msgid "internships_specialities"
+msgstr "Specialties"
+
+msgid "language"
+msgstr "Language"
+
+msgid "list_of_all_hospital"
+msgstr "List of all hospital"
+
+msgid "mail"
+msgstr "Email"
+
+msgid "mandatory"
+msgstr "Mandatory"
+
+msgid "master"
+msgstr "Master"
+
+msgid "name"
+msgstr "Name"
+
+msgid "new_internship"
+msgstr "New internship"
+
+msgid "no_allocation_found"
+msgstr "No allocation found for the master."
+
+msgid "no_result"
+msgstr "No result"
+
+msgid "noma"
+msgstr "Noma"
+
+msgid "not_4_choice_spec"
+msgstr "You don't have submit your 4 choices for this speciality."
+
+msgid "organization"
+msgstr "Hospital"
+
+msgid "PROFESSOR"
+msgstr "Professor"
+
+msgid "period"
+msgstr "Period"
+
+msgid "period_creation"
+msgstr "Create a period"
+
+msgid "periods"
+msgstr "Periods"
+
+msgid "periods_list"
+msgstr "Periods"
+
+msgid "phone_mobile"
+msgstr "Phone Number / Mobile Number"
+
+msgid "places"
+msgstr "Hospitals"
+
+msgid "places_injection"
+msgstr "Hospitals' injection"
+
+msgid "publication_date"
+msgstr "Publication date"
 
 msgid	 "reference"
 msgstr	 "Reference"
@@ -313,8 +328,8 @@ msgstr "Selected internships"
 msgid "select_speciality_change_internships"
 msgstr "Select a speciality to add or modify your choices for this internship in choice"
 
-msgid "assignations_sumup"
-msgstr "Assignations' Sum up"
+msgid "affectation_sumup"
+msgstr "Allocation Sum up"
 
 msgid "download_xls_file"
 msgstr "Download Excel File"
@@ -325,8 +340,8 @@ msgstr "Download PDF File"
 msgid "number_of_student"
 msgstr "Number of student"
 
-msgid "internship_assignation"
-msgstr "Internships assignation"
+msgid "internship_affectation"
+msgstr "Internships Affectation"
 
 msgid "please_wait"
 msgstr "Please Wait"

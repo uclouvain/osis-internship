@@ -23,46 +23,27 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import operator
-
 from django.contrib.auth.decorators import login_required, permission_required
 from django.shortcuts import get_object_or_404, render
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
 from internship import models
-from internship.forms.organization_address_form import OrganizationAddressForm
 from internship.forms.organization_form import OrganizationForm
 from internship.utils.exporting import organization_affectation_master
 from internship.utils.exporting import organization_affectation_hospital
 from internship.views.internship import get_all_specialities, set_tabs_name
+from reference.models import country
 
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internships_places(request, cohort_id):
     cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
-    # Get the value of the option for the sort
-    city_sort_get = "0"
-    if request.method == 'GET':
-        city_sort_get = request.GET.get('city_sort')
-
-    organizations = models.organization.Organization.objects.prefetch_related('addresses') \
-        .filter(type='service partner', cohort=cohort) \
-        .order_by('reference')
-
-    if city_sort_get and city_sort_get != '0':
-        organizations = organizations.filter(address__city=city_sort_get)
-
-    addresses = models.organization_address.OrganizationAddress.objects.filter(organization__type='service partner',
-                                                                               organization__cohort=cohort).distinct('city').order_by('city')
-
-    cities = map(operator.attrgetter('city'), addresses)
+    organizations = models.organization.Organization.objects.filter(cohort=cohort).order_by('reference')
 
     context = {
         'section': 'internship',
         'all_organizations': organizations,
-        'all_addresses': cities,
-        'city_sort_get': city_sort_get,
         'cohort': cohort,
     }
     return render(request, "places.html", context)
@@ -70,11 +51,11 @@ def internships_places(request, cohort_id):
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
-def place_save(request, cohort_id, organization_id, organization_address_id):
+def place_save(request, cohort_id, organization_id):
     cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
 
     if organization_id:
-        organization = models.organization.find_by_id(organization_id)
+        organization = models.organization.get_by_id(organization_id)
     else:
         models.organization.Organization.objects.filter(reference=request.POST.get('reference')).delete()
         models.organization_address.OrganizationAddress.objects.filter(organization__reference=request.POST.get('reference')).delete()
@@ -86,54 +67,32 @@ def place_save(request, cohort_id, organization_id, organization_address_id):
     if form.is_valid():
         form.save()
 
-    if organization_address_id:
-        organization_address = models.organization_address.find_by_id(organization_address_id)
-    else:
-        organization_address = models.organization_address.OrganizationAddress()
+    countries = country.find_all()
 
-    form_address = OrganizationAddressForm(data=request.POST, instance=organization_address)
-    if form_address.is_valid():
-        form_address.save()
-
-    context = {
-        'organization': organization,
-        'organization_address': organization_address,
-        'form': form,
-        'cohort': cohort,
-    }
-    return render(request, "place_form.html", context)
+    return render(request, "place_form.html", locals())
 
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def organization_new(request, cohort_id):
-    return place_save(request, cohort_id, None, None)
+    return place_save(request, cohort_id, None)
 
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def organization_edit(request, cohort_id, organization_id):
     cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
-    organization = models.organization.find_by_id(organization_id)
-    organization_address = models.organization_address.search(organization = organization)
-    context = {
-        'organization': organization,
-        'organization_address': organization_address.first(),
-        'cohort': cohort,
-    }
-    return render(request, "place_form.html", context)
+    organization = models.organization.get_by_id(organization_id)
+    countries = country.find_all()
+    return render(request, "place_form.html", locals())
 
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def organization_create(request, cohort_id):
     cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
-    organization = models.organization.Organization(cohort=cohort)
-    context = {
-        'organization': organization,
-        'cohort': cohort
-    }
-    return render(request, "place_form.html", context)
+    countries = country.find_all()
+    return render(request, "place_form.html", locals())
 
 
 @login_required
@@ -188,7 +147,7 @@ def student_affectation(request, cohort_id, organization_id):
 
     internships = models.internship_offer.search(organization = organization, cohort=cohort)
     all_speciality = get_all_specialities(internships)
-    all_speciality = set_speciality_unique(all_speciality)
+    all_speciality = models.internship_speciality.set_speciality_unique(all_speciality)
     set_tabs_name(all_speciality)
     context = {
         'organization': organization,
@@ -204,7 +163,7 @@ def student_affectation(request, cohort_id, organization_id):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def export_organisation_affectation_master(request, cohort_id, organization_id):
     cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
-    organization = models.organization.find_by_id(organization_id)
+    organization = models.organization.get_by_id(organization_id)
     internships = models.internship_offer.search(organization=organization)
     specialities = list({offer.speciality for offer in internships})
     specialities = sorted(specialities, key=lambda spec: spec.name)
@@ -236,51 +195,8 @@ def export_organisation_affectation_master(request, cohort_id, organization_id):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def export_organisation_affectation_hospital(request, cohort_id, organization_id):
     cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
-    organization = models.organization.find_by_id(organization_id)
+    organization = models.organization.get_by_id(organization_id)
     return _export_xls_hospital(cohort, organization)
-
-
-def sort_organizations(organizations):
-    """
-        Function to sort the organization by the reference
-        Param:
-            sort_organizations : list of organizations to sort
-        Get the reference of the organization, transform and sort by the int key
-        Recreate the list with the reference research
-    """
-    tab = []
-    number_ref = []
-    for organization in organizations:
-        if organization is not None:
-            number_ref.append(organization.reference)
-    if number_ref:
-        number_ref = sorted(number_ref, key=int)
-        for i in number_ref:
-            organization = models.organization.search(reference=i)
-            tab.append(organization[0])
-    return tab
-
-
-def set_speciality_unique(specialities):
-    specialities_size = len(specialities)
-    for element in specialities:
-        name = element.name.split()
-        size = len(name)
-        if name[size - 1].isdigit():
-            temp_name = ""
-            for x in range(0, size - 1):
-                temp_name += name[x] + " "
-            element.name = temp_name
-
-    item_deleted = 0
-    for x in range(1, specialities_size):
-        if specialities[x - 1 - item_deleted] != 0:
-            if specialities[x].name == specialities[x - 1 - item_deleted].name:
-                specialities[x] = 0
-                item_deleted += 1
-
-    specialities = [x for x in specialities if x != 0]
-    return specialities
 
 
 def _export_xls_master(cohort, organization, affections_by_specialities):

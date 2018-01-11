@@ -94,7 +94,8 @@ def master_save(request, cohort_id):
     hospital = ""
     if form.is_valid():
         form.save()
-        master_allocation.clean_allocations(allocated_master)
+        allocated_master = form.instance
+        master_allocation.clean_allocations(current_cohort, allocated_master)
         allocations = _build_allocations(request, allocated_master)
         _save_allocations(allocations)
         hospital = _extract_hospital_id(allocations)
@@ -128,7 +129,7 @@ def _build_allocations(request, allocated_master):
 
     allocations = []
     for i, a_hospital in enumerate(hospitals):
-        hospital = organization.find_by_id(a_hospital)
+        hospital = organization.get_by_id(a_hospital)
         specialty = internship_speciality.find_by_id(specialties[i])
         allocation = master_allocation.MasterAllocation(master=allocated_master,
                                                         organization=hospital,

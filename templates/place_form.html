@@ -47,7 +47,7 @@
     <div class="panel panel-default">
         <div class="panel-body">
             <form method="post" action="{% if organization.id %}
-        {% url 'place_save' cohort_id=cohort.id organization_id=organization.id organization_address_id=organization_address.id%}
+        {% url 'place_save' cohort_id=cohort.id organization_id=organization.id %}
         {%else%} {% url 'place_save_new' cohort_id=cohort.id %} {%endif%}">
                 {% csrf_token %}
                 <div class="row">
@@ -64,27 +64,35 @@
                         <input class="form-control" value="{{ organization.website | default_if_none:'' }}" name="website" id="txt_website" maxlength="255"><span class="error" required>{{ form.website.errors }}</span>
                     </div>
                 </div>
-                <input type="hidden" value="{{ organization_address.id }}" name="organization_address_id"/>
                 <input type="hidden" value="{{ organization_id }}" name="organization_id"/>
                 <br>
                 <div class="row">
                     <div class="col-md-4">
-                        <label for="address_location">{% trans 'location' %}</label>
-                        <input class="form-control" value="{{ organization_address.location | default_if_none:'' }}" name="location" id="txt_organization_address_location" maxlength="255" required>
+                        <label for="address_location">{% trans 'address' %}</label>
+                        <input class="form-control" value="{{ organization.location | default_if_none:'' }}" name="location" id="txt_organization_address_location" maxlength="255" required>
                     </div>
                     <div class="col-md-2">
                         <label for="address_postal_code">{% trans 'postal_code' %}</label>
-                        <input class="form-control" value="{{ organization_address.postal_code | default_if_none:'' }}" name="postal_code" id="txt_organization_address_postal_code" maxlength="20" required>
+                        <input class="form-control" value="{{ organization.postal_code | default_if_none:'' }}" name="postal_code" id="txt_organization_address_postal_code" maxlength="20" required>
                     </div>
                     <div class="col-md-3">
-                        <label for="address_city">{% trans 'city' %}</label>
-                        <input class="form-control" value="{{ organization_address.city | default_if_none:'' }}" name="city" id="txt_organization_address_city" maxlength="255" required>
+                        <label for="address_city">{% trans 'location' %}</label>
+                        <input class="form-control" value="{{ organization.city | default_if_none:'' }}" name="city" id="txt_organization_address_city" maxlength="255" required>
                     </div>
                     <div class="col-md-3">
-                        <label for="country">{% trans 'country'%}</label><br>
-                        <input class="form-control" value="{{ organization_address.country | default_if_none:'' }}" name="country" id="txt_organization_address_country" maxlength="255" required>
-                        <input type="hidden" class="form-control" value="{{ '' }}" name="latitude">
-                        <input type="hidden" class="form-control" value="{{ '' }}" name="longitude">
+                        <div class="form-group">
+                            <label for="country">{% trans 'country' %}</label>
+                            <select name="country" id="country" class="form-control">
+                                <option value="">--</option>
+                                {% for country in countries %}
+                                    {% if organization.country == country %}
+                                        <option value="{{ country.id }}" selected>{{ country.name }}</option>
+                                    {% else %}
+                                        <option value="{{ country.id }}">{{ country.name }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
                     </div>
                 </div>
                 <br>
@@ -113,7 +121,7 @@
                                 <input class="form-control" value="{{ organization.report_start_date | default_if_none:'' }}" name="report_start_date" id="report_start_date" maxlength="2">
                             </div>
                             <div class="col-md-5">
-                                {% trans 'start_date' %}
+                                {% trans 'date_start' %}
                             </div>
                             <div class="col-md-1">
                                 <input class="form-control" value="{{ organization.report_email | default_if_none:'' }}" name="report_email" id="report_email" maxlength="2">
@@ -128,7 +136,7 @@
                                 <input class="form-control" value="{{ organization.report_end_date | default_if_none:'' }}" name="report_end_date" id="report_end_date" maxlength="2">
                             </div>
                             <div class="col-md-5">
-                                {% trans 'end_date' %}
+                                {% trans 'date_end' %}
                             </div>
                             <div class="col-md-1">
                                 <input class="form-control" value="{{ organization.report_noma | default_if_none:'' }}" name="report_noma" id="report_noma" maxlength="2">
@@ -194,7 +202,7 @@
                                 <input class="form-control" value="{{ organization.report_city | default_if_none:'' }}" name="report_city" id="report_city" maxlength="2">
                             </div>
                             <div class="col-md-5">
-                                {% trans 'city' %}
+                                {% trans 'location' %}
                             </div>
                         </div>
                     </div>

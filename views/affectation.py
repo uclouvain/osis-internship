@@ -40,7 +40,6 @@ from internship import models
 from internship.models.internship_student_affectation_stat import InternshipStudentAffectationStat
 from internship.utils.exporting import score_encoding_xls
 from internship.views.internship import set_tabs_name
-from internship.views.place import sort_organizations, set_speciality_unique
 
 HOSPITAL_ERROR = 999  # Reference of the hospital "erreur"
 
@@ -199,11 +198,11 @@ def export_score_encoding_xls(request, cohort_id):
 def internship_affectation_sumup(request, cohort_id):
     cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
     all_speciality = list(models.internship_speciality.find_all(cohort=cohort))
-    all_speciality = set_speciality_unique(all_speciality)
+    all_speciality = models.internship_speciality.set_speciality_unique(all_speciality)
     set_tabs_name(all_speciality)
     periods = models.period.search(cohort=cohort)
     organizations = models.organization.search(cohort=cohort)
-    organizations = sort_organizations(organizations)
+    organizations = models.organization.sort_organizations(organizations)
     offers = models.internship_offer.search(cohort=cohort)
     informations = []
     for organization in organizations:

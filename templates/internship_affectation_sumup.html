@@ -30,12 +30,12 @@
     <li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
     <li><a href="{% url 'internship' %}">{% trans 'internships_managment' %}</a></li>
     <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></li>
-    <li class="active">{% trans 'assignations_sumup' %}</li>
+    <li class="active">{% trans 'affectation_sumup' %}</li>
 {% endblock %}
 
 {% block content %}
     <div class="page-header">
-        <h2>{% trans 'assignations_sumup' %}</h2>
+        <h2>{% trans 'affectation_sumup' %}</h2>
     </div>
     <div class="panel panel-default">
         <div class="panel-body">

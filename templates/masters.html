@@ -97,11 +97,11 @@
             <tbody>
                 {% for allocation in allocations %}
                     <tr>
-                        <td>{% trans allocation.master.civility %}</td>
+                        <td>{% if allocation.master.civility %}{% trans allocation.master.civility %}{% endif %}</td>
                         <td><a href="{% url 'master' cohort_id=current_cohort.id master_id=allocation.master.id %}">{{ allocation.master.last_name | upper }}, {{ allocation.master.first_name }}</a></td>
-                        <td>{% trans allocation.master.type_mastery %}</td>
+                        <td>{% if allocation.master.type_mastery %}{% trans allocation.master.type_mastery %}{% endif %}</td>
                         <td>{{ allocation.specialty }}</td>
-                        <td>{{ allocation.organization }}</td>
+                        <td>{{ allocation.organization.reference }} - {{ allocation.organization }}</td>
                     </tr>
                 {% empty %}
                     {% for master in unallocated_masters %}
