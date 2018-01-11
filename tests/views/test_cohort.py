@@ -23,6 +23,8 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+import datetime
+
 from django.contrib.auth.models import User, Permission
 from django.core.urlresolvers import reverse
 from django.test import TestCase
@@ -33,9 +35,6 @@ from internship.models.cohort import Cohort
 from internship.models.internship_speciality import InternshipSpeciality
 from internship.models.organization import Organization
 from internship.tests.factories.cohort import CohortFactory
-
-import datetime
-
 from internship.tests.factories.organization import OrganizationFactory
 from internship.tests.factories.organization_address import OrganizationAddressFactory
 from internship.tests.factories.speciality import SpecialtyFactory
@@ -75,12 +74,8 @@ class ViewCohortTestCase(TestCase):
 
     def test_copy_organization_from_cohort(self):
         cohort = CohortFactory()
-
         organization = OrganizationFactory(cohort=cohort)
-        address = OrganizationAddressFactory(organization=organization)
-
         speciality = SpecialtyFactory(cohort=cohort)
-
         copy_cohort_name = 'Copy of {} {}'.format(cohort.name, timezone.now())
 
         form_data = {

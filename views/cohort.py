@@ -31,7 +31,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from internship.forms.cohort import CohortForm
 from internship.models.cohort import Cohort
-from internship.models.organization_address import OrganizationAddress
+from internship.models.organization import Organization
 from internship.models.internship_speciality import InternshipSpeciality
 
 
@@ -83,18 +83,13 @@ def _copy_data_if_specified(cohort_form, cohort):
 
 
 def _copy_organizations(cohort_from, cohort_to):
-    organization_addresses = OrganizationAddress.objects.prefetch_related("organization").filter(organization__cohort=cohort_from)
-    for organization_address in organization_addresses:
-        new_organization = organization_address.organization
+    organizations = Organization.objects.filter(cohort=cohort_from)
+    for organization in organizations:
+        new_organization = organization
         new_organization.pk = None
         new_organization.uuid = uuid.uuid4()
         new_organization.cohort = cohort_to
         new_organization.save()
-        new_address = organization_address
-        new_address.pk = None
-        new_address.uuid = uuid.uuid4()
-        new_address.organization = new_organization
-        new_address.save()
 
 
 def _copy_specialities(cohort_from, cohort_to):

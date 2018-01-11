@@ -97,7 +97,6 @@ class PlaceViewAndUrlTestCase(TestCase):
 
     def test_save(self):
         organization = OrganizationFactory(cohort=self.cohort)
-        organization_address = OrganizationAddressFactory(organization=organization)
 
         kwargs = {
             'cohort_id': self.cohort.id,
