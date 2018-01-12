@@ -31,7 +31,6 @@ from openpyxl.writer.excel import save_virtual_workbook
 
 from internship.tests.factories.cohort import CohortFactory
 from internship.tests.factories.organization import OrganizationFactory
-from internship.tests.factories.organization_address import OrganizationAddressFactory
 from internship.tests.utils.test_upload_xls import XlsPlaceImportTestCase
 
 
@@ -84,7 +83,6 @@ class PlaceViewAndUrlTestCase(TestCase):
 
     def test_edit(self):
         organization = OrganizationFactory(cohort=self.cohort)
-        OrganizationAddressFactory(organization=organization)
 
         kwargs = {
             'cohort_id': self.cohort.id,

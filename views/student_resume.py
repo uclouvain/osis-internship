@@ -149,7 +149,6 @@ def internships_student_read(request, cohort_id, student_id):
         order_by("period__date_start")
     periods = mdl_int.period.search(cohort=cohort).order_by("date_start")
     organizations = mdl_int.organization.search(cohort=cohort)
-    _set_organization_address(organizations)
 
     # Set the address of the affectation
     for affectation in affectations:
@@ -316,20 +315,3 @@ def _get_student_status(student, cohort):
     choices_values = mdl_int.internship_choice.get_choices_made(cohort=cohort,
                                                                 student=student).values_list("internship_id", flat=True)
     return len(list(set(internship_ids) - set(choices_values))) == 0
-
-
-def _set_organization_address(organizations):
-    """
-        Function to set the organization address to the organization
-        Param:
-            organizations : list of organizations to get the address
-        Get the address in the OrganizationAddress table and put it
-        Get also the number of student of choose this organization for their internship
-    """
-    for organization in organizations:
-        organization.address = ""
-        organization.student_choice = 0
-        address = mdl_int.organization_address.search(organization=organization)
-        if address:
-            organization.address = address
-        organization.student_choice = len(mdl_int.internship_choice.search(organization=organization))

@@ -58,7 +58,6 @@ def place_save(request, cohort_id, organization_id):
         organization = models.organization.get_by_id(organization_id)
     else:
         models.organization.Organization.objects.filter(reference=request.POST.get('reference')).delete()
-        models.organization_address.OrganizationAddress.objects.filter(organization__reference=request.POST.get('reference')).delete()
         organization = models.organization.Organization()
 
     organization.cohort = cohort

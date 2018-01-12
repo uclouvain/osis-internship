@@ -34,7 +34,6 @@ from internship.models import internship_student_affectation_stat
 from internship.models import internship_student_information
 from internship.models import master_allocation
 from internship.models import organization
-from internship.models import organization_address
 from internship.models import period
 from internship.models import period_internship_places
 from internship.models import cohort

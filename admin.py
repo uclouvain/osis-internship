@@ -63,9 +63,6 @@ admin.site.register(internship_speciality.InternshipSpeciality,
 
 admin.site.register(organization.Organization, organization.OrganizationAdmin)
 
-admin.site.register(organization_address.OrganizationAddress,
-                    organization_address.OrganizationAddressAdmin)
-
 admin.site.register(internship_student_information.InternshipStudentInformation,
                     internship_student_information.InternshipStudentInformationAdmin)
 

@@ -73,12 +73,6 @@
                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                     {% trans 'add' %}
                 </a>
-                {% if perms.base.is_administrator %}
-                    <a href="{% url 'master_import' cohort_id=current_cohort.id %}" class="btn btn-default" style="margin-top: 26px;">
-                        <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span>
-                        {% trans 'import' %}
-                    </a>
-                {% endif %}
             </div>
         </div>
     </form>

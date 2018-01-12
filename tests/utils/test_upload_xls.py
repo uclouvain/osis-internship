@@ -34,8 +34,9 @@ from django.test import TestCase
 from internship.models.organization import Organization
 from internship.tests.factories.cohort import CohortFactory
 from internship.views.upload_xls import _save_xls_place as save_xls_place
+from reference.tests.factories import country
 
-fake = faker.Faker()
+faker = faker.Faker()
 
 
 class XlsPlaceImportTestCase(TestCase):
@@ -55,21 +56,22 @@ class XlsPlaceImportTestCase(TestCase):
             col_url = range(0, 7)
 
         columns = (
-            (col_reference, lambda: fake.random_int(1, 500)),
-            (col_name, lambda: 'Hospital {}'.format(fake.name())),
-            (col_address, lambda: fake.address().replace('\n', '')),
-            (col_postal_code, fake.postalcode),
-            (col_city, fake.city),
-            (col_country, fake.country),
-            (col_url, fake.url)
+            (col_reference, lambda: faker.random_int(1, 500)),
+            (col_name, lambda: 'Hospital {}'.format(faker.name())),
+            (col_address, lambda: faker.address().replace('\n', '')),
+            (col_postal_code, faker.postalcode),
+            (col_city, faker.city),
+            (col_country, lambda: country.CountryFactory().iso_code),
+            (col_url, faker.url)
         )
 
         workbook = openpyxl.Workbook()
         worksheet = workbook.active
         for row in range(1, 11):
-            add_cell = functools.partial(worksheet.cell, row=row)
+            # add_cell = functools.partial(worksheet.cell, row=row)
             for column, func in columns:
-                add_cell(column=column+1, value=func())
+                worksheet.cell(row=row, column=column+1).value = func()
+                # add_cell(column=column+1, value=func())
 
         return workbook
 

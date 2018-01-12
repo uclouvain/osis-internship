@@ -36,7 +36,6 @@ from internship.models.internship_speciality import InternshipSpeciality
 from internship.models.organization import Organization
 from internship.tests.factories.cohort import CohortFactory
 from internship.tests.factories.organization import OrganizationFactory
-from internship.tests.factories.organization_address import OrganizationAddressFactory
 from internship.tests.factories.speciality import SpecialtyFactory
 
 
