@@ -41,7 +41,6 @@ from internship import models as mdl_int
 from internship.forms.form_student_information import StudentInformationForm
 from internship.forms.students_import_form import StudentsImportActionForm
 from internship.utils.importing.import_students import import_xlsx
-from internship.utils import student_loader
 
 
 @login_required
@@ -148,7 +147,7 @@ def internships_student_read(request, cohort_id, student_id):
     information = mdl_int.internship_student_information.search(person=student.person).first()
     internship_choices = mdl_int.internship_choice.get_choices_made(cohort=cohort,
                                                                     student=student).order_by('choice')
-    all_speciality = mdl_int.internship_speciality.search(mandatory=True, cohort=cohort)
+    specialities = mdl_int.internship_speciality.search(mandatory=True, cohort=cohort)
     internships = mdl_int.internship.Internship.objects.filter(cohort=cohort, pk__gte=1)
 
     affectations = mdl_int.internship_student_affectation_stat.find_by_student(student, cohort).\
@@ -164,15 +163,7 @@ def internships_student_read(request, cohort_id, student_id):
                 for addr in organization.address:
                     affectation.organization.address = addr
 
-    return render(request, "student.html",
-                           {'student': student,
-                            'information': information,
-                            'internship_choices': internship_choices,
-                            'specialities': all_speciality,
-                            'affectations': affectations,
-                            'periods': periods,
-                            'cohort': cohort,
-                            'internships': internships})
+    return render(request, "student.html", locals())
 
 
 @login_required
@@ -182,11 +173,7 @@ def internship_student_information_modification(request, cohort_id, student_id):
     student = mdl.student.find_by_id(student_id)
     information = mdl_int.internship_student_information.search(person=student.person, cohort=cohort).first()
     form = StudentInformationForm()
-    return render(request, "student_information_modification.html",
-                           {'student': student,
-                            'information': information,
-                            'cohort': cohort,
-                            "form": form})
+    return render(request, "student_information_modification.html", locals())
 
 
 @login_required
@@ -212,8 +199,6 @@ def student_save_information_modification(request, cohort_id, student_id):
         information.city = form.cleaned_data.get('city')
         information.country = form.cleaned_data.get('country')
         information.contest = form.cleaned_data.get('contest')
-        information.latitude = None
-        information.longitude = None
         information.save()
 
     redirect_url = reverse('internships_student_read', args=[cohort_id, student_id])
@@ -241,13 +226,7 @@ def internship_student_affectation_modification(request, cohort_id, student_id):
         if number:
             speciality.acronym = speciality.acronym + " " + str(number[0])
     periods = mdl_int.period.search(cohort=cohort)
-    return render(request, "student_affectation_modification.html",
-                  {'information': information,
-                   'informations': informations,
-                   'organizations': organizations,
-                   'specialities': specialities,
-                   'periods': periods,
-                   'cohort': cohort})
+    return render(request, "student_affectation_modification.html", locals())
 
 
 @login_required
@@ -314,10 +293,7 @@ def import_students(request, cohort_id):
     form = StudentsImportActionForm(request.POST, request.FILES)
     if form.is_valid():
         file_upload = form.cleaned_data['file_upload']
-        #try:
         import_xlsx(cohort, BytesIO(file_upload.read()))
-        #except Exception:
-        #    messages.add_message(request, messages.ERROR, _('unable_import_students'))
     return HttpResponseRedirect(reverse('internships_student_resume', kwargs={"cohort_id": cohort_id}))
 
 

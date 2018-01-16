@@ -25,10 +25,6 @@
 ##############################################################################
 from django.test.testcases import TestCase
 
-from base.tests.models import test_learning_unit
-from base.tests.factories.learning_unit import LearningUnitFactory
-from base.business import learning_unit_deletion
-
 from internship.models import internship_speciality as mdl_internship_speciality
 from internship.tests.factories.cohort import CohortFactory
 from internship.tests.factories.speciality import SpecialtyFactory
@@ -37,8 +33,7 @@ from internship.tests.factories.speciality import SpecialtyFactory
 def create_speciality(name="chirurgie", cohort=None):
     if cohort is None:
         cohort = CohortFactory()
-    learning_unit = test_learning_unit.create_learning_unit(title="stage medecine", acronym="WSD")
-    return SpecialtyFactory(learning_unit=learning_unit, name=name, cohort=cohort)
+    return SpecialtyFactory(name=name, cohort=cohort)
 
 
 class TestGetById(TestCase):
@@ -48,13 +43,7 @@ class TestGetById(TestCase):
 
     def test_correct_id(self):
         self.assertEqual(self.speciality_1,
-                         mdl_internship_speciality.find_by_id(self.speciality_1.id))
+                         mdl_internship_speciality.get_by_id(self.speciality_1.id))
         self.assertEqual(self.speciality_2,
-                         mdl_internship_speciality.find_by_id(self.speciality_2.id))
+                         mdl_internship_speciality.get_by_id(self.speciality_2.id))
 
-    def test_check_delete_learning_unit_with_internship(self):
-        learning_unit = LearningUnitFactory()
-        speciality = SpecialtyFactory(learning_unit=learning_unit)
-
-        msg = learning_unit_deletion.check_learning_unit_deletion(learning_unit)
-        self.assertIn(speciality, msg.keys())

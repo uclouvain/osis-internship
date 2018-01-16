@@ -49,9 +49,7 @@ def specialities(request, cohort_id):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def speciality_create(request, cohort_id):
     cohort = get_object_or_404(mdl_internship.cohort.Cohort, pk=cohort_id)
-    learning_unit = mdl.learning_unit.search(acronym='WMDS2333')
     return render(request, "speciality_form.html", {'section': 'internship',
-                                                    'learning_unit': learning_unit.first(),
                                                     'cohort': cohort})
 
 
@@ -72,11 +70,9 @@ def speciality_save(request, cohort_id, speciality_id):
     if request.POST.get('mandatory'):
         mandatory = True
 
-    learning_unit = mdl.learning_unit.search(acronym=request.POST.get('learning_unit'))
-
-    speciality.learning_unit = learning_unit.first()
     speciality.name = request.POST.get('name')
     speciality.acronym = request.POST.get('acronym')
+    speciality.sequence = request.POST.get('sequence')
     speciality.mandatory = mandatory
     speciality.save()
     return HttpResponseRedirect(reverse('internships_specialities', kwargs={'cohort_id': cohort.id,}))
@@ -94,10 +90,8 @@ def modify(request, cohort_id, speciality_id):
     cohort = get_object_or_404(mdl_internship.cohort.Cohort, pk=cohort_id)
     speciality = get_object_or_404(mdl_internship.internship_speciality.InternshipSpeciality,
                                    pk=speciality_id, cohort=cohort)
-    learning_unit = mdl.learning_unit.search(acronym='WMDS2333')
     context = {
         'section': 'internship',
-        'learning_unit': learning_unit.first(),
         'speciality': speciality,
         'cohort': cohort,
     }

@@ -362,7 +362,6 @@
     "model": "internship.internshipspeciality",
     "pk": 1,
     "fields": {
-      "learning_unit": 1,
       "name": "State en Pédiatrie",
       "acronym": "PE",
       "mandatory": true
@@ -372,7 +371,6 @@
     "model": "internship.internshipspeciality",
     "pk": 2,
     "fields": {
-      "learning_unit": 1,
       "name": "State en en Chirurgie",
       "acronym": "CH",
       "mandatory": true
@@ -382,7 +380,6 @@
     "model": "internship.internshipspeciality",
     "pk": 3,
     "fields": {
-      "learning_unit": 1,
       "name": "State aux Choix 1",
       "acronym": "CH1",
       "mandatory": false
@@ -392,7 +389,6 @@
     "model": "internship.internshipspeciality",
     "pk": 4,
     "fields": {
-      "learning_unit": 1,
       "name": "State aux Choix 2",
       "acronym": "CH2",
       "mandatory": false

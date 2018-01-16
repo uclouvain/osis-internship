@@ -51,6 +51,7 @@
                     <tr>
                         <th>{% trans 'name' %}</th>
                         <th>{% trans 'acronym' %}</th>
+                        <th>{% trans 'sequence' %}</th>
                         <th>{% trans 'mandatory' %}</th>
                         <th> <th>
                     </tr>
@@ -63,6 +64,9 @@
                             </td>
                             <td>
                                 {{speciality.acronym}}
+                            </td>
+                            <td>
+                                {{speciality.sequence | default_if_none:'' }}
                             </td>
                             <td>
                                 {%if speciality.mandatory%}

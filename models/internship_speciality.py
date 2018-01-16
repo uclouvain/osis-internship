@@ -29,13 +29,12 @@ from django.core.exceptions import ObjectDoesNotExist
 
 
 class InternshipSpecialityAdmin(SerializableModelAdmin):
-    list_display = ('learning_unit', 'name', 'acronym', 'mandatory', 'cohort', 'sequence')
-    fieldsets = ((None, {'fields': ('learning_unit', 'name', 'acronym', 'sequence', 'mandatory', 'cohort')}),)
-    raw_id_fields = ('learning_unit',)
+    list_display = ('name', 'acronym', 'mandatory', 'cohort', 'sequence')
+    fieldsets = ((None, {'fields': ('name', 'acronym', 'sequence', 'mandatory', 'cohort')}),)
+    list_filter = ('cohort',)
 
 
 class InternshipSpeciality(SerializableModel):
-    learning_unit = models.ForeignKey('base.LearningUnit')
     name = models.CharField(max_length=125, blank=False, null=False)
     acronym = models.CharField(max_length=125, blank=False, null=False)
     mandatory = models.BooleanField(default=False)
@@ -54,11 +53,11 @@ class InternshipSpeciality(SerializableModel):
 
 def search(**kwargs):
     kwargs = {k: v for k, v in kwargs.items() if v}
-    return InternshipSpeciality.objects.filter(**kwargs).select_related("learning_unit").order_by('acronym', 'name')
+    return InternshipSpeciality.objects.filter(**kwargs).order_by('acronym', 'name')
 
 
 def find_all(cohort):
-    return InternshipSpeciality.objects.filter(cohort=cohort).select_related("learning_unit").order_by('acronym', 'name')
+    return InternshipSpeciality.objects.filter(cohort=cohort).order_by('acronym', 'name')
 
 
 def find_by_cohort(cohort):
@@ -70,12 +69,10 @@ def find_by_acronym(cohort, acronym):
 
 
 def find_non_mandatory():
-    return InternshipSpeciality.objects.filter(mandatory=False)\
-                                       .select_related("learning_unit")\
-                                       .order_by('acronym', 'name')
+    return InternshipSpeciality.objects.filter(mandatory=False).order_by('acronym', 'name')
 
 
-def find_by_id(speciality_id):
+def get_by_id(speciality_id):
     try:
         return InternshipSpeciality.objects.get(pk=speciality_id)
     except ObjectDoesNotExist:
