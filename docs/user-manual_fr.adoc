@@ -225,20 +225,19 @@ disponibilizés pour les étudiants impliqués.
 
 Les étudiants se connectent sur le portail UCL pour consulter les résultats des
 affectations. Les données sont disponible en mode lecture. En cas de correction
-ou de modification en general, une demande devra être fait au secretariat.
+ou de modification en général, une demande devra être fait au secretariat.
 
 == La gestion journalière
 
 La gestion journalière couvre toutes les fonctionnalités de maintenance de
 données en dehors de l'exécution du processus. Ce sont les fonctionnalités
-utilisées au cours de l'année par le gestionaire des stages.
+utilisées au cours de l'année par le gestionnaire des stages.
 
-=== *Gestion des hôpitaux*
+=== Les hôpitaux
 
 La gestion des hôpitaux est plus que maintenir les données des hôpitaux à jour.
 
-Pour accèder les rapports en format Excel pour les hôpitaux, cliquez sur le 
-botton vers qu'indique les résultats de l'affectation.
+Pour accéder les rapports en format Excel pour les hôpitaux, cliquez sur le bouton vert qu'indique les résultats de l'affectation.
 
 image::images/hospitals-view.png[La liste des hôpitaux]
 
@@ -259,22 +258,28 @@ Les champs laissés vides sont ignorés.
 
 image::images/hospital-report-config.png[La configuration de rapport pour l'hôpital]
 
-* *Specialités des stages*: mantenir les places disponibles dans les different
-  specialités des hôpitaux.
+=== Les spécialités
+
+La gestion des spécialités consiste en maintenir les données des spécialités d'une cohorte. Normalement, les spécialités sont créer automatiquement, au moment de la création d'une cohorte a partir d'une cohorte existant. Après, il suffit d'adapter la liste au cohorte actuelle en supprimant ou ajoutant des spécialités.
+
+image::images/specialties.png[Les spécialities]
+
+* *Les offres de stages*: maintenir les places disponibles dans les différent
+  spécialités des hôpitaux.
 
 //image::images/specialties-places.png[Des places disponibles]
 
-* *Les stages*: mantenir les different types de stages.
+* *Les stages*: maintenir les différent types de stages.
 
 //image::images/internships.png[Les stages]
 
 * *Gestion des maîtres de stage*: pas encore disponible, mais bientôt le
-  gestionaire sera capable de maintenir les données des maîtres.
+  gestionnaire sera capable de maintenir les données des maîtres.
 
 //image::images/maitres-stages.png[Les maîtres de stage]
 
-* *Bilan des assignations*: un raport avec les affectations des étudiants dans
-  les hôpitaux, classé par especialité.
+* *Bilan des assignations*: un rapport avec les affectations des étudiants dans
+  les hôpitaux, classé par spécialité.
 
 //image::images/bilan-assignations.png[Bilan des assignations]
 
