@@ -262,7 +262,7 @@ image::images/hospital-report-config.png[La configuration de rapport pour l'hôp
 
 La gestion des spécialités consiste en maintenir les données des spécialités d'une cohorte. Normalement, les spécialités sont créer automatiquement, au moment de la création d'une cohorte a partir d'une cohorte existant. Après, il suffit d'adapter la liste au cohorte actuelle en supprimant ou ajoutant des spécialités.
 
-image::images/specialties.png[Les spécialities]
+image::images/specialties.png[Les spécialités]
 
 * *Les offres de stages*: maintenir les places disponibles dans les différent
   spécialités des hôpitaux.
@@ -340,13 +340,13 @@ faire au minimum 2 mois dans le même hôpital. Si ce n'est par le cas on ajoute
   et un nombre de places minimales et maximales.
 
 * *La demande* est représentée par un ensemble des choix des étudiants. Elle est
-  divisée en 2 catégories :
+  divisée en 2 catégories:
 
-** Les stages obligatoires : chaque étudiant pour chaque spécialité obligatoire
+** Les stages obligatoires: chaque étudiant pour chaque spécialité obligatoire
    doit donner une liste ordonnée de 4 lieux de stages, par ordre de préférence
    allant de de 1 à 4.
 
-** Les stages au choix : chaque étudiant doit choisir 6 spécialités au choix,
+** Les stages au choix: chaque étudiant doit choisir 6 spécialités au choix,
    par ordre de préférence allant de 1 à 6. Si l’étudiant souhaite, il peut
    choisir plusieurs fois la même spécialité.  Ensuite pour chaque spécialité,
    l’étudiant doit donner une liste ordonnée de 4 lieux de stages, par ordre de
@@ -358,11 +358,11 @@ faire au minimum 2 mois dans le même hôpital. Si ce n'est par le cas on ajoute
   pour chaque étudiant, un triplet qui contient une spécialité, un lieu et une
   période.
 
-* *Les contraintes fortes* :
+* *Les contraintes fortes*:
 
 ** chaque étudiant doit avoir 12 périodes (P) de stages attribuées et réparties
    sur 12 mois (1 période par mois). Les stages se répartissent obligatoirement
-   comme suite en « stages obligatoires » (8 P) et "stages au choix" (4 P).
+   comme suite en «stages obligatoires» (8 P) et "stages au choix" (4 P).
 
 ** les stages obligatoires doivent se dérouler dans la première partie de
    l’année  (janvier – aout) et être suivis par les stages au choix (septembre
@@ -378,10 +378,10 @@ faire au minimum 2 mois dans le même hôpital. Si ce n'est par le cas on ajoute
    impérativement être respecté. Les modifications manuelles ne pourront pas
    être modifiées par le logiciel.
 
-** Les 2 périodes de stage obligatoire « Urgence », doivent être effectuées
+** Les 2 périodes de stage obligatoire «Urgence», doivent être effectuées
    l’une à la suite de l’autre dans un même hôpital.
 
-* *Les contraintes souples* :
+* *Les contraintes souples*:
 
 ** Il faut éviter que l’étudiant ne passe qu’un mois dans un même hôpital. Si
    cette contrainte n’est pas respectée on ajoute une pénalité de 5 points.
@@ -389,7 +389,7 @@ faire au minimum 2 mois dans le même hôpital. Si ce n'est par le cas on ajoute
 ** L’étudiant émet des désidératas concernant le lieu de stage obligatoires et
    concernant la spécialité et les lieux de stages au choix. Ces désidératas
    devraient être respectés le plus possible en fonction d’un ordre de
-   préférence allant de 1 à 4. Si le 1er choix n’est pas respecté, on ajoute :
+   préférence allant de 1 à 4. Si le 1er choix n’est pas respecté, on ajoute:
 
 *** 1 point de pénalité pour le 2ème choix
 *** 2 points de pénalité pour le 3ème choix
@@ -402,13 +402,13 @@ faire au minimum 2 mois dans le même hôpital. Si ce n'est par le cas on ajoute
 
 ** Chaque étudiant doit choisir 6 stages au choix, par ordre de préférence
    allant de 1 à 6. Seulement 4 stages seront pris, s’il est impossible de
-   respecter les 4 premiers choix de stage on va ajouter :
+   respecter les 4 premiers choix de stage on va ajouter:
 
 *** 2 points de pénalité pour le choix 5
 *** 3 points de pénalité pour le choix 6
 
 ** Si l’offre est plus petite que la demande, certains étudiants seront ajoutés
-   dans un hôpital fictif nommé « error », cet hôpital possède une capacité
+   dans un hôpital fictif nommé «error», cet hôpital possède une capacité
    infinie. Si cette contrainte n’est pas respectée (l’offre < la demande) on
    ajoute une pénalité de 1000 points.
 
