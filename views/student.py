@@ -24,6 +24,8 @@
 #
 ##############################################################################
 import json
+from io import BytesIO
+
 from django.http import HttpResponse, HttpResponseRedirect
 from django.views.decorators.http import require_POST
 from django.core.exceptions import PermissionDenied
@@ -32,10 +34,14 @@ from django.shortcuts import render, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.utils.translation import ugettext_lazy as _
+
 from reference.models import country
 from base import models as mdl
 from internship import models as mdl_int
 from internship.forms.form_student_information import StudentInformationForm
+from internship.forms.students_import_form import StudentsImportActionForm
+from internship.utils.importing.import_students import import_xlsx
+from internship.utils import student_loader
 
 
 @login_required
@@ -297,6 +303,22 @@ def student_save_affectation_modification(request, cohort_id, student_id):
         redirect_url = reverse('internship_student_affectation_modification', kwargs={"cohort_id": cohort.id,
                                                                                       "student_id": student.id})
     return HttpResponseRedirect(redirect_url)
+
+
+@login_required
+@require_POST
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def import_students(request, cohort_id):
+    cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)
+
+    form = StudentsImportActionForm(request.POST, request.FILES)
+    if form.is_valid():
+        file_upload = form.cleaned_data['file_upload']
+        #try:
+        import_xlsx(cohort, BytesIO(file_upload.read()))
+        #except Exception:
+        #    messages.add_message(request, messages.ERROR, _('unable_import_students'))
+    return HttpResponseRedirect(reverse('internships_student_resume', kwargs={"cohort_id": cohort_id}))
 
 
 def get_students_with_status(cohort):

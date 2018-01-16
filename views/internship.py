@@ -41,7 +41,7 @@ from internship.forms.internship import InternshipForm
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
-def internships_modification_student(request, cohort_id, student_id, internship_id=-1, speciality_id="-1"):
+def modification_student(request, cohort_id, student_id, internship_id=-1, speciality_id="-1"):
     cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)
     student = mdl.student.find_by_id(student_id)
 
@@ -165,7 +165,6 @@ def internship_new(request, cohort_id):
 
     context = {
         'form': form,
-        'page_title': _('create_internship'),
         'cohort': cohort,
     }
     return render(request, 'internship/internship_form.html', context)

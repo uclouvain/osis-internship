@@ -35,6 +35,7 @@ class InternshipStudentInformationAdmin(SerializableModelAdmin):
     fieldsets = ((None, {'fields': ('person', 'location', 'postal_code', 'city', 'latitude', 'longitude', 'country',
                                     'email', 'phone_mobile', 'contest', 'cohort')}),)
     raw_id_fields = ('person',)
+    list_filter = ('cohort',)
     search_fields = ['person__user__username', 'person__last_name', 'person__first_name']
 
 
@@ -63,15 +64,17 @@ def search(**kwargs):
     return queryset
 
 
+def find_by_cohort(cohort):
+    return InternshipStudentInformation.objects.filter(cohort=cohort)
+
+
 def find_all(cohort):
-    return InternshipStudentInformation.objects.filter(cohort=cohort)\
-        .select_related("person")\
-        .order_by('person__last_name', 'person__first_name')
+    return find_by_cohort(cohort).select_related("person").order_by('person__last_name', 'person__first_name')
 
 
 def find_by_person(person, cohort):
     try:
-        return InternshipStudentInformation.objects.get(person=person, cohort=cohort)
+        return find_by_cohort(cohort).filter(person=person)
     except ObjectDoesNotExist:
         return None
 
@@ -88,3 +91,7 @@ def get_number_of_generalists(cohort):
 
 def get_number_students(cohort):
     return InternshipStudentInformation.objects.filter(cohort=cohort).count()
+
+
+def remove_all(cohort):
+    find_by_cohort(cohort).delete()

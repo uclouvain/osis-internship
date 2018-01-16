@@ -5,12 +5,12 @@
 {% block breadcrumb %}
     <li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
     <li><a href="{% url 'internship' %}">{% trans 'internships_managment' %}</a></li>
-    <li class="active">{{ page_title }}</li>
+    <li class="active">{% trans 'internship' %}</li>
 {% endblock %}
 
 {% block content %}
     <div class="page-header">
-        <h2>{{ page_title }}</h2>
+        <h2>{% trans 'internship' %}</h2>
     </div>
 
     <div class="panel panel-default">
@@ -19,41 +19,46 @@
                 {%  csrf_token %}
                 <div class="row">
                     <div class="col-md-6">
-                        <label for="txt_name">{{ form.name.label }}</label>
-                        {{ form.name }}
-                        <span class="error">{{ form.name.errors }}</span>
+                        <div class="form-group">
+                            <label for="txt_name">{{ form.name.label }}</label>
+                            {{ form.name }}
+                            <span class="error">{{ form.name.errors }}</span>
+                        </div>
                     </div>
                     <div class="col-md-6">
-                        <label for="txt_speciality">{{ form.speciality.label }}</label>
-                        {{ form.speciality }}
-                        <span class="error" required>{{ form.speciality.errors }}</span>
+                        <div class="form-group">
+                            <label for="txt_speciality">{{ form.speciality.label }}</label>
+                            {{ form.speciality }}
+                            <span class="error" required>{{ form.speciality.errors }}</span>
+                        </div>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-md-6">
-                        <label for="txt_length_in_periods">{{ form.length_in_periods.label }}</label>
-                        {{ form.length_in_periods }}
-                        <span class="error" required>{{ form.length_in_periods.errors }}</span>
+                        <div class="form-group">
+                            <label for="txt_length_in_periods">{{ form.length_in_periods.label }}</label>
+                            {{ form.length_in_periods }}
+                            <span class="error" required>{{ form.length_in_periods.errors }}</span>
+                        </div>
                     </div>
                     <div class="col-md-6">
-                        <label for="txt_position">{{ form.position.label }}</label>
-                        {{ form.position }}
-                        <span class="error" required>{{ form.position.errors }}</span>
+                        <div class="form-group">
+                            <label for="txt_position">{{ form.position.label }}</label>
+                            {{ form.position }}
+                            <span class="error" required>{{ form.position.errors }}</span>
+                        </div>
                     </div>
                 </div>
 
-                <br />
-                <div class="row">
-                    <div class="col-md-12">
-                        <button type="submit" class="btn btn-primary" title="{%trans 'save' %}" id="bt_internship_save">
-                            <span class="glyphicon glyphicon-save" aria-hidden="true">{% trans 'save' %}</span>
-                        </button>
-                        <a class="btn btn-default" id="bt_internship_delete" href="{% url 'internship-list' cohort_id=cohort.id %}">
-                            <span class="glyphicon glyphicon-cancel" aria-hidden="true">{% trans 'return' %}</span>
-                        </a>
-                    </div>
-                </div>
+                <button type="submit" class="btn btn-primary" title="{%trans 'save' %}" id="bt_internship_save">
+                    <span class="glyphicon glyphicon-save" aria-hidden="true"></span>
+                    {% trans 'save' %}
+                </button>
+                <a class="btn btn-default" id="bt_internship_delete" href="{% url 'internship-list' cohort_id=cohort.id %}">
+                    <span class="glyphicon glyphicon-cancel" aria-hidden="true"></span>
+                    {% trans 'return' %}
+                </a>
             </form>
         </div>
     </div>

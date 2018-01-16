@@ -146,13 +146,16 @@ msgid "gender"
 msgstr "Sexe"
 
 msgid "help_pnl_selectedfiles_internships"
-msgstr "Veuillez sélectionner un fichier xlsx pour l'injection des stages"
+msgstr "Veuillez sélectionner un fichier xlsx pour l'injection des stages."
 
 msgid "help_pnl_selectedfiles_masters"
-msgstr "Veuillez sélectionner un fichier xlsx pour l'injection des maîtres de stages"
+msgstr "Veuillez sélectionner un fichier xlsx pour l'injection des maîtres de stages."
 
 msgid "help_pnl_selectedfiles_places"
-msgstr "Veuillez sélectionner un fichier xlsx pour l'injection des hôpitaux"
+msgstr "Veuillez sélectionner un fichier xlsx pour l'injection des hôpitaux."
+
+msgid "help_pnl_selectedfiles_students"
+msgstr "Veuillez sélectionner un fichier xlsx pour l'injection des étudiants."
 
 msgid "hospital"
 msgstr "Hôpital"
@@ -173,7 +176,7 @@ msgid "internship_block_moment"
 msgstr "Les sélections de stage sont bloquées actuellement."
 
 msgid "internship_choice"
-msgstr	 "Choix de stage"
+msgstr "Choix de stage"
 
 msgid "internship"
 msgstr "Stage"
@@ -274,14 +277,14 @@ msgstr "Rapport pour l'hôpital"
 msgid "report_instructions"
 msgstr "Indiquez l'ordre dans lequel les colonnes doivent apparaître dans le rapport destiné à l'hôpital. Les champs sans numéro ne sont pas ajoutés au rapport."
 
-msgid	 "return"
-msgstr	 "Retour"
+msgid "return"
+msgstr "Retour"
 
-msgid	 "second_choice"
-msgstr	 "2ème choix"
+msgid "second_choice"
+msgstr "2ème choix"
 
-msgid	 "speciality"
-msgstr	 "Spécialité"
+msgid "speciality"
+msgstr "Spécialité"
 
 msgid "specialty"
 msgstr "Spécialité"
@@ -295,44 +298,44 @@ msgstr "Début des activités"
 msgid "student"
 msgstr "Étudiant"
 
-msgid	 "student_affectation"
-msgstr	 "Affectation de stage"
+msgid "student_affectation"
+msgstr "Affectation de stage"
 
-msgid	 "student_choice"
-msgstr	 "Choix des étudiants"
+msgid "student_choice"
+msgstr "Choix des étudiants"
 
-msgid	 "student_list"
-msgstr	 "Liste des étudiants"
+msgid "student_list"
+msgstr "Liste des étudiants"
 
-msgid	 "student_sumup"
-msgstr	 "Bilan des étudiants"
+msgid "student_sumup"
+msgstr "Bilan des étudiants"
 
-msgid	 "studies"
-msgstr	 "Études"
+msgid "studies"
+msgstr "Études"
 
-msgid	 "summary_your_choices_and_affectation"
-msgstr	 "Résumé de vos choix et affectations"
+msgid "summary_your_choices_and_affectation"
+msgstr "Résumé de vos choix et affectations"
 
-msgid	 "third_choice"
-msgstr	 "3ème choix"
+msgid "third_choice"
+msgstr "3ème choix"
 
-msgid	 "type"
-msgstr	 "Type"
+msgid "type"
+msgstr "Type"
 
-msgid	 "choice"
-msgstr	 "Choix"
+msgid "choice"
+msgstr "Choix"
 
-msgid	 "no_hospital"
-msgstr	 "Hôpital inexistant"
+msgid "no_hospital"
+msgstr "Hôpital inexistant"
 
-msgid	 "capacity"
-msgstr	 "capacité maximale"
+msgid "capacity"
+msgstr "capacité maximale"
 
-msgid	 "number_first_choice"
-msgstr	 "Nombre de 1er choix"
+msgid "number_first_choice"
+msgstr "Nombre de 1er choix"
 
-msgid	 "number_total_student"
-msgstr	 "Nombre total d'étudiant ayant choisi cet hôpital"
+msgid "number_total_student"
+msgstr "Nombre total d'étudiant ayant choisi cet hôpital"
 
 msgid "selection_currently_active"
 msgstr "La sélection des stages est actuellement active"
@@ -370,17 +373,17 @@ msgstr "Cela peut prendre quelques minutes"
 msgid "generate_solution"
 msgstr "Générer la solution"
 
-msgid	 "organizations"
-msgstr	 "Hôpitaux"
+msgid "organizations"
+msgstr "Hôpitaux"
 
-msgid	 "statistics"
-msgstr	 "Statistiques"
+msgid "statistics"
+msgstr "Statistiques"
 
-msgid	 "errors"
-msgstr	 "Erreurs"
+msgid "errors"
+msgstr "Erreurs"
 
-msgid   "erasmus"
-msgstr  "Erasmus"
+msgid "erasmus"
+msgstr "Erasmus"
 
 msgid "F"
 msgstr "Féminin"
@@ -388,53 +391,53 @@ msgstr "Féminin"
 msgid "M"
 msgstr "Masculin"
 
-msgid   "socials"
-msgstr  "Sociaux"
+msgid "socials"
+msgstr "Sociaux"
 
-msgid   "total_internships"
-msgstr  "Total de stages"
+msgid "total_internships"
+msgstr "Total de stages"
 
-msgid   "all_student"
-msgstr  "Tous les étudiants"
+msgid "all_student"
+msgstr "Tous les étudiants"
 
-msgid   "other_choice"
-msgstr  "Autre choix"
+msgid "other_choice"
+msgstr "Autre choix"
 
-msgid   "erasmus_students"
-msgstr   "Etudiants Erasmus"
+msgid "erasmus_students"
+msgstr "Etudiants Erasmus"
 
-msgid   "social_students"
-msgstr   "Etudiants Sociaux"
+msgid "social_students"
+msgstr "Etudiants Sociaux"
 
-msgid   "normal_students"
-msgstr   "Etudiants Normaux"
+msgid "normal_students"
+msgstr "Etudiants Normaux"
 
-msgid   "imposed_choices"
-msgstr  "Choix Imposés"
+msgid "imposed_choices"
+msgstr"Choix Imposés"
 
-msgid   "organization_error"
-msgstr  "Hôpital erreur"
+msgid "organization_error"
+msgstr "Hôpital erreur"
 
-msgid   "mean_cost_student"
-msgstr  "Coût moyen par étudiant"
+msgid "mean_cost_student"
+msgstr "Coût moyen par étudiant"
 
-msgid   "standard_deviation"
-msgstr  "Déviation standard"
+msgid "standard_deviation"
+msgstr "Déviation standard"
 
-msgid   "mean_nonconsecutive_month"
-msgstr  "Moyenne de mois non consécutifs"
+msgid "mean_nonconsecutive_month"
+msgstr "Moyenne de mois non consécutifs"
 
-msgid   "total_cost_solution"
-msgstr  "Coût total de la solution"
+msgid "total_cost_solution"
+msgstr "Coût total de la solution"
 
-msgid   "type_internship"
-msgstr  "Type de stage"
+msgid "type_internship"
+msgstr "Type de stage"
 
-msgid   "executions"
-msgstr  "Executions"
+msgid "executions"
+msgstr "Executions"
 
-msgid   "order_postion"
-msgstr  "Position de tri"
+msgid "order_postion"
+msgstr "Position de tri"
 
 msgid "latest_generation_start"
 msgstr "Début de la dernière génération"
@@ -477,3 +480,6 @@ msgstr "Séquence"
 
 msgid "use_filters_no_data"
 msgstr "Aucune donnée ne correspond aux filtres ci-dessus. Faites un choix, s'il vous plaît."
+
+msgid "unable_import_students"
+msgstr "Impossible d'importer les étudiants"

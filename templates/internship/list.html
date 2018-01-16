@@ -7,13 +7,12 @@
     <li><a href="{% url 'internship' %}">{% trans 'internships_managment' %}</a></li>
     <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></li>
 
-    <li class="active">{% trans 'internship-list' %}</li>
-
+    <li class="active">{% trans 'internships' %}</li>
 {% endblock %}
 
 {% block content %}
     <div class="page-header">
-        <h2>{% trans 'internship-list' %}</h2>
+        <h2>{% trans 'internships' %}</h2>
     </div>
 
     <div class="panel panel-default">
@@ -21,8 +20,10 @@
             <div class="row">
                 <div class="col-md-12">
                     <a href="{% url 'internship-new' cohort_id=cohort.id %}" id="lnk_internship_create"
-                       class="btn btn-default" role="button" title="Create an internship">Add an internship
-                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
+                       class="btn btn-default" role="button" title="Create an internship">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                        {% trans 'add' %}
+                    </a>
                 </div>
             </div>
             <div class="row">

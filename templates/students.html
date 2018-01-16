@@ -57,7 +57,7 @@
                 <div class="col-md-2">
                     {% trans 'specialist' %}: {{ number_specialists }}
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <span class="label label-info" title="{% trans 'number_of_enrollments' %}">
                         {% trans 'number_of_enrollments' %} : {{student_with_internships}} / {{students_can_have_internships}}
                     </span>
@@ -77,8 +77,15 @@
                         <span class="glyphicon glyphicon-ban-circle" aria-hidden="true"> : {{student_without_internship}}</span>
                     </span>
                 </div>
-                <div class="col-md-2">
-                    <a href="{% url 'internship_student_form' cohort_id=cohort.id %}" class="btn btn-default pull-right">
+                <div class="col-md-3">
+                    {% if perms.base.is_administrator %}
+                        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#pnl_upload_students"
+                                id="bt_upload_score_modal">
+                            <span class="glyphicon glyphicon-import" aria-hidden="true"></span>
+                            {% trans 'import' %}
+                        </button>
+                    {% endif %}
+                    <a href="{% url 'internship_student_form' cohort_id=cohort.id %}" class="btn btn-default">
                         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                         {% trans 'add' %}
                     </a>
@@ -145,6 +152,31 @@
                 {% endfor %}
             </table>
         {% endif %}
+    </div>
+
+    <div class="modal fade" id="pnl_upload_students" tabindex="-1" role="dialog" aria-labelledby="uploadStudentsLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form method="post" enctype="multipart/form-data" action="{% url 'internship_students_import' cohort_id=cohort.id %}">
+                    {% csrf_token %}
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="bt_close_upload_students_modal"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="uploadScroresLabel">{% trans 'import' %}</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                          <input type="file" id="fle_scores_input_file" name="file_upload"/>
+                        </div>
+                        <div id="pnl_selectedFiles"></div>
+                        <p class="help-block">{% trans 'help_pnl_selectedfiles_students' %}</p>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="submit" class="btn btn-primary" value="{% trans 'import' %}" onclick="document.getElementById('files').style.visibility='visible'" id="bt_submit_upload_students_modal"/>
+                        <button type="button" class="btn btn-default" data-dismiss="modal" id="bt_cancel_upload_students_modal">{% trans 'cancel' %}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 {% endblock %}
 

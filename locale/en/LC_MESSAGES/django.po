@@ -143,7 +143,10 @@ msgid "help_pnl_selectedfiles_masters"
 msgstr "Select a xlsx file for the internship's masters' injection"
 
 msgid "help_pnl_selectedfiles_places"
-msgstr "Select a xlsx file for the hospitals' injection"
+msgstr "Select a xlsx file for the hospitals' injection."
+
+msgid "help_pnl_selectedfiles_students"
+msgstr "Select a xlsx file that contains the list of students."
 
 msgid "hospital"
 msgstr "Hospital"
@@ -256,17 +259,17 @@ msgstr "Hospitals' injection"
 msgid "publication_date"
 msgstr "Publication date"
 
-msgid	 "reference"
-msgstr	 "Reference"
+msgid "reference"
+msgstr "Reference"
 
-msgid	 "return"
-msgstr	 "Return"
+msgid "return"
+msgstr "Return"
 
-msgid	 "second_choice"
-msgstr	 "Second choice"
+msgid "second_choice"
+msgstr "Second choice"
 
-msgid	 "speciality"
-msgstr	 "Specialty"
+msgid "speciality"
+msgstr "Specialty"
 
 msgid "specialty"
 msgstr "Specialty"
@@ -280,41 +283,41 @@ msgstr "Start Activities"
 msgid "student"
 msgstr "Student"
 
-msgid	 "student_affectation"
-msgstr	 "Internship's affectation"
+msgid "student_affectation"
+msgstr "Internship's affectation"
 
-msgid	 "student_choice"
-msgstr	 "Students' choice"
+msgid "student_choice"
+msgstr "Students' choice"
 
-msgid	 "student_list"
-msgstr	 "Students list"
+msgid "student_list"
+msgstr "Students list"
 
-msgid	 "student_sumup"
-msgstr	 "Student sum up"
+msgid "student_sumup"
+msgstr "Student sum up"
 
-msgid	 "studies"
-msgstr	 "Studies"
+msgid "studies"
+msgstr "Studies"
 
-msgid	 "summary_your_choices_and_affectation"
-msgstr	 "Sump up of your choices and your affectations"
+msgid "summary_your_choices_and_affectation"
+msgstr "Sump up of your choices and your affectations"
 
-msgid	 "third_choice"
-msgstr	 "Third Choice"
+msgid "third_choice"
+msgstr "Third Choice"
 
-msgid	 "type"
-msgstr	 "Type"
+msgid "type"
+msgstr "Type"
 
-msgid	 "choice"
-msgstr	 "Choice"
+msgid "choice"
+msgstr "Choice"
 
-msgid	 "no_hospital"
-msgstr	 "Hospital not found"
+msgid "no_hospital"
+msgstr "Hospital not found"
 
-msgid	 "capacity"
-msgstr	 "capacity"
+msgid "capacity"
+msgstr "capacity"
 
-msgid	 "number_total_student"
-msgstr	 "Number of student who choose this organization"
+msgid "number_total_student"
+msgstr "Number of student who choose this organization"
 
 msgid "selection_currently_active"
 msgstr "The internships' selection is currently active"
@@ -352,77 +355,56 @@ msgstr "This may take several minutes"
 msgid "generate_solution"
 msgstr "Generate solution"
 
-msgid	 "organizations"
-msgstr	 "Hospitals"
+msgid "organizations"
+msgstr "Hospitals"
 
-msgid	 "statistics"
-msgstr	 "Statistics"
+msgid "statistics"
+msgstr "Statistics"
 
-msgid	 "errors"
-msgstr	 "Errors"
+msgid "errors"
+msgstr "Errors"
 
-msgid   "erasmus"
-msgstr  "Erasmus"
+msgid "erasmus"
+msgstr "Erasmus"
 
-msgid   "socials"
-msgstr  "Socials"
+msgid "socials"
+msgstr "Socials"
 
-msgid   "total_internships"
-msgstr  "Total Internships"
+msgid "total_internships"
+msgstr "Total Internships"
 
-msgid   "all_student"
-msgstr  "All student"
+msgid "all_student"
+msgstr "All student"
 
-msgid   "other_choice"
-msgstr  "Other choice"
+msgid "other_choice"
+msgstr "Other choice"
 
-msgid   "erasmus_students"
-msgstr   "Erasmus students"
+msgid "erasmus_students"
+msgstr "Erasmus students"
 
-msgid   "social_students"
-msgstr   "Social students"
+msgid "social_students"
+msgstr "Social students"
 
-msgid   "normal_students"
-msgstr   "Normal students"
+msgid "normal_students"
+msgstr "Normal students"
 
-msgid   "imposed_choices"
-msgstr  "Imposed choices"
+msgid "imposed_choices"
+msgstr "Imposed choices"
 
-msgid   "organization_error"
-msgstr  "Hospital error"
+msgid "organization_error"
+msgstr "Hospital error"
 
-msgid   "mean_cost_student"
-msgstr  "Mean cost of student"
+msgid "mean_cost_student"
+msgstr "Mean cost of student"
 
-msgid   "standard_deviation"
-msgstr  "Standard deviation"
+msgid "standard_deviation"
+msgstr "Standard deviation"
 
-msgid   "mean_nonconsecutive_month"
-msgstr  "Mean nonconsecutive month"
+msgid "mean_nonconsecutive_month"
+msgstr "Mean nonconsecutive month"
 
-msgid   "total_cost_solution"
-msgstr  "Total cost of the solution"
-
-msgid   "type_internship"
-msgstr  "Type of internship"
-
-msgid   "executions"
-msgstr  "Executions"
-
-msgid   "order_postion"
-msgstr  "Sorting position"
-
-msgid "latest_generation_start"
-msgstr "Latest generation start"
-
-msgid "latest_generation_end"
-msgstr "Latest generation end"
-
-msgid "student_already_exists"
-msgstr "Student already exists."
-
-msgid "student_doesnot_exist"
-msgstr "Student doesn't exist."
+msgid "executions"
+msgstr "Executions"
 
 msgid "export_organisation_affectation_master"
 msgstr "Excel file for the Internship master"
@@ -439,11 +421,20 @@ msgstr "Female"
 msgid "GENERALIST"
 msgstr "Generalist"
 
+msgid "latest_generation_start"
+msgstr "Latest generation start"
+
+msgid "latest_generation_end"
+msgstr "Latest generation end"
+
 msgid "M"
 msgstr "Male"
 
 msgid "number_first_choice"
 msgstr "Number of first choice"
+
+msgid "order_postion"
+msgstr "Sorting position"
 
 msgid "preference"
 msgstr "Preference"
@@ -460,11 +451,26 @@ msgstr "Inform the sequence in which the columns must appear in the report to th
 msgid "specialist"
 msgstr "Specialist"
 
+msgid "student_already_exists"
+msgstr "Student already exists."
+
+msgid "student_doesnot_exist"
+msgstr "Student doesn't exist."
+
 msgid "student_max"
 msgstr "Maximum number of students"
 
 msgid "sequence"
 msgstr "Sequence"
 
+msgid "total_cost_solution"
+msgstr "Total cost of the solution"
+
+msgid "type_internship"
+msgstr "Type of internship"
+
 msgid "use_filters_no_data"
 msgstr "No data corresponds to the filters above. Make a choice, please."
+
+msgid "unable_import_students"
+msgstr "Unable to import the students."

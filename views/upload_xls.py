@@ -128,8 +128,9 @@ def _save_xls_place(file_name, cohort):
         if row[col_city].value:
             organization.city = row[col_city].value
 
-        if row[col_country].value:
-            organization.country = country.find_by_iso_code(row[col_country].value)
+        # TODO Uncomment when the function get_by_iso_code is in production.
+        #if row[col_country].value:
+        #    organization.country = country.get_by_iso_code(row[col_country].value)
 
         organization.save()
 

@@ -23,7 +23,6 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-
 import random
 
 from django.db import transaction
@@ -60,28 +59,29 @@ class AssignmentSolver:
         self.specialities = InternshipSpeciality.objects.filter(cohort=self.cohort)
         self.default_organization = Organization.objects.filter(cohort=self.cohort, reference="999").first()
         self.forbidden_organizations = Organization.objects.annotate(reference_length=Length('reference')) \
-                .exclude(reference="00").filter(cohort=self.cohort, reference_length=3)
+                                                           .exclude(reference="00")\
+                                                           .filter(cohort=self.cohort, reference_length=3)
         self.default_speciality = InternshipSpeciality.objects.filter(cohort=self.cohort, acronym="MO").first()
         self.pending_organization = Organization.objects.filter(cohort=self.cohort, reference="604").first()
         self.offers = InternshipOffer.objects.filter(cohort=self.cohort)
         self.periods = Period.objects.extra(select={"period_number": "CAST(substr(name, 2) AS INTEGER)"}) \
-                .exclude(name="P12").filter(cohort=self.cohort).order_by("period_number")
+                                     .exclude(name="P12")\
+                                     .filter(cohort=self.cohort).order_by("period_number")
         self.offer_ids = self.offers.values_list("id", flat=True)
         self.available_places = PeriodInternshipPlaces.objects.filter(internship_offer_id__in=self.offer_ids).values()
         self.errors_count = 0
 
     def solve(self):
-        self.assign_enrollments_to_students(self.internships)  # 1.
+        self.assign_enrollments_to_students(self.internships)                                                      # 1
         for internship in self.internships:
-            # randomize students for each internship cycle to make sure equity of luck is respected
+            # randomize students for each internship cycle to make sure equity of luck is respected.
             self.student_informations = self.student_informations.order_by("?")
-            self.assign_priority_choices_to_students(internship)  # 2.
-            self.assign_best_offer_for_student_choices(self.student_informations, internship)  # 3.
-        self.assign_default_speciality_and_organization_for_students_with_empty_periods(self.default_speciality, self.pending_organization, self.students, self.periods)  # 4.
-
-    @transaction.atomic
-    def persist_solution(self):
-        InternshipStudentAffectationStat.objects.bulk_create(self.affectations)
+            self.assign_priority_choices_to_students(internship)                                                   # 2
+            self.assign_best_offer_for_student_choices(self.student_informations, internship)                      # 3
+        self.assign_default_speciality_and_organization_for_students_with_empty_periods(self.default_speciality,
+                                                                                        self.pending_organization,
+                                                                                        self.students,
+                                                                                        self.periods)              # 4
 
     def assign_enrollments_to_students(self, internships):
         """1. Secretaries submit mandatory enrollments for some students, we start by saving all those in the
@@ -241,7 +241,6 @@ class AssignmentSolver:
         internships_with_speciality = self.internships.filter(speciality__acronym=acronym)
         length = internship.length_in_periods
         affectations_with_speciality = list(filter(lambda affectation: affectation.speciality.acronym == acronym, student_affectations))
-        periods_affected_to_speciality = list(map(lambda affectation: affectation.period, affectations_with_speciality))
         total_number_of_periods_with_speciality_expected = sum(internship.length_in_periods for internship in internships_with_speciality)
         return len(affectations_with_speciality) + length <= total_number_of_periods_with_speciality_expected
 
@@ -253,6 +252,10 @@ class AssignmentSolver:
         student_affectations = get_student_affectations(student, affectations)
         unavailable_periods = get_periods_from_affectations(student_affectations)
         return difference(list(self.periods), unavailable_periods)
+
+    @transaction.atomic
+    def persist_solution(self):
+        InternshipStudentAffectationStat.objects.bulk_create(self.affectations)
 
     #################################################################################################################
     # Affectation factory functions                                                                                 #
