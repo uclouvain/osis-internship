@@ -14,17 +14,17 @@ sein de la faculté de médecine et décrire le fonctionnement de l'application
 développé dans le but de optimiser la charge de travail consacré a l'affectation
 des stages.
 
-Chaque nouvelle personne qui debarque dans le projet réncontre le défi de tout
+Chaque nouvelle personne qui débarque dans le projet rencontre le défi de tout
 comprendre en posant les mêmes questions encore et encore. Si bien fait et bien
-maintenu, ce document aidera la faculté de médecine à evoluer s'application
-proprement et continuellement, independant du changement de l'équipe, tout en
+maintenu, ce document aidera la faculté de médecine à évoluer s'application
+proprement et continuellement, indépendant du changement de l'équipe, tout en
 protégeant l'investissement déjà fait.
 
 === Le contexte
 
 La *Faculté de médecine et médecine dentaire* (MEDE) faire partit du *Secteur
 des sciences de la santé* (SSS) de *l'Université catholique de Louvain* (UCL).
-Leurs activités sont, en géneral, réaliser au campus de Wolluwé, Bruxelles.
+Leurs activités sont, en général, réaliser au campus de Wolluwé, Bruxelles.
 
 Les stages sont prévu comment une activité d'unité d'enseignement dans le
 programme annuelle de formation de l'université. C'est une activité complexe,
@@ -50,9 +50,9 @@ Les acteurs impliqué dans la gestion des stages sont:
 * l'administrateur de système: la personne avec un role technique et bien
   informé par rapport au fonctionnement de l'application.
 
-Les acteurs sont classés en deux roles bien distincts:
+Les acteurs sont classés en deux rôles bien distincts:
 
-* **Gestionaire des stages**: L'accès est limité à l'application OSIS.
+* **Gestionnaire des stages**: L'accès est limité à l'application OSIS.
 * **Étudiant**: L'accès est limité à l'application OSIS-Portal.
 * **Administrateur**: Accès à l'administration de données brut d'OSIS et
   OSIS-Portal.
@@ -137,12 +137,15 @@ provient de l'application de gestion de l'université et contient les étudiants
 inscrits sur le programe de master en médecine, essentiel pour la demarche du
 processus d'affectation.
 
-L'importation du fichier XLS est sur la responsabilité de l'administrateur de
-systeme, sur demande du gestionaire des stages qui renvoie le fichier mis à
-jour. Le fichier peux être importé plusieur fois si necessaire. L'application
-s'occupe d'eviter des duplications de données à chaque importation.
+image::images/students-empty.png[Pas d'étudiant dans la cohorte]
 
-image::images/import-students.png[Importation des étudiants]
+L'importation des étudiants est disponible dans la page de consultation des étudiants. En cliquant sur le bouton "Importer", une fenaitre modal s'ouvre pour permetre la selection du fichier Excel (xlsx) disponible sur la machine de l'utilisateur. Après la selection, cliquez sur le bouton "Importer" en bleu pour demarrer l'importation. Il faut quelques instants pour importer tous les étudiants. C'est normal.
+
+image::images/students-import.png[Importation des étudiants]
+
+Une fois que les étudiants sont importer, le bouton "Importer" disparetre parce que c'est possible importer les étudiant seulement une fois par cohorte. Après l'importation, les données devront être maintenu manuellement.
+
+image::images/students-imported.png[Les étudiants importés dans la cohorte]
 
 === Definition des périodes, des hôpitaux et des places disponibles
 
