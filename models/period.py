@@ -31,6 +31,7 @@ from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 class PeriodAdmin(SerializableModelAdmin):
     list_display = ('name', 'date_start', 'date_end', 'cohort')
     fieldsets = ((None, {'fields': ('name', 'date_start', 'date_end', 'cohort')}),)
+    list_filter = ('cohort',)
 
 
 class Period(SerializableModel):

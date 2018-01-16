@@ -26,7 +26,6 @@
 import factory
 import factory.django
 
-from base.tests.factories.learning_unit import LearningUnitFactory
 from internship.tests.factories.cohort import CohortFactory
 
 
@@ -38,4 +37,3 @@ class SpecialtyFactory(factory.django.DjangoModelFactory):
     acronym = factory.Sequence(lambda n: 'SPEC-%d' % n)
     mandatory = False
     cohort = factory.SubFactory(CohortFactory)
-    learning_unit = factory.SubFactory(LearningUnitFactory)

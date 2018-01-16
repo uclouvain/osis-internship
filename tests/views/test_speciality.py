@@ -27,7 +27,6 @@ from django.contrib.auth.models import Permission, User
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 
-from base.tests.factories.learning_unit import LearningUnitFactory
 from internship.models.internship_speciality import InternshipSpeciality
 from internship.tests.factories.cohort import CohortFactory
 from internship.tests.factories.speciality import SpecialtyFactory
@@ -100,15 +99,13 @@ class SpecialityViewTestCase(TestCase):
         self.assertEqual(response.context['speciality'], speciality)
 
     def test_new(self):
-        learning_unit = LearningUnitFactory(acronym='DEMO')
-        speciality = SpecialtyFactory.build(learning_unit=learning_unit)
+        speciality = SpecialtyFactory()
 
         url = reverse('speciality_new', kwargs={
             'cohort_id': self.cohort.id,
         })
 
         response = self.client.post(url, data={
-            'learning_unit': learning_unit.acronym,
             'mandatory': True,
             'name': speciality.name,
             'acronym': speciality.acronym,

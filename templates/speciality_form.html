@@ -46,11 +46,6 @@
                                 {% url 'speciality_new' cohort_id=cohort.id %}
                           {% endif %}" method="post">
                 {% csrf_token %}
-                <div class="form-group">
-                    <label for="name">{% trans 'learning_unit' %}</label><br>
-                    {{ speciality.learning_unit }}
-                    <input type="hidden" name="learning_unit" value="{{ speciality.learning_unit }}">
-                </div>
                 <div class="row">
                     <div class="col-md-8">
                         <div class="form-group">

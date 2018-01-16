@@ -259,7 +259,7 @@ def _get_speciality(internship_id, speciality_id, student):
     if speciality_id == "-1":
         return _find_speciality_of_choices_for_internship(internship_id, student)
 
-    return mdl_int.internship_speciality.find_by_id(speciality_id)
+    return mdl_int.internship_speciality.get_by_id(speciality_id)
 
 
 def _find_speciality_of_choices_for_internship(internship_id, student):

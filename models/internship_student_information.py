@@ -30,10 +30,9 @@ from django.utils.translation import ugettext_lazy as _
 
 
 class InternshipStudentInformationAdmin(SerializableModelAdmin):
-    list_display = ('person', 'location', 'postal_code', 'city', 'country', 'latitude', 'longitude', 'email',
-                    'phone_mobile', 'contest', 'cohort')
-    fieldsets = ((None, {'fields': ('person', 'location', 'postal_code', 'city', 'latitude', 'longitude', 'country',
-                                    'email', 'phone_mobile', 'contest', 'cohort')}),)
+    list_display = ('person', 'location', 'postal_code', 'city', 'country', 'email', 'phone_mobile', 'cohort')
+    fieldsets = ((None, {'fields': ('person', 'location', 'postal_code', 'city', 'country', 'email', 'phone_mobile',
+                                    'contest', 'cohort')}),)
     raw_id_fields = ('person',)
     list_filter = ('cohort',)
     search_fields = ['person__user__username', 'person__last_name', 'person__first_name']
@@ -47,8 +46,6 @@ class InternshipStudentInformation(SerializableModel):
     postal_code = models.CharField(max_length=20)
     city = models.CharField(max_length=255)
     country = models.CharField(max_length=255)
-    latitude = models.FloatField(blank=True, null=True)
-    longitude = models.FloatField(blank=True, null=True)
     email = models.EmailField(max_length=255, blank=True, null=True)
     phone_mobile = models.CharField(max_length=100, blank=True, null=True)
     contest = models.CharField(max_length=124, choices=TYPE_CHOICE, default="GENERALIST")

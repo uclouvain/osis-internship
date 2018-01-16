@@ -34,6 +34,7 @@ class OrganizationAdmin(SerializableModelAdmin):
     fieldsets = ((None, {'fields': ('name', 'acronym', 'reference', 'website', 'phone', 'location', 'postal_code',
                                     'city', 'country', 'cohort')}),)
     search_fields = ['acronym', 'name', 'reference']
+    list_filter = ('cohort',)
 
 
 class Organization(SerializableModel):

@@ -122,7 +122,7 @@ def _build_allocations(request, allocated_master):
     allocations = []
     for i, a_hospital in enumerate(hospitals):
         hospital = organization.get_by_id(a_hospital)
-        specialty = internship_speciality.find_by_id(specialties[i])
+        specialty = internship_speciality.get_by_id(specialties[i])
         allocation = master_allocation.MasterAllocation(master=allocated_master,
                                                         organization=hospital,
                                                         specialty=specialty)
