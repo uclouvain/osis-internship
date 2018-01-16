@@ -23,43 +23,33 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import csv
-import pendulum
-from base.models import person as mdl_person
+from openpyxl import load_workbook
+from base.models import student
 from internship.models import internship_student_information as mdl_isi
 
 
-def import_csv(cohort, csvfile):
-    reader = csv.reader(csvfile)
-    next(reader)
-    for row in reader:
-        _import_csv_row(cohort, row)
+def import_xlsx(cohort, xlsxfile):
+    workbook = load_workbook(filename=xlsxfile, read_only=True)
+    worksheet = workbook.active
+    mdl_isi.remove_all(cohort)
+    for row in list(worksheet.rows)[1:]:
+        _import_row(cohort, row)
+
+    xlsxfile.close()
 
 
-def _import_csv_row(cohort, row):
-    name, gender, birthdate, birthplace, nationality, noma, fgs, street, zipcode, city, country, phone, email = row
-    person = mdl_person.find_by_global_id(fgs)
-
-    if not person:
-        if ',' in name:
-            t = name.split(',')
-            last_name, first_name = t[0].strip(), t[1].strip()
-        else:
-            t = name.split()
-            last_name, first_name = ' '.join(t[:-1]).strip(), t[-1].strip()
-        birth_date = pendulum.parse(birthdate).format('%Y-%m-%d')
-        person = mdl_person.Person.objects.create(global_id=fgs,
-                                                  gender = gender,
-                                                  first_name = first_name,
-                                                  last_name = last_name,
-                                                  birth_date = birth_date)
-
-    info = {'person': person,
-            'country': country,
-            'postal_code': zipcode,
-            'email': email,
-            'phone_mobile': phone,
-            'city': city,
-            'cohort': cohort}
-
-    mdl_isi.InternshipStudentInformation.objects.create(**info)
+def _import_row(cohort, row):
+    matricule = row[7].value
+    existing_student = student.find_by_registration_id(matricule)
+    if existing_student:
+        student_information = mdl_isi.InternshipStudentInformation()
+        student_information.person = existing_student.person
+        student_information.location = row[15].value
+        student_information.postal_code = row[16].value
+        student_information.city = row[17].value
+        student_information.country = row[18].value
+        student_information.email = row[19].value
+        student_information.phone_mobile = row[14].value
+        student_information.cohort = cohort
+        print(student_information)
+        student_information.save()

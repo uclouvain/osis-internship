@@ -90,7 +90,7 @@ def speciality_new(request, cohort_id):
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
-def speciality_modification(request, cohort_id, speciality_id):
+def modify(request, cohort_id, speciality_id):
     cohort = get_object_or_404(mdl_internship.cohort.Cohort, pk=cohort_id)
     speciality = get_object_or_404(mdl_internship.internship_speciality.InternshipSpeciality,
                                    pk=speciality_id, cohort=cohort)

@@ -27,8 +27,6 @@ from django.db import models
 from django.core.exceptions import ObjectDoesNotExist
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 from internship.models.enums import organization_report_fields
-from internship.models import organization_address
-from reference.models import country
 
 
 class OrganizationAdmin(SerializableModelAdmin):
@@ -36,26 +34,6 @@ class OrganizationAdmin(SerializableModelAdmin):
     fieldsets = ((None, {'fields': ('name', 'acronym', 'reference', 'website', 'phone', 'location', 'postal_code',
                                     'city', 'country', 'cohort')}),)
     search_fields = ['acronym', 'name', 'reference']
-    actions = ['consolidate_addresses']
-
-    def consolidate_addresses(self, request, queryset):
-        """
-        Function temporaire pour consolider les organisations et leur adresses dans une seul table.
-        """
-        for org in queryset:
-            addresses = organization_address.OrganizationAddress.objects.filter(organization=org)
-            if addresses:
-                for address in addresses:
-                    org.location = address.location
-                    org.postal_code = address.postal_code
-                    org.city = address.city
-                    if address.country:
-                        ctry = country.Country.objects.filter(iso_code=address.country).first()
-                        org.country = ctry
-                    org.save()
-                    self.message_user(request, "%s successfully consolidated address." % org.name)
-            else:
-                self.message_user(request, "Address not found.")
 
 
 class Organization(SerializableModel):

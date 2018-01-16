@@ -58,7 +58,6 @@ def place_save(request, cohort_id, organization_id):
         organization = models.organization.get_by_id(organization_id)
     else:
         models.organization.Organization.objects.filter(reference=request.POST.get('reference')).delete()
-        models.organization_address.OrganizationAddress.objects.filter(organization__reference=request.POST.get('reference')).delete()
         organization = models.organization.Organization()
 
     organization.cohort = cohort
@@ -193,7 +192,7 @@ def export_organisation_affectation_master(request, cohort_id, organization_id):
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
-def export_organisation_affectation_hospital(request, cohort_id, organization_id):
+def export_hospital_affectation(request, cohort_id, organization_id):
     cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
     organization = models.organization.get_by_id(organization_id)
     return _export_xls_hospital(cohort, organization)

@@ -24,6 +24,8 @@
 #
 ##############################################################################
 import json
+from io import BytesIO
+
 from django.http import HttpResponse, HttpResponseRedirect
 from django.views.decorators.http import require_POST
 from django.core.exceptions import PermissionDenied
@@ -32,10 +34,14 @@ from django.shortcuts import render, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.utils.translation import ugettext_lazy as _
+
 from reference.models import country
 from base import models as mdl
 from internship import models as mdl_int
 from internship.forms.form_student_information import StudentInformationForm
+from internship.forms.students_import_form import StudentsImportActionForm
+from internship.utils.importing.import_students import import_xlsx
+from internship.utils import student_loader
 
 
 @login_required
@@ -149,7 +155,6 @@ def internships_student_read(request, cohort_id, student_id):
         order_by("period__date_start")
     periods = mdl_int.period.search(cohort=cohort).order_by("date_start")
     organizations = mdl_int.organization.search(cohort=cohort)
-    _set_organization_address(organizations)
 
     # Set the address of the affectation
     for affectation in affectations:
@@ -300,6 +305,22 @@ def student_save_affectation_modification(request, cohort_id, student_id):
     return HttpResponseRedirect(redirect_url)
 
 
+@login_required
+@require_POST
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def import_students(request, cohort_id):
+    cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)
+
+    form = StudentsImportActionForm(request.POST, request.FILES)
+    if form.is_valid():
+        file_upload = form.cleaned_data['file_upload']
+        #try:
+        import_xlsx(cohort, BytesIO(file_upload.read()))
+        #except Exception:
+        #    messages.add_message(request, messages.ERROR, _('unable_import_students'))
+    return HttpResponseRedirect(reverse('internships_student_resume', kwargs={"cohort_id": cohort_id}))
+
+
 def get_students_with_status(cohort):
     students_status = []
     students_informations = mdl_int.internship_student_information.find_all(cohort)
@@ -316,20 +337,3 @@ def _get_student_status(student, cohort):
     choices_values = mdl_int.internship_choice.get_choices_made(cohort=cohort,
                                                                 student=student).values_list("internship_id", flat=True)
     return len(list(set(internship_ids) - set(choices_values))) == 0
-
-
-def _set_organization_address(organizations):
-    """
-        Function to set the organization address to the organization
-        Param:
-            organizations : list of organizations to get the address
-        Get the address in the OrganizationAddress table and put it
-        Get also the number of student of choose this organization for their internship
-    """
-    for organization in organizations:
-        organization.address = ""
-        organization.student_choice = 0
-        address = mdl_int.organization_address.search(organization=organization)
-        if address:
-            organization.address = address
-        organization.student_choice = len(mdl_int.internship_choice.search(organization=organization))

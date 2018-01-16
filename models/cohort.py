@@ -24,8 +24,15 @@
 #
 ##############################################################################
 from django.db import models
-
 from osis_common.models.serializable_model import SerializableModel
+from osis_common.models.serializable_model import SerializableModelAdmin
+
+
+class CohortAdmin(SerializableModelAdmin):
+    list_display = ('name', 'description', 'publication_start_date', 'subscription_start_date',
+                    'subscription_end_date', 'free_internships_number')
+    fields = ('name', 'description', 'publication_start_date', 'subscription_start_date', 'subscription_end_date',
+              'free_internships_number')
 
 
 class Cohort(SerializableModel):

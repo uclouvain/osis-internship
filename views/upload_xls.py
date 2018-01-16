@@ -33,6 +33,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.views.decorators.http import require_http_methods
 
 from internship import models
+from reference.models import country
 
 
 @require_http_methods(['POST'])
@@ -118,45 +119,20 @@ def _save_xls_place(file_name, cohort):
         else:
             organization.website = ""
 
-        organization.save()
-
-        if place:
-            organization_address = models.organization_address.search(organization=organization)
-            if not organization_address:
-                organization_address = models.organization_address.OrganizationAddress()
-            else:
-                organization_address = organization_address[0]
-        else:
-            organization_address = models.organization_address.OrganizationAddress()
-
-        if organization:
-            organization_address.label = "Addr"+organization.name[:14]
-        else:
-            organization_address.label = " "
-
         if row[col_address].value:
-            organization_address.location = row[col_address].value
-        else:
-            organization_address.location = " "
+            organization.location = row[col_address].value
 
         if row[col_postal_code].value:
-            organization_address.postal_code = row[col_postal_code].value
-        else:
-            organization_address.postal_code = " "
+            organization.postal_code = row[col_postal_code].value
 
         if row[col_city].value:
-            organization_address.city = row[col_city].value
-        else:
-            organization_address.city = " "
+            organization.city = row[col_city].value
 
-        if row[col_country].value:
-            organization_address.country = row[col_country].value
-        else:
-            organization_address.country = " "
-        organization_address.organization = organization
-        organization_address.latitude = None
-        organization_address.longitude = None
-        organization_address.save()
+        # TODO Uncomment when the function get_by_iso_code is in production.
+        #if row[col_country].value:
+        #    organization.country = country.get_by_iso_code(row[col_country].value)
+
+        organization.save()
 
 
 def _is_registration_id(registration_id):

@@ -28,7 +28,7 @@ from django.core.urlresolvers import reverse
 from django.test import TestCase
 from internship.tests.models import test_organization, test_internship_speciality, test_internship_student_information
 from base.tests.models import test_student
-from internship.views import student_resume
+from internship.views import student
 from internship.tests.factories.cohort import CohortFactory
 from internship.tests.factories.internship import InternshipFactory
 from internship.tests.factories.internship_choice import create_internship_choice
@@ -57,13 +57,13 @@ class TestStudentResume(TestCase):
 
     def test_get_students_status(self):
         expected = []
-        actual = student_resume.get_students_with_status(cohort=self.cohort)
+        actual = student.get_students_with_status(cohort=self.cohort)
         self.assertCountEqual(expected, actual)
 
         test_internship_student_information.create_student_information(self.student_1.person, "GENERALIST", cohort=self.cohort)
         test_internship_student_information.create_student_information(self.student_2.person, "GENERALIST", cohort=self.cohort)
         expected = [(self.student_1, True), (self.student_2, False)]
-        actual = student_resume.get_students_with_status(cohort=self.cohort)
+        actual = student.get_students_with_status(cohort=self.cohort)
         self.assertCountEqual(expected, actual)
         for item_expected in expected:
             self.assertIn(item_expected, actual)
@@ -78,7 +78,7 @@ class StudentResumeViewTestCase(TestCase):
         self.cohort = CohortFactory()
 
     def test_internships_student_resume(self):
-        from internship.views.student_resume import internships_student_resume
+        from internship.views.student import internships_student_resume
         url = reverse(internships_student_resume, kwargs={
             'cohort_id': self.cohort.id,
         })

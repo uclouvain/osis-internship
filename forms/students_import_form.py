@@ -23,12 +23,8 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.forms import ModelForm
-
-from internship.models.organization_address import OrganizationAddress
+from django import forms
 
 
-class OrganizationAddressForm(ModelForm):
-    class Meta:
-        model = OrganizationAddress
-        fields = ['location', 'postal_code', 'city', 'country', 'latitude', 'longitude']
+class StudentsImportActionForm(forms.Form):
+    file_upload = forms.FileField()

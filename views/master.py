@@ -34,7 +34,6 @@ from internship.forms.master import MasterForm
 from internship.models.enums.civility import Civility
 from internship.models.enums.gender import Gender
 from internship.models.enums.mastery import Mastery
-from internship.utils.importing import import_masters
 
 
 @login_required
@@ -107,13 +106,6 @@ def master_save(request, cohort_id):
 
     return HttpResponseRedirect("{}?hospital={}".format(reverse("internships_masters", args=[current_cohort.id]),
                                                         hospital))
-
-
-@login_required
-@permission_required('perms.base.is_administrator', raise_exception=True)
-def master_import(request, cohort_id):
-    import_masters.import_xls()
-    return HttpResponseRedirect(reverse("internships_masters", args=[cohort_id]))
 
 
 def _build_allocations(request, allocated_master):
