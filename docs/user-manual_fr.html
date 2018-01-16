@@ -449,7 +449,12 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_consultation_des_résultats">1.9. Consultation des résultats</a></li>
 </ul>
 </li>
-<li><a href="#_la_gestion_journalière">2. La gestion journalière</a></li>
+<li><a href="#_la_gestion_journalière">2. La gestion journalière</a>
+<ul class="sectlevel2">
+<li><a href="#_les_hôpitaux">2.1. Les hôpitaux</a></li>
+<li><a href="#_les_spécialités">2.2. Les spécialités</a></li>
+</ul>
+</li>
 <li><a href="#_la_conception_technique_de_l_application">3. La conception technique de l&#8217;application</a>
 <ul class="sectlevel2">
 <li><a href="#_l_algorithme_d_affectation">3.1. L’algorithme d’affectation</a>
@@ -481,10 +486,10 @@ développé dans le but de optimiser la charge de travail consacré a l&#8217;af
 des stages.</p>
 </div>
 <div class="paragraph">
-<p>Chaque nouvelle personne qui debarque dans le projet réncontre le défi de tout
+<p>Chaque nouvelle personne qui débarque dans le projet rencontre le défi de tout
 comprendre en posant les mêmes questions encore et encore. Si bien fait et bien
-maintenu, ce document aidera la faculté de médecine à evoluer s&#8217;application
-proprement et continuellement, independant du changement de l&#8217;équipe, tout en
+maintenu, ce document aidera la faculté de médecine à évoluer s&#8217;application
+proprement et continuellement, indépendant du changement de l&#8217;équipe, tout en
 protégeant l&#8217;investissement déjà fait.</p>
 </div>
 <div class="sect2">
@@ -492,7 +497,7 @@ protégeant l&#8217;investissement déjà fait.</p>
 <div class="paragraph">
 <p>La <strong>Faculté de médecine et médecine dentaire</strong> (MEDE) faire partit du <strong>Secteur
 des sciences de la santé</strong> (SSS) de <strong>l&#8217;Université catholique de Louvain</strong> (UCL).
-Leurs activités sont, en géneral, réaliser au campus de Wolluwé, Bruxelles.</p>
+Leurs activités sont, en général, réaliser au campus de Wolluwé, Bruxelles.</p>
 </div>
 <div class="paragraph">
 <p>Les stages sont prévu comment une activité d&#8217;unité d&#8217;enseignement dans le
@@ -531,12 +536,12 @@ informé par rapport au fonctionnement de l&#8217;application.</p>
 </ul>
 </div>
 <div class="paragraph">
-<p>Les acteurs sont classés en deux roles bien distincts:</p>
+<p>Les acteurs sont classés en deux rôles bien distincts:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Gestionaire des stages</strong>: L&#8217;accès est limité à l&#8217;application OSIS.</p>
+<p><strong>Gestionnaire des stages</strong>: L&#8217;accès est limité à l&#8217;application OSIS.</p>
 </li>
 <li>
 <p><strong>Étudiant</strong>: L&#8217;accès est limité à l&#8217;application OSIS-Portal.</p>
@@ -659,15 +664,25 @@ provient de l&#8217;application de gestion de l&#8217;université et contient le
 inscrits sur le programe de master en médecine, essentiel pour la demarche du
 processus d&#8217;affectation.</p>
 </div>
+<div class="imageblock">
+<div class="content">
+<img src="images/students-empty.png" alt="Pas d'étudiant dans la cohorte">
+</div>
+</div>
 <div class="paragraph">
-<p>L&#8217;importation du fichier XLS est sur la responsabilité de l&#8217;administrateur de
-systeme, sur demande du gestionaire des stages qui renvoie le fichier mis à
-jour. Le fichier peux être importé plusieur fois si necessaire. L&#8217;application
-s&#8217;occupe d&#8217;eviter des duplications de données à chaque importation.</p>
+<p>L&#8217;importation des étudiants est disponible dans la page de consultation des étudiants. En cliquant sur le bouton "Importer", une fenaitre modal s&#8217;ouvre pour permetre la selection du fichier Excel (xlsx) disponible sur la machine de l&#8217;utilisateur. Après la selection, cliquez sur le bouton "Importer" en bleu pour demarrer l&#8217;importation. Il faut quelques instants pour importer tous les étudiants. C&#8217;est normal.</p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="images/import-students.png" alt="Importation des étudiants">
+<img src="images/students-import.png" alt="Importation des étudiants">
+</div>
+</div>
+<div class="paragraph">
+<p>Une fois que les étudiants sont importer, le bouton "Importer" disparetre parce que c&#8217;est possible importer les étudiant seulement une fois par cohorte. Après l&#8217;importation, les données devront être maintenu manuellement.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/students-imported.png" alt="Les étudiants importés dans la cohorte">
 </div>
 </div>
 </div>
@@ -758,7 +773,7 @@ disponibilizés pour les étudiants impliqués.</p>
 <div class="paragraph">
 <p>Les étudiants se connectent sur le portail UCL pour consulter les résultats des
 affectations. Les données sont disponible en mode lecture. En cas de correction
-ou de modification en general, une demande devra être fait au secretariat.</p>
+ou de modification en général, une demande devra être fait au secretariat.</p>
 </div>
 </div>
 </div>
@@ -769,27 +784,77 @@ ou de modification en general, une demande devra être fait au secretariat.</p>
 <div class="paragraph">
 <p>La gestion journalière couvre toutes les fonctionnalités de maintenance de
 données en dehors de l&#8217;exécution du processus. Ce sont les fonctionnalités
-utilisées au cours de l&#8217;année par le gestionaire des stages.</p>
+utilisées au cours de l&#8217;année par le gestionnaire des stages.</p>
+</div>
+<div class="sect2">
+<h3 id="_les_hôpitaux">2.1. Les hôpitaux</h3>
+<div class="paragraph">
+<p>La gestion des hôpitaux est plus que maintenir les données des hôpitaux à jour.</p>
+</div>
+<div class="paragraph">
+<p>Pour accéder les rapports en format Excel pour les hôpitaux, cliquez sur le bouton vert qu&#8217;indique les résultats de l&#8217;affectation.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/hospitals-view.png" alt="La liste des hôpitaux">
+</div>
+</div>
+<div class="paragraph">
+<p>Dans l&#8217;écran de résultats de l&#8217;affectation il y a deux bottons pour la
+production de rapport:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>pour les mêtres de stage avec les affectations groupés par specialité et période.</p>
+</li>
+<li>
+<p>pour l&#8217;hôpital avec une liste des tous les affectation trié par période.</p>
+</li>
+</ol>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/hospital-affectation-results.png" alt="Les rapports pour l'hôpital">
+</div>
+</div>
+<div class="paragraph">
+<p>Le rapport pour l&#8217;hôpital peux être configuré dans le formulaire de l&#8217;hôpital
+parce que chacun peux avoir un besoin different.</p>
+</div>
+<div class="paragraph">
+<p>Il y a un champ númerique pour chaque donnée disponible pour les hôpitaux. Les
+champs contiennent la sequence dans lequel les données doivent être afficher.
+Les champs laissés vides sont ignorés.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/hospital-report-config.png" alt="La configuration de rapport pour l'hôpital">
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_les_spécialités">2.2. Les spécialités</h3>
+<div class="paragraph">
+<p>La gestion des spécialités consiste en maintenir les données des spécialités d&#8217;une cohorte. Normalement, les spécialités sont créer automatiquement, au moment de la création d&#8217;une cohorte a partir d&#8217;une cohorte existant. Après, il suffit d&#8217;adapter la liste au cohorte actuelle en supprimant ou ajoutant des spécialités.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/specialties.png" alt="Les spécialités">
+</div>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Gestion des hôpitaux</strong>: mantenir le données des hôpitaux à jour.</p>
+<p><strong>Les offres de stages</strong>: maintenir les places disponibles dans les différent
+spécialités des hôpitaux.</p>
 </li>
 </ul>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Specialités des stages</strong>: mantenir les places disponibles dans les different
-specialités des hôpitaux.</p>
-</li>
-</ul>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>Les stages</strong>: mantenir les different types de stages.</p>
+<p><strong>Les stages</strong>: maintenir les différent types de stages.</p>
 </li>
 </ul>
 </div>
@@ -797,15 +862,15 @@ specialités des hôpitaux.</p>
 <ul>
 <li>
 <p><strong>Gestion des maîtres de stage</strong>: pas encore disponible, mais bientôt le
-gestionaire sera capable de maintenir les données des maîtres.</p>
+gestionnaire sera capable de maintenir les données des maîtres.</p>
 </li>
 </ul>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Bilan des assignations</strong>: un raport avec les affectations des étudiants dans
-les hôpitaux, classé par especialité.</p>
+<p><strong>Bilan des assignations</strong>: un rapport avec les affectations des étudiants dans
+les hôpitaux, classé par spécialité.</p>
 </li>
 </ul>
 </div>
@@ -817,6 +882,7 @@ selon les particularités de chaque étudiant, principalement les cas de
 permutation des stages.</p>
 </li>
 </ul>
+</div>
 </div>
 </div>
 </div>
@@ -895,16 +961,16 @@ et un nombre de places minimales et maximales.</p>
 </li>
 <li>
 <p><strong>La demande</strong> est représentée par un ensemble des choix des étudiants. Elle est
-divisée en 2 catégories :</p>
+divisée en 2 catégories:</p>
 <div class="ulist">
 <ul>
 <li>
-<p>Les stages obligatoires : chaque étudiant pour chaque spécialité obligatoire
+<p>Les stages obligatoires: chaque étudiant pour chaque spécialité obligatoire
 doit donner une liste ordonnée de 4 lieux de stages, par ordre de préférence
 allant de de 1 à 4.</p>
 </li>
 <li>
-<p>Les stages au choix : chaque étudiant doit choisir 6 spécialités au choix,
+<p>Les stages au choix: chaque étudiant doit choisir 6 spécialités au choix,
 par ordre de préférence allant de 1 à 6. Si l’étudiant souhaite, il peut
 choisir plusieurs fois la même spécialité.  Ensuite pour chaque spécialité,
 l’étudiant doit donner une liste ordonnée de 4 lieux de stages, par ordre de
@@ -921,13 +987,13 @@ pour chaque étudiant, un triplet qui contient une spécialité, un lieu et une
 période.</p>
 </li>
 <li>
-<p><strong>Les contraintes fortes</strong> :</p>
+<p><strong>Les contraintes fortes</strong>:</p>
 <div class="ulist">
 <ul>
 <li>
 <p>chaque étudiant doit avoir 12 périodes (P) de stages attribuées et réparties
 sur 12 mois (1 période par mois). Les stages se répartissent obligatoirement
-comme suite en « stages obligatoires » (8 P) et "stages au choix" (4 P).</p>
+comme suite en «stages obligatoires» (8 P) et "stages au choix" (4 P).</p>
 </li>
 <li>
 <p>les stages obligatoires doivent se dérouler dans la première partie de
@@ -947,14 +1013,14 @@ impérativement être respecté. Les modifications manuelles ne pourront pas
 être modifiées par le logiciel.</p>
 </li>
 <li>
-<p>Les 2 périodes de stage obligatoire « Urgence », doivent être effectuées
+<p>Les 2 périodes de stage obligatoire «Urgence», doivent être effectuées
 l’une à la suite de l’autre dans un même hôpital.</p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><strong>Les contraintes souples</strong> :</p>
+<p><strong>Les contraintes souples</strong>:</p>
 <div class="ulist">
 <ul>
 <li>
@@ -965,7 +1031,7 @@ cette contrainte n’est pas respectée on ajoute une pénalité de 5 points.</p
 <p>L’étudiant émet des désidératas concernant le lieu de stage obligatoires et
 concernant la spécialité et les lieux de stages au choix. Ces désidératas
 devraient être respectés le plus possible en fonction d’un ordre de
-préférence allant de 1 à 4. Si le 1er choix n’est pas respecté, on ajoute :</p>
+préférence allant de 1 à 4. Si le 1er choix n’est pas respecté, on ajoute:</p>
 <div class="ulist">
 <ul>
 <li>
@@ -989,7 +1055,7 @@ kilomètre entre son adresse légale et l’adresse de l’hôpital.</p>
 <li>
 <p>Chaque étudiant doit choisir 6 stages au choix, par ordre de préférence
 allant de 1 à 6. Seulement 4 stages seront pris, s’il est impossible de
-respecter les 4 premiers choix de stage on va ajouter :</p>
+respecter les 4 premiers choix de stage on va ajouter:</p>
 <div class="ulist">
 <ul>
 <li>
@@ -1003,7 +1069,7 @@ respecter les 4 premiers choix de stage on va ajouter :</p>
 </li>
 <li>
 <p>Si l’offre est plus petite que la demande, certains étudiants seront ajoutés
-dans un hôpital fictif nommé « error », cet hôpital possède une capacité
+dans un hôpital fictif nommé «error», cet hôpital possède une capacité
 infinie. Si cette contrainte n’est pas respectée (l’offre &lt; la demande) on
 ajoute une pénalité de 1000 points.</p>
 </li>
@@ -1086,7 +1152,7 @@ ouvert au monde exterieur.</p>
 <div id="footer">
 <div id="footer-text">
 Version 1.0<br>
-Last updated 2017-11-03 10:36:37 CET
+Last updated 2018-01-16 16:32:22 CET
 </div>
 </div>
 </body>
