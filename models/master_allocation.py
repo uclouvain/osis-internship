@@ -24,6 +24,7 @@
 #
 ##############################################################################
 from django.db import models
+from django.db.models import Q
 from django.contrib import admin
 from internship.models.internship_master import InternshipMaster
 
@@ -32,6 +33,7 @@ class MasterAllocationAdmin(admin.ModelAdmin):
     list_display = ('master', 'organization', 'specialty')
     fieldsets = ((None, {'fields': ('master', 'organization', 'specialty')}),)
     raw_id_fields = ('master', 'organization', 'specialty')
+    list_filter = ('organization__cohort', 'specialty__cohort')
 
 
 class MasterAllocation(models.Model):
@@ -77,3 +79,7 @@ def search(cohort, specialty, hospital):
 
 def clean_allocations(cohort, master):
     find_by_master(cohort, master).delete()
+
+
+def find_by_cohort(cohort_from):
+    return MasterAllocation.objects.filter(Q(organization__cohort=cohort_from) | Q(specialty__cohort=cohort_from))

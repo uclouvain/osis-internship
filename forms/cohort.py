@@ -37,8 +37,7 @@ class CohortForm(forms.ModelForm):
     publication_start_date = forms.DateField(widget=DateInput)
     subscription_start_date = forms.DateField(widget=DateInput)
     subscription_end_date = forms.DateField(widget=DateInput)
-    copy_organizations_from_cohort = forms.ModelChoiceField(queryset=cohort.find_all(), empty_label="None", required=False)
-    copy_specialities_from_cohort = forms.ModelChoiceField(queryset=cohort.find_all(), empty_label="None", required=False)
+    originated_from = forms.ModelChoiceField(queryset=cohort.find_all(), empty_label="", required=False)
 
     class Meta:
         model = cohort.Cohort
@@ -48,7 +47,8 @@ class CohortForm(forms.ModelForm):
             'free_internships_number',
             'publication_start_date',
             'subscription_start_date',
-            'subscription_end_date'
+            'subscription_end_date',
+            'originated_from'
         ]
 
     def __init__(self, *args, **kwargs):

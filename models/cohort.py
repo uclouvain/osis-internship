@@ -42,6 +42,7 @@ class Cohort(SerializableModel):
     publication_start_date = models.DateField(blank=False)
     subscription_start_date = models.DateField(blank=False)
     subscription_end_date = models.DateField(blank=False)
+    originated_from = models.ForeignKey('Cohort', null=True, blank=True)
 
     class Meta:
         ordering = ['name']
