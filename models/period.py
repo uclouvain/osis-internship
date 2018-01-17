@@ -63,7 +63,3 @@ def get_by_name(period_name):
 
 def find_by_cohort(cohort):
     return Period.objects.filter(cohort=cohort).order_by("date_start")
-
-
-def find_all():
-    return Period.objects.all()

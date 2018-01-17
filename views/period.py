@@ -39,6 +39,7 @@ from internship.models.period import Period
 def internships_periods(request, cohort_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
     periods = mdl_internship.period.Period.objects.filter(cohort_id=cohort_id)
+
     context = {
         'section': 'internship',
         'periods': periods,

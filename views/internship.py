@@ -123,7 +123,7 @@ def edit_period_places(request, cohort_id, internship_id):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def save_period_places(request, cohort_id, internship_id):
     cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)
-    periods_dict = _get_dict_of_periods()
+    periods_dict = _get_dict_of_periods(cohort)
     internship_offer = get_object_or_404(mdl_int.internship_offer.InternshipOffer, pk=internship_id, cohort=cohort)
     if not internship_offer:
         return redirect('edit_period_places', cohort_id=cohort.id, internship_id=internship_id)
@@ -371,8 +371,8 @@ def _is_correct_speciality(offer, speciality):
     return offer.speciality == speciality
 
 
-def _get_dict_of_periods():
-    periods = mdl_int.period.find_all()
+def _get_dict_of_periods(cohort):
+    periods = mdl_int.period.find_by_cohort(cohort)
     periods_dict = dict()
     for period in periods:
         periods_dict[period.name] = period

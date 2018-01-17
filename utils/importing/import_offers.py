@@ -27,89 +27,89 @@ import openpyxl
 
 from internship.models import organization, internship_speciality, internship_offer, period, period_internship_places
 
+COL_REF_HOSPITAL = 0
+COL_SPECIALTY = 1
+COL_MASTER = 2
+
 
 def import_xlsx(file_name, cohort):
     workbook = openpyxl.load_workbook(file_name, read_only=True)
     worksheet = workbook.active
-    col_reference = 0
-    col_spec = 1
-    col_master = 2
 
-    # Iterates over the lines of the spreadsheet.
-    for count, row in enumerate(worksheet.rows):
-        if row[col_reference].value is None \
-                or row[col_reference].value == 0 \
-                or not _is_registration_id(row[col_reference].value):
-            continue
+    for row in worksheet.rows:
+        _import_offer(row, cohort)
 
-        if row[col_spec].value is not None:
-            if row[col_reference].value:
-                if int(row[col_reference].value) < 10:
-                    reference = "0" + str(row[col_reference].value)
-                else:
-                    reference = str(row[col_reference].value)
-                org = organization.search(reference=reference, cohort=cohort)
 
-            if len(org) > 0:
-                spec_value = row[col_spec].value
-                spec_value = spec_value.replace(" ", "")
-                spec_value = spec_value.replace("*", "")
+def _import_offer(row, cohort):
+    if _is_invalid_id(row[COL_REF_HOSPITAL].value):
+        return
 
-                master_value = row[col_master].value
+    if row[COL_SPECIALTY].value is not None:
+        organizations = organization.find_by_reference(cohort, row[COL_REF_HOSPITAL].value)
 
-                speciality = internship_speciality.search(acronym__exact=spec_value, cohort=cohort)
+        if organizations:
+            maximum_enrollments = 0
+            periods = period.Period.objects.filter(cohort=cohort)
+            for col_period in range(3, len(periods) + 3):
+                if row[col_period].value:
+                    maximum_enrollments += int(row[col_period].value)
 
-                number_place = 0
-                periods = period.Period.objects.filter(cohort=cohort)
+            specialities = internship_speciality.search(acronym__exact=row[COL_SPECIALTY].value, cohort=cohort)
+            for specialty in specialities:
+                offer = _create_offer(row, cohort, specialty, organizations.first(), maximum_enrollments)
+
+                number_period = 1
                 for x in range(3, len(periods) + 3):
-                    if row[x].value is None:
-                        number_place += 0
-                    else:
-                        number_place += int(row[x].value)
-
-                for x in range(0, len(speciality)):
-                    check_internship_offer = internship_offer.InternshipOffer.objects.filter(
-                        speciality=speciality[x],
-                        organization__reference=org[0].reference,
-                        cohort=cohort)
-                    if len(check_internship_offer) != 0:
-                        offer = check_internship_offer.first()
-                    else:
-                        offer = internship_offer.InternshipOffer()
-
-                    offer.organization = org[0]
-                    offer.speciality = speciality[x]
-                    offer.title = speciality[x].name
-                    offer.maximum_enrollments = number_place
-                    offer.master = master_value
-                    offer.cohort = cohort
-                    offer.selectable = True
-                    offer.save()
-
-                    number_period = 1
-                    for x in range(3, len(periods) + 3):
-                        period_search = "P" + str(number_period)
-                        number_period += 1
-                        a_period = period.search(name__exact=period_search, cohort=cohort).first()
-                        check_relation = period_internship_places.find_by_offer_in_period(a_period, offer)
-
-                        if len(check_relation) != 0:
-                            relation = period_internship_places.find_by_id(check_relation.first().id)
-                        else:
-                            relation = period_internship_places.PeriodInternshipPlaces()
-
-                        relation.period = a_period
-                        relation.internship_offer = offer
-                        if row[x].value is None:
-                            relation.number_places = 0
-                        else:
-                            relation.number_places = int(row[x].value)
-                        relation.save()
+                    period_name = "P{}".format(number_period)
+                    number_period += 1
+                    _create_offer_places(cohort, period_name, offer, row[x].value)
 
 
-def _is_registration_id(registration_id):
-    try:
-        int(registration_id)
+def _create_offer(row, cohort, specialty, org, maximum_enrollments):
+    check_internship_offer = internship_offer.InternshipOffer.objects.filter(
+        speciality=specialty,
+        organization__reference=org.reference,
+        cohort=cohort)
+    if check_internship_offer:
+        offer = check_internship_offer.first()
+    else:
+        offer = internship_offer.InternshipOffer()
+
+    offer.organization = org
+    offer.speciality = specialty
+    offer.title = specialty.name
+    offer.maximum_enrollments = maximum_enrollments
+    offer.master = row[COL_MASTER].value
+    offer.cohort = cohort
+    offer.selectable = True
+    offer.save()
+    return offer
+
+
+def _create_offer_places(cohort, period_name, offer, value):
+    a_period = period.search(name__exact=period_name, cohort=cohort).first()
+    check_relation = period_internship_places.find_by_offer_in_period(a_period, offer)
+
+    if check_relation:
+        offer_places = check_relation.first()
+    else:
+        offer_places = period_internship_places.PeriodInternshipPlaces()
+
+    offer_places.period = a_period
+    offer_places.internship_offer = offer
+    if value:
+        offer_places.number_places = int(value)
+    else:
+        offer_places.number_places = 0
+    offer_places.save()
+
+
+def _is_invalid_id(registration_id):
+    if registration_id is None or registration_id == 0:
         return True
-    except ValueError:
-        return False
+    else:
+        try:
+            int(registration_id)
+            return False
+        except ValueError:
+            return True

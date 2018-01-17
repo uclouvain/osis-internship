@@ -31,6 +31,7 @@ class PeriodInternshipPlacesAdmin(SerializableModelAdmin):
     list_display = ('period', 'internship_offer', 'number_places')
     fieldsets = ((None, {'fields': ('period', 'internship_offer', 'number_places')}),)
     raw_id_fields = ('period', 'internship_offer')
+    list_filter = ('period__cohort',)
     search_fields = ['internship_offer__organization__name']
 
 
