@@ -25,7 +25,7 @@
 ##############################################################################
 import openpyxl
 
-from internship import models
+from internship.models import organization, internship_speciality, internship_offer, period, period_internship_places
 
 
 def import_xlsx(file_name, cohort):
@@ -34,6 +34,7 @@ def import_xlsx(file_name, cohort):
     col_reference = 0
     col_spec = 1
     col_master = 2
+
     # Iterates over the lines of the spreadsheet.
     for count, row in enumerate(worksheet.rows):
         if row[col_reference].value is None \
@@ -44,23 +45,22 @@ def import_xlsx(file_name, cohort):
         if row[col_spec].value is not None:
             if row[col_reference].value:
                 if int(row[col_reference].value) < 10:
-                    reference = "0"+str(row[col_reference].value)
+                    reference = "0" + str(row[col_reference].value)
                 else:
                     reference = str(row[col_reference].value)
-                organization = models.organization.search(reference=reference, cohort=cohort)
+                org = organization.search(reference=reference, cohort=cohort)
 
-            if len(organization) > 0:
-
+            if len(org) > 0:
                 spec_value = row[col_spec].value
                 spec_value = spec_value.replace(" ", "")
                 spec_value = spec_value.replace("*", "")
 
                 master_value = row[col_master].value
 
-                speciality = models.internship_speciality.search(acronym__exact=spec_value, cohort=cohort)
+                speciality = internship_speciality.search(acronym__exact=spec_value, cohort=cohort)
 
                 number_place = 0
-                periods = models.period.Period.objects.filter(cohort=cohort)
+                periods = period.Period.objects.filter(cohort=cohort)
                 for x in range(3, len(periods) + 3):
                     if row[x].value is None:
                         number_place += 0
@@ -68,38 +68,38 @@ def import_xlsx(file_name, cohort):
                         number_place += int(row[x].value)
 
                 for x in range(0, len(speciality)):
-                    check_internship_offer = models.internship_offer.InternshipOffer.objects.filter(
+                    check_internship_offer = internship_offer.InternshipOffer.objects.filter(
                         speciality=speciality[x],
-                        organization__reference=organization[0].reference,
+                        organization__reference=org[0].reference,
                         cohort=cohort)
                     if len(check_internship_offer) != 0:
-                        internship_offer = check_internship_offer.first()
+                        offer = check_internship_offer.first()
                     else:
-                        internship_offer = models.internship_offer.InternshipOffer()
+                        offer = internship_offer.InternshipOffer()
 
-                    internship_offer.organization = organization[0]
-                    internship_offer.speciality = speciality[x]
-                    internship_offer.title = speciality[x].name
-                    internship_offer.maximum_enrollments = number_place
-                    internship_offer.master = master_value
-                    internship_offer.cohort = cohort
-                    internship_offer.selectable = True
-                    internship_offer.save()
+                    offer.organization = org[0]
+                    offer.speciality = speciality[x]
+                    offer.title = speciality[x].name
+                    offer.maximum_enrollments = number_place
+                    offer.master = master_value
+                    offer.cohort = cohort
+                    offer.selectable = True
+                    offer.save()
 
                     number_period = 1
                     for x in range(3, len(periods) + 3):
                         period_search = "P" + str(number_period)
                         number_period += 1
-                        period = models.period.search(name__exact=period_search, cohort=cohort).first()
-                        check_relation = models.period_internship_places.PeriodInternshipPlaces.objects.filter(period=period, internship_offer=internship_offer)
+                        a_period = period.search(name__exact=period_search, cohort=cohort).first()
+                        check_relation = period_internship_places.find_by_offer_in_period(a_period, offer)
 
                         if len(check_relation) != 0:
-                            relation = models.period_internship_places.find_by_id(check_relation.first().id)
+                            relation = period_internship_places.find_by_id(check_relation.first().id)
                         else:
-                            relation = models.period_internship_places.PeriodInternshipPlaces()
+                            relation = period_internship_places.PeriodInternshipPlaces()
 
-                        relation.period = period
-                        relation.internship_offer = internship_offer
+                        relation.period = a_period
+                        relation.internship_offer = offer
                         if row[x].value is None:
                             relation.number_places = 0
                         else:

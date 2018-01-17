@@ -54,3 +54,8 @@ def find_by_id(id):
 
 def find_by_internship_offer(internship_offer):
     return PeriodInternshipPlaces.objects.filter(internship_offer=internship_offer)
+
+
+def find_by_offer_in_period(period, offer):
+    return PeriodInternshipPlaces.objects.filter(period=period,
+                                                 internship_offer=offer)

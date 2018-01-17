@@ -112,21 +112,6 @@ class PlaceViewAndUrlTestCase(TestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
-    def test_upload_places_file(self):
-        workbook = XlsPlaceImportTestCase.generate_workbook()
-
-        content_of_workbook = io.BytesIO(save_virtual_workbook(workbook))
-        content_of_workbook.name = 'demo.xls'
-
-        url = reverse('upload_places', kwargs={
-            'cohort_id': self.cohort.id,
-        })
-        response = self.client.post(url, {'file': content_of_workbook}, follow=True)
-
-        self.assertRedirects(response, reverse('internships_places', kwargs={
-            'cohort_id': self.cohort.id,
-        }))
-
     def test_export_organisation_affectation_master(self):
         organization = OrganizationFactory(cohort=self.cohort)
 
