@@ -73,7 +73,7 @@ def import_xlsx(file_name, cohort):
                         organization__reference=organization[0].reference,
                         cohort=cohort)
                     if len(check_internship_offer) != 0:
-                        internship_offer = models.internship_offer.find_intership_by_id(check_internship_offer.first().id)
+                        internship_offer = check_internship_offer.first()
                     else:
                         internship_offer = models.internship_offer.InternshipOffer()
 
