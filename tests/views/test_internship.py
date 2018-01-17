@@ -35,6 +35,7 @@ from internship.tests.factories.offer import OfferFactory
 from internship.tests.models import test_internship_offer, test_internship_speciality, test_organization, test_period
 from internship.tests.factories.cohort import CohortFactory
 from internship.tests.factories.internship import InternshipFactory
+from internship.tests.factories.period import PeriodFactory
 
 
 class TestModifyStudentChoices(TestCase):
@@ -238,6 +239,8 @@ class TestModifyPeriods(TestCase):
     def test_save_period_places(self):
         cohort = CohortFactory()
         internship_offer = OfferFactory(cohort=cohort)
+        PeriodFactory(name="P1", cohort=cohort)
+        PeriodFactory(name="P5", cohort=cohort)
 
         kwargs = {
             'internship_id': internship_offer.id,
