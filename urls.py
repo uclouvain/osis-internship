@@ -25,9 +25,7 @@
 ##############################################################################
 from django.conf.urls import include, url
 
-from internship.utils.importing import import_offers
-from internship.views import (affectation, home, internship, master, offer, period, place, speciality,
-                              student, cohort)
+from internship.views import (affectation, home, internship, master, offer, period, place, speciality, student, cohort)
 
 urlpatterns = [
     url(r'^$', home.view_cohort_selection, name='internship'),
