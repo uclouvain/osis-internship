@@ -23,17 +23,13 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import functools
-from unittest import mock
-
 import faker
 import openpyxl
+
 from django.contrib.auth.models import Permission, User
 from django.test import TestCase
 
-from internship.models.organization import Organization
 from internship.tests.factories.cohort import CohortFactory
-from internship.views.upload_xls import _save_xls_place as save_xls_place
 from reference.tests.factories import country
 
 faker = faker.Faker()
@@ -68,22 +64,7 @@ class XlsPlaceImportTestCase(TestCase):
         workbook = openpyxl.Workbook()
         worksheet = workbook.active
         for row in range(1, 11):
-            # add_cell = functools.partial(worksheet.cell, row=row)
             for column, func in columns:
                 worksheet.cell(row=row, column=column+1).value = func()
-                # add_cell(column=column+1, value=func())
 
         return workbook
-
-    def test_import_xls_from_python_api(self):
-        with mock.patch('openpyxl.load_workbook') as mock_load_workbook:
-            workbook = self.generate_workbook()
-            mock_load_workbook.return_value = workbook
-
-            qs = Organization.objects.all()
-            self.assertEqual(qs.count(), 0)
-            save_xls_place(None, cohort=self.cohort)
-
-            self.assertTrue(mock_load_workbook.called)
-            qs = Organization.objects.all()
-            self.assertTrue(qs.count() > 0)

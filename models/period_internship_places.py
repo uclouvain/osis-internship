@@ -31,6 +31,7 @@ class PeriodInternshipPlacesAdmin(SerializableModelAdmin):
     list_display = ('period', 'internship_offer', 'number_places')
     fieldsets = ((None, {'fields': ('period', 'internship_offer', 'number_places')}),)
     raw_id_fields = ('period', 'internship_offer')
+    list_filter = ('period__cohort',)
     search_fields = ['internship_offer__organization__name']
 
 
@@ -54,3 +55,8 @@ def find_by_id(id):
 
 def find_by_internship_offer(internship_offer):
     return PeriodInternshipPlaces.objects.filter(internship_offer=internship_offer)
+
+
+def find_by_offer_in_period(period, offer):
+    return PeriodInternshipPlaces.objects.filter(period=period,
+                                                 internship_offer=offer)
