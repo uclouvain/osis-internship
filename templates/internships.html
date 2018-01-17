@@ -124,8 +124,7 @@
                                                     <td align="center">
                                                         <a class="btn btn-info" target="_blank" id="lnk_students_choice{{internship.id}}"
                                                            href="{% url 'internship_detail_student_choice' cohort_id=cohort.id offer_id=internship.id %}">
-                                  <span class="glyphicon glyphicon-search" aria-hidden="true">
-                                  </span>
+                                                          <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
                                                         </a>
                                                     </td>
                                                 </tr>
@@ -208,7 +207,7 @@
         <div class="modal fade" id="pnl_upload_internship" tabindex="-1" role="dialog" aria-labelledby="uploadScoresLabel">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
-                    <form method="post" enctype="multipart/form-data" action="{% url 'upload_internship' cohort_id=cohort.id %}">
+                    <form method="post" enctype="multipart/form-data" action="{% url 'upload_offers' cohort_id=cohort.id %}">
                         {% csrf_token %}
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="bt_close_upload_score_modal"><span aria-hidden="true">&times;</span></button>

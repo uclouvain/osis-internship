@@ -28,10 +28,12 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.views.decorators.http import require_http_methods
+from django.contrib import messages
 
 from base import models as mdl
 from internship import models as mdl_int
 from internship.views.internship import get_all_specialities, set_tabs_name
+from internship.utils.importing import import_offers
 
 
 @login_required
@@ -351,6 +353,22 @@ def internship_save_modification_student(request, cohort_id):
 
     redirect_url = reverse('internships_modification_student', args=[registration_id[0]])
     return HttpResponseRedirect(redirect_url)
+
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def upload_offers(request, cohort_id):
+    cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)
+    if request.method == 'POST':
+        file_name = request.FILES['file']
+
+        if file_name is not None:
+            if ".xls" not in str(file_name):
+                messages.add_message(request, messages.ERROR, _('file_must_be_xls'))
+            else:
+                import_offers.import_xlsx(file_name, cohort)
+
+    return HttpResponseRedirect(reverse('internships', kwargs={'cohort_id': cohort.id}))
 
 
 def _get_all_organizations(internships):

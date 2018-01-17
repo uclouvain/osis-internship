@@ -24,126 +24,11 @@
 #
 ##############################################################################
 import openpyxl
-from django.contrib import messages
-from django.contrib.auth.decorators import login_required, permission_required
-from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404
-from django.utils.translation import ugettext_lazy as _
-from django.views.decorators.http import require_http_methods
 
 from internship import models
-from reference.models import country
 
 
-@require_http_methods(['POST'])
-@login_required
-@permission_required('internship.is_internship_manager', raise_exception=True)
-def upload_places_file(request, cohort_id):
-    cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
-    file_name = request.FILES['file']
-    if file_name is not None:
-        if ".xls" not in str(file_name):
-            messages.add_message(request, messages.ERROR, _('file_must_be_xls'))
-        else:
-            _save_xls_place(file_name, cohort)
-
-    return HttpResponseRedirect(reverse('internships_places', kwargs={
-        'cohort_id': cohort.id
-    }))
-
-
-@login_required
-@permission_required('internship.is_internship_manager', raise_exception=True)
-def upload_internships_file(request, cohort_id):
-    cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
-    if request.method == 'POST':
-        file_name = request.FILES['file']
-
-        if file_name is not None:
-            if ".xls" not in str(file_name):
-                messages.add_message(request, messages.ERROR, _('file_must_be_xls'))
-            else:
-                _save_xls_internships(file_name, cohort)
-
-    return HttpResponseRedirect(reverse('internships', kwargs={'cohort_id': cohort.id}))
-
-
-def _save_xls_place(file_name, cohort):
-    workbook = openpyxl.load_workbook(file_name, read_only=True)
-    worksheet = workbook.active
-    col_reference = 0
-    col_name = 1
-    col_address = 2
-    col_postal_code = 3
-    col_city = 4
-    col_country = 5
-    col_url = 6
-
-    # Iterates over the lines of the spreadsheet.
-    for count, row in enumerate(worksheet.rows):
-        if row[col_reference].value is None \
-                or row[col_reference].value == 0 \
-                or not _is_registration_id(row[col_reference].value):
-            continue
-
-        if row[col_reference].value < 10:
-            reference = "0"+str(row[col_reference].value)
-        else:
-            reference = str(row[col_reference].value)
-
-        place = models.organization.search(reference=reference)
-        if place:
-            organization = models.organization.get_by_id(place[0].id)
-        else:
-            organization = models.organization.Organization(cohort=cohort)
-
-        if row[col_reference].value:
-            if int(row[col_reference].value) < 10:
-                reference = "0"+str(row[col_reference].value)
-            else:
-                reference = str(row[col_reference].value)
-            organization.reference = reference
-        else:
-            organization.reference = None
-
-        if row[col_name].value:
-            organization.name = row[col_name].value
-            organization.acronym = row[col_name].value[:14]
-        else:
-            organization.name = None
-            organization.acronym = None
-
-        if row[col_url].value:
-            organization.website = row[col_url].value
-        else:
-            organization.website = ""
-
-        if row[col_address].value:
-            organization.location = row[col_address].value
-
-        if row[col_postal_code].value:
-            organization.postal_code = row[col_postal_code].value
-
-        if row[col_city].value:
-            organization.city = row[col_city].value
-
-        # TODO Uncomment when the function get_by_iso_code is in production.
-        #if row[col_country].value:
-        #    organization.country = country.get_by_iso_code(row[col_country].value)
-
-        organization.save()
-
-
-def _is_registration_id(registration_id):
-    try:
-        int(registration_id)
-        return True
-    except ValueError:
-        return False
-
-
-def _save_xls_internships(file_name, cohort):
+def import_xlsx(file_name, cohort):
     workbook = openpyxl.load_workbook(file_name, read_only=True)
     worksheet = workbook.active
     col_reference = 0
@@ -160,7 +45,7 @@ def _save_xls_internships(file_name, cohort):
             if row[col_reference].value:
                 if int(row[col_reference].value) < 10:
                     reference = "0"+str(row[col_reference].value)
-                else :
+                else:
                     reference = str(row[col_reference].value)
                 organization = models.organization.search(reference=reference, cohort=cohort)
 
@@ -220,3 +105,11 @@ def _save_xls_internships(file_name, cohort):
                         else:
                             relation.number_places = int(row[x].value)
                         relation.save()
+
+
+def _is_registration_id(registration_id):
+    try:
+        int(registration_id)
+        return True
+    except ValueError:
+        return False

@@ -25,8 +25,9 @@
 ##############################################################################
 from django.conf.urls import include, url
 
+from internship.utils.importing import import_offers
 from internship.views import (affectation, home, internship, master, offer, period, place, speciality,
-                              student, cohort, upload_xls)
+                              student, cohort)
 
 urlpatterns = [
     url(r'^$', home.view_cohort_selection, name='internship'),
@@ -62,6 +63,7 @@ urlpatterns = [
                 url(r'^save/$', offer.internships_save, name='internships_save'),
                 url(r'^save/modification/student/$', offer.internship_save_modification_student,
                     name='internship_save_modification_student'),
+                url(r'^upload/$', offer.upload_offers, name='upload_offers'),
             ])),
 
             url(r'^periods/', include([
@@ -93,7 +95,6 @@ urlpatterns = [
                 url(r'^save/(?P<organization_id>[0-9]+)/$', place.place_save,
                     name='place_save'),
                 url(r'^save/$', place.organization_new, name='place_save_new'),
-                url(r'^upload/$', upload_xls.upload_places_file, name='upload_places'),
             ])),
 
             url(r'^specialities/', include([
@@ -145,8 +146,6 @@ urlpatterns = [
                 url(r'^generate/$', affectation.run_affectation, name='internship_affectation_generate'),
                 url(r'^sumup/$', affectation.internship_affectation_sumup, name='internship_affectation_sumup'),
             ])),
-
-            url(r'^internships/upload/$', upload_xls.upload_internships_file, name='upload_internship'),
         ])),
 
     ])),
