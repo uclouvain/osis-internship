@@ -51,5 +51,4 @@ def _import_row(cohort, row):
         student_information.email = row[19].value
         student_information.phone_mobile = row[14].value
         student_information.cohort = cohort
-        print(student_information)
         student_information.save()

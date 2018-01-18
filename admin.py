@@ -29,6 +29,8 @@ from internship.models import *
 
 admin.site.register(cohort.Cohort, cohort.CohortAdmin)
 
+admin.site.register(internship.Internship, internship.InternshipAdmin)
+
 admin.site.register(internship_offer.InternshipOffer, internship_offer.InternshipOfferAdmin)
 
 admin.site.register(internship_enrollment.InternshipEnrollment, internship_enrollment.InternshipEnrollmentAdmin)

@@ -114,38 +114,42 @@ cela, les autorisations peuvent être assignées correctement.
 Voici une description détaillée des tous les tâches du processus:
 
 [#creation_cohort]
-=== Création de cohort
+=== Création d'une cohorte
 
-Le terme *Cohort* est utilisé pour definir la période annuel d'organisation des
-stages. Cette période ne coïncide pas avec l'année academique et ça gestion est
-tout à fait specifique au domaine des stages de médecine.
+La *Cohorte* est utilisé pour définir la période annuel d'organisation des
+stages. Cette période ne coïncide pas avec l'année académique et ça gestion est
+tout à fait spécifique au domaine des stages de médecine.
 
-La creation d'un cohort est le premier pas ver l'affectation des stages. Presque
-toutes les données sont liées à cela. À cette étape l'administrateur, sur
-demande du gestionaire des stages, va créer un cohort avec des informations
-basiques, plus les dates qui déterminent le debut, la fin et la publication des
-résultats.
+La création d'une cohorte est le premier pas ver l'affectation des stages. Presque toutes les données sont liées à cela. À cette étape le gestionnaire des stages va créer une cohorte avec des informations basiques, plus les dates qui déterminent le début, la fin et la publication des résultats.
 
-//image::images/creation-cohort.png[Création de cohort]
+image::images/cohort-creation.png[Création de cohort]
+
+Le gestionnaire a l'option de créer une cohorte à partir d'une cohorte existant. Cela lui permettre de réutiliser une bonne partie de les données disponibles. Les données réutilisés sont les hôpitaux, les spécialités, les périodes, les types de stages et les maîtres de stages.
 
 [#import/students]
-=== Importation des données des étudiants
+=== Importation des étudiants
 
-Grace à l'importation de données apartir d'un fichier XLS, ce n'est pas
-necessaire de démander aux étudiants de s'inscrire sur l'application. Le fichier
+Grace à l'importation de données a partir d'un fichier XLS, ce n'est pas
+nécessaire de demander aux étudiants de s'inscrire sur l'application. Le fichier
 provient de l'application de gestion de l'université et contient les étudiants
-inscrits sur le programe de master en médecine, essentiel pour la demarche du
+inscrits sur le programme de master en médecine, essentiel pour la démarche du
 processus d'affectation.
 
 image::images/students-empty.png[Pas d'étudiant dans la cohorte]
 
-L'importation des étudiants est disponible dans la page de consultation des étudiants. En cliquant sur le bouton "Importer", une fenaitre modal s'ouvre pour permetre la selection du fichier Excel (xlsx) disponible sur la machine de l'utilisateur. Après la selection, cliquez sur le bouton "Importer" en bleu pour demarrer l'importation. Il faut quelques instants pour importer tous les étudiants. C'est normal.
+L'importation des étudiants est disponible dans la page de consultation des étudiants. En cliquant sur le bouton "Importer", une fenêtre modal s'ouvre pour permettre la sélection du fichier Excel (xlsx) disponible sur la machine de l'utilisateur. Après la sélection, cliquez sur le bouton "Importer" en bleu pour démarrer l'importation. Il faut quelques instants pour importer tous les étudiants. C'est normal.
 
 image::images/students-import.png[Importation des étudiants]
 
 Une fois que les étudiants sont importer, le bouton "Importer" disparetre parce que c'est possible importer les étudiant seulement une fois par cohorte. Après l'importation, les données devront être maintenu manuellement.
 
 image::images/students-imported.png[Les étudiants importés dans la cohorte]
+
+=== Importation des offres de stages
+
+Les offres de stages pour les spécialités dans les différent hôpitaux sont meilleur gérer dans un fichier Excel. Cette fonctionnalité permettre d'exploiter les données du fichier dans l'application.
+
+image::images/offers-import.png[Importation des offres de stage]
 
 === Definition des périodes, des hôpitaux et des places disponibles
 

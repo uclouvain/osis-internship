@@ -1,8 +1,10 @@
 import uuid
-from internship.models import organization
+
+from internship.models import internship
 from internship.models import internship_speciality
-from internship.models import period
+from internship.models import organization
 from internship.models import master_allocation
+from internship.models import period
 
 
 def copy_from_origin(cohort):
@@ -10,6 +12,7 @@ def copy_from_origin(cohort):
         _copy_organizations(cohort.originated_from, cohort)
         _copy_specialties(cohort.originated_from, cohort)
         _copy_periods(cohort.originated_from, cohort)
+        _copy_internships(cohort.originated_from, cohort)
         _copy_master_allocations(cohort.originated_from, cohort)
 
 
@@ -40,21 +43,39 @@ def _copy_periods(cohort_from, cohort_to):
         prd.save()
 
 
+def _copy_internships(cohort_from, cohort_to):
+    """ This function must come after _copy_specialties because it needs the new ones. """
+    internships = internship.find_by_cohort(cohort_from)
+    for intern in internships:
+        intern.pk = None
+        intern.cohort = cohort_to
+        intern.uuid = uuid.uuid4()
+        intern.speciality = _get_new_cohort_specialty(intern.speciality, cohort_to)
+        intern.save()
+
+
 def _copy_master_allocations(cohort_from, cohort_to):
     """ This function must come after _copy_organizations and _copy_specialties because it needs the new ones. """
     allocations = master_allocation.find_by_cohort(cohort_from)
 
     for allocation in allocations:
         allocation.pk = None
-
-        if allocation.organization:
-            organizations = organization.find_by_reference(cohort_to, allocation.organization.reference)
-            if organizations:
-                allocation.organization = organizations.first()
-
-        if allocation.specialty:
-            specialties = internship_speciality.find_by_acronym(cohort_to, allocation.specialty.acronym)
-            if specialties:
-                allocation.specialty = specialties.first()
-
+        allocation.organization = _get_new_cohort_hospital(allocation.organization, cohort_to)
+        allocation.specialty = _get_new_cohort_specialty(allocation.specialty, cohort_to)
         allocation.save()
+
+
+def _get_new_cohort_specialty(previous_specialty, cohort_to):
+    if previous_specialty:
+        specialties = internship_speciality.find_by_acronym(cohort_to, previous_specialty.acronym)
+        if specialties:
+            return specialties.first()
+    return None
+
+
+def _get_new_cohort_hospital(previous_hospital, cohort_to):
+    if previous_hospital:
+        organizations = organization.find_by_reference(cohort_to, previous_hospital.reference)
+        if organizations:
+            return organizations.first()
+    return None

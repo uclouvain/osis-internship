@@ -438,15 +438,16 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li><a href="#_l_affectation_des_stages">1. L&#8217;affectation des stages</a>
 <ul class="sectlevel2">
-<li><a href="#creation_cohort">1.1. Création de cohort</a></li>
-<li><a href="#import/students">1.2. Importation des données des étudiants</a></li>
-<li><a href="#_definition_des_périodes_des_hôpitaux_et_des_places_disponibles">1.3. Definition des périodes, des hôpitaux et des places disponibles</a></li>
-<li><a href="#_choix_des_stages_par_specialité">1.4. Choix des stages par specialité</a></li>
-<li><a href="#_affectation_des_stages_aux_étudiants_prioritaires">1.5. Affectation des stages aux étudiants prioritaires</a></li>
-<li><a href="#_affectation_des_stages_aux_autres_étudiants">1.6. Affectation des stages aux autres étudiants</a></li>
-<li><a href="#_correction_des_stages_avec_problème_d_affectation">1.7. Correction des stages avec problème d&#8217;affectation</a></li>
-<li><a href="#_publication_des_résultats">1.8. Publication des résultats</a></li>
-<li><a href="#_consultation_des_résultats">1.9. Consultation des résultats</a></li>
+<li><a href="#creation_cohort">1.1. Création d&#8217;une cohorte</a></li>
+<li><a href="#import/students">1.2. Importation des étudiants</a></li>
+<li><a href="#_importation_des_offres_de_stages">1.3. Importation des offres de stages</a></li>
+<li><a href="#_definition_des_périodes_des_hôpitaux_et_des_places_disponibles">1.4. Definition des périodes, des hôpitaux et des places disponibles</a></li>
+<li><a href="#_choix_des_stages_par_specialité">1.5. Choix des stages par specialité</a></li>
+<li><a href="#_affectation_des_stages_aux_étudiants_prioritaires">1.6. Affectation des stages aux étudiants prioritaires</a></li>
+<li><a href="#_affectation_des_stages_aux_autres_étudiants">1.7. Affectation des stages aux autres étudiants</a></li>
+<li><a href="#_correction_des_stages_avec_problème_d_affectation">1.8. Correction des stages avec problème d&#8217;affectation</a></li>
+<li><a href="#_publication_des_résultats">1.9. Publication des résultats</a></li>
+<li><a href="#_consultation_des_résultats">1.10. Consultation des résultats</a></li>
 </ul>
 </li>
 <li><a href="#_la_gestion_journalière">2. La gestion journalière</a>
@@ -641,22 +642,26 @@ cela, les autorisations peuvent être assignées correctement.</p>
 <p>Voici une description détaillée des tous les tâches du processus:</p>
 </div>
 <div class="sect2">
-<h3 id="creation_cohort">1.1. Création de cohort</h3>
+<h3 id="creation_cohort">1.1. Création d&#8217;une cohorte</h3>
 <div class="paragraph">
-<p>Le terme <strong>Cohort</strong> est utilisé pour definir la période annuel d&#8217;organisation des
+<p>La <strong>Cohorte</strong> est utilisé pour definir la période annuel d&#8217;organisation des
 stages. Cette période ne coïncide pas avec l&#8217;année academique et ça gestion est
 tout à fait specifique au domaine des stages de médecine.</p>
 </div>
 <div class="paragraph">
-<p>La creation d&#8217;un cohort est le premier pas ver l&#8217;affectation des stages. Presque
-toutes les données sont liées à cela. À cette étape l&#8217;administrateur, sur
-demande du gestionaire des stages, va créer un cohort avec des informations
-basiques, plus les dates qui déterminent le debut, la fin et la publication des
-résultats.</p>
+<p>La création d&#8217;une cohorte est le premier pas ver l&#8217;affectation des stages. Presque toutes les données sont liées à cela. À cette étape le gestionaire des stages va créer une cohorte avec des informations basiques, plus les dates qui déterminent le debut, la fin et la publication des résultats.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/cohort-creation.png" alt="Création de cohort">
+</div>
+</div>
+<div class="paragraph">
+<p>Le gestionaire a l&#8217;option de créer une cohorte à partir d&#8217;une cohorte existant. Cela lui permetre de reutiliser une bonne partie de les données disponibles. Les données reutilisés sont les hôpitaux, les spécialités, les periodes et les maîtres de stages.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="import/students">1.2. Importation des données des étudiants</h3>
+<h3 id="import/students">1.2. Importation des étudiants</h3>
 <div class="paragraph">
 <p>Grace à l&#8217;importation de données apartir d&#8217;un fichier XLS, ce n&#8217;est pas
 necessaire de démander aux étudiants de s&#8217;inscrire sur l&#8217;application. Le fichier
@@ -687,7 +692,18 @@ processus d&#8217;affectation.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_definition_des_périodes_des_hôpitaux_et_des_places_disponibles">1.3. Definition des périodes, des hôpitaux et des places disponibles</h3>
+<h3 id="_importation_des_offres_de_stages">1.3. Importation des offres de stages</h3>
+<div class="paragraph">
+<p>Les offres de stages pour les spécialités dans les différent hôpitaux sont meilleur gérer dans un fichier Excel. Cette fonctionnalité permettre d&#8217;exploiter les données du fichier dans l&#8217;application.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/offers-import.png" alt="Importation des offres de stage">
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_definition_des_périodes_des_hôpitaux_et_des_places_disponibles">1.4. Definition des périodes, des hôpitaux et des places disponibles</h3>
 <div class="paragraph">
 <p>Avec l&#8217;intention d&#8217;organiser le cohort pour permettre le bon choix des étudiants
 est l&#8217;affectation en suite, le gestionaire des stages s&#8217;occupe de determiner les
@@ -700,7 +716,7 @@ période de choix des stages.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_choix_des_stages_par_specialité">1.4. Choix des stages par specialité</h3>
+<h3 id="_choix_des_stages_par_specialité">1.5. Choix des stages par specialité</h3>
 <div class="paragraph">
 <p>Precisement à la date de debut de la période de choix, l&#8217;application est ouvert
 aux étudiants de médecine qui devront faire leurs choix de stages. L&#8217;application
@@ -710,7 +726,7 @@ n&#8217;est pas modifier les choix faits avan la fin de la période.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_affectation_des_stages_aux_étudiants_prioritaires">1.5. Affectation des stages aux étudiants prioritaires</h3>
+<h3 id="_affectation_des_stages_aux_étudiants_prioritaires">1.6. Affectation des stages aux étudiants prioritaires</h3>
 <div class="paragraph">
 <p>Affectation des étudiants reconnus par le service d&#8217;aide aux étudiants
 comme prioritaires. Cela donne une priorité adaptée au besoin particulaire de
@@ -729,7 +745,7 @@ de stage, mais toujours en adéquation avec le besoin de l&#8217;étudiant.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_affectation_des_stages_aux_autres_étudiants">1.6. Affectation des stages aux autres étudiants</h3>
+<h3 id="_affectation_des_stages_aux_autres_étudiants">1.7. Affectation des stages aux autres étudiants</h3>
 <div class="paragraph">
 <p>Pour les étudiants non-prioritaires, les affectations sont fait automatiquement
 par l&#8217;application. L&#8217;algorithme essaye de trouver une solution optimale pour
@@ -743,7 +759,7 @@ le mieux possible les souhaits des étudiants.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_correction_des_stages_avec_problème_d_affectation">1.7. Correction des stages avec problème d&#8217;affectation</h3>
+<h3 id="_correction_des_stages_avec_problème_d_affectation">1.8. Correction des stages avec problème d&#8217;affectation</h3>
 <div class="paragraph">
 <p>L&#8217;affectation automatique peux avoir de difficulté pour affecter certains
 étudiants à cause des contraints existants. Dans ce cas, les étudiants sont
@@ -761,7 +777,7 @@ résultats.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_publication_des_résultats">1.8. Publication des résultats</h3>
+<h3 id="_publication_des_résultats">1.9. Publication des résultats</h3>
 <div class="paragraph">
 <p>Quand la date de publication des résultats, défini dans le cohorte, est arrivé,
 tous les resultats sons publiés en même temps sur le portail de l&#8217;université et
@@ -769,7 +785,7 @@ disponibilizés pour les étudiants impliqués.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_consultation_des_résultats">1.9. Consultation des résultats</h3>
+<h3 id="_consultation_des_résultats">1.10. Consultation des résultats</h3>
 <div class="paragraph">
 <p>Les étudiants se connectent sur le portail UCL pour consulter les résultats des
 affectations. Les données sont disponible en mode lecture. En cas de correction
@@ -1152,7 +1168,7 @@ ouvert au monde exterieur.</p>
 <div id="footer">
 <div id="footer-text">
 Version 1.0<br>
-Last updated 2018-01-16 16:32:22 CET
+Last updated 2018-01-18 09:44:28 CET
 </div>
 </div>
 </body>

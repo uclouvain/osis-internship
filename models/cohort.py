@@ -30,7 +30,7 @@ from osis_common.models.serializable_model import SerializableModelAdmin
 
 class CohortAdmin(SerializableModelAdmin):
     list_display = ('name', 'description', 'publication_start_date', 'subscription_start_date',
-                    'subscription_end_date', 'free_internships_number')
+                    'subscription_end_date', 'free_internships_number', 'originated_from')
     fields = ('name', 'description', 'publication_start_date', 'subscription_start_date', 'subscription_end_date',
               'free_internships_number')
 
