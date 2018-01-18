@@ -8,13 +8,6 @@ from django.db import migrations, models
 from internship.models.cohort import Cohort
 from internship.models.internship_student_information import InternshipStudentInformation
 
-
-def assign_first_cohort_to_periods(apps, schema_editor):
-    cohort = Cohort.objects.first()
-
-    InternshipStudentInformation.objects.all().update(cohort=cohort)
-
-
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -27,7 +20,6 @@ class Migration(migrations.Migration):
             name='cohort',
             field=models.ForeignKey(default=None, null=True, on_delete=django.db.models.deletion.CASCADE, to='internship.Cohort'),
         ),
-        migrations.RunPython(assign_first_cohort_to_periods),
         migrations.AlterField(
             model_name='internshipstudentinformation',
             name='cohort',

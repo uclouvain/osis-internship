@@ -84,9 +84,7 @@ class ViewCohortTestCase(TestCase):
             'subscription_end_date': cohort.subscription_end_date.strftime('%Y-%m-%d'),
             'free_internships_number': cohort.free_internships_number,
             'description': cohort.description,
-
-            'copy_organizations_from_cohort': cohort.id,
-            'copy_specialities_from_cohort': cohort.id,
+            'originated_from': cohort.id,
         }
 
         form = CohortForm(data=form_data)

@@ -4,25 +4,8 @@ from __future__ import unicode_literals
 
 from django.db import migrations, models
 import django.db.models.deletion
-from osis_common.models.serializable_model import SerializableModel
-from internship.models.cohort import Cohort
-from internship.models.internship import Internship
 import uuid
 
-def buildNeededInternships(apps, schema_editor):
-    InternshipChoice = apps.get_model("internship", "InternshipChoice")
-    db_alias = schema_editor.connection.alias
-    default_cohort = Cohort.objects.first()
-    existing_choices_values = InternshipChoice.objects.values_list("internship_choice", flat=True)
-    internship_ids_to_create   = sorted(list(set(existing_choices_values)))
-    base_uuid = "b5c15b71-ee4b-4bfb-b74e-9f8119770c4"
-    for internship_id in internship_ids_to_create:
-        internship = Internship(
-                id=internship_id,
-                uuid=base_uuid + str(internship_id),
-                name="Au choix {id}".format(id=internship_id),
-                cohort=default_cohort)
-        super(SerializableModel, internship).save()
 
 class Migration(migrations.Migration):
 
@@ -45,5 +28,4 @@ class Migration(migrations.Migration):
                 'abstract': False,
             },
         ),
-        migrations.RunPython(buildNeededInternships)
     ]

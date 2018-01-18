@@ -7,28 +7,6 @@ import uuid
 import django.db.models.deletion
 from django.db import migrations, models
 
-from osis_common.models.serializable_model import SerializableModel
-from internship.models.cohort import Cohort
-from internship.models.organization import Organization
-from internship.models.period import Period
-
-
-def create_the_first_cohort(apps, schema_editor):
-    cohort = Cohort(name='M7-2018',
-                    uuid="1091eebf-e3ed-4cfd-b13e-6b9e947f14bb",
-                    description='M7-2018',
-                    free_internships_number=8,
-                    publication_start_date="2017-03-27",
-                    subscription_start_date="2017-03-01",
-                    subscription_end_date="2017-03-20")
-    super(SerializableModel, cohort).save() # Avoids passing through the queue
-
-
-def assign_first_cohort_to_periods_and_organizations(apps, schema_editor):
-    cohort = Cohort.objects.first()
-    Period.objects.all().update(cohort=cohort)
-    Organization.objects.all().update(cohort=cohort)
-
 
 class Migration(migrations.Migration):
 
@@ -66,8 +44,6 @@ class Migration(migrations.Migration):
             field=models.ForeignKey(null=True, default=None, on_delete=django.db.models.deletion.CASCADE, to='internship.Cohort'),
             preserve_default=False,
         ),
-        migrations.RunPython(create_the_first_cohort),
-        migrations.RunPython(assign_first_cohort_to_periods_and_organizations),
         migrations.AlterField(
             model_name="organization",
             name="cohort",

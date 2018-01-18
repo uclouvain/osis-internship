@@ -10,11 +10,6 @@ from internship.models.cohort import Cohort
 from internship.models.internship_speciality import InternshipSpeciality
 
 
-def assign_first_cohort_to_periods(apps, schema_editor):
-    cohort = Cohort.objects.first()
-
-    InternshipSpeciality.objects.all().update(cohort=cohort)
-
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -28,7 +23,6 @@ class Migration(migrations.Migration):
             field=models.ForeignKey(null=True, default=None, on_delete=django.db.models.deletion.CASCADE, to='internship.Cohort'),
             preserve_default=False,
         ),
-        migrations.RunPython(assign_first_cohort_to_periods),
         migrations.AlterField(
             model_name='internshipspeciality',
             name='cohort',
