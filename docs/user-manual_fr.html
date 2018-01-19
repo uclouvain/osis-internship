@@ -441,7 +441,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#creation_cohort">1.1. Création d&#8217;une cohorte</a></li>
 <li><a href="#import/students">1.2. Importation des étudiants</a></li>
 <li><a href="#_importation_des_offres_de_stages">1.3. Importation des offres de stages</a></li>
-<li><a href="#_definition_des_périodes_des_hôpitaux_et_des_places_disponibles">1.4. Definition des périodes, des hôpitaux et des places disponibles</a></li>
+<li><a href="#_définition_des_périodes_des_hôpitaux_et_des_places_disponibles">1.4. Définition des périodes, des hôpitaux et des places disponibles</a></li>
 <li><a href="#_choix_des_stages_par_specialité">1.5. Choix des stages par specialité</a></li>
 <li><a href="#_affectation_des_stages_aux_étudiants_prioritaires">1.6. Affectation des stages aux étudiants prioritaires</a></li>
 <li><a href="#_affectation_des_stages_aux_autres_étudiants">1.7. Affectation des stages aux autres étudiants</a></li>
@@ -644,12 +644,12 @@ cela, les autorisations peuvent être assignées correctement.</p>
 <div class="sect2">
 <h3 id="creation_cohort">1.1. Création d&#8217;une cohorte</h3>
 <div class="paragraph">
-<p>La <strong>Cohorte</strong> est utilisé pour definir la période annuel d&#8217;organisation des
-stages. Cette période ne coïncide pas avec l&#8217;année academique et ça gestion est
-tout à fait specifique au domaine des stages de médecine.</p>
+<p>La <strong>Cohorte</strong> est utilisé pour définir la période annuel d&#8217;organisation des
+stages. Cette période ne coïncide pas avec l&#8217;année académique et ça gestion est
+tout à fait spécifique au domaine des stages de médecine.</p>
 </div>
 <div class="paragraph">
-<p>La création d&#8217;une cohorte est le premier pas ver l&#8217;affectation des stages. Presque toutes les données sont liées à cela. À cette étape le gestionaire des stages va créer une cohorte avec des informations basiques, plus les dates qui déterminent le debut, la fin et la publication des résultats.</p>
+<p>La création d&#8217;une cohorte est le premier pas ver l&#8217;affectation des stages. Presque toutes les données sont liées à cela. À cette étape le gestionnaire des stages va créer une cohorte avec des informations basiques, plus les dates qui déterminent le début, la fin et la publication des résultats.</p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -657,16 +657,16 @@ tout à fait specifique au domaine des stages de médecine.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>Le gestionaire a l&#8217;option de créer une cohorte à partir d&#8217;une cohorte existant. Cela lui permetre de reutiliser une bonne partie de les données disponibles. Les données reutilisés sont les hôpitaux, les spécialités, les periodes et les maîtres de stages.</p>
+<p>Le gestionnaire a l&#8217;option de créer une cohorte à partir d&#8217;une cohorte existant. Cela lui permettre de réutiliser une bonne partie de les données disponibles. Les données réutilisés sont les hôpitaux, les spécialités, les périodes, les types de stages et les maîtres de stages.</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="import/students">1.2. Importation des étudiants</h3>
 <div class="paragraph">
-<p>Grace à l&#8217;importation de données apartir d&#8217;un fichier XLS, ce n&#8217;est pas
-necessaire de démander aux étudiants de s&#8217;inscrire sur l&#8217;application. Le fichier
+<p>Grace à l&#8217;importation de données a partir d&#8217;un fichier XLS, ce n&#8217;est pas
+nécessaire de demander aux étudiants de s&#8217;inscrire sur l&#8217;application. Le fichier
 provient de l&#8217;application de gestion de l&#8217;université et contient les étudiants
-inscrits sur le programe de master en médecine, essentiel pour la demarche du
+inscrits sur le programme de master en médecine, essentiel pour la démarche du
 processus d&#8217;affectation.</p>
 </div>
 <div class="imageblock">
@@ -675,7 +675,7 @@ processus d&#8217;affectation.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>L&#8217;importation des étudiants est disponible dans la page de consultation des étudiants. En cliquant sur le bouton "Importer", une fenaitre modal s&#8217;ouvre pour permetre la selection du fichier Excel (xlsx) disponible sur la machine de l&#8217;utilisateur. Après la selection, cliquez sur le bouton "Importer" en bleu pour demarrer l&#8217;importation. Il faut quelques instants pour importer tous les étudiants. C&#8217;est normal.</p>
+<p>L&#8217;importation des étudiants est disponible dans la page de consultation des étudiants. En cliquant sur le bouton "Importer", une fenêtre modal s&#8217;ouvre pour permettre la sélection du fichier Excel (xlsx) disponible sur la machine de l&#8217;utilisateur. Après la sélection, cliquez sur le bouton "Importer" en bleu pour démarrer l&#8217;importation. Il faut quelques instants pour importer tous les étudiants. C&#8217;est normal.</p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -701,9 +701,12 @@ processus d&#8217;affectation.</p>
 <img src="images/offers-import.png" alt="Importation des offres de stage">
 </div>
 </div>
+<div class="paragraph">
+<p>En cas de changement de la quantité des places disponibles, les modifications sont faites dans le même fichier Excel et réimporté dans l&#8217;application sans risque de duplication de données. En option, les quantités peuvent être modifiés directement dans l&#8217;application, mais en cas de réimportation du fichier Excel les données modifiés manuellement seront écrasés.</p>
+</div>
 </div>
 <div class="sect2">
-<h3 id="_definition_des_périodes_des_hôpitaux_et_des_places_disponibles">1.4. Definition des périodes, des hôpitaux et des places disponibles</h3>
+<h3 id="_définition_des_périodes_des_hôpitaux_et_des_places_disponibles">1.4. Définition des périodes, des hôpitaux et des places disponibles</h3>
 <div class="paragraph">
 <p>Avec l&#8217;intention d&#8217;organiser le cohort pour permettre le bon choix des étudiants
 est l&#8217;affectation en suite, le gestionaire des stages s&#8217;occupe de determiner les
@@ -1168,7 +1171,7 @@ ouvert au monde exterieur.</p>
 <div id="footer">
 <div id="footer-text">
 Version 1.0<br>
-Last updated 2018-01-18 09:44:28 CET
+Last updated 2018-01-19 13:30:27 CET
 </div>
 </div>
 </body>

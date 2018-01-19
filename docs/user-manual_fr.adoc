@@ -151,7 +151,9 @@ Les offres de stages pour les spécialités dans les différent hôpitaux sont m
 
 image::images/offers-import.png[Importation des offres de stage]
 
-=== Definition des périodes, des hôpitaux et des places disponibles
+En cas de changement de la quantité des places disponibles, les modifications sont faites dans le même fichier Excel et réimporté dans l'application sans risque de duplication de données. En option, les quantités peuvent être modifiés directement dans l'application, mais en cas de réimportation du fichier Excel les données modifiés manuellement seront écrasés.
+
+=== Définition des périodes, des hôpitaux et des places disponibles
 
 Avec l'intention d'organiser le cohort pour permettre le bon choix des étudiants
 est l'affectation en suite, le gestionaire des stages s'occupe de determiner les
