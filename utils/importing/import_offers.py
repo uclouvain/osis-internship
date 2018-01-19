@@ -33,6 +33,8 @@ COL_MASTER = 2
 
 
 def import_xlsx(file_name, cohort):
+    """ This import can be performed multiple times for the same cohort and the logic must make sure it will not
+        produce duplicated data. """
     workbook = openpyxl.load_workbook(file_name, read_only=True)
     worksheet = workbook.active
 
@@ -44,7 +46,7 @@ def _import_offer(row, cohort):
     if _is_invalid_id(row[COL_REF_HOSPITAL].value):
         return
 
-    if row[COL_SPECIALTY].value is not None:
+    if row[COL_SPECIALTY].value:
         organizations = organization.find_by_reference(cohort, row[COL_REF_HOSPITAL].value)
 
         if organizations:
@@ -66,12 +68,12 @@ def _import_offer(row, cohort):
 
 
 def _create_offer(row, cohort, specialty, org, maximum_enrollments):
-    check_internship_offer = internship_offer.InternshipOffer.objects.filter(
+    existing_internship_offer = internship_offer.InternshipOffer.objects.filter(
         speciality=specialty,
         organization__reference=org.reference,
         cohort=cohort)
-    if check_internship_offer:
-        offer = check_internship_offer.first()
+    if existing_internship_offer:
+        offer = existing_internship_offer.first()
     else:
         offer = internship_offer.InternshipOffer()
 
@@ -88,10 +90,10 @@ def _create_offer(row, cohort, specialty, org, maximum_enrollments):
 
 def _create_offer_places(cohort, period_name, offer, value):
     a_period = period.search(name__exact=period_name, cohort=cohort).first()
-    check_relation = period_internship_places.find_by_offer_in_period(a_period, offer)
+    existing_places = period_internship_places.find_by_offer_in_period(a_period, offer)
 
-    if check_relation:
-        offer_places = check_relation.first()
+    if existing_places:
+        offer_places = existing_places.first()
     else:
         offer_places = period_internship_places.PeriodInternshipPlaces()
 
