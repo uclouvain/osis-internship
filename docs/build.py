@@ -49,6 +49,9 @@ HOMEPAGE_CONTENT = """
             </body>
         </html>"""
 
+def increment_version():
+    """"""
+    return
 
 def generate_pdf():
     print("Generating PDF...")
@@ -109,6 +112,7 @@ def get_path():
 
 def build():
     if not show_help():
+        increment_version()
         generate_pdf()
         generate_html()
         generate_homepage()

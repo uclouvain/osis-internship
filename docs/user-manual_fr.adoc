@@ -1,6 +1,6 @@
 = Open Student Information System : Stages de médecine
 Hildeberto Mendonça <hildeberto.mendonca@uclouvain.be>
-v0.4.0, 2018-01-19
+v0.4.2, 2018-01-22
 :toc: left
 :toclevels: 4
 :numbered:
@@ -98,6 +98,10 @@ L'importation des étudiants est disponible dans la page de consultation des ét
 
 image::images/students-import.png[Importation des étudiants]
 
+**Attention**: c'est important d'importer un fichier en format `xlsx`. L'application n'est pas compatible avec le format `xls`. Pour avoir un fichier `xlsx` à partir d'un fichier `xls`, vous pouvez ouvrir le ficher `xls` en Excel et _Enregistrer sous_ le format `xlsx` en sélectionnant l'option _Classeur Excel_, qui est la premier dans la liste.
+
+image::images/xls-to-xlsx.png[Convertion de xls vers xlsx]
+
 Une fois que les étudiants sont importer, le bouton "Importer" disparetre parce que c'est possible importer les étudiant seulement une fois par cohorte. Après l'importation, les données devront être maintenu manuellement.
 
 image::images/students-imported.png[Les étudiants importés dans la cohorte]
@@ -116,10 +120,6 @@ Avec l'intention d'organiser le cohort pour permettre le bon choix des étudiant
 
 Les trois dernières tâches devraient se terminer avant la date de debut de la période de choix des stages.
 
-//image::images/periodes.png[Des périodes]
-
-//image::images/specialties-places.png[Des places disponibles]
-
 === Choix des stages par specialité
 
 Precisement à la date de debut de la période de choix, l'application est ouvert aux étudiants de médecine qui devront faire leurs choix de stages. L'application reste ouvert jusqu'à la fin de la période. Pendant ce temps là, les étudiants pouvent changer librement leurs choix et le gestionaire des stages s'engage a n'est pas modifier les choix faits avan la fin de la période.
@@ -128,15 +128,11 @@ Precisement à la date de debut de la période de choix, l'application est ouver
 
 Affectation des étudiants reconnus par le service d'aide aux étudiants comme prioritaires. Cela donne une priorité adaptée au besoin particulaire de chaque étudiant, mais il n'y a pas d'assurance de recevoir les premiers choix (le plus souvent priorité pour les stages proches du domicile légal ou dans un hôpital avec logement).
 
-//image::images/bilan-etudiant.png[Bilan de l'étudiant]
-
 L'etudiant devra faire les quatre choix de manière réfléchie et se présenter à la faculté dans un periode bien défini afin de discuter avec le secretariat les critères qui lui sont propres. Après cette discussion, le secretariat déterminera parmi le choix de l'étudiant celui ou ceux que l'application devra obligatoirement prendre en compte. Si les choix semblent non adaptés par rapport à la priorité de l'étudiant, alors le secretariat peut imposer un autre endroit de stage, mais toujours en adéquation avec le besoin de l'étudiant.
 
 === Affectation des stages aux autres étudiants
 
 Pour les étudiants non-prioritaires, les affectations sont fait automatiquement par l'application. L'algorithme essaye de trouver une solution optimale pour chaque étudiant en terme de spécialité et période. Il y a de contrainte qu'impeche de toujours respecter le premier choix de tous les étudiants. Par exemple, si le nombre d'étudiants est plus grand que le nombre de places disponibles. Pour mieux satisfaire toutes les demandes des étudiants avec les offres limitées, nous essayons de trouver une solution avec le coût le plus faible possible et qui satisfait les différentes contraintes, tout en respectant le mieux possible les souhaits des étudiants.
-
-//image::images/affectation-stages.png[Affectation des stages]
 
 === Correction des stages avec problème d'affectation
 
@@ -187,23 +183,13 @@ image::images/specialties.png[Les spécialités]
 
 * *Les offres de stages*: maintenir les places disponibles dans les différent spécialités des hôpitaux.
 
-//image::images/specialties-places.png[Des places disponibles]
-
 * *Les stages*: maintenir les différent types de stages.
-
-//image::images/internships.png[Les stages]
 
 * *Gestion des maîtres de stage*: pas encore disponible, mais bientôt le gestionnaire sera capable de maintenir les données des maîtres.
 
-//image::images/maitres-stages.png[Les maîtres de stage]
-
 * *Bilan des assignations*: un rapport avec les affectations des étudiants dans les hôpitaux, classé par spécialité.
 
-//image::images/bilan-assignations.png[Bilan des assignations]
-
 * *Assignation des stages*: des modifications dans les affectations de stages selon les particularités de chaque étudiant, principalement les cas de permutation des stages.
-
-//image::images/affectation-stages.png[Affectation des stages]
 
 == La conception technique de l'application
 
