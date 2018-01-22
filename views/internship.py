@@ -81,7 +81,6 @@ def modification_student(request, cohort_id, student_id, internship_id=-1, speci
         "formset": formset,
         "offers_forms": zipped_data,
         "internship": internship,
-        "internship_id": internship.id,
         "speciality_id": int(speciality_id),
         "student": student,
         "information": information,

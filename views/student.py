@@ -182,10 +182,12 @@ def internship_student_information_modification(request, cohort_id, student_id):
 def student_save_information_modification(request, cohort_id, student_id):
     cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)
     student = mdl.student.find_by_id(student_id)
-    information = mdl_int.internship_student_information.find_by_person(student.person, cohort)
-    if not information:
+    informations = mdl_int.internship_student_information.find_by_person(student.person, cohort)
+    if not informations:
         information = mdl_int.internship_student_information.InternshipStudentInformation()
         information.person = student.person
+    else:
+        information = informations.first()
 
     if information.cohort is None:
         information.cohort = cohort
