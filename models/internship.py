@@ -28,16 +28,14 @@ from osis_common.models.serializable_model import SerializableModelAdmin, Serial
 
 
 class InternshipAdmin(SerializableModelAdmin):
-    list_display = ('name', 'speciality', 'alternate_speciality', 'cohort', 'length_in_periods')
-    fieldsets = ((None, {'fields': ('name', 'speciality', 'alternate_speciality', 'cohort', 'length_in_periods')}),)
+    list_display = ('name', 'speciality', 'cohort', 'length_in_periods')
+    fieldsets = ((None, {'fields': ('name', 'speciality', 'cohort', 'length_in_periods')}),)
     list_filter = ('cohort',)
 
 
 class Internship(SerializableModel):
     name = models.CharField(max_length=255, blank=False)
     speciality = models.ForeignKey('internship.InternshipSpeciality', null=True, blank=True)
-    alternate_speciality = models.ForeignKey('internship.InternshipSpeciality', null=True, blank=True,
-                                             related_name="alternate_speciality")
     cohort = models.ForeignKey('internship.Cohort', null=False)
     length_in_periods = models.IntegerField(null=False, default=1)
     position = models.IntegerField(null=False, default=0)
