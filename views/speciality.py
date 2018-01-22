@@ -28,7 +28,6 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 
-from base import models as mdl
 from internship import models as mdl_internship
 
 
@@ -72,7 +71,10 @@ def speciality_save(request, cohort_id, speciality_id):
 
     speciality.name = request.POST.get('name')
     speciality.acronym = request.POST.get('acronym')
-    speciality.sequence = request.POST.get('sequence')
+    if request.POST.get('sequence').strip():
+        speciality.sequence = int(request.POST.get('sequence'))
+    else:
+        speciality.sequence = None
     speciality.mandatory = mandatory
     speciality.save()
     return HttpResponseRedirect(reverse('internships_specialities', kwargs={'cohort_id': cohort.id,}))

@@ -56,7 +56,7 @@
                     <div class="col-md-2">
                         <div class="form-group">
                             <label for="name">{% trans 'sequence' %}</label><br>
-                            <input type="text" name="sequence" id="sequence" class="form-control" value="{{ speciality.sequence | default_if_none:'' }}">
+                            <input type="number" name="sequence" id="sequence" class="form-control" value="{{ speciality.sequence | default_if_none:'' }}">
                         </div>
                     </div>
                     <div class="col-md-2">

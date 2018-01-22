@@ -38,7 +38,7 @@ from internship.models.period import Period
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internships_periods(request, cohort_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
-    periods = mdl_internship.period.Period.objects.filter(cohort_id=cohort_id)
+    periods = mdl_internship.period.find_by_cohort(cohort)
 
     context = {
         'section': 'internship',
