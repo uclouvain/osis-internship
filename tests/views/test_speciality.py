@@ -109,6 +109,7 @@ class SpecialityViewTestCase(TestCase):
             'mandatory': True,
             'name': speciality.name,
             'acronym': speciality.acronym,
+            'sequence': ""
         })
         self.assertRedirects(response, reverse('internships_specialities', kwargs={
             'cohort_id': self.cohort.id,
@@ -126,6 +127,7 @@ class SpecialityViewTestCase(TestCase):
             'mandatory': speciality.mandatory,
             'name': 'DEMO',
             'acronym': speciality.acronym,
+            'sequence': ""
         })
 
         self.assertRedirects(response, reverse('internships_specialities', kwargs={
