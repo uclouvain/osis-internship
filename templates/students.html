@@ -78,13 +78,11 @@
                     </span>
                 </div>
                 <div class="col-md-3">
-                    {% if perms.base.is_administrator %}
-                        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#pnl_upload_students"
-                                id="bt_upload_score_modal">
-                            <span class="glyphicon glyphicon-import" aria-hidden="true"></span>
-                            {% trans 'import' %}
-                        </button>
-                    {% endif %}
+                    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#pnl_upload_students"
+                            id="bt_upload_score_modal">
+                        <span class="glyphicon glyphicon-import" aria-hidden="true"></span>
+                        {% trans 'import' %}
+                    </button>
                     <a href="{% url 'internship_student_form' cohort_id=cohort.id %}" class="btn btn-default">
                         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                         {% trans 'add' %}
