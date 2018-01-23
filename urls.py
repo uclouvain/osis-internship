@@ -80,19 +80,20 @@ urlpatterns = [
 
             url(r'^places/', include([
                 url(r'^$', place.internships_places, name='internships_places'),
-                url(r'^(?P<organization_id>[0-9]+)/students/affectation/$', place.student_affectation,
-                    name='place_detail_student_affectation'),
-                url(r'^(?P<organization_id>[0-9]+)/students/choice/$', place.student_choice,
-                    name='place_detail_student_choice'),
                 url(r'^create/$', place.organization_create, name='place_create'),
-                url(r'^(?P<organization_id>[0-9]+)/edit/$', place.organization_edit, name='place_edit'),
-                url(r'^exportxls/(?P<organization_id>[0-9]+)/master/$', place.export_organisation_affectation_master,
-                    name='export_organisation_affectation_master'),
-                url(r'^exportxls/(?P<organization_id>[0-9]+)/hospital/$', place.export_hospital_affectation,
-                    name='export_organisation_affectation_hospital'),
-                url(r'^save/(?P<organization_id>[0-9]+)/$', place.place_save,
-                    name='place_save'),
                 url(r'^save/$', place.organization_new, name='place_save_new'),
+
+                url(r'^(?P<organization_id>[0-9]+)/', include([
+                    url(r'^students/affectation/$', place.student_affectation, name='place_detail_student_affectation'),
+                    url(r'^students/choice/$', place.student_choice, name='place_detail_student_choice'),
+                    url(r'^edit/$', place.organization_edit, name='place_edit'),
+                    url(r'^save/$', place.place_save, name='place_save'),
+                    url(r'^remove/$', place.place_remove, name='place_remove'),
+                    url(r'^exportxls/master/$', place.export_organisation_affectation_master,
+                        name='export_organisation_affectation_master'),
+                    url(r'^exportxls/hospital/$', place.export_hospital_affectation,
+                        name='export_organisation_affectation_hospital'),
+                ]))
             ])),
 
             url(r'^specialities/', include([

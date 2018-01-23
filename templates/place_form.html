@@ -47,8 +47,10 @@
     <div class="panel panel-default">
         <div class="panel-body">
             <form method="post" action="{% if organization.id %}
-        {% url 'place_save' cohort_id=cohort.id organization_id=organization.id %}
-        {%else%} {% url 'place_save_new' cohort_id=cohort.id %} {%endif%}">
+                                            {% url 'place_save' cohort_id=cohort.id organization_id=organization.id %}
+                                        {% else %}
+                                            {% url 'place_save_new' cohort_id=cohort.id %}
+                                        {% endif %}">
                 {% csrf_token %}
                 <div class="row">
                     <div class="col-md-1">
@@ -212,6 +214,10 @@
                     <span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'save'%}</button>
                 <a class="btn btn-default" id="lnk_organization_cancel" href="{% url 'internships_places' cohort_id=cohort.id  %}">
                     <span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span> {% trans 'return'%}</a>
+                {% if organization.id %}
+                    <a class="btn btn-danger" id="lnk_organization_remove" href="{% url 'place_remove' cohort_id=cohort.id organization_id=organization.id %}">
+                        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> {% trans 'remove'%}</a>
+                {% endif %}
             </form>
         </div>
     </div>
