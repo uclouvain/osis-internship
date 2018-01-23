@@ -73,6 +73,15 @@ def place_save(request, cohort_id, organization_id):
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
+def place_remove(request, cohort_id, organization_id):
+    cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
+    organization = models.organization.get_by_id(organization_id)
+    organization.delete()
+    return internships_places(request, cohort_id)
+
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
 def organization_new(request, cohort_id):
     return place_save(request, cohort_id, None)
 
