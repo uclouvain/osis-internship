@@ -44,7 +44,7 @@
                     <label for="organization_sort">{% trans 'organization' %}</label>
                     <select name="organization_sort" id="organization_sort" onChange="javascript: this.form.submit();" class="form-control">
                         <option value="0">{% trans 'choose_a_hospital' %}</option>
-                        {% for organization in all_organizations %}
+                        {% for organization in organizations %}
                             <option value="{{ organization.name }}"
                                     {% if organization.name == organization_sort_value %}selected{% endif %}>
                                 {{ organization.reference }} - {{ organization.name }}

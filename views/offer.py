@@ -38,7 +38,7 @@ from internship.utils.importing import import_offers
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
-def internships(request, cohort_id):
+def list_internships(request, cohort_id):
     cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)
     organization_sort_value = None
     speciality_sort_value = None
@@ -65,7 +65,7 @@ def internships(request, cohort_id):
     internships = mdl_int.internship.Internship.objects.filter(cohort=cohort)
 
     all_internships = mdl_int.internship_offer.find_internships().filter(organization__cohort=cohort)
-    all_organizations = _get_all_organizations(all_internships)
+    organizations = _get_all_organizations(all_internships)
     all_specialities = get_all_specialities(all_internships)
     set_tabs_name(all_specialities)
     all_non_mandatory_speciality = mdl_int.internship_speciality.find_non_mandatory()
@@ -84,7 +84,7 @@ def internships(request, cohort_id):
         'all_internships': query,
         'internships': internships,
         'all_non_mandatory_internships': all_non_mandatory_internships,
-        'all_organizations': all_organizations,
+        'organizations': organizations,
         'all_speciality': all_specialities,
         'organization_sort_value': organization_sort_value,
         'speciality_sort_value': speciality_sort_value,
