@@ -79,6 +79,9 @@ msgstr "Cohort"
 msgid "cohorts"
 msgstr "Cohorts"
 
+msgid "compulsory"
+msgstr "Compulsory"
+
 msgid "contest"
 msgstr "Contest"
 
@@ -270,6 +273,9 @@ msgstr "Return"
 
 msgid "second_choice"
 msgstr "Second choice"
+
+msgid "selectable"
+msgstr "Selectable by the student"
 
 msgid "speciality"
 msgstr "Specialty"

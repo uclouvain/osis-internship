@@ -88,6 +88,9 @@ msgstr "Cohorte"
 msgid "cohorts"
 msgstr "Cohortes"
 
+msgid "compulsory"
+msgstr "Obligatoire"
+
 msgid "contest"
 msgstr "Concours"
 
@@ -214,9 +217,6 @@ msgstr "Liste de tous les hôpitaux"
 msgid "mail"
 msgstr "Email"
 
-msgid "mandatory"
-msgstr "obligatoire"
-
 msgid "master"
 msgstr "Maître"
 
@@ -285,6 +285,9 @@ msgstr "Retour"
 
 msgid "second_choice"
 msgstr "2ème choix"
+
+msgid "selectable"
+msgstr "Sélectionnable par l'étudiant"
 
 msgid "speciality"
 msgstr "Spécialité"

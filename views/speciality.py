@@ -65,17 +65,23 @@ def speciality_save(request, cohort_id, speciality_id):
     else:
         speciality = mdl_internship.internship_speciality.InternshipSpeciality(cohort=cohort)
 
-    mandatory = False
-    if request.POST.get('mandatory'):
-        mandatory = True
-
     speciality.name = request.POST.get('name')
     speciality.acronym = request.POST.get('acronym')
     if request.POST.get('sequence').strip():
         speciality.sequence = int(request.POST.get('sequence'))
     else:
         speciality.sequence = None
+
+    mandatory = False
+    if request.POST.get('mandatory'):
+        mandatory = True
     speciality.mandatory = mandatory
+
+    selectable = False
+    if request.POST.get('selectable'):
+        selectable = True
+    speciality.selectable = selectable
+
     speciality.save()
     return HttpResponseRedirect(reverse('internships_specialities', kwargs={'cohort_id': cohort.id,}))
 
