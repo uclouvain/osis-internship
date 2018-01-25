@@ -238,6 +238,9 @@ msgstr "Noma"
 msgid "not_4_choice_spec"
 msgstr "Vous n'avez pas encore soumis vos 4 choix pour cette spécialité."
 
+msgid "number_of_periods"
+msgstr "Nombre de périodes"
+
 msgid "organization"
 msgstr "Hôpital"
 

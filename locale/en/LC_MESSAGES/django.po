@@ -229,6 +229,9 @@ msgstr "Noma"
 msgid "not_4_choice_spec"
 msgstr "You don't have submit your 4 choices for this speciality."
 
+msgid "number_of_periods"
+msgstr "Number of periods"
+
 msgid "organization"
 msgstr "Hospital"
 
