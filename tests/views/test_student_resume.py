@@ -57,13 +57,13 @@ class TestStudentResume(TestCase):
 
     def test_get_students_status(self):
         expected = []
-        actual = student.get_students_with_status(cohort=self.cohort)
+        actual = student._get_students_with_status(cohort=self.cohort)
         self.assertCountEqual(expected, actual)
 
         test_internship_student_information.create_student_information(self.student_1.person, "GENERALIST", cohort=self.cohort)
         test_internship_student_information.create_student_information(self.student_2.person, "GENERALIST", cohort=self.cohort)
         expected = [(self.student_1, True), (self.student_2, False)]
-        actual = student.get_students_with_status(cohort=self.cohort)
+        actual = student._get_students_with_status(cohort=self.cohort)
         self.assertCountEqual(expected, actual)
         for item_expected in expected:
             self.assertIn(item_expected, actual)
