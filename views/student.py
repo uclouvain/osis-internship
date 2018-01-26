@@ -47,7 +47,7 @@ from internship.utils.importing.import_students import import_xlsx
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internships_student_resume(request, cohort_id):
     cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)
-    students_with_status = get_students_with_status(cohort)
+    students_with_status = _get_students_with_status(cohort)
     student_with_internships = mdl_int.internship_choice.get_number_students(cohort)
     students_can_have_internships = mdl_int.internship_student_information.get_number_students(cohort)
     student_without_internship = students_can_have_internships - student_with_internships
@@ -144,24 +144,15 @@ def internships_student_read(request, cohort_id, student_id):
 
     if not student:
         return render(request, "student.html", {'errors': ['student_doesnot_exist']})
+
     information = mdl_int.internship_student_information.search(person=student.person).first()
-    internship_choices = mdl_int.internship_choice.get_choices_made(cohort=cohort,
-                                                                    student=student).order_by('choice')
+    internship_choices = mdl_int.internship_choice.get_choices_made(cohort=cohort, student=student).order_by('choice')
     specialities = mdl_int.internship_speciality.search(mandatory=True, cohort=cohort)
     internships = mdl_int.internship.Internship.objects.filter(cohort=cohort, pk__gte=1)
-
     affectations = mdl_int.internship_student_affectation_stat.find_by_student(student, cohort).\
         order_by("period__date_start")
     periods = mdl_int.period.search(cohort=cohort).order_by("date_start")
     organizations = mdl_int.organization.search(cohort=cohort)
-
-    # Set the address of the affectation
-    for affectation in affectations:
-        for organization in organizations:
-            if affectation.organization == organization:
-                affectation.organization.address = ""
-                for addr in organization.address:
-                    affectation.organization.address = addr
 
     return render(request, "student.html", locals())
 
@@ -299,7 +290,7 @@ def import_students(request, cohort_id):
     return HttpResponseRedirect(reverse('internships_student_resume', kwargs={"cohort_id": cohort_id}))
 
 
-def get_students_with_status(cohort):
+def _get_students_with_status(cohort):
     students_status = []
     students_informations = mdl_int.internship_student_information.find_all(cohort)
     for student_info in students_informations:

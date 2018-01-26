@@ -144,8 +144,8 @@
                                 <p>{{affectation.speciality.name}} |
                                     {{affectation.organization.reference}} {{affectation.organization.name}} ({{ affectation.speciality.name }}) - {{ affectation.period.cohort }}<br/>
                                     {% trans 'address' %} :
-                                    {{affectation.organization.address.location}} {{affectation.organization.address.postal_code}}
-                                    {{affectation.organization.address.city}}
+                                    {{affectation.organization.location}} {{affectation.organization.postal_code}}
+                                    {{affectation.organization.city}}
                                 </p><br>
                             {%endif%}
                         {% endfor %}
