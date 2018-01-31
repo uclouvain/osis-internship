@@ -43,7 +43,7 @@
                 <ul class="nav nav-tabs">
                     {% for internship_item in internships %}
                       {% if internship_item.speciality != None %}
-                        <li role="presentation" class="{% if internship_item.id == internship.id %} active {% endif %}"><a href="{% url 'specific_internship_student_modification' cohort_id=cohort.id student_id=student.id internship_id=internship_item.id speciality_id=internship.speciality_id %}">{{ internship_item.name }}</a></li>
+                        <li role="presentation" class="{% if internship_item.id == internship.id %} active {% endif %}"><a href="{% url 'specific_internship_student_modification' cohort_id=cohort.id student_id=student.id internship_id=internship_item.id speciality_id=internship_item.speciality_id %}">{{ internship_item.name }}</a></li>
                       {% else %}
                         <li role="presentation" class="{% if internship_item.id == internship.id  %} active {% endif %}"><a href="{% url 'switch_internship' cohort_id=cohort.id student_id=student.id internship_id=internship_item.id %}">{{ internship_item.name }}</a></li>
                       {% endif %}
