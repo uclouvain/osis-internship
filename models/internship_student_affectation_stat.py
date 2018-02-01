@@ -73,16 +73,17 @@ def find_affectations(period_ids):
 
 
 def find_by_cohort(cohort):
-    return InternshipStudentAffectationStat.objects.filter(period__cohort=cohort).order_by("student__person__last_name",
-                                                                                           "student__person__first_name",
-                                                                                           "period__date_start")
+    return InternshipStudentAffectationStat.objects.filter(period__cohort=cohort).\
+        order_by("student__person__last_name",
+                 "student__person__first_name",
+                 "period__date_start")
 
 
 def find_by_organization(cohort, organization):
-    return InternshipStudentAffectationStat.objects.filter(period__cohort=cohort,
-                                                           organization=organization).order_by("period__date_start",
-                                                                                               "student__person__last_name",
-                                                                                               "student__person__first_name")
+    return InternshipStudentAffectationStat.objects.filter(period__cohort=cohort, organization=organization).\
+        order_by("period__date_start",
+                 "student__person__last_name",
+                 "student__person__first_name")
 
 
 def find_by_student(student, cohort):
