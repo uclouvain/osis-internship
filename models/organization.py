@@ -48,6 +48,7 @@ class Organization(SerializableModel):
     city = models.CharField(max_length=255, blank=True, null=True)
     country = models.ForeignKey('reference.Country', blank=True, null=True)
     cohort = models.ForeignKey('internship.Cohort', null=False, on_delete=models.CASCADE)
+    address = [location, postal_code, city, country]
 
     report_period = models.IntegerField(default=1, blank=True, null=True)
     report_start_date = models.IntegerField(default=2, blank=True, null=True)
@@ -115,7 +116,7 @@ def sort_organizations(organizations):
         if organization is not None:
             number_ref.append(organization.reference)
     if number_ref:
-        number_ref = sorted(number_ref, key=int)
+        number_ref = sorted(number_ref, key=lambda ref: int(ref) if ref.isdigit() else ref)
         for i in number_ref:
             organization = search(reference=i)
             tab.append(organization[0])
