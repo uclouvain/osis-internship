@@ -79,11 +79,11 @@
                     </div>
                     <div class="col-md-6">
                         <label for="{{ form.email.id_for_label }}">{% trans 'email' %}</label><br>
-                        <input type="text" class="form-control" id={{ form.email.id_for_label }} name="{{ form.email.html_name }}" value="{{ information.email | default_if_none:'-' }}">
+                        <input type="text" class="form-control" id="{{ form.email.id_for_label }}" name="{{ form.email.html_name }}" value="{{ information.email | default_if_none:'' }}">
                     </div>
                     <div class="col-md-3">
                         <label for="{{ form.phone_mobile.id_for_label }}">{% trans 'phone_mobile' %}</label><br>
-                        <input class="form-control" id="{{ form.email.id_for_label }}" type="text"  name="{{ form.phone_mobile.html_name }}" value="{{ information.phone_mobile | default_if_none:'-' }}">
+                        <input class="form-control" id="{{ form.phone_mobile.id_for_label }}" type="text"  name="{{ form.phone_mobile.html_name }}" value="{{ information.phone_mobile | default_if_none:'-' }}">
                     </div>
                 </div>
                 <br>

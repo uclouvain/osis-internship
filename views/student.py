@@ -202,8 +202,10 @@ def student_save_information_modification(request, cohort_id, student_id):
         information.country = form.cleaned_data.get('country')
         information.contest = form.cleaned_data.get('contest')
         information.save()
+        redirect_url = reverse('internships_student_read', args=[cohort_id, student_id])
+    else:
+        redirect_url = reverse('internship_student_information_modification', args=[cohort_id, student_id])
 
-    redirect_url = reverse('internships_student_read', args=[cohort_id, student_id])
     return HttpResponseRedirect(redirect_url)
 
 
