@@ -54,6 +54,12 @@ class InternshipMaster(SerializableModel):
     birth_date = models.DateField(blank=True, null=True)
     start_activities = models.DateField(blank=True, null=True)
 
+    def civility_acronym(self):
+        if self.civility:
+            return "{}_ACRON".format(self.civility)
+        else:
+            return ""
+
     def __str__(self):
         return "{}, {}".format(self.last_name, self.first_name)
 

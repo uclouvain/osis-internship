@@ -37,3 +37,7 @@ class TestInternshipMaster(TestCase):
 
         nonexistent_master = internship_master.get_by_id(0)
         self.assertIsNone(nonexistent_master)
+
+    def test_civility_acronym(self):
+        master = MasterFactory()
+        self.assertTrue("_ACRON" in master.civility_acronym())

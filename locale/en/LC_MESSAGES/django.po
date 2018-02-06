@@ -112,6 +112,9 @@ msgstr "Details"
 msgid "DOCTOR"
 msgstr "Doctor"
 
+msgid "DOCTOR_ACRON"
+msgstr "Dr."
+
 msgid "edit_places"
 msgstr "Edit number of places"
 
@@ -238,8 +241,8 @@ msgstr "Number of periods"
 msgid "organization"
 msgstr "Hospital"
 
-msgid "PROFESSOR"
-msgstr "Professor"
+msgid "PROFESSOR_ACRON"
+msgstr "Prof."
 
 msgid "period"
 msgstr "Period"

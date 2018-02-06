@@ -32,6 +32,7 @@
     <li><a href="{% url 'internships_home' cohort_id=current_cohort.id %}">{{ current_cohort.name }}</a></li>
     <li class="active">{% trans 'internships_masters' %}</li>
 {% endblock %}
+
 {% block content %}
     <div class="page-header">
         <h2>{% trans 'master' %}: <span id="full_name">{{ allocated_master.last_name | upper }}, {{ allocated_master.first_name }}</span> </h2>
