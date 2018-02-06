@@ -28,13 +28,12 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from internship.models.enums.civility import Civility
 from internship.models.enums.gender import Gender
-from internship.models.enums.mastery import Mastery
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 
 
 class InternshipMasterAdmin(SerializableModelAdmin):
-    list_display = ('first_name', 'last_name', 'civility', 'type_mastery')
-    fieldsets = ((None, {'fields': ('first_name', 'last_name', 'civility', 'type_mastery', 'gender', 'email',
+    list_display = ('first_name', 'last_name', 'civility')
+    fieldsets = ((None, {'fields': ('first_name', 'last_name', 'civility', 'gender', 'email',
                                     'email_private', 'location', 'postal_code', 'city', 'country', 'phone',
                                     'phone_mobile', 'birth_date', 'start_activities')}),)
 
@@ -43,7 +42,6 @@ class InternshipMaster(SerializableModel):
     first_name = models.CharField(max_length=50, blank=True, null=True, db_index=True)
     last_name = models.CharField(max_length=50, blank=True, null=True, db_index=True)
     civility = models.CharField(max_length=50, blank=True, null=True, choices=Civility.choices())
-    type_mastery = models.CharField(max_length=50, blank=True, null=True, choices=Mastery.choices())
     gender = models.CharField(max_length=1, blank=True, null=True, choices=Gender.choices())
     email = models.EmailField(max_length=255, blank=True, null=True)
     email_private = models.EmailField(max_length=255, blank=True, null=True)

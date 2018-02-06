@@ -83,7 +83,6 @@
                 <tr>
                     <th>{% trans 'civility' %}</th>
                     <th>{% trans 'name' %}</th>
-                    <th>{% trans 'type' %}</th>
                     <th>{% trans 'speciality' %}</th>
                     <th>{% trans 'organization' %}</th>
                 </tr>
@@ -93,24 +92,17 @@
                     <tr>
                         <td>{% if allocation.master.civility %}{% trans allocation.master.civility %}{% endif %}</td>
                         <td><a href="{% url 'master' cohort_id=current_cohort.id master_id=allocation.master.id %}">{{ allocation.master.last_name | upper }}, {{ allocation.master.first_name }}</a></td>
-                        <td>{% if allocation.master.type_mastery %}{% trans allocation.master.type_mastery %}{% endif %}</td>
-                        <td>{{ allocation.specialty }}</td>
-                        <td>{{ allocation.organization.reference }} - {{ allocation.organization }}</td>
+                        <td>{{ allocation.specialty | default_if_none:'-' }}</td>
+                        {% if allocation.organization %}
+                            <td>{{ allocation.organization.reference }} - {{ allocation.organization }}</td>
+                        {% else %}
+                            <td>-</td>
+                        {% endif %}
                     </tr>
                 {% empty %}
-                    {% for master in unallocated_masters %}
-                        <tr>
-                            <td>{% if master.civility %}{% trans master.civility %}{% endif %}</td>
-                            <td><a href="{% url 'master' cohort_id=current_cohort.id master_id=master.id %}">{{ master.last_name | upper }}, {{ master.first_name }}</a></td>
-                            <td>{% if master.type_mastery %}{% trans master.type_mastery %}{% endif %}</td>
-                            <td>-</td>
-                            <td>-</td>
-                        </tr>
-                    {% empty %}
-                        <tr>
-                            <td colspan="5">{% trans 'use_filters_no_data' %}</td>
-                        </tr>
-                    {% endfor %}
+                    <tr>
+                        <td colspan="5">{% trans 'use_filters_no_data' %}</td>
+                    </tr>
                 {% endfor %}
             </tbody>
         </table>

@@ -30,7 +30,7 @@ from internship.models.internship_master import InternshipMaster
 
 
 class MasterAllocationAdmin(admin.ModelAdmin):
-    list_display = ('master', 'organization', 'specialty')
+    list_display = ('master', 'organization', 'specialty', 'cohort')
     fieldsets = ((None, {'fields': ('master', 'organization', 'specialty')}),)
     raw_id_fields = ('master', 'organization', 'specialty')
     list_filter = ('organization__cohort', 'specialty__cohort')
@@ -40,6 +40,9 @@ class MasterAllocation(models.Model):
     master = models.ForeignKey('internship.InternshipMaster')
     organization = models.ForeignKey('internship.Organization', blank=True, null=True)
     specialty = models.ForeignKey('internship.InternshipSpeciality', blank=True, null=True)
+
+    def cohort(self):
+        return self.specialty.cohort if self.specialty else (self.organization.cohort if self.organization else None)
 
     def save(self, *args, **kwargs):
         existing = MasterAllocation.objects.filter(master=self.master,
@@ -53,7 +56,7 @@ class MasterAllocation(models.Model):
 
 
 def find_by_master(cohort, a_master):
-    return MasterAllocation.objects.filter(master=a_master, specialty__cohort=cohort)
+    return find_by_cohort(cohort).filter(master=a_master)
 
 
 def find_unallocated_masters():
@@ -63,7 +66,7 @@ def find_unallocated_masters():
 
 
 def search(cohort, specialty, hospital):
-    masters = MasterAllocation.objects.filter(organization__cohort=cohort)
+    masters = find_by_cohort(cohort)
 
     if specialty:
         masters = masters.filter(specialty=specialty)
@@ -74,7 +77,7 @@ def search(cohort, specialty, hospital):
     if specialty or hospital:
         return masters.order_by("master__last_name", "master__first_name")
     else:
-        return None
+        return masters.filter(specialty__isnull=False, organization__isnull=False)
 
 
 def clean_allocations(cohort, master):

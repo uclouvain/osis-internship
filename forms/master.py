@@ -30,5 +30,5 @@ from internship.models import internship_master
 class MasterForm(forms.ModelForm):
     class Meta:
         model = internship_master.InternshipMaster
-        fields = ['first_name', 'last_name', 'civility', 'type_mastery', 'gender', 'email', 'email_private', 'location',
+        fields = ['first_name', 'last_name', 'civility', 'gender', 'email', 'email_private', 'location',
                   'postal_code', 'city', 'country', 'phone', 'phone_mobile', 'birth_date', 'start_activities']

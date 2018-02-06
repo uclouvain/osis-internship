@@ -280,7 +280,6 @@
       "first_name": "Henry",
       "last_name": "Gaillaird",
       "civility": "Dr",
-      "type_mastery": "généraliste",
       "speciality": "MEDECINE GENERALE"
     }
   },
@@ -292,7 +291,6 @@
       "first_name": "Harry",
       "last_name": "Potter",
       "civility": "Pr",
-      "type_mastery": "spécialiste",
       "speciality": "RADIOTHERAPIE"
     }
   },{
@@ -303,7 +301,6 @@
       "first_name": "Jean",
       "last_name": "Dujardin",
       "civility": "Pr",
-      "type_mastery": "spécialiste",
       "speciality": "PEDIATRIE"
     }
   },
@@ -315,7 +312,6 @@
       "first_name": "Elise",
       "last_name": "Descamp",
       "civility": "Dr",
-      "type_mastery": "spécialiste",
       "speciality": "PSYCHIATRIE"
     }
   },
@@ -327,7 +323,6 @@
       "first_name": "Ornelia",
       "last_name": "Fleurette",
       "civility": "Dr",
-      "type_mastery": "généraliste",
       "speciality": "MEDECINE GENERALE"
     }
   },
@@ -339,7 +334,6 @@
       "first_name": "Mark",
       "last_name": "Champs",
       "civility": "Dr",
-      "type_mastery": "généraliste",
       "speciality": "MEDECINE GENERALE"
     }
   },
@@ -351,7 +345,6 @@
       "first_name": "Laure",
       "last_name": "De Potter",
       "civility": "Dr",
-      "type_mastery": "spécialiste",
       "speciality": "URGENCES"
     }
   },

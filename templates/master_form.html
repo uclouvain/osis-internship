@@ -66,13 +66,13 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <div class="form-group">
                             <label for="birth_date">{% trans 'birth_date' %}</label>
                             <input type="date" name="birth_date" id="birth_date" class="form-control" value="{{ allocated_master.birth_date | date:'Y-m-d' | default_if_none:'' }}">
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <div class="form-group">
                             <label for="gender">{% trans 'gender' %}</label>
                             <select name="gender" id="gender" class="form-control">
@@ -81,16 +81,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label for="type_mastery">{% trans 'type' %}</label>
-                            <select name="type_mastery" id="type_mastery" class="form-control">
-                                <option value="GENERALIST" {{ generalist_selected }}>{% trans 'GENERALIST' %}</option>
-                                <option value="SPECIALIST" {{ specialist_selected }}>{% trans 'SPECIALIST' %}</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <div class="form-group">
                             <label for="start_activities">{% trans 'start_activities' %}</label>
                             <input type="date" name="start_activities" id="start_activities" class="form-control" value="{{ allocated_master.start_activities | date:'Y-m-d' | default_if_none:'' }}">

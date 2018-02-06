@@ -54,27 +54,19 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <div class="form-group">
                         <label for="birth_date">{% trans 'birth_date' %}</label>
                         <div id="birth_date">{{ allocated_master.birth_date | default_if_none:"" }}</div>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <div class="form-group">
                         <label for="gender">{% trans 'gender' %}</label>
                         <div id="gender">{% if allocated_master.gender %}{% trans allocated_master.gender %}{% endif %}</div>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <label for="type_mastery">{% trans 'type' %}</label>
-                        {% if allocated_master.type_mastery %}
-                            <div id="type_mastery">{% if allocated_master.type_mastery %}{% trans allocated_master.type_mastery %}{% endif %}</div>
-                        {% endif %}
-                    </div>
-                </div>
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <div class="form-group">
                         <label for="start_activities">{% trans 'start_activities' %}</label>
                         <div id="start_activities">{{ allocated_master.start_activities | default_if_none:"" }}</div>

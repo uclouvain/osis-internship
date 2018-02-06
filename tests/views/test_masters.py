@@ -107,6 +107,3 @@ class MasterTestCase(TestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'masters.html')
-
-        masters = response.context['unallocated_masters']
-        self.assertEqual(masters.count(), 0)

@@ -23,9 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import factory
 import factory.django
-import pendulum
 
 
 class MasterFactory(factory.django.DjangoModelFactory):
@@ -35,4 +33,3 @@ class MasterFactory(factory.django.DjangoModelFactory):
     first_name = factory.Faker('first_name')
     last_name = factory.Faker('last_name')
     civility = factory.Faker('prefix')
-    type_mastery = 'Nothing'

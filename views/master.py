@@ -33,7 +33,6 @@ from internship.models import master_allocation, internship_master, internship_s
 from internship.forms.master import MasterForm
 from internship.models.enums.civility import Civility
 from internship.models.enums.gender import Gender
-from internship.models.enums.mastery import Mastery
 
 
 @login_required
@@ -44,9 +43,6 @@ def masters(request, cohort_id):
     filter_hospital = int(request.GET.get('hospital', 0))
 
     allocations = master_allocation.search(current_cohort, filter_specialty, filter_hospital)
-    if not filter_specialty and not filter_hospital:
-        unallocated_masters = master_allocation.find_unallocated_masters()
-
     specialties = internship_speciality.find_by_cohort(current_cohort)
     hospitals = organization.find_by_cohort(current_cohort)
 
@@ -73,8 +69,6 @@ def master_form(request, cohort_id, master_id=None):
         professor_selected = 'selected' if allocated_master.civility == Civility.PROFESSOR.value else ''
         female_selected = 'selected' if allocated_master.gender == Gender.FEMALE.value else ''
         male_selected = 'selected' if allocated_master.gender == Gender.MALE.value else ''
-        generalist_selected = 'selected' if allocated_master.type_mastery == Mastery.GENERALIST.value else ''
-        specialist_selected = 'selected' if allocated_master.type_mastery == Mastery.SPECIALIST.value else ''
 
     countries = country.find_all()
     specialties = internship_speciality.find_by_cohort(current_cohort)
