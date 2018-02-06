@@ -48,7 +48,6 @@ class Organization(SerializableModel):
     city = models.CharField(max_length=255, blank=True, null=True)
     country = models.ForeignKey('reference.Country', blank=True, null=True)
     cohort = models.ForeignKey('internship.Cohort', null=False, on_delete=models.CASCADE)
-    address = [location, postal_code, city, country]
 
     report_period = models.IntegerField(default=1, blank=True, null=True)
     report_start_date = models.IntegerField(default=2, blank=True, null=True)
