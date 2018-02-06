@@ -316,6 +316,9 @@ msgstr "Liste des étudiants"
 msgid "student_sumup"
 msgstr "Bilan des étudiants"
 
+msgid "students"
+msgstr "Étudiants"
+
 msgid "studies"
 msgstr "Études"
 
