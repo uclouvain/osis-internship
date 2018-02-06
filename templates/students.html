@@ -97,12 +97,12 @@
             <table class="table table-striped table-hover" id="order_student">
                 <thead>
                     <tr>
-                        <th>{% trans 'noma'%}</th>
-                        <th>{% trans 'name'%}</th>
-                        <th>{% trans 'firstname'%}</th>
-                        <th class="no-sort">{% trans 'details'%}</th>
-                        <th class="no-sort">{% trans 'choice_modification'%}</th>
-                        <th>{% trans 'statut'%}</th>
+                        <th>{% trans 'noma' %}</th>
+                        <th>{% trans 'name'|capfirst %}</th>
+                        <th>{% trans 'firstname' %}</th>
+                        <th class="no-sort">{% trans 'details' %}</th>
+                        <th class="no-sort">{% trans 'choice_modification' %}</th>
+                        <th>{% trans 'status' %}</th>
                     </tr>
                 </thead>
                 {% for student, status in students %}
