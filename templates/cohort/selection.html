@@ -32,7 +32,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        {% for cohort in cohorts %}
+                        {% for cohort in cohorts|dictsortreversed:"subscription_start_date" %}
                             <tr>
                                 <td><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></td>
                                 <td>{{ cohort.description|truncatechars:32 }}</td>
