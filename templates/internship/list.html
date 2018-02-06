@@ -34,7 +34,7 @@
                         <tr>
                             <th>{% trans 'name' %}</th>
                             <th>{% trans 'speciality' %}</th>
-                            <th>{% trans 'length_in_periods' %}</th>
+                            <th>{% trans 'number_of_periods' %}</th>
                             <th>{% trans 'position' %}</th>
                             <th>&nbsp;</th>
                         </tr>
@@ -43,7 +43,7 @@
                         {% for internship in internships %}
                             <tr>
                                 <td>{{ internship.name }}</td>
-                                <td>{{ internship.speciality }}</td>
+                                <td>{{ internship.speciality | default_if_none:'' }}</td>
                                 <td>{{ internship.length_in_periods }}</td>
                                 <td>{{ internship.position }}</td>
                                 <td align="right">

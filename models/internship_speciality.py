@@ -29,9 +29,9 @@ from django.core.exceptions import ObjectDoesNotExist
 
 
 class InternshipSpecialityAdmin(SerializableModelAdmin):
-    list_display = ('name', 'acronym', 'mandatory', 'cohort', 'sequence')
-    fieldsets = ((None, {'fields': ('name', 'acronym', 'sequence', 'mandatory', 'cohort')}),)
-    list_filter = ('cohort',)
+    list_display = ('name', 'acronym', 'mandatory', 'cohort', 'sequence', 'selectable')
+    fieldsets = ((None, {'fields': ('name', 'acronym', 'sequence', 'mandatory', 'cohort', 'selectable')}),)
+    list_filter = ('cohort', 'selectable')
 
 
 class InternshipSpeciality(SerializableModel):
@@ -40,6 +40,7 @@ class InternshipSpeciality(SerializableModel):
     mandatory = models.BooleanField(default=False)
     sequence = models.IntegerField(blank=True, null=True)
     cohort = models.ForeignKey('internship.cohort', null=False, on_delete=models.CASCADE)
+    selectable = models.BooleanField(default=True)
 
     def acronym_with_sequence(self):
         if self.sequence:

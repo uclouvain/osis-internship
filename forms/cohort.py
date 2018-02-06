@@ -44,7 +44,6 @@ class CohortForm(forms.ModelForm):
         fields = [
             'name',
             'description',
-            'free_internships_number',
             'publication_start_date',
             'subscription_start_date',
             'subscription_end_date',

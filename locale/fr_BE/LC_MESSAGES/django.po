@@ -88,6 +88,9 @@ msgstr "Cohorte"
 msgid "cohorts"
 msgstr "Cohortes"
 
+msgid "compulsory"
+msgstr "Obligatoire"
+
 msgid "contest"
 msgstr "Concours"
 
@@ -214,9 +217,6 @@ msgstr "Liste de tous les hôpitaux"
 msgid "mail"
 msgstr "Email"
 
-msgid "mandatory"
-msgstr "obligatoire"
-
 msgid "master"
 msgstr "Maître"
 
@@ -237,6 +237,9 @@ msgstr "Noma"
 
 msgid "not_4_choice_spec"
 msgstr "Vous n'avez pas encore soumis vos 4 choix pour cette spécialité."
+
+msgid "number_of_periods"
+msgstr "Nombre de périodes"
 
 msgid "organization"
 msgstr "Hôpital"
@@ -283,6 +286,9 @@ msgstr "Retour"
 msgid "second_choice"
 msgstr "2ème choix"
 
+msgid "selectable"
+msgstr "Sélectionnable par l'étudiant"
+
 msgid "speciality"
 msgstr "Spécialité"
 
@@ -309,6 +315,9 @@ msgstr "Liste des étudiants"
 
 msgid "student_sumup"
 msgstr "Bilan des étudiants"
+
+msgid "students"
+msgstr "Étudiants"
 
 msgid "studies"
 msgstr "Études"

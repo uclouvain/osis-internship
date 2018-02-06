@@ -60,7 +60,6 @@ class ViewCohortTestCase(TestCase):
             'publication_start_date': cohort.publication_start_date.strftime('%Y-%m-%d'),
             'subscription_start_date': cohort.subscription_start_date.strftime('%Y-%m-%d'),
             'subscription_end_date': cohort.subscription_end_date.strftime('%Y-%m-%d'),
-            'free_internships_number': cohort.free_internships_number,
             'description': cohort.description,
         }
 
@@ -82,7 +81,6 @@ class ViewCohortTestCase(TestCase):
             'publication_start_date': cohort.publication_start_date.strftime('%Y-%m-%d'),
             'subscription_start_date': cohort.subscription_start_date.strftime('%Y-%m-%d'),
             'subscription_end_date': cohort.subscription_end_date.strftime('%Y-%m-%d'),
-            'free_internships_number': cohort.free_internships_number,
             'description': cohort.description,
             'originated_from': cohort.id,
         }
@@ -142,7 +140,6 @@ class ViewCohortTestCase(TestCase):
             'publication_start_date': original_cohort.publication_start_date.strftime('%Y-%m-%d'),
             'subscription_start_date': original_cohort.subscription_start_date.strftime('%Y-%m-%d'),
             'subscription_end_date': original_cohort.subscription_end_date.strftime('%Y-%m-%d'),
-            'free_internships_number': cohort.free_internships_number,
             'description': cohort.description,
         }
         form = CohortForm(data=form_data)

@@ -67,11 +67,23 @@
                     </div>
                 </div>
 
-                <div class="checkbox">
-                    <label>
-                        <input type="checkbox" name="mandatory" {% if speciality.mandatory %}checked{% endif %}>
-                        {% trans 'mandatory' %}
-                    </label>
+                <div class="row">
+                    <div class="col-md-2">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" name="mandatory" {% if speciality.mandatory %}checked{% endif %}>
+                                {% trans 'compulsory' %}
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-10">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" name="selectable" {% if speciality.selectable %}checked{% endif %}>
+                                {% trans 'selectable' %}
+                            </label>
+                        </div>
+                    </div>
                 </div>
 
                 <br>

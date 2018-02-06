@@ -32,7 +32,7 @@ class PeriodInternshipPlacesAdmin(SerializableModelAdmin):
     fieldsets = ((None, {'fields': ('period', 'internship_offer', 'number_places')}),)
     raw_id_fields = ('period', 'internship_offer')
     list_filter = ('period__cohort',)
-    search_fields = ['internship_offer__organization__name']
+    search_fields = ['internship_offer__organization__name', 'internship_offer__organization__reference']
 
 
 class PeriodInternshipPlaces(SerializableModel):

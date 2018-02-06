@@ -79,6 +79,9 @@ msgstr "Cohort"
 msgid "cohorts"
 msgstr "Cohorts"
 
+msgid "compulsory"
+msgstr "Compulsory"
+
 msgid "contest"
 msgstr "Contest"
 
@@ -229,6 +232,9 @@ msgstr "Noma"
 msgid "not_4_choice_spec"
 msgstr "You don't have submit your 4 choices for this speciality."
 
+msgid "number_of_periods"
+msgstr "Number of periods"
+
 msgid "organization"
 msgstr "Hospital"
 
@@ -267,6 +273,9 @@ msgstr "Return"
 
 msgid "second_choice"
 msgstr "Second choice"
+
+msgid "selectable"
+msgstr "Selectable by the student"
 
 msgid "speciality"
 msgstr "Specialty"

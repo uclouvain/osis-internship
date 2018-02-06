@@ -68,14 +68,8 @@
                 {% csrf_token %}
                 <div class="row">
                     <div class="col-md-3">
-                        <label for="{{ form.contest.id_for_label }}">{% trans 'contest' %}</label><br>
-                        <select class="form-control" id="{{ form.contest.id_for_label }}" name="{{ form.contest.html_name }}">
-                            {% for x, y in form.fields.contest.choices %}
-                                <option value="{{ x }}" {% if x == information.contest %}selected{% endif %}>
-                                {{ y }}
-                                </option>
-                            {% endfor %}
-                        </select>
+                        <label>{% trans 'birthdate' %}</label><br>
+                        {{ student.person.birth_date | default_if_none:'-' }}
                     </div>
                     <div class="col-md-6">
                         <label for="{{ form.email.id_for_label }}">{% trans 'email' %}</label><br>
