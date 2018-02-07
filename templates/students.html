@@ -51,17 +51,25 @@
     <div class="panel panel-default">
         <div class="panel-heading">
             <div class="row">
-                <div class="col-md-2">
-                    {% trans 'generalist' %}: {{ number_generalists }}
-                </div>
-                <div class="col-md-2">
-                    {% trans 'specialist' %}: {{ number_specialists }}
-                </div>
-                <div class="col-md-2">
-                    <span class="label label-info" title="{% trans 'number_of_enrollments' %}">
-                        {% trans 'number_of_enrollments' %} : {{student_with_internships}} / {{students_can_have_internships}}
-                    </span>
-                </div>
+                {% if number_generalists > 0 and number_specialists > 0 %}
+                    <div class="col-md-2">
+                        {% trans 'generalist' %}: {{ number_generalists }}
+                    </div>
+                    <div class="col-md-2">
+                        {% trans 'specialist' %}: {{ number_specialists }}
+                    </div>
+                    <div class="col-md-2">
+                        <span class="label label-info" title="{% trans 'enrollments' %}">
+                            {% trans 'enrollments' %} : {{student_with_internships}} / {{students_can_have_internships}}
+                        </span>
+                    </div>
+                {% else %}
+                    <div class="col-md-6">
+                        <span class="label label-info" title="{% trans 'number_of_enrollments' %}">
+                            {% trans 'number_of_enrollments' %} : {{student_with_internships}} / {{students_can_have_internships}}
+                        </span>
+                    </div>
+                {% endif %}
                 <div class="col-md-1">
                     <span class="label label-success">
                         <span class="glyphicon glyphicon-ok" aria-hidden="true"> : {{students_ok}}</span>
