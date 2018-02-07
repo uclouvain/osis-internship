@@ -23,14 +23,11 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import unittest
-
 from django.test import TestCase
-from internship.utils.student_assignment.list_utils import difference
+from internship.business.assignment import difference
 
 
 class ListUtilsTestCase(TestCase):
-    # List utils
     def test_difference_non_empty_lists(self):
         first_list = [1,2,3,4,5]
         second_list = [4,5]
@@ -60,6 +57,3 @@ class ListUtilsTestCase(TestCase):
         second_list = [5,6]
         expected = [1,2,3,4]
         self.assertEqual(expected, difference(first_list, second_list))
-
-if __name__ == '__main__':
-        unittest.main()

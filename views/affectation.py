@@ -34,7 +34,7 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import render, redirect
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
-from internship.utils.student_assignment.solver import AssignmentSolver
+from internship.business.assignment import Assignment
 
 from internship import models
 from internship.models import internship_student_affectation_stat, period_internship_places
@@ -53,7 +53,7 @@ def run_affectation(request, cohort_id):
         period_ids = models.period.Period.objects.filter(cohort=cohort).values_list("id", flat=True)
         curr_affectations = internship_student_affectation_stat.find_non_mandatory_affectations(period_ids=period_ids)
         curr_affectations._raw_delete(curr_affectations.db)
-        solver = AssignmentSolver(cohort)
+        solver = Assignment(cohort)
         solver.solve()
         solver.persist_solution()
         end_date_time = datetime.now()

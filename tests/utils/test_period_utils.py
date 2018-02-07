@@ -27,7 +27,7 @@
 from django.test import TestCase
 
 from internship.tests.factories.period import PeriodFactory
-from internship.utils.student_assignment.period_utils import *
+from internship.utils.assignment.period_utils import *
 
 
 class PeriodUtilsTestCase(TestCase):
