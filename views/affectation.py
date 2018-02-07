@@ -37,7 +37,7 @@ from django.http import HttpResponse
 from internship.utils.student_assignment.solver import AssignmentSolver
 
 from internship import models
-from internship.models.internship_student_affectation_stat import InternshipStudentAffectationStat
+from internship.models import internship_student_affectation_stat, period_internship_places
 from internship.utils.exporting import score_encoding_xls
 from internship.views.internship import set_tabs_name
 
@@ -51,8 +51,8 @@ def run_affectation(request, cohort_id):
     if request.method == 'POST':
         start_date_time = datetime.now()
         period_ids = models.period.Period.objects.filter(cohort=cohort).values_list("id", flat=True)
-        current_affectations = models.internship_student_affectation_stat.find_non_mandatory_affectations(period_ids=period_ids)
-        current_affectations._raw_delete(current_affectations.db)
+        curr_affectations = internship_student_affectation_stat.find_non_mandatory_affectations(period_ids=period_ids)
+        curr_affectations._raw_delete(curr_affectations.db)
         solver = AssignmentSolver(cohort)
         solver.solve()
         solver.persist_solution()
@@ -74,7 +74,7 @@ def view_hospitals(request, cohort_id):
     periods = models.period.Period.objects.filter(cohort=cohort)
     period_ids = periods.values_list("id", flat=True)
 
-    student_affectations = InternshipStudentAffectationStat.objects\
+    student_affectations = internship_student_affectation_stat.InternshipStudentAffectationStat.objects\
         .filter(period_id__in=period_ids)\
         .select_related("student", "organization", "speciality", "period")
 
@@ -103,7 +103,7 @@ def view_students(request, cohort_id):
     periods = models.period.Period.objects.filter(cohort=cohort)
     period_ids = periods.values_list("id", flat=True)
 
-    student_affectations = InternshipStudentAffectationStat.objects\
+    student_affectations = internship_student_affectation_stat.InternshipStudentAffectationStat.objects\
         .filter(period_id__in=period_ids)\
         .select_related("student", "organization", "speciality", "period")
 
@@ -132,7 +132,7 @@ def view_statistics(request, cohort_id):
     periods = models.period.Period.objects.filter(cohort=cohort)
     period_ids = periods.values_list("id", flat=True)
 
-    student_affectations = InternshipStudentAffectationStat.objects\
+    student_affectations = internship_student_affectation_stat.InternshipStudentAffectationStat.objects\
         .filter(period_id__in=period_ids)\
         .select_related("student", "organization", "speciality", "period")
 
@@ -160,13 +160,13 @@ def view_errors(request, cohort_id):
     periods = models.period.Period.objects.filter(cohort=cohort)
     period_ids = periods.values_list("id", flat=True)
 
-    student_affectations = InternshipStudentAffectationStat.objects\
+    student_affectations = internship_student_affectation_stat.InternshipStudentAffectationStat.objects\
         .filter(period_id__in=period_ids)\
         .select_related("student", "organization", "speciality", "period")
 
     if student_affectations.count() > 0:
         hospital = models.organization.Organization.objects.filter(reference=HOSPITAL_ERROR, cohort=cohort).first()
-        internship_errors = InternshipStudentAffectationStat.objects \
+        internship_errors = internship_student_affectation_stat.InternshipStudentAffectationStat.objects \
             .filter(organization=hospital,
                     period_id__in=period_ids)
 
@@ -455,7 +455,8 @@ def _get_student_mandatory_choices(cohort, priority):
                 if enrollment.student in specialities[enrollment.internship_offer.speciality.id]:
                     del specialities[enrollment.internship_offer.speciality.id][enrollment.student]
     else:
-        for choice in models.internship_choice.InternshipChoice.objects.filter(priority=True, internship__in=internships).\
+        for choice in models.internship_choice.InternshipChoice.objects.filter(priority=True,
+                                                                               internship__in=internships).\
                 select_related("speciality", "student"):
             if choice.student in specialities[choice.speciality.id]:
                 del specialities[choice.speciality.id][choice.student]
@@ -491,14 +492,14 @@ def _get_student_mandatory_choices(cohort, priority):
 def _load_solution_table(data, cohort):
     periods = models.period.Period.objects.filter(cohort=cohort)
     period_ids = periods.values_list("id", flat=True)
-    period_internship_places = models.period_internship_places.PeriodInternshipPlaces.objects.filter(period_id__in=period_ids).\
+    prd_internship_places = period_internship_places.PeriodInternshipPlaces.objects.filter(period_id__in=period_ids).\
         order_by("period_id").select_related()
     # This object store the number of available places for given organization, speciality, period
     temp_internship_table = defaultdict(dict)
 
     keys = ['P1', 'P2', 'P3', 'P4', 'P5', 'P6', 'P7', 'P8', 'P9', 'P10', 'P11', 'P12']
 
-    for pid in period_internship_places:
+    for pid in prd_internship_places:
         organization = pid.internship_offer.organization
         acronym = pid.internship_offer.speciality.acronym
         period_name = pid.period.name

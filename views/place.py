@@ -138,7 +138,9 @@ def student_affectation(request, cohort_id, organization_id):
     cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
     organization = get_object_or_404(models.organization.Organization, pk=organization_id)
 
-    affectations = models.internship_student_affectation_stat.search(organization=organization).order_by("student__person__last_name", "student__person__first_name")
+    affectations = models.internship_student_affectation_stat.search(organization=organization)\
+                                                             .order_by("student__person__last_name",
+                                                                       "student__person__first_name")
 
     for a in affectations:
         a.email = ""
@@ -175,28 +177,28 @@ def export_organisation_affectation_master(request, cohort_id, organization_id):
     internships = models.internship_offer.search(organization=organization)
     specialities = list({offer.speciality for offer in internships})
     specialities = sorted(specialities, key=lambda spec: spec.name)
-    affections_by_specialities = [(internship_speciality,
-                                   list(models.internship_student_affectation_stat.search(organization=organization,
-                                                                                          speciality=internship_speciality)))
-                                  for internship_speciality in specialities]
-    for speciality, affectations in affections_by_specialities:
+    affec_by_specialties = [(internship_speciality,
+                             list(models.internship_student_affectation_stat.search(organization=organization,
+                                                                                    speciality=internship_speciality)))
+                            for internship_speciality in specialities]
+    for speciality, affectations in affec_by_specialties:
         for affectation in affectations:
             affectation.email = ""
             affectation.adress = ""
             affectation.phone_mobile = ""
             affectation.master = ""
-            internship_student_information = models.internship_student_information.search(person=affectation.student.person)
+            internship_student_info = models.internship_student_information.search(person=affectation.student.person)
             internship_offer = models.internship_offer.search(organization=affectation.organization,
                                                               speciality=affectation.speciality)
-            if internship_student_information:
-                informations = internship_student_information.first()
+            if internship_student_info:
+                informations = internship_student_info.first()
                 affectation.email = informations.email
                 affectation.adress = informations.location + " " + informations.postal_code + " " + informations.city
                 affectation.phone_mobile = informations.phone_mobile
             if internship_offer:
                 offer = internship_offer.first()
                 affectation.master = offer.master
-    return _export_xls_master(cohort, organization, affections_by_specialities)
+    return _export_xls_master(cohort, organization, affec_by_specialties)
 
 
 @login_required

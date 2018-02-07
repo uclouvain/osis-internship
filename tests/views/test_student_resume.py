@@ -60,8 +60,10 @@ class TestStudentResume(TestCase):
         actual = student._get_students_with_status(cohort=self.cohort)
         self.assertCountEqual(expected, actual)
 
-        test_internship_student_information.create_student_information(self.student_1.person, "GENERALIST", cohort=self.cohort)
-        test_internship_student_information.create_student_information(self.student_2.person, "GENERALIST", cohort=self.cohort)
+        test_internship_student_information.create_student_information(self.student_1.person, "GENERALIST",
+                                                                       cohort=self.cohort)
+        test_internship_student_information.create_student_information(self.student_2.person, "GENERALIST",
+                                                                       cohort=self.cohort)
         expected = [(self.student_1, True), (self.student_2, False)]
         actual = student._get_students_with_status(cohort=self.cohort)
         self.assertCountEqual(expected, actual)

@@ -23,7 +23,6 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import factory
 import factory.fuzzy
 
 from django.utils.text import slugify

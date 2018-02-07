@@ -56,8 +56,8 @@ class InternshipOffer(SerializableModel):
         )
 
 
-def find_internships():
-    return InternshipOffer.objects.filter(speciality__mandatory=1)\
+def find_internships(cohort):
+    return InternshipOffer.objects.filter(cohort=cohort).filter(speciality__mandatory=1)\
         .select_related("organization", "speciality").order_by('speciality__acronym', 'speciality__name',
                                                                'organization__reference')
 

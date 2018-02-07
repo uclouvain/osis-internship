@@ -23,7 +23,6 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import factory
 import factory.django
 
 from internship.tests.factories.organization import OrganizationFactory

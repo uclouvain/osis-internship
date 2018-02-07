@@ -23,8 +23,6 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import unittest
-
 from django.contrib.auth.models import Permission, User
 from django.core.urlresolvers import reverse
 from django.test import TestCase

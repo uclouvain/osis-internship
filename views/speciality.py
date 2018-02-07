@@ -28,14 +28,14 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 
-from internship import models as mdl_internship
+from internship import models as mdl
 
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def specialities(request, cohort_id):
-    cohort = get_object_or_404(mdl_internship.cohort.Cohort, pk=cohort_id)
-    specialties = mdl_internship.internship_speciality.find_all(cohort=cohort)
+    cohort = get_object_or_404(mdl.cohort.Cohort, pk=cohort_id)
+    specialties = mdl.internship_speciality.find_all(cohort=cohort)
     context = {
         'section': 'internship',
         'specialities': specialties,
@@ -47,7 +47,7 @@ def specialities(request, cohort_id):
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def speciality_create(request, cohort_id):
-    cohort = get_object_or_404(mdl_internship.cohort.Cohort, pk=cohort_id)
+    cohort = get_object_or_404(mdl.cohort.Cohort, pk=cohort_id)
     return render(request, "speciality_form.html", {'section': 'internship',
                                                     'cohort': cohort})
 
@@ -55,15 +55,16 @@ def speciality_create(request, cohort_id):
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def speciality_save(request, cohort_id, speciality_id):
-    cohort = get_object_or_404(mdl_internship.cohort.Cohort, pk=cohort_id)
+    cohort = get_object_or_404(mdl.cohort.Cohort, pk=cohort_id)
     if speciality_id:
-        check_speciality = mdl_internship.internship_speciality.InternshipSpeciality.objects.filter(pk=speciality_id, cohort=cohort).exists()
+        check_speciality = mdl.internship_speciality.InternshipSpeciality.objects.filter(pk=speciality_id,
+                                                                                         cohort=cohort).exists()
         if check_speciality:
-            speciality = mdl_internship.internship_speciality.InternshipSpeciality.objects.get(pk=speciality_id)
+            speciality = mdl.internship_speciality.InternshipSpeciality.objects.get(pk=speciality_id)
         else:
-            speciality = mdl_internship.internship_speciality.InternshipSpeciality(cohort=cohort)
+            speciality = mdl.internship_speciality.InternshipSpeciality(cohort=cohort)
     else:
-        speciality = mdl_internship.internship_speciality.InternshipSpeciality(cohort=cohort)
+        speciality = mdl.internship_speciality.InternshipSpeciality(cohort=cohort)
 
     speciality.name = request.POST.get('name')
     speciality.acronym = request.POST.get('acronym')
@@ -95,8 +96,8 @@ def speciality_new(request, cohort_id):
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def modify(request, cohort_id, speciality_id):
-    cohort = get_object_or_404(mdl_internship.cohort.Cohort, pk=cohort_id)
-    speciality = get_object_or_404(mdl_internship.internship_speciality.InternshipSpeciality,
+    cohort = get_object_or_404(mdl.cohort.Cohort, pk=cohort_id)
+    speciality = get_object_or_404(mdl.internship_speciality.InternshipSpeciality,
                                    pk=speciality_id, cohort=cohort)
     context = {
         'section': 'internship',
@@ -109,6 +110,6 @@ def modify(request, cohort_id, speciality_id):
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def speciality_delete(request, cohort_id, speciality_id):
-    cohort = get_object_or_404(mdl_internship.cohort.Cohort, pk=cohort_id)
-    mdl_internship.internship_speciality.InternshipSpeciality.objects.filter(pk=speciality_id, cohort_id=cohort_id).delete()
+    cohort = get_object_or_404(mdl.cohort.Cohort, pk=cohort_id)
+    mdl.internship_speciality.InternshipSpeciality.objects.filter(pk=speciality_id, cohort_id=cohort_id).delete()
     return HttpResponseRedirect(reverse('internships_specialities', kwargs={'cohort_id': cohort.id,}))

@@ -23,8 +23,6 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import datetime
-
 from django.test import SimpleTestCase, TestCase
 
 from internship.models import period as mdl_period

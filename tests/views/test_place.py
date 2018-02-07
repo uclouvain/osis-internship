@@ -23,15 +23,12 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import io
 from django.contrib.auth.models import Permission, User
 from django.core.urlresolvers import reverse
 from django.test import TestCase
-from openpyxl.writer.excel import save_virtual_workbook
 
 from internship.tests.factories.cohort import CohortFactory
 from internship.tests.factories.organization import OrganizationFactory
-from internship.tests.utils.test_upload_xls import XlsPlaceImportTestCase
 
 
 class PlaceViewAndUrlTestCase(TestCase):

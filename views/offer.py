@@ -29,7 +29,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.views.decorators.http import require_http_methods
 from django.contrib import messages
-
+from django.utils.translation import ugettext_lazy as _
 from base import models as mdl
 from internship import models as mdl_int
 from internship.views.internship import get_all_specialities, set_tabs_name
@@ -52,7 +52,7 @@ def list_internships(request, cohort_id):
     if organization_sort_value and organization_sort_value != "0":
         query = mdl_int.internship_offer.search(organization__name=organization_sort_value)
     else:
-        query = mdl_int.internship_offer.find_internships()
+        query = mdl_int.internship_offer.find_internships(cohort)
 
     query = query.filter(organization__cohort=cohort)
 
@@ -64,13 +64,14 @@ def list_internships(request, cohort_id):
 
     internships = mdl_int.internship.Internship.objects.filter(cohort=cohort)
 
-    all_internships = mdl_int.internship_offer.find_internships().filter(organization__cohort=cohort)
+    all_internships = mdl_int.internship_offer.find_internships(cohort)
     organizations = _get_all_organizations(all_internships)
     all_specialities = get_all_specialities(all_internships)
     set_tabs_name(all_specialities)
     all_non_mandatory_speciality = mdl_int.internship_speciality.find_non_mandatory()
     if speciality_sort_value:
-        all_non_mandatory_internships = mdl_int.internship_offer.find_non_mandatory_internships(speciality__name=speciality_sort_value)
+        all_non_mandatory_internships = mdl_int.internship_offer.find_non_mandatory_internships(
+            speciality__name=speciality_sort_value)
     else:
         all_non_mandatory_internships = mdl_int.internship_offer.find_non_mandatory_internships(speciality__mandatory=0)
 
@@ -254,6 +255,7 @@ def internships_save(request, cohort_id):
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internship_save_modification_student(request, cohort_id):
+    cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)
     # Get the student
     registration_id = request.POST.getlist('registration_id')
     student = mdl.student.find_by(registration_id=registration_id[0], full_registration = True)
@@ -276,7 +278,7 @@ def internship_save_modification_student(request, cohort_id):
     if request.POST.get('fixthis'):
         fixthis_list = request.POST.getlist('fixthis')
 
-    all_internships = mdl_int.internship_offer.find_internships()
+    all_internships = mdl_int.internship_offer.find_internships(cohort)
     all_specialities = get_all_specialities(all_internships)
     set_tabs_name(all_specialities)
 
@@ -435,8 +437,9 @@ def _get_number_choices(internships):
         number_first_choice = len(mdl_int.internship_choice.search(organization=internship.organization,
                                                                    speciality__acronym=internship.speciality.acronym,
                                                                    choice=1))
-        number_other_choice = len(mdl_int.internship_choice.search_other_choices(organization=internship.organization,
-                                                                                 speciality__acronym=internship.speciality.acronym))
+        number_other_choice = len(mdl_int.internship_choice.search_other_choices(
+            organization=internship.organization,
+            speciality__acronym=internship.speciality.acronym))
         internship.number_first_choice = number_first_choice
         internship.number_other_choice = number_other_choice
 

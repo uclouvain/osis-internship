@@ -23,7 +23,6 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-
 from internship.models import period_internship_places as mdl_period_places
 
 

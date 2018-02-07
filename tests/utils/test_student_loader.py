@@ -23,13 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import csv
-import factory
 import factory.fuzzy
-
-from io import StringIO
-
-from internship.utils import student_loader
 
 
 class CsvRowFactory:
@@ -73,21 +67,3 @@ def _generate_record():
         row.phone_mobile.generate({}),
         row.email.generate({}),
     )
-
-
-def create_csv_stream(filename, number=2, headers=True):
-    str_io = StringIO()
-    writer = csv.writer(str_io)
-    if headers:
-        headers = student_loader.CSVRow._fields
-        writer.writerow(headers)
-
-    records = [
-        _generate_record()
-        for idx in range(0, number)
-    ]
-
-    writer.writerows(records)
-    str_io.seek(0)
-    str_io.name = filename
-    return str_io
