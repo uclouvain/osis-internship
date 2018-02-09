@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
 <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 1.5.4">
+<meta name="generator" content="Asciidoctor 1.5.6.1">
 <meta name="author" content="Hildeberto Mendonça">
 <title>Open Student Information System : Stages de médecine</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
@@ -18,7 +18,6 @@ audio:not([controls]){display:none;height:0}
 [hidden],template{display:none}
 script{display:none!important}
 html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}
-body{margin:0}
 a{background:transparent}
 a:focus{outline:thin dotted}
 a:active,a:hover{outline:0}
@@ -53,7 +52,7 @@ textarea{overflow:auto;vertical-align:top}
 table{border-collapse:collapse;border-spacing:0}
 *,*:before,*:after{-moz-box-sizing:border-box;-webkit-box-sizing:border-box;box-sizing:border-box}
 html,body{font-size:100%}
-body{background:#fff;color:rgba(0,0,0,.8);padding:0;margin:0;font-family:"Noto Serif","DejaVu Serif",serif;font-weight:400;font-style:normal;line-height:1;position:relative;cursor:auto}
+body{background:#fff;color:rgba(0,0,0,.8);padding:0;margin:0;font-family:"Noto Serif","DejaVu Serif",serif;font-weight:400;font-style:normal;line-height:1;position:relative;cursor:auto;tab-size:4;-moz-osx-font-smoothing:grayscale;-webkit-font-smoothing:antialiased}
 a:hover{cursor:pointer}
 img,object,embed{max-width:100%;height:auto}
 object,embed{height:100%}
@@ -65,7 +64,6 @@ img{-ms-interpolation-mode:bicubic}
 .text-center{text-align:center!important}
 .text-justify{text-align:justify!important}
 .hide{display:none}
-body{-webkit-font-smoothing:antialiased}
 img,object,svg{display:inline-block;vertical-align:middle}
 textarea{height:auto;min-height:50px}
 select{width:100%}
@@ -92,13 +90,12 @@ strong,b{font-weight:bold;line-height:inherit}
 small{font-size:60%;line-height:inherit}
 code{font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;font-weight:400;color:rgba(0,0,0,.9)}
 ul,ol,dl{font-size:1em;line-height:1.6;margin-bottom:1.25em;list-style-position:outside;font-family:inherit}
-ul,ol,ul.no-bullet,ol.no-bullet{margin-left:1.5em}
+ul,ol{margin-left:1.5em}
 ul li ul,ul li ol{margin-left:1.25em;margin-bottom:0;font-size:1em}
 ul.square li ul,ul.circle li ul,ul.disc li ul{list-style:inherit}
 ul.square{list-style-type:square}
 ul.circle{list-style-type:circle}
 ul.disc{list-style-type:disc}
-ul.no-bullet{list-style:none}
 ol li ul,ol li ol{margin-left:1.25em;margin-bottom:0}
 dl dt{margin-bottom:.3125em;font-weight:bold}
 dl dd{margin-bottom:1.25em}
@@ -120,18 +117,25 @@ table thead tr th,table thead tr td,table tfoot tr th,table tfoot tr td{padding:
 table tr th,table tr td{padding:.5625em .625em;font-size:inherit;color:rgba(0,0,0,.8)}
 table tr.even,table tr.alt,table tr:nth-of-type(even){background:#f8f8f7}
 table thead tr th,table tfoot tr th,table tbody tr td,table tr td,table tfoot tr td{display:table-cell;line-height:1.6}
-body{tab-size:4}
 h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{line-height:1.2;word-spacing:-.05em}
 h1 strong,h2 strong,h3 strong,#toctitle strong,.sidebarblock>.content>.title strong,h4 strong,h5 strong,h6 strong{font-weight:400}
 .clearfix:before,.clearfix:after,.float-group:before,.float-group:after{content:" ";display:table}
 .clearfix:after,.float-group:after{clear:both}
-*:not(pre)>code{font-size:.9375em;font-style:normal!important;letter-spacing:0;padding:.1em .5ex;word-spacing:-.15em;background-color:#f7f7f8;-webkit-border-radius:4px;border-radius:4px;line-height:1.45;text-rendering:optimizeSpeed}
+*:not(pre)>code{font-size:.9375em;font-style:normal!important;letter-spacing:0;padding:.1em .5ex;word-spacing:-.15em;background-color:#f7f7f8;-webkit-border-radius:4px;border-radius:4px;line-height:1.45;text-rendering:optimizeSpeed;word-wrap:break-word}
+*:not(pre)>code.nobreak{word-wrap:normal}
+*:not(pre)>code.nowrap{white-space:nowrap}
 pre,pre>code{line-height:1.45;color:rgba(0,0,0,.9);font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;font-weight:400;text-rendering:optimizeSpeed}
+em em{font-style:normal}
+strong strong{font-weight:400}
 .keyseq{color:rgba(51,51,51,.8)}
 kbd{font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;display:inline-block;color:rgba(0,0,0,.8);font-size:.65em;line-height:1.45;background-color:#f7f7f7;border:1px solid #ccc;-webkit-border-radius:3px;border-radius:3px;-webkit-box-shadow:0 1px 0 rgba(0,0,0,.2),0 0 0 .1em white inset;box-shadow:0 1px 0 rgba(0,0,0,.2),0 0 0 .1em #fff inset;margin:0 .15em;padding:.2em .5em;vertical-align:middle;position:relative;top:-.1em;white-space:nowrap}
 .keyseq kbd:first-child{margin-left:0}
 .keyseq kbd:last-child{margin-right:0}
-.menuseq,.menu{color:rgba(0,0,0,.8)}
+.menuseq,.menuref{color:#000}
+.menuseq b:not(.caret),.menuref{font-weight:inherit}
+.menuseq{word-spacing:-.02em}
+.menuseq b.caret{font-size:1.25em;line-height:.8}
+.menuseq i.caret{font-weight:bold;text-align:center;width:.45em}
 b.button:before,b.button:after{position:relative;top:-1px;font-weight:400}
 b.button:before{content:"[";padding:0 3px 0 2px}
 b.button:after{content:"]";padding:0 2px 0 3px}
@@ -198,7 +202,7 @@ table.tableblock>caption.title{white-space:nowrap;overflow:visible;max-width:0}
 table.tableblock #preamble>.sectionbody>.paragraph:first-of-type p{font-size:inherit}
 .admonitionblock>table{border-collapse:separate;border:0;background:none;width:100%}
 .admonitionblock>table td.icon{text-align:center;width:80px}
-.admonitionblock>table td.icon img{max-width:none}
+.admonitionblock>table td.icon img{max-width:initial}
 .admonitionblock>table td.icon .title{font-weight:bold;font-family:"Open Sans","DejaVu Sans",sans-serif;text-transform:uppercase}
 .admonitionblock>table td.content{padding-left:1.125em;padding-right:1.25em;border-left:1px solid #ddddd8;color:rgba(0,0,0,.6)}
 .admonitionblock>table td.content>:last-child>:last-child{margin-bottom:0}
@@ -254,13 +258,13 @@ table.pyhltable .linenodiv{background:none!important;padding-right:0!important}
 table.tableblock{max-width:100%;border-collapse:separate}
 table.tableblock td>.paragraph:last-child p>p:last-child,table.tableblock th>p:last-child,table.tableblock td>p:last-child{margin-bottom:0}
 table.tableblock,th.tableblock,td.tableblock{border:0 solid #dedede}
-table.grid-all th.tableblock,table.grid-all td.tableblock{border-width:0 1px 1px 0}
-table.grid-all tfoot>tr>th.tableblock,table.grid-all tfoot>tr>td.tableblock{border-width:1px 1px 0 0}
-table.grid-cols th.tableblock,table.grid-cols td.tableblock{border-width:0 1px 0 0}
-table.grid-all *>tr>.tableblock:last-child,table.grid-cols *>tr>.tableblock:last-child{border-right-width:0}
-table.grid-rows th.tableblock,table.grid-rows td.tableblock{border-width:0 0 1px 0}
-table.grid-all tbody>tr:last-child>th.tableblock,table.grid-all tbody>tr:last-child>td.tableblock,table.grid-all thead:last-child>tr>th.tableblock,table.grid-rows tbody>tr:last-child>th.tableblock,table.grid-rows tbody>tr:last-child>td.tableblock,table.grid-rows thead:last-child>tr>th.tableblock{border-bottom-width:0}
-table.grid-rows tfoot>tr>th.tableblock,table.grid-rows tfoot>tr>td.tableblock{border-width:1px 0 0 0}
+table.grid-all>thead>tr>.tableblock,table.grid-all>tbody>tr>.tableblock{border-width:0 1px 1px 0}
+table.grid-all>tfoot>tr>.tableblock{border-width:1px 1px 0 0}
+table.grid-cols>*>tr>.tableblock{border-width:0 1px 0 0}
+table.grid-rows>thead>tr>.tableblock,table.grid-rows>tbody>tr>.tableblock{border-width:0 0 1px 0}
+table.grid-rows>tfoot>tr>.tableblock{border-width:1px 0 0 0}
+table.grid-all>*>tr>.tableblock:last-child,table.grid-cols>*>tr>.tableblock:last-child{border-right-width:0}
+table.grid-all>tbody>tr:last-child>.tableblock,table.grid-all>thead:last-child>tr>.tableblock,table.grid-rows>tbody>tr:last-child>.tableblock,table.grid-rows>thead:last-child>tr>.tableblock{border-bottom-width:0}
 table.frame-all{border-width:1px}
 table.frame-sides{border-width:0 1px}
 table.frame-topbot{border-width:1px 0}
@@ -281,10 +285,12 @@ ul li ol{margin-left:1.5em}
 dl dd{margin-left:1.125em}
 dl dd:last-child,dl dd:last-child>:last-child{margin-bottom:0}
 ol>li p,ul>li p,ul dd,ol dd,.olist .olist,.ulist .ulist,.ulist .olist,.olist .ulist{margin-bottom:.625em}
-ul.unstyled,ol.unnumbered,ul.checklist,ul.none{list-style-type:none}
-ul.unstyled,ol.unnumbered,ul.checklist{margin-left:.625em}
-ul.checklist li>p:first-child>.fa-square-o:first-child,ul.checklist li>p:first-child>.fa-check-square-o:first-child{width:1em;font-size:.85em}
-ul.checklist li>p:first-child>input[type="checkbox"]:first-child{width:1em;position:relative;top:1px}
+ul.checklist,ul.none,ol.none,ul.no-bullet,ol.no-bullet,ol.unnumbered,ul.unstyled,ol.unstyled{list-style-type:none}
+ul.no-bullet,ol.no-bullet,ol.unnumbered{margin-left:.625em}
+ul.unstyled,ol.unstyled{margin-left:0}
+ul.checklist{margin-left:.625em}
+ul.checklist li>p:first-child>.fa-square-o:first-child,ul.checklist li>p:first-child>.fa-check-square-o:first-child{width:1.25em;font-size:.8em;position:relative;bottom:.125em}
+ul.checklist li>p:first-child>input[type="checkbox"]:first-child{margin-right:.25em}
 ul.inline{margin:0 auto .625em auto;margin-left:-1.375em;margin-right:0;padding:0;list-style:none;overflow:hidden}
 ul.inline>li{list-style:none;float:left;margin-left:1.375em;display:block}
 ul.inline>li>*{display:block}
@@ -301,7 +307,8 @@ ol.lowergreek{list-style-type:lower-greek}
 td.hdlist1,td.hdlist2{vertical-align:top;padding:0 .625em}
 td.hdlist1{font-weight:bold;padding-bottom:1.25em}
 .literalblock+.colist,.listingblock+.colist{margin-top:-.5em}
-.colist>table tr>td:first-of-type{padding:0 .75em;line-height:1}
+.colist>table tr>td:first-of-type{padding:.4em .75em 0 .75em;line-height:1;vertical-align:top}
+.colist>table tr>td:first-of-type img{max-width:initial}
 .colist>table tr>td:last-of-type{padding:.25em 0}
 .thumb,.th{line-height:0;display:inline-block;border:solid 4px #fff;-webkit-box-shadow:0 0 0 1px #ddd;box-shadow:0 0 0 1px #ddd}
 .imageblock.left,.imageblock[style*="float: left"]{margin:.25em .625em 1.25em 0}
@@ -364,6 +371,7 @@ div.unbreakable{page-break-inside:avoid}
 .yellow{color:#bfbf00}
 .yellow-background{background-color:#fafa00}
 span.icon>.fa{cursor:default}
+a span.icon>.fa{cursor:inherit}
 .admonitionblock td.icon [class^="fa icon-"]{font-size:2.5em;text-shadow:1px 1px 2px rgba(0,0,0,.5);cursor:default}
 .admonitionblock td.icon .icon-note:before{content:"\f05a";color:#19407c}
 .admonitionblock td.icon .icon-tip:before{content:"\f0eb";text-shadow:1px 1px 2px rgba(155,155,0,.8);color:#111}
@@ -418,14 +426,14 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 .show-for-print{display:inherit!important}}
 </style>
 </head>
-<body class="article toc2 toc-left">
+<body class="book toc2 toc-left">
 <div id="header">
 <h1>Open Student Information System : Stages de médecine</h1>
 <div class="details">
 <span id="author" class="author">Hildeberto Mendonça</span><br>
 <span id="email" class="email"><a href="mailto:hildeberto.mendonca@uclouvain.be">hildeberto.mendonca@uclouvain.be</a></span><br>
-<span id="revnumber">version 0.4.2,</span>
-<span id="revdate">2018-01-22</span>
+<span id="revnumber">version 0.5.0,</span>
+<span id="revdate">2018-02-09</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -436,39 +444,47 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_les_acteurs">Les acteurs</a></li>
 </ul>
 </li>
-<li><a href="#_l_affectation_des_stages">1. L&#8217;affectation des stages</a>
+<li><a href="#_les_functionalités">1. Les functionalités</a>
 <ul class="sectlevel2">
-<li><a href="#creation_cohort">1.1. Création d&#8217;une cohorte</a></li>
-<li><a href="#import/students">1.2. Importation des étudiants</a></li>
-<li><a href="#_importation_des_offres_de_stages">1.3. Importation des offres de stages</a></li>
-<li><a href="#_définition_des_périodes_des_hôpitaux_et_des_places_disponibles">1.4. Définition des périodes, des hôpitaux et des places disponibles</a></li>
-<li><a href="#_choix_des_stages_par_specialité">1.5. Choix des stages par specialité</a></li>
-<li><a href="#_affectation_des_stages_aux_étudiants_prioritaires">1.6. Affectation des stages aux étudiants prioritaires</a></li>
-<li><a href="#_affectation_des_stages_aux_autres_étudiants">1.7. Affectation des stages aux autres étudiants</a></li>
-<li><a href="#_correction_des_stages_avec_problème_d_affectation">1.8. Correction des stages avec problème d&#8217;affectation</a></li>
-<li><a href="#_publication_des_résultats">1.9. Publication des résultats</a></li>
-<li><a href="#_consultation_des_résultats">1.10. Consultation des résultats</a></li>
-</ul>
-</li>
-<li><a href="#_la_gestion_journalière">2. La gestion journalière</a>
-<ul class="sectlevel2">
-<li><a href="#_les_hôpitaux">2.1. Les hôpitaux</a></li>
-<li><a href="#_les_spécialités">2.2. Les spécialités</a></li>
-</ul>
-</li>
-<li><a href="#_la_conception_technique_de_l_application">3. La conception technique de l&#8217;application</a>
-<ul class="sectlevel2">
-<li><a href="#_l_algorithme_d_affectation">3.1. L’algorithme d’affectation</a>
+<li><a href="#_l_affectation_des_stages">1.1. L&#8217;affectation des stages</a>
 <ul class="sectlevel3">
-<li><a href="#_les_définitions">3.1.1. Les définitions</a></li>
+<li><a href="#creation_cohort">1.1.1. Création d&#8217;une cohorte</a></li>
+<li><a href="#import/students">1.1.2. Importation des étudiants</a></li>
+<li><a href="#_importation_des_offres_de_stages">1.1.3. Importation des offres de stages</a></li>
+<li><a href="#_définition_des_périodes_des_hôpitaux_et_des_stages">1.1.4. Définition des périodes, des hôpitaux et des stages</a></li>
+<li><a href="#_choix_des_stages_par_specialité">1.1.5. Choix des stages par specialité</a></li>
+<li><a href="#_affectation_des_stages_aux_étudiants_prioritaires">1.1.6. Affectation des stages aux étudiants prioritaires</a></li>
+<li><a href="#_affectation_des_stages_aux_autres_étudiants">1.1.7. Affectation des stages aux autres étudiants</a></li>
+<li><a href="#_correction_des_stages_avec_problème_d_affectation">1.1.8. Correction des stages avec problème d&#8217;affectation</a></li>
+<li><a href="#_publication_des_résultats">1.1.9. Publication des résultats</a></li>
+<li><a href="#_consultation_des_résultats">1.1.10. Consultation des résultats</a></li>
 </ul>
 </li>
-<li><a href="#_modèle_de_données">3.2. Modèle de données</a></li>
-<li><a href="#_l_architecture_logiciel">3.3. L&#8217;architecture logiciel</a></li>
-<li><a href="#_sécurité">3.4. Sécurité</a>
+<li><a href="#_la_gestion_journalière">1.2. La gestion journalière</a>
 <ul class="sectlevel3">
-<li><a href="#_l_authentification">3.4.1. L&#8217;authentification</a></li>
-<li><a href="#_l_authorisation">3.4.2. L&#8217;authorisation</a></li>
+<li><a href="#_les_hôpitaux">1.2.1. Les hôpitaux</a></li>
+<li><a href="#_les_spécialités">1.2.2. Les spécialités</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#_la_technique">2. La technique</a>
+<ul class="sectlevel2">
+<li><a href="#_la_conception_de_l_application">2.1. La conception de l&#8217;application</a>
+<ul class="sectlevel3">
+<li><a href="#_l_algorithme_d_affectation">2.1.1. L’algorithme d’affectation</a>
+<ul class="sectlevel4">
+<li><a href="#_les_définitions">Les définitions</a></li>
+</ul>
+</li>
+<li><a href="#_modèle_de_données">2.1.2. Modèle de données</a></li>
+<li><a href="#_l_architecture_logiciel">2.1.3. L&#8217;architecture logiciel</a></li>
+<li><a href="#_sécurité">2.1.4. Sécurité</a>
+<ul class="sectlevel4">
+<li><a href="#_l_authentification">L&#8217;authentification</a></li>
+<li><a href="#_l_authorisation">L&#8217;authorisation</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -484,7 +500,20 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <p>L&#8217;objectif de ce document est de communiquer le métier de gestion des stages au sein de la faculté de médecine et décrire le fonctionnement de l&#8217;application développé dans le but de optimiser la charge de travail consacré a l&#8217;affectation des stages.</p>
 </div>
 <div class="paragraph">
-<p>Chaque nouvelle personne qui débarque dans le projet rencontre le défi de tout comprendre en posant les mêmes questions encore et encore. Si bien fait et bien maintenu, ce document aidera la faculté de médecine à évoluer s&#8217;application proprement et continuellement, indépendant du changement de l&#8217;équipe, tout en protégeant l&#8217;investissement déjà fait.</p>
+<p>Le document est organisé en deux parties:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>la description du métier et comment il est couvert par l&#8217;application. Cette partie se concentre sur les activités du personnel administratif sur la gestion des stages de médecine.</p>
+</li>
+<li>
+<p>la description technique de l&#8217;architecture logiciele, destiné aux developeurs qui prenderons en charge la maintenance technique de l&#8217;application.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Ce document est très important pour le bon dérulement de l&#8217;application. Il a récemment prouvé être utile pour la création annuelle de la cohorte par les utilisateurs, qui a faire ça avec tout l&#8217;autonomie. Chaque nouvelle personne qui débarque dans le projet rencontre le défi de tout comprendre en posant les mêmes questions encore et encore. Si bien fait et bien maintenu, ce document aidera la faculté de médecine à évoluer son application proprement et continuellement, indépendant du changement de l&#8217;équipe, tout en protégeant l&#8217;investissement déjà fait. Pour que la documentation reste toujours à jour, le personnel technique doit la mettre à jour chaque fois qu&#8217;une modification affecte le comportement de l&#8217;application. De cette façon, documenter ne devient pas une tâche laborieuse.</p>
 </div>
 <div class="sect2">
 <h3 id="_le_contexte">Le contexte</h3>
@@ -506,7 +535,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <p>les étudiants inscrits aux programmes de master en médecine</p>
 </li>
 <li>
-<p>les membres de la faculté: le doyen et le personnel administratif</p>
+<p>les gestionaires des stages: le doyen et le personnel administratif</p>
 </li>
 <li>
 <p>l&#8217;administrateur de système: la personne avec un role technique et bien informé par rapport au fonctionnement de l&#8217;application.</p>
@@ -519,37 +548,42 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Gestionnaire des stages</strong>: L&#8217;accès est limité à l&#8217;application OSIS.</p>
+<p><strong>Gestionnaire des stages</strong>: L&#8217;accès est limité à l&#8217;application backoffice.</p>
 </li>
 <li>
-<p><strong>Étudiant</strong>: L&#8217;accès est limité à l&#8217;application OSIS-Portal.</p>
+<p><strong>Étudiant</strong>: L&#8217;accès est limité à l&#8217;application frontoffice.</p>
 </li>
 <li>
-<p><strong>Administrateur</strong>: Accès à l&#8217;administration de données brut d&#8217;OSIS et OSIS-Portal.</p>
+<p><strong>Administrateur</strong>: Accès à l&#8217;administration de données brut pour la resolution des problèmes non antecipés.</p>
 </li>
 </ul>
+</div>
+<div class="paragraph">
+<p>Une explication detaillé des applications backoffice et frontoffice est disponible dans la section 3.</p>
 </div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_l_affectation_des_stages">1. L&#8217;affectation des stages</h2>
+<h2 id="_les_functionalités">1. Les functionalités</h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="_l_affectation_des_stages">1.1. L&#8217;affectation des stages</h3>
 <div class="paragraph">
 <p>Chaque année des étudiants de la faculté de médecine doivent effectuer 12 périodes de stages (1 période par mois). Les stages sont divisés en 2 catégories:</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p><strong>Stages obligatoires</strong>: 5 spécialités imposées pour tous les étudiants avec un total de périodes (table 1). Les stages se déroulent dans la première partie de l&#8217;année (entre javier et août), suivis par les stages au choix.</p>
+<p><strong>Stages obligatoires</strong>: des spécialités imposées à tous les étudiants avec un nombre de périodes (table 1). Les stages se déroulent dans la première partie de l&#8217;année, suivis par les stages au choix.</p>
 </li>
 <li>
-<p><strong>Stages au choix</strong>: 4 spécialités au choix pour un total de 4 périodes. L&#8217;étudiant peut choisir 4 fois la même spécialité ou 4 spécialités différentes. Les stages se déroulent entre septembre et décembre. La priorité est donnée aux étudiants qui présentent un concours dans la spécialité choisie pour le stage au choix. L&#8217;information concernant la spécialité du concours est fournie par l&#8217;étudiant au moment de l&#8217;inscription.</p>
+<p><strong>Stages au choix</strong>: des spécialités au choix limités à 1 mois par specialité. L&#8217;étudiant peut choisir 4 fois la même spécialité ou 4 spécialités différentes. Les stages se déroulent a la fin d&#8217;année. La priorité est donnée aux étudiants qui présentent un concours dans la spécialité choisie pour le stage au choix. L&#8217;information concernant la spécialité du concours est fournie par l&#8217;étudiant au moment de l&#8217;inscription.</p>
 </li>
 </ol>
 </div>
 <div class="paragraph">
-<p>Voici le tableau qui montre la répartition de différents stages.</p>
+<p>Voici le tableau qui montre un example des stages et leurs périodes respectives.</p>
 </div>
 <table class="tableblock frame-all grid-all spread">
 <caption class="title">Table 1. Répartition des stages</caption>
@@ -566,27 +600,27 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Médecine interne (MI)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">P1, P2, P3</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">P1, P2</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Urgence (UR)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">P4, P5</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">P3, P4</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Chirurgie (CH)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">P6</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">P5</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Gynécologie-obstétrice (GO)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">P7</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">P6</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Pédiatrie (PE)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">P8</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">P7</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Stages au choix (peuvent être dans la même spécialité)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">P9, P10, P11, P12</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">P8, P9, P10, P11</p></td>
 </tr>
 </tbody>
 </table>
@@ -604,13 +638,13 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="paragraph">
 <p>Voici une description détaillée des tous les tâches du processus:</p>
 </div>
-<div class="sect2">
-<h3 id="creation_cohort">1.1. Création d&#8217;une cohorte</h3>
+<div class="sect3">
+<h4 id="creation_cohort">1.1.1. Création d&#8217;une cohorte</h4>
 <div class="paragraph">
 <p>La <strong>Cohorte</strong> est utilisé pour définir la période annuel d&#8217;organisation des stages. Cette période ne coïncide pas avec l&#8217;année académique et ça gestion est tout à fait spécifique au domaine des stages de médecine.</p>
 </div>
 <div class="paragraph">
-<p>La création d&#8217;une cohorte est le premier pas ver l&#8217;affectation des stages. Presque toutes les données sont liées à cela. À cette étape le gestionnaire des stages va créer une cohorte avec des informations basiques, plus les dates qui déterminent le début, la fin et la publication des résultats.</p>
+<p>La création d&#8217;une cohorte est le premier pas ver l&#8217;affectation des stages. Presque toutes les données sont liées à cela. À cette étape le gestionnaire des stages va créer une cohorte avec des informations comme demandé dans le formulaire suivant.</p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -618,37 +652,63 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="paragraph">
+<p>Les dates d&#8217;ouverture et de fermeture permetre le controle d&#8217;accès aux inscriptions aux stages par les étudiants matriculés. La date de fermeture est toujour plus grand où egale a la date d&#8217;ouverture. La date de publication, qui est plus grand que la date de fermeture des inscriptions, permettre montrer les données des affectations aux étudiants.</p>
+</div>
+<div class="paragraph">
 <p>Le gestionnaire a l&#8217;option de créer une cohorte à partir d&#8217;une cohorte existant. Cela lui permettre de réutiliser une bonne partie de les données disponibles. Les données réutilisés sont les hôpitaux, les spécialités, les périodes, les types de stages et les maîtres de stages.</p>
 </div>
 </div>
-<div class="sect2">
-<h3 id="import/students">1.2. Importation des étudiants</h3>
+<div class="sect3">
+<h4 id="import/students">1.1.2. Importation des étudiants</h4>
 <div class="paragraph">
 <p>Grace à l&#8217;importation de données a partir d&#8217;un fichier XLS, ce n&#8217;est pas nécessaire de demander aux étudiants de s&#8217;inscrire sur l&#8217;application. Le fichier provient de l&#8217;application de gestion de l&#8217;université et contient les étudiants inscrits sur le programme de master en médecine, essentiel pour la démarche du processus d&#8217;affectation.</p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="images/students-empty.png" alt="Pas d'étudiant dans la cohorte">
+<img src="images/students-empty.png" alt="Pas d&#8217;étudiant dans la cohorte">
 </div>
 </div>
 <div class="paragraph">
-<p>L&#8217;importation des étudiants est disponible dans la page de consultation des étudiants. En cliquant sur le bouton "Importer", une fenêtre modal s&#8217;ouvre pour permettre la sélection du fichier Excel (xlsx) disponible sur la machine de l&#8217;utilisateur. Après la sélection, cliquez sur le bouton "Importer" en bleu pour démarrer l&#8217;importation. Il faut quelques instants pour importer tous les étudiants. C&#8217;est normal.</p>
+<p>L&#8217;importation des étudiants est disponible dans la page de consultation des étudiants. En cliquant sur le bouton "Importer", une fenêtre modal s&#8217;ouvre pour permettre la sélection du fichier Excel (xlsx) disponible sur la machine de l&#8217;utilisateur. Après la sélection, cliquez sur le bouton "Importer" en bleu pour démarrer l&#8217;importation. Le temps d&#8217;importation depend du nombre d&#8217;étudiants dans le fichier à importer.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Warning</div>
+</td>
+<td class="content">
+la reimportation des étudiants ira dissocier tous les étudiants existants de la cohorte, les inserés à la main inclus. La liste d&#8217;étudiants sera equivalent aux données du fichier dernierment importé. Après la premier importation, c&#8217;est recomendé de maintenir les données des étudiants via les fonctionnalités disponible dans l&#8217;application.
+</td>
+</tr>
+</table>
 </div>
 <div class="imageblock">
 <div class="content">
 <img src="images/students-import.png" alt="Importation des étudiants">
 </div>
 </div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
 <div class="paragraph">
-<p><strong>Attention</strong>: c&#8217;est important d&#8217;importer un fichier en format <code>xlsx</code>. L&#8217;application n&#8217;est pas compatible avec le format <code>xls</code>. Pour avoir un fichier <code>xlsx</code> à partir d&#8217;un fichier <code>xls</code>, vous pouvez ouvrir le ficher <code>xls</code> en Excel et <em>Enregistrer sous</em> le format <code>xlsx</code> en sélectionnant l&#8217;option <em>Classeur Excel</em>, qui est la premier dans la liste.</p>
+<p>C&#8217;est important d&#8217;importer un fichier en format <code>xlsx</code>. L&#8217;application n&#8217;est pas compatible avec le format <code>xls</code>. Pour avoir un fichier <code>xlsx</code> à partir d&#8217;un fichier <code>xls</code>, vous pouvez ouvrir le ficher <code>xls</code> en Excel et <em>Enregistrer sous</em> le format <code>xlsx</code> en sélectionnant l&#8217;option <em>Classeur Excel</em>, qui est la premier dans la liste.</p>
 </div>
 <div class="imageblock">
 <div class="content">
 <img src="images/xls-to-xlsx.png" alt="Convertion de xls vers xlsx">
 </div>
 </div>
+</td>
+</tr>
+</table>
+</div>
 <div class="paragraph">
-<p>Une fois que les étudiants sont importer, le bouton "Importer" disparetre parce que c&#8217;est possible importer les étudiant seulement une fois par cohorte. Après l&#8217;importation, les données devront être maintenu manuellement.</p>
+<p>Après l&#8217;importation, les étudiants apparaitrent dans la liste, comme illustré dans l&#8217;image suivante. C&#8217;est possible d&#8217;ajouter un nouveau étudiant an cliquant sur "Ajouter", visualiser et modifier un étudiant éxistant en cliquant sur le botton de la colonne "Détails", et modifier les choix fait par l&#8217;étudiant en cliquant sur le botton dans la colonne "Modification des choix".</p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -656,10 +716,10 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_importation_des_offres_de_stages">1.3. Importation des offres de stages</h3>
+<div class="sect3">
+<h4 id="_importation_des_offres_de_stages">1.1.3. Importation des offres de stages</h4>
 <div class="paragraph">
-<p>Les offres de stages pour les spécialités dans les différent hôpitaux sont meilleur gérer dans un fichier Excel. Cette fonctionnalité permettre d&#8217;exploiter les données du fichier dans l&#8217;application.</p>
+<p>Les offres de stages (la quantité de places disponibles dans chaque hôpital pour chaque spécialité) sont meilleur gérer dans un fichier Excel. Cette fonctionnalité permettre d&#8217;exploiter les données du fichier dans l&#8217;application.</p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -669,24 +729,61 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="paragraph">
 <p>En cas de changement de la quantité des places disponibles, les modifications sont faites dans le même fichier Excel et réimporté dans l&#8217;application sans risque de duplication de données. En option, les quantités peuvent être modifiés directement dans l&#8217;application, mais en cas de réimportation du fichier Excel les données modifiés manuellement seront écrasés.</p>
 </div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+Malgré l&#8217;ordre d&#8217;importation de données afficher dans le processus et documenté dans les section 1.2 et 1.3, les étudiants et les offres pouvent être importé n&#8217;importe en quel ordre, parce que les données ne sont pas initialement associés. Ils seront seulement après les choix et les affectations des étudiants.
+</td>
+</tr>
+</table>
 </div>
-<div class="sect2">
-<h3 id="_définition_des_périodes_des_hôpitaux_et_des_places_disponibles">1.4. Définition des périodes, des hôpitaux et des places disponibles</h3>
+</div>
+<div class="sect3">
+<h4 id="_définition_des_périodes_des_hôpitaux_et_des_stages">1.1.4. Définition des périodes, des hôpitaux et des stages</h4>
 <div class="paragraph">
-<p>Avec l&#8217;intention d&#8217;organiser le cohort pour permettre le bon choix des étudiants est l&#8217;affectation en suite, le gestionaire des stages s&#8217;occupe de determiner les dates de debut et fin des périodes et les places disponibles dans les hôpitaux pour les different specialités.</p>
+<p>Avec l&#8217;intention d&#8217;organiser la cohorte pour permettre le bon choix des étudiants est l&#8217;affectation en suite, le gestionaire des stages s&#8217;occupe de determiner les dates de debut et fin de la période des choix des stages et la date de debut de publication des resultats.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Warning</div>
+</td>
+<td class="content">
+Les quatre dernières tâches devraient se terminer avant la date de debut de la période de choix des stages.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_choix_des_stages_par_specialité">1.1.5. Choix des stages par specialité</h4>
+<div class="paragraph">
+<p>Precisement à la date de debut de la période de choix, l&#8217;application est ouvert aux étudiants de médecine qui devront faire leurs choix de stages. L&#8217;application reste ouvert jusqu&#8217;à la fin de la période. Pendant ce temps là, les étudiants pouvent changer librement leurs choix et le gestionaire des stages s&#8217;engage a n&#8217;est pas modifier les choix faits avant la fin de la période.</p>
 </div>
 <div class="paragraph">
-<p>Les trois dernières tâches devraient se terminer avant la date de debut de la période de choix des stages.</p>
+<p>L&#8217;étudiant a accès a l&#8217;application seulement s&#8217;il:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>est regulierment inscrit comme étudiant à l&#8217;université</p>
+</li>
+<li>
+<p>a une compte utilisateur pour accéder le reseau et les services en ligne du portail</p>
+</li>
+<li>
+<p>est regulierment inscrit dans une des cohortes existants.</p>
+</li>
+</ul>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_choix_des_stages_par_specialité">1.5. Choix des stages par specialité</h3>
-<div class="paragraph">
-<p>Precisement à la date de debut de la période de choix, l&#8217;application est ouvert aux étudiants de médecine qui devront faire leurs choix de stages. L&#8217;application reste ouvert jusqu&#8217;à la fin de la période. Pendant ce temps là, les étudiants pouvent changer librement leurs choix et le gestionaire des stages s&#8217;engage a n&#8217;est pas modifier les choix faits avan la fin de la période.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_affectation_des_stages_aux_étudiants_prioritaires">1.6. Affectation des stages aux étudiants prioritaires</h3>
+<div class="sect3">
+<h4 id="_affectation_des_stages_aux_étudiants_prioritaires">1.1.6. Affectation des stages aux étudiants prioritaires</h4>
 <div class="paragraph">
 <p>Affectation des étudiants reconnus par le service d&#8217;aide aux étudiants comme prioritaires. Cela donne une priorité adaptée au besoin particulaire de chaque étudiant, mais il n&#8217;y a pas d&#8217;assurance de recevoir les premiers choix (le plus souvent priorité pour les stages proches du domicile légal ou dans un hôpital avec logement).</p>
 </div>
@@ -694,14 +791,14 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <p>L&#8217;etudiant devra faire les quatre choix de manière réfléchie et se présenter à la faculté dans un periode bien défini afin de discuter avec le secretariat les critères qui lui sont propres. Après cette discussion, le secretariat déterminera parmi le choix de l&#8217;étudiant celui ou ceux que l&#8217;application devra obligatoirement prendre en compte. Si les choix semblent non adaptés par rapport à la priorité de l&#8217;étudiant, alors le secretariat peut imposer un autre endroit de stage, mais toujours en adéquation avec le besoin de l&#8217;étudiant.</p>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_affectation_des_stages_aux_autres_étudiants">1.7. Affectation des stages aux autres étudiants</h3>
+<div class="sect3">
+<h4 id="_affectation_des_stages_aux_autres_étudiants">1.1.7. Affectation des stages aux autres étudiants</h4>
 <div class="paragraph">
 <p>Pour les étudiants non-prioritaires, les affectations sont fait automatiquement par l&#8217;application. L&#8217;algorithme essaye de trouver une solution optimale pour chaque étudiant en terme de spécialité et période. Il y a de contrainte qu&#8217;impeche de toujours respecter le premier choix de tous les étudiants. Par exemple, si le nombre d&#8217;étudiants est plus grand que le nombre de places disponibles. Pour mieux satisfaire toutes les demandes des étudiants avec les offres limitées, nous essayons de trouver une solution avec le coût le plus faible possible et qui satisfait les différentes contraintes, tout en respectant le mieux possible les souhaits des étudiants.</p>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_correction_des_stages_avec_problème_d_affectation">1.8. Correction des stages avec problème d&#8217;affectation</h3>
+<div class="sect3">
+<h4 id="_correction_des_stages_avec_problème_d_affectation">1.1.8. Correction des stages avec problème d&#8217;affectation</h4>
 <div class="paragraph">
 <p>L&#8217;affectation automatique peux avoir de difficulté pour affecter certains étudiants à cause des contraints existants. Dans ce cas, les étudiants sont affecter à un faux hôpital pour être affecter correctement dans un deuxième moment.</p>
 </div>
@@ -712,28 +809,26 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <p>Tous les affectations devrons être faits avant la date de publication des résultats.</p>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_publication_des_résultats">1.9. Publication des résultats</h3>
+<div class="sect3">
+<h4 id="_publication_des_résultats">1.1.9. Publication des résultats</h4>
 <div class="paragraph">
 <p>Quand la date de publication des résultats, défini dans le cohorte, est arrivé, tous les resultats sons publiés en même temps sur le portail de l&#8217;université et disponibilizés pour les étudiants impliqués.</p>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_consultation_des_résultats">1.10. Consultation des résultats</h3>
+<div class="sect3">
+<h4 id="_consultation_des_résultats">1.1.10. Consultation des résultats</h4>
 <div class="paragraph">
 <p>Les étudiants se connectent sur le portail UCL pour consulter les résultats des affectations. Les données sont disponible en mode lecture. En cas de correction ou de modification en général, une demande devra être fait au secretariat.</p>
 </div>
 </div>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_la_gestion_journalière">2. La gestion journalière</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="_la_gestion_journalière">1.2. La gestion journalière</h3>
 <div class="paragraph">
 <p>La gestion journalière couvre toutes les fonctionnalités de maintenance de données en dehors de l&#8217;exécution du processus. Ce sont les fonctionnalités utilisées au cours de l&#8217;année par le gestionnaire des stages.</p>
 </div>
-<div class="sect2">
-<h3 id="_les_hôpitaux">2.1. Les hôpitaux</h3>
+<div class="sect3">
+<h4 id="_les_hôpitaux">1.2.1. Les hôpitaux</h4>
 <div class="paragraph">
 <p>La gestion des hôpitaux est plus que maintenir les données des hôpitaux à jour.</p>
 </div>
@@ -760,7 +855,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="images/hospital-affectation-results.png" alt="Les rapports pour l'hôpital">
+<img src="images/hospital-affectation-results.png" alt="Les rapports pour l&#8217;hôpital">
 </div>
 </div>
 <div class="paragraph">
@@ -771,12 +866,12 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="images/hospital-report-config.png" alt="La configuration de rapport pour l'hôpital">
+<img src="images/hospital-report-config.png" alt="La configuration de rapport pour l&#8217;hôpital">
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_les_spécialités">2.2. Les spécialités</h3>
+<div class="sect3">
+<h4 id="_les_spécialités">1.2.2. Les spécialités</h4>
 <div class="paragraph">
 <p>La gestion des spécialités consiste en maintenir les données des spécialités d&#8217;une cohorte. Normalement, les spécialités sont créer automatiquement, au moment de la création d&#8217;une cohorte a partir d&#8217;une cohorte existant. Après, il suffit d&#8217;adapter la liste au cohorte actuelle en supprimant ou ajoutant des spécialités.</p>
 </div>
@@ -807,11 +902,14 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 </div>
+</div>
 <div class="sect1">
-<h2 id="_la_conception_technique_de_l_application">3. La conception technique de l&#8217;application</h2>
+<h2 id="_la_technique">2. La technique</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_l_algorithme_d_affectation">3.1. L’algorithme d’affectation</h3>
+<h3 id="_la_conception_de_l_application">2.1. La conception de l&#8217;application</h3>
+<div class="sect3">
+<h4 id="_l_algorithme_d_affectation">2.1.1. L’algorithme d’affectation</h4>
 <div class="paragraph">
 <p>Pour de satisfaire toutes les demandes des étudiants nous essayons de trouver une solution avec le coût le plus faible et qui satisfait les différents contraintes. Le coût est mesuré par la somme de tous les points d&#8217;une solution. Les points sont ajoutés à une solution quand les contraintes ne sont pas respectées. La pondération des différents contraintes est la suivante:</p>
 </div>
@@ -859,8 +957,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="paragraph">
 <p>On a également les différentes contraintes faibles, par exemple l&#8217;étudiant doit faire au minimum 2 mois dans le même hôpital. Si ce n&#8217;est par le cas on ajoute 5 points.</p>
 </div>
-<div class="sect3">
-<h4 id="_les_définitions">3.1.1. Les définitions</h4>
+<div class="sect4">
+<h5 id="_les_définitions">Les définitions</h5>
 <div class="ulist">
 <ul>
 <li>
@@ -953,8 +1051,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_modèle_de_données">3.2. Modèle de données</h3>
+<div class="sect3">
+<h4 id="_modèle_de_données">2.1.2. Modèle de données</h4>
 <div class="paragraph">
 <p>Les données sont organisés dans la base de données selon le modèle de données suivant.</p>
 </div>
@@ -964,25 +1062,25 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_l_architecture_logiciel">3.3. L&#8217;architecture logiciel</h3>
+<div class="sect3">
+<h4 id="_l_architecture_logiciel">2.1.3. L&#8217;architecture logiciel</h4>
 <div class="paragraph">
 <p>La gestion des stages est une app Django. Elle ne tourne pas tout seule, mais elle depend d&#8217;un projet Django pour fonctionner. Pour le moment, elle depend du projet Django OSIS (<a href="https://github.com/uclouvain/osis" class="bare">https://github.com/uclouvain/osis</a>), especifiquement de l&#8217;application <code>base</code>, qui est commun à tous les autres applications. C&#8217;est fortement couplé au point de être aimablement classée comme un "satelite" d&#8217;OSIS. Heureusement, l&#8217;application est conçue de manière à pouvoir être facilement découplée à l&#8217;avenir en utilisant, par exemple, des services web parce la demande de données est très faible.</p>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_sécurité">3.4. Sécurité</h3>
+<div class="sect3">
+<h4 id="_sécurité">2.1.4. Sécurité</h4>
 <div class="paragraph">
 <p>Toutes les fonctionnalités de l&#8217;application sont limitées aux utilisateurs et aux responsabilités bien connus. À cause de ça, la sécurité de l&#8217;application est organisé en deux parties:</p>
 </div>
-<div class="sect3">
-<h4 id="_l_authentification">3.4.1. L&#8217;authentification</h4>
+<div class="sect4">
+<h5 id="_l_authentification">L&#8217;authentification</h5>
 <div class="paragraph">
 <p>OSIS utilise le single-sign-on de l&#8217;UCL qui est integré avec le cadastre unique des utilisateurs informatique de l&#8217;université. L&#8217;application Internship hérite ce mechanism d&#8217;OSIS pour s&#8217;assurer qui tous les accès sont connu de l&#8217;instituition. Il n&#8217;y a aucun moyen de créer de nouveaux utilisateurs dans l&#8217;application, sans passer par les processus standard de l&#8217;université.</p>
 </div>
 </div>
-<div class="sect3">
-<h4 id="_l_authorisation">3.4.2. L&#8217;authorisation</h4>
+<div class="sect4">
+<h5 id="_l_authorisation">L&#8217;authorisation</h5>
 <div class="paragraph">
 <p>L&#8217;authorisation est gérer par Django, qui organise les utilisateurs dans les groupes correspondent aux roles défini par l&#8217;application. Il y a deux rôles actuellment:</p>
 </div>
@@ -1001,10 +1099,11 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 </div>
+</div>
 <div id="footer">
 <div id="footer-text">
-Version 0.4.2<br>
-Last updated 2018-01-22 10:40:26 CET
+Version 0.5.0<br>
+Last updated 2018-02-09 13:40:27 CET
 </div>
 </div>
 </body>

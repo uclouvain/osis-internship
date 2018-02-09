@@ -4,33 +4,33 @@
 
 Chaque année des étudiants de la faculté de médecine doivent effectuer 12 périodes de stages (1 période par mois). Les stages sont divisés en 2 catégories:
 
-1. *Stages obligatoires*: 5 spécialités imposées pour tous les étudiants avec un total de périodes (table 1). Les stages se déroulent dans la première partie de l'année (entre javier et août), suivis par les stages au choix.
+1. *Stages obligatoires*: des spécialités imposées à tous les étudiants avec un nombre de périodes (table 1). Les stages se déroulent dans la première partie de l'année, suivis par les stages au choix.
 
-2. *Stages au choix*: 4 spécialités au choix pour un total de 4 périodes. L'étudiant peut choisir 4 fois la même spécialité ou 4 spécialités différentes. Les stages se déroulent entre septembre et décembre. La priorité est donnée aux étudiants qui présentent un concours dans la spécialité choisie pour le stage au choix. L'information concernant la spécialité du concours est fournie par l'étudiant au moment de l'inscription.
+2. *Stages au choix*: des spécialités au choix limités à 1 mois par specialité. L'étudiant peut choisir 4 fois la même spécialité ou 4 spécialités différentes. Les stages se déroulent a la fin d'année. La priorité est donnée aux étudiants qui présentent un concours dans la spécialité choisie pour le stage au choix. L'information concernant la spécialité du concours est fournie par l'étudiant au moment de l'inscription.
 
-Voici le tableau qui montre la répartition de différents stages.
+Voici le tableau qui montre un example des stages et leurs périodes respectives.
 
 .Répartition des stages
 |===
 |Spécialité |Périodes
 
 |Médecine interne (MI)
-|P1, P2, P3
+|P1, P2
 
 |Urgence (UR)
-|P4, P5
+|P3, P4
 
 |Chirurgie (CH)
-|P6
+|P5
 
 |Gynécologie-obstétrice (GO)
-|P7
+|P6
 
 |Pédiatrie (PE)
-|P8
+|P7
 
 |Stages au choix (peuvent être dans la même spécialité)
-|P9, P10, P11, P12
+|P8, P9, P10, P11
 |===
 
 Pour affecter les étudiants aux differents stages offert par les hôpitaux dans les périodes bien determinés, la faculté suivre le processus suivant une fois par an, au debut de l'année, entre janvier et fevrier:
@@ -46,9 +46,11 @@ Voici une description détaillée des tous les tâches du processus:
 
 La *Cohorte* est utilisé pour définir la période annuel d'organisation des stages. Cette période ne coïncide pas avec l'année académique et ça gestion est tout à fait spécifique au domaine des stages de médecine.
 
-La création d'une cohorte est le premier pas ver l'affectation des stages. Presque toutes les données sont liées à cela. À cette étape le gestionnaire des stages va créer une cohorte avec des informations basiques, plus les dates qui déterminent le début, la fin et la publication des résultats.
+La création d'une cohorte est le premier pas ver l'affectation des stages. Presque toutes les données sont liées à cela. À cette étape le gestionnaire des stages va créer une cohorte avec des informations comme demandé dans le formulaire suivant.
 
 image::images/cohort-creation.png[Création de cohort]
+
+Les dates d'ouverture et de fermeture permetre le controle d'accès aux inscriptions aux stages par les étudiants matriculés. La date de fermeture est toujour plus grand où egale a la date d'ouverture. La date de publication, qui est plus grand que la date de fermeture des inscriptions, permettre montrer les données des affectations aux étudiants.
 
 Le gestionnaire a l'option de créer une cohorte à partir d'une cohorte existant. Cela lui permettre de réutiliser une bonne partie de les données disponibles. Les données réutilisés sont les hôpitaux, les spécialités, les périodes, les types de stages et les maîtres de stages.
 
@@ -59,35 +61,48 @@ Grace à l'importation de données a partir d'un fichier XLS, ce n'est pas néce
 
 image::images/students-empty.png[Pas d'étudiant dans la cohorte]
 
-L'importation des étudiants est disponible dans la page de consultation des étudiants. En cliquant sur le bouton "Importer", une fenêtre modal s'ouvre pour permettre la sélection du fichier Excel (xlsx) disponible sur la machine de l'utilisateur. Après la sélection, cliquez sur le bouton "Importer" en bleu pour démarrer l'importation. Il faut quelques instants pour importer tous les étudiants. C'est normal.
+L'importation des étudiants est disponible dans la page de consultation des étudiants. En cliquant sur le bouton "Importer", une fenêtre modal s'ouvre pour permettre la sélection du fichier Excel (xlsx) disponible sur la machine de l'utilisateur. Après la sélection, cliquez sur le bouton "Importer" en bleu pour démarrer l'importation. Le temps d'importation depend du nombre d'étudiants dans le fichier à importer.
+
+WARNING: la reimportation des étudiants ira dissocier tous les étudiants existants de la cohorte, les inserés à la main inclus. La liste d'étudiants sera equivalent aux données du fichier dernierment importé. Après la premier importation, c'est recomendé de maintenir les données des étudiants via les fonctionnalités disponible dans l'application.
 
 image::images/students-import.png[Importation des étudiants]
 
-**Attention**: c'est important d'importer un fichier en format `xlsx`. L'application n'est pas compatible avec le format `xls`. Pour avoir un fichier `xlsx` à partir d'un fichier `xls`, vous pouvez ouvrir le ficher `xls` en Excel et _Enregistrer sous_ le format `xlsx` en sélectionnant l'option _Classeur Excel_, qui est la premier dans la liste.
+[NOTE]
+====
+C'est important d'importer un fichier en format `xlsx`. L'application n'est pas compatible avec le format `xls`. Pour avoir un fichier `xlsx` à partir d'un fichier `xls`, vous pouvez ouvrir le ficher `xls` en Excel et _Enregistrer sous_ le format `xlsx` en sélectionnant l'option _Classeur Excel_, qui est la premier dans la liste.
 
 image::images/xls-to-xlsx.png[Convertion de xls vers xlsx]
+====
 
-Une fois que les étudiants sont importer, le bouton "Importer" disparetre parce que c'est possible importer les étudiant seulement une fois par cohorte. Après l'importation, les données devront être maintenu manuellement.
+Après l'importation, les étudiants apparaitrent dans la liste, comme illustré dans l'image suivante. C'est possible d'ajouter un nouveau étudiant an cliquant sur "Ajouter", visualiser et modifier un étudiant éxistant en cliquant sur le botton de la colonne "Détails", et modifier les choix fait par l'étudiant en cliquant sur le botton dans la colonne "Modification des choix".
 
 image::images/students-imported.png[Les étudiants importés dans la cohorte]
 
 ==== Importation des offres de stages
 
-Les offres de stages pour les spécialités dans les différent hôpitaux sont meilleur gérer dans un fichier Excel. Cette fonctionnalité permettre d'exploiter les données du fichier dans l'application.
+Les offres de stages (la quantité de places disponibles dans chaque hôpital pour chaque spécialité) sont meilleur gérer dans un fichier Excel. Cette fonctionnalité permettre d'exploiter les données du fichier dans l'application.
 
 image::images/offers-import.png[Importation des offres de stage]
 
 En cas de changement de la quantité des places disponibles, les modifications sont faites dans le même fichier Excel et réimporté dans l'application sans risque de duplication de données. En option, les quantités peuvent être modifiés directement dans l'application, mais en cas de réimportation du fichier Excel les données modifiés manuellement seront écrasés.
 
-==== Définition des périodes, des hôpitaux et des places disponibles
+NOTE: Malgré l'ordre d'importation de données afficher dans le processus et documenté dans les section 1.2 et 1.3, les étudiants et les offres pouvent être importé n'importe en quel ordre, parce que les données ne sont pas initialement associés. Ils seront seulement après les choix et les affectations des étudiants. 
 
-Avec l'intention d'organiser le cohort pour permettre le bon choix des étudiants est l'affectation en suite, le gestionaire des stages s'occupe de determiner les dates de debut et fin des périodes et les places disponibles dans les hôpitaux pour les different specialités.
+==== Définition des périodes, des hôpitaux et des stages
 
-Les trois dernières tâches devraient se terminer avant la date de debut de la période de choix des stages.
+Avec l'intention d'organiser la cohorte pour permettre le bon choix des étudiants est l'affectation en suite, le gestionaire des stages s'occupe de determiner les dates de debut et fin de la période des choix des stages et la date de debut de publication des resultats.
+
+WARNING: Les quatre dernières tâches devraient se terminer avant la date de debut de la période de choix des stages.
 
 ==== Choix des stages par specialité
 
-Precisement à la date de debut de la période de choix, l'application est ouvert aux étudiants de médecine qui devront faire leurs choix de stages. L'application reste ouvert jusqu'à la fin de la période. Pendant ce temps là, les étudiants pouvent changer librement leurs choix et le gestionaire des stages s'engage a n'est pas modifier les choix faits avan la fin de la période.
+Precisement à la date de debut de la période de choix, l'application est ouvert aux étudiants de médecine qui devront faire leurs choix de stages. L'application reste ouvert jusqu'à la fin de la période. Pendant ce temps là, les étudiants pouvent changer librement leurs choix et le gestionaire des stages s'engage a n'est pas modifier les choix faits avant la fin de la période.
+
+L'étudiant a accès a l'application seulement s'il: 
+
+* est regulierment inscrit comme étudiant à l'université
+* a une compte utilisateur pour accéder le reseau et les services en ligne du portail
+* est regulierment inscrit dans une des cohortes existants.
 
 ==== Affectation des stages aux étudiants prioritaires
 

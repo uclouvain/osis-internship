@@ -1,6 +1,6 @@
 ﻿= Open Student Information System : Stages de médecine
 Hildeberto Mendonça <hildeberto.mendonca@uclouvain.be>
-v0.4.5, 2018-01-31
+v0.5.0, 2018-02-09
 :doctype: book
 :encoding: utf-8
 :toc: left
@@ -13,9 +13,13 @@ v0.4.5, 2018-01-31
 
 L'objectif de ce document est de communiquer le métier de gestion des stages au sein de la faculté de médecine et décrire le fonctionnement de l'application développé dans le but de optimiser la charge de travail consacré a l'affectation des stages.
 
-Chaque nouvelle personne qui débarque dans le projet rencontre le défi de tout comprendre en posant les mêmes questions encore et encore. Si bien fait et bien maintenu, ce document aidera la faculté de médecine à évoluer son application proprement et continuellement, indépendant du changement de l'équipe, tout en protégeant l'investissement déjà fait.
+Le document est organisé en deux parties: 
 
-Le document est organisé en deux parties.
+1. la description du métier et comment il est couvert par l'application. Cette partie se concentre sur les activités du personnel administratif sur la gestion des stages de médecine.
+
+2. la description technique de l'architecture logiciele, destiné aux developeurs qui prenderons en charge la maintenance technique de l'application.
+
+Ce document est très important pour le bon dérulement de l'application. Il a récemment prouvé être utile pour la création annuelle de la cohorte par les utilisateurs, qui a faire ça avec tout l'autonomie. Chaque nouvelle personne qui débarque dans le projet rencontre le défi de tout comprendre en posant les mêmes questions encore et encore. Si bien fait et bien maintenu, ce document aidera la faculté de médecine à évoluer son application proprement et continuellement, indépendant du changement de l'équipe, tout en protégeant l'investissement déjà fait. Pour que la documentation reste toujours à jour, le personnel technique doit la mettre à jour chaque fois qu'une modification affecte le comportement de l'application. De cette façon, documenter ne devient pas une tâche laborieuse.
 
 === Le contexte
 
@@ -28,16 +32,16 @@ Les stages sont prévu comment une activité d'unité d'enseignement dans le pro
 Les acteurs impliqué dans la gestion des stages sont:
 
 * les étudiants inscrits aux programmes de master en médecine
-* les membres de la faculté: le doyen et le personnel administratif
+* les gestionaires des stages: le doyen et le personnel administratif
 * l'administrateur de système: la personne avec un role technique et bien informé par rapport au fonctionnement de l'application.
 
 Les acteurs sont classés en deux rôles bien distincts:
 
 * **Gestionnaire des stages**: L'accès est limité à l'application backoffice.
 * **Étudiant**: L'accès est limité à l'application frontoffice.
-* **Administrateur**: Accès à l'administration de données brut pour la resolution des problèmes techniques.
+* **Administrateur**: Accès à l'administration de données brut pour la resolution des problèmes non antecipés.
 
-Une explication detaillé des applications backoffice et frontoffice est disponible dans la section 2.
+Une explication detaillé des applications backoffice et frontoffice est disponible dans la section 3.
 
 :sectnums:
 
