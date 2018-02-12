@@ -40,7 +40,7 @@ from internship.models.organization import Organization
 from internship.models.period import Period
 from internship.models.period_internship_places import PeriodInternshipPlaces
 from internship.utils.assignment.period_place_utils import *
-from internship.utils.assignment.period_utils import *
+from internship.utils.assignment.period_utils import group_periods_by_consecutives, map_period_ids
 
 
 COSTS = {1: 0, 2: 1, 3: 2, 4: 3, 'E': 0, 'I': 10, 'X': 1000}
@@ -124,8 +124,8 @@ def assign_speciality_and_organization_for_students_with_empty_periods(assignmen
     for student in assignment.students:
         if student_has_empty_periods(assignment, student):
             empty_periods = student_empty_periods(assignment, student)
-            affectations = build_affectation_for_periods(assignment, student, assignment.organization, empty_periods,
-                                                         assignment.speciality, "I", False)
+            affectations = build_affectation_for_periods(assignment, student, assignment.pending_organization,
+                                                         empty_periods, assignment.speciality, "I", False)
             assignment.affectations.extend(affectations)
 
 
@@ -205,12 +205,10 @@ def first_relevant_periods(assignment, student, internship_length, periods):
 def find_student_available_periods_regardless_of_internship(assignment, student, internship):
     periods = []
     if internship.speciality:
-        internship_periods = assignment.periods
-        periods = all_available_periods(assignment, student, internship.length_in_periods, internship_periods)
+        periods = all_available_periods(assignment, student, internship.length_in_periods, assignment.periods)
 
     if len(periods) == 0:
-        internship_periods = assignment.periods
-        periods = all_available_periods(assignment, student, internship.length_in_periods, internship_periods)
+        periods = all_available_periods(assignment, student, internship.length_in_periods, assignment.periods)
     return periods
 
 
@@ -219,9 +217,7 @@ def all_available_periods(assignment, student, internship_length, periods):
     student_affectations = get_student_affectations(student, assignment.affectations)
     unavailable_periods = get_periods_from_affectations(student_affectations)
     available_periods = difference(periods, unavailable_periods)
-    grouped_periods = list(group_periods_by_consecutives(available_periods, length=internship_length))
-
-    return grouped_periods
+    return list(group_periods_by_consecutives(available_periods, length=internship_length))
 
 
 def find_best_available_offer_for_internship_periods(assignment, internship, choices, periods):
@@ -364,3 +360,7 @@ def difference(first_list, second_list):
 
 def flatten(list_of_lists):
     return [y for x in list_of_lists for y in x]
+
+
+def get_periods_from_affectations(affectations):
+    return list(map(lambda affectation: affectation.period, affectations))
