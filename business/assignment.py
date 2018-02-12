@@ -43,29 +43,38 @@ from internship.utils.assignment.period_place_utils import *
 from internship.utils.assignment.period_utils import *
 
 
+COSTS = {1: 0, 2: 1, 3: 2, 4: 3, 'E': 0, 'I': 10, 'X': 1000}
+
+
 class Assignment:
     def __init__(self, cohort):
         self.cohort = cohort
-        self.costs = {1: 0, 2: 1, 3: 2, 4: 3, 'E': 0, 'I': 10, 'X': 1000}
-        self.affectations = []
+
         self.student_informations = InternshipStudentInformation.objects.filter(cohort=self.cohort).order_by("?")
         self.person_ids = self.student_informations.values_list("person_id", flat=True)
         self.students = Student.objects.filter(person_id__in=self.person_ids)
+
         self.internships = Internship.objects.filter(cohort=self.cohort).order_by("position", "name")
         self.mandatory_internships = self.internships.exclude(speciality__isnull=True)
+
         self.specialities = InternshipSpeciality.objects.filter(cohort=self.cohort)
-        self.default_organization = Organization.objects.filter(cohort=self.cohort, reference="999").first()
-        self.forbidden_organizations = Organization.objects.annotate(reference_length=Length('reference')) \
-                                                           .exclude(reference="00")\
-                                                           .filter(cohort=self.cohort, reference_length=3)
         self.default_speciality = InternshipSpeciality.objects.filter(cohort=self.cohort, acronym="MO").first()
+
+        self.default_organization = Organization.objects.filter(cohort=self.cohort, reference="999").first()
         self.pending_organization = Organization.objects.filter(cohort=self.cohort, reference="604").first()
+        self.forbidden_organizations = Organization.objects.annotate(reference_length=Length('reference')) \
+                                                           .exclude(reference="00") \
+                                                           .filter(cohort=self.cohort, reference_length=3)
+
         self.offers = InternshipOffer.objects.filter(cohort=self.cohort)
+        self.offer_ids = self.offers.values_list("id", flat=True)
+        self.available_places = PeriodInternshipPlaces.objects.filter(internship_offer_id__in=self.offer_ids).values()
+
         self.periods = Period.objects.extra(select={"period_number": "CAST(substr(name, 2) AS INTEGER)"}) \
                                      .exclude(name="P12")\
                                      .filter(cohort=self.cohort).order_by("period_number")
-        self.offer_ids = self.offers.values_list("id", flat=True)
-        self.available_places = PeriodInternshipPlaces.objects.filter(internship_offer_id__in=self.offer_ids).values()
+
+        self.affectations = []
         self.errors_count = 0
 
     @transaction.atomic
@@ -305,7 +314,7 @@ def build_student_affectation(assignment, organization, student, period, special
         choice = "X"
 
     return InternshipStudentAffectationStat(organization=organization, student=student, period=period,
-                                            speciality=speciality, choice=choice, cost=assignment.costs[choice],
+                                            speciality=speciality, choice=choice, cost=COSTS[choice],
                                             type_of_internship=type_of_internship)
 
 #################################################################################################################
