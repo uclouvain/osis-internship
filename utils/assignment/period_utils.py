@@ -35,9 +35,5 @@ def group_periods_by_consecutives(periods, length=1):
                 yield periods[i: i + length]
 
 
-def get_periods_from_affectations(affectations):
-    return list(map(lambda affectation: affectation.period, affectations))
-
-
 def map_period_ids(periods):
     return list(map(lambda period: period.id, periods))
