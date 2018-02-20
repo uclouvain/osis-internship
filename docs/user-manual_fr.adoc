@@ -41,7 +41,7 @@ Les acteurs sont classés en deux rôles bien distincts:
 * **Étudiant**: L'accès est limité à l'application frontoffice.
 * **Administrateur**: Accès à l'administration de données brut pour la resolution des problèmes non antecipés.
 
-Une explication detaillé des applications backoffice et frontoffice est disponible dans la section 3.
+Une explication detaillé des applications backoffice et frontoffice est disponible dans le chapitre 2.
 
 :sectnums:
 

@@ -100,6 +100,10 @@ L'authorisation est gérer par Django, qui organise les utilisateurs dans les gr
 * *Gestionaire de stages*: il peut accèder les fonctionalités lié à la gestion de stages du coté OSIS Backoffice, mais pas à la partie de choix des stages du coté OSIS Frontoffice. L'accès au backoffice est limité au reseau UCL.
 * *Étudiant*: il peut accèder les fonctionalités lié aux choix des stages du coté OSIS Frontoffice, mais pas à la partie de gestion de stages du coté OSIS Backoffice. L'accès au frontoffice est integré au portail UCL, donc il est ouvert au monde exterieur.
 
+==== Déploiement
+
+image::images/deployment.png[Déploiement de l'application]
+
 :sectnums!:
 
 ////

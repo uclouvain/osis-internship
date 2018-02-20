@@ -86,23 +86,35 @@ image::images/offers-import.png[Importation des offres de stage]
 
 En cas de changement de la quantité des places disponibles, les modifications sont faites dans le même fichier Excel et réimporté dans l'application sans risque de duplication de données. En option, les quantités peuvent être modifiés directement dans l'application, mais en cas de réimportation du fichier Excel les données modifiés manuellement seront écrasés.
 
-NOTE: Malgré l'ordre d'importation de données afficher dans le processus et documenté dans les section 1.2 et 1.3, les étudiants et les offres pouvent être importé n'importe en quel ordre, parce que les données ne sont pas initialement associés. Ils seront seulement après les choix et les affectations des étudiants. 
+NOTE: Malgré l'ordre d'importation de données afficher dans le processus et documenté dans les section 1.2 et 1.3, les étudiants et les offres peuvent être importé n'importe en quel ordre, parce que les données ne sont pas initialement associés. Ils seront seulement après les choix et les affectations des étudiants. 
 
 ==== Définition des périodes, des hôpitaux et des stages
 
-Avec l'intention d'organiser la cohorte pour permettre le bon choix des étudiants est l'affectation en suite, le gestionaire des stages s'occupe de determiner les dates de debut et fin de la période des choix des stages et la date de debut de publication des resultats.
+Avec l'intention d'organiser la cohorte pour permettre le bon choix des étudiants est l'affectation en suite, le gestionnaire des stages s'occupe de déterminer les dates de debut et fin de la période des choix des stages et la date de début de publication des résultats.
 
 WARNING: Les quatre dernières tâches devraient se terminer avant la date de debut de la période de choix des stages.
 
-==== Choix des stages par specialité
+==== Choix des stages obligatoires et au choix
 
 Precisement à la date de debut de la période de choix, l'application est ouvert aux étudiants de médecine qui devront faire leurs choix de stages. L'application reste ouvert jusqu'à la fin de la période. Pendant ce temps là, les étudiants pouvent changer librement leurs choix et le gestionaire des stages s'engage a n'est pas modifier les choix faits avant la fin de la période.
 
 L'étudiant a accès a l'application seulement s'il: 
 
-* est regulierment inscrit comme étudiant à l'université
-* a une compte utilisateur pour accéder le reseau et les services en ligne du portail
-* est regulierment inscrit dans une des cohortes existants.
+* est régulièrement inscrit comme étudiant à l'université
+* a une compte utilisateur pour accéder le réseau et les services en ligne du portail
+* est régulièrement inscrit dans une des cohortes existants.
+
+Lorsque l'étudiant se rendre sur la page d'accueil du portail, il a accès a une liste de fonctionnalités: le choix des stages, la liste des hôpitaux, le bilan de choix de stage et d'affectation finale.
+
+Sur le choix des stages, les onglets des différentes spécialités sont présenté.
+
+image::images/choix-stages.png[Le choix des stages par l'étudiant]
+
+Pour les spécialités obligatoires, dans chacun de ces onglets se présentent plusieurs hôpitaux. L'étudiant doit effectuer 4 choix d'hôpital (du premier au 4ème choix). Une fois ces 4 choix faits dans chaque onglet, il faut cliquer sur le bouton "Soumettre" qui se trouve au bas de la page pour enregistrer les choix. Un erreur se produit si l'utilisateur fait plus de 4 choix ou deux fois le même choix.
+
+Pour les stages au choix, c'est possible de faire 4 choix de spécialités. Une fois la spécialité choisie, l'application propose à l'étudiant les hôpitaux disponibles pour ce stage au choix. Les choix est limité à 4 choix d'hôpitaux. Si le système ne propose rien, c'est que cette spécialité n'est pas disponible. Si l'étudiant sélectionne un stage en médecine générale, il faut choisir l'hôpital "Médecine générale" en premier choix puisqu'il n'y a pas d'autre possibilité. Idem pour les spécialités où il n'existe qu'un hôpital. Ce "premier choix" concerne bien l'hôpital et pas la spécialité, la préférence de celle-ci étant déterminée par le numéro du stage au choix.
+
+Losque l'étudiant sélectionne un hôpital dans une spécialité, un compteur informe sur le nombre de places totales disponibles et le nombre d'étudiants ayant déjà choisi cet hôpital en premier choix. Plus la demande dépasse l'offre, plus la probabilité d'obtenir cette affectation est faible.
 
 ==== Affectation des stages aux étudiants prioritaires
 
