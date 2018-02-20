@@ -25,8 +25,6 @@
 ##############################################################################
 from collections import OrderedDict
 from operator import itemgetter
-from statistics import mean, stdev
-from collections import defaultdict
 from datetime import datetime
 
 from django.contrib.auth.decorators import login_required, permission_required
@@ -34,11 +32,9 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import render, redirect
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
-from internship.business import assignment
-from internship.models.enums.choice_type import ChoiceType
-from internship.models.enums.affectation_type import AffectationType
+from internship.business import assignment, statistics
 from internship import models
-from internship.models import internship_student_affectation_stat, period_internship_places
+from internship.models import internship_student_affectation_stat
 from internship.utils.exporting import score_encoding_xls
 from internship.views.internship import set_tabs_name
 
@@ -78,7 +74,7 @@ def view_hospitals(request, cohort_id):
         .select_related("student", "organization", "speciality", "period")
 
     if student_affectations.count() > 0:
-        table = _load_solution_table(student_affectations, cohort)
+        table = statistics.load_solution_table(student_affectations, cohort)
         # Mange sort of the organizations
         table.sort(key=itemgetter(0))
 
@@ -107,7 +103,7 @@ def view_students(request, cohort_id):
         .select_related("student", "organization", "speciality", "period")
 
     if student_affectations.count() > 0:
-        sol = _load_solution_sol(student_affectations)
+        sol = statistics.load_solution_sol(student_affectations)
         # Mange sort of the students
         sol = OrderedDict(sorted(sol.items(), key=lambda t: t[0].person.last_name))
 
@@ -136,8 +132,8 @@ def view_statistics(request, cohort_id):
         .select_related("student", "organization", "speciality", "period")
 
     if student_affectations.count() > 0:
-        sol = _load_solution_sol(student_affectations)
-        stats = _compute_stats(cohort, sol)
+        sol = statistics.load_solution_sol(student_affectations)
+        stats = statistics.compute_stats(cohort, sol)
 
     latest_generation = models.affectation_generation_time.get_latest()
 
@@ -238,323 +234,3 @@ def internship_affectation_sumup(request, cohort_id):
         'cohort': cohort
     }
     return render(request, "internship_affectation_sumup.html", context)
-
-
-def _compute_stats(cohort, sol):
-    """
-    Compute the statistics of the solution
-    """
-    stats = {}
-    total_cost = 0
-    consecutive_month = 0
-    imposed_choices = 0
-    erasmus = 0
-    hospital_error_count = 0
-    mean_array = []
-    distance_mean = []
-    others_students = set()
-    others_specialities = {}
-    others_specialities_students = {}
-
-    # Retrieve all specialities
-    specialities = models.internship_speciality.InternshipSpeciality.objects.filter(cohort=cohort).select_related()
-
-    # Initialize the others_specialities and others_specialities_students
-    for speciality in specialities:
-        others_specialities[speciality] = 0
-        others_specialities_students[speciality] = set()
-
-    # Total number of internships
-    first, second, third, fourth = 0, 0, 0, 0
-
-    # Number of internships for each category
-    # n = normal, s = social
-    first_n, second_n, third_n, fourth_n = 0, 0, 0, 0
-    first_s, second_s, third_s, fourth_s = 0, 0, 0, 0
-
-    # Iterate all students
-    for student, periods in sol.items():
-        # Cost of the student solution
-        cost = periods['score']
-        # Add cost of the student to the total cost
-        total_cost += cost
-        # Add the cost of the student to the mean_array, this array is used
-        # to find the standard deviation with command "stdev"
-        mean_array.append(cost)
-        # Iterate over all periods of the student
-        for period, internship in periods.items():
-            if period is not 'score' and internship is not None:
-                # First choice
-                if internship.choice == ChoiceType.FIRST_CHOICE.value:
-                    # Increment the number of total first choices
-                    first += 1
-                    # Increment the number of total normal first choices
-                    if internship.type_of_internship == AffectationType.NORMAL.value:
-                        first_n += 1
-                    # Increment the number of total social first choices
-                    if internship.type_of_internship == AffectationType.PRIORITY.value:
-                        first_s += 1
-                # Second choice
-                elif internship.choice == ChoiceType.SECOND_CHOICE.value:
-                    second += 1
-                    if internship.type_of_internship == AffectationType.NORMAL.value:
-                        second_n += 1
-                    if internship.type_of_internship == AffectationType.PRIORITY.value:
-                        second_s += 1
-                # Third choice
-                elif internship.choice == ChoiceType.THIRD_CHOICE.value:
-                    third += 1
-                    if internship.type_of_internship == AffectationType.NORMAL.value:
-                        third_n += 1
-                    if internship.type_of_internship == AffectationType.PRIORITY.value:
-                        third_s += 1
-                # Fourth choice
-                elif internship.choice == ChoiceType.FORTH_CHOICE.value:
-                    fourth += 1
-                    if internship.type_of_internship == AffectationType.NORMAL.value:
-                        fourth_n += 1
-                    if internship.type_of_internship == AffectationType.PRIORITY.value:
-                        fourth_s += 1
-                # Erasmus
-                elif internship.choice == ChoiceType.PRIORITY.value:  # Erasmus
-                    erasmus += 1
-                # Imposed choice
-                elif internship.choice == ChoiceType.IMPOSED.value:  # Imposed hospital
-                    # Retrieve the addresses of the hospital and the student
-                    # Increment total of imposed choices
-                    imposed_choices += 1
-                    # Add the student to the set "others_students",
-                    # we will use this set to find the number of students
-                    # with imposed choices
-                    others_students.add(student)
-                    others_specialities[internship.speciality] += 1
-                    others_specialities_students[internship.speciality].add(student)
-                # Hostpital error
-                if int(internship.organization.reference) == HOSPITAL_ERROR:
-                    hospital_error_count += 1
-                consecutive_month += internship.consecutive_month
-    # Total number of students
-    number_of_students = len(sol)
-    # Total number of internships
-    total_internships = number_of_students * 8
-
-    # Get number of students socio
-    students_socio = set()
-    for speciality, students in _get_student_mandatory_choices(cohort, True).items():
-        for choices in students:
-            students_socio.add(choices[0].student.id)
-    internships = models.internship.Internship.objects.filter(cohort=cohort)
-    socio = len(models.internship_choice.InternshipChoice.
-                objects.filter(internship__in=internships, priority=True).distinct('student').values('student'))
-
-    total_n_internships = first_n + second_n + third_n + fourth_n + imposed_choices
-    total_s_internships = first_s + second_s + third_s + fourth_s
-
-    # Stats : Number of students
-    stats['tot_stud'] = len(sol)
-    stats['erasmus'] = erasmus
-    stats['erasmus_pc'] = round(erasmus / total_internships * 100, 2)
-    period_ids = models.period.Period.objects.filter(cohort=cohort).values_list("id", flat=True)
-    stats['erasmus_students'] = len(models.internship_enrollment.InternshipEnrollment.objects.
-                                    filter(period_id__in=period_ids).distinct('student').values('student'))
-    stats['erasmus_students_pc'] = round(stats['erasmus_students'] / stats['tot_stud'] * 100, 2)
-    stats['socio'] = socio
-    stats['socio_pc'] = round(socio / total_internships * 100, 2)
-    stats['socio_students'] = len(students_socio)
-    stats['socio_students_pc'] = round(stats['socio_students'] / stats['tot_stud'] * 100, 2)
-
-    # Stats: Internships per choice
-    stats['first'] = first
-    stats['first_pc'] = round(first / total_internships * 100, 2)
-    stats['second'] = second
-    stats['second_pc'] = round(second / total_internships * 100, 2)
-    stats['third'] = third
-    stats['third_pc'] = round(third / total_internships * 100, 2)
-    stats['fourth'] = fourth
-    stats['fourth_pc'] = round(fourth / total_internships * 100, 2)
-    stats['others'] = imposed_choices
-    stats['others_pc'] = round(imposed_choices / total_internships * 100, 2)
-    stats['others_students'] = len(others_students)
-    stats['others_specialities'] = others_specialities
-    stats['others_specialities_students'] = others_specialities_students
-    stats['mean_stud'] = round(mean(mean_array), 2)
-
-    # Compute standard deviation of the score
-    if len(mean_array) > 1:
-        std_dev_stud = round(stdev(mean_array), 2)
-    else:
-        std_dev_stud = 0
-    stats['std_dev_stud'] = std_dev_stud
-    stats['mean_noncons'] = round(consecutive_month / number_of_students, 2)
-    stats['sol_cost'] = total_cost
-    stats['total_internships'] = total_internships
-
-    if len(distance_mean) == 0:
-        distance_mean.append(0)
-    stats['distance_mean'] = round(mean(distance_mean), 2)
-    stats['hospital_error'] = hospital_error_count
-
-    # Stats: Internships of normal students
-    if total_n_internships == 0:
-        total_n_internships = 1
-    stats['first_n'] = first_n
-    stats['second_n'] = second_n
-    stats['third_n'] = third_n
-    stats['fourth_n'] = fourth_n
-    stats['first_n_pc'] = round(first_n / total_n_internships * 100, 2)
-    stats['second_n_pc'] = round(second_n / total_n_internships * 100, 2)
-    stats['third_n_pc'] = round(third_n / total_n_internships * 100, 2)
-    stats['fourth_n_pc'] = round(fourth_n / total_n_internships * 100, 2)
-    stats['others_n_pc'] = round(imposed_choices / total_n_internships * 100, 2)
-
-    # Stats: Internships of social students
-    if total_s_internships == 0:
-        total_s_internships = 1
-    stats['first_s'] = first_s
-    stats['second_s'] = second_s
-    stats['third_s'] = third_s
-    stats['fourth_s'] = fourth_s
-    stats['first_s_pc'] = round(first_s / total_s_internships * 100, 2)
-    stats['second_s_pc'] = round(second_s / total_s_internships * 100, 2)
-    stats['third_s_pc'] = round(third_s / total_s_internships * 100, 2)
-    stats['fourth_s_pc'] = round(fourth_s / total_s_internships * 100, 2)
-    return stats
-
-
-def _get_student_mandatory_choices(cohort, priority):
-    """
-    Return all student's choices of given type.
-    :param priority: True if we have to return the choices of priority student,
-    false if we have to return the choices of normal students
-    :return: A dict of dict : <speciality, <student, [choices]>>.
-    """
-    specialities = {}
-    internships = models.internship.Internship.objects.filter(cohort=cohort)
-    choices = models.internship_choice.InternshipChoice.objects.filter(priority=priority, internship__in=internships).\
-        select_related("speciality", "student")
-
-    if len(choices) == 0:
-        return {}
-
-    # Build dict with specialities[speciality][student] <- InternshipChoice
-    for choice in choices:
-        # Init the speciality if does not exists in 'specialities'
-        if choice.speciality.id not in specialities:
-            specialities[choice.speciality.id] = {}
-        # Init the student if does not exists in 'specialities[choice.speciality]'
-        if choice.student not in specialities[choice.speciality.id]:
-            specialities[choice.speciality.id][choice.student] = []
-        specialities[choice.speciality.id][choice.student].append(choice)
-
-    # Remove erasmus choices
-    if priority:
-        periods = models.period.Period.objects.filter(cohort=cohort)
-        for enrollment in models.internship_enrollment.InternshipEnrollment.objects.filter(period__in=periods):
-            if enrollment.internship_offer.speciality.id in specialities:
-                if enrollment.student in specialities[enrollment.internship_offer.speciality.id]:
-                    del specialities[enrollment.internship_offer.speciality.id][enrollment.student]
-    else:
-        for choice in models.internship_choice.InternshipChoice.objects.filter(priority=True,
-                                                                               internship__in=internships).\
-                select_related("speciality", "student"):
-            if choice.student in specialities[choice.speciality.id]:
-                del specialities[choice.speciality.id][choice.student]
-
-    # Convert the dict of students into list of students
-    for speciality, students in specialities.items():
-        specialities[speciality] = [v for v in students.values()]
-
-    # Remove empty keys
-    data = OrderedDict((k, v) for k, v in specialities.items() if v)
-
-    # Sort he dict of student (this optimize the final result)
-
-    all_specialities = models.internship_speciality.search(cohort=cohort, mandatory=True)
-    orders = []
-
-    for speciality in all_specialities:
-        orders.append(speciality.name)
-
-    specialities_dict = {}
-    for speciality in models.internship_speciality.find_all(cohort=cohort):
-        specialities_dict[speciality.name] = speciality.id
-
-    for key in orders:
-        if specialities_dict[key] in data:
-            v = data[specialities_dict[key]]
-            del data[specialities_dict[key]]
-            data[specialities_dict[key]] = v
-
-    return data
-
-
-def _load_solution_table(data, cohort):
-    periods = models.period.Period.objects.filter(cohort=cohort)
-    period_ids = periods.values_list("id", flat=True)
-    prd_internship_places = period_internship_places.PeriodInternshipPlaces.objects.filter(period_id__in=period_ids).\
-        order_by("period_id").select_related()
-    # This object store the number of available places for given organization, speciality, period
-    temp_internship_table = defaultdict(dict)
-
-    keys = ['P1', 'P2', 'P3', 'P4', 'P5', 'P6', 'P7', 'P8', 'P9', 'P10', 'P11', 'P12']
-
-    for pid in prd_internship_places:
-        organization = pid.internship_offer.organization
-        acronym = pid.internship_offer.speciality.acronym
-        period_name = pid.period.name
-        if acronym not in temp_internship_table[organization]:
-            temp_internship_table[organization][acronym] = OrderedDict()
-            _fill_periods_default_values(acronym, keys, organization, temp_internship_table)
-
-        temp_internship_table[organization][acronym][period_name]['before'] += pid.number_places
-        temp_internship_table[organization][acronym][period_name]['after'] += pid.number_places
-
-    for item in data:
-        # Update the number of available places for given organization, speciality, period
-        if item.organization not in temp_internship_table or \
-                        item.speciality.acronym not in temp_internship_table[item.organization]:
-            continue
-        temp_internship_table[item.organization][item.speciality.acronym][item.period.name]['after'] -= 1
-        # Update the % of takes places
-        if temp_internship_table[item.organization][item.speciality.acronym][item.period.name]['before'] > 0:
-            temp_internship_table[item.organization][item.speciality.acronym][item.period.name]['pc'] = \
-                temp_internship_table[item.organization][item.speciality.acronym][item.period.name]['after'] / \
-                temp_internship_table[item.organization][item.speciality.acronym][item.period.name]['before'] * 100
-        else:
-            temp_internship_table[item.organization][item.speciality.acronym][item.period.name]['pc'] = 0
-    # Sort all student by the score (descending order)
-    sorted_internship_table = []
-    for organization, specialities in temp_internship_table.items():
-        for speciality, periods in specialities.items():
-            sorted_internship_table.append((int(organization.reference), speciality, periods))
-    sorted_internship_table.sort(key=itemgetter(0))
-
-    return sorted_internship_table
-
-
-def _load_solution_sol(data):
-    keys = ['P1', 'P2', 'P3', 'P4', 'P5', 'P6', 'P7', 'P8', 'P9', 'P10', 'P11', 'P12']
-
-    sol = {}
-    for item in data:
-        # Initialize 12 empty period of each student
-        if item.student not in sol:
-            sol[item.student] = OrderedDict()
-            sol[item.student] = {key: None for key in keys}
-            # Sort the periods by name P1, P2, ...
-            sol[item.student] = OrderedDict(sorted(sol[item.student].items(), key=lambda t: int(t[0][1:])))
-            sol[item.student]['score'] = 0
-        # Put the internship in the solution
-        sol[item.student][item.period.name] = item
-        # store the cost of each student
-        sol[item.student]['score'] += item.cost
-
-    return sol
-
-
-def _fill_periods_default_values(acronym, keys, organization, temp_internship_table):
-    for key in keys:
-        temp_internship_table[organization][acronym][key] = {
-            'before': 0,
-            'after': 0,
-        }
