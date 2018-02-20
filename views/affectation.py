@@ -34,8 +34,9 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import render, redirect
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
-from internship.business.assignment import Assignment
-
+from internship.business import assignment
+from internship.models.enums.choice_type import ChoiceType
+from internship.models.enums.affectation_type import AffectationType
 from internship import models
 from internship.models import internship_student_affectation_stat, period_internship_places
 from internship.utils.exporting import score_encoding_xls
@@ -49,14 +50,12 @@ HOSPITAL_ERROR = 999  # Reference of the hospital "erreur"
 def run_affectation(request, cohort_id):
     cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
     if request.method == 'POST':
-        start_date_time = datetime.now()
-        period_ids = models.period.Period.objects.filter(cohort=cohort).values_list("id", flat=True)
-        curr_affectations = internship_student_affectation_stat.find_non_mandatory_affectations(period_ids=period_ids)
-        curr_affectations._raw_delete(curr_affectations.db)
-        solver = Assignment(cohort)
+        start_date_time = datetime.now() # To register the beginning of the algorithm.
+        solver = assignment.Assignment(cohort)
         solver.solve()
         solver.persist_solution()
-        end_date_time = datetime.now()
+        end_date_time = datetime.now()  # To register the end of the algorithm.
+
         affectation_generation_time = models.affectation_generation_time.AffectationGenerationTime()
         affectation_generation_time.cohort = cohort
         affectation_generation_time.start_date_time = start_date_time
@@ -286,41 +285,41 @@ def _compute_stats(cohort, sol):
         for period, internship in periods.items():
             if period is not 'score' and internship is not None:
                 # First choice
-                if internship.choice == "1":
+                if internship.choice == ChoiceType.FIRST_CHOICE.value:
                     # Increment the number of total first choices
                     first += 1
                     # Increment the number of total normal first choices
-                    if internship.type_of_internship == "N":
+                    if internship.type_of_internship == AffectationType.NORMAL.value:
                         first_n += 1
                     # Increment the number of total social first choices
-                    if internship.type_of_internship == "S":
+                    if internship.type_of_internship == AffectationType.PRIORITY.value:
                         first_s += 1
                 # Second choice
-                elif internship.choice == "2":
+                elif internship.choice == ChoiceType.SECOND_CHOICE.value:
                     second += 1
-                    if internship.type_of_internship == "N":
+                    if internship.type_of_internship == AffectationType.NORMAL.value:
                         second_n += 1
-                    if internship.type_of_internship == "S":
+                    if internship.type_of_internship == AffectationType.PRIORITY.value:
                         second_s += 1
                 # Third choice
-                elif internship.choice == "3":
+                elif internship.choice == ChoiceType.THIRD_CHOICE.value:
                     third += 1
-                    if internship.type_of_internship == "N":
+                    if internship.type_of_internship == AffectationType.NORMAL.value:
                         third_n += 1
-                    if internship.type_of_internship == "S":
+                    if internship.type_of_internship == AffectationType.PRIORITY.value:
                         third_s += 1
                 # Fourth choice
-                elif internship.choice == "4":
+                elif internship.choice == ChoiceType.FORTH_CHOICE.value:
                     fourth += 1
-                    if internship.type_of_internship == "N":
+                    if internship.type_of_internship == AffectationType.NORMAL.value:
                         fourth_n += 1
-                    if internship.type_of_internship == "S":
+                    if internship.type_of_internship == AffectationType.PRIORITY.value:
                         fourth_s += 1
                 # Erasmus
-                elif internship.choice == 'E':  # Erasmus
+                elif internship.choice == ChoiceType.PRIORITY.value:  # Erasmus
                     erasmus += 1
                 # Imposed choice
-                elif internship.choice == 'I':  # Imposed hospital
+                elif internship.choice == ChoiceType.IMPOSED.value:  # Imposed hospital
                     # Retrieve the addresses of the hospital and the student
                     # Increment total of imposed choices
                     imposed_choices += 1

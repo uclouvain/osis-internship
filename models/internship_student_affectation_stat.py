@@ -25,6 +25,8 @@
 ##############################################################################
 from django.db import models
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
+from internship.models.enums.affectation_type import AffectationType
+from internship.models.enums.choice_type import ChoiceType
 
 
 class InternshipStudentAffectationStatAdmin(SerializableModelAdmin):
@@ -42,10 +44,12 @@ class InternshipStudentAffectationStat(SerializableModel):
     organization = models.ForeignKey('internship.Organization')
     speciality = models.ForeignKey('internship.InternshipSpeciality')
     period = models.ForeignKey('internship.Period')
-    choice = models.CharField(max_length=1, blank=False, null=False, default='0')
+    choice = models.CharField(max_length=1, blank=False, null=False, choices=ChoiceType.choices(),
+                              default=ChoiceType.NO_CHOICE.value)
     cost = models.IntegerField(blank=False, null=False)
     consecutive_month = models.BooleanField(default=False, null=False)
-    type_of_internship = models.CharField(max_length=1, blank=False, null=False, default='N')
+    type_of_internship = models.CharField(max_length=1, blank=False, null=False, choices=AffectationType.choices(),
+                                          default=AffectationType.NORMAL.value)
 
     def __str__(self):
         return u"%s : %s - %s (%s)" % (self.student, self.organization, self.speciality, self.period)
@@ -95,7 +99,7 @@ def delete_affectations(student, cohort):
     affectations.delete()
 
 
-def build(student, organization, specialty, period, choices):
+def build(student, organization, specialty, period, student_choices):
     affectation = InternshipStudentAffectationStat()
     affectation.student = student
     affectation.organization = organization
@@ -103,17 +107,17 @@ def build(student, organization, specialty, period, choices):
     affectation.period = period
 
     check_choice = False
-    for choice in choices:
-        if choice.organization == organization:
-            affectation.choice = choice.choice
+    for student_choice in student_choices:
+        if student_choice.organization == organization:
+            affectation.choice = student_choice.choice
             check_choice = True
-            if choice.choice == 1:
+            if student_choice.choice == 1:
                 affectation.cost = 0
-            elif choice.choice == 2:
+            elif student_choice.choice == 2:
                 affectation.cost = 1
-            elif choice.choice == 3:
+            elif student_choice.choice == 3:
                 affectation.cost = 2
-            elif choice.choice == 4:
+            elif student_choice.choice == 4:
                 affectation.cost = 3
     if not check_choice:
         affectation.choice = "I"

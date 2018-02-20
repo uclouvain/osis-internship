@@ -23,16 +23,15 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-
-def group_periods_by_consecutives(periods, length=1):
-    if length == 1:
-        for period in periods:
-            yield [period]
-    else:
-        for i in range(len(periods) - (length - 1)):
-            if all(map(lambda period: int(periods[i].name[1:]) + 1 == int(periods[i + 1].name[1:]), periods[i: i + length])):
-                yield periods[i: i + length]
+from osis_common.utils.enumerations import ChoiceEnum
 
 
-def map_period_ids(periods):
-    return list(map(lambda period: period.id, periods))
+class ChoiceType(ChoiceEnum):
+    NO_CHOICE = "0"
+    FIRST_CHOICE = "1"
+    SECOND_CHOICE = "2"
+    THIRD_CHOICE = "3"
+    FORTH_CHOICE = "4"
+    PRIORITY = "E"
+    IMPOSED = "I"
+    ERROR = "X"
