@@ -50,21 +50,30 @@ def _import_offer(row, cohort):
         organizations = organization.find_by_reference(cohort, row[COL_REF_HOSPITAL].value)
 
         if organizations:
-            maximum_enrollments = 0
-            periods = period.Period.objects.filter(cohort=cohort)
-            for col_period in range(3, len(periods) + 3):
-                if row[col_period].value:
-                    maximum_enrollments += int(row[col_period].value)
+            _import_places(row, cohort, organizations)
 
-            specialities = internship_speciality.search(acronym__exact=row[COL_SPECIALTY].value, cohort=cohort)
-            for specialty in specialities:
-                offer = _create_offer(row, cohort, specialty, organizations.first(), maximum_enrollments)
 
-                number_period = 1
-                for x in range(3, len(periods) + 3):
-                    period_name = "P{}".format(number_period)
-                    number_period += 1
-                    _create_offer_places(cohort, period_name, offer, row[x].value)
+def _import_places(row, cohort, organizations):
+    periods = period.Period.objects.filter(cohort=cohort)
+    maximum_enrollments = _get_maximum_enrollments(row, periods)
+
+    specialities = internship_speciality.search(acronym__exact=row[COL_SPECIALTY].value, cohort=cohort)
+    for specialty in specialities:
+        offer = _create_offer(row, cohort, specialty, organizations.first(), maximum_enrollments)
+
+        number_period = 1
+        for x in range(3, len(periods) + 3):
+            period_name = "P{}".format(number_period)
+            number_period += 1
+            _create_offer_places(cohort, period_name, offer, row[x].value)
+
+
+def _get_maximum_enrollments(row, periods):
+    maximum_enrollments = 0
+    for col_period in range(3, len(periods) + 3):
+        if row[col_period].value:
+            maximum_enrollments += int(row[col_period].value)
+    return maximum_enrollments
 
 
 def _create_offer(row, cohort, specialty, org, maximum_enrollments):
