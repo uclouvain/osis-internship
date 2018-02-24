@@ -27,6 +27,7 @@ from django.db import models
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 from internship.models.enums.affectation_type import AffectationType
 from internship.models.enums.choice_type import ChoiceType
+from internship.models.enums.costs import Costs
 
 
 class InternshipStudentAffectationStatAdmin(SerializableModelAdmin):
@@ -112,15 +113,15 @@ def build(student, organization, specialty, period, student_choices):
             affectation.choice = student_choice.choice
             check_choice = True
             if student_choice.choice == 1:
-                affectation.cost = 0
+                affectation.cost = Costs.FIRST_CHOICE.value
             elif student_choice.choice == 2:
-                affectation.cost = 1
+                affectation.cost = Costs.SECOND_CHOICE.value
             elif student_choice.choice == 3:
-                affectation.cost = 2
+                affectation.cost = Costs.THIRD_CHOICE.value
             elif student_choice.choice == 4:
-                affectation.cost = 3
+                affectation.cost = Costs.FORTH_CHOICE.value
     if not check_choice:
-        affectation.choice = "I"
-        affectation.cost = 10
+        affectation.choice = ChoiceType.IMPOSED.value
+        affectation.cost = Costs.IMPOSED.value
 
     return affectation

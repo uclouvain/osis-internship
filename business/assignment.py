@@ -40,12 +40,10 @@ from internship.models.organization import Organization
 from internship import models as mdl
 from internship.models.enums.affectation_type import AffectationType
 from internship.models.enums.choice_type import ChoiceType
+from internship.models.enums import costs
 from internship.models.period_internship_places import PeriodInternshipPlaces
 from internship.utils.assignment.period_place_utils import *
 from internship.utils.assignment.period_utils import group_periods_by_consecutives, map_period_ids
-
-
-COSTS = {1: 0, 2: 1, 3: 2, 4: 3, 'E': 0, 'I': 10, 'X': 1000}
 
 
 class Assignment:
@@ -137,7 +135,8 @@ def assign_students_with_empty_periods(assignment):
         if student_has_empty_periods(assignment, student):
             empty_periods = student_empty_periods(assignment, student)
             affectations = build_affectation_for_periods(assignment, student, assignment.pending_organization,
-                                                         empty_periods, assignment.speciality, ChoiceType.IMPOSED.value, False)
+                                                         empty_periods, assignment.speciality, ChoiceType.IMPOSED.value,
+                                                         False)
             assignment.affectations.extend(affectations)
 
 
@@ -145,8 +144,10 @@ def assign_offer_to_student_for_internship(assignment, student, internship):
     """Assign offer to student for specific internship."""
     choices = InternshipChoice.objects.filter(student=student, internship=internship).order_by("choice")
     affectation = None
+
     # Mandatory internship
-    if internship.speciality and student_has_empty_periods(assignment, student) and \
+    if internship.speciality and \
+            student_has_empty_periods(assignment, student) and \
             student_has_no_current_affectations_for_internship(assignment, student, internship):
         affectation = assign_choices_to_student(assignment, student, choices, internship)
     # Non-mandatory internship
@@ -259,10 +260,9 @@ def find_available_periods_for_offers(assignment, offers):
 
 def student_has_no_current_affectations_for_internship(assignment, student, internship):
     student_affectations = get_student_affectations(student, assignment.affectations)
-    acronym = internship.speciality.acronym
-    internships_with_speciality = assignment.internships.filter(speciality__acronym=acronym)
+    internships_with_speciality = assignment.internships.filter(speciality=internship.speciality)
     length = internship.length_in_periods
-    affectations_with_speciality = list(filter(lambda affectation: affectation.speciality.acronym == acronym,
+    affectations_with_speciality = list(filter(lambda affectation: affectation.speciality == internship.speciality,
                                                student_affectations))
     total_number_of_periods_with_speciality_expected = sum(internship.length_in_periods for internship in
                                                            internships_with_speciality)
@@ -279,9 +279,6 @@ def student_empty_periods(assignment, student):
     unavailable_periods = get_periods_from_affectations(student_affectations)
     return difference(list(assignment.periods), unavailable_periods)
 
-#################################################################################################################
-# Affectation factory functions                                                                                 #
-#################################################################################################################
 
 def build_affectation_for_periods(assignment, student, organization, periods, speciality, choice, priority):
     affectations = []
@@ -307,14 +304,13 @@ def build_student_affectation(assignment, organization, student, period, special
     if organization.reference == assignment.organization_error.reference:
         type_affectation = AffectationType.ERROR.value
         choice = ChoiceType.ERROR.value
+    else:
+        choice = str(choice)
 
     return InternshipStudentAffectationStat(organization=organization, student=student, period=period,
-                                            speciality=speciality, choice=choice, cost=COSTS[choice],
+                                            speciality=speciality, choice=choice, cost=costs.COSTS[choice],
                                             type_of_internship=type_affectation)
 
-#################################################################################################################
-# Finders                                                                                                       #
-#################################################################################################################
 
 def find_offer_for_affectation(assignment, affectation):
     return assignment.offers.get(organization=affectation.organization,
@@ -324,7 +320,7 @@ def find_offer_for_affectation(assignment, affectation):
 def find_offer_in_organization_error(assignment, internship):
     if internship.speciality:
         return assignment.offers.get(organization=assignment.organization_error,
-                                     speciality__acronym=internship.speciality.acronym)
+                                     speciality=internship.speciality)
     else:
         return assignment.offers.get(organization=assignment.organization_error,
                                      speciality__in=assignment.specialities)
@@ -333,7 +329,7 @@ def find_offer_in_organization_error(assignment, internship):
 def offers_for_available_organizations(assignment, speciality, unavailable_organizations):
     if speciality:
         return assignment.offers.exclude(organization__in=unavailable_organizations)\
-                                .filter(speciality__acronym=speciality.acronym)\
+                                .filter(speciality=speciality)\
                                 .exclude(organization__in=assignment.forbidden_organizations)
     else:
         return assignment.offers.filter(speciality__in=assignment.specialities)\
@@ -341,12 +337,11 @@ def offers_for_available_organizations(assignment, speciality, unavailable_organ
 
 
 def find_offers_for_speciality(assignment, speciality):
-    return assignment.offers.filter(speciality__acronym=speciality.acronym)\
-                            .exclude(organization__in=assignment.forbidden_organizations)
+    return assignment.offers.filter(speciality=speciality).exclude(organization__in=assignment.forbidden_organizations)
 
 
 def find_offers_for_internship_choice(assignment, choice):
-    return assignment.offers.filter(speciality__acronym=choice.speciality.acronym, organization=choice.organization)
+    return assignment.offers.filter(speciality=choice.speciality, organization=choice.organization)
 
 
 def get_student_affectations(student, affectations):
