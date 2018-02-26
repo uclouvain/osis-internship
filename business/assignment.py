@@ -98,7 +98,7 @@ class Assignment:
 def clean_previous_solution(cohort):
     period_ids = mdl.period.find_by_cohort(cohort).values_list("id", flat=True)
     curr_affectations = mdl.internship_student_affectation_stat.find_non_mandatory_affectations(period_ids=period_ids)
-    curr_affectations._raw_delete(curr_affectations.db)  # Is it really a lot better than .delete() ?
+    curr_affectations._raw_delete(curr_affectations.db)
 
 
 def assign_prioritary_students(assignment):
@@ -108,7 +108,7 @@ def assign_prioritary_students(assignment):
     for enrollment in enrollments:
         affectation = build_student_affectation(assignment, enrollment.place, enrollment.student, enrollment.period,
                                                 enrollment.internship_offer.speciality, ChoiceType.PRIORITY.value, True)
-        update_period_places_for_affectation(assignment, affectation)
+        decrement_places_available(assignment, affectation)
         assignment.affectations.append(affectation)
 
 
@@ -284,18 +284,16 @@ def build_affectation_for_periods(assignment, student, organization, periods, sp
     affectations = []
     for period in periods:
         affectation = build_student_affectation(assignment, organization, student, period, speciality, choice, priority)
-        update_period_places_for_affectation(assignment, affectation)
+        decrement_places_available(assignment, affectation)
         affectations.append(affectation)
     return affectations
 
 
-def update_period_places_for_affectation(assignment, affectation):
-    period = affectation.period
-    offer = find_offer_for_affectation(assignment, affectation)
-    period_place = get_period_place_for_offer_and_period(offer, period, assignment.available_places)
+def decrement_places_available(assignment, affectation):
+    offer = assignment.offers.get(organization=affectation.organization, speciality=affectation.speciality)
+    period_place = get_period_place_for_offer_and_period(offer, affectation.period, assignment.available_places)
     period_place["number_places"] -= 1
-    assignment.available_places = replace_period_place_in_dictionnary(period_place, assignment.available_places,
-                                                                      period_place["number_places"])
+    assignment.available_places = replace_period_place_in_dictionnary(period_place, assignment.available_places)
 
 
 def build_student_affectation(assignment, organization, student, period, speciality, choice, priority):
@@ -310,11 +308,6 @@ def build_student_affectation(assignment, organization, student, period, special
     return InternshipStudentAffectationStat(organization=organization, student=student, period=period,
                                             speciality=speciality, choice=choice, cost=costs.COSTS[choice],
                                             type_of_internship=type_affectation)
-
-
-def find_offer_for_affectation(assignment, affectation):
-    return assignment.offers.get(organization=affectation.organization,
-                                 speciality=affectation.speciality)
 
 
 def find_offer_in_organization_error(assignment, internship):
