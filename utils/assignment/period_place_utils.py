@@ -38,9 +38,9 @@ def get_period_places_for_period_ids(period_ids, period_places):
     return list(filter(lambda period_place: period_place["period_id"] in period_ids, period_places))
 
 
-def get_period_place_for_offer_and_period(offer, period, period_places):
+def get_period_place_for_offer_and_period(offer, period, available_places):
     return list(filter(lambda period_place: period_place["internship_offer_id"] == offer.id and
-                                            period_place["period_id"] == period.id, period_places))[0]
+                                            period_place["period_id"] == period.id, available_places))[0]
 
 
 def get_period_ids_from_period_places(period_places):
@@ -52,8 +52,8 @@ def sort_period_places(period_places):
     return list(sorted(unordered_period_places, key=lambda period_place: period_place["number_places"], reverse=True))
 
 
-def replace_period_place_in_dictionnary(period_place, period_places_dictionnary, new_count):
-    for period_place_dict in period_places_dictionnary:
+def replace_period_place_in_dictionnary(period_place, available_places):
+    for period_place_dict in available_places:
         if period_place_dict["id"] == period_place["id"]:
-            period_place_dict["number_places"] = new_count
-    return period_places_dictionnary
+            period_place_dict["number_places"] = period_place["number_places"]
+    return available_places
