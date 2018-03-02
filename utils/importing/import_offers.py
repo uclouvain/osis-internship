@@ -77,10 +77,9 @@ def _get_maximum_enrollments(row, periods):
 
 
 def _create_offer(row, cohort, specialty, org, maximum_enrollments):
-    existing_internship_offer = internship_offer.InternshipOffer.objects.filter(
-        speciality=specialty,
-        organization__reference=org.reference,
-        cohort=cohort)
+    existing_internship_offer = internship_offer.InternshipOffer.objects.filter(speciality=specialty,
+                                                                                organization__reference=org.reference,
+                                                                                cohort=cohort)
     if existing_internship_offer:
         offer = existing_internship_offer.first()
     else:

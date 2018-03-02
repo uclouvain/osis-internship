@@ -25,6 +25,7 @@
 ##############################################################################
 from django.db import models
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
+from base.models.student import Student
 from internship.models.internship import Internship
 
 
@@ -99,3 +100,11 @@ def get_number_first_choice_by_organization(speciality):
     return InternshipChoice.objects.filter(choice=1,
                                            speciality=speciality).values("organization")\
                                                                  .annotate(models.Count("organization"))
+
+
+def find_priority_choices(internship):
+    return InternshipChoice.objects.filter(internship=internship, priority=True)
+
+
+def find_students_with_priority_choices(internship):
+    return Student.objects.filter(id__in=find_priority_choices(internship).values("student").distinct())

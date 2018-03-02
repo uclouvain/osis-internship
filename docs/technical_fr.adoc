@@ -81,6 +81,14 @@ Les données sont organisés dans la base de données selon le modèle de donné
 
 image::images/internship-erm.png[Internship Entity Relationship Model]
 
+===== period_internship_places
+
+Cette table est peuplée par l'importation du fichier Excel avec le nombre de places disponibles dans chaque spécialité de chaque hôpital. C'est pour ça que si l'algorithme n'arrive pas au but les données ne plus affichés.
+
+===== internship_student_affectation_stat
+
+Cette table est peuplée par l’exécution de l'algorithme d'affectation. Chaque fois que l'algorithme est exécuté pour une cohorte, le donnée correspondent à cette cohorte est supprimé tout au debut de l’exécution.
+
 ==== L'architecture logiciel
 
 La gestion des stages est une app Django. Elle ne tourne pas tout seule, mais elle depend d'un projet Django pour fonctionner. Pour le moment, elle depend du projet Django OSIS (https://github.com/uclouvain/osis), especifiquement de l'application `base`, qui est commun à tous les autres applications. C'est fortement couplé au point de être aimablement classée comme un "satelite" d'OSIS. Heureusement, l'application est conçue de manière à pouvoir être facilement découplée à l'avenir en utilisant, par exemple, des services web parce la demande de données est très faible.
