@@ -106,5 +106,13 @@ def find_priority_choices(internship):
     return InternshipChoice.objects.filter(internship=internship, priority=True)
 
 
+def find_regular_choices(internship):
+    return InternshipChoice.objects.filter(internship=internship, priority=False)
+
+
 def find_students_with_priority_choices(internship):
     return Student.objects.filter(id__in=find_priority_choices(internship).values("student").distinct())
+
+
+def find_students_with_regular_choices(internship):
+    return Student.objects.filter(id__in=find_regular_choices(internship).values("student").distinct())

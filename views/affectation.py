@@ -25,7 +25,7 @@
 ##############################################################################
 from collections import OrderedDict
 from operator import itemgetter
-from datetime import datetime
+from django.utils import timezone
 
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.urlresolvers import reverse
@@ -46,11 +46,11 @@ HOSPITAL_ERROR = 999  # Reference of the hospital "erreur"
 def run_affectation(request, cohort_id):
     cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
     if request.method == 'POST':
-        start_date_time = datetime.now() # To register the beginning of the algorithm.
+        start_date_time = timezone.now() # To register the beginning of the algorithm.
         solver = assignment.Assignment(cohort)
         solver.solve()
         solver.persist_solution()
-        end_date_time = datetime.now()  # To register the end of the algorithm.
+        end_date_time = timezone.now()  # To register the end of the algorithm.
 
         affectation_generation_time = models.affectation_generation_time.AffectationGenerationTime()
         affectation_generation_time.cohort = cohort
