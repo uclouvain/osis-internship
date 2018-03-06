@@ -27,7 +27,7 @@ import random
 
 from django.db import transaction
 from django.db.models.functions import Length
-
+from django.core.exceptions import ObjectDoesNotExist
 from base.models.student import Student
 from internship.models.internship import Internship
 from internship.models.internship_choice import InternshipChoice
@@ -302,10 +302,13 @@ def build_affectation_for_periods(assignment, student, organization, periods, sp
 
 
 def decrement_places_available(assignment, affectation):
-    offer = assignment.offers.get(organization=affectation.organization, speciality=affectation.speciality)
-    period_place = get_period_place_for_offer_and_period(offer, affectation.period, assignment.available_places)
-    period_place["number_places"] -= 1
-    assignment.available_places = replace_period_place_in_dictionnary(period_place, assignment.available_places)
+    try:
+        offer = assignment.offers.get(organization=affectation.organization, speciality=affectation.speciality)
+        period_place = get_period_place_for_offer_and_period(offer, affectation.period, assignment.available_places)
+        period_place["number_places"] -= 1
+        assignment.available_places = replace_period_place_in_dictionnary(period_place, assignment.available_places)
+    except ObjectDoesNotExist:
+        return
 
 
 def _build_prioritary_affectation(enrollment):
