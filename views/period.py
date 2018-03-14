@@ -39,12 +39,7 @@ from internship.models.period import Period
 def internships_periods(request, cohort_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
     periods = mdl_internship.period.find_by_cohort(cohort)
-
-    context = {
-        'section': 'internship',
-        'periods': periods,
-        'cohort': cohort,
-    }
+    context = {'periods': periods, 'cohort': cohort}
     return render(request, "periods.html", context)
 
 
@@ -53,11 +48,7 @@ def internships_periods(request, cohort_id):
 def period_create(request, cohort_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
     period_form = PeriodForm()
-    context = {
-        'section': 'internship',
-        'form': period_form,
-        'cohort': cohort,
-        'url_form': reverse('period_new', kwargs={'cohort_id': cohort.id}),
+    context = {'form': period_form, 'cohort': cohort, 'url_form': reverse('period_new', kwargs={'cohort_id': cohort.id}),
     }
     return render(request, "period_create.html", context)
 
@@ -112,11 +103,6 @@ def period_get(request, cohort_id, period_id):
         'cohort_id': cohort.id,
         'period_id': period.id,
     }
-    context = {
-        'section': 'internship',
-        'period': period,
-        'cohort': cohort,
-        'url_form': reverse('period_save', kwargs=kwargs)
-    }
+    context = {'period': period, 'cohort': cohort, 'url_form': reverse('period_save', kwargs=kwargs)}
 
     return render(request, "period_create.html", context=context)

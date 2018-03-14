@@ -36,11 +36,7 @@ from internship import models as mdl
 def specialities(request, cohort_id):
     cohort = get_object_or_404(mdl.cohort.Cohort, pk=cohort_id)
     specialties = mdl.internship_speciality.find_all(cohort=cohort)
-    context = {
-        'section': 'internship',
-        'specialities': specialties,
-        'cohort': cohort,
-    }
+    context = {'specialities': specialties, 'cohort': cohort}
     return render(request, "specialities.html", context)
 
 
@@ -48,8 +44,7 @@ def specialities(request, cohort_id):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def speciality_create(request, cohort_id):
     cohort = get_object_or_404(mdl.cohort.Cohort, pk=cohort_id)
-    return render(request, "speciality_form.html", {'section': 'internship',
-                                                    'cohort': cohort})
+    return render(request, "speciality_form.html", {'cohort': cohort,})
 
 
 @login_required
@@ -99,11 +94,7 @@ def modify(request, cohort_id, speciality_id):
     cohort = get_object_or_404(mdl.cohort.Cohort, pk=cohort_id)
     speciality = get_object_or_404(mdl.internship_speciality.InternshipSpeciality,
                                    pk=speciality_id, cohort=cohort)
-    context = {
-        'section': 'internship',
-        'speciality': speciality,
-        'cohort': cohort,
-    }
+    context = {'speciality': speciality, 'cohort': cohort}
     return render(request, "speciality_form.html", context)
 
 

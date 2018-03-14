@@ -24,12 +24,15 @@
 #
 ##############################################################################
 import openpyxl
-
+import logging
+from django.conf import settings
 from internship.models import organization, internship_speciality, internship_offer, period, period_internship_places
 
 COL_REF_HOSPITAL = 0
 COL_SPECIALTY = 1
 COL_MASTER = 2
+
+logger = logging.getLogger(settings.DEFAULT_LOGGER)
 
 
 def import_xlsx(file_name, cohort):
@@ -47,19 +50,20 @@ def _import_offer(row, cohort):
         return
 
     if row[COL_SPECIALTY].value:
-        organizations = organization.find_by_reference(cohort, row[COL_REF_HOSPITAL].value)
+        hospitals = organization.find_by_reference(cohort, row[COL_REF_HOSPITAL].value)
+        if hospitals:
+            _import_hospital_places(row, cohort, hospitals)
 
-        if organizations:
-            _import_places(row, cohort, organizations)
 
-
-def _import_places(row, cohort, organizations):
+def _import_hospital_places(row, cohort, hospitals):
     periods = period.Period.objects.filter(cohort=cohort)
     maximum_enrollments = _get_maximum_enrollments(row, periods)
 
+    logger.info("Importing places of the hospital {}".format(hospitals.first()))
     specialities = internship_speciality.search(acronym__exact=row[COL_SPECIALTY].value, cohort=cohort)
     for specialty in specialities:
-        offer = _create_offer(row, cohort, specialty, organizations.first(), maximum_enrollments)
+        logger.info("Importing places of the speciality {}".format(specialty))
+        offer = _create_offer(row, cohort, specialty, hospitals.first(), maximum_enrollments)
 
         number_period = 1
         for x in range(3, len(periods) + 3):
@@ -81,9 +85,12 @@ def _create_offer(row, cohort, specialty, org, maximum_enrollments):
                                                                                 organization__reference=org.reference,
                                                                                 cohort=cohort)
     if existing_internship_offer:
+        logger_message = "Updating offer {}"
         offer = existing_internship_offer.first()
     else:
+        logger_message = "Creating offer {}"
         offer = internship_offer.InternshipOffer()
+    logger.info(logger_message.format(offer))
 
     offer.organization = org
     offer.speciality = specialty
@@ -101,8 +108,10 @@ def _create_offer_places(cohort, period_name, offer, value):
     existing_places = period_internship_places.find_by_offer_in_period(a_period, offer)
 
     if existing_places:
+        logger_message = "Updating places {}"
         offer_places = existing_places.first()
     else:
+        logger_message = "Creating places {}"
         offer_places = period_internship_places.PeriodInternshipPlaces()
 
     offer_places.period = a_period
@@ -112,6 +121,7 @@ def _create_offer_places(cohort, period_name, offer, value):
     else:
         offer_places.number_places = 0
     offer_places.save()
+    logger.info(logger_message.format(offer_places))
 
 
 def _is_invalid_id(registration_id):

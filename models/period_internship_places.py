@@ -38,7 +38,7 @@ class PeriodInternshipPlacesAdmin(SerializableModelAdmin):
 class PeriodInternshipPlaces(SerializableModel):
     period = models.ForeignKey('internship.Period')
     internship_offer = models.ForeignKey('internship.InternshipOffer')
-    number_places = models.IntegerField(blank=None, null=False)
+    number_places = models.IntegerField()
 
     def __str__(self):
         return u"%s (%s)" % (self.internship_offer, self.period)
@@ -60,3 +60,12 @@ def find_by_internship_offer(internship_offer):
 def find_by_offer_in_period(period, offer):
     return PeriodInternshipPlaces.objects.filter(period=period,
                                                  internship_offer=offer)
+
+
+def update_maximum_enrollments(internship_offer):
+    places = find_by_internship_offer(internship_offer)
+    maximum_enrollments = 0
+    for place in places:
+        maximum_enrollments += place.number_places
+    internship_offer.maximum_enrollments = maximum_enrollments
+    internship_offer.save()

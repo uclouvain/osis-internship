@@ -80,12 +80,7 @@ def view_hospitals(request, cohort_id):
 
     latest_generation = models.affectation_generation_time.get_latest()
 
-    context = {
-        'section': 'internship',
-        'cohort': cohort,
-        'organizations': table,
-        'latest_generation': latest_generation
-    }
+    context = {'cohort': cohort, 'organizations': table, 'latest_generation': latest_generation}
 
     return render(request, "internship_affectation_hospitals.html", context)
 
@@ -109,12 +104,7 @@ def view_students(request, cohort_id):
 
     latest_generation = models.affectation_generation_time.get_latest()
 
-    context = {
-        'section': 'internship',
-        'cohort': cohort,
-        'recap_sol': sol,
-        'latest_generation': latest_generation
-    }
+    context = {'cohort': cohort, 'recap_sol': sol, 'latest_generation': latest_generation}
 
     return render(request, "internship_affectation_students.html", context)
 
@@ -137,12 +127,7 @@ def view_statistics(request, cohort_id):
 
     latest_generation = models.affectation_generation_time.get_latest()
 
-    context = {
-        'section': 'internship',
-        'cohort': cohort,
-        'stats': stats,
-        'latest_generation': latest_generation
-    }
+    context = {'cohort': cohort, 'stats': stats, 'latest_generation': latest_generation}
 
     return render(request, "internship_affectation_statistics.html", context)
 
@@ -162,18 +147,10 @@ def view_errors(request, cohort_id):
     if student_affectations.count() > 0:
         hospital = models.organization.Organization.objects.filter(reference=HOSPITAL_ERROR, cohort=cohort).first()
         internship_errors = internship_student_affectation_stat.InternshipStudentAffectationStat.objects \
-            .filter(organization=hospital,
-                    period_id__in=period_ids)
+            .filter(organization=hospital, period_id__in=period_ids)
 
     latest_generation = models.affectation_generation_time.get_latest()
-
-    context = {
-        'section': 'internship',
-        'cohort': cohort,
-        'errors': internship_errors,
-        'latest_generation': latest_generation
-    }
-
+    context = {'cohort': cohort, 'errors': internship_errors, 'latest_generation': latest_generation}
     return render(request, "internship_affectation_errors.html", context)
 
 
@@ -225,12 +202,6 @@ def internship_affectation_sumup(request, cohort_id):
             temp_affectations[period.name] = temp_temp_affectations
         affectations[speciality.name] = temp_affectations
 
-    context = {
-        'section': 'internship',
-        'specialities': all_speciality,
-        'periods': periods,
-        'organizations': informations,
-        'affectations': affectations,
-        'cohort': cohort
-    }
+    context = {'specialities': all_speciality, 'periods': periods, 'organizations': informations,
+               'affectations': affectations, 'cohort': cohort}
     return render(request, "internship_affectation_sumup.html", context)

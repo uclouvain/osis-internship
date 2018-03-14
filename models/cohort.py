@@ -35,11 +35,11 @@ class CohortAdmin(SerializableModelAdmin):
 
 
 class Cohort(SerializableModel):
-    name = models.CharField(max_length=255, null=False)
-    description = models.TextField(null=False)
-    publication_start_date = models.DateField(blank=False)
-    subscription_start_date = models.DateField(blank=False)
-    subscription_end_date = models.DateField(blank=False)
+    name = models.CharField(max_length=255)
+    description = models.TextField()
+    publication_start_date = models.DateField()
+    subscription_start_date = models.DateField()
+    subscription_end_date = models.DateField()
     originated_from = models.ForeignKey('Cohort', null=True, blank=True)
 
     class Meta:

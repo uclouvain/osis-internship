@@ -34,11 +34,17 @@ class InternshipAdmin(SerializableModelAdmin):
 
 
 class Internship(SerializableModel):
-    name = models.CharField(max_length=255, blank=False)
+    name = models.CharField(max_length=255)
     speciality = models.ForeignKey('internship.InternshipSpeciality', null=True, blank=True)
-    cohort = models.ForeignKey('internship.Cohort', null=False)
-    length_in_periods = models.IntegerField(null=False, default=1)
-    position = models.IntegerField(null=False, default=0)
+    cohort = models.ForeignKey('internship.Cohort')
+    length_in_periods = models.IntegerField(default=1)
+    position = models.IntegerField(default=0)
+
+    def choice(self):
+        if not self.speciality:
+            return "/C"
+        else:
+            return ""
 
     def __str__(self):
         return u"%s" % self.name

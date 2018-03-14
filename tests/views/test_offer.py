@@ -79,14 +79,3 @@ class OfferViewTestCase(TestCase):
         self.assertTemplateUsed(response, 'internship_detail.html')
 
         self.assertEqual(response.context['internship'], offer)
-
-    def test_block(self):
-        url = reverse('internships_block', kwargs={
-            'cohort_id': self.cohort.id,
-        })
-
-        response = self.client.get(url)
-        self.assertRedirects(response, reverse('internships_home', kwargs={
-            'cohort_id': self.cohort.id,
-        }))
-

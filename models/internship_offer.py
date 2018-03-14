@@ -44,7 +44,7 @@ class InternshipOffer(SerializableModel):
     maximum_enrollments = models.IntegerField()
     master = models.CharField(max_length=100, blank=True, null=True)
     selectable = models.BooleanField(default=True)
-    cohort = models.ForeignKey('internship.cohort', null=False, on_delete=models.CASCADE)
+    cohort = models.ForeignKey('internship.cohort', on_delete=models.CASCADE)
 
     def __str__(self):
         return self.title
@@ -57,22 +57,25 @@ class InternshipOffer(SerializableModel):
 
 
 def find_internships(cohort):
-    return InternshipOffer.objects.filter(cohort=cohort).filter(speciality__mandatory=1)\
-        .select_related("organization", "speciality").order_by('speciality__acronym', 'speciality__name',
-                                                               'organization__reference')
+    return InternshipOffer.objects.filter(cohort=cohort)
+
+
+def find_mandatory_internships(cohort):
+    return _apply_constraints(find_internships(cohort).filter(speciality__mandatory=1))
 
 
 def find_non_mandatory_internships(**kwargs):
     kwargs = {k: v for k, v in kwargs.items() if v}
-    return InternshipOffer.objects.filter(**kwargs).filter(speciality__mandatory=0) \
-        .select_related("organization", "speciality").order_by('speciality__acronym', 'speciality__name',
-                                                               'organization__reference')
+    return _apply_constraints(InternshipOffer.objects.filter(**kwargs).filter(speciality__mandatory=0))
 
 
 def search(**kwargs):
-    return InternshipOffer.objects.filter(**kwargs) \
-        .select_related("organization", "speciality").order_by('speciality__acronym', 'speciality__name',
-                                                               'organization__reference')
+    return _apply_constraints(InternshipOffer.objects.filter(**kwargs))
+
+
+def _apply_constraints(resultset):
+    return resultset.select_related("organization", "speciality")\
+                    .order_by('speciality__acronym', 'speciality__name', 'organization__reference')
 
 
 def find_by_speciality(speciality):
@@ -87,12 +90,4 @@ def find_by_id(a_id):
 
 
 def get_number_selectable(cohort):
-    return InternshipOffer.objects.filter(selectable=True, organization__cohort=cohort).count()
-
-
-def find_all():
-    return InternshipOffer.objects.all()
-
-
-def find_by_organization(organization):
-    return InternshipOffer.objects.filter(organization=organization)
+    return find_internships(cohort).filter(selectable=True).count()

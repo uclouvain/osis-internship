@@ -132,7 +132,8 @@ def save_period_places(request, cohort_id, internship_id):
 
     for period_name in periods_dict.keys():
         period_number_places = int(request.POST.get(period_name, 0))
-        _save_period_places_to_db(internship_offer, periods_dict[period_name], period_number_places)
+        _save_period_places(internship_offer, periods_dict[period_name], period_number_places)
+    mdl_int.period_internship_places.update_maximum_enrollments(internship_offer)
 
     return redirect('edit_period_places', cohort_id=cohort.id, internship_id=internship_id)
 
@@ -379,19 +380,18 @@ def _get_dict_of_periods(cohort):
     return periods_dict
 
 
-def _save_period_places_to_db(internship_offer, period, number_places):
+def _save_period_places(internship_offer, period, number_places):
     if number_places <= 0:
         return
-    period_places = mdl_int.period_internship_places.PeriodInternshipPlaces(
-        period=period,
-        internship_offer=internship_offer,
-        number_places=number_places
-    )
+
+    period_places = mdl_int.period_internship_places.PeriodInternshipPlaces(period=period,
+                                                                            internship_offer=internship_offer,
+                                                                            number_places=number_places)
     period_places.save()
 
 
 def _delete_previous_period_places(internship_offer):
-    mdl_int.period_internship_places.find_by_internship_offer(internship_offer=internship_offer).delete()
+    mdl_int.period_internship_places.find_by_internship_offer(internship_offer).delete()
 
 
 def _get_current_period_places(internship_offer):

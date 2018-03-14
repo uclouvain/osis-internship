@@ -49,7 +49,7 @@ class InternshipStudentInformation(SerializableModel):
     email = models.EmailField(max_length=255, blank=True, null=True)
     phone_mobile = models.CharField(max_length=100, blank=True, null=True)
     contest = models.CharField(max_length=124, choices=TYPE_CHOICE, null=True, blank=True)
-    cohort = models.ForeignKey('internship.Cohort', null=False, blank=False)
+    cohort = models.ForeignKey('internship.Cohort')
 
     def __str__(self):
         return '{}'.format(self.person)

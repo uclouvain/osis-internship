@@ -52,7 +52,7 @@ def list_internships(request, cohort_id):
     if organization_sort_value and organization_sort_value != "0":
         query = mdl_int.internship_offer.search(organization__name=organization_sort_value)
     else:
-        query = mdl_int.internship_offer.find_internships(cohort)
+        query = mdl_int.internship_offer.find_mandatory_internships(cohort)
 
     query = query.filter(organization__cohort=cohort)
 
@@ -64,7 +64,7 @@ def list_internships(request, cohort_id):
 
     internships = mdl_int.internship.Internship.objects.filter(cohort=cohort)
 
-    all_internships = mdl_int.internship_offer.find_internships(cohort)
+    all_internships = mdl_int.internship_offer.find_mandatory_internships(cohort)
     organizations = _get_all_organizations(all_internships)
     all_specialities = get_all_specialities(all_internships)
     set_tabs_name(all_specialities)
@@ -81,7 +81,6 @@ def list_internships(request, cohort_id):
     _get_number_choices(all_non_mandatory_internships)
 
     context = {
-        'section': 'internship',
         'all_internships': query,
         'internships': internships,
         'all_non_mandatory_internships': all_non_mandatory_internships,
@@ -115,31 +114,8 @@ def student_choice(request, cohort_id, offer_id):
 
         number_choices[index] = count
 
-    context = {
-        'section': 'internship',
-        'internship': internship,
-        'students': students,
-        'number_choices': number_choices,
-        'cohort': cohort,
-    }
+    context = {'internship': internship, 'students': students, 'number_choices': number_choices, 'cohort': cohort}
     return render(request, "internship_detail.html", context)
-
-
-@login_required
-@permission_required('internship.is_internship_manager', raise_exception=True)
-def internships_block(request, cohort_id):
-    cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)
-
-    number_offers_selectable = mdl_int.internship_offer.get_number_selectable(cohort)
-    all_internship_offers = mdl_int.internship_offer.find_all().filter(organization__cohort=cohort)
-
-    new_selectable_state = number_offers_selectable == 0
-
-    all_internship_offers.update(selectable=new_selectable_state)
-
-    return HttpResponseRedirect(reverse('internships_home', kwargs={
-        'cohort_id': cohort.id,
-    }))
 
 
 @require_http_methods(['POST'])
@@ -148,7 +124,7 @@ def internships_block(request, cohort_id):
 def internships_save(request, cohort_id):
     # Check if the internships are selectable, if yes students can save their choices
     cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)
-    all_internships = mdl_int.internship_offer.search(organization__cohort=cohort)
+    all_internships = mdl_int.internship_offer.search(cohort=cohort)
     selectable = _get_selectable(all_internships)
 
     if selectable:
@@ -278,7 +254,7 @@ def internship_save_modification_student(request, cohort_id):
     if request.POST.get('fixthis'):
         fixthis_list = request.POST.getlist('fixthis')
 
-    all_internships = mdl_int.internship_offer.find_internships(cohort)
+    all_internships = mdl_int.internship_offer.find_mandatory_internships(cohort)
     all_specialities = get_all_specialities(all_internships)
     set_tabs_name(all_specialities)
 

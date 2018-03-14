@@ -37,7 +37,7 @@ class AffectationGenerationTime(models.Model):
     start_date_time = models.DateTimeField()
     end_date_time = models.DateTimeField()
     generated_by = models.CharField(max_length=255, default='None')
-    cohort = models.ForeignKey('internship.cohort', null=False, on_delete=models.CASCADE)
+    cohort = models.ForeignKey('internship.cohort', on_delete=models.CASCADE)
 
     def __str__(self):
         return u"%s - %s" % (self.start_date_time, self.end_date_time)

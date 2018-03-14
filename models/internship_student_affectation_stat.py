@@ -31,10 +31,9 @@ from internship.models.enums.costs import Costs
 
 
 class InternshipStudentAffectationStatAdmin(SerializableModelAdmin):
-    list_display = ('student', 'organization', 'speciality', 'period', 'choice', 'cost', 'consecutive_month',
-                    'type_of_internship')
+    list_display = ('student', 'organization', 'speciality', 'period', 'choice', 'cost', 'consecutive_month', 'type')
     fieldsets = ((None, {'fields': ('student', 'organization', 'speciality', 'period', 'choice', 'cost',
-                                    'consecutive_month', 'type_of_internship')}),)
+                                    'consecutive_month', 'type')}),)
     raw_id_fields = ('student', 'organization', 'speciality', 'period')
     search_fields = ['student__person__first_name', 'student__person__last_name']
     list_filter = ('period__cohort', 'choice')
@@ -45,12 +44,11 @@ class InternshipStudentAffectationStat(SerializableModel):
     organization = models.ForeignKey('internship.Organization')
     speciality = models.ForeignKey('internship.InternshipSpeciality')
     period = models.ForeignKey('internship.Period')
-    choice = models.CharField(max_length=1, blank=False, null=False, choices=ChoiceType.choices(),
-                              default=ChoiceType.NO_CHOICE.value)
-    cost = models.IntegerField(blank=False, null=False)
-    consecutive_month = models.BooleanField(default=False, null=False)
-    type_of_internship = models.CharField(max_length=1, blank=False, null=False, choices=AffectationType.choices(),
-                                          default=AffectationType.NORMAL.value)
+    internship = models.ForeignKey('internship.Internship', blank=True, null=True)
+    choice = models.CharField(max_length=1, choices=ChoiceType.choices(), default=ChoiceType.NO_CHOICE.value)
+    cost = models.IntegerField()
+    consecutive_month = models.BooleanField(default=False)
+    type = models.CharField(max_length=1, choices=AffectationType.choices(), default=AffectationType.NORMAL.value)
 
     def __str__(self):
         return u"%s : %s - %s (%s)" % (self.student, self.organization, self.speciality, self.period)

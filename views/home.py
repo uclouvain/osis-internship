@@ -36,11 +36,7 @@ from internship.models.cohort import Cohort
 def cohort_home(request, cohort_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
     blockable = mdl_internship.internship_offer.get_number_selectable(cohort) > 0
-    context = {
-        'section': 'internship',
-        'blockable': blockable,
-        'cohort': cohort,
-    }
+    context = {'blockable': blockable, 'cohort': cohort}
     return render(request, "internship/home.html", context=context)
 
 

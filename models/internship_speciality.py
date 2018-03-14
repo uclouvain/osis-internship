@@ -35,11 +35,11 @@ class InternshipSpecialityAdmin(SerializableModelAdmin):
 
 
 class InternshipSpeciality(SerializableModel):
-    name = models.CharField(max_length=125, blank=False, null=False)
-    acronym = models.CharField(max_length=125, blank=False, null=False)
+    name = models.CharField(max_length=125)
+    acronym = models.CharField(max_length=125)
     mandatory = models.BooleanField(default=False)
     sequence = models.IntegerField(blank=True, null=True)
-    cohort = models.ForeignKey('internship.cohort', null=False, on_delete=models.CASCADE)
+    cohort = models.ForeignKey('internship.cohort', on_delete=models.CASCADE)
     selectable = models.BooleanField(default=True)
 
     def acronym_with_sequence(self):

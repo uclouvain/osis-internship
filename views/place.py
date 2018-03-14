@@ -41,11 +41,7 @@ def internships_places(request, cohort_id):
     cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
     organizations = models.organization.Organization.objects.filter(cohort=cohort).order_by('reference')
 
-    context = {
-        'section': 'internship',
-        'all_organizations': organizations,
-        'cohort': cohort,
-    }
+    context = {'all_organizations': organizations, 'cohort': cohort}
     return render(request, "places.html", context)
 
 

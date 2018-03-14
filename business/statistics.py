@@ -76,44 +76,44 @@ def compute_stats(cohort, sol):
         # to find the standard deviation with command "stdev"
         mean_array.append(cost)
         # Iterate over all periods of the student
-        for period, internship in periods.items():
-            if period is not 'score' and internship is not None:
+        for period, affectation in periods.items():
+            if period is not 'score' and affectation is not None:
                 # First choice
-                if internship.choice == ChoiceType.FIRST_CHOICE.value:
+                if affectation.choice == ChoiceType.FIRST_CHOICE.value:
                     # Increment the number of total first choices
                     first += 1
                     # Increment the number of total normal first choices
-                    if internship.type_of_internship == AffectationType.NORMAL.value:
+                    if affectation.type == AffectationType.NORMAL.value:
                         first_n += 1
                     # Increment the number of total social first choices
-                    if internship.type_of_internship == AffectationType.PRIORITY.value:
+                    if affectation.type == AffectationType.PRIORITY.value:
                         first_s += 1
                 # Second choice
-                elif internship.choice == ChoiceType.SECOND_CHOICE.value:
+                elif affectation.choice == ChoiceType.SECOND_CHOICE.value:
                     second += 1
-                    if internship.type_of_internship == AffectationType.NORMAL.value:
+                    if affectation.type == AffectationType.NORMAL.value:
                         second_n += 1
-                    if internship.type_of_internship == AffectationType.PRIORITY.value:
+                    if affectation.type == AffectationType.PRIORITY.value:
                         second_s += 1
                 # Third choice
-                elif internship.choice == ChoiceType.THIRD_CHOICE.value:
+                elif affectation.choice == ChoiceType.THIRD_CHOICE.value:
                     third += 1
-                    if internship.type_of_internship == AffectationType.NORMAL.value:
+                    if affectation.type == AffectationType.NORMAL.value:
                         third_n += 1
-                    if internship.type_of_internship == AffectationType.PRIORITY.value:
+                    if affectation.type == AffectationType.PRIORITY.value:
                         third_s += 1
                 # Fourth choice
-                elif internship.choice == ChoiceType.FORTH_CHOICE.value:
+                elif affectation.choice == ChoiceType.FORTH_CHOICE.value:
                     fourth += 1
-                    if internship.type_of_internship == AffectationType.NORMAL.value:
+                    if affectation.type == AffectationType.NORMAL.value:
                         fourth_n += 1
-                    if internship.type_of_internship == AffectationType.PRIORITY.value:
+                    if affectation.type == AffectationType.PRIORITY.value:
                         fourth_s += 1
                 # Erasmus
-                elif internship.choice == ChoiceType.PRIORITY.value:  # Erasmus
+                elif affectation.choice == ChoiceType.PRIORITY.value:  # Erasmus
                     erasmus += 1
                 # Imposed choice
-                elif internship.choice == ChoiceType.IMPOSED.value:  # Imposed hospital
+                elif affectation.choice == ChoiceType.IMPOSED.value:  # Imposed hospital
                     # Retrieve the addresses of the hospital and the student
                     # Increment total of imposed choices
                     imposed_choices += 1
@@ -121,12 +121,12 @@ def compute_stats(cohort, sol):
                     # we will use this set to find the number of students
                     # with imposed choices
                     others_students.add(student)
-                    others_specialities[internship.speciality] += 1
-                    others_specialities_students[internship.speciality].add(student)
+                    others_specialities[affectation.speciality] += 1
+                    others_specialities_students[affectation.speciality].add(student)
                 # Hostpital error
-                if int(internship.organization.reference) == HOSPITAL_ERROR:
+                if int(affectation.organization.reference) == HOSPITAL_ERROR:
                     hospital_error_count += 1
-                consecutive_month += internship.consecutive_month
+                consecutive_month += affectation.consecutive_month
     # Total number of students
     number_of_students = len(sol)
     # Total number of internships
@@ -259,14 +259,13 @@ def load_solution_table(data, cohort):
     return sorted_internship_table
 
 
-def load_solution_sol(data):
+def load_solution_sol(student_affectations):
     keys = ['P1', 'P2', 'P3', 'P4', 'P5', 'P6', 'P7', 'P8', 'P9', 'P10', 'P11', 'P12']
 
     sol = {}
-    for item in data:
+    for item in student_affectations:
         # Initialize 12 empty period of each student
         if item.student not in sol:
-            sol[item.student] = OrderedDict()
             sol[item.student] = {key: None for key in keys}
             # Sort the periods by name P1, P2, ...
             sol[item.student] = OrderedDict(sorted(sol[item.student].items(), key=lambda t: int(t[0][1:])))

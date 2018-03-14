@@ -36,9 +36,9 @@ class PeriodAdmin(SerializableModelAdmin):
 
 class Period(SerializableModel):
     name = models.CharField(max_length=255)
-    date_start = models.DateField(blank=False)
-    date_end = models.DateField(blank=False)
-    cohort = models.ForeignKey('internship.cohort', null=False, on_delete=models.CASCADE)
+    date_start = models.DateField()
+    date_end = models.DateField()
+    cohort = models.ForeignKey('internship.cohort', on_delete=models.CASCADE)
 
     def number(self):
         return int(self.name[1])
