@@ -146,7 +146,7 @@ def assign_students_with_empty_periods(assignment):
     """ When student has empty periods at the end, affect default speciality and organisation. It has to be
         handled manually."""
     for student in assignment.students:
-        if student_has_missing_periods(assignment, student):
+        if student_not_fully_assigned(assignment, student):
             empty_periods = student_empty_periods(assignment, student)
             affectations = build_affectation_for_periods(assignment, student, assignment.pending_organization,
                                                          empty_periods, assignment.default_speciality,
@@ -160,7 +160,7 @@ def _assign_student(assignment, student, internship):
     choices = InternshipChoice.objects.filter(student=student, internship=internship).order_by("choice")
     affectations = None
 
-    if student_has_missing_periods(assignment, student):
+    if student_not_fully_assigned(assignment, student):
         # Deal with mandatory internship
         if internship.speciality and student_has_no_affectations_for_internship(assignment, student, internship):
             affectations = assign_choices_to_student(assignment, student, choices, internship)
@@ -177,12 +177,14 @@ def assign_choices_to_student(assignment, student, choices, internship):
 
     # Try to assign choices, from 1 to 4
     for choice in choices:
-        affecs = assignment.affectations
-        affecs = [a for a in affecs if a.organization.reference == choice.organization.reference and
-                                       a.speciality == choice.speciality and
-                                       a.student == student and a.choice == ChoiceType.PRIORITY.value]
-        if len(affecs) > 0:
-            return affectations
+        if not internship.speciality:
+            affecs = assignment.affectations
+            affecs = [a for a in affecs if a.organization.reference == choice.organization.reference and
+                                           a.speciality == choice.speciality and
+                                           a.student == student and
+                                           a.choice == ChoiceType.PRIORITY.value]
+            if len(affecs) > 0:
+                continue
 
         periods = find_first_student_available_periods_for_internship_choice(assignment, student, internship, choice)
         if len(periods) > 0:
@@ -281,17 +283,23 @@ def find_available_periods_for_offers(assignment, offers):
 
 
 def student_has_no_affectations_for_internship(assignment, student, internship):
+    # Take all affectations of the student.
     student_affectations = get_student_affectations(student, assignment.affectations)
-    internships_with_speciality = assignment.internships.filter(speciality=internship.speciality)
-    length = internship.length_in_periods
+    # Take only the affectations with the same specialty of the internship.
     affectations_with_speciality = list(filter(lambda affectation: affectation.speciality == internship.speciality,
                                                student_affectations))
+    # Take only the affectations whose internship does have a specialty.
+    affectations_with_speciality = list(filter(lambda affectation: affectation.internship.speciality is not None,
+                                               affectations_with_speciality))
+    # Take other internships with the same specialty.
+    internships_with_speciality = assignment.internships.filter(speciality=internship.speciality)
+    length = internship.length_in_periods
     total_number_of_periods_with_speciality_expected = sum(internship.length_in_periods for internship in
                                                            internships_with_speciality)
     return len(affectations_with_speciality) + length <= total_number_of_periods_with_speciality_expected
 
 
-def student_has_missing_periods(assignment, student):
+def student_not_fully_assigned(assignment, student):
     student_affectations = get_student_affectations(student, assignment.affectations)
     return len(student_affectations) < len(assignment.periods)
 

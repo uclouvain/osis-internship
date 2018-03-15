@@ -46,20 +46,10 @@ def run_affectation(request, cohort_id):
     if request.method == 'POST':
         start_date_time = timezone.now() # To register the beginning of the algorithm.
 
-        # Old
-        # period_ids = models.period.Period.objects.filter(cohort=cohort).values_list("id", flat=True)
-        # current_affectations = models.internship_student_affectation_stat.find_non_mandatory_affectations(
-        #     period_ids=period_ids)
-        # current_affectations._raw_delete(current_affectations.db)
-        # slvr = solver.AssignmentSolver(cohort)
-        # slvr.solve()
-        # slvr.persist_solution()
-
-        # New
         slvr = assignment.Assignment(cohort)
         slvr.solve()
         slvr.persist_solution()
-        end_date_time = timezone.now()  # To register the end of the algorithm.
+        end_date_time = timezone.now() # To register the end of the algorithm.
 
         affectation_generation_time = models.affectation_generation_time.AffectationGenerationTime()
         affectation_generation_time.cohort = cohort
