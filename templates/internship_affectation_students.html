@@ -157,7 +157,8 @@
                                         {% endif %}
 
                                         {% if forloop.counter <= 12 %}
-                                            <span data-toggle="tooltip" data-placement="top" title="{{ enrollment.speciality.name }}">{{ enrollment.speciality.acronym }}{{ enrollment.internship.choice }}</span><br>
+                                            <span data-toggle="tooltip" data-placement="top" title="{{ enrollment.speciality.name }}">{{ enrollment.speciality.acronym }}</span>
+                                            <span data-toggle="tooltip" data-placement="top" title="{{ enrollment.internship.name }}">{{ enrollment.internship.choice }}</span><br>
                                             <span data-toggle="tooltip" data-placement="top" title="{{ enrollment.organization.name }}">{{enrollment.organization.reference }}</span><br>
                                             {{ enrollment.cost }}({{ enrollment.choice.lower }})
                                         {% else %}

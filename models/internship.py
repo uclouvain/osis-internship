@@ -42,7 +42,7 @@ class Internship(SerializableModel):
 
     def choice(self):
         if not self.speciality:
-            return "/C"
+            return "- C"
         else:
             return ""
 

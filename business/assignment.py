@@ -66,7 +66,7 @@ class Assignment:
         self.specialities = InternshipSpeciality.objects.filter(cohort=self.cohort)
         self.default_speciality = InternshipSpeciality.objects.filter(cohort=self.cohort, acronym="MO").first()
 
-        self.organization_error = Organization.objects.filter(cohort=self.cohort, reference="999").first()
+        self.organization_error = mdl.organization.get_hospital_error(self.cohort)
         self.pending_organization = Organization.objects.filter(cohort=self.cohort, reference="604").first()
         self.forbidden_organizations = Organization.objects.annotate(reference_length=Length('reference')) \
                                                            .exclude(reference="00") \
@@ -177,6 +177,13 @@ def assign_choices_to_student(assignment, student, choices, internship):
 
     # Try to assign choices, from 1 to 4
     for choice in choices:
+        affecs = assignment.affectations
+        affecs = [a for a in affecs if a.organization.reference == choice.organization.reference and
+                                       a.speciality == choice.speciality and
+                                       a.student == student and a.choice == ChoiceType.PRIORITY.value]
+        if len(affecs) > 0:
+            return affectations
+
         periods = find_first_student_available_periods_for_internship_choice(assignment, student, internship, choice)
         if len(periods) > 0:
             affectations.extend(build_affectation_for_periods(assignment, student, choice.organization, periods,
@@ -309,8 +316,9 @@ def decrement_places_available(assignment, affectation):
     try:
         offer = assignment.offers.get(organization=affectation.organization, speciality=affectation.speciality)
         period_place = get_period_place_for_offer_and_period(offer, affectation.period, assignment.available_places)
-        period_place["number_places"] -= 1
-        assignment.available_places = replace_period_place_in_dictionnary(period_place, assignment.available_places)
+        if period_place:
+            period_place["number_places"] -= 1
+            assignment.available_places = replace_period_place_in_dictionnary(period_place, assignment.available_places)
     except ObjectDoesNotExist:
         return
 
@@ -368,7 +376,7 @@ def find_offers_for_internship_choice(assignment, choice):
 
 def get_student_affectations(student, affectations):
     """ From a list of affectations, it returns a new list containing only the affectations related to the student. """
-    return list(filter(lambda affectation: affectation.student_id == student.id, affectations))
+    return list(filter(lambda affectation: affectation.student == student, affectations))
 
 
 def difference(first_list, second_list):

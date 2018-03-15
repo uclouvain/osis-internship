@@ -101,6 +101,13 @@ def find_by_reference(cohort, reference):
     return Organization.objects.filter(cohort=cohort).filter(reference=str_reference)
 
 
+def get_hospital_error(cohort):
+    try:
+        return Organization.objects.filter(cohort=cohort).get(reference=999)
+    except ObjectDoesNotExist:
+        return None
+
+
 def sort_organizations(organizations):
     """
         Function to sort the organization by the reference

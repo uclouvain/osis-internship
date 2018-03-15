@@ -39,8 +39,12 @@ def get_period_places_for_period_ids(period_ids, period_places):
 
 
 def get_period_place_for_offer_and_period(offer, period, available_places):
-    return list(filter(lambda period_place: period_place["internship_offer_id"] == offer.id and
-                                            period_place["period_id"] == period.id, available_places))[0]
+    places = list(filter(lambda period_place: period_place["internship_offer_id"] == offer.id and
+                                            period_place["period_id"] == period.id, available_places))
+    if places:
+        return places[0]
+    else:
+        return None
 
 
 def get_period_ids_from_period_places(period_places):

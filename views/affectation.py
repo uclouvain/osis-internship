@@ -32,13 +32,11 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import render, redirect
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
-from internship.business import assignment, statistics
+from internship.business import assignment, statistics, solver
 from internship import models
 from internship.models import internship_student_affectation_stat
 from internship.utils.exporting import score_encoding_xls
 from internship.views.internship import set_tabs_name
-
-HOSPITAL_ERROR = 999  # Reference of the hospital "erreur"
 
 
 @login_required
@@ -47,9 +45,20 @@ def run_affectation(request, cohort_id):
     cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
     if request.method == 'POST':
         start_date_time = timezone.now() # To register the beginning of the algorithm.
-        solver = assignment.Assignment(cohort)
-        solver.solve()
-        solver.persist_solution()
+
+        # Old
+        # period_ids = models.period.Period.objects.filter(cohort=cohort).values_list("id", flat=True)
+        # current_affectations = models.internship_student_affectation_stat.find_non_mandatory_affectations(
+        #     period_ids=period_ids)
+        # current_affectations._raw_delete(current_affectations.db)
+        # slvr = solver.AssignmentSolver(cohort)
+        # slvr.solve()
+        # slvr.persist_solution()
+
+        # New
+        slvr = assignment.Assignment(cohort)
+        slvr.solve()
+        slvr.persist_solution()
         end_date_time = timezone.now()  # To register the end of the algorithm.
 
         affectation_generation_time = models.affectation_generation_time.AffectationGenerationTime()
@@ -145,7 +154,7 @@ def view_errors(request, cohort_id):
         .select_related("student", "organization", "speciality", "period")
 
     if student_affectations.count() > 0:
-        hospital = models.organization.Organization.objects.filter(reference=HOSPITAL_ERROR, cohort=cohort).first()
+        hospital = models.organization.get_hospital_error(cohort)
         internship_errors = internship_student_affectation_stat.InternshipStudentAffectationStat.objects \
             .filter(organization=hospital, period_id__in=period_ids)
 
