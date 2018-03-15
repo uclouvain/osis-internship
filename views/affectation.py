@@ -32,7 +32,7 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import render, redirect
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
-from internship.business import assignment, statistics, solver
+from internship.business import assignment, statistics
 from internship import models
 from internship.models import internship_student_affectation_stat
 from internship.utils.exporting import score_encoding_xls
