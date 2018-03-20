@@ -23,40 +23,10 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
-from django.core.exceptions import ObjectDoesNotExist
-from osis_common.models.serializable_model import SerializableModelAdmin, SerializableModel
+from django.template.defaulttags import register
 
 
-class InternshipAdmin(SerializableModelAdmin):
-    list_display = ('name', 'speciality', 'cohort', 'length_in_periods')
-    fieldsets = ((None, {'fields': ('name', 'speciality', 'cohort', 'length_in_periods')}),)
-    list_filter = ('cohort',)
-
-
-class Internship(SerializableModel):
-    name = models.CharField(max_length=255)
-    speciality = models.ForeignKey('internship.InternshipSpeciality', null=True, blank=True)
-    cohort = models.ForeignKey('internship.Cohort')
-    length_in_periods = models.IntegerField(default=1)
-    position = models.IntegerField(default=0)
-
-    def choice(self):
-        if not self.speciality:
-            return "- C"
-        else:
-            return ""
-
-    def __str__(self):
-        return u"%s" % self.name
-
-
-def get_by_id(internship_id):
-    try:
-        return Internship.objects.get(pk=internship_id)
-    except ObjectDoesNotExist:
-        return None
-
-
-def find_by_cohort(cohort):
-    return Internship.objects.filter(cohort=cohort)
+@register.filter
+def get_item(dictionary, key):
+    val = dictionary.get(key)
+    return val if val else ""

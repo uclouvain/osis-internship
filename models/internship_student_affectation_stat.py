@@ -98,12 +98,13 @@ def delete_affectations(student, cohort):
     affectations.delete()
 
 
-def build(student, organization, specialty, period, student_choices):
+def build(student, organization, specialty, period, internship, student_choices):
     affectation = InternshipStudentAffectationStat()
     affectation.student = student
     affectation.organization = organization
     affectation.speciality = specialty
     affectation.period = period
+    affectation.internship = internship
 
     check_choice = False
     for student_choice in student_choices:

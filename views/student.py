@@ -202,7 +202,6 @@ def student_save_information_modification(request, cohort_id, student_id):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internship_student_affectation_modification(request, cohort_id, student_id):
     cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)
-    informations = mdl_int.internship_student_affectation_stat.search(student__pk=student_id)
     internship_choice = mdl_int.internship_choice.search(student__pk=student_id)
     if not internship_choice:
         student = mdl.student.find_by_id(student_id)
@@ -219,6 +218,14 @@ def internship_student_affectation_modification(request, cohort_id, student_id):
         if number:
             speciality.acronym = speciality.acronym + " " + str(number[0])
     periods = mdl_int.period.search(cohort=cohort)
+
+    affectations = mdl_int.internship_student_affectation_stat.search(student__pk=student_id)
+    internships = {}
+    for period in periods:
+        affectation = _get_affectation_for_period(affectations, period)
+        if affectation:
+            internships[period.id] = affectation.internship.id
+
     return render(request, "student_affectation_modification.html", locals())
 
 
@@ -240,6 +247,10 @@ def student_save_affectation_modification(request, cohort_id, student_id):
     if 'specialty' in request.POST:
         specialties = request.POST.getlist('specialty')
 
+    internships = []
+    if 'internship' in request.POST:
+        internships = request.POST.getlist('internship')
+
     check_error_present = False
     num_periods = len(periods)
     for num_period in range(0, num_periods):
@@ -257,7 +268,7 @@ def student_save_affectation_modification(request, cohort_id, student_id):
                                                                                                organization.name,
                                                                                                period.name))
 
-    if not check_error_present:
+    if not check_error_present and num_periods > 0:
         mdl_int.internship_student_affectation_stat.delete_affectations(student, cohort)
         for num_period in range(0, num_periods):
             if organizations[num_period]:
@@ -265,9 +276,10 @@ def student_save_affectation_modification(request, cohort_id, student_id):
                 specialty = mdl_int.internship_speciality.search(cohort=cohort, name=specialties[num_period])[0]
                 period = mdl_int.period.search(cohort=cohort, name=periods[num_period])[0]
                 student_choices = mdl_int.internship_choice.search(student=student, speciality=specialty)
-
+                internship = mdl_int.internship.get_by_id(internships[num_period])
                 affectation = mdl_int.internship_student_affectation_stat.build(student, organization, specialty,
-                                                                                period, student_choices)
+                                                                                period, internship,
+                                                                                student_choices)
                 affectation.save()
 
         redirect_url = reverse('internships_student_read', kwargs={"cohort_id": cohort.id, "student_id": student.id})
@@ -288,6 +300,13 @@ def import_students(request, cohort_id):
         file_upload = form.cleaned_data['file_upload']
         import_xlsx(cohort, BytesIO(file_upload.read()))
     return HttpResponseRedirect(reverse('internships_student_resume', kwargs={"cohort_id": cohort_id}))
+
+
+def _get_affectation_for_period(affectations, period):
+    for affectation in affectations:
+        if affectation.period == period:
+            return affectation
+    return None
 
 
 def _get_students_with_status(cohort):

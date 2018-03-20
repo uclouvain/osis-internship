@@ -61,15 +61,16 @@
                         <td>
                             {{ period | default_if_none:'-' }}
                             <input class="hidden" name="period" value="{{ period }}">
+                            <input class="hidden" name="internship" value="{{ internships|get_item:period.id }}">
                         </td>
                         <td>
                             <select name="specialty" class="form-control">
                                 <option value="">--</option>
                                 {% for speciality in specialities %}
                                     <option value="{{speciality.name}}"
-                                        {% for information in informations %}
-                                            {% if information.period == period %}
-                                                {% if speciality.name == information.speciality.name %}
+                                        {% for affectation in affectations %}
+                                            {% if affectation.period == period %}
+                                                {% if speciality.id == affectation.speciality.id %}
                                                     selected
                                                 {% endif %}
                                             {% endif %}
@@ -84,9 +85,9 @@
                                 <option value="">--</option>
                                 {% for organization in organizations %}
                                     <option value="{{organization.reference}}"
-                                        {% for information in informations %}
-                                            {% if information.period == period %}
-                                                {% if organization.reference == information.organization.reference %}
+                                        {% for affectation in affectations %}
+                                            {% if affectation.period == period %}
+                                                {% if organization.reference == affectation.organization.reference %}
                                                     selected
                                                 {% endif %}
                                             {% endif %}
