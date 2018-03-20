@@ -44,7 +44,7 @@ class TestInternshipStudentAffectationStat(TestCase):
     def test_build_without_choices(self):
         student_choices = []
         affectation = internship_student_affectation_stat.build(self.student, self.organization, self.specialty,
-                                                                self.period, student_choices)
+                                                                self.period, None, student_choices)
 
         self.assertEquals(affectation.cost, 10)
         self.assertEquals(affectation.choice, "I")
@@ -55,7 +55,7 @@ class TestInternshipStudentAffectationStat(TestCase):
         self.choice = create_internship_choice(self.organization, self.student, self.specialty, internship=internship)
         student_choices = [self.choice,]
         affectation = internship_student_affectation_stat.build(self.student, self.organization, self.specialty,
-                                                                self.period, student_choices)
+                                                                self.period, internship, student_choices)
 
         self.assertEquals(affectation.cost, 0)
         self.assertEquals(affectation.choice, self.choice.choice)
