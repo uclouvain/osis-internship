@@ -276,7 +276,9 @@ def student_save_affectation_modification(request, cohort_id, student_id):
                 specialty = mdl_int.internship_speciality.search(cohort=cohort, name=specialties[num_period])[0]
                 period = mdl_int.period.search(cohort=cohort, name=periods[num_period])[0]
                 student_choices = mdl_int.internship_choice.search(student=student, speciality=specialty)
-                internship = mdl_int.internship.get_by_id(internships[num_period])
+                internship = None
+                if internships[num_period]:
+                    internship = mdl_int.internship.get_by_id(internships[num_period])
                 affectation = mdl_int.internship_student_affectation_stat.build(student, organization, specialty,
                                                                                 period, internship,
                                                                                 student_choices)
