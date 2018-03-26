@@ -223,7 +223,7 @@ def internship_student_affectation_modification(request, cohort_id, student_id):
     internships = {}
     for period in periods:
         affectation = _get_affectation_for_period(affectations, period)
-        if affectation:
+        if affectation and affectation.internship:
             internships[period.id] = affectation.internship.id
 
     return render(request, "student_affectation_modification.html", locals())

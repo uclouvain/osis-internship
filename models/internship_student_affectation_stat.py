@@ -31,8 +31,9 @@ from internship.models.enums.costs import Costs
 
 
 class InternshipStudentAffectationStatAdmin(SerializableModelAdmin):
-    list_display = ('student', 'organization', 'speciality', 'period', 'choice', 'cost', 'consecutive_month', 'type')
-    fieldsets = ((None, {'fields': ('student', 'organization', 'speciality', 'period', 'choice', 'cost',
+    list_display = ('student', 'organization', 'speciality', 'period', 'internship', 'choice', 'cost',
+                    'consecutive_month', 'type')
+    fieldsets = ((None, {'fields': ('student', 'organization', 'speciality', 'period', 'internship', 'choice', 'cost',
                                     'consecutive_month', 'type')}),)
     raw_id_fields = ('student', 'organization', 'speciality', 'period')
     search_fields = ['student__person__first_name', 'student__person__last_name']
@@ -61,16 +62,7 @@ def search(**kwargs):
         .order_by("student__person__last_name", "student__person__first_name", "period__date_start")
 
 
-def find_by_id(affectation_id):
-    return InternshipStudentAffectationStat.objects.get(pk=affectation_id)
-
-
 def find_non_mandatory_affectations(period_ids):
-    return InternshipStudentAffectationStat.objects.filter(period__id__in=period_ids).\
-        select_related("student", "organization", "speciality")
-
-
-def find_affectations(period_ids):
     return InternshipStudentAffectationStat.objects.filter(period__id__in=period_ids).\
         select_related("student", "organization", "speciality")
 
