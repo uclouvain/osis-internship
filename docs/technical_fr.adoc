@@ -4,7 +4,7 @@
 
 ==== L’algorithme d’affectation
 
-Pour de satisfaire toutes les demandes des étudiants nous essayons de trouver une solution avec le coût le plus faible et qui satisfait les différents contraintes. Le coût est mesuré par la somme de tous les points d'une solution. Les points sont ajoutés à une solution quand les contraintes ne sont pas respectées. La pondération des différents contraintes est la suivante:
+Afin de satisfaire toutes les demandes des étudiants,nous essayons de trouver une solution satisfaisant les différentes contraintes avec un coût le plus faible possible. Le coût est mesuré par la somme de tous les points d'une solution. Des points sont ajoutés à une solution quand les contraintes ne sont pas respectées. La pondération des différentes contraintes est la suivante:
 
 .Pondération des contraintes
 |===
@@ -26,87 +26,87 @@ Pour de satisfaire toutes les demandes des étudiants nous essayons de trouver u
 |10
 |===
 
-Quand les désidératas des étudiants ne peuvent pas être respectés, un autre lieu stage doit être imposé. L'étudiant sera placé dans l'hôpital proche de son adresse légale. Cette solution ajoute 10 points (hors choix) + 1 points par 50 kilomètre entre son adresse légale et l'adresse de l'hôpital.
+Quand les desiderata des étudiants ne peuvent pas être respectés, un autre lieu de stage doit être imposé. L'étudiant sera placé dans l'hôpital proche de son adresse légale. Cette solution ajoute 10 points (hors choix) + 1 point par 50 kilomètre entre son adresse légale et l'adresse de l'hôpital.
 
 Chaque étudiant doit choisir 6 stages au choix, par ordre de préférence, de 1 à 6. Seulement 4 stages seront pris. S'il est impossible de respecter les 4 premiers choix on va ajouter 2 points pour le choix 5 et 3 points pour le choix 6.
 
-On a également les différentes contraintes faibles, par exemple l'étudiant doit faire au minimum 2 mois dans le même hôpital. Si ce n'est par le cas on ajoute 5 points.
+Il existe également des contraintes souples. Par exemple, l'étudiant doit faire au minimum 2 mois dans le même hôpital. Si ces contraintes ne sont pas respectées, on ajoute 5 points.
 
 ===== Les définitions
 
-* *L’offre* est représentée par un ensemble de stages qui sont proposées par les différents acteurs. Chaque stage possède une spécialité, un lieu, une période et un nombre de places minimales et maximales.
+* *L’offre* est représentée par un ensemble de stages proposés par les différents acteurs. Chaque stage possède une spécialité, un lieu, une période et un nombre de places minimales et maximales.
 
-* *La demande* est représentée par un ensemble des choix des étudiants. Elle est divisée en 2 catégories:
+* *La demande* est représentée par un ensemble de choix des étudiants. Elle est divisée en 2 catégories:
 
 ** Les stages obligatoires: chaque étudiant pour chaque spécialité obligatoire doit donner une liste ordonnée de 4 lieux de stages, par ordre de préférence allant de de 1 à 4.
 
-** Les stages au choix: chaque étudiant doit choisir 6 spécialités au choix, par ordre de préférence allant de 1 à 6. Si l’étudiant souhaite, il peut   choisir plusieurs fois la même spécialité.  Ensuite pour chaque spécialité, l’étudiant doit donner une liste ordonnée de 4 lieux de stages, par ordre de  préférence allant de de 1 à 4.
+** Les stages au choix: chaque étudiant doit choisir 6 spécialités au choix, par ordre de préférence allant de 1 à 6. Si l’étudiant le souhaite, il peut choisir plusieurs fois la même spécialité. Ensuite, pour chaque spécialité, l’étudiant doit fournir une liste ordonnée de 4 lieux de stages, par ordre de préférence allant de 1 à 4.
 
-* *Une solution* c’est un ensemble des différents choix qui satisfont au mieux toutes les demandes des étudiants. Elle doit respecter toutes les contraintes fortes et un maximum de contraintes souples. Dans une solution on retrouve, pour chaque étudiant, un triplet qui contient une spécialité, un lieu et une période.
+* *Une solution* est un ensemble des différents choix qui satisfont au mieux toutes les demandes des étudiants. Elle doit respecter toutes les contraintes fortes et un maximum de contraintes souples. Dans une solution on retrouve, pour chaque étudiant, un triplet qui contient une spécialité, un lieu et une période.
 
-* *Les contraintes fortes*:
+* *Les contraintes fortes*
 
-** chaque étudiant doit avoir 12 périodes (P) de stages attribuées et réparties sur 12 mois (1 période par mois). Les stages se répartissent obligatoirement comme suite en «stages obligatoires» (8 P) et "stages au choix" (4 P).
+** Chaque étudiant doit avoir 12 périodes (P) de stages attribuées et réparties sur 12 mois (1 période par mois). Les stages se répartissent obligatoirement comme suite en "stages obligatoires" (8 P) et "stages au choix" (4 P).
 
-** les stages obligatoires doivent se dérouler dans la première partie de l’année  (janvier – aout) et être suivis par les stages au choix (septembre – décembre).
+** Les stages obligatoires doivent se dérouler dans la première partie de l’année (janvier – août) et être suivis par les stages au choix (septembre – décembre).
 
-** Pour les stages au choix, la priorité doit être donnée aux étudiants qui présentent un concours dans la spécialité choisi pour le stage au choix.
+** Pour les stages au choix, la priorité doit être donnée aux étudiants qui présentent un concours dans la spécialité choisie relative à ces stages.
 
-** Pour les étudiants prioritaires, il faut pouvoir attribuer manuellement certains stages (spécialité, lieu, période), avant l’attribution par le   logiciel, des stages aux étudiants. Les étudiants prioritaires pour lesquels, pour certaines spécialités, le lieu est unique et doit donc impérativement être respecté. Les modifications manuelles ne pourront pas être modifiées par le logiciel.
+** Pour les étudiants prioritaires, il faut pouvoir attribuer manuellement certains stages (spécialité, lieu, période), avant l’attribution par le logiciel, des stages aux étudiants. Pour certains étudiants prioritaires, le lieu est unique pour certaines spécialités et doit impérativement être respecté. Ces modifications manuelles ne pourront pas être modifiées par le logiciel.
 
-** Les 2 périodes de stage obligatoire «Urgence», doivent être effectuées l’une à la suite de l’autre dans un même hôpital.
+** Les 2 périodes de stage obligatoire "Urgence", doivent être effectuées l’une à la suite de l’autre dans un même hôpital.
 
-* *Les contraintes souples*:
+* *Les contraintes souples*
 
 ** Il faut éviter que l’étudiant ne passe qu’un mois dans un même hôpital. Si cette contrainte n’est pas respectée on ajoute une pénalité de 5 points.
 
-** L’étudiant émet des désidératas concernant le lieu de stage obligatoires et concernant la spécialité et les lieux de stages au choix. Ces désidératas   devraient être respectés le plus possible en fonction d’un ordre de préférence allant de 1 à 4. Si le 1er choix n’est pas respecté, on ajoute:
+** L’étudiant émet des desiderata concernant le lieu du stage obligatoire et concernant la spécialité et les lieux des stages au choix. Ces desiderata devraient être respectés au mieux en fonction d’un ordre de préférence allant de 1 à 4. Si le 1er choix n’est pas respecté, on ajoute:
 
-*** 1 point de pénalité pour le 2ème choix
-*** 2 points de pénalité pour le 3ème choix
-*** 3 points de pénalité pour le 4ème choix
+*** 1 point de pénalité si le 2ème choix est affecté
+*** 2 points de pénalité si le 3ème choix est affecté
+*** 3 points de pénalité si le 4ème choix est affecté
 
-** En cas d’impossibilité de respecter les désidératas des étudiants, un autre lieu stage doit être imposé. L’étudiant sera placé dans l’hôpital proche de son adresse légale. On ajoute une pénalité de 10 points + 1 point par 50 kilomètre entre son adresse légale et l’adresse de l’hôpital.
+** En cas d’impossibilité de respecter les desiderata des étudiants, un autre lieu de stage doit être imposé. L’étudiant sera placé dans l’hôpital proche de son adresse légale. On ajoute une pénalité de 10 points + 1 point par 50 kilomètre entre son adresse légale et l’adresse de l’hôpital.
 
-** Chaque étudiant doit choisir 6 stages au choix, par ordre de préférence allant de 1 à 6. Seulement 4 stages seront pris, s’il est impossible de   respecter les 4 premiers choix de stage on va ajouter:
+** Chaque étudiant doit sélectionner 6 stages au choix, par ordre de préférence allant de 1 à 6. Seulement 4 stages seront pris, s’il est impossible de respecter les 4 premiers choix de stage on va ajouter:
 
-*** 2 points de pénalité pour le choix 5
-*** 3 points de pénalité pour le choix 6
+*** 2 points de pénalité si le choix 5 est affecté
+*** 3 points de pénalité si le choix 6 est affecté
 
-** Si l’offre est plus petite que la demande, certains étudiants seront ajoutés dans un hôpital fictif nommé «error», cet hôpital possède une capacité   infinie. Si cette contrainte n’est pas respectée (l’offre < la demande) on ajoute une pénalité de 1000 points.
+** Si l’offre est plus petite que la demande, certains étudiants seront ajoutés dans un hôpital fictif nommé "error", cet hôpital possède une capacité infinie. Si cette contrainte n’est pas respectée (offre < demande) on ajoute une pénalité de 1000 points.
 
 ==== Modèle de données
 
-Les données sont organisés dans la base de données selon le modèle de données suivant.
+Les données sont organisées dans la base de données selon le modèle de données suivant.
 
 image::images/internship-erm.png[Internship Entity Relationship Model]
 
 ===== period_internship_places
 
-Cette table est peuplée par l'importation du fichier Excel avec le nombre de places disponibles dans chaque spécialité de chaque hôpital. C'est pour ça que si l'algorithme n'arrive pas au but les données ne plus affichés.
+Cette table est peuplée par l'importation du fichier Excel avec le nombre de places disponibles dans chaque spécialité de chaque hôpital. C'est pour ça que si l'algorithme n'arrive pas au but les données ne plus affichées.
 
 ===== internship_student_affectation_stat
 
-Cette table est peuplée par l’exécution de l'algorithme d'affectation. Chaque fois que l'algorithme est exécuté pour une cohorte, le donnée correspondent à cette cohorte est supprimé tout au debut de l’exécution.
+Cette table est peuplée par l’exécution de l'algorithme d'affectation. Chaque fois que l'algorithme est exécuté pour une cohorte, les données correspondant à cette cohorte sont supprimées au tout début de l’exécution.
 
 ==== L'architecture logiciel
 
-La gestion des stages est une app Django. Elle ne tourne pas tout seule, mais elle depend d'un projet Django pour fonctionner. Pour le moment, elle depend du projet Django OSIS (https://github.com/uclouvain/osis), especifiquement de l'application `base`, qui est commun à tous les autres applications. C'est fortement couplé au point de être aimablement classée comme un "satelite" d'OSIS. Heureusement, l'application est conçue de manière à pouvoir être facilement découplée à l'avenir en utilisant, par exemple, des services web parce la demande de données est très faible.
+La gestion des stages est une app Django. Elle ne tourne pas tout seule, mais elle depend d'un projet Django pour fonctionner. Pour le moment, elle dépend du projet Django OSIS (https://github.com/uclouvain/osis), spécifiquement de l'application `base`, qui est commune à toutes les autres applications. Ce couplage est tel que la gestion des stages est classée comme un "satelite" d'OSIS. Heureusement, l'application est conçue de manière à pouvoir être facilement découplée à l'avenir en utilisant, par exemple, des services web parce que la demande de données est très faible.
 
 ==== Sécurité
 
-Toutes les fonctionnalités de l'application sont limitées aux utilisateurs et aux responsabilités bien connus. À cause de ça, la sécurité de l'application est organisé en deux parties:
+Toutes les fonctionnalités de l'application sont limitées à des utilisateurs aux responsabilités bien connues. De ce fait, la sécurité de l'application est organisée en deux parties:
 
 ===== L'authentification
 
-OSIS utilise le single-sign-on de l'UCL qui est integré avec le cadastre unique des utilisateurs informatique de l'université. L'application Internship hérite ce mechanism d'OSIS pour s'assurer qui tous les accès sont connu de l'instituition. Il n'y a aucun moyen de créer de nouveaux utilisateurs dans l'application, sans passer par les processus standard de l'université.
+OSIS utilise le single-sign-on de l'UCL qui est integré avec le cadastre unique des utilisateurs informatique de l'université. L'application Internship hérite de ce mécanisme d'OSIS pour s'assurer que tous les accès soient connus de l'institution. Il n'y a aucun moyen de créer de nouveaux utilisateurs dans l'application, sans passer par les processus standard de l'université.
 
-===== L'authorisation
+===== L'autorisation
 
-L'authorisation est gérer par Django, qui organise les utilisateurs dans les groupes correspondent aux roles défini par l'application. Il y a deux rôles actuellment:
+L'autorisation est gérée par Django, qui organise les utilisateurs dans des groupes correspondant aux rôles définis par l'application. Il y a deux rôles actuellement:
 
-* *Gestionaire de stages*: il peut accèder les fonctionalités lié à la gestion de stages du coté OSIS Backoffice, mais pas à la partie de choix des stages du coté OSIS Frontoffice. L'accès au backoffice est limité au reseau UCL.
-* *Étudiant*: il peut accèder les fonctionalités lié aux choix des stages du coté OSIS Frontoffice, mais pas à la partie de gestion de stages du coté OSIS Backoffice. L'accès au frontoffice est integré au portail UCL, donc il est ouvert au monde exterieur.
+* *Gestionaire de stages*: il peut accéder aux fonctionnalités liées à la gestion des stages du côté du back office de OSIS, mais pas à la partie de choix des stages du coté front office de OSIS. L'accès au back office est limité au réseau de l'université.
+* *Étudiant*: il peut accéder aux fonctionnalités liées aux choix des stages du coté front office de OSIS, mais pas à la partie de gestion des stages du coté back office de OSIS. L'accès au front office est intégré au portail de l'université, il est donc ouvert au monde extérieur.
 
 ==== Déploiement
 
