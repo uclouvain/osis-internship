@@ -295,6 +295,12 @@ msgstr "Sélectionnable par l'étudiant"
 msgid "speciality"
 msgstr "Spécialité"
 
+msgid "speciality_deleted"
+msgstr "Specialité supprimée"
+
+msgid "speciality_saved"
+msgstr "Specialité enregistrée avec succès"
+
 msgid "specialty"
 msgstr "Spécialité"
 
