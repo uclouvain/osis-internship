@@ -7,12 +7,24 @@
     <li><a href="{% url 'internship' %}">{% trans 'internships_managment' %}</a></li>
     <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></li>
 
-    <li class="active">{% trans 'internships' %}</li>
+    <li class="active">{% trans 'internships_modalities' %}</li>
 {% endblock %}
 
 {% block content %}
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div{% if message.tags %} class="alert {{ message.tags }}"{% endif %}>
+                    <span>{{ message }}</span>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
     <div class="page-header">
-        <h2>{% trans 'internships' %}</h2>
+        <h2>{% trans 'internships_modalities' %}</h2>
     </div>
 
     <div class="panel panel-default">
@@ -22,7 +34,7 @@
                     <a href="{% url 'internship-new' cohort_id=cohort.id %}" id="lnk_internship_create"
                        class="btn btn-default" role="button" title="Create an internship">
                         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                        {% trans 'add' %}
+                        {% trans 'add_internship_modality' %}
                     </a>
                 </div>
             </div>
@@ -48,10 +60,13 @@
                                 <td>{{ internship.position }}</td>
                                 <td align="right">
                                     <a class="btn btn-warning" id="lnk_internship_edit"
-                                       href="{% url 'internship-edit' cohort_id=internship.cohort.id internship_id=internship.id %}"><span class="glyphicon glyphicon-pencil" aria-hidden="true" />
+                                       href="{% url 'internship-edit' cohort_id=internship.cohort.id internship_id=internship.id %}">
+                                        <span class="glyphicon glyphicon-pencil" aria-hidden="true" />
                                     </a>
-                                    <a class="btn btn-warning" id="lnk_internship_delete"
-                                       href="{% url 'internship-delete' cohort_id=internship.cohort.id internship_id=internship.id %}"><span class="glyphicon glyphicon-trash" aria-hidden="true" />
+                                    <a class="btn btn-danger" id="lnk_internship_delete"
+                                       data-href="{% url 'internship-delete' cohort_id=internship.cohort.id internship_id=internship.id %}"
+                                       data-toggle="modal" data-target="#delete_modal">
+                                        <span class="glyphicon glyphicon-trash" aria-hidden="true" />
                                     </a>
                                 </td>
                             </tr>
@@ -62,4 +77,27 @@
             </div>
         </div>
     </div>
+    <!-- Delete ConfirmationModal - to be moved-->
+    <div class="modal fade" id="delete_modal" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-body">
+            {% trans 'are_you_sure' %}
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">{% trans 'cancel' %}</button>
+            <a id="btn-ok" type="button" class="btn btn-danger">{% trans 'delete' %}</a>
+          </div>
+        </div>
+      </div>
+    </div>
+{% endblock %}
+
+<!-- Delete href Script - to be moved -->
+{% block script %}
+    <script>
+        $('#delete_modal').on('show.bs.modal', (e) => {
+            $('#btn-ok').attr('href', $(e.relatedTarget).data('href'));
+        });
+    </script>
 {% endblock %}

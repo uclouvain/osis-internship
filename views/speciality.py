@@ -28,7 +28,7 @@ from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
-from django.utils.translation import gettext
+from django.utils.translation import ugettext_lazy as _
 
 
 from internship import models as mdl
@@ -82,7 +82,7 @@ def speciality_save(request, cohort_id, speciality_id):
     speciality.selectable = selectable
 
     speciality.save()
-    messages.add_message(request, messages.SUCCESS, gettext('speciality_saved') + ' : '+speciality.name, "alert-success")
+    messages.add_message(request, messages.SUCCESS, _('speciality_saved') + ' : '+speciality.name, "alert-success")
     return HttpResponseRedirect(reverse('internships_specialities', kwargs={'cohort_id': cohort.id,}))
 
 
@@ -108,5 +108,5 @@ def speciality_delete(request, cohort_id, speciality_id):
     cohort = get_object_or_404(mdl.cohort.Cohort, pk=cohort_id)
     speciality = get_object_or_404(mdl.internship_speciality.InternshipSpeciality, pk=speciality_id)
     mdl.internship_speciality.InternshipSpeciality.objects.filter(pk=speciality_id, cohort_id=cohort_id).delete()
-    messages.add_message(request, messages.ERROR, gettext('speciality_deleted') + ' : ' +speciality.name, "alert-danger")
+    messages.add_message(request, messages.ERROR, _('speciality_deleted') + ' : ' +speciality.name, "alert-danger")
     return HttpResponseRedirect(reverse('internships_specialities', kwargs={'cohort_id': cohort.id,}))

@@ -23,10 +23,13 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
+from django.utils.translation import ugettext_lazy as _
+
 
 from internship import models as mdl_internship
 from internship.forms.period_form import PeriodForm
@@ -60,7 +63,6 @@ def period_save(request, cohort_id, period_id):
     period = get_object_or_404(Period, pk=period_id, cohort_id=cohort_id)
     form = PeriodForm(data=request.POST, instance=period)
     form.save()
-
     kwargs = {
         'cohort_id': cohort.id
     }
@@ -75,6 +77,7 @@ def period_new(request, cohort_id):
     period.cohort = cohort
     form = PeriodForm(data=request.POST, instance=period)
     form.save()
+    messages.add_message(request, messages.SUCCESS, _('period_saved') + ' : ' + period.name, "alert-success")
     kwargs = {
         'cohort_id': cohort.id
     }
@@ -87,6 +90,7 @@ def period_delete(request, cohort_id, period_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
     period = get_object_or_404(Period, pk=period_id, cohort__id=cohort_id)
     period.delete()
+    messages.add_message(request, messages.ERROR, _('period_delete') + ' : ' +period.name, "alert-danger")
     kwargs = {
         'cohort_id': cohort.id
     }

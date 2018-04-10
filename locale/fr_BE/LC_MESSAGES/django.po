@@ -28,6 +28,9 @@ msgstr "Ajouter"
 msgid "add_a_hospital"
 msgstr "Ajouter un hôpital"
 
+msgid "add_internship_modality"
+msgstr "Ajouter une modalité de stage"
+
 msgid "add_period"
 msgstr "Ajouter une période"
 
@@ -184,6 +187,15 @@ msgstr "Les sélections de stage sont bloquées actuellement."
 msgid "internship_choice"
 msgstr "Choix de stage"
 
+msgid "internship_delete"
+msgstr "Modalité de stage supprimée"
+
+msgid "internship_modality"
+msgstr "Modalité de stage"
+
+msgid "internship_saved"
+msgstr "Modalité de stage créée"
+
 msgid "internship"
 msgstr "Stage"
 
@@ -192,6 +204,9 @@ msgstr "Modification du stage"
 
 msgid "internships"
 msgstr "Stages"
+
+msgid "internships_modalities"
+msgstr "Modalités de stage"
 
 msgid "internships_injection"
 msgstr "Injection des stages"
@@ -252,6 +267,12 @@ msgstr "Période"
 
 msgid "period_creation"
 msgstr "Créer une période"
+
+msgid "period_delete"
+msgstr "Période supprimée"
+
+msgid "period_saved"
+msgstr "Période créée"
 
 msgid "periods"
 msgstr "Périodes"
