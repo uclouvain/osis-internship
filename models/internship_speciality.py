@@ -36,7 +36,7 @@ class InternshipSpecialityAdmin(SerializableModelAdmin):
 
 class InternshipSpeciality(SerializableModel):
     name = models.CharField(max_length=125)
-    acronym = models.CharField(max_length=125)
+    acronym = models.CharField(max_length=125, unique=True)
     mandatory = models.BooleanField(default=False)
     sequence = models.IntegerField(blank=True, null=True)
     cohort = models.ForeignKey('internship.cohort', on_delete=models.CASCADE)
