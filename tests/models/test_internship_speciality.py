@@ -36,14 +36,20 @@ def create_speciality(name="chirurgie", cohort=None):
     return SpecialtyFactory(name=name, cohort=cohort)
 
 
-class TestGetById(TestCase):
+class TestInternshipSpeciality(TestCase):
     def setUp(self):
-        self.speciality_1 = create_speciality(name="spe1")
-        self.speciality_2 = create_speciality(name="spe2")
+        self.specialty_1 = create_speciality(name="spe1")
+        self.specialty_2 = create_speciality(name="spe2")
 
     def test_correct_id(self):
-        self.assertEqual(self.speciality_1,
-                         mdl_internship_speciality.get_by_id(self.speciality_1.id))
-        self.assertEqual(self.speciality_2,
-                         mdl_internship_speciality.get_by_id(self.speciality_2.id))
+        self.assertEqual(self.specialty_1,
+                         mdl_internship_speciality.get_by_id(self.specialty_1.id))
+        self.assertEqual(self.specialty_2,
+                         mdl_internship_speciality.get_by_id(self.specialty_2.id))
 
+    def test_acronym_exists(self):
+        cohort = CohortFactory()
+        SpecialtyFactory(cohort=cohort, name="Test1", acronym="TE")
+        self.assertTrue(mdl_internship_speciality.acronym_exists(cohort, "TE"))
+        self.assertTrue(mdl_internship_speciality.acronym_exists(cohort, "Te"))
+        self.assertTrue(mdl_internship_speciality.acronym_exists(cohort, "te"))

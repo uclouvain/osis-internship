@@ -25,11 +25,12 @@
 ##############################################################################
 from django.contrib.auth.models import Permission, User
 from django.core.urlresolvers import reverse
-from django.test import TestCase
+from django.test import TestCase, RequestFactory
 
 from internship.models.internship_speciality import InternshipSpeciality
 from internship.tests.factories.cohort import CohortFactory
 from internship.tests.factories.speciality import SpecialtyFactory
+from internship.views import speciality as view_speciality
 
 
 class SpecialityViewTestCase(TestCase):
@@ -111,12 +112,31 @@ class SpecialityViewTestCase(TestCase):
             'acronym': speciality.acronym,
             'sequence': ""
         })
+
         self.assertRedirects(response, reverse('internships_specialities', kwargs={
             'cohort_id': self.cohort.id,
         }))
 
     def test_save(self):
-        speciality = SpecialtyFactory(name='SUPERMAN', cohort=self.cohort)
+        # speciality = SpecialtyFactory(name='BATMAN', cohort=self.cohort)
+        #
+        url = reverse('speciality_save', kwargs={
+            'cohort_id': self.cohort.id,
+            'speciality_id': 1,
+        })
+        #
+        response = self.client.post(url, data={
+            'mandatory': False,
+            'name': "TEST",
+            'acronym': "TE",
+            'sequence': "1"
+        })
+
+        self.assertRedirects(response, reverse('internships_specialities', kwargs={'cohort_id': self.cohort.id,}))
+
+        
+    def test_duplicate(self):
+        speciality = SpecialtyFactory(name='TEST', cohort=self.cohort)
 
         url = reverse('speciality_save', kwargs={
             'cohort_id': self.cohort.id,
@@ -125,11 +145,10 @@ class SpecialityViewTestCase(TestCase):
 
         response = self.client.post(url, data={
             'mandatory': speciality.mandatory,
-            'name': 'DEMO',
+            'name': speciality.name,
             'acronym': speciality.acronym,
             'sequence': ""
         })
 
-        self.assertRedirects(response, reverse('internships_specialities', kwargs={
-            'cohort_id': self.cohort.id,
-        }))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'speciality_form.html')
