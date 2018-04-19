@@ -33,6 +33,7 @@ from internship.tests.factories.speciality import SpecialtyFactory
 from internship.views import speciality as view_speciality
 
 
+
 class SpecialityViewTestCase(TestCase):
     def setUp(self):
         self.user = User.objects.create_user('demo', 'demo@demo.org', 'passtest')
@@ -117,38 +118,47 @@ class SpecialityViewTestCase(TestCase):
             'cohort_id': self.cohort.id,
         }))
 
-    def test_save(self):
-        # speciality = SpecialtyFactory(name='BATMAN', cohort=self.cohort)
-        #
+    def test_save_unique_specialty(self):
         url = reverse('speciality_save', kwargs={
             'cohort_id': self.cohort.id,
             'speciality_id': 1,
         })
-        #
-        response = self.client.post(url, data={
+
+        specialty = {
             'mandatory': False,
             'name': "TEST",
             'acronym': "TE",
             'sequence': "1"
-        })
+        }
+
+        response = self.client.post(url, data=specialty)
 
         self.assertRedirects(response, reverse('internships_specialities', kwargs={'cohort_id': self.cohort.id,}))
 
-        
-    def test_duplicate(self):
-        speciality = SpecialtyFactory(name='TEST', cohort=self.cohort)
+        messages = list(response.wsgi_request._messages)
+        self.assertEqual(messages[0].level_tag, "success")
+        self.assertIn(specialty['name'], messages[0].message)
+
+    def test_save_with_duplicate_acronym(self):
+        specialty = SpecialtyFactory(name='TEST', cohort=self.cohort)
 
         url = reverse('speciality_save', kwargs={
             'cohort_id': self.cohort.id,
-            'speciality_id': speciality.id,
+            'speciality_id': specialty.id,
         })
 
-        response = self.client.post(url, data={
-            'mandatory': speciality.mandatory,
-            'name': speciality.name,
-            'acronym': speciality.acronym,
-            'sequence': ""
-        })
+        specialty_with_same_acronym = {
+            'mandatory': False,
+            'name': "TEST-2",
+            'acronym': specialty.acronym,
+            'sequence': "1"
+        }
+
+        response = self.client.post(url, data=specialty_with_same_acronym)
 
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'speciality_form.html')
+
+        messages = list(response.wsgi_request._messages)
+        self.assertEqual(messages[0].level_tag, "error")
+        self.assertIn(specialty.acronym, messages[0].message)
