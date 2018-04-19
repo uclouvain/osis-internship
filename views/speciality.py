@@ -108,5 +108,5 @@ def speciality_delete(request, cohort_id, speciality_id):
     cohort = get_object_or_404(mdl.cohort.Cohort, pk=cohort_id)
     speciality = get_object_or_404(mdl.internship_speciality.InternshipSpeciality, pk=speciality_id)
     mdl.internship_speciality.InternshipSpeciality.objects.filter(pk=speciality_id, cohort_id=cohort_id).delete()
-    messages.add_message(request, messages.ERROR, _('speciality_deleted') + ' : ' +speciality.name, "alert-danger")
+    messages.add_message(request, messages.SUCCESS, _('speciality_deleted') + ' : ' +speciality.name, "alert-success")
     return HttpResponseRedirect(reverse('internships_specialities', kwargs={'cohort_id': cohort.id,}))

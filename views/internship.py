@@ -203,7 +203,7 @@ def internship_edit(request, cohort_id, internship_id):
 def internship_delete(request, cohort_id, internship_id):
     inter = get_object_or_404(mdl_int.internship.Internship, pk=internship_id, cohort_id=cohort_id)
     inter.delete()
-    messages.add_message(request, messages.ERROR, _('internship_delete') + ' : ' +inter.name, "alert-danger")
+    messages.add_message(request, messages.SUCCESS, _('internship_delete') + ' : ' +inter.name, "alert-success")
     return redirect(reverse('internship-list', kwargs={
         'cohort_id': cohort_id,
     }))

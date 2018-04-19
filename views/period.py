@@ -90,7 +90,7 @@ def period_delete(request, cohort_id, period_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
     period = get_object_or_404(Period, pk=period_id, cohort__id=cohort_id)
     period.delete()
-    messages.add_message(request, messages.ERROR, _('period_delete') + ' : ' +period.name, "alert-danger")
+    messages.add_message(request, messages.SUCCESS, _('period_delete') + ' : ' +period.name, "alert-success")
     kwargs = {
         'cohort_id': cohort.id
     }
