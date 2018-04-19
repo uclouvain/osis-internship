@@ -34,6 +34,18 @@
 {% endblock %}
 
 {% block content %}
+{% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+            <div{% if message.tags %} class="alert {{ message.tags }}"{% endif %}>
+                <span>{{ message }}</span>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
     <div class="page-header">
         <h2>{% trans 'speciality' %}</h2>
     </div>

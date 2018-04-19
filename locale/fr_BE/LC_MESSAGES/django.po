@@ -316,6 +316,9 @@ msgstr "Sélectionnable par l'étudiant"
 msgid "speciality"
 msgstr "Spécialité"
 
+msgid "speciality_acronym_exists"
+msgstr "Sigle déjà existant"
+
 msgid "speciality_deleted"
 msgstr "Specialité supprimée"
 
