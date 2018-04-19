@@ -45,15 +45,16 @@ def specialities(request, cohort_id):
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
-def speciality_create(request, cohort_id, **kwargs):
+def speciality_create(request, cohort_id, speciality=None):
     cohort = get_object_or_404(mdl.cohort.Cohort, pk=cohort_id)
-    return render(request, "speciality_form.html", {'cohort': cohort, 'speciality': kwargs.get("speciality")})
+    return render(request, "speciality_form.html", {'cohort': cohort, 'speciality': speciality})
 
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def speciality_save(request, cohort_id, speciality_id):
     cohort = get_object_or_404(mdl.cohort.Cohort, pk=cohort_id)
+
     if speciality_id:
         check_speciality = mdl.internship_speciality.InternshipSpeciality.objects.filter(pk=speciality_id,
                                                                                          cohort=cohort).exists()
@@ -66,7 +67,7 @@ def speciality_save(request, cohort_id, speciality_id):
 
     speciality.name = request.POST.get('name')
     speciality.acronym = request.POST.get('acronym')
-    check_acronym = mdl.internship_speciality.InternshipSpeciality.objects.filter(acronym=speciality.acronym).exists()
+    check_acronym = mdl.internship_speciality.acronym_exists(cohort, speciality.acronym)
 
     if request.POST.get('sequence').strip():
         speciality.sequence = int(request.POST.get('sequence'))
@@ -84,11 +85,13 @@ def speciality_save(request, cohort_id, speciality_id):
     speciality.selectable = selectable
 
     if check_acronym:
-        messages.add_message(request, messages.ERROR, _('speciality_acronym_exists') + ' : '+speciality.acronym, "alert-danger")
-        return speciality_create(request, cohort_id, speciality=speciality)
+        messages.add_message(request, messages.ERROR, "{} : {}".format(_('speciality_acronym_exists'),
+                                                                       speciality.acronym), "alert-danger")
+        return speciality_create(request, cohort.id, speciality)
 
     speciality.save()
-    messages.add_message(request, messages.SUCCESS, _('speciality_saved') + ' : '+speciality.name, "alert-success")
+    messages.add_message(request, messages.SUCCESS, "{} : {}".format(_('speciality_saved'),
+                                                                     speciality.name), "alert-success")
     return HttpResponseRedirect(reverse('internships_specialities', kwargs={'cohort_id': cohort.id,}))
 
 
@@ -114,5 +117,5 @@ def speciality_delete(request, cohort_id, speciality_id):
     cohort = get_object_or_404(mdl.cohort.Cohort, pk=cohort_id)
     speciality = get_object_or_404(mdl.internship_speciality.InternshipSpeciality, pk=speciality_id)
     mdl.internship_speciality.InternshipSpeciality.objects.filter(pk=speciality_id, cohort_id=cohort_id).delete()
-    messages.add_message(request, messages.ERROR, _('speciality_deleted') + ' : ' +speciality.name, "alert-danger")
+    messages.add_message(request, messages.ERROR, _('speciality_deleted') + ' : ' + speciality.name, "alert-danger")
     return HttpResponseRedirect(reverse('internships_specialities', kwargs={'cohort_id': cohort.id,}))

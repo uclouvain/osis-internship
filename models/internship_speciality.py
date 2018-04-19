@@ -36,7 +36,7 @@ class InternshipSpecialityAdmin(SerializableModelAdmin):
 
 class InternshipSpeciality(SerializableModel):
     name = models.CharField(max_length=125)
-    acronym = models.CharField(max_length=125, unique=True)
+    acronym = models.CharField(max_length=125)
     mandatory = models.BooleanField(default=False)
     sequence = models.IntegerField(blank=True, null=True)
     cohort = models.ForeignKey('internship.cohort', on_delete=models.CASCADE)
@@ -67,6 +67,10 @@ def find_by_cohort(cohort):
 
 def find_by_acronym(cohort, acronym):
     return InternshipSpeciality.objects.filter(cohort=cohort).filter(acronym=acronym)
+
+
+def acronym_exists(cohort, acronym):
+    return InternshipSpeciality.objects.filter(cohort=cohort, acronym__iexact=acronym).exists()
 
 
 def find_non_mandatory():
