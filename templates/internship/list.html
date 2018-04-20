@@ -11,18 +11,9 @@
 {% endblock %}
 
 {% block content %}
-    {% if messages %}
-        <div class="messages">
-            {% for message in messages %}
-                <div{% if message.tags %} class="alert {{ message.tags }}"{% endif %}>
-                    <span>{{ message }}</span>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-            {% endfor %}
-        </div>
-    {% endif %}
+
+    {% include "template_messages.html" %}
+
     <div class="page-header">
         <h2>{% trans 'internships_modalities' %}</h2>
     </div>
@@ -77,27 +68,9 @@
             </div>
         </div>
     </div>
-    <!-- Delete ConfirmationModal - to be moved-->
-    <div class="modal fade" id="delete_modal" tabindex="-1" role="dialog" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-body">
-            {% trans 'are_you_sure' %}
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">{% trans 'cancel' %}</button>
-            <a id="btn-ok" type="button" class="btn btn-danger">{% trans 'delete' %}</a>
-          </div>
-        </div>
-      </div>
-    </div>
+    {% include "fragment/delete_confirmation_modal.html" %}
 {% endblock %}
 
-<!-- Delete href Script - to be moved -->
 {% block script %}
-    <script>
-        $('#delete_modal').on('show.bs.modal', (e) => {
-            $('#btn-ok').attr('href', $(e.relatedTarget).data('href'));
-        });
-    </script>
+    <script type="text/javascript" src="{% static "js/internship.js" %}?version={{ js }}"></script>
 {% endblock %}
