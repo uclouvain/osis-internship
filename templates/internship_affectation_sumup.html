@@ -1,5 +1,8 @@
 {% extends "layout.html" %}
 {% load staticfiles %}
+    {% block header %}
+        <link href="{% static 'css/internship_style.css' %}" rel="stylesheet" type="text/css" >
+    {% endblock %}
 {% load i18n %}
 
 {% comment "License" %}
@@ -39,11 +42,17 @@
     </div>
     <div class="panel panel-default">
         <div class="panel-body">
-            <ul class="nav nav-tabs">
-                {% for speciality in specialities %}
-                    <li {% if forloop.first %}class="active"{% endif %}><a data-toggle="tab" href="#tab_{{speciality.tab}}">{{speciality.name}}</a></li>
+            <!-- Single button -->
+            <div class="btn-group">
+              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                {% with specialities|first as first_tab %}{{ first_tab.name }}{% endwith %} <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu scrollable-menu">
+               {% for speciality in specialities %}
+                    <li><a data-toggle="tab" href="#tab_{{speciality.tab}}">{{speciality.name}}</a></li>
                 {% endfor %}
-            </ul>
+              </ul>
+            </div>
             <div class="tab-content">
                 {% for speciality in specialities %}
                     <div id="tab_{{speciality.tab}}" class="tab-pane fade {% if forloop.first %}in active{% endif %}">
@@ -92,4 +101,8 @@
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block script %}
+    <script type="text/javascript" src="{% static "js/internship.js" %}?version={{ js }}"></script>
 {% endblock %}
