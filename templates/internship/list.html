@@ -56,7 +56,8 @@
                                     </a>
                                     <a class="btn btn-danger" id="lnk_internship_delete"
                                        data-href="{% url 'internship-delete' cohort_id=internship.cohort.id internship_id=internship.id %}"
-                                       data-toggle="modal" data-target="#delete_modal">
+                                       data-toggle="modal" data-target="#delete_modal"
+                                       data-value="{{internship.name}}">
                                         <span class="glyphicon glyphicon-trash" aria-hidden="true" />
                                     </a>
                                 </td>

@@ -93,7 +93,8 @@
                                 </a>
                                 <a class="btn btn-danger internship_btn_delete" id="lnk_speciality_{{ speciality.id }}"
                                    data-href="{% url 'speciality_delete' cohort_id=cohort.id speciality_id=speciality.id %}"
-                                   data-toggle="modal" data-target="#delete_modal">
+                                   data-toggle="modal" data-target="#delete_modal"
+                                   data-value="{{speciality.name}} ({{speciality.acronym}})">
                                     <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                                 </a>
                             </td>

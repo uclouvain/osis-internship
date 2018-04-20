@@ -76,7 +76,8 @@
                                 </a>
                                 <a class="btn btn-danger" id="lnk_speciality_{{speciality.id}}"
                                    data-href="{% url 'period_delete' cohort_id=cohort.id period_id=period.id %}"
-                                   data-toggle="modal" data-target="#delete_modal">
+                                   data-toggle="modal" data-target="#delete_modal"
+                                   data-value="{{period.name}}">
                                     <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                                 </a>
                             </td>
