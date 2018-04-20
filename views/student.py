@@ -280,8 +280,7 @@ def student_save_affectation_modification(request, cohort_id, student_id):
                 if internships[num_period]:
                     internship = mdl_int.internship.get_by_id(internships[num_period])
                 affectation = mdl_int.internship_student_affectation_stat.build(student, organization, specialty,
-                                                                                period, internship,
-                                                                                student_choices)
+                                                                                period, internship, student_choices)
                 affectation.save()
 
         redirect_url = reverse('internships_student_read', kwargs={"cohort_id": cohort.id, "student_id": student.id})

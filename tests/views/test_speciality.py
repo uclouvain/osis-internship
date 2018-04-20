@@ -42,7 +42,6 @@ class SpecialityViewTestCase(TestCase):
         self.cohort = CohortFactory()
 
     def test_home(self):
-
         url = reverse('internships_specialities', kwargs={
             'cohort_id': self.cohort.id,
         })

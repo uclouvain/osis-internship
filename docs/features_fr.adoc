@@ -1,23 +1,23 @@
-== Les functionalités
+== Les fonctionnalités
 
 === L'affectation des stages
 
 Chaque année des étudiants de la faculté de médecine doivent effectuer 12 périodes de stages (1 période par mois). Les stages sont divisés en 2 catégories:
 
-1. *Stages obligatoires*: des spécialités imposées à tous les étudiants avec un nombre de périodes (table 1). Les stages se déroulent dans la première partie de l'année, suivis par les stages au choix.
+1. *Stages obligatoires*: des spécialités imposées à tous les étudiants avec des périodes de un à deux mois.
 
-2. *Stages au choix*: des spécialités au choix limités à 1 mois par specialité. L'étudiant peut choisir 4 fois la même spécialité ou 4 spécialités différentes. Les stages se déroulent a la fin d'année. La priorité est donnée aux étudiants qui présentent un concours dans la spécialité choisie pour le stage au choix. L'information concernant la spécialité du concours est fournie par l'étudiant au moment de l'inscription.
+2. *Stages au choix*: des spécialités au choix limités à 1 mois par spécialité. L'étudiant peut choisir 4 fois la même spécialité ou 4 spécialités différentes. La priorité est donnée aux étudiants qui présentent un concours dans la spécialité choisie pour le stage au choix. L'information concernant la spécialité du concours est fournie par l'étudiant au moment de l'inscription. Seulement 2 stages au choix sont prise en consideration pendant l'affectation. Les autres 2 choix sont des sauvegardes pour le cas ou il n'y a plus de places disponibles.
 
 Voici le tableau qui montre un example des stages et leurs périodes respectives.
 
-.Répartition des stages
+.Exemple de répartition des stages
 |===
 |Spécialité |Périodes
 
-|Médecine interne (MI)
+|Médecine interne (MI) 2 mois
 |P1, P2
 
-|Urgence (UR)
+|Urgence (UR) 2 mois
 |P3, P4
 
 |Chirurgie (CH)
@@ -29,30 +29,36 @@ Voici le tableau qui montre un example des stages et leurs périodes respectives
 |Pédiatrie (PE)
 |P7
 
-|Stages au choix (peuvent être dans la même spécialité)
-|P8, P9, P10, P11
+|Médecine interne 1 mois
+|P8
+
+|Gériatrie
+|P9
+
+|Stages au choix
+|P10, P11
 |===
 
-Pour affecter les étudiants aux differents stages offert par les hôpitaux dans les périodes bien determinés, la faculté suivre le processus suivant une fois par an, au debut de l'année, entre janvier et fevrier:
+Pour affecter les étudiants aux différents stages offert par les hôpitaux dans les périodes bien déterminés, la faculté suivre le processus suivant une fois par an, au debut de l'année, entre janvier et avril:
 
 image::images/internship-bp.png[Internship Business Process]
 
 En plus d'expliquer le business de manière explicite, le processus nous aide également à identifier les rôles et les tâches dont ils sont responsables. Avec cela, les autorisations peuvent être assignées correctement.
 
-Voici une description détaillée des tous les tâches du processus:
+Voici une description détaillée des tous les tâches du processus.
 
 [#creation_cohort]
 ==== Création d'une cohorte
 
-La *Cohorte* est utilisé pour définir la période annuel d'organisation des stages. Cette période ne coïncide pas avec l'année académique et ça gestion est tout à fait spécifique au domaine des stages de médecine.
+La *Cohorte* est utilisé pour définir la période annuel d'organisation des stages. Cette période ne coïncide pas avec l'année académique et ça gestion est tout à fait spécifique au domaine des stages de médecine. Elle est crée un an a l'avance pour être bien planifié.
 
 La création d'une cohorte est le premier pas ver l'affectation des stages. Presque toutes les données sont liées à cela. À cette étape le gestionnaire des stages va créer une cohorte avec des informations comme demandé dans le formulaire suivant.
 
 image::images/cohort-creation.png[Création de cohort]
 
-Les dates d'ouverture et de fermeture permetre le controle d'accès aux inscriptions aux stages par les étudiants matriculés. La date de fermeture est toujour plus grand où egale a la date d'ouverture. La date de publication, qui est plus grand que la date de fermeture des inscriptions, permettre montrer les données des affectations aux étudiants.
+Les dates d'ouverture et de fermeture permettre le contrôle d'accès aux inscriptions aux stages par les étudiants matriculés. La date de fermeture est toujours plus grand où égale a la date d'ouverture. La date de publication, qui est plus grand que la date de fermeture des inscriptions, permettre montrer les données des affectations aux étudiants. Après la date de publication, c'est ne plus possible d'affecter les étudiants automatiquement.
 
-Le gestionnaire a l'option de créer une cohorte à partir d'une cohorte existant. Cela lui permettre de réutiliser une bonne partie de les données disponibles. Les données réutilisés sont les hôpitaux, les spécialités, les périodes, les types de stages et les maîtres de stages.
+Le gestionnaire a l'option de créer une cohorte à partir d'une cohorte existant. Cela lui permettre de réutiliser une bonne partie de les données disponibles. Les données réutilisés sont les hôpitaux, les spécialités, les périodes, les modalités de stages et les maîtres de stages.
 
 [#import/students]
 ==== Importation des étudiants
@@ -63,20 +69,20 @@ image::images/students-empty.png[Pas d'étudiant dans la cohorte]
 
 L'importation des étudiants est disponible dans la page de consultation des étudiants. En cliquant sur le bouton "Importer", une fenêtre modal s'ouvre pour permettre la sélection du fichier Excel (xlsx) disponible sur la machine de l'utilisateur. Après la sélection, cliquez sur le bouton "Importer" en bleu pour démarrer l'importation. Le temps d'importation depend du nombre d'étudiants dans le fichier à importer.
 
-WARNING: la reimportation des étudiants ira dissocier tous les étudiants existants de la cohorte, les inserés à la main inclus. La liste d'étudiants sera equivalent aux données du fichier dernierment importé. Après la premier importation, c'est recomendé de maintenir les données des étudiants via les fonctionnalités disponible dans l'application.
-
 image::images/students-import.png[Importation des étudiants]
 
-[NOTE]
-====
-C'est important d'importer un fichier en format `xlsx`. L'application n'est pas compatible avec le format `xls`. Pour avoir un fichier `xlsx` à partir d'un fichier `xls`, vous pouvez ouvrir le ficher `xls` en Excel et _Enregistrer sous_ le format `xlsx` en sélectionnant l'option _Classeur Excel_, qui est la premier dans la liste.
+C'est important d'importer un fichier en format `xlsx` parce que l'application n'est pas compatible avec le format `xls`. Pour avoir un fichier `xlsx` à partir d'un fichier `xls`, vous pouvez ouvrir le ficher `xls` en Excel et _Enregistrer sous_ le format `xlsx` en sélectionnant l'option _Classeur Excel_, qui est la premier dans la liste.
 
 image::images/xls-to-xlsx.png[Convertion de xls vers xlsx]
-====
 
-Après l'importation, les étudiants apparaitrent dans la liste, comme illustré dans l'image suivante. C'est possible d'ajouter un nouveau étudiant an cliquant sur "Ajouter", visualiser et modifier un étudiant éxistant en cliquant sur le botton de la colonne "Détails", et modifier les choix fait par l'étudiant en cliquant sur le botton dans la colonne "Modification des choix".
+Après l'importation, les étudiants apparaissent dans la liste, comme illustré dans l'image suivante. C'est possible d'ajouter un nouveau étudiant an cliquant sur "Ajouter". C'est également possible de visualiser et modifier un étudiant existant en cliquant sur le bottom de la colonne "Détails". Plus tard dans le processus, c'est possible de modifier les choix fait par l'étudiant en cliquant sur le bottom dans la colonne "Modification des choix".
 
 image::images/students-imported.png[Les étudiants importés dans la cohorte]
+
+[WARNING]
+====
+La réimportation des étudiants ira dissocier tous les étudiants existants de la cohorte, sauf les insérés à la main. Après la premier importation, c'est recommandé de maintenir les données des étudiants via les fonctionnalités disponible dans l'application.
+====
 
 ==== Importation des offres de stages
 
@@ -84,63 +90,65 @@ Les offres de stages (la quantité de places disponibles dans chaque hôpital po
 
 image::images/offers-import.png[Importation des offres de stage]
 
-En cas de changement de la quantité des places disponibles, les modifications sont faites dans le même fichier Excel et réimporté dans l'application sans risque de duplication de données. En option, les quantités peuvent être modifiés directement dans l'application, mais en cas de réimportation du fichier Excel les données modifiés manuellement seront écrasés.
+En cas de changement de la quantité des places disponibles, les modifications sont faites dans le même fichier Excel et réimportés dans l'application. En option, les quantités peuvent être modifiés directement dans l'application, mais en cas de réimportation du fichier Excel les données modifiés manuellement seront écrasés.
 
-NOTE: Malgré l'ordre d'importation de données afficher dans le processus et documenté dans les section 1.2 et 1.3, les étudiants et les offres peuvent être importé n'importe en quel ordre, parce que les données ne sont pas initialement associés. Ils seront seulement après les choix et les affectations des étudiants. 
+image::images/spreadsheet-places.png[Le fichier Excel avec des places disponibles]
+
+NOTE: Malgré l'ordre d'importation de données afficher dans le processus et documenté dans les sections 1.1.2 et 1.1.3, les étudiants et les offres peuvent être importé n'importe en quel ordre, parce que les données ne sont pas initialement associés. Ils seront associés seulement après les choix et les affectations des étudiants.
 
 ==== Définition des périodes, des hôpitaux et des stages
 
-Avec l'intention d'organiser la cohorte pour permettre le bon choix des étudiants est l'affectation en suite, le gestionnaire des stages s'occupe de déterminer les dates de debut et fin de la période des choix des stages et la date de début de publication des résultats.
+Avec l'intention d'organiser la cohorte pour permettre le bon choix des étudiants est l'affectation en suite, le gestionnaire des stages s'occupe de déterminer les dates de debut et fin de la période des choix des stages et la date de début de publication des résultats. Les dates sont déterminés dans l'écran d'édition de la cohorte.
 
-WARNING: Les quatre dernières tâches devraient se terminer avant la date de debut de la période de choix des stages.
+WARNING: Les quatre dernières tâches (1.1.1, 1.1.2, 1.1.3, 1.1.4) devraient se terminer avant la date de debut de la période de choix des stages.
 
 ==== Choix des stages obligatoires et au choix
 
-Precisement à la date de debut de la période de choix, l'application est ouvert aux étudiants de médecine qui devront faire leurs choix de stages. L'application reste ouvert jusqu'à la fin de la période. Pendant ce temps là, les étudiants pouvent changer librement leurs choix et le gestionaire des stages s'engage a n'est pas modifier les choix faits avant la fin de la période.
+Précisément à la date de debut de la période de choix, l'application est ouvert aux étudiants de médecine qui devront faire leurs choix de stages. L'application reste ouvert jusqu'à la fin de la période. Pendant ce temps là, les étudiants peuvent changer librement leurs choix et le gestionnaire de stages s'engage peux consulter les choix fait, mais pas  les modifier avant la fin de la période d'inscription.
 
-L'étudiant a accès a l'application seulement s'il: 
+L'étudiant a accès a l'application seulement s'il:
 
 * est régulièrement inscrit comme étudiant à l'université
 * a une compte utilisateur pour accéder le réseau et les services en ligne du portail
-* est régulièrement inscrit dans une des cohortes existants.
+* est régulièrement inscrit dans une des cohortes existantes.
 
-Lorsque l'étudiant se rendre sur la page d'accueil du portail, il a accès a une liste de fonctionnalités: le choix des stages, la liste des hôpitaux, le bilan de choix de stage et d'affectation finale.
-
-Sur le choix des stages, les onglets des différentes spécialités sont présenté.
+Lorsque l'étudiant se rendre sur la page d'accueil du portail, il a accès a une liste de fonctionnalités: le choix des stages, la liste des hôpitaux, le bilan de choix de stage et d'affectation finale. À cette étape, elle sélectionne le choix des stages ou les onglets des différentes spécialités sont présentés.
 
 image::images/choix-stages.png[Le choix des stages par l'étudiant]
 
-Pour les spécialités obligatoires, dans chacun de ces onglets se présentent plusieurs hôpitaux. L'étudiant doit effectuer 4 choix d'hôpital (du premier au 4ème choix). Une fois ces 4 choix faits dans chaque onglet, il faut cliquer sur le bouton "Soumettre" qui se trouve au bas de la page pour enregistrer les choix. Un erreur se produit si l'utilisateur fait plus de 4 choix ou deux fois le même choix.
+Pour les spécialités obligatoires, dans chacun de ces onglets se présentent plusieurs hôpitaux. L'étudiant doit effectuer 4 choix d'hôpital (du premier au 4ème choix selon sa ordre de préférence). Une fois ces 4 choix faits dans chaque onglet, il faut cliquer sur le bouton "Soumettre" qui se trouve au bas de la page pour enregistrer les choix. Un erreur se produit si l'utilisateur fait plus de 4 choix ou deux fois le même choix.
 
-Pour les stages au choix, c'est possible de faire 4 choix de spécialités. Une fois la spécialité choisie, l'application propose à l'étudiant les hôpitaux disponibles pour ce stage au choix. Les choix est limité à 4 choix d'hôpitaux. Si le système ne propose rien, c'est que cette spécialité n'est pas disponible. Si l'étudiant sélectionne un stage en médecine générale, il faut choisir l'hôpital "Médecine générale" en premier choix puisqu'il n'y a pas d'autre possibilité. Idem pour les spécialités où il n'existe qu'un hôpital. Ce "premier choix" concerne bien l'hôpital et pas la spécialité, la préférence de celle-ci étant déterminée par le numéro du stage au choix.
+Pour les stages au choix, c'est possible de faire 4 choix de spécialité. Pour chaque une, l'application propose à l'étudiant les hôpitaux disponibles pour ce stage au choix. Les choix sont limités à 4 hôpitaux. Si le système ne propose rien, c'est que cette spécialité n'est pas disponible. Si l'étudiant sélectionne un stage en médecine générale, il faut choisir l'hôpital "Médecine générale" en premier choix puisqu'il n'y a pas d'autre possibilité. Idem pour les spécialités où il n'existe qu'un hôpital. Ce "premier choix" concerne bien l'hôpital et pas la spécialité, la préférence de celle-ci étant déterminée par le numéro du stage au choix.
 
-Losque l'étudiant sélectionne un hôpital dans une spécialité, un compteur informe sur le nombre de places totales disponibles et le nombre d'étudiants ayant déjà choisi cet hôpital en premier choix. Plus la demande dépasse l'offre, plus la probabilité d'obtenir cette affectation est faible.
+Lorsque l'étudiant sélectionne un hôpital dans une spécialité, un compteur informe sur le nombre de places totales disponibles et le nombre d'étudiants ayant déjà choisi cet hôpital en premier choix. Plus la demande dépasse l'offre, plus la probabilité d'obtenir cette affectation est faible.
 
 ==== Affectation des stages aux étudiants prioritaires
 
-Affectation des étudiants reconnus par le service d'aide aux étudiants comme prioritaires. Cela donne une priorité adaptée au besoin particulaire de chaque étudiant, mais il n'y a pas d'assurance de recevoir les premiers choix (le plus souvent priorité pour les stages proches du domicile légal ou dans un hôpital avec logement).
+Une fois que les inscriptions sont fini, l'affectation des étudiants prioritaires commencent. Les étudiants sont reconnus comme prioritaires par le service d'aide aux étudiants. Cela donne une priorité adaptée au besoin particulaire de chaque étudiant, mais il n'y a pas d'assurance de recevoir les premiers choix. Le plus souvent, c'est de prioriser les stages proches du domicile légal ou dans un hôpital avec logement.
 
-L'etudiant devra faire les quatre choix de manière réfléchie et se présenter à la faculté dans un periode bien défini afin de discuter avec le secretariat les critères qui lui sont propres. Après cette discussion, le secretariat déterminera parmi le choix de l'étudiant celui ou ceux que l'application devra obligatoirement prendre en compte. Si les choix semblent non adaptés par rapport à la priorité de l'étudiant, alors le secretariat peut imposer un autre endroit de stage, mais toujours en adéquation avec le besoin de l'étudiant.
+L’étudiant devra faire les quatre choix de manière réfléchie et se présenter à la faculté dans un période bien défini afin de discuter avec le secretariat les critères qui lui sont propres. Après cette discussion, le secretariat déterminera parmi le choix de l'étudiant celui ou ceux que l'application devra obligatoirement prendre en compte. Le gestionnaire de stages reserve le droit d'imposer un stage selon les disponibilités réel, mais toujours en adéquation avec le besoin de l'étudiant.
+
+La date qui determine la fin de l'affectation aux étudiants prioritaires et les autres affectations n'est pas bien precise. Tout la partie des affectations se déroule après la date de fin des inscriptions e date de debut des publications.
 
 ==== Affectation des stages aux autres étudiants
 
-Pour les étudiants non-prioritaires, les affectations sont fait automatiquement par l'application. L'algorithme essaye de trouver une solution optimale pour chaque étudiant en terme de spécialité et période. Il y a de contrainte qu'impeche de toujours respecter le premier choix de tous les étudiants. Par exemple, si le nombre d'étudiants est plus grand que le nombre de places disponibles. Pour mieux satisfaire toutes les demandes des étudiants avec les offres limitées, nous essayons de trouver une solution avec le coût le plus faible possible et qui satisfait les différentes contraintes, tout en respectant le mieux possible les souhaits des étudiants.
+Pour les étudiants non-prioritaires, les affectations sont fait automatiquement par l'application. Un algorithme essaye de trouver une solution optimale pour chaque étudiant en terme de spécialité et période. Il y a de contrainte qui empêche de respecter le premier choix de tous les étudiants. Par exemple, si le nombre d'étudiants est plus grand que le nombre de places disponibles. Pour mieux satisfaire toutes les demandes des étudiants avec les offres limitées, nous essayons de trouver une solution avec le coût le plus faible possible et qui satisfait les différentes contraintes, tout en respectant le mieux possible les souhaits des étudiants.
 
 ==== Correction des stages avec problème d'affectation
 
-L'affectation automatique peux avoir de difficulté pour affecter certains étudiants à cause des contraints existants. Dans ce cas, les étudiants sont affecter à un faux hôpital pour être affecter correctement dans un deuxième moment.
+L'affectation automatique peux avoir de difficulté pour affecter certains étudiants à cause des limites de places disponibles dans les hôpitaux pour la spécialité. Dans ce cas, les étudiants sont affecter à un faux hôpital (hôpital erreur) pour être facilement identifiés pour une affectation manuel à la suite.
 
-La cause principale c'est l'absence de place disponible dans les hôpitaux. Dans ce cas, des nouvelles places sont crée en concertation avec les maîtres de stage.
+Le but de cette tache c'est de trouver une solution pour les étudiants avec problème d'affectation. Le gestionnaire de stages change manuellement les affectations existants.
 
 Tous les affectations devrons être faits avant la date de publication des résultats.
 
 ==== Publication des résultats
 
-Quand la date de publication des résultats, défini dans le cohorte, est arrivé, tous les resultats sons publiés en même temps sur le portail de l'université et disponibilizés pour les étudiants impliqués.
+Quand la date de publication des résultats, défini dans le cohorte, est arrivé, tous les résultats sons publiés en même temps sur le portail de l'université et mis à disposition des étudiants impliqués.
 
 ==== Consultation des résultats
 
-Les étudiants se connectent sur le portail UCL pour consulter les résultats des affectations. Les données sont disponible en mode lecture. En cas de correction ou de modification en général, une demande devra être fait au secretariat.
+Les étudiants se connectent sur le portail de l'université pour consulter les résultats des affectations. Les données sont disponible en mode lecture. En cas de correction ou de modification en général, une demande devra être fait au secretariat.
 
 === La gestion journalière
 
@@ -156,14 +164,14 @@ image::images/hospitals-view.png[La liste des hôpitaux]
 
 Dans l'écran de résultats de l'affectation il y a deux bottons pour la production de rapport:
 
-1. pour les mêtres de stage avec les affectations groupés par specialité et période.
+1. pour les mètres de stage avec les affectations groupés par spécialité et période.
 2. pour l'hôpital avec une liste des tous les affectation trié par période.
 
 image::images/hospital-affectation-results.png[Les rapports pour l'hôpital]
 
-Le rapport pour l'hôpital peux être configuré dans le formulaire de l'hôpital parce que chacun peux avoir un besoin different. 
+Le rapport pour l'hôpital peux être configuré dans le formulaire de l'hôpital parce que chacun peux avoir un besoin different.
 
-Il y a un champ númerique pour chaque donnée disponible pour les hôpitaux. Les champs contiennent la sequence dans lequel les données doivent être afficher. Les champs laissés vides sont ignorés.
+Il y a un champ numérique pour chaque donnée disponible pour les hôpitaux. Les champs contiennent la sequence dans lequel les données doivent être afficher. Les champs laissés vides sont ignorés.
 
 image::images/hospital-report-config.png[La configuration de rapport pour l'hôpital]
 

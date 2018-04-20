@@ -35,7 +35,7 @@ class InternshipStudentAffectationStatAdmin(SerializableModelAdmin):
                     'consecutive_month', 'type')
     fieldsets = ((None, {'fields': ('student', 'organization', 'speciality', 'period', 'internship', 'choice', 'cost',
                                     'consecutive_month', 'type')}),)
-    raw_id_fields = ('student', 'organization', 'speciality', 'period')
+    raw_id_fields = ('student', 'organization', 'speciality', 'period', 'internship')
     search_fields = ['student__person__first_name', 'student__person__last_name']
     list_filter = ('period__cohort', 'choice')
 
