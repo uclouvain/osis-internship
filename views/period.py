@@ -110,4 +110,4 @@ def period_get(request, cohort_id, period_id):
     }
     context = {'period': period, 'cohort': cohort, 'url_form': reverse('period_save', kwargs=kwargs)}
 
-    return render(request, "period_create.html", context=context)
+    return render(request, "period_create.html", context)
