@@ -69,6 +69,10 @@ def find_by_acronym(cohort, acronym):
     return InternshipSpeciality.objects.filter(cohort=cohort).filter(acronym=acronym)
 
 
+def acronym_exists(cohort, acronym):
+    return InternshipSpeciality.objects.filter(cohort=cohort, acronym__iexact=acronym).exists()
+
+
 def find_non_mandatory():
     return InternshipSpeciality.objects.filter(mandatory=False).order_by('acronym', 'name')
 

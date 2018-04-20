@@ -25,14 +25,17 @@
 ##############################################################################
 from collections import OrderedDict
 
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.urlresolvers import reverse
 from django.forms.formsets import formset_factory
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import get_object_or_404, redirect
 from django.utils.translation import ugettext_lazy as _
 from django.views.decorators.http import require_POST
 
 from base import models as mdl
+from base.views.layout import render
+
 from internship import models as mdl_int
 from internship.forms.form_offer_preference import OfferPreferenceForm, OfferPreferenceFormSet
 from internship.forms.form_select_speciality import SpecialityForm
@@ -159,7 +162,7 @@ def internship_new(request, cohort_id):
     form = InternshipForm(request.POST or None, instance=inter)
     if form.is_valid():
         form.save()
-
+        messages.add_message(request, messages.SUCCESS, "{} : {}".format(_('internship_saved'), inter.name), "alert-success")
         return redirect(reverse('internship-list', kwargs={
             'cohort_id': cohort.id,
         }))
@@ -200,8 +203,8 @@ def internship_edit(request, cohort_id, internship_id):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internship_delete(request, cohort_id, internship_id):
     inter = get_object_or_404(mdl_int.internship.Internship, pk=internship_id, cohort_id=cohort_id)
-
     inter.delete()
+    messages.add_message(request, messages.SUCCESS, "{} : {}".format(_('internship_delete'), inter.name), "alert-success")
     return redirect(reverse('internship-list', kwargs={
         'cohort_id': cohort_id,
     }))
