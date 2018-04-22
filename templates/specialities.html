@@ -33,6 +33,9 @@
     <li class="active">{% trans 'internships_specialities' %}</li>
 {% endblock %}
 {% block content %}
+
+    {% include "template_messages.html" %}
+
     <div class="page-header">
         <h2>{% trans 'internships_specialities' %}</h2>
     </div>
@@ -88,9 +91,12 @@
                                    href="{% url 'speciality_modification' cohort_id=cohort.id speciality_id=speciality.id %}">
                                     <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
                                 </a>
-                                <a class="btn btn-danger" id="lnk_speciality_{{ speciality.id }}"
-                                   href="{% url 'speciality_delete' cohort_id=cohort.id speciality_id=speciality.id %}">
+                                <a class="btn btn-danger internship_btn_delete" id="lnk_speciality_{{ speciality.id }}"
+                                   data-href="{% url 'speciality_delete' cohort_id=cohort.id speciality_id=speciality.id %}"
+                                   data-toggle="modal" data-target="#delete_modal"
+                                   data-value="{{speciality.name}} ({{speciality.acronym}})">
                                     <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                                </a>
                             </td>
                         </tr>
                     {%endfor%}
@@ -99,4 +105,9 @@
             </div>
         </div>
     </div>
+    {% include "fragment/delete_confirmation_modal.html" %}
+{% endblock %}
+
+{% block script %}
+    <script type="text/javascript" src="{% static "js/internship.js" %}?version={{ js }}"></script>
 {% endblock %}

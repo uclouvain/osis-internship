@@ -25,6 +25,12 @@ msgstr "Activate internship's selection"
 msgid "add"
 msgstr "Add"
 
+msgid "add_internship_modality"
+msgstr "Add internship modality"
+
+msgid "add_speciality"
+msgstr "Add a specialty"
+
 msgid "address"
 msgstr "Address"
 
@@ -178,6 +184,18 @@ msgstr "internships' selection are currently blocked."
 msgid "internship_choice"
 msgstr "internship's choices"
 
+msgid "internship_delete"
+msgstr "Internship modality deleted"
+
+msgid "internship_saved"
+msgstr "Internship modality created"
+
+msgid "internships_modalities"
+msgstr "Internships modalities"
+
+msgid "internship_modality"
+msgstr "Internship modality"
+
 msgid "internship_modification"
 msgstr "Internship modification"
 
@@ -250,6 +268,12 @@ msgstr "Period"
 msgid "period_creation"
 msgstr "Create a period"
 
+msgid "period_delete"
+msgstr "Period deleted"
+
+msgid "period_saved"
+msgstr "Period created"
+
 msgid "periods"
 msgstr "Periods"
 
@@ -282,6 +306,15 @@ msgstr "Selectable by the student"
 
 msgid "speciality"
 msgstr "Specialty"
+
+msgid "speciality_acronym_exists"
+msgstr "Acronym already exists"
+
+msgid "speciality_deleted"
+msgstr "Speciality deleted"
+
+msgid "speciality_saved"
+msgstr "Speciality successfully saved"
 
 msgid "specialty"
 msgstr "Specialty"

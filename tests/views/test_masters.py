@@ -23,9 +23,10 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+import faker
+
 from unittest import mock
 
-import faker
 from django.contrib.auth.models import Permission, User
 from django.core.urlresolvers import reverse
 from django.test import TestCase, RequestFactory, override_settings
