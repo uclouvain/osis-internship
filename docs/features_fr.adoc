@@ -116,8 +116,6 @@ Lorsque l'étudiant se rend sur la page d'accueil du portail, il a accès a une 
 
 Sur le choix des stages, les onglets des différentes spécialités sont présentés.
 
-image::images/choix-stages.png[Le choix des stages par l'étudiant]
-
 Pour les spécialités obligatoires, dans chacun de ces onglets se présentent plusieurs hôpitaux. L'étudiant doit effectuer 4 choix d'hôpital (du 1er au 4ème choix) selon sa ordre de préférence). Une fois ces 4 choix effectués dans chaque onglet, il faut cliquer sur le bouton "Soumettre" qui se trouve au bas de la page pour enregistrer les choix. Un erreur se produit si l'utilisateur fait plus de 4 choix ou deux fois le même choix.
 
 Pour les stages au choix, il est possible de faire 4 choix de spécialités. Pour chaque une, l'application propose à l'étudiant les hôpitaux disponibles pour ce stage au choix. Les choix sont limités à 4 hôpitaux. Si le système ne propose rien, c'est que cette spécialité n'est pas disponible. Si l'étudiant sélectionne un stage en médecine générale, il faut choisir l'hôpital "Médecine générale" en premier choix puisqu'il n'y a pas d'autre possibilité. Idem pour les spécialités où il n'existe qu'un hôpital. Ce "premier choix" concerne bien l'hôpital et pas la spécialité, la préférence de celle-ci étant déterminée par le numéro du stage au choix.

@@ -1,6 +1,6 @@
 ﻿= Open Student Information System : Stages de médecine
 Hildeberto Mendonça <hildeberto.mendonca@uclouvain.be>
-v0.7.0, 2018-03-27
+v0.7.0, 2018-04-23
 :doctype: book
 :encoding: utf-8
 :toc: left

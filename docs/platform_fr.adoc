@@ -75,11 +75,21 @@ Il existe également des contraintes souples. Par exemple, l'étudiant doit fair
 
 ** Si l’offre est plus petite que la demande, certains étudiants seront ajoutés dans un hôpital fictif nommé "error", cet hôpital possède une capacité infinie. Si cette contrainte n’est pas respectée (offre < demande) on ajoute une pénalité de 1000 points.
 
-==== Modèle de données
+==== Modèles de données
 
 Les données sont organisées dans la base de données selon le modèle de données suivant.
 
+===== OSIS-Internship
+
+Le modèle de base de données OSIS-Internship represent la totalité des données géré par l'application Internship.
+
 image::images/internship-erm.png[Internship Entity Relationship Model]
+
+===== OSIS-Portal-Internship
+
+Le modèle de base de données OSIS-Internship-Portal est limité aux données accessible aux étudiants de médecine. Le modèle est similaire a celui d'OSIS, mais avec mois de tables et moins de champs dans certains tables.
+
+image::images/internship-portal-erm.png[Internship Portal Entity Relationship Model]
 
 ===== period_internship_places
 

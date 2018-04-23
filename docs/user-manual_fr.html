@@ -432,8 +432,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="details">
 <span id="author" class="author">Hildeberto Mendonça</span><br>
 <span id="email" class="email"><a href="mailto:hildeberto.mendonca@uclouvain.be">hildeberto.mendonca@uclouvain.be</a></span><br>
-<span id="revnumber">version 0.5.0,</span>
-<span id="revdate">2018-02-09</span>
+<span id="revnumber">version 0.7.0,</span>
+<span id="revdate">2018-03-27</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -444,7 +444,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_les_acteurs">Les acteurs</a></li>
 </ul>
 </li>
-<li><a href="#_les_functionalités">1. Les functionalités</a>
+<li><a href="#_les_fonctionnalités">1. Les fonctionnalités</a>
 <ul class="sectlevel2">
 <li><a href="#_l_affectation_des_stages">1.1. L&#8217;affectation des stages</a>
 <ul class="sectlevel3">
@@ -477,8 +477,10 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_les_définitions">Les définitions</a></li>
 </ul>
 </li>
-<li><a href="#_modèle_de_données">2.1.2. Modèle de données</a>
+<li><a href="#_modèles_de_données">2.1.2. Modèles de données</a>
 <ul class="sectlevel4">
+<li><a href="#_osis_internship">OSIS-Internship</a></li>
+<li><a href="#_osis_portal_internship">OSIS-Portal-Internship</a></li>
 <li><a href="#_period_internship_places">period_internship_places</a></li>
 <li><a href="#_internship_student_affectation_stat">internship_student_affectation_stat</a></li>
 </ul>
@@ -491,6 +493,17 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </ul>
 </li>
 <li><a href="#_déploiement">2.1.5. Déploiement</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#_les_annexes">Les annexes</a>
+<ul class="sectlevel2">
+<li><a href="#_greedy">Greedy</a>
+<ul class="sectlevel3">
+<li><a href="#_Étape_1_stages_obligatoires_etudiants_prioritaires_erasmus">Étape 1: Stages obligatoires - Etudiants prioritaires Erasmus</a></li>
+<li><a href="#_Étape_2_stages_obligatoires_etudiants_prioritaires_sociaux">Étape 2: Stages obligatoires - Etudiants prioritaires sociaux</a></li>
+<li><a href="#_Étape_3_stages_obligatoires_pour_les_étudiant_régulière">Étape 3: Stages obligatoires pour les étudiant régulière</a></li>
 </ul>
 </li>
 </ul>
@@ -511,15 +524,15 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>la description du métier et comment celui-ci est couvert par l&#8217;application. Cette partie se concentre sur les activités du personnel administratif sur la gestion des stages de médecine.</p>
+<p><strong>Les fonctionalités</strong>: la description du métier et comment celui-ci est couvert par l&#8217;application. Cette partie se concentre sur les activités du personnel administratif sur la gestion des stages de médecine.</p>
 </li>
 <li>
-<p>la description technique de l&#8217;architecture logicielle, destinée aux développeurs qui prendront en charge la maintenance technique de l&#8217;application.</p>
+<p><strong>La platforme</strong>: la description technique de l&#8217;architecture logicielle, destinée aux développeurs qui prendront en charge la maintenance technique de l&#8217;application.</p>
 </li>
 </ol>
 </div>
 <div class="paragraph">
-<p>Ce document est très important pour le bon déroulement de l&#8217;application. Il s&#8217;est récemment prouvé utile pour la création annuelle de la cohorte par les utilisateurs, qui ont pu réaliser cela en toute autonomie. Chaque nouvelle personne qui débarque dans le projet se trouve confrontée aux mêmes questions ses prédécesseurs. Si celui-ci est bien fait et bien maintenu, ce document aidera la faculté de médecine à faire évoluer son application proprement et continuellement, indépendamment des changements apportés au sein de l&#8217;équipe, tout en protégeant l&#8217;investissement déjà accompli. Pour que la documentation soit tenue à jour, le personnel technique doit l&#8217;actualiser chaque fois qu&#8217;une modification affecte le comportement de l&#8217;application. De cette façon, documenter ne devient pas une tâche laborieuse.</p>
+<p>Ce document est très important pour le bon déroulement de l&#8217;application. Il s&#8217;est récemment prouvé utile pour la création annuelle de la cohorte par les utilisateurs, qui ont pu réaliser cela en toute autonomie. Chaque nouvelle personne qui débarque dans le projet se trouve confrontée aux mêmes questions ses prédécesseurs. Si celui-ce est bien fait et bien maintenu, ce document aidera la faculté de médecine à faire évoluer son application proprement et continuellement, indépendamment des changements apportés au sein de l&#8217;équipe, tout en protégeant l&#8217;investissement déjà accompli. Pour que la documentation soit tenue à jour, le personnel technique doit l&#8217;actualiser chaque fois qu&#8217;une modification affecte le comportement de l&#8217;application. De cette façon, documenter ne devient pas une tâche laborieuse.</p>
 </div>
 <div class="sect2">
 <h3 id="_le_contexte">Le contexte</h3>
@@ -538,13 +551,16 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="ulist">
 <ul>
 <li>
-<p>les étudiants inscrits aux programmes de master en médecine</p>
+<p>les <strong>étudiants</strong> inscrits aux programmes de master en médecine</p>
 </li>
 <li>
-<p>les gestionnaires des stages: le doyen et le personnel administratif</p>
+<p>les <strong>gestionnaires</strong> des stages: le doyen et le personnel administratif</p>
 </li>
 <li>
-<p>l&#8217;administrateur de système: la personne avec un rôle technique et bien informé sur le fonctionnement de l&#8217;application.</p>
+<p><strong>l&#8217;administrateur de système</strong>: la personne avec un rôle technique et bien informé sur le fonctionnement de l&#8217;application.</p>
+</li>
+<li>
+<p><strong>l&#8217;application</strong>: le logiciel responsable pour la gestion de données et des affectations automatiques.</p>
 </li>
 </ul>
 </div>
@@ -554,24 +570,24 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Gestionnaire des stages</strong>: L&#8217;accès est limité à l&#8217;application back office.</p>
+<p><strong>Gestionnaire des stages</strong>: L&#8217;accès est limité à l&#8217;application back office. Le back-office n&#8217;est accessible que dans le réseau de l&#8217;université.</p>
 </li>
 <li>
-<p><strong>Étudiant</strong>: L&#8217;accès est limité à l&#8217;application front office.</p>
+<p><strong>Étudiant</strong>: L&#8217;accès est limité à l&#8217;application front-office.</p>
 </li>
 <li>
-<p><strong>Administrateur</strong>: Accès à l&#8217;administration des données bruts pour la résolution des problèmes non anticipés.</p>
+<p><strong>Administrateur</strong>: Accès à l&#8217;administration des données bruts pour la resolution des problèmes non anticipés.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>Une explication détaillée des applications back office et front office est disponible dans le chapitre 2.</p>
+<p>Une explication détaillée des applications back-office et front-office est disponible dans le chapitre 2.</p>
 </div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_les_functionalités">1. Les functionalités</h2>
+<h2 id="_les_fonctionnalités">1. Les fonctionnalités</h2>
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="_l_affectation_des_stages">1.1. L&#8217;affectation des stages</h3>
@@ -581,10 +597,10 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p><strong>Stages obligatoires</strong>: des spécialités imposées à tous les étudiants avec un nombre de périodes (table 1). Les stages se déroulent dans la première partie de l&#8217;année, suivis par les stages au choix.</p>
+<p><strong>Stages obligatoires</strong>: des spécialités imposées à tous les étudiants avec des périodes de un à deux mois.</p>
 </li>
 <li>
-<p><strong>Stages au choix</strong>: des spécialités au choix limités à 1 mois par spécialité. L&#8217;étudiant peut choisir 4 fois la même spécialité ou 4 spécialités différentes. Les stages se déroulent a la fin d&#8217;année. La priorité est donnée aux étudiants qui présentent un concours dans la spécialité choisie pour le stage au choix. L&#8217;information concernant la spécialité du concours est fournie par l&#8217;étudiant au moment de l&#8217;inscription.</p>
+<p><strong>Stages au choix</strong>: des spécialités au choix limités à 1 mois par spécialité. L&#8217;étudiant peut choisir 4 fois la même spécialité ou 4 spécialités différentes. La priorité est donnée aux étudiants qui présentent un concours dans la spécialité choisie pour le stage au choix. L&#8217;information concernant la spécialité du concours est fournie par l&#8217;étudiant au moment de l&#8217;inscription. Seulement 2 stages au choix sont prise en consideration pendant l&#8217;affectation. Les autres 2 choix sont des sauvegardes pour le cas ou il n&#8217;y a plus de places disponibles.</p>
 </li>
 </ol>
 </div>
@@ -592,7 +608,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <p>Voici le tableau qui montre un exemple des stages et leurs périodes respectives.</p>
 </div>
 <table class="tableblock frame-all grid-all spread">
-<caption class="title">Table 1. Répartition des stages</caption>
+<caption class="title">Table 1. Exemple de répartition des stages</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -605,11 +621,11 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Médecine interne (MI)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Médecine interne (MI) 2 mois</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">P1, P2</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Urgence (UR)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Urgence (UR) 2 mois</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">P3, P4</p></td>
 </tr>
 <tr>
@@ -617,7 +633,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <td class="tableblock halign-left valign-top"><p class="tableblock">P5</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Gynécologie-obstétrique (GO)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Gynécologie-obstétrice (GO)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">P6</p></td>
 </tr>
 <tr>
@@ -625,8 +641,16 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <td class="tableblock halign-left valign-top"><p class="tableblock">P7</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Stages au choix (peuvent être dans la même spécialité)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">P8, P9, P10, P11</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Médecine interne 1 mois</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">P8</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Gériatrie</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">P9</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Stages au choix</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">P10, P11</p></td>
 </tr>
 </tbody>
 </table>
@@ -647,7 +671,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="sect3">
 <h4 id="creation_cohort">1.1.1. Création d&#8217;une cohorte</h4>
 <div class="paragraph">
-<p>La <strong>Cohorte</strong> est utilisée pour définir la période annuelle d&#8217;organisation des stages. Cette période ne coïncide pas avec l&#8217;année académique et sa gestion est tout à fait spécifique au domaine des stages de médecine.</p>
+<p>La <strong>Cohorte</strong> est utilisée pour définir la période annuelle d&#8217;organisation des stages. Cette période ne coïncide pas avec l&#8217;année académique et sa gestion est tout à fait spécifique au domaine des stages de médecine. Elle est crée un an a l&#8217;avance pour être bien planifié.</p>
 </div>
 <div class="paragraph">
 <p>La création d&#8217;une cohorte est le premier pas vers l&#8217;affectation des stages. Presque toutes les données sont liées à celle-ci. À cette étape, le gestionnaire des stages va créer une cohorte en fournissant les informations telles que demandées par le formulaire suivant.</p>
@@ -658,7 +682,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="paragraph">
-<p>Les dates d&#8217;ouverture et de fermeture permettent de contrôler l&#8217;accès aux inscriptions aux stages pour les étudiants disposant d&#8217;un matricule. La date de fermeture est toujours postérieure ou équivalente à la date d&#8217;ouverture. La date de publication, quant à elle postérieure à la date de fermeture des inscriptions, permet de publier les informations d&#8217;affectation aux étudiants.</p>
+<p>Les dates d&#8217;ouverture et de fermeture permettent de contrôler l&#8217;accès aux inscriptions aux stages pour les étudiants disposant d&#8217;un matricule. La date de fermeture est toujours postérieure ou équivalente à la date d&#8217;ouverture. La date de publication, quant à elle postérieure à la date de fermeture des inscriptions, permet de publier les informations d&#8217;affectation aux étudiants. Après la date de publication, c&#8217;est ne plus possible d&#8217;affecter les étudiants automatiquement.</p>
 </div>
 <div class="paragraph">
 <p>Le gestionnaire a l&#8217;option de créer une cohorte à partir d&#8217;une cohorte existante. Cela lui permet de réutiliser une bonne partie des données disponibles. Les données réutilisées sont les hôpitaux, les spécialités, les périodes, les types de stages et les maîtres de stages.</p>
@@ -677,6 +701,27 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="paragraph">
 <p>L&#8217;importation des étudiants est disponible dans la page de consultation des étudiants. En cliquant sur le bouton "Importer", une fenêtre modal s&#8217;ouvre pour permettre la sélection du fichier Excel (xlsx) disponible sur la machine de l&#8217;utilisateur. Après la sélection, cliquez sur le bouton "Importer" en bleu pour démarrer l&#8217;importation. Le temps d&#8217;importation dépend du nombre d&#8217;étudiants dans le fichier à importer.</p>
 </div>
+<div class="imageblock">
+<div class="content">
+<img src="images/students-import.png" alt="Importation des étudiants">
+</div>
+</div>
+<div class="paragraph">
+<p>C&#8217;est important d&#8217;importer un fichier en format <code>xlsx</code> parce que l&#8217;application n&#8217;est pas compatible avec le format <code>xls</code>. Pour avoir un fichier <code>xlsx</code> à partir d&#8217;un fichier <code>xls</code>, vous pouvez ouvrir le ficher <code>xls</code> en Excel et <em>Enregistrer sous</em> le format <code>xlsx</code> en sélectionnant l&#8217;option <em>Classeur Excel</em>, qui est la premier dans la liste.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/xls-to-xlsx.png" alt="Convertion de xls vers xlsx">
+</div>
+</div>
+<div class="paragraph">
+<p>Après l&#8217;importation, les étudiants apparaissent dans la liste, comme illustré dans l&#8217;image suivante. C&#8217;est possible d&#8217;ajouter un nouveau étudiant an cliquant sur "Ajouter". C&#8217;est également possible de visualiser et modifier un étudiant existant en cliquant sur le bottom de la colonne "Détails". Plus tard dans le processus, c&#8217;est possible de modifier les choix fait par l&#8217;étudiant en cliquant sur le bottom dans la colonne "Modification des choix".</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/students-imported.png" alt="Les étudiants importés dans la cohorte">
+</div>
+</div>
 <div class="admonitionblock warning">
 <table>
 <tr>
@@ -684,42 +729,12 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="title">Warning</div>
 </td>
 <td class="content">
-La réimportation des étudiants dissociera tous les étudiants existants de la cohorte, y compris les entrées insérées manuellement. La liste d&#8217;étudiants sera conforme aux données du fichier dernièrement importé. Après la première importation, il est recommandé de maintenir les données des étudiants via les fonctionnalités disponibles dans l&#8217;application.
-</td>
-</tr>
-</table>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="images/students-import.png" alt="Importation des étudiants">
-</div>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<div class="title">Note</div>
-</td>
-<td class="content">
 <div class="paragraph">
-<p>Veillez à importer un fichier en format <code>xlsx</code>. L&#8217;application n&#8217;est pas compatible avec le format <code>xls</code>. Pour avoir un fichier <code>xlsx</code> à partir d&#8217;un fichier <code>xls</code>, vous pouvez ouvrir le ficher <code>xls</code> en Excel et <em>Enregistrer sous</em> le format <code>xlsx</code> en sélectionnant l&#8217;option <em>Classeur Excel</em>, qui est la première dans la liste.</p>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="images/xls-to-xlsx.png" alt="Convertion de xls vers xlsx">
-</div>
+<p>La réimportation des étudiants ira dissocier tous les étudiants existants de la cohorte, sauf les insérés à la main. Après la premier importation, c&#8217;est recommandé de maintenir les données des étudiants via les fonctionnalités disponible dans l&#8217;application.</p>
 </div>
 </td>
 </tr>
 </table>
-</div>
-<div class="paragraph">
-<p>Après l&#8217;importation, les étudiants apparaîtront dans la liste, comme illustré sur la capture d&#8217;écran ci-dessous. Il est possible d&#8217;ajouter un nouvel étudiant en cliquant sur "Ajouter", visualiser et modifier un étudiant existant en cliquant sur le bouton de la colonne "Détails", et modifier les choix faits par un étudiant en cliquant sur le bouton de la colonne "Modification des choix".</p>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="images/students-imported.png" alt="Les étudiants importés dans la cohorte">
-</div>
 </div>
 </div>
 <div class="sect3">
@@ -733,7 +748,12 @@ La réimportation des étudiants dissociera tous les étudiants existants de la 
 </div>
 </div>
 <div class="paragraph">
-<p>En cas de changement de la quantité de places disponibles, les modifications sont faites dans le même fichier Excel et réimportée dans l&#8217;application sans risque de duplication de données. En option, les quantités peuvent être modifiés directement dans l&#8217;application, mais en cas de réimportation du fichier Excel les données modifiées manuellement seront écrasées.</p>
+<p>En cas de changement de la quantité des places disponibles, les modifications sont faites dans le même fichier Excel et réimportés dans l&#8217;application. En option, les quantités peuvent être modifiés directement dans l&#8217;application, mais en cas de réimportation du fichier Excel les données modifiés manuellement seront écrasés.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/spreadsheet-places.png" alt="Le fichier Excel avec des places disponibles">
+</div>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -742,7 +762,7 @@ La réimportation des étudiants dissociera tous les étudiants existants de la 
 <div class="title">Note</div>
 </td>
 <td class="content">
-Malgré l&#8217;ordre d&#8217;importation des données affichées dans le processus et documentées dans les sections 1.2 et 1.3, les étudiants et les offres peuvent être importés dans n&#8217;importe quel ordre puisque les données ne sont pas initialement associées. Cette association se fera seulement après les choix et affectations des étudiants.
+Malgré l&#8217;ordre d&#8217;importation de données afficher dans le processus et documenté dans les sections 1.1.2 et 1.1.3, les étudiants et les offres peuvent être importé n&#8217;importe en quel ordre, parce que les données ne sont pas initialement associés. Ils seront associés seulement après les choix et les affectations des étudiants.
 </td>
 </tr>
 </table>
@@ -751,7 +771,7 @@ Malgré l&#8217;ordre d&#8217;importation des données affichées dans le proces
 <div class="sect3">
 <h4 id="_définition_des_périodes_des_hôpitaux_et_des_stages">1.1.4. Définition des périodes, des hôpitaux et des stages</h4>
 <div class="paragraph">
-<p>Afin d&#8217;organiser la cohorte et faciliter la sélection des étudiants et leur affectation, le gestionnaire des stages peut déterminer des dates de début et de fin de période de choix de stages et une date de début de publication des résultats.</p>
+<p>Avec l&#8217;intention d&#8217;organiser la cohorte pour permettre le bon choix des étudiants est l&#8217;affectation en suite, le gestionnaire des stages s&#8217;occupe de déterminer les dates de debut et fin de la période des choix des stages et la date de début de publication des résultats. Les dates sont déterminés dans l&#8217;écran d&#8217;édition de la cohorte.</p>
 </div>
 <div class="admonitionblock warning">
 <table>
@@ -760,7 +780,7 @@ Malgré l&#8217;ordre d&#8217;importation des données affichées dans le proces
 <div class="title">Warning</div>
 </td>
 <td class="content">
-Les quatre dernières tâches doivent se terminer avant la date de début de la période de choix des stages.
+Les quatre dernières tâches (1.1.1, 1.1.2, 1.1.3, 1.1.4) devraient se terminer avant la date de debut de la période de choix des stages.
 </td>
 </tr>
 </table>
@@ -769,7 +789,7 @@ Les quatre dernières tâches doivent se terminer avant la date de début de la 
 <div class="sect3">
 <h4 id="_choix_des_stages_obligatoires_et_au_choix">1.1.5. Choix des stages obligatoires et au choix</h4>
 <div class="paragraph">
-<p>Précisément à la date de début de la période de choix, l&#8217;application est ouverte aux étudiants de médecine qui doivent faire leurs choix de stages. L&#8217;application reste ouverte jusqu&#8217;à la fin de la période. Pendant ce temps là, les étudiants peuvent changer librement leurs choix et le gestionnaire des stages s&#8217;engage à ne pas modifier les choix faits avant la fin de la période.</p>
+<p>Précisément à la date de debut de la période de choix, l&#8217;application est ouverte aux étudiants de médecine qui devront faire leurs choix de stages. L&#8217;application reste ouverte jusqu&#8217;à la fin de la période. Pendant ce temps là, les étudiants peuvent changer librement leurs choix et le gestionnaire des stages peux consulter les choix fait, mais pas les modifier avant la fin de la période d&#8217;inscription.</p>
 </div>
 <div class="paragraph">
 <p>L&#8217;étudiant a accès a l&#8217;application seulement s&#8217;il:</p>
@@ -780,7 +800,7 @@ Les quatre dernières tâches doivent se terminer avant la date de début de la 
 <p>est régulièrement inscrit comme étudiant à l&#8217;université</p>
 </li>
 <li>
-<p>a un compte utilisateur pour accéder au réseau et aux services en ligne du portail</p>
+<p>a un compte utilisateur pour accéder le réseau et les services en ligne du portail</p>
 </li>
 <li>
 <p>est régulièrement inscrit dans une des cohortes existants.</p>
@@ -788,21 +808,16 @@ Les quatre dernières tâches doivent se terminer avant la date de début de la 
 </ul>
 </div>
 <div class="paragraph">
-<p>Lorsque l&#8217;étudiant se rend sur la page d&#8217;accueil du portail, il a accès à une liste de fonctionnalités: le choix des stages, la liste des hôpitaux, le bilan de choix de stage et d&#8217;affectation finale.</p>
+<p>Lorsque l&#8217;étudiant se rend sur la page d&#8217;accueil du portail, il a accès a une liste de fonctionnalités: le choix des stages, la liste des hôpitaux, le bilan de choix de stage et d&#8217;affectation finale.</p>
 </div>
 <div class="paragraph">
 <p>Sur le choix des stages, les onglets des différentes spécialités sont présentés.</p>
 </div>
-<div class="imageblock">
-<div class="content">
-<img src="images/choix-stages.png" alt="Le choix des stages par l&#8217;étudiant">
-</div>
+<div class="paragraph">
+<p>Pour les spécialités obligatoires, dans chacun de ces onglets se présentent plusieurs hôpitaux. L&#8217;étudiant doit effectuer 4 choix d&#8217;hôpital (du 1er au 4ème choix) selon sa ordre de préférence). Une fois ces 4 choix effectués dans chaque onglet, il faut cliquer sur le bouton "Soumettre" qui se trouve au bas de la page pour enregistrer les choix. Un erreur se produit si l&#8217;utilisateur fait plus de 4 choix ou deux fois le même choix.</p>
 </div>
 <div class="paragraph">
-<p>Pour les spécialités obligatoires, dans chacun de ces onglets se présentent plusieurs hôpitaux. L&#8217;étudiant doit effectuer 4 choix d&#8217;hôpital (du 1er au 4ème choix). Une fois ces 4 choix effectués dans chaque onglet, il faut cliquer sur le bouton "Soumettre" qui se trouve au bas de la page pour enregistrer les choix. Une erreur se produit si l&#8217;utilisateur fait plus de 4 choix ou 2 fois le même choix.</p>
-</div>
-<div class="paragraph">
-<p>Pour les stages au choix, il est possible de faire 4 choix de spécialités. Une fois la spécialité choisie, l&#8217;application propose à l&#8217;étudiant les hôpitaux disponibles pour ce stage au choix. Celui-ci est limité à 4 choix d&#8217;hôpitaux. Si le système ne propose rien, cela signifie que cette spécialité n&#8217;est pas disponible. Si l&#8217;étudiant sélectionne un stage en médecine générale, il faut choisir l&#8217;hôpital "Médecine générale" en premier choix puisqu&#8217;il n&#8217;y a pas d&#8217;autre possibilité. Idem pour les spécialités pour lesquelles il n&#8217;existe qu&#8217;un hôpital. Ce "premier choix" concerne bien l&#8217;hôpital et pas la spécialité, la préférence de celle-ci étant déterminée par le numéro du stage au choix.</p>
+<p>Pour les stages au choix, il est possible de faire 4 choix de spécialités. Pour chaque une, l&#8217;application propose à l&#8217;étudiant les hôpitaux disponibles pour ce stage au choix. Les choix sont limités à 4 hôpitaux. Si le système ne propose rien, c&#8217;est que cette spécialité n&#8217;est pas disponible. Si l&#8217;étudiant sélectionne un stage en médecine générale, il faut choisir l&#8217;hôpital "Médecine générale" en premier choix puisqu&#8217;il n&#8217;y a pas d&#8217;autre possibilité. Idem pour les spécialités où il n&#8217;existe qu&#8217;un hôpital. Ce "premier choix" concerne bien l&#8217;hôpital et pas la spécialité, la préférence de celle-ci étant déterminée par le numéro du stage au choix.</p>
 </div>
 <div class="paragraph">
 <p>Lorsque l&#8217;étudiant sélectionne un hôpital dans une spécialité, un compteur l&#8217;informe sur le nombre de places totales disponibles et le nombre d&#8217;étudiants ayant déjà choisi cet hôpital en premier choix. Plus la demande dépasse l&#8217;offre, plus la probabilité d&#8217;obtenir cette affectation est faible.</p>
@@ -811,25 +826,28 @@ Les quatre dernières tâches doivent se terminer avant la date de début de la 
 <div class="sect3">
 <h4 id="_affectation_des_stages_aux_étudiants_prioritaires">1.1.6. Affectation des stages aux étudiants prioritaires</h4>
 <div class="paragraph">
-<p>Le processus d&#8217;affectation tient compte des étudiants reconnus par le service d&#8217;aide aux étudiants comme prioritaires. Ceux-ci bénéficient d&#8217;une priorité adaptée à leurs besoins particuliers. Cependant, l&#8217;assurance de recevoir leurs premiers choix n&#8217;est pas garantie (le plus souvent cette priorité concerne les stages proches du domicile légal ou effectués dans un hôpital avec logement).</p>
+<p>Une fois que les inscriptions sont fini, l&#8217;affectation des étudiants prioritaires commencent. Les étudiants sont reconnus comme prioritaires par le service d&#8217;aide aux étudiants. Cela donne une priorité adaptée au besoin particulaire de chaque étudiant, mais il n&#8217;y a pas d&#8217;assurance de recevoir les premiers choix. Le plus souvent, c&#8217;est de prioriser les stages proches du domicile légal ou dans un hôpital avec logement.</p>
 </div>
 <div class="paragraph">
-<p>L&#8217;étudiant devra faire ses 4 choix de manière réfléchie et se présenter à la faculté dans une période bien définie afin de discuter avec le secrétariat des critères qui lui sont propres. Après cette discussion, le secrétariat déterminera parmi les choix faits par l&#8217;étudiant celui ou ceux que l&#8217;application devra obligatoirement prendre en compte. Si les choix semblent inadaptés à la priorité de l&#8217;étudiant, le secrétariat peut imposer un autre endroit de stage, mais toujours en adéquation avec le besoin de l&#8217;étudiant.</p>
+<p>L’étudiant devra faire ses 4 choix de manière réfléchie et se présenter à la faculté dans une période bien définie afin de discuter avec le secretariat des critères qui lui sont propres. Après cette discussion, le secretariat déterminera parmi les choix faits par l&#8217;étudiant celui ou ceux que l&#8217;application devra obligatoirement prendre en compte. Le gestionnaire de stages reserve le droit d&#8217;imposer un stage selon les disponibilités réel, mais toujours en adéquation avec le besoin de l&#8217;étudiant.</p>
+</div>
+<div class="paragraph">
+<p>La date qui determine la fin de l&#8217;affectation aux étudiants prioritaires et les autres affectations n&#8217;est pas bien precise. Tout la partie des affectations se déroule après la date de fin des inscriptions e date de debut des publications.</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_affectation_des_stages_aux_autres_étudiants">1.1.7. Affectation des stages aux autres étudiants</h4>
 <div class="paragraph">
-<p>Pour les étudiants non-prioritaires, les affectations sont faites automatiquement par l&#8217;application. L&#8217;algorithme essaye de trouver une solution optimale pour chaque étudiant en terme de spécialité et période. Certaines contraintes empêchent de respecter le premier choix de tous les étudiants. Par exemple, si le nombre d&#8217;étudiants est plus grand que le nombre de places disponibles. Pour satisfaire au mieux toutes les demandes des étudiants avec les offres limitées, nous essayons de trouver une solution satisfaisant les différentes contraintes avec un coût le plus faible possible, tout en respectant au mieux les souhaits des étudiants.</p>
+<p>Pour les étudiants non-prioritaires, les affectations sont faites automatiquement par l&#8217;application. L&#8217;algorithme essaye de trouver une solution optimale pour chaque étudiant en terme de spécialité et période. Certaines contraintes empêchent de respecter le premier choix de tous les étudiants. Par exemple, si le nombre d&#8217;étudiants est plus grand que le nombre de places disponibles. Pour satisfaire au mieux toutes les demandes des étudiants avec les offres limitées, nous essayons de trouver une solution satisfaisant le coût le plus faible possible et qui satisfait les différentes contraintes, tout en respectant le mieux possible les souhaits des étudiants.</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_correction_des_stages_avec_problème_d_affectation">1.1.8. Correction des stages avec problème d&#8217;affectation</h4>
 <div class="paragraph">
-<p>L&#8217;affectation automatique peut rencontrer des difficultés pour affecter certains étudiants à cause des contraintes existantes. Les étudiants sont alors affectés temporairement à un hôpital fictif pour être affectés correctement dans un second temps.</p>
+<p>L&#8217;affectation automatique peux rencontrer des difficultés pour affecter certains étudiants à cause des contraintes existantes. Les étudiants sont alors affectés temporairement à un hôpital fictif (hôpital erreur) pour être facilement identifiés pour une affectation manuel à la suite.</p>
 </div>
 <div class="paragraph">
-<p>La cause principale est l&#8217;absence de places disponibles dans les hôpitaux. Dans ce cas, de nouvelles places sont créées en concertation avec les maîtres de stage.</p>
+<p>Le but de cette tache c&#8217;est de trouver une solution pour les étudiants avec problème d&#8217;affectation. Le gestionnaire de stages change manuellement les affectations existants.</p>
 </div>
 <div class="paragraph">
 <p>Toutes les affectations devrons être réalisées avant la date de publication des résultats.</p>
@@ -844,7 +862,7 @@ Les quatre dernières tâches doivent se terminer avant la date de début de la 
 <div class="sect3">
 <h4 id="_consultation_des_résultats">1.1.10. Consultation des résultats</h4>
 <div class="paragraph">
-<p>Les étudiants se connectent sur le portail pour consulter les résultats des affectations. Les données sont disponibles en mode lecture. En cas de correction ou de modification en général, une demande devra être faite au secrétariat.</p>
+<p>Les étudiants se connectent sur le portail pour consulter les résultats des affectations. Les données sont disponibles en mode lecture. En cas de correction ou de modification en général, une demande devra être fait au secretariat.</p>
 </div>
 </div>
 </div>
@@ -872,10 +890,10 @@ Les quatre dernières tâches doivent se terminer avant la date de début de la 
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>destiné aux maîtres de stage et présentant les affectations groupées par spécialité et période.</p>
+<p>pour les mètres de stage avec les affectations groupés par spécialité et période.</p>
 </li>
 <li>
-<p>destiné à l&#8217;hôpital et présentant une liste des tous les affectations triées par période.</p>
+<p>pour l&#8217;hôpital avec une liste des tous les affectation trié par période.</p>
 </li>
 </ol>
 </div>
@@ -885,10 +903,10 @@ Les quatre dernières tâches doivent se terminer avant la date de début de la 
 </div>
 </div>
 <div class="paragraph">
-<p>Le rapport pour l&#8217;hôpital peut être configuré dans le formulaire de l&#8217;hôpital afin de prendre en compte les besoins de chacun.</p>
+<p>Le rapport pour l&#8217;hôpital peux être configuré dans le formulaire de l&#8217;hôpital afin de prendre en compte les besoins de chacun.</p>
 </div>
 <div class="paragraph">
-<p>Un champ numérique est disponible pour chaque donnée concernant les hôpitaux. Ces champs contiennent la séquence dans laquelle les données doivent être affichées. Les champs laissés vides sont ignorés.</p>
+<p>Un champ numérique est disponible pour chaque donnée concernant les hôpitaux. Ces champs contiennent la sequence dans lequelle les données doivent être affichées. Les champs laissés vides sont ignorés.</p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -1078,13 +1096,30 @@ Les quatre dernières tâches doivent se terminer avant la date de début de la 
 </div>
 </div>
 <div class="sect3">
-<h4 id="_modèle_de_données">2.1.2. Modèle de données</h4>
+<h4 id="_modèles_de_données">2.1.2. Modèles de données</h4>
 <div class="paragraph">
 <p>Les données sont organisées dans la base de données selon le modèle de données suivant.</p>
+</div>
+<div class="sect4">
+<h5 id="_osis_internship">OSIS-Internship</h5>
+<div class="paragraph">
+<p>Le modèle de base de données OSIS-Internship represent la totalité des données géré par l&#8217;application Internship.</p>
 </div>
 <div class="imageblock">
 <div class="content">
 <img src="images/internship-erm.png" alt="Internship Entity Relationship Model">
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_osis_portal_internship">OSIS-Portal-Internship</h5>
+<div class="paragraph">
+<p>Le modèle de base de données OSIS-Internship-Portal est limité aux données accessible aux étudiants de médecine. Le modèle est similaire a celui d&#8217;OSIS, mais avec mois de tables et moins de champs dans certains tables.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/internship-portal-erm.png" alt="Internship Portal Entity Relationship Model">
+</div>
 </div>
 </div>
 <div class="sect4">
@@ -1145,11 +1180,73 @@ Les quatre dernières tâches doivent se terminer avant la date de début de la 
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="_les_annexes">Les annexes</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_greedy">Greedy</h3>
+<div class="paragraph">
+<p>La construction de la solution se faire en 5 étapes. A chaque étape on parcourt chacune des modalités de stage. Pour chaque spécialité on parcourt tous les étudiants. Pour éviter que les étudiants au début de la liste aient toujours leur premier choix (premier arrivé, premier servi), nous allons commencer le parcours à un endroit choisi au hasard. La suite des opérations est différente pour chaque étape.</p>
+</div>
+<div class="sect3">
+<h4 id="_Étape_1_stages_obligatoires_etudiants_prioritaires_erasmus">Étape 1: Stages obligatoires - Etudiants prioritaires Erasmus</h4>
+<div class="paragraph">
+<p>Pour ces étudiants les stages (la spécialité, le lieu et la période) sont fixés. On les ajouté dans la solution initiale tel quel.  Pour chaque stage ajouté on met à jour le nombre de places disponibles pour un lieu / période / spécialité donné (table de stages).</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_Étape_2_stages_obligatoires_etudiants_prioritaires_sociaux">Étape 2: Stages obligatoires - Etudiants prioritaires sociaux</h4>
+<div class="paragraph">
+<p>Ces étudiants ont déjà une spécialité et un lieu choisis. L’algorithme doit choisir seulement la période de stage. Pour le choix de période on favorise les solutions qui permettent d’avoir au moins 2 mois de stage consécutifs dans un même hôpital.</p>
+</div>
+<div class="paragraph">
+<p>Pour chaque période disponible, l’algorithme va regarder les périodes P – 1 et P + 1 et vérifier si une de ces périodes périodes est déjà attribuée à l’étudiant dans ce même hôpital. Si ce’est le cas, la période est candidate. Ensuite parmi les périodes candidates, on va choisir les périodes qui ont plus grand nombre de places disponibles. Si plusieurs périodes on le même nombre d’offres, on choisit une période au hasard. Pour fini on met à jour la table de stages.</p>
+</div>
+<div class="paragraph">
+<p>Voici un exemple:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Si c’est le premier stage de l’étudiant dans cet hôpital, on choisit les périodes dont P-1 et P+1 sont encore libres (afin de favoriser les deux mois  consécutifs dans un même hôpital). Si ex-equo, on choisit la période qui a le  plus grande nombre de places. Dans l’exemple c’est sont les périodes P2, P5 et  P6 (bleu) avec à chaque fois 23 places disponibles. Ensuite on choisit une  période au hasard parmi P2, P5 et P6 et on décrémente le nombre de places  disponibles. Les périodes en rouge ne sont pas disponibles, par exemple si une  spécialité n’est pas disponible.</p>
+</li>
+</ul>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/greedy-example.png" alt="Example 1">
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Si l’étudiant a déjà d’autres stages dans l’hôpital, on va favoriser les  périodes qui sont adjacentes avec les autres périodes de l’étudiant dans cet  hôpital. Dans l’exemple on voit que l’étudiant a déjà fait 3 autres stages  pendant les périodes P1, P4 et P8 (en vert), dans ce cas-là on va favoriser  les stages P2, P5 et P7 (en bleu). Ensuite parmi ces 3, on va choisir les  périodes qui ont la plus grande nombre de places disponibles (P2 et P4). Elles  ont toutes les deux 23 places disponibles, dans ce cas on choisit une période  au hasard parmi ces deux-là.</p>
+</li>
+</ul>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/greedy-example-2.png" alt="Example 2">
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_Étape_3_stages_obligatoires_pour_les_étudiant_régulière">Étape 3: Stages obligatoires pour les étudiant régulière</h4>
+<div class="paragraph">
+<p>Pour ces étudiants, pour la spécialité concernée, l’algorithme doit choisir un lieu et une période. Premièrement, il faut choisir un lieu. L’algorithme va toujours essayer de faire un choix qui minimise le coût total de la solution. Par exemple le premier choix n’est pas toujours le meilleur option, parfois c’est mieux de choisir le 2ème, 3ème ou même 4ème choix et avoir 2 stages consécutifs. Ensuite, la période est choisie de même manière que précédemment (&#8594; Stages obligatoires - Etudiants prioritaires sociaux).  Pour finir on met à jour la table de stages.</p>
+</div>
+<div class="paragraph">
+<p>YDE : On pourrait être proactif et favoriser un second ou 3ème choix qui permet d’avoir deux mois consécutif dans le même hôpital.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 0.5.0<br>
-Last updated 2018-04-04 09:38:14 CEST
+Version 0.7.0<br>
+Last updated 2018-04-22 07:34:50 CEST
 </div>
 </div>
 </body>
