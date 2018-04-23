@@ -433,7 +433,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <span id="author" class="author">Hildeberto Mendonça</span><br>
 <span id="email" class="email"><a href="mailto:hildeberto.mendonca@uclouvain.be">hildeberto.mendonca@uclouvain.be</a></span><br>
 <span id="revnumber">version 0.7.0,</span>
-<span id="revdate">2018-03-27</span>
+<span id="revdate">2018-04-23</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -481,8 +481,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <ul class="sectlevel4">
 <li><a href="#_osis_internship">OSIS-Internship</a></li>
 <li><a href="#_osis_portal_internship">OSIS-Portal-Internship</a></li>
-<li><a href="#_period_internship_places">period_internship_places</a></li>
-<li><a href="#_internship_student_affectation_stat">internship_student_affectation_stat</a></li>
+<li><a href="#_comparaison">Comparaison</a></li>
 </ul>
 </li>
 <li><a href="#_l_architecture_logiciel">2.1.3. L&#8217;architecture logiciel</a></li>
@@ -1123,16 +1122,122 @@ Les quatre dernières tâches (1.1.1, 1.1.2, 1.1.3, 1.1.4) devraient se terminer
 </div>
 </div>
 <div class="sect4">
-<h5 id="_period_internship_places">period_internship_places</h5>
+<h5 id="_comparaison">Comparaison</h5>
 <div class="paragraph">
-<p>Cette table est peuplée par l&#8217;importation du fichier Excel avec le nombre de places disponibles dans chaque spécialité de chaque hôpital. C&#8217;est pour ça que si l&#8217;algorithme n&#8217;arrive pas au but les données ne plus affichées.</p>
+<p>Pour répresenter toutes les données d&#8217;Internship, OSIS contient 14 tables. OSIS-Portal contient 9 tables, 5 en moins que OSIS. De 9 tables, 4 contiennent moins de colonnes que OSIS et 5 sons exactement les mêmes.</p>
 </div>
-</div>
-<div class="sect4">
-<h5 id="_internship_student_affectation_stat">internship_student_affectation_stat</h5>
-<div class="paragraph">
-<p>Cette table est peuplée par l’exécution de l&#8217;algorithme d&#8217;affectation. Chaque fois que l&#8217;algorithme est exécuté pour une cohorte, les données correspondant à cette cohorte sont supprimées au tout début de l’exécution.</p>
-</div>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 3. Comparaison des modèles</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">OSIS (14)</th>
+<th class="tableblock halign-left valign-top">OSIS-Portal (9)</th>
+<th class="tableblock halign-left valign-top">Tables simplifiées (4)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="ulist">
+<ul>
+<li>
+<p>affectation_generation_time</p>
+</li>
+<li>
+<p>cohort</p>
+</li>
+<li>
+<p>internship</p>
+</li>
+<li>
+<p>internship_choice</p>
+</li>
+<li>
+<p>internship_enrollment</p>
+</li>
+<li>
+<p>internship_master</p>
+</li>
+<li>
+<p>internship_offer</p>
+</li>
+<li>
+<p>internship_speciality</p>
+</li>
+<li>
+<p>internship_student_affectation_stat</p>
+</li>
+<li>
+<p>internship_student_information</p>
+</li>
+<li>
+<p>master_allocation</p>
+</li>
+<li>
+<p>organization</p>
+</li>
+<li>
+<p>period</p>
+</li>
+<li>
+<p>period_internship_places</p>
+</li>
+</ul>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div><div class="ulist">
+<ul>
+<li>
+<p>cohort</p>
+</li>
+<li>
+<p>internship</p>
+</li>
+<li>
+<p>internship_choice</p>
+</li>
+<li>
+<p>internship_offer</p>
+</li>
+<li>
+<p>internship_speciality</p>
+</li>
+<li>
+<p>internship_student_affectation_stat</p>
+</li>
+<li>
+<p>internship_student_information</p>
+</li>
+<li>
+<p>organization</p>
+</li>
+<li>
+<p>period</p>
+</li>
+</ul>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div><div class="ulist">
+<ul>
+<li>
+<p>cohort</p>
+</li>
+<li>
+<p>internship</p>
+</li>
+<li>
+<p>internship_speciality</p>
+</li>
+<li>
+<p>organization</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect3">
@@ -1246,7 +1351,7 @@ Les quatre dernières tâches (1.1.1, 1.1.2, 1.1.3, 1.1.4) devraient se terminer
 <div id="footer">
 <div id="footer-text">
 Version 0.7.0<br>
-Last updated 2018-04-22 07:34:50 CEST
+Last updated 2018-04-23 14:28:49 CEST
 </div>
 </div>
 </body>

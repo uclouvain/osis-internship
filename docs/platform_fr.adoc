@@ -91,13 +91,43 @@ Le modèle de base de données OSIS-Internship-Portal est limité aux données a
 
 image::images/internship-portal-erm.png[Internship Portal Entity Relationship Model]
 
-===== period_internship_places
+===== Comparaison
 
-Cette table est peuplée par l'importation du fichier Excel avec le nombre de places disponibles dans chaque spécialité de chaque hôpital. C'est pour ça que si l'algorithme n'arrive pas au but les données ne plus affichées.
+Pour répresenter toutes les données d'Internship, OSIS contient 14 tables. OSIS-Portal contient 9 tables, 5 en moins que OSIS. De 9 tables, 4 contiennent moins de colonnes que OSIS et 5 sons exactement les mêmes.
 
-===== internship_student_affectation_stat
+.Comparaison des modèles
+[cols="4a,4a,4a"]
+|===
+|OSIS (14) | OSIS-Portal (9) | Tables simplifiées (4)
 
-Cette table est peuplée par l’exécution de l'algorithme d'affectation. Chaque fois que l'algorithme est exécuté pour une cohorte, les données correspondant à cette cohorte sont supprimées au tout début de l’exécution.
+|* affectation_generation_time
+* cohort
+* internship
+* internship_choice
+* internship_enrollment
+* internship_master
+* internship_offer
+* internship_speciality
+* internship_student_affectation_stat
+* internship_student_information
+* master_allocation
+* organization
+* period
+* period_internship_places
+|* cohort
+* internship
+* internship_choice
+* internship_offer
+* internship_speciality
+* internship_student_affectation_stat
+* internship_student_information
+* organization
+* period
+|* cohort
+* internship
+* internship_speciality
+* organization
+|===
 
 ==== L'architecture logiciel
 
