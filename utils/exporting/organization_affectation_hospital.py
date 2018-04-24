@@ -58,6 +58,7 @@ def _add_students(worksheet, cohort, organization):
     rep_seq = list(organization.report_sequence())
 
     for student in students_stat:
+        address = models.internship_student_information.find_by_person(student.student.person, cohort).first()
         seq_dict = {organization_report_fields.PERIOD: student.period.name,
                     organization_report_fields.START_DATE: student.period.date_start.strftime("%d-%m-%Y"),
                     organization_report_fields.END_DATE: student.period.date_end.strftime("%d-%m-%Y"),
@@ -68,10 +69,10 @@ def _add_students(worksheet, cohort, organization):
                     organization_report_fields.BIRTHDATE: student.student.person.birth_date.strftime("%d-%m-%Y"),
                     organization_report_fields.EMAIL: student.student.person.email,
                     organization_report_fields.NOMA: student.student.registration_id,
-                    organization_report_fields.PHONE: "",
-                    organization_report_fields.ADDRESS: "",
-                    organization_report_fields.POSTAL_CODE: "",
-                    organization_report_fields.CITY: ""}
+                    organization_report_fields.PHONE: address.phone_mobile,
+                    organization_report_fields.ADDRESS: address.location,
+                    organization_report_fields.POSTAL_CODE: address.postal_code,
+                    organization_report_fields.CITY: address.city}
 
         columns = []
         for seq in rep_seq:
