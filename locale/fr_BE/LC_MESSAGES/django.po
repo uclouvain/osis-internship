@@ -238,6 +238,9 @@ msgstr "Email"
 msgid "master"
 msgstr "Maître"
 
+msgid "modality"
+msgstr "Modalité"
+
 msgid "name"
 msgstr "Nom"
 

@@ -235,6 +235,9 @@ msgstr "Mandatory"
 msgid "master"
 msgstr "Master"
 
+msgid "modality"
+msgstr "Modality"
+
 msgid "name"
 msgstr "Name"
 

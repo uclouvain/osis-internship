@@ -219,6 +219,8 @@ def internship_student_affectation_modification(request, cohort_id, student_id):
             speciality.acronym = speciality.acronym + " " + str(number[0])
     periods = mdl_int.period.search(cohort=cohort)
 
+    modalities = mdl_int.internship.find_by_cohort(cohort).order_by("name")
+
     affectations = mdl_int.internship_student_affectation_stat.search(student__pk=student_id)
     internships = {}
     for period in periods:

@@ -94,9 +94,13 @@ def build(student, organization, specialty, period, internship, student_choices)
     affectation = InternshipStudentAffectationStat()
     affectation.student = student
     affectation.organization = organization
-    affectation.speciality = specialty
     affectation.period = period
     affectation.internship = internship
+
+    if internship is None or internship.speciality is None:
+        affectation.speciality = specialty
+    else:
+        affectation.speciality = internship.speciality
 
     check_choice = False
     for student_choice in student_choices:
