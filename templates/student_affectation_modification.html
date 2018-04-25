@@ -51,6 +51,7 @@
             <thead>
                 <tr>
                     <th>{% trans 'period' %}</th>
+                    <th>{% trans 'modality' %}</th>
                     <th>{% trans 'speciality' %}</th>
                     <th>{% trans 'organization' %}</th>
                 </tr>
@@ -61,7 +62,19 @@
                         <td>
                             {{ period | default_if_none:'-' }}
                             <input class="hidden" name="period" value="{{ period }}">
-                            <input class="hidden" name="internship" value="{{ internships|get_item:period.id }}">
+                        </td>
+                        <td>
+                            <select name="internship" class="form-control">
+                                <option value="">--</option>
+                                {% for modality in modalities %}
+                                    <option value="{{modality.id}}"
+                                        {% if internships|get_item:period.id == modality.id %}
+                                           selected
+                                        {% endif %}>
+                                        {{ modality.name }}
+                                    </option>
+                                {% endfor %}
+                            </select>
                         </td>
                         <td>
                             <select name="specialty" class="form-control">
