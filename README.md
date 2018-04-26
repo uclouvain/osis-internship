@@ -15,7 +15,7 @@ it depends on the applications [base](base), [reference](reference) and
 
 ## Documentation
 
-The documentation of the project is available at [https://uclouvain.github.io/osis-internship/]().
+The documentation of the project is available at [https://uclouvain.github.io/osis-internship/](https://uclouvain.github.io/osis-internship/).
 
 ## Development
 
