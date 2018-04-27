@@ -27,7 +27,3 @@
       $('#btn-ok').attr('href', $(e.relatedTarget).data('href'));
       $('#delete-element').html($(e.relatedTarget).data('value'));
   });
-
-  $(".dropdown-menu li a").click(function(){
-    $(".btn:first-child").html($(this).text()+' <span class="caret"></span>');
-  });

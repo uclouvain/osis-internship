@@ -23,9 +23,12 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+import json
+
 from collections import OrderedDict
 from operator import itemgetter
 from django.utils import timezone
+from django.core.serializers.json import DjangoJSONEncoder
 
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.urlresolvers import reverse
@@ -168,39 +171,53 @@ def export_score_encoding_xls(request, cohort_id):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internship_affectation_sumup(request, cohort_id):
     cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
+    filter_specialty, filter_hospital = int(request.GET.get('specialty', 0)), int(request.GET.get('hospital', 0))
+    specialty = models.internship_speciality.get_by_id(filter_specialty)
+    hospital = models.organization.get_by_id(filter_hospital)
     all_speciality = list(models.internship_speciality.find_all(cohort=cohort))
     all_speciality = models.internship_speciality.set_speciality_unique(all_speciality)
-    set_tabs_name(all_speciality)
     periods = models.period.search(cohort=cohort)
     organizations = models.organization.search(cohort=cohort)
     organizations = models.organization.sort_organizations(organizations)
     offers = models.internship_offer.search(cohort=cohort)
+
+    hospital_specialties = {
+        "all" : []
+    }
+    for specialty in all_speciality :
+        hospital_specialties["all"].append({
+                    "id": specialty.id,
+                    "name": specialty.name
+        })
+
     informations = []
     for organization in organizations:
+        hospital_specialties[organization.reference] = []
         for offer in offers:
             if offer.organization.reference == organization.reference:
                 informations.append(offer)
+                hospital_specialties[organization.reference].append({
+                    "id": offer.speciality.id,
+                    "name": offer.speciality.name
+                })
 
-    for x in range (0,len(informations)):
-        if informations[x] != 0:
-            if informations[x].speciality.acronym == "MI":
-                informations[x+1] = 0
-                informations[x+2] = 0
+    hospital_specialties = json.dumps(hospital_specialties, cls=DjangoJSONEncoder)
 
-    informations = [x for x in informations if x != 0]
-
-    all_affectations = list(models.internship_student_affectation_stat.search())
     affectations = {}
-    for speciality in all_speciality:
+    if filter_specialty != 0:
+        all_affectations = list(models.internship_student_affectation_stat.search(speciality_id=filter_specialty))
         temp_affectations = {}
         for period in periods:
             temp_temp_affectations = []
             for aff in all_affectations:
-                if aff.speciality.acronym == speciality.acronym and aff.period == period:
+                if aff.period == period:
                     temp_temp_affectations.append(aff)
             temp_affectations[period.name] = temp_temp_affectations
-        affectations[speciality.name] = temp_affectations
+        affectations = temp_affectations
 
-    context = {'specialities': all_speciality, 'periods': periods, 'organizations': informations,
-               'affectations': affectations, 'cohort': cohort}
+    context = {'cohort': cohort, 'active_hospital': hospital, 'active_specialty': specialty,
+               'hospitals': organizations, 'hospital_specialties': hospital_specialties,
+               'specialties': all_speciality, 'affectations': affectations,
+               'periods': periods, 'informations': informations,}
+    
     return render(request, "internship_affectation_sumup.html", context)
