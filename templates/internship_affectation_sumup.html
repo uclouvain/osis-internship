@@ -1,5 +1,8 @@
 {% extends "layout.html" %}
 {% load staticfiles %}
+    {% block header %}
+        <link href="{% static 'css/internship_style.css' %}" rel="stylesheet" type="text/css" >
+    {% endblock %}
 {% load i18n %}
 
 {% comment "License" %}
@@ -37,59 +40,125 @@
     <div class="page-header">
         <h2>{% trans 'affectation_sumup' %}</h2>
     </div>
-    <div class="panel panel-default">
-        <div class="panel-body">
-            <ul class="nav nav-tabs">
-                {% for speciality in specialities %}
-                    <li {% if forloop.first %}class="active"{% endif %}><a data-toggle="tab" href="#tab_{{speciality.tab}}">{{speciality.name}}</a></li>
-                {% endfor %}
-            </ul>
-            <div class="tab-content">
-                {% for speciality in specialities %}
-                    <div id="tab_{{speciality.tab}}" class="tab-pane fade {% if forloop.first %}in active{% endif %}">
-                        <div class="panel panel-default">
-                            <div class="tab-content">
-                                <div role="tabpanel" class="tab-pane fade in active" id="profile">
-                                    <table class="table table-hover">
+    <form action="" method="get" class="">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="filter_hospital">{% trans 'hospital' %}</label>
+                    <select name="hospital" id="filter_hospital" class="form-control">
+                        <option value="0">{% trans 'all_hospitals' %}</option>
+                        {% for hospital in hospitals %}
+                            <option value="{{ hospital.id }}" data-ref="{{ hospital.reference }}" {% if active_hospital.id == hospital.id %}selected{% endif %}>
+                                {{ hospital.reference }} - {{ hospital.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="filter_specialty">{% trans 'speciality' %}</label>
+                    <select name="specialty" id="filter_specialty" class="form-control">
+                        <option value="0">--</option>
+                        {% for specialty in specialties %}
+                            <option value="{{ specialty.id }}">
+                                {{ specialty.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <button type="submit" class="btn btn-default" style="margin-top: 26px;">
+                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                    {% trans 'search' %}
+                </button>
+            </div>
+        </div>
+    </form>
+        <div class="tab-content">
+                <div class="tab-pane active">
+                    <div class="panel panel-default">
+                        <div class="tab-content">
+                            <div role="tabpanel" class="table-responsive tab-pane fade in active" id="profile">
+                                <table class="table table-hover table-bordered table-condensed">
+                                    <thead class="thead-dark">
                                         <tr>
                                             <th></th>
                                             {% for period in periods %}
-                                                <th style="background-color: #dddddd; text-align: center; border: 1px solid black;">{{period.name}}</th>
+                                                <th style="text-align: center;">{{period.name}}</th>
                                             {% endfor %}
                                         </tr>
-                                        {% for organization in organizations %}
-                                            {% if organization.speciality.acronym == speciality.acronym %}
+                                    </thead>
+                                    <tbody class="table-striped">
+                                    {% for information in informations %}
+                                        {% if information.speciality.acronym == active_specialty.acronym %}
+                                            {% if information.organization.reference == active_hospital.reference or active_hospital == None %}
                                               <tr>
-                                                   <td style="text-align: center; border-right: 1px solid black;">
-                                                       {{organization.organization.reference}}
+                                                   <td style="text-align: center; " title="{{information.organization.name}}">
+                                                       {{information.organization.reference}}
                                                    </td>
                                                    {% for period in periods %}
-                                                    	<td style="text-align: center; border-right: 1px solid black;">
-                                                    		{% for key,aff_period in affectations.items %}
-                                                                {% if key == speciality.name %}
-                                                                    {% for key,affectations in aff_period.items %}
-                                                                        {% if key == period.name %}
-                                                                            {% for affectation in affectations %}
-                                                                                {% if affectation.organization.reference == organization.organization.reference %}
-                                                                                    {{affectation.student.person.last_name.strip}} ({{affectation.choice.lower}})<br/>
-                                                                                {% endif %}
-                                                                            {% endfor %}
+                                                        <td style="word-break:break-all; text-align: center; font-size: 11px;">
+                                                            {% for key,affectations in affectations.items %}
+                                                                {% if key == period.name %}
+                                                                    {% for affectation in affectations %}
+                                                                        {% if affectation.organization.reference == information.organization.reference %}
+                                                                             <p>{{affectation.student.person.last_name.strip}} ({{affectation.choice.lower}})</p>
                                                                         {% endif %}
-                                                                    {%endfor%}
+                                                                    {% endfor %}
                                                                 {% endif %}
-                                                    		{% endfor %}
-                                                    	</td>
+                                                            {%endfor%}
+                                                        </td>
                                                     {% endfor %}
                                                 </tr>
                                             {% endif %}
-                                        {% endfor %}
-                                    </table>
-                                </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
-                {%endfor%}
+                </div>
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block script %}
+    <!--<script type="text/javascript" src="{% static "js/internship.js" %}?version={{ js }}"></script>-->
+    <script type="text/javascript">
+
+        let urlParams = new URLSearchParams(window.location.search);
+
+        let hospital_specialties = JSON.parse("{{hospital_specialties|safe|escapejs}}");
+        let active_specialty = urlParams.get("specialty");
+
+        $(document).ready(() => {
+            update_specialty_select();
+        });
+
+        $("#filter_hospital").change((e) => {
+            update_specialty_select();
+        });
+
+        function update_specialty_select(){
+            let filter_hospital = $("#filter_hospital option:selected");
+            let specialty_id = $("#filter_specialty").val();
+            let hospital_ref = filter_hospital.attr("data-ref");
+
+            $("#filter_specialty").empty();
+
+            let specialties_by_hospital = hospital_ref ? hospital_specialties[hospital_ref] : hospital_specialties["all"] ;
+            $("#filter_specialty").append($("<option></option>").attr("value",0).text("-"));
+
+            specialties_by_hospital.forEach((specialty) => {
+                let element = $("<option></option>").attr("value",specialty.id).text(specialty.name);
+                if(specialty.id == active_specialty)
+                    element.attr('selected','selected');
+                $("#filter_specialty").append(element);
+            });
+        }
+    </script>
 {% endblock %}
