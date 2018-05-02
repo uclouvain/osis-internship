@@ -23,6 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from datetime import date
 from django.db import models
 from osis_common.models.serializable_model import SerializableModel
 from osis_common.models.serializable_model import SerializableModelAdmin
@@ -44,6 +45,10 @@ class Cohort(SerializableModel):
 
     class Meta:
         ordering = ['name']
+
+    @property
+    def is_published(self):
+        return date.today() > self.publication_start_date
 
     def __str__(self):
         return self.name
