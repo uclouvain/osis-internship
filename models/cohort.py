@@ -23,8 +23,8 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from datetime import date
 from django.db import models
+from django.utils import timezone
 from osis_common.models.serializable_model import SerializableModel
 from osis_common.models.serializable_model import SerializableModelAdmin
 
@@ -48,7 +48,7 @@ class Cohort(SerializableModel):
 
     @property
     def is_published(self):
-        return date.today() > self.publication_start_date
+        return timezone.now() > self.publication_start_date
 
     def __str__(self):
         return self.name
