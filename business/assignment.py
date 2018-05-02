@@ -84,7 +84,16 @@ class Assignment:
         self.affectations = []
         self.errors_count = 0
 
+    def is_not_published(function):
+        def wrapper(self):
+            if not self.cohort.is_published:
+                return function
+            else:
+                logger.warning("{} blocked due to execution after publication date.".format(function.__name__))
+        return wrapper
+
     @transaction.atomic
+    @is_not_published
     def persist_solution(self):
         """ All the generated affectations are stored in the database. """
         InternshipStudentAffectationStat.objects.bulk_create(self.affectations)
@@ -93,6 +102,7 @@ class Assignment:
         """ Students are shuffled to make sure equity of luck is respected. """
         return self.students_information.order_by("?")
 
+    @is_not_published
     def solve(self):
         logger.info("Started assignment algorithm.")
         _clean_previous_solution(self.cohort)
@@ -111,6 +121,7 @@ class Assignment:
 
         assign_students_with_empty_periods(self)
         logger.info("Assigned remaining students.")
+
 
 
 def _clean_previous_solution(cohort):
