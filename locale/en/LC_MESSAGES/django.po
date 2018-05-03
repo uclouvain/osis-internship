@@ -136,6 +136,9 @@ msgstr "Enrolment start"
 msgid "enrolment_end"
 msgstr "Enrolment end"
 
+msgid "enrolment_period_warning"
+msgstr "Information can be altered by student during enrolment period."
+
 msgid "first_choice"
 msgstr "First choice"
 

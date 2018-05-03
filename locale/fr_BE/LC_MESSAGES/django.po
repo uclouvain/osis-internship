@@ -142,6 +142,9 @@ msgstr "Ouverture des inscriptions"
 msgid "enrolment_end"
 msgstr "Fermeture des inscriptions"
 
+msgid "enrolment_period_warning"
+msgstr "Les informations peuvent être modifées par l'étudiant pendant la période d'inscription."
+
 msgid "first_choice"
 msgstr "Choix préféré"
 

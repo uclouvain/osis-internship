@@ -24,6 +24,8 @@
 #
 ##############################################################################
 from django.db import models
+from django.utils import timezone
+
 from osis_common.models.serializable_model import SerializableModel
 from osis_common.models.serializable_model import SerializableModelAdmin
 
@@ -44,6 +46,10 @@ class Cohort(SerializableModel):
 
     class Meta:
         ordering = ['name']
+
+    @property
+    def is_subscription_active(self):
+        return self.subscription_start_date <= timezone.now().date() <= self.subscription_end_date
 
     def __str__(self):
         return self.name
