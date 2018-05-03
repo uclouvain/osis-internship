@@ -48,7 +48,7 @@ class Cohort(SerializableModel):
 
     @property
     def is_published(self):
-        return timezone.now() > self.publication_start_date
+        return timezone.now().date() >= self.publication_start_date
 
     def __str__(self):
         return self.name
