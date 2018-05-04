@@ -51,7 +51,7 @@ class AssignmentTest(TestCase):
         self.assignment = Assignment(self.cohort)
 
     def test_algorithm_execution_blocked(self):
-        self.cohort.publication_start_date = timezone.now() - timedelta(days=5)
+        self.cohort.publication_start_date = timezone.now().date() - timedelta(days=5)
         with self.assertLogs() as logger:
             self.assignment.solve()
             self.assertIn("blocked due to execution after publication date", str(logger.output))
