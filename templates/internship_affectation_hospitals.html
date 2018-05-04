@@ -35,6 +35,7 @@
 
 {% block style %}
     <link rel="stylesheet" href="{% static 'css/dataTables.bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/internhip_style.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -90,21 +91,7 @@
     </div>
 
     <div class="panel panel-default">
-        <div class="panel-heading">
-            <div class="row">
-                <div class="col-md-3">
-                    <button type="submit" class="btn btn-primary" title="{% trans 'Send'%}" id="bt_interships_save" onclick="$('#generate').modal('show');">
-                        <span class="glyphicon glyphicon-random" aria-hidden="true"></span> {% trans 'generate_solution' %}
-                    </button>
-                </div>
-                <div class="col-md-5">
-                    <p>{% trans 'latest_generation_start' %} : {{ latest_generation.start_date_time| default_if_none:''|date:"SHORT_DATE_FORMAT" }} {{ latest_generation.start_date_time| default_if_none:''|time:"TIME_FORMAT" }}</p>
-                </div>
-                <div class="col-md-4">
-                    <p>{% trans 'latest_generation_end' %} : {{ latest_generation.end_date_time| default_if_none:''|date:"SHORT_DATE_FORMAT" }} {{ latest_generation.end_date_time| default_if_none:''|time:"TIME_FORMAT" }}</p>
-                </div>
-            </div>
-        </div>
+     {% include "fragment/affectation_panel_heading.html" %}
 
         <div class="panel-body">
             <ul class="nav nav-tabs">

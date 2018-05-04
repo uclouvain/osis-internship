@@ -51,6 +51,10 @@ class Cohort(SerializableModel):
     def is_subscription_active(self):
         return self.subscription_start_date <= timezone.now().date() <= self.subscription_end_date
 
+    @property
+    def is_published(self):
+        return timezone.now().date() >= self.publication_start_date
+
     def __str__(self):
         return self.name
 

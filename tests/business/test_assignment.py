@@ -23,8 +23,39 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from datetime import timedelta
+
+from django.contrib.auth.models import User, Permission
 from django.test import TestCase
-from internship.business.assignment import difference
+from django.utils import timezone
+
+from base.tests.factories.student import StudentFactory
+from internship.business.assignment import difference, Assignment
+from internship.tests.factories.cohort import CohortFactory
+from internship.tests.factories.internship import InternshipFactory
+from internship.tests.factories.offer import OfferFactory
+from internship.tests.factories.organization import OrganizationFactory
+from internship.tests.factories.period import PeriodFactory
+from internship.tests.factories.speciality import SpecialtyFactory
+from internship.tests.factories.student_affectation_stat import StudentAffectationStatFactory
+
+
+class AssignmentTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user('demo', 'demo@demo.org', 'passtest')
+        permission = Permission.objects.get(codename='is_internship_manager')
+        self.user.user_permissions.add(permission)
+        self.client.force_login(self.user)
+
+        self.cohort = CohortFactory()
+        self.assignment = Assignment(self.cohort)
+
+    def test_algorithm_execution_blocked(self):
+        self.cohort.publication_start_date = timezone.now() - timedelta(days=5)
+        with self.assertLogs() as logger:
+            self.assignment.solve()
+            self.assertIn("blocked due to execution after publication date", str(logger.output))
+            self.assertFalse(self.assignment.affectations)
 
 
 class ListUtilsTestCase(TestCase):
