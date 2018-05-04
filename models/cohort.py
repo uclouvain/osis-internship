@@ -24,6 +24,7 @@
 #
 ##############################################################################
 from django.db import models
+from django.utils import timezone
 from osis_common.models.serializable_model import SerializableModel
 from osis_common.models.serializable_model import SerializableModelAdmin
 
@@ -44,6 +45,10 @@ class Cohort(SerializableModel):
 
     class Meta:
         ordering = ['name']
+
+    @property
+    def is_published(self):
+        return timezone.now().date() >= self.publication_start_date
 
     def __str__(self):
         return self.name
