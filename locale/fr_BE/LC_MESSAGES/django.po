@@ -134,7 +134,7 @@ msgid "email"
 msgstr "Email"
 
 msgid "email_private"
-msgstr "Private Email"
+msgstr "Email Privé"
 
 msgid "enrolment_start"
 msgstr "Ouverture des inscriptions"
@@ -171,6 +171,9 @@ msgstr "Hôpital"
 
 msgid "hospitals"
 msgstr "Hôpitaux"
+
+msgid "hospital_or_specialty_required"
+msgstr "Un maître de stage doit être affecté à au moins un hôpital ou une spécialité."
 
 msgid "import_hospital"
 msgstr "Importer les hôpitaux"

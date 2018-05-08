@@ -24,11 +24,25 @@
 #
 ##############################################################################
 from django import forms
-from internship.models import internship_master
+from django.utils import timezone
+
+from reference.models import country
+from base.forms import bootstrap
+from internship.models import internship_master, organization
 
 
-class MasterForm(forms.ModelForm):
+class MasterForm(bootstrap.BootstrapModelForm):
+    country = forms.ModelChoiceField(queryset=country.find_all(), required=False)
     class Meta:
         model = internship_master.InternshipMaster
         fields = ['first_name', 'last_name', 'civility', 'gender', 'email', 'email_private', 'location',
                   'postal_code', 'city', 'country', 'phone', 'phone_mobile', 'birth_date', 'start_activities']
+        widgets = {
+            'birth_date': forms.DateInput(
+                format="%Y-%m-%d",
+                attrs={
+                    'type': 'date',
+                    'max': timezone.now().date().strftime('%Y-%m-%d')
+                }),
+            'start_activities': forms.DateInput(format="%Y-%m-%d", attrs={'type': 'date'})
+        }

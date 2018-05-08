@@ -24,8 +24,12 @@
 #
 ##############################################################################
 from osis_common.utils.enumerations import ChoiceEnum
-
+from django.utils.translation import ugettext_lazy as _
 
 class Gender(ChoiceEnum):
-    FEMALE = "F"
-    MALE = "M"
+    FEMALE = "female"
+    MALE = "male"
+
+    @classmethod
+    def choices(cls):
+        return tuple((x.value[:1].upper(), _(x.value)) for x in cls)

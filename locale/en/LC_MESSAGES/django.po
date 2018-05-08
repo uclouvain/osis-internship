@@ -166,6 +166,9 @@ msgstr "Hospital"
 msgid "hospitals"
 msgstr "Hospitals"
 
+msgid "hospital_or_specialty_required"
+msgstr "A master must be affected to at least one hospital or one specialty."
+
 msgid "import_hospital"
 msgstr "Import hospitals"
 

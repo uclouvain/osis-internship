@@ -40,7 +40,7 @@ class InternshipMasterAdmin(SerializableModelAdmin):
 
 class InternshipMaster(SerializableModel):
     first_name = models.CharField(max_length=50, blank=True, null=True, db_index=True)
-    last_name = models.CharField(max_length=50, blank=True, null=True, db_index=True)
+    last_name = models.CharField(max_length=50, db_index=True)
     civility = models.CharField(max_length=50, blank=True, null=True, choices=Civility.choices())
     gender = models.CharField(max_length=1, blank=True, null=True, choices=Gender.choices())
     email = models.EmailField(max_length=255, blank=True, null=True)
