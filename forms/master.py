@@ -38,7 +38,7 @@ class MasterForm(bootstrap.BootstrapModelForm):
     def clean(self):
         cleaned_data = super().clean()
         birth_date = cleaned_data.get("birth_date")
-        if birth_date > timezone.now().date():
+        if birth_date is not None and birth_date > timezone.now().date():
             raise forms.ValidationError(_("birth_date_before_today"))
 
     class Meta:

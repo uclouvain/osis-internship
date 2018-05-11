@@ -25,12 +25,14 @@
 ##############################################################################
 from datetime import timedelta
 
-from django.test import TestCase
+from django.test import TestCase, RequestFactory
 from django.utils import timezone
 
 from internship.forms import master
-from internship.tests.factories.cohort import CohortFactory
-from base.tests.factories.person import PersonFactory
+from internship.tests.factories.organization import OrganizationFactory
+from internship.tests.factories.speciality import SpecialtyFactory
+from internship.views.master import _validate_allocations
+
 from reference.models.country import Country
 
 
@@ -63,3 +65,35 @@ class TestMasterForm(TestCase):
         }
         form = master.MasterForm(data)
         self.assertFalse(form.is_valid())
+
+    def test_invalid_allocation(self):
+        requetFactory = RequestFactory()
+        request = requetFactory.post("/masters/save/",data={
+            "specialty": [''],
+            "hospital": ['']
+        })
+        self.assertFalse(_validate_allocations(request))
+
+    def test_valid_allocation_one_specialty(self):
+        requetFactory = RequestFactory()
+        request = requetFactory.post("/masters/save/",data={
+            "specialty": [''],
+            "hospital": [OrganizationFactory()]
+        })
+        self.assertTrue(_validate_allocations(request))
+
+    def test_valid_allocation_one_hospital(self):
+        requetFactory = RequestFactory()
+        request = requetFactory.post("/masters/save/",data={
+            "specialty": [SpecialtyFactory()],
+            "hospital": ['']
+        })
+        self.assertTrue(_validate_allocations(request))
+
+    def test_valid_allocation_both(self):
+        requetFactory = RequestFactory()
+        request = requetFactory.post("/masters/save/",data={
+            "specialty": [SpecialtyFactory()],
+            "hospital": [OrganizationFactory()]
+        })
+        self.assertTrue(_validate_allocations(request))
