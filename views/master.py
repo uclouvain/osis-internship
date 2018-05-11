@@ -62,9 +62,8 @@ def master(request, cohort_id, master_id):
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
-def master_form(request, cohort_id, master_id=None):
+def master_form(request, cohort_id, master_id=None, allocated_master=None):
     current_cohort = shortcuts.get_object_or_404(cohort.Cohort, pk=cohort_id)
-    allocated_master = None
     if master_id:
         allocated_master = internship_master.get_by_id(master_id)
         allocations = master_allocation.find_by_master(current_cohort, allocated_master)
@@ -80,26 +79,28 @@ def master_form(request, cohort_id, master_id=None):
 def master_save(request, cohort_id):
     current_cohort = shortcuts.get_object_or_404(cohort.Cohort, pk=cohort_id)
     allocated_master = internship_master.get_by_id(request.POST.get("id")) if request.POST.get("id") else None
-
     form = MasterForm(request.POST, instance=allocated_master)
     errors = []
     hospital = ""
     if form.is_valid():
-        form.save()
         allocated_master = form.instance
         if _validate_allocations(request):
+            form.save()
             master_allocation.clean_allocations(current_cohort, allocated_master)
             allocations = _build_allocations(request, allocated_master)
             _save_allocations(allocations)
             hospital = _extract_hospital_id(allocations)
         else:
-            messages.add_message(request, messages.ERROR, _('hospital_or_specialty_required'), "alert-danger")
             errors.append(form.errors)
+            messages.add_message(request, messages.ERROR, _('hospital_or_specialty_required'), "alert-danger")
     else:
         errors.append(form.errors)
+        for error in errors:
+            for key, value in error.items():
+                messages.add_message(request, messages.ERROR, "{} : {}".format(_(key), value[0]),"alert-danger")
 
     if errors:
-        return HttpResponseRedirect(reverse("master_edit", args=[current_cohort.id, allocated_master.id]))
+        return master_form(request=request, cohort_id=current_cohort.id, allocated_master=allocated_master)
 
     return HttpResponseRedirect("{}?hospital={}".format(reverse("internships_masters", args=[current_cohort.id]),
                                                         hospital))
@@ -133,7 +134,6 @@ def _build_allocations(request, allocated_master):
                                                             specialty=specialty)
             allocations.append(allocation)
 
-    print(allocations)
     return allocations
 
 

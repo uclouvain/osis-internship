@@ -45,7 +45,9 @@
         <div class="panel-body">
             <form action="{%url 'master_save' cohort_id=current_cohort.id %}" method="POST" class="form">
                 {% csrf_token %}
+                {% if allocated_master.id %}
                 <input type="hidden" name="id" value="{{ allocated_master.id }}">
+                {% endif %}
                 <div class="row">
                     <div class="col-md-3">
                         <div class="form-group">
