@@ -64,6 +64,9 @@ msgstr "Affectation"
 msgid "already_internship_preference_speciality"
 msgstr "Vous avez déjà un stage avec cette préférence dans cette spécialité."
 
+msgid "birth_date_before_today"
+msgstr "La date de naissance doit être antérieure ou égale à la date actuelle."
+
 msgid "block_internship_selection"
 msgstr "Bloquer la sélection des stages"
 

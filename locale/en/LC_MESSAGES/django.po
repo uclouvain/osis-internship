@@ -58,6 +58,9 @@ msgstr "Allocation"
 msgid "already_internship_preference_speciality"
 msgstr "You already have an internship with this preference for this speciality."
 
+msgid "birth_date_before_today"
+msgstr "Birth date must be on or before today's date."
+
 msgid "block_internship_selection"
 msgstr "Block internship's selection"
 
