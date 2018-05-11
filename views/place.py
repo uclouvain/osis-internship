@@ -88,6 +88,7 @@ def organization_edit(request, cohort_id, organization_id):
     cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
     organization = models.organization.get_by_id(organization_id)
     countries = country.find_all()
+    form = OrganizationForm(request.POST or None, instance=organization)
     return render(request, "place_form.html", locals())
 
 
@@ -96,6 +97,7 @@ def organization_edit(request, cohort_id, organization_id):
 def organization_create(request, cohort_id):
     cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
     countries = country.find_all()
+    form = OrganizationForm(request.POST or None)
     return render(request, "place_form.html", locals())
 
 
