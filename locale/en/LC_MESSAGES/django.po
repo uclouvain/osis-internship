@@ -124,6 +124,9 @@ msgstr "Doctor"
 msgid "DOCTOR_ACRON"
 msgstr "Dr."
 
+msgid "duplicate_report_sequence"
+msgstr "Duplicated sequence in report"
+
 msgid "edit_places"
 msgstr "Edit number of places"
 
@@ -168,6 +171,9 @@ msgstr "Hospital"
 
 msgid "hospitals"
 msgstr "Hospitals"
+
+msgid "hospital_saved"
+msgstr "Hospital saved"
 
 msgid "hospital_or_specialty_required"
 msgstr "A master must be affected to at least one hospital or one specialty."

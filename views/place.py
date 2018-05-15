@@ -23,10 +23,13 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.shortcuts import get_object_or_404, render
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
+from django.utils.translation import ugettext_lazy as _
+
 from internship import models
 from internship.forms.organization_form import OrganizationForm
 from internship.utils.exporting import organization_affectation_master
@@ -49,6 +52,7 @@ def internships_places(request, cohort_id):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def place_save(request, cohort_id, organization_id):
     cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
+    errors = []
 
     if organization_id:
         organization = models.organization.get_by_id(organization_id)
@@ -61,6 +65,14 @@ def place_save(request, cohort_id, organization_id):
     form = OrganizationForm(data=request.POST, instance=organization)
     if form.is_valid():
         form.save()
+        messages.add_message(request, messages.SUCCESS, "{} : {} - {}".format(
+            _("hospital_saved"), form.cleaned_data["reference"], form.cleaned_data["name"]), "alert-success")
+    else:
+        errors.append(form.errors)
+        for error in errors:
+            for key, value in error.items():
+                key = key.replace("report_","")
+                messages.add_message(request, messages.ERROR, "{} : {}".format(_(key), value[0]), "alert-danger")
 
     countries = country.find_all()
 

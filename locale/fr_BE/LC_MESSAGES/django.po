@@ -130,6 +130,9 @@ msgstr "Docteur"
 msgid "DOCTOR_ACRON"
 msgstr "Dr."
 
+msgid "duplicate_report_sequence"
+msgstr "Séquence dupliquée dans le rapport"
+
 msgid "edit_places"
 msgstr "Modifier nombres de places"
 
@@ -171,6 +174,9 @@ msgstr "Veuillez sélectionner un fichier xlsx pour l'injection des étudiants."
 
 msgid "hospital"
 msgstr "Hôpital"
+
+msgid "hospital_saved"
+msgstr "Hôpital enregistré"
 
 msgid "hospitals"
 msgstr "Hôpitaux"
