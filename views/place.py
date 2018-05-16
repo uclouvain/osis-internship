@@ -184,15 +184,15 @@ def export_organisation_affectation_master(request, cohort_id, organization_id):
             affectation.phone_mobile = ""
             affectation.master = ""
             internship_student_info = models.internship_student_information.search(person=affectation.student.person)
-            internship_offer = models.internship_offer.search(organization=affectation.organization,
-                                                              speciality=affectation.speciality)
+            master_allocation = models.master_allocation.search(cohort=cohort, hospital=affectation.organization,
+                                                              specialty=affectation.speciality)
             if internship_student_info:
                 informations = internship_student_info.first()
                 affectation.email = informations.email
                 affectation.adress = informations.location + " " + informations.postal_code + " " + informations.city
                 affectation.phone_mobile = informations.phone_mobile
-            if internship_offer:
-                offer = internship_offer.first()
+            if master_allocation:
+                offer = master_allocation.first()
                 affectation.master = offer.master
     return _export_xls_master(cohort, organization, affec_by_specialties)
 
