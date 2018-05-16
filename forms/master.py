@@ -29,7 +29,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from reference.models import country
 from base.forms import bootstrap
-from internship.models import internship_master, organization
+from internship.models import internship_master
 
 
 class MasterForm(bootstrap.BootstrapModelForm):
