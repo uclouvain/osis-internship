@@ -192,8 +192,8 @@ def export_organisation_affectation_master(request, cohort_id, organization_id):
                 affectation.adress = informations.location + " " + informations.postal_code + " " + informations.city
                 affectation.phone_mobile = informations.phone_mobile
             if master_allocation:
-                offer = master_allocation.first()
-                affectation.master = offer.master
+                allocation = master_allocation.first()
+                affectation.master = allocation.master
     return _export_xls_master(cohort, organization, affec_by_specialties)
 
 
