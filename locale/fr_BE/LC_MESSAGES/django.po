@@ -76,6 +76,9 @@ msgstr "Modification des choix"
 msgid "choice_receive_by_administration"
 msgstr "Choix reçus par l'administration"
 
+msgid "choice_saved"
+msgstr "Choix enregistrés"
+
 msgid "choose_a_hospital"
 msgstr "Choisir un hôpital"
 
@@ -132,6 +135,12 @@ msgstr "Docteur"
 
 msgid "DOCTOR_ACRON"
 msgstr "Dr."
+
+msgid "duplicate_offer"
+msgstr "Impossible de sélectionner la même offre"
+
+msgid "duplicate_preference"
+msgstr "Impossible d'appliquer la même préférence sur des offres distinctes"
 
 msgid "duplicate_report_sequence"
 msgstr "Séquence dupliquée dans le rapport"
@@ -384,6 +393,9 @@ msgstr "Études"
 
 msgid "subscription_start_date"
 msgstr "Ouverture des inscriptions"
+
+msgid "submit_choices"
+msgstr "Soumettre les choix"
 
 msgid "summary_your_choices_and_affectation"
 msgstr "Résumé de vos choix et affectations"

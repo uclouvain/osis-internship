@@ -70,6 +70,9 @@ msgstr "Choices modification"
 msgid "choice_receive_by_administration"
 msgstr "Choice receive by administration"
 
+msgid "choice_saved"
+msgstr "Choices saved"
+
 msgid "choose_a_hospital"
 msgstr "Choose a hospital"
 
@@ -126,6 +129,12 @@ msgstr "Doctor"
 
 msgid "DOCTOR_ACRON"
 msgstr "Dr."
+
+msgid "duplicate_offer"
+msgstr "Cannot select same offer"
+
+msgid "duplicate_preference"
+msgstr "Cannot apply same preference on distinct offers"
 
 msgid "duplicate_report_sequence"
 msgstr "Duplicated sequence in report"
@@ -375,6 +384,9 @@ msgstr "Sump up of your choices and your affectations"
 
 msgid "subscription_start_date"
 msgstr "Enrolment start"
+
+msgid "submit_choices"
+msgstr "Submit choices"
 
 msgid "third_choice"
 msgstr "Third Choice"
