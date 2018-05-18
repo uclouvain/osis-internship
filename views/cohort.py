@@ -23,6 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.urlresolvers import reverse
 from django.shortcuts import render, get_object_or_404, redirect
@@ -37,10 +38,16 @@ from internship.business import copy_cohort
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def new(request):
     form = CohortForm(request.POST or None)
+    errors = []
     if form.is_valid():
         cohort = form.save()
         copy_cohort.copy_from_origin(cohort)
         return redirect(reverse('internship'))
+    else:
+        errors.append(form.errors)
+        for error in errors:
+            for key, value in error.items():
+                messages.add_message(request, messages.ERROR, "{} : {}".format(_ (key), value[0]), "alert-danger")
 
     context = {
         'form': form,
@@ -56,11 +63,16 @@ def edit(request, cohort_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
 
     form = CohortForm(data=request.POST or None, instance=cohort)
+    errors = []
 
     if form.is_valid():
         form.save()
         return redirect(reverse('internship'))
-
+    else:
+        errors.append(form.errors)
+        for error in errors:
+            for key, value in error.items():
+                messages.add_message(request, messages.ERROR, "{} : {}".format(_(key), value[0]), "alert-danger")
     context = {
         'form': form,
         'page_title': _('edit_cohort'),

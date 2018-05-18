@@ -25,6 +25,7 @@
 ##############################################################################
 from django import forms
 from django.forms import TextInput
+from django.utils.translation import ugettext_lazy as _
 
 from internship.models import cohort
 
@@ -38,6 +39,17 @@ class CohortForm(forms.ModelForm):
     subscription_start_date = forms.DateField(widget=DateInput)
     subscription_end_date = forms.DateField(widget=DateInput)
     originated_from = forms.ModelChoiceField(queryset=cohort.find_all(), empty_label="", required=False)
+
+    def clean(self):
+        cleaned_data = super().clean()
+        subscription_start_date = cleaned_data.get("subscription_start_date")
+        subscription_end_date = cleaned_data.get("subscription_end_date")
+        publication_start_date = cleaned_data.get("publication_start_date")
+        if all([subscription_start_date, subscription_end_date, publication_start_date]):
+            if subscription_start_date >= subscription_end_date:
+                self.add_error("subscription_start_date", _("start_before_end"))
+            if publication_start_date < subscription_end_date:
+                self.add_error("publication_start_date", _("publication_after_subscription"))
 
     class Meta:
         model = cohort.Cohort

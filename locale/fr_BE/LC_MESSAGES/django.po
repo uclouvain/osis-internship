@@ -82,6 +82,9 @@ msgstr "Choisir un hôpital"
 msgid "choose_internships"
 msgstr "Choisissez vos stages"
 
+msgid "choose_specialty"
+msgstr "Choisissez une spécialité"
+
 msgid "choose_spec_see_record_choice"
 msgstr "Choisissez une spécialité pour voir vos choix déjà effectués."
 
@@ -310,6 +313,12 @@ msgstr "Prof."
 msgid "publication_date"
 msgstr "Date de publication"
 
+msgid "publication_start_date"
+msgstr "Date de publication"
+
+msgid "publication_after_subscription"
+msgstr "La publication doit être réalisée après le processus d'inscription."
+
 msgid "reference"
 msgstr "Référence"
 
@@ -349,6 +358,9 @@ msgstr "Spécialiste"
 msgid "start_activities"
 msgstr "Début des activités"
 
+msgid "start_before_end"
+msgstr "La date d'ouverture doit être antérieure à la date de fermeture."
+
 msgid "student"
 msgstr "Étudiant"
 
@@ -369,6 +381,9 @@ msgstr "Étudiants"
 
 msgid "studies"
 msgstr "Études"
+
+msgid "subscription_start_date"
+msgstr "Ouverture des inscriptions"
 
 msgid "summary_your_choices_and_affectation"
 msgstr "Résumé de vos choix et affectations"
