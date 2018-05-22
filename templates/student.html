@@ -108,8 +108,8 @@
                         <div class="form-group">
                             <label>{% trans 'address' %}</label><br>
                             {% if information %}
-                                {{ information.location | default_if_none:'-' }} {{ information.postal_code | default_if_none:'-' }}
-                                {{ information.city | default_if_none:'-' }}<br>
+                                {{ information.location | default_if_none:'-' }} <br> {{ information.postal_code | default_if_none:'-' }}
+                                {{ information.city | default_if_none:'-' }} ({{ information.country | default_if_none:'-' | upper }})
                             {% endif %}
                         </div>
                     </div>

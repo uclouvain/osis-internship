@@ -159,11 +159,12 @@ def internships_student_read(request, cohort_id, student_id):
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
-def internship_student_information_modification(request, cohort_id, student_id):
+def internship_student_information_modification(request, cohort_id, student_id, form = None):
     cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)
     student = mdl.student.find_by_id(student_id)
     information = mdl_int.internship_student_information.search(person=student.person, cohort=cohort).first()
-    form = StudentInformationForm()
+    if form is None:
+        form = StudentInformationForm(instance=information)
     return render(request, "student_information_modification.html", locals())
 
 
@@ -190,11 +191,12 @@ def student_save_information_modification(request, cohort_id, student_id):
         information.location = form.cleaned_data.get('location')
         information.postal_code = form.cleaned_data.get('postal_code')
         information.city = form.cleaned_data.get('city')
-        information.country = form.cleaned_data.get('country')
+        information.country = str(form.cleaned_data.get('country'))
         information.contest = form.cleaned_data.get('contest')
         information.save()
-
-    redirect_url = reverse('internships_student_read', args=[cohort_id, student_id])
+        redirect_url = reverse('internships_student_read', args=[cohort_id, student_id])
+    else:
+        return internship_student_information_modification(request, cohort_id, student_id, form)
     return HttpResponseRedirect(redirect_url)
 
 
