@@ -85,7 +85,7 @@ def modification_student(request, cohort_id, student_id, internship_id=-1, speci
 
     context = {
         "internships": internships,
-        "speciality_form": SpecialityForm(cohort=cohort),
+        "speciality_form": SpecialityForm(cohort=cohort, specialty_id=speciality_id),
         "formset": formset,
         "offers_forms": zipped_data,
         "internship": internship,
@@ -103,7 +103,7 @@ def assign_speciality_for_internship(request, cohort_id, student_id, internship_
     cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)
     speciality_id = None
     if request.method == "POST":
-        speciality_form = SpecialityForm(request.POST, cohort=cohort)
+        speciality_form = SpecialityForm(request.POST, cohort=cohort, specialty_id=speciality_id)
         if speciality_form.is_valid():
             speciality_selected = speciality_form.cleaned_data["speciality"]
             speciality_id = speciality_selected.id
