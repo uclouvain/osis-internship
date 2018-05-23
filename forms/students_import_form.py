@@ -24,7 +24,9 @@
 #
 ##############################################################################
 from django import forms
+from django.core.validators import FileExtensionValidator
 
 
 class StudentsImportActionForm(forms.Form):
-    file_upload = forms.FileField()
+    file_upload = forms.FileField(validators=[FileExtensionValidator(allowed_extensions=['xlsx'])])
+g

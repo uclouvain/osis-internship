@@ -157,6 +157,9 @@ msgstr "Enrolment end"
 msgid "first_choice"
 msgstr "First choice"
 
+msgid "file_upload"
+msgstr "File upload"
+
 msgid "fourth_choice"
 msgstr "Fourth choice"
 

@@ -163,6 +163,9 @@ msgstr "Fermeture des inscriptions"
 msgid "first_choice"
 msgstr "Choix préféré"
 
+msgid "file_upload"
+msgstr "Importation de fichier"
+
 msgid "fourth_choice"
 msgstr "4ème choix"
 

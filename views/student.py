@@ -301,11 +301,16 @@ def student_save_affectation_modification(request, cohort_id, student_id):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def import_students(request, cohort_id):
     cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)
-
     form = StudentsImportActionForm(request.POST, request.FILES)
+    errors = []
     if form.is_valid():
         file_upload = form.cleaned_data['file_upload']
         import_xlsx(cohort, BytesIO(file_upload.read()))
+    else:
+        errors.append(form.errors)
+        for error in errors:
+            for key, value in error.items():
+                messages.add_message(request, messages.ERROR, "{} : {}".format(_(key), value[0]), "alert-danger")
     return HttpResponseRedirect(reverse('internships_student_resume', kwargs={"cohort_id": cohort_id}))
 
 
