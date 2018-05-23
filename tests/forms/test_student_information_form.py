@@ -29,9 +29,11 @@ from internship.forms import form_student_information
 from internship.tests.factories.cohort import CohortFactory
 from base.tests.factories.person import PersonFactory
 
+from reference.tests.factories.country import CountryFactory
 
 class TestFormStudentInformation(TestCase):
     def test_valid_form(self):
+        country = CountryFactory()
         cohort = CohortFactory()
         person = PersonFactory()
         data = {
@@ -40,7 +42,7 @@ class TestFormStudentInformation(TestCase):
             "location": "location",
             "postal_code": "postal",
             "city": "city",
-            "country": "country",
+            "country": country,
             "contest": "GENERALIST",
             "person": person.id,
             'cohort': cohort.id,

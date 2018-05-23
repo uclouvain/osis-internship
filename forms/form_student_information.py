@@ -24,14 +24,16 @@
 #
 ##############################################################################
 from django import forms
+from base.models.person import Person
 from base.forms.bootstrap import BootstrapModelForm
 from internship.models.internship_student_information import InternshipStudentInformation
 from reference.models import country
 
 
 class StudentInformationForm(BootstrapModelForm):
-    country = forms.ModelChoiceField(queryset=country.find_all(), required=False, to_field_name="name")
+    country = forms.ModelChoiceField(queryset=country.find_all(), to_field_name="name")
+    person = forms.ModelChoiceField(queryset=Person.objects.all(), widget=forms.HiddenInput())
 
     class Meta:
         model = InternshipStudentInformation
-        fields = ['location', 'postal_code', 'city', 'country', 'email', 'phone_mobile', 'contest']
+        fields = ['location', 'postal_code', 'city', 'country', 'email', 'phone_mobile', 'contest', 'cohort', 'person']

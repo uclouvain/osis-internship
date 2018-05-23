@@ -73,9 +73,11 @@ def internships_student_resume(request, cohort_id):
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
-def student_form(request, cohort_id):
+def student_form(request, cohort_id, form=None):
     cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)
     countries = country.find_all()
+    if form is None:
+        form = StudentInformationForm(request.POST)
     return render(request, 'student_form.html', locals())
 
 
@@ -116,15 +118,15 @@ def get_student(request):
 def student_save(request, cohort_id):
     cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)
     student = mdl_int.internship_student_information.InternshipStudentInformation(cohort=cohort)
-
     form = StudentInformationForm(request.POST, instance=student)
     errors = []
     if form.is_valid():
         form.save()
     else:
         errors.append(form.errors)
-
-    if errors:
+        for error in errors:
+            for key, value in error.items():
+                messages.add_message(request, messages.ERROR, "{} : {}".format(_(key), value[0]), "alert-danger")
         return HttpResponseRedirect(reverse("internship_student_form", args=[cohort_id]))
 
     return HttpResponseRedirect(reverse("internships_student_resume", args=[cohort_id]))
@@ -159,7 +161,7 @@ def internships_student_read(request, cohort_id, student_id):
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
-def internship_student_information_modification(request, cohort_id, student_id, form = None):
+def internship_student_information_modification(request, cohort_id, student_id, form=None):
     cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)
     student = mdl.student.find_by_id(student_id)
     information = mdl_int.internship_student_information.search(person=student.person, cohort=cohort).first()
