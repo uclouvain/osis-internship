@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -23,27 +23,30 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.forms import ModelForm
+from datetime import timedelta
 
-from base.forms.bootstrap import BootstrapModelForm
-from internship.models.period import Period
-from django import forms
-from django.utils.translation import ugettext_lazy as _
+from django.test import TestCase
+from django.utils import timezone
 
-class PeriodForm(BootstrapModelForm):
+from internship.forms.period_form import PeriodForm
 
-    def clean(self):
-        cleaned_data = super().clean()
-        date_start = cleaned_data.get("date_start")
-        date_end = cleaned_data.get("date_end")
-        if all([date_start, date_end]):
-            if date_start >= date_end:
-                self.add_error("date_start", _("start_before_end"))
 
-    class Meta:
-        model = Period
-        fields = ['name', 'date_start', 'date_end']
-        widgets = {
-            'date_start': forms.DateInput(format="%Y-%m-%d", attrs={'type': 'date'}),
-            'date_end': forms.DateInput(format="%Y-%m-%d", attrs={'type': 'date'})
+class TestPeriodForm(TestCase):
+
+    def test_valid_form(self):
+        data = {
+            'name': "name",
+            'date_start': timezone.now().date(),
+            'date_end': timezone.now().date() + timedelta(days=5),
         }
+        form = PeriodForm(data)
+        self.assertTrue(form.is_valid())
+
+    def test_start_before_end(self):
+        data = {
+            'name': "name",
+            'date_start': timezone.now().date() + timedelta(days=5),
+            'date_end': timezone.now().date(),
+        }
+        form = PeriodForm(data)
+        self.assertFalse(form.is_valid())

@@ -301,6 +301,9 @@ msgstr "Période supprimée"
 msgid "period_saved"
 msgstr "Période créée"
 
+msgid "period_edited"
+msgstr "Période modifiée"
+
 msgid "periods"
 msgstr "Périodes"
 

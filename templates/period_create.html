@@ -35,6 +35,9 @@
 {% endblock %}
 
 {% block content %}
+
+{% include "template_messages.html" %}
+
 <div class="page-header">
     <h2>{% trans 'period_creation' %}</h2>
 </div>
@@ -51,20 +54,20 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label for="name">{% trans 'name' %}</label>
-                        <input type="text" name="name" placeholder="P..." class="form-control" value="{{ period.name | default_if_none:'' }}" required />
+                        <label for="id_name">{% trans 'name' %}</label>
+                        {{form.name}}
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label for="date_start">{% trans 'start_date' %}</label>
-                        <input type="date" name="date_start" placeholder="AAAA-MM-JJ" class="form-control" value="{{ period.date_start|date:"Y-m-d" }}" required />
+                        <label for="id_date_start">{% trans 'start_date' %}</label>
+                        {{form.date_start}}
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label for="date_end">{% trans 'end_date' %}</label>
-                        <input type="date" name="date_end" placeholder="AAAA-MM-JJ" class="form-control" value="{{ period.date_end|date:"Y-m-d" }}" required />
+                        <label for="id_date_end">{% trans 'end_date' %}</label>
+                        {{form.date_end}}
                     </div>
                 </div>
             </div>

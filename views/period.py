@@ -63,7 +63,22 @@ def period_save(request, cohort_id, period_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
     period = get_object_or_404(Period, pk=period_id, cohort_id=cohort_id)
     form = PeriodForm(data=request.POST, instance=period)
-    form.save()
+    errors = []
+    if(form.is_valid()):
+        form.save()
+        messages.add_message(request, messages.SUCCESS, "{} : {}".format(_('period_edited'), period.name),
+                             "alert-success")
+    else:
+        errors.append(form.errors)
+        for error in errors:
+            for key, value in error.items():
+                messages.add_message(request, messages.ERROR, "{} : {}".format(_ (key), value[0]), "alert-danger")
+        context = {
+            'form': form,
+            'cohort': cohort,
+            'url_form': reverse('period_new', kwargs={'cohort_id': cohort.id}),
+        }
+        return render(request, "period_create.html", context)
     kwargs = {
         'cohort_id': cohort.id
     }
@@ -77,8 +92,23 @@ def period_new(request, cohort_id):
     period = mdl_internship.period.Period()
     period.cohort = cohort
     form = PeriodForm(data=request.POST, instance=period)
-    form.save()
-    messages.add_message(request, messages.SUCCESS, "{} : {}".format(_('period_saved'), period.name), "alert-success")
+    errors = []
+    if(form.is_valid()):
+        form.save()
+        messages.add_message(request, messages.SUCCESS, "{} : {}".format(_('period_saved'), period.name),
+                             "alert-success")
+    else:
+        errors.append(form.errors)
+        print(form.errors)
+        for error in errors:
+            for key, value in error.items():
+                messages.add_message(request, messages.ERROR, "{} : {}".format(_ (key), value[0]), "alert-danger")
+        context = {
+            'form': form,
+            'cohort': cohort,
+            'url_form': reverse('period_new', kwargs={'cohort_id': cohort.id}),
+        }
+        return render(request, "period_create.html", context)
     kwargs = {
         'cohort_id': cohort.id
     }
@@ -103,11 +133,11 @@ def period_delete(request, cohort_id, period_id):
 def period_get(request, cohort_id, period_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
     period = get_object_or_404(Period, pk=period_id, cohort__id=cohort_id)
-
+    form = PeriodForm(instance=period)
     kwargs = {
         'cohort_id': cohort.id,
         'period_id': period.id,
     }
-    context = {'period': period, 'cohort': cohort, 'url_form': reverse('period_save', kwargs=kwargs)}
+    context = {'form': form, 'period': period, 'cohort': cohort, 'url_form': reverse('period_save', kwargs=kwargs)}
 
     return render(request, "period_create.html", context)

@@ -301,6 +301,9 @@ msgstr "Period deleted"
 msgid "period_saved"
 msgstr "Period created"
 
+msgid "period_edited"
+msgstr "Period edited"
+
 msgid "periods"
 msgstr "Periods"
 
