@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -23,9 +23,30 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django import forms
-from django.core.validators import FileExtensionValidator
+from datetime import timedelta
+
+from django.test import TestCase
+from django.utils import timezone
+from django.core.files.uploadedfile import SimpleUploadedFile
+
+from internship.forms.students_import_form import StudentsImportActionForm
 
 
-class StudentsImportActionForm(forms.Form):
-    file_upload = forms.FileField(validators=[FileExtensionValidator(allowed_extensions=['xlsx'])])
+class TestStudentImportForm(TestCase):
+
+    def test_valid_file_extension(self):
+        file = SimpleUploadedFile("test.xlsx", b"file_content",
+                                  content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+        data = {
+            'file_upload': file,
+        }
+        form = StudentsImportActionForm(None, data)
+        self.assertTrue(form.is_valid())
+
+    def test_invalid_file_extension(self):
+        file = SimpleUploadedFile("test.xls", b"file_content", content_type="application/vnd.ms-excel")
+        data = {
+            'file_upload': file,
+        }
+        form = StudentsImportActionForm(None, data)
+        self.assertFalse(form.is_valid())
