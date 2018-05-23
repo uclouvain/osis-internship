@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -23,27 +23,26 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django import forms
+from django.test import TestCase
 
-from base.forms.bootstrap import BootstrapModelForm
-from internship.models.internship import Internship
-from internship.models import internship_speciality
+from internship import models
+from internship.forms.internship import InternshipForm
+
+from internship.tests.factories.cohort import CohortFactory
+from internship.tests.factories.speciality import SpecialtyFactory
 
 
-class InternshipForm(BootstrapModelForm):
-    class Meta:
-        model = Internship
-        fields = [
-            'name',
-            'speciality',
-            'length_in_periods',
-            'position'
-        ]
+class TestInternshipForm(TestCase):
 
-    def __init__(self, *args, **kwargs):
-        super(InternshipForm, self).__init__(*args, **kwargs)
-        cohort_id = kwargs['instance'].cohort_id
-        self.fields['speciality'].queryset = internship_speciality.find_by_cohort(cohort_id)
-
-        # self.fields['speciality'].queryset.filter(
-        #     cohort_id=kwargs['instance'].cohort_id)
+    def test_valid_form(self):
+        cohort = CohortFactory()
+        instance = models.internship.Internship(cohort_id=cohort.id)
+        specialty = SpecialtyFactory(cohort=cohort)
+        data = {
+            'name': "name",
+            "speciality": specialty.id,
+            "length_in_periods": 1,
+            "position": 1
+        }
+        form = InternshipForm(data, instance=instance)
+        self.assertTrue(form.is_valid())
