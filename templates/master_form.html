@@ -1,6 +1,7 @@
 {% extends "layout.html" %}
 {% load staticfiles %}
 {% load i18n %}
+{% load bootstrap3 %}
 
 {% comment "License" %}
     * OSIS stands for Open Student Information System. It's an application
@@ -49,97 +50,26 @@
                 <input type="hidden" name="id" value="{{ allocated_master.id }}">
                 {% endif %}
                 <div class="row">
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label for="id_civility">{% trans 'civility' %}</label>
-                            {{form.civility}}
-                        </div>
-                    </div>
-                    <div class="col-md-5">
-                        <div class="form-group">
-                            <label for="id_last_name">{% trans 'last_name' %}</label>
-                            {{form.last_name}}
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="id_first_name">{% trans 'first_name' %}</label>
-                            {{form.first_name}}
-                        </div>
-                    </div>
+                    {% bootstrap_field form.civility form_group_class="form-group col-md-3" label=_("civility") %}
+                    {% bootstrap_field form.last_name form_group_class="form-group col-md-5" label=_("last_name")%}
+                    {% bootstrap_field form.first_name form_group_class="form-group col-md-4" label=_("first_name") %}
                 </div>
                 <div class="row">
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="id_birth_date">{% trans 'birth_date' %}</label>
-                            {{form.birth_date}}
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="id_gender">{% trans 'gender' %}</label>
-                            {{form.gender}}
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="id_start_activities">{% trans 'start_activities' %}</label>
-                            {{form.start_activities}}
-                        </div>
-                    </div>
+                    {% bootstrap_field form.birth_date form_group_class="form-group col-md-4" label=_("birth_date") %}
+                    {% bootstrap_field form.gender form_group_class="form-group col-md-4" label=_("gender") %}
+                    {% bootstrap_field form.start_activities form_group_class="form-group col-md-4" label=_("start_activities") %}
                 </div>
                 <div class="row">
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="id_email">{% trans 'email' %}</label>
-                            {{form.email}}
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="id_email_private">{% trans 'email_private' %}</label>
-                            {{form.email_private}}
-                        </div>
-                    </div>
-                    <div class="col-md-2">
-                        <div class="form-group">
-                            <label for="id_phone">{% trans 'phone' %}</label>
-                            {{form.phone}}
-                        </div>
-                    </div>
-                    <div class="col-md-2">
-                        <div class="form-group">
-                            <label for="id_phone_mobile">{% trans 'phone_mobile' %}</label>
-                            {{form.phone_mobile}}
-                        </div>
-                    </div>
+                    {% bootstrap_field form.email form_group_class="form-group col-md-4" label=_("email") %}
+                    {% bootstrap_field form.email_private form_group_class="form-group col-md-4" label=_("email_private") %}
+                    {% bootstrap_field form.phone form_group_class="form-group col-md-2" label=_("phone") %}
+                    {% bootstrap_field form.phone_mobile form_group_class="form-group col-md-2" label=_("phone_mobile") %}
                 </div>
                 <div class="row">
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="id_location">{% trans 'address' %}</label>
-                            {{form.location}}
-                        </div>
-                    </div>
-                    <div class="col-md-2">
-                        <div class="form-group">
-                            <label for="id_postal_code">{% trans 'postal_code' %}</label>
-                            {{form.postal_code}}
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label for="id_city">{% trans 'location' %}</label>
-                            {{form.city}}
-                        </div>
-                    </div>
-
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label for="id_country">{% trans 'country' %}</label>
-                            {{form.country}}
-                        </div>
-                    </div>
+                    {% bootstrap_field form.location form_group_class="form-group col-md-4" label=_("address") %}
+                    {% bootstrap_field form.postal_code form_group_class="form-group col-md-2" label=_("postal_code") %}
+                    {% bootstrap_field form.city form_group_class="form-group col-md-3" label=_("city") %}
+                    {% bootstrap_field form.country form_group_class="form-group col-md-3" label=_("country") %}
                 </div>
 
                 <div class="panel panel-default">
@@ -186,8 +116,6 @@
                                     </td>
                                 </tr>
                             {% endfor %}
-                        </tbody>
-                        <tbody>
                             <tr id="allocation_row_new">
                                 <td>
                                     <select name="hospital" id="hospital" class="form-control">
@@ -239,18 +167,26 @@
         var remove_allocation = function() {
             var id_row = this.id.replace("remove_allocation_", "");
             $("#allocation_row_"+ id_row).remove();
-        }
+        };
+
         $('button[id^="remove_allocation_"]').click(remove_allocation);
 
         // Add an allocation to the table.
         $("#add_allocation").click(function() {
-            if(!$('#hospital').val() || !$('#specialty').val())
+            add_allocation();
+        });
+
+        var add_allocation = function(){
+            let hospital = $('#hospital').val();
+            let specialty = $('#specialty').val()
+
+            if(!hospital && !specialty)
                 return;
 
             // Take the last id in the table before adding a new row.
             var newId = 0;
-            if($('#tbl_allocations tr:last').attr("id")) {
-                var lastId = Number($('#tbl_allocations tr:last').attr('id').replace("allocation_row_", ""));
+            if($('#tbl_allocations tr:nth-last-child(2)').attr("id")) {
+                var lastId = Number($('#tbl_allocations tr:nth-last-child(2)').attr("id").replace("allocation_row_", ""));
                 newId = lastId + 1;
             }
 
@@ -258,14 +194,16 @@
             $('#allocation_row_new').clone().appendTo("#tbl_allocations");
 
             // Set the ids of the new row.
-            $('#tbl_allocations tr:last').attr('id', 'allocation_row_'+ newId);
-            $('#tbl_allocations #hospital').attr('id', 'hospital_'+ newId);
-            $('#tbl_allocations #specialty').attr('id', 'specialty_'+ newId);
-            $('#tbl_allocations #add_allocation').attr('id', 'remove_allocation_'+ newId);
+            $('#tbl_allocations tr:nth-last-child(2)').attr('id', 'allocation_row_'+ newId);
+            $('#allocation_row_'+ newId +' #hospital').attr('id', 'hospital_'+ newId);
+            $('#allocation_row_'+ newId +' #specialty').attr('id', 'specialty_'+ newId);
+            $('#allocation_row_'+ newId +' #add_allocation').attr('id', 'remove_allocation_'+ newId);
 
             // Set the values of the fields in the new row.
-            $('#hospital_'+ newId).val($('#hospital').val());
-            $('#specialty_'+ newId).val($('#specialty').val());
+            $('#hospital_'+ newId).val(hospital);
+            $('#specialty_'+ newId).val(specialty);
+
+            $('#add_allocation').click(add_allocation);
 
             // Set the remove allocation button.
             $('#remove_allocation_'+ newId).html('<span class="glyphicon glyphicon-minus" aria-hidden="true"></span>');
@@ -274,6 +212,7 @@
             // Reset the fields.
             $('#hospital').val("");
             $('#specialty').val("");
-        });
+        };
+
     </script>
 {% endblock %}

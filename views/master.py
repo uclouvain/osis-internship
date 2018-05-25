@@ -95,6 +95,7 @@ def master_save(request, cohort_id):
             messages.add_message(request, messages.ERROR, _('hospital_or_specialty_required'), "alert-danger")
     else:
         errors.append(form.errors)
+        print(form.errors)
         for error in errors:
             for key, value in error.items():
                 messages.add_message(request, messages.ERROR, "{} : {}".format(_(key), value[0]),"alert-danger")
@@ -117,28 +118,23 @@ def _build_allocations(request, allocated_master):
         specialties = request.POST.getlist('specialty')
         specialties = _clean_empty_strings(specialties)
 
+    allocations_ids = list(zip(hospitals, specialties))
+
     allocations = []
-    for i, a_hospital in enumerate(hospitals):
-        hospital = organization.get_by_id(a_hospital)
-        specialty = internship_speciality.get_by_id(specialties[i]) if specialties else None
+
+    for hospital_id, specialty_id in allocations_ids:
+        hospital = organization.get_by_id(hospital_id) if hospital_id else None
+        specialty = internship_speciality.get_by_id(specialty_id) if specialty_id else None
         allocation = master_allocation.MasterAllocation(master=allocated_master,
                                                         organization=hospital,
                                                         specialty=specialty)
         allocations.append(allocation)
 
-    if not hospitals:
-        for id in specialties:
-            specialty = internship_speciality.get_by_id(id)
-            allocation = master_allocation.MasterAllocation(master=allocated_master,
-                                                            organization=None,
-                                                            specialty=specialty)
-            allocations.append(allocation)
-
     return allocations
 
 
 def _clean_empty_strings(a_list):
-    return list(filter(lambda x: x is not "", a_list))
+    return [x if x is not '' else None for x in a_list]
 
 
 def _save_allocations(allocations):

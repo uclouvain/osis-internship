@@ -24,8 +24,6 @@
 #
 ##############################################################################
 from django import forms
-from django.utils import timezone
-from django.utils.translation import ugettext_lazy as _
 
 from reference.models import country
 from base.forms import bootstrap
@@ -35,22 +33,11 @@ from internship.models import internship_master
 class MasterForm(bootstrap.BootstrapModelForm):
     country = forms.ModelChoiceField(queryset=country.find_all(), required=False)
 
-    def clean(self):
-        cleaned_data = super().clean()
-        birth_date = cleaned_data.get("birth_date")
-        if birth_date is not None and birth_date > timezone.now().date():
-            raise forms.ValidationError(_("birth_date_before_today"), code="invalid")
-
     class Meta:
         model = internship_master.InternshipMaster
         fields = ['first_name', 'last_name', 'civility', 'gender', 'email', 'email_private', 'location',
                   'postal_code', 'city', 'country', 'phone', 'phone_mobile', 'birth_date', 'start_activities']
         widgets = {
-            'birth_date': forms.DateInput(
-                format="%Y-%m-%d",
-                attrs={
-                    'type': 'date',
-                    'max': timezone.now().date().strftime('%Y-%m-%d')
-                }),
+            'birth_date': forms.DateInput(format="%Y-%m-%d", attrs={'type': 'date'}),
             'start_activities': forms.DateInput(format="%Y-%m-%d", attrs={'type': 'date'})
         }
