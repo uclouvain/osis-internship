@@ -176,17 +176,20 @@ def internship_student_information_modification(request, cohort_id, student_id, 
 def student_save_information_modification(request, cohort_id, student_id):
     cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)
     student = mdl.student.find_by_id(student_id)
-    informations = mdl_int.internship_student_information.find_by_person(student.person, cohort)
-    if not informations:
+    information = mdl_int.internship_student_information.find_by_person(student.person, cohort)
+    if not information:
         information = mdl_int.internship_student_information.InternshipStudentInformation()
         information.person = student.person
     else:
-        information = informations.first()
+        information = information.first()
 
     if information.cohort is None:
         information.cohort = cohort
 
-    form = StudentInformationForm(request.POST, instance=information)
+    data = request.POST.copy()
+    data.update({'person': student.person.id, 'cohort': cohort_id})
+    form = StudentInformationForm(data, instance=information)
+
     if form.is_valid():
         information.email = form.cleaned_data.get('email')
         information.phone_mobile = form.cleaned_data.get('phone_mobile')
@@ -196,9 +199,11 @@ def student_save_information_modification(request, cohort_id, student_id):
         information.country = str(form.cleaned_data.get('country'))
         information.contest = form.cleaned_data.get('contest')
         information.save()
-        redirect_url = reverse('internships_student_read', args=[cohort_id, student_id])
     else:
         return internship_student_information_modification(request, cohort_id, student_id, form)
+
+    redirect_url = reverse('internships_student_read', args=[cohort_id, student_id])
+
     return HttpResponseRedirect(redirect_url)
 
 
