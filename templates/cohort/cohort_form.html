@@ -1,6 +1,7 @@
 {% extends "layout.html" %}
 {% load staticfiles %}
 {% load i18n %}
+{% load bootstrap3 %}
 
 {% block breadcrumb %}
     <li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
@@ -20,47 +21,15 @@
         <div class="panel panel-body">
             <form method="POST" class="post-form">
                 {% csrf_token %}
-                <div class="form-group">
-                    <label for="txt_name">{% trans 'name' %}</label>
-                    {{ form.name }}
-                    <span class="error">{{ form.name.errors }}</span>
-                </div>
-
-                <div class="form-group">
-                    <label for="txt_description">{% trans 'description' %}</label>
-                    {{ form.description }}
-                    <span class="error" required>{{ form.description.errors }}</span>
-                </div>
-
+                {% bootstrap_field form.name label=_("name") %}
+                {% bootstrap_field form.description label=_("description") %}
                 <div class="row">
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="txt_subscription_start_date">{% trans 'enrolment_start' %}</label>
-                            {{ form.subscription_start_date }}
-                            <span class="error" required>{{ form.subscription_start_date.errors }}</span>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="txt_subscription_end_date">{% trans 'enrolment_end' %}</label>
-                            {{ form.subscription_end_date }}
-                            <span class="error" required>{{ form.subscription_end_date.errors }}</span>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="txt_publication_start_date">{% trans 'publication_date' %}</label>
-                            {{ form.publication_start_date }}
-                            <span class="error" required>{{ form.publication_start_date.errors }}</span>
-                        </div>
-                    </div>
+                    {% bootstrap_field form.subscription_start_date form_group_class="form-group col-md-4" label=_("enrolment_start") %}
+                    {% bootstrap_field form.subscription_end_date form_group_class="form-group col-md-4" label=_("enrolment_end") %}
+                    {% bootstrap_field form.publication_start_date form_group_class="form-group col-md-4" label=_("publication_date") %}
                 </div>
                 {% if form_new %}
-                    <div class="form-group">
-                        <label for="originated_from">{% trans 'copy_from_cohort' %}</label>
-                        {{ form.originated_from }}
-                        <span class="error">{{form.originated_from.errors}}</span>
-                    </div>
+                    {% bootstrap_field form.originated_from label=_("copy_from_cohort") %}
                 {% endif %}
 
                 <button type="submit" class="btn btn-primary" title="{%trans 'save' %}" id="bt_cohort_save">

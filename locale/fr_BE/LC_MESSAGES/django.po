@@ -107,7 +107,7 @@ msgid "contest"
 msgstr "Concours"
 
 msgid "copy_from_cohort"
-msgstr "Copier à partir du cohorte"
+msgstr "Copier à partir de la cohorte"
 
 msgid "create_a_speciality"
 msgstr "Créer une spécialité"
