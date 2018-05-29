@@ -195,12 +195,12 @@ def internship_affectation_sumup(request, cohort_id):
         hospital_specialties[organization.reference] = []
         for offer in offers:
             if offer.organization.reference == organization.reference:
-                informations.append(offer)
+                if(offer.speciality_id == filter_specialty):
+                    informations.append(offer)
                 hospital_specialties[organization.reference].append({
                     "id": offer.speciality.id,
                     "name": offer.speciality.name
                 })
-
     hospital_specialties = json.dumps(hospital_specialties, cls=DjangoJSONEncoder)
 
     affectations = {}
