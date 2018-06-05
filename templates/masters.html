@@ -78,7 +78,7 @@
     </form>
 
     <div class="panel panel-default">
-        <table class="table table-hover">
+        <table class="table table-hover" id="order_master">
             <thead>
                 <tr>
                     <th>{% trans 'civility' %}</th>
@@ -107,4 +107,44 @@
             </tbody>
         </table>
     </div>
+{% endblock %}
+
+
+{% block script %}
+    <script type="text/javascript" src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/dataTables.bootstrap.min.js' %}"></script>
+    <script>
+        $(document).ready(function() {
+            $('#order_master').DataTable({
+                paging: true,
+                "columnDefs": [ {
+                            "targets": 'no-sort',
+                            "orderable": false,
+                        } ],
+                "order": [[ 1, "asc" ]],
+                "language": {
+                    "sProcessing":     "{% trans 'datatable_processing'%}",
+                    "sSearch":         "{% trans 'datatable_search'%}",
+                    "sLengthMenu":     "{% trans 'datatable_lengthmenu'%}",
+                    "sInfo":           "{% trans 'datatable_info'%}",
+                    "sInfoEmpty":      "{% trans 'datatable_infoempty'%}",
+                    "sInfoFiltered":   "{% trans 'datatable_infofiltered'%}",
+                    "sLoadingRecords": "{% trans 'datatable_loadingrecords'%}",
+                    "sZeroRecords":    "{% trans 'datatable_zerorecords'%}",
+                    "sEmptyTable":     "{% trans 'datatable_emptytable'%}",
+                    "oPaginate":
+                        {
+                            "sFirst":      "{% trans 'datatable_first'%}",
+                            "sPrevious":   "{% trans 'datatable_previous'%}",
+                            "sNext":       "{% trans 'datatable_next'%}",
+                            "sLast":       "{% trans 'datatable_last'%}"
+                        },
+                    "oAria": {
+                            "sSortAscending":  "{% trans 'datatable_sortascending'%}",
+                            "sSortDescending": "{% trans 'datatable_sortdescending'%}",
+                            }
+                },
+            });
+        } );
+    </script>
 {% endblock %}
