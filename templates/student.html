@@ -100,24 +100,37 @@
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
+                            <label>{% trans 'address_legal' %}</label><br>
+                            {% if student %}
+                                {{ student.address.location | default_if_none:'-' }} <br> {{ student.address.postal_code | default_if_none:'-' }}
+                                {{ student.address.city | default_if_none:'-' }} ({{ student.address.country | default_if_none:'-' | upper }})
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>{% trans 'address_editable' %}</label><br>
+                            {% if information %}
+                                {{ information.location | default_if_none:'-' }} <br> {{ information.postal_code | default_if_none:'-' }}
+                                {{ information.city | default_if_none:'-' }} ({{ information.country | default_if_none:'-' | upper }})
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                     <div class="col-md-4">
+                        <div class="form-group">
                             <label>{% trans 'language' %}</label><br>
                             {{ student.person.language | default_if_none:'-' }}
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label>{% trans 'address' %}</label><br>
-                            {% if information %}
-                                {{ information.location | default_if_none:'-' }} {{ information.postal_code | default_if_none:'-' }}
-                                {{ information.city | default_if_none:'-' }}<br>
-                            {% endif %}
+                            <label>{% trans 'contest' %}</label><br>
+                            {{ information.contest | default_if_none:'-' }}
                         </div>
                     </div>
-                </div>
-
-                <div class="form-group">
-                    <label>{% trans 'contest' %}</label><br>
-                    {{ information.contest | default_if_none:'-' }}
                 </div>
 
                 <a class="btn btn-default" target="_blank" id="lnk_student_information_modification"
