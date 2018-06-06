@@ -1,0 +1,65 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-06-06 10:46+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "datatable_emptytable"
+msgstr "No data available in table"
+
+msgid "datatable_info"
+msgstr "Showing _START_ to _END_ of _TOTAL_ entries"
+
+msgid "datatable_infoempty"
+msgstr "Showing 0 to 0 of 0 entries"
+
+msgid "datatable_infofiltered"
+msgstr "(filtered from _MAX_ total entries)"
+
+msgid "datatable_infopostfix"
+msgstr ""
+
+msgid "datatable_infothousands"
+msgstr ","
+
+msgid "datatable_lengthmenu"
+msgstr "Show _MENU_ entries"
+
+msgid "datatable_loadingrecords"
+msgstr "Loading..."
+
+msgid "datatable_processing"
+msgstr "Processing..."
+
+msgid "datatable_search"
+msgstr "Search:"
+
+msgid "datatable_zerorecords"
+msgstr "No matching records found"
+
+msgid "datatable_first"
+msgstr "First"
+
+msgid "datatable_last"
+msgstr "Last"
+
+msgid "datatable_next"
+msgstr "Next"
+
+msgid "datatable_previous"
+msgstr "Previous"
+
+msgid "datatable_sortascending"
+msgstr ": activate to sort column ascending"
