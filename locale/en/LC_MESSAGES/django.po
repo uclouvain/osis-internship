@@ -34,6 +34,12 @@ msgstr "Add a specialty"
 msgid "address"
 msgstr "Address"
 
+msgid "address_editable"
+msgstr "Editable address"
+
+msgid "address_legal"
+msgstr "Legal address"
+
 msgid "affectation_result"
 msgstr "Affectation's result"
 
