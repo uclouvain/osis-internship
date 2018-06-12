@@ -1,6 +1,8 @@
 {% extends "layout.html" %}
 {% load staticfiles %}
 {% load i18n %}
+{% load bootstrap3 %}
+
 
 {% comment "License" %}
     * OSIS stands for Open Student Information System. It's an application
@@ -41,35 +43,15 @@
 <div class="page-header">
     <h2>{% trans 'period_creation' %}</h2>
 </div>
-{% if message %}
-    <script language="javascript" type="text/javascript">
-        alert("Période correctement créée");
-    </script>
-{% endif %}
 
 <div class="panel panel-default">
     <div class="panel-body">
         <form action="{{ url_form }}" method="post">
             {% csrf_token %}
             <div class="row">
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label for="id_name">{% trans 'name' %}</label>
-                        {{form.name}}
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label for="id_date_start">{% trans 'start_date' %}</label>
-                        {{form.date_start}}
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label for="id_date_end">{% trans 'end_date' %}</label>
-                        {{form.date_end}}
-                    </div>
-                </div>
+                    {% bootstrap_field form.name form_group_class="form-group col-md-4" label=_("name") %}
+                    {% bootstrap_field form.date_start form_group_class="form-group col-md-4" label=_("start_date") %}
+                    {% bootstrap_field form.date_end form_group_class="form-group col-md-4" label=_("end_date") %}
             </div>
 
             <a href="{% url 'internships_periods' cohort_id=cohort.id %}" class="btn btn-default">

@@ -99,7 +99,6 @@ def period_new(request, cohort_id):
                              "alert-success")
     else:
         errors.append(form.errors)
-        print(form.errors)
         for error in errors:
             for key, value in error.items():
                 messages.add_message(request, messages.ERROR, "{} : {}".format(_ (key), value[0]), "alert-danger")

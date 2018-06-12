@@ -23,22 +23,12 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.forms import ModelForm
-
 from base.forms.bootstrap import BootstrapModelForm
 from internship.models.period import Period
 from django import forms
-from django.utils.translation import ugettext_lazy as _
+
 
 class PeriodForm(BootstrapModelForm):
-
-    def clean(self):
-        cleaned_data = super().clean()
-        date_start = cleaned_data.get("date_start")
-        date_end = cleaned_data.get("date_end")
-        if all([date_start, date_end]):
-            if date_start >= date_end:
-                self.add_error("date_start", _("start_before_end"))
 
     class Meta:
         model = Period
