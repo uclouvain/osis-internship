@@ -106,8 +106,8 @@
                 <thead>
                     <tr>
                         <th>{% trans 'noma' %}</th>
-                        <th>{% trans 'name'|capfirst %}</th>
-                        <th>{% trans 'firstname' %}</th>
+                        <th class="searchable">{% trans 'name'|capfirst %}</th>
+                        <th class="searchable">{% trans 'firstname' %}</th>
                         <th class="no-sort">{% trans 'details' %}</th>
                         <th class="no-sort">{% trans 'choice_modification' %}</th>
                         <th>{% trans 'status' %}</th>
@@ -191,10 +191,22 @@
     <script type="text/javascript" src="{% static 'js/dataTables.bootstrap.min.js' %}"></script>
     <script type="text/javascript" src="{% url 'javascript-catalog' %}"></script>
     <script type="text/javascript" src="{% static 'js/datatable_options.js' %}?version={{ js }}"></script>
+    <script type="text/javascript" src="{% static 'js/locale_compare.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/intl.js' %}"></script>
 
     <script>
         $(document).ready(function() {
             $('#order_student').DataTable(datatable_options);
+            $.fn.dataTable.ext.order.intl();
         } );
+        var filterVal = '';
+        $('#order_student_filter input').unbind();
+        $('#order_student_filter input').on('keyup change', function() {
+            var val = NeutralizeAccent(this.value);
+            if (val !== filterVal) {
+                filterVal = val;
+                $('#order_student').DataTable().search(val).draw();
+            }
+        });
     </script>
 {% endblock %}

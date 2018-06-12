@@ -46,6 +46,9 @@ msgstr "Traitement en cours..."
 msgid "datatable_search"
 msgstr "Rechercher&nbsp;:"
 
+msgid "datatable_search_by_name"
+msgstr  "Rechercher par nom:"
+
 msgid "datatable_zerorecords"
 msgstr "Aucun &eacute;l&eacute;ment &agrave; afficher"
 

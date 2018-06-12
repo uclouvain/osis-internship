@@ -46,6 +46,9 @@ msgstr "Processing..."
 msgid "datatable_search"
 msgstr "Search:"
 
+msgid "datatable_search_by_name"
+msgstr "Search by name:"
+
 msgid "datatable_zerorecords"
 msgstr "No matching records found"
 

@@ -24,15 +24,25 @@
 */
 
 datatable_options = {
-                paging: false,
+                paging: true,
+                lengthChange: true,
+                lengthMenu: [ 10, 25, 50, 100, 500, 1000, 2000 ],
                 "columnDefs": [ {
                             "targets": 'no-sort',
                             "orderable": false,
-                        } ],
+                            "searchable": false
+                        },
+                        {
+                            "targets": 'searchable',
+                            "orderable": true,
+                            "searchable": true,
+                            "type": "locale-compare",
+                        },
+                ],
                 "order": [[ 1, "asc" ]],
                 "language": {
                     "sProcessing":     gettext('datatable_processing'),
-                    "sSearch":         gettext('datatable_search'),
+                    "sSearch":         gettext('datatable_search_by_name'),
                     "sLengthMenu":     gettext('datatable_lengthmenu'),
                     "sInfo":           gettext('datatable_info'),
                     "sInfoEmpty":      gettext('datatable_infoempty'),
