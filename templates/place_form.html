@@ -3,6 +3,7 @@
 {% load i18n %}
 {% load full_width %}
 {% load dictionnary %}
+{% load bootstrap3 %}
 
 {% comment "License" %}
     * OSIS stands for Open Student Information System. It's an application
@@ -56,43 +57,17 @@
                                         {% endif %}">
                 {% csrf_token %}
                 <div class="row">
-                    <div class="col-md-1">
-                        <label for="id_txt_reference">{% trans 'reference'%}</label>
-                        {{form.reference}}
-                        <span class="error">{{ form.reference.errors }}</span>
-                    </div>
-                    <div class="col-md-5">
-                        <label for="id_txt_name">{% trans 'name' %}</label>
-                        {{form.name}}
-                        <span class="error" required>{{ form.name.errors }}</span>
-                    </div>
-                    <div class="col-md-6">
-                        <label for="id_txt_website">{% trans 'website' %}</label>
-                        {{form.website}}
-                        <span class="error" required>{{ form.website.errors }}</span>
-                    </div>
+                    {% bootstrap_field form.reference form_group_class="form-group col-md-1" label=_("reference") %}
+                    {% bootstrap_field form.name form_group_class="form-group col-md-5" label=_("name") %}
+                    {% bootstrap_field form.website form_group_class="form-group col-md-6" label=_("website") %}
                 </div>
                 <input type="hidden" value="{{ organization_id }}" name="organization_id"/>
                 <br>
                 <div class="row">
-                    <div class="col-md-4">
-                        <label for="id_address_location">{% trans 'address' %}</label>
-                        {{form.location}}
-                    </div>
-                    <div class="col-md-2">
-                        <label for="id_address_postal_code">{% trans 'postal_code' %}</label>
-                        {{form.postal_code}}
-                    </div>
-                    <div class="col-md-3">
-                        <label for="id_address_city">{% trans 'location' %}</label>
-                        {{form.city}}
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label for="id_country">{% trans 'country' %}</label>
-                            {{form.country}}
-                        </div>
-                    </div>
+                    {% bootstrap_field form.location form_group_class="form-group col-md-4" label=_("address") %}
+                    {% bootstrap_field form.postal_code form_group_class="form-group col-md-2" label=_("postal_code") %}
+                    {% bootstrap_field form.city form_group_class="form-group col-md-3" label=_("location") %}
+                    {% bootstrap_field form.country form_group_class="form-group col-md-3" label=_("country") %}
                 </div>
                 <br>
                 <label for="country">{% trans 'report_to_hospital' %}</label>

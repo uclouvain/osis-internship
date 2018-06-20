@@ -23,10 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from collections import Counter
-
 from django import forms
-from django.utils.translation import ugettext_lazy as _
 from reference.models import country
 
 from base.forms.bootstrap import BootstrapModelForm
@@ -35,15 +32,6 @@ from internship.models.organization import Organization
 
 class OrganizationForm(BootstrapModelForm):
     country = forms.ModelChoiceField(queryset=country.find_all(), required=False)
-
-    def clean(self):
-        cleaned_data = super().clean()
-        report = {field: value for field, value in cleaned_data.items() if "report_" in field and value is not None}
-        report_values = [value for field, value in report.items()]
-        duplicates = set([x for x in report_values if report_values.count(x) > 1])
-        keys = [field for field, value in report.items() if value in duplicates]
-        for k in keys:
-            self.add_error(k, _("duplicate_report_sequence"))
 
     class Meta:
         model = Organization
