@@ -95,7 +95,6 @@ def master_save(request, cohort_id):
             messages.add_message(request, messages.ERROR, _('hospital_or_specialty_required'), "alert-danger")
     else:
         errors.append(form.errors)
-        print(form.errors)
         for error in errors:
             for key, value in error.items():
                 messages.add_message(request, messages.ERROR, "{} : {}".format(_(key), value[0]),"alert-danger")
