@@ -44,6 +44,3 @@ class InternshipForm(BootstrapModelForm):
         super(InternshipForm, self).__init__(*args, **kwargs)
         cohort_id = kwargs['instance'].cohort_id
         self.fields['speciality'].queryset = internship_speciality.find_by_cohort(cohort_id)
-
-        # self.fields['speciality'].queryset.filter(
-        #     cohort_id=kwargs['instance'].cohort_id)
