@@ -44,14 +44,8 @@ from reference.models import country
 def internships_places(request, cohort_id):
     cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
     organizations = models.organization.Organization.objects.filter(cohort=cohort).order_by('reference')
-
     context = {'all_organizations': organizations, 'cohort': cohort}
     return render(request, "places.html", context)
-
-
-def display_report_errors(request, errors):
-    pass
-
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
