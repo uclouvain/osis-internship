@@ -32,6 +32,7 @@ from django.utils.translation import ugettext_lazy as _
 from internship.forms.cohort import CohortForm
 from internship.models.cohort import Cohort
 from internship.business import copy_cohort
+from internship.views.common import display_errors
 
 
 @login_required()
@@ -45,9 +46,7 @@ def new(request):
         return redirect(reverse('internship'))
     else:
         errors.append(form.errors)
-        for error in errors:
-            for key, value in error.items():
-                messages.add_message(request, messages.ERROR, "{} : {}".format(_ (key), value[0]), "alert-danger")
+        display_errors(request, errors)
 
     context = {
         'form': form,
@@ -70,9 +69,8 @@ def edit(request, cohort_id):
         return redirect(reverse('internship'))
     else:
         errors.append(form.errors)
-        for error in errors:
-            for key, value in error.items():
-                messages.add_message(request, messages.ERROR, "{} : {}".format(_(key), value[0]), "alert-danger")
+        display_errors(request, errors)
+
     context = {
         'form': form,
         'page_title': _('edit_cohort'),

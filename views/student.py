@@ -35,6 +35,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.utils.translation import ugettext_lazy as _
 
+from internship.views.common import display_errors
 from reference.models import country
 from base import models as mdl
 from internship import models as mdl_int
@@ -124,9 +125,7 @@ def student_save(request, cohort_id):
         form.save()
     else:
         errors.append(form.errors)
-        for error in errors:
-            for key, value in error.items():
-                messages.add_message(request, messages.ERROR, "{} : {}".format(_(key), value[0]), "alert-danger")
+        display_errors(request, errors)
         return HttpResponseRedirect(reverse("internship_student_form", args=[cohort_id]))
 
     return HttpResponseRedirect(reverse("internships_student_resume", args=[cohort_id]))
@@ -313,9 +312,8 @@ def import_students(request, cohort_id):
         import_xlsx(cohort, BytesIO(file_upload.read()))
     else:
         errors.append(form.errors)
-        for error in errors:
-            for key, value in error.items():
-                messages.add_message(request, messages.ERROR, "{} : {}".format(_(key), value[0]), "alert-danger")
+        display_errors(request, errors)
+
     return HttpResponseRedirect(reverse('internships_student_resume', kwargs={"cohort_id": cohort_id}))
 
 

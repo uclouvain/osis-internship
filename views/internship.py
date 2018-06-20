@@ -40,6 +40,7 @@ from internship import models as mdl_int
 from internship.forms.form_offer_preference import OfferPreferenceForm, OfferPreferenceFormSet
 from internship.forms.form_select_speciality import SpecialityForm
 from internship.forms.internship import InternshipForm
+from internship.views.common import display_errors
 
 
 @login_required
@@ -69,9 +70,7 @@ def modification_student(request, cohort_id, student_id, internship_id=-1, speci
             _remove_previous_choices(student, internship)
             _save_student_choices(formset, student, internship, speciality, cohort)
         else:
-            for error in formset.errors:
-                for key, value in error.items():
-                    messages.add_message(request, messages.ERROR, "{} : {}".format(_(key), value[0]), "alert-danger")
+            display_errors(request, formset.errors)
 
     student_choices = mdl_int.internship_choice.search_by_student_or_choice(student=student,
                                                                             internship=internship)

@@ -34,6 +34,7 @@ from internship import models
 from internship.forms.organization_form import OrganizationForm
 from internship.utils.exporting import organization_affectation_master
 from internship.utils.exporting import organization_affectation_hospital
+from internship.views.common import display_report_errors
 from internship.views.internship import get_all_specialities, set_tabs_name
 from reference.models import country
 
@@ -46,6 +47,10 @@ def internships_places(request, cohort_id):
 
     context = {'all_organizations': organizations, 'cohort': cohort}
     return render(request, "places.html", context)
+
+
+def display_report_errors(request, errors):
+    pass
 
 
 @login_required
@@ -69,10 +74,7 @@ def place_save(request, cohort_id, organization_id):
             _("hospital_saved"), form.cleaned_data["reference"], form.cleaned_data["name"]), "alert-success")
     else:
         errors.append(form.errors)
-        for error in errors:
-            for key, value in error.items():
-                key = key.replace("report_","")
-                messages.add_message(request, messages.ERROR, "{} : {}".format(_(key), value[0]), "alert-danger")
+        display_report_errors(request, errors)
 
     countries = country.find_all()
 

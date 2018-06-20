@@ -30,6 +30,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required, permission_required
 from django.utils.translation import ugettext_lazy as _
 
+from internship.views.common import display_errors
 from reference.models import country
 from internship.models import master_allocation, internship_master, internship_speciality, organization, cohort
 from internship.forms.master import MasterForm
@@ -95,9 +96,8 @@ def master_save(request, cohort_id):
             messages.add_message(request, messages.ERROR, _('hospital_or_specialty_required'), "alert-danger")
     else:
         errors.append(form.errors)
-        for error in errors:
-            for key, value in error.items():
-                messages.add_message(request, messages.ERROR, "{} : {}".format(_(key), value[0]),"alert-danger")
+        display_errors(request, errors)
+
 
     if errors:
         return master_form(request=request, cohort_id=current_cohort.id, allocated_master=allocated_master)

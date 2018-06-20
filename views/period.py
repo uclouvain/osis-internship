@@ -36,6 +36,7 @@ from internship import models as mdl_internship
 from internship.forms.period_form import PeriodForm
 from internship.models.cohort import Cohort
 from internship.models.period import Period
+from internship.views.common import display_errors
 
 
 @login_required
@@ -70,9 +71,7 @@ def period_save(request, cohort_id, period_id):
                              "alert-success")
     else:
         errors.append(form.errors)
-        for error in errors:
-            for key, value in error.items():
-                messages.add_message(request, messages.ERROR, "{} : {}".format(_ (key), value[0]), "alert-danger")
+        display_errors(request, errors)
         context = {
             'form': form,
             'cohort': cohort,
@@ -99,9 +98,7 @@ def period_new(request, cohort_id):
                              "alert-success")
     else:
         errors.append(form.errors)
-        for error in errors:
-            for key, value in error.items():
-                messages.add_message(request, messages.ERROR, "{} : {}".format(_ (key), value[0]), "alert-danger")
+        display_errors(request, errors)
         context = {
             'form': form,
             'cohort': cohort,
