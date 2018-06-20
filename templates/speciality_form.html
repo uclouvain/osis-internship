@@ -1,6 +1,7 @@
 {% extends "layout.html" %}
 {% load staticfiles %}
 {% load i18n %}
+{% load bootstrap3 %}
 
 {% comment "License" %}
  * OSIS stands for Open Student Information System. It's an application
@@ -50,43 +51,14 @@
                           {% endif %}" method="post">
                 {% csrf_token %}
                 <div class="row">
-                    <div class="col-md-8">
-                        <div class="form-group">
-                            <label for="name">{% trans 'name' %}</label>
-                            <input type="text" name="name" id="name" class="form-control" value="{{ speciality.name | default_if_none:'' }}" required>
-                        </div>
-                    </div>
-                    <div class="col-md-2">
-                        <div class="form-group">
-                            <label for="name">{% trans 'sequence' %}</label><br>
-                            <input type="number" name="sequence" id="sequence" class="form-control" value="{{ speciality.sequence | default_if_none:'' }}">
-                        </div>
-                    </div>
-                    <div class="col-md-2">
-                        <div class="form-group">
-                            <label for="acronym">{% trans 'acronym' %}</label>
-                            <input type="text" name="acronym" id="acronym" class="form-control" value="{{ speciality.acronym | default_if_none:'' }}" required>
-                        </div>
-                    </div>
+                    {% bootstrap_field form.name form_group_class="form-group col-md-8" label=_("name") %}
+                    {% bootstrap_field form.sequence form_group_class="form-group col-md-2" label=_("sequence") %}
+                    {% bootstrap_field form.acronym form_group_class="form-group col-md-2" label=_("acronym") %}
                 </div>
 
                 <div class="row">
-                    <div class="col-md-2">
-                        <div class="checkbox">
-                            <label>
-                                <input type="checkbox" name="mandatory" {% if speciality.mandatory %}checked{% endif %}>
-                                {% trans 'compulsory' %}
-                            </label>
-                        </div>
-                    </div>
-                    <div class="col-md-10">
-                        <div class="checkbox">
-                            <label>
-                                <input type="checkbox" name="selectable" {% if speciality.selectable %}checked{% endif %}>
-                                {% trans 'selectable' %}
-                            </label>
-                        </div>
-                    </div>
+                    {% bootstrap_field form.mandatory form_group_class="form-group col-md-2" label=_("compulsory") %}
+                    {% bootstrap_field form.selectable form_group_class="form-group col-md-10" label=_("selectable") %}
                 </div>
 
                 <br>

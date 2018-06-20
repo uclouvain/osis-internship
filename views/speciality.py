@@ -33,6 +33,7 @@ from base.views.layout import render
 
 
 from internship import models as mdl
+from internship.forms.specialty import SpecialtyForm
 
 
 @login_required
@@ -48,7 +49,8 @@ def specialities(request, cohort_id):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def speciality_create(request, cohort_id, speciality=None):
     cohort = get_object_or_404(mdl.cohort.Cohort, pk=cohort_id)
-    return render(request, "speciality_form.html", {'cohort': cohort, 'speciality': speciality})
+    form = SpecialtyForm(request.POST or None)
+    return render(request, "speciality_form.html", locals())
 
 
 @login_required
@@ -67,8 +69,11 @@ def speciality_save(request, cohort_id, speciality_id):
         speciality = mdl.internship_speciality.InternshipSpeciality(cohort=cohort)
 
     speciality.name = request.POST.get('name')
-    speciality.acronym = request.POST.get('acronym')
-    check_acronym = mdl.internship_speciality.acronym_exists(cohort, speciality.acronym)
+
+    check_acronym = False
+    if speciality.acronym != request.POST.get('acronym'):
+        speciality.acronym = request.POST.get('acronym')
+        check_acronym = mdl.internship_speciality.acronym_exists(cohort, speciality.acronym)
 
     if request.POST.get('sequence').strip():
         speciality.sequence = int(request.POST.get('sequence'))
@@ -108,8 +113,9 @@ def modify(request, cohort_id, speciality_id):
     cohort = get_object_or_404(mdl.cohort.Cohort, pk=cohort_id)
     speciality = get_object_or_404(mdl.internship_speciality.InternshipSpeciality,
                                    pk=speciality_id, cohort=cohort)
-    context = {'speciality': speciality, 'cohort': cohort}
-    return render(request, "speciality_form.html", context)
+    form = SpecialtyForm(request.POST or None, instance=speciality)
+
+    return render(request, "speciality_form.html", locals())
 
 
 @login_required
