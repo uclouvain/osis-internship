@@ -40,6 +40,12 @@ msgstr "Ajouter une spécialité"
 msgid "address"
 msgstr "Adresse"
 
+msgid "address_editable"
+msgstr "Adresse modifiable"
+
+msgid "address_legal"
+msgstr "Adresse légale"
+
 msgid "affectation_result"
 msgstr "Résultat de l'affectation"
 
@@ -159,6 +165,9 @@ msgstr "Ouverture des inscriptions"
 
 msgid "enrolment_end"
 msgstr "Fermeture des inscriptions"
+
+msgid "enrolment_period_warning"
+msgstr "Vous êtes dans la période des inscriptions. Il est recommandé de ne pas changer les choix au cours de cette période."
 
 msgid "first_choice"
 msgstr "Choix préféré"

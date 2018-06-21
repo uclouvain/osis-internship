@@ -136,6 +136,7 @@ def student_save(request, cohort_id):
 def internships_student_read(request, cohort_id, student_id):
     cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)
     student = mdl.student.find_by_id(student_id)
+    student.address = mdl.person_address.find_by_person(student.person_id).first()
 
     if not request.user.has_perm('internship.is_internship_manager'):
         person_who_read = mdl.person.find_by_user(request.user)

@@ -34,6 +34,12 @@ msgstr "Add a specialty"
 msgid "address"
 msgstr "Address"
 
+msgid "address_editable"
+msgstr "Editable address"
+
+msgid "address_legal"
+msgstr "Legal address"
+
 msgid "affectation_result"
 msgstr "Affectation's result"
 
@@ -153,6 +159,9 @@ msgstr "Enrolment start"
 
 msgid "enrolment_end"
 msgstr "Enrolment end"
+
+msgid "enrolment_period_warning"
+msgstr "You are in the period of inscriptions. It is not recommended to change choices during this period."
 
 msgid "first_choice"
 msgstr "First choice"
