@@ -75,13 +75,17 @@
               </div>
             {% endif %}
 
-            <br>
-
            <div class="row">
 
                <form id="assign_preference" method="post">
                    {% csrf_token %}
                     {{ formset.management_form }}
+                    {% if offers_forms  %}
+                        <button type="submit" class="btn btn-primary pull-right">
+                            <span class="glyphicon glyphicon-ok"></span>
+                            {% trans 'submit_choices' %}
+                        </button>
+                    {% endif %}
                    <table class="table table-striped">
                        <thead>
                            <th>{% trans 'organization' %}</th>
@@ -125,15 +129,6 @@
 
                         {% endfor %}
                    </table>
-
-                    <br>
-
-               {% if offers_forms  %}
-                    <button type="submit" class="btn btn-primary">
-                        <span class="glyphicon glyphicon-ok"></span>
-                        {% trans 'submit_choices' %}
-                    </button>
-               {% endif %}
                </form>
 
            </div>
