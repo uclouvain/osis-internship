@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -23,30 +23,17 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.test import TestCase
+from base.forms.bootstrap import BootstrapModelForm
+from internship.models.internship_speciality import InternshipSpeciality
 
-from internship.forms import form_student_information
-from internship.tests.factories.cohort import CohortFactory
-from base.tests.factories.person import PersonFactory
 
-from reference.tests.factories.country import CountryFactory
-
-class TestFormStudentInformation(TestCase):
-    def test_valid_form(self):
-        country = CountryFactory()
-        cohort = CohortFactory()
-        person = PersonFactory()
-        data = {
-            "email": "test@test.com",
-            "phone_mobile": "046486313",
-            "location": "location",
-            "postal_code": "postal",
-            "city": "city",
-            "country": country,
-            "contest": "GENERALIST",
-            "person": person.id,
-            'cohort': cohort.id,
-        }
-        form = form_student_information.StudentInformationForm(data)
-        self.assertTrue(form.is_valid())
-
+class SpecialtyForm(BootstrapModelForm):
+    class Meta:
+        model = InternshipSpeciality
+        fields = [
+            'name',
+            'acronym',
+            'mandatory',
+            'sequence',
+            'selectable'
+        ]

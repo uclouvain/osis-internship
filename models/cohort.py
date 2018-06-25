@@ -23,8 +23,10 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils import timezone
+from django.utils.translation import ugettext_lazy as _
 
 from osis_common.models.serializable_model import SerializableModel
 from osis_common.models.serializable_model import SerializableModelAdmin
@@ -43,6 +45,20 @@ class Cohort(SerializableModel):
     subscription_start_date = models.DateField()
     subscription_end_date = models.DateField()
     originated_from = models.ForeignKey('Cohort', null=True, blank=True)
+
+    def clean(self):
+        self.clean_start_date()
+        self.clean_publication_date()
+
+    def clean_start_date(self):
+        if all([self.subscription_start_date, self.subscription_end_date]):
+            if self.subscription_start_date >= self.subscription_end_date:
+                raise ValidationError({"subscription_start_date": _("start_before_end")})
+
+    def clean_publication_date(self):
+        if all([ self.subscription_end_date, self.publication_start_date]):
+            if self.publication_start_date < self.subscription_end_date:
+                raise ValidationError({"publication_start_date": _("publication_after_subscription")})
 
     class Meta:
         ordering = ['name']

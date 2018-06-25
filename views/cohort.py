@@ -23,6 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.urlresolvers import reverse
 from django.shortcuts import render, get_object_or_404, redirect
@@ -31,16 +32,21 @@ from django.utils.translation import ugettext_lazy as _
 from internship.forms.cohort import CohortForm
 from internship.models.cohort import Cohort
 from internship.business import copy_cohort
+from internship.views.common import display_errors
 
 
 @login_required()
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def new(request):
     form = CohortForm(request.POST or None)
+    errors = []
     if form.is_valid():
         cohort = form.save()
         copy_cohort.copy_from_origin(cohort)
         return redirect(reverse('internship'))
+    else:
+        errors.append(form.errors)
+        display_errors(request, errors)
 
     context = {
         'form': form,
@@ -56,10 +62,14 @@ def edit(request, cohort_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
 
     form = CohortForm(data=request.POST or None, instance=cohort)
+    errors = []
 
     if form.is_valid():
         form.save()
         return redirect(reverse('internship'))
+    else:
+        errors.append(form.errors)
+        display_errors(request, errors)
 
     context = {
         'form': form,

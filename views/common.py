@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2018 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -23,30 +23,16 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.test import TestCase
+from django.contrib import messages
+from django.utils.translation import ugettext_lazy as _
 
-from internship.forms import form_student_information
-from internship.tests.factories.cohort import CohortFactory
-from base.tests.factories.person import PersonFactory
+def display_errors(request, errors):
+    for error in errors:
+        for key, value in error.items():
+            messages.add_message(request, messages.ERROR, "{} : {}".format(_(key), value[0]), "alert-danger")
 
-from reference.tests.factories.country import CountryFactory
-
-class TestFormStudentInformation(TestCase):
-    def test_valid_form(self):
-        country = CountryFactory()
-        cohort = CohortFactory()
-        person = PersonFactory()
-        data = {
-            "email": "test@test.com",
-            "phone_mobile": "046486313",
-            "location": "location",
-            "postal_code": "postal",
-            "city": "city",
-            "country": country,
-            "contest": "GENERALIST",
-            "person": person.id,
-            'cohort': cohort.id,
-        }
-        form = form_student_information.StudentInformationForm(data)
-        self.assertTrue(form.is_valid())
-
+def display_report_errors(request,errors):
+    for error in errors:
+        for key, value in error.items():
+            key = key.replace("report_", "")
+            messages.add_message(request, messages.ERROR, "{} : {}".format(_(key), value[0]), "alert-danger")

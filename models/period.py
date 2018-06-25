@@ -25,7 +25,8 @@
 ##############################################################################
 from django.db import models
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
-from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
+from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned, ValidationError
+from django.utils.translation import ugettext_lazy as _
 
 
 class PeriodAdmin(SerializableModelAdmin):
@@ -39,6 +40,14 @@ class Period(SerializableModel):
     date_start = models.DateField()
     date_end = models.DateField()
     cohort = models.ForeignKey('internship.cohort', on_delete=models.CASCADE)
+
+    def clean(self):
+        self.clean_start_date()
+
+    def clean_start_date(self):
+        if all([self.date_start, self.date_end]):
+            if self.date_start >= self.date_end:
+                raise ValidationError({"date_start": _("start_before_end")})
 
     def number(self):
         return int(self.name[1])

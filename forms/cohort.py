@@ -26,6 +26,7 @@
 from django import forms
 from django.forms import TextInput
 
+from base.forms.bootstrap import BootstrapModelForm
 from internship.models import cohort
 
 
@@ -33,7 +34,7 @@ class DateInput(TextInput):
     input_type = 'date'
 
 
-class CohortForm(forms.ModelForm):
+class CohortForm(BootstrapModelForm):
     publication_start_date = forms.DateField(widget=DateInput)
     subscription_start_date = forms.DateField(widget=DateInput)
     subscription_end_date = forms.DateField(widget=DateInput)
@@ -49,11 +50,3 @@ class CohortForm(forms.ModelForm):
             'subscription_end_date',
             'originated_from'
         ]
-
-    def __init__(self, *args, **kwargs):
-        super(forms.ModelForm, self).__init__(*args, **kwargs)
-
-        for field in self.fields:
-            self.fields[field].widget.attrs.update({
-                'class': 'form-control'
-            })

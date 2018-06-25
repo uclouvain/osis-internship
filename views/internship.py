@@ -40,6 +40,7 @@ from internship import models as mdl_int
 from internship.forms.form_offer_preference import OfferPreferenceForm, OfferPreferenceFormSet
 from internship.forms.form_select_speciality import SpecialityForm
 from internship.forms.internship import InternshipForm
+from internship.views.common import display_errors
 
 
 @login_required
@@ -65,8 +66,11 @@ def modification_student(request, cohort_id, student_id, internship_id=-1, speci
     if request.method == 'POST':
         formset = offer_preference_formset(request.POST)
         if formset.is_valid():
+            messages.add_message(request, messages.SUCCESS, _("choice_saved"), "alert-success")
             _remove_previous_choices(student, internship)
             _save_student_choices(formset, student, internship, speciality, cohort)
+        else:
+            display_errors(request, formset.errors)
 
     student_choices = mdl_int.internship_choice.search_by_student_or_choice(student=student,
                                                                             internship=internship)
@@ -80,7 +84,7 @@ def modification_student(request, cohort_id, student_id, internship_id=-1, speci
 
     context = {
         "internships": internships,
-        "speciality_form": SpecialityForm(cohort=cohort),
+        "speciality_form": SpecialityForm(cohort=cohort, specialty_id=speciality_id),
         "formset": formset,
         "offers_forms": zipped_data,
         "internship": internship,
@@ -98,7 +102,7 @@ def assign_speciality_for_internship(request, cohort_id, student_id, internship_
     cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)
     speciality_id = None
     if request.method == "POST":
-        speciality_form = SpecialityForm(request.POST, cohort=cohort)
+        speciality_form = SpecialityForm(request.POST, cohort=cohort, specialty_id=speciality_id)
         if speciality_form.is_valid():
             speciality_selected = speciality_form.cleaned_data["speciality"]
             speciality_id = speciality_selected.id

@@ -23,30 +23,20 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.test import TestCase
+from django.test.testcases import TestCase
 
-from internship.forms import form_student_information
-from internship.tests.factories.cohort import CohortFactory
-from base.tests.factories.person import PersonFactory
+from internship.models.enums.civility import Civility
+from internship.models.enums.gender import Gender
 
-from reference.tests.factories.country import CountryFactory
 
-class TestFormStudentInformation(TestCase):
-    def test_valid_form(self):
-        country = CountryFactory()
-        cohort = CohortFactory()
-        person = PersonFactory()
-        data = {
-            "email": "test@test.com",
-            "phone_mobile": "046486313",
-            "location": "location",
-            "postal_code": "postal",
-            "city": "city",
-            "country": country,
-            "contest": "GENERALIST",
-            "person": person.id,
-            'cohort': cohort.id,
-        }
-        form = form_student_information.StudentInformationForm(data)
-        self.assertTrue(form.is_valid())
+class TestEnums(TestCase):
 
+    def test_civility(self):
+        for civility in [civility for civility in dir(Civility) if not civility.startswith('__')]:
+            value = Civility.__getattr__(civility)._value_
+            self.assertIn(value, str(Civility.choices()))
+
+    def test_gender(self):
+        for gender in [gender for gender in dir(Gender) if not gender.startswith('__')]:
+            value = Gender.__getattr__(gender)._value_
+            self.assertIn(value[:1].upper(), str(Gender.choices()))

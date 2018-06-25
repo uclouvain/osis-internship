@@ -23,12 +23,16 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.forms import ModelForm
+from django import forms
+from reference.models import country
 
+from base.forms.bootstrap import BootstrapModelForm
 from internship.models.organization import Organization
 
 
-class OrganizationForm(ModelForm):
+class OrganizationForm(BootstrapModelForm):
+    country = forms.ModelChoiceField(queryset=country.find_all(), required=False)
+
     class Meta:
         model = Organization
         fields = ['name', 'website', 'reference', 'location', 'postal_code', 'city', 'country', 'report_period',

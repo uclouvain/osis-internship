@@ -64,6 +64,9 @@ msgstr "Allocation"
 msgid "already_internship_preference_speciality"
 msgstr "You already have an internship with this preference for this speciality."
 
+msgid "birth_date_before_today"
+msgstr "Birth date must be on or before today's date."
+
 msgid "block_internship_selection"
 msgstr "Block internship's selection"
 
@@ -73,11 +76,17 @@ msgstr "Choices modification"
 msgid "choice_receive_by_administration"
 msgstr "Choice receive by administration"
 
+msgid "choice_saved"
+msgstr "Choices saved"
+
 msgid "choose_a_hospital"
 msgstr "Choose a hospital"
 
 msgid "choose_internships"
 msgstr "Choose your internship"
+
+msgid "choose_specialty"
+msgstr "Choose a specialty"
 
 msgid "choose_spec_see_record_choice"
 msgstr "Choose a speciality to see your choices already done."
@@ -127,6 +136,15 @@ msgstr "Doctor"
 msgid "DOCTOR_ACRON"
 msgstr "Dr."
 
+msgid "duplicate_offer"
+msgstr "Cannot select same offer"
+
+msgid "duplicate_preference"
+msgstr "Cannot apply same preference on distinct offers"
+
+msgid "duplicate_report_sequence"
+msgstr "Duplicated sequence in report"
+
 msgid "edit_places"
 msgstr "Edit number of places"
 
@@ -147,6 +165,9 @@ msgstr "You are in the period of inscriptions. It is not recommended to change c
 
 msgid "first_choice"
 msgstr "First choice"
+
+msgid "file_upload"
+msgstr "File upload"
 
 msgid "fourth_choice"
 msgstr "Fourth choice"
@@ -174,6 +195,12 @@ msgstr "Hospital"
 
 msgid "hospitals"
 msgstr "Hospitals"
+
+msgid "hospital_saved"
+msgstr "Hospital saved"
+
+msgid "hospital_or_specialty_required"
+msgstr "A master must be affected to at least one hospital or one specialty."
 
 msgid "import_hospital"
 msgstr "Import hospitals"
@@ -286,6 +313,9 @@ msgstr "Period deleted"
 msgid "period_saved"
 msgstr "Period created"
 
+msgid "period_edited"
+msgstr "Period edited"
+
 msgid "periods"
 msgstr "Periods"
 
@@ -303,6 +333,12 @@ msgstr "Hospitals' injection"
 
 msgid "publication_date"
 msgstr "Publication date"
+
+msgid "publication_start_date"
+msgstr "Publication date"
+
+msgid "publication_after_subscription"
+msgstr "Publication must be done after the subscription process."
 
 msgid "reference"
 msgstr "Reference"
@@ -337,6 +373,9 @@ msgstr "Specialist"
 msgid "start_activities"
 msgstr "Start Activities"
 
+msgid "start_before_end"
+msgstr "Start date must be earlier than end date."
+
 msgid "student"
 msgstr "Student"
 
@@ -357,6 +396,12 @@ msgstr "Studies"
 
 msgid "summary_your_choices_and_affectation"
 msgstr "Sump up of your choices and your affectations"
+
+msgid "subscription_start_date"
+msgstr "Enrolment start"
+
+msgid "submit_choices"
+msgstr "Submit choices"
 
 msgid "third_choice"
 msgstr "Third Choice"

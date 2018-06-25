@@ -35,6 +35,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.utils.translation import ugettext_lazy as _
 
+from internship.views.common import display_errors
 from reference.models import country
 from base import models as mdl
 from internship import models as mdl_int
@@ -73,9 +74,11 @@ def internships_student_resume(request, cohort_id):
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
-def student_form(request, cohort_id):
+def student_form(request, cohort_id, form=None):
     cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)
     countries = country.find_all()
+    if form is None:
+        form = StudentInformationForm(request.POST)
     return render(request, 'student_form.html', locals())
 
 
@@ -116,15 +119,13 @@ def get_student(request):
 def student_save(request, cohort_id):
     cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)
     student = mdl_int.internship_student_information.InternshipStudentInformation(cohort=cohort)
-
     form = StudentInformationForm(request.POST, instance=student)
     errors = []
     if form.is_valid():
         form.save()
     else:
         errors.append(form.errors)
-
-    if errors:
+        display_errors(request, errors)
         return HttpResponseRedirect(reverse("internship_student_form", args=[cohort_id]))
 
     return HttpResponseRedirect(reverse("internships_student_resume", args=[cohort_id]))
@@ -160,11 +161,12 @@ def internships_student_read(request, cohort_id, student_id):
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
-def internship_student_information_modification(request, cohort_id, student_id):
+def internship_student_information_modification(request, cohort_id, student_id, form=None):
     cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)
     student = mdl.student.find_by_id(student_id)
     information = mdl_int.internship_student_information.search(person=student.person, cohort=cohort).first()
-    form = StudentInformationForm()
+    if form is None:
+        form = StudentInformationForm(instance=information)
     return render(request, "student_information_modification.html", locals())
 
 
@@ -174,28 +176,34 @@ def internship_student_information_modification(request, cohort_id, student_id):
 def student_save_information_modification(request, cohort_id, student_id):
     cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)
     student = mdl.student.find_by_id(student_id)
-    informations = mdl_int.internship_student_information.find_by_person(student.person, cohort)
-    if not informations:
+    information = mdl_int.internship_student_information.find_by_person(student.person, cohort)
+    if not information:
         information = mdl_int.internship_student_information.InternshipStudentInformation()
         information.person = student.person
     else:
-        information = informations.first()
+        information = information.first()
 
     if information.cohort is None:
         information.cohort = cohort
 
-    form = StudentInformationForm(request.POST, instance=information)
+    data = request.POST.copy()
+    data.update({'person': student.person.id, 'cohort': cohort_id})
+    form = StudentInformationForm(data, instance=information)
+
     if form.is_valid():
         information.email = form.cleaned_data.get('email')
         information.phone_mobile = form.cleaned_data.get('phone_mobile')
         information.location = form.cleaned_data.get('location')
         information.postal_code = form.cleaned_data.get('postal_code')
         information.city = form.cleaned_data.get('city')
-        information.country = form.cleaned_data.get('country')
+        information.country = str(form.cleaned_data.get('country'))
         information.contest = form.cleaned_data.get('contest')
         information.save()
+    else:
+        return internship_student_information_modification(request, cohort_id, student_id, form)
 
     redirect_url = reverse('internships_student_read', args=[cohort_id, student_id])
+
     return HttpResponseRedirect(redirect_url)
 
 
@@ -298,11 +306,15 @@ def student_save_affectation_modification(request, cohort_id, student_id):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def import_students(request, cohort_id):
     cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)
-
     form = StudentsImportActionForm(request.POST, request.FILES)
+    errors = []
     if form.is_valid():
         file_upload = form.cleaned_data['file_upload']
         import_xlsx(cohort, BytesIO(file_upload.read()))
+    else:
+        errors.append(form.errors)
+        display_errors(request, errors)
+
     return HttpResponseRedirect(reverse('internships_student_resume', kwargs={"cohort_id": cohort_id}))
 
 

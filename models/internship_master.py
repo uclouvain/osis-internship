@@ -24,11 +24,16 @@
 #
 ##############################################################################
 from django.db import models
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
+from django.utils import timezone
+from django.utils.translation import ugettext_lazy as _
+
 
 from internship.models.enums.civility import Civility
 from internship.models.enums.gender import Gender
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
+
+
 
 
 class InternshipMasterAdmin(SerializableModelAdmin):
@@ -40,7 +45,7 @@ class InternshipMasterAdmin(SerializableModelAdmin):
 
 class InternshipMaster(SerializableModel):
     first_name = models.CharField(max_length=50, blank=True, null=True, db_index=True)
-    last_name = models.CharField(max_length=50, blank=True, null=True, db_index=True)
+    last_name = models.CharField(max_length=50, db_index=True)
     civility = models.CharField(max_length=50, blank=True, null=True, choices=Civility.choices())
     gender = models.CharField(max_length=1, blank=True, null=True, choices=Gender.choices())
     email = models.EmailField(max_length=255, blank=True, null=True)
@@ -53,6 +58,13 @@ class InternshipMaster(SerializableModel):
     phone_mobile = models.CharField(max_length=30, blank=True, null=True)
     birth_date = models.DateField(blank=True, null=True)
     start_activities = models.DateField(blank=True, null=True)
+
+    def clean(self):
+        self.clean_birth_date()
+
+    def clean_birth_date(self):
+        if self.birth_date is not None and self.birth_date > timezone.now().date():
+            raise ValidationError({"birth_date": _("birth_date_before_today")}, code="invalid")
 
     def civility_acronym(self):
         if self.civility:
