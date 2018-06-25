@@ -23,19 +23,17 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.forms import ModelForm
-
+from base.forms.bootstrap import BootstrapModelForm
 from internship.models.period import Period
 from django import forms
-from functools import partial
 
 
-DateInput = partial(forms.DateInput, {'class': 'datepicker'})
+class PeriodForm(BootstrapModelForm):
 
-
-class PeriodForm(ModelForm):
     class Meta:
         model = Period
         fields = ['name', 'date_start', 'date_end']
-        widgets = {'date_start': forms.DateInput(format='%d/%m/%Y'),
-                   'date_end': forms.DateInput(format='%d/%m/%Y')}
+        widgets = {
+            'date_start': forms.DateInput(format="%Y-%m-%d", attrs={'type': 'date'}),
+            'date_end': forms.DateInput(format="%Y-%m-%d", attrs={'type': 'date'})
+        }

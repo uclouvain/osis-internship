@@ -23,30 +23,30 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from datetime import timedelta
+
 from django.test import TestCase
+from django.utils import timezone
+from django.core.files.uploadedfile import SimpleUploadedFile
 
-from internship.forms import form_student_information
-from internship.tests.factories.cohort import CohortFactory
-from base.tests.factories.person import PersonFactory
+from internship.forms.students_import_form import StudentsImportActionForm
 
-from reference.tests.factories.country import CountryFactory
 
-class TestFormStudentInformation(TestCase):
-    def test_valid_form(self):
-        country = CountryFactory()
-        cohort = CohortFactory()
-        person = PersonFactory()
+class TestStudentImportForm(TestCase):
+
+    def test_valid_file_extension(self):
+        file = SimpleUploadedFile("test.xlsx", b"file_content",
+                                  content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
         data = {
-            "email": "test@test.com",
-            "phone_mobile": "046486313",
-            "location": "location",
-            "postal_code": "postal",
-            "city": "city",
-            "country": country,
-            "contest": "GENERALIST",
-            "person": person.id,
-            'cohort': cohort.id,
+            'file_upload': file,
         }
-        form = form_student_information.StudentInformationForm(data)
+        form = StudentsImportActionForm(None, data)
         self.assertTrue(form.is_valid())
 
+    def test_invalid_file_extension(self):
+        file = SimpleUploadedFile("test.xls", b"file_content", content_type="application/vnd.ms-excel")
+        data = {
+            'file_upload': file,
+        }
+        form = StudentsImportActionForm(None, data)
+        self.assertFalse(form.is_valid())

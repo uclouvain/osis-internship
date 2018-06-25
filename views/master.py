@@ -24,11 +24,14 @@
 #
 ##############################################################################
 from django import shortcuts
+from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required, permission_required
+from django.utils.translation import ugettext_lazy as _
 
 from base.views import layout
+from internship.views.common import display_errors
 from reference.models import country
 from internship.models import master_allocation, internship_master, internship_speciality, organization, cohort
 from internship.forms.master import MasterForm
@@ -61,17 +64,13 @@ def master(request, cohort_id, master_id):
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
-def master_form(request, cohort_id, master_id=None):
+def master_form(request, cohort_id, master_id=None, allocated_master=None):
     current_cohort = shortcuts.get_object_or_404(cohort.Cohort, pk=cohort_id)
     if master_id:
         allocated_master = internship_master.get_by_id(master_id)
         allocations = master_allocation.find_by_master(current_cohort, allocated_master)
-        doctor_selected = 'selected' if allocated_master.civility == Civility.DOCTOR.value else ''
-        professor_selected = 'selected' if allocated_master.civility == Civility.PROFESSOR.value else ''
-        female_selected = 'selected' if allocated_master.gender == Gender.FEMALE.value else ''
-        male_selected = 'selected' if allocated_master.gender == Gender.MALE.value else ''
 
-    countries = country.find_all()
+    form = MasterForm(request.POST or None, instance=allocated_master)
     specialties = internship_speciality.find_by_cohort(current_cohort)
     hospitals = organization.find_by_cohort(current_cohort)
     return layout.render(request, "master_form.html", locals())
@@ -82,22 +81,27 @@ def master_form(request, cohort_id, master_id=None):
 def master_save(request, cohort_id):
     current_cohort = shortcuts.get_object_or_404(cohort.Cohort, pk=cohort_id)
     allocated_master = internship_master.get_by_id(request.POST.get("id")) if request.POST.get("id") else None
-
     form = MasterForm(request.POST, instance=allocated_master)
     errors = []
     hospital = ""
     if form.is_valid():
-        form.save()
         allocated_master = form.instance
-        master_allocation.clean_allocations(current_cohort, allocated_master)
-        allocations = _build_allocations(request, allocated_master)
-        _save_allocations(allocations)
-        hospital = _extract_hospital_id(allocations)
+        if _validate_allocations(request):
+            form.save()
+            master_allocation.clean_allocations(current_cohort, allocated_master)
+            allocations = _build_allocations(request, allocated_master)
+            _save_allocations(allocations)
+            hospital = _extract_hospital_id(allocations)
+        else:
+            errors.append(form.errors)
+            messages.add_message(request, messages.ERROR, _('hospital_or_specialty_required'), "alert-danger")
     else:
         errors.append(form.errors)
+        display_errors(request, errors)
+
 
     if errors:
-        return HttpResponseRedirect(reverse("master_edit", args=[current_cohort.id, allocated_master.id]))
+        return master_form(request=request, cohort_id=current_cohort.id, allocated_master=allocated_master)
 
     return HttpResponseRedirect("{}?hospital={}".format(reverse("internships_masters", args=[current_cohort.id]),
                                                         hospital))
@@ -114,10 +118,13 @@ def _build_allocations(request, allocated_master):
         specialties = request.POST.getlist('specialty')
         specialties = _clean_empty_strings(specialties)
 
+    allocations_ids = list(zip(hospitals, specialties))
+
     allocations = []
-    for i, a_hospital in enumerate(hospitals):
-        hospital = organization.get_by_id(a_hospital)
-        specialty = internship_speciality.get_by_id(specialties[i])
+
+    for hospital_id, specialty_id in allocations_ids:
+        hospital = organization.get_by_id(hospital_id) if hospital_id else None
+        specialty = internship_speciality.get_by_id(specialty_id) if specialty_id else None
         allocation = master_allocation.MasterAllocation(master=allocated_master,
                                                         organization=hospital,
                                                         specialty=specialty)
@@ -127,16 +134,20 @@ def _build_allocations(request, allocated_master):
 
 
 def _clean_empty_strings(a_list):
-    return list(filter(lambda x: x is not "", a_list))
+    return [x if x is not '' else None for x in a_list]
 
 
 def _save_allocations(allocations):
     for allocation in allocations:
         allocation.save()
-
+        
 
 def _extract_hospital_id(allocations):
-    if allocations:
+    if allocations and allocations[0].organization:
         return allocations[0].organization.id
     else:
         return 0
+
+def _validate_allocations(request):
+    hospitals, specialties = request.POST.getlist('hospital'), request.POST.getlist('specialty')
+    return hospitals[0] is not '' or specialties[0] is not ''

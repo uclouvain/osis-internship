@@ -1,6 +1,7 @@
 {% extends "layout.html" %}
 {% load staticfiles %}
 {% load i18n %}
+{% load bootstrap3 %}
 
 {% comment "License" %}
     * OSIS stands for Open Student Information System. It's an application
@@ -71,33 +72,14 @@
                         <label>{% trans 'birthdate' %}</label><br>
                         {{ student.person.birth_date | default_if_none:'-' }}
                     </div>
-                    <div class="col-md-6">
-                        <label for="{{ form.email.id_for_label }}">{% trans 'email' %}</label><br>
-                        <input type="text" class="form-control" id={{ form.email.id_for_label }} name="{{ form.email.html_name }}" value="{{ information.email | default_if_none:'-' }}">
-                    </div>
-                    <div class="col-md-3">
-                        <label for="{{ form.phone_mobile.id_for_label }}">{% trans 'phone_mobile' %}</label><br>
-                        <input class="form-control" id="{{ form.email.id_for_label }}" type="text"  name="{{ form.phone_mobile.html_name }}" value="{{ information.phone_mobile | default_if_none:'-' }}">
-                    </div>
+                    {% bootstrap_field form.email form_group_class="form-group col-md-6" label=_("email") %}
+                    {% bootstrap_field form.phone_mobile form_group_class="form-group col-md-3" label=_("phone_mobile") %}
                 </div>
-                <br>
                 <div class="row">
-                    <div class="col-md-3">
-                        <label for="{{ form.location.id_for_label }}">{% trans 'address' %}</label><br>
-                        <input class="form-control" id="{{ form.location.id_for_label }}" type="text" name="{{ form.location.html_name }}" value="{{ information.location | default_if_none:'-' }}">
-                    </div>
-                    <div class="col-md-3">
-                        <label for="{{ form.postal_code.id_for_label }}">{% trans 'postal_code' %}</label><br>
-                        <input class="form-control" id="{{ form.postal_code.id_for_label }}" type="text" name="{{ form.postal_code.html_name }}" value="{{ information.postal_code | default_if_none:'-' }}">
-                    </div>
-                    <div class="col-md-3">
-                        <label for="{{ form.city.id_for_label }}">{% trans 'location' %}</label><br>
-                        <input class="form-control" id="{{ form.city.id_for_label }}" type="text" name="{{ form.city.html_name }}" value="{{ information.city | default_if_none:'-' }}">
-                    </div>
-                    <div class="col-md-3">
-                        <label for="{{ form.country.id_for_label }}">{% trans 'country' %}</label><br>
-                        <input class="form-control" id="{{ form.country.id_for_label }}" type="text" name="{{ form.country.html_name }}" value="{{ information.country | default_if_none:'-' }}">
-                    </div>
+                    {% bootstrap_field form.location form_group_class="form-group col-md-3" label=_("address") %}
+                    {% bootstrap_field form.postal_code form_group_class="form-group col-md-3" label=_("postal_code") %}
+                    {% bootstrap_field form.city form_group_class="form-group col-md-3" label=_("location") %}
+                    {% bootstrap_field form.country form_group_class="form-group col-md-3" label=_("country") %}
                 </div>
                 <br>
                 <button type="submit" class="btn btn-primary" title="{% trans 'Save'%}" id="bt_interships_new">

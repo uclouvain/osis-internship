@@ -23,12 +23,19 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.forms import ModelForm
-
+from django import forms
+from base.models.person import Person
+from base.forms.bootstrap import BootstrapModelForm
+from internship.models.cohort import Cohort
 from internship.models.internship_student_information import InternshipStudentInformation
+from reference.models import country
 
 
-class StudentInformationForm(ModelForm):
+class StudentInformationForm(BootstrapModelForm):
+    country = forms.ModelChoiceField(queryset=country.find_all(), to_field_name="name")
+    person = forms.ModelChoiceField(queryset=Person.objects.all(), widget=forms.HiddenInput())
+    cohort = forms.ModelChoiceField(queryset=Cohort.objects.all(), widget=forms.HiddenInput())
+
     class Meta:
         model = InternshipStudentInformation
         fields = ['location', 'postal_code', 'city', 'country', 'email', 'phone_mobile', 'contest', 'cohort', 'person']

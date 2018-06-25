@@ -24,12 +24,18 @@
 #
 ##############################################################################
 from django import forms
+
+from base.forms.bootstrap import BootstrapForm
 from internship.models import internship_speciality
 
 
-class SpecialityForm(forms.Form):
+class SpecialityForm(BootstrapForm):
+    speciality = forms.ModelChoiceField(queryset=None, empty_label=None)
+
     def __init__(self, *args, **kwargs):
         cohort = kwargs.pop("cohort")
+        specialty_id = kwargs.pop("specialty_id")
         super(SpecialityForm, self).__init__(*args, **kwargs)
-        self.fields["speciality"] = forms.ModelChoiceField(queryset=internship_speciality.find_by_cohort(cohort),
-                                                           empty_label=None)
+        self.fields["speciality"].queryset = internship_speciality.find_by_cohort(cohort)
+        if specialty_id:
+            self.fields["speciality"].initial = internship_speciality.get_by_id(specialty_id)

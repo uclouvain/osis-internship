@@ -23,30 +23,30 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from datetime import timedelta
+
 from django.test import TestCase
+from django.utils import timezone
 
-from internship.forms import form_student_information
-from internship.tests.factories.cohort import CohortFactory
-from base.tests.factories.person import PersonFactory
+from internship.forms.period_form import PeriodForm
 
-from reference.tests.factories.country import CountryFactory
 
-class TestFormStudentInformation(TestCase):
+class TestPeriodForm(TestCase):
+
     def test_valid_form(self):
-        country = CountryFactory()
-        cohort = CohortFactory()
-        person = PersonFactory()
         data = {
-            "email": "test@test.com",
-            "phone_mobile": "046486313",
-            "location": "location",
-            "postal_code": "postal",
-            "city": "city",
-            "country": country,
-            "contest": "GENERALIST",
-            "person": person.id,
-            'cohort': cohort.id,
+            'name': "name",
+            'date_start': timezone.now().date(),
+            'date_end': timezone.now().date() + timedelta(days=5),
         }
-        form = form_student_information.StudentInformationForm(data)
+        form = PeriodForm(data)
         self.assertTrue(form.is_valid())
 
+    def test_start_before_end(self):
+        data = {
+            'name': "name",
+            'date_start': timezone.now().date() + timedelta(days=5),
+            'date_end': timezone.now().date(),
+        }
+        form = PeriodForm(data)
+        self.assertFalse(form.is_valid())

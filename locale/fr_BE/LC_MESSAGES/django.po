@@ -40,6 +40,12 @@ msgstr "Ajouter une spécialité"
 msgid "address"
 msgstr "Adresse"
 
+msgid "address_editable"
+msgstr "Adresse modifiable"
+
+msgid "address_legal"
+msgstr "Adresse légale"
+
 msgid "affectation_result"
 msgstr "Résultat de l'affectation"
 
@@ -64,6 +70,9 @@ msgstr "Affectation"
 msgid "already_internship_preference_speciality"
 msgstr "Vous avez déjà un stage avec cette préférence dans cette spécialité."
 
+msgid "birth_date_before_today"
+msgstr "La date de naissance doit être antérieure ou égale à la date actuelle."
+
 msgid "block_internship_selection"
 msgstr "Bloquer la sélection des stages"
 
@@ -73,11 +82,17 @@ msgstr "Modification des choix"
 msgid "choice_receive_by_administration"
 msgstr "Choix reçus par l'administration"
 
+msgid "choice_saved"
+msgstr "Choix enregistrés"
+
 msgid "choose_a_hospital"
 msgstr "Choisir un hôpital"
 
 msgid "choose_internships"
 msgstr "Choisissez vos stages"
+
+msgid "choose_specialty"
+msgstr "Choisissez une spécialité"
 
 msgid "choose_spec_see_record_choice"
 msgstr "Choisissez une spécialité pour voir vos choix déjà effectués."
@@ -98,7 +113,7 @@ msgid "contest"
 msgstr "Concours"
 
 msgid "copy_from_cohort"
-msgstr "Copier à partir du cohorte"
+msgstr "Copier à partir de la cohorte"
 
 msgid "create_a_speciality"
 msgstr "Créer une spécialité"
@@ -127,6 +142,15 @@ msgstr "Docteur"
 msgid "DOCTOR_ACRON"
 msgstr "Dr."
 
+msgid "duplicate_offer"
+msgstr "Impossible de sélectionner la même offre"
+
+msgid "duplicate_preference"
+msgstr "Impossible d'appliquer la même préférence sur des offres distinctes"
+
+msgid "duplicate_report_sequence"
+msgstr "Séquence dupliquée dans le rapport"
+
 msgid "edit_places"
 msgstr "Modifier nombres de places"
 
@@ -134,7 +158,7 @@ msgid "email"
 msgstr "Email"
 
 msgid "email_private"
-msgstr "Private Email"
+msgstr "Email Privé"
 
 msgid "enrolment_start"
 msgstr "Ouverture des inscriptions"
@@ -147,6 +171,9 @@ msgstr "Vous êtes dans la période des inscriptions. Il est recommandé de ne p
 
 msgid "first_choice"
 msgstr "Choix préféré"
+
+msgid "file_upload"
+msgstr "Importation de fichier"
 
 msgid "fourth_choice"
 msgstr "4ème choix"
@@ -172,8 +199,14 @@ msgstr "Veuillez sélectionner un fichier xlsx pour l'injection des étudiants."
 msgid "hospital"
 msgstr "Hôpital"
 
+msgid "hospital_saved"
+msgstr "Hôpital enregistré"
+
 msgid "hospitals"
 msgstr "Hôpitaux"
+
+msgid "hospital_or_specialty_required"
+msgstr "Un maître de stage doit être affecté à au moins un hôpital ou une spécialité."
 
 msgid "import_hospital"
 msgstr "Importer les hôpitaux"
@@ -280,6 +313,9 @@ msgstr "Période supprimée"
 msgid "period_saved"
 msgstr "Période créée"
 
+msgid "period_edited"
+msgstr "Période modifiée"
+
 msgid "periods"
 msgstr "Périodes"
 
@@ -300,6 +336,12 @@ msgstr "Prof."
 
 msgid "publication_date"
 msgstr "Date de publication"
+
+msgid "publication_start_date"
+msgstr "Date de publication"
+
+msgid "publication_after_subscription"
+msgstr "La publication doit être réalisée après le processus d'inscription."
 
 msgid "reference"
 msgstr "Référence"
@@ -340,6 +382,9 @@ msgstr "Spécialiste"
 msgid "start_activities"
 msgstr "Début des activités"
 
+msgid "start_before_end"
+msgstr "La date d'ouverture doit être antérieure à la date de fermeture."
+
 msgid "student"
 msgstr "Étudiant"
 
@@ -360,6 +405,12 @@ msgstr "Étudiants"
 
 msgid "studies"
 msgstr "Études"
+
+msgid "subscription_start_date"
+msgstr "Ouverture des inscriptions"
+
+msgid "submit_choices"
+msgstr "Soumettre les choix"
 
 msgid "summary_your_choices_and_affectation"
 msgstr "Résumé de vos choix et affectations"

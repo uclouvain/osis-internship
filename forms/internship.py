@@ -25,10 +25,12 @@
 ##############################################################################
 from django import forms
 
+from base.forms.bootstrap import BootstrapModelForm
 from internship.models.internship import Internship
+from internship.models import internship_speciality
 
 
-class InternshipForm(forms.ModelForm):
+class InternshipForm(BootstrapModelForm):
     class Meta:
         model = Internship
         fields = [
@@ -39,11 +41,6 @@ class InternshipForm(forms.ModelForm):
         ]
 
     def __init__(self, *args, **kwargs):
-        super(forms.ModelForm, self).__init__(*args, **kwargs)
-        self.fields['speciality'].queryset = self.fields['speciality'].queryset.filter(
-            cohort_id=kwargs['instance'].cohort_id)
-
-        for field in self.fields:
-            self.fields[field].widget.attrs.update({
-                'class': 'form-control'
-            })
+        super(InternshipForm, self).__init__(*args, **kwargs)
+        cohort_id = kwargs['instance'].cohort_id
+        self.fields['speciality'].queryset = internship_speciality.find_by_cohort(cohort_id)

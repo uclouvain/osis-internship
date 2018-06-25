@@ -23,14 +23,18 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.shortcuts import get_object_or_404, render
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
+from django.utils.translation import ugettext_lazy as _
+
 from internship import models
 from internship.forms.organization_form import OrganizationForm
 from internship.utils.exporting import organization_affectation_master
 from internship.utils.exporting import organization_affectation_hospital
+from internship.views.common import display_report_errors
 from internship.views.internship import get_all_specialities, set_tabs_name
 from reference.models import country
 
@@ -40,15 +44,14 @@ from reference.models import country
 def internships_places(request, cohort_id):
     cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
     organizations = models.organization.Organization.objects.filter(cohort=cohort).order_by('reference')
-
     context = {'all_organizations': organizations, 'cohort': cohort}
     return render(request, "places.html", context)
-
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def place_save(request, cohort_id, organization_id):
     cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
+    errors = []
 
     if organization_id:
         organization = models.organization.get_by_id(organization_id)
@@ -61,6 +64,11 @@ def place_save(request, cohort_id, organization_id):
     form = OrganizationForm(data=request.POST, instance=organization)
     if form.is_valid():
         form.save()
+        messages.add_message(request, messages.SUCCESS, "{} : {} - {}".format(
+            _("hospital_saved"), form.cleaned_data["reference"], form.cleaned_data["name"]), "alert-success")
+    else:
+        errors.append(form.errors)
+        display_report_errors(request, errors)
 
     countries = country.find_all()
 
@@ -88,6 +96,7 @@ def organization_edit(request, cohort_id, organization_id):
     cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
     organization = models.organization.get_by_id(organization_id)
     countries = country.find_all()
+    form = OrganizationForm(request.POST or None, instance=organization)
     return render(request, "place_form.html", locals())
 
 
@@ -96,6 +105,7 @@ def organization_edit(request, cohort_id, organization_id):
 def organization_create(request, cohort_id):
     cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
     countries = country.find_all()
+    form = OrganizationForm(request.POST or None)
     return render(request, "place_form.html", locals())
 
 

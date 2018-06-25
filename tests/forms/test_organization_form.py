@@ -23,30 +23,37 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.test import TestCase
+from datetime import timedelta
 
-from internship.forms import form_student_information
-from internship.tests.factories.cohort import CohortFactory
-from base.tests.factories.person import PersonFactory
+from django.test import TestCase, RequestFactory
+from django.utils import timezone
 
-from reference.tests.factories.country import CountryFactory
+from internship.forms import organization_form
 
-class TestFormStudentInformation(TestCase):
+from reference.models.country import Country
+
+
+class TestOrganizationForm(TestCase):
+
     def test_valid_form(self):
-        country = CountryFactory()
-        cohort = CohortFactory()
-        person = PersonFactory()
+        belgium = Country.find_by_uuid("ae40df86-04e9-4e9b-8dca-0c1e26b1476d")
         data = {
-            "email": "test@test.com",
-            "phone_mobile": "046486313",
+            "reference":"00",
+            "name": "test",
+            "website": "test.be",
             "location": "location",
-            "postal_code": "postal",
+            "postal_code": "1348",
             "city": "city",
-            "country": country,
-            "contest": "GENERALIST",
-            "person": person.id,
-            'cohort': cohort.id,
+            "country": belgium,
         }
-        form = form_student_information.StudentInformationForm(data)
+        form = organization_form.OrganizationForm(data)
         self.assertTrue(form.is_valid())
 
+    def test_duplicate_sequence(self):
+        data = {
+            "name": "test",
+            "report_period": 1,
+            "report_noma": 1
+        }
+        form = organization_form.OrganizationForm(data)
+        self.assertFalse(form.is_valid())

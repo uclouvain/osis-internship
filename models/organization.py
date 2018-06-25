@@ -24,9 +24,10 @@
 #
 ##############################################################################
 from django.db import models
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 from internship.models.enums import organization_report_fields
+from django.utils.translation import ugettext_lazy as _
 
 
 class OrganizationAdmin(SerializableModelAdmin):
@@ -63,6 +64,17 @@ class Organization(SerializableModel):
     report_address = models.IntegerField(default=12, blank=True, null=True)
     report_postal_code = models.IntegerField(default=13, blank=True, null=True)
     report_city = models.IntegerField(default=14, blank=True, null=True)
+
+    def clean(self):
+        self.clean_duplicate_sequence()
+
+    def clean_duplicate_sequence(self):
+        report = {field: value for field, value in vars(self).items() if "report_" in field and value is not None}
+        report_values = [value for field, value in report.items()]
+        duplicates = set([x for x in report_values if report_values.count(x) > 1])
+        keys = [field for field, value in report.items() if value in duplicates]
+        for k in keys:
+            raise ValidationError({k :_("duplicate_report_sequence")})
 
     def report_sequence(self):
         """ Returns only the report fields that are numered and ordered as numered."""

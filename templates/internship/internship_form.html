@@ -1,6 +1,7 @@
 {% extends "layout.html" %}
 {% load staticfiles %}
 {% load i18n %}
+{% load bootstrap3 %}
 
 {% block breadcrumb %}
     <li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
@@ -21,37 +22,13 @@
             <form method="POST" class="post-form">
                 {%  csrf_token %}
                 <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="txt_name">{{ form.name.label }}</label>
-                            {{ form.name }}
-                            <span class="error">{{ form.name.errors }}</span>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="txt_speciality">{{ form.speciality.label }}</label>
-                            {{ form.speciality }}
-                            <span class="error" required>{{ form.speciality.errors }}</span>
-                        </div>
-                    </div>
+                    {% bootstrap_field form.name form_group_class="form-group col-md-6" label=_("name") %}
+                    {% bootstrap_field form.speciality form_group_class="form-group col-md-6" label=_("specialty") %}
                 </div>
 
                 <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="txt_length_in_periods">{{ form.length_in_periods.label }}</label>
-                            {{ form.length_in_periods }}
-                            <span class="error" required>{{ form.length_in_periods.errors }}</span>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="txt_position">{{ form.position.label }}</label>
-                            {{ form.position }}
-                            <span class="error" required>{{ form.position.errors }}</span>
-                        </div>
-                    </div>
+                    {% bootstrap_field form.length_in_periods form_group_class="form-group col-md-6" label=_("number_of_periods") %}
+                    {% bootstrap_field form.position form_group_class="form-group col-md-6" label=_("order_postion") %}
                 </div>
 
                 <button type="submit" class="btn btn-primary" title="{%trans 'save' %}" id="bt_internship_save">

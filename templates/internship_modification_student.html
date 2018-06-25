@@ -36,6 +36,9 @@
     <div class="page-header">
         <h2>{% trans 'internships' %} : {{ student.person.last_name }} {{ student.person.first_name }} ({{ information.contest }})</h2>
     </div>
+
+    {% include "template_messages.html" %}
+
     <br/>
     {% if cohort.is_subscription_active %}
         <div id="div_warning_messages" class="alert alert-warning" role="alert">
@@ -63,17 +66,8 @@
                     {{ speciality_form.non_field_errors }}
                     <div class="fieldWrapper col-md-4 form-group">
                         {{ speciality_form.speciality.errors }}
-                        <label for="{{ speciality_form.speciality.id_for_label }}">Choose a speciality:</label>
-                        <select id="{{ speciality_form.speciality.id_for_label }}"
-                                name="{{ speciality_form.speciality.html_name }}"
-                                class="form-control">
-                            {% for x,y in speciality_form.fields.speciality.choices %}
-                                <option value="{{ x }}"
-                                        {% if speciality_id == x %} selected {% endif %}>
-                                    {{ y }}
-                                </option>
-                            {% endfor %}
-                        </select>
+                        <label for="id_speciality">{% trans 'choose_specialty' %}</label>
+                            {{speciality_form.speciality}}
                     </div>
 
                     <div class="col-md-2">
@@ -142,7 +136,7 @@
                {% if offers_forms  %}
                     <button type="submit" class="btn btn-primary">
                         <span class="glyphicon glyphicon-ok"></span>
-                        Submit choices
+                        {% trans 'submit_choices' %}
                     </button>
                {% endif %}
                </form>

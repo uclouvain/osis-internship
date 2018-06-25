@@ -24,8 +24,12 @@
 #
 ##############################################################################
 from osis_common.utils.enumerations import ChoiceEnum
-
+from django.utils.translation import ugettext_lazy as _
 
 class Civility(ChoiceEnum):
     PROFESSOR = "PROFESSOR"
     DOCTOR = "DOCTOR"
+
+    @classmethod
+    def choices(cls):
+        return tuple((x.value, _(x.value)) for x in cls)

@@ -139,17 +139,18 @@ class SpecialityViewTestCase(TestCase):
         self.assertIn(specialty['name'], messages[0].message)
 
     def test_save_with_duplicate_acronym(self):
-        specialty = SpecialtyFactory(name='TEST', cohort=self.cohort)
+        first_specialty = SpecialtyFactory(name='TEST', cohort=self.cohort)
+        second_specialty = SpecialtyFactory(name='TEST-1', cohort=self.cohort)
 
         url = reverse('speciality_save', kwargs={
             'cohort_id': self.cohort.id,
-            'speciality_id': specialty.id,
+            'speciality_id': second_specialty.id,
         })
 
         specialty_with_same_acronym = {
             'mandatory': False,
             'name': "TEST-2",
-            'acronym': specialty.acronym,
+            'acronym': first_specialty.acronym,
             'sequence': "1"
         }
 
@@ -160,4 +161,4 @@ class SpecialityViewTestCase(TestCase):
 
         messages = list(response.wsgi_request._messages)
         self.assertEqual(messages[0].level_tag, "error")
-        self.assertIn(specialty.acronym, messages[0].message)
+        self.assertIn(first_specialty.acronym, messages[0].message)

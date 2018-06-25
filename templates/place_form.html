@@ -3,6 +3,7 @@
 {% load i18n %}
 {% load full_width %}
 {% load dictionnary %}
+{% load bootstrap3 %}
 
 {% comment "License" %}
     * OSIS stands for Open Student Information System. It's an application
@@ -36,6 +37,9 @@
 {% endblock %}
 
 {% block content %}
+
+    {% include "template_messages.html" %}
+
     <div class="page-header">
         {% if organization.id%}
             <h2>{{ organization.name }}</h2>
@@ -53,49 +57,17 @@
                                         {% endif %}">
                 {% csrf_token %}
                 <div class="row">
-                    <div class="col-md-1">
-                        <label for="txt_reference">{% trans 'reference'%}</label>
-                        <input class="form-control" value="{{ organization.reference | default_if_none:'' }}" name="reference" id="txt_reference" maxlength="30" required><span class="error">{{ form.reference.errors }}</span>
-                    </div>
-                    <div class="col-md-5">
-                        <label for="txt_name">{% trans 'name' %}</label>
-                        <input class="form-control" value="{{ organization.name| default_if_none:'' }}" name="name" id="txt_name" maxlength="255"><span class="error" required>{{ form.name.errors }}</span>
-                    </div>
-                    <div class="col-md-6">
-                        <label for="txt_website">{% trans 'website' %}</label>
-                        <input class="form-control" value="{{ organization.website | default_if_none:'' }}" name="website" id="txt_website" maxlength="255"><span class="error" required>{{ form.website.errors }}</span>
-                    </div>
+                    {% bootstrap_field form.reference form_group_class="form-group col-md-1" label=_("reference") %}
+                    {% bootstrap_field form.name form_group_class="form-group col-md-5" label=_("name") %}
+                    {% bootstrap_field form.website form_group_class="form-group col-md-6" label=_("website") %}
                 </div>
                 <input type="hidden" value="{{ organization_id }}" name="organization_id"/>
                 <br>
                 <div class="row">
-                    <div class="col-md-4">
-                        <label for="address_location">{% trans 'address' %}</label>
-                        <input class="form-control" value="{{ organization.location | default_if_none:'' }}" name="location" id="txt_organization_address_location" maxlength="255" required>
-                    </div>
-                    <div class="col-md-2">
-                        <label for="address_postal_code">{% trans 'postal_code' %}</label>
-                        <input class="form-control" value="{{ organization.postal_code | default_if_none:'' }}" name="postal_code" id="txt_organization_address_postal_code" maxlength="20" required>
-                    </div>
-                    <div class="col-md-3">
-                        <label for="address_city">{% trans 'location' %}</label>
-                        <input class="form-control" value="{{ organization.city | default_if_none:'' }}" name="city" id="txt_organization_address_city" maxlength="255" required>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label for="country">{% trans 'country' %}</label>
-                            <select name="country" id="country" class="form-control">
-                                <option value="">--</option>
-                                {% for country in countries %}
-                                    {% if organization.country == country %}
-                                        <option value="{{ country.id }}" selected>{{ country.name }}</option>
-                                    {% else %}
-                                        <option value="{{ country.id }}">{{ country.name }}</option>
-                                    {% endif %}
-                                {% endfor %}
-                            </select>
-                        </div>
-                    </div>
+                    {% bootstrap_field form.location form_group_class="form-group col-md-4" label=_("address") %}
+                    {% bootstrap_field form.postal_code form_group_class="form-group col-md-2" label=_("postal_code") %}
+                    {% bootstrap_field form.city form_group_class="form-group col-md-3" label=_("location") %}
+                    {% bootstrap_field form.country form_group_class="form-group col-md-3" label=_("country") %}
                 </div>
                 <br>
                 <label for="country">{% trans 'report_to_hospital' %}</label>
@@ -105,13 +77,13 @@
                         <p>{% trans 'report_instructions' %}</p>
                         <div class="row">
                             <div class="col-md-1">
-                                <input class="form-control" value="{{ organization.report_period | default_if_none:'' }}" name="report_period" id="report_period" maxlength="2">
+                                {{form.report_period}}
                             </div>
                             <div class="col-md-5">
                                 {% trans 'period' %}
                             </div>
                             <div class="col-md-1">
-                                <input class="form-control" value="{{ organization.report_birthdate | default_if_none:'' }}" name="report_birthdate" id="report_birthdate" maxlength="2">
+                                {{form.report_birthdate}}
                             </div>
                             <div class="col-md-5">
                                 {% trans 'birthdate' %}
@@ -120,13 +92,13 @@
                         <br>
                         <div class="row">
                             <div class="col-md-1">
-                                <input class="form-control" value="{{ organization.report_start_date | default_if_none:'' }}" name="report_start_date" id="report_start_date" maxlength="2">
+                                {{form.report_start_date}}
                             </div>
                             <div class="col-md-5">
                                 {% trans 'date_start' %}
                             </div>
                             <div class="col-md-1">
-                                <input class="form-control" value="{{ organization.report_email | default_if_none:'' }}" name="report_email" id="report_email" maxlength="2">
+                                {{form.report_email}}
                             </div>
                             <div class="col-md-5">
                                 {% trans 'email' %}
@@ -135,13 +107,13 @@
                         <br>
                         <div class="row">
                             <div class="col-md-1">
-                                <input class="form-control" value="{{ organization.report_end_date | default_if_none:'' }}" name="report_end_date" id="report_end_date" maxlength="2">
+                                {{form.report_end_date}}
                             </div>
                             <div class="col-md-5">
                                 {% trans 'date_end' %}
                             </div>
                             <div class="col-md-1">
-                                <input class="form-control" value="{{ organization.report_noma | default_if_none:'' }}" name="report_noma" id="report_noma" maxlength="2">
+                                {{form.report_noma}}
                             </div>
                             <div class="col-md-5">
                                 {% trans 'noma' %}
@@ -150,13 +122,13 @@
                         <br>
                         <div class="row">
                             <div class="col-md-1">
-                                <input class="form-control" value="{{ organization.report_last_name | default_if_none:'' }}" name="report_last_name" id="report_last_name" maxlength="2">
+                                {{form.report_last_name}}
                             </div>
                             <div class="col-md-5">
                                 {% trans 'last_name' %}
                             </div>
                             <div class="col-md-1">
-                                <input class="form-control" value="{{ organization.report_phone | default_if_none:'' }}" name="report_phone" id="report_phone" maxlength="2">
+                                {{form.report_phone}}
                             </div>
                             <div class="col-md-5">
                                 {% trans 'phone' %}
@@ -165,13 +137,13 @@
                         <br>
                         <div class="row">
                             <div class="col-md-1">
-                                <input class="form-control" value="{{ organization.report_first_name | default_if_none:'' }}" name="report_first_name" id="report_first_name" maxlength="2">
+                                {{form.report_first_name}}
                             </div>
                             <div class="col-md-5">
                                 {% trans 'first_name' %}
                             </div>
                             <div class="col-md-1">
-                                <input class="form-control" value="{{ organization.report_address | default_if_none:'' }}" name="report_address" id="report_address" maxlength="2">
+                                {{form.report_address}}
                             </div>
                             <div class="col-md-5">
                                 {% trans 'address' %}
@@ -180,13 +152,13 @@
                         <br>
                         <div class="row">
                             <div class="col-md-1">
-                                <input class="form-control" value="{{ organization.report_gender | default_if_none:'' }}" name="report_gender" id="report_gender" maxlength="2">
+                                {{form.report_gender}}
                             </div>
                             <div class="col-md-5">
                                 {% trans 'gender' %}
                             </div>
                             <div class="col-md-1">
-                                <input class="form-control" value="{{ organization.report_postal_code | default_if_none:'' }}" name="report_postal_code" id="report_postal_code" maxlength="2">
+                                {{form.report_postal_code}}
                             </div>
                             <div class="col-md-5">
                                 {% trans 'postal_code' %}
@@ -195,13 +167,13 @@
                         <br>
                         <div class="row">
                             <div class="col-md-1">
-                                <input class="form-control" value="{{ organization.report_specialty | default_if_none:'' }}" name="report_specialty" id="report_specialty" maxlength="2">
+                                {{form.report_specialty}}
                             </div>
                             <div class="col-md-5">
                                 {% trans 'specialty' %}
                             </div>
                             <div class="col-md-1">
-                                <input class="form-control" value="{{ organization.report_city | default_if_none:'' }}" name="report_city" id="report_city" maxlength="2">
+                                {{form.report_city}}
                             </div>
                             <div class="col-md-5">
                                 {% trans 'location' %}
