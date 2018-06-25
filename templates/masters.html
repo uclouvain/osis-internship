@@ -78,20 +78,28 @@
     </form>
 
     <div class="panel panel-default">
-        <table class="table table-hover">
+        <table class="table table-hover" id="order_master">
             <thead>
                 <tr>
-                    <th>{% trans 'civility' %}</th>
-                    <th>{% trans 'name' %}</th>
-                    <th>{% trans 'speciality' %}</th>
-                    <th>{% trans 'organization' %}</th>
+                    <th class="no-sort">{% trans 'civility' %}</th>
+                    <th class="searchable">{% trans 'name' %}</th>
+                    <th class="searchable">{% trans 'firstname' %}</th>
+                    <th class="no-sort">{% trans 'details' %}</th>
+                    <th class="no-sort">{% trans 'speciality' %}</th>
+                    <th class="no-sort">{% trans 'organization' %}</th>
                 </tr>
             </thead>
             <tbody>
                 {% for allocation in allocations %}
                     <tr>
                         <td>{% if allocation.master.civility %}{% trans allocation.master.civility_acronym %}{% endif %}</td>
-                        <td><a href="{% url 'master' cohort_id=current_cohort.id master_id=allocation.master.id %}">{{ allocation.master.last_name | upper }}, {{ allocation.master.first_name }}</a></td>
+                        <td>{{ allocation.master.last_name | upper }}</td>
+                        <td>{{ allocation.master.first_name }}</td>
+                        <td>
+                            <a class="btn btn-primary" href="{% url 'master' cohort_id=current_cohort.id master_id=allocation.master.id %}">
+                                <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                            </a>
+                        </td>
                         <td>{{ allocation.specialty | default_if_none:'-' }}</td>
                         {% if allocation.organization %}
                             <td>{{ allocation.organization.reference }} - {{ allocation.organization }}</td>
@@ -101,10 +109,36 @@
                     </tr>
                 {% empty %}
                     <tr>
-                        <td colspan="5">{% trans 'use_filters_no_data' %}</td>
+                        <td colspan="6">{% trans 'use_filters_no_data' %}</td>
                     </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
+{% endblock %}
+
+
+{% block script %}
+    <script type="text/javascript" src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/dataTables.bootstrap.min.js' %}"></script>
+    <script type="text/javascript" src="{% url 'javascript-catalog' %}"></script>
+    <script type="text/javascript" src="{% static 'js/datatable_options.js' %}?version={{ js }}"></script>
+    <script type="text/javascript" src="{% static 'js/locale_compare.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/intl.js' %}"></script>
+
+    <script>
+        $(document).ready(function() {
+            $('#order_master').DataTable(datatable_options);
+            $.fn.dataTable.ext.order.intl();
+        } );
+        var filterVal = '';
+        $('#order_master_filter input').unbind();
+        $('#order_master_filter input').on('keyup change', function() {
+            var val = NeutralizeAccent(this.value);
+            if (val !== filterVal) {
+                filterVal = val;
+                $('#order_master').DataTable().search(val).draw();
+            }
+        });
+    </script>
 {% endblock %}

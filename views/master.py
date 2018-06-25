@@ -30,6 +30,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required, permission_required
 from django.utils.translation import ugettext_lazy as _
 
+from base.views import layout
 from internship.views.common import display_errors
 from reference.models import country
 from internship.models import master_allocation, internship_master, internship_speciality, organization, cohort
@@ -49,7 +50,7 @@ def masters(request, cohort_id):
     specialties = internship_speciality.find_by_cohort(current_cohort)
     hospitals = organization.find_by_cohort(current_cohort)
 
-    return shortcuts.render(request, "masters.html", locals())
+    return layout.render(request, "masters.html", locals())
 
 
 @login_required
@@ -58,7 +59,7 @@ def master(request, cohort_id, master_id):
     current_cohort = shortcuts.get_object_or_404(cohort.Cohort, pk=cohort_id)
     allocated_master = internship_master.get_by_id(master_id)
     allocations = master_allocation.find_by_master(current_cohort, allocated_master)
-    return shortcuts.render(request, "master.html", locals())
+    return layout.render(request, "master.html", locals())
 
 
 @login_required
@@ -72,7 +73,7 @@ def master_form(request, cohort_id, master_id=None, allocated_master=None):
     form = MasterForm(request.POST or None, instance=allocated_master)
     specialties = internship_speciality.find_by_cohort(current_cohort)
     hospitals = organization.find_by_cohort(current_cohort)
-    return shortcuts.render(request, "master_form.html", locals())
+    return layout.render(request, "master_form.html", locals())
 
 
 @login_required

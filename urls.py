@@ -24,10 +24,13 @@
 #
 ##############################################################################
 from django.conf.urls import include, url
+from django.views.i18n import JavaScriptCatalog
 
 from internship.views import (affectation, home, internship, master, offer, period, place, speciality, student, cohort)
 
 urlpatterns = [
+    url(r'^jsi18n/$', JavaScriptCatalog.as_view(packages=['internship']), name='javascript-catalog'),
+
     url(r'^$', home.view_cohort_selection, name='internship'),
     url(r'^student/get$', student.get_student, name='internship_student_get'),
 
