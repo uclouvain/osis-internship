@@ -46,7 +46,7 @@ class MasterTestCase(TestCase):
 
     @override_settings(DEBUG=True)
     @mock.patch('django.contrib.auth.decorators')
-    @mock.patch('django.shortcuts.render')
+    @mock.patch('base.views.layout.render')
     def test_masters_index_2(self, mock_render, mock_decorators):
         from django.db import connection
         from django.db import reset_queries
