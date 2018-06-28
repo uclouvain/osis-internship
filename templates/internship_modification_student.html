@@ -37,8 +37,6 @@
         <h2>{% trans 'internships' %} : {{ student.person.last_name }} {{ student.person.first_name }} ({{ information.contest }})</h2>
     </div>
 
-    {% include "template_messages.html" %}
-
     <br/>
     {% if cohort.is_subscription_active %}
         <div id="div_warning_messages" class="alert alert-warning" role="alert">

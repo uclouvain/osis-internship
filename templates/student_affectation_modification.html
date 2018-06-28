@@ -42,8 +42,6 @@
         <h2>{% trans 'student_affectation' %}: {{ information.student.person.last_name }} {{ information.student.person.first_name }}</h2>
     </div>
 
-    {% include "template_messages.html" %}
-
     <form method="post" action="{% url 'student_save_affectation_modification' cohort_id=cohort.id student_id=information.student.id %}">
         {% csrf_token %}
 

@@ -38,7 +38,6 @@
     <div class="page-header">
         <h2>{% trans 'list_of_all_hospital' %}</h2>
     </div>
-    {% include "template_messages.html" %}
 
     <a href="{% url 'place_create' cohort_id=cohort.id %}" id="lnk_organization_create" class="btn btn-default pull-right" title="{% trans 'create_an_organization'%}">
         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> {% trans 'add' %}
