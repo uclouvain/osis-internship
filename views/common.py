@@ -35,4 +35,7 @@ def display_report_errors(request,errors):
     for error in errors:
         for key, value in error.items():
             key = key.replace("report_", "")
-            messages.add_message(request, messages.ERROR, "{} : {}".format(_(key), value[0]), "alert-danger")
+            if(key == "__all__"):
+                messages.add_message(request, messages.ERROR, "{}".format(value[0]), "alert-danger")
+            else:
+                messages.add_message(request, messages.ERROR, "{} : {}".format(_(key), value[0]), "alert-danger")
