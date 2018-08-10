@@ -341,8 +341,8 @@ def upload_offers(request, cohort_id):
         file_name = request.FILES['file']
 
         if file_name is not None:
-            if ".xls" not in str(file_name):
-                messages.add_message(request, messages.ERROR, _('file_must_be_xls'))
+            if ".xlsx" not in str(file_name):
+                messages.add_message(request, messages.ERROR, _('file_must_be_xlsx'))
             else:
                 import_offers.import_xlsx(file_name, cohort)
 
