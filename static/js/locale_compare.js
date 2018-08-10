@@ -1,9 +1,9 @@
 jQuery.extend( jQuery.fn.dataTableExt.oSort, {
   'locale-compare-asc': function ( a, b ) {
-     return a.localeCompare(b, 'cs', { sensitivity: 'case' })
+     return a.localeCompare(b, 'fr', { sensitivity: 'case' })
   },
   'locale-compare-desc': function ( a, b ) {
-     return b.localeCompare(a, 'cs', { sensitivity: 'case' })
+     return b.localeCompare(a, 'fr', { sensitivity: 'case' })
   }
 })
 
