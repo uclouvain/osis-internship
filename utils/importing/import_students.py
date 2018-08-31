@@ -44,10 +44,10 @@ def _import_row(cohort, row):
     if existing_student:
         student_information = mdl_isi.InternshipStudentInformation()
         student_information.person = existing_student.person
-        student_information.location = row[9].value
-        student_information.postal_code = row[10].value
-        student_information.city = row[11].value
-        student_information.country = row[12].value
+        student_information.location = row[15].value
+        student_information.postal_code = row[16].value
+        student_information.city = row[17].value
+        student_information.country = row[18].value
         student_information.email = row[19].value
         student_information.phone_mobile = row[14].value
         student_information.cohort = cohort
