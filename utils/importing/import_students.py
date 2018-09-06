@@ -31,10 +31,8 @@ from internship.models import internship_student_information as mdl_isi
 def import_xlsx(cohort, xlsxfile):
     workbook = load_workbook(filename=xlsxfile, read_only=True)
     worksheet = workbook.active
-    mdl_isi.remove_all(cohort)
     for row in list(worksheet.rows)[1:]:
         _import_row(cohort, row)
-
     xlsxfile.close()
 
 
@@ -42,13 +40,21 @@ def _import_row(cohort, row):
     matricule = row[7].value
     existing_student = student.find_by_registration_id(matricule)
     if existing_student:
-        student_information = mdl_isi.InternshipStudentInformation()
-        student_information.person = existing_student.person
-        student_information.location = row[15].value
-        student_information.postal_code = row[16].value
-        student_information.city = row[17].value
-        student_information.country = row[18].value
-        student_information.email = row[19].value
-        student_information.phone_mobile = row[14].value
-        student_information.cohort = cohort
-        student_information.save()
+        internship_student_information = mdl_isi.find_by_person(existing_student.person, cohort).first()
+        if internship_student_information:
+            _update_information(internship_student_information, cohort, row)
+        else:
+            student_information = mdl_isi.InternshipStudentInformation()
+            student_information.person = existing_student.person
+            _update_information(student_information, cohort, row)
+
+
+def _update_information(information, cohort, row):
+    information.location = row[15].value
+    information.postal_code = row[16].value
+    information.city = row[17].value
+    information.country = row[18].value
+    information.email = row[19].value
+    information.phone_mobile = row[14].value
+    information.cohort = cohort
+    information.save()

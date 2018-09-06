@@ -147,7 +147,7 @@ def internships_student_read(request, cohort_id, student_id):
     if not student:
         return render(request, "student.html", {'errors': ['student_doesnot_exist']})
 
-    information = mdl_int.internship_student_information.search(person=student.person).first()
+    information = mdl_int.internship_student_information.find_by_person(student.person, cohort).first()
     internship_choices = mdl_int.internship_choice.get_choices_made(cohort=cohort, student=student).order_by('choice')
     specialities = mdl_int.internship_speciality.search(mandatory=True, cohort=cohort)
     internships = mdl_int.internship.Internship.objects.filter(cohort=cohort, pk__gte=1)
