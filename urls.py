@@ -113,8 +113,11 @@ urlpatterns = [
                 url(r'^$', student.internships_student_resume, name='internships_student_resume'),
                 url(r'^form/$', student.student_form, name='internship_student_form'),
                 url(r'^save/$', student.student_save, name="internship_student_save"),
-                url(r'^import/$', student.import_students, name="internship_students_import"),
-
+                url(r'^import/', include([
+                    url(r'^$',student.import_students, name="internship_students_import"),
+                    url(r'^update/$', student.internships_student_import_update,
+                        name='internships_student_import_update'),
+                ])),
                 url(r'^(?P<student_id>[0-9]+)/', include([
                     url(r'^resume/$', student.internships_student_read, name='internships_student_read'),
                     url(r'^information/modification/$', student.internship_student_information_modification,

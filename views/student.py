@@ -26,22 +26,25 @@
 import json
 from io import BytesIO
 
-from django.http import HttpResponse, HttpResponseRedirect
-from django.views.decorators.http import require_POST
-from django.core.exceptions import PermissionDenied
-from django.core.urlresolvers import reverse
-from django.shortcuts import render, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
+from django.core.exceptions import PermissionDenied
+from django.core.serializers.json import DjangoJSONEncoder
+from django.core.urlresolvers import reverse
+from django.forms import model_to_dict
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import render, get_object_or_404
 from django.utils.translation import ugettext_lazy as _
+from django.views.decorators.http import require_POST
 
-from internship.views.common import display_errors
-from reference.models import country
 from base import models as mdl
 from internship import models as mdl_int
 from internship.forms.form_student_information import StudentInformationForm
 from internship.forms.students_import_form import StudentsImportActionForm
+from internship.models.internship_student_information import InternshipStudentInformation
 from internship.utils.importing.import_students import import_xlsx
+from internship.views.common import display_errors
+from reference.models import country
 
 
 @login_required
@@ -310,13 +313,33 @@ def import_students(request, cohort_id):
     errors = []
     if form.is_valid():
         file_upload = form.cleaned_data['file_upload']
-        import_xlsx(cohort, BytesIO(file_upload.read()))
+        differences = import_xlsx(cohort, BytesIO(file_upload.read()))
+        if differences:
+            return internships_student_import_update(request, cohort_id, differences)
     else:
         errors.append(form.errors)
         display_errors(request, errors)
 
     return HttpResponseRedirect(reverse('internships_student_resume', kwargs={"cohort_id": cohort_id}))
 
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def internships_student_import_update(request, cohort_id, differences=None):
+    cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)
+    if request.POST.get('data'):
+        data = json.loads(request.POST.get('data'))
+        for student_information in data:
+            existing_student = InternshipStudentInformation.objects.get(pk=student_information['id'], cohort=cohort)
+            for field in student_information:
+                existing_student.__dict__[field] = student_information[field]
+            existing_student.save()
+        return HttpResponseRedirect(reverse('internships_student_resume', kwargs={"cohort_id": cohort_id}))
+    data_json = []
+    if differences:
+        for diff in differences:
+            data_json.append(model_to_dict(diff['data']))
+        data_json = json.dumps(data_json, cls=DjangoJSONEncoder)
+    return render(request, "students_update.html", locals())
 
 def _get_affectation_for_period(affectations, period):
     for affectation in affectations:
