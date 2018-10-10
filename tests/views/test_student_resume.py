@@ -23,15 +23,17 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+
 from django.contrib.auth.models import Permission, User
 from django.core.urlresolvers import reverse
 from django.test import TestCase
-from internship.tests.models import test_organization, test_internship_speciality, test_internship_student_information
+
 from base.tests.models import test_student
-from internship.views import student
 from internship.tests.factories.cohort import CohortFactory
 from internship.tests.factories.internship import InternshipFactory
 from internship.tests.factories.internship_choice import create_internship_choice
+from internship.tests.models import test_organization, test_internship_speciality, test_internship_student_information
+from internship.views import student
 
 
 class TestStudentResume(TestCase):
