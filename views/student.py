@@ -41,7 +41,7 @@ from base import models as mdl
 from internship import models as mdl_int
 from internship.forms.form_student_information import StudentInformationForm
 from internship.forms.students_import_form import StudentsImportActionForm
-from internship.models.internship_student_information import InternshipStudentInformation
+from internship.models.internship_student_information import InternshipStudentInformation, find_by_cohort
 from internship.utils.importing.import_students import import_xlsx
 from internship.views.common import display_errors
 from reference.models import country
@@ -325,6 +325,7 @@ def import_students(request, cohort_id):
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internships_student_import_update(request, cohort_id, differences=None):
+    """Render a view to visualize and accept differences to be applied"""
     cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)
     if request.POST.get('data'):
         data = json.loads(request.POST.get('data'))

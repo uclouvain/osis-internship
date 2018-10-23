@@ -49,21 +49,33 @@ class CsvRowFactory:
     email = factory.Faker('email')
 
 
-def _generate_record():
+def generate_record(registration_id):
     row = CsvRowFactory()
     return (
+        'MD2MS/G',
+        '22',
         '{}, {}'.format(row.last_name.generate({}), row.first_name.generate({})),
         # row.name.generate({}),
         row.gender,
         row.birthdate,
         row.birthplace.generate({}),
         row.nationality,
-        row.noma.generate({}),
+        registration_id,
         row.fgs.generate({}),
         row.street.generate({}),
         row.postal_code.generate({}),
         row.city.generate({}),
         row.country.generate({}),
         row.phone_mobile.generate({}),
+        row.phone_mobile.generate({}),
+        row.street.generate({}),
+        row.postal_code.generate({}),
+        row.city.generate({}),
+        row.country.generate({}),
         row.email.generate({}),
+        row.email.generate({}),
+        row.street.generate({}),
+        row.postal_code.generate({}),
+        row.city.generate({}),
+        row.country.generate({}),
     )
