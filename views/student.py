@@ -322,6 +322,7 @@ def import_students(request, cohort_id):
 
     return HttpResponseRedirect(reverse('internships_student_resume', kwargs={"cohort_id": cohort_id}))
 
+
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internships_student_import_update(request, cohort_id, differences=None):
@@ -341,6 +342,7 @@ def internships_student_import_update(request, cohort_id, differences=None):
             data_json.append(model_to_dict(diff['data']))
         data_json = json.dumps(data_json, cls=DjangoJSONEncoder)
     return render(request, "students_update.html", locals())
+
 
 def _get_affectation_for_period(affectations, period):
     for affectation in affectations:

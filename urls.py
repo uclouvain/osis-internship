@@ -114,7 +114,7 @@ urlpatterns = [
                 url(r'^form/$', student.student_form, name='internship_student_form'),
                 url(r'^save/$', student.student_save, name="internship_student_save"),
                 url(r'^import/', include([
-                    url(r'^$',student.import_students, name="internship_students_import"),
+                    url(r'^$', student.import_students, name="internship_students_import"),
                     url(r'^update/$', student.internships_student_import_update,
                         name='internships_student_import_update'),
                 ])),
