@@ -327,11 +327,19 @@ def import_students(request, cohort_id):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internships_student_import_update(request, cohort_id, differences=None):
     """Render a view to visualize and accept differences to be applied"""
+    new_records_count = 0
     cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)
     if request.POST.get('data'):
         data = json.loads(request.POST.get('data'))
         for student_information in data:
-            existing_student = InternshipStudentInformation.objects.get(pk=student_information['id'], cohort=cohort)
+            if(student_information['id']):
+                existing_student = InternshipStudentInformation.objects.get(pk=student_information['id'], cohort=cohort)
+            else:
+                existing_student = InternshipStudentInformation(
+                    person_id=student_information['person'],
+                    cohort_id=cohort_id
+                )
+                student_information['id'] = existing_student.id
             for field in student_information:
                 existing_student.__dict__[field] = student_information[field]
             existing_student.save()
@@ -340,6 +348,8 @@ def internships_student_import_update(request, cohort_id, differences=None):
     if differences:
         for diff in differences:
             data_json.append(model_to_dict(diff['data']))
+            if diff['new_record']:
+                new_records_count+=1
         data_json = json.dumps(data_json, cls=DjangoJSONEncoder)
     return render(request, "students_update.html", locals())
 

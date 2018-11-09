@@ -53,7 +53,10 @@ def _import_row(cohort, row, diff):
             student_information = mdl_isi.InternshipStudentInformation()
             student_information.person = existing_student.person
             _update_information(student_information, cohort, row)
-            student_information.save()
+            diff.append({
+                "data": student_information,
+                "new_record": True,
+            })
 
 def _update_information(information, cohort, row):
     old_data = copy(information)
@@ -72,6 +75,7 @@ def _get_data_differences(old, new):
     data_diff = {
         "data" : new,
         "diff_set" : new_set,
-        "original_data" : old.__dict__
+        "original_data" : old.__dict__,
+        "new_record": False
     } if new_set else None
     return data_diff

@@ -48,33 +48,54 @@
             </div>
         </div>
     </div>
-    {% for diff in differences %}
+        {% for diff in differences %}
+        {% if not diff.new_record %}
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h5 class="panel-title">{{ diff.data }}</h5>
+            </div>
+            <div class="panel-body">
+                <ul>
+                    {% for key, value in diff.original_data.items %}
+                        {% for edited_field in diff.diff_set %}
+                            {% if key == edited_field.0 %}
+                            <li>
+                                <b>{% trans key %}</b>
+                                <ul>
+                                    <li>
+                                        {{ value }}
+                                        <span class="glyphicon glyphicon-arrow-right"></span>
+                                        {{ edited_field.1 }}
+                                    </li>
+                                </ul>
+                            </li>
+                            {% endif %}
+                        {% endfor %}
+                    {% endfor %}
+                </ul>
+             </div>
+         </div>
+        {% endif %}
+    {% endfor %}
     <div class="panel panel-default">
         <div class="panel-heading">
-            <h5 class="panel-title">{{ diff.data }}</h5>
+            <h5 class="panel-title">{% trans 'New records' %}
+                <span class="badge">{{ new_records_count }}</span>
+                <a class="pull-right" role="button" data-toggle="collapse" data-target="#records" aria-expanded="true">
+                    <i class="more-less glyphicon glyphicon-plus"></i>
+                </a>
+            </h5>
         </div>
-        <div class="panel-body">
-            <ul>
-                {% for key, value in diff.original_data.items %}
-                    {% for edited_field in diff.diff_set %}
-                        {% if key == edited_field.0 %}
-                        <li>
-                            <b>{% trans key %}</b>
-                            <ul>
-                                <li>
-                                    {{ value }}
-                                    <span class="glyphicon glyphicon-arrow-right"></span>
-                                    {{ edited_field.1 }}
-                                </li>
-                            </ul>
-                        </li>
-                        {% endif %}
-                    {% endfor %}
-                {% endfor %}
-            </ul>
+        <div id="records" class="panel-body collapse">
+            <div class="row">
+            {% for diff in differences %}
+                {% if diff.new_record %}
+                    <div class="col-xs-6 col-sm-4 col-md-2" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{ diff.data }}</div>
+                {% endif %}
+            {% endfor %}
+            </div>
         </div>
     </div>
-    {% endfor %}
 
 {% endblock %}
 
@@ -95,5 +116,13 @@
                 console.log(err);
             });
         }
+        	function toggleIcon(e) {
+                $(e.target)
+                    .prev('.panel-heading')
+                    .find(".more-less")
+                    .toggleClass('glyphicon-plus glyphicon-minus');
+            }
+            $('.panel').on('hidden.bs.collapse', toggleIcon);
+            $('.panel').on('shown.bs.collapse', toggleIcon);
     </script>
 {% endblock %}
