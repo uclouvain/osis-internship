@@ -164,6 +164,10 @@
                 <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
                 {% trans "back" %}
             </a>
+            <a href="{% url 'master_delete' cohort_id=current_cohort.id master_id=allocated_master.id %}" class="btn btn-danger pull-right">
+                <span class="glyphicon glyphicon-remove aria-hidden="true"></span>
+                {% trans "Delete" %}
+            </a>
         </div>
     </div>
 {% endblock %}
