@@ -28,16 +28,16 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-  <li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
-  <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{% trans 'internships_managment' %}</a></li>
-  <li><a href="{% url 'internships_specialities' cohort_id=cohort.id %}">{% trans 'internships_specialities' %}</a></li>
-  <li class="active">{% trans 'add_speciality' %}</li>
+  <li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
+  <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{% trans 'Internships management' %}</a></li>
+  <li><a href="{% url 'internships_specialities' cohort_id=cohort.id %}">{% trans 'Specialties' %}</a></li>
+  <li class="active">{% trans 'Add a specialty' %}</li>
 {% endblock %}
 
 {% block content %}
 
     <div class="page-header">
-        <h2>{% trans 'speciality' %}</h2>
+        <h2>{% trans 'Specialty' %}</h2>
     </div>
 
     <div class="panel panel-default">
@@ -49,23 +49,23 @@
                           {% endif %}" method="post">
                 {% csrf_token %}
                 <div class="row">
-                    {% bootstrap_field form.name form_group_class="form-group col-md-8" label=_("name") %}
-                    {% bootstrap_field form.sequence form_group_class="form-group col-md-2" label=_("sequence") %}
-                    {% bootstrap_field form.acronym form_group_class="form-group col-md-2" label=_("acronym") %}
+                    {% bootstrap_field form.name form_group_class="form-group col-md-8" label=_("Name") %}
+                    {% bootstrap_field form.sequence form_group_class="form-group col-md-2" label=_("Sequence") %}
+                    {% bootstrap_field form.acronym form_group_class="form-group col-md-2" label=_("Acronym") %}
                 </div>
 
                 <div class="row">
-                    {% bootstrap_field form.mandatory form_group_class="form-group col-md-2" label=_("compulsory") %}
-                    {% bootstrap_field form.selectable form_group_class="form-group col-md-10" label=_("selectable") %}
+                    {% bootstrap_field form.mandatory form_group_class="form-group col-md-2" label=_("Compulsory") %}
+                    {% bootstrap_field form.selectable form_group_class="form-group col-md-10" label=_("Selectable by the student") %}
                 </div>
 
                 <br>
                 <button type="submit" class="btn btn-primary" title="{% trans 'Save'%}" id="bt_interships_new">
-                    <span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'save'%}
+                    <span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'Save'%}
                 </button>
-                <a href="{% url 'internships_specialities' cohort_id=cohort.id %}" class="btn btn-default" title="{% trans 'return'%}"
+                <a href="{% url 'internships_specialities' cohort_id=cohort.id %}" class="btn btn-default" title="{% trans 'Return'%}"
                     id="lnk_internships" >
-                    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span> {% trans 'return' %}
+                    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span> {% trans 'Return' %}
                 </a>
             </form>
         </div>

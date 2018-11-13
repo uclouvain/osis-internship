@@ -74,7 +74,7 @@ class Organization(SerializableModel):
         duplicates = set([x for x in report_values if report_values.count(x) > 1])
         keys = [field for field, value in report.items() if value in duplicates]
         for k in keys:
-            raise ValidationError({k :_("duplicate_report_sequence")})
+            raise ValidationError({k :_("Duplicated sequence in report")})
 
     def report_sequence(self):
         """ Returns only the report fields that are numered and ordered as numered."""

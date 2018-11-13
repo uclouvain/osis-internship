@@ -27,10 +27,10 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-    <li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
-    <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{% trans 'internships_managment' %}</a></li>
+    <li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
+    <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{% trans 'Internships management' %}</a></li>
     <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></li>
-    <li class="active">{% trans 'students' %}</li>
+    <li class="active">{% trans 'Students' %}</li>
 {% endblock %}
 {% block style %}
     <link rel="stylesheet" href="{% static 'css/dataTables.bootstrap.min.css' %}">
@@ -45,7 +45,7 @@
     </style>
 
     <div class="page-header">
-        <h2>{% trans 'student_sumup' %}</h2>
+        <h2>{% trans 'Student sumup' %}</h2>
     </div>
 
     <div class="panel panel-default">
@@ -53,19 +53,19 @@
             <div class="row">
                 {% if number_generalists > 0 and number_specialists > 0 %}
                     <div class="col-md-2">
-                        {% trans 'generalist' %}: {{ number_generalists }}
+                        {% trans 'Generalist' %}: {{ number_generalists }}
                     </div>
                     <div class="col-md-2">
-                        {% trans 'specialist' %}: {{ number_specialists }}
+                        {% trans 'Specialist' %}: {{ number_specialists }}
                     </div>
                     <div class="col-md-2">
-                        <span class="label label-info" title="{% trans 'enrollments' %}">
-                            {% trans 'enrollments' %} : {{student_with_internships}} / {{students_can_have_internships}}
+                        <span class="label label-info" title="{% trans 'Enrollments' %}">
+                            {% trans 'Enrollments' %} : {{student_with_internships}} / {{students_can_have_internships}}
                         </span>
                     </div>
                 {% else %}
                     <div class="col-md-6">
-                        <span class="label label-info" title="{% trans 'number_of_enrollments' %}">
+                        <span class="label label-info" title="{% trans 'Number of enrollments' %}">
                             {% trans 'number_of_enrollments' %} : {{student_with_internships}} / {{students_can_have_internships}}
                         </span>
                     </div>
@@ -89,7 +89,7 @@
                     <button type="button" class="btn btn-default" data-toggle="modal" data-target="#pnl_upload_students"
                             id="bt_upload_score_modal">
                         <span class="glyphicon glyphicon-import" aria-hidden="true"></span>
-                        {% trans 'import' %}
+                        {% trans 'Import' %}
                     </button>
                     <a href="{% url 'internship_student_form' cohort_id=cohort.id %}" class="btn btn-default">
                         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
@@ -100,17 +100,17 @@
         </div>
         <br>
         {% if students|length == 0 %}
-            <label class="alert alert-info" style="margin:5px">{% trans 'no_result' %}</label>
+            <label class="alert alert-info" style="margin:5px">{% trans 'No result' %}</label>
         {% else %}
             <table class="table table-striped table-hover" id="order_student">
                 <thead>
                     <tr>
-                        <th>{% trans 'noma' %}</th>
-                        <th class="searchable">{% trans 'name'|capfirst %}</th>
-                        <th class="searchable">{% trans 'firstname' %}</th>
+                        <th>{% trans 'Noma' %}</th>
+                        <th class="searchable">{% trans 'Last name'|capfirst %}</th>
+                        <th class="searchable">{% trans 'First name' %}</th>
                         <th class="no-sort">{% trans 'details' %}</th>
-                        <th class="no-sort">{% trans 'choice_modification' %}</th>
-                        <th>{% trans 'status' %}</th>
+                        <th class="no-sort">{% trans 'Choices modification' %}</th>
+                        <th>{% trans 'Status' %}</th>
                     </tr>
                 </thead>
                 {% for student, status in students %}
@@ -167,17 +167,17 @@
                     {% csrf_token %}
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="bt_close_upload_students_modal"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="uploadScroresLabel">{% trans 'import' %}</h4>
+                        <h4 class="modal-title" id="uploadScroresLabel">{% trans 'Import' %}</h4>
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
                           <input type="file" id="fle_scores_input_file" name="file_upload"/>
                         </div>
                         <div id="pnl_selectedFiles"></div>
-                        <p class="help-block">{% trans 'help_pnl_selectedfiles_students' %}</p>
+                        <p class="help-block">{% trans 'Select a xlsx file that contains the list of students.' %}</p>
                     </div>
                     <div class="modal-footer">
-                        <input type="submit" class="btn btn-primary" value="{% trans 'import' %}" onclick="document.getElementById('files').style.visibility='visible'" id="bt_submit_upload_students_modal"/>
+                        <input type="submit" class="btn btn-primary" value="{% trans 'Import' %}" onclick="document.getElementById('files').style.visibility='visible'" id="bt_submit_upload_students_modal"/>
                         <button type="button" class="btn btn-default" data-dismiss="modal" id="bt_cancel_upload_students_modal">{% trans 'cancel' %}</button>
                     </div>
                 </form>

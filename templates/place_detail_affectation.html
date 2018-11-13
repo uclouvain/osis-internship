@@ -27,9 +27,9 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-    <li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
-    <li><a href="{% url 'internship' %}">{% trans 'internships_managment' %}</a></li>
-    <li><a href="{% url 'internships_places' cohort_id=cohort.id  %}">{% trans 'places' %}</a></li>
+    <li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
+    <li><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
+    <li><a href="{% url 'internships_places' cohort_id=cohort.id  %}">{% trans 'Hospitals' %}</a></li>
     <li class="active">{{ organization.name }}</li>
 {% endblock %}
 
@@ -42,11 +42,11 @@
         <div class="panel-heading">
             <a href="{% url 'export_organisation_affectation_master' cohort_id=cohort.id organization_id=organization.id %}" class="btn btn-default">
                 <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
-                {% trans 'export_organisation_affectation_master' %}
+                {% trans 'Export master affectations' %}
             </a>
             <a href="{% url 'export_organisation_affectation_hospital' cohort_id=cohort.id organization_id=organization.id %}" class="btn btn-default">
                 <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
-                {% trans 'export_organisation_affectation_hospital' %}
+                {% trans 'Export hospital affectations' %}
             </a>
         </div>
         <div class="panel-body">

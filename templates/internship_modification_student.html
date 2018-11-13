@@ -27,20 +27,20 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-    <li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
-    <li><a href="{% url 'internship' %}">{% trans 'internships_managment' %}</a></li>
-    <li class="active">{% trans 'all_internships' %}</li>
+    <li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
+    <li><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
+    <li class="active">{% trans "All internships" %}</li>
 {% endblock %}
 {% block content %}
 
     <div class="page-header">
-        <h2>{% trans 'internships' %} : {{ student.person.last_name }} {{ student.person.first_name }} ({{ information.contest }})</h2>
+        <h2>{% trans 'Internships' %} : {{ student.person.last_name }} {{ student.person.first_name }} ({{ information.contest }})</h2>
     </div>
 
     <br/>
     {% if cohort.is_subscription_active %}
         <div id="div_warning_messages" class="alert alert-warning" role="alert">
-            <strong>{% trans 'warning' %} !</strong> {% trans 'enrolment_period_warning' %}
+            <strong>{% trans 'Attention' %} !</strong> {% trans 'You are in the period of inscriptions. It is not recommended to change choices during this period.' %}
         </div>
     {% endif %}
     <div class="panel panel-default">
@@ -64,7 +64,7 @@
                     {{ speciality_form.non_field_errors }}
                     <div class="fieldWrapper col-md-4 form-group">
                         {{ speciality_form.speciality.errors }}
-                        <label for="id_speciality">{% trans 'choose_specialty' %}</label>
+                        <label for="id_speciality">{% trans 'Choose a specialty' %}</label>
                             {{speciality_form.speciality}}
                     </div>
 
@@ -86,17 +86,17 @@
                     {% if offers_forms  %}
                         <button type="submit" class="btn btn-primary pull-right">
                             <span class="glyphicon glyphicon-ok"></span>
-                            {% trans 'submit_choices' %}
+                            {% trans 'Submit choices' %}
                         </button>
                     {% endif %}
                    <table class="table table-striped">
                        <thead>
-                           <th>{% trans 'organization' %}</th>
-                           <th>{% trans 'student_max' %}</th>
-                           <th>{% trans 'number_first_choice' %}</th>
-                           <th>{% trans 'preference' %}</th>
-                           <th>{% trans 'periods' %}</th>
-                           <th>{% trans 'priority' %}</th>
+                           <th>{% trans 'Hospital' %}</th>
+                           <th>{% trans 'Maximum number of students' %}</th>
+                           <th>{% trans 'Number of first choices' %}</th>
+                           <th>{% trans 'Preference' %}</th>
+                           <th>{% trans 'Periods' %}</th>
+                           <th>{% trans 'Priority' %}</th>
                        </thead>
 
                         {% for offer, form, offer_value, offer_priority, enrollments, number_choices in  offers_forms %}

@@ -50,7 +50,7 @@ def new(request):
 
     context = {
         'form': form,
-        'page_title': _('create_cohort'),
+        'page_title': _('Add cohort'),
         'form_new': True
     }
     return render(request, 'cohort/cohort_form.html', context)

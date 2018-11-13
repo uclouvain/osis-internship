@@ -65,7 +65,7 @@ def place_save(request, cohort_id, organization_id):
     if form.is_valid():
         form.save()
         messages.add_message(request, messages.SUCCESS, "{} : {} - {}".format(
-            _("hospital_saved"), form.cleaned_data["reference"], form.cleaned_data["name"]), "alert-success")
+            _("Hospital saved"), form.cleaned_data["reference"], form.cleaned_data["name"]), "alert-success")
     else:
         errors.append(form.errors)
         display_report_errors(request, errors)

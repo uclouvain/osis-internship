@@ -27,14 +27,14 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-    <li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
-    <li><a href="{% url 'internship' %}">{% trans 'internships_managment' %}</a></li>
+    <li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
+    <li><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
     <li class="active">{{ cohort.name }}</li>
 {% endblock %}
 
 {% block content %}
     <div class="page-header">
-        <h2>{% trans 'internships_managment' %}</h2>
+        <h2>{% trans 'Internships management' %}</h2>
     </div>
 
     <div class="panel panel-default">
@@ -42,51 +42,51 @@
             <div class="row">
                 <div class="col-md-1"><i class="fa fa-archive" style="font-size: 400%; color: #6699FF;"></i></div>
                 <div class="col-md-5">
-                    <h4 class="media-heading"><a href="{% url 'internships' cohort_id=cohort.id %}">{% trans 'internships_offers' %}</a></h4>
+                    <h4 class="media-heading"><a href="{% url 'internships' cohort_id=cohort.id %}">{% trans 'Internships offers' %}</a></h4>
                 </div>
                 <div class="col-md-1"><i class="fa fa-list-ol" style="font-size: 400%; color: #6699FF;"></i></div>
                 <div class="col-md-5">
-                    <h4 class="media-heading"><a href="{% url 'internships_periods' cohort_id=cohort.id %}">{% trans 'periods_list' %}</a></h4>
+                    <h4 class="media-heading"><a href="{% url 'internships_periods' cohort_id=cohort.id %}">{% trans 'Periods' %}</a></h4>
                 </div>
             </div>
             <br>
             <div class="row">
                 <div class="col-md-1"><i class="fa fa-hospital-o" style="font-size: 400%; color: #6699FF;"></i></div>
                 <div class="col-md-5">
-                    <h4 class="media-heading"><a href="{% url 'internships_places' cohort_id=cohort.id  %}">{% trans 'hospitals' %}</a></h4>
+                    <h4 class="media-heading"><a href="{% url 'internships_places' cohort_id=cohort.id  %}">{% trans 'Hospitals' %}</a></h4>
                 </div>
                 <div class="col-md-1"><i class="fa fa-user-md" style="font-size: 400%; color: #6699FF;"></i></div>
                 <div class="col-md-5">
-                    <h4 class="media-heading"><a href="{% url 'internships_masters' cohort_id=cohort.id %}">{% trans 'internships_masters_list' %}</a></h4>
+                    <h4 class="media-heading"><a href="{% url 'internships_masters' cohort_id=cohort.id %}">{% trans 'Internships masters' %}</a></h4>
                 </div>
             </div>
             <br>
             <div class="row">
                 <div class="col-md-1"><i class="fa fa-book" style="font-size: 400%; color: #6699FF;"></i></div>
                 <div class="col-md-5">
-                    <h4 class="media-heading"><a href="{% url 'internships_specialities' cohort_id=cohort.id %}">{% trans 'internships_specialities' %}</a></h4>
+                    <h4 class="media-heading"><a href="{% url 'internships_specialities' cohort_id=cohort.id %}">{% trans 'Specialties' %}</a></h4>
                 </div>
                 <div class="col-md-1"><i class="fa fa-users" style="font-size: 400%; color: #6699FF;"></i></div>
                 <div class="col-md-5">
-                    <h4 class="media-heading"><a href="{% url 'internships_student_resume' cohort_id=cohort.id %}">{% trans 'students'|capfirst %}</a></h4>
+                    <h4 class="media-heading"><a href="{% url 'internships_student_resume' cohort_id=cohort.id %}">{% trans 'Students'|capfirst %}</a></h4>
                 </div>
             </div>
             <br>
             <div class="row">
                 <div class="col-md-1"><i class="fa fa-certificate" style="font-size: 400%; color: #6699FF;"></i></div>
                 <div class="col-md-5">
-                    <h4 class="media-heading"><a href="{% url 'internship-list' cohort_id=cohort.id %}">{% trans 'internships_modalities' %}</a></h4>
+                    <h4 class="media-heading"><a href="{% url 'internship-list' cohort_id=cohort.id %}">{% trans 'Internships modalities' %}</a></h4>
                 </div>
                 <div class="col-md-1"><i class="fa fa-ticket " style="font-size: 400%; color: #6699FF;"></i></div>
                 <div class="col-md-5">
-                    <h4 class="media-heading"><a href="{% url 'internship_affectation_hospitals' cohort_id=cohort.id %}">{% trans 'internship_affectation' %}</a></h4>
+                    <h4 class="media-heading"><a href="{% url 'internship_affectation_hospitals' cohort_id=cohort.id %}">{% trans 'Internship affectation' %}</a></h4>
                 </div>
             </div>
             <br>
             <div class="row">
                 <div class="col-md-1"><i class="fa fa-calendar-check-o" style="font-size: 400%; color: #6699FF;"></i></div>
                 <div class="col-md-5">
-                    <h4 class="media-heading"><a href="{% url 'internship_affectation_sumup' cohort_id=cohort.id %}">{% trans 'affectation_sumup' %}</a></h4>
+                    <h4 class="media-heading"><a href="{% url 'internship_affectation_sumup' cohort_id=cohort.id %}">{% trans "Allocation Sum up" %}</a></h4>
                 </div>
 
             </div>

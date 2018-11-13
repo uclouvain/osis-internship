@@ -31,10 +31,10 @@ from django.utils.translation import ugettext_lazy as _
 class OfferPreferenceForm(forms.Form):
     PREFERENCE_CHOICES = (
         ('0', '--'),
-        ('1', _('first_choice')),
-        ('2', _('second_choice')),
-        ('3', _('third_choice')),
-        ('4', _('fourth_choice'))
+        ('1', _('First choice')),
+        ('2', _('Second choice')),
+        ('3', _('Third choice')),
+        ('4', _('Fourth choice'))
     )
 
     PERIODS_CHOICES = (
@@ -74,6 +74,6 @@ class OfferPreferenceFormSet(forms.BaseFormSet):
             preferences_made[preference] = preferences_made.get(preference, 0) + 1
             offers_selected[offer] = offers_selected.get(offer, 0) + 1
             if preferences_made[preference] > 1:
-                form.add_error("preference",_("duplicate_preference"))
+                form.add_error("preference",_("Cannot apply same preference on distinct offers"))
             if offers_selected[offer] > 1:
-                form.add_error("offer",_("duplicate_offer"))
+                form.add_error("offer",_("Cannot select same offer"))

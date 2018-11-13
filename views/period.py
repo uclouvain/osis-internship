@@ -67,7 +67,7 @@ def period_save(request, cohort_id, period_id):
     errors = []
     if(form.is_valid()):
         form.save()
-        messages.add_message(request, messages.SUCCESS, "{} : {}".format(_('period_edited'), period.name),
+        messages.add_message(request, messages.SUCCESS, "{} : {}".format(_('Period edited'), period.name),
                              "alert-success")
     else:
         errors.append(form.errors)
@@ -94,7 +94,7 @@ def period_new(request, cohort_id):
     errors = []
     if(form.is_valid()):
         form.save()
-        messages.add_message(request, messages.SUCCESS, "{} : {}".format(_('period_saved'), period.name),
+        messages.add_message(request, messages.SUCCESS, "{} : {}".format(_('Period created'), period.name),
                              "alert-success")
     else:
         errors.append(form.errors)
@@ -117,7 +117,7 @@ def period_delete(request, cohort_id, period_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
     period = get_object_or_404(Period, pk=period_id, cohort__id=cohort_id)
     period.delete()
-    messages.add_message(request, messages.SUCCESS, "{} : {}".format(_('period_delete'), period.name), "alert-success")
+    messages.add_message(request, messages.SUCCESS, "{} : {}".format(_('Period deleted'), period.name), "alert-success")
     kwargs = {
         'cohort_id': cohort.id
     }

@@ -17,60 +17,60 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: static/js/datatable_options.js:52
-msgid "datatable_emptytable"
-msgstr "Aucune donn&eacute;e disponible dans le tableau"
+msgid "No data available in table"
+msgstr "Aucune donnée disponible dans le tableau"
 
 #: static/js/datatable_options.js:55
-msgid "datatable_first"
+msgid "First"
 msgstr "Premier"
 
 #: static/js/datatable_options.js:47
-msgid "datatable_info"
+msgid "Showing _START_ to _END_ of _TOTAL_ entries"
 msgstr ""
 "Affichage de l'&eacute;l&eacute;ment _START_ &agrave; _END_ sur _TOTAL_ "
 "&eacute;l&eacute;ments"
 
 #: static/js/datatable_options.js:48
-msgid "datatable_infoempty"
+msgstr "Showing 0 to 0 of 0 entries"
 msgstr ""
 "Affichage de l'&eacute;l&eacute;ment 0 &agrave; 0 sur 0 &eacute;l&eacute;ment"
 
 #: static/js/datatable_options.js:49
-msgid "datatable_infofiltered"
+msgstr "(filtered from _MAX_ total entries)"
 msgstr "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)"
 
 #: static/js/datatable_options.js:58
-msgid "datatable_last"
+msgstr "Last"
 msgstr "Dernier"
 
 #: static/js/datatable_options.js:46
-msgid "datatable_lengthmenu"
+msgstr "Show _MENU_ entries"
 msgstr "Afficher _MENU_ &eacute;l&eacute;ments"
 
 #: static/js/datatable_options.js:50
-msgid "datatable_loadingrecords"
+msgstr "Loading..."
 msgstr "Chargement en cours..."
 
 #: static/js/datatable_options.js:57
-msgid "datatable_next"
+msgstr "Next"
 msgstr "Suivant"
 
 #: static/js/datatable_options.js:56
-msgid "datatable_previous"
+msgstr "Previous"
 msgstr "Pr&eacute;c&eacute;dent"
 
 #: static/js/datatable_options.js:44
-msgid "datatable_processing"
+msgstr "Processing..."
 msgstr "Traitement en cours..."
 
 #: static/js/datatable_options.js:45
-msgid "datatable_search_by_name"
+msgstr "Search by name:"
 msgstr "Rechercher par nom:"
 
 #: static/js/datatable_options.js:61
-msgid "datatable_sortascending"
+msgstr ": activate to sort column ascending"
 msgstr ": activer pour trier la colonne par ordre croissant"
 
 #: static/js/datatable_options.js:51
-msgid "datatable_zerorecords"
+msgstr "No matching records found"
 msgstr "Aucun &eacute;l&eacute;ment &agrave; afficher"

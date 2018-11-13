@@ -19,15 +19,15 @@ msgstr ""
 #: templates/internships.html:105 templates/internships.html:168
 #, fuzzy
 #| msgid "details"
-msgid "Détails"
-msgstr "Details"
+msgid "Details"
+msgstr ""
 
 #: templates/internships.html:104 templates/internships.html:167
-msgid "Nombre d\\"
+msgid "Number of other choices"
 msgstr ""
 
 #: templates/internships.html:103 templates/internships.html:166
-msgid "Nombre de 1er choix"
+msgid "Number of first choices"
 msgstr ""
 
 #: templates/internship_modification.html:75 templates/period_create.html:58
@@ -45,50 +45,46 @@ msgstr ""
 #: templates/internship_affectation_hospitals.html:30
 #: templates/internship_affectation_statistics.html:30
 #: templates/internship_affectation_students.html:30
-#, fuzzy
-#| msgid "studies"
 msgid "Studies"
-msgstr "Studies"
+msgstr ""
 
 #: templates/specialities.html:54 templates/speciality_form.html:54
-msgid "acronym"
+msgid "Acronym"
 msgstr ""
 
 #: templates/cohort/selection.html:20 templates/masters.html:74
 #: templates/places.html:43 templates/students.html:96
-msgid "add"
-msgstr "Add"
+msgid "Add"
+msgstr ""
 
 #: templates/internship/internship_form.html:12
 #: templates/internship/list.html:26
-msgid "add_internship_modality"
-msgstr "Add internship modality"
+msgid "Add internship modality"
+msgstr ""
 
 #: templates/period_create.html:36 templates/periods.html:49
-#, fuzzy
-#| msgid "period"
-msgid "add_period"
-msgstr "Period"
+msgid "Add period"
+msgstr ""
 
 #: templates/specialities.html:44 templates/speciality_form.html:34
-msgid "add_speciality"
-msgstr "Add a specialty"
+msgid "Add a specialty"
+msgstr ""
 
 #: templates/master.html:110 templates/master_form.html:67
 #: templates/place_form.html:65 templates/place_form.html:147
 #: templates/places.html:56 templates/student.html:182
 #: templates/student_form.html:114
 #: templates/student_information_modification.html:79
-msgid "address"
-msgstr "Address"
+msgid "Address"
+msgstr ""
 
 #: templates/student.html:112
-msgid "address_editable"
-msgstr "Editable address"
+msgid "Editable address"
+msgstr ""
 
 #: templates/student.html:103
-msgid "address_legal"
-msgstr "Legal address"
+msgid "Legal address"
+msgstr ""
 
 #: templates/internship_affectation_errors.html:33
 #: templates/internship_affectation_errors.html:42
@@ -98,60 +94,53 @@ msgstr "Legal address"
 #: templates/internship_affectation_statistics.html:42
 #: templates/internship_affectation_students.html:33
 #: templates/internship_affectation_students.html:42 templates/places.html:55
-msgid "affectation_result"
-msgstr "Affectation's result"
+msgid "Affectation's result"
+msgstr ""
 
 #: templates/internship/home.html:89
 #: templates/internship_affectation_sumup.html:36
 #: templates/internship_affectation_sumup.html:41
-msgid "affectation_sumup"
-msgstr "Allocation Sum up"
+msgid "Allocation Sum up"
+msgstr ""
 
 #: templates/internship_affectation_sumup.html:49
-msgid "all_hospitals"
-msgstr "All hospitals"
+msgid "All hospitals"
+msgstr ""
 
 #: templates/internship_detail.html:32
 #: templates/internship_modification.html:32
 #: templates/internship_modification_student.html:32
 #: templates/internships.html:33
-msgid "all_internships"
-msgstr "All internships"
+msgid "All internships"
+msgstr ""
 
 #: templates/place_form.html:35 templates/places.html:34
-msgid "all_places"
-msgstr "All hospitals"
+msgid "All hospitals"
+msgstr ""
 
 #: templates/internship_affectation_statistics.html:133
-msgid "all_student"
-msgstr "All student"
+msgid "All students"
+msgstr ""
 
 #: templates/master.html:136 templates/master_form.html:74
-msgid "allocation"
-msgstr "Allocation"
+msgid "Allocation"
+msgstr ""
 
 #: templates/fragment/delete_confirmation_modal.html:38
-msgid "are_you_sure"
+msgid "Are you sure ?"
 msgstr ""
 
 #: templates/master.html:165 templates/period_create.html:56
-msgid "back"
+msgid "Back"
 msgstr ""
 
 #: templates/master.html:64 templates/master_form.html:56
 #: templates/student_form.html:83
-#, fuzzy
-#| msgid "publication_date"
-msgid "birth_date"
-msgstr "Publication date"
+msgid "Birth date"
+msgstr ""
 
 #: models/internship_master.py:67
-msgid "birth_date_before_today"
-msgstr "Birth date must be on or before today's date."
-
-#: templates/place_form.html:87 templates/student.html:88
-#: templates/student_information_modification.html:72
-msgid "birthdate"
+msgid "Birth date must be on or before today's date."
 msgstr ""
 
 #: templates/fragment/delete_confirmation_modal.html:41
@@ -161,152 +150,134 @@ msgstr ""
 #: templates/internship_affectation_students.html:85
 #: templates/internships.html:224 templates/master_form.html:150
 #: templates/student_form.html:145 templates/students.html:181
-msgid "cancel"
+msgid "Cancel"
 msgstr ""
 
 #: templates/place_detail.html:46
-msgid "capacity"
-msgstr "capacity"
+msgid "Capacity"
+msgstr ""
 
 #: templates/place_detail.html:57 templates/student.html:160
-msgid "choice"
-msgstr "Choice"
+msgid "Choice"
+msgstr ""
 
 #: templates/students.html:112
-msgid "choice_modification"
-msgstr "Choices modification"
+msgid "Choices modification"
+msgstr ""
 
 #: templates/student.html:146
-msgid "choice_receive_by_administration"
-msgstr "Choice receive by administration"
+msgid "Choices received by administration"
+msgstr ""
 
 #: views/internship.py:69
-msgid "choice_saved"
-msgstr "Choices saved"
+msgid "Choices saved"
+msgstr ""
 
 #: templates/internships.html:46
-msgid "choose_a_hospital"
-msgstr "Choose a hospital"
+msgid "Choose a hospital"
+msgstr ""
 
 #: templates/internship_modification_student.html:67
-msgid "choose_specialty"
-msgstr "Choose a specialty"
+msgid "Choose a specialty"
+msgstr ""
 
 #: templates/master_form.html:69
-#, fuzzy
-#| msgid "all_city"
-msgid "city"
-msgstr "All city"
+msgid "City"
+msgstr ""
 
 #: templates/master.html:50 templates/master_form.html:51
 #: templates/masters.html:84
-msgid "civility"
-msgstr "Civility"
+msgid "Civility"
+msgstr ""
 
 #: templates/cohort/cohort_form.html:9 templates/cohort/cohort_form.html:15
-msgid "cohort"
-msgstr "Cohort"
+msgid "Cohort"
+msgstr ""
 
 #: templates/cohort/selection.html:12
-msgid "cohorts"
-msgstr "Cohorts"
+msgid "Cohorts"
+msgstr ""
 
 #: templates/specialities.html:56 templates/speciality_form.html:58
-msgid "compulsory"
-msgstr "Compulsory"
+msgid "Compulsory"
+msgstr ""
 
 #: templates/student.html:130
-msgid "contest"
-msgstr "Contest"
+msgid "Contest"
+msgstr ""
 
 #: templates/cohort/cohort_form.html:30
-msgid "copy_from_cohort"
-msgstr "Copy from cohort"
+msgid "Copy from cohort"
+msgstr ""
 
 #: templates/master.html:129 templates/master_form.html:70
 #: templates/place_form.html:68 templates/places.html:59
 #: templates/student_form.html:133
 #: templates/student_information_modification.html:82
-msgid "country"
+msgid "Country"
 msgstr ""
 
 #: templates/specialities.html:42
-msgid "create_a_speciality"
-msgstr "Create a speciality"
+msgid "Create a specialty"
+msgstr ""
 
 #: templates/places.html:42
-#, fuzzy
-#| msgid "organization"
-msgid "create_an_organization"
-msgstr "Hospital"
+msgid "Add hospital"
+msgstr ""
 
 #: views/cohort.py:53
-#, fuzzy
-#| msgid "cohort"
-msgid "create_cohort"
-msgstr "Cohort"
+msgid "Add cohort"
+msgstr ""
 
 #: templates/periods.html:60 templates/place_form.html:111
-msgid "date_end"
-msgstr "Date end"
+msgid "Date end"
+msgstr ""
 
 #: utils/exporting/organization_affectation_master.py:60
-#, fuzzy
-#| msgid "date_start"
-msgid "date_format"
-msgstr "Date start"
+msgid "Date format"
+msgstr ""
 
 #: templates/periods.html:59 templates/place_form.html:96
-msgid "date_start"
-msgstr "Date start"
+msgid "Date start"
+msgstr ""
 
 #: templates/fragment/delete_confirmation_modal.html:33
 #: templates/fragment/delete_confirmation_modal.html:42
-#, fuzzy
-#| msgid "period_delete"
-msgid "delete"
-msgstr "Period deleted"
+msgid "Delete"
+msgstr ""
 
 #: templates/cohort/cohort_form.html:23 templates/cohort/selection.html:30
-msgid "description"
-msgstr "Description"
+msgid "Description"
+msgstr ""
 
 #: templates/internship_detail.html:33
-msgid "detail_choice"
-msgstr "Choice's Details"
-
-#: templates/masters.html:87 templates/students.html:111
-msgid "details"
-msgstr "Details"
+msgid "Choice's Details"
+msgstr ""
 
 #: templates/internship_detail.html:55
-#, fuzzy
-#| msgid "student_choice"
-msgid "display_students_first_choice"
-msgstr "Students' choice"
+msgid "Display students first choice"
+msgstr ""
 
 #: forms/form_offer_preference.py:79
-msgid "duplicate_offer"
-msgstr "Cannot select same offer"
+msgid "Cannot select same offer"
+msgstr ""
 
 #: forms/form_offer_preference.py:77
-msgid "duplicate_preference"
-msgstr "Cannot apply same preference on distinct offers"
+msgid "Cannot apply same preference on distinct offers"
+msgstr ""
 
 #: models/organization.py:77
-msgid "duplicate_report_sequence"
-msgstr "Duplicated sequence in report"
+msgid "Duplicated sequence in report"
+msgstr ""
 
 #: templates/master.html:162 templates/student.html:138
 #: templates/student.html:173
-msgid "edit"
+msgid "Edit"
 msgstr ""
 
 #: views/cohort.py:76
-#, fuzzy
-#| msgid "cohort"
-msgid "edit_cohort"
-msgstr "Cohort"
+msgid "Edit cohort"
+msgstr ""
 
 #: views/internship.py:199
 #, fuzzy
