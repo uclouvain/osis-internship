@@ -44,7 +44,11 @@
             <h4 class="pull-left">Les modifications suivantes vont être appliquées:</h4>
             <div class="btn-group pull-right">
                 <a type="button" href="{% url 'internships_student_resume' cohort_id=cohort_id%}" style="margin-right: 10px;" class="btn btn-default">{% trans 'cancel' %}</a>
-                <button onclick="post()" name="accept" class="btn btn-primary">{% trans 'accept' %}</button>
+                <form action="{% url 'internships_student_import_update' cohort_id=cohort_id %}" class="pull-right" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="data" value="{{ data_json }}"/>
+                    <input type="submit" name="accept" class="btn btn-primary" value="{% trans 'accept' %}"/>
+                </form>
             </div>
         </div>
     </div>
@@ -101,28 +105,13 @@
 
 {% block script %}
     <script>
-        let data = JSON.parse("{{ data_json | escapejs | safe }}");
-        function post(){
-            $.ajax({
-            url: "{% url 'internships_student_import_update' cohort_id %}",
-            type:"post",
-              data: {
-                  data: JSON.stringify(data),
-                  csrfmiddlewaretoken: '{{ csrf_token }}'
-              }
-            }).success((e, data, xhr)=>{
-                location.reload();
-            }).fail((err)=>{
-                console.log(err);
-            });
+        function toggleIcon(e) {
+            $(e.target)
+                .prev('.panel-heading')
+                .find(".more-less")
+                .toggleClass('glyphicon-plus glyphicon-minus');
         }
-        	function toggleIcon(e) {
-                $(e.target)
-                    .prev('.panel-heading')
-                    .find(".more-less")
-                    .toggleClass('glyphicon-plus glyphicon-minus');
-            }
-            $('.panel').on('hidden.bs.collapse', toggleIcon);
-            $('.panel').on('shown.bs.collapse', toggleIcon);
+        $('.panel').on('hidden.bs.collapse', toggleIcon);
+        $('.panel').on('shown.bs.collapse', toggleIcon);
     </script>
 {% endblock %}
