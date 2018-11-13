@@ -196,6 +196,9 @@ msgstr "Hospital"
 msgid "hospitals"
 msgstr "Hospitals"
 
+msgid "hospital_already_exists"
+msgstr "A hospital with the same reference already exists in this cohort"
+
 msgid "hospital_saved"
 msgstr "Hospital saved"
 

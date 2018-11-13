@@ -205,6 +205,9 @@ msgstr "Hôpital enregistré"
 msgid "hospitals"
 msgstr "Hôpitaux"
 
+msgid "hospital_already_exists"
+msgstr "Un hôpital avec la même référence existe déjà dans cette cohorte"
+
 msgid "hospital_or_specialty_required"
 msgstr "Un maître de stage doit être affecté à au moins un hôpital ou une spécialité."
 
