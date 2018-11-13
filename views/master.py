@@ -38,7 +38,6 @@ from internship.forms.master import MasterForm
 from internship.models.enums.civility import Civility
 from internship.models.enums.gender import Gender
 
-
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def masters(request, cohort_id):
@@ -78,6 +77,17 @@ def master_form(request, cohort_id, master_id=None, allocated_master=None):
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
+def master_delete(request, master_id, cohort_id):
+    current_cohort = shortcuts.get_object_or_404(cohort.Cohort, pk=cohort_id)
+    allocated_master = internship_master.get_by_id(master_id)
+    allocations = master_allocation.find_by_master(current_cohort, allocated_master)
+    current_allocation = allocations.first()
+    current_allocation.delete()
+    return masters(request, cohort_id)
+
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
 def master_save(request, cohort_id):
     current_cohort = shortcuts.get_object_or_404(cohort.Cohort, pk=cohort_id)
     allocated_master = internship_master.get_by_id(request.POST.get("id")) if request.POST.get("id") else None
@@ -98,7 +108,6 @@ def master_save(request, cohort_id):
     else:
         errors.append(form.errors)
         display_errors(request, errors)
-
 
     if errors:
         return master_form(request=request, cohort_id=current_cohort.id, allocated_master=allocated_master)
@@ -147,6 +156,7 @@ def _extract_hospital_id(allocations):
         return allocations[0].organization.id
     else:
         return 0
+
 
 def _validate_allocations(request):
     hospitals, specialties = request.POST.getlist('hospital'), request.POST.getlist('specialty')
