@@ -327,7 +327,6 @@ def import_students(request, cohort_id):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internships_student_import_update(request, cohort_id, differences=None):
     """Render a view to visualize and accept differences to be applied"""
-    new_records_count = 0
     cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)
     if request.POST.get('data'):
         data = json.loads(request.POST.get('data'))
@@ -344,15 +343,8 @@ def internships_student_import_update(request, cohort_id, differences=None):
                 existing_student.__dict__[field] = student_information[field]
             existing_student.save()
         return HttpResponseRedirect(reverse('internships_student_resume', kwargs={"cohort_id": cohort_id}))
-    data_json = []
-    if differences:
-        for diff in differences:
-            data_json.append(model_to_dict(diff['data']))
-            if diff['new_record']:
-                new_records_count+=1
-        data_json = json.dumps(data_json, cls=DjangoJSONEncoder)
+    data_json, new_records_count = _convert_differences_to_json(differences)
     return render(request, "students_update.html", locals())
-
 
 def _get_affectation_for_period(affectations, period):
     for affectation in affectations:
@@ -377,3 +369,13 @@ def _get_student_status(student, cohort):
     choices_values = mdl_int.internship_choice.get_choices_made(cohort=cohort,
                                                                 student=student).values_list("internship_id", flat=True)
     return len(list(set(internship_ids) - set(choices_values))) == 0
+
+def _convert_differences_to_json(differences):
+    data_json = []
+    new_records_count = 0
+    for diff in differences:
+        data_json.append(model_to_dict(diff['data']))
+        if diff['new_record']:
+            new_records_count += 1
+    data_json = json.dumps(data_json, cls=DjangoJSONEncoder)
+    return data_json, new_records_count
