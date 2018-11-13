@@ -32,12 +32,10 @@ from django.core.urlresolvers import reverse
 from django.test import TestCase, RequestFactory, override_settings
 
 from internship.models import master_allocation
-from internship.models.master_allocation import MasterAllocation
 from internship.tests.factories.cohort import CohortFactory
 from internship.tests.factories.master import MasterFactory
 from internship.tests.factories.master_allocation import MasterAllocationFactory
 from internship.tests.factories.organization import OrganizationFactory
-from internship.views.master import master_delete
 
 
 class MasterTestCase(TestCase):
