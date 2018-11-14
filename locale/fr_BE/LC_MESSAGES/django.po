@@ -585,3 +585,9 @@ msgstr "Aucune donnée ne correspond aux filtres ci-dessus. Faites un choix, s'i
 
 msgid "unable_import_students"
 msgstr "Impossible d'importer les étudiants"
+
+msgid "Delete"
+msgstr "Supprimer"
+
+msgid "Master deleted"
+msgstr "Maître de stage supprimé : "

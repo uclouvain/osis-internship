@@ -31,7 +31,9 @@ from django.contrib.auth.models import Permission, User
 from django.core.urlresolvers import reverse
 from django.test import TestCase, RequestFactory, override_settings
 
+from internship.models import master_allocation
 from internship.tests.factories.cohort import CohortFactory
+from internship.tests.factories.master import MasterFactory
 from internship.tests.factories.master_allocation import MasterAllocationFactory
 from internship.tests.factories.organization import OrganizationFactory
 
@@ -108,3 +110,20 @@ class MasterTestCase(TestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'masters.html')
+
+    def test_delete_master(self):
+        master_test = MasterFactory()
+        fake = faker.Faker()
+        organization_test = OrganizationFactory(cohort=self.cohort, reference=fake.random_int(min=10, max=100))
+        allocation = MasterAllocationFactory(master=master_test, organization=organization_test)
+        url = reverse('master_delete', kwargs={
+            'cohort_id': self.cohort.id,
+            'master_id': master_test.id
+        })
+        allocations = master_allocation.find_by_master(self.cohort, master_test)
+        self.assertIn(allocation, allocations)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'masters.html')
+        allocations = master_allocation.find_by_master(self.cohort, master_test)
+        self.assertNotIn(allocation, allocations)

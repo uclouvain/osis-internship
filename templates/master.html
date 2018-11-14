@@ -164,6 +164,18 @@
                 <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
                 {% trans "back" %}
             </a>
+            <a class="btn btn-danger pull-right master_btn_delete"
+            data-href="{% url 'master_delete' cohort_id=current_cohort.id master_id=allocated_master.id %}"
+            data-toggle="modal" data-target="#delete_modal"
+            data-value="{{allocated_master.last_name}} {{allocated_master.first_name}}">
+                <span class="glyphicon glyphicon-remove aria-hidden="true"></span>
+                {% trans "Delete" %}
+            </a>
         </div>
     </div>
+    {% include "fragment/delete_confirmation_modal.html" %}
+{% endblock %}
+
+{% block script %}
+    <script type="text/javascript" src="{% static 'js/internship.js' %}?version={{ js }}"></script>
 {% endblock %}

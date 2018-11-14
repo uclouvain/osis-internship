@@ -54,6 +54,7 @@ urlpatterns = [
                 url(r'^(?P<master_id>[0-9]+)/form/$', master.master_form, name='master_edit'),
                 url(r'^form/$', master.master_form, name='master_new'),
                 url(r'^save/$', master.master_save, name="master_save"),
+                url(r'^delete/(?P<master_id>[0-9]+)$', master.master_delete, name="master_delete")
             ])),
 
             url(r'^offers/', include([
