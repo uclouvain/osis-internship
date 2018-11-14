@@ -83,7 +83,13 @@ def master_delete(request, master_id, cohort_id):
     allocations = master_allocation.find_by_master(current_cohort, allocated_master)
     current_allocation = allocations.first()
     current_allocation.delete()
-    return masters(request, cohort_id)
+    messages.add_message(
+        request,
+        messages.SUCCESS,
+        "{} : {} {}".format(_('Master deleted'), allocated_master.last_name, allocated_master.first_name),
+        "alert-success"
+    )
+    return HttpResponseRedirect(reverse('internships_masters', kwargs={'cohort_id': cohort_id,}))
 
 
 @login_required

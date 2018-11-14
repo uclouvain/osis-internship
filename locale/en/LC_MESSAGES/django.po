@@ -579,3 +579,6 @@ msgstr "Unable to import the students."
 
 msgid "Delete"
 msgstr "Delete"
+
+msgid "Master deleted"
+msgstr ""

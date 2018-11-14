@@ -585,3 +585,6 @@ msgstr "Impossible d'importer les étudiants"
 
 msgid "Delete"
 msgstr "Supprimer"
+
+msgid "Master deleted"
+msgstr "Maître de stage supprimé : "
