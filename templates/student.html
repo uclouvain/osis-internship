@@ -181,7 +181,15 @@
                                     {{ affectation.organization.reference }} {{ affectation.organization.name }} ({{ affectation.speciality.name }}) - {{ affectation.period.cohort }}<br/>
                                     {% trans 'address' %} :
                                     {{ affectation.organization.location }} {{ affectation.organization.postal_code }}
-                                    {{ affectation.organization.city }}
+                                    {{ affectation.organization.city }}<br/>
+                                    {% with organization=affectation.organization  speciality=affectation.speciality %}
+                                        {% with master=masters|get_item:organization|get_item:speciality %}
+                                            {% if master %}
+                                                {% trans 'Master' %} :
+                                                {{ master.master }}
+                                            {% endif %}
+                                        {% endwith %}
+                                    {% endwith %}
                                 </p><br>
                             {% endif %}
                         {% endfor %}

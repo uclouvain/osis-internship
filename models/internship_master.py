@@ -34,8 +34,6 @@ from internship.models.enums.gender import Gender
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 
 
-
-
 class InternshipMasterAdmin(SerializableModelAdmin):
     list_display = ('first_name', 'last_name', 'civility')
     fieldsets = ((None, {'fields': ('first_name', 'last_name', 'civility', 'gender', 'email',
