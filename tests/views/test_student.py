@@ -128,13 +128,21 @@ class StudentsListImport(TestCase):
         response = self.client.post(self.import_url, {
             'file_upload': uploaded_file
         })
+        apply_response = self.client.post(self.apply_update_url, {
+            'data': response.context['data_json']
+        })
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "students_update.html")
         self.assertEqual(len(find_by_cohort(self.cohort.id)),10)
-        self.assertRedirects(response, reverse('internships_student_resume', kwargs={"cohort_id": self.cohort.id}))
+        self.assertRedirects(apply_response, reverse('internships_student_resume', kwargs={"cohort_id": self.cohort.id}))
 
     def test_valid_import_with_edited_row(self):
         uploaded_file = SimpleUploadedFile('student_list.xlsx', self.file_content)
-        self.client.post(self.import_url, {
+        response = self.client.post(self.import_url, {
             'file_upload': uploaded_file
+        })
+        self.client.post(self.apply_update_url, {
+            'data': response.context['data_json']
         })
         edited_file = SimpleUploadedFile('student_list.xlsx', self.edited_file_content)
         approve_update_response = self.client.post(self.import_url, {
