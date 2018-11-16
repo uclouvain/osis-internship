@@ -41,7 +41,7 @@ from base import models as mdl
 from internship import models as mdl_int
 from internship.forms.form_student_information import StudentInformationForm
 from internship.forms.students_import_form import StudentsImportActionForm
-from internship.models.internship_student_information import InternshipStudentInformation, find_by_cohort
+from internship.models.internship_student_information import InternshipStudentInformation
 from internship.utils.importing.import_students import import_xlsx
 from internship.views.common import display_errors
 from reference.models import country
@@ -331,7 +331,7 @@ def internships_student_import_update(request, cohort_id, differences=None):
     if request.POST.get('data'):
         data = json.loads(request.POST.get('data'))
         for student_information in data:
-            if(student_information['id']):
+            if student_information['id']:
                 existing_student = InternshipStudentInformation.objects.get(pk=student_information['id'], cohort=cohort)
             else:
                 existing_student = InternshipStudentInformation(
@@ -345,6 +345,7 @@ def internships_student_import_update(request, cohort_id, differences=None):
         return HttpResponseRedirect(reverse('internships_student_resume', kwargs={"cohort_id": cohort_id}))
     data_json, new_records_count = _convert_differences_to_json(differences)
     return render(request, "students_update.html", locals())
+
 
 def _get_affectation_for_period(affectations, period):
     for affectation in affectations:
@@ -369,6 +370,7 @@ def _get_student_status(student, cohort):
     choices_values = mdl_int.internship_choice.get_choices_made(cohort=cohort,
                                                                 student=student).values_list("internship_id", flat=True)
     return len(list(set(internship_ids) - set(choices_values))) == 0
+
 
 def _convert_differences_to_json(differences):
     data_json = []
