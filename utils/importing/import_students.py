@@ -40,13 +40,14 @@ def import_xlsx(cohort, xlsxfile):
     xlsxfile.close()
     return diff
 
+
 def _import_row(cohort, row, diff):
     matricule = row[7].value
     existing_student = student.find_by_registration_id(matricule)
     if existing_student:
         internship_student_information = mdl_isi.find_by_person(existing_student.person, cohort).first()
         if internship_student_information:
-            student_information_diff =_update_information(internship_student_information, cohort, row)
+            student_information_diff = _update_information(internship_student_information, cohort, row)
             if(student_information_diff):
                 diff.append(student_information_diff)
         else:
@@ -57,6 +58,7 @@ def _import_row(cohort, row, diff):
                 "data": student_information,
                 "new_record": True,
             })
+
 
 def _update_information(information, cohort, row):
     old_data = copy(information)
@@ -69,13 +71,15 @@ def _update_information(information, cohort, row):
     information.cohort = cohort
     return _get_data_differences(old_data, information)
 
+
 def _get_data_differences(old, new):
-    old._cohort_cache = new._cohort_cache
+    if old._cohort_cache:
+        old._cohort_cache = new._cohort_cache
     new_set = set(new.__dict__.items()) - set(old.__dict__.items())
     data_diff = {
-        "data" : new,
-        "diff_set" : new_set,
-        "original_data" : old.__dict__,
+        "data": new,
+        "diff_set": new_set,
+        "original_data": old.__dict__,
         "new_record": False
     } if new_set else None
     return data_diff
