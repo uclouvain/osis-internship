@@ -73,8 +73,7 @@ def _update_information(information, cohort, row):
 
 
 def _get_data_differences(old, new):
-    if old._cohort_cache:
-        old._cohort_cache = new._cohort_cache
+    old._cohort_cache = new._cohort_cache
     new_set = set(new.__dict__.items()) - set(old.__dict__.items())
     data_diff = {
         "data": new,
