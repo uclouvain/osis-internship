@@ -155,17 +155,17 @@ def internships_student_read(request, cohort_id, student_id):
         order_by("period__date_start")
     periods = mdl_int.period.search(cohort=cohort).order_by("date_start")
     organizations = mdl_int.organization.search(cohort=cohort)
-    masters = {}
+    allocations = {}
     for affectation in affectations:
-        master = mdl_int.master_allocation.search(
+        allocation = mdl_int.master_allocation.search(
             cohort=cohort,
             specialty=affectation.speciality,
             hospital=affectation.organization
         ).first()
         try:
-            masters[affectation.organization].update({affectation.speciality: master})
+            allocations[affectation.organization].update({affectation.speciality: allocation})
         except KeyError:
-            masters.update({affectation.organization: {affectation.speciality: master}})
+            allocations.update({affectation.organization: {affectation.speciality: allocation}})
     return render(request, "student.html", locals())
 
 

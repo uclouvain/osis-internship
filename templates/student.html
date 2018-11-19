@@ -183,10 +183,10 @@
                                     {{ affectation.organization.location }} {{ affectation.organization.postal_code }}
                                     {{ affectation.organization.city }}<br/>
                                     {% with organization=affectation.organization  speciality=affectation.speciality %}
-                                        {% with master=masters|get_item:organization|get_item:speciality %}
-                                            {% if master %}
+                                        {% with allocation=allocations|get_item:organization|get_item:speciality %}
+                                            {% if allocation %}
                                                 {% trans 'Master' %} :
-                                                {{ master.master }}
+                                                {{ allocation.master }}
                                             {% endif %}
                                         {% endwith %}
                                     {% endwith %}
