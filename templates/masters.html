@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 {% load staticfiles %}
-{% load i18n %}
+{% load i18n bootstrap3 %}
 
 {% comment "License" %}
     * OSIS stands for Open Student Information System. It's an application
@@ -39,7 +39,7 @@
 
     <form action="{%url 'internships_masters' cohort_id=current_cohort.id %}" method="get" class="">
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="form-group">
                     <label for="filter_hospital">{% trans 'Hospital' %}</label>
                     <select name="hospital" id="filter_hospital" class="form-control">
@@ -52,7 +52,7 @@
                     </select>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="form-group">
                     <label for="filter_specialty">{% trans 'Specialty' %}</label>
                     <select name="specialty" id="filter_specialty" class="form-control">
@@ -65,7 +65,14 @@
                     </select>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="filter_specialty">{% trans 'Name' %}/{% trans 'First name' %}</label>
+                    <input name="name" id="filter_name" class="form-control">
+
+                </div>
+            </div>
+            <div class="col-md-3">
                 <button type="submit" class="btn btn-default" style="margin-top: 26px;">
                     <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
                     {% trans 'Search' %}</button>
@@ -113,32 +120,13 @@
                     </tr>
                 {% endfor %}
             </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="6">
+                    {% bootstrap_pagination allocations extra=request.GET.urlencode %}
+                    </td>
+                </tr>
+            </tfoot>
         </table>
     </div>
-{% endblock %}
-
-
-{% block script %}
-    <script type="text/javascript" src="{% static 'js/jquery.dataTables.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/dataTables.bootstrap.min.js' %}"></script>
-    <script type="text/javascript" src="{% url 'internship-javascript-catalog' %}"></script>
-    <script type="text/javascript" src="{% static 'js/datatable_options.js' %}?version={{ js }}"></script>
-    <script type="text/javascript" src="{% static 'js/locale_compare.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/intl.js' %}"></script>
-
-    <script>
-        $(document).ready(function() {
-            $('#order_master').DataTable(datatable_options);
-            $.fn.dataTable.ext.order.intl();
-        } );
-        var filterVal = '';
-        $('#order_master_filter input').unbind();
-        $('#order_master_filter input').on('keyup change', function() {
-            var val = NeutralizeAccent(this.value);
-            if (val !== filterVal) {
-                filterVal = val;
-                $('#order_master').DataTable().search(val).draw();
-            }
-        });
-    </script>
 {% endblock %}
