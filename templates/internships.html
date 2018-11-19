@@ -43,7 +43,7 @@
                 <div class="form-group">
                     <label for="organization_sort">{% trans 'Hospital' %}</label>
                     <select name="organization_sort" id="organization_sort" onChange="javascript: this.form.submit();" class="form-control">
-                        <option value="0">{% trans 'choose_a_hospital' %}</option>
+                        <option value="0">{% trans 'Choose a hospital' %}</option>
                         {% for organization in organizations %}
                             <option value="{{ organization.name }}"
                                     {% if organization.name == organization_sort_value %}selected{% endif %}>
@@ -163,8 +163,8 @@
                                         {% endif %}
                                         <th align="center">{% trans 'Hospital' %}</th>
                                         <th align="center">{% trans 'Maximum number of students' %}</th>
-                                        <th align="center">{% trans 'Nombre de 1er choix' %}</th>
-                                        <th align="center">{% trans 'Nombre d\'autres choix faits' %}</th>
+                                        <th align="center">{% trans 'Number of first choices' %}</th>
+                                        <th align="center">{% trans 'Number of other choices' %}</th>
                                         <th align="center">{% trans 'Details' %}</th>
                                     </tr>
                                     </thead>

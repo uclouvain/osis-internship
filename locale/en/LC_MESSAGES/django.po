@@ -3,12 +3,11 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-13 17:21+0100\n"
+"POT-Creation-Date: 2018-11-19 11:03+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,11 +16,11 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: templates/internship_detail.html:52 templates/place_detail.html:49
-msgid "\"Students list"
+#: models/organization.py:98
+msgid "A hospital with the same reference already exists in this cohort"
 msgstr ""
 
-#: views/master.py:100
+#: views/master.py:116
 msgid "A master must be affected to at least one hospital or one specialty."
 msgstr ""
 
@@ -33,7 +32,8 @@ msgstr ""
 msgid "Acronym already exists"
 msgstr ""
 
-#: templates/masters.html:74 templates/places.html:43
+#: templates/cohort/selection.html:20 templates/masters.html:74
+#: templates/places.html:43 templates/students.html:96
 msgid "Add"
 msgstr ""
 
@@ -78,6 +78,7 @@ msgid "Affectation's result"
 msgstr ""
 
 #: templates/internship_affectation_sumup.html:49 templates/place_form.html:35
+#: templates/places.html:34
 msgid "All hospitals"
 msgstr ""
 
@@ -86,10 +87,6 @@ msgstr ""
 #: templates/internship_modification_student.html:32
 #: templates/internships.html:33
 msgid "All internships"
-msgstr ""
-
-#: templates/places.html:34
-msgid "All places"
 msgstr ""
 
 #: templates/internship_affectation_statistics.html:133
@@ -125,7 +122,7 @@ msgstr ""
 msgid "Birth date"
 msgstr ""
 
-#: models/internship_master.py:67
+#: models/internship_master.py:65
 msgid "Birth date must be on or before today's date."
 msgstr ""
 
@@ -135,7 +132,7 @@ msgstr ""
 #: templates/internship_affectation_statistics.html:85
 #: templates/internship_affectation_students.html:85
 #: templates/internships.html:224 templates/master_form.html:150
-#: templates/student_form.html:145
+#: templates/student_form.html:145 templates/students.html:181
 msgid "Cancel"
 msgstr ""
 
@@ -169,6 +166,10 @@ msgstr ""
 
 #: views/internship.py:69
 msgid "Choices saved"
+msgstr ""
+
+#: templates/internships.html:46
+msgid "Choose a hospital"
 msgstr ""
 
 #: templates/internship_modification_student.html:67
@@ -223,8 +224,7 @@ msgstr ""
 msgid "Date format"
 msgstr ""
 
-#: templates/fragment/delete_confirmation_modal.html:33
-#: templates/fragment/delete_confirmation_modal.html:42
+#: templates/master.html:172
 msgid "Delete"
 msgstr ""
 
@@ -233,6 +233,7 @@ msgid "Description"
 msgstr ""
 
 #: templates/internships.html:105 templates/internships.html:168
+#: templates/masters.html:87 templates/students.html:111
 msgid "Details"
 msgstr ""
 
@@ -240,13 +241,17 @@ msgstr ""
 msgid "Display students first choice"
 msgstr ""
 
-#: models/organization.py:77
+#: models/organization.py:81
 msgid "Duplicated sequence in report"
 msgstr ""
 
 #: templates/master.html:162 templates/student.html:138
 #: templates/student.html:173
 msgid "Edit"
+msgstr ""
+
+#: views/cohort.py:76
+msgid "Edit cohort"
 msgstr ""
 
 #: views/internship.py:205
@@ -367,6 +372,7 @@ msgstr ""
 
 #: templates/fragment/affectation_panel_heading.html:32
 #: templates/internship_affectation_errors.html:82
+#: templates/internship_affectation_errors.html:86
 #: templates/internship_affectation_hospitals.html:83
 #: templates/internship_affectation_hospitals.html:87
 #: templates/internship_affectation_statistics.html:82
@@ -394,7 +400,7 @@ msgstr ""
 msgid "Hospital error"
 msgstr ""
 
-#: views/place.py:68
+#: views/place.py:67
 msgid "Hospital saved"
 msgstr ""
 
@@ -548,8 +554,12 @@ msgstr ""
 msgid "Male"
 msgstr ""
 
-#: templates/master_form.html:40
+#: templates/master_form.html:40 templates/student.html:188
 msgid "Master"
+msgstr ""
+
+#: views/master.py:89
+msgid "Master deleted"
 msgstr ""
 
 #: templates/internship_modification.html:53
@@ -612,28 +622,21 @@ msgstr ""
 msgid "Noma"
 msgstr ""
 
-#: templates/internships.html:167
-msgid "Nombre d\\"
-msgstr ""
-
-#: templates/internships.html:166
-msgid "Nombre de 1er choix"
-msgstr ""
-
 #: templates/internship_affectation_statistics.html:181
 msgid "Normal students"
 msgstr ""
 
-#: templates/students.html:68
+#: templates/students.html:68 templates/students.html:69
 msgid "Number of enrollments"
 msgstr ""
 
 #: templates/internship_modification_student.html:96
-#: templates/internships.html:103 templates/place_detail.html:46
+#: templates/internships.html:103 templates/internships.html:166
+#: templates/place_detail.html:46
 msgid "Number of first choices"
 msgstr ""
 
-#: templates/internships.html:104
+#: templates/internships.html:104 templates/internships.html:167
 msgid "Number of other choices"
 msgstr ""
 
@@ -668,7 +671,8 @@ msgstr ""
 msgid "Period created"
 msgstr ""
 
-#: views/period.py:120
+#: templates/fragment/delete_confirmation_modal.html:33
+#: templates/fragment/delete_confirmation_modal.html:42 views/period.py:120
 msgid "Period deleted"
 msgstr ""
 
@@ -732,7 +736,7 @@ msgstr ""
 msgid "Publication must be done after the subscription process."
 msgstr ""
 
-#: templates/place_form.html:58
+#: templates/place_form.html:58 templates/places.html:52
 msgid "Reference"
 msgstr ""
 
@@ -870,7 +874,7 @@ msgid "Status"
 msgstr ""
 
 #: templates/internship_affectation_errors.html:111
-#: templates/internship_affectation_students.html:114 templates/places.html:54
+#: templates/internship_affectation_students.html:114
 #: templates/student_form.html:39
 msgid "Student"
 msgstr ""
@@ -896,12 +900,20 @@ msgstr ""
 msgid "Student sumup"
 msgstr ""
 
+#: templates/places.html:54
+msgid "Student's choices"
+msgstr ""
+
 #: templates/internship/home.html:71
 #: templates/internship_affectation_errors.html:98
 #: templates/internship_affectation_hospitals.html:99
 #: templates/internship_affectation_statistics.html:98
 #: templates/internship_affectation_students.html:98 templates/students.html:33
 msgid "Students"
+msgstr ""
+
+#: templates/internship_detail.html:52 templates/place_detail.html:49
+msgid "Students list"
 msgstr ""
 
 #: templates/cohort/cohort_form.html:7 templates/cohort/selection.html:6
@@ -956,6 +968,10 @@ msgstr ""
 msgid "Total of internships"
 msgstr ""
 
+#: templates/places.html:60
+msgid "Url"
+msgstr ""
+
 #: templates/place_form.html:60
 msgid "Website"
 msgstr ""
@@ -964,40 +980,4 @@ msgstr ""
 msgid ""
 "You are in the period of inscriptions. It is not recommended to change "
 "choices during this period."
-msgstr ""
-
-#: templates/cohort/selection.html:20 templates/students.html:96
-msgid "add"
-msgstr ""
-
-#: templates/students.html:181
-msgid "cancel"
-msgstr ""
-
-#: templates/internships.html:46
-msgid "choose_a_hospital"
-msgstr ""
-
-#: templates/masters.html:87 templates/students.html:111
-msgid "details"
-msgstr ""
-
-#: views/cohort.py:76
-msgid "edit_cohort"
-msgstr ""
-
-#: templates/internship_affectation_errors.html:86
-msgid "generate_solution"
-msgstr ""
-
-#: templates/students.html:69
-msgid "number_of_enrollments"
-msgstr ""
-
-#: templates/places.html:52
-msgid "reference"
-msgstr ""
-
-#: templates/places.html:60
-msgid "url"
 msgstr ""

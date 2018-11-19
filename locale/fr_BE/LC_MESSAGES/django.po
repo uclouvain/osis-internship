@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-13 17:21+0100\n"
+"POT-Creation-Date: 2018-11-19 11:03+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,13 +16,11 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: templates/internship_detail.html:52 templates/place_detail.html:49
-#, fuzzy
-#| msgid "Students list"
-msgid "\"Students list"
-msgstr "Liste des étudiants"
+#: models/organization.py:98
+msgid "A hospital with the same reference already exists in this cohort"
+msgstr "Un hôpital avec la même référence existe déjà dans cette cohorte"
 
-#: views/master.py:100
+#: views/master.py:116
 msgid "A master must be affected to at least one hospital or one specialty."
 msgstr ""
 "Un maître de stage doit être affecté à au moins un hôpital ou une spécialité."
@@ -35,7 +33,8 @@ msgstr "Acronyme"
 msgid "Acronym already exists"
 msgstr "Sigle déjà existant"
 
-#: templates/masters.html:74 templates/places.html:43
+#: templates/cohort/selection.html:20 templates/masters.html:74
+#: templates/places.html:43 templates/students.html:96
 msgid "Add"
 msgstr "Ajouter"
 
@@ -80,6 +79,7 @@ msgid "Affectation's result"
 msgstr "Résultat de l'affectation"
 
 #: templates/internship_affectation_sumup.html:49 templates/place_form.html:35
+#: templates/places.html:34
 msgid "All hospitals"
 msgstr "Tous les hôpitaux"
 
@@ -89,12 +89,6 @@ msgstr "Tous les hôpitaux"
 #: templates/internships.html:33
 msgid "All internships"
 msgstr "Tous les stages"
-
-#: templates/places.html:34
-#, fuzzy
-#| msgid "Edit places"
-msgid "All places"
-msgstr "Modifier nombres de places"
 
 #: templates/internship_affectation_statistics.html:133
 msgid "All students"
@@ -129,7 +123,7 @@ msgstr "Retour"
 msgid "Birth date"
 msgstr "Date de naissance"
 
-#: models/internship_master.py:67
+#: models/internship_master.py:65
 msgid "Birth date must be on or before today's date."
 msgstr "La date de naissance doit être antérieure ou égale à la date actuelle."
 
@@ -139,7 +133,7 @@ msgstr "La date de naissance doit être antérieure ou égale à la date actuell
 #: templates/internship_affectation_statistics.html:85
 #: templates/internship_affectation_students.html:85
 #: templates/internships.html:224 templates/master_form.html:150
-#: templates/student_form.html:145
+#: templates/student_form.html:145 templates/students.html:181
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -176,6 +170,12 @@ msgstr "Modification des choix"
 #: views/internship.py:69
 msgid "Choices saved"
 msgstr "Choix enregistrés"
+
+#: templates/internships.html:46
+#, fuzzy
+#| msgid "Choose a specialty"
+msgid "Choose a hospital"
+msgstr "Choisissez une spécialité"
 
 #: templates/internship_modification_student.html:67
 msgid "Choose a specialty"
@@ -229,28 +229,26 @@ msgstr "Créer une spécialité"
 msgid "Date format"
 msgstr "Format de date"
 
-#: templates/fragment/delete_confirmation_modal.html:33
-#: templates/fragment/delete_confirmation_modal.html:42
+#: templates/master.html:172
 msgid "Delete"
-msgstr "Période supprimée"
+msgstr "Supprimer"
 
 #: templates/cohort/cohort_form.html:23 templates/cohort/selection.html:30
 msgid "Description"
 msgstr "Description"
 
 #: templates/internships.html:105 templates/internships.html:168
+#: templates/masters.html:87 templates/students.html:111
 #, fuzzy
 #| msgid "details"
 msgid "Details"
 msgstr "Détails"
 
 #: templates/internship_detail.html:55
-#, fuzzy
-#| msgid "student_choice"
 msgid "Display students first choice"
-msgstr "Choix des étudiants"
+msgstr "Afficher le premier choix des étudiants"
 
-#: models/organization.py:77
+#: models/organization.py:81
 msgid "Duplicated sequence in report"
 msgstr "Séquence dupliquée dans le rapport"
 
@@ -258,6 +256,12 @@ msgstr "Séquence dupliquée dans le rapport"
 #: templates/student.html:173
 msgid "Edit"
 msgstr "Modifier"
+
+#: views/cohort.py:76
+#, fuzzy
+#| msgid "Add cohort"
+msgid "Edit cohort"
+msgstr "Ajouter une cohorte"
 
 #: views/internship.py:205
 msgid "Edit internship"
@@ -377,6 +381,7 @@ msgstr "Généraliste"
 
 #: templates/fragment/affectation_panel_heading.html:32
 #: templates/internship_affectation_errors.html:82
+#: templates/internship_affectation_errors.html:86
 #: templates/internship_affectation_hospitals.html:83
 #: templates/internship_affectation_hospitals.html:87
 #: templates/internship_affectation_statistics.html:82
@@ -404,7 +409,7 @@ msgstr "Hôpital"
 msgid "Hospital error"
 msgstr "Hôpital erreur"
 
-#: views/place.py:68
+#: views/place.py:67
 msgid "Hospital saved"
 msgstr "Hôpital enregistré"
 
@@ -560,9 +565,13 @@ msgstr "Localité"
 msgid "Male"
 msgstr "Homme"
 
-#: templates/master_form.html:40
+#: templates/master_form.html:40 templates/student.html:188
 msgid "Master"
 msgstr "Maître"
+
+#: views/master.py:89
+msgid "Master deleted"
+msgstr "Maître de stage supprimé : "
 
 #: templates/internship_modification.html:53
 msgid "Maximum enrollments"
@@ -628,30 +637,21 @@ msgstr "Aucun résultat"
 msgid "Noma"
 msgstr ""
 
-#: templates/internships.html:167
-msgid "Nombre d\\"
-msgstr ""
-
-#: templates/internships.html:166
-#, fuzzy
-#| msgid "Number of other choices"
-msgid "Nombre de 1er choix"
-msgstr "Nombre d'autres choix"
-
 #: templates/internship_affectation_statistics.html:181
 msgid "Normal students"
 msgstr "Etudiants Normaux"
 
-#: templates/students.html:68
+#: templates/students.html:68 templates/students.html:69
 msgid "Number of enrollments"
 msgstr "Nombre d'inscriptions"
 
 #: templates/internship_modification_student.html:96
-#: templates/internships.html:103 templates/place_detail.html:46
+#: templates/internships.html:103 templates/internships.html:166
+#: templates/place_detail.html:46
 msgid "Number of first choices"
 msgstr "Nombre de premier choix"
 
-#: templates/internships.html:104
+#: templates/internships.html:104 templates/internships.html:167
 msgid "Number of other choices"
 msgstr "Nombre d'autres choix"
 
@@ -686,7 +686,8 @@ msgstr "Période"
 msgid "Period created"
 msgstr "Période créée"
 
-#: views/period.py:120
+#: templates/fragment/delete_confirmation_modal.html:33
+#: templates/fragment/delete_confirmation_modal.html:42 views/period.py:120
 msgid "Period deleted"
 msgstr "Période supprimée"
 
@@ -720,10 +721,8 @@ msgid "Please wait"
 msgstr "Merci de patienter"
 
 #: templates/internship/list.html:39
-#, fuzzy
-#| msgid "Order position"
 msgid "Position"
-msgstr "Position de tri"
+msgstr "Position"
 
 #: templates/master.html:116 templates/master_form.html:68
 #: templates/place_form.html:66 templates/place_form.html:162
@@ -752,7 +751,7 @@ msgstr "Date de publication"
 msgid "Publication must be done after the subscription process."
 msgstr "La publication doit être réalisée après le processus d'inscription."
 
-#: templates/place_form.html:58
+#: templates/place_form.html:58 templates/places.html:52
 msgid "Reference"
 msgstr "Référence"
 
@@ -892,7 +891,7 @@ msgid "Status"
 msgstr "Statut"
 
 #: templates/internship_affectation_errors.html:111
-#: templates/internship_affectation_students.html:114 templates/places.html:54
+#: templates/internship_affectation_students.html:114
 #: templates/student_form.html:39
 msgid "Student"
 msgstr "Étudiant"
@@ -918,6 +917,12 @@ msgstr "L'étudiant n'existe pas."
 msgid "Student sumup"
 msgstr "Bilan des étudiants"
 
+#: templates/places.html:54
+#, fuzzy
+#| msgid "Students'choices"
+msgid "Student's choices"
+msgstr "Choix des étudiants"
+
 #: templates/internship/home.html:71
 #: templates/internship_affectation_errors.html:98
 #: templates/internship_affectation_hospitals.html:99
@@ -925,6 +930,12 @@ msgstr "Bilan des étudiants"
 #: templates/internship_affectation_students.html:98 templates/students.html:33
 msgid "Students"
 msgstr "Étudiants"
+
+#: templates/internship_detail.html:52 templates/place_detail.html:49
+#, fuzzy
+#| msgid "Students list"
+msgid "Students list"
+msgstr "Liste des étudiants"
 
 #: templates/cohort/cohort_form.html:7 templates/cohort/selection.html:6
 #: templates/internship/home.html:30
@@ -978,6 +989,10 @@ msgstr "Coût total de la solution"
 msgid "Total of internships"
 msgstr "Total de stages"
 
+#: templates/places.html:60
+msgid "Url"
+msgstr ""
+
 #: templates/place_form.html:60
 msgid "Website"
 msgstr "Site web"
@@ -989,67 +1004,3 @@ msgid ""
 msgstr ""
 "Vous êtes dans la période des inscriptions. Il est recommandé de ne pas "
 "changer les choix au cours de cette période."
-
-#: templates/cohort/selection.html:20 templates/students.html:96
-#, fuzzy
-#| msgid "Add"
-msgid "add"
-msgstr "Ajouter"
-
-#: templates/students.html:181
-#, fuzzy
-#| msgid "Cancel"
-msgid "cancel"
-msgstr "Annuler"
-
-#: templates/internships.html:46
-#, fuzzy
-#| msgid "Choose a hospital"
-msgid "choose_a_hospital"
-msgstr "Choisir un hôpital"
-
-#: templates/masters.html:87 templates/students.html:111
-#, fuzzy
-#| msgid "details"
-msgid "details"
-msgstr "Détails"
-
-#: views/cohort.py:76
-#, fuzzy
-#| msgid "Edit cohort"
-msgid "edit_cohort"
-msgstr "Modifier cohorte"
-
-#: templates/internship_affectation_errors.html:86
-#, fuzzy
-#| msgid "Generate solution"
-msgid "generate_solution"
-msgstr "Générer la solution"
-
-#: templates/students.html:69
-#, fuzzy
-#| msgid "Number of enrollments"
-msgid "number_of_enrollments"
-msgstr "Nombre d'inscriptions"
-
-#: templates/places.html:52
-#, fuzzy
-#| msgid "Preference"
-msgid "reference"
-msgstr "Préférence"
-
-#: templates/places.html:60
-msgid "url"
-msgstr "url"
-
-#~ msgid "name"
-#~ msgstr "Nom"
-
-#~ msgid "noma"
-#~ msgstr "Noma"
-
-#~ msgid "Students'choices"
-#~ msgstr "Choix des étudiants"
-
-#~ msgid "Warning"
-#~ msgstr "Attention"

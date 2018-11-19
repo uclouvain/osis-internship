@@ -66,7 +66,7 @@
                 {% else %}
                     <div class="col-md-6">
                         <span class="label label-info" title="{% trans 'Number of enrollments' %}">
-                            {% trans 'number_of_enrollments' %} : {{student_with_internships}} / {{students_can_have_internships}}
+                            {% trans 'Number of enrollments' %} : {{student_with_internships}} / {{students_can_have_internships}}
                         </span>
                     </div>
                 {% endif %}
@@ -93,7 +93,7 @@
                     </button>
                     <a href="{% url 'internship_student_form' cohort_id=cohort.id %}" class="btn btn-default">
                         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                        {% trans 'add' %}
+                        {% trans 'Add' %}
                     </a>
                 </div>
             </div>
@@ -108,7 +108,7 @@
                         <th>{% trans 'Noma' %}</th>
                         <th class="searchable">{% trans 'Last name'|capfirst %}</th>
                         <th class="searchable">{% trans 'First name' %}</th>
-                        <th class="no-sort">{% trans 'details' %}</th>
+                        <th class="no-sort">{% trans 'Details' %}</th>
                         <th class="no-sort">{% trans 'Choices modification' %}</th>
                         <th>{% trans 'Status' %}</th>
                     </tr>
@@ -178,7 +178,7 @@
                     </div>
                     <div class="modal-footer">
                         <input type="submit" class="btn btn-primary" value="{% trans 'Import' %}" onclick="document.getElementById('files').style.visibility='visible'" id="bt_submit_upload_students_modal"/>
-                        <button type="button" class="btn btn-default" data-dismiss="modal" id="bt_cancel_upload_students_modal">{% trans 'cancel' %}</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal" id="bt_cancel_upload_students_modal">{% trans 'Cancel' %}</button>
                     </div>
                 </form>
             </div>
