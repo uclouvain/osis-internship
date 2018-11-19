@@ -27,27 +27,27 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-    <li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
-    <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{% trans 'internships_managment' %}</a></li>
+    <li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
+    <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{% trans 'Internships management' %}</a></li>
     <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></li>
-    <li class="active">{% trans 'students' %}</li>
+    <li class="active">{% trans 'Students' %}</li>
 {% endblock %}
 
 {% block content %}
     {% csrf_token %}
     <div class="page-header">
-        <h2>{% trans 'student_sumup' %}</h2>
+        <h2>{% trans 'Student sumup' %}</h2>
     </div>
 
     <div class="panel panel-default">
         <div class="panel-heading clearfix">
-            <h4 class="pull-left">Les modifications suivantes vont être appliquées:</h4>
+            <h4 class="pull-left">{% trans 'Following modifications will be applied:' %}</h4>
             <div class="btn-group pull-right">
-                <a type="button" href="{% url 'internships_student_resume' cohort_id=cohort_id%}" style="margin-right: 10px;" class="btn btn-default">{% trans 'cancel' %}</a>
+                <a type="button" href="{% url 'internships_student_resume' cohort_id=cohort_id%}" style="margin-right: 10px;" class="btn btn-default">{% trans 'Cancel' %}</a>
                 <form action="{% url 'internships_student_import_update' cohort_id=cohort_id %}" class="pull-right" method="POST">
                     {% csrf_token %}
                     <input type="hidden" name="data" value="{{ data_json }}"/>
-                    <input type="submit" name="accept" class="btn btn-primary" value="{% trans 'accept' %}"/>
+                    <input type="submit" name="accept" class="btn btn-primary" value="{% trans 'Accept' %}"/>
                 </form>
             </div>
         </div>
