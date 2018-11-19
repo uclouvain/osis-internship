@@ -123,7 +123,7 @@ class MasterTestCase(TestCase):
         allocations = master_allocation.find_by_master(self.cohort, master_test)
         self.assertIn(allocation, allocations)
         response = self.client.get(url)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)
         self.assertTemplateUsed(response, 'masters.html')
         allocations = master_allocation.find_by_master(self.cohort, master_test)
         self.assertNotIn(allocation, allocations)
