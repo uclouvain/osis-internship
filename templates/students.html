@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 {% load staticfiles %}
-{% load i18n %}
+{% load i18n bootstrap3 %}
 
 {% comment "License" %}
  * OSIS stands for Open Student Information System. It's an application
@@ -99,6 +99,22 @@
             </div>
         </div>
         <br>
+        <form action="{%url 'internships_student_resume' cohort_id=cohort.id %}" method="get" class="">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="filter_name">{% trans 'Name' %}/{% trans 'First name' %}</label>
+                        <input name="name" id="filter_name" class="form-control">
+
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-default" style="margin-top: 26px;">
+                        <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                        {% trans 'Search' %}</button>
+                </div>
+            </div>
+        </form>
         {% if students|length == 0 %}
             <label class="alert alert-info" style="margin:5px">{% trans 'No result' %}</label>
         {% else %}
@@ -113,6 +129,13 @@
                         <th>{% trans 'Status' %}</th>
                     </tr>
                 </thead>
+                <tfoot>
+                    <tr>
+                        <td colspan="6">
+                            {% bootstrap_pagination students extra=request.GET.urlencode %}
+                        </td>
+                    </tr>
+                </tfoot>
                 {% for student, status in students %}
                     <tr>
                         <td>{{ student.registration_id }}</td>
@@ -184,29 +207,4 @@
             </div>
         </div>
     </div>
-{% endblock %}
-
-{% block script %}
-    <script type="text/javascript" src="{% static 'js/jquery.dataTables.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/dataTables.bootstrap.min.js' %}"></script>
-    <script type="text/javascript" src="{% url 'internship-javascript-catalog' %}"></script>
-    <script type="text/javascript" src="{% static 'js/datatable_options.js' %}?version={{ js }}"></script>
-    <script type="text/javascript" src="{% static 'js/locale_compare.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/intl.js' %}"></script>
-
-    <script>
-        $(document).ready(function() {
-            $('#order_student').DataTable(datatable_options);
-            $.fn.dataTable.ext.order.intl();
-        } );
-        var filterVal = '';
-        $('#order_student_filter input').unbind();
-        $('#order_student_filter input').on('keyup change', function() {
-            var val = NeutralizeAccent(this.value);
-            if (val !== filterVal) {
-                filterVal = val;
-                $('#order_student').DataTable().search(val).draw();
-            }
-        });
-    </script>
 {% endblock %}
