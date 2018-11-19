@@ -30,23 +30,23 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-    <li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
-    <li><a href="{% url 'internship' %}">{% trans 'internships_managment' %}</a></li>
+    <li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
+    <li><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
     <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></li>
-    <li class="active">{% trans 'affectation_sumup' %}</li>
+    <li class="active">{% trans "Allocation Sum up" %}</li>
 {% endblock %}
 
 {% block content %}
     <div class="page-header">
-        <h2>{% trans 'affectation_sumup' %}</h2>
+        <h2>{% trans "Allocation Sum up" %}</h2>
     </div>
     <form action="" method="get" class="">
         <div class="row">
             <div class="col-md-4">
                 <div class="form-group">
-                    <label for="filter_hospital">{% trans 'hospital' %}</label>
+                    <label for="filter_hospital">{% trans 'Hospital' %}</label>
                     <select name="hospital" id="filter_hospital" class="form-control">
-                        <option value="0">{% trans 'all_hospitals' %}</option>
+                        <option value="0">{% trans "All hospitals" %}</option>
                         {% for hospital in hospitals %}
                             <option value="{{ hospital.id }}" data-ref="{{ hospital.reference }}" {% if active_hospital.id == hospital.id %}selected{% endif %}>
                                 {{ hospital.reference }} - {{ hospital.name }}
@@ -57,7 +57,7 @@
             </div>
             <div class="col-md-4">
                 <div class="form-group">
-                    <label for="filter_specialty">{% trans 'speciality' %}</label>
+                    <label for="filter_specialty">{% trans 'Specialty' %}</label>
                     <select name="specialty" id="filter_specialty" class="form-control">
                         <option value="0">--</option>
                         {% for specialty in specialties %}
@@ -71,7 +71,7 @@
             <div class="col-md-4">
                 <button type="submit" class="btn btn-default" style="margin-top: 26px;">
                     <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-                    {% trans 'search' %}
+                    {% trans 'Search' %}
                 </button>
             </div>
         </div>

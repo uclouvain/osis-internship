@@ -28,9 +28,9 @@
 
 {% block breadcrumb %}
     <li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
-    <li><a href="{% url 'internship' %}">{% trans 'internships_managment' %}</a></li>
+    <li><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
     <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></li>
-    <li class="active">{% trans 'affectation_result' %}</li>
+    <li class="active">{% trans "Affectation's result" %}</li>
 {% endblock %}
 
 {% block style %}
@@ -39,7 +39,7 @@
 
 {% block content %}
     <div class="page-header">
-        <h2>{% trans 'affectation_result' %}</h2>
+        <h2>{% trans "Affectation's result" %}</h2>
     </div>
 
     <style>
@@ -57,7 +57,7 @@
                 <div class="modal-header">
                     <h4 class="modal-title">
                     <span class="glyphicon glyphicon-time">
-                    </span> {% trans 'please_wait' %}
+                    </span> {% trans 'Please wait' %}
                     </h4>
                 </div>
                 <div class="modal-body">
@@ -65,7 +65,7 @@
                         <div class="progress-bar progress-bar-info progress-bar-striped active" style="width: 100%">
                         </div>
                     </div>
-                    {% trans 'take_several_minutes' %}
+                    {% trans 'This may take several minutes' %}
                 </div>
             </div>
         </div>
@@ -75,15 +75,15 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <form  method="post" action="{% url 'internship_affectation_generate' cohort_id=cohort.id %}" id="generate_solution">
+            <form  method="post" action="{% url 'internship_affectation_generate' cohort_id=cohort.id %}" id="Generate solution">
               {% csrf_token %}
             </form>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title">{% trans 'generate_solution' %}</h4>
+            <h4 class="modal-title">{% trans 'Generate solution' %}</h4>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">{% trans 'cancel' %}</button>
-            <button type="button" class="btn btn-primary" onclick="$('#generate').modal('hide');$('#PleaseWaitModal').modal('show');$('#generate_solution').submit()">{% trans 'generate_solution' %}</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">{% trans 'Cancel' %}</button>
+            <button type="button" class="btn btn-primary" onclick="$('#generate').modal('hide');$('#PleaseWaitModal').modal('show');$('#generate_solution').submit()">{% trans 'Generate solution' %}</button>
           </div>
         </div>
       </div>
@@ -94,10 +94,10 @@
 
         <div class="panel-body">
             <ul class="nav nav-tabs">
-                <li><a href="{% url 'internship_affectation_hospitals' cohort_id=cohort.id %}">{% trans 'hospitals' %}</a></li>
-                <li><a href="{% url 'internship_affectation_students' cohort_id=cohort.id %}">{% trans 'students' %}</a></li>
-                <li><a href="{% url 'internship_affectation_statistics' cohort_id=cohort.id %}">{% trans 'statistics' %}</a></li>
-                <li class="active"><a href="#">{% trans 'errors' %}</a></li>
+                <li><a href="{% url 'internship_affectation_hospitals' cohort_id=cohort.id %}">{% trans 'Hospitals' %}</a></li>
+                <li><a href="{% url 'internship_affectation_students' cohort_id=cohort.id %}">{% trans 'Students' %}</a></li>
+                <li><a href="{% url 'internship_affectation_statistics' cohort_id=cohort.id %}">{% trans 'Statistics' %}</a></li>
+                <li class="active"><a href="#">{% trans 'Errors' %}</a></li>
             </ul>
             <div class="tab-content">
                 <div id="tab_hospitals" class="tab-pane fade in"></div>
@@ -108,11 +108,11 @@
                     <table class="table" id="errors" cellspacing="0" width="100%">
                         <thead>
                             <tr>
-                                <th>{% trans 'student' %}</th>
-                                <th>{% trans 'speciality' %}</th>
-                                <th class="no-sort">{% trans 'period' %}</th>
-                                <th class="no-sort">{% trans 'organization' %}</th>
-                                <th class="no-sort">{% trans 'type_internship' %}</th>
+                                <th>{% trans 'Student' %}</th>
+                                <th>{% trans 'Specialty' %}</th>
+                                <th class="no-sort">{% trans 'Period' %}</th>
+                                <th class="no-sort">{% trans 'Hospital' %}</th>
+                                <th class="no-sort">{% trans 'Internship type' %}</th>
                             </tr>
                         </thead>
                         {% for internship in errors %}

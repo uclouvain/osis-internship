@@ -110,7 +110,12 @@ def master_save(request, cohort_id):
             hospital = _extract_hospital_id(allocations)
         else:
             errors.append(form.errors)
-            messages.add_message(request, messages.ERROR, _('hospital_or_specialty_required'), "alert-danger")
+            messages.add_message(
+                request,
+                messages.ERROR,
+                _('A master must be affected to at least one hospital or one specialty.'),
+                "alert-danger"
+            )
     else:
         errors.append(form.errors)
         display_errors(request, errors)

@@ -47,7 +47,7 @@ class Period(SerializableModel):
     def clean_start_date(self):
         if all([self.date_start, self.date_end]):
             if self.date_start >= self.date_end:
-                raise ValidationError({"date_start": _("start_before_end")})
+                raise ValidationError({"date_start": _("Start date must be earlier than end date.")})
 
     def number(self):
         return int(self.name[1])

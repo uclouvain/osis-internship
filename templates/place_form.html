@@ -30,10 +30,10 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-    <li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
-    <li><a href="{% url 'internship' %}">{% trans 'internships_managment' %}</a></li>
-    <li><a href="{% url 'internships_places' cohort_id=cohort.id %}">{% trans 'all_places' %}</a></li>
-    <li class="active">{% trans 'organization' %}</li>
+    <li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
+    <li><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
+    <li><a href="{% url 'internships_places' cohort_id=cohort.id %}">{% trans "All hospitals" %}</a></li>
+    <li class="active">{% trans 'Hospital' %}</li>
 {% endblock %}
 
 {% block content %}
@@ -42,7 +42,7 @@
         {% if organization.id%}
             <h2>{{ organization.name }}</h2>
         {% else %}
-            <h2>{% trans 'organization' %}</h2>
+            <h2>{% trans 'Hospital' %}</h2>
         {% endif %}
     </div>
 
@@ -55,36 +55,36 @@
                                         {% endif %}">
                 {% csrf_token %}
                 <div class="row">
-                    {% bootstrap_field form.reference form_group_class="form-group col-md-1" label=_("reference") %}
-                    {% bootstrap_field form.name form_group_class="form-group col-md-5" label=_("name") %}
-                    {% bootstrap_field form.website form_group_class="form-group col-md-6" label=_("website") %}
+                    {% bootstrap_field form.reference form_group_class="form-group col-md-1" label=_("Reference") %}
+                    {% bootstrap_field form.name form_group_class="form-group col-md-5" label=_("Name") %}
+                    {% bootstrap_field form.website form_group_class="form-group col-md-6" label=_("Website") %}
                 </div>
                 <input type="hidden" value="{{ organization_id }}" name="organization_id"/>
                 <br>
                 <div class="row">
-                    {% bootstrap_field form.location form_group_class="form-group col-md-4" label=_("address") %}
-                    {% bootstrap_field form.postal_code form_group_class="form-group col-md-2" label=_("postal_code") %}
-                    {% bootstrap_field form.city form_group_class="form-group col-md-3" label=_("location") %}
-                    {% bootstrap_field form.country form_group_class="form-group col-md-3" label=_("country") %}
+                    {% bootstrap_field form.location form_group_class="form-group col-md-4" label=_("Address") %}
+                    {% bootstrap_field form.postal_code form_group_class="form-group col-md-2" label=_("Postal code") %}
+                    {% bootstrap_field form.city form_group_class="form-group col-md-3" label=_("Locality") %}
+                    {% bootstrap_field form.country form_group_class="form-group col-md-3" label=_("Country") %}
                 </div>
                 <br>
-                <label for="country">{% trans 'report_to_hospital' %}</label>
+                <label for="country">{% trans 'Report to the hospital' %}</label>
 
                 <div class="panel panel-default">
                     <div class="panel-body">
-                        <p>{% trans 'report_instructions' %}</p>
+                        <p>{% trans 'Inform the sequence in which the columns must appear in the report to the hospital. Fields without number are not added to the report.' %}</p>
                         <div class="row">
                             <div class="col-md-1">
                                 {{form.report_period}}
                             </div>
                             <div class="col-md-5">
-                                {% trans 'period' %}
+                                {% trans 'Period' %}
                             </div>
                             <div class="col-md-1">
                                 {{form.report_birthdate}}
                             </div>
                             <div class="col-md-5">
-                                {% trans 'birthdate' %}
+                                {% trans 'Birth date' %}
                             </div>
                         </div>
                         <br>
@@ -93,13 +93,13 @@
                                 {{form.report_start_date}}
                             </div>
                             <div class="col-md-5">
-                                {% trans 'date_start' %}
+                                {% trans 'Start date' %}
                             </div>
                             <div class="col-md-1">
                                 {{form.report_email}}
                             </div>
                             <div class="col-md-5">
-                                {% trans 'email' %}
+                                {% trans 'Email' %}
                             </div>
                         </div>
                         <br>
@@ -108,13 +108,13 @@
                                 {{form.report_end_date}}
                             </div>
                             <div class="col-md-5">
-                                {% trans 'date_end' %}
+                                {% trans 'End date' %}
                             </div>
                             <div class="col-md-1">
                                 {{form.report_noma}}
                             </div>
                             <div class="col-md-5">
-                                {% trans 'noma' %}
+                                {% trans 'Noma' %}
                             </div>
                         </div>
                         <br>
@@ -123,13 +123,13 @@
                                 {{form.report_last_name}}
                             </div>
                             <div class="col-md-5">
-                                {% trans 'last_name' %}
+                                {% trans 'Last name' %}
                             </div>
                             <div class="col-md-1">
                                 {{form.report_phone}}
                             </div>
                             <div class="col-md-5">
-                                {% trans 'phone' %}
+                                {% trans 'Phone' %}
                             </div>
                         </div>
                         <br>
@@ -138,13 +138,13 @@
                                 {{form.report_first_name}}
                             </div>
                             <div class="col-md-5">
-                                {% trans 'first_name' %}
+                                {% trans 'First name' %}
                             </div>
                             <div class="col-md-1">
                                 {{form.report_address}}
                             </div>
                             <div class="col-md-5">
-                                {% trans 'address' %}
+                                {% trans 'Address' %}
                             </div>
                         </div>
                         <br>
@@ -153,13 +153,13 @@
                                 {{form.report_gender}}
                             </div>
                             <div class="col-md-5">
-                                {% trans 'gender' %}
+                                {% trans 'Gender' %}
                             </div>
                             <div class="col-md-1">
                                 {{form.report_postal_code}}
                             </div>
                             <div class="col-md-5">
-                                {% trans 'postal_code' %}
+                                {% trans 'Postal code' %}
                             </div>
                         </div>
                         <br>
@@ -168,22 +168,22 @@
                                 {{form.report_specialty}}
                             </div>
                             <div class="col-md-5">
-                                {% trans 'specialty' %}
+                                {% trans 'Specialty' %}
                             </div>
                             <div class="col-md-1">
                                 {{form.report_city}}
                             </div>
                             <div class="col-md-5">
-                                {% trans 'location' %}
+                                {% trans 'Locality' %}
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <button type="submit" class="btn btn-primary" title="{% trans 'save'%}" id="bt_organization_save">
-                    <span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'save'%}</button>
+                <button type="submit" class="btn btn-primary" title="{% trans 'Save'%}" id="bt_organization_save">
+                    <span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'Save'%}</button>
                 <a class="btn btn-default" id="lnk_organization_cancel" href="{% url 'internships_places' cohort_id=cohort.id  %}">
-                    <span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span> {% trans 'return'%}</a>
+                    <span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span> {% trans 'Return'%}</a>
             </form>
         </div>
     </div>

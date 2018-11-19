@@ -107,9 +107,9 @@ def get_student(request):
                 data['city'] = address.city
                 data['country'] = address.country.id
         else:
-            data = {'error': str(_('student_already_exists'))}
+            data = {'error': str(_('Student already exists'))}
     else:
-        data = {'error': str(_('student_doesnot_exist'))}
+        data = {'error': str(_('Student does not exist'))}
 
     return HttpResponse(json.dumps(data), content_type='application/json')
 

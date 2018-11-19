@@ -78,7 +78,7 @@ class Organization(SerializableModel):
         duplicates = set([x for x in report_values if report_values.count(x) > 1])
         keys = [field for field, value in report.items() if value in duplicates]
         for k in keys:
-            raise ValidationError({k :_("duplicate_report_sequence")})
+            raise ValidationError({k :_("Duplicated sequence in report")})
 
 
     def report_sequence(self):
@@ -95,7 +95,7 @@ class Organization(SerializableModel):
 
     def unique_error_message(self, model_class, unique_check):
         if model_class == type(self) and unique_check == ('reference', 'cohort'):
-            return _('hospital_already_exists')
+            return _('A hospital with the same reference already exists in this cohort')
         else:
             return super(Organization, self).unique_error_message(model_class, unique_check)
 

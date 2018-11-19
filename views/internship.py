@@ -66,7 +66,7 @@ def modification_student(request, cohort_id, student_id, internship_id=-1, speci
     if request.method == 'POST':
         formset = offer_preference_formset(request.POST)
         if formset.is_valid():
-            messages.add_message(request, messages.SUCCESS, _("choice_saved"), "alert-success")
+            messages.add_message(request, messages.SUCCESS, _("Choices saved"), "alert-success")
             _remove_previous_choices(student, internship)
             _save_student_choices(formset, student, internship, speciality, cohort)
         else:
@@ -166,7 +166,12 @@ def internship_new(request, cohort_id):
     form = InternshipForm(request.POST or None, instance=inter)
     if form.is_valid():
         form.save()
-        messages.add_message(request, messages.SUCCESS, "{} : {}".format(_('internship_saved'), inter.name), "alert-success")
+        messages.add_message(
+            request,
+            messages.SUCCESS,
+            "{} : {}".format(_('Internship modality created'), inter.name),
+            "alert-success"
+        )
         return redirect(reverse('internship-list', kwargs={
             'cohort_id': cohort.id,
         }))
@@ -174,6 +179,7 @@ def internship_new(request, cohort_id):
     context = {
         'form': form,
         'cohort': cohort,
+        'page_title': _('New internship'),
     }
     return render(request, 'internship/internship_form.html', context)
 
@@ -196,7 +202,7 @@ def internship_edit(request, cohort_id, internship_id):
 
     context = {
         'form': form,
-        'page_title': _('edit_internship'),
+        'page_title': _('Edit internship'),
         'cohort': cohort,
     }
 
@@ -208,7 +214,7 @@ def internship_edit(request, cohort_id, internship_id):
 def internship_delete(request, cohort_id, internship_id):
     inter = get_object_or_404(mdl_int.internship.Internship, pk=internship_id, cohort_id=cohort_id)
     inter.delete()
-    messages.add_message(request, messages.SUCCESS, "{} : {}".format(_('internship_delete'), inter.name), "alert-success")
+    messages.add_message(request, messages.SUCCESS, "{} : {}".format(_('Internship modality deleted'), inter.name), "alert-success")
     return redirect(reverse('internship-list', kwargs={
         'cohort_id': cohort_id,
     }))

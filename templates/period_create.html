@@ -29,17 +29,17 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-    <li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
-    <li><a href="{% url 'internship' %}">{% trans 'internships_managment' %}</a></li>
+    <li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
+    <li><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
     <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></li>
-    <li><a href="{% url 'internships_periods' cohort_id=cohort.id %}">{% trans 'periods' %}</a></li>
-    <li class="active">{% trans 'add_period' %}</li>
+    <li><a href="{% url 'internships_periods' cohort_id=cohort.id %}">{% trans 'Periods' %}</a></li>
+    <li class="active">{% trans 'Add period' %}</li>
 {% endblock %}
 
 {% block content %}
 
 <div class="page-header">
-    <h2>{% trans 'period_creation' %}</h2>
+    <h2>{% trans 'Create a period' %}</h2>
 </div>
 
 <div class="panel panel-default">
@@ -47,16 +47,16 @@
         <form action="{{ url_form }}" method="post">
             {% csrf_token %}
             <div class="row">
-                    {% bootstrap_field form.name form_group_class="form-group col-md-4" label=_("name") %}
-                    {% bootstrap_field form.date_start form_group_class="form-group col-md-4" label=_("start_date") %}
-                    {% bootstrap_field form.date_end form_group_class="form-group col-md-4" label=_("end_date") %}
+                    {% bootstrap_field form.name form_group_class="form-group col-md-4" label=_("Name") %}
+                    {% bootstrap_field form.date_start form_group_class="form-group col-md-4" label=_("Start date") %}
+                    {% bootstrap_field form.date_end form_group_class="form-group col-md-4" label=_("End date") %}
             </div>
 
             <a href="{% url 'internships_periods' cohort_id=cohort.id %}" class="btn btn-default">
-                <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"/> {% trans 'back' %}
+                <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"/> {% trans 'Back' %}
             </a>
             <button type="submit" class="btn btn-primary" title="{% trans 'Save'%}" id="bt_interships_new">
-                <span class="glyphicon glyphicon-save" aria-hidden="true"/> {% trans 'save'%}
+                <span class="glyphicon glyphicon-save" aria-hidden="true"/> {% trans 'Save'%}
             </button>
         </form>
     </div>
