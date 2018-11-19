@@ -25,6 +25,7 @@
 ##############################################################################
 from django import shortcuts
 from django.contrib import messages
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required, permission_required
@@ -38,17 +39,29 @@ from internship.forms.master import MasterForm
 from internship.models.enums.civility import Civility
 from internship.models.enums.gender import Gender
 
+
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def masters(request, cohort_id):
     current_cohort = shortcuts.get_object_or_404(cohort.Cohort, pk=cohort_id)
     filter_specialty = int(request.GET.get('specialty', 0))
     filter_hospital = int(request.GET.get('hospital', 0))
+    filter_name = request.GET.get('name', '')
 
     allocations = master_allocation.search(current_cohort, filter_specialty, filter_hospital)
+    if filter_name:
+        allocations = allocations.filter(master__last_name__icontains=filter_name) | \
+                      allocations.filter(master__first_name__icontains=filter_name)
     specialties = internship_speciality.find_by_cohort(current_cohort)
     hospitals = organization.find_by_cohort(current_cohort)
-
+    paginator = Paginator(allocations, 10)
+    page = request.GET.get('page')
+    try:
+        allocations = paginator.page(page)
+    except PageNotAnInteger:
+        allocations = paginator.page(1)
+    except EmptyPage:
+        allocations = paginator.page(paginator.num_pages)
     return layout.render(request, "masters.html", locals())
 
 
