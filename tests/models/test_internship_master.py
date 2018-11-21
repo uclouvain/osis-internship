@@ -40,4 +40,4 @@ class TestInternshipMaster(TestCase):
 
     def test_civility_acronym(self):
         master = MasterFactory()
-        self.assertTrue("_ACRON" in master.civility_acronym())
+        self.assertTrue("." in master.civility_acronym())

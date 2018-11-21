@@ -23,7 +23,10 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import factory.django
+import factory
+from factory.fuzzy import FuzzyChoice
+
+from internship.models.enums.civility import Civility
 
 
 class MasterFactory(factory.django.DjangoModelFactory):
@@ -32,4 +35,4 @@ class MasterFactory(factory.django.DjangoModelFactory):
 
     first_name = factory.Faker('first_name')
     last_name = factory.Faker('last_name')
-    civility = factory.Faker('prefix')
+    civility = FuzzyChoice({Civility.DOCTOR.value, Civility.PROFESSOR.value})

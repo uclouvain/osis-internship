@@ -66,7 +66,7 @@ class InternshipMaster(SerializableModel):
 
     def civility_acronym(self):
         if self.civility:
-            return "{}_ACRON".format(self.civility)
+            return Civility.get_acronym(self.civility)
         else:
             return ""
 

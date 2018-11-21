@@ -98,9 +98,9 @@ class MasterTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'masters.html')
 
-        masters = response.context['allocations']
-        self.assertEqual(masters.count(), 1)
-        self.assertEqual(masters.first(), master)
+        masters = response.context['allocations'].__dict__['object_list']
+        self.assertEqual(len(masters), 1)
+        self.assertEqual(masters[0], master)
 
     def test_masters_index_bad_masters(self):
         url = reverse('internships_masters', kwargs={
@@ -123,7 +123,8 @@ class MasterTestCase(TestCase):
         allocations = master_allocation.find_by_master(self.cohort, master_test)
         self.assertIn(allocation, allocations)
         response = self.client.get(url)
-        self.assertEqual(response.status_code, 302)
-        self.assertTemplateUsed(response, 'masters.html')
+        self.assertRedirects(response, reverse('internships_masters', kwargs={
+            'cohort_id': self.cohort.id
+        }))
         allocations = master_allocation.find_by_master(self.cohort, master_test)
         self.assertNotIn(allocation, allocations)
