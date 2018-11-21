@@ -26,6 +26,8 @@
 import json
 from io import BytesIO
 
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.db.models import Prefetch
 from django.http import HttpResponse, HttpResponseRedirect
 from django.views.decorators.http import require_POST
 from django.core.exceptions import PermissionDenied
@@ -35,6 +37,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.utils.translation import ugettext_lazy as _
 
+from internship.models.internship_student_information import InternshipStudentInformation
 from internship.views.common import display_errors
 from reference.models import country
 from base import models as mdl
@@ -48,7 +51,8 @@ from internship.utils.importing.import_students import import_xlsx
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internships_student_resume(request, cohort_id):
     cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)
-    students_with_status = _get_students_with_status(cohort)
+    filter_name = request.GET.get('name', '')
+    students_with_status = _get_students_with_status(cohort, filter_name)
     student_with_internships = mdl_int.internship_choice.get_number_students(cohort)
     students_can_have_internships = mdl_int.internship_student_information.get_number_students(cohort)
     student_without_internship = students_can_have_internships - student_with_internships
@@ -56,6 +60,14 @@ def internships_student_resume(request, cohort_id):
     number_students_not_ok = len([x for x in students_with_status if x[1] is False])
     number_generalists = mdl_int.internship_student_information.get_number_of_generalists(cohort)
     number_specialists = students_can_have_internships - number_generalists
+    paginator = Paginator(students_with_status, 10)
+    page = request.GET.get('page')
+    try:
+        students_with_status = paginator.page(page)
+    except PageNotAnInteger:
+        students_with_status = paginator.page(1)
+    except EmptyPage:
+        students_with_status = paginator.page(paginator.num_pages)
     context = {
         'search_name': None,
         'search_firstname': None,
@@ -335,19 +347,29 @@ def _get_affectation_for_period(affectations, period):
     return None
 
 
-def _get_students_with_status(cohort):
+def _get_students_with_status(cohort, filter_name):
+
     students_status = []
-    students_informations = mdl_int.internship_student_information.find_all(cohort)
-    for student_info in students_informations:
-        person = student_info.person
-        student = mdl.student.find_by_person(person)
-        student_status = _get_student_status(student, cohort)
-        students_status.append((student, student_status))
+
+    students_info = InternshipStudentInformation.objects\
+        .filter(cohort=cohort)\
+        .select_related('person') \
+        .prefetch_related(Prefetch('person__student_set', to_attr='students'))\
+        .order_by('person__last_name', 'person__first_name')
+
+    if filter_name:
+        students_info = students_info.filter(person__last_name__icontains=filter_name) | \
+                        students_info.filter(person__first_name__icontains=filter_name)
+
+    internship_ids = mdl_int.internship.Internship.objects.filter(cohort=cohort, pk__gte=1).values_list("pk", flat=True)
+
+    for student_info in students_info:
+        student_status = _get_student_status(student_info.person.students[0], cohort, internship_ids)
+        students_status.append((student_info.person.students[0], student_status))
     return students_status
 
 
-def _get_student_status(student, cohort):
-    internship_ids = mdl_int.internship.Internship.objects.filter(cohort=cohort, pk__gte=1).values_list("pk", flat=True)
+def _get_student_status(student, cohort, internship_ids):
     choices_values = mdl_int.internship_choice.get_choices_made(cohort=cohort,
                                                                 student=student).values_list("internship_id", flat=True)
     return len(list(set(internship_ids) - set(choices_values))) == 0
