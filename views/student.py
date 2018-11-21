@@ -27,6 +27,7 @@ import json
 from io import BytesIO
 
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.db.models import Prefetch
 from django.http import HttpResponse, HttpResponseRedirect
 from django.views.decorators.http import require_POST
 from django.core.exceptions import PermissionDenied
@@ -36,6 +37,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.utils.translation import ugettext_lazy as _
 
+from internship.models.internship_student_information import InternshipStudentInformation
 from internship.views.common import display_errors
 from reference.models import country
 from base import models as mdl
@@ -346,17 +348,24 @@ def _get_affectation_for_period(affectations, period):
 
 
 def _get_students_with_status(cohort, filter_name):
+
     students_status = []
-    students_informations = mdl_int.internship_student_information.find_all(cohort)
+
+    students_info = InternshipStudentInformation.objects\
+        .filter(cohort=cohort)\
+        .select_related('person') \
+        .prefetch_related(Prefetch('person__student_set', to_attr='students'))\
+        .order_by('person__last_name', 'person__first_name')
+
     if filter_name:
-        students_informations = students_informations.filter(person__last_name__icontains=filter_name) | \
-                                students_informations.filter(person__first_name__icontains=filter_name)
+        students_info = students_info.filter(person__last_name__icontains=filter_name) | \
+                        students_info.filter(person__first_name__icontains=filter_name)
+
     internship_ids = mdl_int.internship.Internship.objects.filter(cohort=cohort, pk__gte=1).values_list("pk", flat=True)
-    for student_info in students_informations:
-        person = student_info.person
-        student = mdl.student.find_by_person(person)
-        student_status = _get_student_status(student, cohort, internship_ids)
-        students_status.append((student, student_status))
+
+    for student_info in students_info:
+        student_status = _get_student_status(student_info.person.students[0], cohort, internship_ids)
+        students_status.append((student_info.person.students[0], student_status))
     return students_status
 
 
