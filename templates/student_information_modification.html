@@ -28,10 +28,10 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-    <li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
-    <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{% trans 'internships_managment' %}</a></li>
+    <li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
+    <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{% trans 'Internships management' %}</a></li>
     <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></li>
-    <li><a href="{% url 'internships_student_resume' cohort_id=cohort.id  %}">{% trans 'student_sumup' %}</a></li>
+    <li><a href="{% url 'internships_student_resume' cohort_id=cohort.id  %}">{% trans 'Student sumup' %}</a></li>
     <li class="active"><a href="{% url 'internships_student_read' cohort_id=cohort.id student_id=student.id %}">
         {{ student.person.last_name }} {{ student.person.first_name }}</a></li>
 {% endblock %}
@@ -44,23 +44,23 @@
             <br>
             <div class="row">
                 <div class="col-md-3">
-                    <label>{% trans 'name' %}</label><br>
+                    <label>{% trans 'Last name' %}</label><br>
                     {{ student.person.last_name | default_if_none:'-' }}
                 </div>
                 <div class="col-md-3">
-                    <label>{% trans 'firstname'%}</label><br>
+                    <label>{% trans 'First name'%}</label><br>
                     {{ student.person.first_name | default_if_none:'-' }}
                 </div>
                 <div class="col-md-3">
-                    <label>{% trans 'noma'%}</label><br>
+                    <label>{% trans 'Noma'%}</label><br>
                     {{ student.registration_id | default_if_none:'-' }}
                 </div>
                 <div class="col-md-2">
-                    <label>{% trans 'gender' %}</label><br>
+                    <label>{% trans 'Gender' %}</label><br>
                     {{ student.person.gender | default_if_none:'-' }}
                 </div>
                 <div class="col-md-1">
-                    <label>{% trans 'language' %}</label><br>
+                    <label>{% trans 'Language' %}</label><br>
                     {{ student.person.language | default_if_none:'-' }}
                 </div>
             </div>
@@ -69,21 +69,21 @@
                 {% csrf_token %}
                 <div class="row">
                     <div class="col-md-3">
-                        <label>{% trans 'birthdate' %}</label><br>
+                        <label>{% trans 'Birth date' %}</label><br>
                         {{ student.person.birth_date | default_if_none:'-' }}
                     </div>
-                    {% bootstrap_field form.email form_group_class="form-group col-md-6" label=_("email") %}
-                    {% bootstrap_field form.phone_mobile form_group_class="form-group col-md-3" label=_("phone_mobile") %}
+                    {% bootstrap_field form.email form_group_class="form-group col-md-6" label=_("Email") %}
+                    {% bootstrap_field form.phone_mobile form_group_class="form-group col-md-3" label=_("Phone Number / Mobile Number") %}
                 </div>
                 <div class="row">
-                    {% bootstrap_field form.location form_group_class="form-group col-md-3" label=_("address") %}
-                    {% bootstrap_field form.postal_code form_group_class="form-group col-md-3" label=_("postal_code") %}
-                    {% bootstrap_field form.city form_group_class="form-group col-md-3" label=_("location") %}
-                    {% bootstrap_field form.country form_group_class="form-group col-md-3" label=_("country") %}
+                    {% bootstrap_field form.location form_group_class="form-group col-md-3" label=_("Address") %}
+                    {% bootstrap_field form.postal_code form_group_class="form-group col-md-3" label=_("Postal code") %}
+                    {% bootstrap_field form.city form_group_class="form-group col-md-3" label=_("Locality") %}
+                    {% bootstrap_field form.country form_group_class="form-group col-md-3" label=_("Country") %}
                 </div>
                 <br>
                 <button type="submit" class="btn btn-primary" title="{% trans 'Save'%}" id="bt_interships_new">
-                    <span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'save'%}
+                    <span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'Save'%}
                 </button>
             </form>
         </div>

@@ -26,9 +26,17 @@
 from osis_common.utils.enumerations import ChoiceEnum
 from django.utils.translation import ugettext_lazy as _
 
+
 class Civility(ChoiceEnum):
     PROFESSOR = "PROFESSOR"
     DOCTOR = "DOCTOR"
+
+    @classmethod
+    def get_acronym(cls, civility):
+        if civility == cls.PROFESSOR.value:
+            return "Prof."
+        elif civility == cls.DOCTOR.value:
+            return "Dr."
 
     @classmethod
     def choices(cls):

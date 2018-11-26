@@ -27,19 +27,19 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-    <li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
-    <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{% trans 'internships_managment' %}</a></li>
+    <li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
+    <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{% trans 'Internships management' %}</a></li>
     <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></li>
-    <li><a href="{% url 'internships_student_resume' cohort_id=cohort.id %}">{% trans 'student_sumup' %}</a></li>
+    <li><a href="{% url 'internships_student_resume' cohort_id=cohort.id %}">{% trans 'Student sumup' %}</a></li>
     <li class="active"><a href="{% url 'internships_student_read' cohort_id=cohort.id student_id=information.student.id %}">
         {{ information.student.person.last_name }} {{ information.student.person.first_name }}</a>
     </li>
-    <li>{% trans 'student_affectation' %}</li>
+    <li>{% trans 'Student affectation' %}</li>
 {% endblock %}
 
 {% block content %}
     <div class="page-header">
-        <h2>{% trans 'student_affectation' %}: {{ information.student.person.last_name }} {{ information.student.person.first_name }}</h2>
+        <h2>{% trans 'Student affectation' %}: {{ information.student.person.last_name }} {{ information.student.person.first_name }}</h2>
     </div>
 
     <form method="post" action="{% url 'student_save_affectation_modification' cohort_id=cohort.id student_id=information.student.id %}">
@@ -48,10 +48,10 @@
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>{% trans 'period' %}</th>
-                    <th>{% trans 'modality' %}</th>
-                    <th>{% trans 'speciality' %}</th>
-                    <th>{% trans 'organization' %}</th>
+                    <th>{% trans 'Period' %}</th>
+                    <th>{% trans 'Modality' %}</th>
+                    <th>{% trans 'Speciality' %}</th>
+                    <th>{% trans 'Hospital' %}</th>
                 </tr>
             </thead>
             <tbody>
@@ -113,7 +113,7 @@
             </tbody>
         </table>
         <button type="submit" class="btn btn-primary" title="{% trans 'Save'%}" id="bt_interships_new">
-            <span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'save'%}
+            <span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'Save'%}
         </button>
     </form>
     <br>

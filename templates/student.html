@@ -27,10 +27,10 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-    <li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
-    <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{% trans 'internships_managment' %}</a></li>
+    <li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
+    <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{% trans 'Internships management' %}</a></li>
     <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></li>
-    <li><a href="{% url 'internships_student_resume' cohort_id=cohort.id %}">{% trans 'student_sumup' %}</a></li>
+    <li><a href="{% url 'internships_student_resume' cohort_id=cohort.id %}">{% trans 'Student sumup' %}</a></li>
     <li class="active">{{ student.person.last_name }} {{ student.person.first_name }}</li>
 {% endblock %}
 
@@ -52,19 +52,19 @@
                 <div class="row">
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label>{% trans 'name'|capfirst %}</label><br>
+                            <label>{% trans 'Last name'|capfirst %}</label><br>
                             {{ student.person.last_name | default_if_none:'-' }}
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label>{% trans 'firstname'%}</label><br>
+                            <label>{% trans 'First name'%}</label><br>
                             {{ student.person.first_name | default_if_none:'-' }}
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label>{% trans 'noma'%}</label><br>
+                            <label>{% trans 'Noma'%}</label><br>
                             {{ student.registration_id | default_if_none:'-' }}
                         </div>
                     </div>
@@ -73,19 +73,19 @@
                 <div class="row">
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label>{% trans 'gender' %}</label><br>
+                            <label>{% trans 'Gender' %}</label><br>
                             {{ student.person.gender | default_if_none:'-' }}
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label>{% trans 'email' %}</label><br>
+                            <label>{% trans 'Email' %}</label><br>
                             {{ information.email | default_if_none:'-' }}
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label>{% trans 'birthdate' %}</label><br>
+                            <label>{% trans 'Birth date' %}</label><br>
                             {{ student.person.birth_date }}
                         </div>
                     </div>
@@ -94,13 +94,13 @@
                 <div class="row">
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label>{% trans 'phone_mobile' %}</label><br>
+                            <label>{% trans 'Phone Number / Mobile Number' %}</label><br>
                             {{ information.phone_mobile | default_if_none:'-' }}
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label>{% trans 'address_legal' %}</label><br>
+                            <label>{% trans 'Legal address' %}</label><br>
                             {% if student %}
                                 {{ student.address.location | default_if_none:'-' }} <br> {{ student.address.postal_code | default_if_none:'-' }}
                                 {{ student.address.city | default_if_none:'-' }} ({{ student.address.country | default_if_none:'-' | upper }})
@@ -109,7 +109,7 @@
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label>{% trans 'address_editable' %}</label><br>
+                            <label>{% trans 'Editable address' %}</label><br>
                             {% if information %}
                                 {{ information.location | default_if_none:'-' }} <br> {{ information.postal_code | default_if_none:'-' }}
                                 {{ information.city | default_if_none:'-' }} ({{ information.country | default_if_none:'-' | upper }})
@@ -121,13 +121,13 @@
                 <div class="row">
                      <div class="col-md-4">
                         <div class="form-group">
-                            <label>{% trans 'language' %}</label><br>
+                            <label>{% trans 'Language' %}</label><br>
                             {{ student.person.language | default_if_none:'-' }}
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label>{% trans 'contest' %}</label><br>
+                            <label>{% trans 'Contest' %}</label><br>
                             {{ information.contest | default_if_none:'-' }}
                         </div>
                     </div>
@@ -135,7 +135,7 @@
 
                 <a class="btn btn-default" target="_blank" id="lnk_student_information_modification"
                    href="{% url 'internship_student_information_modification' cohort_id=cohort.id student_id=student.id %}">
-                    <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> {% trans 'edit' %}
+                    <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> {% trans 'Edit' %}
                 </a>
             </div>
         </div>
@@ -143,21 +143,21 @@
         <div class="panel panel-default">
           <div class="panel-body">
             <ul class="nav nav-tabs">
-                <li class="active"><a data-toggle="tab" href="#tab_choice">{% trans 'choice_receive_by_administration' %}</a></li>
-                <li><a data-toggle="tab" href="#tab_rep">{% trans 'student_affectation' %}</a></li>
+                <li class="active"><a data-toggle="tab" href="#tab_choice">{% trans 'Choice received by administration' %}</a></li>
+                <li><a data-toggle="tab" href="#tab_rep">{% trans 'Student affectation' %}</a></li>
             </ul>
             <div class="tab-content">
                 <div id="tab_choice" class="tab-pane fade in active">
                     <br>
                     {% for internship in internships %}
-                        <label>{% trans 'internship' %} {{ internship.name }}</label><br/>
+                        <label>{% trans 'Internship' %} {{ internship.name }}</label><br/>
                         <ul>
                             {% for choice in internship_choices %}
                                 {% if choice.internship_id == internship.id %}
-                                    <li> {% trans 'organization' %} :
+                                    <li> {% trans 'Hospital' %} :
                                     {{ choice.organization.reference }} - {{ choice.organization.name }} |
-                                    {% trans 'speciality' %} - {{ choice.speciality.name }} |
-                                    {% trans 'choice' %} : {{ choice.choice }}
+                                    {% trans 'Specialty' %} - {{ choice.speciality.name }} |
+                                    {% trans 'Choice' %} : {{ choice.choice }}
                                 {% endif %}
                             {% endfor %}
                         </ul>
@@ -170,7 +170,7 @@
                         <br>
                         <a class="btn btn-default" target="_blank" id="lnk_students_affectation"
                           href="{% url 'internship_student_affectation_modification' cohort_id=cohort.id student_id=student.id %}">
-                            <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> {% trans 'edit' %}</a>
+                            <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> {% trans 'Edit' %}</a>
                     </div>
                     {% for period in periods %}
                         <label>{{ period.name }}</label>
@@ -179,9 +179,17 @@
                             {% if affectation.period == period %}
                                 <p>{{ affectation.speciality.name }}{{ affectation.internship.choice }} |
                                     {{ affectation.organization.reference }} {{ affectation.organization.name }} ({{ affectation.speciality.name }}) - {{ affectation.period.cohort }}<br/>
-                                    {% trans 'address' %} :
+                                    {% trans 'Address' %} :
                                     {{ affectation.organization.location }} {{ affectation.organization.postal_code }}
-                                    {{ affectation.organization.city }}
+                                    {{ affectation.organization.city }}<br/>
+                                    {% with organization=affectation.organization  speciality=affectation.speciality %}
+                                        {% with allocation=allocations|get_item:organization|get_item:speciality %}
+                                            {% if allocation %}
+                                                {% trans 'Master' %} :
+                                                {{ allocation.master }}
+                                            {% endif %}
+                                        {% endwith %}
+                                    {% endwith %}
                                 </p><br>
                             {% endif %}
                         {% endfor %}

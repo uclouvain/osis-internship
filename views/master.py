@@ -25,6 +25,7 @@
 ##############################################################################
 from django import shortcuts
 from django.contrib import messages
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required, permission_required
@@ -45,11 +46,22 @@ def masters(request, cohort_id):
     current_cohort = shortcuts.get_object_or_404(cohort.Cohort, pk=cohort_id)
     filter_specialty = int(request.GET.get('specialty', 0))
     filter_hospital = int(request.GET.get('hospital', 0))
+    filter_name = request.GET.get('name', '')
 
     allocations = master_allocation.search(current_cohort, filter_specialty, filter_hospital)
+    if filter_name:
+        allocations = allocations.filter(master__last_name__icontains=filter_name) | \
+                      allocations.filter(master__first_name__icontains=filter_name)
     specialties = internship_speciality.find_by_cohort(current_cohort)
     hospitals = organization.find_by_cohort(current_cohort)
-
+    paginator = Paginator(allocations, 10)
+    page = request.GET.get('page')
+    try:
+        allocations = paginator.page(page)
+    except PageNotAnInteger:
+        allocations = paginator.page(1)
+    except EmptyPage:
+        allocations = paginator.page(paginator.num_pages)
     return layout.render(request, "masters.html", locals())
 
 
@@ -78,6 +90,23 @@ def master_form(request, cohort_id, master_id=None, allocated_master=None):
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
+def master_delete(request, master_id, cohort_id):
+    current_cohort = shortcuts.get_object_or_404(cohort.Cohort, pk=cohort_id)
+    allocated_master = internship_master.get_by_id(master_id)
+    allocations = master_allocation.find_by_master(current_cohort, allocated_master)
+    current_allocation = allocations.first()
+    current_allocation.delete()
+    messages.add_message(
+        request,
+        messages.SUCCESS,
+        "{} : {} {}".format(_('Master deleted'), allocated_master.last_name, allocated_master.first_name),
+        "alert-success"
+    )
+    return HttpResponseRedirect(reverse('internships_masters', kwargs={'cohort_id': cohort_id,}))
+
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
 def master_save(request, cohort_id):
     current_cohort = shortcuts.get_object_or_404(cohort.Cohort, pk=cohort_id)
     allocated_master = internship_master.get_by_id(request.POST.get("id")) if request.POST.get("id") else None
@@ -94,11 +123,15 @@ def master_save(request, cohort_id):
             hospital = _extract_hospital_id(allocations)
         else:
             errors.append(form.errors)
-            messages.add_message(request, messages.ERROR, _('hospital_or_specialty_required'), "alert-danger")
+            messages.add_message(
+                request,
+                messages.ERROR,
+                _('A master must be affected to at least one hospital or one specialty.'),
+                "alert-danger"
+            )
     else:
         errors.append(form.errors)
         display_errors(request, errors)
-
 
     if errors:
         return master_form(request=request, cohort_id=current_cohort.id, allocated_master=allocated_master)
@@ -147,6 +180,7 @@ def _extract_hospital_id(allocations):
         return allocations[0].organization.id
     else:
         return 0
+
 
 def _validate_allocations(request):
     hospitals, specialties = request.POST.getlist('hospital'), request.POST.getlist('specialty')

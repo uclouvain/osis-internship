@@ -34,8 +34,6 @@ from internship.models.enums.gender import Gender
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 
 
-
-
 class InternshipMasterAdmin(SerializableModelAdmin):
     list_display = ('first_name', 'last_name', 'civility')
     fieldsets = ((None, {'fields': ('first_name', 'last_name', 'civility', 'gender', 'email',
@@ -64,11 +62,11 @@ class InternshipMaster(SerializableModel):
 
     def clean_birth_date(self):
         if self.birth_date is not None and self.birth_date > timezone.now().date():
-            raise ValidationError({"birth_date": _("birth_date_before_today")}, code="invalid")
+            raise ValidationError({"birth_date": _("Birth date must be on or before today's date.")}, code="invalid")
 
     def civility_acronym(self):
         if self.civility:
-            return "{}_ACRON".format(self.civility)
+            return Civility.get_acronym(self.civility)
         else:
             return ""
 

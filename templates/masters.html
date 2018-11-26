@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 {% load staticfiles %}
-{% load i18n %}
+{% load i18n bootstrap3 %}
 
 {% comment "License" %}
     * OSIS stands for Open Student Information System. It's an application
@@ -27,21 +27,21 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-    <li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
-    <li><a href="{% url 'internship' %}">{% trans 'internships_managment' %}</a></li>
+    <li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
+    <li><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
     <li><a href="{% url 'internships_home' cohort_id=current_cohort.id %}">{{ current_cohort.name }}</a></li>
-    <li class="active">{% trans 'internships_masters' %}</li>
+    <li class="active">{% trans 'Internships masters' %}</li>
 {% endblock %}
 {% block content %}
     <div class="page-header">
-        <h2>{% trans 'internships_masters' %}</h2>
+        <h2>{% trans 'Internships masters' %}</h2>
     </div>
 
     <form action="{%url 'internships_masters' cohort_id=current_cohort.id %}" method="get" class="">
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="form-group">
-                    <label for="filter_hospital">{% trans 'hospital' %}</label>
+                    <label for="filter_hospital">{% trans 'Hospital' %}</label>
                     <select name="hospital" id="filter_hospital" class="form-control">
                         <option value="0">--</option>
                         {% for hospital in hospitals %}
@@ -52,9 +52,9 @@
                     </select>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="form-group">
-                    <label for="filter_specialty">{% trans 'speciality' %}</label>
+                    <label for="filter_specialty">{% trans 'Specialty' %}</label>
                     <select name="specialty" id="filter_specialty" class="form-control">
                         <option value="0">--</option>
                         {% for specialty in specialties %}
@@ -65,13 +65,20 @@
                     </select>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="filter_name">{% trans 'Name' %}/{% trans 'First name' %}</label>
+                    <input name="name" id="filter_name" class="form-control">
+
+                </div>
+            </div>
+            <div class="col-md-3">
                 <button type="submit" class="btn btn-default" style="margin-top: 26px;">
                     <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-                    {% trans 'search' %}</button>
+                    {% trans 'Search' %}</button>
                 <a href="{% url 'master_new' cohort_id=current_cohort.id %}" class="btn btn-default pull-right" style="margin-top: 26px;">
                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                    {% trans 'add' %}
+                    {% trans 'Add' %}
                 </a>
             </div>
         </div>
@@ -81,12 +88,12 @@
         <table class="table table-hover" id="order_master">
             <thead>
                 <tr>
-                    <th class="no-sort">{% trans 'civility' %}</th>
-                    <th class="searchable">{% trans 'name' %}</th>
-                    <th class="searchable">{% trans 'firstname' %}</th>
-                    <th class="no-sort">{% trans 'details' %}</th>
-                    <th class="no-sort">{% trans 'speciality' %}</th>
-                    <th class="no-sort">{% trans 'organization' %}</th>
+                    <th class="no-sort">{% trans 'Civility' %}</th>
+                    <th class="searchable">{% trans 'Name' %}</th>
+                    <th class="searchable">{% trans 'First name' %}</th>
+                    <th class="no-sort">{% trans 'Details' %}</th>
+                    <th class="no-sort">{% trans 'Specialty' %}</th>
+                    <th class="no-sort">{% trans 'Hospital' %}</th>
                 </tr>
             </thead>
             <tbody>
@@ -109,36 +116,17 @@
                     </tr>
                 {% empty %}
                     <tr>
-                        <td colspan="6">{% trans 'use_filters_no_data' %}</td>
+                        <td colspan="6">{% trans 'No data corresponds to the filters above. Make a choice, please.' %}</td>
                     </tr>
                 {% endfor %}
             </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="6">
+                    {% bootstrap_pagination allocations extra=request.GET.urlencode %}
+                    </td>
+                </tr>
+            </tfoot>
         </table>
     </div>
-{% endblock %}
-
-
-{% block script %}
-    <script type="text/javascript" src="{% static 'js/jquery.dataTables.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/dataTables.bootstrap.min.js' %}"></script>
-    <script type="text/javascript" src="{% url 'internship-javascript-catalog' %}"></script>
-    <script type="text/javascript" src="{% static 'js/datatable_options.js' %}?version={{ js }}"></script>
-    <script type="text/javascript" src="{% static 'js/locale_compare.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/intl.js' %}"></script>
-
-    <script>
-        $(document).ready(function() {
-            $('#order_master').DataTable(datatable_options);
-            $.fn.dataTable.ext.order.intl();
-        } );
-        var filterVal = '';
-        $('#order_master_filter input').unbind();
-        $('#order_master_filter input').on('keyup change', function() {
-            var val = NeutralizeAccent(this.value);
-            if (val !== filterVal) {
-                filterVal = val;
-                $('#order_master').DataTable().search(val).draw();
-            }
-        });
-    </script>
 {% endblock %}

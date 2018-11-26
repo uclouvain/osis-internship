@@ -27,23 +27,23 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-    <li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
-    <li><a href="{% url 'internship' %}">{% trans 'internships_managment' %}</a></li>
+    <li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
+    <li><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
     <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></li>
-    <li class="active">{% trans 'all_internships' %}</li>
+    <li class="active">{% trans "All internships" %}</li>
 {% endblock %}
 {% block content %}
     <div class="page-header">
-        <h2>{% trans 'internships' %}</h2>
+        <h2>{% trans 'Internships' %}</h2>
     </div>
 
     <form action="{%url 'internships' cohort_id=cohort.id %}" method="get">
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
-                    <label for="organization_sort">{% trans 'organization' %}</label>
+                    <label for="organization_sort">{% trans 'Hospital' %}</label>
                     <select name="organization_sort" id="organization_sort" onChange="javascript: this.form.submit();" class="form-control">
-                        <option value="0">{% trans 'choose_a_hospital' %}</option>
+                        <option value="0">{% trans 'Choose a hospital' %}</option>
                         {% for organization in organizations %}
                             <option value="{{ organization.name }}"
                                     {% if organization.name == organization_sort_value %}selected{% endif %}>
@@ -58,7 +58,7 @@
                 <button type="button" class="btn btn-default pull-right" data-toggle="modal" data-target="#pnl_upload_internship"
                         id="bt_upload_score_modal" style="margin-top: 26px;">
                     <span class="glyphicon glyphicon-import" aria-hidden="true"></span>
-                    {% trans 'import' %}
+                    {% trans "Import" %}
                 </button>
             </div>
         </div>
@@ -80,7 +80,7 @@
                         {%if speciality_sort_value%}
                             class="active"
                         {%endif%}
-                ><a data-toggle="tab" href="#tab_choice">{% trans 'internship_choice' %}</a></li>
+                ><a data-toggle="tab" href="#tab_choice">{% trans 'Internship choice' %}</a></li>
             </ul>
             {% csrf_token %}
             <div class="tab-content">
@@ -98,11 +98,11 @@
                                     <table class="table table-hover">
                                         <thead>
                                         <tr>
-                                            <th align="center">{% trans 'organization' %}</th>
-                                            <th align="center">{% trans 'student_max' %}</th>
-                                            <th align="center">{% trans 'Nombre de 1er choix' %}</th>
-                                            <th align="center">{% trans 'Nombre d\'autres choix faits' %}</th>
-                                            <th align="center">{% trans 'Détails' %}</th>
+                                            <th align="center">{% trans 'Hospital' %}</th>
+                                            <th align="center">{% trans 'Maximum number of students' %}</th>
+                                            <th align="center">{% trans 'Number of first choices' %}</th>
+                                            <th align="center">{% trans 'Number of other choices' %}</th>
+                                            <th align="center">{% trans 'Details' %}</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -159,13 +159,13 @@
                                     <thead>
                                     <tr>
                                         {% if not speciality_sort_value %}
-                                        <th align="center">{% trans 'speciality' %}</th>
+                                        <th align="center">{% trans 'Specialty' %}</th>
                                         {% endif %}
-                                        <th align="center">{% trans 'organization' %}</th>
-                                        <th align="center">{% trans 'student_max' %}</th>
-                                        <th align="center">{% trans 'Nombre de 1er choix' %}</th>
-                                        <th align="center">{% trans 'Nombre d\'autres choix faits' %}</th>
-                                        <th align="center">{% trans 'Détails' %}</th>
+                                        <th align="center">{% trans 'Hospital' %}</th>
+                                        <th align="center">{% trans 'Maximum number of students' %}</th>
+                                        <th align="center">{% trans 'Number of first choices' %}</th>
+                                        <th align="center">{% trans 'Number of other choices' %}</th>
+                                        <th align="center">{% trans 'Details' %}</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -211,18 +211,18 @@
                         {% csrf_token %}
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="bt_close_upload_score_modal"><span aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title" id="uploadScroresLabel">{% trans 'internships_injection' %}</h4>
+                            <h4 class="modal-title" id="uploadScroresLabel">{% trans 'Internships injection' %}</h4>
                         </div>
                         <div class="modal-body">
                             <div class="form-group">
                               <input type="file" id="fle_scores_input_file" name="file">
                             </div>
                             <div id="pnl_selectedFiles"></div>
-                            <p class="help-block">{% trans 'help_pnl_selectedfiles_internships' %}</p>
+                            <p class="help-block">{% trans "Select a xlsx file for the internships' injection" %}</p>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal" id="bt_cancel_upload_score_modal">{% trans 'cancel' %}</button>
-                            <input type="submit" class="btn btn-primary" value="{% trans 'inject'%}" onclick="document.getElementById('files').style.visibility='visible'" id="bt_submit_upload_score_modal"/>
+                            <button type="button" class="btn btn-default" data-dismiss="modal" id="bt_cancel_upload_score_modal">{% trans 'Cancel' %}</button>
+                            <input type="submit" class="btn btn-primary" value="{% trans 'Inject'%}" onclick="document.getElementById('files').style.visibility='visible'" id="bt_submit_upload_score_modal"/>
                         </div>
                     </form>
                 </div>

@@ -28,19 +28,19 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-    <li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
-    <li><a href="{% url 'internship' %}">{% trans 'internships_managment' %}</a></li>
+    <li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
+    <li><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
     <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></li>
-    <li class="active">{% trans 'all_places' %}</li>
+    <li class="active">{% trans "All hospitals" %}</li>
 {% endblock %}
 
 {% block content %}
     <div class="page-header">
-        <h2>{% trans 'list_of_all_hospital' %}</h2>
+        <h2>{% trans 'List of all hospitals' %}</h2>
     </div>
 
-    <a href="{% url 'place_create' cohort_id=cohort.id %}" id="lnk_organization_create" class="btn btn-default pull-right" title="{% trans 'create_an_organization'%}">
-        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> {% trans 'add' %}
+    <a href="{% url 'place_create' cohort_id=cohort.id %}" id="lnk_organization_create" class="btn btn-default pull-right" title="{% trans 'Add hospital'%}">
+        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> {% trans 'Add' %}
     </a>
     <br>
     <br>
@@ -49,15 +49,15 @@
         <table class="table table-hover">
             <thead>
                 <tr>
-                    <th>{% trans 'reference' %}</th>
-                    <th>{% trans 'name' %}</th>
-                    <th>{% trans 'student_choice' %}</th>
-                    <th>{% trans 'affectation_result' %}</th>
-                    <th>{% trans 'address' %}</th>
-                    <th>{% trans 'postal_code' %}</th>
-                    <th>{% trans 'location' %}</th>
-                    <th>{% trans 'country' %}</th>
-                    <th>{% trans 'url' %}</th>
+                    <th>{% trans 'Reference' %}</th>
+                    <th>{% trans 'Name' %}</th>
+                    <th>{% trans "Student's choices" %}</th>
+                    <th>{% trans "Affectation's result" %}</th>
+                    <th>{% trans 'Address' %}</th>
+                    <th>{% trans 'Postal code' %}</th>
+                    <th>{% trans 'Locality' %}</th>
+                    <th>{% trans 'Country' %}</th>
+                    <th>{% trans 'Url' %}</th>
                 </tr>
             </thead>
             <tbody>

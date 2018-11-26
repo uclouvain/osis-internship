@@ -27,10 +27,10 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-    <li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
-    <li><a href="{% url 'internship' %}">{% trans 'internships_managment' %}</a></li>
+    <li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
+    <li><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
     <li><a href="{% url 'internships_home' cohort_id=current_cohort.id %}">{{ current_cohort.name }}</a></li>
-    <li class="active">{% trans 'internships_masters' %}</li>
+    <li class="active">{% trans 'Internships masters' %}</li>
 {% endblock %}
 
 {% block content %}
@@ -47,13 +47,13 @@
             <div class="row">
                 <div class="col-md-3">
                     <div class="form-group">
-                        <label for="civility">{% trans 'civility' %}</label>
+                        <label for="civility">{% trans 'Civility' %}</label>
                         <div id="civility">{% if allocated_master.civility_acronym %}{% trans allocated_master.civility_acronym %}{% endif %}</div>
                     </div>
                 </div>
                 <div class="col-md-9">
                     <div class="form-group">
-                        <label for="first_name">{% trans 'full_name' %}</label>
+                        <label for="first_name">{% trans 'Full name' %}</label>
                         <div id="first_name">{{ allocated_master.last_name | upper }}, {{ allocated_master.first_name }}</div>
                     </div>
                 </div>
@@ -61,19 +61,19 @@
             <div class="row">
                 <div class="col-md-3">
                     <div class="form-group">
-                        <label for="birth_date">{% trans 'birth_date' %}</label>
+                        <label for="birth_date">{% trans 'Birth date' %}</label>
                         <div id="birth_date">{{ allocated_master.birth_date | default_if_none:"" }}</div>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
-                        <label for="gender">{% trans 'gender' %}</label>
+                        <label for="gender">{% trans 'Gender' %}</label>
                         <div id="gender">{% if allocated_master.gender %}{% trans allocated_master.gender %}{% endif %}</div>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
-                        <label for="start_activities">{% trans 'start_activities' %}</label>
+                        <label for="start_activities">{% trans 'Start activities' %}</label>
                         <div id="start_activities">{{ allocated_master.start_activities | default_if_none:"" }}</div>
                     </div>
                 </div>
@@ -81,25 +81,25 @@
             <div class="row">
                 <div class="col-md-3">
                     <div class="form-group">
-                        <label for="email">{% trans 'email' %}</label>
+                        <label for="email">{% trans 'Email' %}</label>
                         <div id="email">{{ allocated_master.email | default_if_none:"" }}</div>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
-                        <label for="email_private">{% trans 'email_private' %}</label>
+                        <label for="email_private">{% trans 'Private email' %}</label>
                         <div id="email_private">{{ allocated_master.email_private | default_if_none:"" }}</div>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
-                        <label for="phone">{% trans 'phone' %}</label>
+                        <label for="phone">{% trans 'Phone' %}</label>
                         <div id="phone">{{ allocated_master.phone | default_if_none:"" }}</div>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
-                        <label for="phone_mobile">{% trans 'phone_mobile' %}</label>
+                        <label for="phone_mobile">{% trans 'Phone Number / Mobile Number' %}</label>
                         <div id="phone_mobile">{{ allocated_master.phone_mobile | default_if_none:"" }}</div>
                     </div>
                 </div>
@@ -107,38 +107,38 @@
             <div class="row">
                 <div class="col-md-3">
                     <div class="form-group">
-                        <label for="location">{% trans 'address' %}</label>
+                        <label for="location">{% trans 'Address' %}</label>
                         <div id="location">{{ allocated_master.location | default_if_none:"" }}</div>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
-                        <label for="postal_code">{% trans 'postal_code' %}</label>
+                        <label for="postal_code">{% trans 'Postal code' %}</label>
                         <div id="postal_code">{{ allocated_master.postal_code | default_if_none:"" }}</div>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
-                        <label for="city">{% trans 'location' %}</label>
+                        <label for="city">{% trans 'Locality' %}</label>
                         <div id="city">{{ allocated_master.city | default_if_none:"" }}</div>
                     </div>
                 </div>
 
                 <div class="col-md-3">
                     <div class="form-group">
-                        <label for="country">{% trans 'country' %}</label>
+                        <label for="country">{% trans 'Country' %}</label>
                         <div id="country">{{ allocated_master.country | default_if_none:"" }}</div>
                     </div>
                 </div>
             </div>
 
             <div class="panel panel-default">
-                <div class="panel-heading">{% trans 'allocation' %}</div>
+                <div class="panel-heading">{% trans 'Allocation' %}</div>
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>{% trans 'hospital' %}</th>
-                            <th>{% trans 'specialty' %}</th>
+                            <th>{% trans 'Hospital' %}</th>
+                            <th>{% trans 'Specialty' %}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -149,7 +149,7 @@
                             </tr>
                         {% empty %}
                             <tr>
-                                <td colspan="5">{% trans 'no_allocation_found' %}</td>
+                                <td colspan="5">{% trans 'No allocation found for the master' %}</td>
                             </tr>
                         {% endfor %}
                     </tbody>
@@ -159,11 +159,23 @@
         <div class="panel-footer">
             <a href="{% url 'master_edit' cohort_id=current_cohort.id master_id=allocated_master.id %}" class="btn btn-default">
                 <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-                {% trans "edit" %}</a>
+                {% trans "Edit" %}</a>
             <a href="{% url 'internships_masters' cohort_id=current_cohort.id %}" class="btn btn-default">
                 <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-                {% trans "back" %}
+                {% trans "Back" %}
+            </a>
+            <a class="btn btn-danger pull-right master_btn_delete"
+            data-href="{% url 'master_delete' cohort_id=current_cohort.id master_id=allocated_master.id %}"
+            data-toggle="modal" data-target="#delete_modal"
+            data-value="{{allocated_master.last_name}} {{allocated_master.first_name}}">
+                <span class="glyphicon glyphicon-remove aria-hidden="true"></span>
+                {% trans "Delete" %}
             </a>
         </div>
     </div>
+    {% include "fragment/delete_confirmation_modal.html" %}
+{% endblock %}
+
+{% block script %}
+    <script type="text/javascript" src="{% static 'js/internship.js' %}?version={{ js }}"></script>
 {% endblock %}

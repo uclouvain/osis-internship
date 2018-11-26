@@ -28,9 +28,9 @@
 
 {% block breadcrumb %}
     <li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
-    <li><a href="{% url 'internship' %}">{% trans 'internships_managment' %}</a></li>
+    <li><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
     <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></li>
-    <li class="active">{% trans 'affectation_result' %}</li>
+    <li class="active">{% trans "Affectation's result" %}</li>
 {% endblock %}
 
 {% block style %}
@@ -40,7 +40,7 @@
 
 {% block content %}
     <div class="page-header">
-        <h2>{% trans 'affectation_result' %}</h2>
+        <h2>{% trans "Affectation's result" %}</h2>
     </div>
 
     <style>
@@ -58,7 +58,7 @@
                 <div class="modal-header">
                     <h4 class="modal-title">
                     <span class="glyphicon glyphicon-time">
-                    </span> {% trans 'please_wait' %}
+                    </span> {% trans 'Please wait' %}
                     </h4>
                 </div>
                 <div class="modal-body">
@@ -66,7 +66,7 @@
                         <div class="progress-bar progress-bar-info progress-bar-striped active" style="width: 100%">
                         </div>
                     </div>
-                    {% trans 'take_several_minutes' %}
+                    {% trans 'This may take several minutes' %}
                 </div>
             </div>
         </div>
@@ -80,11 +80,11 @@
               {% csrf_token %}
             </form>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title">{% trans 'generate_solution' %}</h4>
+            <h4 class="modal-title">{% trans 'Generate solution' %}</h4>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">{% trans 'cancel' %}</button>
-            <button type="button" class="btn btn-primary" onclick="$('#generate').modal('hide');$('#PleaseWaitModal').modal('show');$('#generate_solution').submit()">{% trans 'generate_solution' %}</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">{% trans 'Cancel' %}</button>
+            <button type="button" class="btn btn-primary" onclick="$('#generate').modal('hide');$('#PleaseWaitModal').modal('show');$('#generate_solution').submit()">{% trans 'Generate solution' %}</button>
           </div>
         </div>
       </div>
@@ -95,10 +95,10 @@
 
         <div class="panel-body">
             <ul class="nav nav-tabs">
-                <li class="active"><a data-toggle="tab" href="#tab_hospitals">{% trans 'hospitals' %}</a></li>
-                <li><a href="{% url 'internship_affectation_students' cohort_id=cohort.id %}">{% trans 'students' %}</a></li>
-                <li><a href="{% url 'internship_affectation_statistics' cohort_id=cohort.id %}">{% trans 'statistics' %}</a></li>
-                <li><a href="{% url 'internship_affectation_errors' cohort_id=cohort.id %}">{% trans 'errors' %}</a></li>
+                <li class="active"><a data-toggle="tab" href="#tab_hospitals">{% trans 'Hospitals' %}</a></li>
+                <li><a href="{% url 'internship_affectation_students' cohort_id=cohort.id %}">{% trans 'Students' %}</a></li>
+                <li><a href="{% url 'internship_affectation_statistics' cohort_id=cohort.id %}">{% trans 'Statistics' %}</a></li>
+                <li><a href="{% url 'internship_affectation_errors' cohort_id=cohort.id %}">{% trans 'Errors' %}</a></li>
             </ul>
             <div class="tab-content">
                 <div id="tab_hospitals" class="tab-pane fade in active">
@@ -106,8 +106,8 @@
                     <table class="table" id="organizations">
                         <thead>
                             <tr>
-                                <th>{% trans 'organization' %}</th>
-                                <th>{% trans 'speciality' %}</th>
+                                <th>{% trans 'Hospital' %}</th>
+                                <th>{% trans 'Specialty' %}</th>
                                 <th class="no-sort">P1</th>
                                 <th class="no-sort">P2</th>
                                 <th class="no-sort">P3</th>

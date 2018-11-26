@@ -91,12 +91,12 @@ def speciality_save(request, cohort_id, speciality_id):
     speciality.selectable = selectable
 
     if check_acronym:
-        messages.add_message(request, messages.ERROR, "{} : {}".format(_('speciality_acronym_exists'),
+        messages.add_message(request, messages.ERROR, "{} : {}".format(_('Acronym already exists'),
                                                                        speciality.acronym), "alert-danger")
         return speciality_create(request, cohort.id, speciality)
 
     speciality.save()
-    messages.add_message(request, messages.SUCCESS, "{} : {}".format(_('speciality_saved'),
+    messages.add_message(request, messages.SUCCESS, "{} : {}".format(_('Specialty successfully saved'),
                                                                      speciality.name), "alert-success")
     return HttpResponseRedirect(reverse('internships_specialities', kwargs={'cohort_id': cohort.id,}))
 
@@ -124,5 +124,5 @@ def speciality_delete(request, cohort_id, speciality_id):
     cohort = get_object_or_404(mdl.cohort.Cohort, pk=cohort_id)
     speciality = get_object_or_404(mdl.internship_speciality.InternshipSpeciality, pk=speciality_id)
     mdl.internship_speciality.InternshipSpeciality.objects.filter(pk=speciality_id, cohort_id=cohort_id).delete()
-    messages.add_message(request, messages.SUCCESS, "{} : {}".format(_('speciality_deleted'), speciality.name), "alert-success")
+    messages.add_message(request, messages.SUCCESS, "{} : {}".format(_('Specialty deleted'), speciality.name), "alert-success")
     return HttpResponseRedirect(reverse('internships_specialities', kwargs={'cohort_id': cohort.id,}))

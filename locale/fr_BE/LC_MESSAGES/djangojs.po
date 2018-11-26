@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-04-22 15:14+0200\n"
+"POT-Creation-Date: 2018-11-13 17:24+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,56 +16,64 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-msgid "datatable_emptytable"
-msgstr "Aucune donn&eacute;e disponible dans le tableau"
+#: static/js/datatable_options.js:49
+msgid "(filtered from _MAX_ total entries)"
+msgstr "(filtré de _MAX_ éléments au total)"
 
-msgid "datatable_info"
-msgstr "Affichage de l'&eacute;l&eacute;ment _START_ &agrave; _END_ sur _TOTAL_ &eacute;l&eacute;ments"
-
-msgid "datatable_infoempty"
-msgstr "Affichage de l'&eacute;l&eacute;ment 0 &agrave; 0 sur 0 &eacute;l&eacute;ment"
-
-msgid "datatable_infofiltered"
-msgstr "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)"
-
-msgid "datatable_infopostfix"
-msgstr ""
-
-msgid "datatable_infothousands"
-msgstr ","
-
-msgid "datatable_lengthmenu"
-msgstr "Afficher _MENU_ &eacute;l&eacute;ments"
-
-msgid "datatable_loadingrecords"
-msgstr "Chargement en cours..."
-
-msgid "datatable_processing"
-msgstr "Traitement en cours..."
-
-msgid "datatable_search"
-msgstr "Rechercher&nbsp;:"
-
-msgid "datatable_search_by_name"
-msgstr  "Rechercher par nom:"
-
-msgid "datatable_zerorecords"
-msgstr "Aucun &eacute;l&eacute;ment &agrave; afficher"
-
-msgid "datatable_first"
-msgstr "Premier"
-
-msgid "datatable_last"
-msgstr "Dernier"
-
-msgid "datatable_next"
-msgstr "Suivant"
-
-msgid "datatable_previous"
-msgstr "Pr&eacute;c&eacute;dent"
-
-msgid "datatable_sortascending"
+#: static/js/datatable_options.js:61
+msgid ": activate to sort column ascending"
 msgstr ": activer pour trier la colonne par ordre croissant"
 
-msgid "datatable_sortdescending"
-msgstr ": activer pour trier la colonne par ordre d&eacute;croissant"
+#: static/js/datatable_options.js:62
+#, fuzzy
+#| msgid ": activate to sort column ascending"
+msgid ": activate to sort column descending"
+msgstr ": activer pour trier la colonne par ordre croissant"
+
+#: static/js/datatable_options.js:55
+msgid "First"
+msgstr "Premier"
+
+#: static/js/datatable_options.js:58
+msgid "Last"
+msgstr "Dernier"
+
+#: static/js/datatable_options.js:50
+msgid "Loading..."
+msgstr "Chargement en cours..."
+
+#: static/js/datatable_options.js:57
+msgid "Next"
+msgstr "Suivant"
+
+#: static/js/datatable_options.js:52
+msgid "No data available in table"
+msgstr "Aucune donnée disponible dans le tableau"
+
+#: static/js/datatable_options.js:51
+msgid "No matching records found"
+msgstr "Aucun élément à afficher"
+
+#: static/js/datatable_options.js:56
+msgid "Previous"
+msgstr "Précédent"
+
+#: static/js/datatable_options.js:44
+msgid "Processing..."
+msgstr "Traitement en cours..."
+
+#: static/js/datatable_options.js:45
+msgid "Search by name:"
+msgstr "Rechercher par nom:"
+
+#: static/js/datatable_options.js:46
+msgid "Show _MENU_ entries"
+msgstr "Afficher _MENU_ éléments"
+
+#: static/js/datatable_options.js:48
+msgid "Showing 0 to 0 of 0 entries"
+msgstr "Affichage de l'élément 0 à 0 sur 0 élément"
+
+#: static/js/datatable_options.js:47
+msgid "Showing _START_ to _END_ of _TOTAL_ entries"
+msgstr "Affichage de l'élément _START_ à _END_ sur _TOTAL_ éléments"

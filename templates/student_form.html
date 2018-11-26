@@ -27,16 +27,16 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-    <li><a href="{% url 'studies' %}">{% trans 'studies' %}</a></li>
-    <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{% trans 'internships_managment' %}</a></li>
+    <li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
+    <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{% trans 'Internships management' %}</a></li>
     <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></li>
-    <li><a href="{% url 'internships_student_resume' cohort_id=cohort.id %}">{% trans 'student_sumup' %}</a></li>
+    <li><a href="{% url 'internships_student_resume' cohort_id=cohort.id %}">{% trans 'Student sumup' %}</a></li>
 {% endblock %}
 
 {% block content %}
 
     <div class="page-header">
-        <h2>{% trans 'student' %}</h2>
+        <h2>{% trans 'Student' %}</h2>
     </div>
 
     <form action="{%url 'internship_student_save' cohort_id=cohort.id %}" method="POST" class="form" id="form">
@@ -46,14 +46,14 @@
                 <div class="row">
                     <div class="col-md-2">
                         <div class="form-group">
-                            <label for="registration_id">{% trans 'registration_id' %}</label>
+                            <label for="registration_id">{% trans 'NOMA' %}</label>
                             <input type="text" name="registration_id" id="registration_id" class="form-control">
                         </div>
                     </div>
                     <div class="col-md-2">
                         <button type="button" class="btn btn-default" style="margin-top: 25px;" id="btn_search_student">
                             <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-                            {% trans 'search' %}
+                            {% trans 'Search' %}
                         </button>
                     </div>
                     <div class="col-md-8">
@@ -68,19 +68,19 @@
                 <div class="row">
                     <div class="col-md-5">
                         <div class="form-group">
-                            <label for="last_name">{% trans 'last_name' %}</label>
+                            <label for="last_name">{% trans 'Last name' %}</label>
                             <input type="text" name="last_name" id="last_name" class="form-control" value="{{ student.last_name | upper | default_if_none:'' }}" readonly>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label for="first_name">{% trans 'first_name' %}</label>
+                            <label for="first_name">{% trans 'First name' %}</label>
                             <input type="text" name="first_name" id="first_name" class="form-control" value="{{ student.first_name | default_if_none:'' }}" readonly>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label for="birth_date">{% trans 'birth_date' %}</label>
+                            <label for="birth_date">{% trans 'Birth date' %}</label>
                             <input type="date" name="birth_date" id="birth_date" class="form-control" value="{{ student.birth_date | date:'Y-m-d' | default_if_none:'' }}" readonly>
                         </div>
                     </div>
@@ -88,22 +88,22 @@
                 <div class="row">
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label for="gender">{% trans 'gender' %}</label>
+                            <label for="gender">{% trans 'Gender' %}</label>
                             <select name="gender" id="gender" class="form-control" readonly>
-                                <option value="F" {{ female_selected }}>{% trans 'female' %}</option>
-                                <option value="M" {{ male_selected }}>{% trans 'male' %}</option>
+                                <option value="F" {{ female_selected }}>{% trans 'Female' %}</option>
+                                <option value="M" {{ male_selected }}>{% trans 'Male' %}</option>
                             </select>
                         </div>
                     </div>
                     <div class="col-md-5">
                         <div class="form-group">
-                            <label for="email">{% trans 'email' %}</label>
+                            <label for="email">{% trans 'Email' %}</label>
                             <input type="email" name="email" id="email" class="form-control" value="{{ student.email | default_if_none:'' }}">
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label for="phone_mobile">{% trans 'phone_mobile' %}</label>
+                            <label for="phone_mobile">{% trans 'Phone Number / Mobile Number' %}</label>
                             <input type="text" name="phone_mobile" id="phone_mobile" class="form-control" value="{{ student.phone_mobile | default_if_none:'' }}">
                         </div>
                     </div>
@@ -111,26 +111,26 @@
                 <div class="row">
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label for="location">{% trans 'address' %}</label>
+                            <label for="location">{% trans 'Address' %}</label>
                             <input type="text" name="location" id="location" class="form-control" value="{{ student.location | default_if_none:'' }}">
                         </div>
                     </div>
                     <div class="col-md-2">
                         <div class="form-group">
-                            <label for="postal_code">{% trans 'postal_code' %}</label>
+                            <label for="postal_code">{% trans 'Postal code' %}</label>
                             <input type="text" name="postal_code" id="postal_code" class="form-control" value="{{ student.postal_code | default_if_none:'' }}">
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label for="city">{% trans 'location' %}</label>
+                            <label for="city">{% trans 'Locality' %}</label>
                             <input type="text" name="city" id="city" class="form-control" value="{{ student.city | default_if_none:'' }}">
                         </div>
                     </div>
 
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label for="country">{% trans 'country' %}</label>
+                            <label for="country">{% trans 'Country' %}</label>
                             {{form.country}}
                         </div>
                     </div>
@@ -138,11 +138,11 @@
 
                 <button type="submit" class="btn btn-primary" id="btn_submit" disabled>
                     <span class="glyphicon glyphicon-save" aria-hidden="true"></span>
-                    {% trans "save" %}
+                    {% trans "Save" %}
                 </button>
                 <a href="{% url 'internships_student_resume' cohort_id=cohort.id %}" class="btn btn-default">
                     <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                    {% trans "cancel" %}
+                    {% trans "Cancel" %}
                 </a>
             </div>
         </div>
