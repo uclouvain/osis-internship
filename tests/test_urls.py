@@ -63,6 +63,21 @@ class UrlsTestCase(TestCase):
                 url_path='/internships/cohorts/1/places/1/students/affectation/',
                 pattern_name='place_detail_student_affectation',
                 kwargs={'cohort_id': 1, 'organization_id': 1}
+            ),
+            dict(
+                url_path='/internships/cohorts/1/students/',
+                pattern_name='internships_student_resume',
+                kwargs={'cohort_id': 1}
+            ),
+            dict(
+                url_path='/internships/cohorts/1/students/import/',
+                pattern_name='internship_students_import',
+                kwargs={'cohort_id': 1}
+            ),
+            dict(
+                url_path='/internships/cohorts/1/students/import/update/',
+                pattern_name='internships_student_import_update',
+                kwargs={'cohort_id': 1}
             )
         ]
 
