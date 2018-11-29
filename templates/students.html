@@ -100,20 +100,16 @@
         </div>
         <br>
         <form action="{%url 'internships_student_resume' cohort_id=cohort.id %}" method="get" class="">
-            <div class="row">
                 <div class="col-md-3">
                     <div class="form-group">
-                        <label for="filter_name">{% trans 'Name' %}/{% trans 'First name' %}</label>
-                        <input name="name" id="filter_name" class="form-control">
-
+                        <input name="name" id="filter_name" class="form-control" placeholder="{% trans 'Name' %}/{% trans 'First name' %}">
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <button type="submit" class="btn btn-default" style="margin-top: 26px;">
+                    <button type="submit" class="btn btn-default">
                         <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
                         {% trans 'Search' %}</button>
                 </div>
-            </div>
         </form>
         {% if students|length == 0 %}
             <label class="alert alert-info" style="margin:5px">{% trans 'No result' %}</label>
