@@ -59,7 +59,8 @@ from reference.models import country
 def internships_student_resume(request, cohort_id):
     cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)
     filter_name = request.GET.get('name', '')
-    students_with_status = _get_students_with_status(cohort, filter_name)
+    page = request.GET.get('page')
+    students_with_status = _get_students_with_status(page, cohort, filter_name)
     student_with_internships = mdl_int.internship_choice.get_number_students(cohort)
     students_can_have_internships = mdl_int.internship_student_information.get_number_students(cohort)
     student_without_internship = students_can_have_internships - student_with_internships
@@ -67,14 +68,6 @@ def internships_student_resume(request, cohort_id):
     number_students_not_ok = len([x for x in students_with_status if x[1] is False])
     number_generalists = mdl_int.internship_student_information.get_number_of_generalists(cohort)
     number_specialists = students_can_have_internships - number_generalists
-    paginator = Paginator(students_with_status, 10)
-    page = request.GET.get('page')
-    try:
-        students_with_status = paginator.page(page)
-    except PageNotAnInteger:
-        students_with_status = paginator.page(1)
-    except EmptyPage:
-        students_with_status = paginator.page(paginator.num_pages)
     context = {
         'search_name': None,
         'search_firstname': None,
@@ -380,7 +373,7 @@ def _get_affectation_for_period(affectations, period):
     return None
 
 
-def _get_students_with_status(cohort, filter_name):
+def _get_students_with_status(page, cohort, filter_name):
 
     students_status = []
 
@@ -392,14 +385,24 @@ def _get_students_with_status(cohort, filter_name):
 
     if filter_name:
         students_info = students_info.filter(person__last_name__icontains=filter_name) | \
-                        students_info.filter(person__first_name__icontains=filter_name)
+                                  students_info.filter(person__first_name__icontains=filter_name)
+
+    paginator = Paginator(students_info, 10)
+
+    try:
+        paginated_students_info = paginator.page(page)
+    except PageNotAnInteger:
+        paginated_students_info = paginator.page(1)
+    except EmptyPage:
+        paginated_students_info = paginator.page(paginator.num_pages)
 
     internship_ids = mdl_int.internship.Internship.objects.filter(cohort=cohort, pk__gte=1).values_list("pk", flat=True)
 
-    for student_info in students_info:
+    for student_info in paginated_students_info.object_list:
         student_status = _get_student_status(student_info.person.students[0], cohort, internship_ids)
         students_status.append((student_info.person.students[0], student_status))
-    return students_status
+    paginated_students_info.object_list = students_status
+    return paginated_students_info
 
 
 def _get_student_status(student, cohort, internship_ids):
