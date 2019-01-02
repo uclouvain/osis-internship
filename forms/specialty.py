@@ -23,11 +23,11 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from base.forms.bootstrap import BootstrapModelForm
+from django import forms
 from internship.models.internship_speciality import InternshipSpeciality
 
 
-class SpecialtyForm(BootstrapModelForm):
+class SpecialtyForm(forms.ModelForm):
     class Meta:
         model = InternshipSpeciality
         fields = [

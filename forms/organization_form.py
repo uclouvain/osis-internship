@@ -26,13 +26,11 @@
 from django import forms
 
 from internship.models import cohort
+from internship.models.organization import Organization
 from reference.models import country
 
-from base.forms.bootstrap import BootstrapModelForm
-from internship.models.organization import Organization
 
-
-class OrganizationForm(BootstrapModelForm):
+class OrganizationForm(forms.ModelForm):
     country = forms.ModelChoiceField(queryset=country.find_all(), required=False)
     cohort = forms.ModelChoiceField(queryset=cohort.find_all(), required=False, disabled=True)
 

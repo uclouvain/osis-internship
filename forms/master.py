@@ -25,12 +25,11 @@
 ##############################################################################
 from django import forms
 
-from reference.models import country
-from base.forms import bootstrap
 from internship.models import internship_master
+from reference.models import country
 
 
-class MasterForm(bootstrap.BootstrapModelForm):
+class MasterForm(forms.ModelForm):
     country = forms.ModelChoiceField(queryset=country.find_all(), required=False)
 
     class Meta:
