@@ -30,6 +30,7 @@ from unittest import mock
 from django.contrib.auth.models import Permission, User
 from django.core.urlresolvers import reverse
 from django.test import TestCase, RequestFactory, override_settings
+from requests import Session
 
 from internship.models import master_allocation
 from internship.tests.factories.cohort import CohortFactory
@@ -45,36 +46,6 @@ class MasterTestCase(TestCase):
         self.user.user_permissions.add(permission)
         self.client.force_login(self.user)
         self.cohort = CohortFactory()
-
-    @override_settings(DEBUG=True)
-    @mock.patch('django.contrib.auth.decorators')
-    @mock.patch('base.views.layout.render')
-    def test_masters_index_2(self, mock_render, mock_decorators):
-        from django.db import connection
-        from django.db import reset_queries
-
-        mock_decorators.login_required = lambda x: x
-        mock_decorators.permission_required = lambda *args, **kwargs: lambda func: func
-
-        fake = faker.Faker()
-        organization = OrganizationFactory(cohort=self.cohort, reference=fake.random_int(min=10, max=100))
-
-        request_factory = RequestFactory()
-        request = request_factory.get(reverse('internships_masters', kwargs={
-            'cohort_id': self.cohort.id
-        }))
-        request.user = mock.Mock()
-
-        from internship.views.master import masters
-
-        reset_queries()
-        self.assertEqual(len(connection.queries), 0)
-
-        masters(request, self.cohort.id)
-        self.assertTrue(mock_render.called)
-        request, template, context = mock_render.call_args[0]
-
-        self.assertEqual(context['cohort_id'], self.cohort.id)
 
     def test_masters_index(self):
         url = reverse('internships_masters', kwargs={
