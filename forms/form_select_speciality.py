@@ -25,11 +25,10 @@
 ##############################################################################
 from django import forms
 
-from base.forms.bootstrap import BootstrapForm
 from internship.models import internship_speciality
 
 
-class SpecialityForm(BootstrapForm):
+class SpecialityForm(forms.Form):
     speciality = forms.ModelChoiceField(queryset=None, empty_label=None)
 
     def __init__(self, *args, **kwargs):
