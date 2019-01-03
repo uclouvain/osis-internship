@@ -58,7 +58,10 @@ def modification_student(request, cohort_id, student_id, internship_id=-1, speci
     if speciality:
         speciality_id = speciality.id
 
-    internships_offers = mdl_int.internship_offer.find_by_speciality(speciality)
+    internships_offers = mdl_int.internship_offer.find_by_speciality(speciality).select_related(
+        "organization",
+        "speciality",
+    )
 
     offer_preference_formset = _initialize_offer_preference_formset(internships_offers)
     formset = offer_preference_formset()
@@ -72,11 +75,13 @@ def modification_student(request, cohort_id, student_id, internship_id=-1, speci
         else:
             display_errors(request, formset.errors)
 
-    student_choices = mdl_int.internship_choice.search_by_student_or_choice(student=student,
-                                                                            internship=internship)
+    student_choices = mdl_int.internship_choice.search_by_student_or_choice(
+        student=student,
+        internship=internship).select_related("organization")
 
-    internships = mdl_int.internship.Internship.objects.filter(cohort=cohort, pk__gte=1).order_by("speciality__name",
-                                                                                                  "name")
+    internships = mdl_int.internship.Internship.objects.filter(cohort=cohort, pk__gte=1)\
+        .order_by("speciality__name", "name")\
+        .select_related("speciality")
 
     zipped_data = _prepare_template_data(formset, student_choices, internships_offers, speciality, student,
                                          internship_id)
