@@ -129,7 +129,15 @@ def view_statistics(request, cohort_id):
 
     student_affectations = internship_student_affectation_stat.InternshipStudentAffectationStat.objects\
         .filter(period_id__in=period_ids)\
-        .select_related("student", "organization", "speciality", "period")
+        .select_related(
+            "student",
+            "student__person",
+            "internship",
+            "internship__speciality",
+            "organization",
+            "speciality",
+            "period"
+        )
 
     if student_affectations.count() > 0:
         sol = statistics.load_solution_sol(student_affectations)

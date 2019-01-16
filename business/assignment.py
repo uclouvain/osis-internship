@@ -93,35 +93,39 @@ class Assignment:
         return wrapper
 
     @transaction.atomic
-    @is_not_published
     def persist_solution(self):
         """ All the generated affectations are stored in the database. """
         InternshipStudentAffectationStat.objects.bulk_create(self.affectations)
 
     def shuffle_students_list(self):
-        """ Students are shuffled to make sure equity of luck is respected. """
-        return self.students_information.order_by("?")
+        """ Students are shuffled to make sure equity of luck is respected and then ordered by cost."""
+        students_list = list(self.students_information)
+        random.shuffle(students_list)
+        for student in students_list:
+            student.cost = get_student_cost(self.affectations, student)
+        return sorted(students_list, key=lambda x: x.cost, reverse=True)
 
     @is_not_published
     def solve(self):
-        logger.info("Started assignment algorithm.")
+        print("Started assignment algorithm.")
         _clean_previous_solution(self.cohort)
-        logger.info("Cleaned previous solution.")
+        print("Cleaned previous solution.")
         _assign_priority_students(self)
-        logger.info("Assigned priority students.")
+        print("Assigned priority students.")
 
         for internship in self.internships:
             self.students_information = self.shuffle_students_list()
-            logger.info("")
-            logger.info("Shuffled students for {}.".format(internship.name))
+            for student in self.students_information:
+                print("{} - {}".format(student.email, student.cost))
+            print("")
+            print("Shuffled students for {}.".format(internship.name))
             _assign_students_with_priority_choices(self, internship)
-            logger.info("Assigned students with priority choices to {}.".format(internship.name))
+            print("Assigned students with priority choices to {}.".format(internship.name))
             _assign_regular_students(self, internship)
-            logger.info("Assigned regular students to {}.".format(internship.name))
+            print("Assigned regular students to {}.".format(internship.name))
 
         assign_students_with_empty_periods(self)
-        logger.info("Assigned remaining students.")
-
+        print("Assigned remaining students.")
 
 
 def _clean_previous_solution(cohort):
@@ -181,6 +185,7 @@ def _assign_student(assignment, student, internship):
 
         if affectations:
             assignment.affectations.extend(affectations)
+        print("Student {} affected to {}".format(student, internship))
 
 
 def assign_choices_to_student(assignment, student, choices, internship):
@@ -222,7 +227,7 @@ def find_best_affectation_outside_of_choices(assignment, student, internship, ch
 
     if internship.speciality and student_periods:
         offer = find_offer_in_organization_error(assignment, internship)
-        logger.info("Error: {}".format(offer))
+        print("Error: {}".format(offer))
         return build_affectation_for_periods(assignment, student, offer.organization, random.choice(student_periods),
                                              offer.speciality, ChoiceType.IMPOSED.value, False, internship)
     else:
@@ -279,7 +284,7 @@ def get_available_period_places_for_periods(assignment, offers, periods):
         for offer_id in available_offer_ids:
             period_places_for_periods = list(map(lambda period: get_period_places_for_offer_id_and_period_id(
                 offer_id, period.id, offers_period_places), periods))
-            if all(period_place[0]["number_places"] > 0 for period_place in period_places_for_periods):
+            if all(period_place and period_place[0]["number_places"] > 0 for period_place in period_places_for_periods):
                 return flatten(period_places_for_periods)
             else:
                 return []
@@ -311,8 +316,9 @@ def student_has_no_affectations_for_internship(assignment, student, internship):
 
 
 def student_not_fully_assigned(assignment, student):
-    student_affectations = get_student_affectations(student, assignment.affectations)
-    return len(student_affectations) < len(assignment.periods)
+    # student_affectations = get_student_affectations(student, assignment.affectations)
+    # return len(student_affectations) < len(assignment.periods)
+    return True
 
 
 def student_empty_periods(assignment, student):
@@ -408,3 +414,8 @@ def flatten(list_of_lists):
 
 def get_periods_from_affectations(affectations):
     return list(map(lambda affectation: affectation.period, affectations))
+
+
+def get_student_cost(affectations, student):
+    student_affectations_cost = [a.cost for a in affectations if a.student.person_id == student.person_id]
+    return sum(student_affectations_cost)
