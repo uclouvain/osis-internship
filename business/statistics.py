@@ -24,13 +24,14 @@
 #
 ##############################################################################
 from collections import OrderedDict
+from collections import defaultdict
 from operator import itemgetter
 from statistics import mean, stdev
-from collections import defaultdict
-from internship.models.enums.choice_type import ChoiceType
-from internship.models.enums.affectation_type import AffectationType
+
 from internship import models
 from internship.models import period_internship_places
+from internship.models.enums.affectation_type import AffectationType
+from internship.models.enums.choice_type import ChoiceType
 
 HOSPITAL_ERROR = 999  # Reference of the hospital "erreur"
 
@@ -218,8 +219,13 @@ def compute_stats(cohort, sol):
 def load_solution_table(data, cohort):
     periods = models.period.Period.objects.filter(cohort=cohort)
     period_ids = periods.values_list("id", flat=True)
-    prd_internship_places = period_internship_places.PeriodInternshipPlaces.objects.filter(period_id__in=period_ids).\
-        order_by("period_id").select_related()
+    prd_internship_places = period_internship_places.PeriodInternshipPlaces.objects.filter(
+        period_id__in=period_ids
+    ).order_by("period_id").select_related(
+        'internship_offer__organization',
+        'internship_offer__speciality',
+        'period'
+    )
     # This object store the number of available places for given organization, speciality, period
     temp_internship_table = defaultdict(dict)
 
