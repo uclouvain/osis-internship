@@ -24,14 +24,14 @@
 #
 ##############################################################################
 from django import forms
+
 from base.models.person import Person
-from base.forms.bootstrap import BootstrapModelForm
 from internship.models.cohort import Cohort
 from internship.models.internship_student_information import InternshipStudentInformation
 from reference.models import country
 
 
-class StudentInformationForm(BootstrapModelForm):
+class StudentInformationForm(forms.ModelForm):
     country = forms.ModelChoiceField(queryset=country.find_all(), to_field_name="name")
     person = forms.ModelChoiceField(queryset=Person.objects.all(), widget=forms.HiddenInput())
     cohort = forms.ModelChoiceField(queryset=Cohort.objects.all(), widget=forms.HiddenInput())

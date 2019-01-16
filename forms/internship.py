@@ -25,12 +25,11 @@
 ##############################################################################
 from django import forms
 
-from base.forms.bootstrap import BootstrapModelForm
-from internship.models.internship import Internship
 from internship.models import internship_speciality
+from internship.models.internship import Internship
 
 
-class InternshipForm(BootstrapModelForm):
+class InternshipForm(forms.ModelForm):
     class Meta:
         model = Internship
         fields = [

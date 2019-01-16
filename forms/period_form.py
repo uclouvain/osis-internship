@@ -23,12 +23,12 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from base.forms.bootstrap import BootstrapModelForm
-from internship.models.period import Period
 from django import forms
 
+from internship.models.period import Period
 
-class PeriodForm(BootstrapModelForm):
+
+class PeriodForm(forms.ModelForm):
 
     class Meta:
         model = Period
