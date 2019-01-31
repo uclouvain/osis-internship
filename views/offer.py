@@ -32,35 +32,51 @@ from django.contrib import messages
 from django.utils.translation import ugettext_lazy as _
 from base import models as mdl
 from internship import models as mdl_int
+from internship.models.internship_choice import InternshipChoice
+from internship.models.internship_speciality import InternshipSpeciality
 from internship.views.internship import get_all_specialities, set_tabs_name
 from internship.utils.importing import import_offers
 
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
-def list_internships(request, cohort_id):
+def list_internships(request, cohort_id, specialty_id=None):
+    if not specialty_id:
+        specialty_id = InternshipSpeciality.objects.filter(
+            mandatory=True,
+            cohort_id=cohort_id
+        ).order_by('name').first().pk
     cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)
     organization_sort_value = None
     speciality_sort_value = None
     # First get the value of the option's value for the sort
     if request.method == 'GET':
         organization_sort_value = request.GET.get('organization_sort')
-        if request.GET.get('speciality_sort') != '0':
+        if request.GET.get('speciality_sort') != '0' and request.GET.get('speciality_sort') != 'None':
             speciality_sort_value = request.GET.get('speciality_sort')
 
     # Then select Internship Offer depending of the option
     if organization_sort_value and organization_sort_value != "0":
-        query = mdl_int.internship_offer.search(organization__name=organization_sort_value)
+        query = mdl_int.internship_offer.search(
+            organization__name=organization_sort_value
+        ).filter(speciality_id=specialty_id)
     else:
-        query = mdl_int.internship_offer.find_mandatory_internships(cohort)
+        query = mdl_int.internship_offer.find_mandatory_internships(cohort).filter(speciality_id=specialty_id)
 
     query = query.filter(organization__cohort=cohort)
+
+    organizations = query.values_list('organization_id')
 
     # Sort the internships by the organization's reference
     query = _sort_internships(query)
 
     # Get The number of different choices for the internships
-    _get_number_choices(query)
+    mandatory_choices = InternshipChoice.objects.filter(
+        speciality_id=specialty_id,
+        organization_id__in=organizations,
+    ).select_related("speciality")
+
+    _get_number_choices(query, mandatory_choices)
 
     internships = mdl_int.internship.Internship.objects.filter(cohort=cohort)
 
@@ -68,19 +84,22 @@ def list_internships(request, cohort_id):
     organizations = _get_all_organizations(all_internships)
     all_specialities = get_all_specialities(all_internships)
     set_tabs_name(all_specialities)
-    all_non_mandatory_speciality = mdl_int.internship_speciality.find_non_mandatory()
+    all_non_mandatory_speciality = mdl_int.internship_speciality.find_non_mandatory().filter(cohort=cohort)
     if speciality_sort_value:
         all_non_mandatory_internships = mdl_int.internship_offer.find_non_mandatory_internships(
-            speciality__name=speciality_sort_value)
+            speciality__name=speciality_sort_value
+        )
+        all_non_mandatory_internships = all_non_mandatory_internships.filter(organization__cohort=cohort)
+        organizations = all_non_mandatory_internships.values_list('organization_id')
+        non_mandatory_choices = InternshipChoice.objects.filter(
+            speciality_id__in=all_non_mandatory_speciality,
+            organization_id__in=organizations,
+        ).select_related("speciality")
+        _get_number_choices(all_non_mandatory_internships, non_mandatory_choices)
     else:
-        all_non_mandatory_internships = mdl_int.internship_offer.find_non_mandatory_internships(speciality__mandatory=0)
-
-    all_non_mandatory_internships = all_non_mandatory_internships.filter(organization__cohort=cohort)
-    all_non_mandatory_speciality = all_non_mandatory_speciality.filter(cohort=cohort)
-
-    _get_number_choices(all_non_mandatory_internships)
-
+        all_non_mandatory_internships = []
     context = {
+        'active_tab': str(specialty_id),
         'all_internships': query,
         'internships': internships,
         'all_non_mandatory_internships': all_non_mandatory_internships,
@@ -396,29 +415,28 @@ def _sort_internships(sort_internships):
             number_ref.append(sort_internship.organization.reference)
     number_ref = sorted(number_ref, key=int)
     number_ref = _delete_dublons_keep_order(number_ref)
-    for i in number_ref:
-        internships = mdl_int.internship_offer.search(organization__reference=i)
-        for internship in internships:
-            tab.append(internship)
+    internships = mdl_int.internship_offer.search(organization__reference__in=number_ref)
+    for internship in internships:
+        tab.append(internship)
     return tab
 
 
-def _get_number_choices(internships):
+def _get_number_choices(internships, choices):
     """
         Set new variables for the param, the number of the first and other choice for one internship
         Params :
             internships : the internships we want to compute the number of choices
     """
     for internship in internships:
-        number_first_choice = len(mdl_int.internship_choice.search(organization=internship.organization,
-                                                                   speciality__acronym=internship.speciality.acronym,
-                                                                   choice=1))
-        number_other_choice = len(mdl_int.internship_choice.search_other_choices(
-            organization=internship.organization,
-            speciality__acronym=internship.speciality.acronym))
-        internship.number_first_choice = number_first_choice
-        internship.number_other_choice = number_other_choice
-
+        internship.number_first_choice = 0
+        internship.number_other_choice = 0
+        for choice in choices:
+            if choice.speciality.acronym == internship.speciality.acronym and \
+               choice.organization_id == internship.organization_id:
+                if choice.choice == 1:
+                    internship.number_first_choice += 1
+                else:
+                    internship.number_other_choice += 1
 
 def _delete_dublons_keep_order(seq):
     """
