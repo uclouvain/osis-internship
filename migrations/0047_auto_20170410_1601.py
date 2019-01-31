@@ -3,14 +3,9 @@
 from __future__ import unicode_literals
 
 from django.db import migrations
-from internship.models.internship_student_information import InternshipStudentInformation
-from base.models.person import Person
 
-def cleanupStudentInternshipsAndPersons(apps, schema_editor):
-    bad_student_infos = InternshipStudentInformation.objects.filter(cohort_id=2)
-    bad_person_ids = bad_student_infos.values_list("person_id", flat=True)
-    Person.objects.filter(id__in=bad_person_ids).delete()
-    bad_student_infos.delete()
+from internship.migrations.utils.groups import cleanupStudentInternshipsAndPersons
+
 
 class Migration(migrations.Migration):
 
