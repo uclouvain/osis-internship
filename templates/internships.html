@@ -154,6 +154,7 @@
                                                     <label class="control-label" for="speciality_sort">{% trans 'Internship' %}</label>
                                                     <select name="speciality_sort" onChange="javascript: this.form.submit();" class="form-control">
                                                         <option value="0">--</option>
+                                                        <option value="all" {% if speciality_sort_value == "all" %}selected{% endif %}>{% trans 'All internships' %}</option>
                                                         {% for spec in non_mandatory_speciality %}
                                                             <option value="{{ spec.name }}" {% if spec.name == speciality_sort_value %}selected{% endif %}>
                                                                 {{ spec.name }}
@@ -177,8 +178,9 @@
                                     </thead>
                                     <tbody>
                                     {% for internship in all_non_mandatory_internships %}
+                                        {% if organization_sort_value == "0" or organization_sort_value == "None" or internship.organization.name == organization_sort_value %}
                                         <tr>
-                                            {% if not speciality_sort_value %}
+                                            {% if speciality_sort_value == "all" %}
                                                 <td>{{ internship.speciality.name }}</td>
                                             {% endif %}
                                             <td>
@@ -201,6 +203,7 @@
                                                 </a>
                                             </td>
                                         </tr>
+                                        {% endif %}
                                     {% endfor %}
                                     </tbody>
                                 </table>

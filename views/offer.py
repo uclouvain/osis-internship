@@ -42,10 +42,12 @@ from internship.utils.importing import import_offers
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def list_internships(request, cohort_id, specialty_id=None):
     if not specialty_id:
-        specialty_id = InternshipSpeciality.objects.filter(
+        specialty = InternshipSpeciality.objects.filter(
             mandatory=True,
             cohort_id=cohort_id
-        ).order_by('name').first().pk
+        ).order_by('name').first()
+    else:
+        specialty = InternshipSpeciality.objects.get(id=specialty_id)
     cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)
     organization_sort_value = None
     speciality_sort_value = None
@@ -59,20 +61,20 @@ def list_internships(request, cohort_id, specialty_id=None):
     if organization_sort_value and organization_sort_value != "0":
         query = mdl_int.internship_offer.search(
             organization__name=organization_sort_value
-        ).filter(speciality_id=specialty_id)
+        ).filter(speciality__acronym=specialty.acronym)
     else:
-        query = mdl_int.internship_offer.find_mandatory_internships(cohort).filter(speciality_id=specialty_id)
+        query = mdl_int.internship_offer.find_mandatory_internships(cohort).filter(speciality_id=specialty.id)
 
     query = query.filter(organization__cohort=cohort)
 
     organizations = query.values_list('organization_id')
 
     # Sort the internships by the organization's reference
-    query = _sort_internships(query)
+    query = _sort_internships(query, specialty.id)
 
     # Get The number of different choices for the internships
     mandatory_choices = InternshipChoice.objects.filter(
-        speciality_id=specialty_id,
+        speciality__acronym=specialty.acronym,
         organization_id__in=organizations,
     ).select_related("speciality")
 
@@ -86,11 +88,14 @@ def list_internships(request, cohort_id, specialty_id=None):
     set_tabs_name(all_specialities)
     all_non_mandatory_speciality = mdl_int.internship_speciality.find_non_mandatory().filter(cohort=cohort)
     if speciality_sort_value:
-        all_non_mandatory_internships = mdl_int.internship_offer.find_non_mandatory_internships(
-            speciality__name=speciality_sort_value
-        )
+        if(speciality_sort_value == "all"):
+            all_non_mandatory_internships = mdl_int.internship_offer.find_non_mandatory_internships()
+        else:
+            all_non_mandatory_internships = mdl_int.internship_offer.find_non_mandatory_internships(
+                speciality__name=speciality_sort_value
+            )
         all_non_mandatory_internships = all_non_mandatory_internships.filter(organization__cohort=cohort)
-        organizations = all_non_mandatory_internships.values_list('organization_id')
+        organizations = _get_all_organizations(all_non_mandatory_internships)
         non_mandatory_choices = InternshipChoice.objects.filter(
             speciality_id__in=all_non_mandatory_speciality,
             organization_id__in=organizations,
@@ -99,7 +104,7 @@ def list_internships(request, cohort_id, specialty_id=None):
     else:
         all_non_mandatory_internships = []
     context = {
-        'active_tab': str(specialty_id),
+        'active_tab': specialty.id,
         'all_internships': query,
         'internships': internships,
         'all_non_mandatory_internships': all_non_mandatory_internships,
@@ -400,7 +405,7 @@ def _rebuild_the_lists(preference_list, speciality_list, organization_list, inte
         index += 1
 
 
-def _sort_internships(sort_internships):
+def _sort_internships(sort_internships, specialty_id):
     """
         Function to sort internships by the organization's reference.
         Params :
@@ -415,7 +420,7 @@ def _sort_internships(sort_internships):
             number_ref.append(sort_internship.organization.reference)
     number_ref = sorted(number_ref, key=int)
     number_ref = _delete_dublons_keep_order(number_ref)
-    internships = mdl_int.internship_offer.search(organization__reference__in=number_ref)
+    internships = mdl_int.internship_offer.search(organization__reference__in=number_ref, speciality_id=specialty_id)
     for internship in internships:
         tab.append(internship)
     return tab
