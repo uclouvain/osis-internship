@@ -4,14 +4,9 @@ from __future__ import unicode_literals
 
 from django.db import migrations, models
 import django.db.models.deletion
-from internship.models import cohort
 
-def linkToDefaultCohort(apps, schema_editor):
-    Cohort = apps.get_model("internship", "Cohort")
-    InternshipOffer = apps.get_model("internship", "InternshipOffer")
-    db_alias = schema_editor.connection.alias
-    default_cohort = Cohort.objects.first()
-    InternshipOffer.objects.all().update(cohort=default_cohort)
+from internship.migrations.utils.groups import linkToDefaultCohort
+
 
 class Migration(migrations.Migration):
 
