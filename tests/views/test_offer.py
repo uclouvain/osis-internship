@@ -44,6 +44,11 @@ class OfferViewTestCase(TestCase):
 
     def test_home(self):
         # FIXME: specify organization_sort and speciality_sort
+        speciality = SpecialtyFactory(
+            mandatory=True,
+            cohort=self.cohort
+        )
+
         url = reverse('internships', kwargs={
             'cohort_id': self.cohort.id,
         })
@@ -53,12 +58,16 @@ class OfferViewTestCase(TestCase):
 
     def test_home_with_offer(self):
         organization = OrganizationFactory(cohort=self.cohort)
-        speciality = SpecialtyFactory(cohort=self.cohort)
+        speciality = SpecialtyFactory(
+            mandatory=True,
+            cohort=self.cohort
+        )
 
         offer = OfferFactory(organization=organization, speciality=speciality)
 
         url = reverse('internships', kwargs={
             'cohort_id': self.cohort.id,
+            'specialty_id': speciality.id
         })
 
         response = self.client.get(url)

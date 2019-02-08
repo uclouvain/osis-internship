@@ -59,6 +59,7 @@ urlpatterns = [
 
             url(r'^offers/', include([
                 url(r'^$', offer.list_internships, name='internships'),
+                url(r'^(?P<specialty_id>[0-9]+)$', offer.list_internships, name='internships'),
                 url(r'^(?P<offer_id>[0-9]+)/students/choice/$', offer.student_choice,
                     name='internship_detail_student_choice'),
                 url(r'^save/$', offer.internships_save, name='internships_save'),
