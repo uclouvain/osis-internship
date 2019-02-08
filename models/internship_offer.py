@@ -57,11 +57,11 @@ class InternshipOffer(SerializableModel):
 
 
 def find_internships(cohort):
-    return InternshipOffer.objects.filter(cohort=cohort)
+    return cohort.internshipoffer_set.all()
 
 
 def find_mandatory_internships(cohort):
-    return _apply_constraints(find_internships(cohort).filter(speciality__mandatory=1))
+    return _apply_constraints(cohort.internshipoffer_set.filter(speciality__mandatory=1))
 
 
 def find_non_mandatory_internships(**kwargs):
@@ -90,4 +90,4 @@ def find_by_id(a_id):
 
 
 def get_number_selectable(cohort):
-    return find_internships(cohort).filter(selectable=True).count()
+    return cohort.internshipoffer_set.filter(selectable=True).count()

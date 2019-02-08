@@ -26,7 +26,7 @@
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.urlresolvers import reverse
 from django.db import models
-from django.db.models import Q, F
+from django.db.models import Q, F, Case, When
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.views.decorators.http import require_http_methods
@@ -72,50 +72,49 @@ def list_internships(request, cohort_id, specialty_id=None):
             cohort=cohort,
             speciality=specialty
         )
-    query = query.select_related("organization", "speciality")\
+    query = query.select_related("organization", "speciality") \
         .order_by('speciality__acronym', 'speciality__name', 'organization__reference')
 
-    organizations = query.values_list('organization_id')
-
-    # Sort the internships by the organization's reference
-    # query = _sort_internships(query, specialty.id)
-
-    # Get The number of different choices for the internships
-    # mandatory_choices = InternshipChoice.objects.filter(
-    #     speciality__acronym=specialty.acronym,
-    #     organization_id__in=organizations,
-    # ).select_related("speciality")
+    filter_choices = Q(
+        speciality__acronym=specialty.acronym,
+        speciality__internshipchoice__organization=F('organization')
+    )
 
     query = query.annotate(
         number_first_choice=models.Sum(
-            models.Case(
-                models.When(Q(
-                    speciality__acronym=specialty.acronym,
-                    speciality__internshipchoice__choice=1,
-                    speciality__internshipchoice__organization=F('organization')
-                ), then=1), default=0, output_field=models.IntegerField()
+            Case(
+                When(
+                    Q(filter_choices, speciality__internshipchoice__choice=1), then=1
+                ), default=0, output_field=models.IntegerField()
             )
         ),
         number_other_choice=models.Sum(
             models.Case(
-                models.When(Q(
-                    Q(speciality__acronym=specialty.acronym, organization__in=organizations),
-                    ~Q(speciality__internshipchoice__choice=1)
-                ), then=1), default=0, output_field=models.IntegerField()
+                models.When(
+                    Q(filter_choices, ~Q(speciality__internshipchoice__choice=1)), then=1
+                ), default=0, output_field=models.IntegerField()
             )
-        ),
+        )
     )
 
-    internships = mdl_int.internship.Internship.objects.filter(cohort=cohort)
+    internships = cohort.internship_set.all()
 
-    all_internships = mdl_int.internship_offer.find_mandatory_internships(cohort)
+    all_internships = cohort.internshipoffer_set.filter(
+        speciality__mandatory=1
+    ).select_related(
+        "organization", "speciality"
+    ).order_by('speciality__acronym', 'speciality__name', 'organization__reference')
+
     organizations = _get_all_organizations(all_internships)
     all_specialities = get_all_specialities(all_internships)
     set_tabs_name(all_specialities)
     all_non_mandatory_speciality = cohort.internshipspeciality_set.filter(mandatory=False).order_by('acronym', 'name')
+
+    all_non_mandatory_internships = InternshipOffer.objects.filter(speciality__mandatory=0)
+
     if speciality_sort_value:
-        if(speciality_sort_value == "all"):
-            all_non_mandatory_internships = InternshipOffer.objects.filter(speciality__mandatory=0, organization__cohort=cohort)
+        if speciality_sort_value == "all":
+            all_non_mandatory_internships = all_non_mandatory_internships.filter(organization__cohort=cohort)
         else:
             all_non_mandatory_internships = all_non_mandatory_internships.filter(speciality__name=speciality_sort_value)
         all_non_mandatory_internships = all_non_mandatory_internships.filter(organization__cohort=cohort)
@@ -151,7 +150,7 @@ def student_choice(request, cohort_id, offer_id):
     internship = get_object_or_404(mdl_int.internship_offer.InternshipOffer, pk=offer_id, organization__cohort=cohort)
     # Get the students who have choosen this internship
     students = mdl_int.internship_choice.search(organization=internship.organization, speciality=internship.speciality)
-    number_choices = [None]*5
+    number_choices = [None] * 5
 
     # Get the choices' number for this internship
     for index in range(1, 5):
@@ -201,7 +200,7 @@ def internships_save(request, cohort_id):
         # Create an array with all the tab name of the speciality
         preference_list_tab = []
         for speciality in all_specialities:
-            preference_list_tab.append('preference'+speciality.tab)
+            preference_list_tab.append('preference' + speciality.tab)
 
         # Create a list, for each element of the previous tab,
         # check if this element(speciality) is in the post request
@@ -209,7 +208,7 @@ def internships_save(request, cohort_id):
         preference_list = list()
         for pref_tab in preference_list_tab:
             if request.POST.get(pref_tab):
-                for pref in request.POST.getlist(pref_tab) :
+                for pref in request.POST.getlist(pref_tab):
                     preference_list.append(pref)
 
         _rebuild_the_lists(preference_list, speciality_list, organization_list, internship_choice_tab)
@@ -222,7 +221,7 @@ def internships_save(request, cohort_id):
         if len(speciality_list) > 0:
             # Check if the student sent correctly send 4 choice.
             # If not, the choices are set to 0
-            old_spec=speciality_list[0]
+            old_spec = speciality_list[0]
             index = 0
             cumul = 0
             for p in speciality_list:
@@ -234,18 +233,18 @@ def internships_save(request, cohort_id):
                 else:
                     if cumul < 4:
                         cumul += 1
-                        for i in range(index-cumul,index-1):
+                        for i in range(index - cumul, index - 1):
                             preference_list[i] = 0
                         cumul = 1
-                    else :
+                    else:
                         cumul = 1
                     old_spec = new_spec
             if index < 4:
-                for i in range(index-cumul,index):
+                for i in range(index - cumul, index):
                     preference_list[i] = 0
-            else :
-                if cumul != 4 :
-                    for i in range(index-cumul,index):
+            else:
+                if cumul != 4:
+                    for i in range(index - cumul, index):
                         if i < len(preference_list):
                             preference_list[i] = 0
 
@@ -282,7 +281,7 @@ def internship_save_modification_student(request, cohort_id):
     cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)
     # Get the student
     registration_id = request.POST.getlist('registration_id')
-    student = mdl.student.find_by(registration_id=registration_id[0], full_registration = True)
+    student = mdl.student.find_by(registration_id=registration_id[0], full_registration=True)
     # Delete all the student's choices present in the DB
     mdl_int.internship_choice.InternshipChoice.objects.filter(student=student).delete()
     mdl_int.internship_enrollment.InternshipEnrollment.objects.filter(student=student).delete()
@@ -309,7 +308,7 @@ def internship_save_modification_student(request, cohort_id):
     # Create an array with all the tab name of the speciality
     preference_list_tab = []
     for speciality in all_specialities:
-        preference_list_tab.append('preference'+speciality.tab)
+        preference_list_tab.append('preference' + speciality.tab)
 
     # Create a list, for each element of the previous tab,
     # check if this element(speciality) is in the post request
@@ -317,15 +316,15 @@ def internship_save_modification_student(request, cohort_id):
     preference_list = list()
     for pref_tab in preference_list_tab:
         if request.POST.get(pref_tab):
-            for pref in request.POST.getlist(pref_tab) :
+            for pref in request.POST.getlist(pref_tab):
                 preference_list.append(pref)
 
     # If the fix checkbox is checked, the list receive '0', '1' as data
     # Delete the '0' value (the value before the '1', wich is required)
     index = 0
     for value in fixthis_list:
-        if value == '1'and fixthis_list[index-1]=='0':
-            del fixthis_list[index-1]
+        if value == '1' and fixthis_list[index - 1] == '0':
+            del fixthis_list[index - 1]
         index += 1
 
     _rebuild_the_lists(preference_list, speciality_list, organization_list)
@@ -461,7 +460,7 @@ def _get_number_choices(internships, choices):
         internship.number_other_choice = 0
         for choice in choices:
             if choice.speciality.acronym == internship.speciality.acronym and \
-               choice.organization_id == internship.organization_id:
+                    choice.organization_id == internship.organization_id:
                 if choice.choice == 1:
                     internship.number_first_choice += 1
                 else:
