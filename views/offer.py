@@ -23,29 +23,30 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
-from django.views.decorators.http import require_http_methods
-from django.contrib import messages
 from django.utils.translation import ugettext_lazy as _
+from django.views.decorators.http import require_http_methods
+
 from base import models as mdl
 from internship import models as mdl_int
+from internship.models.cohort import Cohort
 from internship.models.internship_choice import InternshipChoice
+from internship.models.internship_offer import InternshipOffer
 from internship.models.internship_speciality import InternshipSpeciality
-from internship.views.internship import get_all_specialities, set_tabs_name
 from internship.utils.importing import import_offers
+from internship.views.internship import get_all_specialities, set_tabs_name
 
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def list_internships(request, cohort_id, specialty_id=None):
+    cohort = get_object_or_404(Cohort, pk=cohort_id)
     if not specialty_id:
-        specialty = InternshipSpeciality.objects.filter(
-            mandatory=True,
-            cohort_id=cohort_id
-        ).order_by('name').first()
+        specialty = cohort.internshipspeciality_set.filter(mandatory=True).first()
     else:
         specialty = InternshipSpeciality.objects.get(id=specialty_id)
     cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)
@@ -57,15 +58,23 @@ def list_internships(request, cohort_id, specialty_id=None):
         if request.GET.get('speciality_sort') != '0' and request.GET.get('speciality_sort') != 'None':
             speciality_sort_value = request.GET.get('speciality_sort')
 
+    query = InternshipOffer.objects.filter(organization__cohort=cohort)
+
     # Then select Internship Offer depending of the option
     if organization_sort_value and organization_sort_value != "0":
-        query = mdl_int.internship_offer.search(
-            organization__name=organization_sort_value
-        ).filter(speciality__acronym=specialty.acronym)
+        query = query.filter(
+            organization__name=organization_sort_value,
+            speciality__acronym=specialty.acronym
+        )
     else:
-        query = mdl_int.internship_offer.find_mandatory_internships(cohort).filter(speciality_id=specialty.id)
+        query = query.filter(
+            speciality__mandatory=1,
+            cohort=cohort,
+            speciality=specialty
+        )
 
-    query = query.filter(organization__cohort=cohort)
+    query = query.select_related("organization", "speciality") \
+        .order_by('speciality__acronym', 'speciality__name', 'organization__reference')
 
     organizations = query.values_list('organization_id')
 
@@ -86,15 +95,18 @@ def list_internships(request, cohort_id, specialty_id=None):
     organizations = _get_all_organizations(all_internships)
     all_specialities = get_all_specialities(all_internships)
     set_tabs_name(all_specialities)
-    all_non_mandatory_speciality = mdl_int.internship_speciality.find_non_mandatory().filter(cohort=cohort)
+    all_non_mandatory_speciality = cohort.internshipspeciality_set.filter(mandatory=False).order_by('acronym', 'name')
     if speciality_sort_value:
-        if(speciality_sort_value == "all"):
-            all_non_mandatory_internships = mdl_int.internship_offer.find_non_mandatory_internships()
-        else:
-            all_non_mandatory_internships = mdl_int.internship_offer.find_non_mandatory_internships(
+        all_non_mandatory_internships = InternshipOffer.objects.filter(
+            speciality__mandatory=0,
+            organization__cohort=cohort
+        )
+        all_non_mandatory_internships = all_non_mandatory_internships.select_related("organization", "speciality") \
+            .order_by('speciality__acronym', 'speciality__name', 'organization__reference')
+        if (speciality_sort_value != "all"):
+            all_non_mandatory_internships = all_non_mandatory_internships.filter(
                 speciality__name=speciality_sort_value
             )
-        all_non_mandatory_internships = all_non_mandatory_internships.filter(organization__cohort=cohort)
         organizations = _get_all_organizations(all_non_mandatory_internships)
         non_mandatory_choices = InternshipChoice.objects.filter(
             speciality_id__in=all_non_mandatory_speciality,
@@ -102,7 +114,7 @@ def list_internships(request, cohort_id, specialty_id=None):
         ).select_related("speciality")
         _get_number_choices(all_non_mandatory_internships, non_mandatory_choices)
     else:
-        all_non_mandatory_internships = []
+        all_non_mandatory_internships = InternshipOffer.objects.none()
     context = {
         'active_tab': specialty.id,
         'all_internships': query,

@@ -39,7 +39,7 @@ class InternshipSpeciality(SerializableModel):
     acronym = models.CharField(max_length=125)
     mandatory = models.BooleanField(default=False)
     sequence = models.IntegerField(blank=True, null=True)
-    cohort = models.ForeignKey('internship.cohort', on_delete=models.CASCADE)
+    cohort = models.ForeignKey('internship.Cohort', on_delete=models.CASCADE)
     selectable = models.BooleanField(default=True)
 
     def acronym_with_sequence(self):
@@ -50,6 +50,9 @@ class InternshipSpeciality(SerializableModel):
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        ordering = ('name',)
 
 
 def search(**kwargs):
