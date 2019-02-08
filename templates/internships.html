@@ -37,7 +37,7 @@
         <h2>{% trans 'Internships' %}</h2>
     </div>
 
-    <form action="{%url 'internships' cohort_id=cohort.id %}" method="get">
+    <form action="{%url 'internships' cohort_id=cohort.id specialty_id=active_tab %}" method="get">
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
