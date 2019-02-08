@@ -37,7 +37,7 @@
         <h2>{% trans 'Internships' %}</h2>
     </div>
 
-    <form action="{%url 'internships' cohort_id=cohort.id %}" method="get">
+    <form action="{%url 'internships' cohort_id=cohort.id specialty_id=active_tab %}" method="get">
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
@@ -70,11 +70,15 @@
                 {% for luy in all_speciality %}
                     <li
                             {% if not speciality_sort_value %}
-                                {% if forloop.first %}
+                                {% if active_tab|add:"0" == luy.id %}
                                     class="active"
                                 {% endif %}
                             {%endif%}
-                    ><a data-toggle="tab" href="#tab_{{luy.tab}}">{{luy.name}}</a></li>
+                    >
+                        <a href="{% url 'internships' cohort_id=cohort.id specialty_id=luy.id %}">
+                            {{luy.name}}
+                        </a>
+                    </li>
                 {% endfor %}
                 <li
                         {%if speciality_sort_value%}
@@ -87,7 +91,7 @@
                 {% for luy in all_speciality %}
                     <div id="tab_{{luy.tab}}" class="tab-pane fade
                                               {% if not speciality_sort_value %}
-                                                {% if forloop.first %}
+                                                {% if active_tab|add:"0" == luy.id %}
                                                   in active
                                                 {% endif %}
                                               {%endif%}">
@@ -145,15 +149,19 @@
                         <div class="tab-content">
                             <div role="tabpanel" class="tab-pane fade in active" id="profile">
                                 <table class="table table-hover">
-                                    <form action="{% url 'internships' cohort_id=cohort.id %}" method="get">
-                                        <select name="speciality_sort" onChange="javascript: this.form.submit();">
-                                            <option value="0">--</option>
-                                            {% for spec in non_mandatory_speciality %}
-                                                <option value="{{ spec.name }}" {% if spec.name == speciality_sort_value %}selected{% endif %}>
-                                                    {{ spec.name }}
-                                                </option>
-                                            {% endfor %}
-                                        </select>
+                                    <form action="{% url 'internships' cohort_id=cohort.id %}" method="get" class="form-horizontal">
+                                                <div class="input-group" style="padding: 15px;">
+                                                    <label class="control-label" for="speciality_sort">{% trans 'Internship' %}</label>
+                                                    <select name="speciality_sort" onChange="javascript: this.form.submit();" class="form-control">
+                                                        <option value="0">--</option>
+                                                        <option value="all" {% if speciality_sort_value == "all" %}selected{% endif %}>{% trans 'All internships' %}</option>
+                                                        {% for spec in non_mandatory_speciality %}
+                                                            <option value="{{ spec.name }}" {% if spec.name == speciality_sort_value %}selected{% endif %}>
+                                                                {{ spec.name }}
+                                                            </option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
                                         <input type="hidden" name="organization_sort" value="{{organization_sort_value}}"/>
                                     </form>
                                     <thead>
@@ -170,8 +178,9 @@
                                     </thead>
                                     <tbody>
                                     {% for internship in all_non_mandatory_internships %}
+                                        {% if organization_sort_value == "0" or organization_sort_value == "None" or internship.organization.name == organization_sort_value %}
                                         <tr>
-                                            {% if not speciality_sort_value %}
+                                            {% if speciality_sort_value == "all" %}
                                                 <td>{{ internship.speciality.name }}</td>
                                             {% endif %}
                                             <td>
@@ -194,6 +203,7 @@
                                                 </a>
                                             </td>
                                         </tr>
+                                        {% endif %}
                                     {% endfor %}
                                     </tbody>
                                 </table>
