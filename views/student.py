@@ -26,30 +26,24 @@
 import json
 from io import BytesIO
 
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django.db.models import Prefetch, Case, When, IntegerField, Q
-from django.http import HttpResponse, HttpResponseRedirect
-from django.views.decorators.http import require_POST
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.exceptions import PermissionDenied
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.core.serializers.json import DjangoJSONEncoder
 from django.core.urlresolvers import reverse
+from django.db.models import Prefetch
 from django.forms import model_to_dict
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.utils.translation import ugettext_lazy as _
 from django.views.decorators.http import require_POST
 
-from base.models.student import Student
-from internship.models.internship_choice import InternshipChoice
-from internship.models.internship_student_information import InternshipStudentInformation
-from internship.views.common import display_errors
-from reference.models import country
 from base import models as mdl
 from internship import models as mdl_int
 from internship.forms.form_student_information import StudentInformationForm
 from internship.forms.students_import_form import StudentsImportActionForm
+from internship.models.internship_choice import InternshipChoice
 from internship.models.internship_student_information import InternshipStudentInformation
 from internship.utils.importing.import_students import import_xlsx
 from internship.views.common import display_errors
