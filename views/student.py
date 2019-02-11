@@ -26,28 +26,24 @@
 import json
 from io import BytesIO
 
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django.db.models import Prefetch
-from django.http import HttpResponse, HttpResponseRedirect
-from django.views.decorators.http import require_POST
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.exceptions import PermissionDenied
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.core.serializers.json import DjangoJSONEncoder
 from django.core.urlresolvers import reverse
+from django.db.models import Prefetch
 from django.forms import model_to_dict
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.utils.translation import ugettext_lazy as _
 from django.views.decorators.http import require_POST
 
-from internship.models.internship_student_information import InternshipStudentInformation
-from internship.views.common import display_errors
-from reference.models import country
 from base import models as mdl
 from internship import models as mdl_int
 from internship.forms.form_student_information import StudentInformationForm
 from internship.forms.students_import_form import StudentsImportActionForm
+from internship.models.internship_choice import InternshipChoice
 from internship.models.internship_student_information import InternshipStudentInformation
 from internship.utils.importing.import_students import import_xlsx
 from internship.views.common import display_errors
@@ -58,14 +54,15 @@ from reference.models import country
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internships_student_resume(request, cohort_id):
     cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)
+    internships_ids = cohort.internship_set.values_list('id',flat=True)
     filter_name = request.GET.get('name', '')
     page = request.GET.get('page')
+    choices = InternshipChoice.objects.filter(internship_id__in=internships_ids).select_related('student')
+    number_students_ok, number_students_not_ok = _get_statuses(choices, internships_ids)
     students_with_status = _get_students_with_status(page, cohort, filter_name)
     student_with_internships = mdl_int.internship_choice.get_number_students(cohort)
     students_can_have_internships = mdl_int.internship_student_information.get_number_students(cohort)
     student_without_internship = students_can_have_internships - student_with_internships
-    number_students_ok = len([x for x in students_with_status if x[1]])
-    number_students_not_ok = len([x for x in students_with_status if x[1] is False])
     number_generalists = mdl_int.internship_student_information.get_number_of_generalists(cohort)
     number_specialists = students_can_have_internships - number_generalists
     context = {
@@ -420,3 +417,21 @@ def _convert_differences_to_json(differences):
             new_records_count += 1
     data_json = json.dumps(data_json, cls=DjangoJSONEncoder)
     return data_json, new_records_count
+
+
+def _get_statuses(choices, internships_ids):
+    statuses = {}
+    number_ok = 0
+    number_not_ok = 0
+    for choice in choices:
+        person_id = choice.student.person_id
+        if person_id in statuses.keys() and choice.internship_id not in statuses[person_id]:
+            statuses[person_id].append(choice.internship_id)
+        if person_id not in statuses.keys():
+            statuses[person_id] = []
+    for person_id in statuses.keys():
+        if len(internships_ids) == len(statuses[person_id]):
+            number_ok += 1
+        else:
+            number_not_ok += 1
+    return number_ok, number_not_ok
