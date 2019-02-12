@@ -108,18 +108,9 @@
                             <tr>
                                 <th>{% trans 'Hospital' %}</th>
                                 <th>{% trans 'Specialty' %}</th>
-                                <th class="no-sort">P1</th>
-                                <th class="no-sort">P2</th>
-                                <th class="no-sort">P3</th>
-                                <th class="no-sort">P4</th>
-                                <th class="no-sort">P5</th>
-                                <th class="no-sort">P6</th>
-                                <th class="no-sort">P7</th>
-                                <th class="no-sort">P8</th>
-                                <th class="no-sort">P9</th>
-                                <th class="no-sort">P10</th>
-                                <th class="no-sort">P11</th>
-                                <th class="no-sort">P12</th>
+                                {% for period in periods %}
+                                    <th class="no-sort">{{ period.name }}</th>
+                                {% endfor %}
                             </tr>
                         </thead>
                         <tbody>

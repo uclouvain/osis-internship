@@ -112,19 +112,9 @@
                         <thead>
                             <tr>
                                 <th>{% trans 'Student' %}</th>
-                                <th>P1</th>
-                                <th>P2</th>
-                                <th>P3</th>
-                                <th>P4</th>
-                                <th>P5</th>
-                                <th>P6</th>
-                                <th>P7</th>
-                                <th>P8</th>
-                                <th>P9</th>
-                                <th>P10</th>
-                                <th>P11</th>
-                                <th>P12</th>
-                                <th>Score</th>
+                                {% for period in periods %}
+                                    <th>{{ period.name }}</th>
+                                {% endfor %}
                             </tr>
                         </thead>
                         <tbody>

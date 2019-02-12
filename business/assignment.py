@@ -75,10 +75,14 @@ class Assignment:
         self.offers = InternshipOffer.objects.filter(cohort=self.cohort)
         self.offer_ids = self.offers.values_list("id", flat=True)
         self.available_places = PeriodInternshipPlaces.objects.filter(internship_offer_id__in=self.offer_ids).values()
-
+        last_period = mdl.period.Period.objects.filter(cohort=self.cohort).order_by('date_end').last()
         self.periods = mdl.period.Period.objects.extra(select={"period_number": "CAST(substr(name, 2) AS INTEGER)"}) \
-                                                .exclude(name="P12")\
+                                                .exclude(name=last_period.name)\
                                                 .filter(cohort=self.cohort).order_by("period_number")
+
+        self.choices = InternshipChoice.objects.filter(internship__cohort=self.cohort).select_related(
+            'student', 'internship'
+        )
 
         # As the algorithm progresses, these variables are updated with partial results.
         self.affectations = []
@@ -105,7 +109,6 @@ class Assignment:
             student.cost = get_student_cost(self.affectations, student)
         return sorted(students_list, key=lambda x: x.cost, reverse=True)
 
-    @is_not_published
     def solve(self):
         print("Started assignment algorithm.")
         _clean_previous_solution(self.cohort)
@@ -115,8 +118,8 @@ class Assignment:
 
         for internship in self.internships:
             self.students_information = self.shuffle_students_list()
-            for student in self.students_information:
-                print("{} - {}".format(student.email, student.cost))
+            # for student in self.students_information:
+            #     print("{} - {}".format(student.email, student.cost))
             print("")
             print("Shuffled students for {}.".format(internship.name))
             _assign_students_with_priority_choices(self, internship)
@@ -172,7 +175,7 @@ def assign_students_with_empty_periods(assignment):
 
 def _assign_student(assignment, student, internship):
     """ Assign offer to student for specific internship."""
-    choices = InternshipChoice.objects.filter(student=student, internship=internship).order_by("choice")
+    choices = assignment.choices.filter(student=student, internship=internship).order_by("choice")
     affectations = None
 
     if student_not_fully_assigned(assignment, student):
@@ -185,7 +188,7 @@ def _assign_student(assignment, student, internship):
 
         if affectations:
             assignment.affectations.extend(affectations)
-        print("Student {} affected to {}".format(student, internship))
+        # print("Student {} affected to {}".format(student, internship))
 
 
 def assign_choices_to_student(assignment, student, choices, internship):

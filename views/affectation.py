@@ -82,7 +82,7 @@ def view_hospitals(request, cohort_id):
 
     latest_generation = models.affectation_generation_time.get_latest()
 
-    context = {'cohort': cohort, 'organizations': table, 'latest_generation': latest_generation}
+    context = {'cohort': cohort, 'periods': periods, 'organizations': table, 'latest_generation': latest_generation}
 
     return render(request, "internship_affectation_hospitals.html", context)
 
@@ -114,7 +114,7 @@ def view_students(request, cohort_id):
 
     latest_generation = models.affectation_generation_time.get_latest()
 
-    context = {'cohort': cohort, 'recap_sol': sol, 'latest_generation': latest_generation}
+    context = {'cohort': cohort, 'periods': periods, 'recap_sol': sol, 'latest_generation': latest_generation}
 
     return render(request, "internship_affectation_students.html", context)
 
