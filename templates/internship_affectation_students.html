@@ -115,6 +115,7 @@
                                 {% for period in periods %}
                                     <th>{{ period.name }}</th>
                                 {% endfor %}
+                                <th>Score</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -131,8 +132,7 @@
                                         {% else %}
                                             <td>
                                         {% endif %}
-
-                                        {% if forloop.counter <= 12 %}
+                                        {% if forloop.counter < periods.items|length %}
                                             <span data-toggle="tooltip" data-placement="top" title="{{ enrollment.speciality.name }}">{{ enrollment.speciality.acronym }}</span>
                                             <span data-toggle="tooltip" data-placement="top" title="{{ enrollment.internship.name }}">{{ enrollment.internship.choice }}</span><br>
                                             <span data-toggle="tooltip" data-placement="top" title="{{ enrollment.organization.name }}">{{enrollment.organization.reference }}</span><br>

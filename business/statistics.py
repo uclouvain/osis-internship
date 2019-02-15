@@ -32,6 +32,7 @@ from internship import models
 from internship.models import period_internship_places
 from internship.models.enums.affectation_type import AffectationType
 from internship.models.enums.choice_type import ChoiceType
+from internship.models.period import Period
 
 HOSPITAL_ERROR = 999  # Reference of the hospital "erreur"
 
@@ -229,7 +230,7 @@ def load_solution_table(data, cohort):
     # This object store the number of available places for given organization, speciality, period
     temp_internship_table = defaultdict(dict)
 
-    keys = ['P1', 'P2', 'P3', 'P4', 'P5', 'P6', 'P7', 'P8', 'P9', 'P10', 'P11', 'P12']
+    keys = periods.values_list("name", flat=True)
 
     for pid in prd_internship_places:
         organization = pid.internship_offer.organization
@@ -265,8 +266,8 @@ def load_solution_table(data, cohort):
     return sorted_internship_table
 
 
-def load_solution_sol(student_affectations):
-    keys = ['P1', 'P2', 'P3', 'P4', 'P5', 'P6', 'P7', 'P8', 'P9', 'P10', 'P11', 'P12']
+def load_solution_sol(cohort, student_affectations):
+    keys = Period.objects.filter(cohort=cohort).values_list("name", flat=True)
 
     sol = {}
     for item in student_affectations:
