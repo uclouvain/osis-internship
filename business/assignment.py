@@ -27,6 +27,7 @@ import logging
 import random
 import time
 import timeit
+from copy import copy
 
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
@@ -53,6 +54,7 @@ from internship.utils.assignment.period_utils import group_periods_by_consecutiv
 logger = logging.getLogger(settings.DEFAULT_LOGGER)
 
 TIMEOUT = 30
+
 
 class Assignment:
     def __init__(self, cohort):
@@ -181,26 +183,30 @@ def _balance_assignments(self):
                 disadvantaged_student_choices = self.choices.filter(student_id=disadvantaged_student_id)
 
                 for d_affectation in disadvantaged_student_affectations:
+                    temp_d = copy(d_affectation)
                     if d_affectation.cost == 10 and d_affectation.choice == "I":
                         d_organization_choices = disadvantaged_student_choices.filter(speciality=d_affectation.speciality).values_list('organization_id', flat=True)
                         for f_affectation in favored_student_affectations:
-                            if f_affectation.organization.id in d_organization_choices and f_affectation.period == d_affectation.period and f_affectation.type != AffectationType.PRIORITY:
+                            temp_f = copy(f_affectation)
+                            if f_affectation.organization.id in d_organization_choices and f_affectation.period == d_affectation.period and f_affectation.speciality == d_affectation.speciality and f_affectation.type != AffectationType.PRIORITY:
                                 print('switch affectations')
                                 timeout_start = time.time()
                                 switch = True
                                 count = 0
                                 for a in self.affectations:
                                     if a.uuid == d_affectation.uuid:
-                                        print(vars(a))
+                                        print(str(a.student)+" "+str(a.period)+" "+str(a.speciality)+" "+str(a.organization))
                                         a.cost = 0
-                                        a.organization_id = f_affectation.organization_id
+                                        a.organization_id = temp_f.organization_id
+                                        a.organization = temp_f.organization
                                         a.choice = 1
                                         a.type = "1"
                                     if a.uuid == f_affectation.uuid:
                                         print("switch with")
-                                        print(vars(a))
+                                        print(str(a.student)+" "+str(a.period)+" "+str(a.speciality)+" "+str(a.organization))
                                         a.cost = 10
-                                        a.organization_id = d_affectation.organization_id
+                                        a.organization_id = temp_d.organization_id
+                                        a.organization = temp_d.organization
                                         a.choice = "I"
                                 break
                         break
