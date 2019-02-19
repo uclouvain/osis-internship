@@ -24,9 +24,10 @@
 #
 ##############################################################################
 from django.db import models
-from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
+
 from base.models.student import Student
 from internship.models.internship import Internship
+from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 
 
 class InternshipChoiceAdmin(SerializableModelAdmin):
