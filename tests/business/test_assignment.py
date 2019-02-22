@@ -50,14 +50,6 @@ class AssignmentTest(TestCase):
         self.cohort = CohortFactory()
         self.assignment = Assignment(self.cohort)
 
-    def test_algorithm_execution_blocked(self):
-        self.cohort.publication_start_date = timezone.now().date() - timedelta(days=5)
-        with self.assertLogs() as logger:
-            self.assignment.solve()
-            self.assertIn("blocked due to execution after publication date", str(logger.output))
-            self.assertFalse(self.assignment.affectations)
-
-
 class ListUtilsTestCase(TestCase):
     def test_difference_non_empty_lists(self):
         first_list = [1,2,3,4,5]
