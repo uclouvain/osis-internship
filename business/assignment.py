@@ -148,7 +148,7 @@ class Assignment:
         _assign_non_mandatory_internships(self)
         _balance_assignments(self)
         self.stop = timeit.default_timer()
-        print('Time: ', self.stop - self.start)
+        logger.info('Time: ', self.stop - self.start)
 
 
 def _assign_non_mandatory_internships(self):
@@ -377,7 +377,7 @@ def assign_choices_to_student(assignment, student, choices, internship, last=Fal
     # None of student choices available? Try to affect outside of choices
     if len(affectations) == 0:
         if is_non_mandatory_internship(internship):
-            logger.info(student, internship)
+            logger.info("{} - {}".format(student, internship))
         affectations.extend(find_best_affectation_outside_of_choices(assignment, student, internship, choices, last))
 
     return affectations
