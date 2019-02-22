@@ -112,18 +112,9 @@
                         <thead>
                             <tr>
                                 <th>{% trans 'Student' %}</th>
-                                <th>P1</th>
-                                <th>P2</th>
-                                <th>P3</th>
-                                <th>P4</th>
-                                <th>P5</th>
-                                <th>P6</th>
-                                <th>P7</th>
-                                <th>P8</th>
-                                <th>P9</th>
-                                <th>P10</th>
-                                <th>P11</th>
-                                <th>P12</th>
+                                {% for period in periods %}
+                                    <th>{{ period.name }}</th>
+                                {% endfor %}
                                 <th>Score</th>
                             </tr>
                         </thead>
@@ -141,8 +132,7 @@
                                         {% else %}
                                             <td>
                                         {% endif %}
-
-                                        {% if forloop.counter <= 12 %}
+                                        {% if forloop.counter < periods.items|length %}
                                             <span data-toggle="tooltip" data-placement="top" title="{{ enrollment.speciality.name }}">{{ enrollment.speciality.acronym }}</span>
                                             <span data-toggle="tooltip" data-placement="top" title="{{ enrollment.internship.name }}">{{ enrollment.internship.choice }}</span><br>
                                             <span data-toggle="tooltip" data-placement="top" title="{{ enrollment.organization.name }}">{{enrollment.organization.reference }}</span><br>

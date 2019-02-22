@@ -207,6 +207,22 @@
                                 <td>{{ value }}</td>
                             </tr>
                         {% endfor %}
+                        <tr class="active">
+                            <td>{% trans 'Non mandatory internships' %}</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>{% trans 'Count' %}</td>
+                            <td>{{ stats.non_mandatory_internships.count }}</td>
+                        </tr>
+                        {% for key, value in stats.non_mandatory_internships.items %}
+                            {% if key != 'count' %}
+                                <tr>
+                                    <td>{{ key }}</td>
+                                    <td>{{ value.count }} ({{ value.perc }}%)</td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
                         <tr>
                             <td></td>
                             <td></td>

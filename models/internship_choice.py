@@ -24,9 +24,10 @@
 #
 ##############################################################################
 from django.db import models
-from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
+
 from base.models.student import Student
 from internship.models.internship import Internship
+from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 
 
 class InternshipChoiceAdmin(SerializableModelAdmin):
@@ -103,11 +104,17 @@ def get_number_first_choice_by_organization(speciality):
 
 
 def find_priority_choices(internship):
-    return InternshipChoice.objects.filter(internship=internship, priority=True)
+    try:
+        return InternshipChoice.objects.filter(internship__in=internship, priority=True)
+    except TypeError:
+        return InternshipChoice.objects.filter(internship=internship, priority=True)
 
 
 def find_regular_choices(internship):
-    return InternshipChoice.objects.filter(internship=internship, priority=False)
+    try:
+        return InternshipChoice.objects.filter(internship__in=internship, priority=False)
+    except TypeError:
+        return InternshipChoice.objects.filter(internship=internship, priority=False)
 
 
 def find_students_with_priority_choices(internship):

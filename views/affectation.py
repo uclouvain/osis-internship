@@ -82,7 +82,7 @@ def view_hospitals(request, cohort_id):
 
     latest_generation = models.affectation_generation_time.get_latest()
 
-    context = {'cohort': cohort, 'organizations': table, 'latest_generation': latest_generation}
+    context = {'cohort': cohort, 'periods': periods, 'organizations': table, 'latest_generation': latest_generation}
 
     return render(request, "internship_affectation_hospitals.html", context)
 
@@ -108,13 +108,13 @@ def view_students(request, cohort_id):
         )
 
     if student_affectations.count() > 0:
-        sol = statistics.load_solution_sol(student_affectations)
+        sol = statistics.load_solution_sol(cohort, student_affectations)
         # Mange sort of the students
         sol = OrderedDict(sorted(sol.items(), key=lambda t: t[0].person.last_name))
 
     latest_generation = models.affectation_generation_time.get_latest()
 
-    context = {'cohort': cohort, 'recap_sol': sol, 'latest_generation': latest_generation}
+    context = {'cohort': cohort, 'periods': periods, 'recap_sol': sol, 'latest_generation': latest_generation}
 
     return render(request, "internship_affectation_students.html", context)
 
@@ -129,10 +129,18 @@ def view_statistics(request, cohort_id):
 
     student_affectations = internship_student_affectation_stat.InternshipStudentAffectationStat.objects\
         .filter(period_id__in=period_ids)\
-        .select_related("student", "organization", "speciality", "period")
+        .select_related(
+            "student",
+            "student__person",
+            "internship",
+            "internship__speciality",
+            "organization",
+            "speciality",
+            "period"
+        )
 
     if student_affectations.count() > 0:
-        sol = statistics.load_solution_sol(student_affectations)
+        sol = statistics.load_solution_sol(cohort, student_affectations)
         stats = statistics.compute_stats(cohort, sol)
 
     latest_generation = models.affectation_generation_time.get_latest()

@@ -32,6 +32,7 @@ from internship import models
 from internship.models import period_internship_places
 from internship.models.enums.affectation_type import AffectationType
 from internship.models.enums.choice_type import ChoiceType
+from internship.models.period import Period
 
 HOSPITAL_ERROR = 999  # Reference of the hospital "erreur"
 
@@ -67,6 +68,9 @@ def compute_stats(cohort, sol):
     first_n, second_n, third_n, fourth_n = 0, 0, 0, 0
     first_s, second_s, third_s, fourth_s = 0, 0, 0, 0
 
+    non_mandatory_internships_stats = {
+        'count': 0,
+    }
     # Iterate all students
     for student, periods in sol.items():
         # Cost of the student solution
@@ -79,6 +83,12 @@ def compute_stats(cohort, sol):
         # Iterate over all periods of the student
         for period, affectation in periods.items():
             if period is not 'score' and affectation is not None:
+                if affectation.internship.speciality == None:
+                    if affectation.internship.name not in non_mandatory_internships_stats.keys():
+                        non_mandatory_internships_stats.update({affectation.internship.name: {'count':0, 'perc':0}})
+                    non_mandatory_internships_stats[affectation.internship.name]['count'] += 1
+                    non_mandatory_internships_stats[affectation.internship.name]['perc'] += 1
+                    non_mandatory_internships_stats['count'] += 1
                 # First choice
                 if affectation.choice == ChoiceType.FIRST_CHOICE.value:
                     # Increment the number of total first choices
@@ -174,6 +184,16 @@ def compute_stats(cohort, sol):
     stats['others_specialities_students'] = others_specialities_students
     stats['mean_stud'] = round(mean(mean_array), 2)
 
+    # Stats: non-mandatory internships
+    for key in non_mandatory_internships_stats:
+        if 'count' not in key:
+            count = non_mandatory_internships_stats[key]['count']
+            perc = count/non_mandatory_internships_stats['count']
+            non_mandatory_internships_stats[key]['count'] = count
+            non_mandatory_internships_stats[key]['perc'] = round(perc * 100, 2)
+    stats['non_mandatory_internships'] = non_mandatory_internships_stats
+
+
     # Compute standard deviation of the score
     if len(mean_array) > 1:
         std_dev_stud = round(stdev(mean_array), 2)
@@ -229,7 +249,7 @@ def load_solution_table(data, cohort):
     # This object store the number of available places for given organization, speciality, period
     temp_internship_table = defaultdict(dict)
 
-    keys = ['P1', 'P2', 'P3', 'P4', 'P5', 'P6', 'P7', 'P8', 'P9', 'P10', 'P11', 'P12']
+    keys = periods.values_list("name", flat=True)
 
     for pid in prd_internship_places:
         organization = pid.internship_offer.organization
@@ -265,8 +285,8 @@ def load_solution_table(data, cohort):
     return sorted_internship_table
 
 
-def load_solution_sol(student_affectations):
-    keys = ['P1', 'P2', 'P3', 'P4', 'P5', 'P6', 'P7', 'P8', 'P9', 'P10', 'P11', 'P12']
+def load_solution_sol(cohort, student_affectations):
+    keys = Period.objects.filter(cohort=cohort).values_list("name", flat=True)
 
     sol = {}
     for item in student_affectations:
