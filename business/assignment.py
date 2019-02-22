@@ -39,6 +39,7 @@ from internship import models as mdl
 from internship.models.enums import costs
 from internship.models.enums.affectation_type import AffectationType
 from internship.models.enums.choice_type import ChoiceType
+from internship.models.enums.costs import Costs
 from internship.models.internship import Internship
 from internship.models.internship_choice import InternshipChoice
 from internship.models.internship_enrollment import InternshipEnrollment
@@ -54,6 +55,7 @@ from internship.utils.assignment.period_utils import group_periods_by_consecutiv
 logger = logging.getLogger(settings.DEFAULT_LOGGER)
 
 TIMEOUT = 30
+MAX_ALLOWED_IMPOSED = 2
 
 
 class Assignment:
@@ -63,13 +65,14 @@ class Assignment:
         self.total_count = 0
         self.start = 0
         self.stop = 0
+        self.last_switch = []
+        self.internship_count = 0
 
         self.students_information = InternshipStudentInformation.objects.filter(cohort=self.cohort)
         self.person_ids = self.students_information.values_list("person_id", flat=True)
         self.students = Student.objects.filter(person_id__in=self.person_ids)
 
         self.internships = Internship.objects.filter(cohort=self.cohort).order_by("position", "name")
-        # self.mandatory_internships = self.internships.exclude(speciality__isnull=True).filter(speciality__acronym__in=["UR", "PE"])
         self.mandatory_internships = self.internships.exclude(speciality__isnull=True)
         self.non_mandatory_internships = self.internships.filter(speciality__isnull=True)
 
@@ -112,31 +115,35 @@ class Assignment:
         InternshipStudentAffectationStat.objects.bulk_create(self.affectations)
 
     def shuffle_students_list(self):
-        """ Students are shuffled to make sure equity of luck is respected and then ordered by cost."""
+        """ Students are shuffled to make sure equity of luck is respected and then ordered by cost after first iter."""
         students_list = list(self.students_information)
         random.shuffle(students_list)
         for student in students_list:
             student.cost = get_student_cost(self.affectations, student)
-        return sorted(students_list, key=lambda x: x.cost, reverse=True)
+        if self.internship_count > 0:
+            return sorted(students_list, key=lambda x: x.cost, reverse=True)
+        else:
+            return students_list
 
     def solve(self):
         self.start = timeit.default_timer()
-        print("Started assignment algorithm.")
+        logger.info("Started assignment algorithm.")
         _clean_previous_solution(self.cohort)
-        print("Cleaned previous solution.")
+        logger.info("Cleaned previous solution.")
         _assign_priority_students(self)
-        print("Assigned priority students.")
+        logger.info("Assigned priority students.")
 
         for internship in self.mandatory_internships:
             self.students_information = self.shuffle_students_list()
-            print("")
-            print("Shuffled students for {}.".format(internship.name))
+            logger.info("")
+            logger.info("Shuffled students for {}.".format(internship.name))
             _assign_students_with_priority_choices(self, internship)
-            print("")
-            print("Assigned students with priority choices to {}.".format(internship.name))
+            logger.info("")
+            logger.info("Assigned students with priority choices to {}.".format(internship.name))
             _assign_regular_students(self, internship)
-            print("")
-            print("Assigned regular students to {}.".format(internship.name))
+            logger.info("")
+            logger.info("Assigned regular students to {}.".format(internship.name))
+            self.internship_count += 1
 
         _assign_non_mandatory_internships(self)
         _balance_assignments(self)
@@ -147,73 +154,23 @@ class Assignment:
 def _assign_non_mandatory_internships(self):
     self.students_information = self.shuffle_students_list()
     self.total_count = len(self.students_information)
-    print("")
-    print("Shuffled students for stages au choix.")
+    logger.info("")
+    logger.info("Shuffled students for stages au choix.")
     _assign_students_with_priority_choices(self, self.non_mandatory_internships)
-    print("")
-    print("Assigned students with priority choices to stages au choix.")
+    logger.info("")
+    logger.info("Assigned students with priority choices to stages au choix.")
     _assign_regular_students(self, self.non_mandatory_internships)
-    print("")
-    print("Assigned regular students to stages au choix")
+    logger.info("")
+    logger.info("Assigned regular students to stages au choix")
 
 
 def _balance_assignments(self):
-    print("Balancing assignments...")
+    logger.info("Balancing assignments...")
     self.students_information = self.shuffle_students_list()
     favored_students, disadvantaged_students = _update_distinction_between_students(self)
-
-    timeout_start = time.time()
-
-    while len(disadvantaged_students) > 0 and time.time() < timeout_start + TIMEOUT:
-        for disadvantaged_student in disadvantaged_students:
-            for f_student in favored_students:
-                switch = False
-                disadvantaged_student_affectations = []
-                favored_student_affectations = []
-
-                disadvantaged_student_id = None
-
-                for affectation in self.affectations:
-                    if affectation.student.person_id == disadvantaged_student.person_id:
-                        disadvantaged_student_affectations.append(affectation)
-                        disadvantaged_student_id = affectation.student.id
-                    if affectation.student.person_id == f_student.person_id:
-                        favored_student_affectations.append(affectation)
-
-                disadvantaged_student_choices = self.choices.filter(student_id=disadvantaged_student_id)
-
-                for d_affectation in disadvantaged_student_affectations:
-                    temp_d = copy(d_affectation)
-                    if d_affectation.cost == 10 and d_affectation.choice == "I":
-                        d_organization_choices = disadvantaged_student_choices.filter(speciality=d_affectation.speciality).values_list('organization_id', flat=True)
-                        for f_affectation in favored_student_affectations:
-                            temp_f = copy(f_affectation)
-                            if f_affectation.organization.id in d_organization_choices and f_affectation.period == d_affectation.period and f_affectation.speciality == d_affectation.speciality and f_affectation.type != AffectationType.PRIORITY:
-                                print('switch affectations')
-                                timeout_start = time.time()
-                                switch = True
-                                count = 0
-                                for a in self.affectations:
-                                    if a.uuid == d_affectation.uuid:
-                                        print(str(a.student)+" "+str(a.period)+" "+str(a.speciality)+" "+str(a.organization))
-                                        a.cost = 0
-                                        a.organization_id = temp_f.organization_id
-                                        a.organization = temp_f.organization
-                                        a.choice = 1
-                                        a.type = "1"
-                                    if a.uuid == f_affectation.uuid:
-                                        print("switch with")
-                                        print(str(a.student)+" "+str(a.period)+" "+str(a.speciality)+" "+str(a.organization))
-                                        a.cost = 10
-                                        a.organization_id = temp_d.organization_id
-                                        a.organization = temp_d.organization
-                                        a.choice = "I"
-                                break
-                        break
-                if switch:
-                    break
-            if get_student_cost(self.affectations, disadvantaged_student) < 20:
-                favored_students, disadvantaged_students = _update_distinction_between_students(self)
+    self.timeout_start = time.time()
+    while len(disadvantaged_students) > 0 and time.time() < self.timeout_start + TIMEOUT:
+        _process_affectations_comparisons(self, favored_students, disadvantaged_students)
 
 
 def _update_distinction_between_students(self):
@@ -221,13 +178,100 @@ def _update_distinction_between_students(self):
     disadvantaged_students = []
     favored_students = []
     for student in self.students_information:
-        if student.cost >= 0 and student.cost < 10:
+        if student.cost >= Costs.PRIORITY.value and student.cost < Costs.IMPOSED.value:
             favored_students.append(student)
-        if student.cost >= 20:
-            if student.cost >= 1020:
-                student.cost = student.cost - 1000
+        if student.cost >= MAX_ALLOWED_IMPOSED * Costs.IMPOSED.value:
+            if student.cost >= Costs.ERROR.value + MAX_ALLOWED_IMPOSED * Costs.IMPOSED.value:
+                student.cost = student.cost - Costs.ERROR.value
             disadvantaged_students.append(student)
     return favored_students, disadvantaged_students
+
+
+def _process_affectations_comparisons(self, favored_students, disadvantaged_students):
+    for d_student in disadvantaged_students:
+        for f_student in favored_students:
+            self.switch = False
+            disadvantaged_student_affectations = []
+            favored_student_affectations = []
+            disadvantaged_student_id = _append_affectations(
+                self,
+                disadvantaged_student_affectations,
+                favored_student_affectations,
+                d_student,
+                f_student
+            )
+            disadvantaged_student_choices = self.choices.filter(student_id=disadvantaged_student_id)
+            _permute_affectations(
+                self,
+                disadvantaged_student_affectations,
+                favored_student_affectations,
+                disadvantaged_student_choices,
+            )
+            if self.switch:
+                break
+        favored_students, disadvantaged_students = _update_distinction_between_students(self)
+
+
+def _append_affectations(self, d_student_affectations, f_student_affectations, d_student, f_student):
+    disadvantaged_student_id = None
+    for affectation in self.affectations:
+        if affectation.student.person_id == d_student.person_id and is_mandatory_internship(affectation.internship):
+            d_student_affectations.append(affectation)
+            disadvantaged_student_id = affectation.student.id
+        if affectation.student.person_id == f_student.person_id and is_mandatory_internship(affectation.internship):
+            f_student_affectations.append(affectation)
+    return disadvantaged_student_id
+
+
+def _permute_affectations(self, d_student_affectations, f_student_affectations, d_student_choices):
+    for d_affectation in d_student_affectations:
+        temp_d = copy(d_affectation)
+        if _disadvantaged_affectation_is_switchable(d_affectation):
+            d_organization_choices = _get_hospital_choices_by_speciality(d_student_choices, d_affectation)
+            for f_affectation in f_student_affectations:
+                temp_f = copy(f_affectation)
+                if _favored_affectation_is_switchable(f_affectation, d_affectation, d_organization_choices):
+                    _store_exchanged_affectation_information(self, d_organization_choices, d_affectation, f_affectation,
+                                                             temp_f, temp_d)
+                    break
+            break
+
+
+def _disadvantaged_affectation_is_switchable(d_affectation):
+    return d_affectation.cost == 10 and d_affectation.choice == "I" and d_affectation.type != AffectationType.PRIORITY
+
+
+def _favored_affectation_is_switchable(f_affectation, d_affectation, d_organization_choices):
+    return f_affectation.organization.id in d_organization_choices and f_affectation.period == d_affectation.period\
+           and f_affectation.speciality == d_affectation.speciality and f_affectation.type != AffectationType.PRIORITY
+
+
+def _get_hospital_choices_by_speciality(d_student_choices, d_affectation):
+    return list(d_student_choices.filter(speciality=d_affectation.speciality).order_by('choice').values_list(
+        'organization_id', flat=True)
+    )
+
+
+def _store_exchanged_affectation_information(self, d_organization_choices, d_aff, f_aff, temp_f, temp_d):
+    if temp_d.uuid not in self.last_switch:
+        self.timeout_start = time.time()
+        self.switch = True
+    for a in self.affectations:
+        if a.uuid == d_aff.uuid:
+            a.organization_id = temp_f.organization_id
+            a.organization = temp_f.organization
+            a.choice = _get_hospital_choice_type(d_organization_choices, a.organization_id)
+            a.cost = a.choice - 1
+        if a.uuid == f_aff.uuid:
+            a.cost = 10
+            a.organization_id = temp_d.organization_id
+            a.organization = temp_d.organization
+            a.choice = "I"
+    self.last_switch.append(temp_f.uuid)
+
+
+def _get_hospital_choice_type(d_organization_choices, selected_organization_id):
+    return d_organization_choices.index(selected_organization_id)+1
 
 
 def _clean_previous_solution(cohort):
@@ -278,36 +322,40 @@ def assign_students_with_empty_periods(assignment):
 
 def _assign_student(assignment, student, internship):
     assignment.count += 1
-    print("\rStudent " + str(assignment.count) + " of " + str(assignment.total_count), end="", flush=True)
+    # print("\rStudent " + str(assignment.count) + " of " + str(assignment.total_count), end="", flush=True)
     """ Assign offer to student for specific internship."""
     choices = assignment.choices.filter(student=student, internship=internship).order_by("choice")
 
     affectations = None
 
     if student_not_fully_assigned(assignment, student):
-        if hasattr(internship, 'speciality'):
+        if is_mandatory_internship(internship):
             # Deal with mandatory internship
             if internship.speciality and student_has_no_affectations_for_internship(assignment, student, internship):
                 affectations = assign_choices_to_student(assignment, student, choices, internship)
         # Deal with internship at choice
         else:
-            choices = assignment.choices.filter(student=student, internship__in=internship).order_by(
-                "internship__name",
-                "choice"
-            )
-            affectations = assign_choices_to_student(assignment, student, choices, internship)
+            for chosen_internship in internship:
+                if affectations is None or affectations == []:
+                    last = chosen_internship == list(internship)[:-1]
+                    setattr(chosen_internship, 'first', chosen_internship == list(internship)[0])
+                    choices = assignment.choices.filter(student=student, internship=chosen_internship).order_by(
+                        "choice"
+                    )
+                    affectations = assign_choices_to_student(assignment, student, choices, chosen_internship, last)
+                    # logger.info("{} -- {}".format(student, chosen_internship))
 
         if affectations:
             assignment.affectations.extend(affectations)
-        # print("Student {} affected to {}".format(student, internship))
+        # logger.info("Student {} affected to {} in period {}".format(student, internship, affectations))
 
 
-def assign_choices_to_student(assignment, student, choices, internship):
+def assign_choices_to_student(assignment, student, choices, internship, last=False):
     affectations = []
 
     # Try to assign choices, from 1 to 4
     for choice in choices:
-        if not hasattr(internship, 'speciality'):
+        if is_non_mandatory_internship(internship):
             affecs = assignment.affectations
             affecs = [a for a in affecs if a.organization.reference == choice.organization.reference and
                                            a.speciality == choice.speciality and
@@ -318,37 +366,42 @@ def assign_choices_to_student(assignment, student, choices, internship):
 
         periods = find_first_student_available_periods_for_internship_choice(assignment, student, internship, choice)
         if len(periods) > 0:
+            if is_non_mandatory_internship(internship) and not internship.first:
+                choice.choice = ChoiceType.IMPOSED.value
             affectations.extend(build_affectation_for_periods(assignment, student, choice.organization, periods,
                                                               choice.speciality, choice.choice, choice.priority,
                                                               choice.internship))
+
             break
 
     # None of student choices available? Try to affect outside of choices
     if len(affectations) == 0:
-        affectations.extend(find_best_affectation_outside_of_choices(assignment, student, internship, choices))
+        if is_non_mandatory_internship(internship):
+            logger.info(student, internship)
+        affectations.extend(find_best_affectation_outside_of_choices(assignment, student, internship, choices, last))
 
     return affectations
 
 
-def find_best_affectation_outside_of_choices(assignment, student, internship, choices):
-    if hasattr(internship, 'speciality'):
+def find_best_affectation_outside_of_choices(assignment, student, internship, choices, last):
+    if is_mandatory_internship(internship):
         student_periods = all_available_periods(assignment, student, internship.length_in_periods, assignment.periods)
     else:
         student_periods = all_available_periods(assignment, student, 1, assignment.periods)
-
+    random.shuffle(student_periods)
     for grouped_periods in student_periods:
-        offer = find_best_available_offer_for_internship_periods(assignment, internship, choices, grouped_periods)
+        offer = find_best_available_offer_for_internship_periods(assignment, internship, choices, grouped_periods, last)
         if offer:
-            if hasattr(internship, 'speciality'):
+            if is_mandatory_internship(internship):
                 return build_affectation_for_periods(assignment, student, offer.organization, grouped_periods,
                                                      offer.speciality, ChoiceType.IMPOSED.value, False, internship)
             else:
                 return build_affectation_for_periods(assignment, student, offer.organization, grouped_periods,
-                                                     offer.speciality, ChoiceType.IMPOSED.value, False, None)
+                                                    offer.speciality, ChoiceType.IMPOSED.value, False, internship)
 
-    if hasattr(internship, 'speciality') and student_periods:
+    if is_mandatory_internship(internship) and student_periods:
         offer = find_offer_in_organization_error(assignment, internship)
-        print("\rError: {}".format(offer))
+        logger.info("\rError: {}".format(offer))
         return build_affectation_for_periods(assignment, student, offer.organization, random.choice(student_periods),
                                              offer.speciality, ChoiceType.IMPOSED.value, False, internship)
     else:
@@ -358,7 +411,7 @@ def find_best_affectation_outside_of_choices(assignment, student, internship, ch
 def find_first_student_available_periods_for_internship_choice(assignment, student, internship, choice):
     """ Look for available periods for specific choice."""
     periods_with_places = find_available_periods_for_internship_choice(assignment, choice)
-    if hasattr(internship, 'speciality'):
+    if is_mandatory_internship(internship):
         return first_relevant_periods(assignment, student, internship.length_in_periods, periods_with_places)
     else:
         return first_relevant_periods(assignment, student, 1, periods_with_places)
@@ -387,17 +440,23 @@ def all_available_periods(assignment, student, internship_length, periods):
     return list(group_periods_by_consecutives(available_periods, length=internship_length))
 
 
-def find_best_available_offer_for_internship_periods(assignment, internship, choices, periods):
+def find_best_available_offer_for_internship_periods(assignment, internship, choices, periods, last=False):
     unavailable_organizations = list(map(lambda choice: choice.organization, choices))
-    if hasattr(internship, 'speciality'):
+    if is_mandatory_internship(internship):
         speciality = internship.speciality
     else:
-        speciality = None
-    available_offers = offers_for_available_organizations(assignment, speciality, unavailable_organizations)
-    period_places = get_available_period_places_for_periods(assignment, available_offers, periods)
+        if hasattr(choices.first(), 'speciality'):
+            speciality = choices.first().speciality
+        else:
+            speciality = None
+    if speciality is not None or last:
+        available_offers = offers_for_available_organizations(assignment, speciality, unavailable_organizations)
+        period_places = get_available_period_places_for_periods(assignment, available_offers, periods)
 
-    if len(period_places) > 0:
-        return available_offers.get(pk=period_places[0]["internship_offer_id"])
+        if len(period_places) > 0:
+            return available_offers.get(
+                pk=period_places[random.randint(0, len(period_places)-1)]["internship_offer_id"]
+            )
 
 
 def get_available_period_places_for_periods(assignment, offers, periods):
@@ -423,7 +482,7 @@ def find_available_periods_for_offers(assignment, offers):
     period_places_for_offers = get_period_places_for_offer_ids(offer_ids, assignment.available_places)
     available_period_places = sort_period_places(period_places_for_offers)
     period_ids = get_period_ids_from_period_places(available_period_places)
-    return assignment.periods.filter(pk__in=period_ids).order_by("id")
+    return assignment.periods.filter(pk__in=period_ids).order_by("?")
 
 
 def student_has_no_affectations_for_internship(assignment, student, internship):
@@ -444,9 +503,8 @@ def student_has_no_affectations_for_internship(assignment, student, internship):
 
 
 def student_not_fully_assigned(assignment, student):
-    # student_affectations = get_student_affectations(student, assignment.affectations)
-    # return len(student_affectations) < len(assignment.periods)
-    return True
+    student_affectations = get_student_affectations(student, assignment.affectations)
+    return len(student_affectations) < len(assignment.periods)
 
 
 def student_empty_periods(assignment, student):
@@ -547,3 +605,11 @@ def get_periods_from_affectations(affectations):
 def get_student_cost(affectations, student):
     student_affectations_cost = [a.cost for a in affectations if a.student.person_id == student.person_id]
     return sum(student_affectations_cost)
+
+
+def is_mandatory_internship(internship):
+    return not is_non_mandatory_internship(internship)
+
+
+def is_non_mandatory_internship(internship):
+    return not hasattr(internship, 'speciality') or internship.speciality is None
