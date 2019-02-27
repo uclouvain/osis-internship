@@ -1,6 +1,6 @@
 [run]
-branch = False
-source = ./internship
+branch = True
+source = internship/
 omit =
     */migrations/*
 
