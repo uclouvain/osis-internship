@@ -36,6 +36,7 @@ from internship.models.period import Period
 
 HOSPITAL_ERROR = 999  # Reference of the hospital "erreur"
 
+
 def compute_stats(cohort, sol):
     """
     Compute the statistics of the solution
@@ -83,9 +84,9 @@ def compute_stats(cohort, sol):
         # Iterate over all periods of the student
         for period, affectation in periods.items():
             if period is not 'score' and affectation is not None:
-                if affectation.internship.speciality == None:
+                if affectation.internship is not None and affectation.internship.speciality is None:
                     if affectation.internship.name not in non_mandatory_internships_stats.keys():
-                        non_mandatory_internships_stats.update({affectation.internship.name: {'count':0, 'perc':0}})
+                        non_mandatory_internships_stats.update({affectation.internship.name: {'count': 0, 'perc': 0}})
                     non_mandatory_internships_stats[affectation.internship.name]['count'] += 1
                     non_mandatory_internships_stats[affectation.internship.name]['perc'] += 1
                     non_mandatory_internships_stats['count'] += 1
