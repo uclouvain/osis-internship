@@ -68,7 +68,7 @@ def run_affectation(request, cohort_id):
 def view_hospitals(request, cohort_id):
     cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
     sol, table, stats, internship_errors = None, None, None, None
-    periods = models.period.Period.objects.filter(cohort=cohort)
+    periods = models.period.Period.objects.filter(cohort=cohort).order_by('date_end')
     period_ids = periods.values_list("id", flat=True)
 
     student_affectations = internship_student_affectation_stat.InternshipStudentAffectationStat.objects\
@@ -92,7 +92,7 @@ def view_hospitals(request, cohort_id):
 def view_students(request, cohort_id):
     cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
     sol, tabl = None, None
-    periods = models.period.Period.objects.filter(cohort=cohort)
+    periods = models.period.Period.objects.filter(cohort=cohort).order_by('date_end')
     period_ids = periods.values_list("id", flat=True)
 
     student_affectations = internship_student_affectation_stat.InternshipStudentAffectationStat.objects\
@@ -124,7 +124,7 @@ def view_students(request, cohort_id):
 def view_statistics(request, cohort_id):
     cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
     sol, table, stats = None, None, None
-    periods = models.period.Period.objects.filter(cohort=cohort)
+    periods = models.period.Period.objects.filter(cohort=cohort).order_by('date_end')
     period_ids = periods.values_list("id", flat=True)
 
     student_affectations = internship_student_affectation_stat.InternshipStudentAffectationStat.objects\
@@ -155,7 +155,7 @@ def view_statistics(request, cohort_id):
 def view_errors(request, cohort_id):
     cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
     internship_errors = None
-    periods = models.period.Period.objects.filter(cohort=cohort)
+    periods = models.period.Period.objects.filter(cohort=cohort).order_by('date_end')
     period_ids = periods.values_list("id", flat=True)
 
     student_affectations = internship_student_affectation_stat.InternshipStudentAffectationStat.objects\
@@ -192,7 +192,7 @@ def internship_affectation_sumup(request, cohort_id):
     hospital = models.organization.get_by_id(filter_hospital)
     all_speciality = list(models.internship_speciality.find_all(cohort=cohort))
     all_speciality = models.internship_speciality.set_speciality_unique(all_speciality)
-    periods = models.period.search(cohort=cohort)
+    periods = models.period.search(cohort=cohort).order_by('date_end')
     organizations = models.organization.search(cohort=cohort)
     organizations = models.organization.sort_organizations(organizations)
     offers = models.internship_offer.search(cohort=cohort)
