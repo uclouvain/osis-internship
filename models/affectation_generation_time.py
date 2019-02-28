@@ -43,8 +43,8 @@ class AffectationGenerationTime(models.Model):
         return u"%s - %s" % (self.start_date_time, self.end_date_time)
 
 
-def get_latest():
+def get_latest(cohort):
     try:
-        return AffectationGenerationTime.objects.latest('start_date_time')
+        return AffectationGenerationTime.objects.filter(cohort=cohort).latest('start_date_time')
     except ObjectDoesNotExist:
         return None

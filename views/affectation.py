@@ -80,7 +80,7 @@ def view_hospitals(request, cohort_id):
         # Mange sort of the organizations
         table.sort(key=itemgetter(0))
 
-    latest_generation = models.affectation_generation_time.get_latest()
+    latest_generation = models.affectation_generation_time.get_latest(cohort)
 
     context = {'cohort': cohort, 'periods': periods, 'organizations': table, 'latest_generation': latest_generation}
 
