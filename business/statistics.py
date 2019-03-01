@@ -238,7 +238,7 @@ def compute_stats(cohort, sol):
 
 
 def load_solution_table(data, cohort):
-    periods = models.period.Period.objects.filter(cohort=cohort)
+    periods = models.period.Period.objects.filter(cohort=cohort).order_by('date_end')
     period_ids = periods.values_list("id", flat=True)
     prd_internship_places = period_internship_places.PeriodInternshipPlaces.objects.filter(
         period_id__in=period_ids
