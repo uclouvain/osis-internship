@@ -112,7 +112,7 @@ def view_students(request, cohort_id):
         # Mange sort of the students
         sol = OrderedDict(sorted(sol.items(), key=lambda t: t[0].person.last_name))
 
-    latest_generation = models.affectation_generation_time.get_latest()
+    latest_generation = models.affectation_generation_time.get_latest(cohort)
 
     context = {'cohort': cohort, 'periods': periods, 'recap_sol': sol, 'latest_generation': latest_generation}
 
@@ -143,7 +143,7 @@ def view_statistics(request, cohort_id):
         sol = statistics.load_solution_sol(cohort, student_affectations)
         stats = statistics.compute_stats(cohort, sol)
 
-    latest_generation = models.affectation_generation_time.get_latest()
+    latest_generation = models.affectation_generation_time.get_latest(cohort)
 
     context = {'cohort': cohort, 'stats': stats, 'latest_generation': latest_generation}
 
@@ -167,7 +167,7 @@ def view_errors(request, cohort_id):
         internship_errors = internship_student_affectation_stat.InternshipStudentAffectationStat.objects \
             .filter(organization=hospital, period_id__in=period_ids)
 
-    latest_generation = models.affectation_generation_time.get_latest()
+    latest_generation = models.affectation_generation_time.get_latest(cohort)
     context = {'cohort': cohort, 'errors': internship_errors, 'latest_generation': latest_generation}
     return render(request, "internship_affectation_errors.html", context)
 
