@@ -41,7 +41,7 @@ from internship.models.enums.affectation_type import AffectationType
 from internship.models.enums.choice_type import ChoiceType
 from internship.models.enums.costs import Costs
 from internship.models.internship import Internship
-from internship.models.internship_choice import InternshipChoice
+from internship.models.internship_choice import InternshipChoice, find_students_with_priority_choices
 from internship.models.internship_enrollment import InternshipEnrollment
 from internship.models.internship_offer import InternshipOffer
 from internship.models.internship_speciality import InternshipSpeciality
@@ -54,7 +54,7 @@ from internship.utils.assignment.period_utils import group_periods_by_consecutiv
 
 logger = logging.getLogger(settings.DEFAULT_LOGGER)
 
-TIMEOUT = 30
+TIMEOUT = 60
 MAX_ALLOWED_IMPOSED = 2
 
 
@@ -73,6 +73,8 @@ class Assignment:
         self.students = Student.objects.filter(person_id__in=self.person_ids)
 
         self.internships = Internship.objects.filter(cohort=self.cohort).order_by("position", "name")
+        self.priotary_students_person_ids = find_students_with_priority_choices(self.internships).values_list('person__id', flat=True)
+
         self.mandatory_internships = self.internships.exclude(speciality__isnull=True)
         self.non_mandatory_internships = self.internships.filter(speciality__isnull=True)
 
@@ -148,7 +150,8 @@ class Assignment:
         _assign_non_mandatory_internships(self)
         _balance_assignments(self)
         self.stop = timeit.default_timer()
-        logger.info('Time: ', self.stop - self.start)
+        total_time = self.stop - self.start
+        logger.info('Time: {} seconds'.format(total_time))
 
 
 def _assign_non_mandatory_internships(self):
@@ -178,12 +181,13 @@ def _update_distinction_between_students(self):
     disadvantaged_students = []
     favored_students = []
     for student in self.students_information:
-        if student.cost >= Costs.PRIORITY.value and student.cost < Costs.IMPOSED.value:
-            favored_students.append(student)
-        if student.cost >= MAX_ALLOWED_IMPOSED * Costs.IMPOSED.value:
-            if student.cost >= Costs.ERROR.value + MAX_ALLOWED_IMPOSED * Costs.IMPOSED.value:
-                student.cost = student.cost - Costs.ERROR.value
-            disadvantaged_students.append(student)
+        if student.person_id not in self.priotary_students_person_ids:
+            if student.cost >= Costs.PRIORITY.value and student.cost < Costs.IMPOSED.value:
+                favored_students.append(student)
+            if student.cost >= MAX_ALLOWED_IMPOSED * Costs.IMPOSED.value:
+                if student.cost >= Costs.ERROR.value + MAX_ALLOWED_IMPOSED * Costs.IMPOSED.value:
+                    student.cost = student.cost - Costs.ERROR.value
+                disadvantaged_students.append(student)
     return favored_students, disadvantaged_students
 
 
