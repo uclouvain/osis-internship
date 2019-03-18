@@ -371,18 +371,19 @@ def assign_choices_to_student(assignment, student, choices, internship, last=Fal
         periods = find_first_student_available_periods_for_internship_choice(assignment, student, internship, choice)
         if len(periods) > 0:
             if is_non_mandatory_internship(internship) and not internship.first:
-                choice.choice = ChoiceType.IMPOSED.value
+                if not choice.priority and not is_prior_internship(internship, choices):
+                    choice.choice = ChoiceType.IMPOSED.value
             affectations.extend(build_affectation_for_periods(assignment, student, choice.organization, periods,
                                                               choice.speciality, choice.choice, choice.priority,
                                                               choice.internship))
-
             break
 
     # None of student choices available? Try to affect outside of choices
     if len(affectations) == 0:
-        if is_non_mandatory_internship(internship):
-            logger.info("{} - {}".format(student, internship))
-        affectations.extend(find_best_affectation_outside_of_choices(assignment, student, internship, choices, last))
+        if not is_prior_internship(internship, choices):
+            affectations.extend(
+                find_best_affectation_outside_of_choices(assignment, student, internship, choices, last)
+            )
 
     return affectations
 
@@ -617,3 +618,13 @@ def is_mandatory_internship(internship):
 
 def is_non_mandatory_internship(internship):
     return not hasattr(internship, 'speciality') or internship.speciality is None
+
+
+def student_has_priority(assignment, student):
+    return student.id not in assignment.priotary_students_person_ids
+
+
+def is_prior_internship(internship, choices):
+    for choice in choices:
+        if choice.internship == internship and choice.priority:
+            return True
