@@ -395,7 +395,7 @@ def find_best_affectation_outside_of_choices(assignment, student, internship, ch
                                                                      grouped_periods, last)
             if offer:
                 return build_affectation_for_periods(assignment, student, offer.organization, grouped_periods,
-                                                         offer.speciality, ChoiceType.IMPOSED.value, False, internship)
+                                                     offer.speciality, ChoiceType.IMPOSED.value, False, internship)
         if is_mandatory_internship(internship) and student_periods:
             return affect_hospital_error(assignment, student, internship, student_periods)
         else:
