@@ -127,7 +127,7 @@
                                 <tr>
                                     <td>
                                         <a href="{% url 'internships_student_read' cohort_id=cohort.id student_id=student.id %}" target="_blank">{{student}}</a>
-                                        {% if student.priority %}<span><i style="font-size:10px; color:#337ab7;" class="fa">-P</i></span>{% endif %}
+                                        {% if student.priority %}<span><i style="font-size:10px; color:#337ab7;" class="fa">-P.</i></span>{% endif %}
                                     </td>
                                     {% for period, enrollment in periods.items %}
                                         {% if enrollment.choice == 'I' %}
@@ -178,7 +178,7 @@
               if ($(this).is(':checked')) {
                 $.fn.dataTable.ext.search.push(
                   function(settings, data, dataIndex) {
-                    return data[0].includes("-P");
+                    return data[0].includes("-P.");
                   }
                 )
               } else {
