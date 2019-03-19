@@ -28,10 +28,13 @@ from collections import defaultdict
 from operator import itemgetter
 from statistics import mean, stdev
 
+from base.models.student import Student
 from internship import models
 from internship.models import period_internship_places
 from internship.models.enums.affectation_type import AffectationType
 from internship.models.enums.choice_type import ChoiceType
+from internship.models.internship import Internship
+from internship.models.internship_choice import find_priority_choices, InternshipChoice
 from internship.models.period import Period
 
 HOSPITAL_ERROR = 999  # Reference of the hospital "erreur"
@@ -288,7 +291,9 @@ def load_solution_table(data, cohort):
 
 def load_solution_sol(cohort, student_affectations):
     keys = Period.objects.filter(cohort=cohort).order_by('date_end').values_list("name", flat=True)
-
+    internships = Internship.objects.filter(cohort=cohort)
+    priority_choices = InternshipChoice.objects.filter(internship__in=internships, priority=True)
+    students = Student.objects.filter(id__in=priority_choices.values("student").distinct())
     sol = {}
     for item in student_affectations:
         # Initialize 12 empty period of each student
@@ -297,6 +302,7 @@ def load_solution_sol(cohort, student_affectations):
             # Sort the periods by name P1, P2, ...
             sol[item.student] = OrderedDict(sorted(sol[item.student].items(), key=lambda t: int(t[0][1:])))
             sol[item.student]['score'] = 0
+            item.student.priority = item.student in students
         # Put the internship in the solution
         sol[item.student][item.period.name] = item
         # store the cost of each student
