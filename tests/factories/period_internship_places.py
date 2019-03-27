@@ -23,20 +23,19 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import factory.fuzzy
-
-from django.utils.text import slugify
+import factory.django
 
 from internship.tests.factories.cohort import CohortFactory
 
 
-class OrganizationFactory(factory.django.DjangoModelFactory):
+class SpecialtyFactory(factory.django.DjangoModelFactory):
     class Meta:
-        model = 'internship.Organization'
-        django_get_or_create = ('reference',)
+        model = 'internship.InternshipSpeciality'
 
-    name = factory.Sequence(lambda n: 'Organization %d' % (n,))
-    acronym = factory.LazyAttribute(lambda o: slugify(o.name)[:15])
-    reference = factory.fuzzy.FuzzyInteger(1, 999)
-    website = factory.Faker('url')
+    name = factory.Faker('job')
+    mandatory = False
     cohort = factory.SubFactory(CohortFactory)
+
+    @factory.lazy_attribute
+    def acronym(self):
+        return "".join(word[0] for word in self.name.split()).upper()
