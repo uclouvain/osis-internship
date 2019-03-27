@@ -26,16 +26,14 @@
 import factory.django
 
 from internship.tests.factories.cohort import CohortFactory
+from internship.tests.factories.offer import OfferFactory
+from internship.tests.factories.period import PeriodFactory
 
 
-class SpecialtyFactory(factory.django.DjangoModelFactory):
+class PeriodInternshipPlacesFactory(factory.django.DjangoModelFactory):
     class Meta:
-        model = 'internship.InternshipSpeciality'
+        model = 'internship.PeriodInternshipPlaces'
 
-    name = factory.Faker('job')
-    mandatory = False
-    cohort = factory.SubFactory(CohortFactory)
-
-    @factory.lazy_attribute
-    def acronym(self):
-        return "".join(word[0] for word in self.name.split()).upper()
+    period = factory.SubFactory(PeriodFactory)
+    internship_offer = factory.SubFactory(OfferFactory)
+    number_places = factory.Faker('random_int', min=1, max=16)
