@@ -32,7 +32,10 @@ class SpecialtyFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = 'internship.InternshipSpeciality'
 
-    name = factory.Faker('name')
-    acronym = factory.Sequence(lambda n: 'SPEC-%d' % n)
+    name = factory.Faker('job')
     mandatory = False
     cohort = factory.SubFactory(CohortFactory)
+
+    @factory.lazy_attribute
+    def acronym(self):
+        return "".join(word[0] for word in self.name.split()).upper()
