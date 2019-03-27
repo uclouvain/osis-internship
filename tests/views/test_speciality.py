@@ -139,8 +139,8 @@ class SpecialityViewTestCase(TestCase):
         self.assertIn(specialty['name'], messages[0].message)
 
     def test_save_with_duplicate_acronym(self):
-        first_specialty = SpecialtyFactory(name='TEST', cohort=self.cohort)
-        second_specialty = SpecialtyFactory(name='TEST-1', cohort=self.cohort)
+        first_specialty = SpecialtyFactory(name='TEST', acronym='TE1', cohort=self.cohort)
+        second_specialty = SpecialtyFactory(name='TEST-1', acronym='TE2', cohort=self.cohort)
 
         url = reverse('speciality_save', kwargs={
             'cohort_id': self.cohort.id,
