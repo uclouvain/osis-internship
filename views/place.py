@@ -155,8 +155,9 @@ def student_affectation(request, cohort_id, organization_id):
                                                                                      cohort=cohort)
         if internship_student_information:
             informations = internship_student_information.first()
+            person_address = informations.person.personaddress_set.first()
             a.email = informations.email
-            a.adress = informations.location + " " + informations.postal_code + " " + informations.city
+            a.adress = _format_address(person_address)
             a.phone_mobile = informations.phone_mobile
     periods = models.period.search(cohort=cohort)
 
@@ -197,8 +198,9 @@ def export_organisation_affectation_master(request, cohort_id, organization_id):
                                                               specialty=affectation.speciality)
             if internship_student_info:
                 informations = internship_student_info.first()
+                person_address = informations.person.personaddress_set.first()
                 affectation.email = informations.email
-                affectation.adress = informations.location + " " + informations.postal_code + " " + informations.city
+                affectation.adress = _format_address(person_address)
                 affectation.phone_mobile = informations.phone_mobile
             if master_allocation:
                 allocation = master_allocation.first()
@@ -239,3 +241,12 @@ def _export_xls(organization, virtual_workbook):
     file_name = "affectation_{}_{}.xlsx".format(str(organization.reference), file_name_parts)
     response['Content-Disposition'] = 'attachment; filename={}'.format(file_name)
     return response
+
+
+def _format_address(person_address):
+    return "{} - {} {} ({})".format(
+        person_address.location,
+        person_address.postal_code,
+        person_address.city,
+        person_address.country
+    )
