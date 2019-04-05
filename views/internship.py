@@ -79,6 +79,8 @@ def modification_student(request, cohort_id, student_id, internship_id=-1, speci
         student=student,
         internship=internship).select_related("organization")
 
+    print(student_choices)
+
     internships = mdl_int.internship.Internship.objects.filter(cohort=cohort, pk__gte=1)\
         .order_by("speciality__name", "name")\
         .select_related("speciality")

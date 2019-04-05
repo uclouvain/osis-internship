@@ -34,6 +34,7 @@ from django.views.decorators.http import require_http_methods
 from base import models as mdl
 from internship import models as mdl_int
 from internship.models.cohort import Cohort
+from internship.models.internship import Internship
 from internship.models.internship_choice import InternshipChoice
 from internship.models.internship_offer import InternshipOffer
 from internship.models.internship_speciality import InternshipSpeciality
@@ -136,21 +137,45 @@ def student_choice(request, cohort_id, offer_id):
     cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)
     # Get the internship by its id
     # TODO: Check if this algo is ok
-    internship = get_object_or_404(mdl_int.internship_offer.InternshipOffer, pk=offer_id, organization__cohort=cohort)
+    offer = get_object_or_404(mdl_int.internship_offer.InternshipOffer, pk=offer_id, organization__cohort=cohort)
     # Get the students who have choosen this internship
-    students = mdl_int.internship_choice.search(organization=internship.organization, speciality=internship.speciality)
-    number_choices = [None]*5
+    internships = InternshipChoice.objects.filter(
+        organization=offer.organization,
+        speciality=offer.speciality
+    ).order_by('student').distinct('student')
+
+    mandatory_internships_choices = InternshipChoice.objects.filter(
+        organization=offer.organization,
+        speciality=offer.speciality,
+        internship__speciality=offer.speciality
+    ).order_by('student').distinct('student')
+
+    non_mandatory_internships_choices = internships.difference(mandatory_internships_choices)
+
+    number_choices = [0]*4
+
+    non_mandatory_internships = Internship.objects.filter(
+        cohort=cohort,
+        speciality__isnull=True
+    ).order_by('name')
+
+    number_choices_non_mandatory = [[0 for i in range(4)] for j in range(non_mandatory_internships.count())]
+
+    if(non_mandatory_internships_choices.count() > 0):
+        for i, internship in enumerate(non_mandatory_internships):
+            for choice in non_mandatory_internships_choices:
+                if choice.internship_id == internship.pk:
+                    number_choices_non_mandatory[i][choice.choice-1] += 1
 
     # Get the choices' number for this internship
-    for index in range(1, 5):
-        count = mdl_int.internship_choice.search(
-            organization=internship.organization,
-            speciality=internship.speciality,
-            choice=index).count()
+    if(mandatory_internships_choices.count() > 0):
+        for choice in mandatory_internships_choices:
+            number_choices[choice.choice - 1] += 1
 
-        number_choices[index] = count
-
-    context = {'internship': internship, 'students': students, 'number_choices': number_choices, 'cohort': cohort}
+    context = {'internship': offer, 'students': mandatory_internships_choices, 'number_choices': number_choices,
+               'mandatory_internships_choices': mandatory_internships_choices.count(),
+               'non_mandatory_internships_choices': non_mandatory_internships_choices.count(),
+               'number_choices_non_mandatory': number_choices_non_mandatory, 'cohort': cohort}
     return render(request, "internship_detail.html", context)
 
 

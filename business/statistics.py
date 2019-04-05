@@ -303,6 +303,13 @@ def load_solution_sol(cohort, student_affectations):
             sol[item.student] = OrderedDict(sorted(sol[item.student].items(), key=lambda t: int(t[0][1:])))
             sol[item.student]['score'] = 0
             item.student.priority = item.student in students
+            # if item.student.priority:
+            #     item.check = 1 if priority_choices.filter(
+            #         student=item.student,
+            #         speciality=item.speciality,
+            #         organization=item.organization,
+            #         priority=True
+            #     ).exists() else 0
         # Put the internship in the solution
         sol[item.student][item.period.name] = item
         # store the cost of each student
