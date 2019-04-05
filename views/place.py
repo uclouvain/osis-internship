@@ -47,6 +47,7 @@ def internships_places(request, cohort_id):
     context = {'all_organizations': organizations, 'cohort': cohort}
     return render(request, "places.html", context)
 
+
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def place_save(request, cohort_id, organization_id):
@@ -151,14 +152,9 @@ def student_affectation(request, cohort_id, organization_id):
         a.email = ""
         a.adress = ""
         a.phone_mobile = ""
-        internship_student_information= models.internship_student_information.search(person=a.student.person,
+        internship_student_information = models.internship_student_information.search(person=a.student.person,
                                                                                      cohort=cohort)
-        if internship_student_information:
-            informations = internship_student_information.first()
-            person_address = informations.person.personaddress_set.first()
-            a.email = informations.email
-            a.adress = _format_address(person_address)
-            a.phone_mobile = informations.phone_mobile
+        _add_student_information(a, internship_student_information)
     periods = models.period.search(cohort=cohort)
 
     internships = models.internship_offer.search(organization = organization, cohort=cohort)
@@ -196,12 +192,7 @@ def export_organisation_affectation_master(request, cohort_id, organization_id):
             internship_student_info = models.internship_student_information.search(person=affectation.student.person)
             master_allocation = models.master_allocation.search(cohort=cohort, hospital=affectation.organization,
                                                               specialty=affectation.speciality)
-            if internship_student_info:
-                informations = internship_student_info.first()
-                person_address = informations.person.personaddress_set.first()
-                affectation.email = informations.email
-                affectation.adress = _format_address(person_address)
-                affectation.phone_mobile = informations.phone_mobile
+            _add_student_information(affectation, internship_student_info)
             if master_allocation:
                 allocation = master_allocation.first()
                 affectation.master = allocation.master
@@ -250,3 +241,12 @@ def _format_address(person_address):
         person_address.city,
         person_address.country
     )
+
+
+def _add_student_information(affectation, internship_student_information):
+    if internship_student_information:
+        informations = internship_student_information.first()
+        person_address = informations.person.personaddress_set.first()
+        affectation.email = informations.email
+        affectation.adress = _format_address(person_address)
+        affectation.phone_mobile = informations.phone_mobile
