@@ -152,8 +152,10 @@ def student_affectation(request, cohort_id, organization_id):
         a.email = ""
         a.adress = ""
         a.phone_mobile = ""
-        internship_student_information = models.internship_student_information.search(person=a.student.person,
-                                                                                     cohort=cohort)
+        internship_student_information = models.internship_student_information.search(
+            person=a.student.person,
+            cohort=cohort
+        )
         _add_student_information(a, internship_student_information)
     periods = models.period.search(cohort=cohort)
 
