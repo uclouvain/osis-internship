@@ -95,7 +95,16 @@ class AssignmentTest(TestCase):
         )
         self.assertEqual(unlucky_student_affectation.organization, self.hospital_error)
 
-    def test_prior_student_choices_respected(self):
+    def test_prior_student_choices_with_blocked_periods_respected(self):
+        prior_student_affectations = self.affectations.filter(student=self.prior_student)
+        prior_enrollments = InternshipEnrollment.objects.filter(student=self.prior_student)
+        for affectation in prior_student_affectations:
+            prior_enrollment = prior_enrollments.get(internship=affectation.internship)
+            self.assertEqual(affectation.organization, prior_enrollment.place)
+            self.assertEqual(affectation.period, prior_enrollment.period)
+            self.assertEqual(affectation.speciality, prior_enrollment.internship_offer.speciality)
+
+    def test_prior_student_choices_with_unblocked_periods_respected(self):
         prior_student_affectations = self.affectations.filter(student=self.prior_student)
         prior_enrollments = InternshipEnrollment.objects.filter(student=self.prior_student)
         for affectation in prior_student_affectations:
@@ -226,6 +235,7 @@ def _make_shortage_scenario(cls):
             choice=choice,
             speciality=specialty_with_offer_shortage,
         )
+    cls.organizations.remove(cls.hospital_error)
     return internship_with_offer_shortage, unlucky_student
 
 
