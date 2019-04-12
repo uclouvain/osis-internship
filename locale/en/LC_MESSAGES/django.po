@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-19 10:06+0100\n"
+"POT-Creation-Date: 2019-04-12 15:36+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -259,11 +259,11 @@ msgstr ""
 msgid "Edit cohort"
 msgstr ""
 
-#: views/internship.py:210
+#: views/internship.py:212
 msgid "Edit internship"
 msgstr ""
 
-#: templates/internship_detail.html:95 templates/period_places_edit.html:32
+#: templates/internship_detail.html:108 templates/period_places_edit.html:32
 #: templates/period_places_edit.html:37
 msgid "Edit places"
 msgstr ""
@@ -344,7 +344,7 @@ msgstr ""
 #: templates/internship_affectation_statistics.html:137
 #: templates/internship_affectation_statistics.html:165
 #: templates/internship_affectation_statistics.html:185
-#: templates/internship_detail.html:46 templates/internship_detail.html:81
+#: templates/internship_detail.html:51 templates/internship_detail.html:92
 msgid "First choice"
 msgstr ""
 
@@ -364,7 +364,7 @@ msgstr ""
 #: templates/internship_affectation_statistics.html:149
 #: templates/internship_affectation_statistics.html:177
 #: templates/internship_affectation_statistics.html:197
-#: templates/internship_detail.html:52 templates/internship_detail.html:87
+#: templates/internship_detail.html:57 templates/internship_detail.html:98
 msgid "Fourth choice"
 msgstr ""
 
@@ -413,7 +413,7 @@ msgstr ""
 msgid "Hospital error"
 msgstr ""
 
-#: views/place.py:67
+#: views/place.py:68
 msgid "Hospital saved"
 msgstr ""
 
@@ -461,11 +461,11 @@ msgstr ""
 msgid "Internship modality"
 msgstr ""
 
-#: views/internship.py:177
+#: views/internship.py:179
 msgid "Internship modality created"
 msgstr ""
 
-#: views/internship.py:222
+#: views/internship.py:224
 msgid "Internship modality deleted"
 msgstr ""
 
@@ -567,8 +567,8 @@ msgstr ""
 msgid "Male"
 msgstr ""
 
-#: templates/internship_detail.html:42
-msgid "Mandatory internships"
+#: templates/internship_detail.html:46
+msgid "Mandatory internship"
 msgstr ""
 
 #: templates/master_form.html:40 templates/student.html:188
@@ -614,7 +614,7 @@ msgstr ""
 msgid "Name"
 msgstr ""
 
-#: views/internship.py:187
+#: views/internship.py:189
 msgid "New internship"
 msgstr ""
 
@@ -644,12 +644,11 @@ msgstr ""
 msgid "Noma"
 msgstr ""
 
-#: templates/internship_detail.html:77
+#: templates/internship_detail.html:87
 msgid "Non mandatory internship"
 msgstr ""
 
 #: templates/internship_affectation_statistics.html:211
-#: templates/internship_detail.html:74
 msgid "Non mandatory internships"
 msgstr ""
 
@@ -809,7 +808,7 @@ msgstr ""
 #: templates/internship_affectation_statistics.html:141
 #: templates/internship_affectation_statistics.html:169
 #: templates/internship_affectation_statistics.html:189
-#: templates/internship_detail.html:48 templates/internship_detail.html:83
+#: templates/internship_detail.html:53 templates/internship_detail.html:94
 msgid "Second choice"
 msgstr ""
 
@@ -981,7 +980,7 @@ msgstr ""
 #: templates/internship_affectation_statistics.html:145
 #: templates/internship_affectation_statistics.html:173
 #: templates/internship_affectation_statistics.html:193
-#: templates/internship_detail.html:50 templates/internship_detail.html:85
+#: templates/internship_detail.html:55 templates/internship_detail.html:96
 msgid "Third choice"
 msgstr ""
 
