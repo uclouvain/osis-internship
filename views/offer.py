@@ -138,7 +138,7 @@ def student_choice(request, cohort_id, offer_id):
     # Get the internship by its id
     # TODO: Check if this algo is ok
     offer = get_object_or_404(mdl_int.internship_offer.InternshipOffer, pk=offer_id, organization__cohort=cohort)
-    # Get the students who have choosen this internship
+    # Get the students who have chosen this internship
     internships = InternshipChoice.objects.filter(
         organization=offer.organization,
         speciality=offer.speciality
@@ -420,6 +420,7 @@ def _get_all_organizations(internships):
     for internship in internships:
         tab.append(internship.organization)
     tab = list(set(tab))
+    tab.sort(key=lambda x: x.reference)
     return tab
 
 

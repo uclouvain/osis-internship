@@ -180,7 +180,7 @@ msgstr "Choix enregistrés"
 
 #: templates/internships.html:46
 msgid "Choose a hospital"
-msgstr "Choisissez une spécialité"
+msgstr "Choisissez un hôpital"
 
 #: templates/internship_modification_student.html:67
 msgid "Choose a specialty"
