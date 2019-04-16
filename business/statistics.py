@@ -197,7 +197,6 @@ def compute_stats(cohort, sol):
             non_mandatory_internships_stats[key]['perc'] = round(perc * 100, 2)
     stats['non_mandatory_internships'] = non_mandatory_internships_stats
 
-
     # Compute standard deviation of the score
     if len(mean_array) > 1:
         std_dev_stud = round(stdev(mean_array), 2)
@@ -303,13 +302,6 @@ def load_solution_sol(cohort, student_affectations):
             sol[item.student] = OrderedDict(sorted(sol[item.student].items(), key=lambda t: int(t[0][1:])))
             sol[item.student]['score'] = 0
             item.student.priority = item.student in students
-            # if item.student.priority:
-            #     item.check = 1 if priority_choices.filter(
-            #         student=item.student,
-            #         speciality=item.speciality,
-            #         organization=item.organization,
-            #         priority=True
-            #     ).exists() else 0
         # Put the internship in the solution
         sol[item.student][item.period.name] = item
         # store the cost of each student
