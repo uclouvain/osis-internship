@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-04-12 15:36+0200\n"
+"POT-Creation-Date: 2019-04-16 10:33+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -162,6 +162,10 @@ msgstr "Choix"
 msgid "Choice's Details"
 msgstr "Détails des choix"
 
+#: templates/internship_detail.html:42
+msgid "Choices distribution for"
+msgstr "Distribution des choix pour"
+
 #: templates/students.html:124
 msgid "Choices modification"
 msgstr "Modification des choix"
@@ -264,7 +268,7 @@ msgstr "Ajouter une cohorte"
 msgid "Edit internship"
 msgstr "Modifier stage"
 
-#: templates/internship_detail.html:108 templates/period_places_edit.html:32
+#: templates/internship_detail.html:111 templates/period_places_edit.html:32
 #: templates/period_places_edit.html:37
 msgid "Edit places"
 msgstr "Modifier nombres de places"
@@ -345,7 +349,7 @@ msgstr "Filtrer par étudiants prioritaires"
 #: templates/internship_affectation_statistics.html:137
 #: templates/internship_affectation_statistics.html:165
 #: templates/internship_affectation_statistics.html:185
-#: templates/internship_detail.html:51 templates/internship_detail.html:92
+#: templates/internship_detail.html:54 templates/internship_detail.html:95
 msgid "First choice"
 msgstr "Choix préféré"
 
@@ -365,7 +369,7 @@ msgstr ""
 #: templates/internship_affectation_statistics.html:149
 #: templates/internship_affectation_statistics.html:177
 #: templates/internship_affectation_statistics.html:197
-#: templates/internship_detail.html:57 templates/internship_detail.html:98
+#: templates/internship_detail.html:60 templates/internship_detail.html:101
 msgid "Fourth choice"
 msgstr "4ème choix"
 
@@ -570,8 +574,7 @@ msgstr "Localité"
 msgid "Male"
 msgstr "Homme"
 
-#: templates/internship_detail.html:46
-#| msgid "Mandatory internships"
+#: templates/internship_detail.html:49
 msgid "Mandatory internship"
 msgstr "Stage obligatoire"
 
@@ -650,7 +653,7 @@ msgstr "Aucun résultat"
 msgid "Noma"
 msgstr ""
 
-#: templates/internship_detail.html:87
+#: templates/internship_detail.html:90
 msgid "Non mandatory internship"
 msgstr "Stage au choix"
 
@@ -814,7 +817,7 @@ msgstr "Rechercher"
 #: templates/internship_affectation_statistics.html:141
 #: templates/internship_affectation_statistics.html:169
 #: templates/internship_affectation_statistics.html:189
-#: templates/internship_detail.html:53 templates/internship_detail.html:94
+#: templates/internship_detail.html:56 templates/internship_detail.html:97
 msgid "Second choice"
 msgstr "2ème choix"
 
@@ -986,7 +989,7 @@ msgstr "Soumettre les choix"
 #: templates/internship_affectation_statistics.html:145
 #: templates/internship_affectation_statistics.html:173
 #: templates/internship_affectation_statistics.html:193
-#: templates/internship_detail.html:55 templates/internship_detail.html:96
+#: templates/internship_detail.html:58 templates/internship_detail.html:99
 msgid "Third choice"
 msgstr "3ème choix"
 
