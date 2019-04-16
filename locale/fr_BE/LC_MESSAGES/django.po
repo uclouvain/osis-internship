@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-04-16 10:33+0200\n"
+"POT-Creation-Date: 2019-04-16 17:01+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -251,6 +251,10 @@ msgstr "Description"
 msgid "Details"
 msgstr "Détails"
 
+#: templates/internship_detail.html:65 templates/internship_detail.html:108
+msgid "Display students"
+msgstr "Afficher les étudiants"
+
 #: models/organization.py:81
 msgid "Duplicated sequence in report"
 msgstr "Séquence dupliquée dans le rapport"
@@ -268,7 +272,7 @@ msgstr "Ajouter une cohorte"
 msgid "Edit internship"
 msgstr "Modifier stage"
 
-#: templates/internship_detail.html:111 templates/period_places_edit.html:32
+#: templates/internship_detail.html:134 templates/period_places_edit.html:32
 #: templates/period_places_edit.html:37
 msgid "Edit places"
 msgstr "Modifier nombres de places"
@@ -333,7 +337,7 @@ msgstr "Exporter vers XLS"
 msgid "Female"
 msgstr "Femme"
 
-#: views/offer.py:406
+#: views/offer.py:419
 msgid "File extension must be .xlsx"
 msgstr "L'extension de fichier doit être .xlsx"
 
@@ -349,7 +353,7 @@ msgstr "Filtrer par étudiants prioritaires"
 #: templates/internship_affectation_statistics.html:137
 #: templates/internship_affectation_statistics.html:165
 #: templates/internship_affectation_statistics.html:185
-#: templates/internship_detail.html:54 templates/internship_detail.html:95
+#: templates/internship_detail.html:54 templates/internship_detail.html:97
 msgid "First choice"
 msgstr "Choix préféré"
 
@@ -369,7 +373,7 @@ msgstr "Les modifications suivantes vont être appliquées:"
 #: templates/internship_affectation_statistics.html:149
 #: templates/internship_affectation_statistics.html:177
 #: templates/internship_affectation_statistics.html:197
-#: templates/internship_detail.html:60 templates/internship_detail.html:101
+#: templates/internship_detail.html:60 templates/internship_detail.html:103
 msgid "Fourth choice"
 msgstr "4ème choix"
 
@@ -653,7 +657,7 @@ msgstr "Aucun résultat"
 msgid "Noma"
 msgstr ""
 
-#: templates/internship_detail.html:90
+#: templates/internship_detail.html:92
 msgid "Non mandatory internship"
 msgstr "Stage au choix"
 
@@ -817,7 +821,7 @@ msgstr "Rechercher"
 #: templates/internship_affectation_statistics.html:141
 #: templates/internship_affectation_statistics.html:169
 #: templates/internship_affectation_statistics.html:189
-#: templates/internship_detail.html:56 templates/internship_detail.html:97
+#: templates/internship_detail.html:56 templates/internship_detail.html:99
 msgid "Second choice"
 msgstr "2ème choix"
 
@@ -952,6 +956,7 @@ msgstr "Choix des étudiants"
 msgid "Students"
 msgstr "Étudiants"
 
+#: templates/internship_detail.html:62 templates/internship_detail.html:105
 #: templates/place_detail.html:49
 msgid "Students list"
 msgstr "Liste des étudiants"
@@ -989,7 +994,7 @@ msgstr "Soumettre les choix"
 #: templates/internship_affectation_statistics.html:145
 #: templates/internship_affectation_statistics.html:173
 #: templates/internship_affectation_statistics.html:193
-#: templates/internship_detail.html:58 templates/internship_detail.html:99
+#: templates/internship_detail.html:58 templates/internship_detail.html:101
 msgid "Third choice"
 msgstr "3ème choix"
 
