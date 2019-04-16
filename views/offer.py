@@ -138,8 +138,10 @@ def student_choice(request, cohort_id, offer_id):
     non_mandatory_internships_choices = _get_non_mandatory_internships_choices(offer)
 
     number_choices = [0]*4
-    number_choices_non_mandatory = _count_non_mandatory_choices(cohort, non_mandatory_internships_choices)
-    _count_mandatory_choices(mandatory_internships_choices, number_choices)
+    if non_mandatory_internships_choices.count() > 0:
+        number_choices_non_mandatory = _count_non_mandatory_choices(cohort, non_mandatory_internships_choices)
+    if mandatory_internships_choices.count() > 0:
+        _count_mandatory_choices(mandatory_internships_choices, number_choices)
 
     context = {
         'internship': offer,
@@ -155,9 +157,8 @@ def student_choice(request, cohort_id, offer_id):
 
 
 def _count_mandatory_choices(mandatory_internships_choices, number_choices):
-    if (mandatory_internships_choices.count() > 0):
-        for choice in mandatory_internships_choices:
-            number_choices[choice.choice - 1] += 1
+    for choice in mandatory_internships_choices:
+        number_choices[choice.choice - 1] += 1
 
 
 def _count_non_mandatory_choices(cohort, non_mandatory_internships_choices):
@@ -166,11 +167,10 @@ def _count_non_mandatory_choices(cohort, non_mandatory_internships_choices):
         speciality__isnull=True
     ).order_by('name')
     number_choices_non_mandatory = [[0 for i in range(4)] for j in range(non_mandatory_internships.count())]
-    if (non_mandatory_internships_choices.count() > 0):
-        for i, internship in enumerate(non_mandatory_internships):
-            for choice in non_mandatory_internships_choices:
-                if choice.internship_id == internship.pk:
-                    number_choices_non_mandatory[i][choice.choice - 1] += 1
+    for i, internship in enumerate(non_mandatory_internships):
+        nm_choices = non_mandatory_internships_choices.filter(internship=internship)
+        for choice in nm_choices:
+            number_choices_non_mandatory[i][choice.choice - 1] += 1
     return number_choices_non_mandatory
 
 
