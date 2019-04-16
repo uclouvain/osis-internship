@@ -27,7 +27,7 @@ msgstr ""
 
 #: templates/students_update.html:50
 msgid "Accept"
-msgstr ""
+msgstr "Accepter"
 
 #: templates/specialities.html:54 templates/speciality_form.html:54
 msgid "Acronym"
@@ -363,7 +363,7 @@ msgstr "Prénom"
 
 #: templates/students_update.html:44
 msgid "Following modifications will be applied:"
-msgstr ""
+msgstr "Les modifications suivantes vont être appliquées:"
 
 #: forms/form_offer_preference.py:37
 #: templates/internship_affectation_statistics.html:149
@@ -619,7 +619,7 @@ msgstr "NOMA"
 #: templates/places.html:53 templates/specialities.html:53
 #: templates/speciality_form.html:52 templates/students.html:105
 msgid "Name"
-msgstr ""
+msgstr "Nom"
 
 #: views/internship.py:189
 msgid "New internship"
@@ -627,7 +627,7 @@ msgstr "Nouveau stage"
 
 #: templates/students_update.html:86
 msgid "New records"
-msgstr ""
+msgstr "Nouveaux enregistrements"
 
 #: templates/master.html:152
 msgid "No allocation found for the master"
