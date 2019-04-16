@@ -65,7 +65,7 @@ def list_internships(request, cohort_id, specialty_id=None):
     if organization_sort_value and organization_sort_value != "0":
         query = query.filter(
             organization__name=organization_sort_value,
-            speciality__acronym=specialty.acronym
+            speciality=specialty
         )
     else:
         query = query.filter(
@@ -77,15 +77,12 @@ def list_internships(request, cohort_id, specialty_id=None):
     query = query.select_related("organization", "speciality") \
         .order_by('speciality__acronym', 'speciality__name', 'organization__reference')
 
-    organizations = query.values_list('organization_id')
-
     # Sort the internships by the organization's reference
     query = _sort_internships(query, specialty.id)
 
     # Get The number of different choices for the internships
     mandatory_choices = InternshipChoice.objects.filter(
-        speciality__acronym=specialty.acronym,
-        organization_id__in=organizations,
+        speciality=specialty,
     ).select_related("speciality")
 
     _get_number_choices(query, mandatory_choices)
@@ -136,21 +133,24 @@ def list_internships(request, cohort_id, specialty_id=None):
 def student_choice(request, cohort_id, offer_id):
     cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)
     # Get the internship by its id
-    # TODO: Check if this algo is ok
     offer = get_object_or_404(mdl_int.internship_offer.InternshipOffer, pk=offer_id, organization__cohort=cohort)
     # Get the students who have chosen this internship
     internships = InternshipChoice.objects.filter(
         organization=offer.organization,
         speciality=offer.speciality
-    ).order_by('student').distinct('student')
+    ).order_by('student')
 
     mandatory_internships_choices = InternshipChoice.objects.filter(
         organization=offer.organization,
         speciality=offer.speciality,
-        internship__speciality=offer.speciality
+        internship__speciality=offer.speciality,
     ).order_by('student').distinct('student')
 
-    non_mandatory_internships_choices = internships.difference(mandatory_internships_choices)
+    non_mandatory_internships_choices = InternshipChoice.objects.filter(
+        organization=offer.organization,
+        speciality=offer.speciality,
+        internship__speciality=None,
+    ).order_by('student').distinct('student')
 
     number_choices = [0]*4
 
@@ -161,6 +161,7 @@ def student_choice(request, cohort_id, offer_id):
 
     number_choices_non_mandatory = [[0 for i in range(4)] for j in range(non_mandatory_internships.count())]
 
+    a = 0
     if(non_mandatory_internships_choices.count() > 0):
         for i, internship in enumerate(non_mandatory_internships):
             for choice in non_mandatory_internships_choices:
@@ -471,15 +472,27 @@ def _get_number_choices(internships, choices):
             internships : the internships we want to compute the number of choices
     """
     for internship in internships:
+
+        mandatory_internship_choices = choices.filter(
+            organization=internship.organization,
+            internship__speciality=internship.speciality
+        ).order_by('student').distinct('student')
+
+        non_mandatory_internship_choices = choices.filter(
+            organization=internship.organization,
+            internship__speciality=None,
+            speciality=internship.speciality
+        ).order_by('student').distinct('student')
+
+        total_choices = mandatory_internship_choices.union(non_mandatory_internship_choices)
         internship.number_first_choice = 0
         internship.number_other_choice = 0
-        for choice in choices:
-            if choice.speciality.acronym == internship.speciality.acronym and \
-               choice.organization_id == internship.organization_id:
-                if choice.choice == 1:
-                    internship.number_first_choice += 1
-                else:
-                    internship.number_other_choice += 1
+        for choice in total_choices:
+            if choice.choice == 1:
+                internship.number_first_choice += 1
+            else:
+                internship.number_other_choice += 1
+
 
 def _delete_dublons_keep_order(seq):
     """
