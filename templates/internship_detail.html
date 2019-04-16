@@ -58,23 +58,26 @@
                         <label> {% trans 'Third choice' %} </label> : {{i}}<br/>
                         {% elif forloop.counter0 == 3 %}
                         <label> {% trans 'Fourth choice' %} </label> : {{i}}<br/>
-{% comment %}                        {% trans 'Students list' %} : <a role="button" data-toggle="collapse" data-target="#choice{{ forloop.counter0 }}"
-                                                        aria-expanded="false"
-                                                        aria-controls="choice{{ forloop.counter0 }}"
-                                                        title="{% trans 'Display students first choice' %}">
-                        <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
-                    </a>
+                    {% endif %}
+                        {% trans 'Students list' %} :
+                        <a role="button" data-toggle="collapse" data-target="#choice{{ forloop.counter0 }}"
+                           aria-expanded="false" aria-controls="choice{{ forloop.counter0 }}"
+                           title="{% trans 'Display students' %}">
+                            <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+                        </a>
                         <div class="collapse" id="choice{{ forloop.counter0 }}">
-                            <ul>
+                            <ul style="list-style:none; padding-left: 0;">
                                 {% for student in students %}
-                                    {% if student.choice == forloop.parentloop.counter0 %}
-                                        <li> {{ student.student }} </li>
+                                    {% if student.choice == forloop.parentloop.counter0|add:1 %}
+                                        <li>
+                                            <span style="margin-right: 5px;" class="glyphicon glyphicon-user text-primary"></span>
+                                            {{ student.student.person.first_name.0 }}. {{ student.student.person.last_name }}
+                                        </li>
                                     {% endif %}
                                 {% endfor %}
                             </ul>
                         </div>
-                        <br/>{% endcomment %}
-                    {% endif %}
+                    <br/>
                     <br>
                 {% endfor %}
                 </div>
@@ -90,25 +93,46 @@
                 </div>
                 <div class="panel-body">
                 {% for j in i %}
-                            {% if forloop.counter0 == 0 %}
-                            <label> {% trans 'First choice' %} </label> : {{j}}<br/>
-                            {% elif forloop.counter0 == 1 %}
-                            <label> {% trans 'Second choice' %} </label> : {{j}}<br/>
-                            {% elif forloop.counter0 == 2 %}
-                            <label> {% trans 'Third choice' %} </label> : {{j}}<br/>
-                            {% elif forloop.counter0 == 3 %}
-                            <label> {% trans 'Fourth choice' %} </label> : {{j}}<br/>
-                        {% endif %}
-                        <br/>
+                    {% if forloop.counter0 == 0 %}
+                        <label> {% trans 'First choice' %} </label> : {{j}}<br/>
+                        {% elif forloop.counter0 == 1 %}
+                        <label> {% trans 'Second choice' %} </label> : {{j}}<br/>
+                        {% elif forloop.counter0 == 2 %}
+                        <label> {% trans 'Third choice' %} </label> : {{j}}<br/>
+                        {% elif forloop.counter0 == 3 %}
+                        <label> {% trans 'Fourth choice' %} </label> : {{j}}<br/>
+                    {% endif %}
+                    {% trans 'Students list' %} :
+                    <a role="button" data-toggle="collapse" data-target="#nm-choice-{{forloop.parentloop.counter0}}-{{ forloop.counter0 }}"
+                       aria-expanded="false" aria-controls="nmchoice-{{forloop.parentloop.counter0}}{{ forloop.counter0 }}"
+                       title="{% trans 'Display students' %}">
+                        <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+                    </a>
+                    <div class="collapse" id="nm-choice-{{forloop.parentloop.counter0}}-{{ forloop.counter0 }}">
+                        <ul style="list-style:none; padding-left: 0;">
+                            {% for student in nm_students %}
+                                    {% if student.internship.name|make_list|last|add:0 == forloop.parentloop.parentloop.counter|add:0 and student.choice == forloop.parentloop.counter %}
+                                        <li>
+                                            <span style="margin-right: 5px;" class="glyphicon glyphicon-user text-primary"></span>
+                                            {{ student.student.person.first_name.0 }}. {{ student.student.person.last_name }}
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+                        </ul>
+                    </div>
+                    <br/>
+                    <br>
                 {% endfor %}
-                            </div>
-        </div>
+                </div>
+            </div>
         </div>
             {% endfor %}
             {% endif %}
-        <div class="col-lg-6" style="margin-top: 20px;">
-        <a href="{% url 'edit_period_places' cohort_id=cohort.id internship_id=internship.id %}" class="btn btn-primary" role="button">{% trans 'Edit places' %}</a>
-    </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6" style="margin-left: 30px; margin-top: 20px; margin-bottom:20px;">
+                <a href="{% url 'edit_period_places' cohort_id=cohort.id internship_id=internship.id %}" class="btn btn-primary" role="button">{% trans 'Edit places' %}</a>
+            </div>
         </div>
     </div>
     </div>

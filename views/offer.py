@@ -144,13 +144,13 @@ def student_choice(request, cohort_id, offer_id):
         organization=offer.organization,
         speciality=offer.speciality,
         internship__speciality=offer.speciality,
-    ).order_by('student').distinct('student')
+    ).order_by('student__person__last_name').distinct().select_related('student__person')
 
     non_mandatory_internships_choices = InternshipChoice.objects.filter(
         organization=offer.organization,
         speciality=offer.speciality,
         internship__speciality=None,
-    ).order_by('student').distinct('student')
+    ).order_by('student__person__last_name').distinct().select_related('student__person')
 
     number_choices = [0]*4
 
@@ -161,7 +161,6 @@ def student_choice(request, cohort_id, offer_id):
 
     number_choices_non_mandatory = [[0 for i in range(4)] for j in range(non_mandatory_internships.count())]
 
-    a = 0
     if(non_mandatory_internships_choices.count() > 0):
         for i, internship in enumerate(non_mandatory_internships):
             for choice in non_mandatory_internships_choices:
@@ -173,10 +172,12 @@ def student_choice(request, cohort_id, offer_id):
         for choice in mandatory_internships_choices:
             number_choices[choice.choice - 1] += 1
 
-    context = {'internship': offer, 'students': mandatory_internships_choices, 'number_choices': number_choices,
+    context = {'internship': offer, 'number_choices': number_choices,
+               'students': mandatory_internships_choices, 'nm_students': non_mandatory_internships_choices,
                'mandatory_internships_choices': mandatory_internships_choices.count(),
                'non_mandatory_internships_choices': non_mandatory_internships_choices.count(),
-               'number_choices_non_mandatory': number_choices_non_mandatory, 'cohort': cohort}
+               'number_choices_non_mandatory': number_choices_non_mandatory, 'cohort': cohort,
+               'nm_internships': non_mandatory_internships}
     return render(request, "internship_detail.html", context)
 
 
