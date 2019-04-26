@@ -28,7 +28,6 @@ from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
-
 from internship.models.enums.civility import Civility
 from internship.models.enums.gender import Gender
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
@@ -51,7 +50,11 @@ class InternshipMaster(SerializableModel):
     location = models.CharField(max_length=255, blank=True, null=True)
     postal_code = models.CharField(max_length=20, blank=True, null=True)
     city = models.CharField(max_length=255, blank=True, null=True)
-    country = models.ForeignKey('reference.Country', blank=True, null=True)
+    country = models.ForeignKey(
+        'reference.Country',
+        blank=True, null=True,
+        on_delete=models.CASCADE
+    )
     phone = models.CharField(max_length=30, blank=True, null=True)
     phone_mobile = models.CharField(max_length=30, blank=True, null=True)
     birth_date = models.DateField(blank=True, null=True)

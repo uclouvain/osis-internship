@@ -44,7 +44,10 @@ class Cohort(SerializableModel):
     publication_start_date = models.DateField()
     subscription_start_date = models.DateField()
     subscription_end_date = models.DateField()
-    originated_from = models.ForeignKey('Cohort', null=True, blank=True)
+    originated_from = models.ForeignKey(
+        'Cohort', null=True, blank=True,
+        on_delete=models.CASCADE
+    )
 
     def clean(self):
         self.clean_start_date()
@@ -56,7 +59,7 @@ class Cohort(SerializableModel):
                 raise ValidationError({"subscription_start_date": _("Start date must be earlier than end date.")})
 
     def clean_publication_date(self):
-        if all([ self.subscription_end_date, self.publication_start_date]):
+        if all([self.subscription_end_date, self.publication_start_date]):
             if self.publication_start_date < self.subscription_end_date:
                 raise ValidationError(
                     {"publication_start_date": _("Publication must be done after the subscription process.")}

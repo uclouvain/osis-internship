@@ -47,7 +47,7 @@ class Organization(SerializableModel):
     location = models.CharField(max_length=255, blank=True, null=True)
     postal_code = models.CharField(max_length=20, blank=True, null=True)
     city = models.CharField(max_length=255, blank=True, null=True)
-    country = models.ForeignKey('reference.Country', blank=True, null=True)
+    country = models.ForeignKey('reference.Country', blank=True, null=True, on_delete=models.CASCADE)
     cohort = models.ForeignKey('internship.Cohort', on_delete=models.CASCADE)
 
     report_period = models.IntegerField(default=1, blank=True, null=True)
@@ -71,15 +71,13 @@ class Organization(SerializableModel):
     def clean(self):
         self.clean_duplicate_sequence()
 
-
     def clean_duplicate_sequence(self):
         report = {field: value for field, value in vars(self).items() if "report_" in field and value is not None}
         report_values = [value for field, value in report.items()]
         duplicates = set([x for x in report_values if report_values.count(x) > 1])
         keys = [field for field, value in report.items() if value in duplicates]
         for k in keys:
-            raise ValidationError({k :_("Duplicated sequence in report")})
-
+            raise ValidationError({k: _("Duplicated sequence in report")})
 
     def report_sequence(self):
         """ Returns only the report fields that are numered and ordered as numered."""
