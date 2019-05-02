@@ -38,8 +38,8 @@ class InternshipOfferAdmin(SerializableModelAdmin):
 
 
 class InternshipOffer(SerializableModel):
-    organization = models.ForeignKey('internship.Organization')
-    speciality = models.ForeignKey('internship.InternshipSpeciality', null=True)
+    organization = models.ForeignKey('internship.Organization', on_delete=models.CASCADE)
+    speciality = models.ForeignKey('internship.InternshipSpeciality', null=True, on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
     maximum_enrollments = models.IntegerField()
     master = models.CharField(max_length=100, blank=True, null=True)
@@ -74,8 +74,8 @@ def search(**kwargs):
 
 
 def _apply_constraints(resultset):
-    return resultset.select_related("organization", "speciality")\
-                    .order_by('speciality__acronym', 'speciality__name', 'organization__reference')
+    return resultset.select_related("organization", "speciality") \
+        .order_by('speciality__acronym', 'speciality__name', 'organization__reference')
 
 
 def find_by_speciality(speciality):

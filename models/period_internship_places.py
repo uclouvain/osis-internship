@@ -36,8 +36,8 @@ class PeriodInternshipPlacesAdmin(SerializableModelAdmin):
 
 
 class PeriodInternshipPlaces(SerializableModel):
-    period = models.ForeignKey('internship.Period')
-    internship_offer = models.ForeignKey('internship.InternshipOffer')
+    period = models.ForeignKey('internship.Period', on_delete=models.CASCADE)
+    internship_offer = models.ForeignKey('internship.InternshipOffer', on_delete=models.CASCADE)
     number_places = models.IntegerField()
 
     def __str__(self):
