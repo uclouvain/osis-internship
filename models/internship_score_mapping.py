@@ -23,20 +23,27 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.db import models
 
-from internship.models import affectation_generation_time
-from internship.models import internship_choice
-from internship.models import internship_enrollment
-from internship.models import internship_master
-from internship.models import internship_offer
-from internship.models import internship_speciality
-from internship.models import internship_student_affectation_stat
-from internship.models import internship_student_information
-from internship.models import master_allocation
-from internship.models import organization
-from internship.models import period
-from internship.models import period_internship_places
-from internship.models import cohort
-from internship.models import internship
-from internship.models import internship_score
-from internship.models import internship_score_mapping
+from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
+
+
+class InternshipScoreMappingAdmin(SerializableModelAdmin):
+    list_display = ('period', 'apd', 'score_A', 'score_B', 'score_C', 'score_D')
+    list_filter = ('period', 'cohort')
+
+
+class InternshipScoreMapping(SerializableModel):
+
+    period = models.ForeignKey('internship.period')
+    apd = models.IntegerField()
+
+    score_A = models.IntegerField(default=0)
+    score_B = models.IntegerField(default=0)
+    score_C = models.IntegerField(default=0)
+    score_D = models.IntegerField(default=0)
+
+    cohort = models.ForeignKey('internship.cohort')
+
+    def __str__(self):
+        return '{} - {} - {}'.format(self.period, self.apd, self.score_A, self.score_B, self.score_C, self.score_D)
