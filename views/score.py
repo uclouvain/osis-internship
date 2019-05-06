@@ -28,6 +28,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
+from django.utils.translation import gettext as _
 
 from internship.models.cohort import Cohort
 from internship.models.internship_score import InternshipScore
@@ -84,7 +85,6 @@ def upload_scores(request, cohort_id, period_id):
     period = get_object_or_404(Period, pk=period_id)
     if request.method == 'POST':
         file_name = request.FILES['file_upload']
-
         if file_name is not None:
             if ".xlsx" not in str(file_name):
                 messages.add_message(request, messages.ERROR, _('File extension must be .xlsx'))

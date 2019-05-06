@@ -24,33 +24,20 @@
 #
 ##############################################################################
 
-from openpyxl import load_workbook
+import factory.django
+from factory.fuzzy import FuzzyChoice
 
-from base.models import student
-from internship.models.internship_score import InternshipScore
-from internship.models.period import Period
-
-
-def import_xlsx(cohort, xlsxfile, period):
-    workbook = load_workbook(filename=xlsxfile, read_only=True)
-    worksheet = workbook.active
-    row_count = 0
-    period = Period.objects.get(name=period, cohort=cohort)
-    for row in worksheet.rows:
-        if row_count > 4:
-            _import_score(row, cohort, period)
-        row_count += 1
-    xlsxfile.close()
+from base.tests.factories.student import StudentFactory
+from internship.tests.factories.cohort import CohortFactory
+from internship.tests.factories.period import PeriodFactory
 
 
-def _import_score(row, cohort, period):
-    scores = []
-    registration_id = row[0].value
-    for i in range(1, 15*2, 2):
-        scores.append(row[i+3].value)
-    existing_student = student.find_by_registration_id(registration_id)
-    if existing_student:
-        internship_score, created = InternshipScore.objects.get_or_create(student=existing_student, period=period, cohort=cohort)
-        for index, score in enumerate(scores):
-            internship_score.__setattr__('APD_{}'.format(index+1), score)
-        internship_score.save()
+class ScoreFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = 'internship.InternshipScore'
+
+    student = factory.SubFactory(StudentFactory)
+    cohort = factory.SubFactory(CohortFactory)
+    period = factory.SubFactory(PeriodFactory)
+
+    APD_1 = FuzzyChoice(['A', 'B', 'C', 'D', 'E'])

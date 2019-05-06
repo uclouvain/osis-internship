@@ -78,7 +78,17 @@ class UrlsTestCase(TestCase):
                 url_path='/internships/cohorts/1/students/import/update/',
                 pattern_name='internships_student_import_update',
                 kwargs={'cohort_id': 1}
-            )
+            ),
+            dict(
+                url_path='/internships/cohorts/1/scores_encoding/',
+                pattern_name='internship_scores_encoding',
+                kwargs={'cohort_id': 1}
+            ),
+            dict(
+                url_path='/internships/cohorts/1/scores_encoding/upload/1',
+                pattern_name='internship_upload_scores',
+                kwargs={'cohort_id': 1, 'period_id': 1}
+            ),
         ]
 
         for url_name, pattern in test_paths(routes_to_test):
