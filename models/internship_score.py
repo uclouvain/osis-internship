@@ -23,20 +23,39 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.db import models
 
-from internship.models import affectation_generation_time
-from internship.models import internship_choice
-from internship.models import internship_enrollment
-from internship.models import internship_master
-from internship.models import internship_offer
-from internship.models import internship_speciality
-from internship.models import internship_student_affectation_stat
-from internship.models import internship_student_information
-from internship.models import master_allocation
-from internship.models import organization
-from internship.models import period
-from internship.models import period_internship_places
-from internship.models import cohort
-from internship.models import internship
-from internship.models import internship_score
-from internship.models import internship_score_mapping
+from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
+
+
+class InternshipScoreAdmin(SerializableModelAdmin):
+    score_fields = ['APD_{}'.format(index) for index in range(1, 16)]
+    list_display = ('student', 'period', *score_fields)
+    raw_id_fields = ('student',)
+    list_filter = ('cohort',)
+    search_fields = ['student__person__user_name', 'student__person__last_name']
+
+
+class InternshipScore(SerializableModel):
+
+    SCORE_CHOICES = (
+        ('A', 'A'),
+        ('B', 'B'),
+        ('C', 'C'),
+        ('D', 'D')
+    )
+
+    student = models.ForeignKey('base.student')
+    period = models.ForeignKey('internship.period')
+    cohort = models.ForeignKey('internship.cohort')
+    for index in range(1, 16):
+        vars()['APD_{}'.format(index)] = models.CharField(
+            max_length=1,
+            choices=SCORE_CHOICES,
+            null=True,
+            blank=True,
+        )
+
+    def __str__(self):
+        scores = [vars(self)['APD_{}'.format(index)] for index in range(1, 16)]
+        return '{} - {} - {}'.format(self.student, self.period, scores)

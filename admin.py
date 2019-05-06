@@ -58,3 +58,9 @@ admin.site.register(internship_student_affectation_stat.InternshipStudentAffecta
 
 admin.site.register(affectation_generation_time.AffectationGenerationTime,
                     affectation_generation_time.AffectationGenerationTimeAdmin)
+
+admin.site.register(internship_score.InternshipScore,
+                    internship_score.InternshipScoreAdmin)
+
+admin.site.register(internship_score_mapping.InternshipScoreMapping,
+                    internship_score_mapping.InternshipScoreMappingAdmin)
