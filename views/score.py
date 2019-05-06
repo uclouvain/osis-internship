@@ -52,30 +52,8 @@ def scores_encoding(request, cohort_id):
         'student__person', 'period', 'cohort'
     ).order_by('student__person__last_name')
 
-    score_mapping = InternshipScoreMapping.objects.filter(cohort=cohort).select_related(
-        'period', 'cohort'
-    ).values("period", "apd", "score_A", "score_B", "score_C", "score_D")
-
-    score_mapping = [entry for entry in score_mapping]
-
-    apds = ['APD_{}'.format(index) for index in range(1, 16)]
-
-    _map_scores(apds, score_mapping, scores)
-
     context = {'cohort': cohort, 'periods': periods, 'scores': scores, 'students': students}
     return render(request, "scores.html", context=context)
-
-
-def _map_scores(apds, score_mapping, scores):
-    for score in scores:
-        score.global_score = 0
-        for apd in apds:
-            for mapping in score_mapping:
-                if mapping['period'] == score.period.pk and str(mapping['apd']) == apd[4:]:
-                    note = vars(score)['APD_{}'.format(mapping['apd'])]
-                    if note in ['A', 'B', 'C', 'D']:
-                        score.global_score += mapping['score_{}'.format(note)]
-        score.global_score /= len(apds)
 
 
 @login_required
@@ -83,12 +61,14 @@ def _map_scores(apds, score_mapping, scores):
 def upload_scores(request, cohort_id, period_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
     period = get_object_or_404(Period, pk=period_id)
+    _upload_file(request, cohort, period)
+    return HttpResponseRedirect(reverse('internship_scores_encoding', kwargs={'cohort_id': cohort.id}))
+
+
+def _upload_file(request, cohort, period):
     if request.method == 'POST':
         file_name = request.FILES['file_upload']
-        if file_name is not None:
-            if ".xlsx" not in str(file_name):
-                messages.add_message(request, messages.ERROR, _('File extension must be .xlsx'))
-            else:
-                import_scores.import_xlsx(cohort, file_name, period)
-
-    return HttpResponseRedirect(reverse('internship_scores_encoding', kwargs={'cohort_id': cohort.id}))
+        if file_name is not None and ".xlsx" not in str(file_name):
+            messages.add_message(request, messages.ERROR, _('File extension must be .xlsx'))
+        else:
+            import_scores.import_xlsx(cohort, file_name, period)
