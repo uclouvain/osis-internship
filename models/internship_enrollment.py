@@ -34,11 +34,11 @@ class InternshipEnrollmentAdmin(admin.ModelAdmin):
 
 
 class InternshipEnrollment(models.Model):
-    student = models.ForeignKey('base.student')
-    internship_offer = models.ForeignKey('internship.InternshipOffer')
-    place = models.ForeignKey('internship.Organization')
-    period = models.ForeignKey('internship.Period')
-    internship = models.ForeignKey('internship.Internship')
+    student = models.ForeignKey('base.student', on_delete=models.CASCADE)
+    internship_offer = models.ForeignKey('internship.InternshipOffer', on_delete=models.CASCADE)
+    place = models.ForeignKey('internship.Organization', on_delete=models.CASCADE)
+    period = models.ForeignKey('internship.Period', on_delete=models.CASCADE)
+    internship = models.ForeignKey('internship.Internship', on_delete=models.CASCADE)
 
     def __str__(self):
         return u"%s - %s" % (self.student, self.internship_offer.title)
