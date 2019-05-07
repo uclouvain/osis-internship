@@ -73,22 +73,23 @@ def scores_encoding(request, cohort_id):
             ).order_by('period__name').values_list(*apds)
             if list(student_scores):
                 student.scores += (period.name, list(student_scores)[0]),
+
     context = {'cohort': cohort, 'periods': periods, 'scores': scores, 'students': students}
     return render(request, "scores.html", context=context)
 
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
-def upload_scores(request, cohort_id, period_id):
+def upload_scores(request, cohort_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
-    period = get_object_or_404(Period, pk=period_id)
-    _upload_file(request, cohort, period)
+    _upload_file(request, cohort)
     return HttpResponseRedirect(reverse('internship_scores_encoding', kwargs={'cohort_id': cohort.id}))
 
 
-def _upload_file(request, cohort, period):
+def _upload_file(request, cohort):
     if request.method == 'POST':
         file_name = request.FILES['file_upload']
+        period = request.POST['period']
         if file_name is not None and ".xlsx" not in str(file_name):
             messages.add_message(request, messages.ERROR, _('File extension must be .xlsx'))
         else:

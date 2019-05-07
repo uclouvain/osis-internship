@@ -30,3 +30,8 @@ from django.template.defaulttags import register
 def get_item(dictionary, key):
     val = dictionary.get(key)
     return val if val else ""
+
+
+@register.filter
+def has_substr(dictionary, key):
+    return "'{}'".format(key) in str(dictionary)
