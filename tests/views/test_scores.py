@@ -63,13 +63,13 @@ class ScoresEncodingTest(TestCase):
     def test_post_upload_scores(self, mock_import):
         url = reverse('internship_upload_scores', kwargs={
             'cohort_id': self.cohort.pk,
-            'period_id': self.period.pk
         })
         redirect_url = reverse('internship_scores_encoding', kwargs={'cohort_id': self.cohort.pk})
         response = self.client.post(
             url,
             data={
                 'file_upload': self.xlsxfile,
+                'period': self.period.name
             }
         )
         self.assertRedirects(response, redirect_url)
@@ -77,13 +77,13 @@ class ScoresEncodingTest(TestCase):
     def test_post_upload_scores_extension_error(self):
         url = reverse('internship_upload_scores', kwargs={
             'cohort_id': self.cohort.pk,
-            'period_id': self.period.pk
         })
         redirect_url = reverse('internship_scores_encoding', kwargs={'cohort_id': self.cohort.pk})
         response = self.client.post(
             url,
             data={
                 'file_upload': self.xlsfile,
+                'period': self.period.name
             }
         )
         self.assertRedirects(response, redirect_url)

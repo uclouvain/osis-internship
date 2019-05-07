@@ -85,9 +85,9 @@ class UrlsTestCase(TestCase):
                 kwargs={'cohort_id': 1}
             ),
             dict(
-                url_path='/internships/cohorts/1/scores_encoding/upload/1',
+                url_path='/internships/cohorts/1/scores_encoding/upload/',
                 pattern_name='internship_upload_scores',
-                kwargs={'cohort_id': 1, 'period_id': 1}
+                kwargs={'cohort_id': 1}
             ),
         ]
 
