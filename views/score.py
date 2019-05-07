@@ -25,6 +25,7 @@
 ##############################################################################
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
+from django.core.paginator import Paginator, PageNotAnInteger
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
@@ -32,7 +33,6 @@ from django.utils.translation import gettext as _
 
 from internship.models.cohort import Cohort
 from internship.models.internship_score import InternshipScore
-from internship.models.internship_score_mapping import InternshipScoreMapping
 from internship.models.internship_student_information import InternshipStudentInformation
 from internship.models.period import Period
 from internship.utils.importing import import_scores
@@ -44,7 +44,7 @@ def scores_encoding(request, cohort_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
     periods = Period.objects.filter(cohort=cohort).order_by('date_start')
 
-    students = InternshipStudentInformation.objects.filter(cohort=cohort).select_related(
+    students_list = InternshipStudentInformation.objects.filter(cohort=cohort).select_related(
         'person'
     ).order_by('person__last_name')
 
@@ -52,6 +52,27 @@ def scores_encoding(request, cohort_id):
         'student__person', 'period', 'cohort'
     ).order_by('student__person__last_name')
 
+    paginator = Paginator(students_list, 10)
+    page = request.GET.get('page')
+    try:
+        students = paginator.page(page)
+    except PageNotAnInteger:
+        students = paginator.page(1)
+    except students:
+        students = paginator.page(paginator.num_pages)
+
+    apds = ['APD_{}'.format(index) for index in range(1, 16)]
+
+    for student in students.object_list:
+        student.scores = []
+        for period in periods:
+            student_scores = scores.filter(
+                student__person_id=student.person_id,
+                cohort=cohort,
+                period=period
+            ).order_by('period__name').values_list(*apds)
+            if list(student_scores):
+                student.scores += (period.name, list(student_scores)[0]),
     context = {'cohort': cohort, 'periods': periods, 'scores': scores, 'students': students}
     return render(request, "scores.html", context=context)
 
