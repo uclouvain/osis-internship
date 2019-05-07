@@ -30,8 +30,11 @@ from django.core.urlresolvers import reverse
 from django.test import TestCase
 from django.utils.translation import gettext as _
 
+from base.tests.factories.student import StudentFactory
 from internship.tests.factories.cohort import CohortFactory
+from internship.tests.factories.internship_student_information import InternshipStudentInformationFactory
 from internship.tests.factories.period import PeriodFactory
+from internship.tests.factories.score import ScoreFactory
 
 
 class ScoresEncodingTest(TestCase):
@@ -41,7 +44,7 @@ class ScoresEncodingTest(TestCase):
         self.user.user_permissions.add(permission)
         self.client.force_login(self.user)
         self.cohort = CohortFactory()
-        self.period = PeriodFactory()
+        self.period = PeriodFactory(cohort=self.cohort)
         self.xlsfile = SimpleUploadedFile(
             name='upload.xls',
             content=str.encode('test'),
@@ -52,6 +55,10 @@ class ScoresEncodingTest(TestCase):
             content=str.encode('test'),
             content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         )
+        self.students = [InternshipStudentInformationFactory(cohort=self.cohort) for _ in range(11)]
+        for student_info in self.students:
+            student = StudentFactory(person=student_info.person)
+            ScoreFactory(student=student, period=self.period, cohort=self.cohort)
 
     def test_view_scores_encoding(self):
         url = reverse('internship_scores_encoding', kwargs={'cohort_id': self.cohort.pk})
@@ -90,3 +97,16 @@ class ScoresEncodingTest(TestCase):
         messages = list(response.wsgi_request._messages)
         self.assertEqual(messages[0].level_tag, "error")
         self.assertIn(_('File extension must be .xlsx'), messages[0].message)
+
+    def test_scores_encoding_paginated_view(self):
+        url = reverse('internship_scores_encoding', kwargs={'cohort_id': self.cohort.pk})
+        response = self.client.get(url)
+        self.assertEqual(len(response.context['students'].object_list), 10)
+        self.assertEqual(response.context['students'].paginator.num_pages, 2)
+
+    def test_append_scores_to_student(self):
+        url = reverse('internship_scores_encoding', kwargs={'cohort_id': self.cohort.pk})
+        response = self.client.get(url)
+        student_scores = response.context['students'].object_list[0].scores
+        self.assertEqual(student_scores[0][0], self.period.name)
+        self.assertTrue(student_scores[0][1][0] in ['A', 'B', 'C', 'D', 'E'])
