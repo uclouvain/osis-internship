@@ -72,8 +72,12 @@ def _match_scores_with_students(cohort, periods, scores, students):
                 cohort=cohort,
                 period=period
             ).order_by('period__name').values_list(*apds)
-            if list(student_scores):
-                student.scores += (period.name, list(student_scores)[0]),
+            _append_period_scores_to_student(period, student, student_scores)
+
+
+def _append_period_scores_to_student(period, student, student_scores):
+    if list(student_scores):
+        student.scores += (period.name, list(student_scores)[0]),
 
 
 @login_required
