@@ -36,6 +36,7 @@ from internship.models.internship_score import InternshipScore
 from internship.models.internship_student_information import InternshipStudentInformation
 from internship.models.period import Period
 from internship.utils.importing import import_scores
+from internship.views.common import get_object_list
 
 
 @login_required
@@ -52,14 +53,7 @@ def scores_encoding(request, cohort_id):
         'student__person', 'period', 'cohort'
     ).order_by('student__person__last_name')
 
-    paginator = Paginator(students_list, 10)
-    page = request.GET.get('page')
-    try:
-        students = paginator.page(page)
-    except PageNotAnInteger:
-        students = paginator.page(1)
-    except students:
-        students = paginator.page(paginator.num_pages)
+    students = get_object_list(request, students_list)
 
     apds = ['APD_{}'.format(index) for index in range(1, 16)]
 
