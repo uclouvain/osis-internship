@@ -55,8 +55,15 @@ def scores_encoding(request, cohort_id):
 
     students = get_object_list(request, students_list)
 
-    apds = ['APD_{}'.format(index) for index in range(1, 16)]
+    _match_scores_with_students(cohort, periods, scores, students)
 
+    context = {'cohort': cohort, 'periods': periods, 'scores': scores, 'students': students}
+    return render(request, "scores.html", context=context)
+
+
+def _match_scores_with_students(cohort, periods, scores, students):
+    # append scores for each period to each students
+    apds = ['APD_{}'.format(index) for index in range(1, 16)]
     for student in students.object_list:
         student.scores = []
         for period in periods:
@@ -67,9 +74,6 @@ def scores_encoding(request, cohort_id):
             ).order_by('period__name').values_list(*apds)
             if list(student_scores):
                 student.scores += (period.name, list(student_scores)[0]),
-
-    context = {'cohort': cohort, 'periods': periods, 'scores': scores, 'students': students}
-    return render(request, "scores.html", context=context)
 
 
 @login_required
