@@ -38,7 +38,7 @@ def import_xlsx(cohort, xlsxfile, period):
     workbook = load_workbook(filename=xlsxfile, read_only=True)
     worksheet = workbook.active
     period = Period.objects.get(name=period, cohort=cohort)
-    for row in list(worksheet.rows)[:4]:
+    for row in list(worksheet.rows)[4:]:
         _import_score(row, cohort, period)
     xlsxfile.close()
 
