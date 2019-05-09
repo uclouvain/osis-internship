@@ -25,15 +25,14 @@
 ##############################################################################
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
-from django.core.paginator import Paginator, PageNotAnInteger
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.utils.translation import gettext as _
 
+from internship.forms.score import StudentsFilterForm
 from internship.models.cohort import Cohort
 from internship.models.internship_score import InternshipScore
-from internship.models.internship_student_information import InternshipStudentInformation
 from internship.models.period import Period
 from internship.utils.importing import import_scores
 from internship.views.common import get_object_list
@@ -45,9 +44,10 @@ def scores_encoding(request, cohort_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
     periods = Period.objects.filter(cohort=cohort).order_by('date_start')
 
-    students_list = InternshipStudentInformation.objects.filter(cohort=cohort).select_related(
-        'person'
-    ).order_by('person__last_name')
+    search_form = StudentsFilterForm(request.GET)
+    students_list = []
+    if search_form.is_valid():
+        students_list = search_form.get_students(cohort=cohort)
 
     scores = InternshipScore.objects.filter(cohort=cohort).select_related(
         'student__person', 'period', 'cohort'
@@ -57,7 +57,7 @@ def scores_encoding(request, cohort_id):
 
     _match_scores_with_students(cohort, periods, scores, students)
 
-    context = {'cohort': cohort, 'periods': periods, 'scores': scores, 'students': students}
+    context = {'cohort': cohort, 'periods': periods, 'scores': scores, 'students': students, 'search_form': search_form}
     return render(request, "scores.html", context=context)
 
 
