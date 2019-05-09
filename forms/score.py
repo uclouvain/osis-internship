@@ -29,7 +29,6 @@ class StudentsFilterForm(BootstrapForm):
 def search_students_with_free_text(free_text, qs):
     qs = qs.filter(
         Q(person__first_name__icontains=free_text) |
-        Q(person__last_name__icontains=free_text) |
-        Q(person__email__icontains=free_text)
+        Q(person__last_name__icontains=free_text)
     )
     return qs
