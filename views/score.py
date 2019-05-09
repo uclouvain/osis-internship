@@ -23,6 +23,8 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+import pickle
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.http import HttpResponseRedirect
@@ -49,35 +51,35 @@ def scores_encoding(request, cohort_id):
     if search_form.is_valid():
         students_list = search_form.get_students(cohort=cohort)
 
+    students = get_object_list(request, students_list)
+
     scores = InternshipScore.objects.filter(cohort=cohort).select_related(
         'student__person', 'period', 'cohort'
     ).order_by('student__person__last_name')
 
-    students = get_object_list(request, students_list)
+    _match_scores_with_students(cohort, periods, list(scores), students)
 
-    _match_scores_with_students(cohort, periods, scores, students)
-
-    context = {'cohort': cohort, 'periods': periods, 'scores': scores, 'students': students, 'search_form': search_form}
+    context = {'cohort': cohort, 'periods': periods, 'students': students, 'search_form': search_form}
     return render(request, "scores.html", context=context)
 
 
-def _match_scores_with_students(cohort, periods, scores, students):
+def _match_scores_with_students(cohort, periods, scores_list, students):
     # append scores for each period to each students
-    apds = ['APD_{}'.format(index) for index in range(1, 16)]
     for student in students.object_list:
         student.scores = []
         for period in periods:
-            student_scores = scores.filter(
-                student__person_id=student.person_id,
-                cohort=cohort,
-                period=period
-            ).order_by('period__name').values_list(*apds)
+            student_scores = list(filter(_filter_scores(student, cohort, period), scores_list))
             _append_period_scores_to_student(period, student, student_scores)
 
 
+def _filter_scores(student, cohort, period):
+    return lambda x: x.student.person == student.person and x.cohort == cohort and x.period.name == period.name
+
+
 def _append_period_scores_to_student(period, student, student_scores):
-    if list(student_scores):
-        student.scores += (period.name, list(student_scores)[0]),
+    if student_scores:
+        scores = student_scores[0].get_scores()
+        student.scores += (period.name, scores),
 
 
 @login_required
