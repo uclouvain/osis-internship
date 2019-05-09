@@ -32,7 +32,6 @@ from django.utils.translation import gettext as _
 
 from internship.models.cohort import Cohort
 from internship.models.internship_score import InternshipScore
-from internship.models.internship_score_mapping import InternshipScoreMapping
 from internship.models.internship_student_information import InternshipStudentInformation
 from internship.models.period import Period
 from internship.utils.importing import import_scores
@@ -68,7 +67,7 @@ def upload_scores(request, cohort_id, period_id):
 def _upload_file(request, cohort, period):
     if request.method == 'POST':
         file_name = request.FILES['file_upload']
-        if file_name is not None and ".xlsx" not in str(file_name):
+        if file_name and ".xlsx" not in str(file_name):
             messages.add_message(request, messages.ERROR, _('File extension must be .xlsx'))
         else:
             import_scores.import_xlsx(cohort, file_name, period)

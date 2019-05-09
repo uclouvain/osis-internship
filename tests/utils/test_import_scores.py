@@ -25,26 +25,24 @@
 ##############################################################################
 import random
 from unittest import mock
-from unittest.mock import MagicMock
 
-import faker
 import openpyxl
 from django.contrib.auth.models import Permission, User
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
-from django.urls import reverse
 
 from base.tests.factories.student import StudentFactory
 from internship.models.internship_score import InternshipScore
 from internship.tests.factories.cohort import CohortFactory
 from internship.tests.factories.period import PeriodFactory
-from internship.tests.factories.score import ScoreFactory
 from internship.utils.importing.import_scores import import_xlsx
 
-faker = faker.Faker()
+APDS_COUNT = 15
+LINE_INTERVAL = 2
 
 
 class XlsImportTestCase(TestCase):
+
     def setUp(self):
         self.cohort = CohortFactory()
         self.period = PeriodFactory(cohort=self.cohort)
@@ -62,9 +60,9 @@ class XlsImportTestCase(TestCase):
             (0, lambda: StudentFactory().registration_id),
             (1, lambda: '1'),
         ]
-        for i in range(1, 15 * 2, 2):
+        for i in range(1, APDS_COUNT * LINE_INTERVAL, LINE_INTERVAL):
             columns.append(
-                (3+i, lambda: random.choice(['A', 'B', 'C', 'D', 'E', None]))
+                (LINE_INTERVAL+1+i, lambda: random.choice(['A', 'B', 'C', 'D', 'E', None]))
             )
         workbook = openpyxl.Workbook()
         worksheet = workbook.active

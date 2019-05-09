@@ -29,6 +29,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 from django.utils.translation import gettext as _
+from rest_framework import status
 
 from internship.tests.factories.cohort import CohortFactory
 from internship.tests.factories.period import PeriodFactory
@@ -56,7 +57,7 @@ class ScoresEncodingTest(TestCase):
     def test_view_scores_encoding(self):
         url = reverse('internship_scores_encoding', kwargs={'cohort_id': self.cohort.pk})
         response = self.client.get(url)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTemplateUsed(response, 'scores.html')
 
     @mock.patch('internship.utils.importing.import_scores.import_xlsx')
