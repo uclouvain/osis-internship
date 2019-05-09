@@ -92,7 +92,7 @@ def _upload_file(request, cohort):
     if request.method == 'POST':
         file_name = request.FILES['file_upload']
         period = request.POST['period']
-        if file_name is not None and ".xlsx" not in str(file_name):
+        if file_name and ".xlsx" not in str(file_name):
             messages.add_message(request, messages.ERROR, _('File extension must be .xlsx'))
         else:
             import_scores.import_xlsx(cohort, file_name, period)
