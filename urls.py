@@ -24,9 +24,10 @@
 #
 ##############################################################################
 from django.conf.urls import include, url
-from django.views.i18n import JavaScriptCatalog
 
-from internship.views import (affectation, home, internship, master, offer, period, place, speciality, student, cohort)
+from internship.views import (
+    affectation, home, internship, master, offer, period, place, score, speciality, student, cohort
+)
 
 urlpatterns = [
     url(r'^$', home.view_cohort_selection, name='internship'),
@@ -149,6 +150,11 @@ urlpatterns = [
                 url(r'^score_encoding/xls$', affectation.export_score_encoding_xls, name="export_score_encoding_xls"),
                 url(r'^generate/$', affectation.run_affectation, name='internship_affectation_generate'),
                 url(r'^sumup/$', affectation.internship_affectation_sumup, name='internship_affectation_sumup'),
+            ])),
+
+            url(r'^scores_encoding/', include([
+                url(r'^$', score.scores_encoding, name='internship_scores_encoding'),
+                url(r'^upload/(?P<period_id>[0-9]+)$', score.upload_scores, name='internship_upload_scores'),
             ])),
         ])),
 

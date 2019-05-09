@@ -1,0 +1,204 @@
+{% extends "layout.html" %}
+{% load staticfiles %}
+
+{% load i18n %}
+
+{% comment "License" %}
+    * OSIS stands for Open Student Information System. It's an application
+    * designed to manage the core business of higher education institutions,
+    * such as universities, faculties, institutes and professional schools.
+    * The core business involves the administration of students, teachers,
+    * courses, programs and so on.
+    *
+    * Copyright (C) 2015-2019 Université catholique de Louvain (http://www.uclouvain.be)
+    *
+    * This program is free software: you can redistribute it and/or modify
+    * it under the terms of the GNU General Public License as published by
+    * the Free Software Foundation, either version 3 of the License, or
+    * (at your option) any later version.
+    *
+    * This program is distributed in the hope that it will be useful,
+    * but WITHOUT ANY WARRANTY; without even the implied warranty of
+    * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    * GNU General Public License for more details.
+    *
+    * A copy of this license - GNU General Public License - is available
+    * at the root of the source code of this program.  If not,
+    * see http://www.gnu.org/licenses/.
+{% endcomment %}
+
+{% block style %}
+    <link rel="stylesheet" href="{% static 'css/internship.css' %}">
+{% endblock %}
+
+{% block breadcrumb %}
+    <li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
+    <li><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
+    <li class="active">{% trans 'Scores encoding' %}</li>
+{% endblock %}
+
+{% block content %}
+    <div class="page-header">
+        <h2>{% trans 'Scores encoding' %}</h2>
+    </div>
+
+    <ul class="nav nav-tabs">
+      <li role="scores" class="active"><a data-toggle="tab" href="#scores">{% trans 'Scores' %}</a></li>
+      <li role="mapping"><a data-toggle="tab" href="#mapping">{% trans 'Mapping' %}</a></li>
+      <li role="upload"><a data-toggle="tab" href="#upload">{% trans 'Import' %}</a></li>
+    </ul>
+    <div class="tab-content">
+            <div id="scores" class="tab-pane fade in active">
+                <div class="panel panel-body">
+                  <table class="table">
+                    <tbody>
+                      <tr>
+                        <th>Student</th>
+                          {% for period in periods %}
+                            <th>{{ period }}</th>
+                          {% endfor %}
+                      </tr>
+                      {% for student in students %}
+                      <tr>
+                        <td>{{ student }}</td>
+                          {% for period in periods %}
+                            <td> - </td>
+                          {% endfor %}
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+            </div>
+            <div id="upload" class="tab-pane fade">
+                <div class="panel panel-body">
+                    <div class="alert alert-info">
+                        <i class="fa fa-info-circle"></i>
+                        {% trans 'You may use this panel to upload files received from contest for each internship period' %}
+                    </div>
+                    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#upload_scores"
+                            id="bt_upload_score_modal">
+                        <span class="glyphicon glyphicon-import" aria-hidden="true"></span>
+                        {% trans 'Import' %}
+                    </button>
+                </div>
+            </div>
+            <div id="mapping" class="tab-pane fade">
+                <div class="panel panel-heading">
+                    <h3>{% trans 'Scores equivalence according to periods' %}</h3>
+                </div>
+                <div class="panel panel-body">
+                    <div class="row">
+                        <div class="col-xs-1 col-xs-offset-3">
+                        </div>
+                        <div class="col-xs-1">
+                            <h4><span class="label label-default">A</span></h4>
+                        </div>
+                        <div class="col-xs-1">
+                            <h4><span class="label label-default">B</span></h4>
+                        </div>
+                        <div class="col-xs-1">
+                            <h4><span class="label label-default">C</span></h4>
+                        </div>
+                        <div class="col-xs-1">
+                            <h4><span class="label label-default">D</span></h4>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-1 col-xs-offset-3">
+                            <h4><span class="label label-primary">P1-2</span></h4>
+                        </div>
+                        <div class="col-xs-1">
+                            <input type="number" class="form-control" aria-describedby="basic-addon1">
+                        </div>
+                        <div class="col-xs-1">
+                            <input type="number" class="form-control" aria-describedby="basic-addon1">
+                        </div>
+                        <div class="col-xs-1">
+                            <input type="number" class="form-control" aria-describedby="basic-addon1">
+                        </div>
+                        <div class="col-xs-1">
+                            <input type="number" class="form-control" aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-1 col-xs-offset-3">
+                            <h4><span class="label label-primary">P3-4</span></h4>
+                        </div>
+                        <div class="col-xs-1">
+                            <input type="number" class="form-control" aria-describedby="basic-addon1">
+                        </div>
+                        <div class="col-xs-1">
+                            <input type="number" class="form-control" aria-describedby="basic-addon1">
+                        </div>
+                        <div class="col-xs-1">
+                            <input type="number" class="form-control" aria-describedby="basic-addon1">
+                        </div>
+                        <div class="col-xs-1">
+                            <input type="number" class="form-control" aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-1 col-xs-offset-3">
+                            <h4><span class="label label-primary">P5-6</span></h4>
+                        </div>
+                        <div class="col-xs-1">
+                            <input type="number" class="form-control" aria-describedby="basic-addon1">
+                        </div>
+                        <div class="col-xs-1">
+                            <input type="number" class="form-control" aria-describedby="basic-addon1">
+                        </div>
+                        <div class="col-xs-1">
+                            <input type="number" class="form-control" aria-describedby="basic-addon1">
+                        </div>
+                        <div class="col-xs-1">
+                            <input type="number" class="form-control" aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-1 col-xs-offset-3">
+                            <h4><span class="label label-primary">P7</span></h4>
+                        </div>
+                        <div class="col-xs-1">
+                            <input type="number" class="form-control" aria-describedby="basic-addon1">
+                        </div>
+                        <div class="col-xs-1">
+                            <input type="number" class="form-control" aria-describedby="basic-addon1">
+                        </div>
+                        <div class="col-xs-1">
+                            <input type="number" class="form-control" aria-describedby="basic-addon1">
+                        </div>
+                        <div class="col-xs-1">
+                            <input type="number" class="form-control" aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="upload_scores" tabindex="-1" role="dialog" aria-labelledby="uploadScoresLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form method="post" enctype="multipart/form-data" action="{% url 'internship_upload_scores' cohort_id=cohort.id period_id=53 %}">
+                    {% csrf_token %}
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="bt_close_upload_students_modal"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="uploadScoresLabel">{% trans 'Import' %}</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                          <input type="file" id="scores_input_file" name="file_upload"/>
+                        </div>
+                        <div id="selectedFiles"></div>
+                        <p class="help-block">{% trans 'Select a xls file that contains the scores by period' %}</p>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="submit" class="btn btn-primary" value="{% trans 'Import' %}" onclick="document.getElementById('files').style.visibility='visible'" id="bt_submit_upload_scores_modal"/>
+                        <button type="button" class="btn btn-default" data-dismiss="modal" id="bt_cancel_upload_scores_modal">{% trans 'Cancel' %}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
