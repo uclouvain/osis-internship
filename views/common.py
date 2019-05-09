@@ -24,12 +24,15 @@
 #
 ##############################################################################
 from django.contrib import messages
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.utils.translation import ugettext_lazy as _
+
 
 def display_errors(request, errors):
     for error in errors:
         for key, value in error.items():
             messages.add_message(request, messages.ERROR, "{} : {}".format(_(key), value[0]), "alert-danger")
+
 
 def display_report_errors(request,errors):
     for error in errors:
@@ -39,3 +42,18 @@ def display_report_errors(request,errors):
                 messages.add_message(request, messages.ERROR, "{}".format(value[0]), "alert-danger")
             else:
                 messages.add_message(request, messages.ERROR, "{} : {}".format(_(key), value[0]), "alert-danger")
+
+
+def get_object_list(request, objects):
+    if objects is None:
+        objects = []
+    paginator = Paginator(objects, 10)
+    page = request.GET.get('page')
+
+    try:
+        object_list = paginator.page(page)
+    except PageNotAnInteger:
+        object_list = paginator.page(1)
+    except EmptyPage:
+        object_list = paginator.page(paginator.num_pages)
+    return object_list

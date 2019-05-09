@@ -25,6 +25,7 @@
 ##############################################################################
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
+from django.core.paginator import Paginator, PageNotAnInteger
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
@@ -35,6 +36,7 @@ from internship.models.internship_score import InternshipScore
 from internship.models.internship_student_information import InternshipStudentInformation
 from internship.models.period import Period
 from internship.utils.importing import import_scores
+from internship.views.common import get_object_list
 
 
 @login_required
@@ -43,7 +45,7 @@ def scores_encoding(request, cohort_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
     periods = Period.objects.filter(cohort=cohort).order_by('date_start')
 
-    students = InternshipStudentInformation.objects.filter(cohort=cohort).select_related(
+    students_list = InternshipStudentInformation.objects.filter(cohort=cohort).select_related(
         'person'
     ).order_by('person__last_name')
 
@@ -51,22 +53,45 @@ def scores_encoding(request, cohort_id):
         'student__person', 'period', 'cohort'
     ).order_by('student__person__last_name')
 
+    students = get_object_list(request, students_list)
+
+    _match_scores_with_students(cohort, periods, scores, students)
+
     context = {'cohort': cohort, 'periods': periods, 'scores': scores, 'students': students}
     return render(request, "scores.html", context=context)
 
 
+def _match_scores_with_students(cohort, periods, scores, students):
+    # append scores for each period to each students
+    apds = ['APD_{}'.format(index) for index in range(1, 16)]
+    for student in students.object_list:
+        student.scores = []
+        for period in periods:
+            student_scores = scores.filter(
+                student__person_id=student.person_id,
+                cohort=cohort,
+                period=period
+            ).order_by('period__name').values_list(*apds)
+            _append_period_scores_to_student(period, student, student_scores)
+
+
+def _append_period_scores_to_student(period, student, student_scores):
+    if list(student_scores):
+        student.scores += (period.name, list(student_scores)[0]),
+
+
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
-def upload_scores(request, cohort_id, period_id):
+def upload_scores(request, cohort_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
-    period = get_object_or_404(Period, pk=period_id)
-    _upload_file(request, cohort, period)
+    _upload_file(request, cohort)
     return HttpResponseRedirect(reverse('internship_scores_encoding', kwargs={'cohort_id': cohort.id}))
 
 
-def _upload_file(request, cohort, period):
+def _upload_file(request, cohort):
     if request.method == 'POST':
         file_name = request.FILES['file_upload']
+        period = request.POST['period']
         if file_name and ".xlsx" not in str(file_name):
             messages.add_message(request, messages.ERROR, _('File extension must be .xlsx'))
         else:

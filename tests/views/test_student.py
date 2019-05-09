@@ -27,7 +27,7 @@
 from django.contrib.auth.models import Permission, User
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.urlresolvers import reverse
-from django.test import TestCase
+from django.test import TestCase, RequestFactory
 from openpyxl import Workbook
 from openpyxl.writer.excel import save_virtual_workbook
 
@@ -41,7 +41,7 @@ from internship.tests.factories.internship_choice import create_internship_choic
 from internship.tests.models import test_organization, test_internship_speciality, test_internship_student_information
 from internship.tests.utils.test_student_loader import generate_record
 from internship.views import student
-from internship.views.student import import_students, internships_student_import_update
+from internship.views.student import import_students, internships_student_import_update, internships_student_resume
 
 
 class TestStudentResume(TestCase):
@@ -65,17 +65,36 @@ class TestStudentResume(TestCase):
         self.choice_6 = create_internship_choice(organization, self.student_2, speciality, internship=self.internship_2)
         self.choice_7 = create_internship_choice(organization, self.student_2, speciality, internship=self.internship_3)
 
-    def test_get_students_status(self):
+    def test_get_students_status_empty(self):
+        url = reverse(internships_student_resume, kwargs={
+            'cohort_id': self.cohort.id,
+        })
+        response = self.client.get(url)
         expected = []
-        actual = student._get_students_with_status(page=None, cohort=self.cohort, filter_name=None)
+        actual = student._get_students_with_status(
+            request=response.wsgi_request,
+            page=None,
+            cohort=self.cohort,
+            filter_name=None
+        )
         self.assertCountEqual(expected, actual)
 
+    def test_get_students_status_filled_in(self):
+        url = reverse(internships_student_resume, kwargs={
+            'cohort_id': self.cohort.id,
+        })
+        response = self.client.get(url)
         test_internship_student_information.create_student_information(self.student_1.person, "GENERALIST",
                                                                        cohort=self.cohort)
         test_internship_student_information.create_student_information(self.student_2.person, "GENERALIST",
                                                                        cohort=self.cohort)
         expected = [(self.student_1, True), (self.student_2, False)]
-        actual = student._get_students_with_status(page=None, cohort=self.cohort, filter_name=None)
+        actual = student._get_students_with_status(
+            request=response.wsgi_request,
+            page=None,
+            cohort=self.cohort,
+            filter_name=None
+        )
         self.assertCountEqual(expected, actual)
         for item_expected in expected:
             self.assertIn(item_expected, actual)
@@ -90,7 +109,6 @@ class StudentResumeViewTestCase(TestCase):
         self.cohort = CohortFactory()
 
     def test_internships_student_resume(self):
-        from internship.views.student import internships_student_resume
         url = reverse(internships_student_resume, kwargs={
             'cohort_id': self.cohort.id,
         })

@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2019 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -23,15 +23,22 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.template.defaulttags import register
+import factory
+
+from base.tests.factories.person import PersonFactory
+from internship.tests.factories.cohort import CohortFactory
+from reference.tests.factories.country import CountryFactory
 
 
-@register.filter
-def get_item(dictionary, key):
-    val = dictionary.get(key)
-    return val if val else ""
+class InternshipStudentInformationFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = 'internship.InternshipStudentInformation'
 
-
-@register.filter
-def has_substr(dictionary, key):
-    return "'{}'".format(key) in str(dictionary)
+    person = factory.SubFactory(PersonFactory)
+    location = factory.Faker('street_address')
+    postal_code = factory.Faker('zipcode')
+    city = factory.Faker('city')
+    country = factory.SubFactory(CountryFactory)
+    email = factory.Faker('email')
+    phone_mobile = factory.Faker('phone_number')
+    cohort = factory.SubFactory(CohortFactory)

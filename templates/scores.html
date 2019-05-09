@@ -1,7 +1,8 @@
 {% extends "layout.html" %}
 {% load staticfiles %}
+{% load dictionary %}
 
-{% load i18n %}
+{% load i18n bootstrap3 %}
 
 {% comment "License" %}
     * OSIS stands for Open Student Information System. It's an application
@@ -51,23 +52,47 @@
             <div id="scores" class="tab-pane fade in active">
                 <div class="panel panel-body">
                   <table class="table">
-                    <tbody>
                       <tr>
                         <th>Student</th>
-                          {% for period in periods %}
-                            <th>{{ period }}</th>
+                        <th>Period</th>
+                          {% for i in i|rjust:15 %}
+                            <th>APD_{{forloop.counter}}</th>
                           {% endfor %}
                       </tr>
-                      {% for student in students %}
+                        {% for student in students %}
                       <tr>
-                        <td>{{ student }}</td>
-                          {% for period in periods %}
-                            <td> - </td>
-                          {% endfor %}
+                        <td rowspan="{{ periods|length|add:1 }}">{{ student }}</td>
                       </tr>
-                      {% endfor %}
-                    </tbody>
-                  </table>
+                        {% for period in periods %}
+                          <tr>
+                            <td>{{ period }}</td>
+                            {% if not student.scores|has_substr:period %}
+                                {% for i in i|rjust:15 %}
+                                    <td>-</td>
+                                {% endfor %}
+                            {% endif %}
+                            {% for key, scores in student.scores %}
+                                {% if key|slugify == period|slugify %}
+                                    {% for score in scores %}
+                                        {% if score != None %}
+                                            <td>{{ score }}</td>
+                                        {% else %}
+                                            <td>-</td>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+                            {% endfor %}
+                          {% endfor %}
+                          </tr>
+                        {% endfor %}
+                        <tfoot>
+                            <tr>
+                                <td colspan="6">
+                                    {% bootstrap_pagination students extra=request.GET.urlencode %}
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
                 </div>
             </div>
             <div id="upload" class="tab-pane fade">
@@ -180,13 +205,21 @@
     <div class="modal fade" id="upload_scores" tabindex="-1" role="dialog" aria-labelledby="uploadScoresLabel">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <form method="post" enctype="multipart/form-data" action="{% url 'internship_upload_scores' cohort_id=cohort.id period_id=53 %}">
+                <form method="post" enctype="multipart/form-data" action="{% url 'internship_upload_scores' cohort_id=cohort.id %}">
                     {% csrf_token %}
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="bt_close_upload_students_modal"><span aria-hidden="true">&times;</span></button>
                         <h4 class="modal-title" id="uploadScoresLabel">{% trans 'Import' %}</h4>
                     </div>
                     <div class="modal-body">
+                        <div class="form-group">
+                            <label for="period-select">{% trans 'Period' %}</label>
+                            <select name="period" class="form-control" id="period-select">
+                                {% for period in periods %}
+                                    <option>{{ period }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
                         <div class="form-group">
                           <input type="file" id="scores_input_file" name="file_upload"/>
                         </div>
