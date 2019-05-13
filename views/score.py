@@ -35,6 +35,7 @@ from django.utils.translation import gettext as _
 from internship.forms.score import StudentsFilterForm
 from internship.models.cohort import Cohort
 from internship.models.internship_score import InternshipScore
+from internship.models.internship_score_mapping import InternshipScoreMapping
 from internship.models.period import Period
 from internship.utils.importing import import_scores
 from internship.views.common import get_object_list
@@ -57,10 +58,43 @@ def scores_encoding(request, cohort_id):
         'student__person', 'period', 'cohort'
     ).order_by('student__person__last_name')
 
+    mapping = InternshipScoreMapping.objects.filter(cohort=cohort).select_related(
+        'period'
+    )
+
     _match_scores_with_students(cohort, periods, list(scores), students)
+
+    _map_numeric_score(mapping, students)
 
     context = {'cohort': cohort, 'periods': periods, 'students': students, 'search_form': search_form}
     return render(request, "scores.html", context=context)
+
+
+def _map_numeric_score(mapping, students):
+    # compute student grades in numerical value based on mapping for each period
+    for student in students:
+        periods_scores = {}
+        _map_student_score(mapping, periods_scores, student)
+        student.periods_scores = periods_scores
+
+
+def _map_student_score(mapping, periods_scores, student):
+    for item in student.scores:
+        period, scores = item
+        period_score = _process_evaluation_grades(mapping, period, scores)
+        periods_scores.update({period: period_score})
+
+
+def _process_evaluation_grades(mapping, period, scores):
+    period_score = 0
+    effective_apd_count = 0
+    for index, note in enumerate(scores):
+        if note in ['A', 'B', 'C', 'D']:
+            effective_apd_count += 1
+            mapped_note = list(filter(_get_mapping_score(period, index + 1), list(mapping)))
+            if mapped_note:
+                period_score += vars(mapped_note[0])['score_{}'.format(note)]
+    return period_score/effective_apd_count
 
 
 def _match_scores_with_students(cohort, periods, scores_list, students):
@@ -74,6 +108,10 @@ def _match_scores_with_students(cohort, periods, scores_list, students):
 
 def _filter_scores(student, cohort, period):
     return lambda x: x.student.person == student.person and x.cohort == cohort and x.period.name == period.name
+
+
+def _get_mapping_score(period, apd):
+    return lambda x: x.period.name == period and x.apd == apd
 
 
 def _append_period_scores_to_student(period, student, student_scores):

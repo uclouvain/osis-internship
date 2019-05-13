@@ -70,8 +70,9 @@
                         <th>Student</th>
                         <th>Period</th>
                           {% for i in i|rjust:15 %}
-                            <th>APD_{{forloop.counter}}</th>
+                            <th>APD {{forloop.counter}}</th>
                           {% endfor %}
+                        <th>Score</th>
                       </tr>
                         {% for student in students %}
                       <tr>
@@ -96,6 +97,13 @@
                                     {% endfor %}
                                 {% endif %}
                             {% endfor %}
+                            {% with student.periods_scores|get_item:period.name as period_score%}
+                                {% if period_score %}
+                                    <td>{{ period_score|floatformat:2 }}</td>
+                                {% else %}
+                                    <td>-</td>
+                                {% endif %}
+                            {% endwith %}
                           {% endfor %}
                           </tr>
                         {% endfor %}
