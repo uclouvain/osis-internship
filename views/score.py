@@ -94,7 +94,7 @@ def _process_evaluation_grades(mapping, period, scores):
             mapped_note = list(filter(_get_mapping_score(period, index + 1), list(mapping)))
             if mapped_note:
                 period_score += vars(mapped_note[0])['score_{}'.format(note)]
-    return period_score/effective_apd_count
+    return period_score/effective_apd_count if effective_apd_count else 0
 
 
 def _match_scores_with_students(cohort, periods, scores_list, students):
