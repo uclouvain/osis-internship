@@ -62,4 +62,4 @@ class InternshipScore(SerializableModel):
         return '{} - {} - {}'.format(self.student, self.period, self.get_scores())
 
     def get_scores(self):
-        return [vars(self)['APD_{}'.format(index)] for index in range(1, 16)]
+        return [vars(self)['APD_{}'.format(index)] for index in range(1, self.APD_NUMBER+1)]
