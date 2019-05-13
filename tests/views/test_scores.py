@@ -111,3 +111,12 @@ class ScoresEncodingTest(TestCase):
         student_scores = response.context['students'].object_list[0].scores
         self.assertEqual(student_scores[0][0], self.period.name)
         self.assertTrue(student_scores[0][1][0] in ['A', 'B', 'C', 'D', 'E'])
+
+    def test_search_student_by_name(self):
+        url = reverse('internship_scores_encoding', kwargs={'cohort_id': self.cohort.pk})
+        searched_student = self.students[0]
+        data = {
+            'free_text': searched_student.person.last_name,
+        }
+        response = self.client.get(url, data=data)
+        self.assertEqual(response.context['students'].object_list[0], searched_student)

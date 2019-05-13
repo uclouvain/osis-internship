@@ -51,6 +51,20 @@
     <div class="tab-content">
             <div id="scores" class="tab-pane fade in active">
                 <div class="panel panel-body">
+                    <form action="{% url 'internship_scores_encoding' cohort_id=cohort.id %}" method="get" class="" id="search_form">
+                    {% csrf_token %}
+                    <div style="margin-bottom: 10px;" class="row">
+                        <div class="col-md-3">
+                            <label for="free_text_id">{% trans 'Search' %}</label>
+                            {{ search_form.free_text }}
+                        </div>
+                        <div class="col-md-3">
+                            <button type="submit" class="btn btn-primary" style="margin-top: 26px;">
+                                <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                            </button>
+                        </div>
+                    </div>
+                </form>
                   <table class="table">
                       <tr>
                         <th>Student</th>

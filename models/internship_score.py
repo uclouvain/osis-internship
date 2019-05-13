@@ -38,6 +38,8 @@ class InternshipScoreAdmin(SerializableModelAdmin):
 
 class InternshipScore(SerializableModel):
 
+    APD_NUMBER = 15
+
     SCORE_CHOICES = (
         ('A', 'A'),
         ('B', 'B'),
@@ -48,7 +50,7 @@ class InternshipScore(SerializableModel):
     student = models.ForeignKey('base.student')
     period = models.ForeignKey('internship.period')
     cohort = models.ForeignKey('internship.cohort')
-    for index in range(1, 16):
+    for index in range(1, APD_NUMBER+1):
         vars()['APD_{}'.format(index)] = models.CharField(
             max_length=1,
             choices=SCORE_CHOICES,
@@ -57,5 +59,7 @@ class InternshipScore(SerializableModel):
         )
 
     def __str__(self):
-        scores = [vars(self)['APD_{}'.format(index)] for index in range(1, 16)]
-        return '{} - {} - {}'.format(self.student, self.period, scores)
+        return '{} - {} - {}'.format(self.student, self.period, self.get_scores())
+
+    def get_scores(self):
+        return [vars(self)['APD_{}'.format(index)] for index in range(1, self.APD_NUMBER+1)]
