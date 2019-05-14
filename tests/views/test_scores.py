@@ -61,7 +61,7 @@ class ScoresEncodingTest(TestCase):
         for student_info in self.students:
             student = StudentFactory(person=student_info.person)
             ScoreFactory(student=student, period=self.period, cohort=self.cohort, APD_1='A')
-        for apd in range(1, 15):
+        for apd in range(1, InternshipScore.APD_NUMBER):
             ScoreMappingFactory(
                 period=self.period,
                 cohort=self.cohort,
