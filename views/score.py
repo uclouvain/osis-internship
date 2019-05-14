@@ -91,11 +91,12 @@ def _process_evaluation_grades(mapping, period, scores):
     for index, note in enumerate(scores):
         if note in [score[0] for score in InternshipScore.SCORE_CHOICES]:
             effective_apd_count += 1
-            period_score = _sum_mapped_note(index, mapping, note, period, period_score)
+            period_score = _sum_mapped_note((index, note), mapping, period, period_score)
     return period_score/effective_apd_count if effective_apd_count else 0
 
 
-def _sum_mapped_note(index, mapping, note, period, period_score):
+def _sum_mapped_note(indexed_note, mapping, period, period_score):
+    index, note = indexed_note
     mapped_note = list(filter(_get_mapping_score(period, index + 1), list(mapping)))
     if mapped_note:
         period_score += vars(mapped_note[0])['score_{}'.format(note)]
