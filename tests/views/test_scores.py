@@ -32,10 +32,11 @@ from django.utils.translation import gettext as _
 from rest_framework import status
 
 from base.tests.factories.student import StudentFactory
+from internship.models.internship_score import InternshipScore
 from internship.tests.factories.cohort import CohortFactory
 from internship.tests.factories.internship_student_information import InternshipStudentInformationFactory
 from internship.tests.factories.period import PeriodFactory
-from internship.tests.factories.score import ScoreFactory
+from internship.tests.factories.score import ScoreFactory, ScoreMappingFactory
 
 
 class ScoresEncodingTest(TestCase):
@@ -59,7 +60,14 @@ class ScoresEncodingTest(TestCase):
         self.students = [InternshipStudentInformationFactory(cohort=self.cohort) for _ in range(11)]
         for student_info in self.students:
             student = StudentFactory(person=student_info.person)
-            ScoreFactory(student=student, period=self.period, cohort=self.cohort)
+            ScoreFactory(student=student, period=self.period, cohort=self.cohort, APD_1='A')
+        for apd in range(1, InternshipScore.APD_NUMBER):
+            ScoreMappingFactory(
+                period=self.period,
+                cohort=self.cohort,
+                score_A=1, score_B=1, score_C=1, score_D=1,
+                apd=apd
+            )
 
     def test_view_scores_encoding(self):
         url = reverse('internship_scores_encoding', kwargs={'cohort_id': self.cohort.pk})
@@ -110,7 +118,7 @@ class ScoresEncodingTest(TestCase):
         response = self.client.get(url)
         student_scores = response.context['students'].object_list[0].scores
         self.assertEqual(student_scores[0][0], self.period.name)
-        self.assertTrue(student_scores[0][1][0] in ['A', 'B', 'C', 'D', 'E'])
+        self.assertIn(student_scores[0][1][0], [score[0] for score in InternshipScore.SCORE_CHOICES])
 
     def test_search_student_by_name(self):
         url = reverse('internship_scores_encoding', kwargs={'cohort_id': self.cohort.pk})
@@ -120,3 +128,9 @@ class ScoresEncodingTest(TestCase):
         }
         response = self.client.get(url, data=data)
         self.assertEqual(response.context['students'].object_list[0], searched_student)
+
+    def test_grades_converted_to_numerical_value(self):
+        url = reverse('internship_scores_encoding', kwargs={'cohort_id': self.cohort.pk})
+        response = self.client.get(url)
+        periods_scores = response.context['students'].object_list[0].periods_scores
+        self.assertDictEqual(periods_scores, {self.period.name: 1.0})
