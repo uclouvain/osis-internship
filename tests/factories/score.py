@@ -40,4 +40,17 @@ class ScoreFactory(factory.django.DjangoModelFactory):
     cohort = factory.SubFactory(CohortFactory)
     period = factory.SubFactory(PeriodFactory)
 
-    APD_1 = FuzzyChoice(['A', 'B', 'C', 'D', 'E'])
+    APD_1 = FuzzyChoice(['A', 'B', 'C', 'D'])
+
+
+class ScoreMappingFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = 'internship.InternshipScoreMapping'
+
+    cohort = factory.SubFactory(CohortFactory)
+    period = factory.SubFactory(PeriodFactory)
+    apd = factory.fuzzy.FuzzyInteger(low=1, high=15)
+    score_A = factory.fuzzy.FuzzyInteger(low=0, high=20)
+    score_B = factory.fuzzy.FuzzyInteger(low=0, high=20)
+    score_C = factory.fuzzy.FuzzyInteger(low=0, high=20)
+    score_D = factory.fuzzy.FuzzyInteger(low=0, high=20)

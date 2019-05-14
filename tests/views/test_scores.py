@@ -35,7 +35,7 @@ from base.tests.factories.student import StudentFactory
 from internship.tests.factories.cohort import CohortFactory
 from internship.tests.factories.internship_student_information import InternshipStudentInformationFactory
 from internship.tests.factories.period import PeriodFactory
-from internship.tests.factories.score import ScoreFactory
+from internship.tests.factories.score import ScoreFactory, ScoreMappingFactory
 
 
 class ScoresEncodingTest(TestCase):
@@ -60,6 +60,12 @@ class ScoresEncodingTest(TestCase):
         for student_info in self.students:
             student = StudentFactory(person=student_info.person)
             ScoreFactory(student=student, period=self.period, cohort=self.cohort)
+        for apd in range(1, 15):
+            self.mapping = ScoreMappingFactory(
+                period=self.period,
+                cohort=self.cohort,
+                score_A=1, score_B=1, score_C=1, score_D=1
+            )
 
     def test_view_scores_encoding(self):
         url = reverse('internship_scores_encoding', kwargs={'cohort_id': self.cohort.pk})
@@ -120,3 +126,9 @@ class ScoresEncodingTest(TestCase):
         }
         response = self.client.get(url, data=data)
         self.assertEqual(response.context['students'].object_list[0], searched_student)
+
+    def test_grades_converted_to_numerical_value(self):
+        url = reverse('internship_scores_encoding', kwargs={'cohort_id': self.cohort.pk})
+        response = self.client.get(url)
+        periods_scores = response.context['students'].object_list[0].periods_scores
+        self.assertDictEqual(periods_scores, {self.period.name: 1.0})
