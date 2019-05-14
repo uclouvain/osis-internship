@@ -36,6 +36,7 @@ from internship.models.cohort import Cohort
 from internship.models.internship_score import InternshipScore
 from internship.models.internship_score_mapping import InternshipScoreMapping
 from internship.models.internship_student_affectation_stat import InternshipStudentAffectationStat
+from internship.models.internship_student_information import InternshipStudentInformation
 from internship.models.period import Period
 from internship.utils.exporting import score_encoding_xls
 from internship.utils.importing import import_scores
@@ -70,14 +71,14 @@ def scores_encoding(request, cohort_id):
     ).select_related(
         'student', 'period', 'speciality'
     ).values(
-        'student__person', 'period__name', 'speciality__acronym', 'internship__speciality_id'
+      'student__person', 'student__registration_id', 'period__name', 'speciality__acronym', 'internship__speciality_id'
     ).order_by('period__date_start')
 
-    _match_scores_with_students(cohort, periods, list(scores), students)
+    _match_scores_with_students(cohort, periods, list(scores), students.object_list)
 
-    _map_numeric_score(mapping, students)
+    _map_numeric_score(mapping, students.object_list)
 
-    _link_periods_to_specialties(students, students_affectations)
+    _link_periods_to_specialties(students.object_list, students_affectations)
 
     context = {'cohort': cohort, 'periods': periods, 'students': students, 'search_form': search_form}
     return render(request, "scores.html", context=context)
@@ -118,7 +119,7 @@ def _sum_mapped_note(indexed_note, mapping, period, period_score):
 
 def _match_scores_with_students(cohort, periods, scores_list, students):
     # append scores for each period to each students
-    for student in students.object_list:
+    for student in students:
         student.scores = []
         for period in periods:
             student_scores = list(filter(_filter_scores(student, cohort, period), scores_list))
@@ -148,9 +149,25 @@ def _link_periods_to_specialties(students, students_affectations):
                 student.specialties.update({affectation['period__name']: affectation['speciality__acronym']})
 
 
+def _link_periods_to_hospitals(students, students_affectations):
+    for student in students:
+        student.organizations = {}
+        for affectation in students_affectations:
+            if affectation['student__person'] == student.person.pk:
+                student.organizations.update({affectation['period__name']: affectation['organization__reference']})
+
+
 def _annotate_non_mandatory_internship(affectation):
     if affectation['internship__speciality_id'] is None:
         affectation['speciality__acronym'] = '{} - C'.format(affectation['speciality__acronym'])
+
+
+def _append_registration_ids(students, students_affectations):
+    for student in students:
+        student.registration_id = None
+        for affectation in students_affectations:
+            if affectation['student__person'] == student.person.pk:
+                student.registration_id = affectation['student__registration_id']
 
 
 @login_required
@@ -175,7 +192,30 @@ def _upload_file(request, cohort):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def download_scores(request, cohort_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
-    workbook = score_encoding_xls.export_xls_with_scores(cohort)
+    periods = Period.objects.filter(cohort=cohort).order_by('date_start')
+    students = InternshipStudentInformation.objects.filter(cohort=cohort).order_by('person__last_name')
+    scores = InternshipScore.objects.filter(cohort=cohort).select_related(
+        'student__person', 'period', 'cohort'
+    ).order_by('student__person__last_name')
+    mapping = InternshipScoreMapping.objects.filter(cohort=cohort).select_related(
+        'period'
+    )
+    persons = students.values_list('person', flat=True)
+    students_affectations = InternshipStudentAffectationStat.objects.filter(
+        student__person_id__in=list(persons),
+    ).select_related(
+        'student', 'period', 'speciality', 'organization'
+    ).values(
+        'student__person', 'period__name', 'speciality__acronym',
+        'internship__speciality_id', 'organization__reference',  'student__registration_id'
+    ).order_by('period__date_start')
+    _match_scores_with_students(cohort, periods, list(scores), students)
+    _map_numeric_score(mapping, students)
+    _link_periods_to_specialties(students, students_affectations)
+    _link_periods_to_hospitals(students, students_affectations)
+    _append_registration_ids(students, students_affectations)
+
+    workbook = score_encoding_xls.export_xls_with_scores(cohort, periods, students)
     response = HttpResponse(workbook, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     file_name = "encodage_notes_{}.xlsx".format(cohort.name.strip().replace(' ', '_'))
     response['Content-Disposition'] = 'attachment; filename={}'.format(file_name)

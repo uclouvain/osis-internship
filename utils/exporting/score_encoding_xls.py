@@ -27,6 +27,8 @@ from openpyxl import Workbook
 from openpyxl.writer.excel import save_virtual_workbook
 from openpyxl.styles import Font
 from internship import models
+from internship.models.internship_score import InternshipScore
+from internship.models.internship_score_mapping import InternshipScoreMapping
 from internship.utils.exporting.spreadsheet import columns_resizing, add_row
 
 
@@ -41,14 +43,42 @@ def export_xls(cohort):
     return save_virtual_workbook(workbook)
 
 
+def export_xls_with_scores(cohort, periods, students):
+    workbook = Workbook()
+    worksheet = workbook.active
+    _add_header(cohort, worksheet)
+    columns_resizing(worksheet, {'A': 32, 'B': 16, 'C': 11, 'D': 7, 'E': 7, 'F': 7, 'G': 7, 'H': 7, 'I': 7, 'J': 7,
+                                 'K': 7, 'L': 7, 'M': 7, 'N': 7, 'O': 7, 'P': 7, 'Q': 7, 'R': 7, 'S': 7, 'T': 7,
+                                 'U': 7, 'V': 7, 'W': 7, 'X': 7, 'Y': 7, 'Z': 7, 'AA': 7, 'AB': 7, 'AC': 7, 'AD': 7,
+                                 'AE': 7, 'AF': 7, 'AG': 7, 'AH': 7, 'AI': 7, 'AJ': 7, 'AK': 7, 'AL': 7, 'AM': 7,
+                                 'AN': 7, 'AO': 7,  'AP': 7,  'AQ': 7})
+    for student in students:
+        columns = []
+        columns.append(student.person.last_name)
+        columns.append(student.person.first_name)
+        columns.append(student.registration_id)
+        for period in periods:
+            if period.name in student.specialties.keys():
+                columns.append(student.specialties[period.name])
+            if period.name in student.organizations.keys():
+                columns.append("{}{}".format(student.specialties[period.name], student.organizations[period.name]))
+            if period.name in student.periods_scores.keys():
+                columns.append(student.periods_scores[period.name])
+            else:
+                columns.append('')
+        add_row(worksheet, columns)
+    return save_virtual_workbook(workbook)
+
+
 def _add_header(cohort, worksheet):
     periods = models.period.find_by_cohort(cohort)
     column_titles = ["Nom", "Prénom", "NOMA"]
     for period in periods:
         column_titles.append(period.name)
         column_titles.append("{}+".format(period.name))
+        column_titles.append("{}-Score".format(period.name))
     add_row(worksheet, column_titles)
-    cells = worksheet.range("A1:AA1")[0]
+    cells = worksheet.range("A1:AAA1")[0]
     for cell in cells:
         cell.font = Font(bold=True)
 
