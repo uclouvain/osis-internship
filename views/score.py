@@ -23,11 +23,10 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import pickle
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.utils.translation import gettext as _
@@ -36,7 +35,9 @@ from internship.forms.score import StudentsFilterForm
 from internship.models.cohort import Cohort
 from internship.models.internship_score import InternshipScore
 from internship.models.internship_score_mapping import InternshipScoreMapping
+from internship.models.internship_student_affectation_stat import InternshipStudentAffectationStat
 from internship.models.period import Period
+from internship.utils.exporting import score_encoding_xls
 from internship.utils.importing import import_scores
 from internship.views.common import get_object_list
 
@@ -62,9 +63,21 @@ def scores_encoding(request, cohort_id):
         'period'
     )
 
+    persons = students.object_list.values_list('person', flat=True)
+
+    students_affectations = InternshipStudentAffectationStat.objects.filter(
+        student__person_id__in=list(persons),
+    ).select_related(
+        'student', 'period', 'speciality'
+    ).values(
+        'student__person', 'period__name', 'speciality__acronym', 'internship__speciality_id'
+    ).order_by('period__date_start')
+
     _match_scores_with_students(cohort, periods, list(scores), students)
 
     _map_numeric_score(mapping, students)
+
+    _link_periods_to_specialties(students, students_affectations)
 
     context = {'cohort': cohort, 'periods': periods, 'students': students, 'search_form': search_form}
     return render(request, "scores.html", context=context)
@@ -126,6 +139,20 @@ def _append_period_scores_to_student(period, student, student_scores):
         student.scores += (period.name, scores),
 
 
+def _link_periods_to_specialties(students, students_affectations):
+    for student in students:
+        student.specialties = {}
+        for affectation in students_affectations:
+            if affectation['student__person'] == student.person.pk:
+                _annotate_non_mandatory_internship(affectation)
+                student.specialties.update({affectation['period__name']: affectation['speciality__acronym']})
+
+
+def _annotate_non_mandatory_internship(affectation):
+    if affectation['internship__speciality_id'] is None:
+        affectation['speciality__acronym'] = '{} - C'.format(affectation['speciality__acronym'])
+
+
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def upload_scores(request, cohort_id):
@@ -142,3 +169,14 @@ def _upload_file(request, cohort):
             messages.add_message(request, messages.ERROR, _('File extension must be .xlsx'))
         else:
             import_scores.import_xlsx(cohort, file_name, period)
+
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def download_scores(request, cohort_id):
+    cohort = get_object_or_404(Cohort, pk=cohort_id)
+    workbook = score_encoding_xls.export_xls_with_scores(cohort)
+    response = HttpResponse(workbook, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    file_name = "encodage_notes_{}.xlsx".format(cohort.name.strip().replace(' ', '_'))
+    response['Content-Disposition'] = 'attachment; filename={}'.format(file_name)
+    return response
