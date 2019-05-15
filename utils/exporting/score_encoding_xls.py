@@ -43,31 +43,77 @@ def export_xls(cohort):
     return save_virtual_workbook(workbook)
 
 
-def export_xls_with_scores(cohort, periods, students):
+def export_xls_with_scores(cohort, periods, students, internships):
     workbook = Workbook()
     worksheet = workbook.active
     _add_header(cohort, worksheet)
-    columns_resizing(worksheet, {'A': 32, 'B': 16, 'C': 11, 'D': 7, 'E': 7, 'F': 7, 'G': 7, 'H': 7, 'I': 7, 'J': 7,
-                                 'K': 7, 'L': 7, 'M': 7, 'N': 7, 'O': 7, 'P': 7, 'Q': 7, 'R': 7, 'S': 7, 'T': 7,
-                                 'U': 7, 'V': 7, 'W': 7, 'X': 7, 'Y': 7, 'Z': 7, 'AA': 7, 'AB': 7, 'AC': 7, 'AD': 7,
-                                 'AE': 7, 'AF': 7, 'AG': 7, 'AH': 7, 'AI': 7, 'AJ': 7, 'AK': 7, 'AL': 7, 'AM': 7,
-                                 'AN': 7, 'AO': 7,  'AP': 7,  'AQ': 7})
+    _make_complete_list(periods, students, worksheet)
+    _make_internship_sheets(internships, periods, students, workbook)
+    return save_virtual_workbook(workbook)
+
+
+def _make_internship_sheets(internships, periods, students, workbook):
+    for internship in sorted(internships):
+        workbook.create_sheet(internship)
+        worksheet = workbook[internship]
+        _add_sheet_header(worksheet)
+        _add_sheet_content(internship, periods, students, worksheet)
+
+
+def _add_sheet_content(internship, periods, students, worksheet):
     for student in students:
         columns = []
-        columns.append(student.person.last_name)
+        columns.append(student.person.last_name.upper())
         columns.append(student.person.first_name)
         columns.append(student.registration_id)
-        for period in periods:
-            if period.name in student.specialties.keys():
-                columns.append(student.specialties[period.name])
+        _complete_student_row_by_internship(columns, internship, periods, student)
+        add_row(worksheet, columns)
+
+
+def _complete_student_row_by_internship(columns, internship, periods, student):
+    for period in periods:
+        if period.name in student.specialties.keys() and student.specialties[period.name] == internship:
             if period.name in student.organizations.keys():
-                columns.append("{}{}".format(student.specialties[period.name], student.organizations[period.name]))
+                columns.append(student.organizations[period.name])
             if period.name in student.periods_scores.keys():
                 columns.append(student.periods_scores[period.name])
             else:
                 columns.append('')
+
+
+def _make_complete_list(periods, students, worksheet):
+    columns_resizing(worksheet, {'A': 32, 'B': 16, 'C': 11, 'D': 7, 'E': 7, 'F': 7, 'G': 7, 'H': 7, 'I': 7, 'J': 7,
+                                 'K': 7, 'L': 7, 'M': 7, 'N': 7, 'O': 7, 'P': 7, 'Q': 7, 'R': 7, 'S': 7, 'T': 7,
+                                 'U': 7, 'V': 7, 'W': 7, 'X': 7, 'Y': 7, 'Z': 7, 'AA': 7, 'AB': 7, 'AC': 7, 'AD': 7,
+                                 'AE': 7, 'AF': 7, 'AG': 7, 'AH': 7, 'AI': 7, 'AJ': 7, 'AK': 7, 'AL': 7, 'AM': 7,
+                                 'AN': 7, 'AO': 7, 'AP': 7, 'AQ': 7})
+    for student in students:
+        columns = []
+        columns.append(student.person.last_name.upper())
+        columns.append(student.person.first_name)
+        columns.append(student.registration_id)
+        _complete_student_row_for_all_internships(columns, periods, student)
         add_row(worksheet, columns)
-    return save_virtual_workbook(workbook)
+
+
+def _complete_student_row_for_all_internships(columns, periods, student):
+    for period in periods:
+        if period.name in student.specialties.keys():
+            columns.append(student.specialties[period.name])
+        if period.name in student.organizations.keys():
+            columns.append(student.organizations[period.name])
+        if period.name in student.periods_scores.keys():
+            columns.append(student.periods_scores[period.name])
+        else:
+            columns.append('')
+
+
+def _add_sheet_header(worksheet):
+    column_titles = ["Nom", "Prénom", "NOMA", "LIEU", "COTE"]
+    add_row(worksheet, column_titles)
+    cells = worksheet.range("A1:AAA1")[0]
+    for cell in cells:
+        cell.font = Font(bold=True)
 
 
 def _add_header(cohort, worksheet):

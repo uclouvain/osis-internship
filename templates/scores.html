@@ -75,6 +75,7 @@
                       <tr>
                         <th>{% trans 'Student' %}</th>
                         <th>{% trans 'Period' %}</th>
+                        <th>{% trans 'Internship' %}</th>
                         <th>{% trans 'Specialty' %}</th>
                           {% for i in i|rjust:15 %}
                             <th>APD {{forloop.counter}}</th>
@@ -89,6 +90,7 @@
                           <tr>
                             <td>{{ period }}</td>
                             <td>{{ student.specialties|get_item:period.name }}</td>
+                            <td>{{ student.organizations|get_item:period.name }}</td>
                             {% if not student.scores|has_substr:period %}
                                 {% for i in i|rjust:15 %}
                                     <td>-</td>
