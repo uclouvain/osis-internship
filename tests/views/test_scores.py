@@ -76,8 +76,11 @@ class ScoresEncodingTest(TestCase):
         for student_info in self.students:
             student = StudentFactory(person=student_info.person)
             for internship in internships:
-                speciality = internship.speciality if internship.speciality else SpecialtyFactory()
-                StudentAffectationStatFactory(student=student, internship=internship, speciality=speciality)
+                StudentAffectationStatFactory(
+                    student=student,
+                    internship=internship,
+                    speciality=internship.speciality if internship.speciality else SpecialtyFactory()
+                )
             ScoreFactory(student=student, period=self.period, cohort=self.cohort, APD_1='A')
         for apd in range(1, InternshipScore.APD_NUMBER):
             ScoreMappingFactory(

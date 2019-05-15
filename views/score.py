@@ -42,6 +42,8 @@ from internship.utils.exporting import score_encoding_xls
 from internship.utils.importing import import_scores
 from internship.views.common import get_object_list
 
+CHOSEN_LENGTH = 7
+
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
@@ -187,7 +189,7 @@ def update_student_organizations(student, students_affectations):
 
 def _annotate_non_mandatory_internship(affectation):
     if affectation['internship__speciality_id'] is None and affectation['internship__name']:
-        affectation['speciality__acronym'] = affectation['internship__name'][-7:].replace(" ", "").upper()
+        affectation['speciality__acronym'] = affectation['internship__name'][-CHOSEN_LENGTH:].replace(" ", "").upper()
 
 
 def _append_registration_ids(students, students_affectations):
@@ -225,7 +227,7 @@ def _upload_file(request, cohort):
 def download_scores(request, cohort_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
     periods = Period.objects.filter(cohort=cohort).order_by('date_start')
-    students = InternshipStudentInformation.objects.filter(cohort=cohort).order_by('person__last_name')
+    students = InternshipStudentInformation.objects.filter(cohort=cohort).order_by('person__last_name')[:4]
     internships = Internship.objects.filter(cohort=cohort).order_by(
         'position'
     )
@@ -246,5 +248,5 @@ def _list_internships_acronyms(internships):
         elif internship.speciality:
             internships_acronyms.append(internship.speciality.acronym)
         else:
-            internships_acronyms.append(internship.name[-7:].replace(" ", "").upper())
+            internships_acronyms.append(internship.name[-CHOSEN_LENGTH:].replace(" ", "").upper())
     return internships_acronyms

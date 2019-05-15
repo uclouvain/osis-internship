@@ -24,6 +24,7 @@
 #
 ##############################################################################
 from openpyxl import Workbook
+from openpyxl.utils import get_column_letter
 from openpyxl.writer.excel import save_virtual_workbook
 from openpyxl.styles import Font
 from internship import models
@@ -31,16 +32,25 @@ from internship.models.internship_score import InternshipScore
 from internship.models.internship_score_mapping import InternshipScoreMapping
 from internship.utils.exporting.spreadsheet import columns_resizing, add_row
 
+LAST_COLUMN = 50
+PERIOD_COLUMN_WIDTH = 7
+
 
 def export_xls(cohort):
     workbook = Workbook()
     worksheet = workbook.active
     _add_header(cohort, worksheet)
-    columns_resizing(worksheet, {'A': 32, 'B': 16, 'C': 11, 'D': 5, 'E': 7, 'F': 5, 'G': 7, 'H': 5, 'I': 7, 'J': 5,
-                                 'K': 7, 'L': 5, 'M': 7, 'N': 5, 'O': 7, 'P': 5, 'Q': 7, 'R': 5, 'S': 7, 'T': 5,
-                                 'U': 7, 'V': 5, 'W': 7, 'X': 5, 'Y': 7, 'Z': 5, 'AA': 7})
+    columns_resizing(worksheet, _get_columns_width())
     _add_students(cohort, worksheet)
     return save_virtual_workbook(workbook)
+
+
+def _get_columns_width():
+    columns_width = {'A': 32, 'B': 16, 'C': 11}
+    columns_width.update({
+        get_column_letter(i): PERIOD_COLUMN_WIDTH for i in range(4, LAST_COLUMN)
+    })
+    return columns_width
 
 
 def export_xls_with_scores(cohort, periods, students, internships):
@@ -86,11 +96,7 @@ def _append_row_data(columns, period, student):
 
 
 def _make_complete_list(periods, students, worksheet):
-    columns_resizing(worksheet, {'A': 32, 'B': 16, 'C': 11, 'D': 7, 'E': 7, 'F': 7, 'G': 7, 'H': 7, 'I': 7, 'J': 7,
-                                 'K': 7, 'L': 7, 'M': 7, 'N': 7, 'O': 7, 'P': 7, 'Q': 7, 'R': 7, 'S': 7, 'T': 7,
-                                 'U': 7, 'V': 7, 'W': 7, 'X': 7, 'Y': 7, 'Z': 7, 'AA': 7, 'AB': 7, 'AC': 7, 'AD': 7,
-                                 'AE': 7, 'AF': 7, 'AG': 7, 'AH': 7, 'AI': 7, 'AJ': 7, 'AK': 7, 'AL': 7, 'AM': 7,
-                                 'AN': 7, 'AO': 7, 'AP': 7, 'AQ': 7})
+    columns_resizing(worksheet, _get_columns_width())
     for student in students:
         columns = []
         columns.append(student.person.last_name.upper())
