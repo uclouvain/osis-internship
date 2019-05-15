@@ -32,6 +32,7 @@ from django.utils.translation import gettext as _
 
 from internship.forms.score import StudentsFilterForm
 from internship.models.cohort import Cohort
+from internship.models.internship import Internship
 from internship.models.internship_score import InternshipScore
 from internship.models.internship_score_mapping import InternshipScoreMapping
 from internship.models.internship_student_affectation_stat import InternshipStudentAffectationStat
@@ -71,11 +72,12 @@ def _prepare_score_table(cohort, periods, students):
         'student', 'period', 'speciality'
     ).values(
         'student__person', 'student__registration_id', 'period__name', 'organization__reference',
-        'speciality__acronym', 'speciality__sequence', 'internship__speciality_id', 'internship__name'
+        'speciality__acronym', 'speciality__sequence', 'internship__speciality_id', 'internship__name',
+        'internship__length_in_periods'
     ).order_by('period__date_start')
     _match_scores_with_students(cohort, periods, list(scores), students)
     _map_numeric_score(mapping, students)
-    _link_periods_to_hospitals(students, students_affectations)
+    _link_periods_to_organizations(students, students_affectations)
     internships = _link_periods_to_specialties(students, students_affectations)
     _append_registration_ids(students, students_affectations)
     return internships
@@ -141,36 +143,46 @@ def _link_periods_to_specialties(students, students_affectations):
     internships_set = set()
     for student in students:
         student.specialties = {}
-        for affectation in students_affectations:
-            if affectation['student__person'] == student.person.pk:
-                _annotate_non_mandatory_internship(affectation)
-                acronym = _get_acronym_with_sequence(affectation)
-                student.specialties.update({affectation['period__name']: acronym})
-                internships_set.add(acronym)
+        _update_student_specialties(internships_set, student, students_affectations)
     return internships_set
 
 
+def _update_student_specialties(internships_set, student, students_affectations):
+    for affectation in students_affectations:
+        if affectation['student__person'] == student.person.pk:
+            _annotate_non_mandatory_internship(affectation)
+            acronym = _get_acronym_with_sequence(affectation)
+            student.specialties.update({affectation['period__name']: acronym})
+            internships_set.add(acronym)
+
+
 def _get_acronym_with_sequence(affectation):
-    acronym = "{}{}".format(
-        affectation['speciality__acronym'],
-        affectation['speciality__sequence']
-    ) if affectation['speciality__sequence'] else affectation['speciality__acronym']
+    speciality = affectation['internship__speciality_id']
+    length = affectation['internship__length_in_periods']
+    sequence = affectation['speciality__sequence']
+    acronym = affectation['speciality__acronym']
+    if speciality and length and sequence:
+        acronym = "{}{}".format(acronym, length)
     return acronym
 
 
-def _link_periods_to_hospitals(students, students_affectations):
+def _link_periods_to_organizations(students, students_affectations):
     for student in students:
         student.organizations = {}
-        for affectation in students_affectations:
-            if affectation['student__person'] == student.person.pk:
-                student.organizations.update(
-                    {
-                        affectation['period__name']: "{}{}".format(
-                            affectation['speciality__acronym'],
-                            affectation['organization__reference']
-                        )
-                    }
-                )
+        update_student_organizations(student, students_affectations)
+
+
+def update_student_organizations(student, students_affectations):
+    for affectation in students_affectations:
+        if affectation['student__person'] == student.person.pk:
+            student.organizations.update(
+                {
+                    affectation['period__name']: "{}{}".format(
+                        affectation['speciality__acronym'],
+                        affectation['organization__reference']
+                    )
+                }
+            )
 
 
 def _annotate_non_mandatory_internship(affectation):
@@ -181,9 +193,13 @@ def _annotate_non_mandatory_internship(affectation):
 def _append_registration_ids(students, students_affectations):
     for student in students:
         student.registration_id = None
-        for affectation in students_affectations:
-            if affectation['student__person'] == student.person.pk:
-                student.registration_id = affectation['student__registration_id']
+        _append_student_registration_id(student, students_affectations)
+
+
+def _append_student_registration_id(student, students_affectations):
+    for affectation in students_affectations:
+        if affectation['student__person'] == student.person.pk:
+            student.registration_id = affectation['student__registration_id']
 
 
 @login_required
@@ -210,9 +226,25 @@ def download_scores(request, cohort_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
     periods = Period.objects.filter(cohort=cohort).order_by('date_start')
     students = InternshipStudentInformation.objects.filter(cohort=cohort).order_by('person__last_name')
-    internships = _prepare_score_table(cohort, periods, students)
+    internships = Internship.objects.filter(cohort=cohort).order_by(
+        'position'
+    )
+    internships = _list_internships_acronyms(internships)
+    _prepare_score_table(cohort, periods, students)
     workbook = score_encoding_xls.export_xls_with_scores(cohort, periods, students, internships)
     response = HttpResponse(workbook, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     file_name = "encodage_notes_{}.xlsx".format(cohort.name.strip().replace(' ', '_'))
     response['Content-Disposition'] = 'attachment; filename={}'.format(file_name)
     return response
+
+
+def _list_internships_acronyms(internships):
+    internships_acronyms = []
+    for internship in internships:
+        if internship.speciality and internship.length_in_periods and internship.speciality.sequence:
+            internships_acronyms.append("{}{}".format(internship.speciality.acronym, internship.length_in_periods))
+        elif internship.speciality:
+            internships_acronyms.append(internship.speciality.acronym)
+        else:
+            internships_acronyms.append(internship.name[-7:].replace(" ", "").upper())
+    return internships_acronyms

@@ -73,12 +73,16 @@ def _add_sheet_content(internship, periods, students, worksheet):
 def _complete_student_row_by_internship(columns, internship, periods, student):
     for period in periods:
         if period.name in student.specialties.keys() and student.specialties[period.name] == internship:
-            if period.name in student.organizations.keys():
-                columns.append(student.organizations[period.name])
-            if period.name in student.periods_scores.keys():
-                columns.append(student.periods_scores[period.name])
-            else:
-                columns.append('')
+            _append_row_data(columns, period, student)
+
+
+def _append_row_data(columns, period, student):
+    if period.name in student.organizations.keys():
+        columns.append(student.organizations[period.name])
+    if period.name in student.periods_scores.keys():
+        columns.append(student.periods_scores[period.name])
+    else:
+        columns.append('')
 
 
 def _make_complete_list(periods, students, worksheet):
@@ -100,12 +104,7 @@ def _complete_student_row_for_all_internships(columns, periods, student):
     for period in periods:
         if period.name in student.specialties.keys():
             columns.append(student.specialties[period.name])
-        if period.name in student.organizations.keys():
-            columns.append(student.organizations[period.name])
-        if period.name in student.periods_scores.keys():
-            columns.append(student.periods_scores[period.name])
-        else:
-            columns.append('')
+        _append_row_data(columns, period, student)
 
 
 def _add_sheet_header(worksheet):
