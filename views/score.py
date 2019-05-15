@@ -250,3 +250,10 @@ def _list_internships_acronyms(internships):
         else:
             internships_acronyms.append(internship.name[-CHOSEN_LENGTH:].replace(" ", "").upper())
     return internships_acronyms
+
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def save_mapping(request, cohort_id):
+    cohort = get_object_or_404(Cohort, pk=cohort_id)
+    return HttpResponseRedirect(reverse('internship_scores_encoding', kwargs={'cohort_id': cohort.id})+"#mapping")

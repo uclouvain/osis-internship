@@ -43,7 +43,7 @@
         <h2>{% trans 'Scores encoding' %}</h2>
     </div>
 
-    <ul class="nav nav-tabs">
+    <ul id="tabs" class="nav nav-tabs">
       <li role="scores" class="active"><a data-toggle="tab" href="#scores">{% trans 'Scores' %}</a></li>
       <li role="mapping"><a data-toggle="tab" href="#mapping">{% trans 'Mapping' %}</a></li>
       <li role="upload"><a data-toggle="tab" href="#upload">{% trans 'Import' %}</a></li>
@@ -141,8 +141,14 @@
                 </div>
             </div>
             <div id="mapping" class="tab-pane fade">
+                <form action="{% url 'save_internship_score_mapping' cohort_id=cohort.id %}" method="post" id="mapping_form">
+                    {% csrf_token %}
                 <div class="panel panel-heading">
-                    <h3>{% trans 'Scores equivalence according to periods' %}</h3>
+                    <h3 style="display:inline-block;">{% trans 'Scores equivalence according to periods' %}</h3>
+                    <button type="submit" class="btn btn-primary pull-right" style="margin-top: 20px;" id="btn_submit_mapping">
+                        <icon class="fa fa-save"></icon>
+                        {% trans 'Save' %}
+                    </button>
                 </div>
                 <div class="panel panel-body">
                     <div class="row">
@@ -161,9 +167,10 @@
                             <h4><span class="label label-default">D</span></h4>
                         </div>
                     </div>
+                    {% for period in periods %}
                     <div class="row">
                         <div class="col-xs-1 col-xs-offset-3">
-                            <h4><span class="label label-primary">P1-2</span></h4>
+                            <h4><span class="label label-primary">{{ period.name }}</span></h4>
                         </div>
                         <div class="col-xs-1">
                             <input type="number" class="form-control" aria-describedby="basic-addon1">
@@ -178,58 +185,9 @@
                             <input type="number" class="form-control" aria-describedby="basic-addon1">
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-xs-1 col-xs-offset-3">
-                            <h4><span class="label label-primary">P3-4</span></h4>
-                        </div>
-                        <div class="col-xs-1">
-                            <input type="number" class="form-control" aria-describedby="basic-addon1">
-                        </div>
-                        <div class="col-xs-1">
-                            <input type="number" class="form-control" aria-describedby="basic-addon1">
-                        </div>
-                        <div class="col-xs-1">
-                            <input type="number" class="form-control" aria-describedby="basic-addon1">
-                        </div>
-                        <div class="col-xs-1">
-                            <input type="number" class="form-control" aria-describedby="basic-addon1">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-1 col-xs-offset-3">
-                            <h4><span class="label label-primary">P5-6</span></h4>
-                        </div>
-                        <div class="col-xs-1">
-                            <input type="number" class="form-control" aria-describedby="basic-addon1">
-                        </div>
-                        <div class="col-xs-1">
-                            <input type="number" class="form-control" aria-describedby="basic-addon1">
-                        </div>
-                        <div class="col-xs-1">
-                            <input type="number" class="form-control" aria-describedby="basic-addon1">
-                        </div>
-                        <div class="col-xs-1">
-                            <input type="number" class="form-control" aria-describedby="basic-addon1">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-1 col-xs-offset-3">
-                            <h4><span class="label label-primary">P7</span></h4>
-                        </div>
-                        <div class="col-xs-1">
-                            <input type="number" class="form-control" aria-describedby="basic-addon1">
-                        </div>
-                        <div class="col-xs-1">
-                            <input type="number" class="form-control" aria-describedby="basic-addon1">
-                        </div>
-                        <div class="col-xs-1">
-                            <input type="number" class="form-control" aria-describedby="basic-addon1">
-                        </div>
-                        <div class="col-xs-1">
-                            <input type="number" class="form-control" aria-describedby="basic-addon1">
-                        </div>
-                    </div>
+                    {% endfor %}
                 </div>
+                </form>
             </div>
         </div>
     </div>
@@ -266,4 +224,11 @@
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        const anchor = location.hash;
+        $('#tabs a[href="' + anchor + '"]').tab('show');
+    </script>
 {% endblock %}

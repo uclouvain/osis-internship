@@ -156,6 +156,8 @@ urlpatterns = [
                 url(r'^$', score.scores_encoding, name='internship_scores_encoding'),
                 url(r'^upload/$', score.upload_scores, name='internship_upload_scores'),
                 url(r'^download/$', score.download_scores, name='internship_download_scores'),
+                url(r'^mapping/save$', score.save_mapping, name='save_internship_score_mapping'),
+
             ])),
         ])),
 
