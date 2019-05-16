@@ -63,12 +63,20 @@
                                 <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
                             </button>
                         </div>
+                        <div class="col-md-3 pull-right">
+                        <a href="{% url 'internship_download_scores' cohort_id=cohort.id %}" class="btn btn-default pull-right" style="margin-top: 26px;">
+                            <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
+                            {% trans 'Export to XLS' %}
+                        </a>
+                        </div>
                     </div>
                 </form>
                   <table class="table">
                       <tr>
-                        <th>Student</th>
-                        <th>Period</th>
+                        <th>{% trans 'Student' %}</th>
+                        <th>{% trans 'Period' %}</th>
+                        <th>{% trans 'Internship' %}</th>
+                        <th>{% trans 'Specialty' %}</th>
                           {% for i in i|rjust:15 %}
                             <th>APD {{forloop.counter}}</th>
                           {% endfor %}
@@ -81,6 +89,8 @@
                         {% for period in periods %}
                           <tr>
                             <td>{{ period }}</td>
+                            <td>{{ student.specialties|get_item:period.name }}</td>
+                            <td>{{ student.organizations|get_item:period.name }}</td>
                             {% if not student.scores|has_substr:period %}
                                 {% for i in i|rjust:15 %}
                                     <td>-</td>

@@ -34,14 +34,18 @@ def display_errors(request, errors):
             messages.add_message(request, messages.ERROR, "{} : {}".format(_(key), value[0]), "alert-danger")
 
 
-def display_report_errors(request,errors):
+def display_report_errors(request, errors):
     for error in errors:
         for key, value in error.items():
             key = key.replace("report_", "")
-            if(key == "__all__"):
-                messages.add_message(request, messages.ERROR, "{}".format(value[0]), "alert-danger")
-            else:
-                messages.add_message(request, messages.ERROR, "{} : {}".format(_(key), value[0]), "alert-danger")
+            add_report_message(key, request, value)
+
+
+def add_report_message(key, request, value):
+    if (key == "__all__"):
+        messages.add_message(request, messages.ERROR, "{}".format(value[0]), "alert-danger")
+    else:
+        messages.add_message(request, messages.ERROR, "{} : {}".format(_(key), value[0]), "alert-danger")
 
 
 def get_object_list(request, objects):

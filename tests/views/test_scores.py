@@ -34,17 +34,24 @@ from rest_framework import status
 from base.tests.factories.student import StudentFactory
 from internship.models.internship_score import InternshipScore
 from internship.tests.factories.cohort import CohortFactory
+from internship.tests.factories.internship import InternshipFactory
 from internship.tests.factories.internship_student_information import InternshipStudentInformationFactory
 from internship.tests.factories.period import PeriodFactory
 from internship.tests.factories.score import ScoreFactory, ScoreMappingFactory
+from internship.tests.factories.speciality import SpecialtyFactory
+from internship.tests.factories.student_affectation_stat import StudentAffectationStatFactory
 
 
 class ScoresEncodingTest(TestCase):
+
     def setUp(self):
         self.user = User.objects.create_user('demo', 'demo@demo.org', 'passtest')
         permission = Permission.objects.get(codename='is_internship_manager')
         self.user.user_permissions.add(permission)
         self.client.force_login(self.user)
+
+    @classmethod
+    def setUpTestData(self):
         self.cohort = CohortFactory()
         self.period = PeriodFactory(cohort=self.cohort)
         self.xlsfile = SimpleUploadedFile(
@@ -58,8 +65,22 @@ class ScoresEncodingTest(TestCase):
             content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         )
         self.students = [InternshipStudentInformationFactory(cohort=self.cohort) for _ in range(11)]
+        self.mandatory_internship = InternshipFactory(
+            cohort=self.cohort, speciality=SpecialtyFactory(cohort=self.cohort)
+        )
+        self.long_internship = InternshipFactory(
+            cohort=self.cohort, speciality=SpecialtyFactory(cohort=self.cohort, sequence=1)
+        )
+        self.chosen_internship = InternshipFactory(cohort=self.cohort, speciality=None)
+        internships = [self.mandatory_internship, self.long_internship, self.chosen_internship]
         for student_info in self.students:
             student = StudentFactory(person=student_info.person)
+            for internship in internships:
+                StudentAffectationStatFactory(
+                    student=student,
+                    internship=internship,
+                    speciality=internship.speciality if internship.speciality else SpecialtyFactory()
+                )
             ScoreFactory(student=student, period=self.period, cohort=self.cohort, APD_1='A')
         for apd in range(1, InternshipScore.APD_NUMBER):
             ScoreMappingFactory(
@@ -134,3 +155,12 @@ class ScoresEncodingTest(TestCase):
         response = self.client.get(url)
         periods_scores = response.context['students'].object_list[0].periods_scores
         self.assertDictEqual(periods_scores, {self.period.name: 1.0})
+
+    def test_export_scores(self):
+        url = reverse('internship_download_scores', kwargs={'cohort_id': self.cohort.pk})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(
+            response._headers['content-type'][1],
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        )

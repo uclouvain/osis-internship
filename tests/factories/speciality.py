@@ -36,3 +36,4 @@ class SpecialtyFactory(factory.django.DjangoModelFactory):
     acronym = factory.Sequence(lambda n: 'SPEC-%d' % n)
     mandatory = False
     cohort = factory.SubFactory(CohortFactory)
+    sequence = None

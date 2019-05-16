@@ -24,21 +24,101 @@
 #
 ##############################################################################
 from openpyxl import Workbook
+from openpyxl.utils import get_column_letter
 from openpyxl.writer.excel import save_virtual_workbook
 from openpyxl.styles import Font
 from internship import models
+from internship.models.internship_score import InternshipScore
+from internship.models.internship_score_mapping import InternshipScoreMapping
 from internship.utils.exporting.spreadsheet import columns_resizing, add_row
+
+LAST_COLUMN = 50
+PERIOD_COLUMN_WIDTH = 7
 
 
 def export_xls(cohort):
     workbook = Workbook()
     worksheet = workbook.active
     _add_header(cohort, worksheet)
-    columns_resizing(worksheet, {'A': 32, 'B': 16, 'C': 11, 'D': 5, 'E': 7, 'F': 5, 'G': 7, 'H': 5, 'I': 7, 'J': 5,
-                                 'K': 7, 'L': 5, 'M': 7, 'N': 5, 'O': 7, 'P': 5, 'Q': 7, 'R': 5, 'S': 7, 'T': 5,
-                                 'U': 7, 'V': 5, 'W': 7, 'X': 5, 'Y': 7, 'Z': 5, 'AA': 7})
+    columns_resizing(worksheet, _get_columns_width())
     _add_students(cohort, worksheet)
     return save_virtual_workbook(workbook)
+
+
+def _get_columns_width():
+    columns_width = {'A': 32, 'B': 16, 'C': 11}
+    columns_width.update({
+        get_column_letter(i): PERIOD_COLUMN_WIDTH for i in range(4, LAST_COLUMN)
+    })
+    return columns_width
+
+
+def export_xls_with_scores(cohort, periods, students, internships):
+    workbook = Workbook()
+    worksheet = workbook.active
+    _add_header(cohort, worksheet)
+    _make_complete_list(periods, students, worksheet)
+    _make_internship_sheets(internships, periods, students, workbook)
+    return save_virtual_workbook(workbook)
+
+
+def _make_internship_sheets(internships, periods, students, workbook):
+    for internship in sorted(internships):
+        workbook.create_sheet(internship)
+        worksheet = workbook[internship]
+        _add_sheet_header(worksheet)
+        _add_sheet_content(internship, periods, students, worksheet)
+
+
+def _add_sheet_content(internship, periods, students, worksheet):
+    for student in students:
+        columns = []
+        columns.append(student.person.last_name.upper())
+        columns.append(student.person.first_name)
+        columns.append(student.registration_id)
+        _complete_student_row_by_internship(columns, internship, periods, student)
+        add_row(worksheet, columns)
+
+
+def _complete_student_row_by_internship(columns, internship, periods, student):
+    for period in periods:
+        if period.name in student.specialties.keys() and student.specialties[period.name] == internship:
+            _append_row_data(columns, period, student)
+
+
+def _append_row_data(columns, period, student):
+    if period.name in student.organizations.keys():
+        columns.append(student.organizations[period.name])
+    if period.name in student.periods_scores.keys():
+        columns.append(student.periods_scores[period.name])
+    else:
+        columns.append('')
+
+
+def _make_complete_list(periods, students, worksheet):
+    columns_resizing(worksheet, _get_columns_width())
+    for student in students:
+        columns = []
+        columns.append(student.person.last_name.upper())
+        columns.append(student.person.first_name)
+        columns.append(student.registration_id)
+        _complete_student_row_for_all_internships(columns, periods, student)
+        add_row(worksheet, columns)
+
+
+def _complete_student_row_for_all_internships(columns, periods, student):
+    for period in periods:
+        if period.name in student.specialties.keys():
+            columns.append(student.specialties[period.name])
+        _append_row_data(columns, period, student)
+
+
+def _add_sheet_header(worksheet):
+    column_titles = ["Nom", "Prénom", "NOMA", "LIEU", "COTE"]
+    add_row(worksheet, column_titles)
+    cells = worksheet.range("A1:AAA1")[0]
+    for cell in cells:
+        cell.font = Font(bold=True)
 
 
 def _add_header(cohort, worksheet):
@@ -47,8 +127,9 @@ def _add_header(cohort, worksheet):
     for period in periods:
         column_titles.append(period.name)
         column_titles.append("{}+".format(period.name))
+        column_titles.append("{}-Score".format(period.name))
     add_row(worksheet, column_titles)
-    cells = worksheet.range("A1:AA1")[0]
+    cells = worksheet.range("A1:AAA1")[0]
     for cell in cells:
         cell.font = Font(bold=True)
 

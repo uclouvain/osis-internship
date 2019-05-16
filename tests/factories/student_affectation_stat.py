@@ -27,6 +27,7 @@ import random
 import factory.django
 
 from base.tests.factories.student import StudentFactory
+from internship.tests.factories.internship import InternshipFactory
 from internship.tests.factories.organization import OrganizationFactory
 from internship.tests.factories.speciality import SpecialtyFactory
 from internship.tests.factories.period import PeriodFactory
@@ -41,3 +42,4 @@ class StudentAffectationStatFactory(factory.django.DjangoModelFactory):
     organization = factory.SubFactory(OrganizationFactory)
     speciality = factory.SubFactory(SpecialtyFactory)
     period = factory.SubFactory(PeriodFactory)
+    internship = factory.SubFactory(InternshipFactory)
