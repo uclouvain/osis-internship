@@ -151,7 +151,17 @@
                     </button>
                 </div>
                 <div class="panel panel-body">
-                    <div class="row">
+                    <ul class="nav nav-pills nav-justified">
+                        {% for period in periods %}
+                          <li {% if forloop.counter == 1 %}class="active"{% endif %}>
+                              <a href="#mapping_{{ period.name }}" data-toggle="pill">{{ period.name }}</a>
+                          </li>
+                        {% endfor %}
+                    </ul>
+                    <div class="tab-content">
+                    {% for period in periods %}
+                        <div id="mapping_{{ period.name }}" class="tab-pane fade {% if forloop.counter == 1 %}in active{% endif %}">
+                        <div class="row" style="margin-top:50px;">
                         <div class="col-xs-1 col-xs-offset-3">
                         </div>
                         <div class="col-xs-1">
@@ -167,10 +177,10 @@
                             <h4><span class="label label-default">D</span></h4>
                         </div>
                     </div>
-                    {% for period in periods %}
+                    {% for i in i|rjust:15 %}
                     <div class="row">
                         <div class="col-xs-1 col-xs-offset-3">
-                            <h4><span class="label label-primary">{{ period.name }}</span></h4>
+                            <h4><span class="label label-primary">APD {{forloop.counter}}</span></h4>
                         </div>
                         <div class="col-xs-1">
                             <input type="number" class="form-control" aria-describedby="basic-addon1">
@@ -186,7 +196,9 @@
                         </div>
                     </div>
                     {% endfor %}
-                </div>
+                    </div>
+                {% endfor %}
+                    </div>
                 </form>
             </div>
         </div>
