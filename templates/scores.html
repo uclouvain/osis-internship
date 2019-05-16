@@ -1,6 +1,7 @@
 {% extends "layout.html" %}
 {% load staticfiles %}
 {% load dictionary %}
+{% load mapping %}
 
 {% load i18n bootstrap3 %}
 
@@ -183,16 +184,20 @@
                             <h4><span class="label label-primary">APD {{forloop.counter}}</span></h4>
                         </div>
                         <div class="col-xs-1">
-                            <input type="number" class="form-control" aria-describedby="basic-addon1">
+                            <input type="number" class="form-control"
+                                   value="{% get_mapping_value mapping period forloop.counter 'A' %}">
                         </div>
                         <div class="col-xs-1">
-                            <input type="number" class="form-control" aria-describedby="basic-addon1">
+                            <input type="number" class="form-control"
+                                   value="{% get_mapping_value mapping period forloop.counter 'B' %}">
                         </div>
                         <div class="col-xs-1">
-                            <input type="number" class="form-control" aria-describedby="basic-addon1">
+                            <input type="number" class="form-control"
+                                   value="{% get_mapping_value mapping period forloop.counter 'C' %}">
                         </div>
                         <div class="col-xs-1">
-                            <input type="number" class="form-control" aria-describedby="basic-addon1">
+                            <input type="number" class="form-control"
+                                   value="{% get_mapping_value mapping period forloop.counter 'D' %}">
                         </div>
                     </div>
                     {% endfor %}
