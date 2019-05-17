@@ -855,7 +855,6 @@ msgid "Second choice"
 msgstr "2ème choix"
 
 #: templates/scores.html:258
-#| msgid "Select a xlsx file that contains the list of students."
 msgid "Select a xls file that contains the scores by period"
 msgstr "Veuillez sélectionner un fichier xlsx contenant les notes pour la période choisie."
 
@@ -1067,9 +1066,3 @@ msgid ""
 "You may use this panel to upload files received from contest for each "
 "internship period"
 msgstr ""
-
-#~ msgid "Mandatory internships"
-#~ msgstr "Stages obligatoires"
-
-#~ msgid "Non mandatory internship"
-#~ msgstr "Stage au choix"
