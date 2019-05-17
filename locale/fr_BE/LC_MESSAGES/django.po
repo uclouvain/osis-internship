@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-19 10:06+0100\n"
+"POT-Creation-Date: 2019-05-17 16:27+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,18 +16,18 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: models/organization.py:98
+#: models/organization.py:96
 msgid "A hospital with the same reference already exists in this cohort"
 msgstr "Un hôpital avec la même référence existe déjà dans cette cohorte"
 
-#: views/master.py:126
+#: views/master.py:119
 msgid "A master must be affected to at least one hospital or one specialty."
 msgstr ""
 "Un maître de stage doit être affecté à au moins un hôpital ou une spécialité."
 
 #: templates/students_update.html:50
 msgid "Accept"
-msgstr ""
+msgstr "Accepter"
 
 #: templates/specialities.html:54 templates/speciality_form.html:54
 msgid "Acronym"
@@ -74,7 +74,7 @@ msgstr "Adresse"
 #: templates/internship_affectation_errors.html:33
 #: templates/internship_affectation_errors.html:42
 #: templates/internship_affectation_hospitals.html:33
-#: templates/internship_affectation_hospitals.html:43
+#: templates/internship_affectation_hospitals.html:42
 #: templates/internship_affectation_statistics.html:33
 #: templates/internship_affectation_statistics.html:42
 #: templates/internship_affectation_students.html:33
@@ -127,18 +127,18 @@ msgstr "Retour"
 msgid "Birth date"
 msgstr "Date de naissance"
 
-#: models/internship_master.py:65
+#: models/internship_master.py:68
 msgid "Birth date must be on or before today's date."
 msgstr "La date de naissance doit être antérieure ou égale à la date actuelle."
 
 #: templates/fragment/delete_confirmation_modal.html:41
 #: templates/internship_affectation_errors.html:85
-#: templates/internship_affectation_hospitals.html:86
+#: templates/internship_affectation_hospitals.html:85
 #: templates/internship_affectation_statistics.html:85
 #: templates/internship_affectation_students.html:85
 #: templates/internships.html:234 templates/master_form.html:150
-#: templates/student_form.html:145 templates/students.html:200
-#: templates/students_update.html:46
+#: templates/scores.html:265 templates/student_form.html:145
+#: templates/students.html:200 templates/students_update.html:46
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -207,6 +207,14 @@ msgstr "Obligatoire"
 msgid "Contest"
 msgstr "Concours"
 
+#: templates/scores.html:219
+msgid "Copy"
+msgstr "Copier"
+
+#: templates/scores.html:169
+msgid "Copy Period"
+msgstr "Copier Période"
+
 #: templates/cohort/cohort_form.html:30
 msgid "Copy from cohort"
 msgstr "Copier à partir de la cohorte"
@@ -247,7 +255,11 @@ msgstr "Description"
 msgid "Details"
 msgstr "Détails"
 
-#: models/organization.py:81
+#: templates/internship_detail.html:55
+msgid "Display students first choice"
+msgstr "Afficher premier choix des étudiants"
+
+#: models/organization.py:80
 msgid "Duplicated sequence in report"
 msgstr "Séquence dupliquée dans le rapport"
 
@@ -264,7 +276,7 @@ msgstr "Ajouter une cohorte"
 msgid "Edit internship"
 msgstr "Modifier stage"
 
-#: templates/internship_detail.html:95 templates/period_places_edit.html:32
+#: templates/internship_detail.html:72 templates/period_places_edit.html:32
 #: templates/period_places_edit.html:37
 msgid "Edit places"
 msgstr "Modifier nombres de places"
@@ -307,7 +319,7 @@ msgid "Erasmus students"
 msgstr "Étudiants Erasmus"
 
 #: templates/internship_affectation_errors.html:100
-#: templates/internship_affectation_hospitals.html:101
+#: templates/internship_affectation_hospitals.html:100
 #: templates/internship_affectation_statistics.html:100
 #: templates/internship_affectation_students.html:100
 msgid "Errors"
@@ -321,7 +333,7 @@ msgstr "Fichier Excel pour l'hôpital"
 msgid "Export master affectations"
 msgstr "Fichier Excel pour le maitre de stage"
 
-#: templates/internship_affectation_students.html:108
+#: templates/internship_affectation_students.html:108 templates/scores.html:70
 msgid "Export to XLS"
 msgstr "Exporter vers XLS"
 
@@ -329,7 +341,7 @@ msgstr "Exporter vers XLS"
 msgid "Female"
 msgstr "Femme"
 
-#: views/offer.py:406
+#: tests/views/test_scores.py:131 views/offer.py:381 views/score.py:218
 msgid "File extension must be .xlsx"
 msgstr "L'extension de fichier doit être .xlsx"
 
@@ -345,7 +357,7 @@ msgstr "Filtrer par étudiants prioritaires"
 #: templates/internship_affectation_statistics.html:137
 #: templates/internship_affectation_statistics.html:165
 #: templates/internship_affectation_statistics.html:185
-#: templates/internship_detail.html:46 templates/internship_detail.html:81
+#: templates/internship_detail.html:44
 msgid "First choice"
 msgstr "Choix préféré"
 
@@ -359,13 +371,13 @@ msgstr "Prénom"
 
 #: templates/students_update.html:44
 msgid "Following modifications will be applied:"
-msgstr ""
+msgstr "Les modifications suivantes seront appliquées:"
 
 #: forms/form_offer_preference.py:37
 #: templates/internship_affectation_statistics.html:149
 #: templates/internship_affectation_statistics.html:177
 #: templates/internship_affectation_statistics.html:197
-#: templates/internship_detail.html:52 templates/internship_detail.html:87
+#: templates/internship_detail.html:50
 msgid "Fourth choice"
 msgstr "4ème choix"
 
@@ -387,8 +399,8 @@ msgstr "Généraliste"
 #: templates/fragment/affectation_panel_heading.html:32
 #: templates/internship_affectation_errors.html:82
 #: templates/internship_affectation_errors.html:86
-#: templates/internship_affectation_hospitals.html:83
-#: templates/internship_affectation_hospitals.html:87
+#: templates/internship_affectation_hospitals.html:82
+#: templates/internship_affectation_hospitals.html:86
 #: templates/internship_affectation_statistics.html:82
 #: templates/internship_affectation_statistics.html:86
 #: templates/internship_affectation_students.html:82
@@ -397,7 +409,7 @@ msgid "Generate solution"
 msgstr "Générer la solution"
 
 #: templates/internship_affectation_errors.html:114
-#: templates/internship_affectation_hospitals.html:109
+#: templates/internship_affectation_hospitals.html:108
 #: templates/internship_affectation_sumup.html:47
 #: templates/internship_modification.html:51
 #: templates/internship_modification_student.html:94
@@ -414,20 +426,22 @@ msgstr "Hôpital"
 msgid "Hospital error"
 msgstr "Hôpital erreur"
 
-#: views/place.py:67
+#: views/place.py:68
 msgid "Hospital saved"
 msgstr "Hôpital enregistré"
 
 #: templates/internship/home.html:56
 #: templates/internship_affectation_errors.html:97
-#: templates/internship_affectation_hospitals.html:98
+#: templates/internship_affectation_hospitals.html:97
 #: templates/internship_affectation_statistics.html:97
 #: templates/internship_affectation_students.html:97
 #: templates/place_detail.html:32 templates/place_detail_affectation.html:32
 msgid "Hospitals"
 msgstr "Hôpitaux"
 
-#: templates/internships.html:61 templates/students.html:92
+#: templates/internships.html:61 templates/scores.html:50
+#: templates/scores.html:140 templates/scores.html:243
+#: templates/scores.html:263 templates/students.html:92
 #: templates/students.html:189 templates/students.html:199
 msgid "Import"
 msgstr "Importer"
@@ -435,6 +449,10 @@ msgstr "Importer"
 #: templates/internship_affectation_statistics.html:201
 msgid "Imposed choices"
 msgstr "Choix imposés"
+
+#: forms/score.py:11
+msgid "In all fields"
+msgstr "Dans tous les champs"
 
 #: templates/place_form.html:75
 msgid ""
@@ -448,7 +466,8 @@ msgstr ""
 msgid "Inject"
 msgstr "Injecter"
 
-#: templates/internships.html:154 templates/student.html:153
+#: templates/internships.html:154 templates/scores.html:79
+#: templates/student.html:153
 msgid "Internship"
 msgstr "Stage"
 
@@ -506,9 +525,9 @@ msgstr "Injection des stages"
 #: templates/period_create.html:33 templates/period_places_edit.html:31
 #: templates/periods.html:31 templates/place_detail.html:31
 #: templates/place_detail_affectation.html:31 templates/place_form.html:34
-#: templates/places.html:32 templates/specialities.html:31
-#: templates/speciality_form.html:32 templates/student.html:31
-#: templates/student_affectation_modification.html:31
+#: templates/places.html:32 templates/scores.html:38
+#: templates/specialities.html:31 templates/speciality_form.html:32
+#: templates/student.html:31 templates/student_affectation_modification.html:31
 #: templates/student_form.html:31
 #: templates/student_information_modification.html:32
 #: templates/students.html:31 templates/students_update.html:31
@@ -570,15 +589,15 @@ msgstr "Localité"
 msgid "Male"
 msgstr "Homme"
 
-#: templates/internship_detail.html:42
-msgid "Mandatory internships"
-msgstr "Stages obligatoires"
+#: templates/scores.html:49
+msgid "Mapping"
+msgstr "Conversion"
 
 #: templates/master_form.html:40 templates/student.html:188
 msgid "Master"
 msgstr "Maître"
 
-#: views/master.py:99
+#: views/master.py:92
 msgid "Master deleted"
 msgstr "Maître de stage supprimé : "
 
@@ -615,7 +634,7 @@ msgstr "NOMA"
 #: templates/places.html:53 templates/specialities.html:53
 #: templates/speciality_form.html:52 templates/students.html:105
 msgid "Name"
-msgstr ""
+msgstr "Nom"
 
 #: views/internship.py:187
 msgid "New internship"
@@ -623,7 +642,7 @@ msgstr "Nouveau stage"
 
 #: templates/students_update.html:86
 msgid "New records"
-msgstr ""
+msgstr "Nouveaux enregistrements"
 
 #: templates/master.html:152
 msgid "No allocation found for the master"
@@ -649,12 +668,7 @@ msgstr "Aucun résultat"
 msgid "Noma"
 msgstr ""
 
-#: templates/internship_detail.html:77
-msgid "Non mandatory internship"
-msgstr "Stage au choix"
-
 #: templates/internship_affectation_statistics.html:211
-#: templates/internship_detail.html:74
 msgid "Non mandatory internships"
 msgstr "Stages au choix"
 
@@ -697,9 +711,17 @@ msgstr "Position de tri"
 msgid "Other choice"
 msgstr "Autre choix"
 
+#: templates/scores.html:222
+msgid "Paste"
+msgstr "Coller"
+
+#: templates/scores.html:172
+msgid "Paste Period"
+msgstr "Coller Période"
+
 #: templates/internship_affectation_errors.html:113
-#: templates/place_form.html:81
-#: templates/student_affectation_modification.html:51
+#: templates/place_form.html:81 templates/scores.html:78
+#: templates/scores.html:247 templates/student_affectation_modification.html:51
 msgid "Period"
 msgstr "Période"
 
@@ -735,7 +757,7 @@ msgid "Phone Number / Mobile Number"
 msgstr "Numéro de Téléphone / Numéro de portable"
 
 #: templates/internship_affectation_errors.html:60
-#: templates/internship_affectation_hospitals.html:61
+#: templates/internship_affectation_hospitals.html:60
 #: templates/internship_affectation_statistics.html:60
 #: templates/internship_affectation_students.html:60
 msgid "Please wait"
@@ -768,7 +790,7 @@ msgstr "Email Privé"
 msgid "Publication date"
 msgstr "Date de publication"
 
-#: models/cohort.py:62
+#: models/cohort.py:65
 msgid "Publication must be done after the subscription process."
 msgstr "La publication doit être réalisée après le processus d'inscription."
 
@@ -795,8 +817,8 @@ msgstr "Retour"
 #: templates/internship_modification.html:76 templates/master_form.html:146
 #: templates/period_create.html:58 templates/period_create.html:59
 #: templates/period_places_edit.html:51 templates/place_form.html:183
-#: templates/place_form.html:184 templates/speciality_form.html:63
-#: templates/speciality_form.html:64
+#: templates/place_form.html:184 templates/scores.html:151
+#: templates/speciality_form.html:63 templates/speciality_form.html:64
 #: templates/student_affectation_modification.html:115
 #: templates/student_affectation_modification.html:116
 #: templates/student_form.html:141
@@ -805,8 +827,22 @@ msgstr "Retour"
 msgid "Save"
 msgstr "Enregistrer"
 
+#: templates/scores.html:48
+msgid "Scores"
+msgstr "Notes"
+
+#: templates/internship/home.html:93 templates/scores.html:39
+#: templates/scores.html:44
+msgid "Scores encoding"
+msgstr "Encodage des notes"
+
+#: templates/scores.html:148
+msgid "Scores equivalence according to periods"
+msgstr "Equivalence des notes par période"
+
 #: templates/internship_affectation_sumup.html:74 templates/masters.html:78
-#: templates/student_form.html:56 templates/students.html:111
+#: templates/scores.html:59 templates/student_form.html:56
+#: templates/students.html:111
 msgid "Search"
 msgstr "Rechercher"
 
@@ -814,9 +850,14 @@ msgstr "Rechercher"
 #: templates/internship_affectation_statistics.html:141
 #: templates/internship_affectation_statistics.html:169
 #: templates/internship_affectation_statistics.html:189
-#: templates/internship_detail.html:48 templates/internship_detail.html:83
+#: templates/internship_detail.html:46
 msgid "Second choice"
 msgstr "2ème choix"
+
+#: templates/scores.html:258
+#| msgid "Select a xlsx file that contains the list of students."
+msgid "Select a xls file that contains the scores by period"
+msgstr "Veuillez sélectionner un fichier xlsx contenant les notes pour la période choisie."
 
 #: templates/internships.html:231
 msgid "Select a xlsx file for the internships' injection"
@@ -863,13 +904,13 @@ msgstr "Spécialités"
 #: templates/internship/internship_form.html:26
 #: templates/internship/list.html:37
 #: templates/internship_affectation_errors.html:112
-#: templates/internship_affectation_hospitals.html:110
+#: templates/internship_affectation_hospitals.html:109
 #: templates/internship_affectation_sumup.html:60
 #: templates/internship_modification.html:52 templates/internships.html:170
 #: templates/master.html:141 templates/master_form.html:79
 #: templates/masters.html:57 templates/masters.html:95
-#: templates/place_form.html:171 templates/speciality_form.html:40
-#: templates/student.html:159
+#: templates/place_form.html:171 templates/scores.html:80
+#: templates/speciality_form.html:40 templates/student.html:159
 msgid "Specialty"
 msgstr "Spécialité"
 
@@ -894,12 +935,12 @@ msgstr "Début des activités"
 msgid "Start date"
 msgstr "Date de début"
 
-#: models/cohort.py:56 models/period.py:50
+#: models/cohort.py:59 models/period.py:50
 msgid "Start date must be earlier than end date."
 msgstr "La date d'ouverture doit être antérieure à la date de fermeture."
 
 #: templates/internship_affectation_errors.html:99
-#: templates/internship_affectation_hospitals.html:100
+#: templates/internship_affectation_hospitals.html:99
 #: templates/internship_affectation_statistics.html:99
 #: templates/internship_affectation_students.html:99
 msgid "Statistics"
@@ -910,7 +951,7 @@ msgid "Status"
 msgstr "Statut"
 
 #: templates/internship_affectation_errors.html:111
-#: templates/internship_affectation_students.html:118
+#: templates/internship_affectation_students.html:118 templates/scores.html:77
 #: templates/student_form.html:39
 msgid "Student"
 msgstr "Étudiant"
@@ -942,14 +983,14 @@ msgstr "Choix des étudiants"
 
 #: templates/internship/home.html:71
 #: templates/internship_affectation_errors.html:98
-#: templates/internship_affectation_hospitals.html:99
+#: templates/internship_affectation_hospitals.html:98
 #: templates/internship_affectation_statistics.html:98
 #: templates/internship_affectation_students.html:98 templates/students.html:33
 #: templates/students_update.html:33
 msgid "Students"
 msgstr "Étudiants"
 
-#: templates/place_detail.html:49
+#: templates/internship_detail.html:52 templates/place_detail.html:49
 msgid "Students list"
 msgstr "Liste des étudiants"
 
@@ -969,9 +1010,9 @@ msgstr "Liste des étudiants"
 #: templates/period_create.html:32 templates/period_places_edit.html:30
 #: templates/periods.html:30 templates/place_detail.html:30
 #: templates/place_detail_affectation.html:30 templates/place_form.html:33
-#: templates/places.html:31 templates/specialities.html:30
-#: templates/speciality_form.html:31 templates/student.html:30
-#: templates/student_affectation_modification.html:30
+#: templates/places.html:31 templates/scores.html:37
+#: templates/specialities.html:30 templates/speciality_form.html:31
+#: templates/student.html:30 templates/student_affectation_modification.html:30
 #: templates/student_form.html:30
 #: templates/student_information_modification.html:31
 #: templates/students.html:30 templates/students_update.html:30
@@ -986,12 +1027,12 @@ msgstr "Soumettre les choix"
 #: templates/internship_affectation_statistics.html:145
 #: templates/internship_affectation_statistics.html:173
 #: templates/internship_affectation_statistics.html:193
-#: templates/internship_detail.html:50 templates/internship_detail.html:85
+#: templates/internship_detail.html:48
 msgid "Third choice"
 msgstr "3ème choix"
 
 #: templates/internship_affectation_errors.html:68
-#: templates/internship_affectation_hospitals.html:69
+#: templates/internship_affectation_hospitals.html:68
 #: templates/internship_affectation_statistics.html:68
 #: templates/internship_affectation_students.html:68
 msgid "This may take several minutes"
@@ -1020,3 +1061,15 @@ msgid ""
 msgstr ""
 "Vous êtes dans la période des inscriptions. Il est recommandé de ne pas "
 "changer les choix au cours de cette période."
+
+#: templates/scores.html:135
+msgid ""
+"You may use this panel to upload files received from contest for each "
+"internship period"
+msgstr ""
+
+#~ msgid "Mandatory internships"
+#~ msgstr "Stages obligatoires"
+
+#~ msgid "Non mandatory internship"
+#~ msgstr "Stage au choix"
