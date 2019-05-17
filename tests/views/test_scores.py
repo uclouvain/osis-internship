@@ -24,6 +24,7 @@
 #
 ##############################################################################
 from unittest import mock
+
 from django.contrib.auth.models import User, Permission
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.urlresolvers import reverse
@@ -33,6 +34,7 @@ from rest_framework import status
 
 from base.tests.factories.student import StudentFactory
 from internship.models.internship_score import InternshipScore
+from internship.models.internship_score_mapping import InternshipScoreMapping
 from internship.tests.factories.cohort import CohortFactory
 from internship.tests.factories.internship import InternshipFactory
 from internship.tests.factories.internship_student_information import InternshipStudentInformationFactory
@@ -53,7 +55,7 @@ class ScoresEncodingTest(TestCase):
     @classmethod
     def setUpTestData(self):
         self.cohort = CohortFactory()
-        self.period = PeriodFactory(cohort=self.cohort)
+        self.period = PeriodFactory(name='P1', cohort=self.cohort)
         self.xlsfile = SimpleUploadedFile(
             name='upload.xls',
             content=str.encode('test'),
@@ -164,3 +166,16 @@ class ScoresEncodingTest(TestCase):
             response._headers['content-type'][1],
             'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         )
+
+    def test_save_mapping(self):
+        url = reverse('save_internship_score_mapping', kwargs={'cohort_id': self.cohort.pk})
+        mapping = {'A': 10, 'B': 12, 'C': 16, 'D': 18}
+        post_data = {}
+        for key, value in mapping.items():
+            post_data.update({'mapping{}_P1'.format(key): [mapping[key] for _ in range(1, InternshipScore.APD_NUMBER)]})
+        post_data.update({'activePeriod': 'P1'})
+        self.client.post(url, data=post_data)
+        mappings = InternshipScoreMapping.objects.filter(cohort=self.cohort)
+        for m in mappings:
+            for key, value in mapping.items():
+                self.assertEqual(vars(m)['score_{}'.format(key)], value)
