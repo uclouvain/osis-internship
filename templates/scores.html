@@ -152,17 +152,28 @@
                     </button>
                 </div>
                 <div class="panel panel-body">
-                    <ul class="nav nav-pills nav-justified">
+                    <ul id="pills" class="nav nav-pills nav-justified">
                         {% for period in periods %}
-                          <li {% if forloop.counter == 1 %}class="active"{% endif %}>
-                              <a href="#mapping_{{ period.name }}" data-toggle="pill">{{ period.name }}</a>
+                          <li name="{{ period.name }}" {% if forloop.counter == 1 %}class="active"{% endif %}>
+                              <a href="#mapping_{{ period.name }}" data-toggle="pill" onclick="pillChanged('{{ period.name }}')">{{ period.name }}</a>
                           </li>
                         {% endfor %}
                     </ul>
+                    <input id="activePeriod" type="hidden" name="activePeriod"/>
                     <div class="tab-content">
                     {% for period in periods %}
                         <div id="mapping_{{ period.name }}" class="tab-pane fade {% if forloop.counter == 1 %}in active{% endif %}">
-                        <div class="row" style="margin-top:50px;">
+                        <div class="row">
+                        <div class="btn-group btn-period-mapping" role="group">
+                          <button onclick="copyPeriodValues('{{ period }}')" type="button" class="btn btn-default">
+                              <icon class="far fa-copy"></icon> {% trans 'Copy Period' %}
+                          </button>
+                          <button onclick="pastePeriodValues('{{ period }}')" type="button" class="btn btn-primary">
+                              <icon class="fa fa-paste"></icon> {% trans 'Paste Period' %}
+                          </button>
+                        </div>
+                        </div>
+                        <div class="row" style="margin-top:30px;">
                         <div class="col-xs-1 col-xs-offset-3">
                         </div>
                         <div class="col-xs-1">
@@ -179,25 +190,38 @@
                         </div>
                     </div>
                     {% for i in i|rjust:15 %}
-                    <div class="row">
+                    <div class="row" onmouseover="showButtons('{{ period }}', '{{ forloop.counter }}')"
+                    onmouseout="hideButtons('{{ period }}', '{{ forloop.counter }}')">
                         <div class="col-xs-1 col-xs-offset-3">
                             <h4><span class="label label-primary">APD {{forloop.counter}}</span></h4>
                         </div>
                         <div class="col-xs-1">
-                            <input type="number" class="form-control"
+                            <input type="number" class="form-control" name="mappingA_{{ period }}"
+                                   id="mappingA_{{ period }}_{{ forloop.counter }}"
                                    value="{% get_mapping_value mapping period forloop.counter 'A' %}">
                         </div>
                         <div class="col-xs-1">
-                            <input type="number" class="form-control"
+                            <input type="number" class="form-control" name="mappingB_{{ period }}"
+                                   id="mappingB_{{ period }}_{{ forloop.counter }}"
                                    value="{% get_mapping_value mapping period forloop.counter 'B' %}">
                         </div>
                         <div class="col-xs-1">
-                            <input type="number" class="form-control"
+                            <input type="number" class="form-control" name="mappingC_{{ period }}"
+                                   id="mappingC_{{ period }}_{{ forloop.counter }}"
                                    value="{% get_mapping_value mapping period forloop.counter 'C' %}">
                         </div>
                         <div class="col-xs-1">
-                            <input type="number" class="form-control"
+                            <input type="number" class="form-control" name="mappingD_{{ period }}"
+                                   id="mappingD_{{ period }}_{{ forloop.counter }}"
                                    value="{% get_mapping_value mapping period forloop.counter 'D' %}">
+                        </div>
+                        <div id="btn_{{ period }}_{{ forloop.counter }}" class="btn-group" role="group" style="display:none;">
+                          <button onclick="copyValues('{{ period }}', '{{ forloop.counter }}')" title="{% trans 'Copy' %}" type="button" class="btn btn-default">
+                              <icon class="far fa-copy"></icon>
+                          </button>
+                          <button onclick="pasteValues('{{ period }}', '{{ forloop.counter }}')" title="{% trans 'Paste' %}" type="button" class="btn btn-primary">
+                              <icon class="fa fa-paste"></icon>
+                          </button>
                         </div>
                     </div>
                     {% endfor %}
@@ -212,7 +236,7 @@
     <div class="modal fade" id="upload_scores" tabindex="-1" role="dialog" aria-labelledby="uploadScoresLabel">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <form method="post" enctype="multipart/form-data" action="{% url 'internship_upload_scores' cohort_id=cohort.id %}">
+                <form id="upload-form" method="post" enctype="multipart/form-data" action="{% url 'internship_upload_scores' cohort_id=cohort.id %}">
                     {% csrf_token %}
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="bt_close_upload_students_modal"><span aria-hidden="true">&times;</span></button>
@@ -234,7 +258,10 @@
                         <p class="help-block">{% trans 'Select a xls file that contains the scores by period' %}</p>
                     </div>
                     <div class="modal-footer">
-                        <input type="submit" class="btn btn-primary" value="{% trans 'Import' %}" onclick="document.getElementById('files').style.visibility='visible'" id="bt_submit_upload_scores_modal"/>
+                        <button id="import-submit" type="submit" class="btn btn-primary" onclick="document.getElementById('files').style.visibility='visible'" id="bt_submit_upload_scores_modal">
+                            <div id="loader" style="display: none;"></div>
+                            {% trans 'Import' %}
+                        </button>
                         <button type="button" class="btn btn-default" data-dismiss="modal" id="bt_cancel_upload_scores_modal">{% trans 'Cancel' %}</button>
                     </div>
                 </form>
@@ -246,6 +273,82 @@
 {% block script %}
     <script>
         const anchor = location.hash;
+        const grades = ['A', 'B', 'C', 'D'];
+
         $('#tabs a[href="' + anchor + '"]').tab('show');
+
+        if(anchor.indexOf("mapping")!==-1){
+            $('#tabs a[href="#mapping"]').tab('show');
+            $('#pills a[href="' + anchor + '"]').tab('show');
+        }
+
+        $('.nav-pills li').click(function () {
+            $("#activePeriod").val(this.getAttribute('name'));
+        });
+
+       let periodClipboard = [];
+
+        function copyPeriodValues(period){
+            periodClipboard = [];
+            for(let apd of Array(15).keys()){
+                periodClipboard[apd] = copyValues(period, apd+1);
+            }
+        }
+
+        function pastePeriodValues(period){
+            for(let [index, values] of periodClipboard.entries()){
+                pasteValues(period, index+1, values);
+            }
+        }
+
+        let clipboard = {};
+        function copyValues(period, apd){
+            clipboard = {};
+            for(let grade of grades) {
+                clipboard[grade] = document.getElementById('mapping' + grade + '_' + period + '_' + apd).value
+            }
+            return Object.assign({}, clipboard)
+        }
+
+        function pasteValues(period, apd, values){
+            if(!values){
+                values = clipboard;
+            }
+            if(Object.keys(clipboard).length !== 0){
+                for(let grade of grades){
+                    document.getElementById('mapping'+ grade + '_' + period + '_' + apd).value = values[grade];
+                }
+            }
+        }
+
+        function pillChanged(period){
+            $("#activePeriod").val(period);
+        }
+
+        function showButtons(period, apd){
+            $("#btn_"+period+"_"+apd).show();
+        }
+
+        function hideButtons(period, apd){
+            $("#btn_"+period+"_"+apd).hide();
+        }
+
+        $("#upload-form").submit(function() {
+            $("#import-submit").attr("disabled", true);
+            $("#loader").show();
+        });
+
+        $('#import-submit').attr('disabled',true);
+        $('input:file').change(
+            function(){
+                if ($(this).val()){
+                    $('#import-submit').removeAttr('disabled');
+                }
+                else {
+                    $('#import-submit').attr('disabled',true);
+                }
+            }
+        );
+
     </script>
 {% endblock %}
