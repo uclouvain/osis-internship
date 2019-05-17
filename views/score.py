@@ -273,11 +273,15 @@ def _save_mapping_diff(cohort, periods, request):
 def _update_or_create_mapping(apds, cohort, grade, period):
     for index, value in enumerate(apds):
         if value:
-            mapping, created = InternshipScoreMapping.objects.get_or_create(
-                period=period,
-                apd=index + 1,
-                cohort=cohort
-            )
-            if int(value) != 0 and vars(mapping)['score_{}'.format(grade)] != int(value):
-                vars(mapping)['score_{}'.format(grade)] = value
-                mapping.save()
+            _update_or_create_apd_mapping(cohort, grade, index, period, value)
+
+
+def _update_or_create_apd_mapping(cohort, grade, index, period, value):
+    mapping, created = InternshipScoreMapping.objects.get_or_create(
+        period=period,
+        apd=index + 1,
+        cohort=cohort
+    )
+    if int(value) != 0 and vars(mapping)['score_{}'.format(grade)] != int(value):
+        vars(mapping)['score_{}'.format(grade)] = value
+        mapping.save()
