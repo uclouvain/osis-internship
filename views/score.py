@@ -265,7 +265,7 @@ def save_mapping(request, cohort_id):
 
 def _save_mapping_diff(cohort, periods, request):
     for period in periods:
-        for grade in ['A', 'B', 'C', 'D']:
+        for grade in [x[0] for x in InternshipScore.SCORE_CHOICES]:
             apds = request.POST.getlist('mapping{}_{}'.format(grade, period.name))
             _update_or_create_mapping(apds, cohort, grade, period)
 
