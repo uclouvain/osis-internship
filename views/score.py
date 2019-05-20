@@ -55,8 +55,9 @@ def scores_encoding(request, cohort_id):
     if search_form.is_valid():
         students_list = search_form.get_students(cohort=cohort)
     students = get_object_list(request, students_list)
-    _prepare_score_table(cohort, periods, students.object_list)
-    context = {'cohort': cohort, 'periods': periods, 'students': students, 'search_form': search_form}
+    mapping = _prepare_score_table(cohort, periods, students.object_list)
+    context = {'cohort': cohort, 'periods': periods,
+               'students': students, 'search_form': search_form, 'mapping': list(mapping)}
     return render(request, "scores.html", context=context)
 
 
@@ -80,9 +81,9 @@ def _prepare_score_table(cohort, periods, students):
     _match_scores_with_students(cohort, periods, list(scores), students)
     _map_numeric_score(mapping, students)
     _link_periods_to_organizations(students, students_affectations)
-    internships = _link_periods_to_specialties(students, students_affectations)
+    _link_periods_to_specialties(students, students_affectations)
     _append_registration_ids(students, students_affectations)
-    return internships
+    return mapping
 
 
 def _map_numeric_score(mapping, students):
@@ -142,20 +143,17 @@ def _append_period_scores_to_student(period, student, student_scores):
 
 
 def _link_periods_to_specialties(students, students_affectations):
-    internships_set = set()
     for student in students:
         student.specialties = {}
-        _update_student_specialties(internships_set, student, students_affectations)
-    return internships_set
+        _update_student_specialties(student, students_affectations)
 
 
-def _update_student_specialties(internships_set, student, students_affectations):
+def _update_student_specialties(student, students_affectations):
     for affectation in students_affectations:
         if affectation['student__person'] == student.person.pk:
             _annotate_non_mandatory_internship(affectation)
             acronym = _get_acronym_with_sequence(affectation)
             student.specialties.update({affectation['period__name']: acronym})
-            internships_set.add(acronym)
 
 
 def _get_acronym_with_sequence(affectation):
@@ -227,7 +225,7 @@ def _upload_file(request, cohort):
 def download_scores(request, cohort_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
     periods = Period.objects.filter(cohort=cohort).order_by('date_start')
-    students = InternshipStudentInformation.objects.filter(cohort=cohort).order_by('person__last_name')[:4]
+    students = InternshipStudentInformation.objects.filter(cohort=cohort).order_by('person__last_name')
     internships = Internship.objects.filter(cohort=cohort).order_by(
         'position'
     )
@@ -250,3 +248,41 @@ def _list_internships_acronyms(internships):
         else:
             internships_acronyms.append(internship.name[-CHOSEN_LENGTH:].replace(" ", "").upper())
     return internships_acronyms
+
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def save_mapping(request, cohort_id):
+    cohort = get_object_or_404(Cohort, pk=cohort_id)
+    periods = Period.objects.filter(cohort=cohort).order_by('date_start')
+    anchor = "#mapping"
+    if request.POST:
+        _save_mapping_diff(cohort, periods, request)
+        period = request.POST['activePeriod']
+        anchor = "#mapping_{}".format(period)
+    return HttpResponseRedirect(reverse('internship_scores_encoding', kwargs={'cohort_id': cohort.id}) + anchor)
+
+
+def _save_mapping_diff(cohort, periods, request):
+    for period in periods:
+        for grade in [x[0] for x in InternshipScore.SCORE_CHOICES]:
+            apds = request.POST.getlist('mapping{}_{}'.format(grade, period.name))
+            _update_or_create_mapping(apds, cohort, grade, period)
+
+
+def _update_or_create_mapping(apds, cohort, grade, period):
+    for index, value in enumerate(apds):
+        if value:
+            _update_or_create_apd_mapping(cohort, grade, period, (index, value))
+
+
+def _update_or_create_apd_mapping(cohort, grade, period, enum_item):
+    index, value = enum_item
+    mapping, created = InternshipScoreMapping.objects.get_or_create(
+        period=period,
+        apd=index + 1,
+        cohort=cohort
+    )
+    if int(value) != 0 and vars(mapping)['score_{}'.format(grade)] != int(value):
+        vars(mapping)['score_{}'.format(grade)] = value
+        mapping.save()
