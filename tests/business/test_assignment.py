@@ -34,6 +34,7 @@ from django.utils import timezone
 from base.tests.factories.person import PersonFactory
 from base.tests.factories.student import StudentFactory
 from internship.business.assignment import difference, Assignment
+from internship.business.statistics import load_solution_sol, compute_stats
 from internship.models.internship_choice import InternshipChoice
 from internship.models.internship_enrollment import InternshipEnrollment
 from internship.models.internship_student_affectation_stat import InternshipStudentAffectationStat
@@ -47,6 +48,12 @@ from internship.tests.factories.organization import OrganizationFactory
 from internship.tests.factories.period import PeriodFactory
 from internship.tests.factories.period_internship_places import PeriodInternshipPlacesFactory
 from internship.tests.factories.speciality import SpecialtyFactory
+
+N_STUDENTS = 30
+N_MANDATORY_INTERNSHIPS = 6
+N_NON_MANDATORY_INTERNSHIPS = 20
+N_ORGANIZATIONS = 10
+N_PERIODS = 8
 
 
 class AssignmentTest(TestCase):
@@ -66,8 +73,8 @@ class AssignmentTest(TestCase):
         cls.students = _create_internship_students(cls)
 
         cls.hospital_error = OrganizationFactory(name='Hospital Error', cohort=cls.cohort, reference=999)
-        cls.organizations = [OrganizationFactory(cohort=cls.cohort) for _ in range(0, 10)]
-        cls.periods = [PeriodFactory(cohort=cls.cohort) for _ in range(0, 8)]
+        cls.organizations = [OrganizationFactory(cohort=cls.cohort) for _ in range(0, N_ORGANIZATIONS)]
+        cls.periods = [PeriodFactory(cohort=cls.cohort) for _ in range(0, N_PERIODS)]
 
         cls.specialties = cls.mandatory_specialties + cls.non_mandatory_specialties
         cls.internships = cls.mandatory_internships + cls.non_mandatory_internships
@@ -112,6 +119,12 @@ class AssignmentTest(TestCase):
             self.assertEqual(affectation.organization, prior_enrollment.place)
             self.assertEqual(affectation.period, prior_enrollment.period)
             self.assertEqual(affectation.speciality, prior_enrollment.internship_offer.speciality)
+
+    def test_affectation_statistics(self):
+        solution = load_solution_sol(self.cohort, self.affectations)
+        stats = compute_stats(self.cohort, solution)
+        self.assertEqual(stats['tot_stud'], N_STUDENTS)
+        self.assertEqual(stats['erasmus_students'], 1)
 
 
 def _make_student_choices(cls):
@@ -171,13 +184,13 @@ def _create_internship_students(cls):
     internship_students = [InternshipStudentInformationFactory(
         cohort=cls.cohort,
         person=PersonFactory()
-    ) for _ in range(0, 30)]
+    ) for _ in range(0, N_STUDENTS)]
     students = [StudentFactory(person=student.person) for student in internship_students]
     return students
 
 
 def _create_mandatory_internships(cls):
-    mandatory_specialties = [SpecialtyFactory(mandatory=True) for _ in range(0, 6)]
+    mandatory_specialties = [SpecialtyFactory(mandatory=True) for _ in range(0, N_MANDATORY_INTERNSHIPS)]
     mandatory_internships = [
         InternshipFactory(
             cohort=cls.cohort,
@@ -190,7 +203,7 @@ def _create_mandatory_internships(cls):
 
 
 def _create_non_mandatory_internships(cls):
-    non_mandatory_specialties = [SpecialtyFactory(mandatory=False) for _ in range(0, 20)]
+    non_mandatory_specialties = [SpecialtyFactory(mandatory=False) for _ in range(0, N_NON_MANDATORY_INTERNSHIPS)]
     non_mandatory_internships = [
         InternshipFactory(
             cohort=cls.cohort,
@@ -248,20 +261,20 @@ def _execute_assignment_algorithm(cls):
 
 class ListUtilsTestCase(TestCase):
     def test_difference_non_empty_lists(self):
-        first_list = [1,2,3,4,5]
-        second_list = [4,5]
-        expected = [1,2,3]
+        first_list = [1, 2, 3, 4, 5]
+        second_list = [4, 5]
+        expected = [1, 2, 3]
         self.assertEqual(expected, difference(first_list, second_list))
 
     def test_difference_with_empty_second_list(self):
-        first_list = [1,2,3,4,5]
+        first_list = [1, 2, 3, 4, 5]
         second_list = []
-        expected = [1,2,3,4,5]
+        expected = [1, 2, 3, 4, 5]
         self.assertEqual(expected, difference(first_list, second_list))
 
     def test_difference_with_empty_first_list(self):
         first_list = []
-        second_list = [1,2]
+        second_list = [1, 2]
         expected = []
         self.assertEqual(expected, difference(first_list, second_list))
 
@@ -272,9 +285,9 @@ class ListUtilsTestCase(TestCase):
         self.assertEqual(expected, difference(first_list, second_list))
 
     def test_difference_with_list_without_common_elements(self):
-        first_list = [1,2,3,4]
-        second_list = [5,6]
-        expected = [1,2,3,4]
+        first_list = [1, 2, 3, 4]
+        second_list = [5, 6]
+        expected = [1, 2, 3, 4]
         self.assertEqual(expected, difference(first_list, second_list))
 
 
