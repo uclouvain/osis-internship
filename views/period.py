@@ -53,7 +53,8 @@ def internships_periods(request, cohort_id):
 def period_create(request, cohort_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
     period_form = PeriodForm()
-    context = {'form': period_form, 'cohort': cohort, 'url_form': reverse('period_new', kwargs={'cohort_id': cohort.id}),
+    context = {
+        'form': period_form, 'cohort': cohort, 'url_form': reverse('period_new', kwargs={'cohort_id': cohort.id}),
     }
     return render(request, "period_create.html", context)
 
