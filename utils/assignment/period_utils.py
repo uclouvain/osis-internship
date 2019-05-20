@@ -25,14 +25,14 @@
 ##############################################################################
 
 
-def group_periods_by_consecutives(periods, len=1):
-    if len == 1:
+def group_periods_by_consecutives(periods, leng=1):
+    if leng == 1:
         for period in periods:
             yield [period]
     else:
-        for i in range(len(periods) - (len - 1)):
-            if all(map(lambda per: int(periods[i].name[1:]) + 1 == int(periods[i + 1].name[1:]), periods[i: i + len])):
-                yield periods[i: i + len]
+        for i in range(len(periods) - (leng - 1)):
+            if all(map(lambda per: int(periods[i].name[1:]) + 1 == int(periods[i + 1].name[1:]), periods[i: i + leng])):
+                yield periods[i: i + leng]
 
 
 def map_period_ids(periods):

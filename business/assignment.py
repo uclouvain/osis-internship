@@ -455,7 +455,7 @@ def all_available_periods(assignment, student, internship_length, periods):
     student_affectations = get_student_affectations(student, assignment.affectations)
     unavailable_periods = get_periods_from_affectations(student_affectations)
     available_periods = difference(periods, unavailable_periods)
-    return list(group_periods_by_consecutives(available_periods, len=internship_length))
+    return list(group_periods_by_consecutives(available_periods, leng=internship_length))
 
 
 def find_best_available_offer_for_internship_periods(assignment, internship, choices, periods, last=False):
