@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2019 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -46,6 +46,7 @@ def internships_places(request, cohort_id):
     organizations = models.organization.Organization.objects.filter(cohort=cohort).order_by('reference')
     context = {'all_organizations': organizations, 'cohort': cohort}
     return render(request, "places.html", context)
+
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
@@ -151,13 +152,11 @@ def student_affectation(request, cohort_id, organization_id):
         a.email = ""
         a.adress = ""
         a.phone_mobile = ""
-        internship_student_information= models.internship_student_information.search(person=a.student.person,
-                                                                                     cohort=cohort)
-        if internship_student_information:
-            informations = internship_student_information.first()
-            a.email = informations.email
-            a.adress = informations.location + " " + informations.postal_code + " " + informations.city
-            a.phone_mobile = informations.phone_mobile
+        internship_student_information = models.internship_student_information.search(
+            person=a.student.person,
+            cohort=cohort
+        )
+        _add_student_information(a, internship_student_information)
     periods = models.period.search(cohort=cohort)
 
     internships = models.internship_offer.search(organization = organization, cohort=cohort)
@@ -195,11 +194,7 @@ def export_organisation_affectation_master(request, cohort_id, organization_id):
             internship_student_info = models.internship_student_information.search(person=affectation.student.person)
             master_allocation = models.master_allocation.search(cohort=cohort, hospital=affectation.organization,
                                                               specialty=affectation.speciality)
-            if internship_student_info:
-                informations = internship_student_info.first()
-                affectation.email = informations.email
-                affectation.adress = informations.location + " " + informations.postal_code + " " + informations.city
-                affectation.phone_mobile = informations.phone_mobile
+            _add_student_information(affectation, internship_student_info)
             if master_allocation:
                 allocation = master_allocation.first()
                 affectation.master = allocation.master
@@ -239,3 +234,21 @@ def _export_xls(organization, virtual_workbook):
     file_name = "affectation_{}_{}.xlsx".format(str(organization.reference), file_name_parts)
     response['Content-Disposition'] = 'attachment; filename={}'.format(file_name)
     return response
+
+
+def _format_address(person_address):
+    return "{} - {} {} ({})".format(
+        person_address.location,
+        person_address.postal_code,
+        person_address.city,
+        person_address.country
+    )
+
+
+def _add_student_information(affectation, internship_student_information):
+    if internship_student_information:
+        informations = internship_student_information.first()
+        person_address = informations.person.personaddress_set.first()
+        affectation.email = informations.email
+        affectation.adress = _format_address(person_address)
+        affectation.phone_mobile = informations.phone_mobile

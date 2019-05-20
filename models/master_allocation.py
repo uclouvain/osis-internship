@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2019 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -37,9 +37,17 @@ class MasterAllocationAdmin(admin.ModelAdmin):
 
 
 class MasterAllocation(models.Model):
-    master = models.ForeignKey('internship.InternshipMaster')
-    organization = models.ForeignKey('internship.Organization', blank=True, null=True)
-    specialty = models.ForeignKey('internship.InternshipSpeciality', blank=True, null=True)
+    master = models.ForeignKey('internship.InternshipMaster', on_delete=models.CASCADE)
+    organization = models.ForeignKey(
+        'internship.Organization',
+        blank=True, null=True,
+        on_delete=models.CASCADE
+    )
+    specialty = models.ForeignKey(
+        'internship.InternshipSpeciality',
+        blank=True, null=True,
+        on_delete=models.CASCADE
+    )
 
     def cohort(self):
         return self.specialty.cohort if self.specialty else (self.organization.cohort if self.organization else None)
@@ -61,8 +69,8 @@ def find_by_master(cohort, a_master):
 
 def find_unallocated_masters():
     allocated_masters = MasterAllocation.objects.values("pk").distinct()
-    return InternshipMaster.objects.exclude(id__in=(list([a['pk'] for a in allocated_masters])))\
-                                   .order_by('last_name', 'first_name')
+    return InternshipMaster.objects.exclude(id__in=(list([a['pk'] for a in allocated_masters]))) \
+        .order_by('last_name', 'first_name')
 
 
 def search(cohort, specialty, hospital):
@@ -77,8 +85,8 @@ def search(cohort, specialty, hospital):
     if specialty or hospital:
         return masters.order_by("master__last_name", "master__first_name")
     else:
-        return masters\
-            .filter(specialty__isnull=False, organization__isnull=False)\
+        return masters \
+            .filter(specialty__isnull=False, organization__isnull=False) \
             .order_by("master__last_name", "master__first_name")
 
 
