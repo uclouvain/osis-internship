@@ -22,7 +22,7 @@ install:
   - pip install -r requirements.txt
   - rm -Rf internship
   - ln -s $PROJECT_DIR internship
-  -
+
 before_script:
   - cp .env.example .env
   - echo 'APPS_TO_TEST += ("internship",)' >> backoffice/settings/local.py
