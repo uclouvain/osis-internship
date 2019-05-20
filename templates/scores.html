@@ -47,7 +47,6 @@
     <ul id="tabs" class="nav nav-tabs">
       <li role="scores" class="active"><a data-toggle="tab" href="#scores">{% trans 'Scores' %}</a></li>
       <li role="mapping"><a data-toggle="tab" href="#mapping">{% trans 'Mapping' %}</a></li>
-      <li role="upload"><a data-toggle="tab" href="#upload">{% trans 'Import' %}</a></li>
     </ul>
     <div class="tab-content">
             <div id="scores" class="tab-pane fade in active">
@@ -64,11 +63,16 @@
                                 <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
                             </button>
                         </div>
-                        <div class="col-md-3 pull-right">
-                        <a href="{% url 'internship_download_scores' cohort_id=cohort.id %}" class="btn btn-default pull-right" style="margin-top: 26px;">
-                            <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
-                            {% trans 'Export to XLS' %}
-                        </a>
+                        <div class="col-md-6 pull-right">
+                            <a href="{% url 'internship_download_scores' cohort_id=cohort.id %}" class="btn btn-default pull-right" style="margin-top: 26px;">
+                                <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
+                                {% trans 'Export to XLSX' %}
+                            </a>
+                            <button type="button" class="btn btn-default pull-right" data-toggle="modal"
+                                    data-target="#upload_scores" id="bt_upload_score_modal" style="margin-top: 26px; margin-right:10px;">
+                                <span class="glyphicon glyphicon-upload" aria-hidden="true"></span>
+                                {% trans 'Import internships ratings' %}
+                            </button>
                         </div>
                     </div>
                 </form>
@@ -126,19 +130,6 @@
                             </tr>
                         </tfoot>
                     </table>
-                </div>
-            </div>
-            <div id="upload" class="tab-pane fade">
-                <div class="panel panel-body">
-                    <div class="alert alert-info">
-                        <i class="fa fa-info-circle"></i>
-                        {% trans 'You may use this panel to upload files received from contest for each internship period' %}
-                    </div>
-                    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#upload_scores"
-                            id="bt_upload_score_modal">
-                        <span class="glyphicon glyphicon-import" aria-hidden="true"></span>
-                        {% trans 'Import' %}
-                    </button>
                 </div>
             </div>
             <div id="mapping" class="tab-pane fade">
