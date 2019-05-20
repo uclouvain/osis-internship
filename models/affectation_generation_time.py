@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2019 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -43,8 +43,8 @@ class AffectationGenerationTime(models.Model):
         return u"%s - %s" % (self.start_date_time, self.end_date_time)
 
 
-def get_latest():
+def get_latest(cohort):
     try:
-        return AffectationGenerationTime.objects.latest('start_date_time')
+        return AffectationGenerationTime.objects.filter(cohort=cohort).latest('start_date_time')
     except ObjectDoesNotExist:
         return None

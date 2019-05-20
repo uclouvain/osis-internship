@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2019 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -36,8 +36,8 @@ class PeriodInternshipPlacesAdmin(SerializableModelAdmin):
 
 
 class PeriodInternshipPlaces(SerializableModel):
-    period = models.ForeignKey('internship.Period')
-    internship_offer = models.ForeignKey('internship.InternshipOffer')
+    period = models.ForeignKey('internship.Period', on_delete=models.CASCADE)
+    internship_offer = models.ForeignKey('internship.InternshipOffer', on_delete=models.CASCADE)
     number_places = models.IntegerField()
 
     def __str__(self):

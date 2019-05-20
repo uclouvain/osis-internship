@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2019 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -24,13 +24,12 @@
 #
 ##############################################################################
 from django.conf.urls import include, url
-from django.views.i18n import JavaScriptCatalog
 
-from internship.views import (affectation, home, internship, master, offer, period, place, speciality, student, cohort)
+from internship.views import (
+    affectation, home, internship, master, offer, period, place, score, speciality, student, cohort
+)
 
 urlpatterns = [
-    url(r'^jsi18n/$', JavaScriptCatalog.as_view(packages=['internship']), name='internship-javascript-catalog'),
-
     url(r'^$', home.view_cohort_selection, name='internship'),
     url(r'^student/get$', student.get_student, name='internship_student_get'),
 
@@ -151,6 +150,14 @@ urlpatterns = [
                 url(r'^score_encoding/xls$', affectation.export_score_encoding_xls, name="export_score_encoding_xls"),
                 url(r'^generate/$', affectation.run_affectation, name='internship_affectation_generate'),
                 url(r'^sumup/$', affectation.internship_affectation_sumup, name='internship_affectation_sumup'),
+            ])),
+
+            url(r'^scores_encoding/', include([
+                url(r'^$', score.scores_encoding, name='internship_scores_encoding'),
+                url(r'^upload/$', score.upload_scores, name='internship_upload_scores'),
+                url(r'^download/$', score.download_scores, name='internship_download_scores'),
+                url(r'^mapping/save$', score.save_mapping, name='save_internship_score_mapping'),
+
             ])),
         ])),
 

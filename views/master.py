@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2019 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -34,7 +34,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from internship.forms.master import MasterForm
 from internship.models import master_allocation, internship_master, internship_speciality, organization, cohort
-from internship.views.common import display_errors
+from internship.views.common import display_errors, get_object_list
 
 
 @login_required
@@ -51,14 +51,7 @@ def masters(request, cohort_id):
                       allocations.filter(master__first_name__icontains=filter_name)
     specialties = internship_speciality.find_by_cohort(current_cohort)
     hospitals = organization.find_by_cohort(current_cohort)
-    paginator = Paginator(allocations, 10)
-    page = request.GET.get('page')
-    try:
-        allocations = paginator.page(page)
-    except PageNotAnInteger:
-        allocations = paginator.page(1)
-    except EmptyPage:
-        allocations = paginator.page(paginator.num_pages)
+    allocations = get_object_list(request, allocations)
     return render(request, "masters.html", locals())
 
 

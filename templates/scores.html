@@ -1,0 +1,345 @@
+{% extends "layout.html" %}
+{% load staticfiles %}
+{% load dictionary %}
+{% load mapping %}
+
+{% load i18n bootstrap3 %}
+
+{% comment "License" %}
+    * OSIS stands for Open Student Information System. It's an application
+    * designed to manage the core business of higher education institutions,
+    * such as universities, faculties, institutes and professional schools.
+    * The core business involves the administration of students, teachers,
+    * courses, programs and so on.
+    *
+    * Copyright (C) 2015-2019 Université catholique de Louvain (http://www.uclouvain.be)
+    *
+    * This program is free software: you can redistribute it and/or modify
+    * it under the terms of the GNU General Public License as published by
+    * the Free Software Foundation, either version 3 of the License, or
+    * (at your option) any later version.
+    *
+    * This program is distributed in the hope that it will be useful,
+    * but WITHOUT ANY WARRANTY; without even the implied warranty of
+    * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    * GNU General Public License for more details.
+    *
+    * A copy of this license - GNU General Public License - is available
+    * at the root of the source code of this program.  If not,
+    * see http://www.gnu.org/licenses/.
+{% endcomment %}
+
+{% block style %}
+    <link rel="stylesheet" href="{% static 'css/internship.css' %}">
+{% endblock %}
+
+{% block breadcrumb %}
+    <li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
+    <li><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
+    <li class="active">{% trans 'Scores encoding' %}</li>
+{% endblock %}
+
+{% block content %}
+    <div class="page-header">
+        <h2>{% trans 'Scores encoding' %}</h2>
+    </div>
+
+    <ul id="tabs" class="nav nav-tabs">
+      <li role="scores" class="active"><a data-toggle="tab" href="#scores">{% trans 'Scores' %}</a></li>
+      <li role="mapping"><a data-toggle="tab" href="#mapping">{% trans 'Mapping' %}</a></li>
+    </ul>
+    <div class="tab-content">
+            <div id="scores" class="tab-pane fade in active">
+                <div class="panel panel-body">
+                    <form action="{% url 'internship_scores_encoding' cohort_id=cohort.id %}" method="get" class="" id="search_form">
+                    {% csrf_token %}
+                    <div style="margin-bottom: 10px;" class="row">
+                        <div class="col-md-3">
+                            <label for="free_text_id">{% trans 'Search' %}</label>
+                            {{ search_form.free_text }}
+                        </div>
+                        <div class="col-md-3">
+                            <button type="submit" class="btn btn-primary" style="margin-top: 26px;">
+                                <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                            </button>
+                        </div>
+                        <div class="col-md-6 pull-right">
+                            <a href="{% url 'internship_download_scores' cohort_id=cohort.id %}" class="btn btn-default pull-right" style="margin-top: 26px;">
+                                <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
+                                {% trans 'Export to XLSX' %}
+                            </a>
+                            <button type="button" class="btn btn-default pull-right" data-toggle="modal"
+                                    data-target="#upload_scores" id="bt_upload_score_modal" style="margin-top: 26px; margin-right:10px;">
+                                <span class="glyphicon glyphicon-upload" aria-hidden="true"></span>
+                                {% trans 'Import internships ratings' %}
+                            </button>
+                        </div>
+                    </div>
+                </form>
+                  <table class="table">
+                      <tr>
+                        <th>{% trans 'Student' %}</th>
+                        <th>{% trans 'Period' %}</th>
+                        <th>{% trans 'Internship' %}</th>
+                        <th>{% trans 'Specialty' %}</th>
+                          {% for i in i|rjust:15 %}
+                            <th>APD {{forloop.counter}}</th>
+                          {% endfor %}
+                        <th>Score</th>
+                      </tr>
+                        {% for student in students %}
+                      <tr>
+                        <td rowspan="{{ periods|length|add:1 }}">{{ student }}</td>
+                      </tr>
+                        {% for period in periods %}
+                          <tr>
+                            <td>{{ period }}</td>
+                            <td>{{ student.specialties|get_item:period.name }}</td>
+                            <td>{{ student.organizations|get_item:period.name }}</td>
+                            {% if not student.scores|has_substr:period %}
+                                {% for i in i|rjust:15 %}
+                                    <td>-</td>
+                                {% endfor %}
+                            {% endif %}
+                            {% for key, scores in student.scores %}
+                                {% if key|slugify == period|slugify %}
+                                    {% for score in scores %}
+                                        {% if score != None %}
+                                            <td>{{ score }}</td>
+                                        {% else %}
+                                            <td>-</td>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+                            {% endfor %}
+                            {% with student.periods_scores|get_item:period.name as period_score%}
+                                {% if period_score %}
+                                    <td>{{ period_score|floatformat:2 }}</td>
+                                {% else %}
+                                    <td>-</td>
+                                {% endif %}
+                            {% endwith %}
+                          {% endfor %}
+                          </tr>
+                        {% endfor %}
+                        <tfoot>
+                            <tr>
+                                <td colspan="6">
+                                    {% bootstrap_pagination students extra=request.GET.urlencode %}
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+            <div id="mapping" class="tab-pane fade">
+                <form action="{% url 'save_internship_score_mapping' cohort_id=cohort.id %}" method="post" id="mapping_form">
+                    {% csrf_token %}
+                <div class="panel panel-heading">
+                    <h3 style="display:inline-block;">{% trans 'Scores equivalence according to periods' %}</h3>
+                    <button type="submit" class="btn btn-primary pull-right" style="margin-top: 20px;" id="btn_submit_mapping">
+                        <icon class="fa fa-save"></icon>
+                        {% trans 'Save' %}
+                    </button>
+                </div>
+                <div class="panel panel-body">
+                    <ul id="pills" class="nav nav-pills nav-justified">
+                        {% for period in periods %}
+                          <li name="{{ period.name }}" {% if forloop.counter == 1 %}class="active"{% endif %}>
+                              <a href="#mapping_{{ period.name }}" data-toggle="pill" onclick="pillChanged('{{ period.name }}')">{{ period.name }}</a>
+                          </li>
+                        {% endfor %}
+                    </ul>
+                    <input id="activePeriod" type="hidden" name="activePeriod"/>
+                    <div class="tab-content">
+                    {% for period in periods %}
+                        <div id="mapping_{{ period.name }}" class="tab-pane fade {% if forloop.counter == 1 %}in active{% endif %}">
+                        <div class="row">
+                        <div class="btn-group btn-period-mapping" role="group">
+                          <button onclick="copyPeriodValues('{{ period }}')" type="button" class="btn btn-default">
+                              <icon class="far fa-copy"></icon> {% trans 'Copy Period' %}
+                          </button>
+                          <button onclick="pastePeriodValues('{{ period }}')" type="button" class="btn btn-primary">
+                              <icon class="fa fa-paste"></icon> {% trans 'Paste Period' %}
+                          </button>
+                        </div>
+                        </div>
+                        <div class="row" style="margin-top:30px;">
+                        <div class="col-xs-1 col-xs-offset-3">
+                        </div>
+                        <div class="col-xs-1">
+                            <h4><span class="label label-default">A</span></h4>
+                        </div>
+                        <div class="col-xs-1">
+                            <h4><span class="label label-default">B</span></h4>
+                        </div>
+                        <div class="col-xs-1">
+                            <h4><span class="label label-default">C</span></h4>
+                        </div>
+                        <div class="col-xs-1">
+                            <h4><span class="label label-default">D</span></h4>
+                        </div>
+                    </div>
+                    {% for i in i|rjust:15 %}
+                    <div class="row" onmouseover="showButtons('{{ period }}', '{{ forloop.counter }}')"
+                    onmouseout="hideButtons('{{ period }}', '{{ forloop.counter }}')">
+                        <div class="col-xs-1 col-xs-offset-3">
+                            <h4><span class="label label-primary">APD {{forloop.counter}}</span></h4>
+                        </div>
+                        <div class="col-xs-1">
+                            <input type="number" class="form-control" name="mappingA_{{ period }}"
+                                   id="mappingA_{{ period }}_{{ forloop.counter }}"
+                                   value="{% get_mapping_value mapping period forloop.counter 'A' %}">
+                        </div>
+                        <div class="col-xs-1">
+                            <input type="number" class="form-control" name="mappingB_{{ period }}"
+                                   id="mappingB_{{ period }}_{{ forloop.counter }}"
+                                   value="{% get_mapping_value mapping period forloop.counter 'B' %}">
+                        </div>
+                        <div class="col-xs-1">
+                            <input type="number" class="form-control" name="mappingC_{{ period }}"
+                                   id="mappingC_{{ period }}_{{ forloop.counter }}"
+                                   value="{% get_mapping_value mapping period forloop.counter 'C' %}">
+                        </div>
+                        <div class="col-xs-1">
+                            <input type="number" class="form-control" name="mappingD_{{ period }}"
+                                   id="mappingD_{{ period }}_{{ forloop.counter }}"
+                                   value="{% get_mapping_value mapping period forloop.counter 'D' %}">
+                        </div>
+                        <div id="btn_{{ period }}_{{ forloop.counter }}" class="btn-group" role="group" style="display:none;">
+                          <button onclick="copyValues('{{ period }}', '{{ forloop.counter }}')" title="{% trans 'Copy' %}" type="button" class="btn btn-default">
+                              <icon class="far fa-copy"></icon>
+                          </button>
+                          <button onclick="pasteValues('{{ period }}', '{{ forloop.counter }}')" title="{% trans 'Paste' %}" type="button" class="btn btn-primary">
+                              <icon class="fa fa-paste"></icon>
+                          </button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    </div>
+                {% endfor %}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="upload_scores" tabindex="-1" role="dialog" aria-labelledby="uploadScoresLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form id="upload-form" method="post" enctype="multipart/form-data" action="{% url 'internship_upload_scores' cohort_id=cohort.id %}">
+                    {% csrf_token %}
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="bt_close_upload_students_modal"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="uploadScoresLabel">{% trans 'Import' %}</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="period-select">{% trans 'Period' %}</label>
+                            <select name="period" class="form-control" id="period-select">
+                                {% for period in periods %}
+                                    <option>{{ period }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                          <input type="file" id="scores_input_file" name="file_upload"/>
+                        </div>
+                        <div id="selectedFiles"></div>
+                        <p class="help-block">{% trans 'Select a xls file that contains the scores by period' %}</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="import-submit" type="submit" class="btn btn-primary" onclick="document.getElementById('files').style.visibility='visible'" id="bt_submit_upload_scores_modal">
+                            <div id="loader" style="display: none;"></div>
+                            {% trans 'Import' %}
+                        </button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal" id="bt_cancel_upload_scores_modal">{% trans 'Cancel' %}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        const anchor = location.hash;
+        const grades = ['A', 'B', 'C', 'D'];
+
+        $('#tabs a[href="' + anchor + '"]').tab('show');
+
+        if(anchor.indexOf("mapping")!==-1){
+            $('#tabs a[href="#mapping"]').tab('show');
+            $('#pills a[href="' + anchor + '"]').tab('show');
+        }
+
+        $('.nav-pills li').click(function () {
+            $("#activePeriod").val(this.getAttribute('name'));
+        });
+
+       let periodClipboard = [];
+
+        function copyPeriodValues(period){
+            periodClipboard = [];
+            for(let apd of Array(15).keys()){
+                periodClipboard[apd] = copyValues(period, apd+1);
+            }
+        }
+
+        function pastePeriodValues(period){
+            for(let [index, values] of periodClipboard.entries()){
+                pasteValues(period, index+1, values);
+            }
+        }
+
+        let clipboard = {};
+        function copyValues(period, apd){
+            clipboard = {};
+            for(let grade of grades) {
+                clipboard[grade] = document.getElementById('mapping' + grade + '_' + period + '_' + apd).value
+            }
+            return Object.assign({}, clipboard)
+        }
+
+        function pasteValues(period, apd, values){
+            if(!values){
+                values = clipboard;
+            }
+            if(Object.keys(clipboard).length !== 0){
+                for(let grade of grades){
+                    document.getElementById('mapping'+ grade + '_' + period + '_' + apd).value = values[grade];
+                }
+            }
+        }
+
+        function pillChanged(period){
+            $("#activePeriod").val(period);
+        }
+
+        function showButtons(period, apd){
+            $("#btn_"+period+"_"+apd).show();
+        }
+
+        function hideButtons(period, apd){
+            $("#btn_"+period+"_"+apd).hide();
+        }
+
+        $("#upload-form").submit(function() {
+            $("#import-submit").attr("disabled", true);
+            $("#loader").show();
+        });
+
+        $('#import-submit').attr('disabled',true);
+        $('input:file').change(
+            function(){
+                if ($(this).val()){
+                    $('#import-submit').removeAttr('disabled');
+                }
+                else {
+                    $('#import-submit').attr('disabled',true);
+                }
+            }
+        );
+
+    </script>
+{% endblock %}

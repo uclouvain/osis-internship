@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2019 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -39,11 +39,11 @@ class InternshipChoiceAdmin(SerializableModelAdmin):
 
 
 class InternshipChoice(SerializableModel):
-    student = models.ForeignKey('base.Student')
-    organization = models.ForeignKey('internship.Organization')
-    speciality = models.ForeignKey('internship.InternshipSpeciality', null=True)
+    student = models.ForeignKey('base.Student', on_delete=models.CASCADE)
+    organization = models.ForeignKey('internship.Organization', on_delete=models.CASCADE)
+    speciality = models.ForeignKey('internship.InternshipSpeciality', null=True, on_delete=models.CASCADE)
     choice = models.IntegerField()
-    internship = models.ForeignKey('internship.Internship')
+    internship = models.ForeignKey('internship.Internship', on_delete=models.CASCADE)
     priority = models.BooleanField()
     registered = models.DateTimeField(null=True)
 

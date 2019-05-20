@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2019 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -41,7 +41,7 @@ from internship.models.enums.affectation_type import AffectationType
 from internship.models.enums.choice_type import ChoiceType
 from internship.models.enums.costs import Costs
 from internship.models.internship import Internship
-from internship.models.internship_choice import InternshipChoice
+from internship.models.internship_choice import InternshipChoice, find_students_with_priority_choices
 from internship.models.internship_enrollment import InternshipEnrollment
 from internship.models.internship_offer import InternshipOffer
 from internship.models.internship_speciality import InternshipSpeciality
@@ -54,7 +54,7 @@ from internship.utils.assignment.period_utils import group_periods_by_consecutiv
 
 logger = logging.getLogger(settings.DEFAULT_LOGGER)
 
-TIMEOUT = 30
+TIMEOUT = 60
 MAX_ALLOWED_IMPOSED = 2
 
 
@@ -73,6 +73,8 @@ class Assignment:
         self.students = Student.objects.filter(person_id__in=self.person_ids)
 
         self.internships = Internship.objects.filter(cohort=self.cohort).order_by("position", "name")
+        self.priotary_students_person_ids = find_students_with_priority_choices(self.internships).values_list('person__id', flat=True)
+
         self.mandatory_internships = self.internships.exclude(speciality__isnull=True)
         self.non_mandatory_internships = self.internships.filter(speciality__isnull=True)
 
@@ -148,7 +150,8 @@ class Assignment:
         _assign_non_mandatory_internships(self)
         _balance_assignments(self)
         self.stop = timeit.default_timer()
-        logger.info('Time: ', self.stop - self.start)
+        total_time = self.stop - self.start
+        logger.info('Time: {} seconds'.format(total_time))
 
 
 def _assign_non_mandatory_internships(self):
@@ -178,12 +181,13 @@ def _update_distinction_between_students(self):
     disadvantaged_students = []
     favored_students = []
     for student in self.students_information:
-        if student.cost >= Costs.PRIORITY.value and student.cost < Costs.IMPOSED.value:
-            favored_students.append(student)
-        if student.cost >= MAX_ALLOWED_IMPOSED * Costs.IMPOSED.value:
-            if student.cost >= Costs.ERROR.value + MAX_ALLOWED_IMPOSED * Costs.IMPOSED.value:
-                student.cost = student.cost - Costs.ERROR.value
-            disadvantaged_students.append(student)
+            if student.cost >= Costs.PRIORITY.value and student.cost < Costs.IMPOSED.value:
+                if student.person_id not in self.priotary_students_person_ids:
+                    favored_students.append(student)
+            if student.cost >= MAX_ALLOWED_IMPOSED * Costs.IMPOSED.value:
+                if student.cost >= Costs.ERROR.value + MAX_ALLOWED_IMPOSED * Costs.IMPOSED.value:
+                    student.cost = student.cost - Costs.ERROR.value
+                disadvantaged_students.append(student)
     return favored_students, disadvantaged_students
 
 
@@ -367,45 +371,57 @@ def assign_choices_to_student(assignment, student, choices, internship, last=Fal
         periods = find_first_student_available_periods_for_internship_choice(assignment, student, internship, choice)
         if len(periods) > 0:
             if is_non_mandatory_internship(internship) and not internship.first:
-                choice.choice = ChoiceType.IMPOSED.value
+                if not choice.priority and not is_prior_internship(internship, choices):
+                    choice.choice = ChoiceType.IMPOSED.value
             affectations.extend(build_affectation_for_periods(assignment, student, choice.organization, periods,
                                                               choice.speciality, choice.choice, choice.priority,
                                                               choice.internship))
-
             break
 
     # None of student choices available? Try to affect outside of choices
     if len(affectations) == 0:
-        if is_non_mandatory_internship(internship):
-            logger.info("{} - {}".format(student, internship))
-        affectations.extend(find_best_affectation_outside_of_choices(assignment, student, internship, choices, last))
+        affectations.extend(
+            find_best_affectation_outside_of_choices(assignment, student, internship, choices, last)
+        )
 
     return affectations
 
 
 def find_best_affectation_outside_of_choices(assignment, student, internship, choices, last):
+    if not is_prior_internship(internship, choices):
+        student_periods = get_student_periods(assignment, student, internship)
+        for grouped_periods in student_periods:
+            offer = find_best_available_offer_for_internship_periods(assignment, internship, choices,
+                                                                     grouped_periods, last)
+            if offer:
+                return build_affectation_for_periods(assignment, student, offer.organization, grouped_periods,
+                                                     offer.speciality, ChoiceType.IMPOSED.value, False, internship)
+        if is_mandatory_internship(internship) and student_periods:
+            return affect_hospital_error(assignment, student, internship, student_periods)
+        else:
+            return []
+    else:
+        student_periods = get_student_periods(assignment, student, internship)
+        speciality = choices.first().speciality
+        return affect_hospital_error(assignment, student, internship, student_periods, speciality)
+
+
+def affect_hospital_error(assignment, student, internship, periods, speciality=None):
+    offer = find_offer_in_organization_error(assignment, internship)
+    if speciality is None:
+        speciality = offer.speciality
+    logger.info("\rError: {}".format(speciality))
+    return build_affectation_for_periods(assignment, student, offer.organization, random.choice(periods),
+                                         speciality, ChoiceType.IMPOSED.value, False, internship)
+
+
+def get_student_periods(assignment, student, internship):
     if is_mandatory_internship(internship):
         student_periods = all_available_periods(assignment, student, internship.length_in_periods, assignment.periods)
     else:
         student_periods = all_available_periods(assignment, student, 1, assignment.periods)
     random.shuffle(student_periods)
-    for grouped_periods in student_periods:
-        offer = find_best_available_offer_for_internship_periods(assignment, internship, choices, grouped_periods, last)
-        if offer:
-            if is_mandatory_internship(internship):
-                return build_affectation_for_periods(assignment, student, offer.organization, grouped_periods,
-                                                     offer.speciality, ChoiceType.IMPOSED.value, False, internship)
-            else:
-                return build_affectation_for_periods(assignment, student, offer.organization, grouped_periods,
-                                                    offer.speciality, ChoiceType.IMPOSED.value, False, internship)
-
-    if is_mandatory_internship(internship) and student_periods:
-        offer = find_offer_in_organization_error(assignment, internship)
-        logger.info("\rError: {}".format(offer))
-        return build_affectation_for_periods(assignment, student, offer.organization, random.choice(student_periods),
-                                             offer.speciality, ChoiceType.IMPOSED.value, False, internship)
-    else:
-        return []
+    return student_periods
 
 
 def find_first_student_available_periods_for_internship_choice(assignment, student, internship, choice):
@@ -563,8 +579,7 @@ def find_offer_in_organization_error(assignment, internship):
                                      speciality=internship.speciality)
     # Chosen internship
     else:
-        return assignment.offers.get(organization=assignment.organization_error,
-                                     speciality__in=assignment.specialities)
+        return assignment.offers.filter(organization=assignment.organization_error, cohort=assignment.cohort).first()
 
 
 def offers_for_available_organizations(assignment, speciality, unavailable_organizations):
@@ -613,3 +628,13 @@ def is_mandatory_internship(internship):
 
 def is_non_mandatory_internship(internship):
     return not hasattr(internship, 'speciality') or internship.speciality is None
+
+
+def student_has_priority(assignment, student):
+    return student.id not in assignment.priotary_students_person_ids
+
+
+def is_prior_internship(internship, choices):
+    for choice in choices:
+        if choice.internship == internship and choice.priority:
+            return True

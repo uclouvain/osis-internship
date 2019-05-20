@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2019 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -68,7 +68,7 @@ def run_affectation(request, cohort_id):
 def view_hospitals(request, cohort_id):
     cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
     sol, table, stats, internship_errors = None, None, None, None
-    periods = models.period.Period.objects.filter(cohort=cohort)
+    periods = models.period.Period.objects.filter(cohort=cohort).order_by('date_end')
     period_ids = periods.values_list("id", flat=True)
 
     student_affectations = internship_student_affectation_stat.InternshipStudentAffectationStat.objects\
@@ -80,7 +80,7 @@ def view_hospitals(request, cohort_id):
         # Mange sort of the organizations
         table.sort(key=itemgetter(0))
 
-    latest_generation = models.affectation_generation_time.get_latest()
+    latest_generation = models.affectation_generation_time.get_latest(cohort)
 
     context = {'cohort': cohort, 'periods': periods, 'organizations': table, 'latest_generation': latest_generation}
 
@@ -92,7 +92,7 @@ def view_hospitals(request, cohort_id):
 def view_students(request, cohort_id):
     cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
     sol, tabl = None, None
-    periods = models.period.Period.objects.filter(cohort=cohort)
+    periods = models.period.Period.objects.filter(cohort=cohort).order_by('date_end')
     period_ids = periods.values_list("id", flat=True)
 
     student_affectations = internship_student_affectation_stat.InternshipStudentAffectationStat.objects\
@@ -112,7 +112,7 @@ def view_students(request, cohort_id):
         # Mange sort of the students
         sol = OrderedDict(sorted(sol.items(), key=lambda t: t[0].person.last_name))
 
-    latest_generation = models.affectation_generation_time.get_latest()
+    latest_generation = models.affectation_generation_time.get_latest(cohort)
 
     context = {'cohort': cohort, 'periods': periods, 'recap_sol': sol, 'latest_generation': latest_generation}
 
@@ -124,7 +124,7 @@ def view_students(request, cohort_id):
 def view_statistics(request, cohort_id):
     cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
     sol, table, stats = None, None, None
-    periods = models.period.Period.objects.filter(cohort=cohort)
+    periods = models.period.Period.objects.filter(cohort=cohort).order_by('date_end')
     period_ids = periods.values_list("id", flat=True)
 
     student_affectations = internship_student_affectation_stat.InternshipStudentAffectationStat.objects\
@@ -143,7 +143,7 @@ def view_statistics(request, cohort_id):
         sol = statistics.load_solution_sol(cohort, student_affectations)
         stats = statistics.compute_stats(cohort, sol)
 
-    latest_generation = models.affectation_generation_time.get_latest()
+    latest_generation = models.affectation_generation_time.get_latest(cohort)
 
     context = {'cohort': cohort, 'stats': stats, 'latest_generation': latest_generation}
 
@@ -155,7 +155,7 @@ def view_statistics(request, cohort_id):
 def view_errors(request, cohort_id):
     cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
     internship_errors = None
-    periods = models.period.Period.objects.filter(cohort=cohort)
+    periods = models.period.Period.objects.filter(cohort=cohort).order_by('date_end')
     period_ids = periods.values_list("id", flat=True)
 
     student_affectations = internship_student_affectation_stat.InternshipStudentAffectationStat.objects\
@@ -167,7 +167,7 @@ def view_errors(request, cohort_id):
         internship_errors = internship_student_affectation_stat.InternshipStudentAffectationStat.objects \
             .filter(organization=hospital, period_id__in=period_ids)
 
-    latest_generation = models.affectation_generation_time.get_latest()
+    latest_generation = models.affectation_generation_time.get_latest(cohort)
     context = {'cohort': cohort, 'errors': internship_errors, 'latest_generation': latest_generation}
     return render(request, "internship_affectation_errors.html", context)
 
@@ -192,7 +192,7 @@ def internship_affectation_sumup(request, cohort_id):
     hospital = models.organization.get_by_id(filter_hospital)
     all_speciality = list(models.internship_speciality.find_all(cohort=cohort))
     all_speciality = models.internship_speciality.set_speciality_unique(all_speciality)
-    periods = models.period.search(cohort=cohort)
+    periods = models.period.search(cohort=cohort).order_by('date_end')
     organizations = models.organization.search(cohort=cohort)
     organizations = models.organization.sort_organizations(organizations)
     offers = models.internship_offer.search(cohort=cohort)

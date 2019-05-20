@@ -9,7 +9,7 @@
 * The core business involves the administration of students, teachers,
 * courses, programs and so on.
 *
-* Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
+* Copyright (C) 2015-2019 Université catholique de Louvain (http://www.uclouvain.be)
 *
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -107,6 +107,10 @@
                             <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
                             {% trans 'Export to XLS' %}
                         </a>
+                        <label class="pull-right">
+                             <input type="checkbox" id="only-prior">
+                            {% trans 'Filter by students with priorities' %}
+                        </label>
                     <br>
                     <table class="table" id="students">
                         <thead>
@@ -123,6 +127,7 @@
                                 <tr>
                                     <td>
                                         <a href="{% url 'internships_student_read' cohort_id=cohort.id student_id=student.id %}" target="_blank">{{student}}</a>
+                                        {% if student.priority %}<span><i style="font-size:10px; color:#337ab7;" class="fa">-P.</i></span>{% endif %}
                                     </td>
                                     {% for period, enrollment in periods.items %}
                                         {% if enrollment.choice == 'I' %}
@@ -159,13 +164,27 @@
     <script type="text/javascript" src="{% static 'js/dataTables.bootstrap.min.js' %}"></script>
     <script>
         $(document).ready(function() {
-            $('#students').DataTable({
+            students = $('#students').DataTable({
                 paging: false,
                 "columnDefs": [ {
                     "targets": 'no-sort',
                     "orderable": false
                 } ],
                 bInfo: false
+            });
+
+            //filter prior students
+            $('#only-prior').on('change', function() {
+              if ($(this).is(':checked')) {
+                $.fn.dataTable.ext.search.push(
+                  function(settings, data, dataIndex) {
+                    return data[0].includes("-P.");
+                  }
+                )
+              } else {
+                $.fn.dataTable.ext.search.pop()
+              }
+              students.draw()
             });
 
             $('#organizations').DataTable({

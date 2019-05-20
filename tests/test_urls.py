@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2019 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -78,7 +78,17 @@ class UrlsTestCase(TestCase):
                 url_path='/internships/cohorts/1/students/import/update/',
                 pattern_name='internships_student_import_update',
                 kwargs={'cohort_id': 1}
-            )
+            ),
+            dict(
+                url_path='/internships/cohorts/1/scores_encoding/',
+                pattern_name='internship_scores_encoding',
+                kwargs={'cohort_id': 1}
+            ),
+            dict(
+                url_path='/internships/cohorts/1/scores_encoding/upload/',
+                pattern_name='internship_upload_scores',
+                kwargs={'cohort_id': 1}
+            ),
         ]
 
         for url_name, pattern in test_paths(routes_to_test):

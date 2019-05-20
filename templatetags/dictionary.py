@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2019 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -30,3 +30,8 @@ from django.template.defaulttags import register
 def get_item(dictionary, key):
     val = dictionary.get(key)
     return val if val else ""
+
+
+@register.filter
+def has_substr(dictionary, key):
+    return "'{}'".format(key) in str(dictionary)
