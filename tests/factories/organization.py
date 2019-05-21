@@ -33,9 +33,10 @@ from internship.tests.factories.cohort import CohortFactory
 class OrganizationFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = 'internship.Organization'
+        django_get_or_create = ('reference',)
 
     name = factory.Sequence(lambda n: 'Organization %d' % (n,))
     acronym = factory.LazyAttribute(lambda o: slugify(o.name)[:15])
-    reference =  factory.Faker('random_int', min=1, max=999)
+    reference = factory.fuzzy.FuzzyInteger(1, 999)
     website = factory.Faker('url')
     cohort = factory.SubFactory(CohortFactory)

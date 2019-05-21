@@ -25,20 +25,19 @@
 ##############################################################################
 import factory
 
-from base.tests.factories.person import PersonFactory
-from internship.tests.factories.cohort import CohortFactory
-from reference.tests.factories.country import CountryFactory
+from base.tests.factories.student import StudentFactory
+from internship.tests.factories.internship import InternshipFactory
+from internship.tests.factories.offer import OfferFactory
+from internship.tests.factories.organization import OrganizationFactory
+from internship.tests.factories.period import PeriodFactory
 
 
-class InternshipStudentInformationFactory(factory.django.DjangoModelFactory):
+class InternshipEnrollmentFactory(factory.django.DjangoModelFactory):
     class Meta:
-        model = 'internship.InternshipStudentInformation'
+        model = 'internship.InternshipEnrollment'
 
-    person = factory.SubFactory(PersonFactory)
-    location = factory.Faker('street_address')
-    postal_code = factory.Faker('zipcode')
-    city = factory.Faker('city')
-    country = factory.SubFactory(CountryFactory)
-    email = factory.Faker('email')
-    phone_mobile = factory.Faker('phone_number')
-    cohort = factory.SubFactory(CohortFactory)
+    student = factory.SubFactory(StudentFactory)
+    internship_offer = factory.SubFactory(OfferFactory)
+    place = factory.SubFactory(OrganizationFactory)
+    period = factory.SubFactory(PeriodFactory)
+    internship = factory.SubFactory(InternshipFactory)

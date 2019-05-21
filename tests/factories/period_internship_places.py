@@ -23,22 +23,16 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import factory
+import factory.django
 
-from base.tests.factories.person import PersonFactory
-from internship.tests.factories.cohort import CohortFactory
-from reference.tests.factories.country import CountryFactory
+from internship.tests.factories.offer import OfferFactory
+from internship.tests.factories.period import PeriodFactory
 
 
-class InternshipStudentInformationFactory(factory.django.DjangoModelFactory):
+class PeriodInternshipPlacesFactory(factory.django.DjangoModelFactory):
     class Meta:
-        model = 'internship.InternshipStudentInformation'
+        model = 'internship.PeriodInternshipPlaces'
 
-    person = factory.SubFactory(PersonFactory)
-    location = factory.Faker('street_address')
-    postal_code = factory.Faker('zipcode')
-    city = factory.Faker('city')
-    country = factory.SubFactory(CountryFactory)
-    email = factory.Faker('email')
-    phone_mobile = factory.Faker('phone_number')
-    cohort = factory.SubFactory(CohortFactory)
+    period = factory.SubFactory(PeriodFactory)
+    internship_offer = factory.SubFactory(OfferFactory)
+    number_places = factory.Faker('random_int', min=1, max=16)

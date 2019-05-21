@@ -54,11 +54,11 @@ from internship.utils.assignment.period_utils import group_periods_by_consecutiv
 
 logger = logging.getLogger(settings.DEFAULT_LOGGER)
 
-TIMEOUT = 60
-MAX_ALLOWED_IMPOSED = 2
-
 
 class Assignment:
+    TIMEOUT = 60
+    MAX_ALLOWED_IMPOSED = 2
+
     def __init__(self, cohort):
         self.cohort = cohort
         self.count = 0
@@ -139,13 +139,10 @@ class Assignment:
 
         for internship in self.mandatory_internships:
             self.students_information = self.shuffle_students_list()
-            logger.info("")
             logger.info("Shuffled students for {}.".format(internship.name))
             _assign_students_with_priority_choices(self, internship)
-            logger.info("")
             logger.info("Assigned students with priority choices to {}.".format(internship.name))
             _assign_regular_students(self, internship)
-            logger.info("")
             logger.info("Assigned regular students to {}.".format(internship.name))
             self.internship_count += 1
 
@@ -159,13 +156,10 @@ class Assignment:
 def _assign_non_mandatory_internships(self):
     self.students_information = self.shuffle_students_list()
     self.total_count = len(self.students_information)
-    logger.info("")
     logger.info("Shuffled students for stages au choix.")
     _assign_students_with_priority_choices(self, self.non_mandatory_internships)
-    logger.info("")
     logger.info("Assigned students with priority choices to stages au choix.")
     _assign_regular_students(self, self.non_mandatory_internships)
-    logger.info("")
     logger.info("Assigned regular students to stages au choix")
 
 
@@ -174,7 +168,7 @@ def _balance_assignments(self):
     self.students_information = self.shuffle_students_list()
     favored_students, disadvantaged_students = _update_distinction_between_students(self)
     self.timeout_start = time.time()
-    while len(disadvantaged_students) > 0 and time.time() < self.timeout_start + TIMEOUT:
+    while len(disadvantaged_students) > 0 and time.time() < self.timeout_start + self.TIMEOUT:
         _process_affectations_comparisons(self, favored_students, disadvantaged_students)
 
 
@@ -186,8 +180,8 @@ def _update_distinction_between_students(self):
             if student.cost >= Costs.PRIORITY.value and student.cost < Costs.IMPOSED.value:
                 if student.person_id not in self.priotary_students_person_ids:
                     favored_students.append(student)
-            if student.cost >= MAX_ALLOWED_IMPOSED * Costs.IMPOSED.value:
-                if student.cost >= Costs.ERROR.value + MAX_ALLOWED_IMPOSED * Costs.IMPOSED.value:
+            if student.cost >= self.MAX_ALLOWED_IMPOSED * Costs.IMPOSED.value:
+                if student.cost >= Costs.ERROR.value + self.MAX_ALLOWED_IMPOSED * Costs.IMPOSED.value:
                     student.cost = student.cost - Costs.ERROR.value
                 disadvantaged_students.append(student)
     return favored_students, disadvantaged_students
