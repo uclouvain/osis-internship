@@ -182,7 +182,7 @@ def _update_distinction_between_students(self):
     favored_students = []
     for student in self.students_information:
             if student.cost >= Costs.PRIORITY.value and student.cost < Costs.IMPOSED.value:
-                if student.person_id not in self.priotary_students_person_ids:
+                if student.person_id not in self.prioritary_students_person_ids:
                     favored_students.append(student)
             if student.cost >= MAX_ALLOWED_IMPOSED * Costs.IMPOSED.value:
                 if student.cost >= Costs.ERROR.value + MAX_ALLOWED_IMPOSED * Costs.IMPOSED.value:
@@ -631,7 +631,7 @@ def is_non_mandatory_internship(internship):
 
 
 def student_has_priority(assignment, student):
-    return student.id not in assignment.priotary_students_person_ids
+    return student.id not in assignment.prioritary_students_person_ids
 
 
 def is_prior_internship(internship, choices):

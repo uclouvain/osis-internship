@@ -31,6 +31,7 @@ from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.utils.translation import gettext as _
 
+from base.views.common import display_error_messages, display_success_messages
 from internship.forms.score import StudentsFilterForm
 from internship.models.cohort import Cohort
 from internship.models.internship import Internship
@@ -230,19 +231,17 @@ def _show_message(request, row_error, period):
 
 
 def _show_row_error_message(request, row_error):
-    messages.add_message(
-        request, messages.ERROR, "{} : {}".format(
+    display_error_messages(
+        request, "{} : {}".format(
             _('Import aborted due to error on row %(row_id)s') % {'row_id': row_error[0].row},
             _("student with registration id '%(reg_id)s' not found") % {'reg_id': row_error[0].value}
-        ), "alert-error"
+        )
     )
 
 
 def _show_import_success_message(request, period):
-    messages.add_message(
-        request, messages.SUCCESS,
-        _('Internships ratings successfully imported for period {}'.format(period)),
-        "alert-succes"
+    display_success_messages(
+        request, _('Internships ratings successfully imported for period %(period)s') % {'period': period}
     )
 
 
