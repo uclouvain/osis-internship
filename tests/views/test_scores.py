@@ -23,9 +23,13 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from types import SimpleNamespace
 from unittest import mock
+from unittest.mock import Mock
 
 from django.contrib.auth.models import User, Permission
+from django.contrib.messages import DEFAULT_LEVELS
+from django.contrib.messages.storage.base import LEVEL_TAGS
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.urlresolvers import reverse
 from django.test import TestCase
@@ -99,7 +103,8 @@ class ScoresEncodingTest(TestCase):
         self.assertTemplateUsed(response, 'scores.html')
 
     @mock.patch('internship.utils.importing.import_scores.import_xlsx')
-    def test_post_upload_scores(self, mock_import):
+    def test_post_upload_scores_success(self, mock_import):
+        mock_import.return_value = None
         url = reverse('internship_upload_scores', kwargs={
             'cohort_id': self.cohort.pk,
         })
@@ -112,6 +117,26 @@ class ScoresEncodingTest(TestCase):
             }
         )
         self.assertRedirects(response, redirect_url)
+        messages_list = [msg for msg in response.wsgi_request._messages]
+        self.assertEqual(messages_list[0].level_tag, 'success')
+
+    @mock.patch('internship.utils.importing.import_scores.import_xlsx')
+    def test_post_upload_scores_invalid_registration_id_error(self, mock_import):
+        mock_import.return_value = [SimpleNamespace(row=6, value='invalid registration id')]
+        url = reverse('internship_upload_scores', kwargs={
+            'cohort_id': self.cohort.pk,
+        })
+        redirect_url = reverse('internship_scores_encoding', kwargs={'cohort_id': self.cohort.pk})
+        response = self.client.post(
+            url,
+            data={
+                'file_upload': self.xlsxfile,
+                'period': self.period.name
+            }
+        )
+        self.assertRedirects(response, redirect_url)
+        messages_list = [msg for msg in response.wsgi_request._messages]
+        self.assertIn(messages_list[0].level_tag, 'error')
 
     def test_post_upload_scores_extension_error(self):
         url = reverse('internship_upload_scores', kwargs={

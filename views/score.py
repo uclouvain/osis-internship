@@ -25,6 +25,7 @@
 ##############################################################################
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
+from django.db import transaction
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
@@ -217,7 +218,32 @@ def _upload_file(request, cohort):
         if file_name and ".xlsx" not in str(file_name):
             messages.add_message(request, messages.ERROR, _('File extension must be .xlsx'))
         else:
-            import_scores.import_xlsx(cohort, file_name, period)
+            row_error = import_scores.import_xlsx(cohort, file_name, period)
+            _show_message(request, row_error, period)
+
+
+def _show_message(request, row_error, period):
+    if row_error:
+        _show_row_error_message(request, row_error)
+    else:
+        _show_import_success_message(request, period)
+
+
+def _show_row_error_message(request, row_error):
+    messages.add_message(
+        request, messages.ERROR, "{} : {}".format(
+            _('Import aborted due to error on row %(row_id)s') % {'row_id': row_error[0].row},
+            _("student with registration id '%(reg_id)s' not found") % {'reg_id': row_error[0].value}
+        ), "alert-error"
+    )
+
+
+def _show_import_success_message(request, period):
+    messages.add_message(
+        request, messages.SUCCESS,
+        _('Internships ratings successfully imported for period {}'.format(period)),
+        "alert-succes"
+    )
 
 
 @login_required
@@ -263,6 +289,7 @@ def save_mapping(request, cohort_id):
     return HttpResponseRedirect(reverse('internship_scores_encoding', kwargs={'cohort_id': cohort.id}) + anchor)
 
 
+@transaction.atomic
 def _save_mapping_diff(cohort, periods, request):
     for period in periods:
         for grade in [x[0] for x in InternshipScore.SCORE_CHOICES]:

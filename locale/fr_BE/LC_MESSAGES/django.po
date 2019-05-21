@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-05-20 11:24+0200\n"
+"POT-Creation-Date: 2019-05-21 11:56+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -345,7 +345,7 @@ msgstr "Exporter vers XLSX"
 msgid "Female"
 msgstr "Femme"
 
-#: tests/views/test_scores.py:131 views/offer.py:381 views/score.py:218
+#: tests/views/test_scores.py:156 views/offer.py:381 views/score.py:219
 msgid "File extension must be .xlsx"
 msgstr "L'extension de fichier doit être .xlsx"
 
@@ -448,6 +448,11 @@ msgstr "Hôpitaux"
 #: templates/students.html:189 templates/students.html:199
 msgid "Import"
 msgstr "Importer"
+
+#: views/score.py:235
+#, python-format
+msgid "Import aborted due to error on row %(row_id)s"
+msgstr "Importation interrompue suite à une erreur à la ligne %(row_id)s"
 
 #: templates/scores.html:74
 msgid "Import internships ratings"
@@ -556,6 +561,10 @@ msgstr "Modalités de stage"
 #: templates/internship/home.html:45
 msgid "Internships offers"
 msgstr "Offres de stage"
+
+#: views/score.py:244
+msgid "Internships ratings successfully imported for period {}"
+msgstr "Cotes de stage importée avec succès pour la période {}"
 
 #: templates/student.html:124
 #: templates/student_information_modification.html:63
@@ -970,11 +979,11 @@ msgstr "Étudiant"
 msgid "Student affectation"
 msgstr "Affectation de stage"
 
-#: views/student.py:119
+#: views/student.py:118
 msgid "Student already exists"
 msgstr "L'étudiant existe déjà."
 
-#: views/student.py:121
+#: views/student.py:120
 msgid "Student does not exist"
 msgstr "L'étudiant n'existe pas."
 
@@ -1069,3 +1078,8 @@ msgid ""
 msgstr ""
 "Vous êtes dans la période des inscriptions. Il est recommandé de ne pas "
 "changer les choix au cours de cette période."
+
+#: views/score.py:236
+#, python-format
+msgid "student with registration id '%(reg_id)s' not found"
+msgstr "étudiant avec NOMA '%(reg_id)s' introuvable"

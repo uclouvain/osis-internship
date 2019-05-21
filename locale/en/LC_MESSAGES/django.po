@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-05-20 11:24+0200\n"
+"POT-Creation-Date: 2019-05-21 11:56+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -344,7 +344,7 @@ msgstr ""
 msgid "Female"
 msgstr ""
 
-#: tests/views/test_scores.py:131 views/offer.py:381 views/score.py:218
+#: tests/views/test_scores.py:156 views/offer.py:381 views/score.py:219
 msgid "File extension must be .xlsx"
 msgstr ""
 
@@ -446,6 +446,11 @@ msgstr ""
 #: templates/scores.html:254 templates/students.html:92
 #: templates/students.html:189 templates/students.html:199
 msgid "Import"
+msgstr ""
+
+#: views/score.py:235
+#, python-format
+msgid "Import aborted due to error on row %(row_id)s"
 msgstr ""
 
 #: templates/scores.html:74
@@ -552,6 +557,10 @@ msgstr ""
 
 #: templates/internship/home.html:45
 msgid "Internships offers"
+msgstr ""
+
+#: views/score.py:244
+msgid "Internships ratings successfully imported for period {}"
 msgstr ""
 
 #: templates/student.html:124
@@ -963,11 +972,11 @@ msgstr ""
 msgid "Student affectation"
 msgstr ""
 
-#: views/student.py:119
+#: views/student.py:118
 msgid "Student already exists"
 msgstr ""
 
-#: views/student.py:121
+#: views/student.py:120
 msgid "Student does not exist"
 msgstr ""
 
@@ -1059,4 +1068,9 @@ msgstr ""
 msgid ""
 "You are in the period of inscriptions. It is not recommended to change "
 "choices during this period."
+msgstr ""
+
+#: views/score.py:236
+#, python-format
+msgid "student with registration id '%(reg_id)s' not found"
 msgstr ""
