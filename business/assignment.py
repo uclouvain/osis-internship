@@ -73,7 +73,9 @@ class Assignment:
         self.students = Student.objects.filter(person_id__in=self.person_ids)
 
         self.internships = Internship.objects.filter(cohort=self.cohort).order_by("position", "name")
-        self.priotary_students_person_ids = find_students_with_priority_choices(self.internships).values_list('person__id', flat=True)
+        self.prioritary_students_person_ids = find_students_with_priority_choices(
+            self.internships
+        ).values_list('person__id', flat=True)
 
         self.mandatory_internships = self.internships.exclude(speciality__isnull=True)
         self.non_mandatory_internships = self.internships.filter(speciality__isnull=True)
@@ -453,7 +455,7 @@ def all_available_periods(assignment, student, internship_length, periods):
     student_affectations = get_student_affectations(student, assignment.affectations)
     unavailable_periods = get_periods_from_affectations(student_affectations)
     available_periods = difference(periods, unavailable_periods)
-    return list(group_periods_by_consecutives(available_periods, length=internship_length))
+    return list(group_periods_by_consecutives(available_periods, leng=internship_length))
 
 
 def find_best_available_offer_for_internship_periods(assignment, internship, choices, periods, last=False):

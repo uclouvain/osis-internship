@@ -46,27 +46,27 @@ class PeriodUtilsTestCase(TestCase):
     def test_2_consecutive_periods(self):
         periods = [self.p1, self.p2, self.p3, self.p4]
         expected = [[self.p1, self.p2], [self.p2, self.p3], [self.p3, self.p4]]
-        self.assertEqual(expected, list(group_periods_by_consecutives(periods, length=2)))
+        self.assertEqual(expected, list(group_periods_by_consecutives(periods, leng=2)))
 
     def test_2_consecutive_periods_in_complicated_list(self):
         periods = [self.p2, self.p4, self.p5]
         expected = [[self.p4, self.p5]]
-        self.assertEqual(expected, list(group_periods_by_consecutives(periods, length=2)))
+        self.assertEqual(expected, list(group_periods_by_consecutives(periods, leng=2)))
 
     def test_2_consecutive_periods_in_other_complicated_list(self):
         periods = [self.p1, self.p2, self.p5]
         expected = [[self.p1, self.p2]]
-        self.assertEqual(expected, list(group_periods_by_consecutives(periods, length=2)))
+        self.assertEqual(expected, list(group_periods_by_consecutives(periods, leng=2)))
 
     def test_3_consecutive_periods(self):
         periods = [self.p1, self.p2, self.p3, self.p4, self.p5]
         expected = [[self.p1, self.p2, self.p3], [self.p2, self.p3, self.p4], [self.p3, self.p4, self.p5]]
-        self.assertEqual(expected, list(group_periods_by_consecutives(periods, length=3)))
+        self.assertEqual(expected, list(group_periods_by_consecutives(periods, leng=3)))
 
     def test_4_consecutive_periods(self):
         periods = [self.p1, self.p2, self.p3, self.p4, self.p5]
         expected = [[self.p1, self.p2, self.p3, self.p4], [self.p2, self.p3, self.p4, self.p5]]
-        self.assertEqual(expected, list(group_periods_by_consecutives(periods, length=4)))
+        self.assertEqual(expected, list(group_periods_by_consecutives(periods, leng=4)))
 
     def test_map_period_ids(self):
         periods = [self.p1, self.p2]
