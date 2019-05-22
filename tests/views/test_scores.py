@@ -36,6 +36,7 @@ from django.test import TestCase
 from django.utils.translation import gettext as _
 from rest_framework import status
 
+from base.tests.factories.person import PersonFactory
 from base.tests.factories.student import StudentFactory
 from internship.models.internship_score import InternshipScore
 from internship.models.internship_score_mapping import InternshipScoreMapping
@@ -170,7 +171,8 @@ class ScoresEncodingTest(TestCase):
 
     def test_search_student_by_name(self):
         url = reverse('internship_scores_encoding', kwargs={'cohort_id': self.cohort.pk})
-        searched_student = self.students[0]
+        person = PersonFactory(last_name="UNIQUE_NAME")
+        searched_student = InternshipStudentInformationFactory(person=person, cohort=self.cohort)
         data = {
             'free_text': searched_student.person.last_name,
         }

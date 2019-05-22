@@ -37,6 +37,6 @@ class OrganizationFactory(factory.django.DjangoModelFactory):
 
     name = factory.Sequence(lambda n: 'Organization %d' % (n,))
     acronym = factory.LazyAttribute(lambda o: slugify(o.name)[:15])
-    reference = factory.fuzzy.FuzzyInteger(1, 999)
+    reference = factory.Sequence(lambda n: '%d' % (n,))
     website = factory.Faker('url')
     cohort = factory.SubFactory(CohortFactory)

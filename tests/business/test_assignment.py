@@ -236,6 +236,7 @@ def _make_shortage_scenario(cls):
                 internship_offer=shortage_offer,
                 number_places=number_places
             )
+    cls.organizations.remove(cls.hospital_error)
     unlucky_student = random.choice(cls.students)
     available_organizations = cls.organizations.copy()
     for choice in range(1, 5):
@@ -248,7 +249,6 @@ def _make_shortage_scenario(cls):
             choice=choice,
             speciality=specialty_with_offer_shortage,
         )
-    cls.organizations.remove(cls.hospital_error)
     return internship_with_offer_shortage, unlucky_student
 
 
