@@ -23,7 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-
+from django.db import transaction
 from openpyxl import load_workbook
 
 from base.models import student
@@ -34,18 +34,24 @@ APDS_COUNT = 15
 LINE_INTERVAL = 2
 
 
+@transaction.atomic
 def import_xlsx(cohort, xlsxfile, period):
     workbook = load_workbook(filename=xlsxfile, read_only=True)
     worksheet = workbook.active
     period = Period.objects.get(name=period, cohort=cohort)
-    for row in list(worksheet.rows)[4:]:
-        _import_score(row, cohort, period)
+    for row in list(worksheet.rows)[5:worksheet.max_row]:
+        try:
+            _import_score(row, cohort, period)
+        except Exception:
+            return row
     xlsxfile.close()
 
 
 def _import_score(row, cohort, period):
     scores = []
     registration_id = row[0].value
+    if registration_id is None:
+        return
     for i in range(1, APDS_COUNT*LINE_INTERVAL, LINE_INTERVAL):
         scores.append(row[i+LINE_INTERVAL+1].value)
     existing_student = student.find_by_registration_id(registration_id)
@@ -56,3 +62,5 @@ def _import_score(row, cohort, period):
         for index, score in enumerate(scores):
             internship_score.__setattr__('APD_{}'.format(index+1), score)
         internship_score.save()
+    else:
+        raise Exception

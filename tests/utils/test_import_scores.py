@@ -68,7 +68,7 @@ class XlsImportTestCase(TestCase):
         worksheet = workbook.active
         for row in range(1, 11):
             for column, func in columns:
-                worksheet.cell(row=row+6, column=column+1).value = func()
+                worksheet.cell(row=row+5, column=column+1).value = func()
         return workbook
 
     @mock.patch('internship.utils.importing.import_scores.load_workbook')
@@ -76,3 +76,15 @@ class XlsImportTestCase(TestCase):
         mock_workbook.return_value = self.generate_workbook()
         import_xlsx(self.cohort, self.file, self.period.name)
         self.assertEqual(InternshipScore.objects.count(), 10)
+
+    @mock.patch('internship.utils.importing.import_scores.load_workbook')
+    def test_import_scores_with_wrong_registration_id(self, mock_workbook):
+        row_error_number = 6
+        invalid_registration_id = 'invalid registration_id'
+        workbook = self.generate_workbook()
+        workbook.worksheets[0].cell(row=row_error_number, column=1).value = invalid_registration_id
+        mock_workbook.return_value = workbook
+        row_error = import_xlsx(self.cohort, self.file, self.period.name)
+        self.assertEqual(InternshipScore.objects.count(), 0)
+        self.assertEqual(row_error[0].row, row_error_number)
+        self.assertEqual(row_error[0].value, invalid_registration_id)
