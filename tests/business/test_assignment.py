@@ -221,7 +221,8 @@ def _make_shortage_scenario(cls):
     internship_with_offer_shortage = InternshipFactory(
         cohort=cls.cohort,
         name=specialty_with_offer_shortage.name,
-        speciality=specialty_with_offer_shortage
+        speciality=specialty_with_offer_shortage,
+        position=-1
     )
     for organization in cls.organizations:
         number_places = 999 if organization is cls.hospital_error else 0

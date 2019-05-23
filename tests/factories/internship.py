@@ -36,3 +36,4 @@ class InternshipFactory(factory.django.DjangoModelFactory):
     length_in_periods = 1
     cohort = factory.SubFactory(CohortFactory)
     speciality = None
+    position = 0
