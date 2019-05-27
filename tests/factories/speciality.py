@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2019 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -32,7 +32,11 @@ class SpecialtyFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = 'internship.InternshipSpeciality'
 
-    name = factory.Faker('name')
-    acronym = factory.Sequence(lambda n: 'SPEC-%d' % n)
+    name = factory.Faker('job')
     mandatory = False
     cohort = factory.SubFactory(CohortFactory)
+    sequence = None
+
+    @factory.lazy_attribute
+    def acronym(self):
+        return "".join(word[0] for word in self.name.split()).upper()

@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2019 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -58,3 +58,9 @@ admin.site.register(internship_student_affectation_stat.InternshipStudentAffecta
 
 admin.site.register(affectation_generation_time.AffectationGenerationTime,
                     affectation_generation_time.AffectationGenerationTimeAdmin)
+
+admin.site.register(internship_score.InternshipScore,
+                    internship_score.InternshipScoreAdmin)
+
+admin.site.register(internship_score_mapping.InternshipScoreMapping,
+                    internship_score_mapping.InternshipScoreMappingAdmin)

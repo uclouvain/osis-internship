@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2019 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -53,7 +53,8 @@ def internships_periods(request, cohort_id):
 def period_create(request, cohort_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
     period_form = PeriodForm()
-    context = {'form': period_form, 'cohort': cohort, 'url_form': reverse('period_new', kwargs={'cohort_id': cohort.id}),
+    context = {
+        'form': period_form, 'cohort': cohort, 'url_form': reverse('period_new', kwargs={'cohort_id': cohort.id}),
     }
     return render(request, "period_create.html", context)
 

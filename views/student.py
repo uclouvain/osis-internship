@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2019 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -29,7 +29,6 @@ from io import BytesIO
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.exceptions import PermissionDenied
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.core.serializers.json import DjangoJSONEncoder
 from django.core.urlresolvers import reverse
 from django.db.models import Prefetch
@@ -46,7 +45,7 @@ from internship.forms.students_import_form import StudentsImportActionForm
 from internship.models.internship_choice import InternshipChoice
 from internship.models.internship_student_information import InternshipStudentInformation
 from internship.utils.importing.import_students import import_xlsx
-from internship.views.common import display_errors
+from internship.views.common import display_errors, get_object_list
 from reference.models import country
 
 
@@ -59,7 +58,7 @@ def internships_student_resume(request, cohort_id):
     page = request.GET.get('page')
     choices = InternshipChoice.objects.filter(internship_id__in=internships_ids).select_related('student')
     number_students_ok, number_students_not_ok = _get_statuses(choices, internships_ids)
-    students_with_status = _get_students_with_status(page, cohort, filter_name)
+    students_with_status = _get_students_with_status(request, page, cohort, filter_name)
     student_with_internships = mdl_int.internship_choice.get_number_students(cohort)
     students_can_have_internships = mdl_int.internship_student_information.get_number_students(cohort)
     student_without_internship = students_can_have_internships - student_with_internships
@@ -370,7 +369,7 @@ def _get_affectation_for_period(affectations, period):
     return None
 
 
-def _get_students_with_status(page, cohort, filter_name):
+def _get_students_with_status(request, page, cohort, filter_name):
 
     students_status = []
 
@@ -384,14 +383,7 @@ def _get_students_with_status(page, cohort, filter_name):
         students_info = students_info.filter(person__last_name__icontains=filter_name) | \
                                   students_info.filter(person__first_name__icontains=filter_name)
 
-    paginator = Paginator(students_info, 10)
-
-    try:
-        paginated_students_info = paginator.page(page)
-    except PageNotAnInteger:
-        paginated_students_info = paginator.page(1)
-    except EmptyPage:
-        paginated_students_info = paginator.page(paginator.num_pages)
+    paginated_students_info = get_object_list(request, students_info)
 
     internship_ids = mdl_int.internship.Internship.objects.filter(cohort=cohort, pk__gte=1).values_list("pk", flat=True)
 

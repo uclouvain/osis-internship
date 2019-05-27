@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2019 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -34,11 +34,11 @@ class InternshipEnrollmentAdmin(admin.ModelAdmin):
 
 
 class InternshipEnrollment(models.Model):
-    student = models.ForeignKey('base.student')
-    internship_offer = models.ForeignKey('internship.InternshipOffer')
-    place = models.ForeignKey('internship.Organization')
-    period = models.ForeignKey('internship.Period')
-    internship = models.ForeignKey('internship.Internship')
+    student = models.ForeignKey('base.student', on_delete=models.CASCADE)
+    internship_offer = models.ForeignKey('internship.InternshipOffer', on_delete=models.CASCADE)
+    place = models.ForeignKey('internship.Organization', on_delete=models.CASCADE)
+    period = models.ForeignKey('internship.Period', on_delete=models.CASCADE)
+    internship = models.ForeignKey('internship.Internship', on_delete=models.CASCADE)
 
     def __str__(self):
         return u"%s - %s" % (self.student, self.internship_offer.title)

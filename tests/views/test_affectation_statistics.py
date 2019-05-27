@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2019 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -73,3 +73,12 @@ class ViewAffectationStatisticsTestCase(TestCase):
 
         self.assertIn(affectation.organization, response.context[0]['hospitals'])
         self.assertIn(affectation.speciality.name, response.context[0]['hospital_specialties'])
+
+    def test_affectation_statistics(self):
+        cohort = CohortFactory()
+        url = reverse('internship_affectation_statistics', kwargs={
+            'cohort_id': cohort.id
+        })
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'internship_affectation_statistics.html')

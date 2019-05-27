@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2019 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -27,7 +27,6 @@ from django.db import models
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
-
 
 from internship.models.enums.civility import Civility
 from internship.models.enums.gender import Gender
@@ -51,7 +50,11 @@ class InternshipMaster(SerializableModel):
     location = models.CharField(max_length=255, blank=True, null=True)
     postal_code = models.CharField(max_length=20, blank=True, null=True)
     city = models.CharField(max_length=255, blank=True, null=True)
-    country = models.ForeignKey('reference.Country', blank=True, null=True)
+    country = models.ForeignKey(
+        'reference.Country',
+        blank=True, null=True,
+        on_delete=models.CASCADE
+    )
     phone = models.CharField(max_length=30, blank=True, null=True)
     phone_mobile = models.CharField(max_length=30, blank=True, null=True)
     birth_date = models.DateField(blank=True, null=True)

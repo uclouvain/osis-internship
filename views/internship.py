@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2019 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -221,7 +221,9 @@ def internship_edit(request, cohort_id, internship_id):
 def internship_delete(request, cohort_id, internship_id):
     inter = get_object_or_404(mdl_int.internship.Internship, pk=internship_id, cohort_id=cohort_id)
     inter.delete()
-    messages.add_message(request, messages.SUCCESS, "{} : {}".format(_('Internship modality deleted'), inter.name), "alert-success")
+    messages.add_message(
+        request, messages.SUCCESS, "{} : {}".format(_('Internship modality deleted'), inter.name), "alert-success"
+    )
     return redirect(reverse('internship-list', kwargs={
         'cohort_id': cohort_id,
     }))
@@ -333,12 +335,12 @@ def _zip_data(dict_current_choices, formset, internships_offers, dict_current_en
     return zipped_data_for_offer_selected
 
 
-def _generate_elements(dict_current_choices, dict_current_enrollments, dict_offers_choices, formset, internships_offers):
+def _generate_elements(dict_curr_choices, dict_curr_enrollments, dict_offers_choices, formset, internships_offers):
     for offer, form in zip(internships_offers, formset):
-        offer_choice = dict_current_choices.get((offer.organization.id, offer.speciality.id), None)
+        offer_choice = dict_curr_choices.get((offer.organization.id, offer.speciality.id), None)
         offer_value = 0 if not offer_choice else offer_choice.choice
         offer_priority = False if not offer_choice else offer_choice.priority
-        offer_enrollments = dict_current_enrollments.get(offer.id, [])
+        offer_enrollments = dict_curr_enrollments.get(offer.id, [])
         number_first_choices = dict_offers_choices.get(offer.organization.id, 0)
         element = (offer, form, str(offer_value), offer_priority, offer_enrollments, number_first_choices)
         yield element

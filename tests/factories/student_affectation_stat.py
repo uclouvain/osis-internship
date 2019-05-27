@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2019 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -27,6 +27,7 @@ import random
 import factory.django
 
 from base.tests.factories.student import StudentFactory
+from internship.tests.factories.internship import InternshipFactory
 from internship.tests.factories.organization import OrganizationFactory
 from internship.tests.factories.speciality import SpecialtyFactory
 from internship.tests.factories.period import PeriodFactory
@@ -41,3 +42,4 @@ class StudentAffectationStatFactory(factory.django.DjangoModelFactory):
     organization = factory.SubFactory(OrganizationFactory)
     speciality = factory.SubFactory(SpecialtyFactory)
     period = factory.SubFactory(PeriodFactory)
+    internship = factory.SubFactory(InternshipFactory)

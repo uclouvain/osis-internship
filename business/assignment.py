@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2019 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -54,11 +54,11 @@ from internship.utils.assignment.period_utils import group_periods_by_consecutiv
 
 logger = logging.getLogger(settings.DEFAULT_LOGGER)
 
-TIMEOUT = 60
-MAX_ALLOWED_IMPOSED = 2
-
 
 class Assignment:
+    TIMEOUT = 60
+    MAX_ALLOWED_IMPOSED = 2
+
     def __init__(self, cohort):
         self.cohort = cohort
         self.count = 0
@@ -73,7 +73,9 @@ class Assignment:
         self.students = Student.objects.filter(person_id__in=self.person_ids)
 
         self.internships = Internship.objects.filter(cohort=self.cohort).order_by("position", "name")
-        self.priotary_students_person_ids = find_students_with_priority_choices(self.internships).values_list('person__id', flat=True)
+        self.prioritary_students_person_ids = find_students_with_priority_choices(
+            self.internships
+        ).values_list('person__id', flat=True)
 
         self.mandatory_internships = self.internships.exclude(speciality__isnull=True)
         self.non_mandatory_internships = self.internships.filter(speciality__isnull=True)
@@ -137,13 +139,10 @@ class Assignment:
 
         for internship in self.mandatory_internships:
             self.students_information = self.shuffle_students_list()
-            logger.info("")
             logger.info("Shuffled students for {}.".format(internship.name))
             _assign_students_with_priority_choices(self, internship)
-            logger.info("")
             logger.info("Assigned students with priority choices to {}.".format(internship.name))
             _assign_regular_students(self, internship)
-            logger.info("")
             logger.info("Assigned regular students to {}.".format(internship.name))
             self.internship_count += 1
 
@@ -157,13 +156,10 @@ class Assignment:
 def _assign_non_mandatory_internships(self):
     self.students_information = self.shuffle_students_list()
     self.total_count = len(self.students_information)
-    logger.info("")
     logger.info("Shuffled students for stages au choix.")
     _assign_students_with_priority_choices(self, self.non_mandatory_internships)
-    logger.info("")
     logger.info("Assigned students with priority choices to stages au choix.")
     _assign_regular_students(self, self.non_mandatory_internships)
-    logger.info("")
     logger.info("Assigned regular students to stages au choix")
 
 
@@ -172,7 +168,7 @@ def _balance_assignments(self):
     self.students_information = self.shuffle_students_list()
     favored_students, disadvantaged_students = _update_distinction_between_students(self)
     self.timeout_start = time.time()
-    while len(disadvantaged_students) > 0 and time.time() < self.timeout_start + TIMEOUT:
+    while len(disadvantaged_students) > 0 and time.time() < self.timeout_start + self.TIMEOUT:
         _process_affectations_comparisons(self, favored_students, disadvantaged_students)
 
 
@@ -182,10 +178,10 @@ def _update_distinction_between_students(self):
     favored_students = []
     for student in self.students_information:
             if student.cost >= Costs.PRIORITY.value and student.cost < Costs.IMPOSED.value:
-                if student.person_id not in self.priotary_students_person_ids:
+                if student.person_id not in self.prioritary_students_person_ids:
                     favored_students.append(student)
-            if student.cost >= MAX_ALLOWED_IMPOSED * Costs.IMPOSED.value:
-                if student.cost >= Costs.ERROR.value + MAX_ALLOWED_IMPOSED * Costs.IMPOSED.value:
+            if student.cost >= self.MAX_ALLOWED_IMPOSED * Costs.IMPOSED.value:
+                if student.cost >= Costs.ERROR.value + self.MAX_ALLOWED_IMPOSED * Costs.IMPOSED.value:
                     student.cost = student.cost - Costs.ERROR.value
                 disadvantaged_students.append(student)
     return favored_students, disadvantaged_students
@@ -453,7 +449,7 @@ def all_available_periods(assignment, student, internship_length, periods):
     student_affectations = get_student_affectations(student, assignment.affectations)
     unavailable_periods = get_periods_from_affectations(student_affectations)
     available_periods = difference(periods, unavailable_periods)
-    return list(group_periods_by_consecutives(available_periods, length=internship_length))
+    return list(group_periods_by_consecutives(available_periods, leng=internship_length))
 
 
 def find_best_available_offer_for_internship_periods(assignment, internship, choices, periods, last=False):
@@ -631,7 +627,7 @@ def is_non_mandatory_internship(internship):
 
 
 def student_has_priority(assignment, student):
-    return student.id not in assignment.priotary_students_person_ids
+    return student.id not in assignment.prioritary_students_person_ids
 
 
 def is_prior_internship(internship, choices):

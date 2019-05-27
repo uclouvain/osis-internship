@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2019 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -24,14 +24,15 @@
 #
 ##############################################################################
 
-def group_periods_by_consecutives(periods, length=1):
-    if length == 1:
+
+def group_periods_by_consecutives(periods, leng=1):
+    if leng == 1:
         for period in periods:
             yield [period]
     else:
-        for i in range(len(periods) - (length - 1)):
-            if all(map(lambda period: int(periods[i].name[1:]) + 1 == int(periods[i + 1].name[1:]), periods[i: i + length])):
-                yield periods[i: i + length]
+        for i in range(len(periods) - (leng - 1)):
+            if all(map(lambda per: int(periods[i].name[1:]) + 1 == int(periods[i + 1].name[1:]), periods[i: i + leng])):
+                yield periods[i: i + leng]
 
 
 def map_period_ids(periods):

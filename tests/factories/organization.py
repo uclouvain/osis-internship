@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2019 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -33,9 +33,10 @@ from internship.tests.factories.cohort import CohortFactory
 class OrganizationFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = 'internship.Organization'
+        django_get_or_create = ('reference',)
 
     name = factory.Sequence(lambda n: 'Organization %d' % (n,))
     acronym = factory.LazyAttribute(lambda o: slugify(o.name)[:15])
-    reference =  factory.Faker('random_int', min=1, max=999)
+    reference = factory.Sequence(lambda n: '%d' % (n,))
     website = factory.Faker('url')
     cohort = factory.SubFactory(CohortFactory)

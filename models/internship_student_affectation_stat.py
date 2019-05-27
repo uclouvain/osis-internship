@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2017 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2019 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -41,11 +41,14 @@ class InternshipStudentAffectationStatAdmin(SerializableModelAdmin):
 
 
 class InternshipStudentAffectationStat(SerializableModel):
-    student = models.ForeignKey('base.Student')
-    organization = models.ForeignKey('internship.Organization')
-    speciality = models.ForeignKey('internship.InternshipSpeciality')
-    period = models.ForeignKey('internship.Period')
-    internship = models.ForeignKey('internship.Internship', blank=True, null=True)
+    student = models.ForeignKey('base.Student', on_delete=models.CASCADE)
+    organization = models.ForeignKey('internship.Organization', on_delete=models.CASCADE)
+    speciality = models.ForeignKey('internship.InternshipSpeciality', on_delete=models.CASCADE)
+    period = models.ForeignKey('internship.Period', on_delete=models.CASCADE)
+    internship = models.ForeignKey(
+        'internship.Internship', blank=True, null=True,
+        on_delete=models.CASCADE
+    )
     choice = models.CharField(max_length=1, choices=ChoiceType.choices(), default=ChoiceType.NO_CHOICE.value)
     cost = models.IntegerField()
     consecutive_month = models.BooleanField(default=False)
@@ -57,25 +60,25 @@ class InternshipStudentAffectationStat(SerializableModel):
 
 def search(**kwargs):
     kwargs = {k: v for k, v in kwargs.items() if v}
-    return InternshipStudentAffectationStat.objects.filter(**kwargs)\
-        .select_related("student__person", "organization", "speciality", "period")\
+    return InternshipStudentAffectationStat.objects.filter(**kwargs) \
+        .select_related("student__person", "organization", "speciality", "period") \
         .order_by("student__person__last_name", "student__person__first_name", "period__date_start")
 
 
 def find_non_mandatory_affectations(period_ids):
-    return InternshipStudentAffectationStat.objects.filter(period__id__in=period_ids).\
+    return InternshipStudentAffectationStat.objects.filter(period__id__in=period_ids). \
         select_related("student", "organization", "speciality")
 
 
 def find_by_cohort(cohort):
-    return InternshipStudentAffectationStat.objects.filter(period__cohort=cohort).\
+    return InternshipStudentAffectationStat.objects.filter(period__cohort=cohort). \
         order_by("student__person__last_name",
                  "student__person__first_name",
                  "period__date_start")
 
 
 def find_by_organization(cohort, organization):
-    return InternshipStudentAffectationStat.objects.filter(period__cohort=cohort, organization=organization).\
+    return InternshipStudentAffectationStat.objects.filter(period__cohort=cohort, organization=organization). \
         order_by("period__date_start",
                  "student__person__last_name",
                  "student__person__first_name")
