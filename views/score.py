@@ -226,9 +226,9 @@ def _upload_file(request, cohort):
 
 
 def _process_errors(request, import_errors, period):
-    if 'registration_error' in import_errors.keys():
+    if import_errors and 'registration_error' in import_errors.keys():
         _show_import_error_message(request, import_errors['registration_error'], period)
-    elif 'period_error' in import_errors.keys():
+    elif import_errors and 'period_error' in import_errors.keys():
         _show_period_error_message(request, import_errors['period_error'], period)
     else:
         _show_import_success_message(request, period)

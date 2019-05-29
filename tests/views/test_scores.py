@@ -102,7 +102,7 @@ class ScoresEncodingTest(TestCase):
 
     @mock.patch('internship.utils.importing.import_scores.import_xlsx')
     def test_post_upload_scores_success(self, mock_import):
-        mock_import.return_value = {}
+        mock_import.return_value = None
         url = reverse('internship_upload_scores', kwargs={
             'cohort_id': self.cohort.pk,
         })
