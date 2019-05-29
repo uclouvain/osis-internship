@@ -123,7 +123,10 @@ class ScoresEncodingTest(TestCase):
 
     @mock.patch('internship.utils.importing.import_scores.import_xlsx')
     def test_post_upload_scores_invalid_registration_id_error(self, mock_import):
-        mock_import.return_value = [SimpleNamespace(row=6, value='invalid registration id')]
+        mock_import.return_value = [
+            [SimpleNamespace(row=6, value='invalid registration id')],
+            [SimpleNamespace(row=7, value='invalid registration id')],
+        ]
         url = reverse('internship_upload_scores', kwargs={
             'cohort_id': self.cohort.pk,
         })
@@ -138,6 +141,7 @@ class ScoresEncodingTest(TestCase):
         self.assertRedirects(response, redirect_url)
         messages_list = [msg for msg in response.wsgi_request._messages]
         self.assertIn(messages_list[0].level_tag, 'error')
+        self.assertIn(self.period.name, str(messages_list[0]))
 
     def test_post_upload_scores_extension_error(self):
         url = reverse('internship_upload_scores', kwargs={
