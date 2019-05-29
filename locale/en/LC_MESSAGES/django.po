@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-05-21 16:36+0200\n"
+"POT-Creation-Date: 2019-05-29 10:57+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -344,7 +344,7 @@ msgstr ""
 msgid "Female"
 msgstr ""
 
-#: tests/views/test_scores.py:156 views/offer.py:381 views/score.py:220
+#: tests/views/test_scores.py:157 views/offer.py:381 views/score.py:220
 msgid "File extension must be .xlsx"
 msgstr ""
 
@@ -448,9 +448,13 @@ msgstr ""
 msgid "Import"
 msgstr ""
 
-#: views/score.py:236
+#: templates/scores.html:344
+msgid "Import aborted due to error(s) on:"
+msgstr ""
+
+#: views/score.py:226
 #, python-format
-msgid "Import aborted due to error on row %(row_id)s"
+msgid "Import aborted for period %(period)s due to error(s) on:"
 msgstr ""
 
 #: templates/scores.html:74
@@ -496,7 +500,7 @@ msgstr ""
 msgid "Internship modality created"
 msgstr ""
 
-#: views/internship.py:222
+#: views/internship.py:223
 msgid "Internship modality deleted"
 msgstr ""
 
@@ -559,7 +563,7 @@ msgstr ""
 msgid "Internships offers"
 msgstr ""
 
-#: views/score.py:244
+#: views/score.py:246
 #, python-format
 msgid "Internships ratings successfully imported for period %(period)s"
 msgstr ""
@@ -737,16 +741,16 @@ msgstr ""
 msgid "Period"
 msgstr ""
 
-#: views/period.py:97
+#: views/period.py:98
 msgid "Period created"
 msgstr ""
 
 #: templates/fragment/delete_confirmation_modal.html:33
-#: templates/fragment/delete_confirmation_modal.html:42 views/period.py:120
+#: templates/fragment/delete_confirmation_modal.html:42 views/period.py:121
 msgid "Period deleted"
 msgstr ""
 
-#: views/period.py:70
+#: views/period.py:71
 msgid "Period edited"
 msgstr ""
 
@@ -925,7 +929,7 @@ msgstr ""
 msgid "Specialty"
 msgstr ""
 
-#: views/speciality.py:127
+#: views/speciality.py:128
 msgid "Specialty deleted"
 msgstr ""
 
@@ -1071,7 +1075,12 @@ msgid ""
 "choices during this period."
 msgstr ""
 
-#: views/score.py:237
+#: views/score.py:238
+#, python-format
+msgid "row %(row_id)s"
+msgstr ""
+
+#: views/score.py:239
 #, python-format
 msgid "student with registration id '%(reg_id)s' not found"
 msgstr ""

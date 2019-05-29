@@ -28,6 +28,7 @@ from openpyxl import load_workbook
 
 from base.models import student
 from internship.models.internship_score import InternshipScore
+from internship.models.internship_student_information import find_by_person
 from internship.models.period import Period
 
 APDS_COUNT = 15
@@ -39,12 +40,28 @@ def import_xlsx(cohort, xlsxfile, period):
     workbook = load_workbook(filename=xlsxfile, read_only=True)
     worksheet = workbook.active
     period = Period.objects.get(name=period, cohort=cohort)
+    errors = _analyze_registration_ids(cohort, worksheet)
+    if errors:
+        return errors
     for row in list(worksheet.rows)[5:worksheet.max_row]:
         try:
             _import_score(row, cohort, period)
         except Exception:
             return row
     xlsxfile.close()
+
+
+def _analyze_registration_ids(cohort, worksheet):
+    errors = []
+    for row in list(worksheet.rows)[5:worksheet.max_row]:
+        registration_id = row[0].value
+        if registration_id is None:
+            continue
+        else:
+            existing_student = student.find_by_registration_id(registration_id)
+            if existing_student is None or not _student_is_in_cohort(existing_student, cohort):
+                errors.append(row)
+    return errors
 
 
 def _import_score(row, cohort, period):
@@ -64,3 +81,7 @@ def _import_score(row, cohort, period):
         internship_score.save()
     else:
         raise Exception
+
+
+def _student_is_in_cohort(student, cohort):
+    return find_by_person(student.person, cohort)

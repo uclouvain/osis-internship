@@ -29,6 +29,8 @@ from django.db import transaction
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
+from django.utils.html import escape
+from django.utils.safestring import mark_safe
 from django.utils.translation import gettext as _
 
 from base.views.common import display_error_messages, display_success_messages
@@ -219,24 +221,21 @@ def _upload_file(request, cohort):
         if file_name and ".xlsx" not in str(file_name):
             messages.add_message(request, messages.ERROR, _('File extension must be .xlsx'))
         else:
-            row_error = import_scores.import_xlsx(cohort, file_name, period)
-            _show_message(request, row_error, period)
+            errors = import_scores.import_xlsx(cohort, file_name, period)
+            if errors:
+                _show_import_error_message(request, errors, period)
+            else:
+                _show_import_success_message(request, period)
 
 
-def _show_message(request, row_error, period):
-    if row_error:
-        _show_row_error_message(request, row_error)
-    else:
-        _show_import_success_message(request, period)
-
-
-def _show_row_error_message(request, row_error):
-    display_error_messages(
-        request, "{} : {}".format(
-            _('Import aborted due to error on row %(row_id)s') % {'row_id': row_error[0].row},
-            _("student with registration id '%(reg_id)s' not found") % {'reg_id': row_error[0].value}
+def _show_import_error_message(request, errors, period):
+    message_content = _('Import aborted for period %(period)s due to error(s) on:') % {'period': period}
+    for row_error in errors:
+        message_content += "<br/> - {} : {}".format(
+            _('row %(row_id)s') % {'row_id': row_error[0].row},
+            _("student with registration id '%(reg_id)s' not found") % {'reg_id': escape(row_error[0].value)}
         )
-    )
+    display_error_messages(request, message_content, extra_tags='safe')
 
 
 def _show_import_success_message(request, period):

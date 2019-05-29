@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-05-21 16:36+0200\n"
+"POT-Creation-Date: 2019-05-29 10:57+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -345,7 +345,7 @@ msgstr "Exporter vers XLSX"
 msgid "Female"
 msgstr "Femme"
 
-#: tests/views/test_scores.py:156 views/offer.py:381 views/score.py:220
+#: tests/views/test_scores.py:157 views/offer.py:381 views/score.py:220
 msgid "File extension must be .xlsx"
 msgstr "L'extension de fichier doit être .xlsx"
 
@@ -449,10 +449,13 @@ msgstr "Hôpitaux"
 msgid "Import"
 msgstr "Importer"
 
-#: views/score.py:236
-#, python-format
-msgid "Import aborted due to error on row %(row_id)s"
-msgstr "Importation interrompue suite à une erreur à la ligne %(row_id)s"
+#: templates/scores.html:344
+msgid "Import aborted due to error(s) on:"
+msgstr "Importation interrompue suite à une ou plusieurs erreurs:"
+
+#: views/score.py:226
+msgid "Import aborted for period %(period)s due to error(s) on:"
+msgstr "Importation interrompue pour la période %(period)s suite à une ou plusieurs erreurs:"
 
 #: templates/scores.html:74
 msgid "Import internships ratings"
@@ -499,7 +502,7 @@ msgstr "Modalité de stage"
 msgid "Internship modality created"
 msgstr "Modalité de stage créée"
 
-#: views/internship.py:222
+#: views/internship.py:223
 msgid "Internship modality deleted"
 msgstr "Modalité de stage supprimée"
 
@@ -562,7 +565,8 @@ msgstr "Modalités de stage"
 msgid "Internships offers"
 msgstr "Offres de stage"
 
-#: views/score.py:244
+#: views/score.py:246
+#, python-format
 msgid "Internships ratings successfully imported for period %(period)s"
 msgstr "Cotes de stage importées avec succès pour la période %(period)s"
 
@@ -741,16 +745,16 @@ msgstr "Coller Période"
 msgid "Period"
 msgstr "Période"
 
-#: views/period.py:97
+#: views/period.py:98
 msgid "Period created"
 msgstr "Période créée"
 
 #: templates/fragment/delete_confirmation_modal.html:33
-#: templates/fragment/delete_confirmation_modal.html:42 views/period.py:120
+#: templates/fragment/delete_confirmation_modal.html:42 views/period.py:121
 msgid "Period deleted"
 msgstr "Période supprimée"
 
-#: views/period.py:70
+#: views/period.py:71
 msgid "Period edited"
 msgstr "Période modifiée"
 
@@ -931,7 +935,7 @@ msgstr "Spécialités"
 msgid "Specialty"
 msgstr "Spécialité"
 
-#: views/speciality.py:127
+#: views/speciality.py:128
 msgid "Specialty deleted"
 msgstr "Specialité supprimée"
 
@@ -1079,7 +1083,12 @@ msgstr ""
 "Vous êtes dans la période des inscriptions. Il est recommandé de ne pas "
 "changer les choix au cours de cette période."
 
-#: views/score.py:237
+#: views/score.py:238
+#, python-format
+msgid "row %(row_id)s"
+msgstr "ligne %(row_id)s"
+
+#: views/score.py:239
 #, python-format
 msgid "student with registration id '%(reg_id)s' not found"
 msgstr "étudiant avec NOMA '%(reg_id)s' introuvable"
