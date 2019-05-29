@@ -222,8 +222,10 @@ def _upload_file(request, cohort):
             messages.add_message(request, messages.ERROR, _('File extension must be .xlsx'))
         else:
             errors = import_scores.import_xlsx(cohort, file_name, period)
-            if errors:
+            if errors and not isinstance(errors, str):
                 _show_import_error_message(request, errors, period)
+            elif isinstance(errors, str):
+                display_error_messages(request, "{}: {} ≠ {}".format(_('Periods do not match'), period, errors))
             else:
                 _show_import_success_message(request, period)
 

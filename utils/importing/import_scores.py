@@ -40,14 +40,18 @@ def import_xlsx(cohort, xlsxfile, period):
     workbook = load_workbook(filename=xlsxfile, read_only=True)
     worksheet = workbook.active
     period = Period.objects.get(name=period, cohort=cohort)
-    errors = _analyze_registration_ids(cohort, worksheet)
-    if errors:
-        return errors
-    for row in list(worksheet.rows)[5:worksheet.max_row]:
-        try:
-            _import_score(row, cohort, period)
-        except Exception:
-            return row
+    worksheet_period = list(worksheet.rows)[0][0].value.split(maxsplit=1)[0]
+    if period.name[-1:] != worksheet_period[-1:]:
+        return worksheet_period
+    else:
+        errors = _analyze_registration_ids(cohort, worksheet)
+        if errors:
+            return errors
+        for row in list(worksheet.rows)[5:worksheet.max_row]:
+            try:
+                _import_score(row, cohort, period)
+            except Exception:
+                return row
     xlsxfile.close()
 
 
