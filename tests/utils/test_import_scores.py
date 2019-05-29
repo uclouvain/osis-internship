@@ -87,7 +87,7 @@ class XlsImportTestCase(TestCase):
         mock_workbook.return_value = workbook
         errors = import_xlsx(self.cohort, self.file, self.period.name)
         self.assertEqual(InternshipScore.objects.count(), 0)
-        for row_error in errors:
+        for row_error in errors['registration_error']:
             self.assertEqual(row_error[0].row, row_error_number)
             self.assertEqual(row_error[0].value, invalid_registration_id)
 
@@ -97,5 +97,5 @@ class XlsImportTestCase(TestCase):
         workbook.worksheets[0].cell(row=1, column=1).value = 'invalid_period'
         mock_workbook.return_value = workbook
         errors = import_xlsx(self.cohort, self.file, self.period.name)
-        self.assertEqual(errors, 'invalid_period')
+        self.assertEqual(errors['period_error'], 'invalid_period')
         self.assertEqual(InternshipScore.objects.count(), 0)

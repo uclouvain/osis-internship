@@ -25,11 +25,8 @@
 ##############################################################################
 from types import SimpleNamespace
 from unittest import mock
-from unittest.mock import Mock
 
 from django.contrib.auth.models import User, Permission
-from django.contrib.messages import DEFAULT_LEVELS
-from django.contrib.messages.storage.base import LEVEL_TAGS
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.urlresolvers import reverse
 from django.test import TestCase
@@ -105,7 +102,7 @@ class ScoresEncodingTest(TestCase):
 
     @mock.patch('internship.utils.importing.import_scores.import_xlsx')
     def test_post_upload_scores_success(self, mock_import):
-        mock_import.return_value = None
+        mock_import.return_value = {}
         url = reverse('internship_upload_scores', kwargs={
             'cohort_id': self.cohort.pk,
         })
@@ -123,10 +120,13 @@ class ScoresEncodingTest(TestCase):
 
     @mock.patch('internship.utils.importing.import_scores.import_xlsx')
     def test_post_upload_scores_invalid_registration_id_error(self, mock_import):
-        mock_import.return_value = [
-            [SimpleNamespace(row=6, value='invalid registration id')],
-            [SimpleNamespace(row=7, value='invalid registration id')],
-        ]
+        mock_import.return_value = {
+            'registration_error':
+            [
+                [SimpleNamespace(row=6, value='invalid registration id')],
+                [SimpleNamespace(row=7, value='invalid registration id')],
+            ]
+        }
         url = reverse('internship_upload_scores', kwargs={
             'cohort_id': self.cohort.pk,
         })
@@ -145,7 +145,7 @@ class ScoresEncodingTest(TestCase):
 
     @mock.patch('internship.utils.importing.import_scores.import_xlsx')
     def test_post_upload_scores_invalid_period(self, mock_import):
-        mock_import.return_value = 'invalid_period'
+        mock_import.return_value = {'period_error': 'invalid_period'}
         url = reverse('internship_upload_scores', kwargs={
             'cohort_id': self.cohort.pk,
         })
