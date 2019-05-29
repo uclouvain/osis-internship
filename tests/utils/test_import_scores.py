@@ -61,6 +61,7 @@ class XlsImportTestCase(TestCase):
         [InternshipStudentInformationFactory(person=student.person, cohort=cls.cohort) for student in students]
         workbook = openpyxl.Workbook()
         worksheet = workbook.active
+        worksheet.cell(row=1, column=1).value = 'PERIOD{}'.format(cls.period.name)
         for row, student in enumerate(students):
             columns = [(0, student.registration_id), (1, '1')]
             for i in range(1, APDS_COUNT * LINE_INTERVAL, LINE_INTERVAL):
@@ -78,7 +79,7 @@ class XlsImportTestCase(TestCase):
         self.assertEqual(InternshipScore.objects.count(), 10)
 
     @mock.patch('internship.utils.importing.import_scores.load_workbook')
-    def test_import_scores_with_wrong_registration_id(self, mock_workbook):
+    def test_import_scores_abort_with_wrong_registration_id(self, mock_workbook):
         row_error_number = 6
         invalid_registration_id = 'invalid registration_id'
         workbook = self.generate_workbook()
@@ -89,3 +90,12 @@ class XlsImportTestCase(TestCase):
         for row_error in errors:
             self.assertEqual(row_error[0].row, row_error_number)
             self.assertEqual(row_error[0].value, invalid_registration_id)
+
+    @mock.patch('internship.utils.importing.import_scores.load_workbook')
+    def test_import_scores_abort_with_wrong_period(self, mock_workbook):
+        workbook = self.generate_workbook()
+        workbook.worksheets[0].cell(row=1, column=1).value = 'invalid_period'
+        mock_workbook.return_value = workbook
+        errors = import_xlsx(self.cohort, self.file, self.period.name)
+        self.assertEqual(errors, 'invalid_period')
+        self.assertEqual(InternshipScore.objects.count(), 0)
