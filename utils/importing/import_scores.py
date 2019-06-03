@@ -58,7 +58,7 @@ def _process_rows_import(cohort, period, worksheet):
 
 def _search_worksheet_for_errors(cohort, period, worksheet, worksheet_period):
     errors = {}
-    if _periods_match(period, worksheet_period):
+    if not _periods_match(period, worksheet_period):
         errors.update({'period_error': worksheet_period})
     else:
         registration_error = _analyze_registration_ids(cohort, worksheet)
@@ -101,6 +101,6 @@ def _student_is_in_cohort(student, cohort):
 
 
 def _periods_match(period, worksheet_period):
-    period_numeric = re.findall(r'(\d+)', period.name)[0]
-    worksheet_period_numeric = re.findall(r'(\d+)', worksheet_period)[0]
-    return period_numeric == worksheet_period_numeric
+    period_numeric = re.findall(r'(\d+)', period.name)
+    worksheet_period_numeric = re.findall(r'(\d+)', worksheet_period)
+    return period_numeric[0] == worksheet_period_numeric[0] if period_numeric and worksheet_period_numeric else False
