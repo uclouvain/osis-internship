@@ -89,6 +89,8 @@ def _complete_student_row_by_internship(columns, internship, periods, student):
 def _append_row_data(columns, period, student):
     if period.name in student.organizations.keys():
         columns.append(student.organizations[period.name])
+    else:
+        columns.append('')
     if period.name in student.periods_scores.keys():
         columns.append(student.periods_scores[period.name])
     else:
@@ -110,6 +112,8 @@ def _complete_student_row_for_all_internships(columns, periods, student):
     for period in periods:
         if period.name in student.specialties.keys():
             columns.append(student.specialties[period.name])
+        else:
+            columns.append('')
         _append_row_data(columns, period, student)
 
 

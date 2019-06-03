@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-05-29 15:54+0200\n"
+"POT-Creation-Date: 2019-06-03 16:01+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -344,7 +344,7 @@ msgstr ""
 msgid "Female"
 msgstr ""
 
-#: tests/views/test_scores.py:180 views/offer.py:381 views/score.py:222
+#: tests/views/test_scores.py:180 views/offer.py:381 views/score.py:221
 msgid "File extension must be .xlsx"
 msgstr ""
 
@@ -448,7 +448,7 @@ msgstr ""
 msgid "Import"
 msgstr ""
 
-#: views/score.py:247
+#: views/score.py:246
 #, python-format
 msgid "Import aborted for period %(period)s due to error(s) on:"
 msgstr ""
@@ -559,7 +559,7 @@ msgstr ""
 msgid "Internships offers"
 msgstr ""
 
-#: views/score.py:258
+#: views/score.py:257
 #, python-format
 msgid "Internships ratings successfully imported for period %(period)s"
 msgstr ""
@@ -757,7 +757,7 @@ msgstr ""
 msgid "Periods"
 msgstr ""
 
-#: views/score.py:241
+#: views/score.py:240
 msgid "Periods do not match"
 msgstr ""
 
@@ -1075,12 +1075,12 @@ msgid ""
 "choices during this period."
 msgstr ""
 
-#: views/score.py:250
+#: views/score.py:249
 #, python-format
 msgid "row %(row_id)s"
 msgstr ""
 
-#: views/score.py:251
+#: views/score.py:250
 #, python-format
 msgid "student with registration id '%(reg_id)s' not found"
 msgstr ""

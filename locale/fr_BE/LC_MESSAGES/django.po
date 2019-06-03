@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-05-29 15:54+0200\n"
+"POT-Creation-Date: 2019-06-03 16:01+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -176,7 +176,7 @@ msgstr "Choix enregistrés"
 
 #: templates/internships.html:46
 msgid "Choose a hospital"
-msgstr "Choisissez une spécialité"
+msgstr "Choisissez un hôpital"
 
 #: templates/internship_modification_student.html:67
 msgid "Choose a specialty"
@@ -345,7 +345,7 @@ msgstr "Exporter vers XLSX"
 msgid "Female"
 msgstr "Femme"
 
-#: tests/views/test_scores.py:180 views/offer.py:381 views/score.py:222
+#: tests/views/test_scores.py:180 views/offer.py:381 views/score.py:221
 msgid "File extension must be .xlsx"
 msgstr "L'extension de fichier doit être .xlsx"
 
@@ -449,7 +449,7 @@ msgstr "Hôpitaux"
 msgid "Import"
 msgstr "Importer"
 
-#: views/score.py:247
+#: views/score.py:246
 #, python-format
 msgid "Import aborted for period %(period)s due to error(s) on:"
 msgstr ""
@@ -564,7 +564,7 @@ msgstr "Modalités de stage"
 msgid "Internships offers"
 msgstr "Offres de stage"
 
-#: views/score.py:258
+#: views/score.py:257
 #, python-format
 msgid "Internships ratings successfully imported for period %(period)s"
 msgstr "Cotes de stage importées avec succès pour la période %(period)s"
@@ -764,7 +764,7 @@ msgstr "Période modifiée"
 msgid "Periods"
 msgstr "Périodes"
 
-#: views/score.py:241
+#: views/score.py:240
 msgid "Periods do not match"
 msgstr "Les périodes ne correspondent pas"
 
@@ -1086,12 +1086,12 @@ msgstr ""
 "Vous êtes dans la période des inscriptions. Il est recommandé de ne pas "
 "changer les choix au cours de cette période."
 
-#: views/score.py:250
+#: views/score.py:249
 #, python-format
 msgid "row %(row_id)s"
 msgstr "ligne %(row_id)s"
 
-#: views/score.py:251
+#: views/score.py:250
 #, python-format
 msgid "student with registration id '%(reg_id)s' not found"
 msgstr "étudiant avec NOMA '%(reg_id)s' introuvable"
