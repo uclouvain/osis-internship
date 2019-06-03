@@ -35,6 +35,7 @@ from internship.models.period import Period
 
 APDS_COUNT = 15
 LINE_INTERVAL = 2
+NUMBER_REGEX = r'(\d+)'
 
 
 @transaction.atomic
@@ -101,6 +102,6 @@ def _student_is_in_cohort(student, cohort):
 
 
 def _periods_match(period, worksheet_period):
-    period_numeric = re.findall(r'(\d+)', period.name)
-    worksheet_period_numeric = re.findall(r'(\d+)', worksheet_period)
+    period_numeric = re.findall(NUMBER_REGEX, period.name)
+    worksheet_period_numeric = re.findall(NUMBER_REGEX, worksheet_period)
     return period_numeric[0] == worksheet_period_numeric[0] if period_numeric and worksheet_period_numeric else False
