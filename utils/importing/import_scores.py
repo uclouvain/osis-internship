@@ -23,6 +23,8 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+import re
+
 from django.db import transaction
 from openpyxl import load_workbook
 
@@ -40,7 +42,7 @@ def import_xlsx(cohort, xlsxfile, period):
     workbook = load_workbook(filename=xlsxfile, read_only=True)
     worksheet = workbook.active
     period = Period.objects.get(name=period, cohort=cohort)
-    worksheet_period = list(worksheet.rows)[0][0].value.split(maxsplit=1)[0]
+    worksheet_period = list(worksheet.rows)[0][0].value
     errors = _search_worksheet_for_errors(cohort, period, worksheet, worksheet_period)
     if errors:
         return errors
@@ -56,7 +58,7 @@ def _process_rows_import(cohort, period, worksheet):
 
 def _search_worksheet_for_errors(cohort, period, worksheet, worksheet_period):
     errors = {}
-    if period.name[-1:] != worksheet_period[-1:]:
+    if _periods_match(period, worksheet_period):
         errors.update({'period_error': worksheet_period})
     else:
         registration_error = _analyze_registration_ids(cohort, worksheet)
@@ -96,3 +98,9 @@ def _import_score(row, cohort, period):
 
 def _student_is_in_cohort(student, cohort):
     return find_by_person(student.person, cohort)
+
+
+def _periods_match(period, worksheet_period):
+    period_numeric = re.findall(r'(\d+)', period.name)[0]
+    worksheet_period_numeric = re.findall(r'(\d+)', worksheet_period)[0]
+    return period_numeric == worksheet_period_numeric

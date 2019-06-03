@@ -30,7 +30,6 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.utils.html import escape
-from django.utils.safestring import mark_safe
 from django.utils.translation import gettext as _
 
 from base.views.common import display_error_messages, display_success_messages
