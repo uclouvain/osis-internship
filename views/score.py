@@ -74,6 +74,7 @@ def _prepare_score_table(cohort, periods, students):
     persons = students.values_list('person', flat=True)
     students_affectations = InternshipStudentAffectationStat.objects.filter(
         student__person_id__in=list(persons),
+        period__cohort=cohort,
     ).select_related(
         'student', 'period', 'speciality'
     ).values(

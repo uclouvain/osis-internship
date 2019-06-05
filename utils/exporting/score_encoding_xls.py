@@ -72,12 +72,13 @@ def _make_internship_sheets(internships, periods, students, workbook):
 
 def _add_sheet_content(internship, periods, students, worksheet):
     for student in students:
-        columns = []
-        columns.append(student.person.last_name.upper())
-        columns.append(student.person.first_name)
-        columns.append(student.registration_id)
-        _complete_student_row_by_internship(columns, internship, periods, student)
-        add_row(worksheet, columns)
+        if student.registration_id:
+            columns = []
+            columns.append(student.person.last_name.upper())
+            columns.append(student.person.first_name)
+            columns.append(student.registration_id)
+            _complete_student_row_by_internship(columns, internship, periods, student)
+            add_row(worksheet, columns)
 
 
 def _complete_student_row_by_internship(columns, internship, periods, student):
@@ -100,12 +101,13 @@ def _append_row_data(columns, period, student):
 def _make_complete_list(periods, students, worksheet):
     columns_resizing(worksheet, _get_columns_width())
     for student in students:
-        columns = []
-        columns.append(student.person.last_name.upper())
-        columns.append(student.person.first_name)
-        columns.append(student.registration_id)
-        _complete_student_row_for_all_internships(columns, periods, student)
-        add_row(worksheet, columns)
+        if student.registration_id:
+            columns = []
+            columns.append(student.person.last_name.upper())
+            columns.append(student.person.first_name)
+            columns.append(student.registration_id)
+            _complete_student_row_for_all_internships(columns, periods, student)
+            add_row(worksheet, columns)
 
 
 def _complete_student_row_for_all_internships(columns, periods, student):

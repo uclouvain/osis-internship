@@ -33,7 +33,7 @@ class InternshipScoreAdmin(SerializableModelAdmin):
     list_display = ('student', 'period', *score_fields)
     raw_id_fields = ('student',)
     list_filter = ('cohort',)
-    search_fields = ['student__person__user_name', 'student__person__last_name']
+    search_fields = ['student__person__first_name', 'student__person__last_name']
 
 
 class InternshipScore(SerializableModel):
