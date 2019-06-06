@@ -1,14 +1,18 @@
 from django import forms
 from django.db.models import Q
+from django.forms import Form
 from django.utils.translation import gettext as _
-
-from continuing_education.forms.search import BootstrapForm
 from internship.models.internship_student_information import InternshipStudentInformation
 
 
-class StudentsFilterForm(BootstrapForm):
+class StudentsFilterForm(Form):
 
-    free_text = forms.CharField(max_length=100, required=False, label=_('In all fields'))
+    free_text = forms.CharField(
+        max_length=100,
+        required=False,
+        label=_('In all fields'),
+        widget=forms.TextInput(attrs={"class": "form-control"})
+    )
 
     def __init__(self, *args, **kwargs):
         super(StudentsFilterForm, self).__init__(*args, **kwargs)
