@@ -29,6 +29,7 @@ from django.db import transaction
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
+from django.utils.html import escape
 from django.utils.translation import gettext as _
 
 from base.views.common import display_error_messages, display_success_messages
@@ -73,6 +74,7 @@ def _prepare_score_table(cohort, periods, students):
     persons = students.values_list('person', flat=True)
     students_affectations = InternshipStudentAffectationStat.objects.filter(
         student__person_id__in=list(persons),
+        period__cohort=cohort,
     ).select_related(
         'student', 'period', 'speciality'
     ).values(
@@ -219,24 +221,36 @@ def _upload_file(request, cohort):
         if file_name and ".xlsx" not in str(file_name):
             messages.add_message(request, messages.ERROR, _('File extension must be .xlsx'))
         else:
-            row_error = import_scores.import_xlsx(cohort, file_name, period)
-            _show_message(request, row_error, period)
+            import_errors = import_scores.import_xlsx(cohort, file_name, period)
+            _process_errors(request, import_errors, period)
 
 
-def _show_message(request, row_error, period):
-    if row_error:
-        _show_row_error_message(request, row_error)
+def _process_errors(request, import_errors, period):
+    if import_errors and 'registration_error' in import_errors.keys():
+        _show_import_error_message(request, import_errors['registration_error'], period)
+    elif import_errors and 'period_error' in import_errors.keys():
+        _show_period_error_message(request, import_errors['period_error'], period)
     else:
         _show_import_success_message(request, period)
 
 
-def _show_row_error_message(request, row_error):
+def _show_period_error_message(request, period_error, period):
     display_error_messages(
-        request, "{} : {}".format(
-            _('Import aborted due to error on row %(row_id)s') % {'row_id': row_error[0].row},
-            _("student with registration id '%(reg_id)s' not found") % {'reg_id': row_error[0].value}
+        request,
+        "{}: {} ≠ {}".format(
+            _('Periods do not match'), period, period_error
         )
     )
+
+
+def _show_import_error_message(request, errors, period):
+    message_content = _('Import aborted for period %(period)s due to error(s) on:') % {'period': period}
+    for row_error in errors:
+        message_content += "<br/> - {} : {}".format(
+            _('row %(row_id)s') % {'row_id': row_error[0].row},
+            _("student with registration id '%(reg_id)s' not found") % {'reg_id': escape(row_error[0].value)}
+        )
+    display_error_messages(request, message_content, extra_tags='safe')
 
 
 def _show_import_success_message(request, period):
