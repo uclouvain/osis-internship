@@ -29,4 +29,3 @@ from django.template.defaulttags import register
 @register.filter
 def get_item_at_index(list, index):
     return list[index]
-
