@@ -139,6 +139,7 @@ def student_choice(request, cohort_id, offer_id):
 
     number_choices = [0]*4
     number_choices_non_mandatory = 0
+    choices_labels = [_('First choice'), _('Second choice'), _('Third choice'), _('Fourth choice')]
 
     if non_mandatory_internships_choices.count() > 0:
         number_choices_non_mandatory = _count_non_mandatory_choices(cohort, non_mandatory_internships_choices)
@@ -148,6 +149,7 @@ def student_choice(request, cohort_id, offer_id):
     context = {
         'internship': offer,
         'number_choices': number_choices,
+        'choices_labels': choices_labels,
         'students': mandatory_internships_choices,
         'nm_students': non_mandatory_internships_choices,
         'mandatory_internships_choices': mandatory_internships_choices.count(),

@@ -1,6 +1,7 @@
 {% extends "layout.html" %}
 {% load staticfiles %}
 {% load i18n %}
+{% load list %}
 
 {% comment "License" %}
     * OSIS stands for Open Student Information System. It's an application
@@ -50,25 +51,18 @@
                 </div>
                 <div class="panel-body">
                 {% for i in number_choices %}
-                    {% if forloop.counter0 == 0 %}
-                        <label> {% trans 'First choice' %} </label> : {{i}}<br/>
-                        {% elif forloop.counter0 == 1 %}
-                        <label> {% trans 'Second choice' %} </label> : {{i}}<br/>
-                        {% elif forloop.counter0 == 2 %}
-                        <label> {% trans 'Third choice' %} </label> : {{i}}<br/>
-                        {% elif forloop.counter0 == 3 %}
-                        <label> {% trans 'Fourth choice' %} </label> : {{i}}<br/>
-                    {% endif %}
+                    {% with forloop as choices_loop %}
+                    <label> {{ choices_labels|get_item_at_index:choices_loop.counter0}}</label> {{i}} <br/>
                         {% trans 'Students list' %} :
-                        <a role="button" data-toggle="collapse" data-target="#choice{{ forloop.counter0 }}"
-                           aria-expanded="false" aria-controls="choice{{ forloop.counter0 }}"
+                        <a role="button" data-toggle="collapse" data-target="#choice{{ choices_loop.counter0 }}"
+                           aria-expanded="false" aria-controls="choice{{ choices_loop.counter0 }}"
                            title="{% trans 'Display students' %}">
                             <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
                         </a>
-                        <div class="collapse" id="choice{{ forloop.counter0 }}">
+                        <div class="collapse" id="choice{{ choices_loop.counter0 }}">
                             <ul style="list-style:none; padding-left: 0;">
                                 {% for student in students %}
-                                    {% if student.choice == forloop.parentloop.counter0|add:1 %}
+                                    {% if student.choice == choices_loop.counter %}
                                         <li>
                                             <span style="margin-right: 5px;" class="glyphicon glyphicon-user text-primary"></span>
                                             {{ student.student.person.first_name.0 }}. {{ student.student.person.last_name }}
@@ -79,6 +73,7 @@
                         </div>
                     <br/>
                     <br>
+                    {% endwith %}
                 {% endfor %}
                 </div>
             </div>
@@ -86,32 +81,26 @@
         {% endif %}
             {% if non_mandatory_internships_choices %}
             {% for i in number_choices_non_mandatory %}
+                {% with forloop as nm_internships_loop %}
                 <div class="col-lg-2">
                 <div class="panel panel-info">
                 <div class="panel-heading">
-                <h4>{% trans 'Non mandatory internship' %} - {{ forloop.counter }}</h4>
+                <h4>{% trans 'Non mandatory internship' %} - {{ nm_internships_loop.counter }}</h4>
                 </div>
                 <div class="panel-body">
                 {% for j in i %}
-                    {% if forloop.counter0 == 0 %}
-                        <label> {% trans 'First choice' %} </label> : {{j}}<br/>
-                        {% elif forloop.counter0 == 1 %}
-                        <label> {% trans 'Second choice' %} </label> : {{j}}<br/>
-                        {% elif forloop.counter0 == 2 %}
-                        <label> {% trans 'Third choice' %} </label> : {{j}}<br/>
-                        {% elif forloop.counter0 == 3 %}
-                        <label> {% trans 'Fourth choice' %} </label> : {{j}}<br/>
-                    {% endif %}
+                    {% with forloop as choices_loop %}
+                    <label> {{ choices_labels|get_item_at_index:choices_loop.counter0}}</label> {{i}} <br/>
                     {% trans 'Students list' %} :
-                    <a role="button" data-toggle="collapse" data-target="#nm-choice-{{forloop.parentloop.counter0}}-{{ forloop.counter0 }}"
-                       aria-expanded="false" aria-controls="nmchoice-{{forloop.parentloop.counter0}}{{ forloop.counter0 }}"
+                    <a role="button" data-toggle="collapse" data-target="#nm-choice-{{nm_internships_loop.counter0}}-{{ choices_loop.counter0 }}"
+                       aria-expanded="false" aria-controls="nmchoice-{{nm_internships_loop.counter0}}{{ choices_loop.counter0 }}"
                        title="{% trans 'Display students' %}">
                         <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
                     </a>
-                    <div class="collapse" id="nm-choice-{{forloop.parentloop.counter0}}-{{ forloop.counter0 }}">
+                    <div class="collapse" id="nm-choice-{{nm_internships_loop.counter0}}-{{ choices_loop.counter0 }}">
                         <ul style="list-style:none; padding-left: 0;">
                             {% for student in nm_students %}
-                                    {% if student.internship.name|make_list|last|add:0 == forloop.parentloop.parentloop.counter|add:0 and student.choice == forloop.parentloop.counter %}
+                                    {% if student.internship.name|slice:"-1:"|add:0 == nm_internships_loop.counter and student.choice == choices_loop.counter %}
                                         <li>
                                             <span style="margin-right: 5px;" class="glyphicon glyphicon-user text-primary"></span>
                                             {{ student.student.person.first_name.0 }}. {{ student.student.person.last_name }}
@@ -122,10 +111,12 @@
                     </div>
                     <br/>
                     <br>
+                {% endwith %}
                 {% endfor %}
                 </div>
             </div>
         </div>
+            {% endwith %}
             {% endfor %}
             {% endif %}
         </div>

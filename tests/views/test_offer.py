@@ -27,6 +27,7 @@ import random
 
 from django.contrib.auth.models import Permission, User
 from django.core.urlresolvers import reverse
+from django.http import HttpResponse
 from django.test import TestCase
 
 from base.tests.factories.student import StudentFactory
@@ -37,6 +38,7 @@ from internship.tests.factories.offer import OfferFactory
 from internship.tests.factories.organization import OrganizationFactory
 from internship.tests.factories.speciality import SpecialtyFactory
 
+CHOICES = [1, 2, 3, 4]
 
 class OfferViewTestCase(TestCase):
     def setUp(self):
@@ -53,7 +55,7 @@ class OfferViewTestCase(TestCase):
         non_mandatory_internship = InternshipFactory(cohort=self.cohort)
 
         for internship in [mandatory_internship, non_mandatory_internship]:
-            for choice in [1, 2, 3, 4]:
+            for choice in CHOICES:
                 create_internship_choice(
                     organization=self.organization,
                     student=students[0],
@@ -75,7 +77,7 @@ class OfferViewTestCase(TestCase):
             'cohort_id': self.cohort.id,
         })
         response = self.client.get(url)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, HttpResponse.status_code)
         self.assertTemplateUsed(response, 'internships.html')
 
     def test_home_with_organization_filter(self):
@@ -85,7 +87,7 @@ class OfferViewTestCase(TestCase):
         })
         get_params = '?organization_sort={}'.format(organization.name)
         response = self.client.get(url+get_params)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, HttpResponse.status_code)
         self.assertTemplateUsed(response, 'internships.html')
 
     def test_home_with_specialty_filter(self):
@@ -94,7 +96,7 @@ class OfferViewTestCase(TestCase):
         })
         get_params = '?speciality_sort={}'.format(self.specialty.name)
         response = self.client.get(url+get_params)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, HttpResponse.status_code)
         self.assertTemplateUsed(response, 'internships.html')
 
     def test_home_with_both_filters(self):
@@ -103,7 +105,7 @@ class OfferViewTestCase(TestCase):
         })
         get_params = '?speciality_sort={}&organization_sort={}'.format(self.specialty.name, self.organization.name)
         response = self.client.get(url+get_params)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, HttpResponse.status_code)
         self.assertTemplateUsed(response, 'internships.html')
 
     def test_home_with_offer(self):
@@ -112,7 +114,7 @@ class OfferViewTestCase(TestCase):
             'specialty_id': self.specialty.id
         })
         response = self.client.get(url)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, HttpResponse.status_code)
         self.assertTemplateUsed(response, 'internships.html')
 
     def test_internship_detail_student_choice(self):
@@ -123,7 +125,7 @@ class OfferViewTestCase(TestCase):
 
         response = self.client.get(url)
 
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, HttpResponse.status_code)
         self.assertTemplateUsed(response, 'internship_detail.html')
 
         self.assertEqual(response.context['internship'], self.offer)
@@ -147,7 +149,7 @@ class OfferChoiceDistributionTestCase(TestCase):
             speciality=self.specialty
         )
         for internship in [mandatory_internship, non_mandatory_internship]:
-            for choice in [1, 2, 3, 4]:
+            for choice in CHOICES:
                 create_internship_choice(
                     organization=organization,
                     student=students[0],
@@ -171,7 +173,7 @@ class OfferChoiceDistributionTestCase(TestCase):
         })
         response = self.client.get(url)
         self.assertEqual(response.context['all_internships'][0].number_first_choice, 2)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, HttpResponse.status_code)
 
     def test_count_number_other_choices(self):
         url = reverse('internships', kwargs={
@@ -180,4 +182,4 @@ class OfferChoiceDistributionTestCase(TestCase):
         })
         response = self.client.get(url)
         self.assertEqual(response.context['all_internships'][0].number_other_choice, 9)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, HttpResponse.status_code)
