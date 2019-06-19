@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-06-18 16:08+0200\n"
+"POT-Creation-Date: 2019-06-19 11:13+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -173,7 +173,7 @@ msgstr ""
 msgid "Choices received by administration"
 msgstr ""
 
-#: views/internship.py:72
+#: views/internship.py:75
 msgid "Choices saved"
 msgstr ""
 
@@ -253,6 +253,7 @@ msgstr ""
 msgid "Description"
 msgstr ""
 
+#: templates/internship_modification_student.html:97
 #: templates/internships.html:109 templates/internships.html:176
 #: templates/masters.html:94 templates/students.html:123
 msgid "Details"
@@ -275,7 +276,7 @@ msgstr ""
 msgid "Edit cohort"
 msgstr ""
 
-#: views/internship.py:212
+#: views/internship.py:214
 msgid "Edit internship"
 msgstr ""
 
@@ -496,11 +497,11 @@ msgstr ""
 msgid "Internship modality"
 msgstr ""
 
-#: views/internship.py:179
+#: views/internship.py:181
 msgid "Internship modality created"
 msgstr ""
 
-#: views/internship.py:225
+#: views/internship.py:227
 msgid "Internship modality deleted"
 msgstr ""
 
@@ -658,7 +659,7 @@ msgstr ""
 msgid "Name"
 msgstr ""
 
-#: views/internship.py:189
+#: views/internship.py:191
 msgid "New internship"
 msgstr ""
 
@@ -763,7 +764,7 @@ msgid "Period edited"
 msgstr ""
 
 #: templates/internship/home.html:49
-#: templates/internship_modification_student.html:98
+#: templates/internship_modification_student.html:99
 #: templates/period_create.html:35 templates/periods.html:33
 #: templates/periods.html:39
 msgid "Periods"
@@ -802,11 +803,11 @@ msgstr ""
 msgid "Postal code"
 msgstr ""
 
-#: templates/internship_modification_student.html:97
+#: templates/internship_modification_student.html:98
 msgid "Preference"
 msgstr ""
 
-#: templates/internship_modification_student.html:99
+#: templates/internship_modification_student.html:100
 msgid "Priority"
 msgstr ""
 

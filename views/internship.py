@@ -48,9 +48,12 @@ from internship.views.common import display_errors
 def modification_student(request, cohort_id, student_id, internship_id=-1, speciality_id="-1"):
     cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)
     student = mdl.student.find_by_id(student_id)
-
     if int(internship_id) < 1:
-        internship = mdl_int.internship.Internship.objects.filter(cohort=cohort, pk__gte=1).first()
+        internship = mdl_int.internship.Internship.objects.filter(
+            cohort=cohort,
+            pk__gte=1
+        ).order_by('speciality__name').first()
+        internship_id = internship.id
     else:
         internship = mdl_int.internship.Internship.objects.get(pk=internship_id)
 
@@ -77,9 +80,8 @@ def modification_student(request, cohort_id, student_id, internship_id=-1, speci
 
     student_choices = mdl_int.internship_choice.search_by_student_or_choice(
         student=student,
-        internship=internship).select_related("organization")
-
-    print(student_choices)
+        internship=internship
+    ).select_related("organization")
 
     internships = mdl_int.internship.Internship.objects.filter(cohort=cohort, pk__gte=1)\
         .order_by("speciality__name", "name")\
@@ -265,7 +267,7 @@ def _prepare_template_data(formset, current_choices, internships_offers, special
     current_enrollments = mdl_int.internship_enrollment.search_by_student_and_internship(student, internship_id)
     dict_current_choices = _get_dict_current_choices(current_choices)
     dict_current_enrollments = _get_dict_current_enrollments(current_enrollments)
-    dict_offers_choices = _get_first_choices_by_organization(speciality)
+    dict_offers_choices = _get_first_choices_by_organization(speciality, internship_id)
     zipped_data = _zip_data(dict_current_choices, formset, internships_offers, dict_current_enrollments,
                             dict_offers_choices)
     return zipped_data
@@ -309,8 +311,8 @@ def _get_dict_current_enrollments(current_enrollments):
     return dict_current_enrollments
 
 
-def _get_first_choices_by_organization(speciality):
-    list_number_choices = mdl_int.internship_choice.get_number_first_choice_by_organization(speciality)
+def _get_first_choices_by_organization(speciality, internship_id):
+    list_number_choices = mdl_int.internship_choice.get_number_first_choice_by_organization(speciality, internship_id)
     dict_number_choices_by_organization = dict()
     for number_first_choices in list_number_choices:
         dict_number_choices_by_organization[number_first_choices["organization"]] = \

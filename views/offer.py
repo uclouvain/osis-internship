@@ -488,13 +488,13 @@ def _get_number_choices(internships, choices):
         mandatory_internship_choices = choices.filter(
             organization=internship.organization,
             internship__speciality=internship.speciality
-        ).order_by('student').distinct('student')
+        ).order_by('student')
 
         non_mandatory_internship_choices = choices.filter(
             organization=internship.organization,
             internship__speciality=None,
             speciality=internship.speciality
-        ).order_by('student').distinct('student')
+        ).order_by('student')
 
         total_choices = mandatory_internship_choices.union(non_mandatory_internship_choices)
         internship.number_first_choice = 0

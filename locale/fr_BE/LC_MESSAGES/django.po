@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-06-18 16:08+0200\n"
+"POT-Creation-Date: 2019-06-19 11:13+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -163,7 +163,6 @@ msgid "Choice's Details"
 msgstr "Détails des choix"
 
 #: templates/internship_detail.html:42
-#| msgid "Choices modification"
 msgid "Choices distribution for"
 msgstr "Distribution des choix pour"
 
@@ -175,7 +174,7 @@ msgstr "Modification des choix"
 msgid "Choices received by administration"
 msgstr "Choix reçus par l'administration"
 
-#: views/internship.py:72
+#: views/internship.py:75
 msgid "Choices saved"
 msgstr "Choix enregistrés"
 
@@ -255,6 +254,7 @@ msgstr "Supprimer"
 msgid "Description"
 msgstr "Description"
 
+#: templates/internship_modification_student.html:97
 #: templates/internships.html:109 templates/internships.html:176
 #: templates/masters.html:94 templates/students.html:123
 msgid "Details"
@@ -277,7 +277,7 @@ msgstr "Modifier"
 msgid "Edit cohort"
 msgstr "Ajouter une cohorte"
 
-#: views/internship.py:212
+#: views/internship.py:214
 msgid "Edit internship"
 msgstr "Modifier stage"
 
@@ -502,11 +502,11 @@ msgstr "Choix de stage"
 msgid "Internship modality"
 msgstr "Modalité de stage"
 
-#: views/internship.py:179
+#: views/internship.py:181
 msgid "Internship modality created"
 msgstr "Modalité de stage créée"
 
-#: views/internship.py:225
+#: views/internship.py:227
 msgid "Internship modality deleted"
 msgstr "Modalité de stage supprimée"
 
@@ -664,7 +664,7 @@ msgstr "NOMA"
 msgid "Name"
 msgstr "Nom"
 
-#: views/internship.py:189
+#: views/internship.py:191
 msgid "New internship"
 msgstr "Nouveau stage"
 
@@ -716,7 +716,7 @@ msgstr "Nombre d'inscriptions"
 #: templates/internships.html:107 templates/internships.html:174
 #: templates/place_detail.html:46
 msgid "Number of first choices"
-msgstr "Nombre de premier choix"
+msgstr "Nombre de premiers choix"
 
 #: templates/internships.html:108 templates/internships.html:175
 msgid "Number of other choices"
@@ -771,7 +771,7 @@ msgid "Period edited"
 msgstr "Période modifiée"
 
 #: templates/internship/home.html:49
-#: templates/internship_modification_student.html:98
+#: templates/internship_modification_student.html:99
 #: templates/period_create.html:35 templates/periods.html:33
 #: templates/periods.html:39
 msgid "Periods"
@@ -810,11 +810,11 @@ msgstr "Position"
 msgid "Postal code"
 msgstr "Code postal"
 
-#: templates/internship_modification_student.html:97
+#: templates/internship_modification_student.html:98
 msgid "Preference"
 msgstr "Préférence"
 
-#: templates/internship_modification_student.html:99
+#: templates/internship_modification_student.html:100
 msgid "Priority"
 msgstr "Prioritaire"
 
