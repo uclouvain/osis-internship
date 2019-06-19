@@ -90,7 +90,7 @@
                 <div class="panel-body">
                 {% for j in i %}
                     {% with forloop as choices_loop %}
-                    <label> {{ choices_labels|get_item_at_index:choices_loop.counter0}}</label> {{i}} <br/>
+                    <label> {{ choices_labels|get_item_at_index:choices_loop.counter0}}</label> {{j}} <br/>
                     {% trans 'Students list' %} :
                     <a role="button" data-toggle="collapse" data-target="#nm-choice-{{nm_internships_loop.counter0}}-{{ choices_loop.counter0 }}"
                        aria-expanded="false" aria-controls="nmchoice-{{nm_internships_loop.counter0}}{{ choices_loop.counter0 }}"
