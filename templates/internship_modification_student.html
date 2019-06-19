@@ -94,6 +94,7 @@
                            <th>{% trans 'Hospital' %}</th>
                            <th>{% trans 'Maximum number of students' %}</th>
                            <th>{% trans 'Number of first choices' %}</th>
+                           <th>{% trans 'Details' %}</th>
                            <th>{% trans 'Preference' %}</th>
                            <th>{% trans 'Periods' %}</th>
                            <th>{% trans 'Priority' %}</th>
@@ -104,7 +105,12 @@
                        <tr>
                             <td>{{ offer.organization.reference }}- {{ offer.organization }}</td>
                             <td>{{ offer.maximum_enrollments }}</td>
-                            <td> {{ number_choices }} </td>
+                            <td>{{ number_choices }}</td>
+                            <td>
+                                <a class="btn btn-info" target="_blank" href="{% url 'internship_detail_student_choice' cohort_id=cohort.id offer_id=offer.id %}">
+                                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                                </a>
+                            </td>
                             <td hidden>
                                 <input type="number" id="{{ form.offer.id_for_label }}" name="{{ form.offer.html_name }}" class="form-control" value="{{ offer.pk }}">
                             </td>

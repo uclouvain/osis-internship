@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-06-03 16:01+0200\n"
+"POT-Creation-Date: 2019-06-19 11:13+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -162,6 +162,10 @@ msgstr "Choix"
 msgid "Choice's Details"
 msgstr "Détails des choix"
 
+#: templates/internship_detail.html:42
+msgid "Choices distribution for"
+msgstr "Distribution des choix pour"
+
 #: templates/students.html:124
 msgid "Choices modification"
 msgstr "Modification des choix"
@@ -170,7 +174,7 @@ msgstr "Modification des choix"
 msgid "Choices received by administration"
 msgstr "Choix reçus par l'administration"
 
-#: views/internship.py:72
+#: views/internship.py:75
 msgid "Choices saved"
 msgstr "Choix enregistrés"
 
@@ -250,14 +254,15 @@ msgstr "Supprimer"
 msgid "Description"
 msgstr "Description"
 
+#: templates/internship_modification_student.html:97
 #: templates/internships.html:109 templates/internships.html:176
 #: templates/masters.html:94 templates/students.html:123
 msgid "Details"
 msgstr "Détails"
 
-#: templates/internship_detail.html:55
-msgid "Display students first choice"
-msgstr "Afficher premier choix des étudiants"
+#: templates/internship_detail.html:65 templates/internship_detail.html:108
+msgid "Display students"
+msgstr "Afficher les étudiants"
 
 #: models/organization.py:80
 msgid "Duplicated sequence in report"
@@ -272,11 +277,11 @@ msgstr "Modifier"
 msgid "Edit cohort"
 msgstr "Ajouter une cohorte"
 
-#: views/internship.py:210
+#: views/internship.py:214
 msgid "Edit internship"
 msgstr "Modifier stage"
 
-#: templates/internship_detail.html:72 templates/period_places_edit.html:32
+#: templates/internship_detail.html:134 templates/period_places_edit.html:32
 #: templates/period_places_edit.html:37
 msgid "Edit places"
 msgstr "Modifier nombres de places"
@@ -345,7 +350,7 @@ msgstr "Exporter vers XLSX"
 msgid "Female"
 msgstr "Femme"
 
-#: tests/views/test_scores.py:180 views/offer.py:381 views/score.py:221
+#: tests/views/test_scores.py:180 views/offer.py:419 views/score.py:222
 msgid "File extension must be .xlsx"
 msgstr "L'extension de fichier doit être .xlsx"
 
@@ -361,7 +366,7 @@ msgstr "Filtrer par étudiants prioritaires"
 #: templates/internship_affectation_statistics.html:137
 #: templates/internship_affectation_statistics.html:165
 #: templates/internship_affectation_statistics.html:185
-#: templates/internship_detail.html:44
+#: templates/internship_detail.html:54 templates/internship_detail.html:97
 msgid "First choice"
 msgstr "Choix préféré"
 
@@ -381,7 +386,7 @@ msgstr "Les modifications suivantes seront appliquées:"
 #: templates/internship_affectation_statistics.html:149
 #: templates/internship_affectation_statistics.html:177
 #: templates/internship_affectation_statistics.html:197
-#: templates/internship_detail.html:50
+#: templates/internship_detail.html:60 templates/internship_detail.html:103
 msgid "Fourth choice"
 msgstr "4ème choix"
 
@@ -449,7 +454,7 @@ msgstr "Hôpitaux"
 msgid "Import"
 msgstr "Importer"
 
-#: views/score.py:246
+#: views/score.py:247
 #, python-format
 msgid "Import aborted for period %(period)s due to error(s) on:"
 msgstr ""
@@ -464,7 +469,7 @@ msgstr "Importer cotes de stage"
 msgid "Imposed choices"
 msgstr "Choix imposés"
 
-#: forms/score.py:11
+#: forms/score.py:13
 msgid "In all fields"
 msgstr "Dans tous les champs"
 
@@ -497,11 +502,11 @@ msgstr "Choix de stage"
 msgid "Internship modality"
 msgstr "Modalité de stage"
 
-#: views/internship.py:177
+#: views/internship.py:181
 msgid "Internship modality created"
 msgstr "Modalité de stage créée"
 
-#: views/internship.py:223
+#: views/internship.py:227
 msgid "Internship modality deleted"
 msgstr "Modalité de stage supprimée"
 
@@ -564,7 +569,7 @@ msgstr "Modalités de stage"
 msgid "Internships offers"
 msgstr "Offres de stage"
 
-#: views/score.py:257
+#: views/score.py:258
 #, python-format
 msgid "Internships ratings successfully imported for period %(period)s"
 msgstr "Cotes de stage importées avec succès pour la période %(period)s"
@@ -607,6 +612,10 @@ msgstr "Localité"
 #: templates/student_form.html:94
 msgid "Male"
 msgstr "Homme"
+
+#: templates/internship_detail.html:49
+msgid "Mandatory internship"
+msgstr "Stages obligatoires"
 
 #: templates/scores.html:49
 msgid "Mapping"
@@ -655,7 +664,7 @@ msgstr "NOMA"
 msgid "Name"
 msgstr "Nom"
 
-#: views/internship.py:187
+#: views/internship.py:191
 msgid "New internship"
 msgstr "Nouveau stage"
 
@@ -687,6 +696,10 @@ msgstr "Aucun résultat"
 msgid "Noma"
 msgstr ""
 
+#: templates/internship_detail.html:92
+msgid "Non mandatory internship"
+msgstr "Stage au choix"
+
 #: templates/internship_affectation_statistics.html:211
 msgid "Non mandatory internships"
 msgstr "Stages au choix"
@@ -703,7 +716,7 @@ msgstr "Nombre d'inscriptions"
 #: templates/internships.html:107 templates/internships.html:174
 #: templates/place_detail.html:46
 msgid "Number of first choices"
-msgstr "Nombre de premier choix"
+msgstr "Nombre de premiers choix"
 
 #: templates/internships.html:108 templates/internships.html:175
 msgid "Number of other choices"
@@ -758,13 +771,13 @@ msgid "Period edited"
 msgstr "Période modifiée"
 
 #: templates/internship/home.html:49
-#: templates/internship_modification_student.html:98
+#: templates/internship_modification_student.html:99
 #: templates/period_create.html:35 templates/periods.html:33
 #: templates/periods.html:39
 msgid "Periods"
 msgstr "Périodes"
 
-#: views/score.py:240
+#: views/score.py:241
 msgid "Periods do not match"
 msgstr "Les périodes ne correspondent pas"
 
@@ -797,11 +810,11 @@ msgstr "Position"
 msgid "Postal code"
 msgstr "Code postal"
 
-#: templates/internship_modification_student.html:97
+#: templates/internship_modification_student.html:98
 msgid "Preference"
 msgstr "Préférence"
 
-#: templates/internship_modification_student.html:99
+#: templates/internship_modification_student.html:100
 msgid "Priority"
 msgstr "Prioritaire"
 
@@ -873,7 +886,7 @@ msgstr "Rechercher"
 #: templates/internship_affectation_statistics.html:141
 #: templates/internship_affectation_statistics.html:169
 #: templates/internship_affectation_statistics.html:189
-#: templates/internship_detail.html:46
+#: templates/internship_detail.html:56 templates/internship_detail.html:99
 msgid "Second choice"
 msgstr "2ème choix"
 
@@ -1014,7 +1027,8 @@ msgstr "Choix des étudiants"
 msgid "Students"
 msgstr "Étudiants"
 
-#: templates/internship_detail.html:52 templates/place_detail.html:49
+#: templates/internship_detail.html:62 templates/internship_detail.html:105
+#: templates/place_detail.html:49
 msgid "Students list"
 msgstr "Liste des étudiants"
 
@@ -1051,7 +1065,7 @@ msgstr "Soumettre les choix"
 #: templates/internship_affectation_statistics.html:145
 #: templates/internship_affectation_statistics.html:173
 #: templates/internship_affectation_statistics.html:193
-#: templates/internship_detail.html:48
+#: templates/internship_detail.html:58 templates/internship_detail.html:101
 msgid "Third choice"
 msgstr "3ème choix"
 
@@ -1086,12 +1100,12 @@ msgstr ""
 "Vous êtes dans la période des inscriptions. Il est recommandé de ne pas "
 "changer les choix au cours de cette période."
 
-#: views/score.py:249
+#: views/score.py:250
 #, python-format
 msgid "row %(row_id)s"
 msgstr "ligne %(row_id)s"
 
-#: views/score.py:250
+#: views/score.py:251
 #, python-format
 msgid "student with registration id '%(reg_id)s' not found"
 msgstr "étudiant avec NOMA '%(reg_id)s' introuvable"

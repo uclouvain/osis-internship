@@ -34,6 +34,7 @@ from django.views.decorators.http import require_http_methods
 from base import models as mdl
 from internship import models as mdl_int
 from internship.models.cohort import Cohort
+from internship.models.internship import Internship
 from internship.models.internship_choice import InternshipChoice
 from internship.models.internship_offer import InternshipOffer
 from internship.models.internship_speciality import InternshipSpeciality
@@ -64,7 +65,7 @@ def list_internships(request, cohort_id, specialty_id=None):
     if organization_sort_value and organization_sort_value != "0":
         query = query.filter(
             organization__name=organization_sort_value,
-            speciality__acronym=specialty.acronym
+            speciality=specialty
         )
     else:
         query = query.filter(
@@ -76,15 +77,12 @@ def list_internships(request, cohort_id, specialty_id=None):
     query = query.select_related("organization", "speciality") \
         .order_by('speciality__acronym', 'speciality__name', 'organization__reference')
 
-    organizations = query.values_list('organization_id')
-
     # Sort the internships by the organization's reference
     query = _sort_internships(query, specialty.id)
 
     # Get The number of different choices for the internships
     mandatory_choices = InternshipChoice.objects.filter(
-        speciality__acronym=specialty.acronym,
-        organization_id__in=organizations,
+        speciality=specialty,
     ).select_related("speciality")
 
     _get_number_choices(query, mandatory_choices)
@@ -134,24 +132,68 @@ def list_internships(request, cohort_id, specialty_id=None):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def student_choice(request, cohort_id, offer_id):
     cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)
-    # Get the internship by its id
-    # TODO: Check if this algo is ok
-    internship = get_object_or_404(mdl_int.internship_offer.InternshipOffer, pk=offer_id, organization__cohort=cohort)
-    # Get the students who have choosen this internship
-    students = mdl_int.internship_choice.search(organization=internship.organization, speciality=internship.speciality)
-    number_choices = [None]*5
+    offer = get_object_or_404(mdl_int.internship_offer.InternshipOffer, pk=offer_id, organization__cohort=cohort)
 
-    # Get the choices' number for this internship
-    for index in range(1, 5):
-        count = mdl_int.internship_choice.search(
-            organization=internship.organization,
-            speciality=internship.speciality,
-            choice=index).count()
+    mandatory_internships_choices = _get_mandatory_internships_choices(offer)
+    non_mandatory_internships_choices = _get_non_mandatory_internships_choices(offer)
 
-        number_choices[index] = count
+    number_choices = [0]*4
+    number_choices_non_mandatory = 0
+    choices_labels = [_('First choice'), _('Second choice'), _('Third choice'), _('Fourth choice')]
 
-    context = {'internship': internship, 'students': students, 'number_choices': number_choices, 'cohort': cohort}
+    if non_mandatory_internships_choices.count() > 0:
+        number_choices_non_mandatory = _count_non_mandatory_choices(cohort, non_mandatory_internships_choices)
+    if mandatory_internships_choices.count() > 0:
+        _count_mandatory_choices(mandatory_internships_choices, number_choices)
+
+    context = {
+        'internship': offer,
+        'number_choices': number_choices,
+        'choices_labels': choices_labels,
+        'students': mandatory_internships_choices,
+        'nm_students': non_mandatory_internships_choices,
+        'mandatory_internships_choices': mandatory_internships_choices.count(),
+        'non_mandatory_internships_choices': non_mandatory_internships_choices.count(),
+        'number_choices_non_mandatory': number_choices_non_mandatory,
+        'cohort': cohort
+    }
     return render(request, "internship_detail.html", context)
+
+
+def _count_mandatory_choices(mandatory_internships_choices, number_choices):
+    for choice in mandatory_internships_choices:
+        number_choices[choice.choice - 1] += 1
+
+
+def _count_non_mandatory_choices(cohort, non_mandatory_internships_choices):
+    non_mandatory_internships = Internship.objects.filter(
+        cohort=cohort,
+        speciality__isnull=True
+    ).order_by('name')
+    number_choices_non_mandatory = [[0 for i in range(4)] for j in range(non_mandatory_internships.count())]
+    for i, internship in enumerate(non_mandatory_internships):
+        nm_choices = non_mandatory_internships_choices.filter(internship=internship)
+        for choice in nm_choices:
+            number_choices_non_mandatory[i][choice.choice - 1] += 1
+    return number_choices_non_mandatory
+
+
+def _get_non_mandatory_internships_choices(offer):
+    non_mandatory_internships_choices = InternshipChoice.objects.filter(
+        organization=offer.organization,
+        speciality=offer.speciality,
+        internship__speciality=None,
+    ).order_by('student__person__last_name').distinct().select_related('student__person')
+    return non_mandatory_internships_choices
+
+
+def _get_mandatory_internships_choices(offer):
+    mandatory_internships_choices = InternshipChoice.objects.filter(
+        organization=offer.organization,
+        speciality=offer.speciality,
+        internship__speciality=offer.speciality,
+    ).order_by('student__person__last_name').distinct().select_related('student__person')
+    return mandatory_internships_choices
 
 
 @require_http_methods(['POST'])
@@ -395,6 +437,7 @@ def _get_all_organizations(internships):
     for internship in internships:
         tab.append(internship.organization)
     tab = list(set(tab))
+    tab.sort(key=lambda x: x.reference)
     return tab
 
 
@@ -445,15 +488,27 @@ def _get_number_choices(internships, choices):
             internships : the internships we want to compute the number of choices
     """
     for internship in internships:
+
+        mandatory_internship_choices = choices.filter(
+            organization=internship.organization,
+            internship__speciality=internship.speciality
+        ).order_by('student')
+
+        non_mandatory_internship_choices = choices.filter(
+            organization=internship.organization,
+            internship__speciality=None,
+            speciality=internship.speciality
+        ).order_by('student')
+
+        total_choices = mandatory_internship_choices.union(non_mandatory_internship_choices)
         internship.number_first_choice = 0
         internship.number_other_choice = 0
-        for choice in choices:
-            if choice.speciality.acronym == internship.speciality.acronym and \
-               choice.organization_id == internship.organization_id:
-                if choice.choice == 1:
-                    internship.number_first_choice += 1
-                else:
-                    internship.number_other_choice += 1
+        for choice in total_choices:
+            if choice.choice == 1:
+                internship.number_first_choice += 1
+            else:
+                internship.number_other_choice += 1
+
 
 def _delete_dublons_keep_order(seq):
     """

@@ -34,7 +34,7 @@ class InternshipChoiceAdmin(SerializableModelAdmin):
     list_display = ('student', 'organization', 'speciality', 'choice', 'internship', 'priority', 'registered')
     fieldsets = ((None, {'fields': ('student', 'organization', 'speciality', 'choice', 'internship', 'priority')}),)
     raw_id_fields = ('student', 'organization', 'speciality')
-    list_filter = ('speciality', 'choice', 'internship')
+    list_filter = ('speciality', 'choice', 'internship', 'organization')
     search_fields = ['student__person__first_name', 'student__person__last_name']
 
 
@@ -97,10 +97,13 @@ def get_number_students(cohort):
     return InternshipChoice.objects.filter(internship__cohort=cohort).distinct("student").count()
 
 
-def get_number_first_choice_by_organization(speciality):
-    return InternshipChoice.objects.filter(choice=1,
-                                           speciality=speciality).values("organization")\
-                                                                 .annotate(models.Count("organization"))
+def get_number_first_choice_by_organization(speciality, internship_id):
+    internship = Internship.objects.get(pk=internship_id)
+    return InternshipChoice.objects.filter(
+        choice=1,
+        speciality=speciality,
+        internship__speciality_id=internship.speciality_id,
+    ).values("organization").annotate(models.Count("organization"))
 
 
 def find_priority_choices(internship):

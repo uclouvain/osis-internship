@@ -166,7 +166,7 @@
                                     </form>
                                     <thead>
                                     <tr>
-                                        {% if not speciality_sort_value %}
+                                        {% if speciality_sort_value == "all" %}
                                         <th align="center">{% trans 'Specialty' %}</th>
                                         {% endif %}
                                         <th align="center">{% trans 'Hospital' %}</th>

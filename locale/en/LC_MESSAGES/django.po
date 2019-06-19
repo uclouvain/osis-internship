@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-06-03 16:01+0200\n"
+"POT-Creation-Date: 2019-06-19 11:13+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -161,6 +161,10 @@ msgstr ""
 msgid "Choice's Details"
 msgstr ""
 
+#: templates/internship_detail.html:42
+msgid "Choices distribution for"
+msgstr ""
+
 #: templates/students.html:124
 msgid "Choices modification"
 msgstr ""
@@ -169,7 +173,7 @@ msgstr ""
 msgid "Choices received by administration"
 msgstr ""
 
-#: views/internship.py:72
+#: views/internship.py:75
 msgid "Choices saved"
 msgstr ""
 
@@ -249,13 +253,14 @@ msgstr ""
 msgid "Description"
 msgstr ""
 
+#: templates/internship_modification_student.html:97
 #: templates/internships.html:109 templates/internships.html:176
 #: templates/masters.html:94 templates/students.html:123
 msgid "Details"
 msgstr ""
 
-#: templates/internship_detail.html:55
-msgid "Display students first choice"
+#: templates/internship_detail.html:65 templates/internship_detail.html:108
+msgid "Display students"
 msgstr ""
 
 #: models/organization.py:80
@@ -271,11 +276,11 @@ msgstr ""
 msgid "Edit cohort"
 msgstr ""
 
-#: views/internship.py:210
+#: views/internship.py:214
 msgid "Edit internship"
 msgstr ""
 
-#: templates/internship_detail.html:72 templates/period_places_edit.html:32
+#: templates/internship_detail.html:134 templates/period_places_edit.html:32
 #: templates/period_places_edit.html:37
 msgid "Edit places"
 msgstr ""
@@ -344,7 +349,7 @@ msgstr ""
 msgid "Female"
 msgstr ""
 
-#: tests/views/test_scores.py:180 views/offer.py:381 views/score.py:221
+#: tests/views/test_scores.py:180 views/offer.py:419 views/score.py:222
 msgid "File extension must be .xlsx"
 msgstr ""
 
@@ -360,7 +365,7 @@ msgstr ""
 #: templates/internship_affectation_statistics.html:137
 #: templates/internship_affectation_statistics.html:165
 #: templates/internship_affectation_statistics.html:185
-#: templates/internship_detail.html:44
+#: templates/internship_detail.html:54 templates/internship_detail.html:97
 msgid "First choice"
 msgstr ""
 
@@ -380,7 +385,7 @@ msgstr ""
 #: templates/internship_affectation_statistics.html:149
 #: templates/internship_affectation_statistics.html:177
 #: templates/internship_affectation_statistics.html:197
-#: templates/internship_detail.html:50
+#: templates/internship_detail.html:60 templates/internship_detail.html:103
 msgid "Fourth choice"
 msgstr ""
 
@@ -448,7 +453,7 @@ msgstr ""
 msgid "Import"
 msgstr ""
 
-#: views/score.py:246
+#: views/score.py:247
 #, python-format
 msgid "Import aborted for period %(period)s due to error(s) on:"
 msgstr ""
@@ -461,7 +466,7 @@ msgstr ""
 msgid "Imposed choices"
 msgstr ""
 
-#: forms/score.py:11
+#: forms/score.py:13
 msgid "In all fields"
 msgstr ""
 
@@ -492,11 +497,11 @@ msgstr ""
 msgid "Internship modality"
 msgstr ""
 
-#: views/internship.py:177
+#: views/internship.py:181
 msgid "Internship modality created"
 msgstr ""
 
-#: views/internship.py:223
+#: views/internship.py:227
 msgid "Internship modality deleted"
 msgstr ""
 
@@ -559,7 +564,7 @@ msgstr ""
 msgid "Internships offers"
 msgstr ""
 
-#: views/score.py:257
+#: views/score.py:258
 #, python-format
 msgid "Internships ratings successfully imported for period %(period)s"
 msgstr ""
@@ -601,6 +606,10 @@ msgstr ""
 
 #: templates/student_form.html:94
 msgid "Male"
+msgstr ""
+
+#: templates/internship_detail.html:49
+msgid "Mandatory internship"
 msgstr ""
 
 #: templates/scores.html:49
@@ -650,7 +659,7 @@ msgstr ""
 msgid "Name"
 msgstr ""
 
-#: views/internship.py:187
+#: views/internship.py:191
 msgid "New internship"
 msgstr ""
 
@@ -678,6 +687,10 @@ msgstr ""
 #: templates/student_information_modification.html:55
 #: templates/students.html:120
 msgid "Noma"
+msgstr ""
+
+#: templates/internship_detail.html:92
+msgid "Non mandatory internship"
 msgstr ""
 
 #: templates/internship_affectation_statistics.html:211
@@ -751,13 +764,13 @@ msgid "Period edited"
 msgstr ""
 
 #: templates/internship/home.html:49
-#: templates/internship_modification_student.html:98
+#: templates/internship_modification_student.html:99
 #: templates/period_create.html:35 templates/periods.html:33
 #: templates/periods.html:39
 msgid "Periods"
 msgstr ""
 
-#: views/score.py:240
+#: views/score.py:241
 msgid "Periods do not match"
 msgstr ""
 
@@ -790,11 +803,11 @@ msgstr ""
 msgid "Postal code"
 msgstr ""
 
-#: templates/internship_modification_student.html:97
+#: templates/internship_modification_student.html:98
 msgid "Preference"
 msgstr ""
 
-#: templates/internship_modification_student.html:99
+#: templates/internship_modification_student.html:100
 msgid "Priority"
 msgstr ""
 
@@ -866,7 +879,7 @@ msgstr ""
 #: templates/internship_affectation_statistics.html:141
 #: templates/internship_affectation_statistics.html:169
 #: templates/internship_affectation_statistics.html:189
-#: templates/internship_detail.html:46
+#: templates/internship_detail.html:56 templates/internship_detail.html:99
 msgid "Second choice"
 msgstr ""
 
@@ -1005,7 +1018,8 @@ msgstr ""
 msgid "Students"
 msgstr ""
 
-#: templates/internship_detail.html:52 templates/place_detail.html:49
+#: templates/internship_detail.html:62 templates/internship_detail.html:105
+#: templates/place_detail.html:49
 msgid "Students list"
 msgstr ""
 
@@ -1042,7 +1056,7 @@ msgstr ""
 #: templates/internship_affectation_statistics.html:145
 #: templates/internship_affectation_statistics.html:173
 #: templates/internship_affectation_statistics.html:193
-#: templates/internship_detail.html:48
+#: templates/internship_detail.html:58 templates/internship_detail.html:101
 msgid "Third choice"
 msgstr ""
 
@@ -1075,12 +1089,12 @@ msgid ""
 "choices during this period."
 msgstr ""
 
-#: views/score.py:249
+#: views/score.py:250
 #, python-format
 msgid "row %(row_id)s"
 msgstr ""
 
-#: views/score.py:250
+#: views/score.py:251
 #, python-format
 msgid "student with registration id '%(reg_id)s' not found"
 msgstr ""

@@ -197,7 +197,6 @@ def compute_stats(cohort, sol):
             non_mandatory_internships_stats[key]['perc'] = round(perc * 100, 2)
     stats['non_mandatory_internships'] = non_mandatory_internships_stats
 
-
     # Compute standard deviation of the score
     if len(mean_array) > 1:
         std_dev_stud = round(stdev(mean_array), 2)
