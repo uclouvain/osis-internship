@@ -144,5 +144,5 @@ class OfferChoiceDistributionTestCase(TestCase):
             'specialty_id': self.specialty.id
         })
         response = self.client.get(url)
-        self.assertEqual(response.context['all_internships'][0].number_other_choice, 3)
+        self.assertEqual(response.context['all_internships'][0].number_other_choice, 9)
         self.assertEqual(response.status_code, 200)

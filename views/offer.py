@@ -138,6 +138,8 @@ def student_choice(request, cohort_id, offer_id):
     non_mandatory_internships_choices = _get_non_mandatory_internships_choices(offer)
 
     number_choices = [0]*4
+    number_choices_non_mandatory = 0
+
     if non_mandatory_internships_choices.count() > 0:
         number_choices_non_mandatory = _count_non_mandatory_choices(cohort, non_mandatory_internships_choices)
     if mandatory_internships_choices.count() > 0:
