@@ -24,9 +24,10 @@
 #
 ##############################################################################
 from django.test.testcases import TestCase
+
+from internship.models import organization
 from internship.tests.factories.cohort import CohortFactory
 from internship.tests.factories.organization import OrganizationFactory
-from internship.models import organization
 
 
 def create_organization(name="OSIS", acronym="OSIS", reference="01", cohort=None):
@@ -40,7 +41,7 @@ class TestOrganization(TestCase):
     def test_get_by_id(self):
         an_organization = OrganizationFactory()
         persisted_organization = organization.get_by_id(an_organization.id)
-        self.assertEquals(an_organization.id, persisted_organization.id)
+        self.assertEqual(an_organization.id, persisted_organization.id)
 
         nonexistent_organization = organization.get_by_id(0)
         self.assertIsNone(nonexistent_organization)
@@ -49,4 +50,4 @@ class TestOrganization(TestCase):
         cohort = CohortFactory()
         OrganizationFactory(cohort=cohort)
         an_organization = organization.find_by_cohort(cohort)
-        self.assertEquals(cohort, an_organization[0].cohort)
+        self.assertEqual(cohort, an_organization[0].cohort)
