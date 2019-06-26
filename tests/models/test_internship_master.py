@@ -24,6 +24,7 @@
 #
 ##############################################################################
 from django.test.testcases import TestCase
+
 from internship.models import internship_master
 from internship.tests.factories.master import MasterFactory
 
@@ -33,7 +34,7 @@ class TestInternshipMaster(TestCase):
     def test_get_by_id(self):
         master = MasterFactory()
         persisted_master = internship_master.get_by_id(master.id)
-        self.assertEquals(master.id, persisted_master.id)
+        self.assertEqual(master.id, persisted_master.id)
 
         nonexistent_master = internship_master.get_by_id(0)
         self.assertIsNone(nonexistent_master)

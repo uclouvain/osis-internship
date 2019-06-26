@@ -24,11 +24,12 @@
 #
 ##############################################################################
 from django.test.testcases import TestCase
+
 from internship.models import master_allocation
+from internship.tests.factories.master import MasterFactory
 from internship.tests.factories.master_allocation import MasterAllocationFactory
 from internship.tests.factories.organization import OrganizationFactory
 from internship.tests.factories.speciality import SpecialtyFactory
-from internship.tests.factories.master import MasterFactory
 
 
 class TestInternshipMaster(TestCase):
@@ -43,20 +44,20 @@ class TestInternshipMaster(TestCase):
         MasterAllocationFactory(organization=organization, specialty=specialty, master=self.master)
 
         allocations = master_allocation.find_by_master(specialty.cohort, self.master)
-        self.assertEquals(1, allocations.count())
+        self.assertEqual(1, allocations.count())
 
     def test_find_by_master(self):
         allocation = MasterAllocationFactory(master=self.master)
         allocations = master_allocation.find_by_master(allocation.specialty.cohort, self.master)
-        self.assertEquals(self.master, allocations[0].master)
+        self.assertEqual(self.master, allocations[0].master)
 
     def test_find_unallocated_masters(self):
         unallocated_masters = master_allocation.find_unallocated_masters()
-        self.assertEquals(1, unallocated_masters.count())
+        self.assertEqual(1, unallocated_masters.count())
 
     def test_clean_allocations(self):
         allocation = MasterAllocationFactory(master=self.master)
         cohort = allocation.specialty.cohort
         master_allocation.clean_allocations(cohort, self.master)
         allocations = master_allocation.find_by_master(cohort, self.master)
-        self.assertEquals(0, allocations.count())
+        self.assertEqual(0, allocations.count())

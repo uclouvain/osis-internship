@@ -24,14 +24,15 @@
 #
 ##############################################################################
 from django.test.testcases import TestCase
+
 from base.tests.factories.student import StudentFactory
 from internship.models import internship_student_affectation_stat
 from internship.tests.factories.cohort import CohortFactory
 from internship.tests.factories.internship import InternshipFactory
-from internship.tests.factories.organization import OrganizationFactory
-from internship.tests.factories.speciality import SpecialtyFactory
-from internship.tests.factories.period import PeriodFactory
 from internship.tests.factories.internship_choice import create_internship_choice
+from internship.tests.factories.organization import OrganizationFactory
+from internship.tests.factories.period import PeriodFactory
+from internship.tests.factories.speciality import SpecialtyFactory
 
 
 class TestInternshipStudentAffectationStat(TestCase):
@@ -46,8 +47,8 @@ class TestInternshipStudentAffectationStat(TestCase):
         affectation = internship_student_affectation_stat.build(self.student, self.organization, self.specialty,
                                                                 self.period, None, student_choices)
 
-        self.assertEquals(affectation.cost, 10)
-        self.assertEquals(affectation.choice, "I")
+        self.assertEqual(affectation.cost, 10)
+        self.assertEqual(affectation.choice, "I")
 
     def test_build_with_choices(self):
         cohort = CohortFactory()
@@ -57,5 +58,5 @@ class TestInternshipStudentAffectationStat(TestCase):
         affectation = internship_student_affectation_stat.build(self.student, self.organization, self.specialty,
                                                                 self.period, internship, student_choices)
 
-        self.assertEquals(affectation.cost, 0)
-        self.assertEquals(affectation.choice, self.choice.choice)
+        self.assertEqual(affectation.cost, 0)
+        self.assertEqual(affectation.choice, self.choice.choice)
