@@ -158,7 +158,8 @@ def internships_student_read(request, cohort_id, student_id):
     information = mdl_int.internship_student_information.find_by_person(student.person, cohort).first()
     internship_choices = mdl_int.internship_choice.get_choices_made(cohort=cohort, student=student).order_by('choice')
     specialities = mdl_int.internship_speciality.search(mandatory=True, cohort=cohort)
-    internships = mdl_int.internship.Internship.objects.filter(cohort=cohort, pk__gte=1).order_by('position')
+    internships = mdl_int.internship.Internship.objects.filter(cohort=cohort, pk__gte=1)\
+        .order_by('speciality', 'name', )
     affectations = mdl_int.internship_student_affectation_stat.find_by_student(student, cohort).\
         order_by("period__date_start")
     periods = mdl_int.period.search(cohort=cohort).order_by("date_start")
