@@ -45,12 +45,12 @@ def export_master_xls(cohort, organization, affections_by_specialities):
 
 def create_worksheets(workbook, organization, periods, affections_by_specialities):
     for specialty, affectations in affections_by_specialities:
-        sheet_title = specialty.name.strip()[0:30]
-        worksheet = workbook.create_sheet(title=sheet_title)
-
-        _add_header(worksheet, organization, specialty, affectations)
-        columns_resizing(worksheet, {'A': 18, 'B': 18, 'C': 18, 'D': 40, 'E': 40, 'F': 10, 'G': 20, 'H': 30})
-        _add_periods(worksheet, periods, affectations)
+        if affectations:
+            sheet_title = specialty.name.strip()[0:30]
+            worksheet = workbook.create_sheet(title=sheet_title)
+            _add_header(worksheet, organization, specialty, affectations)
+            columns_resizing(worksheet, {'A': 18, 'B': 18, 'C': 18, 'D': 40, 'E': 40, 'F': 10, 'G': 20, 'H': 30})
+            _add_periods(worksheet, periods, affectations)
 
 
 def _add_header(worksheet, organization, specialty, affectations):
