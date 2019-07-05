@@ -35,7 +35,7 @@ from rest_framework import status
 
 from base.tests.factories.person import PersonFactory
 from base.tests.factories.student import StudentFactory
-from internship.models.internship_score import InternshipScore
+from internship.models.internship_score import InternshipScore, APD_NUMBER
 from internship.models.internship_score_mapping import InternshipScoreMapping
 from internship.tests.factories.cohort import CohortFactory
 from internship.tests.factories.internship import InternshipFactory
@@ -86,7 +86,7 @@ class ScoresEncodingTest(TestCase):
                     speciality=internship.speciality if internship.speciality else SpecialtyFactory()
                 )
             ScoreFactory(student=student, period=self.period, cohort=self.cohort, APD_1='A')
-        for apd in range(1, InternshipScore.APD_NUMBER):
+        for apd in range(1, APD_NUMBER):
             ScoreMappingFactory(
                 period=self.period,
                 cohort=self.cohort,
@@ -222,7 +222,7 @@ class ScoresEncodingTest(TestCase):
         mapping = {'A': 10, 'B': 12, 'C': 16, 'D': 18}
         post_data = {}
         for key, value in mapping.items():
-            post_data.update({'mapping{}_P1'.format(key): [mapping[key] for _ in range(1, InternshipScore.APD_NUMBER)]})
+            post_data.update({'mapping{}_P1'.format(key): [mapping[key] for _ in range(1, APD_NUMBER)]})
         post_data.update({'activePeriod': 'P1'})
         self.client.post(url, data=post_data)
         mappings = InternshipScoreMapping.objects.filter(cohort=self.cohort)
