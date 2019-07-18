@@ -27,18 +27,18 @@ from django.db import models
 
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 
+APD_NUMBER = 15
+
 
 class InternshipScoreAdmin(SerializableModelAdmin):
-    score_fields = ['APD_{}'.format(index) for index in range(1, 16)]
-    list_display = ('student', 'period', *score_fields)
+    score_fields = ['APD_{}'.format(index) for index in range(1, APD_NUMBER+1)]
+    list_display = ('student', 'period', *score_fields, 'score')
     raw_id_fields = ('student',)
     list_filter = ('cohort',)
     search_fields = ['student__person__first_name', 'student__person__last_name']
 
 
 class InternshipScore(SerializableModel):
-
-    APD_NUMBER = 15
 
     SCORE_CHOICES = (
         ('A', 'A'),
@@ -57,9 +57,10 @@ class InternshipScore(SerializableModel):
             null=True,
             blank=True,
         )
+    score = models.FloatField(null=True, blank=True)
 
     def __str__(self):
         return '{} - {} - {}'.format(self.student, self.period, self.get_scores())
 
     def get_scores(self):
-        return [vars(self)['APD_{}'.format(index)] for index in range(1, self.APD_NUMBER+1)]
+        return [vars(self)['APD_{}'.format(index)] for index in range(1, APD_NUMBER+1)]
