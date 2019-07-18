@@ -113,8 +113,28 @@
                                 {% endif %}
                             {% endfor %}
                             {% with student.periods_scores|get_item:period.name as period_score%}
-                                {% if period_score %}
-                                    <td>{{ period_score|floatformat:2 }}</td>
+                                  {% if period_score %}
+                                    <td style="width: 100px;"
+                                        onmouseover="showEditButton('{{student.registration_id}}{{ period.name }}')"
+                                        onmouseout="hideEditButton('{{student.registration_id}}{{ period.name }}')">
+                                        {% if period_score|is_edited %}
+                                            {{ period_score.edited|floatformat:2 }}
+                                            <i style="font-size: 15px; top: 3px;" title="Score edited. Computed score: {{ period_score.computed|floatformat:2 }}"
+                                           class="glyphicon glyphicon-info-sign text-info"></i>
+                                        {% else %}
+                                            {{ period_score|floatformat:2 }}
+                                        {% endif %}
+                                        <button onclick="editScore(this)" style="display:none;"
+                                                {% if period_score|is_edited %}
+                                                    data-computed="{{ period_score.computed|floatformat:2 }}"
+                                                {% else %}
+                                                    data-computed="{{ period_score }}"
+                                                {% endif %}
+                                                data-student="{{ student.registration_id }}" data-period="{{ period.name }}"
+                                                id="edit-{{ student.registration_id }}{{ period.name }}" class="pull-right btn btn-xs btn-warning">
+                                            <i class="glyphicon glyphicon-pencil"></i>
+                                        </button>
+                                    </td>
                                 {% else %}
                                     <td>-</td>
                                 {% endif %}
@@ -324,6 +344,73 @@
             $("#btn_"+period+"_"+apd).hide();
         }
 
+        function showEditButton(id){
+            $("#edit-"+id).show();
+        }
+
+        function hideEditButton(id){
+            $("#edit-"+id).hide();
+        }
+
+        function buildScoreInput(score_value) {
+            let input = document.createElement("input");
+            Object.assign(input, {
+                value: parseFloat(score_value.replace(',', '.')),
+                type: 'number',
+                step: 'any',
+                min: 0,
+                max: 20
+            });
+            input.style.width = "80px";
+            input.classList.add("form-control");
+            return input;
+        }
+
+        function buildScoreFormGroup(input) {
+            let formGroup = document.createElement("div");
+            formGroup.classList.add("input-group");
+            formGroup.append(input);
+            return formGroup;
+        }
+
+        function buildScoreGroupButton(input, cell, old_cell_content, student, period, computedScore) {
+            let groupButton = document.createElement("span");
+            groupButton.classList.add("input-group-btn");
+            let confirmButton = document.createElement("button");
+            confirmButton.innerHTML = "<icon class='glyphicon glyphicon-ok'><icon/>";
+            confirmButton.classList.add("btn", "btn-primary");
+            confirmButton.addEventListener('click', function(){
+                value = parseFloat(input.value.replace(',', '.'));
+                saveScore(value, student, period, cell, computedScore);
+            });
+            let cancelButton = document.createElement("button");
+            cancelButton.innerHTML = "<icon class='glyphicon glyphicon-remove'><icon/>";
+            cancelButton.classList.add("btn", "btn-secondary");
+            cancelButton.addEventListener('click', function(){
+               cell.innerHTML = old_cell_content;
+               cell.getElementsByTagName("button")[0].style.display = "None";
+            });
+            groupButton.append(confirmButton);
+            groupButton.append(cancelButton);
+            return groupButton;
+        }
+
+        function editScore(e){
+            let student = e.dataset.student;
+            let period = e.dataset.period;
+            console.log(e.dataset);
+            let computedScore = parseFloat(e.dataset.computed.replace(',', '.'));
+            let cell =  $(e).parent()[0];
+            old_cell_content = cell.innerHTML;
+            const score_value = cell.innerText;
+            let input = buildScoreInput(score_value);
+            let formGroup = buildScoreFormGroup(input);
+            let groupButton = buildScoreGroupButton(input, cell, old_cell_content, student, period, computedScore);
+            formGroup.append(groupButton);
+            cell.innerHTML = "";
+            cell.append(formGroup);
+        }
+
         $("#upload-form").submit(function() {
             $("#import-submit").attr("disabled", true);
             $("#loader").show();
@@ -340,5 +427,23 @@
                 }
             }
         );
+
+        function saveScore(value, student, period, cell, computed) {
+            $.ajax({
+                url: "ajax/save_score/",
+                data: {
+                    'value': value,
+                    'computed': computed,
+                    'student': student,
+                    'period': period
+                },
+                success: function(response) {
+                    cell.innerHTML = response;
+                },
+                error: function(data) {
+                    alert(data.responseJSON.error);
+                }
+            });
+        }
     </script>
 {% endblock %}

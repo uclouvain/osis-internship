@@ -33,9 +33,10 @@ from django.test import TestCase
 from django.utils.translation import gettext as _
 from rest_framework import status
 
+from base.models.student import Student
 from base.tests.factories.person import PersonFactory
 from base.tests.factories.student import StudentFactory
-from internship.models.internship_score import InternshipScore
+from internship.models.internship_score import InternshipScore, APD_NUMBER
 from internship.models.internship_score_mapping import InternshipScoreMapping
 from internship.tests.factories.cohort import CohortFactory
 from internship.tests.factories.internship import InternshipFactory
@@ -86,7 +87,7 @@ class ScoresEncodingTest(TestCase):
                     speciality=internship.speciality if internship.speciality else SpecialtyFactory()
                 )
             ScoreFactory(student=student, period=self.period, cohort=self.cohort, APD_1='A')
-        for apd in range(1, InternshipScore.APD_NUMBER):
+        for apd in range(1, APD_NUMBER):
             ScoreMappingFactory(
                 period=self.period,
                 cohort=self.cohort,
@@ -222,10 +223,27 @@ class ScoresEncodingTest(TestCase):
         mapping = {'A': 10, 'B': 12, 'C': 16, 'D': 18}
         post_data = {}
         for key, value in mapping.items():
-            post_data.update({'mapping{}_P1'.format(key): [mapping[key] for _ in range(1, InternshipScore.APD_NUMBER)]})
+            post_data.update({'mapping{}_P1'.format(key): [mapping[key] for _ in range(1, APD_NUMBER)]})
         post_data.update({'activePeriod': 'P1'})
         self.client.post(url, data=post_data)
         mappings = InternshipScoreMapping.objects.filter(cohort=self.cohort)
         for m in mappings:
             for key, value in mapping.items():
                 self.assertEqual(vars(m)['score_{}'.format(key)], value)
+
+    def test_ajax_edit_score(self):
+        edited_score = 10
+        computed_score = 20
+        student = Student.objects.first()
+        score = InternshipScore.objects.get(student=student, period=self.period)
+        self.assertIsNone(score.score)
+        url = reverse('save_edited_score', kwargs={'cohort_id': self.cohort.pk})
+        response = self.client.get(url, data={
+            'student': student.registration_id,
+            'value': edited_score,
+            'computed': computed_score,
+            'period': self.period.name,
+        })
+        score.refresh_from_db()
+        self.assertTemplateUsed(response, 'fragment/score_cell.html')
+        self.assertEqual(score.score, edited_score)

@@ -35,3 +35,8 @@ def get_item(dictionary, key):
 @register.filter
 def has_substr(dictionary, key):
     return "'{}'".format(key) in str(dictionary)
+
+
+@register.filter
+def is_edited(val):
+    return type(val) is dict and 'edited' in val.keys()
