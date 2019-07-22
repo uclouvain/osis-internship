@@ -47,6 +47,8 @@ from internship.utils.importing import import_scores
 from internship.views.common import get_object_list
 
 CHOSEN_LENGTH = 7
+MINIMUM_SCORE = 0
+MAXIMUM_SCORE = 20
 
 
 @login_required
@@ -68,6 +70,7 @@ def scores_encoding(request, cohort_id):
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def save_edited_score(request, cohort_id):
+
     cohort = get_object_or_404(Cohort, pk=cohort_id)
     edited_score = float(request.GET.get("value"))
     computed_score = float(request.GET.get("computed"))
@@ -80,6 +83,21 @@ def save_edited_score(request, cohort_id):
         "edited": edited_score
     }
 
+    if edited_score >= MINIMUM_SCORE and edited_score <= MAXIMUM_SCORE:
+        updated = _update_score(cohort, edited_score, period_name, registration_id)
+        if updated:
+            return render(request, "fragment/score_cell.html", context={
+                "student": student,
+                "period": period,
+                "period_score": period_score,
+            })
+        else:
+            return _json_response_error(_("An error occured during score update"))
+    else:
+        return _json_response_error(_("Score must be between 0 and 20"))
+
+
+def _update_score(cohort, edited_score, period_name, registration_id):
     updated = InternshipScore.objects.filter(
         cohort=cohort,
         period__name=period_name,
@@ -87,17 +105,13 @@ def save_edited_score(request, cohort_id):
     ).update(
         score=edited_score
     )
+    return updated
 
-    if updated:
-        return render(request, "fragment/score_cell.html", context={
-            "student": student,
-            "period": period,
-            "period_score": period_score,
-        })
-    else:
-        response = JsonResponse({"error": _("An error occured during score update")})
-        response.status_code = 500
-        return response
+
+def _json_response_error(msg):
+    response = JsonResponse({"error": msg})
+    response.status_code = 500
+    return response
 
 
 def _prepare_score_table(cohort, periods, students):

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-07-22 10:34+0200\n"
+"POT-Creation-Date: 2019-07-22 11:38+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -108,7 +108,7 @@ msgstr "Affectation"
 msgid "Allocation Sum up"
 msgstr "Bilan des affectations"
 
-#: views/score.py:98
+#: views/score.py:95
 msgid "An error occured during score update"
 msgstr ""
 
@@ -354,7 +354,7 @@ msgstr "Exporter vers XLSX"
 msgid "Female"
 msgstr "Femme"
 
-#: tests/views/test_scores.py:181 views/offer.py:423 views/score.py:275
+#: tests/views/test_scores.py:181 views/offer.py:423 views/score.py:289
 msgid "File extension must be .xlsx"
 msgstr "L'extension de fichier doit être .xlsx"
 
@@ -456,7 +456,7 @@ msgstr "Hôpitaux"
 msgid "Import"
 msgstr "Importer"
 
-#: views/score.py:300
+#: views/score.py:314
 #, python-format
 msgid "Import aborted for period %(period)s due to error(s) on:"
 msgstr ""
@@ -571,7 +571,7 @@ msgstr "Modalités de stage"
 msgid "Internships offers"
 msgstr "Offres de stage"
 
-#: views/score.py:311
+#: views/score.py:325
 #, python-format
 msgid "Internships ratings successfully imported for period %(period)s"
 msgstr "Cotes de stage importées avec succès pour la période %(period)s"
@@ -779,7 +779,7 @@ msgstr "Période modifiée"
 msgid "Periods"
 msgstr "Périodes"
 
-#: views/score.py:294
+#: views/score.py:308
 msgid "Periods do not match"
 msgstr "Les périodes ne correspondent pas"
 
@@ -868,6 +868,10 @@ msgstr "Enregistrer"
 #: templates/scores.html:122
 msgid "Score edited. Computed score: "
 msgstr "Note modifiée. Note calculée: "
+
+#: views/score.py:97
+msgid "Score must be between 0 and 20"
+msgstr "La note doit être comprise entre 0 et 20"
 
 #: templates/scores.html:48
 msgid "Scores"
@@ -1104,12 +1108,12 @@ msgstr ""
 "Vous êtes dans la période des inscriptions. Il est recommandé de ne pas "
 "changer les choix au cours de cette période."
 
-#: views/score.py:303
+#: views/score.py:317
 #, python-format
 msgid "row %(row_id)s"
 msgstr "ligne %(row_id)s"
 
-#: views/score.py:304
+#: views/score.py:318
 #, python-format
 msgid "student with registration id '%(reg_id)s' not found"
 msgstr "étudiant avec NOMA '%(reg_id)s' introuvable"

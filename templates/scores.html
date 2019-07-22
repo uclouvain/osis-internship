@@ -114,7 +114,7 @@
                             {% endfor %}
                             {% with student.periods_scores|get_item:period.name as period_score%}
                                   {% if period_score %}
-                                    <td style="width: 100px;"
+                                    <td style="width: 110px;"
                                         onmouseover="showEditButton('{{student.registration_id}}{{ period.name }}')"
                                         onmouseout="hideEditButton('{{student.registration_id}}{{ period.name }}')">
                                         {% if period_score|is_edited %}
@@ -124,7 +124,7 @@
                                         {% else %}
                                             {{ period_score|floatformat:2 }}
                                         {% endif %}
-                                        <button onclick="editScore(this)" style="display:none;"
+                                        <button onclick="editScore(this)" style="display:none; padding-top:0; line-height: inherit;"
                                                 {% if period_score|is_edited %}
                                                     data-computed="{{ period_score.computed|floatformat:2 }}"
                                                 {% else %}
@@ -457,7 +457,12 @@
                     cell.innerHTML = response;
                 },
                 error: function(data) {
-                    alert(data.responseJSON.error);
+                    let inputGroup = $(cell).find(".input-group")[0];
+                    inputGroup.classList.add("has-error");
+                    inputGroup.setAttribute("data-toggle", "tooltip");
+                    inputGroup.setAttribute("data-placement", "top");
+                    inputGroup.setAttribute("title", data.responseJSON.error);
+                    $(inputGroup).tooltip('show');
                 }
             });
         }
