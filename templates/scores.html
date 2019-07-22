@@ -373,39 +373,55 @@
             return formGroup;
         }
 
-        function buildScoreGroupButton(input, cell, old_cell_content, student, period, computedScore) {
+        function buildGroupButton() {
             let groupButton = document.createElement("span");
             groupButton.classList.add("input-group-btn");
+            return groupButton;
+        }
+
+        function buildConfirmButton(input, cell, data) {
             let confirmButton = document.createElement("button");
             confirmButton.innerHTML = "<icon class='glyphicon glyphicon-ok'><icon/>";
             confirmButton.classList.add("btn", "btn-primary");
-            confirmButton.addEventListener('click', function(){
+            confirmButton.addEventListener('click', function () {
                 value = parseFloat(input.value.replace(',', '.'));
-                saveScore(value, student, period, cell, computedScore);
+                saveScore(value, data.student, data.period, cell, data.computedScore);
             });
+            return confirmButton;
+        }
+
+        function buildCancelButton(cell, oldCellContent) {
             let cancelButton = document.createElement("button");
             cancelButton.innerHTML = "<icon class='glyphicon glyphicon-remove'><icon/>";
             cancelButton.classList.add("btn", "btn-secondary");
-            cancelButton.addEventListener('click', function(){
-               cell.innerHTML = old_cell_content;
-               cell.getElementsByTagName("button")[0].style.display = "None";
+            cancelButton.addEventListener('click', function () {
+                cell.innerHTML = oldCellContent;
+                cell.getElementsByTagName("button")[0].style.display = "None";
             });
+            return cancelButton;
+        }
+
+        function buildScoreGroupButton(input, cell, oldCellContent, data) {
+            let groupButton = buildGroupButton();
+            let confirmButton = buildConfirmButton(input, cell, data);
+            let cancelButton = buildCancelButton(cell, oldCellContent);
             groupButton.append(confirmButton);
             groupButton.append(cancelButton);
             return groupButton;
         }
 
         function editScore(e){
-            let student = e.dataset.student;
-            let period = e.dataset.period;
-            console.log(e.dataset);
-            let computedScore = parseFloat(e.dataset.computed.replace(',', '.'));
+            let data = {
+                student: e.dataset.student,
+                period: e.dataset.period,
+                computedScore: parseFloat(e.dataset.computed.replace(',', '.'))
+            };
             let cell =  $(e).parent()[0];
-            old_cell_content = cell.innerHTML;
+            let oldCellContent = cell.innerHTML;
             const score_value = cell.innerText;
             let input = buildScoreInput(score_value);
             let formGroup = buildScoreFormGroup(input);
-            let groupButton = buildScoreGroupButton(input, cell, old_cell_content, student, period, computedScore);
+            let groupButton = buildScoreGroupButton(input, cell, oldCellContent, data);
             formGroup.append(groupButton);
             cell.innerHTML = "";
             cell.append(formGroup);
