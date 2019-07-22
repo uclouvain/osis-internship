@@ -119,7 +119,7 @@
                                         onmouseout="hideEditButton('{{student.registration_id}}{{ period.name }}')">
                                         {% if period_score|is_edited %}
                                             {{ period_score.edited|floatformat:2 }}
-                                            <i style="font-size: 15px; top: 3px;" title="Score edited. Computed score: {{ period_score.computed|floatformat:2 }}"
+                                            <i style="font-size: 15px; top: 3px;" title="{% trans "Score edited. Computed score: " %}{{ period_score.computed|floatformat:2 }}"
                                            class="glyphicon glyphicon-info-sign text-info"></i>
                                         {% else %}
                                             {{ period_score|floatformat:2 }}
