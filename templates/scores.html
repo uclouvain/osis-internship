@@ -114,26 +114,10 @@
                             {% endfor %}
                             {% with student.periods_scores|get_item:period.name as period_score%}
                                   {% if period_score %}
-                                    <td style="width: 110px;"
+                                    <td style="width: 140px;"
                                         onmouseover="showEditButton('{{student.registration_id}}{{ period.name }}')"
                                         onmouseout="hideEditButton('{{student.registration_id}}{{ period.name }}')">
-                                        {% if period_score|is_edited %}
-                                            {{ period_score.edited|floatformat:2 }}
-                                            <i style="font-size: 15px; top: 3px;" title="{% trans "Score edited. Computed score: " %}{{ period_score.computed|floatformat:2 }}"
-                                           class="glyphicon glyphicon-info-sign text-info"></i>
-                                        {% else %}
-                                            {{ period_score|floatformat:2 }}
-                                        {% endif %}
-                                        <button onclick="editScore(this)" style="display:none; padding-top:0; line-height: inherit;"
-                                                {% if period_score|is_edited %}
-                                                    data-computed="{{ period_score.computed|floatformat:2 }}"
-                                                {% else %}
-                                                    data-computed="{{ period_score }}"
-                                                {% endif %}
-                                                data-student="{{ student.registration_id }}" data-period="{{ period.name }}"
-                                                id="edit-{{ student.registration_id }}{{ period.name }}" class="pull-right btn btn-xs btn-warning">
-                                            <i class="glyphicon glyphicon-pencil"></i>
-                                        </button>
+                                        {% include 'fragment/score_cell.html' %}
                                     </td>
                                 {% else %}
                                     <td>-</td>
@@ -279,6 +263,26 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="delete_score" tabindex="-1" role="dialog" aria-labelledby="delete_score_label">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">{% trans "Delete score ?" %}</h4>
+                </div>
+                <div class="modal-body">
+                    <p>{% trans "This action will delete previously edited score." %}</p>
+                </div>
+                <div class="modal-footer">
+                    <button id="delete_score_btn" type="button" class="btn btn-danger" data-dismiss="modal" onclick="deleteScore(this)">
+                        {% trans "Delete" %}
+                    </button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">{% trans "Cancel" %}</button>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
 {% block script %}
@@ -369,6 +373,7 @@
         function buildScoreFormGroup(input) {
             let formGroup = document.createElement("div");
             formGroup.classList.add("input-group");
+            formGroup.classList.add("input-group-sm")
             formGroup.append(input);
             return formGroup;
         }
@@ -396,7 +401,7 @@
             cancelButton.classList.add("btn", "btn-secondary");
             cancelButton.addEventListener('click', function () {
                 cell.innerHTML = oldCellContent;
-                cell.getElementsByTagName("button")[0].style.display = "None";
+                resetPadding(cell);
             });
             return cancelButton;
         }
@@ -410,13 +415,23 @@
             return groupButton;
         }
 
+        function adaptPadding(cell) {
+            let paddingTop = parseInt($(cell).css('padding')) / 2 - 1;
+            $(cell).css('padding', paddingTop + 'px 0px 0px 0px');
+        }
+
+        function resetPadding(cell){
+            $(cell).css('padding', '');
+        }
+
         function editScore(e){
             let data = {
                 student: e.dataset.student,
                 period: e.dataset.period,
                 computedScore: parseFloat(e.dataset.computed.replace(',', '.'))
             };
-            let cell =  $(e).parent()[0];
+            let cell =  $(e).closest('td')[0];
+            adaptPadding(cell);
             let oldCellContent = cell.innerHTML;
             const score_value = cell.innerText;
             let input = buildScoreInput(score_value);
@@ -444,6 +459,12 @@
             }
         );
 
+        $(document).on('click', '[data-target="#delete_score"]', function(){
+            let deleteScoreBtn = $("#delete_score_btn");
+            deleteScoreBtn.data(this.dataset);
+            deleteScoreBtn.data("cell", $(this).closest('td')[0]);
+        });
+
         function saveScore(value, student, period, cell, computed) {
             $.ajax({
                 url: "ajax/save_score/",
@@ -452,6 +473,30 @@
                     'computed': computed,
                     'student': student,
                     'period': period
+                },
+                success: function(response) {
+                    cell.innerHTML = response;
+                    resetPadding(cell);
+                },
+                error: function(data) {
+                    let inputGroup = $(cell).find(".input-group")[0];
+                    inputGroup.classList.add("has-error");
+                    inputGroup.setAttribute("data-toggle", "tooltip");
+                    inputGroup.setAttribute("data-placement", "top");
+                    inputGroup.setAttribute("title", data.responseJSON.error);
+                    $(inputGroup).tooltip('show');
+                }
+            });
+        }
+
+        function deleteScore(e){
+            cell = $(e).data('cell');
+            $.ajax({
+                url: "ajax/delete_score/",
+                data: {
+                    'computed': parseFloat($(e).data('computed').replace(',', '.')),
+                    'student': $(e).data('student'),
+                    'period': $(e).data('period')
                 },
                 success: function(response) {
                     cell.innerHTML = response;

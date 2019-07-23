@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-07-22 11:38+0200\n"
+"POT-Creation-Date: 2019-07-23 11:38+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -108,7 +108,7 @@ msgstr "Affectation"
 msgid "Allocation Sum up"
 msgstr "Bilan des affectations"
 
-#: views/score.py:95
+#: views/score.py:93 views/score.py:115
 msgid "An error occured during score update"
 msgstr ""
 
@@ -141,8 +141,9 @@ msgstr "La date de naissance doit être antérieure ou égale à la date actuell
 #: templates/internship_affectation_statistics.html:85
 #: templates/internship_affectation_students.html:85
 #: templates/internships.html:234 templates/master_form.html:150
-#: templates/scores.html:276 templates/student_form.html:145
-#: templates/students.html:200 templates/students_update.html:46
+#: templates/scores.html:260 templates/scores.html:281
+#: templates/student_form.html:145 templates/students.html:200
+#: templates/students_update.html:46
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -215,11 +216,11 @@ msgstr "Obligatoire"
 msgid "Contest"
 msgstr "Concours"
 
-#: templates/scores.html:230
+#: templates/scores.html:214
 msgid "Copy"
 msgstr "Copier"
 
-#: templates/scores.html:180
+#: templates/scores.html:164
 msgid "Copy Period"
 msgstr "Copier Période"
 
@@ -250,9 +251,13 @@ msgstr "Créer une spécialité"
 msgid "Date format"
 msgstr "Format de date"
 
-#: templates/master.html:172
+#: templates/master.html:172 templates/scores.html:279
 msgid "Delete"
 msgstr "Supprimer"
+
+#: templates/scores.html:272
+msgid "Delete score ?"
+msgstr "Supprimer la note ?"
 
 #: templates/cohort/cohort_form.html:23 templates/cohort/selection.html:30
 msgid "Description"
@@ -354,7 +359,7 @@ msgstr "Exporter vers XLSX"
 msgid "Female"
 msgstr "Femme"
 
-#: tests/views/test_scores.py:181 views/offer.py:423 views/score.py:289
+#: tests/views/test_scores.py:181 views/offer.py:423 views/score.py:314
 msgid "File extension must be .xlsx"
 msgstr "L'extension de fichier doit être .xlsx"
 
@@ -450,13 +455,13 @@ msgstr "Hôpital enregistré"
 msgid "Hospitals"
 msgstr "Hôpitaux"
 
-#: templates/internships.html:61 templates/scores.html:254
-#: templates/scores.html:274 templates/students.html:92
+#: templates/internships.html:61 templates/scores.html:238
+#: templates/scores.html:258 templates/students.html:92
 #: templates/students.html:189 templates/students.html:199
 msgid "Import"
 msgstr "Importer"
 
-#: views/score.py:314
+#: views/score.py:339
 #, python-format
 msgid "Import aborted for period %(period)s due to error(s) on:"
 msgstr ""
@@ -571,7 +576,7 @@ msgstr "Modalités de stage"
 msgid "Internships offers"
 msgstr "Offres de stage"
 
-#: views/score.py:325
+#: views/score.py:350
 #, python-format
 msgid "Internships ratings successfully imported for period %(period)s"
 msgstr "Cotes de stage importées avec succès pour la période %(period)s"
@@ -745,17 +750,17 @@ msgstr "Position de tri"
 msgid "Other choice"
 msgstr "Autre choix"
 
-#: templates/scores.html:233
+#: templates/scores.html:217
 msgid "Paste"
 msgstr "Coller"
 
-#: templates/scores.html:183
+#: templates/scores.html:167
 msgid "Paste Period"
 msgstr "Coller Période"
 
 #: templates/internship_affectation_errors.html:113
 #: templates/place_form.html:81 templates/scores.html:82
-#: templates/scores.html:258 templates/student_affectation_modification.html:51
+#: templates/scores.html:242 templates/student_affectation_modification.html:51
 msgid "Period"
 msgstr "Période"
 
@@ -779,7 +784,7 @@ msgstr "Période modifiée"
 msgid "Periods"
 msgstr "Périodes"
 
-#: views/score.py:308
+#: views/score.py:333
 msgid "Periods do not match"
 msgstr "Les périodes ne correspondent pas"
 
@@ -855,7 +860,7 @@ msgstr "Retour"
 #: templates/internship_modification.html:76 templates/master_form.html:146
 #: templates/period_create.html:58 templates/period_create.html:59
 #: templates/period_places_edit.html:51 templates/place_form.html:183
-#: templates/place_form.html:184 templates/scores.html:162
+#: templates/place_form.html:184 templates/scores.html:146
 #: templates/speciality_form.html:63 templates/speciality_form.html:64
 #: templates/student_affectation_modification.html:115
 #: templates/student_affectation_modification.html:116
@@ -865,11 +870,11 @@ msgstr "Retour"
 msgid "Save"
 msgstr "Enregistrer"
 
-#: templates/scores.html:122
+#: templates/fragment/score_cell.html:5
 msgid "Score edited. Computed score: "
 msgstr "Note modifiée. Note calculée: "
 
-#: views/score.py:97
+#: views/score.py:95
 msgid "Score must be between 0 and 20"
 msgstr "La note doit être comprise entre 0 et 20"
 
@@ -882,7 +887,7 @@ msgstr "Notes"
 msgid "Scores encoding"
 msgstr "Encodage des notes"
 
-#: templates/scores.html:159
+#: templates/scores.html:143
 msgid "Scores equivalence according to periods"
 msgstr "Equivalence des notes par période"
 
@@ -899,7 +904,7 @@ msgstr "Rechercher"
 msgid "Second choice"
 msgstr "2ème choix"
 
-#: templates/scores.html:269
+#: templates/scores.html:253
 msgid "Select a xls file that contains the scores by period"
 msgstr ""
 "Veuillez sélectionner un fichier xlsx contenant les notes pour la période "
@@ -1077,6 +1082,10 @@ msgstr "Soumettre les choix"
 msgid "Third choice"
 msgstr "3ème choix"
 
+#: templates/scores.html:275
+msgid "This action will delete previously edited score."
+msgstr "Cette action supprimera la note précédemment modifiée."
+
 #: templates/internship_affectation_errors.html:68
 #: templates/internship_affectation_hospitals.html:68
 #: templates/internship_affectation_statistics.html:68
@@ -1108,12 +1117,12 @@ msgstr ""
 "Vous êtes dans la période des inscriptions. Il est recommandé de ne pas "
 "changer les choix au cours de cette période."
 
-#: views/score.py:317
+#: views/score.py:342
 #, python-format
 msgid "row %(row_id)s"
 msgstr "ligne %(row_id)s"
 
-#: views/score.py:318
+#: views/score.py:343
 #, python-format
 msgid "student with registration id '%(reg_id)s' not found"
 msgstr "étudiant avec NOMA '%(reg_id)s' introuvable"

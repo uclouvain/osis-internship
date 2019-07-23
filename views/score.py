@@ -70,7 +70,6 @@ def scores_encoding(request, cohort_id):
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def save_edited_score(request, cohort_id):
-
     cohort = get_object_or_404(Cohort, pk=cohort_id)
     edited_score = float(request.GET.get("value"))
     computed_score = float(request.GET.get("computed"))
@@ -84,8 +83,7 @@ def save_edited_score(request, cohort_id):
     }
 
     if edited_score >= MINIMUM_SCORE and edited_score <= MAXIMUM_SCORE:
-        updated = _update_score(cohort, edited_score, period_name, registration_id)
-        if updated:
+        if _update_score(cohort, edited_score, period_name, registration_id):
             return render(request, "fragment/score_cell.html", context={
                 "student": student,
                 "period": period,
@@ -97,15 +95,42 @@ def save_edited_score(request, cohort_id):
         return _json_response_error(_("Score must be between 0 and 20"))
 
 
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def delete_edited_score(request, cohort_id):
+    cohort = get_object_or_404(Cohort, pk=cohort_id)
+    registration_id = request.GET.get("student")
+    period_name = request.GET.get("period")
+    student = {'registration_id': registration_id}
+    period = {'name': period_name}
+    period_score = float(request.GET.get("computed"))
+
+    if _delete_score(cohort, period_name, registration_id):
+        return render(request, "fragment/score_cell.html", context={
+            "student": student,
+            "period": period,
+            "period_score": period_score,
+        })
+    else:
+        return _json_response_error(_("An error occured during score update"))
+
+
+def _delete_score(cohort, period_name, registration_id):
+    return InternshipScore.objects.filter(
+        cohort=cohort,
+        period__name=period_name,
+        student__registration_id=registration_id
+    ).update(score=None)
+
+
 def _update_score(cohort, edited_score, period_name, registration_id):
-    updated = InternshipScore.objects.filter(
+    return InternshipScore.objects.filter(
         cohort=cohort,
         period__name=period_name,
         student__registration_id=registration_id
     ).update(
         score=edited_score
     )
-    return updated
 
 
 def _json_response_error(msg):
