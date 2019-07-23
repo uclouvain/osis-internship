@@ -90,12 +90,12 @@ class UrlsTestCase(TestCase):
                 kwargs={'cohort_id': 1}
             ),
             dict(
-                url_path='/internships/cohorts/1/scores_encoding/ajax/save_score',
+                url_path='/internships/cohorts/1/scores_encoding/ajax/save_score/',
                 pattern_name='save_edited_score',
                 kwargs={'cohort_id': 1}
             ),
             dict(
-                url_path='/internships/cohorts/1/scores_encoding/ajax/delete_score',
+                url_path='/internships/cohorts/1/scores_encoding/ajax/delete_score/',
                 pattern_name='delete_edited_score',
                 kwargs={'cohort_id': 1}
             ),
