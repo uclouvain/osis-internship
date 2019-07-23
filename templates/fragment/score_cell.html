@@ -1,0 +1,32 @@
+{% load i18n bootstrap3 %}
+
+{% if period_score|is_edited %}
+    {{ period_score.edited|floatformat:2 }}
+    <i style="font-size: 15px; top: 3px;" title="{% trans "Score edited. Computed score: " %}{{ period_score.computed|floatformat:2 }}"
+   class="glyphicon glyphicon-info-sign text-info"></i>
+{% else %}
+    {{ period_score|floatformat:2 }}
+{% endif %}
+<div style="display: none;" id="edit-{{ student.registration_id }}{{ period.name }}" class="pull-right">
+    <button onclick="editScore(this)" style="padding-top:0; line-height: inherit;"
+            {% if period_score|is_edited %}
+                data-computed="{{ period_score.computed|floatformat:2 }}"
+            {% else %}
+                data-computed="{{ period_score }}"
+            {% endif %}
+            data-student="{{ student.registration_id }}" data-period="{{ period.name }}"
+            class="btn btn-xs btn-warning">
+        <i class="glyphicon glyphicon-pencil"></i>
+    </button>
+    {% if period_score|is_edited %}
+        <button style="padding-top:0; line-height: inherit;"
+                data-toggle="modal"
+                data-target="#delete_score"
+                data-student="{{ student.registration_id }}"
+                data-period="{{ period.name }}"
+                data-computed="{{ period_score.computed|floatformat:2 }}"
+                class="btn btn-xs btn-danger">
+            <i class="glyphicon glyphicon-erase"></i>
+        </button>
+    {% endif %}
+</div>

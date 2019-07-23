@@ -25,3 +25,10 @@
   100% { transform: rotate(360deg); }
 }
 
+.has-error + .tooltip.top > .tooltip-inner{
+    background-color: #a94442;
+}
+
+.has-error + .tooltip.top > .tooltip-arrow {
+    border-top-color: #a94442;
+}

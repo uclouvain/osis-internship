@@ -33,6 +33,7 @@ from django.test import TestCase
 from django.utils.translation import gettext as _
 from rest_framework import status
 
+from base.models.student import Student
 from base.tests.factories.person import PersonFactory
 from base.tests.factories.student import StudentFactory
 from internship.models.internship_score import InternshipScore, APD_NUMBER
@@ -229,3 +230,36 @@ class ScoresEncodingTest(TestCase):
         for m in mappings:
             for key, value in mapping.items():
                 self.assertEqual(vars(m)['score_{}'.format(key)], value)
+
+    def test_ajax_edit_score(self):
+        edited_score = 10
+        computed_score = 20
+        student = Student.objects.first()
+        score = InternshipScore.objects.get(student=student, period=self.period)
+        self.assertIsNone(score.score)
+        url = reverse('save_edited_score', kwargs={'cohort_id': self.cohort.pk})
+        response = self.client.post(url, data={
+            'student': student.registration_id,
+            'value': edited_score,
+            'computed': computed_score,
+            'period': self.period.name,
+        })
+        score.refresh_from_db()
+        self.assertTemplateUsed(response, 'fragment/score_cell.html')
+        self.assertEqual(score.score, edited_score)
+
+    def test_ajax_delete_score(self):
+        edited_score = 10
+        computed_score = 20
+        student = Student.objects.first()
+        score = ScoreFactory(cohort=self.cohort, student=student, period=self.period, score=edited_score)
+        url = reverse('delete_edited_score', kwargs={'cohort_id': self.cohort.pk})
+        self.assertEqual(score.score, edited_score)
+        response = self.client.post(url, data={
+            'student': score.student.registration_id,
+            'computed': computed_score,
+            'period': self.period.name,
+        })
+        score.refresh_from_db()
+        self.assertTemplateUsed(response, 'fragment/score_cell.html')
+        self.assertIsNone(score.score)

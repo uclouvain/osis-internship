@@ -23,10 +23,11 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.db import transaction
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.utils.html import escape
@@ -46,6 +47,8 @@ from internship.utils.importing import import_scores
 from internship.views.common import get_object_list
 
 CHOSEN_LENGTH = 7
+MINIMUM_SCORE = 0
+MAXIMUM_SCORE = 20
 
 
 @login_required
@@ -62,6 +65,78 @@ def scores_encoding(request, cohort_id):
     context = {'cohort': cohort, 'periods': periods,
                'students': students, 'search_form': search_form, 'mapping': list(mapping)}
     return render(request, "scores.html", context=context)
+
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def save_edited_score(request, cohort_id):
+    cohort = get_object_or_404(Cohort, pk=cohort_id)
+    edited_score = float(request.POST.get("value"))
+    computed_score = float(request.POST.get("computed"))
+    registration_id = request.POST.get("student")
+    period_name = request.POST.get("period")
+    student = {'registration_id': registration_id}
+    period = {'name': period_name}
+    period_score = {
+        "computed": computed_score,
+        "edited": edited_score
+    }
+
+    if edited_score >= MINIMUM_SCORE and edited_score <= MAXIMUM_SCORE:
+        if _update_score(cohort, edited_score, period_name, registration_id):
+            return render(request, "fragment/score_cell.html", context={
+                "student": student,
+                "period": period,
+                "period_score": period_score,
+            })
+        else:
+            return _json_response_error(_("An error occured during score update"))
+    else:
+        return _json_response_error(_("Score must be between 0 and 20"))
+
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def delete_edited_score(request, cohort_id):
+    cohort = get_object_or_404(Cohort, pk=cohort_id)
+    registration_id = request.POST.get("student")
+    period_name = request.POST.get("period")
+    student = {'registration_id': registration_id}
+    period = {'name': period_name}
+    period_score = float(request.POST.get("computed"))
+
+    if _delete_score(cohort, period_name, registration_id):
+        return render(request, "fragment/score_cell.html", context={
+            "student": student,
+            "period": period,
+            "period_score": period_score,
+        })
+    else:
+        return _json_response_error(_("An error occured during score update"))
+
+
+def _delete_score(cohort, period_name, registration_id):
+    return InternshipScore.objects.filter(
+        cohort=cohort,
+        period__name=period_name,
+        student__registration_id=registration_id
+    ).update(score=None)
+
+
+def _update_score(cohort, edited_score, period_name, registration_id):
+    return InternshipScore.objects.filter(
+        cohort=cohort,
+        period__name=period_name,
+        student__registration_id=registration_id
+    ).update(
+        score=edited_score
+    )
+
+
+def _json_response_error(msg):
+    response = JsonResponse({"error": msg})
+    response.status_code = 500
+    return response
 
 
 def _prepare_score_table(cohort, periods, students):
@@ -102,7 +177,17 @@ def _map_student_score(mapping, periods_scores, student):
     for item in student.scores:
         period, scores = item
         period_score = _process_evaluation_grades(mapping, period, scores)
-        periods_scores.update({period: period_score})
+        if period in student.numeric_scores.keys():
+            periods_scores.update(
+                {
+                    period: {
+                        'computed': period_score,
+                        'edited': student.numeric_scores[period],
+                    }
+                }
+            )
+        else:
+            periods_scores.update({period: period_score})
 
 
 def _process_evaluation_grades(mapping, period, scores):
@@ -127,6 +212,7 @@ def _match_scores_with_students(cohort, periods, scores_list, students):
     # append scores for each period to each students
     for student in students:
         student.scores = []
+        student.numeric_scores = {}
         for period in periods:
             student_scores = list(filter(_filter_scores(student, cohort, period), scores_list))
             _append_period_scores_to_student(period, student, student_scores)
@@ -144,6 +230,12 @@ def _append_period_scores_to_student(period, student, student_scores):
     if student_scores:
         scores = student_scores[0].get_scores()
         student.scores += (period.name, scores),
+        _retrieve_scores_entered_manually(period, student, student_scores)
+
+
+def _retrieve_scores_entered_manually(period, student, student_scores):
+    if student_scores[0].score:
+        student.numeric_scores.update({period.name: student_scores[0].score})
 
 
 def _link_periods_to_specialties(students, students_affectations):
