@@ -468,6 +468,7 @@
         function saveScore(value, student, period, cell, computed) {
             $.ajax({
                 url: "ajax/save_score/",
+                method: "POST",
                 data: {
                     'value': value,
                     'computed': computed,
@@ -493,6 +494,7 @@
             cell = $(e).data('cell');
             $.ajax({
                 url: "ajax/delete_score/",
+                method: "POST",
                 data: {
                     'computed': parseFloat($(e).data('computed').replace(',', '.')),
                     'student': $(e).data('student'),

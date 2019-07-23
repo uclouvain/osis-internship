@@ -238,7 +238,7 @@ class ScoresEncodingTest(TestCase):
         score = InternshipScore.objects.get(student=student, period=self.period)
         self.assertIsNone(score.score)
         url = reverse('save_edited_score', kwargs={'cohort_id': self.cohort.pk})
-        response = self.client.get(url, data={
+        response = self.client.post(url, data={
             'student': student.registration_id,
             'value': edited_score,
             'computed': computed_score,
@@ -247,3 +247,19 @@ class ScoresEncodingTest(TestCase):
         score.refresh_from_db()
         self.assertTemplateUsed(response, 'fragment/score_cell.html')
         self.assertEqual(score.score, edited_score)
+
+    def test_ajax_delete_score(self):
+        edited_score = 10
+        computed_score = 20
+        student = Student.objects.first()
+        score = ScoreFactory(cohort=self.cohort, student=student, period=self.period, score=edited_score)
+        url = reverse('delete_edited_score', kwargs={'cohort_id': self.cohort.pk})
+        self.assertEqual(score.score, edited_score)
+        response = self.client.post(url, data={
+            'student': score.student.registration_id,
+            'computed': computed_score,
+            'period': self.period.name,
+        })
+        score.refresh_from_db()
+        self.assertTemplateUsed(response, 'fragment/score_cell.html')
+        self.assertIsNone(score.score)

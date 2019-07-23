@@ -71,10 +71,10 @@ def scores_encoding(request, cohort_id):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def save_edited_score(request, cohort_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
-    edited_score = float(request.GET.get("value"))
-    computed_score = float(request.GET.get("computed"))
-    registration_id = request.GET.get("student")
-    period_name = request.GET.get("period")
+    edited_score = float(request.POST.get("value"))
+    computed_score = float(request.POST.get("computed"))
+    registration_id = request.POST.get("student")
+    period_name = request.POST.get("period")
     student = {'registration_id': registration_id}
     period = {'name': period_name}
     period_score = {
@@ -99,11 +99,11 @@ def save_edited_score(request, cohort_id):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def delete_edited_score(request, cohort_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
-    registration_id = request.GET.get("student")
-    period_name = request.GET.get("period")
+    registration_id = request.POST.get("student")
+    period_name = request.POST.get("period")
     student = {'registration_id': registration_id}
     period = {'name': period_name}
-    period_score = float(request.GET.get("computed"))
+    period_score = float(request.POST.get("computed"))
 
     if _delete_score(cohort, period_name, registration_id):
         return render(request, "fragment/score_cell.html", context={

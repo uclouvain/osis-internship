@@ -89,6 +89,16 @@ class UrlsTestCase(TestCase):
                 pattern_name='internship_upload_scores',
                 kwargs={'cohort_id': 1}
             ),
+            dict(
+                url_path='/internships/cohorts/1/scores_encoding/ajax/save_score',
+                pattern_name='save_edited_score',
+                kwargs={'cohort_id': 1}
+            ),
+            dict(
+                url_path='/internships/cohorts/1/scores_encoding/ajax/delete_score',
+                pattern_name='delete_edited_score',
+                kwargs={'cohort_id': 1}
+            ),
         ]
 
         for url_name, pattern in test_paths(routes_to_test):

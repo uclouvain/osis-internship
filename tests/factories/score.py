@@ -41,6 +41,7 @@ class ScoreFactory(factory.django.DjangoModelFactory):
     period = factory.SubFactory(PeriodFactory)
 
     APD_1 = FuzzyChoice(['A', 'B', 'C', 'D'])
+    score = None
 
 
 class ScoreMappingFactory(factory.django.DjangoModelFactory):
