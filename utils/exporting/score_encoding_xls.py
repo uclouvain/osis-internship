@@ -93,9 +93,20 @@ def _append_row_data(columns, period, student):
     else:
         columns.append('')
     if period.name in student.periods_scores.keys():
-        columns.append(student.periods_scores[period.name])
+        columns.append(
+            _retrieve_score(
+                student.periods_scores[period.name]
+            )
+        )
     else:
         columns.append('')
+
+
+def _retrieve_score(period_score):
+    if isinstance(period_score, dict) and 'edited' in period_score:
+        return period_score['edited']
+    else:
+        return period_score
 
 
 def _make_complete_list(periods, students, worksheet):
