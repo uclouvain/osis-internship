@@ -31,7 +31,7 @@ from django.utils import timezone
 from django.core.serializers.json import DjangoJSONEncoder
 
 from django.contrib.auth.decorators import login_required, permission_required
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.shortcuts import render, redirect
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse

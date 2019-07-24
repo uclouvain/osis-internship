@@ -30,7 +30,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.exceptions import PermissionDenied
 from django.core.serializers.json import DjangoJSONEncoder
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.db.models import Prefetch
 from django.forms import model_to_dict
 from django.http import HttpResponse, HttpResponseRedirect

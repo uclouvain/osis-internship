@@ -26,7 +26,7 @@
 
 from django.contrib.auth.models import Permission, User
 from django.core.files.uploadedfile import SimpleUploadedFile
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.test import TestCase, RequestFactory
 from openpyxl import Workbook
 from openpyxl.writer.excel import save_virtual_workbook

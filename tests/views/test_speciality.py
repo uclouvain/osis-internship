@@ -24,14 +24,12 @@
 #
 ##############################################################################
 from django.contrib.auth.models import Permission, User
-from django.core.urlresolvers import reverse
-from django.test import TestCase, RequestFactory
+from django.test import TestCase
+from django.urls import reverse
 
 from internship.models.internship_speciality import InternshipSpeciality
 from internship.tests.factories.cohort import CohortFactory
 from internship.tests.factories.speciality import SpecialtyFactory
-from internship.views import speciality as view_speciality
-
 
 
 class SpecialityViewTestCase(TestCase):

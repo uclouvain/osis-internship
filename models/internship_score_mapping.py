@@ -35,7 +35,7 @@ class InternshipScoreMappingAdmin(SerializableModelAdmin):
 
 class InternshipScoreMapping(SerializableModel):
 
-    period = models.ForeignKey('internship.period')
+    period = models.ForeignKey('internship.period', on_delete=models.PROTECT)
     apd = models.IntegerField()
 
     score_A = models.IntegerField(default=0)
@@ -43,7 +43,7 @@ class InternshipScoreMapping(SerializableModel):
     score_C = models.IntegerField(default=0)
     score_D = models.IntegerField(default=0)
 
-    cohort = models.ForeignKey('internship.cohort')
+    cohort = models.ForeignKey('internship.cohort', on_delete=models.PROTECT)
 
     def __str__(self):
         return '{} - {} - {}'.format(self.period, self.apd, self.score_A, self.score_B, self.score_C, self.score_D)
