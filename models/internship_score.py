@@ -47,9 +47,9 @@ class InternshipScore(SerializableModel):
         ('D', 'D')
     )
 
-    student = models.ForeignKey('base.student')
-    period = models.ForeignKey('internship.period')
-    cohort = models.ForeignKey('internship.cohort')
+    student = models.ForeignKey('base.student', on_delete=models.PROTECT)
+    period = models.ForeignKey('internship.period', on_delete=models.PROTECT)
+    cohort = models.ForeignKey('internship.cohort', on_delete=models.PROTECT)
     for index in range(1, APD_NUMBER+1):
         vars()['APD_{}'.format(index)] = models.CharField(
             max_length=1,
