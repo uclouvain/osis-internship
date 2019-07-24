@@ -26,3 +26,4 @@ ghostdriver.log
 dev-requirements.txt
 .DS_Store
 .coveragerc
+submodule_updates.log
