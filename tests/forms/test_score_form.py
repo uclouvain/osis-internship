@@ -26,7 +26,7 @@
 
 from django.test import TestCase
 
-from internship.forms.score import StudentsFilterForm
+from internship.forms.score import ScoresFilterForm
 
 
 class TestScoreForm(TestCase):
@@ -35,5 +35,5 @@ class TestScoreForm(TestCase):
         data = {
             'free_text': "TEST",
         }
-        form = StudentsFilterForm(data)
+        form = ScoresFilterForm(data)
         self.assertTrue(form.is_valid())

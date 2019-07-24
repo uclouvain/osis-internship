@@ -58,7 +58,11 @@
                             <label for="free_text_id">{% trans 'Search' %}</label>
                             {{ search_form.free_text }}
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-1">
+                            <label for="period_id">{% trans 'Period' %}</label>
+                            {{ search_form.period }}
+                        </div>
+                        <div class="col-md-2">
                             <button type="submit" class="btn btn-primary" style="margin-top: 26px;">
                                 <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
                             </button>
