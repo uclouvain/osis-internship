@@ -24,13 +24,9 @@
 #
 ##############################################################################
 import faker
-
-from unittest import mock
-
 from django.contrib.auth.models import Permission, User
-from django.core.urlresolvers import reverse
-from django.test import TestCase, RequestFactory, override_settings
-from requests import Session
+from django.test import TestCase
+from django.urls import reverse
 
 from internship.models import master_allocation
 from internship.tests.factories.cohort import CohortFactory

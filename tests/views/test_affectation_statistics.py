@@ -23,13 +23,11 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import faker
 
 from django.contrib.auth.models import User, Permission
-from django.core.urlresolvers import reverse
 from django.test import TestCase
+from django.urls import reverse
 
-from internship import models
 from internship.tests.factories.cohort import CohortFactory
 from internship.tests.factories.organization import OrganizationFactory
 from internship.tests.factories.speciality import SpecialtyFactory

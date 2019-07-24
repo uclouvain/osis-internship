@@ -25,7 +25,7 @@
 ##############################################################################
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib import messages
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.utils.translation import ugettext_lazy as _

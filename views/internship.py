@@ -27,7 +27,7 @@ from collections import OrderedDict
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.forms.formsets import formset_factory
 from django.shortcuts import get_object_or_404, redirect
 from django.utils.translation import ugettext_lazy as _

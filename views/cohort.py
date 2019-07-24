@@ -23,15 +23,14 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
-from django.core.urlresolvers import reverse
 from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 
+from internship.business import copy_cohort
 from internship.forms.cohort import CohortForm
 from internship.models.cohort import Cohort
-from internship.business import copy_cohort
 from internship.views.common import display_errors
 
 
