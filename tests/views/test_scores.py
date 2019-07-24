@@ -28,7 +28,7 @@ from unittest import mock
 
 from django.contrib.auth.models import User, Permission
 from django.core.files.uploadedfile import SimpleUploadedFile
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.test import TestCase
 from django.utils.translation import gettext as _
 from rest_framework import status
