@@ -34,7 +34,7 @@ from django.utils.html import escape
 from django.utils.translation import gettext as _
 
 from base.views.common import display_error_messages, display_success_messages
-from internship.forms.score import StudentsFilterForm
+from internship.forms.score import ScoresFilterForm
 from internship.models.cohort import Cohort
 from internship.models.internship import Internship
 from internship.models.internship_score import InternshipScore
@@ -56,10 +56,11 @@ MAXIMUM_SCORE = 20
 def scores_encoding(request, cohort_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
     periods = Period.objects.filter(cohort=cohort).order_by('date_start')
-    search_form = StudentsFilterForm(request.GET)
+    search_form = ScoresFilterForm(request.GET, cohort=cohort)
     students_list = []
     if search_form.is_valid():
         students_list = search_form.get_students(cohort=cohort)
+        periods = search_form.get_period(cohort=cohort)
     students = get_object_list(request, students_list)
     mapping = _prepare_score_table(cohort, periods, students.object_list)
     context = {'cohort': cohort, 'periods': periods,

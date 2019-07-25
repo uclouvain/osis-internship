@@ -203,6 +203,15 @@ class ScoresEncodingTest(TestCase):
         response = self.client.get(url, data=data)
         self.assertEqual(response.context['students'].object_list[0], searched_student)
 
+    def test_search_scores_by_period(self):
+        url = reverse('internship_scores_encoding', kwargs={'cohort_id': self.cohort.pk})
+        data = {
+            'period': self.period.pk,
+        }
+        response = self.client.get(url, data=data)
+        for student in response.context['students'].object_list:
+            self.assertEqual(list(student.periods_scores.keys()), [self.period.name])
+
     def test_grades_converted_to_numerical_value(self):
         url = reverse('internship_scores_encoding', kwargs={'cohort_id': self.cohort.pk})
         response = self.client.get(url)

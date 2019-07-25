@@ -26,14 +26,21 @@
 
 from django.test import TestCase
 
-from internship.forms.score import StudentsFilterForm
+from internship.forms.score import ScoresFilterForm
+from internship.tests.factories.cohort import CohortFactory
+from internship.tests.factories.period import PeriodFactory
 
 
 class TestScoreForm(TestCase):
 
+    def setUp(self):
+        self.cohort = CohortFactory()
+        self.period = PeriodFactory(cohort=self.cohort)
+
     def test_valid_search_form(self):
         data = {
             'free_text': "TEST",
+            'period': self.period.pk,
         }
-        form = StudentsFilterForm(data)
+        form = ScoresFilterForm(data, cohort=self.cohort)
         self.assertTrue(form.is_valid())
