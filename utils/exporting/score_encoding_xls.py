@@ -24,12 +24,11 @@
 #
 ##############################################################################
 from openpyxl import Workbook
+from openpyxl.styles import Font
 from openpyxl.utils import get_column_letter
 from openpyxl.writer.excel import save_virtual_workbook
-from openpyxl.styles import Font
+
 from internship import models
-from internship.models.internship_score import InternshipScore
-from internship.models.internship_score_mapping import InternshipScoreMapping
 from internship.utils.exporting.spreadsheet import columns_resizing, add_row
 
 LAST_COLUMN = 50
@@ -56,7 +55,7 @@ def _get_columns_width():
 def export_xls_with_scores(cohort, periods, students, internships):
     workbook = Workbook()
     worksheet = workbook.active
-    _add_header(cohort, worksheet)
+    _add_header(cohort, periods, worksheet)
     _make_complete_list(periods, students, worksheet)
     _make_internship_sheets(internships, periods, students, workbook)
     return save_virtual_workbook(workbook)
@@ -138,8 +137,7 @@ def _add_sheet_header(worksheet):
         cell.font = Font(bold=True)
 
 
-def _add_header(cohort, worksheet):
-    periods = models.period.find_by_cohort(cohort)
+def _add_header(cohort, periods, worksheet):
     column_titles = ["Nom", "Prénom", "NOMA"]
     for period in periods:
         column_titles.append(period.name)

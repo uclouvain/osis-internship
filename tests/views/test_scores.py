@@ -243,7 +243,9 @@ class ScoresEncodingTest(TestCase):
 
     def test_export_scores(self):
         url = reverse('internship_download_scores', kwargs={'cohort_id': self.cohort.pk})
-        response = self.client.get(url)
+        response = self.client.post(url, data={
+            'period': [self.period]
+        })
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(
             response._headers['content-type'][1],

@@ -393,7 +393,8 @@ def _show_import_success_message(request, period):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def download_scores(request, cohort_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
-    periods = Period.objects.filter(cohort=cohort).order_by('date_start')
+    selected_periods = request.POST.getlist('period')
+    periods = Period.objects.filter(name__in=selected_periods, cohort=cohort).order_by('date_start')
     students = InternshipStudentInformation.objects.filter(cohort=cohort).order_by('person__last_name')
     internships = Internship.objects.filter(cohort=cohort).order_by(
         'position'
