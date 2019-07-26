@@ -41,6 +41,7 @@ class TestScoreForm(TestCase):
         data = {
             'free_text': "TEST",
             'period': self.period.pk,
+            'score_filter': True
         }
         form = ScoresFilterForm(data, cohort=self.cohort)
         self.assertTrue(form.is_valid())

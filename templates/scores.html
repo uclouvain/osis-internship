@@ -62,7 +62,11 @@
                             <label for="period_id">{% trans 'Period' %}</label>
                             {{ search_form.period }}
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-1">
+                            <label for="period_id">{% trans 'Score' %}</label>
+                            {{ search_form.score_filter }}
+                        </div>
+                        <div class="col-md-1">
                             <button type="submit" class="btn btn-primary" style="margin-top: 26px;">
                                 <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
                             </button>
@@ -84,7 +88,7 @@
                   <table class="table">
                       <tr>
                         <th>{% trans 'Student' %}</th>
-                        <th>{% trans 'Period' %}</th>
+                        <th  class="overflow-cell" style="max-width:7vw;">{% trans 'Period' %}</th>
                         <th>{% trans 'Internship' %}</th>
                         <th>{% trans 'Specialty' %}</th>
                           {% for i in i|rjust:15 %}
@@ -94,7 +98,7 @@
                       </tr>
                         {% for student in students %}
                       <tr>
-                        <td style="white-space: normal;"  rowspan="{{ periods|length|add:1 }}">{{ student }}</td>
+                        <td style="max-width: 10vw;" class="overflow-cell" rowspan="{{ periods|length|add:1 }}">{{ student }}</td>
                       </tr>
                         {% for period in periods %}
                           <tr>
@@ -131,14 +135,10 @@
                           {% endfor %}
                           </tr>
                         {% endfor %}
-                        <tfoot>
-                            <tr>
-                                <td colspan="6">
-                                    {% bootstrap_pagination students extra=request.GET.urlencode %}
-                                </td>
-                            </tr>
-                        </tfoot>
                     </table>
+                    <div>
+                        {% bootstrap_pagination students extra=request.GET.urlencode %}
+                    </div>
                 </div>
                 </div>
             </div>

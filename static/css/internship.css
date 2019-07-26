@@ -32,3 +32,9 @@
 .has-error + .tooltip.top > .tooltip-arrow {
     border-top-color: #a94442;
 }
+
+.overflow-cell{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
