@@ -38,3 +38,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+.text-bold{
+    font-weight: bold;
+}
