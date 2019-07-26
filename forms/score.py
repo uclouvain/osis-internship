@@ -9,6 +9,12 @@ from internship.models.period import Period
 
 class ScoresFilterForm(Form):
 
+    YES_NO_CHOICES = (
+        (None, '-'),
+        (True, _('Yes')),
+        (False, _('No')),
+    )
+
     free_text = forms.CharField(
         max_length=100,
         required=False,
@@ -20,6 +26,13 @@ class ScoresFilterForm(Form):
         queryset=None,
         required=False,
         empty_label='-',
+        widget=forms.Select(attrs={"class": "form-control"})
+    )
+
+    score_filter = forms.TypedChoiceField(
+        coerce=lambda x: x == 'True',
+        required=False,
+        choices=YES_NO_CHOICES,
         widget=forms.Select(attrs={"class": "form-control"})
     )
 
@@ -46,6 +59,12 @@ class ScoresFilterForm(Form):
         if period:
             qs = [Period.objects.get(pk=period.pk)]
         return qs
+
+    def get_score_filter(self):
+        score_filter = self.cleaned_data.get('score_filter')
+        if score_filter == "":
+            return None
+        return score_filter
 
 
 def search_students_with_free_text(free_text, qs):

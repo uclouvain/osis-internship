@@ -28,8 +28,8 @@ from unittest import mock
 
 from django.contrib.auth.models import User, Permission
 from django.core.files.uploadedfile import SimpleUploadedFile
-from django.urls import reverse
 from django.test import TestCase
+from django.urls import reverse
 from django.utils.translation import gettext as _
 from rest_framework import status
 
@@ -211,6 +211,29 @@ class ScoresEncodingTest(TestCase):
         response = self.client.get(url, data=data)
         for student in response.context['students'].object_list:
             self.assertEqual(list(student.periods_scores.keys()), [self.period.name])
+
+    def test_filter_students_with_score(self):
+        student_without_score = Student.objects.first()
+        InternshipScore.objects.filter(student=student_without_score).delete()
+        url = reverse('internship_scores_encoding', kwargs={'cohort_id': self.cohort.pk})
+        data = {
+            'period': self.period.pk,
+            'score_filter': True,
+        }
+        response = self.client.get(url, data=data)
+        self.assertEqual(len(response.context['students'].object_list), len(self.students)-1)
+
+    def test_filter_students_without_score(self):
+        student_without_score = Student.objects.first()
+        InternshipScore.objects.filter(student=student_without_score).delete()
+        url = reverse('internship_scores_encoding', kwargs={'cohort_id': self.cohort.pk})
+        data = {
+            'period': self.period.pk,
+            'score_filter': False,
+        }
+        response = self.client.get(url, data=data)
+        for student in response.context['students'].object_list:
+            self.assertFalse(student.periods_scores)
 
     def test_grades_converted_to_numerical_value(self):
         url = reverse('internship_scores_encoding', kwargs={'cohort_id': self.cohort.pk})
