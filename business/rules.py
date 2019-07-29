@@ -48,6 +48,6 @@ class InternshipScoreRules:
             return False
         for period, scores in student.scores:
             for index, score in enumerate(scores):
-                if score is not None and not self.is_score_valid(index, score):
+                if score and not self.is_score_valid(index, score):
                     return False
         return True
