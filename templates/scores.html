@@ -72,21 +72,40 @@
                             </button>
                         </div>
                         <div class="col-md-6 pull-right">
-                            <button type="button" data-toggle="modal" data-target="#download_scores" class="btn btn-default pull-right" style="margin-top: 26px;">
-                                <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
-                                {% trans 'Export to XLSX' %}
-                            </button>
-                            <button type="button" class="btn btn-default pull-right" data-toggle="modal"
-                                    data-target="#upload_scores" id="bt_upload_score_modal" style="margin-top: 26px; margin-right:10px;">
-                                <span class="glyphicon glyphicon-upload" aria-hidden="true"></span>
-                                {% trans 'Import internships ratings' %}
-                            </button>
+                            <div class="dropdown text-right">
+                                <button type="button" class="btn btn-default" data-toggle="dropdown" aria-haspopup="true"
+                                        aria-expanded="false" style="margin-top: 26px;">
+                                    <span class="glyphicon glyphicon-cog" aria-hidden="true"></span> {% trans 'Actions' %}
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-large row text-right pull-right">
+                                    <li>
+                                        <a href="#" data-toggle="modal" data-target="#download_scores">
+                                            <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
+                                            {% trans 'Export to XLSX' %}
+                                        </a>
+                                    </li>
+                                    <li role="separator" class="divider"></li>
+                                    <li>
+                                        <a href="#" data-toggle="modal"
+                                                data-target="#upload_scores" id="bt_upload_score_modal">
+                                            <span class="glyphicon glyphicon-upload" aria-hidden="true"></span>
+                                            {% trans 'Import internships ratings' %}
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </form>
                 <div class="table-responsive">
                   <table class="table">
                       <tr>
+                        {% if students %}
+                            <th>
+                        <input id="id_check_all" type="checkbox" name="check_all" title="{% trans 'Check All' %}"/>
+                            </th>
+                        {% endif %}
                         <th></th>
                         <th>{% trans 'Student' %}</th>
                         <th  class="overflow-cell" style="max-width:7vw;">{% trans 'Period' %}</th>
@@ -99,6 +118,9 @@
                       </tr>
                         {% for student in students %}
                       <tr>
+                      <td rowspan="{{ periods|length|add:1 }}">
+                          <input type="checkbox" name="selected_action" class="selected_object" value="{{ student.pk }}"/>
+                      </td>
                           <td rowspan="{{ periods|length|add:1 }}">
                               {% if not student.fulfill_condition %}
                                   <icon class="glyphicon glyphicon-remove-sign text-danger"></icon>
@@ -568,6 +590,10 @@
 
         $("#export_score_btn").on('click', function(){
           $("#download_scores").modal("hide");
+        });
+
+        $("#id_check_all").click(function(){
+            $('input:checkbox.selected_object').not(this).prop('checked', this.checked);
         });
     </script>
 {% endblock %}
