@@ -2,7 +2,7 @@
 {% load staticfiles %}
 {% load dictionary %}
 {% load mapping %}
-
+{% load grades %}
 {% load i18n bootstrap3 %}
 
 {% comment "License" %}
@@ -87,6 +87,7 @@
                 <div class="table-responsive">
                   <table class="table">
                       <tr>
+                        <th></th>
                         <th>{% trans 'Student' %}</th>
                         <th  class="overflow-cell" style="max-width:7vw;">{% trans 'Period' %}</th>
                         <th>{% trans 'Internship' %}</th>
@@ -98,7 +99,14 @@
                       </tr>
                         {% for student in students %}
                       <tr>
-                        <td style="max-width: 10vw;" class="overflow-cell" rowspan="{{ periods|length|add:1 }}">{{ student }}</td>
+                          <td rowspan="{{ periods|length|add:1 }}">
+                              {% if not student.fulfill_condition %}
+                                  <icon class="glyphicon glyphicon-remove-sign text-danger"></icon>
+                              {% else %}
+                                  <icon class="glyphicon glyphicon-ok-sign text-success"></icon>
+                              {% endif %}
+                          </td>
+                          <td style="max-width: 10vw;" class="overflow-cell" rowspan="{{ periods|length|add:1 }}">{{ student }}</td>
                       </tr>
                         {% for period in periods %}
                           <tr>
@@ -114,7 +122,12 @@
                                 {% if key|slugify == period|slugify %}
                                     {% for score in scores %}
                                         {% if score != None %}
-                                            <td class="hidden-sm hidden-xs">{{ score }}</td>
+                                            <td class="hidden-sm hidden-xs
+                                            {% if not score|is_valid:forloop.counter0 %}
+                                             text-bold text-danger
+                                            {% endif %}">
+                                                {{ score }}
+                                            </td>
                                         {% else %}
                                             <td class="hidden-sm hidden-xs">-</td>
                                         {% endif %}
@@ -134,6 +147,10 @@
                             {% endwith %}
                           {% endfor %}
                           </tr>
+                        {% empty %}
+                            <tr>
+                                {% trans 'No result' %}
+                            </tr>
                         {% endfor %}
                     </table>
                     <div>
@@ -154,7 +171,7 @@
                 </div>
                 <div class="panel panel-body">
                     <ul id="pills" class="nav nav-pills nav-justified">
-                        {% for period in periods %}
+                        {% for period in all_periods %}
                           <li name="{{ period.name }}" {% if forloop.counter == 1 %}class="active"{% endif %}>
                               <a href="#mapping_{{ period.name }}" data-toggle="pill" onclick="pillChanged('{{ period.name }}')">{{ period.name }}</a>
                           </li>
@@ -162,7 +179,7 @@
                     </ul>
                     <input id="activePeriod" type="hidden" name="activePeriod"/>
                     <div class="tab-content">
-                    {% for period in periods %}
+                    {% for period in all_periods %}
                         <div id="mapping_{{ period.name }}" class="tab-pane fade {% if forloop.counter == 1 %}in active{% endif %}">
                         <div class="row">
                         <div class="btn-group btn-period-mapping" role="group">
@@ -247,7 +264,7 @@
                         <div class="form-group">
                             <label for="period-select">{% trans 'Period' %}</label>
                             <select name="period" class="form-control" id="period-select">
-                                {% for period in periods %}
+                                {% for period in all_periods %}
                                     <option>{{ period }}</option>
                                 {% endfor %}
                             </select>
@@ -282,7 +299,7 @@
                     <div class="modal-body">
                         <p>{% trans "Choose which periods you want to include in the file" %}</p>
                         <div class="row">
-                            {% for period in periods %}
+                            {% for period in all_periods %}
                                 <div class="col-lg-2">
                                     <div class="checkbox">
                                         <label><input name="period" type="checkbox" value="{{ period }}" checked>{{ period }}</label>

@@ -35,6 +35,7 @@ from django.utils.html import escape
 from django.utils.translation import gettext as _
 
 from base.views.common import display_error_messages, display_success_messages
+from internship.business.rules import InternshipScoreRules
 from internship.forms.score import ScoresFilterForm
 from internship.models.cohort import Cohort
 from internship.models.internship import Internship
@@ -56,7 +57,8 @@ MAXIMUM_SCORE = 20
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def scores_encoding(request, cohort_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
-    periods = Period.objects.filter(cohort=cohort).order_by('date_start')
+    all_periods = Period.objects.filter(cohort=cohort).order_by('date_start')
+    periods = all_periods
     search_form = ScoresFilterForm(request.GET, cohort=cohort)
     students_list = []
     if search_form.is_valid():
@@ -66,7 +68,7 @@ def scores_encoding(request, cohort_id):
     students_list = _filter_students_by_internship_score(cohort, students_list, periods, score_filter)
     students = get_object_list(request, students_list)
     mapping = _prepare_score_table(cohort, periods, students.object_list)
-    context = {'cohort': cohort, 'periods': periods,
+    context = {'cohort': cohort, 'periods': periods, 'all_periods': all_periods,
                'students': students, 'search_form': search_form, 'mapping': list(mapping)}
     return render(request, "scores.html", context=context)
 
@@ -163,6 +165,7 @@ def _prepare_score_table(cohort, periods, students):
         'internship__length_in_periods'
     ).order_by('period__date_start')
     _match_scores_with_students(cohort, periods, list(scores), students)
+    _set_condition_fulfilled_status(students)
     _map_numeric_score(mapping, students)
     _link_periods_to_organizations(students, students_affectations)
     _link_periods_to_specialties(students, students_affectations)
@@ -221,6 +224,11 @@ def _match_scores_with_students(cohort, periods, scores_list, students):
         for period in periods:
             student_scores = list(filter(_filter_scores(student, cohort, period), scores_list))
             _append_period_scores_to_student(period, student, student_scores)
+
+
+def _set_condition_fulfilled_status(students):
+    for student in students:
+        student.fulfill_condition = InternshipScoreRules.student_has_fulfilled_requirements(student)
 
 
 def _filter_scores(student, cohort, period):
