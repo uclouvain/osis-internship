@@ -73,7 +73,7 @@
                         </div>
                         <div class="col-md-6 pull-right">
                             <div class="dropdown text-right">
-                                <button type="button" class="btn btn-default" data-toggle="dropdown" aria-haspopup="true"
+                                <button id="actions" type="button" class="btn btn-default" data-toggle="dropdown" aria-haspopup="true"
                                         aria-expanded="false" style="margin-top: 26px;">
                                     <span class="glyphicon glyphicon-cog" aria-hidden="true"></span> {% trans 'Actions' %}
                                     <span class="caret"></span>
@@ -94,9 +94,8 @@
                                         </a>
                                     </li>
                                     <li role="separator" class="divider"></li>
-                                    <li>
-                                        <a href="#" data-toggle="modal"
-                                                data-target="#send_callback" id="btn_send_callback">
+                                    <li id="li_send_callback" class="disabled">
+                                        <a href="#" data-target="#send_callback" id="btn_send_callback">
                                             <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>
                                             {% trans 'Send callback' %}
                                         </a>
@@ -127,7 +126,7 @@
                         {% for student in students %}
                       <tr>
                       <td rowspan="{{ periods|length|add:1 }}">
-                          <input type="checkbox" name="selected_action" class="selected_object" value="{{ student.pk }}"/>
+                          <input type="checkbox" name="selected_student" class="selected_object" data-student="{{ student }}" value="{{ student.pk }}"/>
                       </td>
                           <td rowspan="{{ periods|length|add:1 }}">
                               {% if not student.fulfill_condition %}
@@ -376,8 +375,7 @@
                 </div>
                 <div class="modal-body">
                     <p>{% trans "This action will send a callback by email to following students:" %}</p>
-                    <ul>
-                        <li>Student</li>
+                    <ul id="selected_students">
                     </ul>
                 </div>
                 <div class="modal-footer">
@@ -568,6 +566,28 @@
             let deleteScoreBtn = $("#delete_score_btn");
             deleteScoreBtn.data(this.dataset);
             deleteScoreBtn.data("cell", $(this).closest('td')[0]);
+        });
+
+        $(document).on('click', '[data-target="#send_callback"]', function(){
+            $.each($("input[name='selected_student']:checked"), function(){
+                $("#selected_students").append(
+                    '<li>'+$(this).data('student')+'</li>'
+                );
+            });
+            if(!$("#li_send_callback").hasClass('disabled')){
+                $("#send_callback").modal("show");
+            }
+        });
+
+        $("#actions").click(function(){
+            $("#li_send_callback").toggleClass(
+                'disabled',
+                $("input[name='selected_student']:checked").length<1
+            );
+        });
+
+        $("#send_callback").on("hidden.bs.modal", function(){
+            $("#selected_students").empty();
         });
 
         function saveScore(value, student, period, cell, computed) {
