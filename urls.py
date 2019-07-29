@@ -159,6 +159,7 @@ urlpatterns = [
                 url(r'^mapping/save$', score.save_mapping, name='save_internship_score_mapping'),
                 url(r'^ajax/save_score/$', score.save_edited_score, name='save_edited_score'),
                 url(r'^ajax/delete_score/$', score.delete_edited_score, name='delete_edited_score'),
+                url(r'^send_callback/$', score.send_callback, name='send_callback'),
             ])),
         ])),
 

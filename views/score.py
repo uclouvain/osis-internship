@@ -34,6 +34,7 @@ from django.urls import reverse
 from django.utils.html import escape
 from django.utils.translation import gettext as _
 
+from base.models.student import Student
 from base.views.common import display_error_messages, display_success_messages
 from internship.business.rules import InternshipScoreRules
 from internship.forms.score import ScoresFilterForm
@@ -71,6 +72,15 @@ def scores_encoding(request, cohort_id):
     context = {'cohort': cohort, 'periods': periods, 'all_periods': all_periods,
                'students': students, 'search_form': search_form, 'mapping': list(mapping)}
     return render(request, "scores.html", context=context)
+
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def send_callback(request, cohort_id):
+    selected_students_emails = InternshipStudentInformation.objects.filter(
+        pk__in=request.POST.getlist('selected_student'),
+    ).values_list('email')
+    return scores_encoding(request, cohort_id)
 
 
 @login_required
