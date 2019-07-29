@@ -93,6 +93,14 @@
                                             {% trans 'Import internships ratings' %}
                                         </a>
                                     </li>
+                                    <li role="separator" class="divider"></li>
+                                    <li>
+                                        <a href="#" data-toggle="modal"
+                                                data-target="#send_callback" id="btn_send_callback">
+                                            <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>
+                                            {% trans 'Send callback' %}
+                                        </a>
+                                    </li>
                                 </ul>
                             </div>
                         </div>
@@ -352,6 +360,29 @@
                 <div class="modal-footer">
                     <button id="delete_score_btn" type="button" class="btn btn-danger" data-dismiss="modal" onclick="deleteScore(this)">
                         {% trans "Delete" %}
+                    </button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">{% trans "Cancel" %}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="send_callback" tabindex="-1" role="dialog" aria-labelledby="send_callback">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">{% trans "Send callback" %} ?</h4>
+                </div>
+                <div class="modal-body">
+                    <p>{% trans "This action will send a callback by email to following students:" %}</p>
+                    <ul>
+                        <li>Student</li>
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button id="delete_score_btn" type="button" class="btn btn-primary" data-dismiss="modal" onclick="deleteScore(this)">
+                        {% trans "Send" %}
                     </button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">{% trans "Cancel" %}</button>
                 </div>
