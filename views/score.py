@@ -87,11 +87,16 @@ def send_callback(request, cohort_id):
 
     students = _retrieve_blank_periods_by_student(periods, scores)
     for id in students:
-        send_score_encoding_callback(data={
-            'person_id': id,
-            'periods': students[id],
-            'cohort_id': cohort_id
-        })
+        try:
+            send_score_encoding_callback(data={
+                'person_id': id,
+                'periods': students[id],
+                'cohort_id': cohort_id
+            })
+        except Exception:
+            _show_callback_sent_error_message(request)
+
+    _show_callback_sent_success_message(request)
 
     prev_url = request.META['HTTP_REFERER'] if 'HTTP_REFERER' in request.META else ''
     query_string = prev_url.split('?')[1] if prev_url and '?' in prev_url else ''
@@ -111,6 +116,18 @@ def _retrieve_blank_periods_by_student(periods, scores):
     for student in students.keys():
         students[student] = [period for period in periods if period not in students[student]]
     return students
+
+
+def _show_callback_sent_error_message(request):
+    display_success_messages(
+        request, _('An error occured while sending callbacks')
+    )
+
+
+def _show_callback_sent_success_message(request):
+    display_success_messages(
+        request, _('Callbacks have been sent successfully')
+    )
 
 
 @login_required

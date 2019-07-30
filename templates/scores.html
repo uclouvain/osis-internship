@@ -121,7 +121,7 @@
                           {% for i in i|rjust:15 %}
                             <th class="hidden-sm hidden-xs">APD {{forloop.counter}}</th>
                           {% endfor %}
-                        <th>Score</th>
+                        <th>{% trans 'Score' %}</th>
                       </tr>
                         <form action="{% url 'send_callback' cohort_id=cohort.id %}" method="post" id="send_callback_form">
                         {% csrf_token %}
