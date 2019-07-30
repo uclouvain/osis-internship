@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -23,25 +23,28 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-
 from django.test import TestCase
 
-from internship.forms.score import ScoresFilterForm
+from base.tests.factories.student import StudentFactory
+from internship.business.rules import InternshipScoreRules
 from internship.tests.factories.cohort import CohortFactory
 from internship.tests.factories.period import PeriodFactory
+from internship.tests.factories.score import ScoreFactory
 
 
-class TestScoreForm(TestCase):
-
-    def setUp(self):
+class InternshipScoreRulesTest(TestCase):
+    def setUp(self) -> None:
         self.cohort = CohortFactory()
+        self.student = StudentFactory()
         self.period = PeriodFactory(cohort=self.cohort)
+        self.internship_score = ScoreFactory(student=self.student, period=self.period, cohort=self.cohort)
 
-    def test_valid_search_form(self):
-        data = {
-            'free_text': "TEST",
-            'period': self.period.pk,
-            'score_filter': True
-        }
-        form = ScoresFilterForm(data, cohort=self.cohort)
-        self.assertTrue(form.is_valid())
+    def test_student_fulfill_requirements(self):
+        self.internship_score.APD_1 = 'D'
+        self.student.scores = [(self.period, self.internship_score.get_scores())]
+        self.assertTrue(InternshipScoreRules.student_has_fulfilled_requirements(self.student))
+
+    def test_student_does_not_fulfill_requirements(self):
+        self.internship_score.APD_1 = 'A'
+        self.student.scores = [(self.period, self.internship_score.get_scores())]
+        self.assertFalse(InternshipScoreRules.student_has_fulfilled_requirements(self.student))

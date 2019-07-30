@@ -293,7 +293,7 @@ class ListUtilsTestCase(TestCase):
         self.assertEqual(expected, difference(first_list, second_list))
 
 
-class AgorithmExecutionBlockedTest(TestCase):
+class AlgorithmExecutionBlockedTest(TestCase):
     def setUp(self):
         self.cohort = CohortFactory()
         self.user = User.objects.create_user('demo', 'demo@demo.org', 'passtest')

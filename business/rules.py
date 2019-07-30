@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -24,24 +24,30 @@
 #
 ##############################################################################
 
-from django.test import TestCase
 
-from internship.forms.score import ScoresFilterForm
-from internship.tests.factories.cohort import CohortFactory
-from internship.tests.factories.period import PeriodFactory
+class InternshipScoreRules:
+    NORMAL_GRADES = ['C', 'D', 'E']
+    EXCEPT_APDS = [8, 14]
+    EXCEPT_GRADES = NORMAL_GRADES + ['B']
 
+    @classmethod
+    def get_valid_grades(self, index):
+        return self.EXCEPT_GRADES if index in self.get_except_apds_indices() else self.NORMAL_GRADES
 
-class TestScoreForm(TestCase):
+    @classmethod
+    def get_except_apds_indices(self):
+        return [x - 1 for x in self.EXCEPT_APDS]
 
-    def setUp(self):
-        self.cohort = CohortFactory()
-        self.period = PeriodFactory(cohort=self.cohort)
+    @classmethod
+    def is_score_valid(self, index, score):
+        return score in self.get_valid_grades(index)
 
-    def test_valid_search_form(self):
-        data = {
-            'free_text': "TEST",
-            'period': self.period.pk,
-            'score_filter': True
-        }
-        form = ScoresFilterForm(data, cohort=self.cohort)
-        self.assertTrue(form.is_valid())
+    @classmethod
+    def student_has_fulfilled_requirements(self, student):
+        if not student.scores:
+            return False
+        for period, scores in student.scores:
+            for index, score in enumerate(scores):
+                if score and not self.is_score_valid(index, score):
+                    return False
+        return True

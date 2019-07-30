@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -23,25 +23,11 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.template.defaulttags import register
 
-from django.test import TestCase
-
-from internship.forms.score import ScoresFilterForm
-from internship.tests.factories.cohort import CohortFactory
-from internship.tests.factories.period import PeriodFactory
+from internship.business.rules import InternshipScoreRules
 
 
-class TestScoreForm(TestCase):
-
-    def setUp(self):
-        self.cohort = CohortFactory()
-        self.period = PeriodFactory(cohort=self.cohort)
-
-    def test_valid_search_form(self):
-        data = {
-            'free_text': "TEST",
-            'period': self.period.pk,
-            'score_filter': True
-        }
-        form = ScoresFilterForm(data, cohort=self.cohort)
-        self.assertTrue(form.is_valid())
+@register.filter()
+def is_valid(grade, index):
+    return InternshipScoreRules.is_score_valid(index, grade)

@@ -23,6 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from collections import Counter
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
@@ -34,7 +35,8 @@ from django.utils.html import escape
 from django.utils.translation import gettext as _
 
 from base.views.common import display_error_messages, display_success_messages
-from internship.forms.score import StudentsFilterForm
+from internship.business.rules import InternshipScoreRules
+from internship.forms.score import ScoresFilterForm
 from internship.models.cohort import Cohort
 from internship.models.internship import Internship
 from internship.models.internship_score import InternshipScore
@@ -55,14 +57,18 @@ MAXIMUM_SCORE = 20
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def scores_encoding(request, cohort_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
-    periods = Period.objects.filter(cohort=cohort).order_by('date_start')
-    search_form = StudentsFilterForm(request.GET)
+    all_periods = Period.objects.filter(cohort=cohort).order_by('date_start')
+    periods = all_periods
+    search_form = ScoresFilterForm(request.GET, cohort=cohort)
     students_list = []
     if search_form.is_valid():
         students_list = search_form.get_students(cohort=cohort)
+        periods = search_form.get_period(cohort=cohort)
+        score_filter = search_form.get_score_filter()
+    students_list = _filter_students_by_internship_score(cohort, students_list, periods, score_filter)
     students = get_object_list(request, students_list)
     mapping = _prepare_score_table(cohort, periods, students.object_list)
-    context = {'cohort': cohort, 'periods': periods,
+    context = {'cohort': cohort, 'periods': periods, 'all_periods': all_periods,
                'students': students, 'search_form': search_form, 'mapping': list(mapping)}
     return render(request, "scores.html", context=context)
 
@@ -143,6 +149,7 @@ def _prepare_score_table(cohort, periods, students):
     scores = InternshipScore.objects.filter(cohort=cohort).select_related(
         'student__person', 'period', 'cohort'
     ).order_by('student__person__last_name')
+
     mapping = InternshipScoreMapping.objects.filter(cohort=cohort).select_related(
         'period'
     )
@@ -158,6 +165,7 @@ def _prepare_score_table(cohort, periods, students):
         'internship__length_in_periods'
     ).order_by('period__date_start')
     _match_scores_with_students(cohort, periods, list(scores), students)
+    _set_condition_fulfilled_status(students)
     _map_numeric_score(mapping, students)
     _link_periods_to_organizations(students, students_affectations)
     _link_periods_to_specialties(students, students_affectations)
@@ -216,6 +224,11 @@ def _match_scores_with_students(cohort, periods, scores_list, students):
         for period in periods:
             student_scores = list(filter(_filter_scores(student, cohort, period), scores_list))
             _append_period_scores_to_student(period, student, student_scores)
+
+
+def _set_condition_fulfilled_status(students):
+    for student in students:
+        student.fulfill_condition = InternshipScoreRules.student_has_fulfilled_requirements(student)
 
 
 def _filter_scores(student, cohort, period):
@@ -296,6 +309,31 @@ def _append_student_registration_id(student, students_affectations):
     for affectation in students_affectations:
         if affectation['student__person'] == student.person.pk:
             student.registration_id = affectation['student__registration_id']
+
+
+def _filter_students_by_internship_score(cohort, students, periods, score_filter=None):
+    if score_filter is not None:
+        persons = InternshipScore.objects.filter(
+            cohort=cohort,
+            period__in=periods
+        ).values_list('student__person', flat=True)
+        persons = _keep_persons_with_periods_scores(periods, persons)
+        if score_filter:
+            return students.filter(person__pk__in=persons)
+        else:
+            return students.exclude(person__pk__in=persons)
+    else:
+        return students
+
+
+def _keep_persons_with_periods_scores(periods, persons):
+    count = len(periods)
+    counter = Counter(persons)
+    for k in list(counter):
+        if counter[k] < count:
+            del counter[k]
+    persons = [key for key, _ in counter.most_common()]
+    return persons
 
 
 @login_required
