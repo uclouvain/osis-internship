@@ -1,0 +1,22 @@
+[
+{
+    "model": "osis_common.messagetemplate",
+    "fields": {
+        "reference": "internship_score_encoding_callback_email",
+        "subject": "STAC - Rappel remise des notes des stage",
+        "template": "<p>Contenu du rappel: {{student}}, {{period}}, {{specialty}}, {{hospital}}</p>",
+        "format": "HTML",
+        "language": "fr-be"
+    }
+},
+{
+    "model": "osis_common.messagetemplate",
+    "fields": {
+        "reference": "internship_score_encoding_callback_email",
+        "subject": "STAC - Rappel remise des notes des stage",
+        "template": "Contenu du rappel: {{student}}, {{period}}, {{specialty}}, {{hospital}}",
+        "format": "PLAIN",
+        "language": "fr-be"
+    }
+}
+]
