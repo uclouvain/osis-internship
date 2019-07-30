@@ -23,6 +23,12 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from base.models.student import Student
+from internship.models.internship_student_affectation_stat import InternshipStudentAffectationStat
+from internship.models.internship_student_information import InternshipStudentInformation
+from internship.models.period import Period
+from osis_common.messaging import message_config
+from osis_common.messaging.send_message import send_messages
 
 
 class InternshipScoreRules:
@@ -51,3 +57,31 @@ class InternshipScoreRules:
                 if score and not self.is_score_valid(index, score):
                     return False
         return True
+
+
+def send_score_encoding_callback(data):
+    student_info = InternshipStudentInformation.objects.get(
+        person__id=data['person_id'],
+        cohort__id=data['cohort_id']
+    )
+    student = Student.objects.get(person__id=data['person_id'])
+    periods = Period.objects.filter(pk__in=data['periods']).order_by('start_date')
+    affectations = InternshipStudentAffectationStat.objects.filter(
+        student=student, period__in=periods
+    )
+    message_content = message_config.create_message_content(
+        html_template_ref='internship_score_encoding_callback_email_html',
+        txt_template_ref='internship_score_encoding_callback_email_txt',
+        tables=[],
+        receivers=[message_config.create_receiver(
+            student_info.person_id,
+            student_info.email,
+            None
+        )],
+        template_base_data={
+            'student': student,
+            'affectations': affectations
+        },
+        subject_data={}
+    )
+    send_messages(message_content=message_content)

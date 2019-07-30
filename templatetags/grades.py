@@ -25,7 +25,7 @@
 ##############################################################################
 from django.template.defaulttags import register
 
-from internship.business.rules import InternshipScoreRules
+from internship.business.scores import InternshipScoreRules
 
 
 @register.filter()

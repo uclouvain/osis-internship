@@ -26,7 +26,7 @@
 from django.test import TestCase
 
 from base.tests.factories.student import StudentFactory
-from internship.business.rules import InternshipScoreRules
+from internship.business.scores import InternshipScoreRules
 from internship.tests.factories.cohort import CohortFactory
 from internship.tests.factories.period import PeriodFactory
 from internship.tests.factories.score import ScoreFactory

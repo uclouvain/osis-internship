@@ -128,7 +128,8 @@
                         {% for student in students %}
                          <tr>
                           <td rowspan="{{ periods|length|add:1 }}">
-                              <input type="checkbox" name="selected_student" class="selected_object" data-student="{{ student }}" value="{{ student.pk }}"/>
+                              <input type="checkbox" name="selected_student" class="selected_object" data-periods="{{ student.periods_scores }}"
+                                     data-student="{{ student }}" value="{{ student.pk }}"/>
                           </td>
                           <td rowspan="{{ periods|length|add:1 }}">
                               {% if not student.fulfill_condition %}
