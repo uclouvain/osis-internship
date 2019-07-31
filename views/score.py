@@ -34,7 +34,6 @@ from django.urls import reverse
 from django.utils.html import escape
 from django.utils.translation import gettext as _
 
-from base.models.student import Student
 from base.views.common import display_error_messages, display_success_messages
 from internship.business.scores import InternshipScoreRules, send_score_encoding_callback
 from internship.forms.score import ScoresFilterForm
@@ -84,8 +83,8 @@ def send_callback(request, cohort_id):
     scores = InternshipScore.objects.filter(
         cohort__id=cohort_id, student__person__in=selected_persons
     ).values_list('student__person', 'period')
-
     students = _retrieve_blank_periods_by_student(periods, scores)
+
     for id in students:
         try:
             send_score_encoding_callback(data={

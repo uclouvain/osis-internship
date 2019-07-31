@@ -50,7 +50,7 @@ class UrlsTestCase(TestCase):
                 pattern_name='internship',
             ),
             dict(
-                url_path = "/internships/cohorts/1/",
+                url_path="/internships/cohorts/1/",
                 pattern_name="internships_home",
                 kwargs={'cohort_id': 1}
             ),
@@ -97,6 +97,11 @@ class UrlsTestCase(TestCase):
             dict(
                 url_path='/internships/cohorts/1/scores_encoding/ajax/delete_score/',
                 pattern_name='delete_edited_score',
+                kwargs={'cohort_id': 1}
+            ),
+            dict(
+                url_path='/internships/cohorts/1/scores_encoding/send_callback/',
+                pattern_name='send_callback',
                 kwargs={'cohort_id': 1}
             ),
         ]

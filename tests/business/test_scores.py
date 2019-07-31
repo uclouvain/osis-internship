@@ -23,11 +23,14 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from unittest import mock
+
 from django.test import TestCase
 
 from base.tests.factories.student import StudentFactory
-from internship.business.scores import InternshipScoreRules
+from internship.business.scores import InternshipScoreRules, send_score_encoding_callback
 from internship.tests.factories.cohort import CohortFactory
+from internship.tests.factories.internship_student_information import InternshipStudentInformationFactory
 from internship.tests.factories.period import PeriodFactory
 from internship.tests.factories.score import ScoreFactory
 
@@ -48,3 +51,21 @@ class InternshipScoreRulesTest(TestCase):
         self.internship_score.APD_1 = 'A'
         self.student.scores = [(self.period, self.internship_score.get_scores())]
         self.assertFalse(InternshipScoreRules.student_has_fulfilled_requirements(self.student))
+
+
+class InternshipScoreCallbackTest(TestCase):
+    def setUp(self) -> None:
+        self.cohort = CohortFactory()
+        self.student_info = InternshipStudentInformationFactory(cohort=self.cohort)
+        self.student = StudentFactory(person=self.student_info.person)
+        self.period = PeriodFactory(cohort=self.cohort)
+
+    @mock.patch('internship.business.scores.send_messages')
+    def test_send_callback(self, mock_send_messages):
+        data = {
+            'person_id': self.student_info.person.pk,
+            'cohort_id': self.cohort.pk,
+            'periods': [self.period.pk]
+        }
+        send_score_encoding_callback(data)
+        self.assertTrue(mock_send_messages.called)
