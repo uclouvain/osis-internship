@@ -26,6 +26,7 @@
 from types import SimpleNamespace
 from unittest import mock
 
+from django.contrib import messages
 from django.contrib.auth.models import User, Permission
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
@@ -297,3 +298,21 @@ class ScoresEncodingTest(TestCase):
         score.refresh_from_db()
         self.assertTemplateUsed(response, 'fragment/score_cell.html')
         self.assertIsNone(score.score)
+
+    @mock.patch('internship.views.score.send_score_encoding_reminder')
+    def test_send_reminder(self, mock_send_mail):
+        student_info = InternshipStudentInformationFactory(cohort=self.cohort)
+        student = StudentFactory(person=student_info.person)
+        period = PeriodFactory(name='P1', cohort=self.cohort)
+        StudentAffectationStatFactory(student=student, period=period)
+        ScoreFactory(period=period, student=student, cohort=self.cohort)
+        url = reverse('send_reminder', kwargs={'cohort_id': self.cohort.pk})
+        response = self.client.post(url, data={
+            'selected_student': [student_info.pk]
+        })
+        messages_list = [str(msg) for msg in list(messages.get_messages(response.wsgi_request))]
+        self.assertIn(
+            _("Reminders have been sent successfully"),
+            messages_list
+        )
+        self.assertTrue(mock_send_mail.called)

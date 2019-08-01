@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-07-24 09:14+0200\n"
+"POT-Creation-Date: 2019-07-30 16:06+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -36,6 +36,10 @@ msgstr ""
 msgid "Acronym already exists"
 msgstr ""
 
+#: templates/scores.html:78
+msgid "Actions"
+msgstr ""
+
 #: templates/cohort/selection.html:20 templates/masters.html:81
 #: templates/places.html:43 templates/students.html:96
 msgid "Add"
@@ -45,7 +49,7 @@ msgstr ""
 msgid "Add a specialty"
 msgstr ""
 
-#: views/cohort.py:53
+#: views/cohort.py:52
 msgid "Add cohort"
 msgstr ""
 
@@ -107,8 +111,12 @@ msgstr ""
 msgid "Allocation Sum up"
 msgstr ""
 
-#: views/score.py:93 views/score.py:115
+#: views/score.py:156 views/score.py:178
 msgid "An error occured during score update"
+msgstr ""
+
+#: views/score.py:123
+msgid "An error occured while sending reminders"
 msgstr ""
 
 #: templates/fragment/delete_confirmation_modal.html:38
@@ -134,15 +142,20 @@ msgstr ""
 msgid "Birth date must be on or before today's date."
 msgstr ""
 
+#: views/score.py:129
+msgid "Reminders have been sent successfully"
+msgstr ""
+
 #: templates/fragment/delete_confirmation_modal.html:41
 #: templates/internship_affectation_errors.html:85
 #: templates/internship_affectation_hospitals.html:85
 #: templates/internship_affectation_statistics.html:85
 #: templates/internship_affectation_students.html:85
 #: templates/internships.html:234 templates/master_form.html:150
-#: templates/scores.html:262 templates/scores.html:292
-#: templates/scores.html:312 templates/student_form.html:145
-#: templates/students.html:200 templates/students_update.html:46
+#: templates/scores.html:316 templates/scores.html:346
+#: templates/scores.html:367 templates/scores.html:389
+#: templates/student_form.html:145 templates/students.html:200
+#: templates/students_update.html:46
 msgid "Cancel"
 msgstr ""
 
@@ -156,6 +169,10 @@ msgstr ""
 
 #: templates/place_detail.html:46
 msgid "Capacity"
+msgstr ""
+
+#: templates/scores.html:113
+msgid "Check All"
 msgstr ""
 
 #: templates/place_detail.html:57 templates/student.html:160
@@ -190,7 +207,7 @@ msgstr ""
 msgid "Choose a specialty"
 msgstr ""
 
-#: templates/scores.html:277
+#: templates/scores.html:333
 msgid "Choose which periods you want to include in the file"
 msgstr ""
 
@@ -219,11 +236,11 @@ msgstr ""
 msgid "Contest"
 msgstr ""
 
-#: templates/scores.html:216
+#: templates/scores.html:270
 msgid "Copy"
 msgstr ""
 
-#: templates/scores.html:166
+#: templates/scores.html:220
 msgid "Copy Period"
 msgstr ""
 
@@ -254,11 +271,11 @@ msgstr ""
 msgid "Date format"
 msgstr ""
 
-#: templates/master.html:172 templates/scores.html:310
+#: templates/master.html:172 templates/scores.html:365
 msgid "Delete"
 msgstr ""
 
-#: templates/scores.html:303
+#: templates/scores.html:358
 msgid "Delete score ?"
 msgstr ""
 
@@ -285,7 +302,7 @@ msgstr ""
 msgid "Edit"
 msgstr ""
 
-#: views/cohort.py:76
+#: views/cohort.py:75
 msgid "Edit cohort"
 msgstr ""
 
@@ -342,7 +359,7 @@ msgstr ""
 msgid "Errors"
 msgstr ""
 
-#: templates/scores.html:290
+#: templates/scores.html:345
 msgid "Export"
 msgstr ""
 
@@ -354,7 +371,7 @@ msgstr ""
 msgid "Export master affectations"
 msgstr ""
 
-#: templates/scores.html:274
+#: templates/scores.html:330
 msgid "Export scores"
 msgstr ""
 
@@ -362,7 +379,7 @@ msgstr ""
 msgid "Export to XLS"
 msgstr ""
 
-#: templates/scores.html:69
+#: templates/scores.html:85
 msgid "Export to XLSX"
 msgstr ""
 
@@ -370,7 +387,7 @@ msgstr ""
 msgid "Female"
 msgstr ""
 
-#: tests/views/test_scores.py:181 views/offer.py:423 views/score.py:314
+#: tests/views/test_scores.py:181 views/offer.py:423 views/score.py:409
 msgid "File extension must be .xlsx"
 msgstr ""
 
@@ -466,18 +483,18 @@ msgstr ""
 msgid "Hospitals"
 msgstr ""
 
-#: templates/internships.html:61 templates/scores.html:240
-#: templates/scores.html:260 templates/students.html:92
+#: templates/internships.html:61 templates/scores.html:294
+#: templates/scores.html:314 templates/students.html:92
 #: templates/students.html:189 templates/students.html:199
 msgid "Import"
 msgstr ""
 
-#: views/score.py:339
+#: views/score.py:434
 #, python-format
 msgid "Import aborted for period %(period)s due to error(s) on:"
 msgstr ""
 
-#: templates/scores.html:74
+#: templates/scores.html:93
 msgid "Import internships ratings"
 msgstr ""
 
@@ -485,7 +502,7 @@ msgstr ""
 msgid "Imposed choices"
 msgstr ""
 
-#: forms/score.py:13
+#: forms/score.py:21
 msgid "In all fields"
 msgstr ""
 
@@ -499,7 +516,7 @@ msgstr ""
 msgid "Inject"
 msgstr ""
 
-#: templates/internships.html:154 templates/scores.html:84
+#: templates/internships.html:154 templates/scores.html:119
 #: templates/student.html:153
 msgid "Internship"
 msgstr ""
@@ -583,7 +600,7 @@ msgstr ""
 msgid "Internships offers"
 msgstr ""
 
-#: views/score.py:350
+#: views/score.py:445
 #, python-format
 msgid "Internships ratings successfully imported for period %(period)s"
 msgstr ""
@@ -686,6 +703,10 @@ msgstr ""
 msgid "New records"
 msgstr ""
 
+#: forms/score.py:15
+msgid "No"
+msgstr ""
+
 #: templates/master.html:152
 msgid "No allocation found for the master"
 msgstr ""
@@ -698,7 +719,7 @@ msgstr ""
 msgid "No hospital"
 msgstr ""
 
-#: templates/students.html:115
+#: templates/scores.html:184 templates/students.html:115
 msgid "No result"
 msgstr ""
 
@@ -755,17 +776,18 @@ msgstr ""
 msgid "Other choice"
 msgstr ""
 
-#: templates/scores.html:219
+#: templates/scores.html:273
 msgid "Paste"
 msgstr ""
 
-#: templates/scores.html:169
+#: templates/scores.html:223
 msgid "Paste Period"
 msgstr ""
 
 #: templates/internship_affectation_errors.html:113
-#: templates/place_form.html:81 templates/scores.html:83
-#: templates/scores.html:244 templates/student_affectation_modification.html:51
+#: templates/place_form.html:81 templates/scores.html:62
+#: templates/scores.html:118 templates/scores.html:298
+#: templates/student_affectation_modification.html:51
 msgid "Period"
 msgstr ""
 
@@ -789,7 +811,7 @@ msgstr ""
 msgid "Periods"
 msgstr ""
 
-#: views/score.py:333
+#: views/score.py:428
 msgid "Periods do not match"
 msgstr ""
 
@@ -865,7 +887,7 @@ msgstr ""
 #: templates/internship_modification.html:76 templates/master_form.html:146
 #: templates/period_create.html:58 templates/period_create.html:59
 #: templates/period_places_edit.html:51 templates/place_form.html:183
-#: templates/place_form.html:184 templates/scores.html:148
+#: templates/place_form.html:184 templates/scores.html:202
 #: templates/speciality_form.html:63 templates/speciality_form.html:64
 #: templates/student_affectation_modification.html:115
 #: templates/student_affectation_modification.html:116
@@ -875,11 +897,15 @@ msgstr ""
 msgid "Save"
 msgstr ""
 
+#: templates/scores.html:66 templates/scores.html:124
+msgid "Score"
+msgstr ""
+
 #: templates/fragment/score_cell.html:5
 msgid "Score edited. Computed score: "
 msgstr ""
 
-#: views/score.py:95
+#: views/score.py:158
 msgid "Score must be between 0 and 20"
 msgstr ""
 
@@ -892,7 +918,7 @@ msgstr ""
 msgid "Scores encoding"
 msgstr ""
 
-#: templates/scores.html:145
+#: templates/scores.html:199
 msgid "Scores equivalence according to periods"
 msgstr ""
 
@@ -909,7 +935,7 @@ msgstr ""
 msgid "Second choice"
 msgstr ""
 
-#: templates/scores.html:255
+#: templates/scores.html:309
 msgid "Select a xls file that contains the scores by period"
 msgstr ""
 
@@ -926,7 +952,12 @@ msgid "Selectable by the student"
 msgstr ""
 
 #: templates/fragment/affectation_panel_heading.html:31
+#: templates/scores.html:387
 msgid "Send"
+msgstr ""
+
+#: templates/scores.html:100 templates/scores.html:378
+msgid "Send reminder"
 msgstr ""
 
 #: templates/specialities.html:55 templates/speciality_form.html:53
@@ -963,7 +994,7 @@ msgstr ""
 #: templates/internship_modification.html:52 templates/internships.html:170
 #: templates/master.html:141 templates/master_form.html:79
 #: templates/masters.html:57 templates/masters.html:95
-#: templates/place_form.html:171 templates/scores.html:85
+#: templates/place_form.html:171 templates/scores.html:120
 #: templates/speciality_form.html:40 templates/student.html:159
 msgid "Specialty"
 msgstr ""
@@ -1005,7 +1036,7 @@ msgid "Status"
 msgstr ""
 
 #: templates/internship_affectation_errors.html:111
-#: templates/internship_affectation_students.html:118 templates/scores.html:82
+#: templates/internship_affectation_students.html:118 templates/scores.html:117
 #: templates/student_form.html:39
 msgid "Student"
 msgstr ""
@@ -1085,8 +1116,12 @@ msgstr ""
 msgid "Third choice"
 msgstr ""
 
-#: templates/scores.html:306
+#: templates/scores.html:361
 msgid "This action will delete previously edited score."
+msgstr ""
+
+#: templates/scores.html:381
+msgid "This action will send a reminder by email to the following students:"
 msgstr ""
 
 #: templates/internship_affectation_errors.html:68
@@ -1112,18 +1147,22 @@ msgstr ""
 msgid "Website"
 msgstr ""
 
+#: forms/score.py:14
+msgid "Yes"
+msgstr ""
+
 #: templates/internship_modification_student.html:43
 msgid ""
 "You are in the period of inscriptions. It is not recommended to change "
 "choices during this period."
 msgstr ""
 
-#: views/score.py:342
+#: views/score.py:437
 #, python-format
 msgid "row %(row_id)s"
 msgstr ""
 
-#: views/score.py:343
+#: views/score.py:438
 #, python-format
 msgid "student with registration id '%(reg_id)s' not found"
 msgstr ""

@@ -1,0 +1,37 @@
+{% load i18n bootstrap3 %}
+
+<div class="modal fade" id="upload_scores" tabindex="-1" role="dialog" aria-labelledby="uploadScoresLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form id="upload-form" method="post" enctype="multipart/form-data" action="{% url 'internship_upload_scores' cohort_id=cohort.id %}">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="bt_close_upload_students_modal"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="uploadScoresLabel">{% trans 'Import' %}</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="period-select">{% trans 'Period' %}</label>
+                        <select name="period" class="form-control" id="period-select">
+                            {% for period in all_periods %}
+                                <option>{{ period }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                      <input type="file" id="scores_input_file" name="file_upload"/>
+                    </div>
+                    <div id="selectedFiles"></div>
+                    <p class="help-block">{% trans 'Select a xls file that contains the scores by period' %}</p>
+                </div>
+                <div class="modal-footer">
+                    <button id="import-submit" type="submit" class="btn btn-primary" onclick="document.getElementById('files').style.visibility='visible'" id="bt_submit_upload_scores_modal">
+                        <div id="loader" style="display: none;"></div>
+                        {% trans 'Import' %}
+                    </button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="bt_cancel_upload_scores_modal">{% trans 'Cancel' %}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

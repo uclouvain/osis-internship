@@ -72,21 +72,47 @@
                             </button>
                         </div>
                         <div class="col-md-6 pull-right">
-                            <button type="button" data-toggle="modal" data-target="#download_scores" class="btn btn-default pull-right" style="margin-top: 26px;">
-                                <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
-                                {% trans 'Export to XLSX' %}
-                            </button>
-                            <button type="button" class="btn btn-default pull-right" data-toggle="modal"
-                                    data-target="#upload_scores" id="bt_upload_score_modal" style="margin-top: 26px; margin-right:10px;">
-                                <span class="glyphicon glyphicon-upload" aria-hidden="true"></span>
-                                {% trans 'Import internships ratings' %}
-                            </button>
+                            <div class="dropdown text-right">
+                                <button id="actions" type="button" class="btn btn-default" data-toggle="dropdown" aria-haspopup="true"
+                                        aria-expanded="false" style="margin-top: 26px;">
+                                    <span class="glyphicon glyphicon-cog" aria-hidden="true"></span> {% trans 'Actions' %}
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-large row text-right pull-right">
+                                    <li>
+                                        <a href="#" data-toggle="modal" data-target="#download_scores">
+                                            <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
+                                            {% trans 'Export to XLSX' %}
+                                        </a>
+                                    </li>
+                                    <li role="separator" class="divider"></li>
+                                    <li>
+                                        <a href="#" data-toggle="modal"
+                                                data-target="#upload_scores" id="bt_upload_score_modal">
+                                            <span class="glyphicon glyphicon-upload" aria-hidden="true"></span>
+                                            {% trans 'Import internships ratings' %}
+                                        </a>
+                                    </li>
+                                    <li role="separator" class="divider"></li>
+                                    <li id="li_send_reminder" class="disabled">
+                                        <a href="#" data-target="#send_reminder" id="btn_send_reminder">
+                                            <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>
+                                            {% trans 'Send reminder' %}
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </form>
                 <div class="table-responsive">
                   <table class="table">
                       <tr>
+                        {% if students %}
+                            <th>
+                                <input id="id_check_all" type="checkbox" name="check_all" title="{% trans 'Check All' %}"/>
+                            </th>
+                        {% endif %}
                         <th></th>
                         <th>{% trans 'Student' %}</th>
                         <th  class="overflow-cell" style="max-width:7vw;">{% trans 'Period' %}</th>
@@ -95,10 +121,16 @@
                           {% for i in i|rjust:15 %}
                             <th class="hidden-sm hidden-xs">APD {{forloop.counter}}</th>
                           {% endfor %}
-                        <th>Score</th>
+                        <th>{% trans 'Score' %}</th>
                       </tr>
+                        <form action="{% url 'send_reminder' cohort_id=cohort.id %}" method="post" id="send_reminder_form">
+                        {% csrf_token %}
                         {% for student in students %}
-                      <tr>
+                         <tr>
+                          <td rowspan="{{ periods|length|add:1 }}">
+                              <input type="checkbox" name="selected_student" class="selected_object" data-periods="{{ student.periods_scores }}"
+                                     data-student="{{ student }}" value="{{ student.pk }}"/>
+                          </td>
                           <td rowspan="{{ periods|length|add:1 }}">
                               {% if not student.fulfill_condition %}
                                   <icon class="glyphicon glyphicon-remove-sign text-danger"></icon>
@@ -152,6 +184,7 @@
                                 {% trans 'No result' %}
                             </tr>
                         {% endfor %}
+                        </form>
                     </table>
                     <div>
                         {% bootstrap_pagination students extra=request.GET.urlencode %}
@@ -251,91 +284,14 @@
         </div>
     </div>
 
-    <div class="modal fade" id="upload_scores" tabindex="-1" role="dialog" aria-labelledby="uploadScoresLabel">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <form id="upload-form" method="post" enctype="multipart/form-data" action="{% url 'internship_upload_scores' cohort_id=cohort.id %}">
-                    {% csrf_token %}
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="bt_close_upload_students_modal"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="uploadScoresLabel">{% trans 'Import' %}</h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label for="period-select">{% trans 'Period' %}</label>
-                            <select name="period" class="form-control" id="period-select">
-                                {% for period in all_periods %}
-                                    <option>{{ period }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <div class="form-group">
-                          <input type="file" id="scores_input_file" name="file_upload"/>
-                        </div>
-                        <div id="selectedFiles"></div>
-                        <p class="help-block">{% trans 'Select a xls file that contains the scores by period' %}</p>
-                    </div>
-                    <div class="modal-footer">
-                        <button id="import-submit" type="submit" class="btn btn-primary" onclick="document.getElementById('files').style.visibility='visible'" id="bt_submit_upload_scores_modal">
-                            <div id="loader" style="display: none;"></div>
-                            {% trans 'Import' %}
-                        </button>
-                        <button type="button" class="btn btn-default" data-dismiss="modal" id="bt_cancel_upload_scores_modal">{% trans 'Cancel' %}</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+    {% include 'fragment/upload_scores_modal.html' %}
 
-    <div class="modal fade" id="download_scores" tabindex="-1" role="dialog" aria-labelledby="delete_score_label">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <form id="form_export_scores" method="post" action="{% url 'internship_download_scores' cohort_id=cohort.id %}" >
-                    {% csrf_token %}
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">{% trans "Export scores" %}</h4>
-                    </div>
-                    <div class="modal-body">
-                        <p>{% trans "Choose which periods you want to include in the file" %}</p>
-                        <div class="row">
-                            {% for period in all_periods %}
-                                <div class="col-lg-2">
-                                    <div class="checkbox">
-                                        <label><input name="period" type="checkbox" value="{{ period }}" checked>{{ period }}</label>
-                                    </div>
-                                </div>
-                            {% endfor %}
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <input id="export_score_btn" type="submit" class="btn btn-primary" value="{% trans "Export" %}">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">{% trans "Cancel" %}</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+    {% include 'fragment/download_scores_modal.html' %}
 
-    <div class="modal fade" id="delete_score" tabindex="-1" role="dialog" aria-labelledby="delete_score_label">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">{% trans "Delete score ?" %}</h4>
-                </div>
-                <div class="modal-body">
-                    <p>{% trans "This action will delete previously edited score." %}</p>
-                </div>
-                <div class="modal-footer">
-                    <button id="delete_score_btn" type="button" class="btn btn-danger" data-dismiss="modal" onclick="deleteScore(this)">
-                        {% trans "Delete" %}
-                    </button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">{% trans "Cancel" %}</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    {% include 'fragment/delete_score_modal.html' %}
+
+    {% include 'fragment/send_reminder_modal.html' %}
+
 {% endblock %}
 
 {% block script %}
@@ -517,6 +473,28 @@
             deleteScoreBtn.data("cell", $(this).closest('td')[0]);
         });
 
+        $(document).on('click', '[data-target="#send_reminder"]', function(){
+            $.each($("input[name='selected_student']:checked"), function(){
+                $("#selected_students").append(
+                    '<li>'+$(this).data('student')+'</li>'
+                );
+            });
+            if(!$("#li_send_reminder").hasClass('disabled')){
+                $("#send_reminder").modal("show");
+            }
+        });
+
+        $("#actions").click(function(){
+            $("#li_send_reminder").toggleClass(
+                'disabled',
+                $("input[name='selected_student']:checked").length<1
+            );
+        });
+
+        $("#send_reminder").on("hidden.bs.modal", function(){
+            $("#selected_students").empty();
+        });
+
         function saveScore(value, student, period, cell, computed) {
             $.ajax({
                 url: "ajax/save_score/",
@@ -566,8 +544,16 @@
             });
         }
 
+        function sendReminder(){
+            $("#send_reminder_form").submit();
+        }
+
         $("#export_score_btn").on('click', function(){
           $("#download_scores").modal("hide");
+        });
+
+        $("#id_check_all").click(function(){
+            $('input:checkbox.selected_object').not(this).prop('checked', this.checked);
         });
     </script>
 {% endblock %}
