@@ -117,7 +117,7 @@ msgid "An error occured during score update"
 msgstr "Une erreur est survenue lors de l'édition de la note"
 
 #: views/score.py:123
-msgid "An error occured while sending callbacks"
+msgid "An error occured while sending reminders"
 msgstr "Une erreur s'est produite lors de l'envoi des rappels"
 
 #: templates/fragment/delete_confirmation_modal.html:38
@@ -144,7 +144,7 @@ msgid "Birth date must be on or before today's date."
 msgstr "La date de naissance doit être antérieure ou égale à la date actuelle."
 
 #: views/score.py:129
-msgid "Callbacks have been sent successfully"
+msgid "Reminders have been sent successfully"
 msgstr "Les messages de rappels ont bien été envoyés"
 
 #: templates/fragment/delete_confirmation_modal.html:41
@@ -174,7 +174,7 @@ msgstr "Capacité maximale"
 
 #: templates/scores.html:113
 msgid "Check All"
-msgstr ""
+msgstr "Cocher tout"
 
 #: templates/place_detail.html:57 templates/student.html:160
 msgid "Choice"
@@ -710,7 +710,7 @@ msgstr "Nouveaux enregistrements"
 
 #: forms/score.py:15
 msgid "No"
-msgstr ""
+msgstr "Non"
 
 #: templates/master.html:152
 msgid "No allocation found for the master"
@@ -966,7 +966,7 @@ msgid "Send"
 msgstr "Envoyer"
 
 #: templates/scores.html:100 templates/scores.html:378
-msgid "Send callback"
+msgid "Send reminder"
 msgstr "Envoyer un rappel"
 
 #: templates/specialities.html:55 templates/speciality_form.html:53
@@ -1130,7 +1130,7 @@ msgid "This action will delete previously edited score."
 msgstr "Cette action supprimera la note précédemment modifiée."
 
 #: templates/scores.html:381
-msgid "This action will send a callback by email to the following students:"
+msgid "This action will send a reminder by email to the following students:"
 msgstr "Cette action enverra un email de rappel aux étudiants suivants:"
 
 #: templates/internship_affectation_errors.html:68
@@ -1158,7 +1158,7 @@ msgstr "Site web"
 
 #: forms/score.py:14
 msgid "Yes"
-msgstr ""
+msgstr "Oui"
 
 #: templates/internship_modification_student.html:43
 msgid ""

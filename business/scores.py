@@ -59,7 +59,7 @@ class InternshipScoreRules:
         return True
 
 
-def send_score_encoding_callback(data):
+def send_score_encoding_reminder(data):
     student_info = InternshipStudentInformation.objects.get(
         person__id=data['person_id'],
         cohort__id=data['cohort_id']
@@ -70,8 +70,8 @@ def send_score_encoding_callback(data):
         student=student, period__in=periods
     )
     message_content = message_config.create_message_content(
-        html_template_ref='internship_score_encoding_callback_email_html',
-        txt_template_ref='internship_score_encoding_callback_email_txt',
+        html_template_ref='internship_score_encoding_reminder_email_html',
+        txt_template_ref='internship_score_encoding_reminder_email_txt',
         tables=[],
         receivers=[message_config.create_receiver(
             student_info.person_id,

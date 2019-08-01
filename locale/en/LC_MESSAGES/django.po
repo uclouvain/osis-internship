@@ -116,7 +116,7 @@ msgid "An error occured during score update"
 msgstr ""
 
 #: views/score.py:123
-msgid "An error occured while sending callbacks"
+msgid "An error occured while sending reminders"
 msgstr ""
 
 #: templates/fragment/delete_confirmation_modal.html:38
@@ -143,7 +143,7 @@ msgid "Birth date must be on or before today's date."
 msgstr ""
 
 #: views/score.py:129
-msgid "Callbacks have been sent successfully"
+msgid "Reminders have been sent successfully"
 msgstr ""
 
 #: templates/fragment/delete_confirmation_modal.html:41
@@ -957,7 +957,7 @@ msgid "Send"
 msgstr ""
 
 #: templates/scores.html:100 templates/scores.html:378
-msgid "Send callback"
+msgid "Send reminder"
 msgstr ""
 
 #: templates/specialities.html:55 templates/speciality_form.html:53
@@ -1121,7 +1121,7 @@ msgid "This action will delete previously edited score."
 msgstr ""
 
 #: templates/scores.html:381
-msgid "This action will send a callback by email to the following students:"
+msgid "This action will send a reminder by email to the following students:"
 msgstr ""
 
 #: templates/internship_affectation_errors.html:68
