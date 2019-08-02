@@ -316,3 +316,19 @@ class ScoresEncodingTest(TestCase):
             messages_list
         )
         self.assertTrue(mock_send_mail.called)
+
+    def test_ajax_save_evaluation_status(self):
+        affectation = StudentAffectationStatFactory(
+            student=StudentFactory(),
+            period=PeriodFactory(cohort=self.cohort)
+        )
+        self.assertFalse(affectation.internship_evaluated)
+        url = reverse('save_evaluation_status', kwargs={'cohort_id': self.cohort.pk})
+        response = self.client.post(url, data={
+            'student': affectation.student.registration_id,
+            'period': affectation.period.name,
+            'status': 'true'
+        })
+        affectation.refresh_from_db()
+        self.assertEqual(response.status_code, 204)
+        self.assertTrue(affectation.internship_evaluated)

@@ -118,8 +118,9 @@
                         <th  class="overflow-cell" style="max-width:7vw;">{% trans 'Period' %}</th>
                         <th>{% trans 'Internship' %}</th>
                         <th>{% trans 'Specialty' %}</th>
+                        <th>Eval.</th>
                           {% for i in i|rjust:15 %}
-                            <th class="hidden-sm hidden-xs">APD {{forloop.counter}}</th>
+                            <th class="hidden-sm hidden-xs text-center">APD {{forloop.counter}}</th>
                           {% endfor %}
                         <th>{% trans 'Score' %}</th>
                       </tr>
@@ -145,23 +146,33 @@
                             <td>{{ period }}</td>
                             <td>{{ student.specialties|get_item:period.name }}</td>
                             <td>{{ student.organizations|get_item:period.name }}</td>
+                            <td>
+                                <label class="switch">
+                                  <input type="checkbox"  data-period="{{ period }}" data-student="{{ student.registration_id }}"
+                                    {% if student.evaluations|get_item:period.name %}
+                                        checked
+                                    {% endif %}>
+                                  <span class="slider"></span>
+                                </label>
+
+                            </td>
                             {% if not student.scores|has_substr:period %}
                                 {% for i in i|rjust:15 %}
-                                    <td class="hidden-sm hidden-xs">-</td>
+                                    <td class="hidden-sm hidden-xs text-center">-</td>
                                 {% endfor %}
                             {% endif %}
                             {% for key, scores in student.scores %}
                                 {% if key|slugify == period|slugify %}
                                     {% for score in scores %}
                                         {% if score != None %}
-                                            <td class="hidden-sm hidden-xs
+                                            <td class="hidden-sm hidden-xs text-center
                                             {% if not score|is_valid:forloop.counter0 %}
                                              text-bold text-danger
                                             {% endif %}">
                                                 {{ score }}
                                             </td>
                                         {% else %}
-                                            <td class="hidden-sm hidden-xs">-</td>
+                                            <td class="hidden-sm hidden-xs text-center">-</td>
                                         {% endif %}
                                     {% endfor %}
                                 {% endif %}
@@ -554,6 +565,19 @@
 
         $("#id_check_all").click(function(){
             $('input:checkbox.selected_object').not(this).prop('checked', this.checked);
+        });
+
+        $('.switch input').click(function(){
+            let status = $(this).prop('checked');
+            $.ajax({
+                url: "ajax/save_evaluation_status/",
+                method: "POST",
+                data: {
+                    'status': status,
+                    'student': $(this).data('student'),
+                    'period': $(this).data('period')
+                }
+            });
         });
     </script>
 {% endblock %}

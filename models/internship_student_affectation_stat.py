@@ -32,9 +32,9 @@ from internship.models.enums.costs import Costs
 
 class InternshipStudentAffectationStatAdmin(SerializableModelAdmin):
     list_display = ('student', 'organization', 'speciality', 'period', 'internship', 'choice', 'cost',
-                    'consecutive_month', 'type')
+                    'consecutive_month', 'type', 'internship_evaluated')
     fieldsets = ((None, {'fields': ('student', 'organization', 'speciality', 'period', 'internship', 'choice', 'cost',
-                                    'consecutive_month', 'type')}),)
+                                    'consecutive_month', 'type', 'internship_evaluated')}),)
     raw_id_fields = ('student', 'organization', 'speciality', 'period', 'internship')
     search_fields = ['student__person__first_name', 'student__person__last_name']
     list_filter = ('period__cohort', 'choice')
@@ -53,6 +53,7 @@ class InternshipStudentAffectationStat(SerializableModel):
     cost = models.IntegerField()
     consecutive_month = models.BooleanField(default=False)
     type = models.CharField(max_length=1, choices=AffectationType.choices(), default=AffectationType.NORMAL.value)
+    internship_evaluated = models.BooleanField(default=False)
 
     def __str__(self):
         return u"%s : %s - %s (%s)" % (self.student, self.organization, self.speciality, self.period)

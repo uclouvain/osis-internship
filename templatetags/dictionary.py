@@ -28,8 +28,8 @@ from django.template.defaulttags import register
 
 @register.filter
 def get_item(dictionary, key):
-    val = dictionary.get(key)
-    return val if val else ""
+    val = dictionary.get(key, "")
+    return val
 
 
 @register.filter
