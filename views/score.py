@@ -23,6 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+import json
 from collections import Counter
 
 from django.contrib import messages
@@ -131,6 +132,27 @@ def _show_reminder_sent_success_message(request):
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
+def save_evaluation_status(request, cohort_id):
+    cohort = get_object_or_404(Cohort, pk=cohort_id)
+    registration_id = request.POST.get("student")
+    period_name = request.POST.get("period")
+    status = json.loads(request.POST.get("status"))
+    _update_evaluation_status(status, registration_id, period_name, cohort)
+    return _json_response_success()
+
+
+def _update_evaluation_status(status, registration_id, period_name, cohort):
+    return InternshipStudentAffectationStat.objects.filter(
+        period__cohort=cohort,
+        period__name=period_name,
+        student__registration_id=registration_id
+    ).update(
+        internship_evaluated=status
+    )
+
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
 def save_edited_score(request, cohort_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
     edited_score = float(request.POST.get("value"))
@@ -195,6 +217,12 @@ def _update_score(cohort, edited_score, period_name, registration_id):
     )
 
 
+def _json_response_success():
+    response = JsonResponse({})
+    response.status_code = 204
+    return response
+
+
 def _json_response_error(msg):
     response = JsonResponse({"error": msg})
     response.status_code = 500
@@ -218,15 +246,32 @@ def _prepare_score_table(cohort, periods, students):
     ).values(
         'student__person', 'student__registration_id', 'period__name', 'organization__reference',
         'speciality__acronym', 'speciality__sequence', 'internship__speciality_id', 'internship__name',
-        'internship__length_in_periods'
+        'internship__length_in_periods', 'internship_evaluated'
     ).order_by('period__date_start')
     _match_scores_with_students(cohort, periods, list(scores), students)
     _set_condition_fulfilled_status(students)
     _map_numeric_score(mapping, students)
     _link_periods_to_organizations(students, students_affectations)
     _link_periods_to_specialties(students, students_affectations)
+    _link_periods_to_evaluations(students, students_affectations)
     _append_registration_ids(students, students_affectations)
     return mapping
+
+
+def _link_periods_to_evaluations(students, students_affectations):
+    for student in students:
+        student.evaluations = {}
+        _update_student_evaluations(student, students_affectations)
+
+
+def _update_student_evaluations(student, students_affectations):
+    for affectation in students_affectations:
+        if affectation['student__person'] == student.person.pk:
+            student.evaluations.update(
+                {
+                    affectation['period__name']: affectation['internship_evaluated']
+                }
+            )
 
 
 def _map_numeric_score(mapping, students):
