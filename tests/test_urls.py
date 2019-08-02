@@ -104,6 +104,11 @@ class UrlsTestCase(TestCase):
                 pattern_name='send_reminder',
                 kwargs={'cohort_id': 1}
             ),
+            dict(
+                url_path='/internships/cohorts/1/scores_encoding/ajax/save_evaluation_status/',
+                pattern_name='save_evaluation_status',
+                kwargs={'cohort_id': 1}
+            ),
         ]
 
         for url_name, pattern in test_paths(routes_to_test):
