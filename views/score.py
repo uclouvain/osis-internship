@@ -45,6 +45,7 @@ from internship.models.internship_score_mapping import InternshipScoreMapping
 from internship.models.internship_student_affectation_stat import InternshipStudentAffectationStat
 from internship.models.internship_student_information import InternshipStudentInformation
 from internship.models.period import Period
+from internship.templatetags.dictionary import is_edited
 from internship.utils.exporting import score_encoding_xls
 from internship.utils.importing import import_scores
 from internship.views.common import get_object_list
@@ -153,6 +154,22 @@ def _update_evaluation_status(status, registration_id, period_name, cohort):
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
+def refresh_evolution_score(request, cohort_id):
+    scores = json.loads(request.POST['scores'].replace("'", '"'))
+    period = request.POST['period']
+    value = float(request.POST['value'])
+    scores[period] = value
+    evolution_score = _get_scores_mean(scores)
+    response = JsonResponse({
+        'updated_scores': str(scores),
+        'evolution_score': evolution_score}
+    )
+    response.status_code = 200
+    return response
+
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
 def save_edited_score(request, cohort_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
     edited_score = float(request.POST.get("value"))
@@ -255,7 +272,25 @@ def _prepare_score_table(cohort, periods, students):
     _link_periods_to_specialties(students, students_affectations)
     _link_periods_to_evaluations(students, students_affectations)
     _append_registration_ids(students, students_affectations)
+    _compute_evolution_score(students)
     return mapping
+
+
+def _compute_evolution_score(students):
+    for student in students:
+        student.evolution_score = _get_scores_mean(student.periods_scores)
+
+
+def _get_scores_mean(scores):
+    evolution_score = 0
+    n_periods = len(scores.keys())
+    for key in scores.keys():
+        evolution_score += _get_period_score(scores[key]) / n_periods
+    return evolution_score
+
+
+def _get_period_score(score):
+    return score['edited'] if is_edited(score) else score
 
 
 def _link_periods_to_evaluations(students, students_affectations):
