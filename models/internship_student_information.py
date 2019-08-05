@@ -32,7 +32,7 @@ from django.utils.translation import ugettext_lazy as _
 class InternshipStudentInformationAdmin(SerializableModelAdmin):
     list_display = ('person', 'location', 'postal_code', 'city', 'country', 'email', 'phone_mobile', 'cohort')
     fieldsets = ((None, {'fields': ('person', 'location', 'postal_code', 'city', 'country', 'email', 'phone_mobile',
-                                    'contest', 'cohort')}),)
+                                    'contest', 'cohort', 'evolution_score')}),)
     raw_id_fields = ('person',)
     list_filter = ('cohort',)
     search_fields = ['person__user__username', 'person__last_name', 'person__first_name']
@@ -50,6 +50,7 @@ class InternshipStudentInformation(SerializableModel):
     phone_mobile = models.CharField(max_length=100, blank=True, null=True)
     contest = models.CharField(max_length=124, choices=TYPE_CHOICE, null=True, blank=True)
     cohort = models.ForeignKey('internship.Cohort', on_delete=models.CASCADE)
+    evolution_score = models.FloatField(null=True, blank=True)
 
     def __str__(self):
         return '{}'.format(self.person)
