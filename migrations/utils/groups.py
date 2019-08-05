@@ -23,9 +23,6 @@
 # ##################################################################################################
 from django.core.management.sql import emit_post_migrate_signal
 
-from base.models.person import Person
-from internship.models.internship_student_information import InternshipStudentInformation
-
 
 def add_init_internship_manager_group(apps, schema_editor):
     # create group
@@ -51,6 +48,8 @@ def linkToDefaultCohort(apps, schema_editor):
 
 
 def cleanupStudentInternshipsAndPersons(apps, schema_editor):
+    Person = apps.get_model("base", "Person")
+    InternshipStudentInformation = apps.get_model("internship", "InternshipStudentInformation")
     bad_student_infos = InternshipStudentInformation.objects.filter(cohort_id=2)
     bad_person_ids = bad_student_infos.values_list("person_id", flat=True)
     Person.objects.filter(id__in=bad_person_ids).delete()
