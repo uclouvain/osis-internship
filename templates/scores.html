@@ -189,7 +189,19 @@
                                 {% endif %}
                             {% endwith %}
                           {% endfor %}
-                          </tr>
+                            </tr>
+                            {% if periods|length == all_periods|length %}
+                            <tr style="height: 50px;">
+                                <td colspan="22" style="text-decoration: underline;" class="text-right">
+                                    {% trans 'Evolution Score:' %}
+                                </td>
+                                <td>
+                                    <span id="evolution_score_{{ student.registration_id }}" data-scores="{{ student.periods_scores }}">
+                                        {{ student.evolution_score|floatformat:2 }}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% endif %}
                         {% empty %}
                             <tr>
                                 {% trans 'No result' %}
@@ -482,6 +494,7 @@
             let deleteScoreBtn = $("#delete_score_btn");
             deleteScoreBtn.data(this.dataset);
             deleteScoreBtn.data("cell", $(this).closest('td')[0]);
+            return false;
         });
 
         $(document).on('click', '[data-target="#send_reminder"]', function(){
@@ -519,6 +532,7 @@
                 success: function(response) {
                     cell.innerHTML = response;
                     resetPadding(cell);
+                    refreshEvolutionScore(student, period, value);
                 },
                 error: function(data) {
                     let inputGroup = $(cell).find(".input-group")[0];
@@ -533,16 +547,20 @@
 
         function deleteScore(e){
             cell = $(e).data('cell');
+            student = $(e).data('student');
+            period = $(e).data('period');
+            computed = parseFloat($(e).data('computed').replace(',', '.'));
             $.ajax({
                 url: "ajax/delete_score/",
                 method: "POST",
                 data: {
-                    'computed': parseFloat($(e).data('computed').replace(',', '.')),
-                    'student': $(e).data('student'),
-                    'period': $(e).data('period')
+                    'computed': computed,
+                    'student': student,
+                    'period': period
                 },
                 success: function(response) {
                     cell.innerHTML = response;
+                    refreshEvolutionScore(student, period, computed);
                 },
                 error: function(data) {
                     let inputGroup = $(cell).find(".input-group")[0];
@@ -579,5 +597,24 @@
                 }
             });
         });
+
+        function refreshEvolutionScore(student_id, period, value){
+            student_evolution_score = $(`#evolution_score_${student_id}`);
+            $.ajax({
+                url: "ajax/refresh_evolution_score/",
+                method: "POST",
+                data: {
+                    'scores': student_evolution_score.data('scores'),
+                    'period': period,
+                    'value': value
+                },
+                success: function(response){
+                    student_evolution_score.data('scores', response['updated_scores']);
+                    student_evolution_score[0].innerHTML = response['evolution_score'].toFixed(2).replace('.',',');
+                }
+            })
+        }
+
+
     </script>
 {% endblock %}

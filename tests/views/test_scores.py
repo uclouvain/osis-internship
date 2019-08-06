@@ -23,6 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+import json
 from types import SimpleNamespace
 from unittest import mock
 
@@ -92,7 +93,7 @@ class ScoresEncodingTest(TestCase):
             ScoreMappingFactory(
                 period=self.period,
                 cohort=self.cohort,
-                score_A=1, score_B=1, score_C=1, score_D=1,
+                score_A=20, score_B=15, score_C=10, score_D=0,
                 apd=apd
             )
 
@@ -240,7 +241,7 @@ class ScoresEncodingTest(TestCase):
         url = reverse('internship_scores_encoding', kwargs={'cohort_id': self.cohort.pk})
         response = self.client.get(url)
         periods_scores = response.context['students'].object_list[0].periods_scores
-        self.assertDictEqual(periods_scores, {self.period.name: 1.0})
+        self.assertDictEqual(periods_scores, {self.period.name: 20.0})
 
     def test_export_scores(self):
         url = reverse('internship_download_scores', kwargs={'cohort_id': self.cohort.pk})
@@ -332,3 +333,25 @@ class ScoresEncodingTest(TestCase):
         affectation.refresh_from_db()
         self.assertEqual(response.status_code, 204)
         self.assertTrue(affectation.internship_evaluated)
+
+    def test_compute_evolution_score(self):
+        student_info = InternshipStudentInformationFactory(cohort=self.cohort)
+        student = StudentFactory(person=student_info.person)
+        other_period = PeriodFactory(name='P2', cohort=self.cohort)
+        ScoreFactory(student=student, period=self.period, cohort=self.cohort, APD_1='A')
+        ScoreFactory(student=student, period=other_period, cohort=self.cohort, APD_1='C')
+        url = reverse('internship_scores_encoding', kwargs={'cohort_id': self.cohort.pk})
+        response = self.client.get(url, {'free_text': student.person.last_name})
+        evolution_score = response.context['students'].object_list[0].evolution_score
+        self.assertEqual(evolution_score, 10.0)
+
+    def test_ajax_refresh_evolution_score(self):
+        url = reverse('refresh_evolution_score', kwargs={'cohort_id': self.cohort.pk})
+        response = self.client.post(url, data={
+            'scores': '{"P1": 10.0, "P2": 20.0}',
+            'period': self.period.name,
+            'value': 20.0
+        })
+        json_response = json.loads(str(response.content, 'utf-8'))
+        self.assertEqual(json_response['evolution_score'], 20.0)
+        self.assertEqual(json_response['updated_scores'], "{'P1': 20.0, 'P2': 20.0}")
