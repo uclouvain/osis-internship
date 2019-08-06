@@ -494,6 +494,7 @@
             let deleteScoreBtn = $("#delete_score_btn");
             deleteScoreBtn.data(this.dataset);
             deleteScoreBtn.data("cell", $(this).closest('td')[0]);
+            return false;
         });
 
         $(document).on('click', '[data-target="#send_reminder"]', function(){
