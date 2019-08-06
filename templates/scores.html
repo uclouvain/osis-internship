@@ -191,16 +191,7 @@
                           {% endfor %}
                             </tr>
                             {% if periods|length == all_periods|length %}
-                            <tr style="height: 50px;">
-                                <td colspan="22" style="text-decoration: underline;" class="text-right">
-                                    {% trans 'Evolution Score:' %}
-                                </td>
-                                <td>
-                                    <span id="evolution_score_{{ student.registration_id }}" data-scores="{{ student.periods_scores }}">
-                                        {{ student.evolution_score|floatformat:2 }}
-                                    </span>
-                                </td>
-                            </tr>
+                                {% include 'fragment/evolution_score_cell.html' %}
                             {% endif %}
                         {% empty %}
                             <tr>

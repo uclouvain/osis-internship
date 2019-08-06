@@ -83,7 +83,7 @@ function editScore(e){
     cell.append(formGroup);
 }
 
-$(document).on('click', '[data-target="#delete_score"]', () => {
+$(document).on('click', '[data-target="#delete_score"]', function(){
     let deleteScoreBtn = $("#delete_score_btn");
     deleteScoreBtn.data(this.dataset);
     deleteScoreBtn.data("cell", $(this).closest('td')[0]);
