@@ -352,6 +352,6 @@ class ScoresEncodingTest(TestCase):
             'period': self.period.name,
             'value': 20.0
         })
-        json_response = json.loads(response.content)
+        json_response = json.loads(str(response.content, 'utf-8'))
         self.assertEqual(json_response['evolution_score'], 20.0)
         self.assertEqual(json_response['updated_scores'], "{'P1': 20.0, 'P2': 20.0}")
