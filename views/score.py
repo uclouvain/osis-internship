@@ -383,7 +383,7 @@ def _append_period_scores_to_student(period, student, student_scores):
 
 
 def _retrieve_scores_entered_manually(period, student, student_scores):
-    if student_scores[0].score:
+    if student_scores[0].score is not None:
         student.numeric_scores.update({period.name: student_scores[0].score})
 
 
