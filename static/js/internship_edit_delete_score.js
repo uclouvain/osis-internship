@@ -29,7 +29,7 @@ function buildConfirmButton(input, cell, data) {
     let confirmButton = document.createElement("button");
     confirmButton.innerHTML = "<icon class='glyphicon glyphicon-ok'><icon/>";
     confirmButton.classList.add("btn", "btn-primary");
-    confirmButton.addEventListener('click', function () {
+    confirmButton.addEventListener('click', () => {
         value = parseFloat(input.value.replace(',', '.'));
         saveScore(value, data.student, data.period, cell, data.computedScore);
     });
@@ -40,7 +40,7 @@ function buildCancelButton(cell, oldCellContent) {
     let cancelButton = document.createElement("button");
     cancelButton.innerHTML = "<icon class='glyphicon glyphicon-remove'><icon/>";
     cancelButton.classList.add("btn", "btn-secondary");
-    cancelButton.addEventListener('click', function () {
+    cancelButton.addEventListener('click', () => {
         cell.innerHTML = oldCellContent;
         resetPadding(cell);
     });
@@ -83,7 +83,7 @@ function editScore(e){
     cell.append(formGroup);
 }
 
-$(document).on('click', '[data-target="#delete_score"]', function(){
+$(document).on('click', '[data-target="#delete_score"]', () => {
     let deleteScoreBtn = $("#delete_score_btn");
     deleteScoreBtn.data(this.dataset);
     deleteScoreBtn.data("cell", $(this).closest('td')[0]);
@@ -100,12 +100,12 @@ function saveScore(value, student, period, cell, computed) {
             'student': student,
             'period': period
         },
-        success: function(response) {
+        success: response => {
             cell.innerHTML = response;
             resetPadding(cell);
             refreshEvolutionScore(student, period, value);
         },
-        error: function(data) {
+        error: data => {
             let inputGroup = $(cell).find(".input-group")[0];
             inputGroup.classList.add("has-error");
             inputGroup.setAttribute("data-toggle", "tooltip");
@@ -129,11 +129,11 @@ function deleteScore(e){
             'student': student,
             'period': period
         },
-        success: function(response) {
+        success: response => {
             cell.innerHTML = response;
             refreshEvolutionScore(student, period, computed);
         },
-        error: function(data) {
+        error: data => {
             let inputGroup = $(cell).find(".input-group")[0];
             inputGroup.classList.add("has-error");
             inputGroup.setAttribute("data-toggle", "tooltip");
@@ -154,7 +154,7 @@ function refreshEvolutionScore(student_id, period, value){
             'period': period,
             'value': value
         },
-        success: function(response){
+        success: response => {
             student_evolution_score.data('scores', response['updated_scores']);
             student_evolution_score[0].innerHTML = response['evolution_score'].toFixed(2).replace('.',',');
         }

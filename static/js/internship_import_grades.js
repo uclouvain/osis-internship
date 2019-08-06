@@ -1,4 +1,4 @@
-$("#upload-form").submit(function() {
+$("#upload-form").submit(() => {
     $("#import-submit").attr("disabled", true);
     $("#loader").show();
 });

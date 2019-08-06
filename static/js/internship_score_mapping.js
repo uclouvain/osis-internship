@@ -1,14 +1,14 @@
 const anchor = location.hash;
 const grades = ['A', 'B', 'C', 'D'];
 
-$('#tabs a[href="' + anchor + '"]').tab('show');
+$(`#tabs a[href="${anchor}"]`).tab('show');
 
 if(anchor.indexOf("mapping")!==-1){
     $('#tabs a[href="#mapping"]').tab('show');
-    $('#pills a[href="' + anchor + '"]').tab('show');
+    $(`#pills a[href="${anchor}"]`).tab('show');
 }
 
-$('.nav-pills li').click(function () {
+$('.nav-pills li').click(() => {
     $("#activePeriod").val(this.getAttribute('name'));
 });
 
@@ -31,7 +31,7 @@ let clipboard = {};
 function copyValues(period, apd){
     clipboard = {};
     for(let grade of grades) {
-        clipboard[grade] = document.getElementById('mapping' + grade + '_' + period + '_' + apd).value
+        clipboard[grade] = document.getElementById(`mapping${grade}_${period}_${apd}`).value
     }
     return Object.assign({}, clipboard)
 }
@@ -42,7 +42,7 @@ function pasteValues(period, apd, values){
     }
     if(Object.keys(clipboard).length !== 0){
         for(let grade of grades){
-            document.getElementById('mapping'+ grade + '_' + period + '_' + apd).value = values[grade];
+            document.getElementById(`mapping${grade}_${period}_${apd}`).value = values[grade];
         }
     }
 }
@@ -52,17 +52,17 @@ function pillChanged(period){
 }
 
 function showButtons(period, apd){
-    $("#btn_"+period+"_"+apd).show();
+    $(`#btn_${period}_${apd}`).show();
 }
 
 function hideButtons(period, apd){
-    $("#btn_"+period+"_"+apd).hide();
+    $(`#btn_${period}_${apd}`).hide();
 }
 
 function showEditButton(id){
-    $("#edit-"+id).show();
+    $(`#edit-${id}`).show();
 }
 
 function hideEditButton(id){
-    $("#edit-"+id).hide();
+    $(`#edit-${id}`).hide();
 }
