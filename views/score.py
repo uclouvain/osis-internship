@@ -70,8 +70,9 @@ def scores_encoding(request, cohort_id):
     students_list = _filter_students_by_internship_score(cohort, students_list, periods, score_filter)
     students = get_object_list(request, students_list)
     mapping = _prepare_score_table(cohort, periods, students.object_list)
+    grades = [grade for grade, _ in InternshipScore.SCORE_CHOICES]
     context = {'cohort': cohort, 'periods': periods, 'all_periods': all_periods,
-               'students': students, 'search_form': search_form, 'mapping': list(mapping)}
+               'students': students, 'search_form': search_form, 'mapping': list(mapping), 'grades': grades}
     return render(request, "scores.html", context=context)
 
 
@@ -166,6 +167,12 @@ def refresh_evolution_score(request, cohort_id):
     )
     response.status_code = 200
     return response
+
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def save_edited_evolution_score(request, cohort_id):
+    pass
 
 
 @login_required
@@ -278,7 +285,13 @@ def _prepare_score_table(cohort, periods, students):
 
 def _compute_evolution_score(students):
     for student in students:
-        student.evolution_score = _get_scores_mean(student.periods_scores)
+        if not student.evolution_score:
+            student.evolution_score = _get_scores_mean(student.periods_scores)
+        else:
+            student.evolution_score = {
+                'edited': student.evolution_score,
+                'computed': _get_scores_mean(student.periods_scores)
+            }
 
 
 def _get_scores_mean(scores):

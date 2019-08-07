@@ -5,8 +5,17 @@
         {% trans 'Evolution Score:' %}
     </td>
     <td>
+        {% if student.evolution_score|is_edited %}
+        <span id="evolution_score_{{ student.registration_id }}" data-scores="{{ student.periods_scores }}">
+            {{ student.evolution_score.edited|floatformat:2 }}
+        </span>
+        <i style="font-size: 15px; top: 3px;" class="glyphicon glyphicon-info-sign text-info"
+           title="{% trans "Score edited. Computed score: " %}{{ student.evolution_score.computed|floatformat:2 }}">
+        </i>
+        {% else %}
         <span id="evolution_score_{{ student.registration_id }}" data-scores="{{ student.periods_scores }}">
             {{ student.evolution_score|floatformat:2 }}
         </span>
+        {% endif %}
     </td>
 </tr>

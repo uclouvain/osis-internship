@@ -8,8 +8,8 @@ if(anchor.indexOf("mapping")!==-1){
     $(`#pills a[href="${anchor}"]`).tab('show');
 }
 
-$('.nav-pills li').click(() => {
-    $("#activePeriod").val(this.getAttribute('name'));
+$('.nav-pills li').click(event => {
+    $("#activePeriod").val(event.currentTarget.getAttribute('name'));
 });
 
 let periodClipboard = [];
