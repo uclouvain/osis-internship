@@ -89,6 +89,7 @@ function editScore(e){
     formGroup.append(groupButton);
     cell.innerHTML = "";
     cell.append(formGroup);
+    return false;
 }
 
 $(document).on('click', '[data-target="#delete_score"]', function(){
