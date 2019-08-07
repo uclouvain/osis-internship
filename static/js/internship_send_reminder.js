@@ -1,5 +1,5 @@
 $(document).on('click', '[data-target="#send_reminder"]', function(){
-    $.each($("input[name='selected_student']:checked"), () => {
+    $.each($("input[name='selected_student']:checked"), function() {
         $("#selected_students").append(
             '<li>'+$(this).data('student')+'</li>'
         );
@@ -24,6 +24,6 @@ function sendReminder(){
     $("#send_reminder_form").submit();
 }
 
-$("#id_check_all").click(() => {
+$("#id_check_all").click(function() {
     $('input:checkbox.selected_object').not(this).prop('checked', this.checked);
 });
