@@ -145,7 +145,8 @@ function deleteScore(e){
 }
 
 function refreshEvolutionScore(student_id, period, value){
-    student_evolution_score = $(`#evolution_score_${student_id}`);
+    let student_evolution_score = $(`#evolution_score_${student_id}`);
+    let student_evolution_score_info = $(`#evolution_score_info_${student_id}`);
     $.ajax({
         url: "ajax/refresh_evolution_score/",
         method: "POST",
@@ -155,8 +156,13 @@ function refreshEvolutionScore(student_id, period, value){
             'value': value
         },
         success: response => {
+            let evolution_score = response['evolution_score'].toFixed(2).replace('.',',')
             student_evolution_score.data('scores', response['updated_scores']);
-            student_evolution_score[0].innerHTML = response['evolution_score'].toFixed(2).replace('.',',');
+            if(!student_evolution_score.data('edited')){
+                student_evolution_score[0].innerHTML = evolution_score;
+            } else {
+                student_evolution_score_info.attr('title', response['computed_title_text']+evolution_score);
+            }
         }
     })
 }

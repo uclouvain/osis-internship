@@ -163,7 +163,9 @@ def refresh_evolution_score(request, cohort_id):
     evolution_score = _get_scores_mean(scores)
     response = JsonResponse({
         'updated_scores': str(scores),
-        'evolution_score': evolution_score}
+        'evolution_score': evolution_score,
+        'computed_title_text': _("Score edited. Computed score: "),
+    }
     )
     response.status_code = 200
     return response
