@@ -58,11 +58,3 @@ function showButtons(period, apd){
 function hideButtons(period, apd){
     $(`#btn_${period}_${apd}`).hide();
 }
-
-function showEditButton(id){
-    $(`#edit-${id}`).show();
-}
-
-function hideEditButton(id){
-    $(`#edit-${id}`).hide();
-}

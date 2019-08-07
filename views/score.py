@@ -35,6 +35,7 @@ from django.urls import reverse
 from django.utils.html import escape
 from django.utils.translation import gettext as _
 
+from base.models.student import Student
 from base.views.common import display_error_messages, display_success_messages
 from internship.business.scores import InternshipScoreRules, send_score_encoding_reminder
 from internship.forms.score import ScoresFilterForm
@@ -165,16 +166,45 @@ def refresh_evolution_score(request, cohort_id):
         'updated_scores': str(scores),
         'evolution_score': evolution_score,
         'computed_title_text': _("Score edited. Computed score: "),
-    }
-    )
+    })
     response.status_code = 200
     return response
 
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
-def save_edited_evolution_score(request, cohort_id):
-    pass
+def save_evolution_score(request, cohort_id):
+    cohort = get_object_or_404(Cohort, pk=cohort_id)
+    edited_score = float(request.POST.get("value"))
+    computed_score = float(request.POST.get("computed"))
+    registration_id = request.POST.get("student")
+    student = {
+        'registration_id': registration_id,
+        'evolution_score': {
+            "computed": computed_score,
+            "edited": edited_score
+        }
+    }
+
+    if edited_score >= MINIMUM_SCORE and edited_score <= MAXIMUM_SCORE:
+        if _update_evolution_score(cohort, edited_score, registration_id):
+            return render(request, "fragment/evolution_score_cell.html", context={
+                "student": student,
+            })
+        else:
+            return _json_response_error(_("An error occured during score update"))
+    else:
+        return _json_response_error(_("Score must be between 0 and 20"))
+
+
+def _update_evolution_score(cohort, edited_score, registration_id):
+    student = Student.objects.get(registration_id=registration_id)
+    return InternshipStudentInformation.objects.filter(
+        cohort=cohort,
+        person=student.person
+    ).update(
+        evolution_score=edited_score
+    )
 
 
 @login_required

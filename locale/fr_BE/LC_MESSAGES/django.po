@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-07-30 16:06+0200\n"
+"POT-Creation-Date: 2019-08-07 14:08+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -112,11 +112,11 @@ msgstr "Affectation"
 msgid "Allocation Sum up"
 msgstr "Bilan des affectations"
 
-#: views/score.py:156 views/score.py:178
+#: views/score.py:203 views/score.py:225
 msgid "An error occured during score update"
 msgstr "Une erreur est survenue lors de l'édition de la note"
 
-#: views/score.py:123
+#: views/score.py:125
 msgid "An error occured while sending reminders"
 msgstr "Une erreur s'est produite lors de l'envoi des rappels"
 
@@ -143,18 +143,16 @@ msgstr "Date de naissance"
 msgid "Birth date must be on or before today's date."
 msgstr "La date de naissance doit être antérieure ou égale à la date actuelle."
 
-#: views/score.py:129
-msgid "Reminders have been sent successfully"
-msgstr "Les messages de rappels ont bien été envoyés"
-
 #: templates/fragment/delete_confirmation_modal.html:41
+#: templates/fragment/delete_score_modal.html:17
+#: templates/fragment/download_scores_modal.html:26
+#: templates/fragment/send_reminder_modal.html:19
+#: templates/fragment/upload_scores_modal.html:32
 #: templates/internship_affectation_errors.html:85
 #: templates/internship_affectation_hospitals.html:85
 #: templates/internship_affectation_statistics.html:85
 #: templates/internship_affectation_students.html:85
 #: templates/internships.html:234 templates/master_form.html:150
-#: templates/scores.html:316 templates/scores.html:346
-#: templates/scores.html:367 templates/scores.html:389
 #: templates/student_form.html:145 templates/students.html:200
 #: templates/students_update.html:46
 msgid "Cancel"
@@ -208,7 +206,7 @@ msgstr "Choisissez un hôpital"
 msgid "Choose a specialty"
 msgstr "Choisissez une spécialité"
 
-#: templates/scores.html:333
+#: templates/fragment/download_scores_modal.html:13
 msgid "Choose which periods you want to include in the file"
 msgstr "Choisissez les périodes que vous souhaitez inclure dans le fichier"
 
@@ -237,11 +235,11 @@ msgstr "Obligatoire"
 msgid "Contest"
 msgstr "Concours"
 
-#: templates/scores.html:270
+#: templates/scores.html:264
 msgid "Copy"
 msgstr "Copier"
 
-#: templates/scores.html:220
+#: templates/scores.html:234
 msgid "Copy Period"
 msgstr "Copier Période"
 
@@ -272,11 +270,11 @@ msgstr "Créer une spécialité"
 msgid "Date format"
 msgstr "Format de date"
 
-#: templates/master.html:172 templates/scores.html:365
+#: templates/fragment/delete_score_modal.html:15 templates/master.html:172
 msgid "Delete"
 msgstr "Supprimer"
 
-#: templates/scores.html:358
+#: templates/fragment/delete_score_modal.html:8
 msgid "Delete score ?"
 msgstr "Supprimer la note ?"
 
@@ -360,7 +358,11 @@ msgstr "Étudiants Erasmus"
 msgid "Errors"
 msgstr "Erreurs"
 
-#: templates/scores.html:345
+#: templates/fragment/evolution_score_cell.html:5
+msgid "Evolution Score:"
+msgstr "Cote d'évolution:"
+
+#: templates/fragment/download_scores_modal.html:25
 msgid "Export"
 msgstr "Exporter"
 
@@ -372,7 +374,7 @@ msgstr "Fichier Excel pour l'hôpital"
 msgid "Export master affectations"
 msgstr "Fichier Excel pour le maitre de stage"
 
-#: templates/scores.html:330
+#: templates/fragment/download_scores_modal.html:10
 msgid "Export scores"
 msgstr "Exporter les notes"
 
@@ -388,7 +390,7 @@ msgstr "Exporter vers XLSX"
 msgid "Female"
 msgstr "Femme"
 
-#: tests/views/test_scores.py:181 views/offer.py:423 views/score.py:409
+#: tests/views/test_scores.py:183 views/offer.py:423 views/score.py:503
 msgid "File extension must be .xlsx"
 msgstr "L'extension de fichier doit être .xlsx"
 
@@ -484,13 +486,14 @@ msgstr "Hôpital enregistré"
 msgid "Hospitals"
 msgstr "Hôpitaux"
 
-#: templates/internships.html:61 templates/scores.html:294
-#: templates/scores.html:314 templates/students.html:92
-#: templates/students.html:189 templates/students.html:199
+#: templates/fragment/upload_scores_modal.html:10
+#: templates/fragment/upload_scores_modal.html:30 templates/internships.html:61
+#: templates/students.html:92 templates/students.html:189
+#: templates/students.html:199
 msgid "Import"
 msgstr "Importer"
 
-#: views/score.py:434
+#: views/score.py:528
 #, python-format
 msgid "Import aborted for period %(period)s due to error(s) on:"
 msgstr ""
@@ -605,7 +608,7 @@ msgstr "Modalités de stage"
 msgid "Internships offers"
 msgstr "Offres de stage"
 
-#: views/score.py:445
+#: views/score.py:539
 #, python-format
 msgid "Internships ratings successfully imported for period %(period)s"
 msgstr "Cotes de stage importées avec succès pour la période %(period)s"
@@ -726,7 +729,7 @@ msgstr ""
 msgid "No hospital"
 msgstr "Hôpital inexistant"
 
-#: templates/scores.html:184 templates/students.html:115
+#: templates/scores.html:198 templates/students.html:115
 msgid "No result"
 msgstr "Aucun résultat"
 
@@ -783,18 +786,18 @@ msgstr "Position de tri"
 msgid "Other choice"
 msgstr "Autre choix"
 
-#: templates/scores.html:273
+#: templates/scores.html:267
 msgid "Paste"
 msgstr "Coller"
 
-#: templates/scores.html:223
+#: templates/scores.html:237
 msgid "Paste Period"
 msgstr "Coller Période"
 
+#: templates/fragment/upload_scores_modal.html:14
 #: templates/internship_affectation_errors.html:113
 #: templates/place_form.html:81 templates/scores.html:62
-#: templates/scores.html:118 templates/scores.html:298
-#: templates/student_affectation_modification.html:51
+#: templates/scores.html:118 templates/student_affectation_modification.html:51
 msgid "Period"
 msgstr "Période"
 
@@ -818,7 +821,7 @@ msgstr "Période modifiée"
 msgid "Periods"
 msgstr "Périodes"
 
-#: views/score.py:428
+#: views/score.py:522
 msgid "Periods do not match"
 msgstr "Les périodes ne correspondent pas"
 
@@ -875,6 +878,10 @@ msgstr "La publication doit être réalisée après le processus d'inscription."
 msgid "Reference"
 msgstr "Référence"
 
+#: tests/views/test_scores.py:316 views/score.py:131
+msgid "Reminders have been sent successfully"
+msgstr "Les messages de rappels ont bien été envoyés"
+
 #: templates/place_form.html:71
 msgid "Report to the hospital"
 msgstr "Rapport pour l'hôpital"
@@ -894,7 +901,7 @@ msgstr "Retour"
 #: templates/internship_modification.html:76 templates/master_form.html:146
 #: templates/period_create.html:58 templates/period_create.html:59
 #: templates/period_places_edit.html:51 templates/place_form.html:183
-#: templates/place_form.html:184 templates/scores.html:202
+#: templates/place_form.html:184 templates/scores.html:216
 #: templates/speciality_form.html:63 templates/speciality_form.html:64
 #: templates/student_affectation_modification.html:115
 #: templates/student_affectation_modification.html:116
@@ -904,15 +911,16 @@ msgstr "Retour"
 msgid "Save"
 msgstr "Enregistrer"
 
-#: templates/scores.html:66 templates/scores.html:124
+#: templates/scores.html:66 templates/scores.html:125
 msgid "Score"
 msgstr "Note"
 
-#: templates/fragment/score_cell.html:5
+#: templates/fragment/evolution_score_cell.html:14
+#: templates/fragment/score_cell.html:5 views/score.py:167
 msgid "Score edited. Computed score: "
 msgstr "Note modifiée. Note calculée: "
 
-#: views/score.py:158
+#: views/score.py:205
 msgid "Score must be between 0 and 20"
 msgstr "La note doit être comprise entre 0 et 20"
 
@@ -925,7 +933,7 @@ msgstr "Notes"
 msgid "Scores encoding"
 msgstr "Encodage des notes"
 
-#: templates/scores.html:199
+#: templates/scores.html:213
 msgid "Scores equivalence according to periods"
 msgstr "Equivalence des notes par période"
 
@@ -942,7 +950,7 @@ msgstr "Rechercher"
 msgid "Second choice"
 msgstr "2ème choix"
 
-#: templates/scores.html:309
+#: templates/fragment/upload_scores_modal.html:25
 msgid "Select a xls file that contains the scores by period"
 msgstr ""
 "Veuillez sélectionner un fichier xlsx contenant les notes pour la période "
@@ -961,11 +969,11 @@ msgid "Selectable by the student"
 msgstr "Sélectionnable par l'étudiant"
 
 #: templates/fragment/affectation_panel_heading.html:31
-#: templates/scores.html:387
+#: templates/fragment/send_reminder_modal.html:17
 msgid "Send"
 msgstr "Envoyer"
 
-#: templates/scores.html:100 templates/scores.html:378
+#: templates/fragment/send_reminder_modal.html:8 templates/scores.html:100
 msgid "Send reminder"
 msgstr "Envoyer un rappel"
 
@@ -1125,11 +1133,11 @@ msgstr "Soumettre les choix"
 msgid "Third choice"
 msgstr "3ème choix"
 
-#: templates/scores.html:361
+#: templates/fragment/delete_score_modal.html:11
 msgid "This action will delete previously edited score."
 msgstr "Cette action supprimera la note précédemment modifiée."
 
-#: templates/scores.html:381
+#: templates/fragment/send_reminder_modal.html:11
 msgid "This action will send a reminder by email to the following students:"
 msgstr "Cette action enverra un email de rappel aux étudiants suivants:"
 
@@ -1168,12 +1176,12 @@ msgstr ""
 "Vous êtes dans la période des inscriptions. Il est recommandé de ne pas "
 "changer les choix au cours de cette période."
 
-#: views/score.py:437
+#: views/score.py:531
 #, python-format
 msgid "row %(row_id)s"
 msgstr "ligne %(row_id)s"
 
-#: views/score.py:438
+#: views/score.py:532
 #, python-format
 msgid "student with registration id '%(reg_id)s' not found"
 msgstr "étudiant avec NOMA '%(reg_id)s' introuvable"

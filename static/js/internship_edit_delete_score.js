@@ -1,3 +1,11 @@
+function showEditButton(id){
+    $(`#edit-${id}`).show();
+}
+
+function hideEditButton(id){
+    $(`#edit-${id}`).hide();
+}
+
 function buildScoreInput(score_value) {
     let input = document.createElement("input");
     Object.assign(input, {
@@ -91,8 +99,11 @@ $(document).on('click', '[data-target="#delete_score"]', function(){
 });
 
 function saveScore(value, student, period, cell, computed) {
+    //period undefined means that we are dealing with an evolution score
+    let url = period ? "ajax/save_score/" : "ajax/save_evolution_score/";
+    let periods_scores = $(`#evolution_score_${student}`).data('scores');
     $.ajax({
-        url: "ajax/save_score/",
+        url: url,
         method: "POST",
         data: {
             'value': value,
@@ -101,9 +112,14 @@ function saveScore(value, student, period, cell, computed) {
             'period': period
         },
         success: response => {
-            cell.innerHTML = response;
-            resetPadding(cell);
-            refreshEvolutionScore(student, period, value);
+            if(period){
+                cell.innerHTML = response;
+                resetPadding(cell);
+                refreshEvolutionScore(student, period, value, periods_scores);
+            } else {
+                cell.closest('tr').innerHTML = response;
+            }
+
         },
         error: data => {
             let inputGroup = $(cell).find(".input-group")[0];
@@ -144,14 +160,15 @@ function deleteScore(e){
     });
 }
 
-function refreshEvolutionScore(student_id, period, value){
+function refreshEvolutionScore(student_id, period, value, scores){
     let student_evolution_score = $(`#evolution_score_${student_id}`);
     let student_evolution_score_info = $(`#evolution_score_info_${student_id}`);
+    scores = student_evolution_score.data('scores') ? student_evolution_score.data('scores') : scores;
     $.ajax({
         url: "ajax/refresh_evolution_score/",
         method: "POST",
         data: {
-            'scores': student_evolution_score.data('scores'),
+            'scores': scores,
             'period': period,
             'value': value
         },
