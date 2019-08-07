@@ -39,7 +39,7 @@ function buildConfirmButton(input, cell, data) {
     confirmButton.classList.add("btn", "btn-primary");
     confirmButton.addEventListener('click', () => {
         value = parseFloat(input.value.replace(',', '.'));
-        saveScore(value, data.student, data.period, cell, data.computedScore);
+        saveScore({'edited': value, 'computed': data.computedScore}, data.student, data.period, cell);
     });
     return confirmButton;
 }
@@ -99,7 +99,16 @@ $(document).on('click', '[data-target="#delete_score"]', function(){
     return false;
 });
 
-function saveScore(value, student, period, cell, computed) {
+function showErrorTooltip(cell, data) {
+    let inputGroup = $(cell).find(".input-group")[0];
+    inputGroup.classList.add("has-error");
+    inputGroup.setAttribute("data-toggle", "tooltip");
+    inputGroup.setAttribute("data-placement", "top");
+    inputGroup.setAttribute("title", data.responseJSON.error);
+    $(inputGroup).tooltip('show');
+}
+
+function saveScore(values, student, period, cell) {
     //period undefined means that we are dealing with an evolution score
     let url = period ? "ajax/save_score/" : "ajax/save_evolution_score/";
     let periods_scores = $(`#evolution_score_${student}`).data('scores');
@@ -107,8 +116,8 @@ function saveScore(value, student, period, cell, computed) {
         url: url,
         method: "POST",
         data: {
-            'value': value,
-            'computed': computed,
+            'value': values.edited,
+            'computed': values.computed,
             'student': student,
             'period': period
         },
@@ -116,19 +125,13 @@ function saveScore(value, student, period, cell, computed) {
             if(period){
                 cell.innerHTML = response;
                 resetPadding(cell);
-                refreshEvolutionScore(student, period, value, periods_scores);
+                refreshEvolutionScore(student, period, values.edited, periods_scores);
             } else {
                 cell.closest('tr').innerHTML = response;
             }
-
         },
         error: data => {
-            let inputGroup = $(cell).find(".input-group")[0];
-            inputGroup.classList.add("has-error");
-            inputGroup.setAttribute("data-toggle", "tooltip");
-            inputGroup.setAttribute("data-placement", "top");
-            inputGroup.setAttribute("title", data.responseJSON.error);
-            $(inputGroup).tooltip('show');
+            showErrorTooltip(cell, data);
         }
     });
 }
