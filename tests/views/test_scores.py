@@ -276,7 +276,7 @@ class ScoresEncodingTest(TestCase):
         url = reverse('save_edited_score', kwargs={'cohort_id': self.cohort.pk})
         response = self.client.post(url, data={
             'student': student.registration_id,
-            'value': edited_score,
+            'edited': edited_score,
             'computed': computed_score,
             'period': self.period.name,
         })
@@ -350,7 +350,7 @@ class ScoresEncodingTest(TestCase):
         response = self.client.post(url, data={
             'scores': '{"P1": 10.0, "P2": 20.0}',
             'period': self.period.name,
-            'value': 20.0
+            'edited': 20.0
         })
         json_response = json.loads(str(response.content, 'utf-8'))
         self.assertEqual(json_response['evolution_score'], 20.0)
@@ -366,8 +366,9 @@ class ScoresEncodingTest(TestCase):
         url = reverse('save_evolution_score', kwargs={'cohort_id': self.cohort.pk})
         response = self.client.post(url, data={
             'computed': computed_score,
-            'value': new_score,
-            'student': student.registration_id
+            'edited': new_score,
+            'student': student.registration_id,
+            'scores': '{}',
         })
         student_info.refresh_from_db()
         self.assertTemplateUsed(response, 'fragment/evolution_score_cell.html')
