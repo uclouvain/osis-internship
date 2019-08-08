@@ -158,7 +158,7 @@ def _update_evaluation_status(status, registration_id, period_name, cohort):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def refresh_evolution_score(request, cohort_id):
     scores = json.loads(request.POST['scores'].replace("'", '"'))
-    value = float(request.POST['value'])
+    value = float(request.POST['edited']) if 'edited' in request.POST else float(request.POST['computed'])
     if 'period' in request.POST:
         period = request.POST['period']
         scores[period] = value
@@ -176,7 +176,7 @@ def refresh_evolution_score(request, cohort_id):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def save_evolution_score(request, cohort_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
-    edited_score = float(request.POST.get("value"))
+    edited_score = float(request.POST.get("edited"))
     computed_score = float(request.POST.get("computed"))
     registration_id = request.POST.get("student")
     scores = json.loads(request.POST['scores'].replace("'", '"'))
@@ -241,7 +241,7 @@ def delete_evolution_score(request, cohort_id):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def save_edited_score(request, cohort_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
-    edited_score = float(request.POST.get("value"))
+    edited_score = float(request.POST.get("edited"))
     computed_score = float(request.POST.get("computed"))
     registration_id = request.POST.get("student")
     period_name = request.POST.get("period")
@@ -351,7 +351,7 @@ def _prepare_score_table(cohort, periods, students):
 
 def _compute_evolution_score(students):
     for student in students:
-        if not student.evolution_score:
+        if student.evolution_score is None:
             student.evolution_score = _get_scores_mean(student.periods_scores)
         else:
             student.evolution_score = {
