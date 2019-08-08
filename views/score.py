@@ -194,7 +194,11 @@ def save_evolution_score(request, cohort_id):
         else:
             return _json_response_error(_("An error occured during score update"))
     else:
-        return _json_response_error(_("Score must be between 0 and 20"))
+        return _json_response_error(
+            _("Score must be between %(minimum)d and %(maximum)d") % {
+                'minimum': MINIMUM_SCORE, 'maximum': MAXIMUM_SCORE
+            }
+        )
 
 
 def _update_evolution_score(cohort, edited_score, registration_id):
@@ -232,7 +236,11 @@ def save_edited_score(request, cohort_id):
         else:
             return _json_response_error(_("An error occured during score update"))
     else:
-        return _json_response_error(_("Score must be between 0 and 20"))
+        return _json_response_error(
+            _("Score must be between %(minimum)d and %(maximum)d") % {
+                'minimum': MINIMUM_SCORE, 'maximum': MAXIMUM_SCORE
+            }
+        )
 
 
 @login_required

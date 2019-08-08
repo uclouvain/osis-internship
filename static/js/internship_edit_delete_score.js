@@ -35,7 +35,7 @@ function buildGroupButton() {
 
 function buildConfirmButton(input, cell, data) {
     let confirmButton = document.createElement("button");
-    confirmButton.innerHTML = "<icon class='glyphicon glyphicon-ok'><icon/>";
+    confirmButton.innerHTML = "<icon class='fas fa-check'><icon/>";
     confirmButton.classList.add("btn", "btn-primary");
     confirmButton.addEventListener('click', () => {
         value = parseFloat(input.value.replace(',', '.'));
@@ -46,7 +46,7 @@ function buildConfirmButton(input, cell, data) {
 
 function buildCancelButton(cell, oldCellContent) {
     let cancelButton = document.createElement("button");
-    cancelButton.innerHTML = "<icon class='glyphicon glyphicon-remove'><icon/>";
+    cancelButton.innerHTML = "<icon class='fas fa-times'><icon/>";
     cancelButton.classList.add("btn", "btn-secondary");
     cancelButton.addEventListener('click', () => {
         cell.innerHTML = oldCellContent;

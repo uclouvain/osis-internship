@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-07 14:08+0200\n"
+"POT-Creation-Date: 2019-08-08 09:57+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -111,11 +111,11 @@ msgstr ""
 msgid "Allocation Sum up"
 msgstr ""
 
-#: views/score.py:203 views/score.py:225
+#: views/score.py:195 views/score.py:237 views/score.py:259
 msgid "An error occured during score update"
 msgstr ""
 
-#: views/score.py:125
+#: views/score.py:126
 msgid "An error occured while sending reminders"
 msgstr ""
 
@@ -389,7 +389,7 @@ msgstr ""
 msgid "Female"
 msgstr ""
 
-#: tests/views/test_scores.py:183 views/offer.py:423 views/score.py:503
+#: tests/views/test_scores.py:183 views/offer.py:423 views/score.py:537
 msgid "File extension must be .xlsx"
 msgstr ""
 
@@ -492,7 +492,7 @@ msgstr ""
 msgid "Import"
 msgstr ""
 
-#: views/score.py:528
+#: views/score.py:562
 #, python-format
 msgid "Import aborted for period %(period)s due to error(s) on:"
 msgstr ""
@@ -603,7 +603,7 @@ msgstr ""
 msgid "Internships offers"
 msgstr ""
 
-#: views/score.py:539
+#: views/score.py:573
 #, python-format
 msgid "Internships ratings successfully imported for period %(period)s"
 msgstr ""
@@ -814,7 +814,7 @@ msgstr ""
 msgid "Periods"
 msgstr ""
 
-#: views/score.py:522
+#: views/score.py:556
 msgid "Periods do not match"
 msgstr ""
 
@@ -871,7 +871,7 @@ msgstr ""
 msgid "Reference"
 msgstr ""
 
-#: tests/views/test_scores.py:316 views/score.py:131
+#: tests/views/test_scores.py:316 views/score.py:132
 msgid "Reminders have been sent successfully"
 msgstr ""
 
@@ -909,11 +909,16 @@ msgid "Score"
 msgstr ""
 
 #: templates/fragment/evolution_score_cell.html:14
-#: templates/fragment/score_cell.html:5 views/score.py:167
+#: templates/fragment/score_cell.html:5 views/score.py:168
 msgid "Score edited. Computed score: "
 msgstr ""
 
-#: views/score.py:205
+#: views/score.py:198
+#, python-format
+msgid "Score must be between %(minimum)d and %(maximum)d"
+msgstr ""
+
+#: views/score.py:239
 msgid "Score must be between 0 and 20"
 msgstr ""
 
@@ -1165,12 +1170,12 @@ msgid ""
 "choices during this period."
 msgstr ""
 
-#: views/score.py:531
+#: views/score.py:565
 #, python-format
 msgid "row %(row_id)s"
 msgstr ""
 
-#: views/score.py:532
+#: views/score.py:566
 #, python-format
 msgid "student with registration id '%(reg_id)s' not found"
 msgstr ""
