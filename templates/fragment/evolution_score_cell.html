@@ -32,7 +32,7 @@
         {% if student.evolution_score|is_edited %}
             <button style="padding-top:0; line-height: inherit;"
                     data-toggle="modal"
-                    data-target="#delete_evolution_score"
+                    data-target="#delete_score"
                     data-student="{{ student.registration_id }}"
                     data-computed="{{ student.evolution_score.computed|floatformat:2 }}"
                     class="btn btn-xs btn-danger">

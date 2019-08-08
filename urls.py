@@ -161,6 +161,7 @@ urlpatterns = [
                 url(r'^ajax/delete_score/$', score.delete_edited_score, name='delete_edited_score'),
                 url(r'^ajax/save_evaluation_status/$', score.save_evaluation_status, name='save_evaluation_status'),
                 url(r'^ajax/save_evolution_score/$', score.save_evolution_score, name='save_evolution_score'),
+                url(r'^ajax/delete_evolution_score/$', score.delete_evolution_score, name='delete_evolution_score'),
                 url(r'^ajax/refresh_evolution_score/$', score.refresh_evolution_score, name='refresh_evolution_score'),
                 url(r'^send_reminder/$', score.send_reminder, name='send_reminder'),
             ])),

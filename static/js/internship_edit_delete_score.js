@@ -39,7 +39,10 @@ function buildConfirmButton(input, cell, data) {
     confirmButton.classList.add("btn", "btn-primary");
     confirmButton.addEventListener('click', () => {
         value = parseFloat(input.value.replace(',', '.'));
-        saveScore({'edited': value, 'computed': data.computedScore}, data.student, data.period, cell);
+        saveScore(
+            {'edited': value, 'computed': data.computedScore, 'scores': data.scores},
+            data.student, data.period, cell
+        );
     });
     return confirmButton;
 }
@@ -74,10 +77,12 @@ function resetPadding(cell){
 }
 
 function editScore(e){
+    let periods_scores = $(`#evolution_score_${e.dataset.student}`).data('scores');
     let data = {
         student: e.dataset.student,
         period: e.dataset.period,
-        computedScore: parseFloat(e.dataset.computed.replace(',', '.'))
+        computedScore: parseFloat(e.dataset.computed.replace(',', '.')),
+        scores: periods_scores
     };
     let cell =  $(e).closest('td')[0];
     adaptPadding(cell);
@@ -111,7 +116,6 @@ function showErrorTooltip(cell, data) {
 function saveScore(values, student, period, cell) {
     //period undefined means that we are dealing with an evolution score
     let url = period ? "ajax/save_score/" : "ajax/save_evolution_score/";
-    let periods_scores = $(`#evolution_score_${student}`).data('scores');
     $.ajax({
         url: url,
         method: "POST",
@@ -119,13 +123,14 @@ function saveScore(values, student, period, cell) {
             'value': values.edited,
             'computed': values.computed,
             'student': student,
-            'period': period
+            'period': period,
+            'scores': values.scores
         },
         success: response => {
             if(period){
                 cell.innerHTML = response;
                 resetPadding(cell);
-                refreshEvolutionScore(student, period, values.edited, periods_scores);
+                refreshEvolutionScore(student, period, values.edited, values.scores);
             } else {
                 cell.closest('tr').innerHTML = response;
             }
@@ -141,25 +146,28 @@ function deleteScore(e){
     student = $(e).data('student');
     period = $(e).data('period');
     computed = parseFloat($(e).data('computed').replace(',', '.'));
+    //period undefined means that we are dealing with an evolution score
+    let url = period ? "ajax/delete_score/" : "ajax/delete_evolution_score/";
+    let periods_scores = $(`#evolution_score_${student}`).data('scores');
     $.ajax({
-        url: "ajax/delete_score/",
+        url: url,
         method: "POST",
         data: {
             'computed': computed,
             'student': student,
-            'period': period
+            'period': period,
+            'scores': periods_scores
         },
         success: response => {
-            cell.innerHTML = response;
-            refreshEvolutionScore(student, period, computed);
+            if(period){
+                cell.innerHTML = response;
+                refreshEvolutionScore(student, period, computed, periods_scores);
+            } else {
+                cell.closest('tr').innerHTML = response;
+            }
         },
         error: data => {
-            let inputGroup = $(cell).find(".input-group")[0];
-            inputGroup.classList.add("has-error");
-            inputGroup.setAttribute("data-toggle", "tooltip");
-            inputGroup.setAttribute("data-placement", "top");
-            inputGroup.setAttribute("title", data.responseJSON.error);
-            $(inputGroup).tooltip('show');
+            showErrorTooltip(cell, data);
         }
     });
 }
