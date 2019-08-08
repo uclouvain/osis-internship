@@ -372,3 +372,17 @@ class ScoresEncodingTest(TestCase):
         student_info.refresh_from_db()
         self.assertTemplateUsed(response, 'fragment/evolution_score_cell.html')
         self.assertEqual(student_info.evolution_score, new_score)
+
+    def test_ajax_delete_evolution_score(self):
+        computed_score = 0.0
+        student_info = InternshipStudentInformationFactory(cohort=self.cohort, evolution_score=20)
+        student = StudentFactory(person=student_info.person)
+        url = reverse('delete_evolution_score', kwargs={'cohort_id': self.cohort.pk})
+        response = self.client.post(url, data={
+            'computed': computed_score,
+            'scores': '{"P1": 0.0, "P2": 0.0}',
+            'student': student.registration_id
+        })
+        student_info.refresh_from_db()
+        self.assertTemplateUsed(response, 'fragment/evolution_score_cell.html')
+        self.assertIsNone(student_info.evolution_score)

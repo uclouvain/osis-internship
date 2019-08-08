@@ -42,3 +42,4 @@ class InternshipStudentInformationFactory(factory.django.DjangoModelFactory):
     email = factory.Faker('email')
     phone_mobile = factory.Faker('phone_number')
     cohort = factory.SubFactory(CohortFactory)
+    evolution_score = None
