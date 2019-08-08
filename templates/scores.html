@@ -191,16 +191,7 @@
                           {% endfor %}
                             </tr>
                             {% if periods|length == all_periods|length %}
-                            <tr style="height: 50px;">
-                                <td colspan="22" style="text-decoration: underline;" class="text-right">
-                                    {% trans 'Evolution Score:' %}
-                                </td>
-                                <td>
-                                    <span id="evolution_score_{{ student.registration_id }}" data-scores="{{ student.periods_scores }}">
-                                        {{ student.evolution_score|floatformat:2 }}
-                                    </span>
-                                </td>
-                            </tr>
+                                {% include 'fragment/evolution_score_cell.html' %}
                             {% endif %}
                         {% empty %}
                             <tr>
@@ -250,18 +241,11 @@
                         <div class="row" style="margin-top:30px;">
                         <div class="col-xs-1 col-xs-offset-3">
                         </div>
+                        {% for grade in grades %}
                         <div class="col-xs-1">
-                            <h4><span class="label label-default">A</span></h4>
+                            <h4><span class="label label-default">{{ grade }}</span></h4>
                         </div>
-                        <div class="col-xs-1">
-                            <h4><span class="label label-default">B</span></h4>
-                        </div>
-                        <div class="col-xs-1">
-                            <h4><span class="label label-default">C</span></h4>
-                        </div>
-                        <div class="col-xs-1">
-                            <h4><span class="label label-default">D</span></h4>
-                        </div>
+                        {% endfor %}
                     </div>
                     {% for i in i|rjust:15 %}
                     <div class="row" onmouseover="showButtons('{{ period }}', '{{ forloop.counter }}')"
@@ -269,26 +253,13 @@
                         <div class="col-xs-1 col-xs-offset-3">
                             <h4><span class="label label-primary">APD {{forloop.counter}}</span></h4>
                         </div>
-                        <div class="col-xs-1">
-                            <input type="number" class="form-control" name="mappingA_{{ period }}"
-                                   id="mappingA_{{ period }}_{{ forloop.counter }}"
-                                   value="{% get_mapping_value mapping period forloop.counter 'A' %}">
-                        </div>
-                        <div class="col-xs-1">
-                            <input type="number" class="form-control" name="mappingB_{{ period }}"
-                                   id="mappingB_{{ period }}_{{ forloop.counter }}"
-                                   value="{% get_mapping_value mapping period forloop.counter 'B' %}">
-                        </div>
-                        <div class="col-xs-1">
-                            <input type="number" class="form-control" name="mappingC_{{ period }}"
-                                   id="mappingC_{{ period }}_{{ forloop.counter }}"
-                                   value="{% get_mapping_value mapping period forloop.counter 'C' %}">
-                        </div>
-                        <div class="col-xs-1">
-                            <input type="number" class="form-control" name="mappingD_{{ period }}"
-                                   id="mappingD_{{ period }}_{{ forloop.counter }}"
-                                   value="{% get_mapping_value mapping period forloop.counter 'D' %}">
-                        </div>
+                        {% for grade in grades %}
+                            <div class="col-xs-1">
+                                <input type="number" class="form-control" name="mapping{{ grade }}_{{ period }}"
+                                       id="mapping{{ grade }}_{{ period }}_{{ forloop.parentloop.counter }}"
+                                       value="{% get_mapping_value mapping period forloop.parentloop.counter grade %}">
+                            </div>
+                        {% endfor %}
                         <div id="btn_{{ period }}_{{ forloop.counter }}" class="btn-group" role="group" style="display:none;">
                           <button onclick="copyValues('{{ period }}', '{{ forloop.counter }}')" title="{% trans 'Copy' %}" type="button" class="btn btn-default">
                               <icon class="far fa-copy"></icon>
@@ -318,303 +289,31 @@
 {% endblock %}
 
 {% block script %}
+    <script type="text/javascript" src="{% static "js/internship_score_mapping.js" %}?version={{ js }}"></script>
+    <script type="text/javascript" src="{% static "js/internship_edit_delete_score.js" %}?version={{ js }}"></script>
+    <script type="text/javascript" src="{% static "js/internship_import_grades.js" %}?version={{ js }}"></script>
+    <script type="text/javascript" src="{% static "js/internship_send_reminder.js" %}?version={{ js }}"></script>
+
     <script>
-        const anchor = location.hash;
-        const grades = ['A', 'B', 'C', 'D'];
 
-        $('#tabs a[href="' + anchor + '"]').tab('show');
+    //close modal on export button click
+    $("#export_score_btn").on('click', function(){
+      $("#download_scores").modal("hide");
+    });
 
-        if(anchor.indexOf("mapping")!==-1){
-            $('#tabs a[href="#mapping"]').tab('show');
-            $('#pills a[href="' + anchor + '"]').tab('show');
-        }
-
-        $('.nav-pills li').click(function () {
-            $("#activePeriod").val(this.getAttribute('name'));
-        });
-
-       let periodClipboard = [];
-
-        function copyPeriodValues(period){
-            periodClipboard = [];
-            for(let apd of Array(15).keys()){
-                periodClipboard[apd] = copyValues(period, apd+1);
-            }
-        }
-
-        function pastePeriodValues(period){
-            for(let [index, values] of periodClipboard.entries()){
-                pasteValues(period, index+1, values);
-            }
-        }
-
-        let clipboard = {};
-        function copyValues(period, apd){
-            clipboard = {};
-            for(let grade of grades) {
-                clipboard[grade] = document.getElementById('mapping' + grade + '_' + period + '_' + apd).value
-            }
-            return Object.assign({}, clipboard)
-        }
-
-        function pasteValues(period, apd, values){
-            if(!values){
-                values = clipboard;
-            }
-            if(Object.keys(clipboard).length !== 0){
-                for(let grade of grades){
-                    document.getElementById('mapping'+ grade + '_' + period + '_' + apd).value = values[grade];
-                }
-            }
-        }
-
-        function pillChanged(period){
-            $("#activePeriod").val(period);
-        }
-
-        function showButtons(period, apd){
-            $("#btn_"+period+"_"+apd).show();
-        }
-
-        function hideButtons(period, apd){
-            $("#btn_"+period+"_"+apd).hide();
-        }
-
-        function showEditButton(id){
-            $("#edit-"+id).show();
-        }
-
-        function hideEditButton(id){
-            $("#edit-"+id).hide();
-        }
-
-        function buildScoreInput(score_value) {
-            let input = document.createElement("input");
-            Object.assign(input, {
-                value: parseFloat(score_value.replace(',', '.')),
-                type: 'number',
-                step: 'any',
-                min: 0,
-                max: 20
-            });
-            input.style.width = "80px";
-            input.classList.add("form-control");
-            return input;
-        }
-
-        function buildScoreFormGroup(input) {
-            let formGroup = document.createElement("div");
-            formGroup.classList.add("input-group", "input-group-sm");
-            formGroup.append(input);
-            return formGroup;
-        }
-
-        function buildGroupButton() {
-            let groupButton = document.createElement("span");
-            groupButton.classList.add("input-group-btn");
-            return groupButton;
-        }
-
-        function buildConfirmButton(input, cell, data) {
-            let confirmButton = document.createElement("button");
-            confirmButton.innerHTML = "<icon class='glyphicon glyphicon-ok'><icon/>";
-            confirmButton.classList.add("btn", "btn-primary");
-            confirmButton.addEventListener('click', function () {
-                value = parseFloat(input.value.replace(',', '.'));
-                saveScore(value, data.student, data.period, cell, data.computedScore);
-            });
-            return confirmButton;
-        }
-
-        function buildCancelButton(cell, oldCellContent) {
-            let cancelButton = document.createElement("button");
-            cancelButton.innerHTML = "<icon class='glyphicon glyphicon-remove'><icon/>";
-            cancelButton.classList.add("btn", "btn-secondary");
-            cancelButton.addEventListener('click', function () {
-                cell.innerHTML = oldCellContent;
-                resetPadding(cell);
-            });
-            return cancelButton;
-        }
-
-        function buildScoreGroupButton(input, cell, oldCellContent, data) {
-            let groupButton = buildGroupButton();
-            let confirmButton = buildConfirmButton(input, cell, data);
-            let cancelButton = buildCancelButton(cell, oldCellContent);
-            groupButton.append(confirmButton);
-            groupButton.append(cancelButton);
-            return groupButton;
-        }
-
-        function adaptPadding(cell) {
-            let paddingTop = parseInt($(cell).css('padding')) / 2 - 1;
-            $(cell).css('padding', paddingTop + 'px 0px 0px 0px');
-        }
-
-        function resetPadding(cell){
-            $(cell).css('padding', '');
-        }
-
-        function editScore(e){
-            let data = {
-                student: e.dataset.student,
-                period: e.dataset.period,
-                computedScore: parseFloat(e.dataset.computed.replace(',', '.'))
-            };
-            let cell =  $(e).closest('td')[0];
-            adaptPadding(cell);
-            let oldCellContent = cell.innerHTML;
-            const score_value = cell.innerText;
-            let input = buildScoreInput(score_value);
-            let formGroup = buildScoreFormGroup(input);
-            let groupButton = buildScoreGroupButton(input, cell, oldCellContent, data);
-            formGroup.append(groupButton);
-            cell.innerHTML = "";
-            cell.append(formGroup);
-        }
-
-        $("#upload-form").submit(function() {
-            $("#import-submit").attr("disabled", true);
-            $("#loader").show();
-        });
-
-        $('#import-submit').attr('disabled',true);
-        $('input:file').change(
-            function(){
-                if ($(this).val()){
-                    $('#import-submit').removeAttr('disabled');
-                }
-                else {
-                    $('#import-submit').attr('disabled',true);
-                }
-            }
-        );
-
-        $(document).on('click', '[data-target="#delete_score"]', function(){
-            let deleteScoreBtn = $("#delete_score_btn");
-            deleteScoreBtn.data(this.dataset);
-            deleteScoreBtn.data("cell", $(this).closest('td')[0]);
-            return false;
-        });
-
-        $(document).on('click', '[data-target="#send_reminder"]', function(){
-            $.each($("input[name='selected_student']:checked"), function(){
-                $("#selected_students").append(
-                    '<li>'+$(this).data('student')+'</li>'
-                );
-            });
-            if(!$("#li_send_reminder").hasClass('disabled')){
-                $("#send_reminder").modal("show");
+    //send ajax post request on evaluation button toggle
+    $('.switch input').click(function(){
+        let status = $(this).prop('checked');
+        $.ajax({
+            url: "ajax/save_evaluation_status/",
+            method: "POST",
+            data: {
+                'status': status,
+                'student': $(this).data('student'),
+                'period': $(this).data('period')
             }
         });
-
-        $("#actions").click(function(){
-            $("#li_send_reminder").toggleClass(
-                'disabled',
-                $("input[name='selected_student']:checked").length<1
-            );
-        });
-
-        $("#send_reminder").on("hidden.bs.modal", function(){
-            $("#selected_students").empty();
-        });
-
-        function saveScore(value, student, period, cell, computed) {
-            $.ajax({
-                url: "ajax/save_score/",
-                method: "POST",
-                data: {
-                    'value': value,
-                    'computed': computed,
-                    'student': student,
-                    'period': period
-                },
-                success: function(response) {
-                    cell.innerHTML = response;
-                    resetPadding(cell);
-                    refreshEvolutionScore(student, period, value);
-                },
-                error: function(data) {
-                    let inputGroup = $(cell).find(".input-group")[0];
-                    inputGroup.classList.add("has-error");
-                    inputGroup.setAttribute("data-toggle", "tooltip");
-                    inputGroup.setAttribute("data-placement", "top");
-                    inputGroup.setAttribute("title", data.responseJSON.error);
-                    $(inputGroup).tooltip('show');
-                }
-            });
-        }
-
-        function deleteScore(e){
-            cell = $(e).data('cell');
-            student = $(e).data('student');
-            period = $(e).data('period');
-            computed = parseFloat($(e).data('computed').replace(',', '.'));
-            $.ajax({
-                url: "ajax/delete_score/",
-                method: "POST",
-                data: {
-                    'computed': computed,
-                    'student': student,
-                    'period': period
-                },
-                success: function(response) {
-                    cell.innerHTML = response;
-                    refreshEvolutionScore(student, period, computed);
-                },
-                error: function(data) {
-                    let inputGroup = $(cell).find(".input-group")[0];
-                    inputGroup.classList.add("has-error");
-                    inputGroup.setAttribute("data-toggle", "tooltip");
-                    inputGroup.setAttribute("data-placement", "top");
-                    inputGroup.setAttribute("title", data.responseJSON.error);
-                    $(inputGroup).tooltip('show');
-                }
-            });
-        }
-
-        function sendReminder(){
-            $("#send_reminder_form").submit();
-        }
-
-        $("#export_score_btn").on('click', function(){
-          $("#download_scores").modal("hide");
-        });
-
-        $("#id_check_all").click(function(){
-            $('input:checkbox.selected_object').not(this).prop('checked', this.checked);
-        });
-
-        $('.switch input').click(function(){
-            let status = $(this).prop('checked');
-            $.ajax({
-                url: "ajax/save_evaluation_status/",
-                method: "POST",
-                data: {
-                    'status': status,
-                    'student': $(this).data('student'),
-                    'period': $(this).data('period')
-                }
-            });
-        });
-
-        function refreshEvolutionScore(student_id, period, value){
-            student_evolution_score = $(`#evolution_score_${student_id}`);
-            $.ajax({
-                url: "ajax/refresh_evolution_score/",
-                method: "POST",
-                data: {
-                    'scores': student_evolution_score.data('scores'),
-                    'period': period,
-                    'value': value
-                },
-                success: function(response){
-                    student_evolution_score.data('scores', response['updated_scores']);
-                    student_evolution_score[0].innerHTML = response['evolution_score'].toFixed(2).replace('.',',');
-                }
-            })
-        }
-
+    });
 
     </script>
 {% endblock %}

@@ -354,4 +354,21 @@ class ScoresEncodingTest(TestCase):
         })
         json_response = json.loads(str(response.content, 'utf-8'))
         self.assertEqual(json_response['evolution_score'], 20.0)
-        self.assertEqual(json_response['updated_scores'], "{'P1': 20.0, 'P2': 20.0}")
+        self.assertIn("'P1': 20.0", json_response['updated_scores'])
+        self.assertIn("'P2': 20.0", json_response['updated_scores'])
+
+    def test_ajax_save_evolution_score(self):
+        computed_score = 0.0
+        new_score = 20.0
+        student_info = InternshipStudentInformationFactory(cohort=self.cohort)
+        student = StudentFactory(person=student_info.person)
+        self.assertIsNone(student_info.evolution_score)
+        url = reverse('save_evolution_score', kwargs={'cohort_id': self.cohort.pk})
+        response = self.client.post(url, data={
+            'computed': computed_score,
+            'value': new_score,
+            'student': student.registration_id
+        })
+        student_info.refresh_from_db()
+        self.assertTemplateUsed(response, 'fragment/evolution_score_cell.html')
+        self.assertEqual(student_info.evolution_score, new_score)
