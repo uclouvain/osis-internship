@@ -209,7 +209,6 @@ function showErrorTooltip(cell, data) {
 }
 
 function refreshEvolutionScore(data){
-    console.log(data);
     let score_element = $(`#evolution_score_${data.student}`);
     let score_info_element = $(`#evolution_score_info_${data.student}`);
     data.scores = score_element.data('scores');
