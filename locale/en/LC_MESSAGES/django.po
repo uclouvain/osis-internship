@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-08 09:57+0200\n"
+"POT-Creation-Date: 2019-08-09 12:02+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -111,7 +111,11 @@ msgstr ""
 msgid "Allocation Sum up"
 msgstr ""
 
-#: views/score.py:195 views/score.py:237 views/score.py:259
+#: views/score.py:237 views/score.py:289
+msgid "An error occured during score deletion"
+msgstr ""
+
+#: views/score.py:198 views/score.py:263
 msgid "An error occured during score update"
 msgstr ""
 
@@ -144,7 +148,7 @@ msgstr ""
 
 #: templates/fragment/delete_confirmation_modal.html:41
 #: templates/fragment/delete_score_modal.html:17
-#: templates/fragment/download_scores_modal.html:26
+#: templates/fragment/download_scores_modal.html:32
 #: templates/fragment/send_reminder_modal.html:19
 #: templates/fragment/upload_scores_modal.html:32
 #: templates/internship_affectation_errors.html:85
@@ -362,6 +366,14 @@ msgid "Evolution Score:"
 msgstr ""
 
 #: templates/fragment/download_scores_modal.html:25
+msgid "Evolution score will be exported"
+msgstr ""
+
+#: templates/fragment/download_scores_modal.html:26
+msgid "Evolution score will not be exported"
+msgstr ""
+
+#: templates/fragment/download_scores_modal.html:31
 msgid "Export"
 msgstr ""
 
@@ -389,7 +401,7 @@ msgstr ""
 msgid "Female"
 msgstr ""
 
-#: tests/views/test_scores.py:183 views/offer.py:423 views/score.py:537
+#: tests/views/test_scores.py:183 views/offer.py:423 views/score.py:567
 msgid "File extension must be .xlsx"
 msgstr ""
 
@@ -492,7 +504,7 @@ msgstr ""
 msgid "Import"
 msgstr ""
 
-#: views/score.py:562
+#: views/score.py:592
 #, python-format
 msgid "Import aborted for period %(period)s due to error(s) on:"
 msgstr ""
@@ -603,7 +615,7 @@ msgstr ""
 msgid "Internships offers"
 msgstr ""
 
-#: views/score.py:573
+#: views/score.py:603
 #, python-format
 msgid "Internships ratings successfully imported for period %(period)s"
 msgstr ""
@@ -814,7 +826,7 @@ msgstr ""
 msgid "Periods"
 msgstr ""
 
-#: views/score.py:556
+#: views/score.py:586
 msgid "Periods do not match"
 msgstr ""
 
@@ -909,17 +921,13 @@ msgid "Score"
 msgstr ""
 
 #: templates/fragment/evolution_score_cell.html:14
-#: templates/fragment/score_cell.html:5 views/score.py:168
+#: templates/fragment/score_cell.html:5 views/score.py:169
 msgid "Score edited. Computed score: "
 msgstr ""
 
-#: views/score.py:198
+#: views/score.py:201 views/score.py:266
 #, python-format
 msgid "Score must be between %(minimum)d and %(maximum)d"
-msgstr ""
-
-#: views/score.py:239
-msgid "Score must be between 0 and 20"
 msgstr ""
 
 #: templates/scores.html:48
@@ -1170,12 +1178,12 @@ msgid ""
 "choices during this period."
 msgstr ""
 
-#: views/score.py:565
+#: views/score.py:595
 #, python-format
 msgid "row %(row_id)s"
 msgstr ""
 
-#: views/score.py:566
+#: views/score.py:596
 #, python-format
 msgid "student with registration id '%(reg_id)s' not found"
 msgstr ""
