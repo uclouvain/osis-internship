@@ -1,3 +1,7 @@
+const MINIMUM_SCORE = 0;
+const MAXIMUM_SCORE = 20;
+const EDITABLE_SCORE_INPUT_WIDTH = "80px";
+
 function showEditButton(id){
     $(`#edit-${id}`).show();
 }
@@ -6,16 +10,56 @@ function hideEditButton(id){
     $(`#edit-${id}`).hide();
 }
 
+function editScore(e){
+    data = e.dataset.period ? extractPeriodScoreData(e.dataset) : extractEvolutionScoreData(e.dataset);
+    showEditableScore(e, data);
+    return false;
+}
+
+function extractPeriodScoreData(dataset) {
+    return {
+        student: dataset.student,
+        period: dataset.period,
+        computed: parseFloat(dataset.computed.replace(',', '.')),
+    };
+}
+
+function extractEvolutionScoreData(dataset) {
+    return {
+        student: dataset.student,
+        scores: $(`#evolution_score_${dataset.student}`).data('scores'),
+        computed: parseFloat(dataset.computed.replace(',', '.')),
+    };
+}
+
+function showEditableScore(e, data) {
+    let cell = $(e).closest('td')[0];
+    let formGroup = buildEditableScore(cell, data);
+    cell.innerHTML = "";
+    cell.append(formGroup);
+}
+
+function buildEditableScore(cell, data) {
+    adaptPadding(cell);
+    let oldCellContent = cell.innerHTML;
+    const score_value = cell.innerText;
+    let input = buildScoreInput(score_value);
+    let formGroup = buildScoreFormGroup(input);
+    let groupButton = buildScoreGroupButton(input, cell, oldCellContent, data);
+    formGroup.append(groupButton);
+    return formGroup;
+}
+
 function buildScoreInput(score_value) {
     let input = document.createElement("input");
     Object.assign(input, {
         value: parseFloat(score_value.replace(',', '.')),
         type: 'number',
         step: 'any',
-        min: 0,
-        max: 20
+        min: MINIMUM_SCORE,
+        max: MAXIMUM_SCORE
     });
-    input.style.width = "80px";
+    input.style.width = EDITABLE_SCORE_INPUT_WIDTH;
     input.classList.add("form-control");
     return input;
 }
@@ -38,8 +82,8 @@ function buildConfirmButton(input, cell, data) {
     confirmButton.innerHTML = "<icon class='fas fa-check'><icon/>";
     confirmButton.classList.add("btn", "btn-primary");
     confirmButton.addEventListener('click', () => {
-        value = parseFloat(input.value.replace(',', '.'));
-        saveScore({'edited': value, 'computed': data.computedScore}, data.student, data.period, cell);
+        data['edited'] = parseFloat(input.value.replace(',', '.'));
+        saveScore(data, cell);
     });
     return confirmButton;
 }
@@ -73,31 +117,87 @@ function resetPadding(cell){
     $(cell).css('padding', '');
 }
 
-function editScore(e){
-    let data = {
-        student: e.dataset.student,
-        period: e.dataset.period,
-        computedScore: parseFloat(e.dataset.computed.replace(',', '.'))
-    };
-    let cell =  $(e).closest('td')[0];
-    adaptPadding(cell);
-    let oldCellContent = cell.innerHTML;
-    const score_value = cell.innerText;
-    let input = buildScoreInput(score_value);
-    let formGroup = buildScoreFormGroup(input);
-    let groupButton = buildScoreGroupButton(input, cell, oldCellContent, data);
-    formGroup.append(groupButton);
-    cell.innerHTML = "";
-    cell.append(formGroup);
-    return false;
+function saveScore(data, cell) {
+    if(data.period){
+        savePeriodScore(data, cell);
+    } else {
+        saveEvolutionScore(data, cell);
+    }
 }
 
+function deleteScore(e){
+    let dataset = $(e).data();
+    let data = dataset.period ? extractPeriodScoreData(dataset) : extractEvolutionScoreData(dataset);
+    if(dataset.period){
+        deletePeriodScore(data, dataset.cell);
+    } else {
+        deleteEvolutionScore(data, dataset.cell);
+    }
+}
+
+//append data to modal button on modal open
 $(document).on('click', '[data-target="#delete_score"]', function(){
     let deleteScoreBtn = $("#delete_score_btn");
     deleteScoreBtn.data(this.dataset);
     deleteScoreBtn.data("cell", $(this).closest('td')[0]);
     return false;
 });
+
+//AJAX LOGIC GOES HERE
+
+function savePeriodScore(data, cell){
+    $.ajax({
+        url: "ajax/save_score/",
+        method: "POST",
+        data: data,
+        success: response => {
+            cell.innerHTML = response;
+            resetPadding(cell);
+            refreshEvolutionScore(data);
+        },
+        error: data => {
+            showErrorTooltip(cell, data);
+        }
+    });
+}
+
+function saveEvolutionScore(data, cell){
+    $.ajax({
+        url: "ajax/save_evolution_score/",
+        method: "POST",
+        data: data,
+        success: response => {
+            cell.closest('tr').innerHTML = response;
+        },
+        error: data => {
+            showErrorTooltip(cell, data);
+        }
+    });
+}
+
+
+function deletePeriodScore(data, cell){
+    $.ajax({
+        url: "ajax/delete_score/",
+        method: "POST",
+        data: data,
+        success: response => {
+            cell.innerHTML = response;
+            refreshEvolutionScore(data);
+        },
+        error: error_data => showErrorTooltip(cell, error_data)
+    });
+}
+
+function deleteEvolutionScore(data, cell){
+    $.ajax({
+        url: "ajax/delete_evolution_score/",
+        method: "POST",
+        data: data,
+        success: response => cell.closest('tr').innerHTML = response,
+        error: data => showErrorTooltip(cell, data)
+    });
+}
 
 function showErrorTooltip(cell, data) {
     let inputGroup = $(cell).find(".input-group")[0];
@@ -108,82 +208,24 @@ function showErrorTooltip(cell, data) {
     $(inputGroup).tooltip('show');
 }
 
-function saveScore(values, student, period, cell) {
-    //period undefined means that we are dealing with an evolution score
-    let url = period ? "ajax/save_score/" : "ajax/save_evolution_score/";
-    let periods_scores = $(`#evolution_score_${student}`).data('scores');
-    $.ajax({
-        url: url,
-        method: "POST",
-        data: {
-            'value': values.edited,
-            'computed': values.computed,
-            'student': student,
-            'period': period
-        },
-        success: response => {
-            if(period){
-                cell.innerHTML = response;
-                resetPadding(cell);
-                refreshEvolutionScore(student, period, values.edited, periods_scores);
-            } else {
-                cell.closest('tr').innerHTML = response;
-            }
-        },
-        error: data => {
-            showErrorTooltip(cell, data);
-        }
-    });
-}
-
-function deleteScore(e){
-    cell = $(e).data('cell');
-    student = $(e).data('student');
-    period = $(e).data('period');
-    computed = parseFloat($(e).data('computed').replace(',', '.'));
-    $.ajax({
-        url: "ajax/delete_score/",
-        method: "POST",
-        data: {
-            'computed': computed,
-            'student': student,
-            'period': period
-        },
-        success: response => {
-            cell.innerHTML = response;
-            refreshEvolutionScore(student, period, computed);
-        },
-        error: data => {
-            let inputGroup = $(cell).find(".input-group")[0];
-            inputGroup.classList.add("has-error");
-            inputGroup.setAttribute("data-toggle", "tooltip");
-            inputGroup.setAttribute("data-placement", "top");
-            inputGroup.setAttribute("title", data.responseJSON.error);
-            $(inputGroup).tooltip('show');
-        }
-    });
-}
-
-function refreshEvolutionScore(student_id, period, value, scores){
-    let student_evolution_score = $(`#evolution_score_${student_id}`);
-    let student_evolution_score_info = $(`#evolution_score_info_${student_id}`);
-    scores = student_evolution_score.data('scores') ? student_evolution_score.data('scores') : scores;
+function refreshEvolutionScore(data){
+    let score_element = $(`#evolution_score_${data.student}`);
+    let score_info_element = $(`#evolution_score_info_${data.student}`);
+    data.scores = score_element.data('scores');
     $.ajax({
         url: "ajax/refresh_evolution_score/",
         method: "POST",
-        data: {
-            'scores': scores,
-            'period': period,
-            'value': value
-        },
-        success: response => {
-            let evolution_score = response['evolution_score'].toFixed(2).replace('.',',')
-            student_evolution_score.data('scores', response['updated_scores']);
-            if(!student_evolution_score.data('edited')){
-                student_evolution_score[0].innerHTML = evolution_score;
-            } else {
-                student_evolution_score_info.attr('title', response['computed_title_text']+evolution_score);
-            }
-        }
+        data: data,
+        success: response => buildAndReplaceEvolutionScore(response, score_element, score_info_element)
     })
+}
+
+function buildAndReplaceEvolutionScore(response, score_element, score_info_element) {
+    let evolution_score = response['evolution_score'].toFixed(2).replace('.', ',')
+    score_element.data('scores', response['updated_scores']);
+    if (!score_element.data('edited')) {
+        score_element[0].innerHTML = evolution_score;
+    } else {
+        score_info_element.attr('title', response['computed_title_text'] + evolution_score);
+    }
 }

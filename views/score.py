@@ -158,9 +158,10 @@ def _update_evaluation_status(status, registration_id, period_name, cohort):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def refresh_evolution_score(request, cohort_id):
     scores = json.loads(request.POST['scores'].replace("'", '"'))
-    period = request.POST['period']
-    value = float(request.POST['value'])
-    scores[period] = value
+    value = float(request.POST['edited']) if 'edited' in request.POST else float(request.POST['computed'])
+    if 'period' in request.POST:
+        period = request.POST['period']
+        scores[period] = value
     evolution_score = _get_scores_mean(scores)
     response = JsonResponse({
         'updated_scores': str(scores),
@@ -175,15 +176,17 @@ def refresh_evolution_score(request, cohort_id):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def save_evolution_score(request, cohort_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
-    edited_score = float(request.POST.get("value"))
+    edited_score = float(request.POST.get("edited"))
     computed_score = float(request.POST.get("computed"))
     registration_id = request.POST.get("student")
+    scores = json.loads(request.POST['scores'].replace("'", '"'))
     student = {
         'registration_id': registration_id,
         'evolution_score': {
             "computed": computed_score,
             "edited": edited_score
-        }
+        },
+        'periods_scores': scores
     }
 
     if edited_score >= MINIMUM_SCORE and edited_score <= MAXIMUM_SCORE:
@@ -213,9 +216,32 @@ def _update_evolution_score(cohort, edited_score, registration_id):
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
+def delete_evolution_score(request, cohort_id):
+    cohort = get_object_or_404(Cohort, pk=cohort_id)
+    registration_id = request.POST.get("student")
+    computed_score = float(request.POST.get("computed"))
+    scores = json.loads(request.POST['scores'].replace("'", '"'))
+    student = {
+        'registration_id': registration_id,
+        'evolution_score': computed_score,
+        'periods_scores': scores
+    }
+    base_student = Student.objects.get(registration_id=registration_id)
+    if InternshipStudentInformation.objects.filter(
+            cohort=cohort, person=base_student.person
+    ).update(evolution_score=None):
+        return render(request, "fragment/evolution_score_cell.html", context={
+            "student": student,
+        })
+    else:
+        return _json_response_error(_("An error occured during score deletion"))
+
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
 def save_edited_score(request, cohort_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
-    edited_score = float(request.POST.get("value"))
+    edited_score = float(request.POST.get("edited"))
     computed_score = float(request.POST.get("computed"))
     registration_id = request.POST.get("student")
     period_name = request.POST.get("period")
@@ -260,7 +286,7 @@ def delete_edited_score(request, cohort_id):
             "period_score": period_score,
         })
     else:
-        return _json_response_error(_("An error occured during score update"))
+        return _json_response_error(_("An error occured during score deletion"))
 
 
 def _delete_score(cohort, period_name, registration_id):
@@ -325,7 +351,7 @@ def _prepare_score_table(cohort, periods, students):
 
 def _compute_evolution_score(students):
     for student in students:
-        if not student.evolution_score:
+        if student.evolution_score is None:
             student.evolution_score = _get_scores_mean(student.periods_scores)
         else:
             student.evolution_score = {
