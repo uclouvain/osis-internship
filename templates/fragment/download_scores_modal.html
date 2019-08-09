@@ -20,6 +20,12 @@
                             </div>
                         {% endfor %}
                     </div>
+                    <div class="row">
+                        <div class="alert alert-info">
+                            <span id="evolution_score_export_message">{% trans 'Evolution score will be exported' %}</span>
+                            <span id="no_evolution_score_export_message" hidden>{% trans 'Evolution score will <b>not</b> be exported'|safe %}</span>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <input id="export_score_btn" type="submit" class="btn btn-primary" value="{% trans "Export" %}">

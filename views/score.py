@@ -610,10 +610,10 @@ def download_scores(request, cohort_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
     selected_periods = request.POST.getlist('period')
     periods = Period.objects.filter(name__in=selected_periods, cohort=cohort).order_by('date_start')
-    students = InternshipStudentInformation.objects.filter(cohort=cohort).order_by('person__last_name')
-    internships = Internship.objects.filter(cohort=cohort).order_by(
-        'position'
-    )
+    students = InternshipStudentInformation.objects.filter(cohort=cohort).select_related(
+      'person'
+    ).order_by('person__last_name')
+    internships = Internship.objects.filter(cohort=cohort).order_by('position')
     internships = _list_internships_acronyms(internships)
     _prepare_score_table(cohort, periods, students)
     workbook = score_encoding_xls.export_xls_with_scores(cohort, periods, students, internships)

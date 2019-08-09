@@ -29,6 +29,8 @@ from openpyxl.utils import get_column_letter
 from openpyxl.writer.excel import save_virtual_workbook
 
 from internship import models
+from internship.models.period import Period
+from internship.templatetags.dictionary import is_edited
 from internship.utils.exporting.spreadsheet import columns_resizing, add_row
 
 LAST_COLUMN = 50
@@ -36,8 +38,8 @@ PERIOD_COLUMN_WIDTH = 7
 
 
 def export_xls(cohort):
-    workbook = Workbook()
-    worksheet = workbook.active
+    workbook = Workbook(write_only=True)
+    worksheet = workbook.create_sheet()
     _add_header(cohort, worksheet)
     columns_resizing(worksheet, _get_columns_width())
     _add_students(cohort, worksheet)
@@ -110,6 +112,7 @@ def _retrieve_score(period_score):
 
 def _make_complete_list(periods, students, worksheet):
     columns_resizing(worksheet, _get_columns_width())
+    all_periods_count = Period.objects.filter(cohort=periods.first().cohort).count()
     for student in students:
         if student.registration_id:
             columns = []
@@ -117,7 +120,13 @@ def _make_complete_list(periods, students, worksheet):
             columns.append(student.person.first_name)
             columns.append(student.registration_id)
             _complete_student_row_for_all_internships(columns, periods, student)
+            if periods.count() == all_periods_count:
+                columns.append(_get_evolution_score(student.evolution_score))
             add_row(worksheet, columns)
+
+
+def _get_evolution_score(score):
+    return score['edited'] if is_edited(score) else score
 
 
 def _complete_student_row_for_all_internships(columns, periods, student):
@@ -143,6 +152,8 @@ def _add_header(cohort, periods, worksheet):
         column_titles.append(period.name)
         column_titles.append("{}+".format(period.name))
         column_titles.append("{}-Score".format(period.name))
+    if periods.count() == Period.objects.filter(cohort=cohort).count():
+        column_titles.append("Evolution")
     add_row(worksheet, column_titles)
     cells = worksheet.range("A1:AAA1")[0]
     for cell in cells:
