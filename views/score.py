@@ -610,7 +610,7 @@ def download_scores(request, cohort_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
     selected_periods = request.POST.getlist('period')
     periods = Period.objects.filter(name__in=selected_periods, cohort=cohort).order_by('date_start')
-    students = InternshipStudentInformation.objects.filter(cohort=cohort).order_by('person__last_name')[:5]
+    students = InternshipStudentInformation.objects.filter(cohort=cohort).order_by('person__last_name')
     internships = Internship.objects.filter(cohort=cohort).order_by(
         'position'
     )
