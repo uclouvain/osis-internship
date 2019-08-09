@@ -29,6 +29,7 @@ from openpyxl.utils import get_column_letter
 from openpyxl.writer.excel import save_virtual_workbook
 
 from internship import models
+from internship.templatetags.dictionary import is_edited
 from internship.utils.exporting.spreadsheet import columns_resizing, add_row
 
 LAST_COLUMN = 50
@@ -117,7 +118,12 @@ def _make_complete_list(periods, students, worksheet):
             columns.append(student.person.first_name)
             columns.append(student.registration_id)
             _complete_student_row_for_all_internships(columns, periods, student)
+            columns.append(_get_evolution_score(student.evolution_score))
             add_row(worksheet, columns)
+
+
+def _get_evolution_score(score):
+    return score['edited'] if is_edited(score) else score
 
 
 def _complete_student_row_for_all_internships(columns, periods, student):
@@ -143,6 +149,7 @@ def _add_header(cohort, periods, worksheet):
         column_titles.append(period.name)
         column_titles.append("{}+".format(period.name))
         column_titles.append("{}-Score".format(period.name))
+    column_titles.append("Evolution")
     add_row(worksheet, column_titles)
     cells = worksheet.range("A1:AAA1")[0]
     for cell in cells:
