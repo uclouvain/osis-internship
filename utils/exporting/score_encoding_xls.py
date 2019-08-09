@@ -38,8 +38,8 @@ PERIOD_COLUMN_WIDTH = 7
 
 
 def export_xls(cohort):
-    workbook = Workbook()
-    worksheet = workbook.active
+    workbook = Workbook(write_only=True)
+    worksheet = workbook.create_sheet()
     _add_header(cohort, worksheet)
     columns_resizing(worksheet, _get_columns_width())
     _add_students(cohort, worksheet)
@@ -113,7 +113,6 @@ def _retrieve_score(period_score):
 def _make_complete_list(periods, students, worksheet):
     columns_resizing(worksheet, _get_columns_width())
     all_periods_count = Period.objects.filter(cohort=periods.first().cohort).count()
-    print(all_periods_count)
     for student in students:
         if student.registration_id:
             columns = []
