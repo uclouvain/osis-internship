@@ -24,14 +24,19 @@
 #
 ##############################################################################
 
-from django.db import transaction
 from openpyxl import load_workbook
 
 
-@transaction.atomic
 def import_xlsx(xlsxfile):
     workbook = load_workbook(filename=xlsxfile, read_only=True)
     worksheet = workbook.active
-    registration_ids = [str(row[0].value) for row in list(worksheet.rows)[1:worksheet.max_row]]
+    registration_ids = [
+        _get_only_digits_comprehension(str(row[6].value))
+        for row in list(worksheet.rows)[1:worksheet.max_row]
+    ]
     xlsxfile.close()
     return registration_ids
+
+
+def _get_only_digits_comprehension(value):
+    return ''.join([c for c in value if c.isdigit()])
