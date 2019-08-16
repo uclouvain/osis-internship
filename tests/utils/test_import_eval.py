@@ -52,7 +52,7 @@ class XlsImportEvalTestCase(TestCase):
         workbook = openpyxl.Workbook()
         worksheet = workbook.active
         for row, student in enumerate(cls.students):
-            columns = [(0, student.registration_id), (1, '1')]
+            columns = [(6, student.registration_id)]
             for column, value in columns:
                 worksheet.cell(row=row+2, column=column+1).value = value
         return workbook
