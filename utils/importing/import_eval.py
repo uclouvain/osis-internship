@@ -31,12 +31,12 @@ def import_xlsx(xlsxfile):
     workbook = load_workbook(filename=xlsxfile, read_only=True)
     worksheet = workbook.active
     registration_ids = [
-        _get_only_digits_comprehension(str(row[6].value))
+        _get_only_digits(str(row[6].value))
         for row in list(worksheet.rows)[1:worksheet.max_row]
     ]
     xlsxfile.close()
     return registration_ids
 
 
-def _get_only_digits_comprehension(value):
+def _get_only_digits(value):
     return ''.join([c for c in value if c.isdigit()])
