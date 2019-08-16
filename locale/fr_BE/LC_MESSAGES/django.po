@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-14 10:16+0200\n"
+"POT-Creation-Date: 2019-08-16 14:37+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -112,15 +112,15 @@ msgstr "Affectation"
 msgid "Allocation Sum up"
 msgstr "Bilan des affectations"
 
-#: views/score.py:237 views/score.py:289
+#: views/score.py:238 views/score.py:290
 msgid "An error occured during score deletion"
 msgstr "Une erreur est survenue lors de la suppression de la note"
 
-#: views/score.py:198 views/score.py:263
+#: views/score.py:199 views/score.py:264
 msgid "An error occured during score update"
 msgstr "Une erreur est survenue lors de l'édition de la note"
 
-#: views/score.py:126
+#: views/score.py:127
 msgid "An error occured while sending reminders"
 msgstr "Une erreur s'est produite lors de l'envoi des rappels"
 
@@ -363,6 +363,23 @@ msgstr "Étudiants Erasmus"
 msgid "Errors"
 msgstr "Erreurs"
 
+#: views/score.py:590
+#, python-format
+msgid ""
+"Evaluation status importation aborted for period %(period)s. Following "
+"registration ids do not exist in cohort: %(registration_ids)s"
+msgstr ""
+"L'importation du statut des évaluations a été interrompue pour la période "
+"%(period)s. Les NOMA suivants n'existent pas pour cette cohorte: "
+"%(registration_ids)s"
+
+#: views/score.py:598
+#, python-format
+msgid "Evaluation status successfully updated for period %(period)s"
+msgstr ""
+"Le statut des évaluations a été correctement mis à jour pour la période "
+"%(period)s"
+
 #: templates/fragment/evolution_score_cell.html:5
 msgid "Evolution Score:"
 msgstr "Cote d'évolution:"
@@ -403,7 +420,8 @@ msgstr "Exporter vers XLSX"
 msgid "Female"
 msgstr "Femme"
 
-#: tests/views/test_scores.py:183 views/offer.py:423 views/score.py:567
+#: tests/views/test_scores.py:187 views/offer.py:423 views/score.py:568
+#: views/score.py:579
 msgid "File extension must be .xlsx"
 msgstr "L'extension de fichier doit être .xlsx"
 
@@ -508,7 +526,7 @@ msgstr "Hôpitaux"
 msgid "Import"
 msgstr "Importer"
 
-#: views/score.py:592
+#: views/score.py:631
 #, python-format
 msgid "Import aborted for period %(period)s due to error(s) on:"
 msgstr ""
@@ -627,7 +645,7 @@ msgstr "Modalités de stage"
 msgid "Internships offers"
 msgstr "Offres de stage"
 
-#: views/score.py:603
+#: views/score.py:642
 #, python-format
 msgid "Internships ratings successfully imported for period %(period)s"
 msgstr "Cotes de stage importées avec succès pour la période %(period)s"
@@ -841,7 +859,7 @@ msgstr "Période modifiée"
 msgid "Periods"
 msgstr "Périodes"
 
-#: views/score.py:586
+#: views/score.py:625
 msgid "Periods do not match"
 msgstr "Les périodes ne correspondent pas"
 
@@ -898,7 +916,7 @@ msgstr "La publication doit être réalisée après le processus d'inscription."
 msgid "Reference"
 msgstr "Référence"
 
-#: tests/views/test_scores.py:316 views/score.py:132
+#: tests/views/test_scores.py:320 views/score.py:133
 msgid "Reminders have been sent successfully"
 msgstr "Les messages de rappels ont bien été envoyés"
 
@@ -936,11 +954,11 @@ msgid "Score"
 msgstr "Note"
 
 #: templates/fragment/evolution_score_cell.html:14
-#: templates/fragment/score_cell.html:5 views/score.py:169
+#: templates/fragment/score_cell.html:5 views/score.py:170
 msgid "Score edited. Computed score: "
 msgstr "Note modifiée. Note calculée: "
 
-#: views/score.py:201 views/score.py:266
+#: views/score.py:202 views/score.py:267
 #, python-format
 msgid "Score must be between %(minimum)d and %(maximum)d"
 msgstr "La note doit être comprise entre %(minimum)d et %(maximum)d"
@@ -975,7 +993,9 @@ msgstr "2ème choix"
 msgid ""
 "Select a xls file that contains a list of students who have assesed their "
 "internship at the chosen period"
-msgstr "Veuillez sélectionner un fichier xlsx contenant la liste des étudiants ayant évalué leur stage pour la période choisie."
+msgstr ""
+"Veuillez sélectionner un fichier xlsx contenant la liste des étudiants ayant "
+"évalué leur stage pour la période choisie."
 
 #: templates/fragment/upload_scores_modal.html:25
 msgid "Select a xls file that contains the scores by period"
@@ -1203,12 +1223,12 @@ msgstr ""
 "Vous êtes dans la période des inscriptions. Il est recommandé de ne pas "
 "changer les choix au cours de cette période."
 
-#: views/score.py:595
+#: views/score.py:634
 #, python-format
 msgid "row %(row_id)s"
 msgstr "ligne %(row_id)s"
 
-#: views/score.py:596
+#: views/score.py:635
 #, python-format
 msgid "student with registration id '%(reg_id)s' not found"
 msgstr "étudiant avec NOMA '%(reg_id)s' introuvable"

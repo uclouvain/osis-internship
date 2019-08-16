@@ -29,6 +29,7 @@ from collections import Counter
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.db import transaction
+from django.db.models import Subquery, OuterRef
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
@@ -575,15 +576,37 @@ def _upload_eval_file(request, cohort):
         file_name = request.FILES['file_upload']
         period = request.POST['period']
         if file_name and ".xlsx" not in str(file_name):
-            messages.add_message(request, messages.ERROR, _('File extension must be .xlsx'))
+            display_error_messages(request, _('File extension must be .xlsx'))
         else:
             registration_ids = import_eval.import_xlsx(file_name)
-            _update_evaluation_status(
-                status=True,
-                registration_ids=registration_ids,
-                period_name=period,
-                cohort=cohort
-            )
+            _process_registration_ids(request, cohort, period, registration_ids)
+
+
+def _process_registration_ids(request, cohort, period, registration_ids):
+    non_valid_registration_ids = _check_registration_ids_validity(cohort, registration_ids)
+    if non_valid_registration_ids:
+        display_error_messages(
+            request,
+            _('Evaluation status importation aborted for period %(period)s. ' 
+              'Following registration ids do not exist in cohort: %(registration_ids)s')
+            % {'period': period, 'registration_ids': ', '.join(non_valid_registration_ids)}
+        )
+    else:
+        _update_evaluation_status(status=True, registration_ids=registration_ids, period_name=period, cohort=cohort)
+        display_success_messages(
+            request,
+            _('Evaluation status successfully updated for period %(period)s') % {'period': period}
+        )
+
+
+def _check_registration_ids_validity(cohort, registration_ids):
+    student_registration_id_query = Student.objects.filter(person=OuterRef('person')).values('registration_id')
+    filtered_students = InternshipStudentInformation.objects.filter(cohort=cohort).annotate(
+        registration_id=Subquery(student_registration_id_query)
+    ).values_list('registration_id', flat=True)
+    non_valid_registration_ids = set(registration_ids).difference(set(filtered_students))
+    non_valid_registration_ids.discard('None')
+    return non_valid_registration_ids
 
 
 def _process_errors(request, import_errors, period):

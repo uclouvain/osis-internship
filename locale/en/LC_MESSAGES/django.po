@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-14 10:16+0200\n"
+"POT-Creation-Date: 2019-08-16 14:37+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -111,15 +111,15 @@ msgstr ""
 msgid "Allocation Sum up"
 msgstr ""
 
-#: views/score.py:237 views/score.py:289
+#: views/score.py:238 views/score.py:290
 msgid "An error occured during score deletion"
 msgstr ""
 
-#: views/score.py:198 views/score.py:263
+#: views/score.py:199 views/score.py:264
 msgid "An error occured during score update"
 msgstr ""
 
-#: views/score.py:126
+#: views/score.py:127
 msgid "An error occured while sending reminders"
 msgstr ""
 
@@ -362,6 +362,18 @@ msgstr ""
 msgid "Errors"
 msgstr ""
 
+#: views/score.py:590
+#, python-format
+msgid ""
+"Evaluation status importation aborted for period %(period)s. Following "
+"registration ids do not exist in cohort: %(registration_ids)s"
+msgstr ""
+
+#: views/score.py:598
+#, python-format
+msgid "Evaluation status successfully updated for period %(period)s"
+msgstr ""
+
 #: templates/fragment/evolution_score_cell.html:5
 msgid "Evolution Score:"
 msgstr ""
@@ -402,7 +414,8 @@ msgstr ""
 msgid "Female"
 msgstr ""
 
-#: tests/views/test_scores.py:183 views/offer.py:423 views/score.py:567
+#: tests/views/test_scores.py:187 views/offer.py:423 views/score.py:568
+#: views/score.py:579
 msgid "File extension must be .xlsx"
 msgstr ""
 
@@ -507,7 +520,7 @@ msgstr ""
 msgid "Import"
 msgstr ""
 
-#: views/score.py:592
+#: views/score.py:631
 #, python-format
 msgid "Import aborted for period %(period)s due to error(s) on:"
 msgstr ""
@@ -622,7 +635,7 @@ msgstr ""
 msgid "Internships offers"
 msgstr ""
 
-#: views/score.py:603
+#: views/score.py:642
 #, python-format
 msgid "Internships ratings successfully imported for period %(period)s"
 msgstr ""
@@ -834,7 +847,7 @@ msgstr ""
 msgid "Periods"
 msgstr ""
 
-#: views/score.py:586
+#: views/score.py:625
 msgid "Periods do not match"
 msgstr ""
 
@@ -891,7 +904,7 @@ msgstr ""
 msgid "Reference"
 msgstr ""
 
-#: tests/views/test_scores.py:316 views/score.py:132
+#: tests/views/test_scores.py:320 views/score.py:133
 msgid "Reminders have been sent successfully"
 msgstr ""
 
@@ -929,11 +942,11 @@ msgid "Score"
 msgstr ""
 
 #: templates/fragment/evolution_score_cell.html:14
-#: templates/fragment/score_cell.html:5 views/score.py:169
+#: templates/fragment/score_cell.html:5 views/score.py:170
 msgid "Score edited. Computed score: "
 msgstr ""
 
-#: views/score.py:201 views/score.py:266
+#: views/score.py:202 views/score.py:267
 #, python-format
 msgid "Score must be between %(minimum)d and %(maximum)d"
 msgstr ""
@@ -1192,12 +1205,12 @@ msgid ""
 "choices during this period."
 msgstr ""
 
-#: views/score.py:595
+#: views/score.py:634
 #, python-format
 msgid "row %(row_id)s"
 msgstr ""
 
-#: views/score.py:596
+#: views/score.py:635
 #, python-format
 msgid "student with registration id '%(reg_id)s' not found"
 msgstr ""
