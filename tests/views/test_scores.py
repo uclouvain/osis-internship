@@ -413,6 +413,28 @@ class ScoresEncodingTest(TestCase):
                 'period': self.period.name
             }
         )
-        self.assertRedirects(response, redirect_url)
         student_period_affectation.refresh_from_db()
+        messages_list = [msg for msg in response.wsgi_request._messages]
+        self.assertRedirects(response, redirect_url)
+        self.assertEqual(messages_list[0].level_tag, 'success')
         self.assertTrue(student_period_affectation.internship_evaluated)
+
+    @mock.patch('internship.utils.importing.import_eval.import_xlsx')
+    def test_post_upload_eval_error(self, mock_import):
+        student = StudentFactory()
+        mock_import.return_value = [student.registration_id]
+        url = reverse('internship_upload_eval', kwargs={
+            'cohort_id': self.cohort.pk,
+        })
+        redirect_url = reverse('internship_scores_encoding', kwargs={'cohort_id': self.cohort.pk})
+        response = self.client.post(
+            url,
+            data={
+                'file_upload': self.xlsxfile,
+                'period': self.period.name
+            }
+        )
+        messages_list = [msg for msg in response.wsgi_request._messages]
+        self.assertRedirects(response, redirect_url)
+        self.assertEqual(messages_list[0].level_tag, 'error')
+        self.assertIn(student.registration_id, str(messages_list[0]))
