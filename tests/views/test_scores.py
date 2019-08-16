@@ -40,6 +40,7 @@ from base.tests.factories.person import PersonFactory
 from base.tests.factories.student import StudentFactory
 from internship.models.internship_score import InternshipScore, APD_NUMBER
 from internship.models.internship_score_mapping import InternshipScoreMapping
+from internship.models.internship_student_affectation_stat import InternshipStudentAffectationStat
 from internship.tests.factories.cohort import CohortFactory
 from internship.tests.factories.internship import InternshipFactory
 from internship.tests.factories.internship_student_information import InternshipStudentInformationFactory
@@ -80,13 +81,16 @@ class ScoresEncodingTest(TestCase):
         )
         self.chosen_internship = InternshipFactory(cohort=self.cohort, speciality=None)
         internships = [self.mandatory_internship, self.long_internship, self.chosen_internship]
+        periods = [PeriodFactory(cohort=self.cohort) for internship in range(2)]
+        periods.append(self.period)
         for student_info in self.students:
             student = StudentFactory(person=student_info.person)
-            for internship in internships:
+            for index, internship in enumerate(internships):
                 StudentAffectationStatFactory(
                     student=student,
                     internship=internship,
-                    speciality=internship.speciality if internship.speciality else SpecialtyFactory()
+                    speciality=internship.speciality if internship.speciality else SpecialtyFactory(),
+                    period=periods[index]
                 )
             ScoreFactory(student=student, period=self.period, cohort=self.cohort, APD_1='A')
         for apd in range(1, APD_NUMBER):
@@ -387,3 +391,28 @@ class ScoresEncodingTest(TestCase):
         student_info.refresh_from_db()
         self.assertTemplateUsed(response, 'fragment/evolution_score_cell.html')
         self.assertIsNone(student_info.evolution_score)
+
+    @mock.patch('internship.utils.importing.import_eval.import_xlsx')
+    def test_post_upload_eval_success(self, mock_import):
+        student_info = self.students[0]
+        student = Student.objects.get(person=student_info.person)
+        student_period_affectation = InternshipStudentAffectationStat.objects.get(
+            student=student,
+            period=self.period
+        )
+        self.assertFalse(student_period_affectation.internship_evaluated)
+        mock_import.return_value = [student.registration_id]
+        url = reverse('internship_upload_eval', kwargs={
+            'cohort_id': self.cohort.pk,
+        })
+        redirect_url = reverse('internship_scores_encoding', kwargs={'cohort_id': self.cohort.pk})
+        response = self.client.post(
+            url,
+            data={
+                'file_upload': self.xlsxfile,
+                'period': self.period.name
+            }
+        )
+        self.assertRedirects(response, redirect_url)
+        student_period_affectation.refresh_from_db()
+        self.assertTrue(student_period_affectation.internship_evaluated)

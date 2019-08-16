@@ -48,7 +48,7 @@ from internship.models.internship_student_information import InternshipStudentIn
 from internship.models.period import Period
 from internship.templatetags.dictionary import is_edited
 from internship.utils.exporting import score_encoding_xls
-from internship.utils.importing import import_scores
+from internship.utils.importing import import_scores, import_eval
 from internship.views.common import get_object_list
 
 CHOSEN_LENGTH = 7
@@ -140,15 +140,15 @@ def save_evaluation_status(request, cohort_id):
     registration_id = request.POST.get("student")
     period_name = request.POST.get("period")
     status = json.loads(request.POST.get("status"))
-    _update_evaluation_status(status, registration_id, period_name, cohort)
+    _update_evaluation_status(status, [registration_id], period_name, cohort)
     return _json_response_success()
 
 
-def _update_evaluation_status(status, registration_id, period_name, cohort):
+def _update_evaluation_status(status, registration_ids, period_name, cohort):
     return InternshipStudentAffectationStat.objects.filter(
         period__cohort=cohort,
         period__name=period_name,
-        student__registration_id=registration_id
+        student__registration_id__in=registration_ids
     ).update(
         internship_evaluated=status
     )
@@ -555,11 +555,11 @@ def _keep_persons_with_periods_scores(periods, persons):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def upload_scores(request, cohort_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
-    _upload_file(request, cohort)
+    _upload_scores_file(request, cohort)
     return HttpResponseRedirect(reverse('internship_scores_encoding', kwargs={'cohort_id': cohort.id}))
 
 
-def _upload_file(request, cohort):
+def _upload_scores_file(request, cohort):
     if request.method == 'POST':
         file_name = request.FILES['file_upload']
         period = request.POST['period']
@@ -568,6 +568,22 @@ def _upload_file(request, cohort):
         else:
             import_errors = import_scores.import_xlsx(cohort, file_name, period)
             _process_errors(request, import_errors, period)
+
+
+def _upload_eval_file(request, cohort):
+    if request.method == 'POST':
+        file_name = request.FILES['file_upload']
+        period = request.POST['period']
+        if file_name and ".xlsx" not in str(file_name):
+            messages.add_message(request, messages.ERROR, _('File extension must be .xlsx'))
+        else:
+            registration_ids = import_eval.import_xlsx(file_name)
+            _update_evaluation_status(
+                status=True,
+                registration_ids=registration_ids,
+                period_name=period,
+                cohort=cohort
+            )
 
 
 def _process_errors(request, import_errors, period):
@@ -639,6 +655,7 @@ def _list_internships_acronyms(internships):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def upload_eval(request, cohort_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
+    _upload_eval_file(request, cohort)
     return HttpResponseRedirect(reverse('internship_scores_encoding', kwargs={'cohort_id': cohort.id}))
 
 

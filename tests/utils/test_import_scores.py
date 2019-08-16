@@ -42,7 +42,7 @@ APDS_COUNT = 15
 LINE_INTERVAL = 2
 
 
-class XlsImportTestCase(TestCase):
+class XlsImportScoresTestCase(TestCase):
 
     def setUp(self):
         self.cohort = CohortFactory()
