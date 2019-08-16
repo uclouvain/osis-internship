@@ -577,7 +577,7 @@ def _upload_eval_file(request, cohort):
         if file_name and ".xlsx" not in str(file_name):
             messages.add_message(request, messages.ERROR, _('File extension must be .xlsx'))
         else:
-            registration_ids = import_eval.import_xlsx(cohort, file_name)
+            registration_ids = import_eval.import_xlsx(file_name)
             _update_evaluation_status(
                 status=True,
                 registration_ids=registration_ids,

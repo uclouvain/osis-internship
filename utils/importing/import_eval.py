@@ -29,7 +29,7 @@ from openpyxl import load_workbook
 
 
 @transaction.atomic
-def import_xlsx(cohort, xlsxfile):
+def import_xlsx(xlsxfile):
     workbook = load_workbook(filename=xlsxfile, read_only=True)
     worksheet = workbook.active
     registration_ids = [str(row[0].value) for row in list(worksheet.rows)[1:worksheet.max_row]]
