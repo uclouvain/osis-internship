@@ -85,7 +85,7 @@ class UrlsTestCase(TestCase):
                 kwargs={'cohort_id': 1}
             ),
             dict(
-                url_path='/internships/cohorts/1/scores_encoding/upload/',
+                url_path='/internships/cohorts/1/scores_encoding/upload_scores/',
                 pattern_name='internship_upload_scores',
                 kwargs={'cohort_id': 1}
             ),
@@ -112,6 +112,11 @@ class UrlsTestCase(TestCase):
             dict(
                 url_path='/internships/cohorts/1/scores_encoding/ajax/refresh_evolution_score/',
                 pattern_name='refresh_evolution_score',
+                kwargs={'cohort_id': 1}
+            ),
+            dict(
+                url_path='/internships/cohorts/1/scores_encoding/upload_eval/',
+                pattern_name='internship_upload_eval',
                 kwargs={'cohort_id': 1}
             ),
         ]

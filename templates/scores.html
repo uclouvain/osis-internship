@@ -94,6 +94,14 @@
                                         </a>
                                     </li>
                                     <li role="separator" class="divider"></li>
+                                    <li>
+                                        <a href="#" data-toggle="modal"
+                                                data-target="#upload_eval" id="bt_upload_eval_modal">
+                                            <span class="glyphicon glyphicon-upload" aria-hidden="true"></span>
+                                            {% trans 'Import internships evaluations' %}
+                                        </a>
+                                    </li>
+                                    <li role="separator" class="divider"></li>
                                     <li id="li_send_reminder" class="disabled">
                                         <a href="#" data-target="#send_reminder" id="btn_send_reminder">
                                             <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>
@@ -279,6 +287,8 @@
     </div>
 
     {% include 'fragment/upload_scores_modal.html' %}
+
+    {% include 'fragment/upload_eval_modal.html' %}
 
     {% include 'fragment/download_scores_modal.html' %}
 
