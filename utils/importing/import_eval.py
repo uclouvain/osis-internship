@@ -26,12 +26,14 @@
 
 from openpyxl import load_workbook
 
+REGISTRATION_ID_COLUMN = 6
+
 
 def import_xlsx(xlsxfile):
     workbook = load_workbook(filename=xlsxfile, read_only=True)
     worksheet = workbook.active
     registration_ids = [
-        _get_only_digits(str(row[6].value))
+        _get_only_digits(str(row[REGISTRATION_ID_COLUMN].value))
         for row in list(worksheet.rows)[1:worksheet.max_row]
     ]
     xlsxfile.close()

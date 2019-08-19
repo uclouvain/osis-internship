@@ -32,7 +32,7 @@ from django.test import TestCase
 
 from base.tests.factories.student import StudentFactory
 from internship.models.internship_score import InternshipScore
-from internship.utils.importing.import_eval import import_xlsx
+from internship.utils.importing.import_eval import import_xlsx, REGISTRATION_ID_COLUMN
 
 
 class XlsImportEvalTestCase(TestCase):
@@ -52,7 +52,7 @@ class XlsImportEvalTestCase(TestCase):
         workbook = openpyxl.Workbook()
         worksheet = workbook.active
         for row, student in enumerate(cls.students):
-            columns = [(6, student.registration_id)]
+            columns = [(REGISTRATION_ID_COLUMN, student.registration_id)]
             for column, value in columns:
                 worksheet.cell(row=row+2, column=column+1).value = value
         return workbook
