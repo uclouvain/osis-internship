@@ -25,6 +25,7 @@
 ##############################################################################
 import json
 from collections import Counter
+from itertools import groupby
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
@@ -321,14 +322,13 @@ def _json_response_error(msg):
 
 
 def _prepare_score_table(cohort, periods, students):
-    scores = InternshipScore.objects.filter(cohort=cohort).select_related(
+    persons = students.values_list('person', flat=True)
+    scores = InternshipScore.objects.filter(cohort=cohort, student__person_id__in=list(persons)).select_related(
         'student__person', 'period', 'cohort'
-    ).order_by('student__person__last_name')
-
+    ).order_by('student__person')
     mapping = InternshipScoreMapping.objects.filter(cohort=cohort).select_related(
         'period'
     )
-    persons = students.values_list('person', flat=True)
     students_affectations = InternshipStudentAffectationStat.objects.filter(
         student__person_id__in=list(persons),
         period__cohort=cohort,
@@ -339,7 +339,11 @@ def _prepare_score_table(cohort, periods, students):
         'speciality__acronym', 'speciality__sequence', 'internship__speciality_id', 'internship__name',
         'internship__length_in_periods', 'internship_evaluated'
     ).order_by('period__date_start')
-    _match_scores_with_students(cohort, periods, list(scores), students)
+
+    scores = _group_by_students_and_periods(scores)
+
+    _prepare_students_extra_data(students)
+    _match_scores_with_students(cohort, periods, scores, students)
     _set_condition_fulfilled_status(students)
     _map_numeric_score(mapping, students)
     _link_periods_to_organizations(students, students_affectations)
@@ -348,6 +352,25 @@ def _prepare_score_table(cohort, periods, students):
     _append_registration_ids(students, students_affectations)
     _compute_evolution_score(students)
     return mapping
+
+
+def _group_by_students_and_periods(scores):
+    return {
+        person_id: {
+            period_id: list(score)
+            for period_id, score in groupby(value, lambda score: score.period.pk)
+        }
+        for person_id, value in groupby(scores, lambda score: score.student.person.pk)
+    }
+
+
+def _prepare_students_extra_data(students):
+    for student in students:
+        student.scores = []
+        student.numeric_scores = {}
+        student.specialties = {}
+        student.organizations = {}
+        student.evaluations = {}
 
 
 def _compute_evolution_score(students):
@@ -375,7 +398,6 @@ def _get_period_score(score):
 
 def _link_periods_to_evaluations(students, students_affectations):
     for student in students:
-        student.evaluations = {}
         _update_student_evaluations(student, students_affectations)
 
 
@@ -432,23 +454,18 @@ def _sum_mapped_note(indexed_note, mapping, period, period_score):
     return period_score
 
 
-def _match_scores_with_students(cohort, periods, scores_list, students):
-    # append scores for each period to each students
+def _match_scores_with_students(cohort, periods, scores, students):
+    # append scores for each period to each student
     for student in students:
-        student.scores = []
-        student.numeric_scores = {}
         for period in periods:
-            student_scores = list(filter(_filter_scores(student, cohort, period), scores_list))
-            _append_period_scores_to_student(period, student, student_scores)
+            if student.person.pk in scores.keys() and period.pk in scores[student.person.pk].keys():
+                student_scores = scores[student.person.pk][period.pk]
+                _append_period_scores_to_student(period, student, list(student_scores))
 
 
 def _set_condition_fulfilled_status(students):
     for student in students:
         student.fulfill_condition = InternshipScoreRules.student_has_fulfilled_requirements(student)
-
-
-def _filter_scores(student, cohort, period):
-    return lambda x: x.student.person == student.person and x.cohort == cohort and x.period.name == period.name
 
 
 def _get_mapping_score(period, apd):
@@ -469,7 +486,6 @@ def _retrieve_scores_entered_manually(period, student, student_scores):
 
 def _link_periods_to_specialties(students, students_affectations):
     for student in students:
-        student.specialties = {}
         _update_student_specialties(student, students_affectations)
 
 
@@ -493,7 +509,6 @@ def _get_acronym_with_sequence(affectation):
 
 def _link_periods_to_organizations(students, students_affectations):
     for student in students:
-        student.organizations = {}
         update_student_organizations(student, students_affectations)
 
 
