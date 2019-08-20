@@ -51,7 +51,7 @@ def add_report_message(key, request, value):
 
 
 def get_object_list(request, objects):
-    size = request.GET.get('paginator_size') if 'paginator_size' in request.GET else DEFAULT_PAGINATOR_SIZE
+    size = request.GET.get('paginator_size', DEFAULT_PAGINATOR_SIZE)
     if objects is None:
         objects = []
     paginator = Paginator(objects, size)
