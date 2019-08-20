@@ -3,6 +3,7 @@
 {% load dictionary %}
 {% load mapping %}
 {% load grades %}
+{% load pagination %}
 {% load i18n bootstrap3 %}
 
 {% comment "License" %}
@@ -209,7 +210,12 @@
                         </form>
                     </table>
                     <div>
-                        {% bootstrap_pagination students extra=request.GET.urlencode %}
+                        <div class="col-md-6">
+                            {% bootstrap_pagination students extra=request.GET.urlencode %}
+                        </div>
+                        <div class="col-md-6">
+                            {% pagination_size_select %}
+                        </div>
                     </div>
                 </div>
                 </div>

@@ -27,6 +27,8 @@ from django.contrib import messages
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.utils.translation import ugettext_lazy as _
 
+DEFAULT_PAGINATOR_SIZE = 10
+
 
 def display_errors(request, errors):
     for error in errors:
@@ -49,9 +51,10 @@ def add_report_message(key, request, value):
 
 
 def get_object_list(request, objects):
+    size = request.GET.get('paginator_size') if 'paginator_size' in request.GET else DEFAULT_PAGINATOR_SIZE
     if objects is None:
         objects = []
-    paginator = Paginator(objects, 10)
+    paginator = Paginator(objects, size)
     page = request.GET.get('page')
 
     try:

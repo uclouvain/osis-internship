@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-16 14:37+0200\n"
+"POT-Creation-Date: 2019-08-20 14:29+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -36,7 +36,7 @@ msgstr ""
 msgid "Acronym already exists"
 msgstr ""
 
-#: templates/scores.html:78
+#: templates/scores.html:79
 msgid "Actions"
 msgstr ""
 
@@ -174,7 +174,7 @@ msgstr ""
 msgid "Capacity"
 msgstr ""
 
-#: templates/scores.html:121
+#: templates/scores.html:122
 msgid "Check All"
 msgstr ""
 
@@ -239,11 +239,11 @@ msgstr ""
 msgid "Contest"
 msgstr ""
 
-#: templates/scores.html:272
+#: templates/scores.html:278
 msgid "Copy"
 msgstr ""
 
-#: templates/scores.html:242
+#: templates/scores.html:248
 msgid "Copy Period"
 msgstr ""
 
@@ -406,7 +406,7 @@ msgstr ""
 msgid "Export to XLS"
 msgstr ""
 
-#: templates/scores.html:85
+#: templates/scores.html:86
 msgid "Export to XLSX"
 msgstr ""
 
@@ -525,11 +525,11 @@ msgstr ""
 msgid "Import aborted for period %(period)s due to error(s) on:"
 msgstr ""
 
-#: templates/scores.html:101
+#: templates/scores.html:102
 msgid "Import internships evaluations"
 msgstr ""
 
-#: templates/scores.html:93
+#: templates/scores.html:94
 msgid "Import internships ratings"
 msgstr ""
 
@@ -551,7 +551,7 @@ msgstr ""
 msgid "Inject"
 msgstr ""
 
-#: templates/internships.html:154 templates/scores.html:127
+#: templates/internships.html:154 templates/scores.html:128
 #: templates/student.html:153
 msgid "Internship"
 msgstr ""
@@ -610,7 +610,7 @@ msgstr ""
 #: templates/period_create.html:33 templates/period_places_edit.html:31
 #: templates/periods.html:31 templates/place_detail.html:31
 #: templates/place_detail_affectation.html:31 templates/place_form.html:34
-#: templates/places.html:32 templates/scores.html:38
+#: templates/places.html:32 templates/scores.html:39
 #: templates/specialities.html:31 templates/speciality_form.html:32
 #: templates/student.html:31 templates/student_affectation_modification.html:31
 #: templates/student_form.html:31
@@ -683,7 +683,7 @@ msgstr ""
 msgid "Mandatory internship"
 msgstr ""
 
-#: templates/scores.html:49
+#: templates/scores.html:50
 msgid "Mapping"
 msgstr ""
 
@@ -754,7 +754,7 @@ msgstr ""
 msgid "No hospital"
 msgstr ""
 
-#: templates/scores.html:206 templates/students.html:115
+#: templates/scores.html:207 templates/students.html:115
 msgid "No result"
 msgstr ""
 
@@ -811,19 +811,19 @@ msgstr ""
 msgid "Other choice"
 msgstr ""
 
-#: templates/scores.html:275
+#: templates/scores.html:281
 msgid "Paste"
 msgstr ""
 
-#: templates/scores.html:245
+#: templates/scores.html:251
 msgid "Paste Period"
 msgstr ""
 
 #: templates/fragment/upload_eval_modal.html:14
 #: templates/fragment/upload_scores_modal.html:14
 #: templates/internship_affectation_errors.html:113
-#: templates/place_form.html:81 templates/scores.html:62
-#: templates/scores.html:126 templates/student_affectation_modification.html:51
+#: templates/place_form.html:81 templates/scores.html:63
+#: templates/scores.html:127 templates/student_affectation_modification.html:51
 msgid "Period"
 msgstr ""
 
@@ -927,7 +927,7 @@ msgstr ""
 #: templates/internship_modification.html:76 templates/master_form.html:146
 #: templates/period_create.html:58 templates/period_create.html:59
 #: templates/period_places_edit.html:51 templates/place_form.html:183
-#: templates/place_form.html:184 templates/scores.html:224
+#: templates/place_form.html:184 templates/scores.html:230
 #: templates/speciality_form.html:63 templates/speciality_form.html:64
 #: templates/student_affectation_modification.html:115
 #: templates/student_affectation_modification.html:116
@@ -937,7 +937,7 @@ msgstr ""
 msgid "Save"
 msgstr ""
 
-#: templates/scores.html:66 templates/scores.html:133
+#: templates/scores.html:67 templates/scores.html:134
 msgid "Score"
 msgstr ""
 
@@ -951,21 +951,21 @@ msgstr ""
 msgid "Score must be between %(minimum)d and %(maximum)d"
 msgstr ""
 
-#: templates/scores.html:48
+#: templates/scores.html:49
 msgid "Scores"
 msgstr ""
 
-#: templates/internship/home.html:93 templates/scores.html:39
-#: templates/scores.html:44
+#: templates/internship/home.html:93 templates/scores.html:40
+#: templates/scores.html:45
 msgid "Scores encoding"
 msgstr ""
 
-#: templates/scores.html:221
+#: templates/scores.html:227
 msgid "Scores equivalence according to periods"
 msgstr ""
 
 #: templates/internship_affectation_sumup.html:74 templates/masters.html:78
-#: templates/scores.html:58 templates/student_form.html:56
+#: templates/scores.html:59 templates/student_form.html:56
 #: templates/students.html:111
 msgid "Search"
 msgstr ""
@@ -1004,7 +1004,7 @@ msgstr ""
 msgid "Send"
 msgstr ""
 
-#: templates/fragment/send_reminder_modal.html:8 templates/scores.html:108
+#: templates/fragment/send_reminder_modal.html:8 templates/scores.html:109
 msgid "Send reminder"
 msgstr ""
 
@@ -1042,7 +1042,7 @@ msgstr ""
 #: templates/internship_modification.html:52 templates/internships.html:170
 #: templates/master.html:141 templates/master_form.html:79
 #: templates/masters.html:57 templates/masters.html:95
-#: templates/place_form.html:171 templates/scores.html:128
+#: templates/place_form.html:171 templates/scores.html:129
 #: templates/speciality_form.html:40 templates/student.html:159
 msgid "Specialty"
 msgstr ""
@@ -1084,7 +1084,7 @@ msgid "Status"
 msgstr ""
 
 #: templates/internship_affectation_errors.html:111
-#: templates/internship_affectation_students.html:118 templates/scores.html:125
+#: templates/internship_affectation_students.html:118 templates/scores.html:126
 #: templates/student_form.html:39
 msgid "Student"
 msgstr ""
@@ -1144,7 +1144,7 @@ msgstr ""
 #: templates/period_create.html:32 templates/period_places_edit.html:30
 #: templates/periods.html:30 templates/place_detail.html:30
 #: templates/place_detail_affectation.html:30 templates/place_form.html:33
-#: templates/places.html:31 templates/scores.html:37
+#: templates/places.html:31 templates/scores.html:38
 #: templates/specialities.html:30 templates/speciality_form.html:31
 #: templates/student.html:30 templates/student_affectation_modification.html:30
 #: templates/student_form.html:30
@@ -1203,6 +1203,10 @@ msgstr ""
 msgid ""
 "You are in the period of inscriptions. It is not recommended to change "
 "choices during this period."
+msgstr ""
+
+#: templates/inclusion/pagination_size_select.html:36
+msgid "items per page"
 msgstr ""
 
 #: views/score.py:634
