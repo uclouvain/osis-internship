@@ -34,6 +34,7 @@ from internship.tests.factories.cohort import CohortFactory
 from internship.tests.factories.master import MasterFactory
 from internship.tests.factories.master_allocation import MasterAllocationFactory
 from internship.tests.factories.organization import OrganizationFactory
+from osis_common.document.xls_build import CONTENT_TYPE_XLS
 
 
 class MasterTestCase(TestCase):
@@ -101,7 +102,4 @@ class MasterTestCase(TestCase):
         url = reverse('master_export', kwargs={'cohort_id': self.cohort.pk})
         response = self.client.get(url)
         self.assertEqual(response.status_code, HttpResponse.status_code)
-        self.assertEqual(
-            response._headers['content-type'][1],
-            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-        )
+        self.assertEqual(response['content-type'], CONTENT_TYPE_XLS.split(';')[0])

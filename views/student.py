@@ -31,7 +31,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.core.exceptions import PermissionDenied
 from django.core.serializers.json import DjangoJSONEncoder
 from django.urls import reverse
-from django.db.models import Prefetch
+from django.db.models import Prefetch, OuterRef, Subquery
 from django.forms import model_to_dict
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
@@ -39,6 +39,8 @@ from django.utils.translation import ugettext_lazy as _
 from django.views.decorators.http import require_POST
 
 from base import models as mdl
+from base.models.person_address import PersonAddress
+from base.models.student import Student
 from internship import models as mdl_int
 from internship.forms.form_student_information import StudentInformationForm
 from internship.forms.students_import_form import StudentsImportActionForm
@@ -143,8 +145,8 @@ def student_save(request, cohort_id):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internships_student_read(request, cohort_id, student_id):
     cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)
-    student = mdl.student.find_by_id(student_id)
-    student.address = mdl.person_address.find_by_person(student.person_id).first()
+    student = Student.objects.get(id=student_id)
+    student.address = PersonAddress.objects.get(person=student.person)
 
     if not request.user.has_perm('internship.is_internship_manager'):
         person_who_read = mdl.person.find_by_user(request.user)
@@ -156,12 +158,16 @@ def internships_student_read(request, cohort_id, student_id):
         return render(request, "student.html", {'errors': ['student_doesnot_exist']})
 
     information = mdl_int.internship_student_information.find_by_person(student.person, cohort).first()
-    internship_choices = mdl_int.internship_choice.get_choices_made(cohort=cohort, student=student).order_by('choice')
+    internship_choices = mdl_int.internship_choice.get_choices_made(
+        cohort=cohort, student=student
+    ).order_by('choice').select_related('organization', 'speciality')
     specialities = mdl_int.internship_speciality.search(mandatory=True, cohort=cohort)
-    internships = mdl_int.internship.Internship.objects.filter(cohort=cohort, pk__gte=1)\
-        .order_by('speciality', 'name', )
-    affectations = mdl_int.internship_student_affectation_stat.find_by_student(student, cohort).\
-        order_by("period__date_start")
+    internships = mdl_int.internship.Internship.objects.filter(
+        cohort=cohort
+    ).select_related('speciality').order_by('speciality', 'name')
+    affectations = mdl_int.internship_student_affectation_stat.find_by_student(student, cohort).select_related(
+        'speciality', 'organization', 'period', 'period__cohort', 'internship', 'internship__speciality'
+    ).order_by("period__date_start")
     periods = mdl_int.period.search(cohort=cohort).order_by("date_start")
     organizations = mdl_int.organization.search(cohort=cohort)
     allocations = {}
@@ -170,7 +176,7 @@ def internships_student_read(request, cohort_id, student_id):
             cohort=cohort,
             specialty=affectation.speciality,
             hospital=affectation.organization
-        ).first()
+        ).select_related('master', 'specialty').first()
         try:
             allocations[affectation.organization].update({affectation.speciality: allocation})
         except KeyError:
