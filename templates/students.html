@@ -1,5 +1,6 @@
 {% extends "layout.html" %}
 {% load staticfiles %}
+{% load pagination %}
 {% load i18n bootstrap3 %}
 
 {% comment "License" %}
@@ -127,8 +128,11 @@
                 </thead>
                 <tfoot>
                     <tr>
-                        <td colspan="6">
+                        <td colspan="4">
                             {% bootstrap_pagination students extra=request.GET.urlencode %}
+                        </td>
+                        <td colspan="2">
+                            {% pagination_size_select %}
                         </td>
                     </tr>
                 </tfoot>
