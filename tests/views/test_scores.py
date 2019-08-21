@@ -339,7 +339,8 @@ class ScoresEncodingTest(TestCase):
         self.assertTrue(affectation.internship_evaluated)
 
     def test_compute_evolution_score(self):
-        student_info = InternshipStudentInformationFactory(cohort=self.cohort)
+        student_name = "test_student"
+        student_info = InternshipStudentInformationFactory(person__last_name=student_name, cohort=self.cohort)
         student = StudentFactory(person=student_info.person)
         other_period = PeriodFactory(name='P2', cohort=self.cohort)
         ScoreFactory(student=student, period=self.period, cohort=self.cohort, APD_1='A')
