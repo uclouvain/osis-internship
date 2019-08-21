@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-16 14:37+0200\n"
+"POT-Creation-Date: 2019-08-21 14:30+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,7 +20,7 @@ msgstr ""
 msgid "A hospital with the same reference already exists in this cohort"
 msgstr ""
 
-#: views/master.py:119
+#: views/master.py:120
 msgid "A master must be affected to at least one hospital or one specialty."
 msgstr ""
 
@@ -40,7 +40,7 @@ msgstr ""
 msgid "Actions"
 msgstr ""
 
-#: templates/cohort/selection.html:20 templates/masters.html:81
+#: templates/cohort/selection.html:20 templates/masters.html:99
 #: templates/places.html:43 templates/students.html:96
 msgid "Add"
 msgstr ""
@@ -111,15 +111,15 @@ msgstr ""
 msgid "Allocation Sum up"
 msgstr ""
 
-#: views/score.py:238 views/score.py:290
+#: views/score.py:239 views/score.py:291
 msgid "An error occured during score deletion"
 msgstr ""
 
-#: views/score.py:199 views/score.py:264
+#: views/score.py:200 views/score.py:265
 msgid "An error occured during score update"
 msgstr ""
 
-#: views/score.py:127
+#: views/score.py:128
 msgid "An error occured while sending reminders"
 msgstr ""
 
@@ -362,14 +362,14 @@ msgstr ""
 msgid "Errors"
 msgstr ""
 
-#: views/score.py:590
+#: views/score.py:605
 #, python-format
 msgid ""
 "Evaluation status importation aborted for period %(period)s. Following "
 "registration ids do not exist in cohort: %(registration_ids)s"
 msgstr ""
 
-#: views/score.py:598
+#: views/score.py:613
 #, python-format
 msgid "Evaluation status successfully updated for period %(period)s"
 msgstr ""
@@ -406,7 +406,7 @@ msgstr ""
 msgid "Export to XLS"
 msgstr ""
 
-#: templates/scores.html:85
+#: templates/masters.html:81 templates/scores.html:85
 msgid "Export to XLSX"
 msgstr ""
 
@@ -414,8 +414,8 @@ msgstr ""
 msgid "Female"
 msgstr ""
 
-#: tests/views/test_scores.py:187 views/offer.py:423 views/score.py:568
-#: views/score.py:579
+#: tests/views/test_scores.py:187 views/offer.py:423 views/score.py:583
+#: views/score.py:594
 msgid "File extension must be .xlsx"
 msgstr ""
 
@@ -520,7 +520,7 @@ msgstr ""
 msgid "Import"
 msgstr ""
 
-#: views/score.py:631
+#: views/score.py:646
 #, python-format
 msgid "Import aborted for period %(period)s due to error(s) on:"
 msgstr ""
@@ -635,7 +635,7 @@ msgstr ""
 msgid "Internships offers"
 msgstr ""
 
-#: views/score.py:642
+#: views/score.py:657
 #, python-format
 msgid "Internships ratings successfully imported for period %(period)s"
 msgstr ""
@@ -691,7 +691,7 @@ msgstr ""
 msgid "Master"
 msgstr ""
 
-#: views/master.py:92
+#: views/master.py:93
 msgid "Master deleted"
 msgstr ""
 
@@ -746,7 +746,7 @@ msgstr ""
 msgid "No allocation found for the master"
 msgstr ""
 
-#: templates/masters.html:119
+#: templates/masters.html:123
 msgid "No data corresponds to the filters above. Make a choice, please."
 msgstr ""
 
@@ -807,6 +807,10 @@ msgstr ""
 msgid "Order position"
 msgstr ""
 
+#: utils/exporting/masters.py:57
+msgid "Organization"
+msgstr ""
+
 #: templates/internship_affectation_statistics.html:153
 msgid "Other choice"
 msgstr ""
@@ -847,7 +851,7 @@ msgstr ""
 msgid "Periods"
 msgstr ""
 
-#: views/score.py:625
+#: views/score.py:640
 msgid "Periods do not match"
 msgstr ""
 
@@ -904,7 +908,7 @@ msgstr ""
 msgid "Reference"
 msgstr ""
 
-#: tests/views/test_scores.py:320 views/score.py:133
+#: tests/views/test_scores.py:320 views/score.py:134
 msgid "Reminders have been sent successfully"
 msgstr ""
 
@@ -942,11 +946,11 @@ msgid "Score"
 msgstr ""
 
 #: templates/fragment/evolution_score_cell.html:14
-#: templates/fragment/score_cell.html:5 views/score.py:170
+#: templates/fragment/score_cell.html:5 views/score.py:171
 msgid "Score edited. Computed score: "
 msgstr ""
 
-#: views/score.py:202 views/score.py:267
+#: views/score.py:203 views/score.py:268
 #, python-format
 msgid "Score must be between %(minimum)d and %(maximum)d"
 msgstr ""
@@ -1044,6 +1048,7 @@ msgstr ""
 #: templates/masters.html:57 templates/masters.html:95
 #: templates/place_form.html:171 templates/scores.html:128
 #: templates/speciality_form.html:40 templates/student.html:159
+#: utils/exporting/masters.py:57
 msgid "Specialty"
 msgstr ""
 
@@ -1205,12 +1210,12 @@ msgid ""
 "choices during this period."
 msgstr ""
 
-#: views/score.py:634
+#: views/score.py:649
 #, python-format
 msgid "row %(row_id)s"
 msgstr ""
 
-#: views/score.py:635
+#: views/score.py:650
 #, python-format
 msgid "student with registration id '%(reg_id)s' not found"
 msgstr ""

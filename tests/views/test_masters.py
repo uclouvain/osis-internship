@@ -25,6 +25,7 @@
 ##############################################################################
 import faker
 from django.contrib.auth.models import Permission, User
+from django.http import HttpResponse
 from django.test import TestCase
 from django.urls import reverse
 
@@ -95,3 +96,12 @@ class MasterTestCase(TestCase):
         }))
         allocations = master_allocation.find_by_master(self.cohort, master_test)
         self.assertNotIn(allocation, allocations)
+
+    def test_export_masters(self):
+        url = reverse('master_export', kwargs={'cohort_id': self.cohort.pk})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, HttpResponse.status_code)
+        self.assertEqual(
+            response._headers['content-type'][1],
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        )

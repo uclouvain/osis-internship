@@ -28,12 +28,13 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.urls import reverse
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 from django.utils.translation import ugettext_lazy as _
 
 from internship.forms.master import MasterForm
 from internship.models import master_allocation, internship_master, internship_speciality, organization, cohort
+from internship.utils.exporting.masters import export_xls
 from internship.views.common import display_errors, get_object_list
 
 
@@ -128,6 +129,15 @@ def master_save(request, cohort_id):
 
     return HttpResponseRedirect("{}?hospital={}".format(reverse("internships_masters", args=[current_cohort.id]),
                                                         hospital))
+
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def export_masters(request, cohort_id):
+    workbook = export_xls()
+    response = HttpResponse(workbook, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename=masters.xlsx'
+    return response
 
 
 def _build_allocations(request, allocated_master):
