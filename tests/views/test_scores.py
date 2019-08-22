@@ -48,6 +48,7 @@ from internship.tests.factories.period import PeriodFactory
 from internship.tests.factories.score import ScoreFactory, ScoreMappingFactory
 from internship.tests.factories.speciality import SpecialtyFactory
 from internship.tests.factories.student_affectation_stat import StudentAffectationStatFactory
+from osis_common.document.xls_build import CONTENT_TYPE_XLS
 
 
 class ScoresEncodingTest(TestCase):
@@ -254,8 +255,8 @@ class ScoresEncodingTest(TestCase):
         })
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(
-            response._headers['content-type'][1],
-            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            response['content-type'],
+            CONTENT_TYPE_XLS.split(';')[0]
         )
 
     def test_save_mapping(self):
@@ -339,7 +340,8 @@ class ScoresEncodingTest(TestCase):
         self.assertTrue(affectation.internship_evaluated)
 
     def test_compute_evolution_score(self):
-        student_info = InternshipStudentInformationFactory(cohort=self.cohort)
+        student_name = "test_student"
+        student_info = InternshipStudentInformationFactory(person__last_name=student_name, cohort=self.cohort)
         student = StudentFactory(person=student_info.person)
         other_period = PeriodFactory(name='P2', cohort=self.cohort)
         ScoreFactory(student=student, period=self.period, cohort=self.cohort, APD_1='A')

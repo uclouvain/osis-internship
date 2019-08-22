@@ -53,7 +53,7 @@
                     </select>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-2">
                 <div class="form-group">
                     <label for="filter_specialty">{% trans 'Specialty' %}</label>
                     <select name="specialty" id="filter_specialty" class="form-control">
@@ -66,20 +66,20 @@
                     </select>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-2">
                 <div class="form-group">
                     <label for="filter_name">{% trans 'Name' %}/{% trans 'First name' %}</label>
                     <input name="name" id="filter_name" class="form-control">
 
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-5">
                 <button type="submit" class="btn btn-default" style="margin-top: 26px;">
                     <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
                     {% trans 'Search' %}</button>
-                <a href="{% url 'master_new' cohort_id=current_cohort.id %}" class="btn btn-default pull-right" style="margin-top: 26px;">
-                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                    {% trans 'Add' %}
+                <a href="{% url 'master_export' cohort_id=current_cohort.id %}" class="btn btn-default pull-right" style="margin-top: 26px;">
+                    <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
+                    {% trans 'Export to XLSX' %}
                 </a>
             </div>
         </div>
@@ -95,6 +95,10 @@
                     <th class="no-sort">{% trans 'Details' %}</th>
                     <th class="no-sort">{% trans 'Specialty' %}</th>
                     <th class="no-sort">{% trans 'Hospital' %}</th>
+                    <a href="{% url 'master_new' cohort_id=current_cohort.id %}" class="btn btn-primary pull-right" style="margin-top: 15px; margin-right:15px;">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                        {% trans 'Add' %}
+                    </a>
                 </tr>
             </thead>
             <tbody>

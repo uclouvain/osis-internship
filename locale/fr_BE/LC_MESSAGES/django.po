@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-21 15:32+0200\n"
+"POT-Creation-Date: 2019-08-22 09:54+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -518,6 +518,9 @@ msgstr "Nombre total d'étudiants ayant choisi cet hôpital"
 
 msgid "Order position"
 msgstr "Position de tri"
+
+msgid "Organization"
+msgstr "Organisation"
 
 msgid "Other choice"
 msgstr "Autre choix"
