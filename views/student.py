@@ -30,11 +30,12 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.exceptions import PermissionDenied
 from django.core.serializers.json import DjangoJSONEncoder
-from django.urls import reverse
-from django.db.models import Prefetch, OuterRef, Subquery
+from django.db.models import Prefetch, OuterRef, Subquery, Value
+from django.db.models.functions import Concat
 from django.forms import model_to_dict
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
+from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 from django.views.decorators.http import require_POST
 
@@ -44,8 +45,15 @@ from base.models.student import Student
 from internship import models as mdl_int
 from internship.forms.form_student_information import StudentInformationForm
 from internship.forms.students_import_form import StudentsImportActionForm
+from internship.models.cohort import Cohort
+from internship.models.internship import Internship
 from internship.models.internship_choice import InternshipChoice
+from internship.models.internship_speciality import InternshipSpeciality
+from internship.models.internship_student_affectation_stat import InternshipStudentAffectationStat
 from internship.models.internship_student_information import InternshipStudentInformation
+from internship.models.master_allocation import MasterAllocation
+from internship.models.organization import Organization
+from internship.models.period import Period
 from internship.utils.importing.import_students import import_xlsx
 from internship.views.common import display_errors, get_object_list
 from reference.models import country
@@ -144,7 +152,7 @@ def student_save(request, cohort_id):
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internships_student_read(request, cohort_id, student_id):
-    cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)
+    cohort = get_object_or_404(Cohort, pk=cohort_id)
     student = Student.objects.get(id=student_id)
     student.address = PersonAddress.objects.get(person=student.person)
 
@@ -157,30 +165,28 @@ def internships_student_read(request, cohort_id, student_id):
     if not student:
         return render(request, "student.html", {'errors': ['student_doesnot_exist']})
 
-    information = mdl_int.internship_student_information.find_by_person(student.person, cohort).first()
-    internship_choices = mdl_int.internship_choice.get_choices_made(
-        cohort=cohort, student=student
+    information = InternshipStudentInformation.objects.get(person=student.person, cohort=cohort)
+    internships = Internship.objects.filter(cohort=cohort).select_related('speciality').order_by('speciality', 'name')
+    internship_choices = InternshipChoice.objects.filter(
+        internship__in=internships, student=student
     ).order_by('choice').select_related('organization', 'speciality')
-    specialities = mdl_int.internship_speciality.search(mandatory=True, cohort=cohort)
-    internships = mdl_int.internship.Internship.objects.filter(
-        cohort=cohort
-    ).select_related('speciality').order_by('speciality', 'name')
-    affectations = mdl_int.internship_student_affectation_stat.find_by_student(student, cohort).select_related(
+    specialities = InternshipSpeciality.objects.filter(mandatory=True, cohort=cohort).order_by('acronym', 'name')
+    master = MasterAllocation.objects.filter(specialty=OuterRef('speciality'), organization=OuterRef('organization'))
+    affectations = InternshipStudentAffectationStat.objects.filter(
+        student=student, period__cohort=cohort
+    ).select_related(
         'speciality', 'organization', 'period', 'period__cohort', 'internship', 'internship__speciality'
-    ).order_by("period__date_start")
-    periods = mdl_int.period.search(cohort=cohort).order_by("date_start")
-    organizations = mdl_int.organization.search(cohort=cohort)
-    allocations = {}
-    for affectation in affectations:
-        allocation = mdl_int.master_allocation.search(
-            cohort=cohort,
-            specialty=affectation.speciality,
-            hospital=affectation.organization
-        ).select_related('master', 'specialty').first()
-        try:
-            allocations[affectation.organization].update({affectation.speciality: allocation})
-        except KeyError:
-            allocations.update({affectation.organization: {affectation.speciality: allocation}})
+    ).order_by(
+        "period__date_start"
+    ).annotate(
+        master=Concat(
+            Subquery(master.values('master__last_name')[:1]),
+            Value(', '),
+            Subquery(master.values('master__first_name')[:1])
+        )
+    )
+    periods = Period.objects.filter(cohort=cohort).order_by("date_start")
+    organizations = Organization.objects.filter(cohort=cohort)
     return render(request, "student.html", locals())
 
 
