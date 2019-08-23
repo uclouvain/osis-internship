@@ -388,7 +388,9 @@ def _get_students_with_status(request, cohort, filters):
 
     students_status = []
 
-    active_period = Period.objects.filter(cohort=cohort, date_start__lte=date.today(), date_end__gte=date.today()).first()
+    active_period = Period.objects.filter(
+        cohort=cohort, date_start__lte=date.today(), date_end__gte=date.today()
+    ).first()
 
     current_internship_query = InternshipStudentAffectationStat.objects.filter(
         student__person=OuterRef('person'),
