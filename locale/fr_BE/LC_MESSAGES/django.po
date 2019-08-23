@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-22 09:54+0200\n"
+"POT-Creation-Date: 2019-08-23 11:35+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -178,6 +178,9 @@ msgstr "Créer une période"
 
 msgid "Create a specialty"
 msgstr "Créer une spécialité"
+
+msgid "Current internship"
+msgstr "Stage en cours"
 
 msgid "Date format"
 msgstr "Format de date"

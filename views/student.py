@@ -30,12 +30,13 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.exceptions import PermissionDenied
 from django.core.serializers.json import DjangoJSONEncoder
-from django.db.models import Prefetch, OuterRef, Subquery, Value
+from django.db.models import Prefetch, OuterRef, Subquery, Value, Q
 from django.db.models.functions import Concat
 from django.forms import model_to_dict
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
+from django.utils.datetime_safe import date
 from django.utils.translation import ugettext_lazy as _
 from django.views.decorators.http import require_POST
 
@@ -65,10 +66,11 @@ def internships_student_resume(request, cohort_id):
     cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)
     internships_ids = cohort.internship_set.values_list('id',flat=True)
     filter_name = request.GET.get('name', '')
+    filter_current_internship = request.GET.get('current_internship')
     page = request.GET.get('page')
     choices = InternshipChoice.objects.filter(internship_id__in=internships_ids).select_related('student')
     number_students_ok, number_students_not_ok = _get_statuses(choices, internships_ids)
-    students_with_status = _get_students_with_status(request, page, cohort, filter_name)
+    students_with_status = _get_students_with_status(request, cohort, (filter_name, filter_current_internship))
     student_with_internships = mdl_int.internship_choice.get_number_students(cohort)
     students_can_have_internships = mdl_int.internship_student_information.get_number_students(cohort)
     student_without_internship = students_can_have_internships - student_with_internships
@@ -382,19 +384,36 @@ def _get_affectation_for_period(affectations, period):
     return None
 
 
-def _get_students_with_status(request, page, cohort, filter_name):
+def _get_students_with_status(request, cohort, filters):
 
     students_status = []
+
+    active_period = Period.objects.filter(cohort=cohort, date_start__lte=date.today(), date_end__gte=date.today()).first()
+
+    current_internship_query = InternshipStudentAffectationStat.objects.filter(
+        student__person=OuterRef('person'),
+        period=active_period
+    )
 
     students_info = InternshipStudentInformation.objects\
         .filter(cohort=cohort)\
         .select_related('person') \
         .prefetch_related(Prefetch('person__student_set', to_attr='students'))\
-        .order_by('person__last_name', 'person__first_name')
+        .order_by('person__last_name', 'person__first_name')\
+        .annotate(
+            current_internship=Concat(
+                Subquery(current_internship_query.values('speciality__acronym')),
+                Subquery(current_internship_query.values('organization__reference'))
+            )
+        )
 
-    if filter_name:
-        students_info = students_info.filter(person__last_name__icontains=filter_name) | \
-                                  students_info.filter(person__first_name__icontains=filter_name)
+    if filters:
+        filter_name, filter_current_internship = filters
+        if filter_name:
+            students_info = students_info.filter(person__last_name__icontains=filter_name) | \
+                                      students_info.filter(person__first_name__icontains=filter_name)
+        if filter_current_internship:
+            students_info = students_info.exclude(Q(current_internship__isnull=True) | Q(current_internship__exact=''))
 
     paginated_students_info = get_object_list(request, students_info)
 
@@ -402,7 +421,7 @@ def _get_students_with_status(request, page, cohort, filter_name):
 
     for student_info in paginated_students_info.object_list:
         student_status = _get_student_status(student_info.person.students[0], cohort, internship_ids)
-        students_status.append((student_info.person.students[0], student_status))
+        students_status.append((student_info.person.students[0], student_status, student_info.current_internship))
     paginated_students_info.object_list = students_status
     return paginated_students_info
 

@@ -26,18 +26,21 @@
 
 from django.contrib.auth.models import Permission, User
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.test import TestCase
 from django.urls import reverse
-from django.test import TestCase, RequestFactory
+from django.utils.datetime_safe import date
 from openpyxl import Workbook
 from openpyxl.writer.excel import save_virtual_workbook
 
 from base.tests.factories.student import StudentFactory
 from base.tests.models import test_student
-from internship.models.internship_student_information import find_by_cohort, find_by_person, \
-    InternshipStudentInformation, find_all
+from internship.models.internship_student_information import find_by_cohort, InternshipStudentInformation
 from internship.tests.factories.cohort import CohortFactory
 from internship.tests.factories.internship import InternshipFactory
 from internship.tests.factories.internship_choice import create_internship_choice
+from internship.tests.factories.internship_student_information import InternshipStudentInformationFactory
+from internship.tests.factories.period import PeriodFactory
+from internship.tests.factories.student_affectation_stat import StudentAffectationStatFactory
 from internship.tests.models import test_organization, test_internship_speciality, test_internship_student_information
 from internship.tests.utils.test_student_loader import generate_record
 from internship.views import student
@@ -73,9 +76,8 @@ class TestStudentResume(TestCase):
         expected = []
         actual = student._get_students_with_status(
             request=response.wsgi_request,
-            page=None,
             cohort=self.cohort,
-            filter_name=None
+            filters=None
         )
         self.assertCountEqual(expected, actual)
 
@@ -88,13 +90,32 @@ class TestStudentResume(TestCase):
                                                                        cohort=self.cohort)
         test_internship_student_information.create_student_information(self.student_2.person, "GENERALIST",
                                                                        cohort=self.cohort)
-        expected = [(self.student_1, True), (self.student_2, False)]
+        expected = [(self.student_1, True, ''), (self.student_2, False, '')]
         actual = student._get_students_with_status(
             request=response.wsgi_request,
-            page=None,
             cohort=self.cohort,
-            filter_name=None
+            filters=None
         )
+        self.assertCountEqual(expected, actual)
+        for item_expected in expected:
+            self.assertIn(item_expected, actual)
+
+    def test_filter_students_by_current_internship(self):
+        period = PeriodFactory(cohort=self.cohort, date_start=date.today(), date_end=date.today())
+        InternshipStudentInformationFactory(cohort=self.cohort, person=self.student_1.person)
+        affectation = StudentAffectationStatFactory(student=self.student_1, period=period)
+        url = reverse(internships_student_resume, kwargs={
+            'cohort_id': self.cohort.id,
+        })
+        response = self.client.get(url)
+        actual = student._get_students_with_status(
+            request=response.wsgi_request,
+            cohort=self.cohort,
+            filters=(None, True)
+        )
+        expected= [
+            (self.student_1, True, "{}{}".format(affectation.speciality.acronym, affectation.organization.reference))
+        ]
         self.assertCountEqual(expected, actual)
         for item_expected in expected:
             self.assertIn(item_expected, actual)
