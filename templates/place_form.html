@@ -74,107 +74,23 @@
                     <div class="panel-body">
                         <p>{% trans 'Inform the sequence in which the columns must appear in the report to the hospital. Fields without number are not added to the report.' %}</p>
                         <div class="row">
-                            <div class="col-md-1">
-                                {{form.report_period}}
+                            <div class="col-md-4">
+                                {% bootstrap_field form.report_period layout='horizontal' label=_('Period')  horizontal_field_class='col-md-4' horizontal_label_class='col-md-6 col-md-offset-2'%}
+                                {% bootstrap_field form.report_birthdate layout='horizontal' label=_('Birth date') horizontal_field_class='col-md-4' horizontal_label_class='col-md-6 col-md-offset-2'%}
+                                {% bootstrap_field form.report_start_date layout='horizontal' label=_('Start date') horizontal_field_class='col-md-4' horizontal_label_class='col-md-6 col-md-offset-2'%}
+                                {% bootstrap_field form.report_email layout='horizontal' label=_('Email') horizontal_field_class='col-md-4' horizontal_label_class='col-md-6 col-md-offset-2'%}
+                                {% bootstrap_field form.report_end_date layout='horizontal' label=_('End date') horizontal_field_class='col-md-4' horizontal_label_class='col-md-6 col-md-offset-2'%}
+                                {% bootstrap_field form.report_noma layout='horizontal' label=_('Noma') horizontal_field_class='col-md-4' horizontal_label_class='col-md-6 col-md-offset-2'%}
+                                {% bootstrap_field form.report_last_name layout='horizontal' label=_('Last name') horizontal_field_class='col-md-4' horizontal_label_class='col-md-6 col-md-offset-2'%}
                             </div>
-                            <div class="col-md-5">
-                                {% trans 'Period' %}
-                            </div>
-                            <div class="col-md-1">
-                                {{form.report_birthdate}}
-                            </div>
-                            <div class="col-md-5">
-                                {% trans 'Birth date' %}
-                            </div>
-                        </div>
-                        <br>
-                        <div class="row">
-                            <div class="col-md-1">
-                                {{form.report_start_date}}
-                            </div>
-                            <div class="col-md-5">
-                                {% trans 'Start date' %}
-                            </div>
-                            <div class="col-md-1">
-                                {{form.report_email}}
-                            </div>
-                            <div class="col-md-5">
-                                {% trans 'Email' %}
-                            </div>
-                        </div>
-                        <br>
-                        <div class="row">
-                            <div class="col-md-1">
-                                {{form.report_end_date}}
-                            </div>
-                            <div class="col-md-5">
-                                {% trans 'End date' %}
-                            </div>
-                            <div class="col-md-1">
-                                {{form.report_noma}}
-                            </div>
-                            <div class="col-md-5">
-                                {% trans 'Noma' %}
-                            </div>
-                        </div>
-                        <br>
-                        <div class="row">
-                            <div class="col-md-1">
-                                {{form.report_last_name}}
-                            </div>
-                            <div class="col-md-5">
-                                {% trans 'Last name' %}
-                            </div>
-                            <div class="col-md-1">
-                                {{form.report_phone}}
-                            </div>
-                            <div class="col-md-5">
-                                {% trans 'Phone' %}
-                            </div>
-                        </div>
-                        <br>
-                        <div class="row">
-                            <div class="col-md-1">
-                                {{form.report_first_name}}
-                            </div>
-                            <div class="col-md-5">
-                                {% trans 'First name' %}
-                            </div>
-                            <div class="col-md-1">
-                                {{form.report_address}}
-                            </div>
-                            <div class="col-md-5">
-                                {% trans 'Address' %}
-                            </div>
-                        </div>
-                        <br>
-                        <div class="row">
-                            <div class="col-md-1">
-                                {{form.report_gender}}
-                            </div>
-                            <div class="col-md-5">
-                                {% trans 'Gender' %}
-                            </div>
-                            <div class="col-md-1">
-                                {{form.report_postal_code}}
-                            </div>
-                            <div class="col-md-5">
-                                {% trans 'Postal code' %}
-                            </div>
-                        </div>
-                        <br>
-                        <div class="row">
-                            <div class="col-md-1">
-                                {{form.report_specialty}}
-                            </div>
-                            <div class="col-md-5">
-                                {% trans 'Specialty' %}
-                            </div>
-                            <div class="col-md-1">
-                                {{form.report_city}}
-                            </div>
-                            <div class="col-md-5">
-                                {% trans 'Locality' %}
+                            <div class="col-md-4">
+                                {% bootstrap_field form.report_phone layout='horizontal' label=_('Phone') horizontal_field_class='col-md-4' horizontal_label_class='col-md-6 col-md-offset-2'%}
+                                {% bootstrap_field form.report_first_name layout='horizontal' label=_('First name') horizontal_field_class='col-md-4' horizontal_label_class='col-md-6 col-md-offset-2'%}
+                                {% bootstrap_field form.report_address layout='horizontal' label=_('Address') horizontal_field_class='col-md-4' horizontal_label_class='col-md-6 col-md-offset-2'%}
+                                {% bootstrap_field form.report_gender layout='horizontal' label=_('Gender') horizontal_field_class='col-md-4' horizontal_label_class='col-md-6 col-md-offset-2'%}
+                                {% bootstrap_field form.report_postal_code layout='horizontal' label=_('Postal code') horizontal_field_class='col-md-4' horizontal_label_class='col-md-6 col-md-offset-2'%}
+                                {% bootstrap_field form.report_specialty layout='horizontal' label=_('Specialty') horizontal_field_class='col-md-4' horizontal_label_class='col-md-6 col-md-offset-2'%}
+                                {% bootstrap_field form.report_city layout='horizontal' label=_('City') horizontal_field_class='col-md-4' horizontal_label_class='col-md-6 col-md-offset-2'%}
                             </div>
                         </div>
                     </div>
@@ -183,7 +99,7 @@
                 <button type="submit" class="btn btn-primary" title="{% trans 'Save'%}" id="bt_organization_save">
                     <span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'Save'%}</button>
                 <a class="btn btn-default" id="lnk_organization_cancel" href="{% url 'internships_places' cohort_id=cohort.id  %}">
-                    <span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span> {% trans 'Return'%}</a>
+                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> {% trans 'Cancel'%}</a>
             </form>
         </div>
     </div>

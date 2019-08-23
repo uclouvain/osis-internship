@@ -30,7 +30,8 @@
     <li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
     <li><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
     <li><a href="{% url 'internships_home' cohort_id=current_cohort.id %}">{{ current_cohort.name }}</a></li>
-    <li class="active">{% trans 'Internships masters' %}</li>
+    <li><a href="{% url 'internships_masters' cohort_id=current_cohort.id %}">{% trans 'Internships masters' %}</a></li>
+    <li class="active">{{ allocated_master.last_name | upper }}, {{ allocated_master.first_name }}</li>
 {% endblock %}
 
 {% block content %}
@@ -39,7 +40,8 @@
             {% if allocated_master.civility %}
                 {% trans allocated_master.civility_acronym %}
             {% endif %}
-            {{ allocated_master.last_name | upper }}, {{ allocated_master.first_name }}</h2>
+            {{ allocated_master.last_name | upper }}, {{ allocated_master.first_name }}
+        </h2>
     </div>
 
     <div class="panel panel-default">
@@ -159,10 +161,7 @@
         <div class="panel-footer">
             <a href="{% url 'master_edit' cohort_id=current_cohort.id master_id=allocated_master.id %}" class="btn btn-default">
                 <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-                {% trans "Edit" %}</a>
-            <a href="{% url 'internships_masters' cohort_id=current_cohort.id %}" class="btn btn-default">
-                <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-                {% trans "Back" %}
+                {% trans "Edit" %}
             </a>
             <a class="btn btn-danger pull-right master_btn_delete"
             data-href="{% url 'master_delete' cohort_id=current_cohort.id master_id=allocated_master.id %}"

@@ -28,8 +28,11 @@
 
 {% block breadcrumb %}
     <li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
-    <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{% trans 'Internships management' %}</a></li>
-    <li class="active">{% trans 'Edit places' %}</li>
+    <li><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
+    <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></li>
+    <li><a href="{% url 'internships' cohort_id=cohort.id %}">{% trans "All internships" %}</a></li>
+    <li><a href="{% url 'internship_detail_student_choice' cohort_id=cohort.id offer_id=internship.id %}">{% trans "Choice's Details" %}</a></li>
+    <li class="active">{% trans "Edit places" %}</li>
 {% endblock %}
 
 {% block content %}
@@ -48,7 +51,7 @@
                     </div>
                 {% endfor %}
                 <button type="submit" class="btn btn-primary">
-                    <span class="glyphicon glyphicon-save" aria-hidden="true"/> {% trans 'Save'%}
+                    <span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'Save'%}
                 </button>
             </form>
         </div>
