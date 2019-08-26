@@ -25,6 +25,9 @@
 {% endcomment %}
 
 <form action="{{path}}" method="get" class="form-inline" id="pagination_form">
+    {% for key, value in other_params.items %}
+        <input type="hidden" name="{{ key }}" value="{{ value }}">
+    {% endfor %}
     <div class="pull-right pagination form-group">
         <select onchange="this.form.submit()" name="paginator_size" class="form-control">
             {% for size in paginator_size_list %}
