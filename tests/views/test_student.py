@@ -74,51 +74,53 @@ class TestStudentResume(TestCase):
         })
         response = self.client.get(url)
         expected = []
-        actual = student._get_students_with_status(
+        actual, stats = student._get_students_with_status(
             request=response.wsgi_request,
             cohort=self.cohort,
             filters=None
         )
-        self.assertCountEqual(expected, actual)
+        self.assertCountEqual(expected, actual.object_list)
 
     def test_get_students_status_filled_in(self):
         url = reverse(internships_student_resume, kwargs={
             'cohort_id': self.cohort.id,
         })
         response = self.client.get(url)
-        test_internship_student_information.create_student_information(self.student_1.person, "GENERALIST",
+        student_info_1 = test_internship_student_information.create_student_information(self.student_1.person, "GENERALIST",
                                                                        cohort=self.cohort)
-        test_internship_student_information.create_student_information(self.student_2.person, "GENERALIST",
+        student_info_2 = test_internship_student_information.create_student_information(self.student_2.person, "GENERALIST",
                                                                        cohort=self.cohort)
-        expected = [(self.student_1, True, ''), (self.student_2, False, '')]
-        actual = student._get_students_with_status(
+        expected = [student_info_1, student_info_2]
+        actual, stats = student._get_students_with_status(
             request=response.wsgi_request,
             cohort=self.cohort,
             filters=None
         )
-        self.assertCountEqual(expected, actual)
+        self.assertCountEqual(expected, actual.object_list)
         for item_expected in expected:
-            self.assertIn(item_expected, actual)
+            self.assertIn(item_expected, actual.object_list)
 
     def test_filter_students_by_current_internship(self):
         period = PeriodFactory(cohort=self.cohort, date_start=date.today(), date_end=date.today())
-        InternshipStudentInformationFactory(cohort=self.cohort, person=self.student_1.person)
+        student_info = InternshipStudentInformationFactory(cohort=self.cohort, person=self.student_1.person)
         affectation = StudentAffectationStatFactory(student=self.student_1, period=period)
         url = reverse(internships_student_resume, kwargs={
             'cohort_id': self.cohort.id,
         })
         response = self.client.get(url)
-        actual = student._get_students_with_status(
+        actual, stats = student._get_students_with_status(
             request=response.wsgi_request,
             cohort=self.cohort,
             filters=(None, True)
         )
-        expected= [
-            (self.student_1, True, "{}{}".format(affectation.speciality.acronym, affectation.organization.reference))
-        ]
+        expected = [student_info]
         self.assertCountEqual(expected, actual)
         for item_expected in expected:
             self.assertIn(item_expected, actual)
+        self.assertEqual(
+            actual[0].current_internship,
+            "{}{}".format(affectation.speciality.acronym, affectation.organization.reference)
+        )
 
 
 class StudentResumeViewTestCase(TestCase):
