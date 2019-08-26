@@ -78,7 +78,7 @@ def internships_student_resume(request, cohort_id):
         'students_ok': status_stats['OK'],
         'students_not_ok': status_stats['NOK'],
         'student_with_internships': status_stats['OK'] + status_stats['NOK'],
-        'students_can_have_internships': status_stats['OK'] + status_stats ['NOK'] + status_stats['UNKNOWN'],
+        'students_can_have_internships': status_stats['OK'] + status_stats['NOK'] + status_stats['UNKNOWN'],
         'student_without_internship': status_stats['UNKNOWN'],
         "number_generalists": number_generalists,
         "number_specialists": number_specialists,
