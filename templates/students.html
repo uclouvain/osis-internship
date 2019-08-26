@@ -52,38 +52,40 @@
     <div class="panel panel-default">
         <div class="panel-heading">
             <div class="row">
-                {% if number_generalists > 0 and number_specialists > 0 %}
-                    <div class="col-md-2">
-                        {% trans 'Generalist' %}: {{ number_generalists }}
-                    </div>
-                    <div class="col-md-2">
-                        {% trans 'Specialist' %}: {{ number_specialists }}
-                    </div>
-                    <div class="col-md-2">
-                        <span class="label label-info" title="{% trans 'Enrollments' %}">
-                            {% trans 'Enrollments' %} : {{student_with_internships}} / {{students_can_have_internships}}
-                        </span>
-                    </div>
-                {% else %}
-                    <div class="col-md-6">
-                        <span class="label label-info" title="{% trans 'Number of enrollments' %}">
-                            {% trans 'Number of enrollments' %} : {{student_with_internships}} / {{students_can_have_internships}}
-                        </span>
-                    </div>
-                {% endif %}
+                {% with student_with_internships=status_stats.OK|add:status_stats.NOK %}
+                    {% if number_generalists > 0 and number_specialists > 0 %}
+                        <div class="col-md-2">
+                            {% trans 'Generalist' %}: {{ number_generalists }}
+                        </div>
+                        <div class="col-md-2">
+                            {% trans 'Specialist' %}: {{ number_specialists }}
+                        </div>
+                        <div class="col-md-2">
+                            <span class="label label-info" title="{% trans 'Enrollments' %}">
+                                {% trans 'Enrollments' %} : {{student_with_internships}} / {{student_with_internships|add:status_stats.UNKNOWN}}
+                            </span>
+                        </div>
+                    {% else %}
+                        <div class="col-md-6">
+                            <span class="label label-info" title="{% trans 'Number of enrollments' %}">
+                                {% trans 'Number of enrollments' %} : {{student_with_internships}} / {{student_with_internships|add:status_stats.UNKNOWN}}
+                            </span>
+                        </div>
+                    {% endif %}
+                {% endwith %}
                 <div class="col-md-1">
                     <span class="label label-success">
-                        <span class="glyphicon glyphicon-ok" aria-hidden="true"> : {{students_ok}}</span>
+                        <span class="glyphicon glyphicon-ok" aria-hidden="true"> : {{status_stats.OK}}</span>
                     </span>
                 </div>
                 <div class="col-md-1">
                     <span class="label label-danger">
-                        <span class="glyphicon glyphicon-remove" aria-hidden="true"> : {{students_not_ok}}</span>
+                        <span class="glyphicon glyphicon-remove" aria-hidden="true"> : {{status_stats.NOK}}</span>
                     </span>
                 </div>
                 <div class="col-md-1">
                     <span class="label label-default">
-                        <span class="glyphicon glyphicon-ban-circle" aria-hidden="true"> : {{student_without_internship}}</span>
+                        <span class="glyphicon glyphicon-ban-circle" aria-hidden="true"> : {{status_stats.UNKNOWN}}</span>
                     </span>
                 </div>
                 <div class="col-md-3">
