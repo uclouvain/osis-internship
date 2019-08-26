@@ -96,9 +96,9 @@
                                         </a>
                                     </li>
                                     <li role="separator" class="divider"></li>
-                                    <li class="disabled">
+                                    <li {% if affectations_count < 1 %} class="disabled" {% endif %}>
                                         <a {% if affectations_count < 1 %}
-                                                class="disabled" title="{% trans 'No assignment available' %}"
+                                                title="{% trans 'No assignment available' %}"
                                             {% else %}
                                                 href="#" data-toggle="modal"
                                             {% endif %}

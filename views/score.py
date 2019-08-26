@@ -624,8 +624,7 @@ def _check_registration_ids_validity(cohort, registration_ids):
     ).values_list('registration_id', flat=True)
     non_valid_registration_ids = set(registration_ids).difference(set(filtered_students))
     valid_registration_ids = set(registration_ids).difference(non_valid_registration_ids)
-    non_valid_registration_ids.discard('None')
-    non_valid_registration_ids.discard('')
+    non_valid_registration_ids.difference_update({'', None})
     return valid_registration_ids, non_valid_registration_ids
 
 
