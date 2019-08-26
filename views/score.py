@@ -601,16 +601,16 @@ def _upload_eval_file(request, cohort):
 
 
 def _process_registration_ids(request, cohort, period, registration_ids):
-    valid_registration_ids, non_valid_registration_ids = _check_registration_ids_validity(cohort, registration_ids)
-    if non_valid_registration_ids:
+    valid_reg_ids, non_valid_reg_ids = _check_registration_ids_validity(cohort, registration_ids)
+    if non_valid_reg_ids:
         display_error_messages(
             request,
             _('Evaluation status importation aborted for period %(period)s. ' 
               'Following registration ids do not exist in cohort: %(registration_ids)s')
-            % {'period': period, 'registration_ids': ', '.join(non_valid_registration_ids)}
+            % {'period': period, 'registration_ids': ', '.join(non_valid_reg_ids)}
         )
     else:
-        _update_evaluation_status(status=True, registration_ids=valid_registration_ids, period_name=period, cohort=cohort)
+        _update_evaluation_status(status=True, registration_ids=valid_reg_ids, period_name=period, cohort=cohort)
         display_success_messages(
             request,
             _('Evaluation status successfully updated for period %(period)s') % {'period': period}
