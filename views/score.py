@@ -66,6 +66,9 @@ def scores_encoding(request, cohort_id):
     periods = all_periods
     search_form = ScoresFilterForm(request.GET, cohort=cohort)
     students_list = []
+
+    affectations_count = InternshipStudentAffectationStat.objects.filter(internship__cohort=cohort).count()
+
     if search_form.is_valid():
         students_list = search_form.get_students(cohort=cohort)
         periods = search_form.get_period(cohort=cohort)
@@ -74,8 +77,8 @@ def scores_encoding(request, cohort_id):
     students = get_object_list(request, students_list)
     mapping = _prepare_score_table(cohort, periods, students.object_list)
     grades = [grade for grade, _ in InternshipScore.SCORE_CHOICES]
-    context = {'cohort': cohort, 'periods': periods, 'all_periods': all_periods,
-               'students': students, 'search_form': search_form, 'mapping': list(mapping), 'grades': grades}
+    context = {'cohort': cohort, 'periods': periods, 'all_periods': all_periods, 'students': students, 'grades': grades,
+               'affectations_count': affectations_count, 'search_form': search_form, 'mapping': list(mapping)}
     return render(request, "scores.html", context=context)
 
 
@@ -598,7 +601,7 @@ def _upload_eval_file(request, cohort):
 
 
 def _process_registration_ids(request, cohort, period, registration_ids):
-    non_valid_registration_ids = _check_registration_ids_validity(cohort, registration_ids)
+    valid_registration_ids, non_valid_registration_ids = _check_registration_ids_validity(cohort, registration_ids)
     if non_valid_registration_ids:
         display_error_messages(
             request,
@@ -607,7 +610,7 @@ def _process_registration_ids(request, cohort, period, registration_ids):
             % {'period': period, 'registration_ids': ', '.join(non_valid_registration_ids)}
         )
     else:
-        _update_evaluation_status(status=True, registration_ids=registration_ids, period_name=period, cohort=cohort)
+        _update_evaluation_status(status=True, registration_ids=valid_registration_ids, period_name=period, cohort=cohort)
         display_success_messages(
             request,
             _('Evaluation status successfully updated for period %(period)s') % {'period': period}
@@ -620,8 +623,10 @@ def _check_registration_ids_validity(cohort, registration_ids):
         registration_id=Subquery(student_registration_id_query)
     ).values_list('registration_id', flat=True)
     non_valid_registration_ids = set(registration_ids).difference(set(filtered_students))
+    valid_registration_ids = set(registration_ids).difference(non_valid_registration_ids)
     non_valid_registration_ids.discard('None')
-    return non_valid_registration_ids
+    non_valid_registration_ids.discard('')
+    return valid_registration_ids, non_valid_registration_ids
 
 
 def _process_errors(request, import_errors, period):

@@ -96,9 +96,13 @@
                                         </a>
                                     </li>
                                     <li role="separator" class="divider"></li>
-                                    <li>
-                                        <a href="#" data-toggle="modal"
-                                                data-target="#upload_eval" id="bt_upload_eval_modal">
+                                    <li class="disabled">
+                                        <a {% if affectations_count < 1 %}
+                                                class="disabled" title="{% trans 'No assignment available' %}"
+                                            {% else %}
+                                                href="#" data-toggle="modal"
+                                            {% endif %}
+                                            data-target="#upload_eval" id="bt_upload_eval_modal">
                                             <span class="glyphicon glyphicon-upload" aria-hidden="true"></span>
                                             {% trans 'Import internships evaluations' %}
                                         </a>
