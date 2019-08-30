@@ -31,7 +31,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.core.exceptions import PermissionDenied
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db import models
-from django.db.models import Prefetch, OuterRef, Subquery, Value, Q, Count, Case, When, F
+from django.db.models import Prefetch, OuterRef, Subquery, Value, Q, Count, F
 from django.db.models.functions import Concat
 from django.forms import model_to_dict
 from django.http import HttpResponse, HttpResponseRedirect
@@ -418,8 +418,8 @@ def _get_students_with_status(request, cohort, filters):
     if filters:
         filter_name, filter_current_internship = filters
         if filter_name:
-            students_info = students_info.filter(person__last_name__icontains=filter_name) | \
-                                      students_info.filter(person__first_name__icontains=filter_name)
+            students_info = students_info.filter(person__last_name__unaccent__icontains=filter_name) | \
+                            students_info.filter(person__first_name__unaccent__icontains=filter_name)
         if filter_current_internship:
             students_info = students_info.exclude(Q(current_internship__isnull=True) | Q(current_internship__exact=''))
 

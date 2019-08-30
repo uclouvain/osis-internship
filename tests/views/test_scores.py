@@ -200,9 +200,9 @@ class ScoresEncodingTest(TestCase):
         self.assertEqual(student_scores[0][0], self.period.name)
         self.assertIn(student_scores[0][1][0], [score[0] for score in InternshipScore.SCORE_CHOICES])
 
-    def test_search_student_by_name(self):
+    def test_search_student_by_name_unaccent(self):
         url = reverse('internship_scores_encoding', kwargs={'cohort_id': self.cohort.pk})
-        person = PersonFactory(last_name="UNIQUE_NAME")
+        person = PersonFactory(last_name="Éçàüî")
         searched_student = InternshipStudentInformationFactory(person=person, cohort=self.cohort)
         data = {
             'free_text': searched_student.person.last_name,
