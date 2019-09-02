@@ -23,6 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from unittest import skipUnless
 
 from django.contrib.auth.models import Permission, User
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -32,6 +33,8 @@ from django.utils.datetime_safe import date
 from openpyxl import Workbook
 from openpyxl.writer.excel import save_virtual_workbook
 
+from backoffice.settings.base import INSTALLED_APPS
+from base.tests.factories.person import PersonFactory
 from base.tests.factories.student import StudentFactory
 from base.tests.models import test_student
 from internship.models.internship_student_information import find_by_cohort, InternshipStudentInformation
@@ -124,12 +127,20 @@ class TestStudentResume(TestCase):
 
 
 class StudentResumeViewTestCase(TestCase):
+    @classmethod
+    def setUpTestData(self):
+        self.cohort = CohortFactory()
+        self.students = [InternshipStudentInformationFactory(cohort=self.cohort) for _ in range(0, 9)]
+        self.student_with_accent = InternshipStudentInformationFactory(
+            cohort=self.cohort, person=PersonFactory(last_name='Éçàüî')
+        )
+        self.students.append(self.student_with_accent)
+
     def setUp(self):
         self.user = User.objects.create_user('demo', 'demo@demo.org', 'passtest')
         permission = Permission.objects.get(codename='is_internship_manager')
         self.user.user_permissions.add(permission)
         self.client.force_login(self.user)
-        self.cohort = CohortFactory()
 
     def test_internships_student_resume(self):
         url = reverse(internships_student_resume, kwargs={
@@ -137,6 +148,17 @@ class StudentResumeViewTestCase(TestCase):
         })
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
+        self.assertCountEqual(response.context['students'].object_list, self.students)
+
+    @skipUnless('django.contrib.postgres' in INSTALLED_APPS, 'requires django.contrib.postgres')
+    def test_search_student_by_name_unaccent(self):
+        url = reverse(internships_student_resume, kwargs={
+            'cohort_id': self.cohort.id,
+        })
+        query_string = '?name={}'.format("Ecaui")
+        response = self.client.get("{}{}".format(url, query_string))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['students'].object_list[0], self.student_with_accent)
 
 
 class StudentsListImport(TestCase):
