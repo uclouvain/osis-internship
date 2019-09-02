@@ -341,6 +341,7 @@ class ScoresEncodingTest(TestCase):
         self.assertEqual(response.status_code, 204)
         self.assertTrue(affectation.internship_evaluated)
 
+    @skipUnless('django.contrib.postgres' in INSTALLED_APPS, 'requires django.contrib.postgres')
     def test_compute_evolution_score(self):
         student_name = "test_student"
         student_info = InternshipStudentInformationFactory(person__last_name=student_name, cohort=self.cohort)
