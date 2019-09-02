@@ -23,12 +23,15 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from unittest import skipUnless
+
 import faker
 from django.contrib.auth.models import Permission, User
 from django.http import HttpResponse
 from django.test import TestCase
 from django.urls import reverse
 
+from backoffice.settings.base import INSTALLED_APPS
 from internship.models import master_allocation
 from internship.tests.factories.cohort import CohortFactory
 from internship.tests.factories.master import MasterFactory
@@ -53,6 +56,7 @@ class MasterTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'masters.html')
 
+    @skipUnless('django.contrib.postgres' in INSTALLED_APPS, 'requires django.contrib.postgres')
     def test_search_master_by_name_unaccent(self):
         organization = OrganizationFactory(cohort=self.cohort)
         master_with_accent = MasterFactory(last_name='Éçàüî')

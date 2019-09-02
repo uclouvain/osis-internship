@@ -23,6 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from unittest import skipUnless
 
 from django.contrib.auth.models import Permission, User
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -32,6 +33,7 @@ from django.utils.datetime_safe import date
 from openpyxl import Workbook
 from openpyxl.writer.excel import save_virtual_workbook
 
+from backoffice.settings.base import INSTALLED_APPS
 from base.tests.factories.person import PersonFactory
 from base.tests.factories.student import StudentFactory
 from base.tests.models import test_student
@@ -148,6 +150,7 @@ class StudentResumeViewTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertCountEqual(response.context['students'].object_list, self.students)
 
+    @skipUnless('django.contrib.postgres' in INSTALLED_APPS, 'requires django.contrib.postgres')
     def test_search_student_by_name_unaccent(self):
         url = reverse(internships_student_resume, kwargs={
             'cohort_id': self.cohort.id,
