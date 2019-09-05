@@ -23,8 +23,9 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
+
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
+from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
@@ -35,7 +36,7 @@ from osis_common.models.serializable_model import SerializableModel, Serializabl
 
 class InternshipMasterAdmin(SerializableModelAdmin):
     list_display = ('first_name', 'last_name', 'civility')
-    fieldsets = ((None, {'fields': ('first_name', 'last_name', 'civility', 'gender', 'email',
+    fieldsets = ((None, {'fields': ('last_name', 'first_name', 'civility', 'gender', 'email',
                                     'email_private', 'location', 'postal_code', 'city', 'country', 'phone',
                                     'phone_mobile', 'birth_date', 'start_activities')}),)
 
