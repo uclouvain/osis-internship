@@ -29,7 +29,7 @@ from openpyxl import Workbook
 from openpyxl.styles import Font
 from openpyxl.writer.excel import save_virtual_workbook
 
-from internship.models.internship_master import InternshipMaster
+from internship.models.internship_master import InternshipMaster, InternshipMasterAdmin
 from internship.models.master_allocation import MasterAllocation
 from internship.utils.exporting.spreadsheet import add_row
 
@@ -42,10 +42,10 @@ MAX_COL_LENGTH = 25
 def export_xls():
     workbook = Workbook()
     worksheet = workbook.active
-    fields = [
+    fields = _custom_sort_fields([
         {'name': f.name, 'verbose_name': _(f.verbose_name.capitalize())}
         for f in InternshipMaster._meta.fields if f.name not in EXCLUDED_FIELDS
-    ]
+    ])
     _add_header(worksheet, fields)
     _add_masters(worksheet, fields)
     _adjust_column_width(worksheet)
@@ -75,3 +75,9 @@ def _adjust_column_width(worksheet):
         length = max(len(str(cell.value)) for cell in column_cells)
         length = length if length <= MAX_COL_LENGTH else MAX_COL_LENGTH
         worksheet.column_dimensions[column_cells[0].column].width = length
+
+
+def _custom_sort_fields(fields):
+    ordered_field_names = InternshipMasterAdmin.fieldsets[0][1]['fields']
+    ordered_fields = sorted(fields, key=lambda x: ordered_field_names.index(x['name']))
+    return ordered_fields
