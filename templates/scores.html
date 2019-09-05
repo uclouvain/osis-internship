@@ -37,6 +37,7 @@
 {% block breadcrumb %}
     <li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
     <li><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
+    <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></li>
     <li class="active">{% trans 'Scores encoding' %}</li>
 {% endblock %}
 
@@ -95,9 +96,13 @@
                                         </a>
                                     </li>
                                     <li role="separator" class="divider"></li>
-                                    <li>
-                                        <a href="#" data-toggle="modal"
-                                                data-target="#upload_eval" id="bt_upload_eval_modal">
+                                    <li {% if affectations_count < 1 %} class="disabled" {% endif %}>
+                                        <a {% if affectations_count < 1 %}
+                                                title="{% trans 'No assignment available' %}"
+                                            {% else %}
+                                                href="#" data-toggle="modal"
+                                            {% endif %}
+                                            data-target="#upload_eval" id="bt_upload_eval_modal">
                                             <span class="glyphicon glyphicon-upload" aria-hidden="true"></span>
                                             {% trans 'Import internships evaluations' %}
                                         </a>

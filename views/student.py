@@ -30,12 +30,14 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.exceptions import PermissionDenied
 from django.core.serializers.json import DjangoJSONEncoder
-from django.db.models import Prefetch, OuterRef, Subquery, Value
+from django.db import models
+from django.db.models import Prefetch, OuterRef, Subquery, Value, Q, Count, F
 from django.db.models.functions import Concat
 from django.forms import model_to_dict
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
+from django.utils.datetime_safe import date
 from django.utils.translation import ugettext_lazy as _
 from django.views.decorators.http import require_POST
 
@@ -63,26 +65,17 @@ from reference.models import country
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internships_student_resume(request, cohort_id):
     cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)
-    internships_ids = cohort.internship_set.values_list('id',flat=True)
     filter_name = request.GET.get('name', '')
-    page = request.GET.get('page')
-    choices = InternshipChoice.objects.filter(internship_id__in=internships_ids).select_related('student')
-    number_students_ok, number_students_not_ok = _get_statuses(choices, internships_ids)
-    students_with_status = _get_students_with_status(request, page, cohort, filter_name)
-    student_with_internships = mdl_int.internship_choice.get_number_students(cohort)
+    filter_current_internship = request.GET.get('current_internship')
+    students, status_stats = _get_students_with_status(request, cohort, (filter_name, filter_current_internship))
     students_can_have_internships = mdl_int.internship_student_information.get_number_students(cohort)
-    student_without_internship = students_can_have_internships - student_with_internships
     number_generalists = mdl_int.internship_student_information.get_number_of_generalists(cohort)
     number_specialists = students_can_have_internships - number_generalists
     context = {
         'search_name': None,
         'search_firstname': None,
-        'students': students_with_status,
-        'students_ok': number_students_ok,
-        'students_not_ok': number_students_not_ok,
-        'student_with_internships': student_with_internships,
-        'students_can_have_internships': students_can_have_internships,
-        'student_without_internship': student_without_internship,
+        'students': students,
+        'status_stats': status_stats,
         "number_generalists": number_generalists,
         "number_specialists": number_specialists,
         'cohort': cohort,
@@ -382,35 +375,56 @@ def _get_affectation_for_period(affectations, period):
     return None
 
 
-def _get_students_with_status(request, page, cohort, filter_name):
+def _get_students_with_status(request, cohort, filters):
 
-    students_status = []
+    active_period = Period.objects.filter(
+        cohort=cohort, date_start__lte=date.today(), date_end__gte=date.today()
+    ).first()
+
+    internship_ids = Internship.objects.filter(cohort=cohort).values_list('pk', flat=True)
+
+    current_internship_subquery = InternshipStudentAffectationStat.objects.filter(
+        student__person=OuterRef('person'),
+        period=active_period
+    )
+
+    student_internships_count = InternshipChoice.objects.filter(
+        internship__pk__in=internship_ids,
+        choice=1,
+        student__person=OuterRef('person')
+    ).values('student').annotate(count=Count('internship')).values('count')
 
     students_info = InternshipStudentInformation.objects\
         .filter(cohort=cohort)\
-        .select_related('person') \
         .prefetch_related(Prefetch('person__student_set', to_attr='students'))\
-        .order_by('person__last_name', 'person__first_name')
+        .order_by('person__last_name', 'person__first_name')\
+        .annotate(
+            current_internship=Concat(
+                Subquery(current_internship_subquery.values('speciality__acronym')),
+                Subquery(current_internship_subquery.values('organization__reference'))
+            ),
+            chosen_internships_count=Subquery(student_internships_count, output_field=models.IntegerField()),
+            total_count=Value(internship_ids.count(), output_field=models.IntegerField())
+        ).annotate(
+            status=F('chosen_internships_count')-F('total_count')
+        )
 
-    if filter_name:
-        students_info = students_info.filter(person__last_name__icontains=filter_name) | \
-                                  students_info.filter(person__first_name__icontains=filter_name)
+    status_stats = {
+        'OK': students_info.filter(status__gte=0).count(),
+        'NOK': students_info.filter(status__lt=0).count(),
+        'UNKNOWN': students_info.filter(status__isnull=True).count(),
+    }
+
+    if filters:
+        filter_name, filter_current_internship = filters
+        if filter_name:
+            students_info = students_info.filter(person__last_name__unaccent__icontains=filter_name) | \
+                            students_info.filter(person__first_name__unaccent__icontains=filter_name)
+        if filter_current_internship:
+            students_info = students_info.exclude(Q(current_internship__isnull=True) | Q(current_internship__exact=''))
 
     paginated_students_info = get_object_list(request, students_info)
-
-    internship_ids = mdl_int.internship.Internship.objects.filter(cohort=cohort, pk__gte=1).values_list("pk", flat=True)
-
-    for student_info in paginated_students_info.object_list:
-        student_status = _get_student_status(student_info.person.students[0], cohort, internship_ids)
-        students_status.append((student_info.person.students[0], student_status))
-    paginated_students_info.object_list = students_status
-    return paginated_students_info
-
-
-def _get_student_status(student, cohort, internship_ids):
-    choices_values = mdl_int.internship_choice.get_choices_made(cohort=cohort,
-                                                                student=student).values_list("internship_id", flat=True)
-    return len(list(set(internship_ids) - set(choices_values))) == 0
+    return paginated_students_info, status_stats
 
 
 def _convert_differences_to_json(differences):
@@ -422,21 +436,3 @@ def _convert_differences_to_json(differences):
             new_records_count += 1
     data_json = json.dumps(data_json, cls=DjangoJSONEncoder)
     return data_json, new_records_count
-
-
-def _get_statuses(choices, internships_ids):
-    statuses = {}
-    number_ok = 0
-    number_not_ok = 0
-    for choice in choices:
-        person_id = choice.student.person_id
-        if person_id in statuses.keys() and choice.internship_id not in statuses[person_id]:
-            statuses[person_id].append(choice.internship_id)
-        if person_id not in statuses.keys():
-            statuses[person_id] = []
-    for person_id in statuses.keys():
-        if len(internships_ids) == len(statuses[person_id]):
-            number_ok += 1
-        else:
-            number_not_ok += 1
-    return number_ok, number_not_ok

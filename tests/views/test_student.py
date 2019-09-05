@@ -23,21 +23,27 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from unittest import skipUnless
 
 from django.contrib.auth.models import Permission, User
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.test import TestCase
 from django.urls import reverse
-from django.test import TestCase, RequestFactory
+from django.utils.datetime_safe import date
 from openpyxl import Workbook
 from openpyxl.writer.excel import save_virtual_workbook
 
+from backoffice.settings.base import INSTALLED_APPS
+from base.tests.factories.person import PersonFactory
 from base.tests.factories.student import StudentFactory
 from base.tests.models import test_student
-from internship.models.internship_student_information import find_by_cohort, find_by_person, \
-    InternshipStudentInformation, find_all
+from internship.models.internship_student_information import find_by_cohort, InternshipStudentInformation
 from internship.tests.factories.cohort import CohortFactory
 from internship.tests.factories.internship import InternshipFactory
 from internship.tests.factories.internship_choice import create_internship_choice
+from internship.tests.factories.internship_student_information import InternshipStudentInformationFactory
+from internship.tests.factories.period import PeriodFactory
+from internship.tests.factories.student_affectation_stat import StudentAffectationStatFactory
 from internship.tests.models import test_organization, test_internship_speciality, test_internship_student_information
 from internship.tests.utils.test_student_loader import generate_record
 from internship.views import student
@@ -71,42 +77,70 @@ class TestStudentResume(TestCase):
         })
         response = self.client.get(url)
         expected = []
-        actual = student._get_students_with_status(
+        actual, stats = student._get_students_with_status(
             request=response.wsgi_request,
-            page=None,
             cohort=self.cohort,
-            filter_name=None
+            filters=None
         )
-        self.assertCountEqual(expected, actual)
+        self.assertCountEqual(expected, actual.object_list)
 
     def test_get_students_status_filled_in(self):
         url = reverse(internships_student_resume, kwargs={
             'cohort_id': self.cohort.id,
         })
         response = self.client.get(url)
-        test_internship_student_information.create_student_information(self.student_1.person, "GENERALIST",
+        student_info_1 = test_internship_student_information.create_student_information(self.student_1.person, "GENERALIST",
                                                                        cohort=self.cohort)
-        test_internship_student_information.create_student_information(self.student_2.person, "GENERALIST",
+        student_info_2 = test_internship_student_information.create_student_information(self.student_2.person, "GENERALIST",
                                                                        cohort=self.cohort)
-        expected = [(self.student_1, True), (self.student_2, False)]
-        actual = student._get_students_with_status(
+        expected = [student_info_1, student_info_2]
+        actual, stats = student._get_students_with_status(
             request=response.wsgi_request,
-            page=None,
             cohort=self.cohort,
-            filter_name=None
+            filters=None
         )
+        self.assertCountEqual(expected, actual.object_list)
+        for item_expected in expected:
+            self.assertIn(item_expected, actual.object_list)
+
+    def test_filter_students_by_current_internship(self):
+        period = PeriodFactory(cohort=self.cohort, date_start=date.today(), date_end=date.today())
+        student_info = InternshipStudentInformationFactory(cohort=self.cohort, person=self.student_1.person)
+        affectation = StudentAffectationStatFactory(student=self.student_1, period=period)
+        url = reverse(internships_student_resume, kwargs={
+            'cohort_id': self.cohort.id,
+        })
+        response = self.client.get(url)
+        actual, stats = student._get_students_with_status(
+            request=response.wsgi_request,
+            cohort=self.cohort,
+            filters=(None, True)
+        )
+        expected = [student_info]
         self.assertCountEqual(expected, actual)
         for item_expected in expected:
             self.assertIn(item_expected, actual)
+        self.assertEqual(
+            actual[0].current_internship,
+            "{}{}".format(affectation.speciality.acronym, affectation.organization.reference)
+        )
 
 
 class StudentResumeViewTestCase(TestCase):
+    @classmethod
+    def setUpTestData(self):
+        self.cohort = CohortFactory()
+        self.students = [InternshipStudentInformationFactory(cohort=self.cohort) for _ in range(0, 9)]
+        self.student_with_accent = InternshipStudentInformationFactory(
+            cohort=self.cohort, person=PersonFactory(last_name='Éçàüî')
+        )
+        self.students.append(self.student_with_accent)
+
     def setUp(self):
         self.user = User.objects.create_user('demo', 'demo@demo.org', 'passtest')
         permission = Permission.objects.get(codename='is_internship_manager')
         self.user.user_permissions.add(permission)
         self.client.force_login(self.user)
-        self.cohort = CohortFactory()
 
     def test_internships_student_resume(self):
         url = reverse(internships_student_resume, kwargs={
@@ -114,6 +148,17 @@ class StudentResumeViewTestCase(TestCase):
         })
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
+        self.assertCountEqual(response.context['students'].object_list, self.students)
+
+    @skipUnless('django.contrib.postgres' in INSTALLED_APPS, 'requires django.contrib.postgres')
+    def test_search_student_by_name_unaccent(self):
+        url = reverse(internships_student_resume, kwargs={
+            'cohort_id': self.cohort.id,
+        })
+        query_string = '?name={}'.format("Ecaui")
+        response = self.client.get("{}{}".format(url, query_string))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['students'].object_list[0], self.student_with_accent)
 
 
 class StudentsListImport(TestCase):

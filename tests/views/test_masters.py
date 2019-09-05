@@ -23,12 +23,15 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from unittest import skipUnless
+
 import faker
 from django.contrib.auth.models import Permission, User
 from django.http import HttpResponse
 from django.test import TestCase
 from django.urls import reverse
 
+from backoffice.settings.base import INSTALLED_APPS
 from internship.models import master_allocation
 from internship.tests.factories.cohort import CohortFactory
 from internship.tests.factories.master import MasterFactory
@@ -49,10 +52,22 @@ class MasterTestCase(TestCase):
         url = reverse('internships_masters', kwargs={
             'cohort_id': self.cohort.id
         })
-
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'masters.html')
+
+    @skipUnless('django.contrib.postgres' in INSTALLED_APPS, 'requires django.contrib.postgres')
+    def test_search_master_by_name_unaccent(self):
+        organization = OrganizationFactory(cohort=self.cohort)
+        master_with_accent = MasterFactory(last_name='Éçàüî')
+        MasterAllocationFactory(organization=organization, master=master_with_accent)
+        url = reverse('internships_masters', kwargs={
+            'cohort_id': self.cohort.id,
+        })
+        query_string = '?name={}'.format("Éçàüî")
+        response = self.client.get("{}{}".format(url, query_string))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['allocations'].object_list[0].master, master_with_accent)
 
     def test_masters_index_with_master(self):
         fake = faker.Faker()
@@ -67,7 +82,7 @@ class MasterTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'masters.html')
 
-        masters = response.context['allocations'].__dict__['object_list']
+        masters = response.context['allocations'].object_list
         self.assertEqual(len(masters), 1)
         self.assertEqual(masters[0], master)
 
@@ -75,7 +90,6 @@ class MasterTestCase(TestCase):
         url = reverse('internships_masters', kwargs={
             'cohort_id': self.cohort.id
         })
-
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'masters.html')

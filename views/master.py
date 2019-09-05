@@ -48,8 +48,8 @@ def masters(request, cohort_id):
 
     allocations = master_allocation.search(current_cohort, filter_specialty, filter_hospital)
     if filter_name:
-        allocations = allocations.filter(master__last_name__icontains=filter_name) | \
-                      allocations.filter(master__first_name__icontains=filter_name)
+        allocations = allocations.filter(master__last_name__unaccent__icontains=filter_name) | \
+                      allocations.filter(master__first_name__unaccent__icontains=filter_name)
     specialties = internship_speciality.find_by_cohort(current_cohort)
     hospitals = organization.find_by_cohort(current_cohort)
     allocations = get_object_list(request, allocations)
