@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-23 11:35+0200\n"
+"POT-Creation-Date: 2019-09-06 11:17+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -88,9 +88,6 @@ msgstr "Êtes-vous sur ?"
 
 msgid "Attention"
 msgstr ""
-
-msgid "Back"
-msgstr "Retour"
 
 msgid "Birth date"
 msgstr "Date de naissance"
@@ -477,6 +474,9 @@ msgstr "Non"
 
 msgid "No allocation found for the master"
 msgstr "Aucune allocation trouvée pour le maître."
+
+msgid "No assignment available"
+msgstr "Pas d'affectation disponible"
 
 msgid "No data corresponds to the filters above. Make a choice, please."
 msgstr ""
