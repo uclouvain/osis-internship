@@ -476,7 +476,7 @@ msgid "No allocation found for the master"
 msgstr "Aucune allocation trouvée pour le maître."
 
 msgid "No assignment available"
-msgstr ""
+msgstr "Pas d'affectation disponible"
 
 msgid "No data corresponds to the filters above. Make a choice, please."
 msgstr ""
