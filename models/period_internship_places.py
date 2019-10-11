@@ -24,6 +24,7 @@
 #
 ##############################################################################
 from django.db import models
+
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 
 
@@ -49,17 +50,8 @@ def search(**kwargs):
     return PeriodInternshipPlaces.objects.filter(**kwargs).select_related("period", "internship_offer")
 
 
-def find_by_id(id):
-    return PeriodInternshipPlaces.objects.get(pk=id)
-
-
 def find_by_internship_offer(internship_offer):
     return PeriodInternshipPlaces.objects.filter(internship_offer=internship_offer)
-
-
-def find_by_offer_in_period(period, offer):
-    return PeriodInternshipPlaces.objects.filter(period=period,
-                                                 internship_offer=offer)
 
 
 def update_maximum_enrollments(internship_offer):

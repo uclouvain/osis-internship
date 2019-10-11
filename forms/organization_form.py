@@ -25,14 +25,14 @@
 ##############################################################################
 from django import forms
 
-from internship.models import cohort
+from internship.models.cohort import Cohort
 from internship.models.organization import Organization
 from reference.models import country
 
 
 class OrganizationForm(forms.ModelForm):
     country = forms.ModelChoiceField(queryset=country.find_all(), required=False)
-    cohort = forms.ModelChoiceField(queryset=cohort.find_all(), required=False, disabled=True)
+    cohort = forms.ModelChoiceField(queryset=Cohort.objects.all(), required=False, disabled=True)
 
     class Meta:
         model = Organization

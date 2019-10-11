@@ -27,6 +27,7 @@ from django import forms
 from django.forms import TextInput
 
 from internship.models import cohort
+from internship.models.cohort import Cohort
 
 
 class DateInput(TextInput):
@@ -37,7 +38,7 @@ class CohortForm(forms.ModelForm):
     publication_start_date = forms.DateField(widget=DateInput)
     subscription_start_date = forms.DateField(widget=DateInput)
     subscription_end_date = forms.DateField(widget=DateInput)
-    originated_from = forms.ModelChoiceField(queryset=cohort.find_all(), empty_label="", required=False)
+    originated_from = forms.ModelChoiceField(queryset=Cohort.objects.all(), empty_label="", required=False)
 
     class Meta:
         model = cohort.Cohort

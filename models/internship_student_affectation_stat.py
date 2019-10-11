@@ -24,10 +24,11 @@
 #
 ##############################################################################
 from django.db import models
-from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
+
 from internship.models.enums.affectation_type import AffectationType
 from internship.models.enums.choice_type import ChoiceType
 from internship.models.enums.costs import Costs
+from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 
 
 class InternshipStudentAffectationStatAdmin(SerializableModelAdmin):
@@ -64,11 +65,6 @@ def search(**kwargs):
     return InternshipStudentAffectationStat.objects.filter(**kwargs) \
         .select_related("student__person", "organization", "speciality", "period") \
         .order_by("student__person__last_name", "student__person__first_name", "period__date_start")
-
-
-def find_non_mandatory_affectations(period_ids):
-    return InternshipStudentAffectationStat.objects.filter(period__id__in=period_ids). \
-        select_related("student", "organization", "speciality")
 
 
 def find_by_cohort(cohort):

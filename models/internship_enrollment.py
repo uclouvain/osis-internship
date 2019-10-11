@@ -23,8 +23,8 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
 from django.contrib import admin
+from django.db import models
 
 
 class InternshipEnrollmentAdmin(admin.ModelAdmin):
@@ -56,8 +56,3 @@ def search_by_student_and_internship(student, internship):
 
 def find_by_student(student):
     return InternshipEnrollment.objects.filter(student=student)
-
-
-def find_for_non_mandatory_internship():
-    return InternshipEnrollment.objects.filter(internship_choice__gte=1).\
-        select_related("student", "internship_offer", "place", "period")

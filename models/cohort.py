@@ -78,7 +78,3 @@ class Cohort(SerializableModel):
 
     def __str__(self):
         return self.name
-
-
-def find_all():
-    return Cohort.objects.all()

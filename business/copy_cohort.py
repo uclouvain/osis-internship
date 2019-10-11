@@ -2,9 +2,10 @@ import uuid
 
 from internship.models import internship
 from internship.models import internship_speciality
-from internship.models import organization
 from internship.models import master_allocation
+from internship.models import organization
 from internship.models import period
+from internship.models.internship_speciality import InternshipSpeciality
 
 
 def copy_from_origin(cohort):
@@ -67,7 +68,7 @@ def _copy_master_allocations(cohort_from, cohort_to):
 
 def _get_new_cohort_specialty(previous_specialty, cohort_to):
     if previous_specialty:
-        specialties = internship_speciality.find_by_acronym(cohort_to, previous_specialty.acronym)
+        specialties = InternshipSpeciality.objects.filter(cohort=cohort_to).filter(acronym=previous_specialty.acronym)
         if specialties:
             return specialties.first()
     return None

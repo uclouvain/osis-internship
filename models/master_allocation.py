@@ -23,10 +23,9 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.contrib import admin
 from django.db import models
 from django.db.models import Q
-from django.contrib import admin
-from internship.models.internship_master import InternshipMaster
 
 
 class MasterAllocationAdmin(admin.ModelAdmin):
@@ -65,12 +64,6 @@ class MasterAllocation(models.Model):
 
 def find_by_master(cohort, a_master):
     return find_by_cohort(cohort).filter(master=a_master)
-
-
-def find_unallocated_masters():
-    allocated_masters = MasterAllocation.objects.values("pk").distinct()
-    return InternshipMaster.objects.exclude(id__in=(list([a['pk'] for a in allocated_masters]))) \
-        .order_by('last_name', 'first_name')
 
 
 def search(cohort, specialty, hospital):

@@ -24,6 +24,7 @@
 #
 ##############################################################################
 from django.test import TestCase
+
 from base.tests.models import test_student
 from internship.models import internship_student_information
 from internship.models.internship_student_information import InternshipStudentInformation
@@ -58,7 +59,7 @@ class TestStudentInformation(TestCase):
 
     def test_get_number_of_specialists(self):
         expected = 1
-        actual = internship_student_information.get_number_of_specialists(self.cohort)
+        actual = InternshipStudentInformation.objects.filter(contest="SPECIALIST", cohort=self.cohort).count()
         self.assertEqual(expected, actual)
 
     def test_get_number_of_generalists(self):

@@ -105,14 +105,6 @@ class Assignment:
         self.affectations = []
         self.errors_count = 0
 
-    def is_not_published(function):
-        def wrapper(self):
-            if not self.cohort.is_published:
-                return function
-            else:
-                logger.warning("{} blocked due to execution after publication date.".format(function.__name__))
-        return wrapper
-
     @transaction.atomic
     def persist_solution(self):
         """ All the generated affectations are stored in the database. """
@@ -276,7 +268,8 @@ def _get_hospital_choice_type(d_organization_choices, selected_organization_id):
 
 def _clean_previous_solution(cohort):
     period_ids = mdl.period.find_by_cohort(cohort).values_list("id", flat=True)
-    curr_affectations = mdl.internship_student_affectation_stat.find_non_mandatory_affectations(period_ids=period_ids)
+    curr_affectations = InternshipStudentAffectationStat.objects.filter(period__id__in=period_ids). \
+        select_related("student", "organization", "speciality")
     curr_affectations._raw_delete(curr_affectations.db)
 
 
@@ -305,19 +298,6 @@ def _assign_regular_students(assignment, internship):
     assignment.total_count = len(students)
     for student in students:
         _assign_student(assignment, student, internship)
-
-
-def assign_students_with_empty_periods(assignment):
-    """ When student has empty periods at the end, affect default speciality and organisation. It has to be
-        handled manually."""
-    for student in assignment.students:
-        if student_not_fully_assigned(assignment, student):
-            empty_periods = student_empty_periods(assignment, student)
-            affectations = build_affectation_for_periods(assignment, student, assignment.pending_organization,
-                                                         empty_periods, assignment.default_speciality,
-                                                         ChoiceType.IMPOSED.value,
-                                                         False, None)
-            assignment.affectations.extend(affectations)
 
 
 def _assign_student(assignment, student, internship):
@@ -588,10 +568,6 @@ def offers_for_available_organizations(assignment, speciality, unavailable_organ
                                 .exclude(organization__in=assignment.forbidden_organizations)
 
 
-def find_offers_for_speciality(assignment, speciality):
-    return assignment.offers.filter(speciality=speciality).exclude(organization__in=assignment.forbidden_organizations)
-
-
 def find_offers_for_internship_choice(assignment, choice):
     return assignment.offers.filter(speciality=choice.speciality, organization=choice.organization)
 
@@ -624,10 +600,6 @@ def is_mandatory_internship(internship):
 
 def is_non_mandatory_internship(internship):
     return not hasattr(internship, 'speciality') or internship.speciality is None
-
-
-def student_has_priority(assignment, student):
-    return student.id not in assignment.prioritary_students_person_ids
 
 
 def is_prior_internship(internship, choices):

@@ -26,6 +26,8 @@
 from django.test.testcases import TestCase
 
 from internship.models import master_allocation
+from internship.models.internship_master import InternshipMaster
+from internship.models.master_allocation import MasterAllocation
 from internship.tests.factories.master import MasterFactory
 from internship.tests.factories.master_allocation import MasterAllocationFactory
 from internship.tests.factories.organization import OrganizationFactory
@@ -52,7 +54,9 @@ class TestInternshipMaster(TestCase):
         self.assertEqual(self.master, allocations[0].master)
 
     def test_find_unallocated_masters(self):
-        unallocated_masters = master_allocation.find_unallocated_masters()
+        allocated_masters = MasterAllocation.objects.values("pk").distinct()
+        unallocated_masters = InternshipMaster.objects.exclude(id__in=(list([a['pk'] for a in allocated_masters]))) \
+            .order_by('last_name', 'first_name')
         self.assertEqual(1, unallocated_masters.count())
 
     def test_clean_allocations(self):

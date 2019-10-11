@@ -23,15 +23,17 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.test import TestCase
-from internship.models import internship_choice as mdl_internship_choice
-from internship.tests.models import test_organization, test_internship_speciality
 from django.db.utils import IntegrityError
+from django.test import TestCase
+
 from base.tests.models import test_student
-from internship.tests.models import test_internship_student_information
-from internship.tests.factories.internship import InternshipFactory
+from internship.models import internship_choice as mdl_internship_choice
+from internship.models.internship_choice import InternshipChoice
 from internship.tests.factories.cohort import CohortFactory
+from internship.tests.factories.internship import InternshipFactory
 from internship.tests.factories.internship_choice import create_internship_choice
+from internship.tests.models import test_internship_student_information
+from internship.tests.models import test_organization, test_internship_speciality
 
 
 class TestSearchByStudentOrChoice(TestCase):
@@ -80,5 +82,5 @@ class TestSearchByStudentOrChoice(TestCase):
 
     def test_get_number_students(self):
         expected = 2
-        actual = mdl_internship_choice.get_number_students(self.cohort)
+        actual = InternshipChoice.objects.filter(internship__cohort=self.cohort).distinct("student").count()
         self.assertEqual(expected, actual)
