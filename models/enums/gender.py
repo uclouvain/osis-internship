@@ -23,8 +23,10 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from osis_common.utils.enumerations import ChoiceEnum
 from django.utils.translation import ugettext_lazy as _
+
+from osis_common.utils.enumerations import ChoiceEnum
+
 
 class Gender(ChoiceEnum):
     FEMALE = "female"

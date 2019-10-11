@@ -25,9 +25,9 @@
 ##############################################################################
 import factory.django
 
+from internship.tests.factories.cohort import CohortFactory
 from internship.tests.factories.organization import OrganizationFactory
 from internship.tests.factories.speciality import SpecialtyFactory
-from internship.tests.factories.cohort import CohortFactory
 
 
 class OfferFactory(factory.django.DjangoModelFactory):

@@ -25,10 +25,14 @@
 ##############################################################################
 
 from internship.models import affectation_generation_time
+from internship.models import cohort
+from internship.models import internship
 from internship.models import internship_choice
 from internship.models import internship_enrollment
 from internship.models import internship_master
 from internship.models import internship_offer
+from internship.models import internship_score
+from internship.models import internship_score_mapping
 from internship.models import internship_speciality
 from internship.models import internship_student_affectation_stat
 from internship.models import internship_student_information
@@ -36,7 +40,3 @@ from internship.models import master_allocation
 from internship.models import organization
 from internship.models import period
 from internship.models import period_internship_places
-from internship.models import cohort
-from internship.models import internship
-from internship.models import internship_score
-from internship.models import internship_score_mapping

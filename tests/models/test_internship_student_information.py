@@ -24,6 +24,7 @@
 #
 ##############################################################################
 from django.test import TestCase
+
 from base.tests.models import test_student
 from internship.models import internship_student_information
 from internship.models.internship_student_information import InternshipStudentInformation

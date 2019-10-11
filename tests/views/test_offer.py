@@ -26,9 +26,9 @@
 import random
 
 from django.contrib.auth.models import Permission, User
-from django.urls import reverse
 from django.http import HttpResponse
 from django.test import TestCase
+from django.urls import reverse
 
 from base.tests.factories.student import StudentFactory
 from internship.tests.factories.cohort import CohortFactory
