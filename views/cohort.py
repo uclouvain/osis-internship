@@ -26,7 +26,7 @@
 from django.contrib.auth.decorators import login_required, permission_required
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from internship.business import copy_cohort
 from internship.forms.cohort import CohortForm

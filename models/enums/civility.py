@@ -23,8 +23,9 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.utils.translation import gettext_lazy as _
+
 from osis_common.utils.enumerations import ChoiceEnum
-from django.utils.translation import ugettext_lazy as _
 
 
 class Civility(ChoiceEnum):

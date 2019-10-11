@@ -38,7 +38,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.utils.datetime_safe import date
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_POST
 
 from base import models as mdl

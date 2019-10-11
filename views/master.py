@@ -26,11 +26,10 @@
 from django import shortcuts
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django.urls import reverse
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
-from django.utils.translation import ugettext_lazy as _
+from django.urls import reverse
+from django.utils.translation import gettext_lazy as _
 
 from internship.forms.master import MasterForm
 from internship.models import master_allocation, internship_master, internship_speciality, organization, cohort
