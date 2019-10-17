@@ -24,6 +24,7 @@
 #
 ##############################################################################
 from enum import Enum
+
 from internship.models.enums.choice_type import ChoiceType
 
 

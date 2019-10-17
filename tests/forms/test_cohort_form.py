@@ -26,8 +26,8 @@
 from django.test import TestCase
 
 from internship.forms.cohort import CohortForm
-
 from internship.tests.factories.cohort import CohortFactory
+
 
 class TestCohortForm(TestCase):
 

@@ -23,9 +23,9 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.test import TestCase
-from internship import apps
 from django.apps import apps
+from django.test import TestCase
+
 
 class AppsTestCase(TestCase):
     def test_app_name(self):

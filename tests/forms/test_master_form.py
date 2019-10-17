@@ -32,7 +32,6 @@ from internship.forms import master
 from internship.tests.factories.organization import OrganizationFactory
 from internship.tests.factories.speciality import SpecialtyFactory
 from internship.views.master import _validate_allocations
-
 from reference.models.country import Country
 
 

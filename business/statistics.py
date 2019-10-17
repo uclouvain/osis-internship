@@ -34,7 +34,7 @@ from internship.models import period_internship_places
 from internship.models.enums.affectation_type import AffectationType
 from internship.models.enums.choice_type import ChoiceType
 from internship.models.internship import Internship
-from internship.models.internship_choice import find_priority_choices, InternshipChoice
+from internship.models.internship_choice import InternshipChoice
 from internship.models.period import Period
 
 HOSPITAL_ERROR = 999  # Reference of the hospital "erreur"

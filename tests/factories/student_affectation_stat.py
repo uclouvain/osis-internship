@@ -24,13 +24,14 @@
 #
 ##############################################################################
 import random
+
 import factory.django
 
 from base.tests.factories.student import StudentFactory
 from internship.tests.factories.internship import InternshipFactory
 from internship.tests.factories.organization import OrganizationFactory
-from internship.tests.factories.speciality import SpecialtyFactory
 from internship.tests.factories.period import PeriodFactory
+from internship.tests.factories.speciality import SpecialtyFactory
 
 
 class StudentAffectationStatFactory(factory.django.DjangoModelFactory):
