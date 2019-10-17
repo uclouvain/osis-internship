@@ -25,7 +25,7 @@
 ##############################################################################
 from django.contrib import messages
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 PAGINATOR_SIZE_LIST = [10, 25, 50, 100]
 
