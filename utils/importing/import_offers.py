@@ -29,6 +29,7 @@ import openpyxl
 from django.conf import settings
 
 from internship.models import organization, internship_speciality, internship_offer, period, period_internship_places
+from internship.models.period_internship_places import PeriodInternshipPlaces
 
 COL_REF_HOSPITAL = 0
 COL_SPECIALTY = 1
@@ -107,7 +108,10 @@ def _create_offer(row, cohort, specialty, org, maximum_enrollments):
 
 def _create_offer_places(cohort, period_name, offer, value):
     a_period = period.search(name__exact=period_name, cohort=cohort).first()
-    existing_places = period_internship_places.find_by_offer_in_period(a_period, offer)
+    existing_places = PeriodInternshipPlaces.objects.filter(
+        period=a_period,
+        internship_offer=offer
+    )
 
     if existing_places:
         logger_message = "Updating places {}"

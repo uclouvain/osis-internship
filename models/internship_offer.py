@@ -65,11 +65,6 @@ def find_mandatory_internships(cohort):
     return _apply_constraints(find_internships(cohort).filter(speciality__mandatory=1))
 
 
-def find_non_mandatory_internships(**kwargs):
-    kwargs = {k: v for k, v in kwargs.items() if v}
-    return _apply_constraints(InternshipOffer.objects.filter(**kwargs).filter(speciality__mandatory=0))
-
-
 def search(**kwargs):
     return _apply_constraints(InternshipOffer.objects.filter(**kwargs))
 
@@ -88,7 +83,3 @@ def find_by_id(a_id):
         return InternshipOffer.objects.get(pk=a_id)
     except ObjectDoesNotExist:
         return None
-
-
-def get_number_selectable(cohort):
-    return find_internships(cohort).filter(selectable=True).count()
