@@ -105,6 +105,14 @@ class Assignment:
         self.affectations = []
         self.errors_count = 0
 
+    def is_not_published(function):
+        def wrapper(self):
+            if not self.cohort.is_published:
+                return function
+            else:
+                logger.warning("{} blocked due to execution after publication date.".format(function.__name__))
+        return wrapper
+
     @transaction.atomic
     def persist_solution(self):
         """ All the generated affectations are stored in the database. """
