@@ -61,14 +61,6 @@ def search(**kwargs):
                                    .order_by('choice')
 
 
-def search_other_choices(**kwargs):
-    kwargs = {k: v for k, v in kwargs.items() if v}
-    queryset = InternshipChoice.objects.filter(**kwargs)\
-                                       .select_related("student", "organization", "speciality")\
-                                       .order_by('choice')
-    return queryset.exclude(choice=1)
-
-
 def search_by_student_or_choice(student=None, internship=None):
     has_criteria = False
     queryset = InternshipChoice.objects
@@ -85,16 +77,6 @@ def search_by_student_or_choice(student=None, internship=None):
         return queryset.order_by("choice")
     else:
         return None
-
-
-def get_choices_made(cohort, student):
-    internships = Internship.objects.filter(cohort=cohort, pk__gte=1)
-    return InternshipChoice.objects.filter(internship_id__in=internships.values_list("id", flat=True),
-                                           student=student).distinct()
-
-
-def get_number_students(cohort):
-    return InternshipChoice.objects.filter(internship__cohort=cohort).distinct("student").count()
 
 
 def get_number_first_choice_by_organization(speciality, internship_id):

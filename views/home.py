@@ -27,15 +27,15 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.shortcuts import render, get_object_or_404
 from django.views.decorators import http
 
-from internship import models as mdl_internship
 from internship.models.cohort import Cohort
+from internship.models.internship_offer import find_internships
 
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def cohort_home(request, cohort_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
-    blockable = mdl_internship.internship_offer.get_number_selectable(cohort) > 0
+    blockable = find_internships(cohort).filter(selectable=True).count() > 0
     context = {'blockable': blockable, 'cohort': cohort}
     return render(request, "internship/home.html", context=context)
 

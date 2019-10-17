@@ -67,20 +67,11 @@ def find_by_cohort(cohort):
     return InternshipStudentInformation.objects.filter(cohort=cohort)
 
 
-def find_all(cohort):
-    return find_by_cohort(cohort).select_related("person").order_by('person__last_name', 'person__first_name')
-
-
 def find_by_person(person, cohort):
     try:
         return find_by_cohort(cohort).filter(person=person)
     except ObjectDoesNotExist:
         return None
-
-
-def get_number_of_specialists(cohort):
-    contest_specialist = "SPECIALIST"
-    return InternshipStudentInformation.objects.filter(contest=contest_specialist, cohort=cohort).count()
 
 
 def get_number_of_generalists(cohort):
