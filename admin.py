@@ -24,8 +24,8 @@
 #
 ##############################################################################
 from django.contrib import admin
-from internship.models import *
 
+from internship.models import *
 
 admin.site.register(cohort.Cohort, cohort.CohortAdmin)
 

@@ -23,10 +23,11 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.utils import timezone
+from django.utils.translation import ugettext_lazy as _
 from openpyxl import Workbook
 from openpyxl.writer.excel import save_virtual_workbook
-from django.utils.translation import ugettext_lazy as _
-from django.utils import timezone
+
 from internship import models
 from internship.utils.exporting.spreadsheet import columns_resizing, add_row, coloring_non_editable_line
 

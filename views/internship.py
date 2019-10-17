@@ -27,15 +27,14 @@ from collections import OrderedDict
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
-from django.urls import reverse
 from django.forms.formsets import formset_factory
 from django.shortcuts import get_object_or_404, redirect
+from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 from django.views.decorators.http import require_POST
 
 from base import models as mdl
 from base.views.layout import render
-
 from internship import models as mdl_int
 from internship.forms.form_offer_preference import OfferPreferenceForm, OfferPreferenceFormSet
 from internship.forms.form_select_speciality import SpecialityForm

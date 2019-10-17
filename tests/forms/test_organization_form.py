@@ -23,13 +23,10 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from datetime import timedelta
 
-from django.test import TestCase, RequestFactory
-from django.utils import timezone
+from django.test import TestCase
 
 from internship.forms import organization_form
-
 from reference.models.country import Country
 
 

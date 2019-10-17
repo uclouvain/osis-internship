@@ -25,13 +25,12 @@
 ##############################################################################
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
-from django.urls import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
+from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 
 from base.views.layout import render
-
 from internship import models as mdl_internship
 from internship.forms.period_form import PeriodForm
 from internship.models.cohort import Cohort

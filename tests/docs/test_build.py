@@ -23,12 +23,13 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import sys
-import unittest
 import os
 import os.path
 import subprocess
+import sys
+import unittest
 from unittest.mock import patch
+
 from internship.docs.build import generate_pdf, generate_homepage, generate_html, get_path, show_help
 
 

@@ -2,8 +2,8 @@ import uuid
 
 from internship.models import internship
 from internship.models import internship_speciality
-from internship.models import organization
 from internship.models import master_allocation
+from internship.models import organization
 from internship.models import period
 
 

@@ -23,8 +23,8 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required, permission_required
+from django.shortcuts import render, get_object_or_404
 from django.views.decorators import http
 
 from internship import models as mdl_internship

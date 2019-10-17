@@ -24,7 +24,6 @@
 #
 ##############################################################################
 import factory.fuzzy
-
 from django.utils.text import slugify
 
 from internship.tests.factories.cohort import CohortFactory
