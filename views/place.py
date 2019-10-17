@@ -25,15 +25,15 @@
 ##############################################################################
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
-from django.http import HttpResponse, HttpResponseRedirect
 from django.utils.translation import ugettext_lazy as _
 
 from internship import models
 from internship.forms.organization_form import OrganizationForm
-from internship.utils.exporting import organization_affectation_master
 from internship.utils.exporting import organization_affectation_hospital
+from internship.utils.exporting import organization_affectation_master
 from internship.views.common import display_report_errors
 from internship.views.internship import get_all_specialities, set_tabs_name
 from reference.models import country

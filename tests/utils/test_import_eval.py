@@ -31,7 +31,6 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 
 from base.tests.factories.student import StudentFactory
-from internship.models.internship_score import InternshipScore
 from internship.utils.importing.import_eval import import_xlsx, REGISTRATION_ID_COLUMN
 
 

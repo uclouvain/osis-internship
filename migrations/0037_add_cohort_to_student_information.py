@@ -5,8 +5,6 @@ from __future__ import unicode_literals
 import django.db.models.deletion
 from django.db import migrations, models
 
-from internship.models.cohort import Cohort
-from internship.models.internship_student_information import InternshipStudentInformation
 
 class Migration(migrations.Migration):
 

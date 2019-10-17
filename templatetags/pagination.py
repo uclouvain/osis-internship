@@ -25,7 +25,7 @@
 ##############################################################################
 from django.template.defaulttags import register
 
-from internship.views.common import get_paginator_size, store_paginator_size, PAGINATOR_SIZE_LIST
+from internship.views.common import get_paginator_size, PAGINATOR_SIZE_LIST
 
 
 @register.inclusion_tag('inclusion/pagination_size_select.html', takes_context=True)

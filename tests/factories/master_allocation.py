@@ -25,9 +25,9 @@
 ##############################################################################
 import factory.django
 
+from internship.tests.factories.master import MasterFactory
 from internship.tests.factories.organization import OrganizationFactory
 from internship.tests.factories.speciality import SpecialtyFactory
-from internship.tests.factories.master import MasterFactory
 
 
 class MasterAllocationFactory(factory.django.DjangoModelFactory):
