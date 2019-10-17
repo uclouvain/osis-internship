@@ -27,7 +27,6 @@ from django.test import TestCase
 
 from internship import models
 from internship.forms.internship import InternshipForm
-
 from internship.tests.factories.cohort import CohortFactory
 from internship.tests.factories.speciality import SpecialtyFactory
 

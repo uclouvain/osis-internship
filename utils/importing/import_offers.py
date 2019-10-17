@@ -23,9 +23,11 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import openpyxl
 import logging
+
+import openpyxl
 from django.conf import settings
+
 from internship.models import organization, internship_speciality, internship_offer, period, period_internship_places
 
 COL_REF_HOSPITAL = 0

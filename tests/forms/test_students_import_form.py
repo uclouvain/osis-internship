@@ -23,11 +23,9 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from datetime import timedelta
 
-from django.test import TestCase
-from django.utils import timezone
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.test import TestCase
 
 from internship.forms.students_import_form import StudentsImportActionForm
 

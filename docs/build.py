@@ -23,9 +23,8 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import sys
 import subprocess
-
+import sys
 
 DOCUMENTATION_FILE = 'user-manual_fr.{}'
 HOMEPAGE_CONTENT = """

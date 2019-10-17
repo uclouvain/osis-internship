@@ -24,8 +24,8 @@
 #
 ##############################################################################
 from django.contrib.auth.models import Permission, User
-from django.urls import reverse
 from django.test import TestCase
+from django.urls import reverse
 
 from internship.tests.factories.cohort import CohortFactory
 from internship.tests.factories.organization import OrganizationFactory
