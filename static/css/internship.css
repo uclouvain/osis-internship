@@ -98,6 +98,6 @@ input:checked + .slider:before {
   transform: translateX(13px);
 }
 
-#students-filter{
-
+#students_filter{
+    float: left;
 }

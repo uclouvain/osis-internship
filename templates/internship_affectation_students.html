@@ -35,20 +35,13 @@
 
 {% block style %}
     <link rel="stylesheet" href="{% static 'css/dataTables.bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/internship.css' %}">
 {% endblock %}
 
 {% block content %}
     <div class="page-header">
         <h2>{% trans "Affectation's result" %}</h2>
     </div>
-
-    <style>
-        .dataTables_filter {
-            width: 50%;
-            float: right;
-            text-align: right;
-        }
-    </style>
 
     <div class="modal fade bs-example-modal-sm" id="PleaseWaitModal" tabindex="-1"
          role="dialog" aria-hidden="true" data-backdrop="static">
