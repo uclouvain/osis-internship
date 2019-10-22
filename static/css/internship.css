@@ -10,7 +10,7 @@
     margin-right: auto;
 }
 
-#loader {
+.button-loader {
     display:inline-block;
     border: 1px solid #f3f3f3;
     border-top: 1px solid #3498db;
@@ -96,4 +96,8 @@ input:checked + .slider:before {
   -webkit-transform: translateX(13px);
   -ms-transform: translateX(13px);
   transform: translateX(13px);
+}
+
+#students_filter{
+    float: left;
 }

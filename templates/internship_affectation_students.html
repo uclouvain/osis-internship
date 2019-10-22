@@ -35,20 +35,13 @@
 
 {% block style %}
     <link rel="stylesheet" href="{% static 'css/dataTables.bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/internship.css' %}">
 {% endblock %}
 
 {% block content %}
     <div class="page-header">
         <h2>{% trans "Affectation's result" %}</h2>
     </div>
-
-    <style>
-        .dataTables_filter {
-            width: 50%;
-            float: right;
-            text-align: right;
-        }
-    </style>
 
     <div class="modal fade bs-example-modal-sm" id="PleaseWaitModal" tabindex="-1"
          role="dialog" aria-hidden="true" data-backdrop="static">
@@ -102,16 +95,11 @@
             <div class="tab-content">
                 <div id="tab_hospitals" class="tab-pane fade in"></div>
                 <div id="tab_students" class="tab-pane fade in active">
-                    <br>
-                        <a href="{% url 'export_score_encoding_xls' cohort_id=cohort.id %}" class="btn btn-default">
-                            <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
-                            {% trans 'Export to XLS' %}
-                        </a>
+                        <br/>
                         <label class="pull-right">
                              <input type="checkbox" id="only-prior">
                             {% trans 'Filter by students with priorities' %}
                         </label>
-                    <br>
                     <table class="table" id="students">
                         <thead>
                             <tr>

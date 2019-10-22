@@ -1,6 +1,6 @@
 $("#upload-form").submit(() => {
     $("#import-submit").attr("disabled", true);
-    $("#loader").show();
+    $(".button-loader").show();
 });
 
 $('#import-submit').attr('disabled',true);
