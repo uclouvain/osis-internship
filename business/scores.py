@@ -39,33 +39,36 @@ class InternshipScoreRules:
     EXCEPT_GRADES = NORMAL_GRADES + ['B']
 
     @classmethod
-    def get_valid_grades(self, index):
-        return self.EXCEPT_GRADES if index in self.get_except_apds_indices() else self.NORMAL_GRADES
+    def get_valid_grades(cls, index):
+        return cls.EXCEPT_GRADES if index in cls.get_except_apds_indices() else cls.NORMAL_GRADES
 
     @classmethod
-    def get_except_apds_indices(self):
-        return [x - 1 for x in self.EXCEPT_APDS]
+    def get_except_apds_indices(cls):
+        return [x - 1 for x in cls.EXCEPT_APDS]
 
     @classmethod
-    def is_score_valid(self, index, score):
-        return score in self.get_valid_grades(index)
+    def is_score_valid(cls, index, score):
+        return score in cls.get_valid_grades(index)
 
     @classmethod
-    def student_has_fulfilled_requirements(self, student):
+    def student_has_fulfilled_requirements(cls, student):
         # student fulfill requirements when he has at least 'C' for each APD
         apd_indices = [index for index in range(0, APD_NUMBER)]
         if not student.scores:
             return False
-        # remove iteratively apd from list when score is valid
-        for period, scores in student.scores:
-            for apd, score in enumerate(scores):
-                if not apd_indices:
-                    return True
-                if apd in apd_indices and score and self.is_score_valid(apd, score):
-                    apd_indices.remove(apd)
-                    continue
+        cls._filter_fulfilled_apd_indices(apd_indices, student)
         # fulfill if no more index in list
         return not apd_indices
+
+    @classmethod
+    def _filter_fulfilled_apd_indices(cls, apd_indices, student):
+        # remove iteratively apd from list when score is valid
+        for period, scores in student.scores:
+            if not apd_indices:
+                break
+            for apd, score in enumerate(scores):
+                if apd in apd_indices and score and cls.is_score_valid(apd, score):
+                    apd_indices.remove(apd)
 
 
 def send_score_encoding_reminder(data):
