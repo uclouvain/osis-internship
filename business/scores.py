@@ -24,6 +24,7 @@
 #
 ##############################################################################
 from base.models.student import Student
+from internship.models.internship_score import APD_NUMBER
 from internship.models.internship_student_affectation_stat import InternshipStudentAffectationStat
 from internship.models.internship_student_information import InternshipStudentInformation
 from internship.models.period import Period
@@ -32,7 +33,8 @@ from osis_common.messaging.send_message import send_messages
 
 
 class InternshipScoreRules:
-    NORMAL_GRADES = ['C', 'D', 'E']
+    NA_GRADE = 'E'
+    NORMAL_GRADES = ['C', 'D']
     EXCEPT_APDS = [8, 14]
     EXCEPT_GRADES = NORMAL_GRADES + ['B']
 
@@ -50,13 +52,20 @@ class InternshipScoreRules:
 
     @classmethod
     def student_has_fulfilled_requirements(self, student):
+        # student fulfill requirements when he has at least 'C' for each APD
+        apd_indices = [index for index in range(0, APD_NUMBER)]
         if not student.scores:
             return False
+        # remove iteratively apd from list when score is valid
         for period, scores in student.scores:
-            for index, score in enumerate(scores):
-                if score and not self.is_score_valid(index, score):
-                    return False
-        return True
+            for apd, score in enumerate(scores):
+                if not apd_indices:
+                    return True
+                if apd in apd_indices and score and self.is_score_valid(apd, score):
+                    apd_indices.remove(apd)
+                    continue
+        # fulfill if no more index in list
+        return not apd_indices
 
 
 def send_score_encoding_reminder(data):
