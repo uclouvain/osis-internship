@@ -53,22 +53,21 @@ class InternshipScoreRules:
     @classmethod
     def student_has_fulfilled_requirements(cls, student):
         # student fulfill requirements when he has at least 'C' for each APD
-        apd_indices = [index for index in range(0, APD_NUMBER)]
         if not student.scores:
             return False
-        cls._filter_fulfilled_apd_indices(apd_indices, student)
-        # fulfill if no more index in list
-        return not apd_indices
+        return cls._filter_fulfilled_apd_indices(student)
 
     @classmethod
-    def _filter_fulfilled_apd_indices(cls, apd_indices, student):
+    def _filter_fulfilled_apd_indices(cls, student):
         # remove iteratively apd from list when score is valid
+        apd_indices = [index for index in range(0, APD_NUMBER)]
         for period, scores in student.scores:
             if not apd_indices:
                 break
             for apd, score in enumerate(scores):
                 if cls._apd_can_be_removed(apd, apd_indices, score):
                     apd_indices.remove(apd)
+        return not apd_indices
 
     @classmethod
     def _apd_can_be_removed(cls, apd, apd_indices, score):
