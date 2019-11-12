@@ -67,8 +67,12 @@ class InternshipScoreRules:
             if not apd_indices:
                 break
             for apd, score in enumerate(scores):
-                if apd in apd_indices and score and cls.is_score_valid(apd, score):
+                if cls._apd_can_be_removed(apd, apd_indices, score):
                     apd_indices.remove(apd)
+
+    @classmethod
+    def _apd_can_be_removed(cls, apd, apd_indices, score):
+        return apd in apd_indices and score and cls.is_score_valid(apd, score)
 
 
 def send_score_encoding_reminder(data):
