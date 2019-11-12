@@ -35,8 +35,11 @@ from internship.utils.exporting.spreadsheet import add_row
 
 LAST_COLUMN = 50
 PERIOD_COLUMN_WIDTH = 7
-EXCLUDED_FIELDS = ['id', 'uuid']
 MAX_COL_LENGTH = 25
+FIELDS = [
+    'last_name', 'first_name', 'civility', 'gender', 'email', 'email_private', 'location', 'postal_code', 'city',
+    'country', 'phone', 'phone_mobile', 'birth_date', 'start_activities'
+]
 
 
 def export_xls():
@@ -44,7 +47,7 @@ def export_xls():
     worksheet = workbook.active
     fields = _custom_sort_fields([
         {'name': f.name, 'verbose_name': _(f.verbose_name.capitalize())}
-        for f in InternshipMaster._meta.fields if f.name not in EXCLUDED_FIELDS
+        for f in InternshipMaster._meta.fields if f.name in FIELDS
     ])
     _add_header(worksheet, fields)
     _add_masters(worksheet, fields)
@@ -60,12 +63,11 @@ def _add_header(worksheet, fields):
 
 
 def _add_masters(worksheet, fields):
-    fields_names = [field['name'] for field in fields]
     master_allocation = MasterAllocation.objects.filter(master=OuterRef('pk'))
     masters = InternshipMaster.objects.all().order_by('last_name', 'first_name').annotate(
         specialty=Subquery(master_allocation.values('specialty__name')[:1]),
         organization=Subquery(master_allocation.values('organization__name')[:1])
-    ).values(*fields_names, 'specialty', 'organization').distinct()
+    ).values(*FIELDS, 'specialty', 'organization').distinct()
     for master in masters:
         add_row(worksheet, list(master.values()))
 
