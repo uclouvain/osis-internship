@@ -54,7 +54,6 @@
             <div id="scores" class="tab-pane fade in active">
                 <div class="panel panel-body">
                     <form action="{% url 'internship_scores_encoding' cohort_id=cohort.id %}" method="get" class="" id="search_form">
-                    {% csrf_token %}
                     <div style="margin-bottom: 10px;" class="row">
                         <div class="col-md-3">
                             <label for="free_text_id">{% trans 'Search' %}</label>
@@ -121,6 +120,7 @@
                 </form>
                 <div class="table-responsive">
                   <table class="table">
+
                       <tr>
                         {% if students %}
                             <th>
