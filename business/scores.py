@@ -24,6 +24,7 @@
 #
 ##############################################################################
 from base.models.student import Student
+from internship.models.internship_score import APD_NUMBER
 from internship.models.internship_student_affectation_stat import InternshipStudentAffectationStat
 from internship.models.internship_student_information import InternshipStudentInformation
 from internship.models.period import Period
@@ -32,31 +33,45 @@ from osis_common.messaging.send_message import send_messages
 
 
 class InternshipScoreRules:
-    NORMAL_GRADES = ['C', 'D', 'E']
+    NA_GRADE = 'E'
+    NORMAL_GRADES = ['C', 'D']
     EXCEPT_APDS = [8, 14]
     EXCEPT_GRADES = NORMAL_GRADES + ['B']
 
     @classmethod
-    def get_valid_grades(self, index):
-        return self.EXCEPT_GRADES if index in self.get_except_apds_indices() else self.NORMAL_GRADES
+    def get_valid_grades(cls, index):
+        return cls.EXCEPT_GRADES if index in cls.get_except_apds_indices() else cls.NORMAL_GRADES
 
     @classmethod
-    def get_except_apds_indices(self):
-        return [x - 1 for x in self.EXCEPT_APDS]
+    def get_except_apds_indices(cls):
+        return [x - 1 for x in cls.EXCEPT_APDS]
 
     @classmethod
-    def is_score_valid(self, index, score):
-        return score in self.get_valid_grades(index)
+    def is_score_valid(cls, index, score):
+        return score in cls.get_valid_grades(index)
 
     @classmethod
-    def student_has_fulfilled_requirements(self, student):
+    def student_has_fulfilled_requirements(cls, student):
+        # student fulfill requirements when he has at least 'C' for each APD
         if not student.scores:
             return False
+        return cls._filter_fulfilled_apd_indices(student)
+
+    @classmethod
+    def _filter_fulfilled_apd_indices(cls, student):
+        # remove iteratively apd from list when score is valid
+        apd_indices = [index for index in range(0, APD_NUMBER)]
         for period, scores in student.scores:
-            for index, score in enumerate(scores):
-                if score and not self.is_score_valid(index, score):
-                    return False
-        return True
+            if not apd_indices:
+                break
+            for apd, score in enumerate(scores):
+                if cls._apd_can_be_removed(apd, apd_indices, score):
+                    apd_indices.remove(apd)
+        return not apd_indices
+
+    @classmethod
+    def _apd_can_be_removed(cls, apd, apd_indices, score):
+        return apd in apd_indices and score and cls.is_score_valid(apd, score)
 
 
 def send_score_encoding_reminder(data):

@@ -29,6 +29,7 @@ from django.test import TestCase
 
 from base.tests.factories.student import StudentFactory
 from internship.business.scores import InternshipScoreRules, send_score_encoding_reminder
+from internship.models.internship_score import APD_NUMBER
 from internship.tests.factories.cohort import CohortFactory
 from internship.tests.factories.internship_student_information import InternshipStudentInformationFactory
 from internship.tests.factories.period import PeriodFactory
@@ -43,7 +44,8 @@ class InternshipScoreRulesTest(TestCase):
         self.internship_score = ScoreFactory(student=self.student, period=self.period, cohort=self.cohort)
 
     def test_student_fulfill_requirements(self):
-        self.internship_score.APD_1 = 'D'
+        for index in [index for index in range(0, APD_NUMBER)]:
+            vars(self.internship_score)['APD_{}'.format(index+1)] = 'D'
         self.student.scores = [(self.period, self.internship_score.get_scores())]
         self.assertTrue(InternshipScoreRules.student_has_fulfilled_requirements(self.student))
 
@@ -51,6 +53,15 @@ class InternshipScoreRulesTest(TestCase):
         self.internship_score.APD_1 = 'A'
         self.student.scores = [(self.period, self.internship_score.get_scores())]
         self.assertFalse(InternshipScoreRules.student_has_fulfilled_requirements(self.student))
+
+    def test_student_except_apd_fulfill_requirements(self):
+        for index in [index for index in range(0, APD_NUMBER)]:
+            if index+1 not in InternshipScoreRules.EXCEPT_APDS:
+                vars(self.internship_score)['APD_{}'.format(index + 1)] = 'D'
+            else:
+                vars(self.internship_score)['APD_{}'.format(index + 1)] = 'B'
+        self.student.scores = [(self.period, self.internship_score.get_scores())]
+        self.assertTrue(InternshipScoreRules.student_has_fulfilled_requirements(self.student))
 
 
 class InternshipScoreReminderTest(TestCase):

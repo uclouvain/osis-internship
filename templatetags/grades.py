@@ -30,4 +30,6 @@ from internship.business.scores import InternshipScoreRules
 
 @register.filter()
 def is_valid(grade, index):
+    if grade == InternshipScoreRules.NA_GRADE:
+        return True
     return InternshipScoreRules.is_score_valid(index, grade)
