@@ -23,13 +23,14 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+
 from django.db.models import OuterRef, Subquery
 from django.utils.translation import gettext as _
 from openpyxl import Workbook
 from openpyxl.styles import Font
 from openpyxl.writer.excel import save_virtual_workbook
 
-from internship.models.internship_master import InternshipMaster, InternshipMasterAdmin
+from internship.models.internship_master import InternshipMaster
 from internship.models.master_allocation import MasterAllocation
 from internship.utils.exporting.spreadsheet import add_row
 
@@ -48,7 +49,7 @@ def export_xls():
     meta_fields = [field for field in InternshipMaster._meta.fields if field.name in FIELDS]
     sorted_fields = sorted(meta_fields, key=lambda x: FIELDS.index(x.name))
     _add_header(worksheet, sorted_fields)
-    _add_masters(worksheet, sorted_fields)
+    _add_masters(worksheet)
     _adjust_column_width(worksheet)
     return save_virtual_workbook(workbook)
 
@@ -60,15 +61,14 @@ def _add_header(worksheet, fields):
     worksheet.row_dimensions[1].font = Font(bold=True)
 
 
-def _add_masters(worksheet, fields):
-    fields_names = [field.name for field in fields]
+def _add_masters(worksheet):
     master_allocation = MasterAllocation.objects.filter(master=OuterRef('pk'))
     masters = InternshipMaster.objects.all().order_by('last_name', 'first_name').annotate(
         specialty=Subquery(master_allocation.values('specialty__name')[:1]),
         organization=Subquery(master_allocation.values('organization__name')[:1])
-    ).values(*fields_names, 'specialty', 'organization').distinct()
+    ).values_list(*FIELDS, 'specialty', 'organization').distinct()
     for master in masters:
-        add_row(worksheet, list(master.values()))
+        add_row(worksheet, master)
 
 
 def _adjust_column_width(worksheet):
