@@ -107,7 +107,7 @@ def _retrieve_score(period_score):
     if isinstance(period_score, dict) and 'edited' in period_score:
         return period_score['edited']
     else:
-        return period_score
+        return int(period_score)
 
 
 def _make_complete_list(periods, students, worksheet):
@@ -126,7 +126,7 @@ def _make_complete_list(periods, students, worksheet):
 
 
 def _get_evolution_score(score):
-    return score['edited'] if is_edited(score) else score
+    return score['edited'] if is_edited(score) else int(score)
 
 
 def _complete_student_row_for_all_internships(columns, periods, student):
