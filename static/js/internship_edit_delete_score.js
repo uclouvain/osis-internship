@@ -53,9 +53,9 @@ function buildEditableScore(cell, data) {
 function buildScoreInput(score_value) {
     let input = document.createElement("input");
     Object.assign(input, {
-        value: parseFloat(score_value.replace(',', '.')),
+        value: parseInt(score_value.replace(',', '.')),
         type: 'number',
-        step: 'any',
+        step: 1,
         min: MINIMUM_SCORE,
         max: MAXIMUM_SCORE
     });
@@ -118,10 +118,14 @@ function resetPadding(cell){
 }
 
 function saveScore(data, cell) {
-    if(data.period){
-        savePeriodScore(data, cell);
+    if(data.edited % 1 === 0){
+        if(data.period){
+            savePeriodScore(data, cell);
+        } else {
+            saveEvolutionScore(data, cell);
+        }
     } else {
-        saveEvolutionScore(data, cell);
+        showErrorTooltip(cell, data);
     }
 }
 
@@ -204,7 +208,8 @@ function showErrorTooltip(cell, data) {
     inputGroup.classList.add("has-error");
     inputGroup.setAttribute("data-toggle", "tooltip");
     inputGroup.setAttribute("data-placement", "top");
-    inputGroup.setAttribute("title", data.responseJSON.error);
+    if(data.responseJSON && data.responseJSON.error)
+        inputGroup.setAttribute("title", data.responseJSON.error);
     $(inputGroup).tooltip('show');
 }
 
