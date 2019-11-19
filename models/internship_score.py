@@ -57,7 +57,7 @@ class InternshipScore(SerializableModel):
             null=True,
             blank=True,
         )
-    score = models.FloatField(null=True, blank=True)
+    score = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
         return '{} - {} - {}'.format(self.student, self.period, self.get_scores())

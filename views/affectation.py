@@ -173,17 +173,6 @@ def view_errors(request, cohort_id):
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
-def export_score_encoding_xls(request, cohort_id):
-    cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
-    workbook = score_encoding_xls.export_xls(cohort)
-    response = HttpResponse(workbook, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    file_name = "encodage_notes_{}.xlsx".format(cohort.name.strip().replace(' ', '_'))
-    response['Content-Disposition'] = 'attachment; filename={}'.format(file_name)
-    return response
-
-
-@login_required
-@permission_required('internship.is_internship_manager', raise_exception=True)
 def internship_affectation_sumup(request, cohort_id):
     cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
     filter_specialty, filter_hospital = int(request.GET.get('specialty', 0)), int(request.GET.get('hospital', 0))

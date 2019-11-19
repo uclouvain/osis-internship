@@ -248,7 +248,7 @@ class ScoresEncodingTest(TestCase):
         url = reverse('internship_scores_encoding', kwargs={'cohort_id': self.cohort.pk})
         response = self.client.get(url)
         periods_scores = response.context['students'].object_list[0].periods_scores
-        self.assertDictEqual(periods_scores, {self.period.name: 20.0})
+        self.assertDictEqual(periods_scores, {self.period.name: 20})
 
     def test_export_scores(self):
         url = reverse('internship_download_scores', kwargs={'cohort_id': self.cohort.pk})
@@ -352,23 +352,23 @@ class ScoresEncodingTest(TestCase):
         url = reverse('internship_scores_encoding', kwargs={'cohort_id': self.cohort.pk})
         response = self.client.get(url, {'free_text': student.person.last_name})
         evolution_score = response.context['students'].object_list[0].evolution_score
-        self.assertEqual(evolution_score, 10.0)
+        self.assertEqual(evolution_score, 10)
 
     def test_ajax_refresh_evolution_score(self):
         url = reverse('refresh_evolution_score', kwargs={'cohort_id': self.cohort.pk})
         response = self.client.post(url, data={
             'scores': '{"P1": 10.0, "P2": 20.0}',
             'period': self.period.name,
-            'edited': 20.0
+            'edited': 20
         })
         json_response = json.loads(str(response.content, 'utf-8'))
-        self.assertEqual(json_response['evolution_score'], 20.0)
-        self.assertIn("'P1': 20.0", json_response['updated_scores'])
-        self.assertIn("'P2': 20.0", json_response['updated_scores'])
+        self.assertEqual(json_response['evolution_score'], 20)
+        self.assertIn("'P1': 20", json_response['updated_scores'])
+        self.assertIn("'P2': 20", json_response['updated_scores'])
 
     def test_ajax_save_evolution_score(self):
-        computed_score = 0.0
-        new_score = 20.0
+        computed_score = 0
+        new_score = 20
         student_info = InternshipStudentInformationFactory(cohort=self.cohort)
         student = StudentFactory(person=student_info.person)
         self.assertIsNone(student_info.evolution_score)
@@ -384,13 +384,13 @@ class ScoresEncodingTest(TestCase):
         self.assertEqual(student_info.evolution_score, new_score)
 
     def test_ajax_delete_evolution_score(self):
-        computed_score = 0.0
+        computed_score = 0
         student_info = InternshipStudentInformationFactory(cohort=self.cohort, evolution_score=20)
         student = StudentFactory(person=student_info.person)
         url = reverse('delete_evolution_score', kwargs={'cohort_id': self.cohort.pk})
         response = self.client.post(url, data={
             'computed': computed_score,
-            'scores': '{"P1": 0.0, "P2": 0.0}',
+            'scores': '{"P1": 0, "P2": 0}',
             'student': student.registration_id
         })
         student_info.refresh_from_db()

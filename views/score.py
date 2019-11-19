@@ -25,6 +25,7 @@
 ##############################################################################
 import json
 from collections import Counter
+from decimal import Decimal, ROUND_HALF_UP
 from itertools import groupby
 
 from django.contrib import messages
@@ -163,7 +164,7 @@ def _update_evaluation_status(status, registration_ids, period_name, cohort):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def refresh_evolution_score(request, cohort_id):
     scores = json.loads(request.POST['scores'].replace("'", '"'))
-    value = float(request.POST['edited']) if 'edited' in request.POST else float(request.POST['computed'])
+    value = int(request.POST['edited']) if 'edited' in request.POST else int(request.POST['computed'])
     if 'period' in request.POST:
         period = request.POST['period']
         scores[period] = value
@@ -181,8 +182,8 @@ def refresh_evolution_score(request, cohort_id):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def save_evolution_score(request, cohort_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
-    edited_score = float(request.POST.get("edited"))
-    computed_score = float(request.POST.get("computed"))
+    edited_score = int(request.POST.get("edited"))
+    computed_score = int(request.POST.get("computed"))
     registration_id = request.POST.get("student")
     scores = json.loads(request.POST['scores'].replace("'", '"'))
     student = {
@@ -224,7 +225,7 @@ def _update_evolution_score(cohort, edited_score, registration_id):
 def delete_evolution_score(request, cohort_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
     registration_id = request.POST.get("student")
-    computed_score = float(request.POST.get("computed"))
+    computed_score = int(request.POST.get("computed"))
     scores = json.loads(request.POST['scores'].replace("'", '"'))
     student = {
         'registration_id': registration_id,
@@ -246,8 +247,8 @@ def delete_evolution_score(request, cohort_id):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def save_edited_score(request, cohort_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
-    edited_score = float(request.POST.get("edited"))
-    computed_score = float(request.POST.get("computed"))
+    edited_score = int(request.POST.get("edited"))
+    computed_score = int(request.POST.get("computed"))
     registration_id = request.POST.get("student")
     period_name = request.POST.get("period")
     student = {'registration_id': registration_id}
@@ -282,7 +283,7 @@ def delete_edited_score(request, cohort_id):
     period_name = request.POST.get("period")
     student = {'registration_id': registration_id}
     period = {'name': period_name}
-    period_score = float(request.POST.get("computed"))
+    period_score = int(request.POST.get("computed"))
 
     if _delete_score(cohort, period_name, registration_id):
         return render(request, "fragment/score_cell.html", context={
@@ -388,11 +389,11 @@ def _compute_evolution_score(students):
 
 
 def _get_scores_mean(scores):
-    evolution_score = 0
+    evolution_score = Decimal(0)
     n_periods = len(scores.keys())
     for key in scores.keys():
-        evolution_score += _get_period_score(scores[key]) / n_periods
-    return evolution_score
+        evolution_score += Decimal(_get_period_score(scores[key]) / n_periods)
+    return int(evolution_score.to_integral_value(rounding=ROUND_HALF_UP))
 
 
 def _get_period_score(score):
@@ -441,12 +442,14 @@ def _map_student_score(mapping, periods_scores, student):
 
 def _process_evaluation_grades(mapping, period, scores):
     period_score = 0
-    effective_apd_count = 0
+    effective_count = 0
     for index, note in enumerate(scores):
         if note in [score[0] for score in InternshipScore.SCORE_CHOICES]:
-            effective_apd_count += 1
+            effective_count += 1
             period_score = _sum_mapped_note((index, note), mapping, period, period_score)
-    return period_score/effective_apd_count if effective_apd_count else 0
+    return int(
+        Decimal(period_score/effective_count).to_integral_value(rounding=ROUND_HALF_UP) if effective_count else 0
+    )
 
 
 def _sum_mapped_note(indexed_note, mapping, period, period_score):

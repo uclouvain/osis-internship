@@ -146,7 +146,6 @@ urlpatterns = [
                 url(r'^students/$', affectation.view_students, name='internship_affectation_students'),
                 url(r'^statistics/$', affectation.view_statistics, name='internship_affectation_statistics'),
                 url(r'^errors/$', affectation.view_errors, name='internship_affectation_errors'),
-                url(r'^score_encoding/xls$', affectation.export_score_encoding_xls, name="export_score_encoding_xls"),
                 url(r'^generate/$', affectation.run_affectation, name='internship_affectation_generate'),
                 url(r'^sumup/$', affectation.internship_affectation_sumup, name='internship_affectation_sumup'),
             ])),

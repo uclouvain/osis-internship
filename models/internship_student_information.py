@@ -51,7 +51,7 @@ class InternshipStudentInformation(SerializableModel):
     phone_mobile = models.CharField(max_length=100, blank=True, null=True)
     contest = models.CharField(max_length=124, choices=TYPE_CHOICE, null=True, blank=True)
     cohort = models.ForeignKey('internship.Cohort', on_delete=models.CASCADE)
-    evolution_score = models.FloatField(null=True, blank=True)
+    evolution_score = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
         return '{}'.format(self.person)

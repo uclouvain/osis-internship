@@ -37,15 +37,6 @@ LAST_COLUMN = 50
 PERIOD_COLUMN_WIDTH = 7
 
 
-def export_xls(cohort):
-    workbook = Workbook(write_only=True)
-    worksheet = workbook.create_sheet()
-    _add_header(cohort, worksheet)
-    columns_resizing(worksheet, _get_columns_width())
-    _add_students(cohort, worksheet)
-    return save_virtual_workbook(workbook)
-
-
 def _get_columns_width():
     columns_width = {'A': 32, 'B': 16, 'C': 11}
     columns_width.update({
