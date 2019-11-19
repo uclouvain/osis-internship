@@ -8,20 +8,20 @@
         onmouseout="hideEditButton('{{student.registration_id}}-evolution-score')">
         {% if student.evolution_score|is_edited %}
         <span id="evolution_score_{{ student.registration_id }}" data-edited="true" data-scores="{{ student.periods_scores }}">
-            {{ student.evolution_score.edited|floatformat:0 }}
+            {{ student.evolution_score.edited }}
         </span>
         <i id="evolution_score_info_{{ student.registration_id }}" style="font-size: 15px; top: 3px;" class="fas fa-info-circle text-info"
-           title="{% trans "Score edited. Computed score: " %}{{ student.evolution_score.computed|floatformat:0 }}">
+           title="{% trans "Score edited. Computed score: " %}{{ student.evolution_score.computed }}">
         </i>
         {% else %}
         <span id="evolution_score_{{ student.registration_id }}" data-scores="{{ student.periods_scores }}">
-            {{ student.evolution_score|floatformat:0 }}
+            {{ student.evolution_score }}
         </span>
         {% endif %}
         <div style="display: none;" id="edit-{{ student.registration_id }}-evolution-score" class="pull-right">
         <button onclick="editScore(this)" style="padding-top:0; line-height: inherit;"
                 {% if student.evolution_score|is_edited %}
-                    data-computed="{{ student.evolution_score.computed|floatformat:0 }}"
+                    data-computed="{{ student.evolution_score.computed }}"
                 {% else %}
                     data-computed="{{ student.evolution_score }}"
                 {% endif %}
@@ -34,7 +34,7 @@
                     data-toggle="modal"
                     data-target="#delete_score"
                     data-student="{{ student.registration_id }}"
-                    data-computed="{{ student.evolution_score.computed|floatformat:0 }}"
+                    data-computed="{{ student.evolution_score.computed }}"
                     class="btn btn-xs btn-danger">
                 <i class="fas fa-eraser"></i>
             </button>

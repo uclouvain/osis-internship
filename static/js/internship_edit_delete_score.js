@@ -20,7 +20,7 @@ function extractPeriodScoreData(dataset) {
     return {
         student: dataset.student,
         period: dataset.period,
-        computed: parseFloat(dataset.computed.replace(',', '.')),
+        computed: dataset.computed,
     };
 }
 
@@ -28,7 +28,7 @@ function extractEvolutionScoreData(dataset) {
     return {
         student: dataset.student,
         scores: $(`#evolution_score_${dataset.student}`).data('scores'),
-        computed: parseFloat(dataset.computed.replace(',', '.')),
+        computed: dataset.computed,
     };
 }
 
@@ -53,7 +53,7 @@ function buildEditableScore(cell, data) {
 function buildScoreInput(score_value) {
     let input = document.createElement("input");
     Object.assign(input, {
-        value: parseInt(score_value.replace(',', '.')),
+        value: parseInt(score_value),
         type: 'number',
         step: 1,
         min: MINIMUM_SCORE,
@@ -82,7 +82,7 @@ function buildConfirmButton(input, cell, data) {
     confirmButton.innerHTML = "<icon class='fas fa-check'><icon/>";
     confirmButton.classList.add("btn", "btn-primary");
     confirmButton.addEventListener('click', () => {
-        data['edited'] = parseFloat(input.value.replace(',', '.'));
+        data['edited'] = input.value;
         saveScore(data, cell);
     });
     return confirmButton;
@@ -226,7 +226,7 @@ function refreshEvolutionScore(data){
 }
 
 function buildAndReplaceEvolutionScore(response, score_element, score_info_element) {
-    let evolution_score = response['evolution_score'].toFixed(2).replace('.', ',')
+    let evolution_score = response['evolution_score'];
     score_element.data('scores', response['updated_scores']);
     if (!score_element.data('edited')) {
         score_element[0].innerHTML = evolution_score;
