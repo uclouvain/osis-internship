@@ -84,6 +84,5 @@ def get_paginator_size(request):
         return PAGINATOR_SIZE_LIST[0]
 
 
-def round_half_up(n, decimals=0):
-    multiplier = 10 ** decimals
-    return math.floor(n*multiplier + 0.5) / multiplier
+def round_half_up(n):
+    return int(math.floor(n + 0.5))
