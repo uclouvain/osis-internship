@@ -11,10 +11,10 @@
                 <p>{% trans "This action will delete previously edited score." %}</p>
             </div>
             <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">{% trans "Cancel" %}</button>
                 <button id="delete_score_btn" type="button" class="btn btn-danger" data-dismiss="modal" onclick="deleteScore(this)">
                     {% trans "Delete" %}
                 </button>
-                <button type="button" class="btn btn-default" data-dismiss="modal">{% trans "Cancel" %}</button>
             </div>
         </div>
     </div>
