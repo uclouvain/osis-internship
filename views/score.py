@@ -391,7 +391,7 @@ def _get_scores_mean(scores):
     n_periods = len(scores.keys())
     for key in scores.keys():
         evolution_score += _get_period_score(scores[key]) / n_periods
-    return int(round_half_up(evolution_score))
+    return round_half_up(evolution_score)
 
 
 def _get_period_score(score):
@@ -445,7 +445,7 @@ def _process_evaluation_grades(mapping, period, scores):
         if note in [score[0] for score in InternshipScore.SCORE_CHOICES]:
             effective_count += 1
             period_score = _sum_mapped_note((index, note), mapping, period, period_score)
-    return int(round_half_up(period_score/effective_count) if effective_count else 0)
+    return round_half_up(period_score/effective_count) if effective_count else 0
 
 
 def _sum_mapped_note(indexed_note, mapping, period, period_score):
