@@ -23,6 +23,8 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+import math
+
 from django.contrib import messages
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.utils.translation import gettext_lazy as _
@@ -80,3 +82,8 @@ def get_paginator_size(request):
         return request.GET.get('paginator_size')
     else:
         return PAGINATOR_SIZE_LIST[0]
+
+
+def round_half_up(n, decimals=0):
+    multiplier = 10 ** decimals
+    return math.floor(n*multiplier + 0.5) / multiplier
