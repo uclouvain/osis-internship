@@ -134,6 +134,7 @@ function deleteScore(e){
     let data = dataset.period ? extractPeriodScoreData(dataset) : extractEvolutionScoreData(dataset);
     if(dataset.period){
         deletePeriodScore(data, dataset.cell);
+        delete dataset.period;
     } else {
         deleteEvolutionScore(data, dataset.cell);
     }

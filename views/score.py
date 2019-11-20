@@ -25,7 +25,6 @@
 ##############################################################################
 import json
 from collections import Counter
-from decimal import Decimal, ROUND_HALF_UP
 from itertools import groupby
 
 from django.contrib import messages
@@ -52,7 +51,7 @@ from internship.models.period import Period
 from internship.templatetags.dictionary import is_edited
 from internship.utils.exporting import score_encoding_xls
 from internship.utils.importing import import_scores, import_eval
-from internship.views.common import get_object_list
+from internship.views.common import get_object_list, round_half_up
 
 CHOSEN_LENGTH = 7
 MINIMUM_SCORE = 0
@@ -284,7 +283,6 @@ def delete_edited_score(request, cohort_id):
     student = {'registration_id': registration_id}
     period = {'name': period_name}
     period_score = int(request.POST.get("computed"))
-
     if _delete_score(cohort, period_name, registration_id):
         return render(request, "fragment/score_cell.html", context={
             "student": student,
@@ -389,11 +387,11 @@ def _compute_evolution_score(students):
 
 
 def _get_scores_mean(scores):
-    evolution_score = Decimal(0)
+    evolution_score = 0
     n_periods = len(scores.keys())
     for key in scores.keys():
-        evolution_score += Decimal(_get_period_score(scores[key]) / n_periods)
-    return int(evolution_score.to_integral_value(rounding=ROUND_HALF_UP))
+        evolution_score += _get_period_score(scores[key]) / n_periods
+    return round_half_up(evolution_score)
 
 
 def _get_period_score(score):
@@ -447,9 +445,7 @@ def _process_evaluation_grades(mapping, period, scores):
         if note in [score[0] for score in InternshipScore.SCORE_CHOICES]:
             effective_count += 1
             period_score = _sum_mapped_note((index, note), mapping, period, period_score)
-    return int(
-        Decimal(period_score/effective_count).to_integral_value(rounding=ROUND_HALF_UP) if effective_count else 0
-    )
+    return round_half_up(period_score/effective_count) if effective_count else 0
 
 
 def _sum_mapped_note(indexed_note, mapping, period, period_score):

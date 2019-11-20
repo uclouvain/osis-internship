@@ -33,6 +33,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from django.urls import reverse
 from django.utils.translation import gettext as _
+from mock import patch
 from rest_framework import status
 
 from backoffice.settings.base import INSTALLED_APPS
@@ -49,6 +50,7 @@ from internship.tests.factories.period import PeriodFactory
 from internship.tests.factories.score import ScoreFactory, ScoreMappingFactory
 from internship.tests.factories.speciality import SpecialtyFactory
 from internship.tests.factories.student_affectation_stat import StudentAffectationStatFactory
+from internship.views.score import _get_scores_mean
 from osis_common.document.xls_build import CONTENT_TYPE_XLS
 
 
@@ -353,6 +355,10 @@ class ScoresEncodingTest(TestCase):
         response = self.client.get(url, {'free_text': student.person.last_name})
         evolution_score = response.context['students'].object_list[0].evolution_score
         self.assertEqual(evolution_score, 10)
+
+    def test_round_half_up_evolution_score(self):
+        evolution_score = _get_scores_mean({'P1': 1.5, 'P2': 1.5, 'P3': 1.5})
+        self.assertEqual(evolution_score, 2)
 
     def test_ajax_refresh_evolution_score(self):
         url = reverse('refresh_evolution_score', kwargs={'cohort_id': self.cohort.pk})
