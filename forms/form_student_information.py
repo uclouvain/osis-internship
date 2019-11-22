@@ -28,11 +28,11 @@ from django import forms
 from base.models.person import Person
 from internship.models.cohort import Cohort
 from internship.models.internship_student_information import InternshipStudentInformation
-from reference.models import country
+from reference.models.country import Country
 
 
 class StudentInformationForm(forms.ModelForm):
-    country = forms.ModelChoiceField(queryset=country.find_all(), to_field_name="name")
+    country = forms.ModelChoiceField(queryset=Country.objects.order_by('name'), to_field_name="name")
     person = forms.ModelChoiceField(queryset=Person.objects.all(), widget=forms.HiddenInput())
     cohort = forms.ModelChoiceField(queryset=Cohort.objects.all(), widget=forms.HiddenInput())
 

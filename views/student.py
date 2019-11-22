@@ -58,7 +58,7 @@ from internship.models.organization import Organization
 from internship.models.period import Period
 from internship.utils.importing.import_students import import_xlsx
 from internship.views.common import display_errors, get_object_list
-from reference.models import country
+from reference.models.country import Country
 
 
 @login_required
@@ -87,7 +87,7 @@ def internships_student_resume(request, cohort_id):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def student_form(request, cohort_id, form=None):
     cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)
-    countries = country.find_all()
+    countries = Country.objects.order_by('name')
     if form is None:
         form = StudentInformationForm(request.POST)
     return render(request, 'student_form.html', locals())
