@@ -36,7 +36,7 @@ from internship.utils.exporting import organization_affectation_hospital
 from internship.utils.exporting import organization_affectation_master
 from internship.views.common import display_report_errors
 from internship.views.internship import get_all_specialities, set_tabs_name
-from reference.models import country
+from reference.models.country import Country
 
 
 @login_required
@@ -70,7 +70,7 @@ def place_save(request, cohort_id, organization_id):
         errors.append(form.errors)
         display_report_errors(request, errors)
 
-    countries = country.find_all()
+    countries = Country.objects.order_by('name')
 
     return render(request, "place_form.html", locals())
 
@@ -95,7 +95,7 @@ def organization_new(request, cohort_id):
 def organization_edit(request, cohort_id, organization_id):
     cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
     organization = models.organization.get_by_id(organization_id)
-    countries = country.find_all()
+    countries = Country.objects.order_by('name')
     form = OrganizationForm(request.POST or None, instance=organization)
     return render(request, "place_form.html", locals())
 
@@ -104,7 +104,7 @@ def organization_edit(request, cohort_id, organization_id):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def organization_create(request, cohort_id):
     cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
-    countries = country.find_all()
+    countries = Country.objects.order_by('name')
     form = OrganizationForm(request.POST or None)
     return render(request, "place_form.html", locals())
 
