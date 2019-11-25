@@ -78,5 +78,5 @@ class InternshipScoreReminderTest(TestCase):
             'cohort_id': self.cohort.pk,
             'periods': [self.period.pk]
         }
-        send_score_encoding_reminder(data)
+        send_score_encoding_reminder(data, None)
         self.assertTrue(mock_send_messages.called)

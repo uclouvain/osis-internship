@@ -74,7 +74,7 @@ class InternshipScoreRules:
         return apd in apd_indices and score and cls.is_score_valid(apd, score)
 
 
-def send_score_encoding_reminder(data):
+def send_score_encoding_reminder(data, connected_user):
     student_info = InternshipStudentInformation.objects.get(
         person__id=data['person_id'],
         cohort__id=data['cohort_id']
@@ -99,4 +99,4 @@ def send_score_encoding_reminder(data):
         },
         subject_data={}
     )
-    send_messages(message_content=message_content)
+    send_messages(message_content=message_content, connected_user=connected_user)

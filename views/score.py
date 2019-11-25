@@ -100,7 +100,7 @@ def send_reminder(request, cohort_id):
                 'person_id': id,
                 'periods': students[id],
                 'cohort_id': cohort_id
-            })
+            }, connected_user=request.user)
         except Exception:
             _show_reminder_sent_error_message(request)
 
