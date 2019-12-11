@@ -147,7 +147,7 @@ def _add_header(cohort, periods, worksheet):
     if periods.count() == Period.objects.filter(cohort=cohort).count():
         column_titles.append("Evolution")
     add_row(worksheet, column_titles)
-    cells = worksheet.iter_rows("A1:AAA1")[0]
+    cells = worksheet.iter_rows("A1:AAA1")
     for col in cells:
         for cell in col:
             cell.font = Font(bold=True)
