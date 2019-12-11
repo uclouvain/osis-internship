@@ -39,6 +39,6 @@ def add_row(worksheet, content=None):
 
 
 def coloring_non_editable_line(worksheet, row_number, max_column_number):
-    style_readonly = Style(fill=PatternFill(patternType='solid', fgColor=Color('C1C1C1')))
+    pattern_fill = PatternFill(patternType='solid', fgColor=Color('C1C1C1'))
     for column_number in range(1, max_column_number):
-        worksheet.cell(row=row_number, column=column_number).style = style_readonly
+        worksheet.cell(row=row_number, column=column_number).fill = pattern_fill
