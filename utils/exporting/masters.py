@@ -49,7 +49,7 @@ def export_xls():
     meta_fields = [field for field in InternshipMaster._meta.fields if field.name in FIELDS]
     sorted_fields = sorted(meta_fields, key=lambda x: FIELDS.index(x.name))
     _add_header(worksheet, sorted_fields)
-    _add_masters(worksheet)
+    _add_masters(worksheet, sorted_fields)
     _adjust_column_width(worksheet)
     return save_virtual_workbook(workbook)
 
@@ -61,12 +61,13 @@ def _add_header(worksheet, fields):
     worksheet.row_dimensions[1].font = Font(bold=True)
 
 
-def _add_masters(worksheet):
+def _add_masters(worksheet, fields):
+    fields_names = [field.name for field in fields]
     master_allocation = MasterAllocation.objects.filter(master=OuterRef('pk'))
     masters = InternshipMaster.objects.all().order_by('last_name', 'first_name').annotate(
         specialty=Subquery(master_allocation.values('specialty__name')[:1]),
         organization=Subquery(master_allocation.values('organization__name')[:1])
-    ).values_list(*FIELDS, 'specialty', 'organization').distinct()
+    ).values_list(*fields_names, 'specialty', 'organization').distinct()
     for master in masters:
         add_row(worksheet, master)
 

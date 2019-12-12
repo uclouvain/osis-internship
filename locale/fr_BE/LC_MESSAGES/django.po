@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-12-12 16:12+0100\n"
+"POT-Creation-Date: 2019-12-12 14:32+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -646,11 +646,6 @@ msgstr "Envoyer un rappel"
 msgid "Sequence"
 msgstr "Séquence"
 
-msgid ""
-"Show only students having submitted / not submitted all their grades "
-"considering only completed periods"
-msgstr "N'affiche que les étudiants ayant soumis / n'ayant pas soumis toutes leurs cotes en ne considérant que les périodes de stages complétées"
-
 msgid "Social students"
 msgstr "Etudiants sociaux"
 
@@ -767,12 +762,3 @@ msgstr "ligne %(row_id)s"
 #, python-format
 msgid "student with registration id '%(reg_id)s' not found"
 msgstr "étudiant avec NOMA '%(reg_id)s' introuvable"
-
-#~ msgid "Export to XLS"
-#~ msgstr "Exporter vers XLS"
-
-#~ msgid "Internship modification"
-#~ msgstr "Modification du stage"
-
-#~ msgid "Maximum enrollments"
-#~ msgstr "Nombre d'inscriptions maximum"
