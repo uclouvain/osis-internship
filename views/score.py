@@ -168,10 +168,10 @@ def _update_evaluation_status(status, registration_ids, period_name, cohort):
 def refresh_evolution_score(request, cohort_id):
     if 'scores' in request.POST:
         scores = json.loads(request.POST['scores'].replace("'", '"'))
-        value = int(request.POST['edited']) if 'edited' in request.POST else int(request.POST['computed'])
         if 'period' in request.POST:
+            value = request.POST.get('edited', request.POST.get('computed'))
             period = request.POST['period']
-            scores[period] = value
+            scores[period] = int(value)
         evolution_score = _get_scores_mean(scores)
         response = JsonResponse({
             'updated_scores': str(scores),

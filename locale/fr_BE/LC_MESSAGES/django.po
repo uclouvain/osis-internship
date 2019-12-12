@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-12-12 14:32+0100\n"
+"POT-Creation-Date: 2019-12-12 16:50+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -762,12 +762,3 @@ msgstr "ligne %(row_id)s"
 #, python-format
 msgid "student with registration id '%(reg_id)s' not found"
 msgstr "étudiant avec NOMA '%(reg_id)s' introuvable"
-
-#~ msgid "Export to XLS"
-#~ msgstr "Exporter vers XLS"
-
-#~ msgid "Internship modification"
-#~ msgstr "Modification du stage"
-
-#~ msgid "Maximum enrollments"
-#~ msgstr "Nombre d'inscriptions maximum"
