@@ -56,7 +56,7 @@ class ScoresFilterForm(Form):
     def get_period(self, cohort):
         period = self.cleaned_data.get('period')
         qs = Period.objects.filter(cohort=cohort).order_by('date_start')
-        qs = qs.exclude(pk=qs.last().pk)
+        qs = qs.exclude(pk=qs.last().pk)  # exclude last period without grade associated
         if period:
             qs = Period.objects.filter(pk=period.pk)
         return qs

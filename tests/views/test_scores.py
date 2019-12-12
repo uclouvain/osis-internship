@@ -33,7 +33,6 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from django.urls import reverse
 from django.utils.translation import gettext as _
-from mock import patch
 from rest_framework import status
 
 from backoffice.settings.base import INSTALLED_APPS
@@ -223,24 +222,24 @@ class ScoresEncodingTest(TestCase):
         for student in response.context['students'].object_list:
             self.assertEqual(list(student.periods_scores.keys()), [self.period.name])
 
-    def test_filter_students_with_score(self):
+    def test_filter_all_grades_submitted(self):
         student_without_score = Student.objects.first()
         InternshipScore.objects.filter(student=student_without_score).delete()
         url = reverse('internship_scores_encoding', kwargs={'cohort_id': self.cohort.pk})
         data = {
             'period': self.period.pk,
-            'score_filter': True,
+            'all_grades_submitted_filter': True,
         }
         response = self.client.get(url, data=data)
         self.assertEqual(len(response.context['students'].object_list), len(self.students)-1)
 
-    def test_filter_students_without_score(self):
+    def test_filter_not_all_grades_submitted(self):
         student_without_score = Student.objects.first()
         InternshipScore.objects.filter(student=student_without_score).delete()
         url = reverse('internship_scores_encoding', kwargs={'cohort_id': self.cohort.pk})
         data = {
             'period': self.period.pk,
-            'score_filter': False,
+            'all_grades_submitted_filter': False,
         }
         response = self.client.get(url, data=data)
         for student in response.context['students'].object_list:
@@ -349,12 +348,19 @@ class ScoresEncodingTest(TestCase):
         student_info = InternshipStudentInformationFactory(person__last_name=student_name, cohort=self.cohort)
         student = StudentFactory(person=student_info.person)
         other_period = PeriodFactory(name='P2', cohort=self.cohort)
+        PeriodFactory(name='last_period', cohort=self.cohort)
         ScoreFactory(student=student, period=self.period, cohort=self.cohort, APD_1='A')
         ScoreFactory(student=student, period=other_period, cohort=self.cohort, APD_1='C')
+        ScoreMappingFactory(
+            period=other_period,
+            cohort=self.cohort,
+            score_A=20, score_B=15, score_C=10, score_D=0,
+            apd=1
+        )
         url = reverse('internship_scores_encoding', kwargs={'cohort_id': self.cohort.pk})
-        response = self.client.get(url, {'free_text': student.person.last_name})
+        response = self.client.get(url, {'free_text': student_name})
         evolution_score = response.context['students'].object_list[0].evolution_score
-        self.assertEqual(evolution_score, 10)
+        self.assertEqual(evolution_score, 15)
 
     def test_round_half_up_evolution_score(self):
         evolution_score = _get_scores_mean({'P1': 1.5, 'P2': 1.5, 'P3': 1.5})
