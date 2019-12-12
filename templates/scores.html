@@ -63,16 +63,16 @@
                             <label for="period_id">{% trans 'Period' %}</label>
                             {{ search_form.period }}
                         </div>
-                        <div class="col-md-1">
-                            <label for="period_id">{% trans 'Score' %}</label>
-                            {{ search_form.score_filter }}
+                        <div class="col-md-2">
+                            <label for="period_id">{% trans 'All grades submitted' %}</label>
+                            {{ search_form.all_grades_submitted_filter }}
                         </div>
                         <div class="col-md-1">
                             <button type="submit" class="btn btn-primary" style="margin-top: 26px;">
                                 <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
                             </button>
                         </div>
-                        <div class="col-md-6 pull-right">
+                        <div class="col-md-4 pull-right">
                             <div class="dropdown text-right">
                                 <button id="actions" type="button" class="btn btn-default" data-toggle="dropdown" aria-haspopup="true"
                                         aria-expanded="false" style="margin-top: 26px;">

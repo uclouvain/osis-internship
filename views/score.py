@@ -24,7 +24,6 @@
 #
 ##############################################################################
 import json
-from collections import Counter
 from itertools import groupby
 
 from django.contrib import messages
@@ -63,6 +62,7 @@ MAXIMUM_SCORE = 20
 def scores_encoding(request, cohort_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
     all_periods = Period.objects.filter(cohort=cohort).order_by('date_start')
+    all_periods = all_periods.exclude(pk=all_periods.last().pk)
     periods = all_periods
     search_form = ScoresFilterForm(request.GET, cohort=cohort)
     students_list = []
@@ -72,8 +72,9 @@ def scores_encoding(request, cohort_id):
     if search_form.is_valid():
         students_list = search_form.get_students(cohort=cohort)
         periods = search_form.get_period(cohort=cohort)
-        score_filter = search_form.get_score_filter()
-    students_list = _filter_students_by_internship_score(cohort, students_list, periods, score_filter)
+        grades_filter = search_form.get_all_grades_submitted_filter()
+        students_list = _filter_students_with_all_grades_submitted(cohort, students_list, periods, grades_filter)
+
     students = get_object_list(request, students_list)
     mapping = _prepare_score_table(cohort, periods, students.object_list)
     grades = [grade for grade, _ in InternshipScore.SCORE_CHOICES]
@@ -95,15 +96,11 @@ def send_reminder(request, cohort_id):
     students = _retrieve_blank_periods_by_student(periods, scores)
 
     for id in students:
-        try:
-            send_score_encoding_reminder(data={
-                'person_id': id,
-                'periods': students[id],
-                'cohort_id': cohort_id
-            }, connected_user=request.user)
-        except Exception:
-            _show_reminder_sent_error_message(request)
-
+        send_score_encoding_reminder(data={
+            'person_id': id,
+            'periods': students[id],
+            'cohort_id': cohort_id
+        }, connected_user=request.user)
     _show_reminder_sent_success_message(request)
 
     prev_url = request.META['HTTP_REFERER'] if 'HTTP_REFERER' in request.META else ''
@@ -115,15 +112,22 @@ def send_reminder(request, cohort_id):
     )
 
 
-def _retrieve_blank_periods_by_student(periods, scores):
+def _retrieve_blank_periods_by_student(periods, scores, reverse=False):
+    # get students with blank periods, students without blank periods if reverse set to true
     students = {}
+    students_without_grades = {}
+    students_with_grades = {}
     for student, period in scores:
         if student not in students.keys():
             students[student] = []
         students[student].append(period)
     for student in students.keys():
-        students[student] = [period for period in periods if period not in students[student]]
-    return students
+        blank_periods = [period for period in periods if period not in students[student]]
+        if blank_periods:
+            students_without_grades[student] = blank_periods
+        else:
+            students_with_grades[student] = blank_periods
+    return students_with_grades if reverse else students_without_grades
 
 
 def _show_reminder_sent_error_message(request):
@@ -162,19 +166,22 @@ def _update_evaluation_status(status, registration_ids, period_name, cohort):
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def refresh_evolution_score(request, cohort_id):
-    scores = json.loads(request.POST['scores'].replace("'", '"'))
-    value = int(request.POST['edited']) if 'edited' in request.POST else int(request.POST['computed'])
-    if 'period' in request.POST:
-        period = request.POST['period']
-        scores[period] = value
-    evolution_score = _get_scores_mean(scores)
-    response = JsonResponse({
-        'updated_scores': str(scores),
-        'evolution_score': evolution_score,
-        'computed_title_text': _("Score edited. Computed score: "),
-    })
-    response.status_code = 200
-    return response
+    if 'scores' in request.POST:
+        scores = json.loads(request.POST['scores'].replace("'", '"'))
+        if 'period' in request.POST:
+            value = request.POST.get('edited', request.POST.get('computed'))
+            period = request.POST['period']
+            scores[period] = int(value)
+        evolution_score = _get_scores_mean(scores)
+        response = JsonResponse({
+            'updated_scores': str(scores),
+            'evolution_score': evolution_score,
+            'computed_title_text': _("Score edited. Computed score: "),
+        })
+        response.status_code = 200
+        return response
+    else:
+        return HttpResponse(status=204)
 
 
 @login_required
@@ -544,29 +551,16 @@ def _append_student_registration_id(student, students_affectations):
             student.registration_id = affectation['student__registration_id']
 
 
-def _filter_students_by_internship_score(cohort, students, periods, score_filter=None):
-    if score_filter is not None:
-        persons = InternshipScore.objects.filter(
-            cohort=cohort,
-            period__in=periods
-        ).values_list('student__person', flat=True)
-        persons = _keep_persons_with_periods_scores(periods, persons)
-        if score_filter:
-            return students.filter(person__pk__in=persons)
-        else:
-            return students.exclude(person__pk__in=persons)
-    else:
-        return students
-
-
-def _keep_persons_with_periods_scores(periods, persons):
-    count = len(periods)
-    counter = Counter(persons)
-    for k in list(counter):
-        if counter[k] < count:
-            del counter[k]
-    persons = [key for key, _ in counter.most_common()]
-    return persons
+def _filter_students_with_all_grades_submitted(cohort, students, periods, filter):
+    if filter is not None:
+        persons = students.values_list('person', flat=True)
+        periods = periods.values_list('id', flat=True)
+        scores = InternshipScore.objects.filter(
+            cohort=cohort, student__person__in=persons
+        ).values_list('student__person', 'period')
+        periods_students = _retrieve_blank_periods_by_student(periods, scores, filter)
+        students = students.filter(person__pk__in=periods_students.keys())
+    return students
 
 
 @login_required

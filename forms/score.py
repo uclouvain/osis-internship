@@ -29,7 +29,7 @@ class ScoresFilterForm(Form):
         widget=forms.Select(attrs={"class": "form-control"})
     )
 
-    score_filter = forms.TypedChoiceField(
+    all_grades_submitted_filter = forms.TypedChoiceField(
         coerce=lambda x: x == 'True',
         required=False,
         choices=YES_NO_CHOICES,
@@ -56,15 +56,16 @@ class ScoresFilterForm(Form):
     def get_period(self, cohort):
         period = self.cleaned_data.get('period')
         qs = Period.objects.filter(cohort=cohort).order_by('date_start')
+        qs = qs.exclude(pk=qs.last().pk)  # exclude last period without grade associated
         if period:
-            qs = [Period.objects.get(pk=period.pk)]
+            qs = Period.objects.filter(pk=period.pk)
         return qs
 
-    def get_score_filter(self):
-        score_filter = self.cleaned_data.get('score_filter')
-        if score_filter == "":
+    def get_all_grades_submitted_filter(self):
+        all_grades_submitted_filter = self.cleaned_data.get('all_grades_submitted_filter')
+        if all_grades_submitted_filter == "":
             return None
-        return score_filter
+        return all_grades_submitted_filter
 
 
 def search_students_with_free_text(free_text, qs):

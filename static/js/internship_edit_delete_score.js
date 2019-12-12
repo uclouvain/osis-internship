@@ -222,7 +222,10 @@ function refreshEvolutionScore(data){
         url: "ajax/refresh_evolution_score/",
         method: "POST",
         data: data,
-        success: response => buildAndReplaceEvolutionScore(response, score_element, score_info_element)
+        success: response => {
+            if(response)
+                buildAndReplaceEvolutionScore(response, score_element, score_info_element)
+        }
     })
 }
 

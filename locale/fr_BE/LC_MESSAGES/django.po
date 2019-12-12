@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-06 11:17+0200\n"
+"POT-Creation-Date: 2019-12-12 16:50+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -58,6 +58,9 @@ msgstr "Adresse"
 
 msgid "Affectation's result"
 msgstr "Résultat de l'affectation"
+
+msgid "All grades submitted"
+msgstr "Encodage complet"
 
 msgid "All hospitals"
 msgstr "Tous les hôpitaux"
@@ -275,9 +278,6 @@ msgstr "Fichier Excel pour le maitre de stage"
 msgid "Export scores"
 msgstr "Exporter les notes"
 
-msgid "Export to XLS"
-msgstr "Exporter vers XLS"
-
 msgid "Export to XLSX"
 msgstr "Exporter vers XLSX"
 
@@ -378,9 +378,6 @@ msgstr "Modalité de stage créée"
 msgid "Internship modality deleted"
 msgstr "Modalité de stage supprimée"
 
-msgid "Internship modification"
-msgstr "Modification du stage"
-
 msgid "Internship type"
 msgstr "Type de stage"
 
@@ -441,9 +438,6 @@ msgstr "Maître"
 
 msgid "Master deleted"
 msgstr "Maître de stage supprimé : "
-
-msgid "Maximum enrollments"
-msgstr "Nombre d'inscriptions maximum"
 
 msgid "Maximum number of students"
 msgstr "Nombre maximum d'étudiants"
