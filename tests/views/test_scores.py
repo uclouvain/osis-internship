@@ -24,6 +24,7 @@
 #
 ##############################################################################
 import json
+from datetime import timedelta
 from types import SimpleNamespace
 from unittest import mock, skipUnless
 
@@ -32,6 +33,7 @@ from django.contrib.auth.models import User, Permission
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from django.urls import reverse
+from django.utils.datetime_safe import date
 from django.utils.translation import gettext as _
 from rest_framework import status
 
@@ -64,7 +66,7 @@ class ScoresEncodingTest(TestCase):
     @classmethod
     def setUpTestData(self):
         self.cohort = CohortFactory()
-        self.period = PeriodFactory(name='P1', cohort=self.cohort)
+        self.period = PeriodFactory(name='P1', date_end=date.today()-timedelta(days=1), cohort=self.cohort)
         self.xlsfile = SimpleUploadedFile(
             name='upload.xls',
             content=str.encode('test'),
@@ -84,7 +86,7 @@ class ScoresEncodingTest(TestCase):
         )
         self.chosen_internship = InternshipFactory(cohort=self.cohort, speciality=None)
         internships = [self.mandatory_internship, self.long_internship, self.chosen_internship]
-        periods = [PeriodFactory(cohort=self.cohort) for internship in range(2)]
+        periods = [PeriodFactory(cohort=self.cohort) for _ in range(2)]
         periods.append(self.period)
         for student_info in self.students:
             student = StudentFactory(person=student_info.person)
