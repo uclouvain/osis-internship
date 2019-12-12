@@ -49,9 +49,10 @@ def _add_header(worksheet, organization):
         column_titles.append(str(_(item)))
 
     add_row(worksheet, column_titles)
-    cells = worksheet.range("A1:N1")[0]
-    for cell in cells:
-        cell.font = Font(bold=True)
+    cells = worksheet.iter_rows("A1:N1")
+    for col in cells:
+        for cell in col:
+            cell.font = Font(bold=True)
 
 
 def _add_students(worksheet, cohort, organization):
