@@ -80,10 +80,10 @@ def send_score_encoding_reminder(data, connected_user):
         cohort__id=data['cohort_id']
     )
     student = Student.objects.get(person__id=data['person_id'])
-    periods = Period.objects.filter(pk__in=data['periods']).order_by('start_date')
+    periods = Period.objects.filter(pk__in=data['periods'])
     affectations = InternshipStudentAffectationStat.objects.filter(
         student=student, period__in=periods
-    )
+    ).order_by('period__date_start')
     message_content = message_config.create_message_content(
         html_template_ref='internship_score_encoding_reminder_email_html',
         txt_template_ref='internship_score_encoding_reminder_email_txt',
