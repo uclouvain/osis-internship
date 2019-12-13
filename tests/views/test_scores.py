@@ -317,7 +317,7 @@ class ScoresEncodingTest(TestCase):
         period = PeriodFactory(name='P1', cohort=self.cohort)
         StudentAffectationStatFactory(student=student, period=period)
         ScoreFactory(period=period, student=student, cohort=self.cohort)
-        url = reverse('send_reminder', kwargs={'cohort_id': self.cohort.pk})
+        url = reverse('send_reminder', kwargs={'cohort_id': self.cohort.pk, 'period_id': period.pk})
         response = self.client.post(url, data={
             'selected_student': [student_info.pk]
         })

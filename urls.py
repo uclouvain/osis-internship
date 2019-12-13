@@ -162,7 +162,7 @@ urlpatterns = [
                 url(r'^ajax/save_evolution_score/$', score.save_evolution_score, name='save_evolution_score'),
                 url(r'^ajax/delete_evolution_score/$', score.delete_evolution_score, name='delete_evolution_score'),
                 url(r'^ajax/refresh_evolution_score/$', score.refresh_evolution_score, name='refresh_evolution_score'),
-                url(r'^send_reminder/$', score.send_reminder, name='send_reminder'),
+                url(r'^send_reminder(?:/(?P<period_id>[0-9]+)/)?$', score.send_reminder, name='send_reminder'),
             ])),
         ])),
     ])),

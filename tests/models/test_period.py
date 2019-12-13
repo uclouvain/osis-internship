@@ -23,24 +23,13 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.test import SimpleTestCase, TestCase
+from django.test import SimpleTestCase
 
-from internship.models import period as mdl_period
 from internship.tests.factories.period import PeriodFactory
 
 
 def create_period(name="P1", cohort=None):
     return PeriodFactory(name=name, cohort=cohort)
-
-class TestGetByName(TestCase):
-    def test_find(self):
-        period_1 = PeriodFactory(name="P1")
-        period_2 = PeriodFactory(name="P5")
-
-        self.assertEqual(period_1, mdl_period.get_by_name("P1"))
-        self.assertEqual(period_2, mdl_period.get_by_name("P5"))
-
-        self.assertFalse(mdl_period.get_by_name("P4"))
 
 
 class PeriodFactoryTestCase(SimpleTestCase):

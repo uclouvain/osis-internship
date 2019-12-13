@@ -27,7 +27,7 @@ from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned, 
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
+from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin, SerializableModelManager
 
 
 class PeriodAdmin(SerializableModelAdmin):
@@ -62,14 +62,10 @@ def search(**kwargs):
     return Period.objects.filter(**kwargs).select_related().order_by("date_start")
 
 
-def get_by_name(period_name):
-    try:
-        return Period.objects.get(name=period_name)
-    except ObjectDoesNotExist:
-        return None
-    except MultipleObjectsReturned:
-        return None
-
-
 def find_by_cohort(cohort):
     return Period.objects.filter(cohort=cohort).order_by("date_start")
+
+
+def get_effective_periods(cohort_id):
+    qs = Period.objects.filter(cohort__pk=cohort_id).order_by("date_end")
+    return qs.exclude(pk=qs.last().pk)
