@@ -33,6 +33,7 @@ from django.db.models import Subquery, OuterRef
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
+from django.utils.datetime_safe import date
 from django.utils.html import escape
 from django.utils.translation import gettext as _
 
@@ -554,11 +555,11 @@ def _append_student_registration_id(student, students_affectations):
 def _filter_students_with_all_grades_submitted(cohort, students, periods, filter):
     if filter is not None:
         persons = students.values_list('person', flat=True)
-        periods = periods.values_list('id', flat=True)
+        completed_periods = periods.filter(date_end__lt=date.today()).values_list('id', flat=True)
         scores = InternshipScore.objects.filter(
-            cohort=cohort, student__person__in=persons
+            cohort=cohort, student__person__in=persons, period__pk__in=completed_periods
         ).values_list('student__person', 'period')
-        periods_students = _retrieve_blank_periods_by_student(periods, scores, filter)
+        periods_students = _retrieve_blank_periods_by_student(completed_periods, scores, filter)
         students = students.filter(person__pk__in=periods_students.keys())
     return students
 

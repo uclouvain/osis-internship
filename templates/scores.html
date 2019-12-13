@@ -65,6 +65,8 @@
                         </div>
                         <div class="col-md-2">
                             <label for="period_id">{% trans 'All grades submitted' %}</label>
+                            <i title="{% trans "Show only students having submitted / not submitted all their grades considering only completed periods" %}"
+                               class="fas fa-info-circle text-info"></i>
                             {{ search_form.all_grades_submitted_filter }}
                         </div>
                         <div class="col-md-1">
