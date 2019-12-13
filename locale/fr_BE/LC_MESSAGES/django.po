@@ -650,7 +650,7 @@ msgid ""
 "Show only students having submitted / not submitted all their grades "
 "considering only completed periods"
 msgstr ""
-"N'affiche que les étudiants ayant soumis / n'ayant pas soumis toutes leurs "
+"Affiche les étudiants ayant / n'ayant pas soumis toutes leurs "
 "cotes en ne considérant que les périodes de stages complétées"
 
 msgid "Social students"
