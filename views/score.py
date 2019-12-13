@@ -563,7 +563,12 @@ def _filter_students_with_all_grades_submitted(cohort, students, periods, filter
             cohort=cohort, student__in=students_with_affectations, period__pk__in=completed_periods
         ).values_list('student__person', 'period')
         persons_with_affectations = students_with_affectations.values_list('student__person', flat=True)
-        periods_persons = _retrieve_blank_periods_by_student(persons_with_affectations, completed_periods, scores, filter)
+        periods_persons = _retrieve_blank_periods_by_student(
+            persons_with_affectations,
+            completed_periods,
+            scores,
+            filter
+        )
         students = students.filter(person__pk__in=periods_persons.keys())
     return students
 
