@@ -23,7 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from openpyxl.styles import Color, Style, PatternFill
+from openpyxl.styles import Color, PatternFill
 
 
 def columns_resizing(worksheet, column_widths):

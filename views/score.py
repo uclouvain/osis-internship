@@ -47,7 +47,7 @@ from internship.models.internship_score import InternshipScore
 from internship.models.internship_score_mapping import InternshipScoreMapping
 from internship.models.internship_student_affectation_stat import InternshipStudentAffectationStat
 from internship.models.internship_student_information import InternshipStudentInformation
-from internship.models.period import Period
+from internship.models.period import Period, get_effective_periods
 from internship.templatetags.dictionary import is_edited
 from internship.utils.exporting import score_encoding_xls
 from internship.utils.importing import import_scores, import_eval
@@ -62,8 +62,7 @@ MAXIMUM_SCORE = 20
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def scores_encoding(request, cohort_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
-    all_periods = Period.objects.filter(cohort=cohort).order_by('date_start')
-    all_periods = all_periods.exclude(pk=all_periods.last().pk)
+    all_periods = get_effective_periods(cohort_id)
     periods = all_periods
     search_form = ScoresFilterForm(request.GET, cohort=cohort)
     students_list = []
@@ -86,15 +85,18 @@ def scores_encoding(request, cohort_id):
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
-def send_reminder(request, cohort_id):
+def send_reminder(request, cohort_id, period_id=None):
     selected_persons = InternshipStudentInformation.objects.filter(
         pk__in=request.POST.getlist('selected_student'),
     ).values_list('person', flat=True)
-    periods = Period.objects.filter(cohort__id=cohort_id).values_list('id', flat=True)
+    periods = get_effective_periods(cohort_id)
+    if period_id:
+        periods = periods.filter(pk=period_id)
+    completed_periods = periods.filter(date_end__lt=date.today()).values_list('id', flat=True)
     scores = InternshipScore.objects.filter(
         cohort__id=cohort_id, student__person__in=selected_persons
     ).values_list('student__person', 'period')
-    students = _retrieve_blank_periods_by_student(periods, scores)
+    students = _retrieve_blank_periods_by_student(selected_persons, completed_periods, scores)
 
     for id in students:
         send_score_encoding_reminder(data={
@@ -113,14 +115,12 @@ def send_reminder(request, cohort_id):
     )
 
 
-def _retrieve_blank_periods_by_student(periods, scores, reverse=False):
+def _retrieve_blank_periods_by_student(persons, periods, scores, reverse=False):
     # get students with blank periods, students without blank periods if reverse set to true
-    students = {}
+    students = {person: [] for person in persons}
     students_without_grades = {}
     students_with_grades = {}
     for student, period in scores:
-        if student not in students.keys():
-            students[student] = []
         students[student].append(period)
     for student in students.keys():
         blank_periods = [period for period in periods if period not in students[student]]
@@ -556,11 +556,20 @@ def _filter_students_with_all_grades_submitted(cohort, students, periods, filter
     if filter is not None:
         persons = students.values_list('person', flat=True)
         completed_periods = periods.filter(date_end__lt=date.today()).values_list('id', flat=True)
+        students_with_affectations = InternshipStudentAffectationStat.objects.filter(
+            student__person__in=persons, period__in=completed_periods
+        ).values_list('student', flat=True)
         scores = InternshipScore.objects.filter(
-            cohort=cohort, student__person__in=persons, period__pk__in=completed_periods
+            cohort=cohort, student__in=students_with_affectations, period__pk__in=completed_periods
         ).values_list('student__person', 'period')
-        periods_students = _retrieve_blank_periods_by_student(completed_periods, scores, filter)
-        students = students.filter(person__pk__in=periods_students.keys())
+        persons_with_affectations = students_with_affectations.values_list('student__person', flat=True)
+        periods_persons = _retrieve_blank_periods_by_student(
+            persons_with_affectations,
+            completed_periods,
+            scores,
+            filter
+        )
+        students = students.filter(person__pk__in=periods_persons.keys())
     return students
 
 

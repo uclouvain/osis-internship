@@ -139,7 +139,11 @@
                           {% endfor %}
                         <th>{% trans 'Score' %}</th>
                       </tr>
-                        <form action="{% url 'send_reminder' cohort_id=cohort.id %}" method="post" id="send_reminder_form">
+                        {% if periods.count == 1 %}
+                            <form action="{% url 'send_reminder' cohort_id=cohort.id period_id=periods.0.id %}" method="post" id="send_reminder_form">
+                        {% else %}
+                            <form action="{% url 'send_reminder' cohort_id=cohort.id %}" method="post" id="send_reminder_form">
+                        {% endif %}
                         {% csrf_token %}
                         {% for student in students %}
                          <tr>

@@ -29,7 +29,6 @@ from operator import itemgetter
 
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.serializers.json import DjangoJSONEncoder
-from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render, redirect
 from django.urls import reverse
@@ -38,7 +37,6 @@ from django.utils import timezone
 from internship import models
 from internship.business import assignment, statistics
 from internship.models import internship_student_affectation_stat
-from internship.utils.exporting import score_encoding_xls
 
 
 @login_required
