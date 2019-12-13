@@ -28,6 +28,7 @@ from datetime import timedelta
 from types import SimpleNamespace
 from unittest import mock, skipUnless
 
+from dateutil.relativedelta import relativedelta
 from django.contrib import messages
 from django.contrib.auth.models import User, Permission
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -44,6 +45,7 @@ from base.tests.factories.student import StudentFactory
 from internship.models.internship_score import InternshipScore, APD_NUMBER
 from internship.models.internship_score_mapping import InternshipScoreMapping
 from internship.models.internship_student_affectation_stat import InternshipStudentAffectationStat
+from internship.models.period import get_effective_periods
 from internship.tests.factories.cohort import CohortFactory
 from internship.tests.factories.internship import InternshipFactory
 from internship.tests.factories.internship_student_information import InternshipStudentInformationFactory
@@ -105,6 +107,7 @@ class ScoresEncodingTest(TestCase):
                 score_A=20, score_B=15, score_C=10, score_D=0,
                 apd=apd
             )
+        self.unused_period = PeriodFactory(name="P99", cohort=self.cohort, date_end=date.today()+relativedelta(months=+2))
 
     def test_view_scores_encoding(self):
         url = reverse('internship_scores_encoding', kwargs={'cohort_id': self.cohort.pk})
@@ -314,9 +317,9 @@ class ScoresEncodingTest(TestCase):
     def test_send_reminder(self, mock_send_mail):
         student_info = InternshipStudentInformationFactory(cohort=self.cohort)
         student = StudentFactory(person=student_info.person)
-        period = PeriodFactory(name='P1', cohort=self.cohort)
+        period = PeriodFactory(name='PTEST', cohort=self.cohort, date_end=date.today()-timedelta(days=1))
         StudentAffectationStatFactory(student=student, period=period)
-        ScoreFactory(period=period, student=student, cohort=self.cohort)
+        ScoreFactory(period=self.period, student=student, cohort=self.cohort)
         url = reverse('send_reminder', kwargs={'cohort_id': self.cohort.pk, 'period_id': period.pk})
         response = self.client.post(url, data={
             'selected_student': [student_info.pk]
