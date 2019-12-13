@@ -23,11 +23,11 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned, ValidationError
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin, SerializableModelManager
+from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 
 
 class PeriodAdmin(SerializableModelAdmin):
