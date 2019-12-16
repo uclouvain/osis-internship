@@ -4,7 +4,7 @@
     "fields": {
         "reference": "internship_score_encoding_reminder_email_html",
         "subject": "STAC - Rappel remise des cotes de stage",
-        "template": "<i>Ceci est un message automatique généré par le serveur OSIS. Merci de ne pas y répondre.</i><br/><p>Bonjour,<br/>Les cotes de stage pour les périodes suivantes ne nous sont pas encore parvenues:</p><ul>{% for affectation in affectations %}<li>{{ affectation.period }} - {{ affectation.speciality }} - {{affectation.organization}}</li>{% endfor %}</ul>",
+        "template": "<i>Ceci est un message automatique généré par le serveur OSIS. Merci de ne pas y répondre.</i><br/><p>Bonjour,<br/>Les cotes de stage pour les périodes suivantes ne nous sont pas encore parvenues:</p><ul>{% for affectation in affectations %}<li>{{ affectation.period }} - {{ affectation.speciality }} - {{affectation.organization}}</li>{% endfor %}</ul><p>Merci de nous les transmettre dès réception de ce mail.<br/> Bien à vous.</p>",
         "format": "HTML",
         "language": "fr-be"
     }
@@ -14,7 +14,7 @@
     "fields": {
         "reference": "internship_score_encoding_reminder_email_txt",
         "subject": "STAC - Rappel remise des cotes de stage",
-        "template": "Ceci est un message automatique généré par le serveur OSIS. Merci de ne pas y répondre. Bonjour, Les cotes de stage pour les périodes suivantes ne nous sont pas encore parvenues: {% for affectation in affectations %} {{ affectation.period }} - {{ affectation.speciality }} - {{affectation.organization}} {% endfor %}",
+        "template": "Ceci est un message automatique généré par le serveur OSIS. Merci de ne pas y répondre. Bonjour, Les cotes de stage pour les périodes suivantes ne nous sont pas encore parvenues: {% for affectation in affectations %} {{ affectation.period }} - {{ affectation.speciality }} - {{affectation.organization}} {% endfor %} Merci de nous les transmettre dès réception de ce mail. Bien à vous.",
         "format": "PLAIN",
         "language": "fr-be"
     }
