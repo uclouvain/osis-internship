@@ -27,7 +27,7 @@ from django.core.management.sql import emit_post_migrate_signal
 def add_init_internship_manager_group(apps, schema_editor):
     # create group
     db_alias = schema_editor.connection.alias
-    emit_post_migrate_signal(2, False, db_alias)
+    emit_post_migrate_signal(1, False, db_alias)
     Group = apps.get_model('auth', 'Group')
     Permission = apps.get_model('auth', 'Permission')
     internship_manager_group, created = Group.objects.get_or_create(name='internship_manager')
