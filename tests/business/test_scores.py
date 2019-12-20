@@ -37,11 +37,12 @@ from internship.tests.factories.score import ScoreFactory
 
 
 class InternshipScoreRulesTest(TestCase):
-    def setUp(self) -> None:
-        self.cohort = CohortFactory()
-        self.student = StudentFactory()
-        self.period = PeriodFactory(cohort=self.cohort)
-        self.internship_score = ScoreFactory(student=self.student, period=self.period, cohort=self.cohort)
+    @classmethod
+    def setUpTestData(cls) -> None:
+        cls.cohort = CohortFactory()
+        cls.student = StudentFactory()
+        cls.period = PeriodFactory(cohort=cls.cohort)
+        cls.internship_score = ScoreFactory(student=cls.student, period=cls.period, cohort=cls.cohort)
 
     def test_student_fulfill_requirements(self):
         for index in [index for index in range(0, APD_NUMBER)]:
@@ -65,11 +66,12 @@ class InternshipScoreRulesTest(TestCase):
 
 
 class InternshipScoreReminderTest(TestCase):
-    def setUp(self) -> None:
-        self.cohort = CohortFactory()
-        self.student_info = InternshipStudentInformationFactory(cohort=self.cohort)
-        self.student = StudentFactory(person=self.student_info.person)
-        self.period = PeriodFactory(cohort=self.cohort)
+    @classmethod
+    def setUpTestData(cls) -> None:
+        cls.cohort = CohortFactory()
+        cls.student_info = InternshipStudentInformationFactory(cohort=cls.cohort)
+        cls.student = StudentFactory(person=cls.student_info.person)
+        cls.period = PeriodFactory(cohort=cls.cohort)
 
     @mock.patch('internship.business.scores.send_messages')
     def test_send_reminder(self, mock_send_messages):

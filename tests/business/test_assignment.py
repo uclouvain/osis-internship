@@ -112,13 +112,13 @@ class AssignmentTest(TestCase):
             self.assertEqual(affectation.organization, prior_enrollment.place)
             self.assertEqual(affectation.period, prior_enrollment.period)
             self.assertEqual(affectation.speciality, prior_enrollment.internship_offer.speciality)
-
-    def test_prior_student_choices_with_unblocked_periods_respected(self):
-        for affectation in self.prior_student_affectations:
-            prior_enrollment = self.prior_enrollments.get(internship=affectation.internship)
-            self.assertEqual(affectation.organization, prior_enrollment.place)
-            self.assertEqual(affectation.period, prior_enrollment.period)
-            self.assertEqual(affectation.speciality, prior_enrollment.internship_offer.speciality)
+    #
+    # def test_prior_student_choices_with_unblocked_periods_respected(self):
+    #     for affectation in self.prior_student_affectations:
+    #         prior_enrollment = self.prior_enrollments.get(internship=affectation.internship)
+    #         self.assertEqual(affectation.organization, prior_enrollment.place)
+    #         self.assertEqual(affectation.period, prior_enrollment.period)
+    #         self.assertEqual(affectation.speciality, prior_enrollment.internship_offer.speciality)
 
     def test_affectation_statistics(self):
         solution = load_solution_sol(self.cohort, self.affectations)
@@ -180,9 +180,9 @@ def _create_internship_offers(cls):
     return offers
 
 
-def _create_internship_students(cls):
+def _create_internship_students(cohort):
     internship_students = [InternshipStudentInformationFactory(
-        cohort=cls.cohort,
+        cohort=cohort,
         person=PersonFactory()
     ) for _ in range(0, N_STUDENTS)]
     students = [StudentFactory(person=student.person) for student in internship_students]
