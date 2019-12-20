@@ -32,10 +32,13 @@ from internship.tests.factories.cohort import CohortFactory
 
 
 class ViewHomeTest(TestCase):
-    def setUp(self):
-        self.user = User.objects.create_user('demo', 'demo@demo.org', 'passtest')
+    @classmethod
+    def setUpTestData(cls):
+        cls.user = User.objects.create_user('demo', 'demo@demo.org', 'passtest')
         permission = Permission.objects.get(codename='is_internship_manager')
-        self.user.user_permissions.add(permission)
+        cls.user.user_permissions.add(permission)
+
+    def setUp(self) -> None:
         self.client.force_login(self.user)
 
     def test_view_cohort_selection(self):

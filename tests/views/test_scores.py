@@ -45,7 +45,6 @@ from base.tests.factories.student import StudentFactory
 from internship.models.internship_score import InternshipScore, APD_NUMBER
 from internship.models.internship_score_mapping import InternshipScoreMapping
 from internship.models.internship_student_affectation_stat import InternshipStudentAffectationStat
-from internship.models.period import get_effective_periods
 from internship.tests.factories.cohort import CohortFactory
 from internship.tests.factories.internship import InternshipFactory
 from internship.tests.factories.internship_student_information import InternshipStudentInformationFactory
@@ -58,39 +57,35 @@ from osis_common.document.xls_build import CONTENT_TYPE_XLS
 
 
 class ScoresEncodingTest(TestCase):
-
     def setUp(self):
-        self.user = User.objects.create_user('demo', 'demo@demo.org', 'passtest')
-        permission = Permission.objects.get(codename='is_internship_manager')
-        self.user.user_permissions.add(permission)
         self.client.force_login(self.user)
 
     @classmethod
-    def setUpTestData(self):
-        self.cohort = CohortFactory()
-        self.period = PeriodFactory(name='P1', date_end=date.today()-timedelta(days=1), cohort=self.cohort)
-        self.xlsfile = SimpleUploadedFile(
+    def setUpTestData(cls):
+        cls.cohort = CohortFactory()
+        cls.period = PeriodFactory(name='P1', date_end=date.today()-timedelta(days=1), cohort=cls.cohort)
+        cls.xlsfile = SimpleUploadedFile(
             name='upload.xls',
             content=str.encode('test'),
             content_type="application/vnd.ms-excel",
         )
-        self.xlsxfile = SimpleUploadedFile(
+        cls.xlsxfile = SimpleUploadedFile(
             name='upload.xlsx',
             content=str.encode('test'),
             content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         )
-        self.students = [InternshipStudentInformationFactory(cohort=self.cohort) for _ in range(11)]
-        self.mandatory_internship = InternshipFactory(
-            cohort=self.cohort, speciality=SpecialtyFactory(cohort=self.cohort)
+        cls.students = [InternshipStudentInformationFactory(cohort=cls.cohort) for _ in range(11)]
+        cls.mandatory_internship = InternshipFactory(
+            cohort=cls.cohort, speciality=SpecialtyFactory(cohort=cls.cohort)
         )
-        self.long_internship = InternshipFactory(
-            cohort=self.cohort, speciality=SpecialtyFactory(cohort=self.cohort, sequence=1)
+        cls.long_internship = InternshipFactory(
+            cohort=cls.cohort, speciality=SpecialtyFactory(cohort=cls.cohort, sequence=1)
         )
-        self.chosen_internship = InternshipFactory(cohort=self.cohort, speciality=None)
-        internships = [self.mandatory_internship, self.long_internship, self.chosen_internship]
-        periods = [PeriodFactory(cohort=self.cohort) for _ in range(2)]
-        periods.append(self.period)
-        for student_info in self.students:
+        cls.chosen_internship = InternshipFactory(cohort=cls.cohort, speciality=None)
+        internships = [cls.mandatory_internship, cls.long_internship, cls.chosen_internship]
+        periods = [PeriodFactory(cohort=cls.cohort) for _ in range(2)]
+        periods.append(cls.period)
+        for student_info in cls.students:
             student = StudentFactory(person=student_info.person)
             for index, internship in enumerate(internships):
                 StudentAffectationStatFactory(
@@ -99,15 +94,18 @@ class ScoresEncodingTest(TestCase):
                     speciality=internship.speciality if internship.speciality else SpecialtyFactory(),
                     period=periods[index]
                 )
-            ScoreFactory(student=student, period=self.period, cohort=self.cohort, APD_1='A')
+            ScoreFactory(student=student, period=cls.period, cohort=cls.cohort, APD_1='A')
         for apd in range(1, APD_NUMBER):
             ScoreMappingFactory(
-                period=self.period,
-                cohort=self.cohort,
+                period=cls.period,
+                cohort=cls.cohort,
                 score_A=20, score_B=15, score_C=10, score_D=0,
                 apd=apd
             )
-        self.unused_period = PeriodFactory(name="P99", cohort=self.cohort, date_end=date.today()+relativedelta(months=+2))
+        cls.unused_period = PeriodFactory(name="P99", cohort=cls.cohort, date_end=date.today()+relativedelta(months=+2))
+        cls.user = User.objects.create_user('demo', 'demo@demo.org', 'passtest')
+        permission = Permission.objects.get(codename='is_internship_manager')
+        cls.user.user_permissions.add(permission)
 
     def test_view_scores_encoding(self):
         url = reverse('internship_scores_encoding', kwargs={'cohort_id': self.cohort.pk})

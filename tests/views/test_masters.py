@@ -41,12 +41,15 @@ from osis_common.document.xls_build import CONTENT_TYPE_XLS
 
 
 class MasterTestCase(TestCase):
-    def setUp(self):
-        self.user = User.objects.create_user('demo', 'demo@demo.org', 'passtest')
+    @classmethod
+    def setUpTestData(cls):
+        cls.user = User.objects.create_user('demo', 'demo@demo.org', 'passtest')
         permission = Permission.objects.get(codename='is_internship_manager')
-        self.user.user_permissions.add(permission)
+        cls.user.user_permissions.add(permission)
+        cls.cohort = CohortFactory()
+
+    def setUp(self):
         self.client.force_login(self.user)
-        self.cohort = CohortFactory()
 
     def test_masters_index(self):
         url = reverse('internships_masters', kwargs={

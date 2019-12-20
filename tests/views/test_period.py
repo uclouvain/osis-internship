@@ -35,10 +35,13 @@ from internship.tests.factories.period import PeriodFactory
 
 
 class PeriodTestCase(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.user = User.objects.create_superuser('demo-internship', email='demo@demo.org', password='secret')
+        cls.cohort = CohortFactory()
+
     def setUp(self):
-        self.user = User.objects.create_superuser('demo-internship', email='demo@demo.org', password='secret')
         self.client.force_login(self.user)
-        self.cohort = CohortFactory()
 
     def test_list_periods_but_cohort_not_exist(self):
         unknown_cohort_id = Cohort.objects.all().aggregate(Max('id'))['id__max'] + 1
@@ -108,7 +111,6 @@ class PeriodTestCase(TestCase):
             response,
             reverse('internships_periods', kwargs=kwargs)
         )
-
 
     def test_period_new_cohort_not_exist(self):
         unknown_cohort_id = Cohort.objects.all().aggregate(Max('id'))['id__max'] + 1

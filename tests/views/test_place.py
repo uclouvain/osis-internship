@@ -32,13 +32,16 @@ from internship.tests.factories.organization import OrganizationFactory
 
 
 class PlaceViewAndUrlTestCase(TestCase):
-    def setUp(self):
-        self.user = User.objects.create_user('demo', 'demo@demo.org', 'passtest')
+    @classmethod
+    def setUpTestData(cls):
+        cls.user = User.objects.create_user('demo', 'demo@demo.org', 'passtest')
         permission = Permission.objects.get(codename='is_internship_manager')
-        self.user.user_permissions.add(permission)
-        self.client.force_login(self.user)
+        cls.user.user_permissions.add(permission)
+        cls.cohort = CohortFactory()
+        cls.organization = OrganizationFactory(cohort=cls.cohort)
 
-        self.cohort = CohortFactory()
+    def setUp(self):
+        self.client.force_login(self.user)
 
     def test_home(self):
         kwargs = {'cohort_id': self.cohort.id, }
@@ -48,10 +51,9 @@ class PlaceViewAndUrlTestCase(TestCase):
         self.assertTemplateUsed(response, 'places.html')
 
     def test_student_affectation(self):
-        organization = OrganizationFactory(cohort=self.cohort)
         kwargs = {
             'cohort_id': self.cohort.id,
-            'organization_id': organization.id
+            'organization_id': self.organization.id
         }
         url = reverse('place_detail_student_affectation', kwargs=kwargs)
         response = self.client.get(url)
@@ -59,10 +61,9 @@ class PlaceViewAndUrlTestCase(TestCase):
         self.assertTemplateUsed(response, 'place_detail_affectation.html')
 
     def test_student_choice(self):
-        organization = OrganizationFactory(cohort=self.cohort)
         kwargs = {
             'cohort_id': self.cohort.id,
-            'organization_id': organization.id
+            'organization_id': self.organization.id
         }
         url = reverse('place_detail_student_choice', kwargs=kwargs)
         response = self.client.get(url)
@@ -79,11 +80,9 @@ class PlaceViewAndUrlTestCase(TestCase):
         self.assertTemplateUsed(response, 'place_form.html')
 
     def test_edit(self):
-        organization = OrganizationFactory(cohort=self.cohort)
-
         kwargs = {
             'cohort_id': self.cohort.id,
-            'organization_id': organization.id
+            'organization_id': self.organization.id
         }
         url = reverse('place_edit', kwargs=kwargs)
         response = self.client.get(url)
@@ -91,11 +90,9 @@ class PlaceViewAndUrlTestCase(TestCase):
         self.assertTemplateUsed(response, 'place_form.html')
 
     def test_save(self):
-        organization = OrganizationFactory(cohort=self.cohort)
-
         kwargs = {
             'cohort_id': self.cohort.id,
-            'organization_id': organization.id
+            'organization_id': self.organization.id
         }
         url = reverse('place_save', kwargs=kwargs)
         response = self.client.post(url)
@@ -110,22 +107,18 @@ class PlaceViewAndUrlTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_export_organisation_affectation_master(self):
-        organization = OrganizationFactory(cohort=self.cohort)
-
         url = reverse('export_organisation_affectation_master', kwargs={
             'cohort_id': self.cohort.id,
-            'organization_id': organization.id,
+            'organization_id': self.organization.id,
         })
 
         response = self.client.get(url, follow=True)
         self.assertEqual(response.status_code, 200)
 
     def test_export_organisation_affectation_hospital(self):
-        organization = OrganizationFactory(cohort=self.cohort)
-
         url = reverse('export_organisation_affectation_hospital', kwargs={
             'cohort_id': self.cohort.id,
-            'organization_id': organization.id,
+            'organization_id': self.organization.id,
         })
 
         response = self.client.get(url, follow=True)
