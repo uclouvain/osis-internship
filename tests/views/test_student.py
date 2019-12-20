@@ -51,51 +51,56 @@ from internship.views.student import import_students, internships_student_import
 
 
 class TestStudentResume(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.cohort = CohortFactory()
+        organization = test_organization.create_organization(cohort=cls.cohort)
+        cls.student_1 = test_student.create_student(first_name="first", last_name="last", registration_id="64641200")
+        cls.student_2 = test_student.create_student(first_name="first", last_name="last", registration_id="606012")
+        speciality = test_internship_speciality.create_speciality(cohort=cls.cohort)
+
+        cls.internship = InternshipFactory(cohort=cls.cohort)
+        cls.internship_2 = InternshipFactory(cohort=cls.cohort)
+        cls.internship_3 = InternshipFactory(cohort=cls.cohort)
+        cls.internship_4 = InternshipFactory(cohort=cls.cohort)
+
+        cls.choice_1 = create_internship_choice(organization, cls.student_1, speciality, internship=cls.internship)
+        cls.choice_2 = create_internship_choice(organization, cls.student_1, speciality, internship=cls.internship_2)
+        cls.choice_3 = create_internship_choice(organization, cls.student_1, speciality, internship=cls.internship_3)
+        cls.choice_4 = create_internship_choice(organization, cls.student_1, speciality, internship=cls.internship_4)
+        cls.choice_5 = create_internship_choice(organization, cls.student_2, speciality, internship=cls.internship)
+        cls.choice_6 = create_internship_choice(organization, cls.student_2, speciality, internship=cls.internship_2)
+        cls.choice_7 = create_internship_choice(organization, cls.student_2, speciality, internship=cls.internship_3)
+        cls.url = reverse(internships_student_resume, kwargs={
+            'cohort_id': cls.cohort.id,
+        })
+
     def setUp(self):
-        self.cohort = CohortFactory()
-        organization = test_organization.create_organization(cohort=self.cohort)
-        self.student_1 = test_student.create_student(first_name="first", last_name="last", registration_id="64641200")
-        self.student_2 = test_student.create_student(first_name="first", last_name="last", registration_id="606012")
-        speciality = test_internship_speciality.create_speciality(cohort=self.cohort)
-
-        self.internship = InternshipFactory(cohort=self.cohort)
-        self.internship_2 = InternshipFactory(cohort=self.cohort)
-        self.internship_3 = InternshipFactory(cohort=self.cohort)
-        self.internship_4 = InternshipFactory(cohort=self.cohort)
-
-        self.choice_1 = create_internship_choice(organization, self.student_1, speciality, internship=self.internship)
-        self.choice_2 = create_internship_choice(organization, self.student_1, speciality, internship=self.internship_2)
-        self.choice_3 = create_internship_choice(organization, self.student_1, speciality, internship=self.internship_3)
-        self.choice_4 = create_internship_choice(organization, self.student_1, speciality, internship=self.internship_4)
-        self.choice_5 = create_internship_choice(organization, self.student_2, speciality, internship=self.internship)
-        self.choice_6 = create_internship_choice(organization, self.student_2, speciality, internship=self.internship_2)
-        self.choice_7 = create_internship_choice(organization, self.student_2, speciality, internship=self.internship_3)
+        self.response = self.client.get(self.url)
 
     def test_get_students_status_empty(self):
-        url = reverse(internships_student_resume, kwargs={
-            'cohort_id': self.cohort.id,
-        })
-        response = self.client.get(url)
         expected = []
         actual, stats = student._get_students_with_status(
-            request=response.wsgi_request,
+            request=self.response.wsgi_request,
             cohort=self.cohort,
             filters=None
         )
         self.assertCountEqual(expected, actual.object_list)
 
     def test_get_students_status_filled_in(self):
-        url = reverse(internships_student_resume, kwargs={
-            'cohort_id': self.cohort.id,
-        })
-        response = self.client.get(url)
-        student_info_1 = test_internship_student_information.create_student_information(self.student_1.person, "GENERALIST",
-                                                                       cohort=self.cohort)
-        student_info_2 = test_internship_student_information.create_student_information(self.student_2.person, "GENERALIST",
-                                                                       cohort=self.cohort)
+        student_info_1 = test_internship_student_information.create_student_information(
+            self.student_1.person,
+            "GENERALIST",
+            cohort=self.cohort
+        )
+        student_info_2 = test_internship_student_information.create_student_information(
+            self.student_2.person,
+            "GENERALIST",
+            cohort=self.cohort
+        )
         expected = [student_info_1, student_info_2]
         actual, stats = student._get_students_with_status(
-            request=response.wsgi_request,
+            request=self.response.wsgi_request,
             cohort=self.cohort,
             filters=None
         )
@@ -128,63 +133,63 @@ class TestStudentResume(TestCase):
 
 class StudentResumeViewTestCase(TestCase):
     @classmethod
-    def setUpTestData(self):
-        self.cohort = CohortFactory()
-        self.students = [InternshipStudentInformationFactory(cohort=self.cohort) for _ in range(0, 9)]
-        self.student_with_accent = InternshipStudentInformationFactory(
-            cohort=self.cohort, person=PersonFactory(last_name='Éçàüî')
+    def setUpTestData(cls):
+        cls.cohort = CohortFactory()
+        cls.students = [InternshipStudentInformationFactory(cohort=cls.cohort) for _ in range(0, 9)]
+        cls.student_with_accent = InternshipStudentInformationFactory(
+            cohort=cls.cohort, person=PersonFactory(last_name='Éçàüî')
         )
-        self.students.append(self.student_with_accent)
+        cls.students.append(cls.student_with_accent)
+        cls.url = reverse(internships_student_resume, kwargs={
+            'cohort_id': cls.cohort.id,
+        })
+        cls.user = User.objects.create_user('demo', 'demo@demo.org', 'passtest')
+        permission = Permission.objects.get(codename='is_internship_manager')
+        cls.user.user_permissions.add(permission)
 
     def setUp(self):
-        self.user = User.objects.create_user('demo', 'demo@demo.org', 'passtest')
-        permission = Permission.objects.get(codename='is_internship_manager')
-        self.user.user_permissions.add(permission)
         self.client.force_login(self.user)
 
     def test_internships_student_resume(self):
-        url = reverse(internships_student_resume, kwargs={
-            'cohort_id': self.cohort.id,
-        })
-        response = self.client.get(url)
+        response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
         self.assertCountEqual(response.context['students'].object_list, self.students)
 
     @skipUnless('django.contrib.postgres' in INSTALLED_APPS, 'requires django.contrib.postgres')
     def test_search_student_by_name_unaccent(self):
-        url = reverse(internships_student_resume, kwargs={
-            'cohort_id': self.cohort.id,
-        })
         query_string = '?name={}'.format("Ecaui")
-        response = self.client.get("{}{}".format(url, query_string))
+        response = self.client.get("{}{}".format(self.url, query_string))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['students'].object_list[0], self.student_with_accent)
 
 
 class StudentsListImport(TestCase):
-    def setUp(self):
-        self.user = User.objects.create_user('demo', email='demo@demo.org', password='password')
+    @classmethod
+    def setUpTestData(cls):
+        cls.user = User.objects.create_user('demo', email='demo@demo.org', password='password')
         permission = Permission.objects.get(codename='is_internship_manager')
-        self.user.user_permissions.add(permission)
-        self.client.force_login(self.user)
-        self.cohort = CohortFactory()
+        cls.user.user_permissions.add(permission)
+        cls.cohort = CohortFactory()
 
-        self.workbook = Workbook()
-        self.worksheet = self.workbook.active
-        self.worksheet.append([])
-        for i in range(0,10):
+        cls.workbook = Workbook()
+        cls.worksheet = cls.workbook.active
+        cls.worksheet.append([])
+        for _ in range(0, 10):
             student = StudentFactory()
-            self.worksheet.append(generate_record(registration_id=student.registration_id))
-        self.file_content = save_virtual_workbook(self.workbook)
-        self.worksheet.rows[1][15].value = "Edited_Location"
-        self.edited_file_content = save_virtual_workbook(self.workbook)
+            cls.worksheet.append(generate_record(registration_id=student.registration_id))
+        cls.file_content = save_virtual_workbook(cls.workbook)
+        cls.worksheet.rows[1][15].value = "Edited_Location"
+        cls.edited_file_content = save_virtual_workbook(cls.workbook)
 
-        self.import_url = reverse(import_students, kwargs={
-            'cohort_id': self.cohort.id,
+        cls.import_url = reverse(import_students, kwargs={
+            'cohort_id': cls.cohort.id,
         })
-        self.apply_update_url = reverse(internships_student_import_update, kwargs={
-            'cohort_id': self.cohort.id,
+        cls.apply_update_url = reverse(internships_student_import_update, kwargs={
+            'cohort_id': cls.cohort.id,
         })
+
+    def setUp(self):
+        self.client.force_login(self.user)
 
     def test_valid_import_with_original_list_empty(self):
         uploaded_file = SimpleUploadedFile('student_list.xlsx', self.file_content)
