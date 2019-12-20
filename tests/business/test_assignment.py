@@ -57,11 +57,7 @@ N_PERIODS = 8
 
 
 class AssignmentTest(TestCase):
-
     def setUp(self):
-        self.user = User.objects.create_user('demo', 'demo@demo.org', 'passtest')
-        permission = Permission.objects.get(codename='is_internship_manager')
-        self.user.user_permissions.add(permission)
         self.client.force_login(self.user)
 
     @classmethod
@@ -90,6 +86,13 @@ class AssignmentTest(TestCase):
         _execute_assignment_algorithm(cls)
         cls.affectations = InternshipStudentAffectationStat.objects.all()
 
+        cls.prior_student_affectations = cls.affectations.filter(student=cls.prior_student)
+        cls.prior_enrollments = InternshipEnrollment.objects.filter(student=cls.prior_student)
+
+        cls.user = User.objects.create_user('demo', 'demo@demo.org', 'passtest')
+        permission = Permission.objects.get(codename='is_internship_manager')
+        cls.user.user_permissions.add(permission)
+
     def test_algorithm_execution_all_periods_assigned(self):
         for student in self.students:
             student_affectations = self.affectations.filter(student=student)
@@ -104,19 +107,15 @@ class AssignmentTest(TestCase):
         self.assertEqual(unlucky_student_affectation.organization, self.hospital_error)
 
     def test_prior_student_choices_with_blocked_periods_respected(self):
-        prior_student_affectations = self.affectations.filter(student=self.prior_student)
-        prior_enrollments = InternshipEnrollment.objects.filter(student=self.prior_student)
-        for affectation in prior_student_affectations:
-            prior_enrollment = prior_enrollments.get(internship=affectation.internship)
+        for affectation in self.prior_student_affectations:
+            prior_enrollment = self.prior_enrollments.get(internship=affectation.internship)
             self.assertEqual(affectation.organization, prior_enrollment.place)
             self.assertEqual(affectation.period, prior_enrollment.period)
             self.assertEqual(affectation.speciality, prior_enrollment.internship_offer.speciality)
 
     def test_prior_student_choices_with_unblocked_periods_respected(self):
-        prior_student_affectations = self.affectations.filter(student=self.prior_student)
-        prior_enrollments = InternshipEnrollment.objects.filter(student=self.prior_student)
-        for affectation in prior_student_affectations:
-            prior_enrollment = prior_enrollments.get(internship=affectation.internship)
+        for affectation in self.prior_student_affectations:
+            prior_enrollment = self.prior_enrollments.get(internship=affectation.internship)
             self.assertEqual(affectation.organization, prior_enrollment.place)
             self.assertEqual(affectation.period, prior_enrollment.period)
             self.assertEqual(affectation.speciality, prior_enrollment.internship_offer.speciality)
