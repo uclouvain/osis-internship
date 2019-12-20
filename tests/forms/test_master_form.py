@@ -25,7 +25,7 @@
 ##############################################################################
 from datetime import timedelta
 
-from django.test import TestCase, RequestFactory
+from django.test import TestCase
 from django.utils import timezone
 
 from internship.forms import master
@@ -36,7 +36,6 @@ from reference.models.country import Country
 
 
 class TestMasterForm(TestCase):
-
     def test_valid_form(self):
         belgium = Country.find_by_uuid("ae40df86-04e9-4e9b-8dca-0c1e26b1476d")
         data = {
@@ -66,33 +65,29 @@ class TestMasterForm(TestCase):
         self.assertFalse(form.is_valid())
 
     def test_invalid_allocation(self):
-        requetFactory = RequestFactory()
-        request = requetFactory.post("/masters/save/",data={
+        request = self.client.post("/masters/save/",data={
             "specialty": [''],
             "hospital": ['']
-        })
+        }).wsgi_request
         self.assertFalse(_validate_allocations(request))
 
     def test_valid_allocation_one_specialty(self):
-        requetFactory = RequestFactory()
-        request = requetFactory.post("/masters/save/",data={
+        request = self.client.post("/masters/save/",data={
             "specialty": [''],
             "hospital": [OrganizationFactory()]
-        })
+        }).wsgi_request
         self.assertTrue(_validate_allocations(request))
 
     def test_valid_allocation_one_hospital(self):
-        requetFactory = RequestFactory()
-        request = requetFactory.post("/masters/save/",data={
+        request = self.client.post("/masters/save/",data={
             "specialty": [SpecialtyFactory()],
             "hospital": ['']
-        })
+        }).wsgi_request
         self.assertTrue(_validate_allocations(request))
 
     def test_valid_allocation_both(self):
-        requetFactory = RequestFactory()
-        request = requetFactory.post("/masters/save/",data={
+        request = self.client.post("/masters/save/",data={
             "specialty": [SpecialtyFactory()],
             "hospital": [OrganizationFactory()]
-        })
+        }).wsgi_request
         self.assertTrue(_validate_allocations(request))

@@ -31,7 +31,6 @@ from reference.models.country import Country
 
 
 class TestOrganizationForm(TestCase):
-
     def test_valid_form(self):
         belgium = Country.find_by_uuid("ae40df86-04e9-4e9b-8dca-0c1e26b1476d")
         data = {

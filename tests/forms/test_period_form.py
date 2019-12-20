@@ -32,7 +32,6 @@ from internship.forms.period_form import PeriodForm
 
 
 class TestPeriodForm(TestCase):
-
     def test_valid_form(self):
         data = {
             'name': "name",
