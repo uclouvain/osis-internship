@@ -180,9 +180,9 @@ def _create_internship_offers(cls):
     return offers
 
 
-def _create_internship_students(cohort):
+def _create_internship_students(cls):
     internship_students = [InternshipStudentInformationFactory(
-        cohort=cohort,
+        cohort=cls.cohort,
         person=PersonFactory()
     ) for _ in range(0, N_STUDENTS)]
     students = [StudentFactory(person=student.person) for student in internship_students]

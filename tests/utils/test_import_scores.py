@@ -43,38 +43,25 @@ LINE_INTERVAL = 2
 
 
 class XlsImportScoresTestCase(TestCase):
-
-    def setUp(self):
-        self.cohort = CohortFactory()
-        self.period = PeriodFactory(cohort=self.cohort)
-        self.user = User.objects.create_user('demo',
+    @classmethod
+    def setUpTestData(cls):
+        cls.cohort = CohortFactory()
+        cls.period = PeriodFactory(cohort=cls.cohort)
+        cls.user = User.objects.create_user('demo',
                                              email='demo@demo.org',
                                              password='password')
         permission = Permission.objects.get(codename='is_internship_manager')
-        self.user.user_permissions.add(permission)
-        self.user.save()
-        self.client.force_login(self.user)
-        self.file = SimpleUploadedFile(name='test', content=b'test')
+        cls.user.user_permissions.add(permission)
+        cls.user.save()
+        cls.file = SimpleUploadedFile(name='test', content=b'test')
 
-    def generate_workbook(cls):
-        students = [StudentFactory() for _ in range(0, 10)]
-        [InternshipStudentInformationFactory(person=student.person, cohort=cls.cohort) for student in students]
-        workbook = openpyxl.Workbook()
-        worksheet = workbook.active
-        worksheet.cell(row=1, column=1).value = 'PERIOD{}'.format(cls.period.name)
-        for row, student in enumerate(students):
-            columns = [(0, student.registration_id), (1, '1')]
-            for i in range(1, APDS_COUNT * LINE_INTERVAL, LINE_INTERVAL):
-                columns.append(
-                    (LINE_INTERVAL+1+i, random.choice(['A', 'B', 'C', 'D', 'E', None]))
-                )
-            for column, value in columns:
-                worksheet.cell(row=row+6, column=column+1).value = value
-        return workbook
+    def setUp(self):
+        self.client.force_login(self.user)
+        self.workbook = self.generate_workbook()
 
     @mock.patch('internship.utils.importing.import_scores.load_workbook')
     def test_import_scores(self, mock_workbook):
-        mock_workbook.return_value = self.generate_workbook()
+        mock_workbook.return_value = self.workbook
         import_xlsx(self.cohort, self.file, self.period.name)
         self.assertEqual(InternshipScore.objects.count(), 10)
 
@@ -82,7 +69,7 @@ class XlsImportScoresTestCase(TestCase):
     def test_import_scores_abort_with_wrong_registration_id(self, mock_workbook):
         row_error_number = 6
         invalid_registration_id = 'invalid registration_id'
-        workbook = self.generate_workbook()
+        workbook = self.workbook
         workbook.worksheets[0].cell(row=row_error_number, column=1).value = invalid_registration_id
         mock_workbook.return_value = workbook
         errors = import_xlsx(self.cohort, self.file, self.period.name)
@@ -93,9 +80,25 @@ class XlsImportScoresTestCase(TestCase):
 
     @mock.patch('internship.utils.importing.import_scores.load_workbook')
     def test_import_scores_abort_with_wrong_period(self, mock_workbook):
-        workbook = self.generate_workbook()
+        workbook = self.workbook
         workbook.worksheets[0].cell(row=1, column=1).value = 'invalid_period'
         mock_workbook.return_value = workbook
         errors = import_xlsx(self.cohort, self.file, self.period.name)
         self.assertEqual(errors['period_error'], 'invalid_period')
         self.assertEqual(InternshipScore.objects.count(), 0)
+
+    def generate_workbook(self):
+        students = [StudentFactory() for _ in range(0, 10)]
+        [InternshipStudentInformationFactory(person=student.person, cohort=self.cohort) for student in students]
+        workbook = openpyxl.Workbook()
+        worksheet = workbook.active
+        worksheet.cell(row=1, column=1).value = 'PERIOD{}'.format(self.period.name)
+        for row, student in enumerate(students):
+            columns = [(0, student.registration_id), (1, '1')]
+            for i in range(1, APDS_COUNT * LINE_INTERVAL, LINE_INTERVAL):
+                columns.append(
+                    (LINE_INTERVAL+1+i, random.choice(['A', 'B', 'C', 'D', 'E', None]))
+                )
+            for column, value in columns:
+                worksheet.cell(row=row+6, column=column+1).value = value
+        return workbook
