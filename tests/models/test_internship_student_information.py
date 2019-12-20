@@ -42,8 +42,9 @@ def create_student_information(person, contest="GENERALIST", cohort=None):
 
 
 class TestStudentInformation(TestCase):
-    def setUp(self):
-        self.cohort = CohortFactory()
+    @classmethod
+    def setUpTestData(cls):
+        cls.cohort = CohortFactory()
         student_1 = test_student.create_student("first", "last", "01")
         student_2 = test_student.create_student("first", "last", "02")
         student_3 = test_student.create_student("first", "last", "03")
@@ -52,10 +53,10 @@ class TestStudentInformation(TestCase):
         contest_generalist = "GENERALIST"
         contest_specialist = "SPECIALIST"
 
-        create_student_information(student_1.person, contest_generalist, cohort=self.cohort)
-        create_student_information(student_2.person, contest_generalist, cohort=self.cohort)
-        create_student_information(student_3.person, contest_generalist, cohort=self.cohort)
-        create_student_information(student_4.person, contest_specialist, cohort=self.cohort)
+        create_student_information(student_1.person, contest_generalist, cohort=cls.cohort)
+        create_student_information(student_2.person, contest_generalist, cohort=cls.cohort)
+        create_student_information(student_3.person, contest_generalist, cohort=cls.cohort)
+        create_student_information(student_4.person, contest_specialist, cohort=cls.cohort)
 
     def test_get_number_of_specialists(self):
         expected = 1

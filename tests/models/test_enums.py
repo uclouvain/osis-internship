@@ -30,7 +30,6 @@ from internship.models.enums.gender import Gender
 
 
 class TestEnums(TestCase):
-
     def test_civility(self):
         for civility in [civility for civility in dir(Civility) if not civility.startswith('__')]:
             value = Civility.__getattr__(civility)._value_

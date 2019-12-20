@@ -35,8 +35,9 @@ from internship.tests.factories.speciality import SpecialtyFactory
 
 
 class TestInternshipMaster(TestCase):
-    def setUp(self):
-        self.master = MasterFactory()
+    @classmethod
+    def setUpTestData(cls):
+        cls.master = MasterFactory()
 
     def test_save_duplicated(self):
         organization = OrganizationFactory()
