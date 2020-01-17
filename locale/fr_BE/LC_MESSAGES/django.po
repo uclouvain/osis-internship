@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-12-12 17:08+0100\n"
+"POT-Creation-Date: 2020-01-17 11:14+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -317,6 +317,12 @@ msgstr "Généraliste"
 msgid "Generate solution"
 msgstr "Générer la solution"
 
+msgid "Grades not received"
+msgstr "Cotes non reçues"
+
+msgid "Grades received"
+msgstr "Cotes reçues"
+
 msgid "Hospital"
 msgstr "Hôpital"
 
@@ -377,6 +383,9 @@ msgstr "Modalité de stage créée"
 
 msgid "Internship modality deleted"
 msgstr "Modalité de stage supprimée"
+
+msgid "Internship not done yet"
+msgstr "Stage pas encore effectué"
 
 msgid "Internship type"
 msgstr "Type de stage"
@@ -479,6 +488,9 @@ msgstr ""
 
 msgid "No hospital"
 msgstr "Hôpital inexistant"
+
+msgid "No internship"
+msgstr "Aucun stage"
 
 msgid "No result"
 msgstr "Aucun résultat"
@@ -650,8 +662,8 @@ msgid ""
 "Show only students having submitted / not submitted all their grades "
 "considering only completed periods"
 msgstr ""
-"Affiche les étudiants ayant / n'ayant pas soumis toutes leurs "
-"cotes en ne considérant que les périodes de stages complétées"
+"Affiche les étudiants ayant / n'ayant pas soumis toutes leurs cotes en ne "
+"considérant que les périodes de stages complétées"
 
 msgid "Social students"
 msgstr "Etudiants sociaux"

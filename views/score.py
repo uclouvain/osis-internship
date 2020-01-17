@@ -23,6 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+import datetime
 import json
 from itertools import groupby
 
@@ -51,6 +52,7 @@ from internship.models.period import Period, get_effective_periods
 from internship.templatetags.dictionary import is_edited
 from internship.utils.exporting import score_encoding_xls
 from internship.utils.importing import import_scores, import_eval
+from internship.utils.mails import mails_management
 from internship.views.common import get_object_list, round_half_up
 
 CHOSEN_LENGTH = 7
@@ -106,6 +108,53 @@ def send_reminder(request, cohort_id, period_id=None):
         }, connected_user=request.user)
     _show_reminder_sent_success_message(request)
 
+    prev_url = request.META['HTTP_REFERER'] if 'HTTP_REFERER' in request.META else ''
+    query_string = prev_url.split('?')[1] if prev_url and '?' in prev_url else ''
+    return redirect('{}?{}'.format(
+        reverse('internship_scores_encoding',  kwargs={
+            'cohort_id': cohort_id,
+        }), query_string)
+    )
+
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def send_recap(request, cohort_id, period_id=None):
+    selected_persons = InternshipStudentInformation.objects.filter(
+        pk__in=request.POST.getlist('selected_student'),
+    ).select_related('person').values_list('person', flat=True)
+    periods = get_effective_periods(cohort_id)
+    if period_id:
+        periods = periods.filter(pk=period_id)
+    affectations = InternshipStudentAffectationStat.objects.filter(
+        period__in=periods, student__person__in=selected_persons
+    ).order_by('period__date_start').values_list('student__person', 'period')
+    scores = InternshipScore.objects.filter(
+        cohort__id=cohort_id, student__person__in=selected_persons
+    ).values_list('student__person', 'period')
+
+    today = datetime.date.today()
+    students = {person: {p.name: None for p in periods} for person in selected_persons}
+    for person in selected_persons:
+        for period in periods:
+            pp = (person, period.id)
+            if pp in affectations:
+                spec = InternshipStudentAffectationStat.objects.\
+                    get(period=period.id, student__person=person).speciality.name
+                if today > period.date_end:
+                    students[person][period.name] = (spec + " - " + _("Grades received")) if pp in scores \
+                        else (spec + " - " + _("Grades not received"))
+                else:
+                    students[person][period.name] = (spec + " - " + _("Internship not done yet"))
+            else:
+                students[person][period.name] = _("No internship")
+        mails_management.send_score_encoding_recap(data={
+            'today': today,
+            'person_id': person,
+            'periods': students[person],
+            'cohort_id': cohort_id
+        }, connected_user=request.user)
+    _show_reminder_sent_success_message(request)
     prev_url = request.META['HTTP_REFERER'] if 'HTTP_REFERER' in request.META else ''
     query_string = prev_url.split('?')[1] if prev_url and '?' in prev_url else ''
     return redirect('{}?{}'.format(
