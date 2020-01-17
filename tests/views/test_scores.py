@@ -313,7 +313,7 @@ class ScoresEncodingTest(TestCase):
         self.assertIsNone(score.score)
 
     @mock.patch('internship.utils.mails.mails_management.send_score_encoding_recap')
-    def test_send_reminder(self, mock_send_mail):
+    def test_send_recap(self, mock_send_mail):
         student_info = InternshipStudentInformationFactory(cohort=self.cohort)
         student = StudentFactory(person=student_info.person)
         period = PeriodFactory(name='PTEST', cohort=self.cohort, date_end=date.today()-timedelta(days=1))

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-01-17 11:14+0100\n"
+"POT-Creation-Date: 2020-01-17 16:06+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -637,6 +637,9 @@ msgid "Send"
 msgstr ""
 
 msgid "Send reminder"
+msgstr ""
+
+msgid "Send summary"
 msgstr ""
 
 msgid "Sequence"

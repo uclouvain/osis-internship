@@ -40,7 +40,7 @@ from django.utils.translation import gettext as _
 
 from base.models.student import Student
 from base.views.common import display_error_messages, display_success_messages
-from internship.business.scores import InternshipScoreRules, send_score_encoding_reminder
+from internship.business.scores import InternshipScoreRules
 from internship.forms.score import ScoresFilterForm
 from internship.models.cohort import Cohort
 from internship.models.internship import Internship
@@ -83,38 +83,6 @@ def scores_encoding(request, cohort_id):
     context = {'cohort': cohort, 'periods': periods, 'all_periods': all_periods, 'students': students, 'grades': grades,
                'affectations_count': affectations_count, 'search_form': search_form, 'mapping': list(mapping)}
     return render(request, "scores.html", context=context)
-
-
-@login_required
-@permission_required('internship.is_internship_manager', raise_exception=True)
-def send_reminder(request, cohort_id, period_id=None):
-    selected_persons = InternshipStudentInformation.objects.filter(
-        pk__in=request.POST.getlist('selected_student'),
-    ).values_list('person', flat=True)
-    periods = get_effective_periods(cohort_id)
-    if period_id:
-        periods = periods.filter(pk=period_id)
-    completed_periods = periods.filter(date_end__lt=date.today()).values_list('id', flat=True)
-    scores = InternshipScore.objects.filter(
-        cohort__id=cohort_id, student__person__in=selected_persons
-    ).values_list('student__person', 'period')
-    students = _retrieve_blank_periods_by_student(selected_persons, completed_periods, scores)
-
-    for id in students:
-        send_score_encoding_reminder(data={
-            'person_id': id,
-            'periods': students[id],
-            'cohort_id': cohort_id
-        }, connected_user=request.user)
-    _show_reminder_sent_success_message(request)
-
-    prev_url = request.META['HTTP_REFERER'] if 'HTTP_REFERER' in request.META else ''
-    query_string = prev_url.split('?')[1] if prev_url and '?' in prev_url else ''
-    return redirect('{}?{}'.format(
-        reverse('internship_scores_encoding',  kwargs={
-            'cohort_id': cohort_id,
-        }), query_string)
-    )
 
 
 @login_required
