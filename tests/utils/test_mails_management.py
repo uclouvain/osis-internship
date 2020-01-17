@@ -42,8 +42,8 @@ class InternshipScoreRecapTest(TestCase):
         self.student = StudentFactory(person=self.student_info.person)
         self.period = PeriodFactory(cohort=self.cohort)
 
-    @mock.patch('internship.utils.mails_management.send_score_encoding_recap')
-    def test_send_reminder(self, mock_send_messages):
+    @mock.patch('internship.utils.mails.mails_management.send_score_encoding_recap')
+    def test_send_recap(self, mock_send_messages):
         data = {
             'today': datetime.date.today(),
             'person_id': self.student_info.person.pk,
