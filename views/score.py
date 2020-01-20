@@ -102,32 +102,35 @@ def send_recap(request, cohort_id, period_id=None):
     ).values_list('student__person', 'period')
 
     today = datetime.date.today()
-    students = {person: {p.name: None for p in periods} for person in selected_persons}
+    persons_dict = {person: {p.name: _("No internship") for p in periods} for person in selected_persons}
     for person in selected_persons:
-        for period in periods:
-            pp = (person, period.id)
-            if pp in affectations:
-                spec = InternshipStudentAffectationStat.objects.\
-                    get(period=period.id, student__person=person).speciality.name
-                if today > period.date_end:
-                    students[person][period.name] = (spec + " - " + _("Grades received")) if pp in scores \
-                        else (spec + " - " + _("Grades not received"))
-                else:
-                    students[person][period.name] = (spec + " - " + _("Internship not done yet"))
-            else:
-                students[person][period.name] = _("No internship")
-        mails_management.send_score_encoding_recap(data={
-            'today': today,
-            'person_id': person,
-            'periods': students[person],
-            'cohort_id': cohort_id
-        }, connected_user=request.user)
+        send_mail_recap_per_student(affectations, cohort_id, periods, person, request, scores, persons_dict, today)
     _show_reminder_sent_success_message(request)
     return redirect('{}?{}'.format(
         reverse('internship_scores_encoding',  kwargs={
             'cohort_id': cohort_id,
         }), generate_query_string(request))
     )
+
+
+def send_mail_recap_per_student(affectations, cohort_id, periods, person, request, scores, persons_dict):
+    today = datetime.date.today()
+    for period in periods:
+        pp = (person, period.id)
+        if pp in affectations:
+            spec = InternshipStudentAffectationStat.objects. \
+                get(period=period.id, student__person=person).speciality.name
+            if today > period.date_end:
+                persons_dict[person][period.name] = (spec + " - " + _("Grades received")) if pp in scores \
+                    else (spec + " - " + _("Grades not received"))
+            else:
+                persons_dict[person][period.name] = (spec + " - " + _("Internship not done yet"))
+    mails_management.send_score_encoding_recap(data={
+        'today': today,
+        'person_id': person,
+        'periods': persons_dict[person],
+        'cohort_id': cohort_id
+    }, connected_user=request.user)
 
 
 def generate_query_string(request):
