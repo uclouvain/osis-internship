@@ -101,10 +101,15 @@ def send_recap(request, cohort_id, period_id=None):
         cohort__id=cohort_id, student__person__in=selected_persons
     ).values_list('student__person', 'period')
 
-    today = datetime.date.today()
     persons_dict = {person: {p.name: _("No internship") for p in periods} for person in selected_persons}
     for person in selected_persons:
-        send_mail_recap_per_student(affectations, cohort_id, periods, person, request, scores, persons_dict, today)
+        send_mail_recap_per_student(affectations=affectations,
+                                    cohort_id=cohort_id,
+                                    periods=periods,
+                                    person=person,
+                                    connected_user=request.user,
+                                    scores=scores,
+                                    persons_dict=persons_dict)
     _show_reminder_sent_success_message(request)
     return redirect('{}?{}'.format(
         reverse('internship_scores_encoding',  kwargs={
@@ -113,7 +118,15 @@ def send_recap(request, cohort_id, period_id=None):
     )
 
 
-def send_mail_recap_per_student(affectations, cohort_id, periods, person, request, scores, persons_dict):
+def send_mail_recap_per_student(**kwargs):
+    affectations = kwargs.get('affectations')
+    cohort_id = kwargs.get('cohort_id')
+    periods = kwargs.get('periods')
+    person = kwargs.get('person')
+    connected_user = kwargs.get('connected_user')
+    scores = kwargs.get('scores')
+    persons_dict = kwargs.get('persons_dict')
+
     today = datetime.date.today()
     for period in periods:
         pp = (person, period.id)
@@ -130,7 +143,7 @@ def send_mail_recap_per_student(affectations, cohort_id, periods, person, reques
         'person_id': person,
         'periods': persons_dict[person],
         'cohort_id': cohort_id
-    }, connected_user=request.user)
+    }, connected_user=connected_user)
 
 
 def generate_query_string(request):
