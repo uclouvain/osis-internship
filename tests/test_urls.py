@@ -100,8 +100,8 @@ class UrlsTestCase(TestCase):
                 kwargs={'cohort_id': 1}
             ),
             dict(
-                url_path='/internships/cohorts/1/scores_encoding/send_reminder',
-                pattern_name='send_reminder',
+                url_path='/internships/cohorts/1/scores_encoding/send_summary',
+                pattern_name='send_summary',
                 kwargs={'cohort_id': 1}
             ),
             dict(
