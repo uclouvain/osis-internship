@@ -314,6 +314,12 @@ msgstr ""
 msgid "Generate solution"
 msgstr ""
 
+msgid "Grades not received"
+msgstr ""
+
+msgid "Grades received"
+msgstr ""
+
 msgid "Hospital"
 msgstr ""
 
@@ -369,6 +375,9 @@ msgid "Internship modality created"
 msgstr ""
 
 msgid "Internship modality deleted"
+msgstr ""
+
+msgid "Internship not done yet"
 msgstr ""
 
 msgid "Internship type"
@@ -469,6 +478,9 @@ msgid "No data corresponds to the filters above. Make a choice, please."
 msgstr ""
 
 msgid "No hospital"
+msgstr ""
+
+msgid "No internship"
 msgstr ""
 
 msgid "No result"
@@ -628,6 +640,9 @@ msgid "Send"
 msgstr ""
 
 msgid "Send reminder"
+msgstr ""
+
+msgid "Send summary"
 msgstr ""
 
 msgid "Sequence"

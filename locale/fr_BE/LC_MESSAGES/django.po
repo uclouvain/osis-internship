@@ -320,6 +320,12 @@ msgstr "Généraliste"
 msgid "Generate solution"
 msgstr "Générer la solution"
 
+msgid "Grades not received"
+msgstr "Cotes non reçues"
+
+msgid "Grades received"
+msgstr "Cotes reçues"
+
 msgid "Hospital"
 msgstr "Hôpital"
 
@@ -380,6 +386,9 @@ msgstr "Modalité de stage créée"
 
 msgid "Internship modality deleted"
 msgstr "Modalité de stage supprimée"
+
+msgid "Internship not done yet"
+msgstr "Stage pas encore effectué"
 
 msgid "Internship type"
 msgstr "Type de stage"
@@ -482,6 +491,9 @@ msgstr ""
 
 msgid "No hospital"
 msgstr "Hôpital inexistant"
+
+msgid "No internship"
+msgstr "Aucun stage"
 
 msgid "No result"
 msgstr "Aucun résultat"
@@ -645,6 +657,9 @@ msgstr "Envoyer"
 
 msgid "Send reminder"
 msgstr "Envoyer un rappel"
+
+msgid "Send summary"
+msgstr "Envoyer un récapitulatif"
 
 msgid "Sequence"
 msgstr "Séquence"

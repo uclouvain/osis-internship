@@ -45,7 +45,6 @@ from base.tests.factories.student import StudentFactory
 from internship.models.internship_score import InternshipScore, APD_NUMBER
 from internship.models.internship_score_mapping import InternshipScoreMapping
 from internship.models.internship_student_affectation_stat import InternshipStudentAffectationStat
-from internship.models.period import get_effective_periods
 from internship.tests.factories.cohort import CohortFactory
 from internship.tests.factories.internship import InternshipFactory
 from internship.tests.factories.internship_student_information import InternshipStudentInformationFactory
@@ -324,14 +323,14 @@ class ScoresEncodingTest(TestCase):
         self.assertTemplateUsed(response, 'fragment/score_cell.html')
         self.assertIsNone(score.score)
 
-    @mock.patch('internship.views.score.send_score_encoding_reminder')
-    def test_send_reminder(self, mock_send_mail):
+    @mock.patch('internship.utils.mails.mails_management.send_score_encoding_recap')
+    def test_send_recap(self, mock_send_mail):
         student_info = InternshipStudentInformationFactory(cohort=self.cohort)
         student = StudentFactory(person=student_info.person)
         period = PeriodFactory(name='PTEST', cohort=self.cohort, date_end=date.today()-timedelta(days=1))
         StudentAffectationStatFactory(student=student, period=period)
         ScoreFactory(period=self.period, student=student, cohort=self.cohort)
-        url = reverse('send_reminder', kwargs={'cohort_id': self.cohort.pk, 'period_id': period.pk})
+        url = reverse('send_summary', kwargs={'cohort_id': self.cohort.pk, 'period_id': period.pk})
         response = self.client.post(url, data={
             'selected_student': [student_info.pk]
         })
