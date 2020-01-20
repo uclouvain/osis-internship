@@ -75,7 +75,9 @@ def scores_encoding(request, cohort_id):
         students_list = search_form.get_students(cohort=cohort)
         periods = search_form.get_period(cohort=cohort)
         grades_filter = search_form.get_all_grades_submitted_filter()
+        evals_filter = search_form.get_evaluations_submitted_filter()
         students_list = _filter_students_with_all_grades_submitted(cohort, students_list, periods, grades_filter)
+        students_list = _filter_students_with_evaluations_submitted(students_list, periods, evals_filter)
 
     students = get_object_list(request, students_list)
     mapping = _prepare_score_table(cohort, periods, students.object_list)
@@ -604,6 +606,18 @@ def _filter_students_with_all_grades_submitted(cohort, students, periods, filter
             filter
         )
         students = students.filter(person__pk__in=periods_persons.keys())
+    return students
+
+
+def _filter_students_with_evaluations_submitted(students, periods, filter):
+    if filter is not None:
+        persons = students.values_list('person', flat=True)
+        completed_periods = periods.filter(date_end__lt=date.today()).values_list('id', flat=True)
+        students_with_affectations = InternshipStudentAffectationStat.objects.filter(
+            student__person__in=persons, period__in=completed_periods, internship_evaluated=filter
+        ).values_list('student', flat=True)
+        persons_with_affectations = students_with_affectations.values_list('student__person', flat=True)
+        students = students.filter(person__pk__in=persons_with_affectations)
     return students
 
 

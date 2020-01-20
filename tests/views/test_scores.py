@@ -249,6 +249,17 @@ class ScoresEncodingTest(TestCase):
         for student in response.context['students'].object_list:
             self.assertFalse(student.periods_scores)
 
+    def test_filter_evaluations_submitted(self):
+        student_affectations = InternshipStudentAffectationStat.objects.filter(student__person=self.students[0].person)
+        student_affectations.update(internship_evaluated=True)
+        url = reverse('internship_scores_encoding', kwargs={'cohort_id': self.cohort.pk})
+        data = {
+            'period': self.period.pk,
+            'evaluations_submitted_filter': True,
+        }
+        response = self.client.get(url, data=data)
+        self.assertEqual(response.context['students'].object_list, [self.students[0]])
+
     def test_grades_converted_to_numerical_value(self):
         url = reverse('internship_scores_encoding', kwargs={'cohort_id': self.cohort.pk})
         response = self.client.get(url)

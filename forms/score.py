@@ -36,6 +36,13 @@ class ScoresFilterForm(Form):
         widget=forms.Select(attrs={"class": "form-control"})
     )
 
+    evaluations_submitted_filter = forms.TypedChoiceField(
+        coerce=lambda x: x == 'True',
+        required=False,
+        choices=YES_NO_CHOICES,
+        widget=forms.Select(attrs={"class": "form-control"})
+    )
+
     def __init__(self, *args, **kwargs):
         cohort = kwargs.pop('cohort')
         super(ScoresFilterForm, self).__init__(*args, **kwargs)
@@ -66,6 +73,12 @@ class ScoresFilterForm(Form):
         if all_grades_submitted_filter == "":
             return None
         return all_grades_submitted_filter
+
+    def get_evaluations_submitted_filter(self):
+        evaluations_submitted_filter = self.cleaned_data.get('evaluations_submitted_filter')
+        if evaluations_submitted_filter == "":
+            return None
+        return evaluations_submitted_filter
 
 
 def search_students_with_free_text(free_text, qs):
