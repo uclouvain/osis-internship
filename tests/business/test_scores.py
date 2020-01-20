@@ -23,15 +23,13 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from unittest import mock
 
 from django.test import TestCase
 
 from base.tests.factories.student import StudentFactory
-from internship.business.scores import InternshipScoreRules, send_score_encoding_reminder
+from internship.business.scores import InternshipScoreRules
 from internship.models.internship_score import APD_NUMBER
 from internship.tests.factories.cohort import CohortFactory
-from internship.tests.factories.internship_student_information import InternshipStudentInformationFactory
 from internship.tests.factories.period import PeriodFactory
 from internship.tests.factories.score import ScoreFactory
 
@@ -63,22 +61,3 @@ class InternshipScoreRulesTest(TestCase):
                 vars(self.internship_score)['APD_{}'.format(index + 1)] = 'B'
         self.student.scores = [(self.period, self.internship_score.get_scores())]
         self.assertTrue(InternshipScoreRules.student_has_fulfilled_requirements(self.student))
-
-
-class InternshipScoreReminderTest(TestCase):
-    @classmethod
-    def setUpTestData(cls) -> None:
-        cls.cohort = CohortFactory()
-        cls.student_info = InternshipStudentInformationFactory(cohort=cls.cohort)
-        cls.student = StudentFactory(person=cls.student_info.person)
-        cls.period = PeriodFactory(cohort=cls.cohort)
-
-    @mock.patch('internship.business.scores.send_messages')
-    def test_send_reminder(self, mock_send_messages):
-        data = {
-            'person_id': self.student_info.person.pk,
-            'cohort_id': self.cohort.pk,
-            'periods': [self.period.pk]
-        }
-        send_score_encoding_reminder(data, None)
-        self.assertTrue(mock_send_messages.called)

@@ -23,6 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+import datetime
 import json
 from itertools import groupby
 
@@ -39,7 +40,7 @@ from django.utils.translation import gettext as _
 
 from base.models.student import Student
 from base.views.common import display_error_messages, display_success_messages
-from internship.business.scores import InternshipScoreRules, send_score_encoding_reminder
+from internship.business.scores import InternshipScoreRules
 from internship.forms.score import ScoresFilterForm
 from internship.models.cohort import Cohort
 from internship.models.internship import Internship
@@ -51,6 +52,7 @@ from internship.models.period import Period, get_effective_periods
 from internship.templatetags.dictionary import is_edited
 from internship.utils.exporting import score_encoding_xls
 from internship.utils.importing import import_scores, import_eval
+from internship.utils.mails import mails_management
 from internship.views.common import get_object_list, round_half_up
 
 CHOSEN_LENGTH = 7
@@ -73,7 +75,9 @@ def scores_encoding(request, cohort_id):
         students_list = search_form.get_students(cohort=cohort)
         periods = search_form.get_period(cohort=cohort)
         grades_filter = search_form.get_all_grades_submitted_filter()
+        evals_filter = search_form.get_evaluations_submitted_filter()
         students_list = _filter_students_with_all_grades_submitted(cohort, students_list, periods, grades_filter)
+        students_list = _filter_students_with_evaluations_submitted(students_list, periods, evals_filter)
 
     students = get_object_list(request, students_list)
     mapping = _prepare_score_table(cohort, periods, students.object_list)
@@ -85,34 +89,66 @@ def scores_encoding(request, cohort_id):
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
-def send_reminder(request, cohort_id, period_id=None):
+def send_recap(request, cohort_id, period_id=None):
     selected_persons = InternshipStudentInformation.objects.filter(
         pk__in=request.POST.getlist('selected_student'),
-    ).values_list('person', flat=True)
+    ).select_related('person').values_list('person', flat=True)
     periods = get_effective_periods(cohort_id)
     if period_id:
         periods = periods.filter(pk=period_id)
-    completed_periods = periods.filter(date_end__lt=date.today()).values_list('id', flat=True)
+    affectations = InternshipStudentAffectationStat.objects.filter(
+        period__in=periods, student__person__in=selected_persons
+    ).order_by('period__date_start').values_list('student__person', 'period')
     scores = InternshipScore.objects.filter(
         cohort__id=cohort_id, student__person__in=selected_persons
     ).values_list('student__person', 'period')
-    students = _retrieve_blank_periods_by_student(selected_persons, completed_periods, scores)
 
-    for id in students:
-        send_score_encoding_reminder(data={
-            'person_id': id,
-            'periods': students[id],
-            'cohort_id': cohort_id
-        }, connected_user=request.user)
+    persons_dict = {person: {p.name: _("No internship") for p in periods} for person in selected_persons}
+    for person in selected_persons:
+        send_mail_recap_per_student(person, persons_dict,
+                                    affectations=affectations,
+                                    cohort_id=cohort_id,
+                                    periods=periods,
+                                    connected_user=request.user,
+                                    scores=scores)
     _show_reminder_sent_success_message(request)
-
-    prev_url = request.META['HTTP_REFERER'] if 'HTTP_REFERER' in request.META else ''
-    query_string = prev_url.split('?')[1] if prev_url and '?' in prev_url else ''
     return redirect('{}?{}'.format(
         reverse('internship_scores_encoding',  kwargs={
             'cohort_id': cohort_id,
-        }), query_string)
+        }), generate_query_string(request))
     )
+
+
+def send_mail_recap_per_student(person, persons_dict, **kwargs):
+    affectations = kwargs.get('affectations')
+    cohort_id = kwargs.get('cohort_id')
+    periods = kwargs.get('periods')
+    connected_user = kwargs.get('connected_user')
+    scores = kwargs.get('scores')
+
+    today = datetime.date.today()
+    for period in periods:
+        pp = (person, period.id)
+        if pp in affectations:
+            spec = InternshipStudentAffectationStat.objects.get(period=period.id,
+                                                                student__person=person).speciality.name
+            if today > period.date_end:
+                persons_dict[person][period.name] = (spec + " - " + _("Grades received")) if pp in scores \
+                    else (spec + " - " + _("Grades not received"))
+            else:
+                persons_dict[person][period.name] = (spec + " - " + _("Internship not done yet"))
+    mails_management.send_score_encoding_recap(data={
+        'today': today,
+        'person_id': person,
+        'periods': persons_dict[person],
+        'cohort_id': cohort_id
+    }, connected_user=connected_user)
+
+
+def generate_query_string(request):
+    prev_url = request.META['HTTP_REFERER'] if 'HTTP_REFERER' in request.META else ''
+    query_string = prev_url.split('?')[1] if prev_url and '?' in prev_url else ''
+    return query_string
 
 
 def _retrieve_blank_periods_by_student(persons, periods, scores, reverse=False):
@@ -570,6 +606,18 @@ def _filter_students_with_all_grades_submitted(cohort, students, periods, filter
             filter
         )
         students = students.filter(person__pk__in=periods_persons.keys())
+    return students
+
+
+def _filter_students_with_evaluations_submitted(students, periods, filter):
+    if filter is not None:
+        persons = students.values_list('person', flat=True)
+        completed_periods = periods.filter(date_end__lt=date.today()).values_list('id', flat=True)
+        students_with_affectations = InternshipStudentAffectationStat.objects.filter(
+            student__person__in=persons, period__in=completed_periods, internship_evaluated=filter
+        ).values_list('student', flat=True)
+        persons_with_affectations = students_with_affectations.values_list('student__person', flat=True)
+        students = students.filter(person__pk__in=persons_with_affectations)
     return students
 
 

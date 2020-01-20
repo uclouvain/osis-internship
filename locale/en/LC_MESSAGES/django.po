@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-12-12 17:08+0100\n"
+"POT-Creation-Date: 2020-01-20 12:44+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -251,6 +251,9 @@ msgstr ""
 msgid "Evaluation status successfully updated for period %(period)s"
 msgstr ""
 
+msgid "Evaluations submitted"
+msgstr ""
+
 msgid "Evolution Score:"
 msgstr ""
 
@@ -311,6 +314,12 @@ msgstr ""
 msgid "Generate solution"
 msgstr ""
 
+msgid "Grades not received"
+msgstr ""
+
+msgid "Grades received"
+msgstr ""
+
 msgid "Hospital"
 msgstr ""
 
@@ -366,6 +375,9 @@ msgid "Internship modality created"
 msgstr ""
 
 msgid "Internship modality deleted"
+msgstr ""
+
+msgid "Internship not done yet"
 msgstr ""
 
 msgid "Internship type"
@@ -466,6 +478,9 @@ msgid "No data corresponds to the filters above. Make a choice, please."
 msgstr ""
 
 msgid "No hospital"
+msgstr ""
+
+msgid "No internship"
 msgstr ""
 
 msgid "No result"
@@ -625,6 +640,9 @@ msgid "Send"
 msgstr ""
 
 msgid "Send reminder"
+msgstr ""
+
+msgid "Send summary"
 msgstr ""
 
 msgid "Sequence"

@@ -248,6 +248,17 @@ class ScoresEncodingTest(TestCase):
         for student in response.context['students'].object_list:
             self.assertFalse(student.periods_scores)
 
+    def test_filter_evaluations_submitted(self):
+        student_affectations = InternshipStudentAffectationStat.objects.filter(student__person=self.students[0].person)
+        student_affectations.update(internship_evaluated=True)
+        url = reverse('internship_scores_encoding', kwargs={'cohort_id': self.cohort.pk})
+        data = {
+            'period': self.period.pk,
+            'evaluations_submitted_filter': True,
+        }
+        response = self.client.get(url, data=data)
+        self.assertEqual(response.context['students'].object_list, [self.students[0]])
+
     def test_grades_converted_to_numerical_value(self):
         url = reverse('internship_scores_encoding', kwargs={'cohort_id': self.cohort.pk})
         response = self.client.get(url)
@@ -311,14 +322,14 @@ class ScoresEncodingTest(TestCase):
         self.assertTemplateUsed(response, 'fragment/score_cell.html')
         self.assertIsNone(score.score)
 
-    @mock.patch('internship.views.score.send_score_encoding_reminder')
-    def test_send_reminder(self, mock_send_mail):
+    @mock.patch('internship.utils.mails.mails_management.send_score_encoding_recap')
+    def test_send_recap(self, mock_send_mail):
         student_info = InternshipStudentInformationFactory(cohort=self.cohort)
         student = StudentFactory(person=student_info.person)
         period = PeriodFactory(name='PTEST', cohort=self.cohort, date_end=date.today()-timedelta(days=1))
         StudentAffectationStatFactory(student=student, period=period)
         ScoreFactory(period=self.period, student=student, cohort=self.cohort)
-        url = reverse('send_reminder', kwargs={'cohort_id': self.cohort.pk, 'period_id': period.pk})
+        url = reverse('send_summary', kwargs={'cohort_id': self.cohort.pk, 'period_id': period.pk})
         response = self.client.post(url, data={
             'selected_student': [student_info.pk]
         })
