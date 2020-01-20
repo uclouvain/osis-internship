@@ -106,19 +106,12 @@ class AssignmentTest(TestCase):
         )
         self.assertEqual(unlucky_student_affectation.organization, self.hospital_error)
 
-    def test_prior_student_choices_with_blocked_periods_respected(self):
+    def test_prior_student_choices_with_periods_respected(self):
         for affectation in self.prior_student_affectations:
             prior_enrollment = self.prior_enrollments.get(internship=affectation.internship)
             self.assertEqual(affectation.organization, prior_enrollment.place)
             self.assertEqual(affectation.period, prior_enrollment.period)
             self.assertEqual(affectation.speciality, prior_enrollment.internship_offer.speciality)
-    #
-    # def test_prior_student_choices_with_unblocked_periods_respected(self):
-    #     for affectation in self.prior_student_affectations:
-    #         prior_enrollment = self.prior_enrollments.get(internship=affectation.internship)
-    #         self.assertEqual(affectation.organization, prior_enrollment.place)
-    #         self.assertEqual(affectation.period, prior_enrollment.period)
-    #         self.assertEqual(affectation.speciality, prior_enrollment.internship_offer.speciality)
 
     def test_affectation_statistics(self):
         solution = load_solution_sol(self.cohort, self.affectations)
