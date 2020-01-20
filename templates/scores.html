@@ -109,8 +109,8 @@
                                         </a>
                                     </li>
                                     <li role="separator" class="divider"></li>
-                                    <li id="li_send_reminder" class="disabled">
-                                        <a href="#" data-target="#send_reminder" id="btn_send_reminder">
+                                    <li id="li_send_summary" class="disabled">
+                                        <a href="#" data-target="#send_summary" id="btn_send_summary">
                                             <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>
                                             {% trans 'Send summary' %}
                                         </a>
@@ -140,9 +140,9 @@
                         <th>{% trans 'Score' %}</th>
                       </tr>
                         {% if periods.count == 1 %}
-                            <form action="{% url 'send_reminder' cohort_id=cohort.id period_id=periods.0.id %}" method="post" id="send_reminder_form">
+                            <form action="{% url 'send_summary' cohort_id=cohort.id period_id=periods.0.id %}" method="post" id="send_summary_form">
                         {% else %}
-                            <form action="{% url 'send_reminder' cohort_id=cohort.id %}" method="post" id="send_reminder_form">
+                            <form action="{% url 'send_summary' cohort_id=cohort.id %}" method="post" id="send_summary_form">
                         {% endif %}
                         {% csrf_token %}
                         {% for student in students %}
@@ -310,7 +310,7 @@
 
     {% include 'fragment/delete_score_modal.html' %}
 
-    {% include 'fragment/send_reminder_modal.html' %}
+    {% include 'fragment/send_summary_modal.html' %}
 
 {% endblock %}
 
@@ -318,7 +318,7 @@
     <script type="text/javascript" src="{% static "js/internship_score_mapping.js" %}?version={{ js }}"></script>
     <script type="text/javascript" src="{% static "js/internship_edit_delete_score.js" %}?version={{ js }}"></script>
     <script type="text/javascript" src="{% static "js/internship_import_grades.js" %}?version={{ js }}"></script>
-    <script type="text/javascript" src="{% static "js/internship_send_reminder.js" %}?version={{ js }}"></script>
+    <script type="text/javascript" src="{% static "js/internship_send_summary.js" %}?version={{ js }}"></script>
 
     <script>
 
