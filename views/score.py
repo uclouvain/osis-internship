@@ -123,13 +123,17 @@ def send_recap(request, cohort_id, period_id=None):
             'cohort_id': cohort_id
         }, connected_user=request.user)
     _show_reminder_sent_success_message(request)
-    prev_url = request.META['HTTP_REFERER'] if 'HTTP_REFERER' in request.META else ''
-    query_string = prev_url.split('?')[1] if prev_url and '?' in prev_url else ''
     return redirect('{}?{}'.format(
         reverse('internship_scores_encoding',  kwargs={
             'cohort_id': cohort_id,
-        }), query_string)
+        }), generate_query_string(request))
     )
+
+
+def generate_query_string(request):
+    prev_url = request.META['HTTP_REFERER'] if 'HTTP_REFERER' in request.META else ''
+    query_string = prev_url.split('?')[1] if prev_url and '?' in prev_url else ''
+    return query_string
 
 
 def _retrieve_blank_periods_by_student(persons, periods, scores, reverse=False):
