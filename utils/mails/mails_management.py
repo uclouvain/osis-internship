@@ -44,7 +44,8 @@ def send_score_encoding_recap(data, connected_user):
         )],
         template_base_data={
             'today': data['today'],
-            'periods': data['periods']
+            'periods': data['periods'],
+            'ordered_periods': data['ordered_periods']
         },
         subject_data={}
     )

@@ -141,6 +141,7 @@ def send_mail_recap_per_student(person, persons_dict, **kwargs):
         'today': today,
         'person_id': person,
         'periods': persons_dict[person],
+        'ordered_periods': periods,
         'cohort_id': cohort_id
     }, connected_user=connected_user)
 

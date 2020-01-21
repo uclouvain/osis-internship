@@ -24,7 +24,7 @@
         "fields": {
             "reference": "internship_score_encoding_recap_email_html",
             "subject": "STAC - Récapitulatif remise des cotes de stage",
-            "template": "<i>Ceci est un message automatique g&eacute;n&eacute;r&eacute; par le serveur OSIS. Merci de ne pas y r&eacute;pondre.</i><p>Bonjour,<br />Ceci est un e-mail r&eacute;capitulatif des diff&eacute;rentes p&eacute;riodes de stage en date du <strong>{{today}}</strong>:</p><ul>{% for key, val in periods.items %}<li><strong>{{key}}</strong> - {{val}}</li>{% endfor %}</ul><p>Si vous avez des cotes de stage qui ne nous sont pas encore parvenues, merci de bien vouloir nous les transmettre d&egrave;s r&eacute;ception de ce mail.<br />Bien &agrave; vous.</p>",
+            "template": "{% load dictionary %}<i>Ceci est un message automatique g&eacute;n&eacute;r&eacute; par le serveur OSIS. Merci de ne pas y r&eacute;pondre.</i><p>Bonjour,<br />Ceci est un e-mail r&eacute;capitulatif des diff&eacute;rentes p&eacute;riodes de stage en date du <strong>{{today}}</strong>:</p><ul>{% for p in ordered_periods %}{% with p.name as key %}<li><strong>{{key}}</strong> - {{ periods | get_item:key }}</li>{% endwith %}{% endfor %}</ul><p>Si vous avez des cotes de stage qui ne nous sont pas encore parvenues, merci de bien vouloir nous les transmettre d&egrave;s r&eacute;ception de ce mail.<br/>Bien &agrave; vous.</p>\n",
             "format": "HTML",
             "language": "fr-be"
         }
@@ -34,7 +34,7 @@
         "fields": {
             "reference": "internship_score_encoding_recap_email_txt",
             "subject": "STAC - Récapitulatif remise des cotes de stage",
-            "template": "Ceci est un message automatique g&eacute;n&eacute;r&eacute; par le serveur OSIS. Merci de ne pas y r&eacute;pondre.\nBonjour,\nCeci est un e-mail r&eacute;capitulatif des diff&eacute;rentes p&eacute;riodes de stage en date du {{today}}:\n\n{% for key, val in periods.items %}\t-&gt;{{key}} - {{val}}\n{% endfor %}\nSi vous avez des cotes de stage qui ne nous sont pas encore parvenues, merci de bien vouloir nous les transmettre d&egrave;s r&eacute;ception de ce mail.\nBien &agrave; vous.",
+            "template": "{% load dictionary %}Ceci est un message automatique g&eacute;n&eacute;r&eacute; par le serveur OSIS. Merci de ne pas y r&eacute;pondre.\\nBonjour,\\nCeci est un e-mail r&eacute;capitulatif des diff&eacute;rentes p&eacute;riodes de stage en date du {{today}}:\\n\\n{% for p in ordered_periods %}{% with p.name as key %}\\t-&gt;{{key}} - {{ periods | get_item:key }}\\n{% endwith %}{% endfor %}\\nSi vous avez des cotes de stage qui ne nous sont pas encore parvenues, merci de bien vouloir nous les transmettre d&egrave;s r&eacute;ception de ce mail.\\nBien &agrave; vous.\n",
             "format": "PLAIN",
             "language": "fr-be"
         }
