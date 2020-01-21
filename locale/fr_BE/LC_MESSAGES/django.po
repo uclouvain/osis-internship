@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-01-20 12:44+0100\n"
+"POT-Creation-Date: 2020-01-21 10:38+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -655,9 +655,6 @@ msgstr "Sélectionnable par l'étudiant"
 msgid "Send"
 msgstr "Envoyer"
 
-msgid "Send reminder"
-msgstr "Envoyer un rappel"
-
 msgid "Send summary"
 msgstr "Envoyer un récapitulatif"
 
@@ -743,14 +740,17 @@ msgstr "Études"
 msgid "Submit choices"
 msgstr "Soumettre les choix"
 
+msgid "Summaries have been sent successfully"
+msgstr "Les emails récapitulatifs ont bien été envoyés"
+
 msgid "Third choice"
 msgstr "3ème choix"
 
 msgid "This action will delete previously edited score."
 msgstr "Cette action supprimera la note précédemment modifiée."
 
-msgid "This action will send a reminder by email to the following students:"
-msgstr "Cette action enverra un email de rappel aux étudiants suivants:"
+msgid "This action will send a summary by email to the following students:"
+msgstr "Cette action enverra un email récapitulatif aux étudiants suivants:"
 
 msgid "This may take several minutes"
 msgstr "Cela peut prendre quelques minutes"

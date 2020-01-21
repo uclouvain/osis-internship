@@ -175,7 +175,7 @@ def _show_reminder_sent_error_message(request):
 
 def _show_reminder_sent_success_message(request):
     display_success_messages(
-        request, _('Reminders have been sent successfully')
+        request, _('Summaries have been sent successfully')
     )
 
 

@@ -335,7 +335,7 @@ class ScoresEncodingTest(TestCase):
         })
         messages_list = [str(msg) for msg in list(messages.get_messages(response.wsgi_request))]
         self.assertIn(
-            _("Reminders have been sent successfully"),
+            _("Summaries have been sent successfully"),
             messages_list
         )
         self.assertTrue(mock_send_mail.called)
