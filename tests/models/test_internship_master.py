@@ -30,15 +30,16 @@ from internship.tests.factories.master import MasterFactory
 
 
 class TestInternshipMaster(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.master = MasterFactory()
 
     def test_get_by_id(self):
-        master = MasterFactory()
-        persisted_master = internship_master.get_by_id(master.id)
-        self.assertEqual(master.id, persisted_master.id)
+        persisted_master = internship_master.get_by_id(self.master.id)
+        self.assertEqual(self.master.id, persisted_master.id)
 
         nonexistent_master = internship_master.get_by_id(0)
         self.assertIsNone(nonexistent_master)
 
     def test_civility_acronym(self):
-        master = MasterFactory()
-        self.assertTrue("." in master.civility_acronym())
+        self.assertTrue("." in self.master.civility_acronym())

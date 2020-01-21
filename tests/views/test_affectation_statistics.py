@@ -35,16 +35,19 @@ from internship.tests.factories.student_affectation_stat import StudentAffectati
 
 
 class ViewAffectationStatisticsTestCase(TestCase):
-    def setUp(self):
-        self.user = User.objects.create_user('demo', 'demo@demo.org', 'passtest')
+    @classmethod
+    def setUpTestData(cls):
+        cls.user = User.objects.create_user('demo', 'demo@demo.org', 'passtest')
         permission = Permission.objects.get(codename='is_internship_manager')
-        self.user.user_permissions.add(permission)
+        cls.user.user_permissions.add(permission)
+        cls.cohort = CohortFactory()
+
+    def setUp(self):
         self.client.force_login(self.user)
 
     def test_affectation_result(self):
-        cohort = CohortFactory()
         url = reverse('internship_affectation_hospitals', kwargs={
-            'cohort_id': cohort.id
+            'cohort_id': self.cohort.id
         })
 
         response = self.client.get(url)
@@ -52,13 +55,12 @@ class ViewAffectationStatisticsTestCase(TestCase):
         self.assertTemplateUsed(response, 'internship_affectation_hospitals.html')
 
     def test_affectation_result_sumup(self):
-        cohort = CohortFactory()
-        specialty = SpecialtyFactory(cohort=cohort)
-        organization = OrganizationFactory(cohort=cohort)
+        specialty = SpecialtyFactory(cohort=self.cohort)
+        organization = OrganizationFactory(cohort=self.cohort)
         affectation = StudentAffectationStatFactory(organization=organization, speciality=specialty)
 
         url = reverse('internship_affectation_sumup', kwargs={
-            'cohort_id': cohort.id
+            'cohort_id': self.cohort.id
         })
 
         response = self.client.get("{}?hospital={}&specialty={}".format(url, organization.id, specialty.id))
@@ -73,9 +75,8 @@ class ViewAffectationStatisticsTestCase(TestCase):
         self.assertIn(affectation.speciality.name, response.context[0]['hospital_specialties'])
 
     def test_affectation_statistics(self):
-        cohort = CohortFactory()
         url = reverse('internship_affectation_statistics', kwargs={
-            'cohort_id': cohort.id
+            'cohort_id': self.cohort.id
         })
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)

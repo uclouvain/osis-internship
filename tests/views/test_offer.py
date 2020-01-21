@@ -40,71 +40,66 @@ from internship.tests.factories.speciality import SpecialtyFactory
 
 CHOICES = [1, 2, 3, 4]
 
+
 class OfferViewTestCase(TestCase):
-    def setUp(self):
-        self.user = User.objects.create_user('demo', 'demo@demo.org', 'passtest')
+    @classmethod
+    def setUpTestData(cls):
+        cls.user = User.objects.create_user('demo', 'demo@demo.org', 'passtest')
         permission = Permission.objects.get(codename='is_internship_manager')
-        self.user.user_permissions.add(permission)
-        self.client.force_login(self.user)
-        self.cohort = CohortFactory()
-        self.organization = OrganizationFactory(cohort=self.cohort)
-        self.specialty = SpecialtyFactory(mandatory=True, cohort=self.cohort)
-        self.offer = OfferFactory(cohort=self.cohort, organization=self.organization,  speciality=self.specialty)
+        cls.user.user_permissions.add(permission)
+        cls.cohort = CohortFactory()
+        cls.organization = OrganizationFactory(cohort=cls.cohort)
+        cls.specialty = SpecialtyFactory(mandatory=True, cohort=cls.cohort)
+        cls.offer = OfferFactory(cohort=cls.cohort, organization=cls.organization,  speciality=cls.specialty)
         students = [StudentFactory() for _ in range(0, 4)]
-        mandatory_internship = InternshipFactory(cohort=self.cohort, speciality=self.specialty)
-        non_mandatory_internship = InternshipFactory(cohort=self.cohort)
+        mandatory_internship = InternshipFactory(cohort=cls.cohort, speciality=cls.specialty)
+        non_mandatory_internship = InternshipFactory(cohort=cls.cohort)
 
         for internship in [mandatory_internship, non_mandatory_internship]:
             for choice in CHOICES:
                 create_internship_choice(
-                    organization=self.organization,
+                    organization=cls.organization,
                     student=students[0],
-                    speciality=self.specialty,
+                    speciality=cls.specialty,
                     choice=choice,
                     internship=internship
                 )
         for student in students[1:]:
             create_internship_choice(
-                organization=self.organization,
+                organization=cls.organization,
                 student=student,
-                speciality=self.specialty,
+                speciality=cls.specialty,
                 choice=random.choice([2, 3, 4]),
                 internship=mandatory_internship
             )
+        cls.url = reverse('internships', kwargs={
+            'cohort_id': cls.cohort.id,
+        })
+
+    def setUp(self):
+        self.client.force_login(self.user)
 
     def test_home(self):
-        url = reverse('internships', kwargs={
-            'cohort_id': self.cohort.id,
-        })
-        response = self.client.get(url)
+        response = self.client.get(self.url)
         self.assertEqual(response.status_code, HttpResponse.status_code)
         self.assertTemplateUsed(response, 'internships.html')
 
     def test_home_with_organization_filter(self):
         organization = OrganizationFactory(cohort=self.cohort)
-        url = reverse('internships', kwargs={
-            'cohort_id': self.cohort.id,
-        })
         get_params = '?organization_sort={}'.format(organization.name)
-        response = self.client.get(url+get_params)
+        response = self.client.get(self.url+get_params)
         self.assertEqual(response.status_code, HttpResponse.status_code)
         self.assertTemplateUsed(response, 'internships.html')
 
     def test_home_with_specialty_filter(self):
-        url = reverse('internships', kwargs={
-            'cohort_id': self.cohort.id,
-        })
         get_params = '?speciality_sort={}'.format(self.specialty.name)
-        response = self.client.get(url+get_params)
+        response = self.client.get(self.url+get_params)
         self.assertEqual(response.status_code, HttpResponse.status_code)
         self.assertTemplateUsed(response, 'internships.html')
 
     def test_home_with_both_filters(self):
-        url = reverse('internships', kwargs={
-            'cohort_id': self.cohort.id,
-        })
         get_params = '?speciality_sort={}&organization_sort={}'.format(self.specialty.name, self.organization.name)
-        response = self.client.get(url+get_params)
+        response = self.client.get(self.url+get_params)
         self.assertEqual(response.status_code, HttpResponse.status_code)
         self.assertTemplateUsed(response, 'internships.html')
 
@@ -132,28 +127,28 @@ class OfferViewTestCase(TestCase):
 
 
 class OfferChoiceDistributionTestCase(TestCase):
-    def setUp(self):
-        self.user = User.objects.create_user('demo', 'demo@demo.org', 'passtest')
+    @classmethod
+    def setUpTestData(cls):
+        cls.user = User.objects.create_user('demo', 'demo@demo.org', 'passtest')
         permission = Permission.objects.get(codename='is_internship_manager')
-        self.user.user_permissions.add(permission)
-        self.client.force_login(self.user)
-        self.cohort = CohortFactory()
+        cls.user.user_permissions.add(permission)
+        cls.cohort = CohortFactory()
         students = [StudentFactory() for _ in range(0, 4)]
-        self.specialty = SpecialtyFactory(mandatory=1, cohort=self.cohort)
-        mandatory_internship = InternshipFactory(cohort=self.cohort, speciality=self.specialty)
-        non_mandatory_internship = InternshipFactory(cohort=self.cohort)
-        organization = OrganizationFactory(cohort=self.cohort)
+        cls.specialty = SpecialtyFactory(mandatory=1, cohort=cls.cohort)
+        mandatory_internship = InternshipFactory(cohort=cls.cohort, speciality=cls.specialty)
+        non_mandatory_internship = InternshipFactory(cohort=cls.cohort)
+        organization = OrganizationFactory(cohort=cls.cohort)
         OfferFactory(
-            cohort=self.cohort,
+            cohort=cls.cohort,
             organization=organization,
-            speciality=self.specialty
+            speciality=cls.specialty
         )
         for internship in [mandatory_internship, non_mandatory_internship]:
             for choice in CHOICES:
                 create_internship_choice(
                     organization=organization,
                     student=students[0],
-                    speciality=self.specialty,
+                    speciality=cls.specialty,
                     choice=choice,
                     internship=internship
                 )
@@ -161,25 +156,24 @@ class OfferChoiceDistributionTestCase(TestCase):
             create_internship_choice(
                 organization=organization,
                 student=student,
-                speciality=self.specialty,
+                speciality=cls.specialty,
                 choice=random.choice([2, 3, 4]),
                 internship=mandatory_internship
             )
+        cls.url = reverse('internships', kwargs={
+            'cohort_id': cls.cohort.id,
+            'specialty_id': cls.specialty.id
+        })
+
+    def setUp(self):
+        self.client.force_login(self.user)
 
     def test_count_number_first_choices(self):
-        url = reverse('internships', kwargs={
-            'cohort_id': self.cohort.id,
-            'specialty_id': self.specialty.id
-        })
-        response = self.client.get(url)
+        response = self.client.get(self.url)
         self.assertEqual(response.context['all_internships'][0].number_first_choice, 2)
         self.assertEqual(response.status_code, HttpResponse.status_code)
 
     def test_count_number_other_choices(self):
-        url = reverse('internships', kwargs={
-            'cohort_id': self.cohort.id,
-            'specialty_id': self.specialty.id
-        })
-        response = self.client.get(url)
+        response = self.client.get(self.url)
         self.assertEqual(response.context['all_internships'][0].number_other_choice, 9)
         self.assertEqual(response.status_code, HttpResponse.status_code)

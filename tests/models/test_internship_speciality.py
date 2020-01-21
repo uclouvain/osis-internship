@@ -37,9 +37,10 @@ def create_speciality(name="chirurgie", cohort=None):
 
 
 class TestInternshipSpeciality(TestCase):
-    def setUp(self):
-        self.specialty_1 = create_speciality(name="spe1")
-        self.specialty_2 = create_speciality(name="spe2")
+    @classmethod
+    def setUpTestData(cls):
+        cls.specialty_1 = create_speciality(name="spe1")
+        cls.specialty_2 = create_speciality(name="spe2")
 
     def test_correct_id(self):
         self.assertEqual(self.specialty_1,

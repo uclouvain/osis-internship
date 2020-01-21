@@ -34,10 +34,13 @@ TEST_PAGINATOR_SIZE = 25
 
 
 class CommonTest(TestCase):
-    def setUp(self):
-        self.user = User.objects.create_user('demo', 'demo@demo.org', 'passtest')
+    @classmethod
+    def setUpTestData(cls):
+        cls.user = User.objects.create_user('demo', 'demo@demo.org', 'passtest')
         permission = Permission.objects.get(codename='is_internship_manager')
-        self.user.user_permissions.add(permission)
+        cls.user.user_permissions.add(permission)
+
+    def setUp(self):
         self.client.force_login(self.user)
 
     def test_get_object_list_with_default_paginator_size(self):

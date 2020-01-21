@@ -30,9 +30,10 @@ from internship.utils.assignment.period_place_utils import *
 
 
 class PeriodUtilsTestCase(TestCase):
-    def setUp(self):
-        self.period_places = [ {"id": 1, "number_places": 1}, {"id": 2, "number_places": 0}]
-        self.unavailable_period_places = [ {"id": 1, "number_places": -1}, {"id": 2, "number_places": 0}]
+    @classmethod
+    def setUpTestData(cls):
+        cls.period_places = [{"id": 1, "number_places": 1}, {"id": 2, "number_places": 0}]
+        cls.unavailable_period_places = [{"id": 1, "number_places": -1}, {"id": 2, "number_places": 0}]
 
     def test_filters_unavailable_periods(self):
         expected = [{"id": 1, "number_places": 1}]

@@ -31,12 +31,13 @@ from internship.utils.assignment.period_utils import *
 
 
 class PeriodUtilsTestCase(TestCase):
-    def setUp(self):
-        self.p1 = PeriodFactory.build(name="P1", id=1)
-        self.p2 = PeriodFactory.build(name="P2", id=2)
-        self.p3 = PeriodFactory.build(name="P3", id=3)
-        self.p4 = PeriodFactory.build(name="P4", id=4)
-        self.p5 = PeriodFactory.build(name="P5", id=5)
+    @classmethod
+    def setUpTestData(cls):
+        cls.p1 = PeriodFactory.build(name="P1", id=1)
+        cls.p2 = PeriodFactory.build(name="P2", id=2)
+        cls.p3 = PeriodFactory.build(name="P3", id=3)
+        cls.p4 = PeriodFactory.build(name="P4", id=4)
+        cls.p5 = PeriodFactory.build(name="P5", id=5)
 
     def test_1_consecutive_periods(self):
         periods = [self.p1, self.p2, self.p3, self.p4]

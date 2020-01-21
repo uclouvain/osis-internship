@@ -33,13 +33,15 @@ from internship.tests.factories.speciality import SpecialtyFactory
 
 
 class SpecialityViewTestCase(TestCase):
-    def setUp(self):
-        self.user = User.objects.create_user('demo', 'demo@demo.org', 'passtest')
+    @classmethod
+    def setUpTestData(cls):
+        cls.user = User.objects.create_user('demo', 'demo@demo.org', 'passtest')
         permission = Permission.objects.get(codename='is_internship_manager')
-        self.user.user_permissions.add(permission)
-        self.client.force_login(self.user)
+        cls.user.user_permissions.add(permission)
+        cls.cohort = CohortFactory()
 
-        self.cohort = CohortFactory()
+    def setUp(self):
+        self.client.force_login(self.user)
 
     def test_home(self):
         url = reverse('internships_specialities', kwargs={

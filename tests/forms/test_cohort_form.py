@@ -30,42 +30,39 @@ from internship.tests.factories.cohort import CohortFactory
 
 
 class TestCohortForm(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.cohort = CohortFactory.build()
 
     def test_valid_form(self):
-        cohort = CohortFactory.build()
-
         data = {
-            'name': cohort.name,
-            'publication_start_date': cohort.publication_start_date.strftime('%Y-%m-%d'),
-            'subscription_start_date': cohort.subscription_start_date.strftime('%Y-%m-%d'),
-            'subscription_end_date': cohort.subscription_end_date.strftime('%Y-%m-%d'),
-            'description': cohort.description,
+            'name': self.cohort.name,
+            'publication_start_date': self.cohort.publication_start_date.strftime('%Y-%m-%d'),
+            'subscription_start_date': self.cohort.subscription_start_date.strftime('%Y-%m-%d'),
+            'subscription_end_date': self.cohort.subscription_end_date.strftime('%Y-%m-%d'),
+            'description': self.cohort.description,
         }
         form = CohortForm(data)
         self.assertTrue(form.is_valid())
 
     def test_start_before_end(self):
-        cohort = CohortFactory.build()
-
         data = {
-            'name': cohort.name,
-            'publication_start_date': cohort.publication_start_date.strftime('%Y-%m-%d'),
-            'subscription_start_date': cohort.subscription_end_date.strftime('%Y-%m-%d'),
-            'subscription_end_date': cohort.subscription_start_date.strftime('%Y-%m-%d'),
-            'description': cohort.description,
+            'name': self.cohort.name,
+            'publication_start_date': self.cohort.publication_start_date.strftime('%Y-%m-%d'),
+            'subscription_start_date': self.cohort.subscription_end_date.strftime('%Y-%m-%d'),
+            'subscription_end_date': self.cohort.subscription_start_date.strftime('%Y-%m-%d'),
+            'description': self.cohort.description,
         }
         form = CohortForm(data)
         self.assertFalse(form.is_valid())
 
     def test_publication_before_subscription_closed(self):
-        cohort = CohortFactory.build()
-
         data = {
-            'name': cohort.name,
-            'publication_start_date': cohort.subscription_end_date.strftime('%Y-%m-%d'),
-            'subscription_start_date': cohort.subscription_start_date.strftime('%Y-%m-%d'),
-            'subscription_end_date': cohort.publication_start_date.strftime('%Y-%m-%d'),
-            'description': cohort.description,
+            'name': self.cohort.name,
+            'publication_start_date': self.cohort.subscription_end_date.strftime('%Y-%m-%d'),
+            'subscription_start_date': self.cohort.subscription_start_date.strftime('%Y-%m-%d'),
+            'subscription_end_date': self.cohort.publication_start_date.strftime('%Y-%m-%d'),
+            'description': self.cohort.description,
         }
         form = CohortForm(data)
         self.assertFalse(form.is_valid())

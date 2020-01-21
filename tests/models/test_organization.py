@@ -37,7 +37,6 @@ def create_organization(name="OSIS", acronym="OSIS", reference="01", cohort=None
 
 
 class TestOrganization(TestCase):
-
     def test_get_by_id(self):
         an_organization = OrganizationFactory()
         persisted_organization = organization.get_by_id(an_organization.id)

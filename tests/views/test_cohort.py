@@ -40,10 +40,14 @@ from internship.tests.factories.speciality import SpecialtyFactory
 
 
 class ViewCohortTestCase(TestCase):
-    def setUp(self):
-        self.user = User.objects.create_user('demo', 'demo@demo.org', 'passtest')
+    @classmethod
+    def setUpTestData(cls):
+        cls.user = User.objects.create_user('demo', 'demo@demo.org', 'passtest')
         permission = Permission.objects.get(codename='is_internship_manager')
-        self.user.user_permissions.add(permission)
+        cls.user.user_permissions.add(permission)
+        cls.cohort = CohortFactory()
+
+    def setUp(self):
         self.client.force_login(self.user)
 
     def test_new_get(self):
@@ -54,7 +58,6 @@ class ViewCohortTestCase(TestCase):
 
     def test_new_port(self):
         cohort = CohortFactory.build()
-
         form_data = {
             'name': cohort.name,
             'publication_start_date': cohort.publication_start_date.strftime('%Y-%m-%d'),
@@ -71,18 +74,17 @@ class ViewCohortTestCase(TestCase):
         self.assertRedirects(response, reverse('internship'))
 
     def test_copy_organization_from_cohort(self):
-        cohort = CohortFactory()
-        organization = OrganizationFactory(cohort=cohort)
-        speciality = SpecialtyFactory(cohort=cohort)
-        copy_cohort_name = 'Copy of {} {}'.format(cohort.name, timezone.now())
+        organization = OrganizationFactory(cohort=self.cohort)
+        speciality = SpecialtyFactory(cohort=self.cohort)
+        copy_cohort_name = 'Copy of {} {}'.format(self.cohort.name, timezone.now())
 
         form_data = {
             'name': copy_cohort_name,
-            'publication_start_date': cohort.publication_start_date.strftime('%Y-%m-%d'),
-            'subscription_start_date': cohort.subscription_start_date.strftime('%Y-%m-%d'),
-            'subscription_end_date': cohort.subscription_end_date.strftime('%Y-%m-%d'),
-            'description': cohort.description,
-            'originated_from': cohort.id,
+            'publication_start_date': self.cohort.publication_start_date.strftime('%Y-%m-%d'),
+            'subscription_start_date': self.cohort.subscription_start_date.strftime('%Y-%m-%d'),
+            'subscription_end_date': self.cohort.subscription_end_date.strftime('%Y-%m-%d'),
+            'description': self.cohort.description,
+            'originated_from': self.cohort.id,
         }
 
         form = CohortForm(data=form_data)
@@ -113,23 +115,19 @@ class ViewCohortTestCase(TestCase):
         self.assertEqual(response.status_code, 404)
 
     def test_edit_get_cohort_found(self):
-        cohort = CohortFactory()
-
         response = self.client.get(reverse('cohort_edit', kwargs={
-            'cohort_id': cohort.id,
+            'cohort_id': self.cohort.id,
         }))
 
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'cohort/cohort_form.html')
 
     def test_edit_post_cohort_found(self):
-        cohort = CohortFactory()
-
         four_weeks = datetime.timedelta(weeks=4)
 
-        original_cohort = Cohort.objects.get(pk=cohort.id)
+        original_cohort = Cohort.objects.get(pk=self.cohort.id)
 
-        original_cohort.name = 'Update {}'.format(cohort.name)
+        original_cohort.name = 'Update {}'.format(self.cohort.name)
 
         original_cohort.publication_start_date += four_weeks
         original_cohort.subscription_start_date += four_weeks
@@ -140,24 +138,24 @@ class ViewCohortTestCase(TestCase):
             'publication_start_date': original_cohort.publication_start_date.strftime('%Y-%m-%d'),
             'subscription_start_date': original_cohort.subscription_start_date.strftime('%Y-%m-%d'),
             'subscription_end_date': original_cohort.subscription_end_date.strftime('%Y-%m-%d'),
-            'description': cohort.description,
+            'description': self.cohort.description,
         }
         form = CohortForm(data=form_data)
 
         self.assertTrue(form.is_valid())
 
         url = reverse('cohort_edit', kwargs={
-            'cohort_id': cohort.id
+            'cohort_id': self.cohort.id
         })
 
         response = self.client.post(url, data=form_data)
 
         self.assertRedirects(response, reverse('internship'))
 
-        cohort.refresh_from_db()
+        self.cohort.refresh_from_db()
 
-        self.assertEqual(cohort.name, original_cohort.name)
-        self.assertEqual(cohort.publication_start_date, original_cohort.publication_start_date)
-        self.assertEqual(cohort.subscription_start_date, original_cohort.subscription_start_date)
-        self.assertEqual(cohort.subscription_end_date, original_cohort.subscription_end_date)
+        self.assertEqual(self.cohort.name, original_cohort.name)
+        self.assertEqual(self.cohort.publication_start_date, original_cohort.publication_start_date)
+        self.assertEqual(self.cohort.subscription_start_date, original_cohort.subscription_start_date)
+        self.assertEqual(self.cohort.subscription_end_date, original_cohort.subscription_end_date)
 

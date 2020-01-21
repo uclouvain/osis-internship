@@ -35,17 +35,19 @@ from internship.utils.importing.import_eval import import_xlsx, REGISTRATION_ID_
 
 
 class XlsImportEvalTestCase(TestCase):
-
-    def setUp(self):
-        self.user = User.objects.create_user('demo',
+    @classmethod
+    def setUpTestData(cls):
+        cls.user = User.objects.create_user('demo',
                                              email='demo@demo.org',
                                              password='password')
         permission = Permission.objects.get(codename='is_internship_manager')
-        self.user.user_permissions.add(permission)
-        self.user.save()
+        cls.user.user_permissions.add(permission)
+        cls.user.save()
+        cls.file = SimpleUploadedFile(name='test', content=b'test')
+        cls.students = [StudentFactory() for _ in range(0, 10)]
+
+    def setUp(self):
         self.client.force_login(self.user)
-        self.file = SimpleUploadedFile(name='test', content=b'test')
-        self.students = [StudentFactory() for _ in range(0, 10)]
 
     def generate_workbook(cls):
         workbook = openpyxl.Workbook()

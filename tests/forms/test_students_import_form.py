@@ -31,7 +31,6 @@ from internship.forms.students_import_form import StudentsImportActionForm
 
 
 class TestStudentImportForm(TestCase):
-
     def test_valid_file_extension(self):
         file = SimpleUploadedFile("test.xlsx", b"file_content",
                                   content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
