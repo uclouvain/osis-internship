@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-01-20 12:44+0100\n"
+"POT-Creation-Date: 2020-01-21 10:38+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -639,9 +639,6 @@ msgstr ""
 msgid "Send"
 msgstr ""
 
-msgid "Send reminder"
-msgstr ""
-
 msgid "Send summary"
 msgstr ""
 
@@ -725,13 +722,16 @@ msgstr ""
 msgid "Submit choices"
 msgstr ""
 
+msgid "Summaries have been sent successfully"
+msgstr ""
+
 msgid "Third choice"
 msgstr ""
 
 msgid "This action will delete previously edited score."
 msgstr ""
 
-msgid "This action will send a reminder by email to the following students:"
+msgid "This action will send a summary by email to the following students:"
 msgstr ""
 
 msgid "This may take several minutes"
