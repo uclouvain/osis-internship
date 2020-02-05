@@ -85,7 +85,7 @@ def list_internships(request, cohort_id, specialty_id=None):
         speciality=specialty,
     ).select_related("speciality")
 
-    _get_number_choices(query, mandatory_choices)
+    _get_number_choices(query, mandatory_choices, mandatory=True)
 
     internships = mdl_int.internship.Internship.objects.filter(cohort=cohort)
 
@@ -110,7 +110,7 @@ def list_internships(request, cohort_id, specialty_id=None):
             speciality_id__in=all_non_mandatory_speciality,
             organization_id__in=organizations,
         ).select_related("speciality")
-        _get_number_choices(all_non_mandatory_internships, non_mandatory_choices)
+        _get_number_choices(all_non_mandatory_internships, non_mandatory_choices, mandatory=False)
     else:
         all_non_mandatory_internships = InternshipOffer.objects.none()
     context = {
@@ -481,7 +481,7 @@ def _sort_internships(sort_internships, specialty_id):
     return tab
 
 
-def _get_number_choices(internships, choices):
+def _get_number_choices(internships, choices, mandatory=True):
     """
         Set new variables for the param, the number of the first and other choice for one internship
         Params :
@@ -493,18 +493,20 @@ def _get_number_choices(internships, choices):
             organization=internship.organization,
             internship__speciality=internship.speciality
         ).order_by('student')
+        total_choices = mandatory_internship_choices
 
-        non_mandatory_internship_choices = choices.filter(
-            organization=internship.organization,
-            internship__speciality=None,
-            speciality=internship.speciality
-        ).order_by('student')
+        if not mandatory:
+            non_mandatory_internship_choices = choices.filter(
+                organization=internship.organization,
+                internship__speciality=None,
+                speciality=internship.speciality
+            ).order_by('student')
+            total_choices = mandatory_internship_choices.union(non_mandatory_internship_choices)
 
-        total_choices = mandatory_internship_choices.union(non_mandatory_internship_choices)
         internship.number_first_choice = 0
         internship.number_other_choice = 0
         for choice in total_choices:
-            if choice.choice == 1:
+            if choice.choice == 1 and mandatory or choice.choice == 1 and "1" in choice.internship.name:
                 internship.number_first_choice += 1
             else:
                 internship.number_other_choice += 1

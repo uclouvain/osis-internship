@@ -170,10 +170,10 @@ class OfferChoiceDistributionTestCase(TestCase):
 
     def test_count_number_first_choices(self):
         response = self.client.get(self.url)
-        self.assertEqual(response.context['all_internships'][0].number_first_choice, 2)
+        self.assertEqual(response.context['all_internships'][0].number_first_choice, 1)
         self.assertEqual(response.status_code, HttpResponse.status_code)
 
     def test_count_number_other_choices(self):
         response = self.client.get(self.url)
-        self.assertEqual(response.context['all_internships'][0].number_other_choice, 9)
+        self.assertEqual(response.context['all_internships'][0].number_other_choice, 6)
         self.assertEqual(response.status_code, HttpResponse.status_code)
