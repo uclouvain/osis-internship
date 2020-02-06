@@ -85,6 +85,7 @@ def get_number_first_choice_by_organization(speciality, internship_id):
         choice=1,
         speciality=speciality,
         internship__speciality_id=internship.speciality_id,
+        internship_id=internship_id
     ).values("organization").annotate(models.Count("organization"))
 
 
