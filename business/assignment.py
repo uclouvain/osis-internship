@@ -256,11 +256,12 @@ def _store_exchanged_affectation_information(self, d_organization_choices, d_aff
     if temp_d.uuid not in self.last_switch:
         self.timeout_start = time.time()
         self.switch = True
+    logger.info('Switching {} with {}'.format(d_aff, f_aff))
     for a in self.affectations:
         if a.uuid == d_aff.uuid:
             a.organization_id = temp_f.organization_id
             a.organization = temp_f.organization
-            a.choice = _get_hospital_choice_type(d_organization_choices, a.organization_id)
+            a.choice = _get_hospital_choice_type(d_organization_choices, temp_f.organization_id)
             a.cost = a.choice - 1
         if a.uuid == f_aff.uuid:
             a.cost = 10
@@ -310,7 +311,6 @@ def _assign_regular_students(assignment, internship):
 
 def _assign_student(assignment, student, internship):
     assignment.count += 1
-    # print("\rStudent " + str(assignment.count) + " of " + str(assignment.total_count), end="", flush=True)
     """ Assign offer to student for specific internship."""
     choices = assignment.choices.filter(student=student, internship=internship).order_by("choice")
 
