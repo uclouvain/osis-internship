@@ -33,7 +33,7 @@ from django.utils import timezone
 
 from base.tests.factories.person import PersonFactory
 from base.tests.factories.student import StudentFactory
-from internship.business.assignment import difference, Assignment
+from internship.business.assignment import difference, Assignment, _permute_affectations
 from internship.business.statistics import load_solution_sol, compute_stats
 from internship.models.internship_choice import InternshipChoice
 from internship.models.internship_enrollment import InternshipEnrollment
@@ -48,6 +48,7 @@ from internship.tests.factories.organization import OrganizationFactory
 from internship.tests.factories.period import PeriodFactory
 from internship.tests.factories.period_internship_places import PeriodInternshipPlacesFactory
 from internship.tests.factories.speciality import SpecialtyFactory
+from internship.tests.factories.student_affectation_stat import StudentAffectationStatFactory
 
 N_STUDENTS = 30
 N_MANDATORY_INTERNSHIPS = 6
@@ -251,6 +252,51 @@ def _execute_assignment_algorithm(cls):
     assignment.TIMEOUT = 1
     assignment.solve()
     assignment.persist_solution()
+
+
+class BalancingTest(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.cohort = CohortFactory()
+        cls.organizations = [OrganizationFactory(cohort=cls.cohort) for _ in range(0, N_ORGANIZATIONS)]
+        cls.last_switch = []
+
+    def test_permute_exchanged_affectation_information(self):
+        specialty = SpecialtyFactory()
+        period = PeriodFactory()
+        internship = InternshipFactory(speciality=specialty)
+        defavored_affectation = StudentAffectationStatFactory(
+            speciality=specialty,
+            organization=self.organizations[-1],
+            period=period,
+            internship=internship,
+            cost=10,
+            choice="I"
+        )
+        favored_affectation = StudentAffectationStatFactory(
+            speciality=specialty,
+            organization=self.organizations[1],
+            period=period,
+            internship=internship,
+            cost=0
+        )
+        self.affectations = InternshipStudentAffectationStat.objects.all()
+        for choice, organization in enumerate(self.organizations[:4], start=1):
+            create_internship_choice(
+                organization=organization,
+                student=defavored_affectation.student,
+                internship=internship,
+                choice=choice,
+                speciality=specialty,
+            )
+        _permute_affectations(self, [defavored_affectation], [favored_affectation], InternshipChoice.objects.all())
+        InternshipStudentAffectationStat.objects.bulk_update(self.affectations, fields=['organization'])
+        self.assertEqual(
+            self.affectations.get(student=defavored_affectation.student).organization, self.organizations[1]
+        )
+        self.assertEqual(
+            self.affectations.get(student=favored_affectation.student).organization, self.organizations[-1]
+        )
 
 
 class ListUtilsTestCase(TestCase):

@@ -27,7 +27,6 @@ import logging
 import random
 import time
 import timeit
-from copy import copy
 
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
@@ -225,16 +224,22 @@ def _append_affectations(self, d_student_affectations, f_student_affectations, d
 
 def _permute_affectations(self, d_student_affectations, f_student_affectations, d_student_choices):
     for d_affectation in d_student_affectations:
-        temp_d = copy(d_affectation)
+        temp_d = _copy_affectation(d_affectation)
         if _disadvantaged_affectation_is_switchable(d_affectation):
             d_organization_choices = _get_hospital_choices_by_speciality(d_student_choices, d_affectation)
             for f_affectation in f_student_affectations:
-                temp_f = copy(f_affectation)
+                temp_f = _copy_affectation(f_affectation)
                 if _favored_affectation_is_switchable(f_affectation, d_affectation, d_organization_choices):
                     _store_exchanged_affectation_information(self, d_organization_choices, d_affectation, f_affectation,
                                                              temp_f, temp_d)
                     break
             break
+
+
+def _copy_affectation(affectation):
+    return {
+        'organization_id': affectation.organization_id,
+    }
 
 
 def _disadvantaged_affectation_is_switchable(d_affectation):
@@ -253,22 +258,23 @@ def _get_hospital_choices_by_speciality(d_student_choices, d_affectation):
 
 
 def _store_exchanged_affectation_information(self, d_organization_choices, d_aff, f_aff, temp_f, temp_d):
-    if temp_d.uuid not in self.last_switch:
+    if d_aff.uuid not in self.last_switch:
         self.timeout_start = time.time()
         self.switch = True
+
     logger.info('Switching {} with {}'.format(d_aff, f_aff))
     for a in self.affectations:
         if a.uuid == d_aff.uuid:
-            a.organization_id = temp_f.organization_id
-            a.organization = temp_f.organization
-            a.choice = _get_hospital_choice_type(d_organization_choices, temp_f.organization_id)
+            a.organization_id = temp_f['organization_id']
+            a.organization = Organization.objects.get(pk=temp_f['organization_id'])
+            a.choice = _get_hospital_choice_type(d_organization_choices, temp_f['organization_id'])
             a.cost = a.choice - 1
         if a.uuid == f_aff.uuid:
             a.cost = 10
-            a.organization_id = temp_d.organization_id
-            a.organization = temp_d.organization
+            a.organization_id = temp_d['organization_id']
+            a.organization = Organization.objects.get(pk=temp_d['organization_id'])
             a.choice = "I"
-    self.last_switch.append(temp_f.uuid)
+    self.last_switch.append(f_aff.uuid)
 
 
 def _get_hospital_choice_type(d_organization_choices, selected_organization_id):
