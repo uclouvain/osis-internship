@@ -24,8 +24,10 @@
 #
 ##############################################################################
 import datetime
+import itertools
 import json
 from itertools import groupby
+from operator import itemgetter
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
@@ -187,18 +189,28 @@ def save_evaluation_status(request, cohort_id):
     registration_id = request.POST.get("student")
     period_name = request.POST.get("period")
     status = json.loads(request.POST.get("status"))
-    _update_evaluation_status(status, [registration_id], period_name, cohort)
-    return _json_response_success()
+    evaluations = {"registration_id": registration_id, "period": period_name}
+    update, error_info = _update_evaluation_status(status, [evaluations], cohort)
+    return _json_response_success() if update else _json_response_error(_('An error occured while updating status'))
 
 
-def _update_evaluation_status(status, registration_ids, period_name, cohort):
-    return InternshipStudentAffectationStat.objects.filter(
-        period__cohort=cohort,
-        period__name=period_name,
-        student__registration_id__in=registration_ids
-    ).update(
-        internship_evaluated=status
-    )
+def _update_evaluation_status(status, evaluations, cohort):
+    sorted_evaluations = sorted(evaluations, key=itemgetter('period'))
+    evaluations_by_period = {
+        key: [item['registration_id'] for item in group]
+        for key, group in itertools.groupby(sorted_evaluations, lambda eval: eval['period'])
+    }
+    for period_name, registration_ids in evaluations_by_period.items():
+        update = InternshipStudentAffectationStat.objects.filter(
+            period__cohort=cohort,
+            period__name=period_name,
+            student__registration_id__in=registration_ids
+        ).update(
+            internship_evaluated=status
+        )
+        if not update:
+            return False, {'period': period_name}
+    return True, {'periods': evaluations_by_period.keys()}
 
 
 @login_required
@@ -644,29 +656,35 @@ def _upload_scores_file(request, cohort):
 def _upload_eval_file(request, cohort):
     if request.method == 'POST':
         file_name = request.FILES['file_upload']
-        period = request.POST['period']
         if file_name and ".xlsx" not in str(file_name):
             display_error_messages(request, _('File extension must be .xlsx'))
         else:
-            registration_ids = import_eval.import_xlsx(file_name)
-            _process_registration_ids(request, cohort, period, registration_ids)
+            evaluations = import_eval.import_xlsx(file_name)
+            _process_evaluations(request, cohort, evaluations)
 
 
-def _process_registration_ids(request, cohort, period, registration_ids):
+def _process_evaluations(request, cohort, evaluations):
+    registration_ids = [eval['registration_id'] for eval in evaluations]
     valid_reg_ids, non_valid_reg_ids = _check_registration_ids_validity(cohort, registration_ids)
     if non_valid_reg_ids:
         display_error_messages(
             request,
-            _('Evaluation status importation aborted for period %(period)s. ' 
+            _('Evaluation status importation aborted. ' 
               'Following registration ids do not exist in cohort: %(registration_ids)s')
-            % {'period': period, 'registration_ids': ', '.join(non_valid_reg_ids)}
+            % {'registration_ids': ', '.join(non_valid_reg_ids)}
         )
     else:
-        _update_evaluation_status(status=True, registration_ids=valid_reg_ids, period_name=period, cohort=cohort)
-        display_success_messages(
-            request,
-            _('Evaluation status successfully updated for period %(period)s') % {'period': period}
+        filtered_evaluations = [eval for eval in evaluations if eval['registration_id'] in valid_reg_ids]
+        status_updated, info = _update_evaluation_status(
+            status=True, evaluations=filtered_evaluations, cohort=cohort
         )
+        if status_updated:
+            display_success_messages(request, _('Evaluation status successfully updated for {}'.format(
+                ', '.join(info['periods'])
+            )))
+        else:
+            period = info['period']
+            display_error_messages(request, _('An error occured during evaluation status update in {}').format(period))
 
 
 def _check_registration_ids_validity(cohort, registration_ids):
