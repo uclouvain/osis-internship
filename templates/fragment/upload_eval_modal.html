@@ -11,18 +11,10 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="period-select">{% trans 'Period' %}</label>
-                        <select name="period" class="form-control" id="period-select">
-                            {% for period in all_periods %}
-                                <option>{{ period }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="form-group">
                       <input type="file" id="eval_input_file" name="file_upload"/>
                     </div>
                     <div id="selectedFiles"></div>
-                    <p class="help-block">{% trans 'Select a xls file that contains a list of students who have assesed their internship at the chosen period' %}</p>
+                    <p class="help-block">{% trans 'Select a xls file that contains a list of students who have assesed their internship.' %}</p>
                 </div>
                 <div class="modal-footer">
                     <button id="import-submit" type="submit" class="btn btn-primary" onclick="document.getElementById('files').style.visibility='visible'" id="bt_submit_upload_eval_modal">

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-13 17:24+0100\n"
+"POT-Creation-Date: 2020-01-20 09:56+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,64 +16,49 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: static/js/datatable_options.js:49
 msgid "(filtered from _MAX_ total entries)"
 msgstr "(filtré de _MAX_ éléments au total)"
 
-#: static/js/datatable_options.js:61
 msgid ": activate to sort column ascending"
 msgstr ": activer pour trier la colonne par ordre croissant"
 
-#: static/js/datatable_options.js:62
 #, fuzzy
 #| msgid ": activate to sort column ascending"
 msgid ": activate to sort column descending"
 msgstr ": activer pour trier la colonne par ordre croissant"
 
-#: static/js/datatable_options.js:55
 msgid "First"
 msgstr "Premier"
 
-#: static/js/datatable_options.js:58
 msgid "Last"
 msgstr "Dernier"
 
-#: static/js/datatable_options.js:50
 msgid "Loading..."
 msgstr "Chargement en cours..."
 
-#: static/js/datatable_options.js:57
 msgid "Next"
 msgstr "Suivant"
 
-#: static/js/datatable_options.js:52
 msgid "No data available in table"
 msgstr "Aucune donnée disponible dans le tableau"
 
-#: static/js/datatable_options.js:51
 msgid "No matching records found"
 msgstr "Aucun élément à afficher"
 
-#: static/js/datatable_options.js:56
 msgid "Previous"
 msgstr "Précédent"
 
-#: static/js/datatable_options.js:44
 msgid "Processing..."
 msgstr "Traitement en cours..."
 
-#: static/js/datatable_options.js:45
 msgid "Search by name:"
 msgstr "Rechercher par nom:"
 
-#: static/js/datatable_options.js:46
 msgid "Show _MENU_ entries"
 msgstr "Afficher _MENU_ éléments"
 
-#: static/js/datatable_options.js:48
 msgid "Showing 0 to 0 of 0 entries"
 msgstr "Affichage de l'élément 0 à 0 sur 0 élément"
 
-#: static/js/datatable_options.js:47
 msgid "Showing _START_ to _END_ of _TOTAL_ entries"
 msgstr "Affichage de l'élément _START_ à _END_ sur _TOTAL_ éléments"

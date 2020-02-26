@@ -31,7 +31,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 
 from base.tests.factories.student import StudentFactory
-from internship.utils.importing.import_eval import import_xlsx, REGISTRATION_ID_COLUMN
+from internship.utils.importing.import_eval import import_xlsx, REGISTRATION_ID_COLUMN, PERIOD_COLUMN
 
 
 class XlsImportEvalTestCase(TestCase):
@@ -53,7 +53,7 @@ class XlsImportEvalTestCase(TestCase):
         workbook = openpyxl.Workbook()
         worksheet = workbook.active
         for row, student in enumerate(cls.students):
-            columns = [(REGISTRATION_ID_COLUMN, student.registration_id)]
+            columns = [(REGISTRATION_ID_COLUMN, student.registration_id), (PERIOD_COLUMN, 'P1')]
             for column, value in columns:
                 worksheet.cell(row=row+2, column=column+1).value = value
         return workbook
@@ -61,5 +61,6 @@ class XlsImportEvalTestCase(TestCase):
     @mock.patch('internship.utils.importing.import_eval.load_workbook')
     def test_import_eval(self, mock_workbook):
         mock_workbook.return_value = self.generate_workbook()
-        registration_ids = import_xlsx(self.file)
+        evaluations = import_xlsx(self.file)
+        registration_ids = [eval['registration_id'] for eval in evaluations]
         self.assertSetEqual(set(registration_ids), set([student.registration_id for student in self.students]))

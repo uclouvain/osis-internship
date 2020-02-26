@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-01-21 10:38+0100\n"
+"POT-Creation-Date: 2020-02-26 11:34+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -76,6 +76,9 @@ msgstr ""
 msgid "Allocation Sum up"
 msgstr ""
 
+msgid "An error occured during evaluation status update in {}"
+msgstr ""
+
 msgid "An error occured during score deletion"
 msgstr ""
 
@@ -83,6 +86,9 @@ msgid "An error occured during score update"
 msgstr ""
 
 msgid "An error occured while sending reminders"
+msgstr ""
+
+msgid "An error occured while updating status"
 msgstr ""
 
 msgid "Are you sure ?"
@@ -243,12 +249,11 @@ msgstr ""
 
 #, python-format
 msgid ""
-"Evaluation status importation aborted for period %(period)s. Following "
-"registration ids do not exist in cohort: %(registration_ids)s"
+"Evaluation status importation aborted. Following registration ids do not "
+"exist in cohort: %(registration_ids)s"
 msgstr ""
 
-#, python-format
-msgid "Evaluation status successfully updated for period %(period)s"
+msgid "Evaluation status successfully updated for {}"
 msgstr ""
 
 msgid "Evaluations submitted"
@@ -582,9 +587,6 @@ msgstr ""
 msgid "Reference"
 msgstr ""
 
-msgid "Reminders have been sent successfully"
-msgstr ""
-
 msgid "Report to the hospital"
 msgstr ""
 
@@ -621,7 +623,7 @@ msgstr ""
 
 msgid ""
 "Select a xls file that contains a list of students who have assesed their "
-"internship at the chosen period"
+"internship."
 msgstr ""
 
 msgid "Select a xls file that contains the scores by period"

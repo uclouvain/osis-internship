@@ -27,17 +27,21 @@
 from openpyxl import load_workbook
 
 REGISTRATION_ID_COLUMN = 6
+PERIOD_COLUMN = 15
 
 
 def import_xlsx(xlsxfile):
     workbook = load_workbook(filename=xlsxfile, read_only=True)
     worksheet = workbook.active
-    registration_ids = [
-        _get_only_digits(str(row[REGISTRATION_ID_COLUMN].value))
-        for row in list(worksheet.rows)[1:worksheet.max_row]
+    evaluations = [
+        {
+            "registration_id": _get_only_digits(str(row[REGISTRATION_ID_COLUMN].value)),
+            "period": str(row[PERIOD_COLUMN].value)
+        }
+        for row in list(worksheet.rows)[1:worksheet.max_row] if row[PERIOD_COLUMN].value
     ]
     xlsxfile.close()
-    return registration_ids
+    return evaluations
 
 
 def _get_only_digits(value):

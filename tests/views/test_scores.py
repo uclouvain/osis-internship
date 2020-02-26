@@ -432,7 +432,7 @@ class ScoresEncodingTest(TestCase):
             period=self.period
         )
         self.assertFalse(student_period_affectation.internship_evaluated)
-        mock_import.return_value = [student.registration_id]
+        mock_import.return_value = [{'registration_id': student.registration_id, 'period': self.period.name}]
         url = reverse('internship_upload_eval', kwargs={
             'cohort_id': self.cohort.pk,
         })
@@ -440,8 +440,7 @@ class ScoresEncodingTest(TestCase):
         response = self.client.post(
             url,
             data={
-                'file_upload': self.xlsxfile,
-                'period': self.period.name
+                'file_upload': self.xlsxfile
             }
         )
         student_period_affectation.refresh_from_db()
@@ -453,7 +452,7 @@ class ScoresEncodingTest(TestCase):
     @mock.patch('internship.utils.importing.import_eval.import_xlsx')
     def test_post_upload_eval_error(self, mock_import):
         student = StudentFactory()
-        mock_import.return_value = [student.registration_id]
+        mock_import.return_value = [{'registration_id': student.registration_id, 'period': self.period.name}]
         url = reverse('internship_upload_eval', kwargs={
             'cohort_id': self.cohort.pk,
         })
@@ -461,8 +460,7 @@ class ScoresEncodingTest(TestCase):
         response = self.client.post(
             url,
             data={
-                'file_upload': self.xlsxfile,
-                'period': self.period.name
+                'file_upload': self.xlsxfile
             }
         )
         messages_list = [msg for msg in response.wsgi_request._messages]
