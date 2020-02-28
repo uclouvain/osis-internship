@@ -63,7 +63,8 @@ class ScoresEncodingTest(TestCase):
     @classmethod
     def setUpTestData(cls):
         cls.cohort = CohortFactory()
-        cls.period = PeriodFactory(name='P1', date_end=date.today()-timedelta(days=1), cohort=cls.cohort)
+        cls.period = PeriodFactory(name='P1', date_end=date.today()-relativedelta(months=2), cohort=cls.cohort)
+        cls.other_period = PeriodFactory(name='P2', date_end=date.today()-relativedelta(months=1),  cohort=cls.cohort,)
         cls.xlsfile = SimpleUploadedFile(
             name='upload.xls',
             content=str.encode('test'),
@@ -361,12 +362,11 @@ class ScoresEncodingTest(TestCase):
         student_name = "test_student"
         student_info = InternshipStudentInformationFactory(person__last_name=student_name, cohort=self.cohort)
         student = StudentFactory(person=student_info.person)
-        other_period = PeriodFactory(name='P2', cohort=self.cohort)
         PeriodFactory(name='last_period', cohort=self.cohort)
         ScoreFactory(student=student, period=self.period, cohort=self.cohort, APD_1='A')
-        ScoreFactory(student=student, period=other_period, cohort=self.cohort, APD_1='C')
+        ScoreFactory(student=student, period=self.other_period, cohort=self.cohort, APD_1='C')
         ScoreMappingFactory(
-            period=other_period,
+            period=self.other_period,
             cohort=self.cohort,
             score_A=20, score_B=15, score_C=10, score_D=0,
             apd=1
@@ -377,7 +377,8 @@ class ScoresEncodingTest(TestCase):
         self.assertEqual(evolution_score, 15)
 
     def test_round_half_up_evolution_score(self):
-        evolution_score = _get_scores_mean({'P1': 1.5, 'P2': 1.5, 'P3': 1.5})
+        periods = {'P1': 1.5, 'P2': 1.5, 'P3': 1.5}
+        evolution_score = _get_scores_mean(periods, len(periods.keys()))
         self.assertEqual(evolution_score, 2)
 
     def test_ajax_refresh_evolution_score(self):

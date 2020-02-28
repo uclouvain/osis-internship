@@ -101,3 +101,11 @@ input:checked + .slider:before {
 #students_filter{
     float: left;
 }
+
+.last-completed-period + tr > td{
+    border-top: none !important;
+}
+
+.last-completed-period {
+    border-bottom: 2px dashed #dedede !important;
+}
