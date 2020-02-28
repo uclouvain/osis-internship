@@ -68,7 +68,7 @@ def scores_encoding(request, cohort_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
     all_periods = get_effective_periods(cohort_id)
     periods = all_periods.order_by('date_end')
-    completed_periods = periods.exclude(pk=periods.last().pk).filter(date_end__lt=today())
+    completed_periods = periods.filter(date_end__lt=today())
     search_form = ScoresFilterForm(request.GET, cohort=cohort)
     students_list = []
 

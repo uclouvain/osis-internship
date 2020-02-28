@@ -165,7 +165,9 @@
                           <td style="max-width: 10vw;" class="overflow-cell" rowspan="{{ periods|length|add:1 }}">{{ student }}</td>
                       </tr>
                         {% for period in periods %}
-                          <tr {% if period == completed_periods.last %} class="last-completed-period" {% endif %}>
+                          <tr {% if period == completed_periods.last and periods.last is not completed_periods.last %}
+                              class="last-completed-period"
+                          {% endif %}>
                             <td>
                                 {{ period }}
                             {% if period == completed_periods.last %}
