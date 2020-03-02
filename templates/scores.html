@@ -165,8 +165,15 @@
                           <td style="max-width: 10vw;" class="overflow-cell" rowspan="{{ periods|length|add:1 }}">{{ student }}</td>
                       </tr>
                         {% for period in periods %}
-                          <tr>
-                            <td>{{ period }}</td>
+                          <tr {% if period == completed_periods.last and periods.last is not completed_periods.last %}
+                              class="last-completed-period"
+                          {% endif %}>
+                            <td>
+                                {{ period }}
+                            {% if period == completed_periods.last %}
+                                  <icon style="font-size: 11px; color: #333;" class="glyphicon glyphicon-time"></icon>
+                            {% endif %}
+                            </td>
                             <td>{{ student.specialties|get_item:period.name }}</td>
                             <td>{{ student.organizations|get_item:period.name }}</td>
                             <td>
@@ -208,7 +215,11 @@
                                         {% include 'fragment/score_cell.html' %}
                                     </td>
                                 {% else %}
-                                    <td>-</td>
+                                      {% if period in completed_periods %}
+                                          <td>0</td>
+                                      {% else %}
+                                          <td>-</td>
+                                      {% endif %}
                                 {% endif %}
                             {% endwith %}
                           {% endfor %}

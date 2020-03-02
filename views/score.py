@@ -29,6 +29,7 @@ import json
 from itertools import groupby
 from operator import itemgetter
 
+from dateutil.utils import today
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.db import transaction
@@ -36,7 +37,6 @@ from django.db.models import Subquery, OuterRef
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
-from django.utils.datetime_safe import date
 from django.utils.html import escape
 from django.utils.translation import gettext as _
 
@@ -67,7 +67,8 @@ MAXIMUM_SCORE = 20
 def scores_encoding(request, cohort_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
     all_periods = get_effective_periods(cohort_id)
-    periods = all_periods
+    periods = all_periods.order_by('date_end')
+    completed_periods = periods.filter(date_end__lt=today())
     search_form = ScoresFilterForm(request.GET, cohort=cohort)
     students_list = []
 
@@ -85,7 +86,8 @@ def scores_encoding(request, cohort_id):
     mapping = _prepare_score_table(cohort, periods, students.object_list)
     grades = [grade for grade, _ in InternshipScore.SCORE_CHOICES]
     context = {'cohort': cohort, 'periods': periods, 'all_periods': all_periods, 'students': students, 'grades': grades,
-               'affectations_count': affectations_count, 'search_form': search_form, 'mapping': list(mapping)}
+               'affectations_count': affectations_count, 'search_form': search_form, 'mapping': list(mapping),
+               'completed_periods': completed_periods}
     return render(request, "scores.html", context=context)
 
 
@@ -216,13 +218,14 @@ def _update_evaluation_status(status, evaluations, cohort):
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def refresh_evolution_score(request, cohort_id):
+    n_completed_periods = get_effective_periods(cohort_id).filter(date_end__lt=today()).count()
     if 'scores' in request.POST:
         scores = json.loads(request.POST['scores'].replace("'", '"'))
         if 'period' in request.POST:
             value = request.POST.get('edited', request.POST.get('computed'))
             period = request.POST['period']
             scores[period] = int(value)
-        evolution_score = _get_scores_mean(scores)
+        evolution_score = _get_scores_mean(scores, n_completed_periods)
         response = JsonResponse({
             'updated_scores': str(scores),
             'evolution_score': evolution_score,
@@ -409,7 +412,7 @@ def _prepare_score_table(cohort, periods, students):
     _link_periods_to_specialties(students, students_affectations)
     _link_periods_to_evaluations(students, students_affectations)
     _append_registration_ids(students, students_affectations)
-    _compute_evolution_score(students)
+    _compute_evolution_score(students, cohort.id)
     return mapping
 
 
@@ -432,20 +435,20 @@ def _prepare_students_extra_data(students):
         student.evaluations = {}
 
 
-def _compute_evolution_score(students):
+def _compute_evolution_score(students, cohort_id):
+    n_completed_periods = get_effective_periods(cohort_id).filter(date_end__lt=today()).count()
     for student in students:
         if student.evolution_score is None:
-            student.evolution_score = _get_scores_mean(student.periods_scores)
+            student.evolution_score = _get_scores_mean(student.periods_scores, n_completed_periods)
         else:
             student.evolution_score = {
                 'edited': student.evolution_score,
-                'computed': _get_scores_mean(student.periods_scores)
+                'computed': _get_scores_mean(student.periods_scores, n_completed_periods)
             }
 
 
-def _get_scores_mean(scores):
+def _get_scores_mean(scores, n_periods):
     evolution_score = 0
-    n_periods = len(scores.keys())
     for key in scores.keys():
         evolution_score += _get_period_score(scores[key]) / n_periods
     return round_half_up(evolution_score)
@@ -604,7 +607,7 @@ def _append_student_registration_id(student, students_affectations):
 def _filter_students_with_all_grades_submitted(cohort, students, periods, filter):
     if filter is not None:
         persons = students.values_list('person', flat=True)
-        completed_periods = periods.filter(date_end__lt=date.today()).values_list('id', flat=True)
+        completed_periods = periods.filter(date_end__lt=today()).values_list('id', flat=True)
         students_with_affectations = InternshipStudentAffectationStat.objects.filter(
             student__person__in=persons, period__in=completed_periods
         ).values_list('student', flat=True)
@@ -625,7 +628,7 @@ def _filter_students_with_all_grades_submitted(cohort, students, periods, filter
 def _filter_students_with_evaluations_submitted(students, periods, filter):
     if filter is not None:
         persons = students.values_list('person', flat=True)
-        completed_periods = periods.filter(date_end__lt=date.today()).values_list('id', flat=True)
+        completed_periods = periods.filter(date_end__lt=today()).values_list('id', flat=True)
         students_with_affectations = InternshipStudentAffectationStat.objects.filter(
             student__person__in=persons, period__in=completed_periods, internship_evaluated=filter
         ).values_list('student', flat=True)
