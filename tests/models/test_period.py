@@ -23,7 +23,10 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.test import SimpleTestCase
+from datetime import date
+
+from dateutil.relativedelta import relativedelta
+from django.test import TestCase
 
 from internship.tests.factories.period import PeriodFactory
 
@@ -32,7 +35,12 @@ def create_period(name="P1", cohort=None):
     return PeriodFactory(name=name, cohort=cohort)
 
 
-class PeriodFactoryTestCase(SimpleTestCase):
+class PeriodFactoryTestCase(TestCase):
     def test_dates(self):
-        period = PeriodFactory.build()
+        period = PeriodFactory()
         self.assertLess(period.date_start, period.date_end)
+
+    def test_period_is_active(self):
+        delta = relativedelta(day=2)
+        period = PeriodFactory(date_start=date.today()-delta, date_end=date.today()+delta)
+        self.assertTrue(period.is_active)

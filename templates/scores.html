@@ -170,7 +170,7 @@
                           {% endif %}>
                             <td>
                                 {{ period }}
-                            {% if period == completed_periods.last %}
+                            {% if period.is_active  %}
                                   <icon style="font-size: 11px; color: #333;" class="glyphicon glyphicon-time"></icon>
                             {% endif %}
                             </td>
