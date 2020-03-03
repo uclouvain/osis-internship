@@ -141,15 +141,16 @@ function deleteScore(e){
 }
 
 //append data to modal button on modal open
-$(document).on('click', '[data-target="#delete_score"]', function(){
-    let deleteScoreBtn = $("#delete_score_btn");
-    deleteScoreBtn.data(this.dataset);
-    deleteScoreBtn.data("cell", $(this).closest('td')[0]);
-    return false;
-});
+for(let target of ['#empty_score','#delete_score']){
+    $(document).on('click', `[data-target=${target}]`, function(){
+        let btn = $(`${target}_btn`);
+        btn.data(this.dataset);
+        btn.data("cell", $(this).closest('td')[0]);
+        return false;
+    });
+}
 
 //AJAX LOGIC GOES HERE
-
 function savePeriodScore(data, cell){
     $.ajax({
         url: "ajax/save_score/",
@@ -201,6 +202,29 @@ function deleteEvolutionScore(data, cell){
         data: data,
         success: response => cell.closest('tr').innerHTML = response,
         error: data => showErrorTooltip(cell, data)
+    });
+}
+
+function emptyScore(e){
+    const data = $(e).data();
+    const refreshData = {
+        'student': data.student,
+        'period': data.period,
+        'computed': 0,
+        'edited': null
+    };
+    $.ajax({
+        url: "ajax/empty_score/",
+        method: "POST",
+        data: {
+            'registration_id': data.student,
+            'period_name': data.period
+        },
+        success: response => {
+            data.cell.closest('td').innerHTML = response;
+            refreshEvolutionScore(refreshData);
+        },
+        error: error => showErrorTooltip(data.cell, error)
     });
 }
 

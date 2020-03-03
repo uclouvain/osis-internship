@@ -1,23 +1,29 @@
 {% load i18n bootstrap3 %}
 
 {% if period_score|is_edited %}
-    {{ period_score.edited }}
+    {{ period_score.edited|default_if_none:'-' }}
     <i style="font-size: 15px;" title="{% trans "Score edited. Computed score: " %}{{ period_score.computed }}"
    class="fas fa-info-circle text-info"></i>
 {% else %}
     {{ period_score }}
 {% endif %}
-<div style="display: none;" id="edit-{{ student.registration_id }}{{ period.name }}" class="pull-right">
-    <button onclick="editScore(this)" style="padding-top:0; line-height: inherit;"
-            {% if period_score|is_edited %}
-                data-computed="{{ period_score.computed }}"
-            {% else %}
-                data-computed="{{ period_score }}"
-            {% endif %}
-            data-student="{{ student.registration_id }}" data-period="{{ period.name }}"
-            class="btn btn-xs btn-warning">
-        <i class="fas fa-pencil-alt"></i>
-    </button>
+<div style="display: none;" id="edit-{{ student.registration_id }}{{ period.name }}" class="cell-actions pull-right">
+    {% if period_score.edited or not period_score|is_edited %}
+        {% if period_score %}
+        <button onclick="editScore(this)" style="padding-top:0; line-height: inherit;"
+                {% if period_score|is_edited %}
+                    data-computed="{{ period_score.computed }}"
+                {% else %}
+                    data-computed="{{ period_score }}"
+                {% endif %}
+                data-student="{{ student.registration_id }}" data-period="{{ period.name }}"
+                class="btn btn-xs btn-warning">
+            <i class="fas fa-pencil-alt"></i>
+        </button>
+        {% else %}
+            {% include 'fragment/btn_empty_score.html' %}
+        {% endif %}
+    {% endif %}
     {% if period_score|is_edited %}
         <button style="padding-top:0; line-height: inherit;"
                 data-toggle="modal"

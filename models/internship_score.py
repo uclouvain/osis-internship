@@ -58,6 +58,7 @@ class InternshipScore(SerializableModel):
             blank=True,
         )
     score = models.IntegerField(null=True, blank=True)
+    excused = models.BooleanField()
 
     def __str__(self):
         return '{} - {} - {}'.format(self.student, self.period, self.get_scores())

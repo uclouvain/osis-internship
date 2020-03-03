@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-02-26 11:34+0100\n"
+"POT-Creation-Date: 2020-03-03 10:25+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -149,6 +149,12 @@ msgid "City"
 msgstr ""
 
 msgid "Civility"
+msgstr ""
+
+msgid "Clear"
+msgstr ""
+
+msgid "Clear score for period ?"
 msgstr ""
 
 msgid "Cohort"
@@ -730,10 +736,17 @@ msgstr ""
 msgid "Third choice"
 msgstr ""
 
-msgid "This action will delete previously edited score."
+msgid ""
+"This action will delete previously edited score that will be reset to the "
+"original computed value."
 msgstr ""
 
 msgid "This action will send a summary by email to the following students:"
+msgstr ""
+
+msgid ""
+"This action will set an empty score for the student for this period which "
+"will be discarded from the evolution score computation."
 msgstr ""
 
 msgid "This may take several minutes"

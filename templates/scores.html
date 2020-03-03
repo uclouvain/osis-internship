@@ -216,7 +216,13 @@
                                     </td>
                                 {% else %}
                                       {% if period in completed_periods %}
-                                          <td>0</td>
+                                          <td class="zero"
+                                          onmouseover="showEditButton('{{student.registration_id}}{{ period.name }}')"
+                                          onmouseout="hideEditButton('{{student.registration_id}}{{ period.name }}')"
+                                          >
+                                            0
+                                            {% include 'fragment/btn_empty_score.html' %}
+                                          </td>
                                       {% else %}
                                           <td>-</td>
                                       {% endif %}
@@ -327,11 +333,13 @@
 
     {% include 'fragment/send_summary_modal.html' %}
 
+    {% include 'fragment/empty_score_modal.html' %}
+
 {% endblock %}
 
 {% block script %}
     <script type="text/javascript" src="{% static "js/internship_score_mapping.js" %}?version={{ js }}"></script>
-    <script type="text/javascript" src="{% static "js/internship_edit_delete_score.js" %}?version={{ js }}"></script>
+    <script type="text/javascript" src="{% static "js/internship_edit_delete_empty_score.js" %}?version={{ js }}"></script>
     <script type="text/javascript" src="{% static "js/internship_import_grades.js" %}?version={{ js }}"></script>
     <script type="text/javascript" src="{% static "js/internship_send_summary.js" %}?version={{ js }}"></script>
 

@@ -1,19 +1,19 @@
 {% load i18n bootstrap3 %}
 
-<div class="modal fade" id="delete_score" tabindex="-1" role="dialog" aria-labelledby="delete_score_label">
+<div class="modal fade" id="empty_score" tabindex="-1" role="dialog" aria-labelledby="empty_score_label">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">{% trans "Delete score ?" %}</h4>
+                <h4 class="modal-title">{% trans "Clear score for period ?" %}</h4>
             </div>
             <div class="modal-body">
-                <p>{% trans "This action will delete previously edited score that will be reset to the original computed value." %}</p>
+                <p>{% trans "This action will set an empty score for the student for this period which will be discarded from the evolution score computation." %}</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">{% trans "Cancel" %}</button>
-                <button id="delete_score_btn" type="button" class="btn btn-danger" data-dismiss="modal" onclick="deleteScore(this)">
-                    {% trans "Delete" %}
+                <button id="empty_score_btn" type="button" class="btn btn-danger" data-dismiss="modal" onclick="emptyScore(this)">
+                    {% trans "Clear" %}
                 </button>
             </div>
         </div>

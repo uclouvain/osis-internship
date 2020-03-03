@@ -44,3 +44,4 @@ class PeriodFactoryTestCase(TestCase):
         delta = relativedelta(day=2)
         period = PeriodFactory(date_start=date.today()-delta, date_end=date.today()+delta)
         self.assertTrue(period.is_active)
+
