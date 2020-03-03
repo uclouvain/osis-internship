@@ -109,3 +109,11 @@ input:checked + .slider:before {
 .last-completed-period {
     border-bottom: 2px dashed #dedede !important;
 }
+
+.zero > a, .zero .cell-actions {
+    display: none;
+}
+
+.zero:hover > a, .zero:hover .cell-actions {
+    display: block;
+}

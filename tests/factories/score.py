@@ -39,6 +39,7 @@ class ScoreFactory(factory.django.DjangoModelFactory):
     student = factory.SubFactory(StudentFactory)
     cohort = factory.SubFactory(CohortFactory)
     period = factory.SubFactory(PeriodFactory)
+    excused = False
 
     APD_1 = FuzzyChoice(['A', 'B', 'C', 'D'])
     score = None

@@ -220,11 +220,11 @@ def _update_evaluation_status(status, evaluations, cohort):
 def refresh_evolution_score(request, cohort_id):
     n_completed_periods = get_effective_periods(cohort_id).filter(date_end__lt=today()).count()
     if 'scores' in request.POST:
-        scores = json.loads(request.POST['scores'].replace("'", '"'))
+        scores = _load_json_scores(request)
         if 'period' in request.POST:
             value = request.POST.get('edited', request.POST.get('computed'))
             period = request.POST['period']
-            scores[period] = int(value)
+            scores[period] = int(value) if value else None
         evolution_score = _get_scores_mean(scores, n_completed_periods)
         response = JsonResponse({
             'updated_scores': str(scores),
@@ -235,6 +235,10 @@ def refresh_evolution_score(request, cohort_id):
         return response
     else:
         return HttpResponse(status=204)
+
+
+def _load_json_scores(request):
+    return json.loads(request.POST['scores'].replace("'", '"').replace('None', 'null'))
 
 
 @login_required
@@ -358,7 +362,7 @@ def _delete_score(cohort, period_name, registration_id):
         cohort=cohort,
         period__name=period_name,
         student__registration_id=registration_id
-    ).update(score=None)
+    ).update(score=None, excused=False)
 
 
 def _update_score(cohort, edited_score, period_name, registration_id):
@@ -381,6 +385,23 @@ def _json_response_error(msg):
     response = JsonResponse({"error": msg})
     response.status_code = 500
     return response
+
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def empty_score(request, cohort_id):
+    cohort = get_object_or_404(Cohort, pk=cohort_id)
+    student = Student.objects.get(registration_id=request.POST.get('registration_id'))
+    period = Period.objects.get(name=request.POST.get("period_name"), cohort=cohort)
+    score, created = InternshipScore.objects.update_or_create(
+        cohort=cohort, period=period, student=student, defaults={'excused': True}
+    )
+    if score:
+        return render(request, "fragment/score_cell.html", context={
+            "student": {'registration_id': student.registration_id},
+            "period": {'name': period.name},
+            "period_score": {"computed": 0, "edited": score.score}
+        })
 
 
 def _prepare_score_table(cohort, periods, students):
@@ -449,13 +470,19 @@ def _compute_evolution_score(students, cohort_id):
 
 def _get_scores_mean(scores, n_periods):
     evolution_score = 0
+    effective_n_periods = n_periods - _count_emptied_scores(scores)
     for key in scores.keys():
-        evolution_score += _get_period_score(scores[key]) / n_periods
+        period_score = _get_period_score(scores[key])
+        evolution_score += period_score / effective_n_periods if period_score else 0
     return round_half_up(evolution_score)
 
 
 def _get_period_score(score):
     return score['edited'] if is_edited(score) else score
+
+
+def _count_emptied_scores(scores):
+    return len([key for key in scores.keys() if _get_period_score(scores[key]) is None])
 
 
 def _link_periods_to_evaluations(students, students_affectations):
@@ -542,7 +569,7 @@ def _append_period_scores_to_student(period, student, student_scores):
 
 
 def _retrieve_scores_entered_manually(period, student, student_scores):
-    if student_scores[0].score is not None:
+    if student_scores[0].score is not None or student_scores[0].excused:
         student.numeric_scores.update({period.name: student_scores[0].score})
 
 

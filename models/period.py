@@ -23,6 +23,8 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from datetime import date
+
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import gettext_lazy as _
@@ -52,6 +54,10 @@ class Period(SerializableModel):
 
     def number(self):
         return int(self.name[1])
+
+    @property
+    def is_active(self):
+        return date.today() >= self.date_start and date.today() <= self.date_end
 
     def __str__(self):
         return u"%s" % self.name
