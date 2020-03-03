@@ -424,6 +424,17 @@ class ScoresEncodingTest(TestCase):
         self.assertTemplateUsed(response, 'fragment/evolution_score_cell.html')
         self.assertIsNone(student_info.evolution_score)
 
+    def test_ajax_empty_score(self):
+        student = Student.objects.first()
+        url = reverse('empty_score', kwargs={'cohort_id': self.cohort.pk})
+        response = self.client.post(url, data={
+            'period_name': self.period.name,
+            'registration_id': student.registration_id,
+        })
+        excused_score = InternshipScore.objects.filter(excused=True)
+        self.assertTemplateUsed(response, 'fragment/score_cell.html')
+        self.assertTrue(excused_score.exists())
+
     @mock.patch('internship.utils.importing.import_eval.import_xlsx')
     def test_post_upload_eval_success(self, mock_import):
         student_info = self.students[0]

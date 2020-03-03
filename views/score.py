@@ -400,7 +400,7 @@ def empty_score(request, cohort_id):
         return render(request, "fragment/score_cell.html", context={
             "student": {'registration_id': student.registration_id},
             "period": {'name': period.name},
-            "period_score": {"computed": 0, "edited": None}
+            "period_score": {"computed": 0, "edited": score.score}
         })
 
 
@@ -471,7 +471,6 @@ def _compute_evolution_score(students, cohort_id):
 def _get_scores_mean(scores, n_periods):
     evolution_score = 0
     effective_n_periods = n_periods - _count_empty_periods(scores)
-    print(_count_empty_periods(scores))
     for key in scores.keys():
         evolution_score += _get_period_score(scores[key]) / effective_n_periods if _get_period_score(scores[key]) else 0
     return round_half_up(evolution_score)
