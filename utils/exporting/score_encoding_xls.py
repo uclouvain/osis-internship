@@ -91,12 +91,13 @@ def _append_row_data(columns, period, student):
             )
         )
     else:
-        columns.append('')
+        # default to zero when grades have not been submitted and period is completed
+        columns.append(0 if period.is_past else '')
 
 
 def _retrieve_score(period_score):
     if isinstance(period_score, dict) and 'edited' in period_score:
-        return period_score['edited']
+        return period_score['edited'] if period_score['edited'] else ''
     else:
         return period_score
 

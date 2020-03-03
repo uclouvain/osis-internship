@@ -59,6 +59,10 @@ class Period(SerializableModel):
     def is_active(self):
         return date.today() >= self.date_start and date.today() <= self.date_end
 
+    @property
+    def is_past(self):
+        return date.today() > self.date_end
+
     def __str__(self):
         return u"%s" % self.name
 
