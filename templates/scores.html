@@ -364,17 +364,26 @@
         });
     });
 
-    $('input:checkbox[name="period"]').click(()=>{
-        let selected_periods_count = $('input:checkbox[name="period"]:checked').length;
-        let all_periods_count = parseInt("{{ all_periods.count }}");
-        if (selected_periods_count === all_periods_count){
+    const all_periods_count = parseInt("{{ all_periods.count }}");
+    const completed_periods_count = parseInt("{{ completed_periods.count }}");
+
+    function switchEvolutionScoreModalMsg(selected_periods_count) {
+        if (selected_periods_count === all_periods_count && all_periods_count === completed_periods_count) {
             $("#evolution_score_export_message").show();
             $("#no_evolution_score_export_message").hide();
         } else {
             $("#no_evolution_score_export_message").show();
             $("#evolution_score_export_message").hide();
         }
+    }
+
+    $('input:checkbox[name="period"]').click(()=>{
+        const selected_periods_count = $('input:checkbox[name="period"]:checked').length;
+        switchEvolutionScoreModalMsg(selected_periods_count);
     });
+
+    //trigger first msg appearing in modal
+    switchEvolutionScoreModalMsg(all_periods_count);
 
     </script>
 {% endblock %}
