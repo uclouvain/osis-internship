@@ -155,7 +155,7 @@ msgid "Civility"
 msgstr "Civilité"
 
 msgid "Clear"
-msgstr ""
+msgstr "Effacer"
 
 msgid "Clear score for period ?"
 msgstr "Effacer la note pour cette période ?"
