@@ -470,7 +470,7 @@ def _compute_evolution_score(students, cohort_id):
 
 def _get_scores_mean(scores, n_periods):
     evolution_score = 0
-    effective_n_periods = n_periods - _count_empty_periods(scores)
+    effective_n_periods = n_periods - _count_emptied_scores(scores)
     for key in scores.keys():
         evolution_score += _get_period_score(scores[key]) / effective_n_periods if _get_period_score(scores[key]) else 0
     return round_half_up(evolution_score)
@@ -480,12 +480,8 @@ def _get_period_score(score):
     return score['edited'] if is_edited(score) else score
 
 
-def _count_empty_periods(scores):
-    count_empty = 0
-    for key in scores.keys():
-        if _get_period_score(scores[key]) is None:
-            count_empty += 1
-    return count_empty
+def _count_emptied_scores(scores):
+    return len([key for key in scores.keys() if _get_period_score(scores[key]) is None])
 
 
 def _link_periods_to_evaluations(students, students_affectations):
