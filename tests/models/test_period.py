@@ -41,7 +41,7 @@ class PeriodFactoryTestCase(TestCase):
         self.assertLess(period.date_start, period.date_end)
 
     def test_period_is_active(self):
-        delta = relativedelta(day=2)
+        delta = relativedelta(days=1)
         period = PeriodFactory(date_start=date.today()-delta, date_end=date.today()+delta)
         self.assertTrue(period.is_active)
 
