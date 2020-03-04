@@ -117,3 +117,13 @@ input:checked + .slider:before {
 .zero:hover > a, .zero:hover .cell-actions {
     display: block;
 }
+
+.score-cell-value{
+    display: inline-block;
+    width: 40px;
+}
+
+.score-cell-value i {
+    float: right;
+    line-height: 1.4;
+}
