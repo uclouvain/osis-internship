@@ -248,7 +248,7 @@ def save_evolution_score(request, cohort_id):
     edited_score = int(request.POST.get("edited"))
     computed_score = int(request.POST.get("computed"))
     registration_id = request.POST.get("student")
-    scores = json.loads(request.POST['scores'].replace("'", '"'))
+    scores = _load_json_scores(request)
     student = {
         'registration_id': registration_id,
         'evolution_score': {

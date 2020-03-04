@@ -97,7 +97,7 @@ def _append_row_data(columns, period, student):
 
 def _retrieve_score(period_score):
     if isinstance(period_score, dict) and 'edited' in period_score:
-        return period_score['edited'] if period_score['edited'] else ''
+        return period_score['edited'] or ''
     else:
         return period_score
 
