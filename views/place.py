@@ -36,6 +36,7 @@ from internship.utils.exporting import organization_affectation_hospital
 from internship.utils.exporting import organization_affectation_master
 from internship.views.common import display_report_errors
 from internship.views.internship import get_all_specialities, set_tabs_name
+from osis_common.decorators.download import set_download_cookie
 from reference.models.country import Country
 
 
@@ -227,6 +228,7 @@ def _export_xls_hospital(cohort, organization):
     return _export_xls(organization, virtual_workbook)
 
 
+@set_download_cookie
 def _export_xls(organization, virtual_workbook):
     response = HttpResponse(virtual_workbook,
                             content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')

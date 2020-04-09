@@ -35,6 +35,7 @@ from internship.forms.master import MasterForm
 from internship.models import master_allocation, internship_master, internship_speciality, organization, cohort
 from internship.utils.exporting.masters import export_xls
 from internship.views.common import display_errors, get_object_list
+from osis_common.decorators.download import set_download_cookie
 
 
 @login_required
@@ -132,6 +133,7 @@ def master_save(request, cohort_id):
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
+@set_download_cookie
 def export_masters(request, cohort_id):
     workbook = export_xls()
     response = HttpResponse(workbook, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
