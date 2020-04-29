@@ -67,7 +67,9 @@ class Assignment:
         self.last_switch = []
         self.internship_count = 0
 
-        self.students_information = InternshipStudentInformation.objects.filter(cohort=self.cohort)
+        self.students_information = InternshipStudentInformation.objects.filter(
+            cohort=self.cohort
+        ).select_related('person')
         self.person_ids = self.students_information.values_list("person_id", flat=True)
         self.students = Student.objects.filter(person_id__in=self.person_ids)
 
@@ -117,17 +119,6 @@ class Assignment:
         """ All the generated affectations are stored in the database. """
         InternshipStudentAffectationStat.objects.bulk_create(self.affectations)
 
-    def shuffle_students_list(self):
-        """ Students are shuffled to make sure equity of luck is respected and then ordered by cost after first iter."""
-        students_list = list(self.students_information)
-        random.shuffle(students_list)
-        for student in students_list:
-            student.cost = get_student_cost(self.affectations, student)
-        if self.internship_count > 0:
-            return sorted(students_list, key=lambda x: x.cost, reverse=True)
-        else:
-            return students_list
-
     def solve(self):
         self.start = timeit.default_timer()
         logger.info("Started assignment algorithm.")
@@ -137,8 +128,6 @@ class Assignment:
         logger.info("Assigned priority students.")
 
         for internship in self.mandatory_internships:
-            self.students_information = self.shuffle_students_list()
-            logger.info("Shuffled students for {}.".format(internship.name))
             _assign_students_with_priority_choices(self, internship)
             logger.info("Assigned students with priority choices to {}.".format(internship.name))
             _assign_regular_students(self, internship)
@@ -152,10 +141,19 @@ class Assignment:
         logger.info('Time: {} seconds'.format(total_time))
 
 
+def _sort_by_cost_after_random_shuffle(assignment, students_list):
+    """ Students are shuffled to make sure equity of luck is respected and sorted asc by score afterwards"""
+    students_list = list(students_list)
+    random.shuffle(students_list)
+    for student in students_list:
+        student.cost = get_student_cost(assignment.affectations, student)
+    list_sorted = sorted(students_list, key=lambda x: x.cost, reverse=True)
+    logger.info("Shuffled students list and sorted by cost")
+    return list_sorted
+
+
 def _assign_non_mandatory_internships(self):
-    self.students_information = self.shuffle_students_list()
     self.total_count = len(self.students_information)
-    logger.info("Shuffled students for stages au choix.")
     _assign_students_with_priority_choices(self, self.non_mandatory_internships)
     logger.info("Assigned students with priority choices to stages au choix.")
     _assign_regular_students(self, self.non_mandatory_internships)
@@ -164,7 +162,6 @@ def _assign_non_mandatory_internships(self):
 
 def _balance_assignments(self):
     logger.info("Balancing assignments...")
-    self.students_information = self.shuffle_students_list()
     favored_students, disadvantaged_students = _update_distinction_between_students(self)
     self.timeout_start = time.time()
     while len(disadvantaged_students) > 0 and time.time() < self.timeout_start + self.TIMEOUT:
@@ -172,17 +169,17 @@ def _balance_assignments(self):
 
 
 def _update_distinction_between_students(self):
-    self.students_information = self.shuffle_students_list()
+    self.students_information = _sort_by_cost_after_random_shuffle(self, self.students_information)
     disadvantaged_students = []
     favored_students = []
     for student in self.students_information:
-            if student.cost >= Costs.PRIORITY.value and student.cost < Costs.IMPOSED.value:
-                if student.person_id not in self.prioritary_students_person_ids:
-                    favored_students.append(student)
-            if student.cost >= self.MAX_ALLOWED_IMPOSED * Costs.IMPOSED.value:
-                if student.cost >= Costs.ERROR.value + self.MAX_ALLOWED_IMPOSED * Costs.IMPOSED.value:
-                    student.cost = student.cost - Costs.ERROR.value
-                disadvantaged_students.append(student)
+        if student.cost >= Costs.PRIORITY.value and student.cost < Costs.IMPOSED.value:
+            if student.person_id not in self.prioritary_students_person_ids:
+                favored_students.append(student)
+        if student.cost >= self.MAX_ALLOWED_IMPOSED * Costs.IMPOSED.value:
+            if student.cost >= Costs.ERROR.value + self.MAX_ALLOWED_IMPOSED * Costs.IMPOSED.value:
+                student.cost = student.cost - Costs.ERROR.value
+            disadvantaged_students.append(student)
     return favored_students, disadvantaged_students
 
 
@@ -301,6 +298,7 @@ def _assign_students_with_priority_choices(assignment, internship):
     assignment.count = 0
     """ Some students are priority students, their choices need to be taken into account before the others."""
     students = mdl.internship_choice.find_students_with_priority_choices(internship)
+    students = _sort_by_cost_after_random_shuffle(assignment, students)
     assignment.total_count = len(students)
     for student in students:
         _assign_student(assignment, student, internship)
@@ -310,6 +308,7 @@ def _assign_regular_students(assignment, internship):
     assignment.count = 0
     """ Assign the best possible choice to other non-priority students."""
     students = mdl.internship_choice.find_students_with_regular_choices(internship)
+    students = _sort_by_cost_after_random_shuffle(assignment, students)
     assignment.total_count = len(students)
     for student in students:
         _assign_student(assignment, student, internship)
