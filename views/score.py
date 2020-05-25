@@ -709,9 +709,9 @@ def _process_evaluations(request, cohort, evaluations):
             status=True, evaluations=filtered_evaluations, cohort=cohort
         )
         if status_updated:
-            display_success_messages(request, _('Evaluation status successfully updated for {}'.format(
-                ', '.join(info['periods'])
-            )))
+            display_success_messages(request, _('Evaluation status successfully updated for %(periods)s' % {
+                'periods': ', '.join(info['periods'])
+            }))
         else:
             period = info['period']
             display_error_messages(request, _('An error occured during evaluation status update in {}').format(period))
