@@ -24,14 +24,14 @@
 
 <div class="cell-actions pull-right">
 
-    <button onclick="editScore(this)" class="btn-score"
+    <button onclick="editScore(this)"
             {% if period_score|is_edited %}
                 data-computed="{{ period_score.computed }}"
             {% else %}
                 data-computed="{{ period_score }}"
             {% endif %}
             data-student="{{ student.registration_id }}" data-period="{{ period.name }}"
-            class="btn btn-xs btn-warning">
+            class="btn btn-xs btn-warning btn-score">
         <i class="fas fa-pencil-alt"></i>
     </button>
 
