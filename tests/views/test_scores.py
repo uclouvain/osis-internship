@@ -84,8 +84,7 @@ class ScoresEncodingTest(TestCase):
         )
         cls.chosen_internship = InternshipFactory(cohort=cls.cohort, speciality=None)
         internships = [cls.mandatory_internship, cls.long_internship, cls.chosen_internship]
-        periods = [PeriodFactory(cohort=cls.cohort) for _ in range(2)]
-        periods.insert(0, cls.period)
+        periods = [cls.period] + [PeriodFactory(cohort=cls.cohort) for _ in range(2)]
         for student_info in cls.students:
             student = StudentFactory(person=student_info.person)
             for index, internship in enumerate(internships):

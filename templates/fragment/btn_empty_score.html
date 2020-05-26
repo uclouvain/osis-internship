@@ -24,7 +24,7 @@
 
 <div class="cell-actions pull-right">
 
-    <button onclick="editScore(this)" style="padding-top:0; line-height: inherit;"
+    <button onclick="editScore(this)" class="btn-score"
             {% if period_score|is_edited %}
                 data-computed="{{ period_score.computed }}"
             {% else %}

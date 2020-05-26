@@ -21,7 +21,7 @@
         </span>
         {% endif %}
         <div style="display: none;" id="edit-{{ student.registration_id }}-evolution-score" class="pull-right">
-        <button onclick="editScore(this)" style="padding-top:0; line-height: inherit;"
+        <button onclick="editScore(this)" class="btn-score"
                 {% if student.evolution_score|is_edited %}
                     data-computed="{{ student.evolution_score.computed }}"
                 {% else %}
@@ -32,7 +32,7 @@
             <i class="fas fa-pencil-alt"></i>
         </button>
         {% if student.evolution_score|is_edited %}
-            <button style="padding-top:0; line-height: inherit;"
+            <button class="btn-score"
                     data-toggle="modal"
                     data-target="#delete_score"
                     data-student="{{ student.registration_id }}"
