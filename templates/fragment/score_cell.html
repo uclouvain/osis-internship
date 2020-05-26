@@ -12,7 +12,7 @@
 <div style="display: none;" id="edit-{{ student.registration_id }}{{ period.name }}" class="cell-actions pull-right">
     {% if period_score.edited or not period_score|is_edited %}
         {% if period_score %}
-        <button onclick="editScore(this)" style="padding-top:0; line-height: inherit;"
+        <button onclick="editScore(this)"
                 {% if period_score|is_edited %}
                     data-computed="{{ period_score.computed }}"
                 {% else %}
@@ -27,13 +27,12 @@
         {% endif %}
     {% endif %}
     {% if period_score|is_edited %}
-        <button style="padding-top:0; line-height: inherit;"
-                data-toggle="modal"
+        <button data-toggle="modal"
                 data-target="#delete_score"
                 data-student="{{ student.registration_id }}"
                 data-period="{{ period.name }}"
                 data-computed="{{ period_score.computed }}"
-                class="btn btn-xs btn-danger">
+                class="btn btn-xs btn-danger btn-score">
             <i class="fas fa-eraser"></i>
         </button>
     {% endif %}

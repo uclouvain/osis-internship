@@ -127,3 +127,8 @@ input:checked + .slider:before {
     float: right;
     line-height: 1.4;
 }
+
+.btn-score{
+    padding-top:0;
+    line-height: inherit;
+}

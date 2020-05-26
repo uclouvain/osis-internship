@@ -4,7 +4,7 @@ from django.forms import Form
 from django.utils.translation import gettext as _
 
 from internship.models.internship_student_information import InternshipStudentInformation
-from internship.models.period import Period
+from internship.models.period import Period, get_effective_periods
 
 
 class ScoresFilterForm(Form):
@@ -62,10 +62,9 @@ class ScoresFilterForm(Form):
 
     def get_period(self, cohort):
         period = self.cleaned_data.get('period')
-        qs = Period.objects.filter(cohort=cohort).order_by('date_start')
-        qs = qs.exclude(pk=qs.last().pk)  # exclude last period without grade associated
+        qs = get_effective_periods(cohort.id)  # exclude last period without grade associated
         if period:
-            qs = Period.objects.filter(pk=period.pk)
+            qs = qs.filter(pk=period.pk)
         return qs
 
     def get_all_grades_submitted_filter(self):
