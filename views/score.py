@@ -310,8 +310,8 @@ def delete_evolution_score(request, cohort_id):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def save_edited_score(request, cohort_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
-    edited_score = int(request.POST.get("edited"))
-    computed_score = int(request.POST.get("computed"))
+    edited_score = int(request.POST.get("edited") or 0)
+    computed_score = int(request.POST.get("computed") or 0)
     registration_id = request.POST.get("student")
     period_name = request.POST.get("period")
     student = {'registration_id': registration_id}
@@ -366,13 +366,10 @@ def _delete_score(cohort, period_name, registration_id):
 
 
 def _update_score(cohort, edited_score, period_name, registration_id):
-    return InternshipScore.objects.filter(
-        cohort=cohort,
-        period__name=period_name,
-        student__registration_id=registration_id
-    ).update(
-        score=edited_score
-    )
+    period = Period.objects.get(cohort=cohort, name=period_name)
+    student = Student.objects.get(registration_id=registration_id)
+    data = {'cohort': cohort, 'student': student, 'period': period}
+    return InternshipScore.objects.filter(**data).update_or_create(**data, defaults={'score': edited_score})
 
 
 def _json_response_success():
