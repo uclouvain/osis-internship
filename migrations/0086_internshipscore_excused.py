@@ -14,6 +14,5 @@ class Migration(migrations.Migration):
             model_name='internshipscore',
             name='excused',
             field=models.BooleanField(default=False),
-            preserve_default=False,
         ),
     ]
