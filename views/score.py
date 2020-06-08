@@ -274,10 +274,10 @@ def save_evolution_score(request, cohort_id):
 
 
 def _update_evolution_score(cohort, edited_score, registration_id):
-    student = Student.objects.get(registration_id=registration_id)
+    student_subquery = Student.objects.get(registration_id=registration_id, person=OuterRef('person'))
     return InternshipStudentInformation.objects.filter(
         cohort=cohort,
-        person=student.person
+        person=Subquery(student_subquery)
     ).update(
         evolution_score=edited_score
     )
@@ -295,9 +295,9 @@ def delete_evolution_score(request, cohort_id):
         'evolution_score': computed_score,
         'periods_scores': scores
     }
-    base_student = Student.objects.get(registration_id=registration_id)
+    base_student_subquery = Student.objects.get(registration_id=registration_id, person=OuterRef('person'))
     if InternshipStudentInformation.objects.filter(
-            cohort=cohort, person=base_student.person
+            cohort=cohort, person=Subquery(base_student_subquery)
     ).update(evolution_score=None):
         return render(request, "fragment/evolution_score_cell.html", context={
             "student": student,
@@ -402,15 +402,16 @@ def empty_score(request, cohort_id):
 
 
 def _prepare_score_table(cohort, periods, students):
-    persons = students.values_list('person', flat=True)
-    scores = InternshipScore.objects.filter(cohort=cohort, student__person_id__in=list(persons)).select_related(
+    scores = InternshipScore.objects.filter(
+        cohort=cohort, student_id__in=students.values_list('id', flat=True)
+    ).select_related(
         'student__person', 'period', 'cohort'
     ).order_by('student__person')
     mapping = InternshipScoreMapping.objects.filter(cohort=cohort).select_related(
         'period'
     )
     students_affectations = InternshipStudentAffectationStat.objects.filter(
-        student__person_id__in=list(persons),
+        student_id__in=students.values_list('id', flat=True),
         period__cohort=cohort,
     ).select_related(
         'student', 'period', 'speciality'
@@ -762,13 +763,19 @@ def _show_import_success_message(request, period):
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def download_scores(request, cohort_id):
-    cohort = get_object_or_404(Cohort, pk=cohort_id)
+    cohort = get_object_or_404(
+        Cohort.objects.prefetch_related(
+            'internshipstudentinformation_set',
+            'internship_set'
+        ),
+        pk=cohort_id
+    )
     selected_periods = request.POST.getlist('period')
     periods = Period.objects.filter(name__in=selected_periods, cohort=cohort).order_by('date_start')
-    students = InternshipStudentInformation.objects.filter(cohort=cohort).select_related(
+    students = cohort.internshipstudentinformation_set.all().select_related(
       'person'
     ).order_by('person__last_name')
-    internships = Internship.objects.filter(cohort=cohort).order_by('position')
+    internships = cohort.internship_set.all().order_by('position')
     internships = _list_internships_acronyms(internships)
     _prepare_score_table(cohort, periods, students)
     workbook = score_encoding_xls.export_xls_with_scores(cohort, periods, students, internships)
