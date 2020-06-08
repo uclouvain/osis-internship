@@ -273,12 +273,12 @@ def save_evolution_score(request, cohort_id):
 
 
 def _update_evolution_score(cohort, edited_score, registration_id):
-    persons = Student.objects.filter(
+    person = Student.objects.get(
         registration_id=registration_id,
-    ).values('person')
+    ).person
     return InternshipStudentInformation.objects.filter(
         cohort=cohort,
-        person__in=persons
+        person=person
     ).update(
         evolution_score=edited_score
     )
@@ -296,11 +296,11 @@ def delete_evolution_score(request, cohort_id):
         'evolution_score': computed_score,
         'periods_scores': scores
     }
-    persons = Student.objects.filter(
+    person = Student.objects.get(
         registration_id=registration_id,
-    ).values('person')
+    ).person
     if InternshipStudentInformation.objects.filter(
-            cohort=cohort, person__in=persons
+            cohort=cohort, person=person
     ).update(evolution_score=None):
         return render(request, "fragment/evolution_score_cell.html", context={
             "student": student,
