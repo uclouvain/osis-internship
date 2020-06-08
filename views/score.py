@@ -49,7 +49,7 @@ from internship.models.internship_score import InternshipScore
 from internship.models.internship_score_mapping import InternshipScoreMapping
 from internship.models.internship_student_affectation_stat import InternshipStudentAffectationStat
 from internship.models.internship_student_information import InternshipStudentInformation
-from internship.models.period import Period, get_effective_periods
+from internship.models.period import get_effective_periods
 from internship.templatetags.dictionary import is_edited
 from internship.utils.exporting import score_encoding_xls
 from internship.utils.importing import import_scores, import_eval
@@ -64,7 +64,14 @@ MAXIMUM_SCORE = 20
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def scores_encoding(request, cohort_id):
-    cohort = get_object_or_404(Cohort, pk=cohort_id)
+    cohort = get_object_or_404(
+        Cohort.objects.prefetch_related(
+            'internshipstudentinformation_set',
+            'internshipscore_set',
+            'period_set'
+        ),
+        pk=cohort_id
+    )
     all_periods = get_effective_periods(cohort_id)
     periods = all_periods.order_by('date_end')
     completed_periods = periods.filter(date_end__lt=today())
@@ -392,9 +399,9 @@ def _json_response_error(msg):
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def empty_score(request, cohort_id):
-    cohort = get_object_or_404(Cohort, pk=cohort_id)
+    cohort = get_object_or_404(Cohort.objects.prefetch_related('period_set'), pk=cohort_id)
     student = Student.objects.get(registration_id=request.POST.get('registration_id'))
-    period = Period.objects.get(name=request.POST.get("period_name"), cohort=cohort)
+    period = cohort.period_set.filter(name=request.POST.get("period_name"))
     score, created = InternshipScore.objects.update_or_create(
         cohort=cohort, period=period, student=student, defaults={'excused': True}
     )
@@ -408,7 +415,7 @@ def empty_score(request, cohort_id):
 
 def _prepare_score_table(cohort, periods, students):
     persons = students.values_list('person', flat=True)
-    scores = InternshipScore.objects.filter(cohort=cohort, student__person_id__in=persons).select_related(
+    scores = cohort.internshipscore_set.filter(student__person_id__in=persons).select_related(
         'student__person', 'period', 'cohort'
     ).order_by('student__person')
     mapping = cohort.internshipscoremapping_set.all().select_related('period')
@@ -638,8 +645,8 @@ def _filter_students_with_all_grades_submitted(cohort, students, periods, filter
         students_with_affectations = InternshipStudentAffectationStat.objects.filter(
             student__person__in=persons, period__in=completed_periods
         ).values_list('student', flat=True)
-        scores = InternshipScore.objects.filter(
-            cohort=cohort, student__in=students_with_affectations, period__pk__in=completed_periods
+        scores = cohort.internshipscore_set.filter(
+            student__in=students_with_affectations, period__pk__in=completed_periods
         ).values_list('student__person', 'period')
         persons_with_affectations = students_with_affectations.values_list('student__person', flat=True)
         periods_persons = _retrieve_blank_periods_by_student(
@@ -719,7 +726,7 @@ def _process_evaluations(request, cohort, evaluations):
 
 def _check_registration_ids_validity(cohort, registration_ids):
     student_registration_id_query = Student.objects.filter(person=OuterRef('person')).values('registration_id')[:1]
-    filtered_students = InternshipStudentInformation.objects.filter(cohort=cohort).annotate(
+    filtered_students = cohort.internshipstudentinformation_set.all().annotate(
         registration_id=Subquery(student_registration_id_query)
     ).values_list('registration_id', flat=True)
     non_valid_registration_ids = set(registration_ids).difference(set(filtered_students))
