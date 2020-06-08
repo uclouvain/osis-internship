@@ -401,7 +401,7 @@ def _json_response_error(msg):
 def empty_score(request, cohort_id):
     cohort = get_object_or_404(Cohort.objects.prefetch_related('period_set'), pk=cohort_id)
     student = Student.objects.get(registration_id=request.POST.get('registration_id'))
-    period = cohort.period_set.filter(name=request.POST.get("period_name"))
+    period = cohort.period_set.get(name=request.POST.get("period_name"))
     score, created = InternshipScore.objects.update_or_create(
         cohort=cohort, period=period, student=student, defaults={'excused': True}
     )
