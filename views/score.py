@@ -409,9 +409,7 @@ def _prepare_score_table(cohort, periods, students):
     scores = InternshipScore.objects.filter(cohort=cohort, student__person_id__in=persons).select_related(
         'student__person', 'period', 'cohort'
     ).order_by('student__person')
-    mapping = InternshipScoreMapping.objects.filter(cohort=cohort).select_related(
-        'period'
-    )
+    mapping = cohort.internshipscoremapping_set.all().select_related('period')
     students_affectations = InternshipStudentAffectationStat.objects.filter(
         student_id__in=students.values_list('id', flat=True),
         period__cohort=cohort,
