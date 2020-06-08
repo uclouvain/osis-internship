@@ -639,8 +639,8 @@ def _filter_students_with_all_grades_submitted(cohort, students, periods, filter
     if filter is not None:
         persons = students.values_list('person', flat=True)
         completed_periods = periods.filter(date_end__lt=today()).values_list('id', flat=True)
-        students_with_affectations = completed_periods.internshipstudentaffectationstat_set.filter(
-            student__person__in=persons
+        students_with_affectations = InternshipStudentAffectationStat.objects.filter(
+            student__person__in=persons, period__in=completed_periods
         ).values_list('student', flat=True)
         scores = cohort.internshipscore_set.filter(
             student__in=students_with_affectations, period__pk__in=completed_periods
