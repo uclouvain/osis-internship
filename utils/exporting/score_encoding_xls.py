@@ -145,7 +145,7 @@ def _add_header(cohort, periods, worksheet):
         column_titles.append(period.name)
         column_titles.append("{}+".format(period.name))
         column_titles.append("{}-Score".format(period.name))
-    if periods.count() == Period.objects.filter(cohort=cohort).count():
+    if periods.count() == cohort.period_set.all().count():
         column_titles.append("Evolution")
     add_row(worksheet, column_titles)
     cells = worksheet.iter_rows("A1:AAA1")
