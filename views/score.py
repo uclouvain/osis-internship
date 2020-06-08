@@ -133,8 +133,12 @@ def send_mail_recap_per_student(person, persons_dict, **kwargs):
     for period in periods:
         pp = (person, period.id)
         if pp in affectations:
-            spec = InternshipStudentAffectationStat.objects.get(period=period.id,
-                                                                student__person=person).speciality.name
+            spec = InternshipStudentAffectationStat.objects.select_related(
+                'period', 'student__person'
+            ).get(
+                period=period.id,
+                student__person=person
+            ).speciality.name
             if today > period.date_end:
                 persons_dict[person][period.name] = (spec + " - " + _("Grades received")) if pp in scores \
                     else (spec + " - " + _("Grades not received"))
@@ -273,7 +277,7 @@ def save_evolution_score(request, cohort_id):
 
 
 def _update_evolution_score(cohort, edited_score, registration_id):
-    person = Student.objects.get(
+    person = Student.objects.select_related('person').get(
         registration_id=registration_id,
     ).person
     return InternshipStudentInformation.objects.filter(
@@ -296,7 +300,7 @@ def delete_evolution_score(request, cohort_id):
         'evolution_score': computed_score,
         'periods_scores': scores
     }
-    person = Student.objects.get(
+    person = Student.objects.select_related('person').get(
         registration_id=registration_id,
     ).person
     if InternshipStudentInformation.objects.filter(
