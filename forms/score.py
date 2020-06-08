@@ -53,6 +53,14 @@ class ScoresFilterForm(Form):
 
         qs = InternshipStudentInformation.objects.filter(cohort=cohort).select_related(
             'person'
+        ).prefetch_related(
+            'internshipstudentaffectationstat_set__period',
+            'internshipstudentaffectationstat_set__period__cohort',
+            'internshipstudentaffectationstat_set__student__person',
+            'internshipscore_set__cohort',
+            'internshipscore_set__student',
+            'internshipscore_set__student__person',
+            'internshipscore_set__period',
         ).order_by('person__last_name')
 
         if free_text:
