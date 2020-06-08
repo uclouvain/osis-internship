@@ -33,7 +33,7 @@ from dateutil.utils import today
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.db import transaction
-from django.db.models import Subquery, OuterRef
+from django.db.models import OuterRef
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
@@ -276,10 +276,10 @@ def _update_evolution_score(cohort, edited_score, registration_id):
     student_subquery = Student.objects.filter(
         registration_id=registration_id,
         person=OuterRef('person')
-    ).values('person')[:1]
+    ).values('person')
     return InternshipStudentInformation.objects.filter(
         cohort=cohort,
-        person=Subquery(student_subquery)
+        person__in=student_subquery
     ).update(
         evolution_score=edited_score
     )
@@ -300,9 +300,9 @@ def delete_evolution_score(request, cohort_id):
     base_student_subquery = Student.objects.filter(
         registration_id=registration_id,
         person=OuterRef('person')
-    ).values('person')[:1]
+    ).values('person')
     if InternshipStudentInformation.objects.filter(
-            cohort=cohort, person=Subquery(base_student_subquery)
+            cohort=cohort, person__in=base_student_subquery
     ).update(evolution_score=None):
         return render(request, "fragment/evolution_score_cell.html", context={
             "student": student,
@@ -721,9 +721,9 @@ def _process_evaluations(request, cohort, evaluations):
 
 
 def _check_registration_ids_validity(cohort, registration_ids):
-    student_registration_id_query = Student.objects.filter(person=OuterRef('person')).values('registration_id')[:1]
+    student_registration_id_query = Student.objects.filter(person=OuterRef('person')).values('registration_id')
     filtered_students = InternshipStudentInformation.objects.filter(cohort=cohort).annotate(
-        registration_id=Subquery(student_registration_id_query)
+        registration_id__in=student_registration_id_query
     ).values_list('registration_id', flat=True)
     non_valid_registration_ids = set(registration_ids).difference(set(filtered_students))
     valid_registration_ids = set(registration_ids).difference(non_valid_registration_ids)
