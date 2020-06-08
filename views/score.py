@@ -413,7 +413,7 @@ def _prepare_score_table(cohort, periods, students):
     mapping = InternshipScoreMapping.objects.filter(cohort=cohort).select_related(
         'period'
     )
-    students_affectations = students.internshipstudentaffectationstat_set().filter(
+    students_affectations = students.internshipstudentaffectationstat_set.filter(
         period__cohort=cohort
     ).select_related(
         'student', 'period', 'speciality', 'student__person', 'period__cohort', 'organization'
@@ -634,10 +634,10 @@ def _append_student_registration_id(student, students_affectations):
 def _filter_students_with_all_grades_submitted(cohort, students, periods, filter):
     if filter is not None:
         completed_periods = periods.filter(date_end__lt=today()).values_list('id', flat=True)
-        persons_with_affectations = students.internshipstudentaffectationstat_set().filter(
+        persons_with_affectations = students.internshipstudentaffectationstat_set.filter(
             period__in=completed_periods
         ).values_list('student__person', flat=True)
-        scores = students.internshipscore_set().filter(
+        scores = students.internshipscore_set.filter(
             cohort=cohort, student__in=students, period_id__in=completed_periods
         ).values_list('student__person', 'period',)
         periods_persons = _retrieve_blank_periods_by_student(
@@ -653,7 +653,7 @@ def _filter_students_with_all_grades_submitted(cohort, students, periods, filter
 def _filter_students_with_evaluations_submitted(students, periods, filter):
     if filter is not None:
         completed_periods = periods.filter(date_end__lt=today()).values_list('id', flat=True)
-        persons_with_affectations = students.internshipstudentaffectationstat_set().filter(
+        persons_with_affectations = students.internshipstudentaffectationstat_set.filter(
             period__in=completed_periods, internship_evaluated=filter
         ).values_list('student__person', flat=True)
         students = students.filter(person__pk__in=persons_with_affectations)
