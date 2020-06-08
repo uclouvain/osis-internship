@@ -140,12 +140,9 @@ def send_mail_recap_per_student(person, persons_dict, **kwargs):
     for period in periods:
         pp = (person, period.id)
         if pp in affectations:
-            spec = InternshipStudentAffectationStat.objects.select_related(
+            spec = period.internshipstudentaffectationstat_set.select_related(
                 'period', 'student__person'
-            ).get(
-                period=period.id,
-                student__person=person
-            ).speciality.name
+            ).get(student__person=person).speciality.name
             if today > period.date_end:
                 persons_dict[person][period.name] = (spec + " - " + _("Grades received")) if pp in scores \
                     else (spec + " - " + _("Grades not received"))
@@ -419,8 +416,7 @@ def _prepare_score_table(cohort, periods, students):
         'student__person', 'period', 'cohort'
     ).order_by('student__person')
     mapping = cohort.internshipscoremapping_set.all().select_related('period')
-    students_affectations = InternshipStudentAffectationStat.objects.filter(
-        student_id__in=students.values_list('id', flat=True),
+    students_affectations = students.internshipstudentaffectationstat_set.filter(
         period__cohort=cohort,
     ).select_related(
         'student', 'period', 'speciality'
@@ -642,8 +638,8 @@ def _filter_students_with_all_grades_submitted(cohort, students, periods, filter
     if filter is not None:
         persons = students.values_list('person', flat=True)
         completed_periods = periods.filter(date_end__lt=today()).values_list('id', flat=True)
-        students_with_affectations = InternshipStudentAffectationStat.objects.filter(
-            student__person__in=persons, period__in=completed_periods
+        students_with_affectations = completed_periods.internshipstudentaffectationstat_set.filter(
+            student__person__in=persons
         ).values_list('student', flat=True)
         scores = cohort.internshipscore_set.filter(
             student__in=students_with_affectations, period__pk__in=completed_periods
@@ -663,8 +659,8 @@ def _filter_students_with_evaluations_submitted(students, periods, filter):
     if filter is not None:
         persons = students.values_list('person', flat=True)
         completed_periods = periods.filter(date_end__lt=today()).values_list('id', flat=True)
-        students_with_affectations = InternshipStudentAffectationStat.objects.filter(
-            student__person__in=persons, period__in=completed_periods, internship_evaluated=filter
+        students_with_affectations = completed_periods.internshipstudentaffectationstat_set.filter(
+            student__person__in=persons, internship_evaluated=filter
         ).values_list('student', flat=True)
         persons_with_affectations = students_with_affectations.values_list('student__person', flat=True)
         students = students.filter(person__pk__in=persons_with_affectations)
