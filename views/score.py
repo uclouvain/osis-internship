@@ -45,7 +45,6 @@ from base.views.common import display_error_messages, display_success_messages
 from internship.business.scores import InternshipScoreRules
 from internship.forms.score import ScoresFilterForm
 from internship.models.cohort import Cohort
-from internship.models.internship import Internship
 from internship.models.internship_score import InternshipScore
 from internship.models.internship_score_mapping import InternshipScoreMapping
 from internship.models.internship_student_affectation_stat import InternshipStudentAffectationStat
@@ -274,7 +273,10 @@ def save_evolution_score(request, cohort_id):
 
 
 def _update_evolution_score(cohort, edited_score, registration_id):
-    student_subquery = Student.objects.filter(registration_id=registration_id, person=OuterRef('person'))
+    student_subquery = Student.objects.filter(
+        registration_id=registration_id,
+        person=OuterRef('person')
+    ).values('person')[:1]
     return InternshipStudentInformation.objects.filter(
         cohort=cohort,
         person=Subquery(student_subquery)
@@ -295,7 +297,10 @@ def delete_evolution_score(request, cohort_id):
         'evolution_score': computed_score,
         'periods_scores': scores
     }
-    base_student_subquery = Student.objects.filter(registration_id=registration_id, person=OuterRef('person'))
+    base_student_subquery = Student.objects.filter(
+        registration_id=registration_id,
+        person=OuterRef('person')
+    ).values('person')[:1]
     if InternshipStudentInformation.objects.filter(
             cohort=cohort, person=Subquery(base_student_subquery)
     ).update(evolution_score=None):
@@ -716,7 +721,7 @@ def _process_evaluations(request, cohort, evaluations):
 
 
 def _check_registration_ids_validity(cohort, registration_ids):
-    student_registration_id_query = Student.objects.filter(person=OuterRef('person')).values('registration_id')
+    student_registration_id_query = Student.objects.filter(person=OuterRef('person')).values('registration_id')[:1]
     filtered_students = InternshipStudentInformation.objects.filter(cohort=cohort).annotate(
         registration_id=Subquery(student_registration_id_query)
     ).values_list('registration_id', flat=True)
