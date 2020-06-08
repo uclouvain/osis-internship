@@ -33,7 +33,7 @@ from dateutil.utils import today
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.db import transaction
-from django.db.models import OuterRef
+from django.db.models import OuterRef, Subquery
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
@@ -719,9 +719,9 @@ def _process_evaluations(request, cohort, evaluations):
 
 
 def _check_registration_ids_validity(cohort, registration_ids):
-    student_registration_id_query = Student.objects.filter(person=OuterRef('person')).values('registration_id')
+    student_registration_id_query = Student.objects.filter(person=OuterRef('person')).values('registration_id')[:1]
     filtered_students = InternshipStudentInformation.objects.filter(cohort=cohort).annotate(
-        registration_id__in=student_registration_id_query
+        registration_id=Subquery(student_registration_id_query)
     ).values_list('registration_id', flat=True)
     non_valid_registration_ids = set(registration_ids).difference(set(filtered_students))
     valid_registration_ids = set(registration_ids).difference(non_valid_registration_ids)
