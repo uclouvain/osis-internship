@@ -280,8 +280,7 @@ def _update_evolution_score(cohort, edited_score, registration_id):
     person = Student.objects.select_related('person').get(
         registration_id=registration_id,
     ).person
-    return InternshipStudentInformation.objects.filter(
-        cohort=cohort,
+    return cohort.internshipstudentinformation_set.filter(
         person=person
     ).update(
         evolution_score=edited_score
@@ -303,8 +302,8 @@ def delete_evolution_score(request, cohort_id):
     person = Student.objects.select_related('person').get(
         registration_id=registration_id,
     ).person
-    if InternshipStudentInformation.objects.filter(
-            cohort=cohort, person=person
+    if cohort.internshipstudentinformation_set.filter(
+            person=person
     ).update(evolution_score=None):
         return render(request, "fragment/evolution_score_cell.html", context={
             "student": student,
@@ -365,15 +364,14 @@ def delete_edited_score(request, cohort_id):
 
 
 def _delete_score(cohort, period_name, registration_id):
-    return InternshipScore.objects.filter(
-        cohort=cohort,
+    return cohort.internshipscore_set.filter(
         period__name=period_name,
         student__registration_id=registration_id
     ).update(score=None, excused=False)
 
 
 def _update_score(cohort, edited_score, period_name, registration_id):
-    period = Period.objects.get(cohort=cohort, name=period_name)
+    period = cohort.period_set.get(name=period_name)
     student = Student.objects.get(registration_id=registration_id)
     data = {'cohort': cohort, 'student': student, 'period': period}
     return InternshipScore.objects.filter(**data).update_or_create(**data, defaults={'score': edited_score})
@@ -813,8 +811,8 @@ def upload_eval(request, cohort_id):
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def save_mapping(request, cohort_id):
-    cohort = get_object_or_404(Cohort, pk=cohort_id)
-    periods = Period.objects.filter(cohort=cohort).order_by('date_start')
+    cohort = get_object_or_404(Cohort.objects.prefetch_related('period_set'), pk=cohort_id)
+    periods = cohort.period_set.all().order_by('date_start')
     anchor = "#mapping"
     if request.POST:
         _save_mapping_diff(cohort, periods, request)
