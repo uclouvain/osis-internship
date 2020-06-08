@@ -53,9 +53,9 @@
     <div class="tab-content">
             <div id="scores" class="tab-pane fade in active">
                 <div class="panel panel-body">
-                    <form action="{% url 'internship_scores_encoding' cohort_id=cohort.id %}" method="get" class="" id="search_form">
+                    <form action="{% url 'internship_scores_encoding' cohort_id=cohort.id %}" method="get" id="search_form">
                     <div style="margin-bottom: 10px;" class="row">
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <label for="free_text_id">{% trans 'Search' %}</label>
                             {{ search_form.free_text }}
                         </div>
@@ -72,6 +72,10 @@
                         <div class="col-md-2">
                             <label for="period_id">{% trans 'Evaluations submitted' %}</label>
                             {{ search_form.evaluations_submitted_filter }}
+                        </div>
+                        <div class="col-md-2">
+                            <label for="period_id">{% trans 'All APDs validated' %}</label>
+                            {{ search_form.all_apds_validated_filter }}
                         </div>
                         <div class="col-md-1">
                             <button type="submit" class="btn btn-primary" style="margin-top: 26px;">

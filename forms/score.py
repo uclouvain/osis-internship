@@ -43,6 +43,13 @@ class ScoresFilterForm(Form):
         widget=forms.Select(attrs={"class": "form-control"})
     )
 
+    all_apds_validated_filter = forms.TypedChoiceField(
+        coerce=lambda x: x == 'True',
+        required=False,
+        choices=YES_NO_CHOICES,
+        widget=forms.Select(attrs={"class": "form-control"})
+    )
+
     def __init__(self, *args, **kwargs):
         cohort = kwargs.pop('cohort')
         super(ScoresFilterForm, self).__init__(*args, **kwargs)
@@ -78,6 +85,12 @@ class ScoresFilterForm(Form):
         if evaluations_submitted_filter == "":
             return None
         return evaluations_submitted_filter
+
+    def get_all_apds_validated_filter(self):
+        all_apds_validated_filter = self.cleaned_data.get('all_apds_validated_filter')
+        if all_apds_validated_filter == "":
+            return None
+        return all_apds_validated_filter
 
 
 def search_students_with_free_text(free_text, qs):

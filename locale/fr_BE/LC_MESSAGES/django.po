@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-25 17:24+0200\n"
+"POT-Creation-Date: 2020-06-08 15:12+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -58,6 +58,9 @@ msgstr "Adresse"
 
 msgid "Affectation's result"
 msgstr "Résultat de l'affectation"
+
+msgid "All APDs validated"
+msgstr "Tous les APDs validés"
 
 msgid "All grades submitted"
 msgstr "Encodage complet"
@@ -266,7 +269,8 @@ msgstr ""
 
 #, python-format
 msgid "Evaluation status successfully updated for %(periods)s"
-msgstr "Le statut des évaluations a été correctement mis à jour pour %(periods)s"
+msgstr ""
+"Le statut des évaluations a été correctement mis à jour pour %(periods)s"
 
 msgid "Evaluations submitted"
 msgstr "Évaluations soumises"
