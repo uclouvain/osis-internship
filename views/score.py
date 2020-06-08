@@ -274,7 +274,7 @@ def save_evolution_score(request, cohort_id):
 
 
 def _update_evolution_score(cohort, edited_score, registration_id):
-    student_subquery = Student.objects.get(registration_id=registration_id, person=OuterRef('person'))
+    student_subquery = Student.objects.filter(registration_id=registration_id, person=OuterRef('person'))
     return InternshipStudentInformation.objects.filter(
         cohort=cohort,
         person=Subquery(student_subquery)
@@ -295,7 +295,7 @@ def delete_evolution_score(request, cohort_id):
         'evolution_score': computed_score,
         'periods_scores': scores
     }
-    base_student_subquery = Student.objects.get(registration_id=registration_id, person=OuterRef('person'))
+    base_student_subquery = Student.objects.filter(registration_id=registration_id, person=OuterRef('person'))
     if InternshipStudentInformation.objects.filter(
             cohort=cohort, person=Subquery(base_student_subquery)
     ).update(evolution_score=None):
@@ -766,12 +766,13 @@ def download_scores(request, cohort_id):
     cohort = get_object_or_404(
         Cohort.objects.prefetch_related(
             'internshipstudentinformation_set',
-            'internship_set'
+            'internship_set',
+            'period_set'
         ),
         pk=cohort_id
     )
     selected_periods = request.POST.getlist('period')
-    periods = Period.objects.filter(name__in=selected_periods, cohort=cohort).order_by('date_start')
+    periods = cohort.period_set.filter(name__in=selected_periods).order_by('date_start')
     students = cohort.internshipstudentinformation_set.all().select_related(
       'person'
     ).order_by('person__last_name')
