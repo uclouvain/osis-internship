@@ -77,5 +77,9 @@ def find_by_cohort(cohort):
 
 
 def get_effective_periods(cohort_id):
-    qs = Period.objects.filter(cohort__pk=cohort_id).order_by("date_end")
+    qs = Period.objects.filter(
+        cohort__pk=cohort_id
+    ).prefetch_related(
+        'internshipstudentaffectationstat_set'
+    ).order_by("date_end")
     return qs.exclude(pk=qs.last().pk)
