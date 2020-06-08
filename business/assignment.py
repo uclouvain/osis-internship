@@ -39,14 +39,11 @@ from internship.models.enums import costs
 from internship.models.enums.affectation_type import AffectationType
 from internship.models.enums.choice_type import ChoiceType
 from internship.models.enums.costs import Costs
-from internship.models.internship import Internship
 from internship.models.internship_choice import InternshipChoice, find_students_with_priority_choices
 from internship.models.internship_enrollment import InternshipEnrollment
-from internship.models.internship_offer import InternshipOffer
-from internship.models.internship_speciality import InternshipSpeciality
 from internship.models.internship_student_affectation_stat import InternshipStudentAffectationStat
-from internship.models.internship_student_information import InternshipStudentInformation
 from internship.models.organization import Organization
+from internship.models.period import Period
 from internship.models.period_internship_places import PeriodInternshipPlaces
 from internship.utils.assignment.period_place_utils import *
 from internship.utils.assignment.period_utils import group_periods_by_consecutives, map_period_ids
@@ -67,13 +64,11 @@ class Assignment:
         self.last_switch = []
         self.internship_count = 0
 
-        self.students_information = InternshipStudentInformation.objects.filter(
-            cohort=self.cohort
-        ).select_related('person')
+        self.students_information = self.cohort.internshipstudentinformation_set.all().select_related('person')
         self.person_ids = self.students_information.values_list("person_id", flat=True)
         self.students = Student.objects.filter(person_id__in=self.person_ids)
 
-        self.internships = Internship.objects.filter(cohort=self.cohort).order_by("position", "name")
+        self.internships = self.cohort.internship_set.all().order_by('position', 'name')
         self.prioritary_students_person_ids = find_students_with_priority_choices(
             self.internships
         ).values_list('person__id', flat=True)
@@ -81,22 +76,24 @@ class Assignment:
         self.mandatory_internships = self.internships.exclude(speciality__isnull=True)
         self.non_mandatory_internships = self.internships.filter(speciality__isnull=True)
 
-        self.specialities = InternshipSpeciality.objects.filter(cohort=self.cohort)
-        self.default_speciality = InternshipSpeciality.objects.filter(cohort=self.cohort, acronym="MO").first()
+        self.specialities = self.cohort.internshipspeciality_set.all()
+        self.default_speciality = self.cohort.internshipspeciality_set.filter(
+            acronym='MO'
+        ).first()
 
         self.organization_error = mdl.organization.get_hospital_error(self.cohort)
-        self.pending_organization = Organization.objects.filter(cohort=self.cohort, reference="604").first()
-        self.forbidden_organizations = Organization.objects.annotate(reference_length=Length('reference')) \
-                                                           .exclude(reference="00") \
-                                                           .filter(cohort=self.cohort, reference_length=3)
+        self.pending_organization = cohort.organization_set.filter(reference='604').first()
+        self.forbidden_organizations = cohort.organization_set.annotate(
+            reference_length=Length('reference')
+        ).exclude(reference="00").filter(reference_length=3)
 
-        self.offers = InternshipOffer.objects.filter(cohort=self.cohort)
+        self.offers = self.cohort.internshipoffer_set.all()
         self.offer_ids = self.offers.values_list("id", flat=True)
         self.available_places = PeriodInternshipPlaces.objects.filter(internship_offer_id__in=self.offer_ids).values()
-        last_period = mdl.period.Period.objects.filter(cohort=self.cohort).order_by('date_end').last()
-        self.periods = mdl.period.Period.objects.extra(select={"period_number": "CAST(substr(name, 2) AS INTEGER)"}) \
-                                                .exclude(name=last_period.name)\
-                                                .filter(cohort=self.cohort).order_by("period_number")
+        last_period = self.cohort.period_set.all().order_by('date_end').last()
+        self.periods = self.cohort.period_set.all().extra(
+            select={"period_number": "CAST(substr(name, 2) AS INTEGER)"}
+        ).exclude(name=last_period.name).order_by("period_number")
 
         self.choices = InternshipChoice.objects.filter(internship__cohort=self.cohort).select_related(
             'student', 'internship'
@@ -112,6 +109,7 @@ class Assignment:
                 return function
             else:
                 logger.warning("{} blocked due to execution after publication date.".format(function.__name__))
+
         return wrapper
 
     @transaction.atomic
@@ -173,9 +171,9 @@ def _update_distinction_between_students(self):
     disadvantaged_students = []
     favored_students = []
     for student in self.students_information:
-        if student.cost >= Costs.PRIORITY.value and student.cost < Costs.IMPOSED.value:
-            if student.person_id not in self.prioritary_students_person_ids:
-                favored_students.append(student)
+        if student.cost >= Costs.PRIORITY.value and student.cost < Costs.IMPOSED.value and student.person_id not in \
+                self.prioritary_students_person_ids:
+            favored_students.append(student)
         if student.cost >= self.MAX_ALLOWED_IMPOSED * Costs.IMPOSED.value:
             if student.cost >= Costs.ERROR.value + self.MAX_ALLOWED_IMPOSED * Costs.IMPOSED.value:
                 student.cost = student.cost - Costs.ERROR.value
@@ -244,7 +242,7 @@ def _disadvantaged_affectation_is_switchable(d_affectation):
 
 
 def _favored_affectation_is_switchable(f_affectation, d_affectation, d_organization_choices):
-    return f_affectation.organization.id in d_organization_choices and f_affectation.period == d_affectation.period\
+    return f_affectation.organization.id in d_organization_choices and f_affectation.period == d_affectation.period \
            and f_affectation.speciality == d_affectation.speciality and f_affectation.type != AffectationType.PRIORITY
 
 
@@ -275,11 +273,11 @@ def _store_exchanged_affectation_information(self, d_organization_choices, d_aff
 
 
 def _get_hospital_choice_type(d_organization_choices, selected_organization_id):
-    return d_organization_choices.index(selected_organization_id)+1
+    return d_organization_choices.index(selected_organization_id) + 1
 
 
 def _clean_previous_solution(cohort):
-    period_ids = mdl.period.find_by_cohort(cohort).values_list("id", flat=True)
+    period_ids = Period.objects.filter(cohort=cohort).order_by("date_start").values_list("id", flat=True)
     curr_affectations = InternshipStudentAffectationStat.objects.filter(period__id__in=period_ids). \
         select_related("student", "organization", "speciality")
     curr_affectations._raw_delete(curr_affectations.db)
@@ -351,17 +349,18 @@ def assign_choices_to_student(assignment, student, choices, internship, last=Fal
         if is_non_mandatory_internship(internship):
             affecs = assignment.affectations
             affecs = [a for a in affecs if a.organization.reference == choice.organization.reference and
-                                           a.speciality == choice.speciality and
-                                           a.student == student and
-                                           a.choice == ChoiceType.PRIORITY.value]
+                      a.speciality == choice.speciality and
+                      a.student == student and
+                      a.choice == ChoiceType.PRIORITY.value]
             if len(affecs) > 0:
                 continue
 
         periods = find_first_student_available_periods_for_internship_choice(assignment, student, internship, choice)
         if len(periods) > 0:
-            if is_non_mandatory_internship(internship) and not internship.first:
-                if not choice.priority and not is_prior_internship(internship, choices):
-                    choice.choice = ChoiceType.IMPOSED.value
+            if is_non_mandatory_internship(
+                    internship) and not internship.first and not choice.priority and not is_prior_internship(internship,
+                                                                                                             choices):
+                choice.choice = ChoiceType.IMPOSED.value
             affectations.extend(build_affectation_for_periods(assignment, student, choice.organization, periods,
                                                               choice.speciality, choice.choice, choice.priority,
                                                               choice.internship))
@@ -460,7 +459,7 @@ def find_best_available_offer_for_internship_periods(assignment, internship, cho
 
         if len(period_places) > 0:
             return available_offers.get(
-                pk=period_places[random.randint(0, len(period_places)-1)]["internship_offer_id"]
+                pk=period_places[random.randint(0, len(period_places) - 1)]["internship_offer_id"]
             )
 
 
@@ -573,12 +572,12 @@ def find_offer_in_organization_error(assignment, internship):
 
 def offers_for_available_organizations(assignment, speciality, unavailable_organizations):
     if speciality:
-        return assignment.offers.exclude(organization__in=unavailable_organizations)\
-                                .filter(speciality=speciality)\
-                                .exclude(organization__in=assignment.forbidden_organizations)
+        return assignment.offers.exclude(organization__in=unavailable_organizations) \
+            .filter(speciality=speciality) \
+            .exclude(organization__in=assignment.forbidden_organizations)
     else:
-        return assignment.offers.filter(speciality__in=assignment.specialities)\
-                                .exclude(organization__in=assignment.forbidden_organizations)
+        return assignment.offers.filter(speciality__in=assignment.specialities) \
+            .exclude(organization__in=assignment.forbidden_organizations)
 
 
 def find_offers_for_internship_choice(assignment, choice):
