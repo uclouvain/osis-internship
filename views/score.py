@@ -291,7 +291,7 @@ def delete_evolution_score(request, cohort_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
     registration_id = request.POST.get("student")
     computed_score = int(request.POST.get("computed"))
-    scores = json.loads(request.POST['scores'].replace("'", '"'))
+    scores = _load_json_scores(request)
     student = {
         'registration_id': registration_id,
         'evolution_score': computed_score,
