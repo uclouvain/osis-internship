@@ -40,6 +40,11 @@ class ScoresFilterForm(Form):
     evaluations_submitted_filter = yes_no_typed_choice_field
     all_apds_validated_filter = yes_no_typed_choice_field
 
+    show_apds_validation = forms.BooleanField(
+        required=False,
+        initial=False
+    )
+
     def __init__(self, *args, **kwargs):
         cohort = kwargs.pop('cohort')
         super(ScoresFilterForm, self).__init__(*args, **kwargs)

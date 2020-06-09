@@ -64,17 +64,17 @@
                             {{ search_form.period }}
                         </div>
                         <div class="col-md-2">
-                            <label for="period_id">{% trans 'All grades submitted' %}</label>
+                            <label>{% trans 'All grades submitted' %}</label>
                             <i title="{% trans "Show only students having submitted / not submitted all their grades considering only completed periods" %}"
                                class="fas fa-info-circle text-info"></i>
                             {{ search_form.all_grades_submitted_filter }}
                         </div>
                         <div class="col-md-2">
-                            <label for="period_id">{% trans 'Evaluations submitted' %}</label>
+                            <label>{% trans 'Evaluations submitted' %}</label>
                             {{ search_form.evaluations_submitted_filter }}
                         </div>
                         <div class="col-md-2">
-                            <label for="period_id">{% trans 'All APDs validated' %}</label>
+                            <label>{% trans 'All APDs validated' %}</label>
                             {{ search_form.all_apds_validated_filter }}
                         </div>
                         <div class="col-md-1">
@@ -126,6 +126,10 @@
                                 </ul>
                             </div>
                         </div>
+                        <div class="col-md-offset-7 col-md-2">
+                            <label>{% trans 'Show APD validation' %}</label>
+                            {{ search_form.show_apds_validation }}
+                        </div>
                     </div>
                 </form>
                 <div class="table-responsive">
@@ -153,6 +157,7 @@
                             <form action="{% url 'send_summary' cohort_id=cohort.id %}" method="post" id="send_summary_form">
                         {% endif %}
                         {% csrf_token %}
+                        {% with last_complete_period=completed_periods.last last_period=periods.last %}
                         {% for student in students %}
                          <tr>
                           <td rowspan="{{ periods|length|add:1 }}">
@@ -169,7 +174,7 @@
                           <td style="max-width: 10vw;" class="overflow-cell" rowspan="{{ periods|length|add:1 }}">{{ student }}</td>
                       </tr>
                         {% for period in periods %}
-                          <tr {% if period == completed_periods.last and periods.last is not completed_periods.last %}
+                          <tr {% if period == last_complete_period and last_period is not last_completed_period %}
                               class="last-completed-period"
                           {% endif %}>
                             <td>
@@ -234,6 +239,17 @@
                             {% endwith %}
                           {% endfor %}
                             </tr>
+                            {% if search_form.show_apds_validation.value %}
+                            <tr>
+                                <td colspan="7" style="text-align: right;">{% trans 'APD Validation' %}</td>
+                                {% for apd in apd_range %}
+                                    <td class="hidden-sm hidden-xs text-center">
+                                        {% is_apd_validated cohort student apd as success %}
+                                        <icon class="fas fa-circle {% if success %} text-success {% else %} text-danger {% endif %}"></icon>
+                                    </td>
+                                {% endfor %}
+                            </tr>
+                            {% endif %}
                             {% if periods|length == all_periods|length %}
                                 {% include 'fragment/evolution_score_cell.html' %}
                             {% endif %}
@@ -242,6 +258,7 @@
                                 {% trans 'No result' %}
                             </tr>
                         {% endfor %}
+                        {% endwith %}
                         </form>
                     </table>
                     <div>
