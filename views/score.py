@@ -79,8 +79,10 @@ def scores_encoding(request, cohort_id):
         periods = search_form.get_period(cohort=cohort)
         grades_filter = search_form.get_all_grades_submitted_filter()
         evals_filter = search_form.get_evaluations_submitted_filter()
+        apds_filter = search_form.get_all_apds_validated_filter()
         students_list = _filter_students_with_all_grades_submitted(cohort, students_list, periods, grades_filter)
         students_list = _filter_students_with_evaluations_submitted(students_list, periods, evals_filter)
+        students_list = _filter_students_with_all_apds_validated(cohort, students_list, periods, apds_filter)
 
     students = get_object_list(request, students_list)
     mapping = _prepare_score_table(cohort, periods, students.object_list)
@@ -402,8 +404,8 @@ def empty_score(request, cohort_id):
 
 
 def _prepare_score_table(cohort, periods, students):
-    persons = students.values_list('person', flat=True)
-    scores = InternshipScore.objects.filter(cohort=cohort, student__person_id__in=list(persons)).select_related(
+    persons = [s.person.pk for s in students]
+    scores = InternshipScore.objects.filter(cohort=cohort, student__person_id__in=persons).select_related(
         'student__person', 'period', 'cohort'
     ).order_by('student__person')
     mapping = InternshipScoreMapping.objects.filter(cohort=cohort).select_related(
@@ -658,6 +660,20 @@ def _filter_students_with_evaluations_submitted(students, periods, filter):
         ).values_list('student', flat=True)
         persons_with_affectations = students_with_affectations.values_list('student__person', flat=True)
         students = students.filter(person__pk__in=persons_with_affectations)
+    return students
+
+
+def _filter_students_with_all_apds_validated(cohort, students, periods, filter):
+    if filter is not None:
+        persons = students.values_list('person', flat=True)
+        scores = InternshipScore.objects.filter(cohort=cohort, student__person_id__in=list(persons)).select_related(
+            'student__person', 'period', 'cohort'
+        ).order_by('student__person')
+        scores = _group_by_students_and_periods(scores)
+        _prepare_students_extra_data(students)
+        _match_scores_with_students(cohort, periods, scores, students)
+        _set_condition_fulfilled_status(students)
+        students = [s for s in students if s.fulfill_condition == filter]
     return students
 
 

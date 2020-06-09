@@ -29,19 +29,16 @@ class ScoresFilterForm(Form):
         widget=forms.Select(attrs={"class": "form-control"})
     )
 
-    all_grades_submitted_filter = forms.TypedChoiceField(
+    yes_no_typed_choice_field = forms.TypedChoiceField(
         coerce=lambda x: x == 'True',
         required=False,
         choices=YES_NO_CHOICES,
         widget=forms.Select(attrs={"class": "form-control"})
     )
 
-    evaluations_submitted_filter = forms.TypedChoiceField(
-        coerce=lambda x: x == 'True',
-        required=False,
-        choices=YES_NO_CHOICES,
-        widget=forms.Select(attrs={"class": "form-control"})
-    )
+    all_grades_submitted_filter = yes_no_typed_choice_field
+    evaluations_submitted_filter = yes_no_typed_choice_field
+    all_apds_validated_filter = yes_no_typed_choice_field
 
     def __init__(self, *args, **kwargs):
         cohort = kwargs.pop('cohort')
@@ -68,16 +65,19 @@ class ScoresFilterForm(Form):
         return qs
 
     def get_all_grades_submitted_filter(self):
-        all_grades_submitted_filter = self.cleaned_data.get('all_grades_submitted_filter')
-        if all_grades_submitted_filter == "":
-            return None
-        return all_grades_submitted_filter
+        return self.get_filter('all_grades_submitted_filter')
 
     def get_evaluations_submitted_filter(self):
-        evaluations_submitted_filter = self.cleaned_data.get('evaluations_submitted_filter')
-        if evaluations_submitted_filter == "":
+        return self.get_filter('evaluations_submitted_filter')
+
+    def get_all_apds_validated_filter(self):
+        return self.get_filter('all_apds_validated_filter')
+
+    def get_filter(self, filter_name):
+        filter = self.cleaned_data.get(filter_name)
+        if filter == "":
             return None
-        return evaluations_submitted_filter
+        return filter
 
 
 def search_students_with_free_text(free_text, qs):
