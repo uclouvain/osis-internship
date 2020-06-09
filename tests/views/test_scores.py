@@ -106,6 +106,7 @@ class ScoresEncodingTest(TestCase):
         cls.user = User.objects.create_user('demo', 'demo@demo.org', 'passtest')
         permission = Permission.objects.get(codename='is_internship_manager')
         cls.user.user_permissions.add(permission)
+        cls.all_apds_validated = {'APD_{}'.format(i): 'D' for i in range(1, APD_NUMBER+1)}
 
     def test_view_scores_encoding(self):
         url = reverse('internship_scores_encoding', kwargs={'cohort_id': self.cohort.pk})
@@ -261,16 +262,14 @@ class ScoresEncodingTest(TestCase):
 
     def test_filter_all_apds_validated(self):
         student_with_all_apds = Student.objects.first()
-        all_apds_validated = {'APD_{}'.format(i): 'D' for i in range(1, APD_NUMBER+1)}
-        InternshipScore.objects.filter(student=student_with_all_apds).update(**all_apds_validated)
+        InternshipScore.objects.filter(student=student_with_all_apds).update(**self.all_apds_validated)
         url = reverse('internship_scores_encoding', kwargs={'cohort_id': self.cohort.pk})
         response = self.client.get(url, data={'all_apds_validated_filter': True})
         self.assertEqual(len(response.context['students'].object_list), 1)
 
     def test_filter_not_all_apds_validated(self):
         student_with_not_all_apds = Student.objects.first()
-        all_apds_validated = {'APD_{}'.format(i): 'D' for i in range(1, APD_NUMBER+1)}
-        InternshipScore.objects.all().exclude(student=student_with_not_all_apds).update(**all_apds_validated)
+        InternshipScore.objects.all().exclude(student=student_with_not_all_apds).update(**self.all_apds_validated)
         url = reverse('internship_scores_encoding', kwargs={'cohort_id': self.cohort.pk})
         response = self.client.get(url, data={'all_apds_validated_filter': False})
         self.assertEqual(len(response.context['students'].object_list), 1)
