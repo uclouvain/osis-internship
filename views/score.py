@@ -46,7 +46,7 @@ from internship.business.scores import InternshipScoreRules
 from internship.forms.score import ScoresFilterForm
 from internship.models.cohort import Cohort
 from internship.models.internship import Internship
-from internship.models.internship_score import InternshipScore
+from internship.models.internship_score import InternshipScore, APD_NUMBER
 from internship.models.internship_score_mapping import InternshipScoreMapping
 from internship.models.internship_student_affectation_stat import InternshipStudentAffectationStat
 from internship.models.internship_student_information import InternshipStudentInformation
@@ -89,7 +89,7 @@ def scores_encoding(request, cohort_id):
     grades = [grade for grade, _ in InternshipScore.SCORE_CHOICES]
     context = {'cohort': cohort, 'periods': periods, 'all_periods': all_periods, 'students': students, 'grades': grades,
                'affectations_count': affectations_count, 'search_form': search_form, 'mapping': list(mapping),
-               'completed_periods': completed_periods}
+               'completed_periods': completed_periods, 'apd_range': range(1, APD_NUMBER + 1)}
     return render(request, "scores.html", context=context)
 
 
@@ -408,9 +408,7 @@ def _prepare_score_table(cohort, periods, students):
     scores = InternshipScore.objects.filter(cohort=cohort, student__person_id__in=persons).select_related(
         'student__person', 'period', 'cohort'
     ).order_by('student__person')
-    mapping = InternshipScoreMapping.objects.filter(cohort=cohort).select_related(
-        'period'
-    )
+    mapping = InternshipScoreMapping.objects.filter(cohort=cohort).select_related('period')
     students_affectations = InternshipStudentAffectationStat.objects.filter(
         student__person_id__in=list(persons),
         period__cohort=cohort,
