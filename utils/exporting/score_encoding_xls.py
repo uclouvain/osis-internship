@@ -29,7 +29,7 @@ from openpyxl.utils import get_column_letter
 from openpyxl.writer.excel import save_virtual_workbook
 
 from internship import models
-from internship.models.period import Period
+from internship.models.period import get_effective_periods
 from internship.templatetags.dictionary import is_edited
 from internship.utils.exporting.spreadsheet import columns_resizing, add_row
 
@@ -104,7 +104,7 @@ def _retrieve_score(period_score):
 
 def _make_complete_list(periods, students, worksheet):
     columns_resizing(worksheet, _get_columns_width())
-    all_periods_count = Period.objects.filter(cohort=periods.first().cohort).count()
+    all_periods_count = get_effective_periods(periods.first().cohort.pk).count()
     for student in students:
         if student.registration_id:
             columns = []
@@ -141,11 +141,12 @@ def _add_sheet_header(worksheet):
 
 def _add_header(cohort, periods, worksheet):
     column_titles = ["Nom", "Prénom", "NOMA"]
+    all_periods_count = get_effective_periods(periods.first().cohort.pk).count()
     for period in periods:
         column_titles.append(period.name)
         column_titles.append("{}+".format(period.name))
         column_titles.append("{}-Score".format(period.name))
-    if periods.count() == Period.objects.filter(cohort=cohort).count():
+    if periods.count() == all_periods_count:
         column_titles.append("Evolution")
     add_row(worksheet, column_titles)
     cells = worksheet.iter_rows("A1:AAA1")
