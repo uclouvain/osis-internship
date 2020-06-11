@@ -51,7 +51,7 @@ from internship.models.internship_score_mapping import InternshipScoreMapping
 from internship.models.internship_student_affectation_stat import InternshipStudentAffectationStat
 from internship.models.internship_student_information import InternshipStudentInformation
 from internship.models.period import Period, get_effective_periods
-from internship.templatetags.dictionary import is_edited
+from internship.templatetags.dictionary import is_edited, is_excused
 from internship.utils.exporting import score_encoding_xls
 from internship.utils.importing import import_scores, import_eval
 from internship.utils.mails import mails_management
@@ -470,12 +470,13 @@ def _get_scores_mean(scores, n_periods):
     effective_n_periods = n_periods - _count_emptied_scores(scores)
     for key in scores.keys():
         period_score = _get_period_score(scores[key])
-        evolution_score += period_score / effective_n_periods if period_score else 0
+        evolution_score += period_score / effective_n_periods if period_score and isinstance(period_score, int) else 0
     return round_half_up(evolution_score)
 
 
 def _get_period_score(score):
-    return score['edited'] if is_edited(score) else score
+    score = score['edited'] if is_edited(score) else score
+    return None if is_excused(score) else score
 
 
 def _count_emptied_scores(scores):
@@ -566,8 +567,10 @@ def _append_period_scores_to_student(period, student, student_scores):
 
 
 def _retrieve_scores_entered_manually(period, student, student_scores):
-    if student_scores[0].score is not None or student_scores[0].excused:
-        student.numeric_scores.update({period.name: student_scores[0].score})
+    student_score = student_scores[0]
+    score = student_score.score
+    if score or student_score.excused:
+        student.numeric_scores.update({period.name: {'excused': score} if student_score.excused else score})
 
 
 def _link_periods_to_specialties(students, students_affectations):
