@@ -96,10 +96,16 @@ def _append_row_data(columns, period, student):
 
 
 def _retrieve_score(period_score):
-    if isinstance(period_score, dict) and 'edited' in period_score:
+    if _is_dict_with_key(period_score, 'edited'):
+        if _is_dict_with_key(period_score['edited'], 'excused'):
+            return period_score['edited']['excused'] or ''
         return period_score['edited'] or ''
     else:
         return period_score
+
+
+def _is_dict_with_key(obj, key):
+    return isinstance(obj, dict) and key in obj
 
 
 def _make_complete_list(periods, students, worksheet):

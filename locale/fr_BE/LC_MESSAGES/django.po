@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-06-09 09:46+0200\n"
+"POT-Creation-Date: 2020-06-11 15:53+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -626,6 +626,9 @@ msgstr "Note"
 
 msgid "Score edited. Computed score: "
 msgstr "Note modifiée. Note calculée: "
+
+msgid "Score excused"
+msgstr "Note excusée"
 
 #, python-format
 msgid "Score must be between %(minimum)d and %(maximum)d"

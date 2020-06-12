@@ -40,3 +40,8 @@ def has_substr(dictionary, key):
 @register.filter
 def is_edited(val):
     return type(val) is dict and 'edited' in val.keys()
+
+
+@register.filter
+def is_excused(val):
+    return type(val) is dict and 'excused' in val.keys()
