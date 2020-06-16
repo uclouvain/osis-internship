@@ -239,7 +239,7 @@ msgid "Editable address"
 msgstr "Adresse modifiable"
 
 msgid "Email"
-msgstr "Email"
+msgstr "Courriel"
 
 msgid "End date"
 msgstr "Date de fin"
