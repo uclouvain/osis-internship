@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-06-22 09:51+0200\n"
+"POT-Creation-Date: 2020-06-22 11:03+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -280,7 +280,16 @@ msgstr ""
 msgid "Evaluations submitted"
 msgstr ""
 
+msgid "Evolution"
+msgstr ""
+
 msgid "Evolution Score:"
+msgstr ""
+
+msgid "Evolution computed"
+msgstr ""
+
+msgid "Evolution edited"
 msgstr ""
 
 msgid "Evolution score will <b>not</b> be exported"
@@ -322,6 +331,9 @@ msgstr ""
 msgid "First name"
 msgstr ""
 
+msgid "Firstname"
+msgstr ""
+
 msgid "Following modifications will be applied:"
 msgstr ""
 
@@ -338,6 +350,9 @@ msgid "Generalist"
 msgstr ""
 
 msgid "Generate solution"
+msgstr ""
+
+msgid "Grade"
 msgstr ""
 
 msgid "Grades not received"
