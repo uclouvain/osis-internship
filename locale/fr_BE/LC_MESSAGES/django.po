@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-06-22 11:03+0200\n"
+"POT-Creation-Date: 2020-06-22 16:29+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -537,6 +537,9 @@ msgstr "Hôpital inexistant"
 msgid "No internship"
 msgstr "Aucun stage"
 
+msgid "No reason"
+msgstr "Pas de motif"
+
 msgid "No result"
 msgstr "Aucun résultat"
 
@@ -579,6 +582,9 @@ msgstr "Organisation"
 msgid "Other choice"
 msgstr "Autre choix"
 
+msgid "Other reason"
+msgstr ""
+
 msgid "Paste"
 msgstr "Coller"
 
@@ -618,6 +624,9 @@ msgstr "Position"
 msgid "Postal code"
 msgstr "Code postal"
 
+msgid "Predifined reason"
+msgstr "Motif prédéfini"
+
 msgid "Preference"
 msgstr "Préférence"
 
@@ -627,11 +636,20 @@ msgstr "Prioritaire"
 msgid "Private email"
 msgstr "Email Privé"
 
+msgid "Provide a reason for editing score ?"
+msgstr "Fournir un motif de modification de la note ?"
+
+msgid "Provide reason"
+msgstr "Fournir le motif"
+
 msgid "Publication date"
 msgstr "Date de publication"
 
 msgid "Publication must be done after the subscription process."
 msgstr "La publication doit être réalisée après le processus d'inscription."
+
+msgid "Reason"
+msgstr "Motif"
 
 msgid "Reference"
 msgstr "Référence"
@@ -832,6 +850,11 @@ msgid ""
 msgstr ""
 "Vous êtes dans la période des inscriptions. Il est recommandé de ne pas "
 "changer les choix au cours de cette période."
+
+msgid ""
+"You may provide a reason for editing score by choosing a justification from "
+"the list below."
+msgstr ""
 
 msgid "items per page"
 msgstr "éléments par page"
