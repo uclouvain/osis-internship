@@ -134,6 +134,13 @@
                 </form>
                 <div class="table-responsive">
                   <table class="table">
+                    <tr>
+                        <strong class="pagination-index-count">
+                            {% blocktrans with start_index=students.start_index end_index=students.end_index total_counts=students.paginator.count %}
+                                {{ start_index }} to {{ end_index }} of {{ total_counts }} students
+                            {% endblocktrans %}
+                        </strong>
+                    </tr>
                       <tr>
                         {% if students %}
                             <th>

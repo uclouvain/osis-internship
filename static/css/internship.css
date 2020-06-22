@@ -140,3 +140,8 @@ input:checked + .slider:before {
 .excused {
     color: darkgrey;
 }
+
+.pagination-index-count {
+    margin-left: 10px;
+    color: grey;
+}

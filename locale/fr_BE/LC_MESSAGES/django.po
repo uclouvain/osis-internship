@@ -16,6 +16,18 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+#, python-format
+msgid ""
+"\n"
+"                                %(start_index)s to %(end_index)s of "
+"%(total_counts)s students\n"
+"                            "
+msgstr ""
+"\n"
+"                                %(start_index)s à %(end_index)s sur "
+"%(total_counts)s étudiants\n"
+"                            "
+
 msgid "A hospital with the same reference already exists in this cohort"
 msgstr "Un hôpital avec la même référence existe déjà dans cette cohorte"
 
