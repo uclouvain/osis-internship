@@ -68,4 +68,3 @@ admin.site.register(internship_score_mapping.InternshipScoreMapping,
 
 admin.site.register(internship_score_reason.InternshipScoreReason,
                     internship_score_reason.InternshipScoreReasonAdmin)
-
