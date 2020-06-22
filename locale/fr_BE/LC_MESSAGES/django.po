@@ -583,7 +583,7 @@ msgid "Other choice"
 msgstr "Autre choix"
 
 msgid "Other reason"
-msgstr ""
+msgstr "Autre motif"
 
 msgid "Paste"
 msgstr "Coller"
