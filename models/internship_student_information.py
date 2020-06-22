@@ -33,7 +33,7 @@ from osis_common.models.serializable_model import SerializableModel, Serializabl
 class InternshipStudentInformationAdmin(SerializableModelAdmin):
     list_display = ('person', 'location', 'postal_code', 'city', 'country', 'email', 'phone_mobile', 'cohort')
     fieldsets = ((None, {'fields': ('person', 'location', 'postal_code', 'city', 'country', 'email', 'phone_mobile',
-                                    'contest', 'cohort', 'evolution_score')}),)
+                                    'contest', 'cohort', 'evolution_score', 'evolution_score_reason')}),)
     raw_id_fields = ('person',)
     list_filter = ('cohort',)
     search_fields = ['person__user__username', 'person__last_name', 'person__first_name']
@@ -52,6 +52,7 @@ class InternshipStudentInformation(SerializableModel):
     contest = models.CharField(max_length=124, choices=TYPE_CHOICE, null=True, blank=True)
     cohort = models.ForeignKey('internship.Cohort', on_delete=models.CASCADE)
     evolution_score = models.IntegerField(null=True, blank=True)
+    evolution_score_reason = models.CharField(max_length=255, null=True, blank=True)
 
     def __str__(self):
         return '{}'.format(self.person)
