@@ -854,7 +854,7 @@ msgstr ""
 msgid ""
 "You may provide a reason for editing score by choosing a justification from "
 "the list below."
-msgstr ""
+msgstr "Vous pouvez fournir un motif de modification de la note en choisissant parmi les justifications suivantes."
 
 msgid "items per page"
 msgstr "éléments par page"
