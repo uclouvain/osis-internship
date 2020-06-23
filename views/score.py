@@ -49,6 +49,7 @@ from internship.models.cohort import Cohort
 from internship.models.internship import Internship
 from internship.models.internship_score import InternshipScore, APD_NUMBER
 from internship.models.internship_score_mapping import InternshipScoreMapping
+from internship.models.internship_score_reason import InternshipScoreReason
 from internship.models.internship_student_affectation_stat import InternshipStudentAffectationStat
 from internship.models.internship_student_information import InternshipStudentInformation
 from internship.models.period import Period, get_effective_periods
@@ -88,9 +89,12 @@ def scores_encoding(request, cohort_id):
     students = get_object_list(request, students_list)
     mapping = _prepare_score_table(cohort, periods, students.object_list)
     grades = [grade for grade, _ in InternshipScore.SCORE_CHOICES]
-    context = {'cohort': cohort, 'periods': periods, 'all_periods': all_periods, 'students': students, 'grades': grades,
-               'affectations_count': affectations_count, 'search_form': search_form, 'mapping': list(mapping),
-               'completed_periods': completed_periods, 'apd_range': range(1, APD_NUMBER + 1)}
+    context = {
+        'cohort': cohort, 'periods': periods, 'all_periods': all_periods, 'students': students, 'grades': grades,
+        'affectations_count': affectations_count, 'search_form': search_form, 'mapping': list(mapping),
+        'completed_periods': completed_periods, 'apd_range': range(1, APD_NUMBER + 1),
+        'score_edit_reasons': InternshipScoreReason.objects.all()
+    }
     return render(request, "scores.html", context=context)
 
 
@@ -251,6 +255,7 @@ def save_evolution_score(request, cohort_id):
     edited_score = int(request.POST.get("edited"))
     computed_score = int(request.POST.get("computed"))
     registration_id = request.POST.get("student")
+    reason = request.POST.get("reason")
     scores = _load_json_scores(request)
     student = {
         'registration_id': registration_id,
@@ -262,7 +267,7 @@ def save_evolution_score(request, cohort_id):
     }
 
     if edited_score >= MINIMUM_SCORE and edited_score <= MAXIMUM_SCORE:
-        if _update_evolution_score(cohort, edited_score, registration_id):
+        if _update_evolution_score(cohort, edited_score, registration_id, reason):
             return render(request, "fragment/evolution_score_cell.html", context={
                 "student": student,
             })
@@ -276,13 +281,14 @@ def save_evolution_score(request, cohort_id):
         )
 
 
-def _update_evolution_score(cohort, edited_score, registration_id):
+def _update_evolution_score(cohort, edited_score, registration_id, reason):
     student = Student.objects.get(registration_id=registration_id)
     return InternshipStudentInformation.objects.filter(
         cohort=cohort,
-        person=student.person
+        person=student.person,
     ).update(
-        evolution_score=edited_score
+        evolution_score=edited_score,
+        evolution_score_reason=reason
     )
 
 
@@ -317,6 +323,7 @@ def save_edited_score(request, cohort_id):
     computed_score = int(request.POST.get("computed") or 0)
     registration_id = request.POST.get("student")
     period_name = request.POST.get("period")
+    reason = request.POST.get("reason")
     student = {'registration_id': registration_id}
     period = {'name': period_name}
     period_score = {
@@ -325,7 +332,7 @@ def save_edited_score(request, cohort_id):
     }
 
     if edited_score >= MINIMUM_SCORE and edited_score <= MAXIMUM_SCORE:
-        if _update_score(cohort, edited_score, period_name, registration_id):
+        if _update_score(cohort, edited_score, period_name, registration_id, reason):
             return render(request, "fragment/score_cell.html", context={
                 "student": student,
                 "period": period,
@@ -368,11 +375,13 @@ def _delete_score(cohort, period_name, registration_id):
     ).update(score=None, excused=False)
 
 
-def _update_score(cohort, edited_score, period_name, registration_id):
+def _update_score(cohort, edited_score, period_name, registration_id, reason):
     period = Period.objects.get(cohort=cohort, name=period_name)
     student = Student.objects.get(registration_id=registration_id)
     data = {'cohort': cohort, 'student': student, 'period': period}
-    return InternshipScore.objects.filter(**data).update_or_create(**data, defaults={'score': edited_score})
+    return InternshipScore.objects.filter(**data).update_or_create(**data, defaults={
+        'score': edited_score, 'reason': reason
+    })
 
 
 def _json_response_success():

@@ -121,6 +121,7 @@ def _make_complete_list(periods, students, worksheet):
             _complete_student_row_for_all_internships(columns, periods, student)
             if periods.count() == all_periods_count:
                 _append_evolution_score(columns, student.evolution_score)
+                columns.append(student.evolution_score_reason)
             columns.append(_("Yes") if student.fulfill_condition else _("No"))
             add_row(worksheet, columns)
 
@@ -141,7 +142,7 @@ def _complete_student_row_for_all_internships(columns, periods, student):
 
 
 def _add_sheet_header(worksheet):
-    column_titles = [_("Name"), _("Firstname"), _("NOMA"), _("Hospital"), _("Grade")]
+    column_titles = [_("Name"), _("First name"), _("NOMA"), _("Hospital"), _("Grade")]
     add_row(worksheet, column_titles)
     cells = worksheet.iter_rows("A1:AAA1")
     for col in cells:
@@ -160,6 +161,7 @@ def _add_header(cohort, periods, worksheet):
         column_titles.append(_("Evolution"))
         column_titles.append(_("Evolution computed"))
         column_titles.append(_("Evolution edited"))
+        column_titles.append(_("Reason"))
     column_titles.append(_("APD Validation"))
     add_row(worksheet, column_titles)
     cells = worksheet.iter_rows("A1:AAA1")

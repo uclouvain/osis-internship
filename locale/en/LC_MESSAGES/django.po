@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-06-22 11:03+0200\n"
+"POT-Creation-Date: 2020-06-22 16:29+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -331,9 +331,6 @@ msgstr ""
 msgid "First name"
 msgstr ""
 
-msgid "Firstname"
-msgstr ""
-
 msgid "Following modifications will be applied:"
 msgstr ""
 
@@ -524,6 +521,9 @@ msgstr ""
 msgid "No internship"
 msgstr ""
 
+msgid "No reason"
+msgstr ""
+
 msgid "No result"
 msgstr ""
 
@@ -566,6 +566,9 @@ msgstr ""
 msgid "Other choice"
 msgstr ""
 
+msgid "Other reason"
+msgstr ""
+
 msgid "Paste"
 msgstr ""
 
@@ -605,6 +608,9 @@ msgstr ""
 msgid "Postal code"
 msgstr ""
 
+msgid "Predifined reason"
+msgstr ""
+
 msgid "Preference"
 msgstr ""
 
@@ -614,10 +620,19 @@ msgstr ""
 msgid "Private email"
 msgstr ""
 
+msgid "Provide a reason for editing score ?"
+msgstr ""
+
+msgid "Provide reason"
+msgstr ""
+
 msgid "Publication date"
 msgstr ""
 
 msgid "Publication must be done after the subscription process."
+msgstr ""
+
+msgid "Reason"
 msgstr ""
 
 msgid "Reference"
@@ -806,6 +821,11 @@ msgstr ""
 msgid ""
 "You are in the period of inscriptions. It is not recommended to change "
 "choices during this period."
+msgstr ""
+
+msgid ""
+"You may provide a reason for editing score by choosing a justification from "
+"the list below."
 msgstr ""
 
 msgid "items per page"

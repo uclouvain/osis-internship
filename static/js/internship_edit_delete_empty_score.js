@@ -83,7 +83,7 @@ function buildConfirmButton(input, cell, data) {
     confirmButton.classList.add("btn", "btn-primary");
     confirmButton.addEventListener('click', () => {
         data['edited'] = input.value;
-        saveScore(data, cell);
+        showJustificationModal(data, cell);
     });
     return confirmButton;
 }
@@ -117,8 +117,9 @@ function resetPadding(cell){
     $(cell).css('padding', '');
 }
 
-function saveScore(data, cell) {
+function saveScore(data, cell, reason=null) {
     if(data.edited % 1 === 0){
+        data.reason = reason;
         if(data.period){
             savePeriodScore(data, cell);
         } else {
@@ -140,6 +141,18 @@ function deleteScore(e){
     }
 }
 
+function showJustificationModal(data, cell) {
+    $('#justify_score_btn').unbind('click').click(()=>{
+        const selected_reason = $("#id_reason").val();
+        const reason = selected_reason === "other" ? $("#id_other_reason").val() : selected_reason;
+        saveScore(data, cell, reason);
+    });
+    $('#no_reason_btn').unbind('click').click(()=>{
+        saveScore(data, cell);
+    });
+    $('#justify_score').modal('show');
+}
+
 //append data to modal button on modal open
 for(let target of ['#empty_score','#delete_score']){
     $(document).on('click', `[data-target=${target}]`, function(){
@@ -151,7 +164,7 @@ for(let target of ['#empty_score','#delete_score']){
 }
 
 //AJAX LOGIC GOES HERE
-function savePeriodScore(data, cell){
+function savePeriodScore(data, cell, reason){
     $.ajax({
         url: "ajax/save_score/",
         method: "POST",
