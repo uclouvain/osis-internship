@@ -116,7 +116,7 @@ msgid "Are you sure ?"
 msgstr "Êtes-vous sur ?"
 
 msgid "Attention"
-msgstr ""
+msgstr "Attention"
 
 msgid "Birth date"
 msgstr "Date de naissance"
@@ -544,7 +544,7 @@ msgid "No result"
 msgstr "Aucun résultat"
 
 msgid "Noma"
-msgstr ""
+msgstr "Noma"
 
 msgid "Non mandatory internship"
 msgstr "Stage au choix"
@@ -836,7 +836,7 @@ msgid "Total of internships"
 msgstr "Total de stages"
 
 msgid "Url"
-msgstr ""
+msgstr "Url"
 
 msgid "Website"
 msgstr "Site web"
