@@ -1,0 +1,65 @@
+openapi: 3.0.0
+info:
+  version: "1"
+  title: Internship API
+  description: 'This API delivers data for the Internship project.'
+  contact:
+    name: 'UCLouvain - OSIS'
+    url: https://github.com/uclouvain/osis
+
+servers:
+  - url: https://{environment}.osis.uclouvain.be/api/v1/internship/
+    variables:
+      environment:
+        default: dev
+        enum:
+          - dev # Development server
+          - qa # Staging server
+          - test # Test server
+  - url: https://osis.uclouvain.be/api/v1/internship/
+    description: Production server
+
+paths:
+  /masters:
+    get:
+      description: Obtain the list of internship masters
+      responses:
+        200:
+          description: Successful get of the list of registrations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MasterGet'
+
+components:
+  securitySchemes:
+    Token:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Enter your token in the format **Token &lt;token>**
+
+  schemas:
+    MasterGet:
+      type: object
+      properties:
+          last_name:
+            type: string
+            example: "Dupont"
+          first_name:
+            type: string
+            example: "Jacques"
+          civility:
+            type: string
+            example: "DOCTOR"
+          gender:
+            type: string
+            example: "m"
+          email:
+            type: string
+            example: "jacques.dupont@mail.xyz"
+
+security:
+  - Token: []
