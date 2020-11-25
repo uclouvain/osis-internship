@@ -26,11 +26,9 @@
 from rest_framework import serializers
 
 from internship.models.internship_master import InternshipMaster
-from reference.api.serializers.country import CountrySerializer
 
 
 class InternshipMasterSerializer(serializers.HyperlinkedModelSerializer):
-    country = CountrySerializer(read_only=True)
 
     class Meta:
         model = InternshipMaster
