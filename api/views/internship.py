@@ -34,6 +34,7 @@ class InternshipList(generics.ListAPIView):
        Return a list of internships with optional filtering.
     """
     name = 'internship-list'
+    serializer_class = InternshipSerializer
     queryset = Internship.objects.all()
     search_fields = (
         'name', 'speciality'
@@ -44,6 +45,3 @@ class InternshipList(generics.ListAPIView):
     ordering = (
         'position',
     )  # Default ordering
-
-    def get_serializer_class(self):
-        return InternshipSerializer

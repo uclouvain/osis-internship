@@ -34,6 +34,7 @@ class CohortList(generics.ListAPIView):
        Return a list of cohorts with optional filtering.
     """
     name = 'cohort-list'
+    serializer_class = CohortSerializer
     queryset = Cohort.objects.all()
     search_fields = (
         'name'
@@ -44,6 +45,3 @@ class CohortList(generics.ListAPIView):
     ordering = (
         'publication_start_date',
     )  # Default ordering
-
-    def get_serializer_class(self):
-        return CohortSerializer

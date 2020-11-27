@@ -34,6 +34,7 @@ class PeriodList(generics.ListAPIView):
        Return a list of periods with optional filtering.
     """
     name = 'period-list'
+    serializer_class = PeriodSerializer
     queryset = Period.objects.all()
     search_fields = (
         'name'
@@ -44,6 +45,3 @@ class PeriodList(generics.ListAPIView):
     ordering = (
         'date_start',
     )  # Default ordering
-
-    def get_serializer_class(self):
-        return PeriodSerializer

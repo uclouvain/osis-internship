@@ -34,6 +34,7 @@ class InternshipSpecialtyList(generics.ListAPIView):
        Return a list of specialties with optional filtering.
     """
     name = 'specialty-list'
+    serializer_class = InternshipSpecialtySerializer
     queryset = InternshipSpeciality.objects.all()
     filterset_fields = (
         'cohort',
@@ -47,6 +48,3 @@ class InternshipSpecialtyList(generics.ListAPIView):
     ordering = (
         'cohort',
     )  # Default ordering
-
-    def get_serializer_class(self):
-        return InternshipSpecialtySerializer

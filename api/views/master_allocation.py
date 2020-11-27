@@ -34,6 +34,7 @@ class MasterAllocationList(generics.ListAPIView):
        Return a list of master allocations with optional filtering.
     """
     name = 'master-allocation-list'
+    serializer_class = MasterAllocationSerializer
     queryset = MasterAllocation.objects.all()
     search_fields = (
         'organization', 'specialty'
@@ -44,6 +45,3 @@ class MasterAllocationList(generics.ListAPIView):
     ordering = (
         'organization',
     )  # Default ordering
-
-    def get_serializer_class(self):
-        return MasterAllocationSerializer

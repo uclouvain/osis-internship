@@ -175,14 +175,11 @@ components:
           type: string
           example: "123e4567-e89b-12d3-a456-426614174000"
         master:
-          type: string
-          example: "Dr. Jacques Dupont"
+          type: object
         organization:
-          type: string
-          example: "CHU XYZ"
+          type: object
         specialty:
-          type: string
-          example: "Xyzetologie"
+          type: object
 
     SpecialtyGet:
       type: object
@@ -200,11 +197,10 @@ components:
           type: boolean
           example: True
         sequence:
-          type: integer
+          type: number
           example: 1
         cohort:
-          type: string
-          example: "R6-2021"
+          type: object
         selectable:
           type: boolean
           example: True
@@ -222,13 +218,13 @@ components:
           type: string
           example: "Student cohort for academic year 2020-2021"
         publication_start_date:
-          type: date
+          type: string
           example: 01/04/2020
         subscription_start_date:
-          type: date
+          type: string
           example: 01/02/2020
         subscription_end_date:
-          type: date
+          type: string
           example: 01/03/2020
 
     OrganizationGet:
@@ -262,11 +258,9 @@ components:
           type: string
           example: "Bruxelles"
         country:
-          type: string
-          example: "Belgique"
+          type: object
         cohort:
-          type: string
-          example: "R6-2021"
+          type: object
 
     InternshipGet:
       type: object
@@ -278,16 +272,14 @@ components:
           type: string
           example: "XYZ"
         speciality:
-          type: string
-          example: "Xyzetologie"
+          type: object
         cohort:
-          type: string
-          example: "R6-2021"
+          type: object
         length_in_periods:
-          type: integer
+          type: number
           example: 1
         position:
-          type: integer
+          type: number
           example: 1
 
     StudentGet:
@@ -297,8 +289,7 @@ components:
           type: string
           example: "123e4567-e89b-12d3-a456-426614174000"
         person:
-          type: string
-          example: "Jean Pondu"
+          type: object
         location:
           type: string
           example: "Rue de la maison, 10"
@@ -308,6 +299,9 @@ components:
         city:
           type: string
           example: "Bruxelles"
+        country:
+          type: string
+          example: "Belgique"
         email:
           type: string
           example: "jean.pondu@mail.be"
@@ -318,10 +312,9 @@ components:
           type: string
           example: "SPECIALIST"
         cohort:
-          type: string
-          example: "R6-2020"
+          type: object
         evolution_score:
-          type: integer
+          type: number
           example: 17
         evolution_score_reason:
           type: string
@@ -337,7 +330,7 @@ components:
           type: string
           example: "P1"
         date_start:
-          type: date
+          type: string
           example: "01/02/2020"
         date_end:
           type: string
@@ -350,20 +343,15 @@ components:
           type: string
           example: "123e4567-e89b-12d3-a456-426614174000"
         student:
-          type: string
-          example: "Jean Pondu"
+          type: object
         organization:
-          type: string
-          example: "CHU XYZ"
+          type: object
         specialty:
-          type: string
-          example: "Xyzetologie"
+          type: object
         period:
-          type: string
-          example: "P1"
+          type: object
         internship:
-          type: string
-          example: "XYZ"
+          type: object
 
 security:
   - Token: []

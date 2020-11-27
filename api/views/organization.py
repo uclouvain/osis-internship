@@ -34,6 +34,7 @@ class OrganizationList(generics.ListAPIView):
        Return a list of internship organizations with optional filtering.
     """
     name = 'organization-list'
+    serializer_class = OrganizationSerializer
     queryset = Organization.objects.all()
     filterset_fields = (
         'cohort',
@@ -48,6 +49,3 @@ class OrganizationList(generics.ListAPIView):
     ordering = (
         'reference',
     )  # Default ordering
-
-    def get_serializer_class(self):
-        return OrganizationSerializer
