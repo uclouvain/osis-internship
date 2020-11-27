@@ -25,9 +25,25 @@
 ##############################################################################
 from django.conf.urls import url
 
-from internship.api.views.internship_master import InternshipMasterListCreate
+from internship.api.views.cohort import CohortList
+from internship.api.views.internship import InternshipList
+from internship.api.views.internship_master import InternshipMasterList
+from internship.api.views.internship_specialty import InternshipSpecialtyList
+from internship.api.views.internship_student_affectation_stat import InternshipStudentAffectationList
+from internship.api.views.internship_student_information import InternshipStudentInformationList
+from internship.api.views.master_allocation import MasterAllocationList
+from internship.api.views.organization import OrganizationList
+from internship.api.views.period import PeriodList
 
 app_name = "internship"
 urlpatterns = [
-    url(r'^masters/$', InternshipMasterListCreate.as_view(), name=InternshipMasterListCreate.name),
+    url(r'^masters/$', InternshipMasterList.as_view(), name=InternshipMasterList.name),
+    url(r'^masters_allocations/$', MasterAllocationList.as_view(), name=MasterAllocationList.name),
+    url(r'^specialties/$', InternshipSpecialtyList.as_view(), name=InternshipSpecialtyList.name),
+    url(r'^cohorts/$', CohortList.as_view(), name=CohortList.name),
+    url(r'^organizations/$', OrganizationList.as_view(), name=OrganizationList.name),
+    url(r'^internships/$', InternshipList.as_view(), name=InternshipList.name),
+    url(r'^students/$', InternshipStudentInformationList.as_view(), name=InternshipStudentInformationList.name),
+    url(r'^periods/$', PeriodList.as_view(), name=PeriodList.name),
+    url(r'^students_affectations/$', InternshipStudentAffectationList.as_view(), name=InternshipStudentAffectationList.name),
 ]

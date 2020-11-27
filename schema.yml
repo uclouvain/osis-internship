@@ -25,13 +25,117 @@ paths:
       description: Obtain the list of internship masters
       responses:
         200:
-          description: Successful get of the list of registrations
+          description: Successful get of the list of internship masters
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: '#/components/schemas/MasterGet'
+
+  /masters_allocations:
+    get:
+      description: Obtain the list of internship-master allocations
+      responses:
+        200:
+          description: Successful get of the list of allocations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AllocationGet'
+
+  /specialties:
+    get:
+      description: Obtain the list of specialties
+      responses:
+        200:
+          description: Successful get of the list of specialties
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SpecialtyGet'
+
+  /cohorts:
+    get:
+      description: Obtain the list of cohorts
+      responses:
+        200:
+          description: Successful get of the list of cohorts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CohortGet'
+
+  /organizations:
+    get:
+      description: Obtain the list of organizations
+      responses:
+        200:
+          description: Successful get of the list of organizations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrganizationGet'
+
+  /internships:
+    get:
+      description: Obtain the list of internships
+      responses:
+        200:
+          description: Successful get of the list of internships
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/InternshipGet'
+
+  /periods:
+    get:
+      description: Obtain the list of periods
+      responses:
+        200:
+          description: Successful get of the list of periods
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PeriodGet'
+
+  /students:
+    get:
+      description: Obtain the list of students
+      responses:
+        200:
+          description: Successful get of the list of students
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StudentGet'
+
+  /students_affectations:
+    get:
+      description: Obtain the list of students affectations
+      responses:
+        200:
+          description: Successful get of the list of students affectations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StudentAffectationGet'
 
 components:
   securitySchemes:
@@ -45,6 +149,9 @@ components:
     MasterGet:
       type: object
       properties:
+          uuid:
+            type: string
+            example: "123e4567-e89b-12d3-a456-426614174000"
           last_name:
             type: string
             example: "Dupont"
@@ -60,6 +167,203 @@ components:
           email:
             type: string
             example: "jacques.dupont@mail.xyz"
+
+    AllocationGet:
+      type: object
+      properties:
+        uuid:
+          type: string
+          example: "123e4567-e89b-12d3-a456-426614174000"
+        master:
+          type: string
+          example: "Dr. Jacques Dupont"
+        organization:
+          type: string
+          example: "CHU XYZ"
+        specialty:
+          type: string
+          example: "Xyzetologie"
+
+    SpecialtyGet:
+      type: object
+      properties:
+        uuid:
+          type: string
+          example: "123e4567-e89b-12d3-a456-426614174000"
+        name:
+          type: string
+          example: "Xyzetologie"
+        acronym:
+          type: string
+          example: "XYZ"
+        mandatory:
+          type: boolean
+          example: True
+        sequence:
+          type: integer
+          example: 1
+        cohort:
+          type: string
+          example: "R6-2021"
+        selectable:
+          type: boolean
+          example: True
+
+    CohortGet:
+      type: object
+      properties:
+        uuid:
+          type: string
+          example: "123e4567-e89b-12d3-a456-426614174000"
+        name:
+          type: string
+          example: "R6-2021"
+        description:
+          type: string
+          example: "Student cohort for academic year 2020-2021"
+        publication_start_date:
+          type: date
+          example: 01/04/2020
+        subscription_start_date:
+          type: date
+          example: 01/02/2020
+        subscription_end_date:
+          type: date
+          example: 01/03/2020
+
+    OrganizationGet:
+      type: object
+      properties:
+        uuid:
+          type: string
+          example: "123e4567-e89b-12d3-a456-426614174000"
+        name:
+          type: string
+          example: "CHU XYZ"
+        acronym:
+          type: string
+          example: "XYZ"
+        website:
+          type: string
+          example: "www.chuxyz.be"
+        reference:
+          type: string
+          example: "01"
+        phone:
+          type: string
+          example: "01/01.01.01"
+        location:
+          type: string
+          example: "Rue de l'hôpital"
+        postal_code:
+          type: string
+          example: "1000"
+        city:
+          type: string
+          example: "Bruxelles"
+        country:
+          type: string
+          example: "Belgique"
+        cohort:
+          type: string
+          example: "R6-2021"
+
+    InternshipGet:
+      type: object
+      properties:
+        uuid:
+          type: string
+          example: "123e4567-e89b-12d3-a456-426614174000"
+        name:
+          type: string
+          example: "XYZ"
+        speciality:
+          type: string
+          example: "Xyzetologie"
+        cohort:
+          type: string
+          example: "R6-2021"
+        length_in_periods:
+          type: integer
+          example: 1
+        position:
+          type: integer
+          example: 1
+
+    StudentGet:
+      type: object
+      properties:
+        uuid:
+          type: string
+          example: "123e4567-e89b-12d3-a456-426614174000"
+        person:
+          type: string
+          example: "Jean Pondu"
+        location:
+          type: string
+          example: "Rue de la maison, 10"
+        postal_code:
+          type: string
+          example: "1000"
+        city:
+          type: string
+          example: "Bruxelles"
+        email:
+          type: string
+          example: "jean.pondu@mail.be"
+        phone_mobile:
+          type: string
+          example: "0411/11.11.11"
+        contest:
+          type: string
+          example: "SPECIALIST"
+        cohort:
+          type: string
+          example: "R6-2020"
+        evolution_score:
+          type: integer
+          example: 17
+        evolution_score_reason:
+          type: string
+          example: "reason"
+
+    PeriodGet:
+      type: object
+      properties:
+        uuid:
+          type: string
+          example: "123e4567-e89b-12d3-a456-426614174000"
+        name:
+          type: string
+          example: "P1"
+        date_start:
+          type: date
+          example: "01/02/2020"
+        date_end:
+          type: string
+          example: "01/03/2020"
+
+    StudentAffectationGet:
+      type: object
+      properties:
+        uuid:
+          type: string
+          example: "123e4567-e89b-12d3-a456-426614174000"
+        student:
+          type: string
+          example: "Jean Pondu"
+        organization:
+          type: string
+          example: "CHU XYZ"
+        specialty:
+          type: string
+          example: "Xyzetologie"
+        period:
+          type: string
+          example: "P1"
+        internship:
+          type: string
+          example: "XYZ"
 
 security:
   - Token: []

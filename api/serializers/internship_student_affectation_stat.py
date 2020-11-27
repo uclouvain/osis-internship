@@ -23,27 +23,30 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from rest_framework import generics
+from rest_framework import serializers
 
-from internship.api.serializers.internship_master import InternshipMasterSerializer
-from internship.models.internship_master import InternshipMaster
+from base.api.serializers.student import StudentSerializer
+from internship.api.serializers.internship import InternshipSerializer
+from internship.api.serializers.internship_specialty import InternshipSpecialtySerializer
+from internship.api.serializers.organization import OrganizationSerializer
+from internship.api.serializers.period import PeriodSerializer
+from internship.models.internship_student_affectation_stat import InternshipStudentAffectationStat
 
 
-class InternshipMasterList(generics.ListAPIView):
-    """
-       Return a list of internship masters with optional filtering.
-    """
-    name = 'master-list'
-    queryset = InternshipMaster.objects.all()
-    search_fields = (
-        'last_name', 'first_name'
-    )
-    ordering_fields = (
-        'birth_date',
-    )
-    ordering = (
-        'last_name',
-    )  # Default ordering
+class InternshipStudentAffectationSerializer(serializers.HyperlinkedModelSerializer):
+    student = StudentSerializer()
+    organization = OrganizationSerializer()
+    speciality = InternshipSpecialtySerializer()
+    internship = InternshipSerializer()
+    period = PeriodSerializer()
 
-    def get_serializer_class(self):
-        return InternshipMasterSerializer
+    class Meta:
+        model = InternshipStudentAffectationStat
+        fields = (
+            'uuid',
+            'student',
+            'organization',
+            'speciality',
+            'period',
+            'internship',
+        )

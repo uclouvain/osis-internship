@@ -23,27 +23,30 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from rest_framework import generics
+from rest_framework import serializers
 
-from internship.api.serializers.internship_master import InternshipMasterSerializer
-from internship.models.internship_master import InternshipMaster
+from base.api.serializers.person import PersonDetailSerializer
+from internship.api.serializers.cohort import CohortSerializer
+from internship.models.internship_student_information import InternshipStudentInformation
 
 
-class InternshipMasterList(generics.ListAPIView):
-    """
-       Return a list of internship masters with optional filtering.
-    """
-    name = 'master-list'
-    queryset = InternshipMaster.objects.all()
-    search_fields = (
-        'last_name', 'first_name'
-    )
-    ordering_fields = (
-        'birth_date',
-    )
-    ordering = (
-        'last_name',
-    )  # Default ordering
+class InternshipStudentInformationSerializer(serializers.HyperlinkedModelSerializer):
+    person = PersonDetailSerializer(read_only=True)
+    cohort = CohortSerializer()
 
-    def get_serializer_class(self):
-        return InternshipMasterSerializer
+    class Meta:
+        model = InternshipStudentInformation
+        fields = (
+            'uuid',
+            'person',
+            'location',
+            'postal_code',
+            'city',
+            'country',
+            'email',
+            'phone_mobile',
+            'contest',
+            'cohort',
+            'evolution_score',
+            'evolution_score_reason'
+        )

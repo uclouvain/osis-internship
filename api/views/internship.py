@@ -25,25 +25,25 @@
 ##############################################################################
 from rest_framework import generics
 
-from internship.api.serializers.internship_master import InternshipMasterSerializer
-from internship.models.internship_master import InternshipMaster
+from internship.api.serializers.internship import InternshipSerializer
+from internship.models.internship import Internship
 
 
-class InternshipMasterList(generics.ListAPIView):
+class InternshipList(generics.ListAPIView):
     """
-       Return a list of internship masters with optional filtering.
+       Return a list of internships with optional filtering.
     """
-    name = 'master-list'
-    queryset = InternshipMaster.objects.all()
+    name = 'internship-list'
+    queryset = Internship.objects.all()
     search_fields = (
-        'last_name', 'first_name'
+        'name', 'speciality'
     )
     ordering_fields = (
-        'birth_date',
+        'position', 'name', 'length_in_periods'
     )
     ordering = (
-        'last_name',
+        'position',
     )  # Default ordering
 
     def get_serializer_class(self):
-        return InternshipMasterSerializer
+        return InternshipSerializer
