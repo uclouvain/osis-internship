@@ -33,7 +33,7 @@ class InternshipStudentAffectationList(generics.ListAPIView):
     """
        Return a list of internship student affectations with optional filtering.
     """
-    name = 'affectation-list'
+    name = 'student-affectation-list'
     serializer_class = InternshipStudentAffectationSerializer
     queryset = InternshipStudentAffectationStat.objects.all()
     search_fields = (
@@ -45,3 +45,13 @@ class InternshipStudentAffectationList(generics.ListAPIView):
     ordering = (
         'period',
     )  # Default ordering
+
+
+class InternshipStudentAffectationDetail(generics.RetrieveAPIView):
+    """
+        Return the detail of the student affectation
+    """
+    name = 'student-affectation-detail'
+    serializer_class = InternshipStudentAffectationSerializer
+    queryset = InternshipStudentAffectationStat.objects.all()
+    lookup_field = 'uuid'

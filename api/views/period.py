@@ -45,3 +45,13 @@ class PeriodList(generics.ListAPIView):
     ordering = (
         'date_start',
     )  # Default ordering
+
+
+class PeriodDetail(generics.RetrieveAPIView):
+    """
+        Return the detail of the period
+    """
+    name = 'period-detail'
+    serializer_class = PeriodSerializer
+    queryset = Period.objects.all()
+    lookup_field = 'uuid'

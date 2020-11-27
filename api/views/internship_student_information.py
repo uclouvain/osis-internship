@@ -45,3 +45,13 @@ class InternshipStudentInformationList(generics.ListAPIView):
     ordering = (
         'cohort',
     )  # Default ordering
+
+
+class InternshipStudentInformationDetail(generics.RetrieveAPIView):
+    """
+        Return the detail of the student information.
+    """
+    name = 'student-detail'
+    serializer_class = InternshipStudentInformationSerializer
+    queryset = InternshipStudentInformation.objects.all()
+    lookup_field = 'uuid'

@@ -33,6 +33,24 @@ paths:
                 items:
                   $ref: '#/components/schemas/MasterGet'
 
+  /masters/{uuid}:
+    get:
+      description: Obtain information about a specific master
+      parameters:
+        - in: path
+          name: uuid
+          required: true
+          description: The UUID of the master
+          schema:
+            $ref: '#/components/schemas/Uuid'
+      responses:
+        200:
+          description: Successful get of a master's data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MasterGet'
+
   /masters_allocations:
     get:
       description: Obtain the list of internship-master allocations
@@ -45,6 +63,24 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/AllocationGet'
+
+  /masters_allocations/{uuid}:
+    get:
+      description: Obtain information about a specific master allocation
+      parameters:
+        - in: path
+          name: uuid
+          required: true
+          description: The UUID of the master allocation
+          schema:
+            $ref: '#/components/schemas/Uuid'
+      responses:
+        200:
+          description: Successful get of a master allocation's data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MasterAllocationGet'
 
   /specialties:
     get:
@@ -59,6 +95,24 @@ paths:
                 items:
                   $ref: '#/components/schemas/SpecialtyGet'
 
+  /specialties/{uuid}:
+    get:
+      description: Obtain information about a specific specialty
+      parameters:
+        - in: path
+          name: uuid
+          required: true
+          description: The UUID of the specialty
+          schema:
+            $ref: '#/components/schemas/Uuid'
+      responses:
+        200:
+          description: Successful get of a specialty's data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SpecialtyGet'
+
   /cohorts:
     get:
       description: Obtain the list of cohorts
@@ -71,6 +125,24 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/CohortGet'
+
+  /cohorts/{uuid}:
+    get:
+      description: Obtain information about a specific cohort
+      parameters:
+        - in: path
+          name: uuid
+          required: true
+          description: The UUID of the cohort
+          schema:
+            $ref: '#/components/schemas/Uuid'
+      responses:
+        200:
+          description: Successful get of a cohort's data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CohortGet'
 
   /organizations:
     get:
@@ -85,6 +157,24 @@ paths:
                 items:
                   $ref: '#/components/schemas/OrganizationGet'
 
+  /organizations/{uuid}:
+    get:
+      description: Obtain information about a specific organization
+      parameters:
+        - in: path
+          name: uuid
+          required: true
+          description: The UUID of the organization
+          schema:
+            $ref: '#/components/schemas/Uuid'
+      responses:
+        200:
+          description: Successful get of an organization's data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationGet'
+
   /internships:
     get:
       description: Obtain the list of internships
@@ -97,6 +187,24 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/InternshipGet'
+
+  /internships/{uuid}:
+    get:
+      description: Obtain information about a specific internship
+      parameters:
+        - in: path
+          name: uuid
+          required: true
+          description: The UUID of the internship
+          schema:
+            $ref: '#/components/schemas/Uuid'
+      responses:
+        200:
+          description: Successful get of an internship's data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternshipGet'
 
   /periods:
     get:
@@ -111,6 +219,24 @@ paths:
                 items:
                   $ref: '#/components/schemas/PeriodGet'
 
+  /periods/{uuid}:
+    get:
+      description: Obtain information about a specific period
+      parameters:
+        - in: path
+          name: uuid
+          required: true
+          description: The UUID of the period
+          schema:
+            $ref: '#/components/schemas/Uuid'
+      responses:
+        200:
+          description: Successful get of a period's data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PeriodGet'
+
   /students:
     get:
       description: Obtain the list of students
@@ -123,6 +249,24 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/StudentGet'
+
+  /students/{uuid}:
+    get:
+      description: Obtain information about a specific internship student
+      parameters:
+        - in: path
+          name: uuid
+          required: true
+          description: The UUID of the internship student
+          schema:
+            $ref: '#/components/schemas/Uuid'
+      responses:
+        200:
+          description: Successful get of a internship student's data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentGet'
 
   /students_affectations:
     get:
@@ -137,6 +281,24 @@ paths:
                 items:
                   $ref: '#/components/schemas/StudentAffectationGet'
 
+  /students_affectations/{uuid}:
+    get:
+      description: Obtain information about a specific student's affectation
+      parameters:
+        - in: path
+          name: uuid
+          required: true
+          description: The UUID of the student's affectation
+          schema:
+            $ref: '#/components/schemas/Uuid'
+      responses:
+        200:
+          description: Successful get of a student's affectation's data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentAffectationGet'
+
 components:
   securitySchemes:
     Token:
@@ -150,8 +312,7 @@ components:
       type: object
       properties:
           uuid:
-            type: string
-            example: "123e4567-e89b-12d3-a456-426614174000"
+            $ref: '#/components/schemas/Uuid'
           last_name:
             type: string
             example: "Dupont"
@@ -172,8 +333,7 @@ components:
       type: object
       properties:
         uuid:
-          type: string
-          example: "123e4567-e89b-12d3-a456-426614174000"
+          $ref: '#/components/schemas/Uuid'
         master:
           type: object
         organization:
@@ -185,8 +345,7 @@ components:
       type: object
       properties:
         uuid:
-          type: string
-          example: "123e4567-e89b-12d3-a456-426614174000"
+          $ref: '#/components/schemas/Uuid'
         name:
           type: string
           example: "Xyzetologie"
@@ -209,8 +368,7 @@ components:
       type: object
       properties:
         uuid:
-          type: string
-          example: "123e4567-e89b-12d3-a456-426614174000"
+          $ref: '#/components/schemas/Uuid'
         name:
           type: string
           example: "R6-2021"
@@ -231,8 +389,7 @@ components:
       type: object
       properties:
         uuid:
-          type: string
-          example: "123e4567-e89b-12d3-a456-426614174000"
+          $ref: '#/components/schemas/Uuid'
         name:
           type: string
           example: "CHU XYZ"
@@ -266,8 +423,7 @@ components:
       type: object
       properties:
         uuid:
-          type: string
-          example: "123e4567-e89b-12d3-a456-426614174000"
+          $ref: '#/components/schemas/Uuid'
         name:
           type: string
           example: "XYZ"
@@ -286,8 +442,7 @@ components:
       type: object
       properties:
         uuid:
-          type: string
-          example: "123e4567-e89b-12d3-a456-426614174000"
+          $ref: '#/components/schemas/Uuid'
         person:
           type: object
         location:
@@ -324,8 +479,7 @@ components:
       type: object
       properties:
         uuid:
-          type: string
-          example: "123e4567-e89b-12d3-a456-426614174000"
+          $ref: '#/components/schemas/Uuid'
         name:
           type: string
           example: "P1"
@@ -340,8 +494,7 @@ components:
       type: object
       properties:
         uuid:
-          type: string
-          example: "123e4567-e89b-12d3-a456-426614174000"
+          $ref: '#/components/schemas/Uuid'
         student:
           type: object
         organization:
@@ -352,6 +505,11 @@ components:
           type: object
         internship:
           type: object
+
+    Uuid:
+      type: string
+      format: uuid
+      example: "abcd-efgh-ijkl-mnop-1234-5678"
 
 security:
   - Token: []

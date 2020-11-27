@@ -45,3 +45,13 @@ class CohortList(generics.ListAPIView):
     ordering = (
         'publication_start_date',
     )  # Default ordering
+
+
+class CohortDetail(generics.RetrieveAPIView):
+    """
+        Return the detail of the cohort.
+    """
+    name = 'cohort-detail'
+    serializer_class = CohortSerializer
+    queryset = Cohort.objects.all()
+    lookup_field = 'uuid'

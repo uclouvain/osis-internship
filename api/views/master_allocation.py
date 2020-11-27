@@ -45,3 +45,13 @@ class MasterAllocationList(generics.ListAPIView):
     ordering = (
         'organization',
     )  # Default ordering
+
+
+class MasterAllocationDetail(generics.RetrieveAPIView):
+    """
+        Return the detail of the internship master allocation.
+    """
+    name = 'master-allocation-detail'
+    serializer_class = MasterAllocationSerializer
+    queryset = MasterAllocation.objects.all()
+    lookup_field = 'uuid'

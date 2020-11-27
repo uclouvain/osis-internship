@@ -48,3 +48,13 @@ class InternshipSpecialtyList(generics.ListAPIView):
     ordering = (
         'cohort',
     )  # Default ordering
+
+
+class InternshipSpecialtyDetail(generics.RetrieveAPIView):
+    """
+        Return the detail of the specialty.
+    """
+    name = 'specialty-detail'
+    serializer_class = InternshipSpecialtySerializer
+    queryset = InternshipSpeciality.objects.all()
+    lookup_field = 'uuid'

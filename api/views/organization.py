@@ -49,3 +49,13 @@ class OrganizationList(generics.ListAPIView):
     ordering = (
         'reference',
     )  # Default ordering
+
+
+class OrganizationDetail(generics.RetrieveAPIView):
+    """
+        Return the detail of the organization
+    """
+    name = 'organization-detail'
+    serializer_class = OrganizationSerializer
+    queryset = Organization.objects.all()
+    lookup_field = 'uuid'
