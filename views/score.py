@@ -423,13 +423,13 @@ def empty_score(request, cohort_id):
 
 
 def _prepare_score_table(cohort, periods, students):
-    persons = students.values_list('person', flat=True)
+    persons = [student.person.pk for student in students]
     scores = cohort.internshipscore_set.filter(student__person_id__in=persons).select_related(
         'student__person', 'period', 'cohort'
     ).order_by('student__person')
     mapping = cohort.internshipscoremapping_set.all().select_related('period')
     students_affectations = InternshipStudentAffectationStat.objects.filter(
-        student_id__in=students.values_list('id', flat=True),
+        student_id__in=[student.pk for student in students],
         period__cohort=cohort,
     ).select_related(
         'student', 'period', 'speciality'
