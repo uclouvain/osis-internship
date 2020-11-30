@@ -335,11 +335,11 @@ components:
         uuid:
           $ref: '#/components/schemas/Uuid'
         master:
-          type: object
+          $ref: '#/components/schemas/MasterGet'
         organization:
-          type: object
+          $ref: '#/components/schemas/OrganizationGet'
         specialty:
-          type: object
+          $ref: '#/components/schemas/SpecialtyGet'
 
     SpecialtyGet:
       type: object
@@ -354,15 +354,15 @@ components:
           example: "XYZ"
         mandatory:
           type: boolean
-          example: True
+          example: true
         sequence:
           type: integer
           example: 1
         cohort:
-          type: object
+          $ref: '#/components/schemas/CohortGet'
         selectable:
           type: boolean
-          example: True
+          example: true
 
     CohortGet:
       type: object
@@ -415,9 +415,9 @@ components:
           type: string
           example: "Bruxelles"
         country:
-          type: object
+          $ref: '#/components/schemas/Country'
         cohort:
-          type: object
+          $ref: '#/components/schemas/CohortGet'
 
     InternshipGet:
       type: object
@@ -428,9 +428,9 @@ components:
           type: string
           example: "XYZ"
         speciality:
-          type: object
+          $ref: '#/components/schemas/SpecialtyGet'
         cohort:
-          type: object
+          $ref: '#/components/schemas/CohortGet'
         length_in_periods:
           type: integer
           example: 1
@@ -444,7 +444,7 @@ components:
         uuid:
           $ref: '#/components/schemas/Uuid'
         person:
-          type: object
+          $ref: '#/components/schemas/Person'
         location:
           type: string
           example: "Rue de la maison, 10"
@@ -467,7 +467,7 @@ components:
           type: string
           example: "SPECIALIST"
         cohort:
-          type: object
+          $ref: '#/components/schemas/CohortGet'
         evolution_score:
           type: number
           example: 17
@@ -496,20 +496,66 @@ components:
         uuid:
           $ref: '#/components/schemas/Uuid'
         student:
-          type: object
+          $ref: '#/components/schemas/Student'
         organization:
-          type: object
+          $ref: '#/components/schemas/OrganizationGet'
         specialty:
-          type: object
+          $ref: '#/components/schemas/SpecialtyGet'
         period:
-          type: object
+          $ref: '#/components/schemas/PeriodGet'
         internship:
-          type: object
+          $ref: '#/components/schemas/InternshipGet'
 
     Uuid:
       type: string
       format: uuid
       example: "abcd-efgh-ijkl-mnop-1234-5678"
+
+    Student:
+      type: object
+      properties:
+        uuid:
+          $ref: '#/components/schemas/Uuid'
+        registration_id:
+          type: string
+          example: "44444444444"
+        person:
+          $ref: '#/components/schemas/Person'
+
+    Person:
+      type: object
+      properties:
+        uuid:
+          $ref: '#/components/schemas/Uuid'
+        first_name:
+          type: string
+          example: "Dupont"
+        last_name:
+          type: string
+          example: "Jacques"
+        email:
+          type: string
+          example: "jacques.dupont@mail.xyz"
+        gender:
+          type: string
+          example: "M"
+
+    Country:
+      type: object
+      properties:
+        url:
+          type: string
+        uuid:
+          $ref: '#/components/schemas/Uuid'
+        iso_code:
+          type: string
+          example: "BE"
+        name:
+          type: string
+          example: "Belgium"
+        nationality:
+          type: string
+          example: "Belgian"
 
 security:
   - Token: []
