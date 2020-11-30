@@ -184,6 +184,7 @@ def view_errors(request, cohort_id):
 def internship_affectation_sumup(request, cohort_id):
     cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
     filter_specialty, filter_hospital = int(request.GET.get('specialty', 0)), int(request.GET.get('hospital', 0))
+    specialty = models.internship_speciality.get_by_id(filter_specialty)
     hospital = models.organization.get_by_id(filter_hospital)
     all_speciality = list(models.internship_speciality.find_all(cohort=cohort))
     all_speciality = models.internship_speciality.set_speciality_unique(all_speciality)
