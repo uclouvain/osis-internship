@@ -23,13 +23,14 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.utils.translation import gettext as _
 from openpyxl import Workbook
 from openpyxl.styles import Font
 from openpyxl.utils import get_column_letter
 from openpyxl.writer.excel import save_virtual_workbook
 
 from internship import models
-from internship.models.period import Period
+from internship.models.period import get_effective_periods
 from internship.templatetags.dictionary import is_edited
 from internship.utils.exporting.spreadsheet import columns_resizing, add_row
 
@@ -96,15 +97,21 @@ def _append_row_data(columns, period, student):
 
 
 def _retrieve_score(period_score):
-    if isinstance(period_score, dict) and 'edited' in period_score:
+    if _is_dict_with_key(period_score, 'edited'):
+        if _is_dict_with_key(period_score['edited'], 'excused'):
+            return period_score['edited']['excused'] or ''
         return period_score['edited'] or ''
     else:
         return period_score
 
 
+def _is_dict_with_key(obj, key):
+    return isinstance(obj, dict) and key in obj
+
+
 def _make_complete_list(periods, students, worksheet):
     columns_resizing(worksheet, _get_columns_width())
-    all_periods_count = Period.objects.filter(cohort=periods.first().cohort).count()
+    all_periods_count = get_effective_periods(periods.first().cohort.pk).count()
     for student in students:
         if student.registration_id:
             columns = []
@@ -113,12 +120,16 @@ def _make_complete_list(periods, students, worksheet):
             columns.append(student.registration_id)
             _complete_student_row_for_all_internships(columns, periods, student)
             if periods.count() == all_periods_count:
-                columns.append(_get_evolution_score(student.evolution_score))
+                _append_evolution_score(columns, student.evolution_score)
+                columns.append(student.evolution_score_reason)
+            columns.append(_("Yes") if student.fulfill_condition else _("No"))
             add_row(worksheet, columns)
 
 
-def _get_evolution_score(score):
-    return score['edited'] if is_edited(score) else score
+def _append_evolution_score(columns, score):
+    columns.append(score['edited'] if is_edited(score) else score)
+    columns.append(score['computed'] if is_edited(score) else score)
+    columns.append(score['edited'] if is_edited(score) else '')
 
 
 def _complete_student_row_for_all_internships(columns, periods, student):
@@ -131,7 +142,7 @@ def _complete_student_row_for_all_internships(columns, periods, student):
 
 
 def _add_sheet_header(worksheet):
-    column_titles = ["Nom", "Prénom", "NOMA", "LIEU", "COTE"]
+    column_titles = [_("Name"), _("First name"), _("NOMA"), _("Hospital"), _("Grade")]
     add_row(worksheet, column_titles)
     cells = worksheet.iter_rows("A1:AAA1")
     for col in cells:
@@ -140,13 +151,18 @@ def _add_sheet_header(worksheet):
 
 
 def _add_header(cohort, periods, worksheet):
-    column_titles = ["Nom", "Prénom", "NOMA"]
+    column_titles = [_("Name"), _("First name"), _("NOMA")]
+    all_periods_count = get_effective_periods(periods.first().cohort.pk).count()
     for period in periods:
         column_titles.append(period.name)
         column_titles.append("{}+".format(period.name))
         column_titles.append("{}-Score".format(period.name))
-    if periods.count() == cohort.period_set.all().count():
-        column_titles.append("Evolution")
+    if periods.count() == all_periods_count:
+        column_titles.append(_("Evolution"))
+        column_titles.append(_("Evolution computed"))
+        column_titles.append(_("Evolution edited"))
+        column_titles.append(_("Reason"))
+    column_titles.append(_("APD Validation"))
     add_row(worksheet, column_titles)
     cells = worksheet.iter_rows("A1:AAA1")
     for col in cells:

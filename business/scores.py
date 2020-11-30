@@ -29,7 +29,7 @@ from internship.models.internship_score import APD_NUMBER
 class InternshipScoreRules:
     NA_GRADE = 'E'
     NORMAL_GRADES = ['C', 'D']
-    EXCEPT_APDS = [8, 14]
+    EXCEPT_APDS = [8, 14, 15]
     EXCEPT_GRADES = NORMAL_GRADES + ['B']
 
     @classmethod

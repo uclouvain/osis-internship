@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-25 17:24+0200\n"
+"POT-Creation-Date: 2020-06-22 16:29+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,10 +16,21 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+#, python-format
+msgid ""
+"\n"
+"                                %(start_index)s to %(end_index)s of "
+"%(total_counts)s students\n"
+"                            "
+msgstr ""
+
 msgid "A hospital with the same reference already exists in this cohort"
 msgstr ""
 
 msgid "A master must be affected to at least one hospital or one specialty."
+msgstr ""
+
+msgid "APD Validation"
 msgstr ""
 
 msgid "Accept"
@@ -56,6 +67,9 @@ msgid "Address"
 msgstr ""
 
 msgid "Affectation's result"
+msgstr ""
+
+msgid "All APDs validated"
 msgstr ""
 
 msgid "All grades submitted"
@@ -266,7 +280,16 @@ msgstr ""
 msgid "Evaluations submitted"
 msgstr ""
 
+msgid "Evolution"
+msgstr ""
+
 msgid "Evolution Score:"
+msgstr ""
+
+msgid "Evolution computed"
+msgstr ""
+
+msgid "Evolution edited"
 msgstr ""
 
 msgid "Evolution score will <b>not</b> be exported"
@@ -324,6 +347,9 @@ msgid "Generalist"
 msgstr ""
 
 msgid "Generate solution"
+msgstr ""
+
+msgid "Grade"
 msgstr ""
 
 msgid "Grades not received"
@@ -495,6 +521,9 @@ msgstr ""
 msgid "No internship"
 msgstr ""
 
+msgid "No reason"
+msgstr ""
+
 msgid "No result"
 msgstr ""
 
@@ -537,6 +566,9 @@ msgstr ""
 msgid "Other choice"
 msgstr ""
 
+msgid "Other reason"
+msgstr ""
+
 msgid "Paste"
 msgstr ""
 
@@ -576,6 +608,9 @@ msgstr ""
 msgid "Postal code"
 msgstr ""
 
+msgid "Predifined reason"
+msgstr ""
+
 msgid "Preference"
 msgstr ""
 
@@ -585,10 +620,19 @@ msgstr ""
 msgid "Private email"
 msgstr ""
 
+msgid "Provide a reason for editing score ?"
+msgstr ""
+
+msgid "Provide reason"
+msgstr ""
+
 msgid "Publication date"
 msgstr ""
 
 msgid "Publication must be done after the subscription process."
+msgstr ""
+
+msgid "Reason"
 msgstr ""
 
 msgid "Reference"
@@ -607,6 +651,9 @@ msgid "Score"
 msgstr ""
 
 msgid "Score edited. Computed score: "
+msgstr ""
+
+msgid "Score excused"
 msgstr ""
 
 #, python-format
@@ -652,6 +699,9 @@ msgid "Send summary"
 msgstr ""
 
 msgid "Sequence"
+msgstr ""
+
+msgid "Show APD validation"
 msgstr ""
 
 msgid ""
@@ -771,6 +821,11 @@ msgstr ""
 msgid ""
 "You are in the period of inscriptions. It is not recommended to change "
 "choices during this period."
+msgstr ""
+
+msgid ""
+"You may provide a reason for editing score by choosing a justification from "
+"the list below."
 msgstr ""
 
 msgid "items per page"

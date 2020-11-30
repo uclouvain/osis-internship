@@ -2,9 +2,17 @@
 
 {% if period_score|is_edited %}
     <div class="score-cell-value">
-        {{ period_score.edited|default_if_none:'-' }}
-        <i style="font-size: 15px;" title="{% trans "Score edited. Computed score: " %}{{ period_score.computed }}"
-       class="fas fa-info-circle text-info"></i>
+        {% if period_score.edited|is_excused %}
+            <span class="excused">
+                {{ period_score.edited.excused|default_if_none:'-' }}
+            </span>
+            <i title="{% trans "Score excused" %}"
+        {% else %}
+            {{ period_score.edited|default_if_none:'-' }}
+            <i title="{% trans "Score edited. Computed score: " %}
+                {{ period_score.computed }}"
+        {% endif %}
+       class="info-icon fas fa-info-circle text-info"></i>
     </div>
 {% else %}
     {{ period_score }}

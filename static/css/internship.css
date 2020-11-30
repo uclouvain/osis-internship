@@ -132,3 +132,16 @@ input:checked + .slider:before {
     padding-top:0;
     line-height: inherit;
 }
+
+.info-icon {
+    font-size: 15px;
+}
+
+.excused {
+    color: darkgrey;
+}
+
+.pagination-index-count {
+    margin-left: 10px;
+    color: grey;
+}

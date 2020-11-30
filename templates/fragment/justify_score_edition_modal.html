@@ -1,0 +1,48 @@
+{% load i18n bootstrap3 %}
+
+<div class="modal fade" id="justify_score" tabindex="-1" role="dialog" aria-labelledby="justify_score_label">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">{% trans "Provide a reason for editing score ?" %}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="panel-default">
+                    <div class="panel-heading">
+                        {% trans "You may provide a reason for editing score by choosing a justification from the list below." %}
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group col-md-12 required_field">
+                            <label class="control-label" for="id_reason">
+                                {% trans "Predifined reason" %}
+                            </label>
+                            <select name="reason" class="form-control" title="" id="id_reason">
+                                {% for reason in score_edit_reasons %}
+                                    <option value="{{ reason.text }}">{{ reason.text }}</option>
+                                {% endfor %}
+                                <option value="other">{% trans "Other reason" %}</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-12">
+                            <label class="control-label" for="id_other_reason">{% trans "Other reason" %}</label>
+                            <textarea name="other_reason" cols="40" rows="10" class="form-control" title="" disabled="" id="id_other_reason"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="no_reason_btn" type="button" class="btn btn-default" data-dismiss="modal">{% trans "No reason" %}</button>
+                <button id="justify_score_btn" type="button" class="btn btn-primary" data-dismiss="modal">
+                    {% trans "Provide reason" %}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block script %}
+    <script>
+        $("#id_reason").change((e) => $('#id_other_reason').prop('disabled', e.target.value !== "other"));
+    </script>
+{% endblock %}
