@@ -30,24 +30,28 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 from internship.models.enums.civility import Civility
-from internship.models.enums.gender import Gender
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 
 
 class InternshipMasterAdmin(SerializableModelAdmin):
-    list_display = ('first_name', 'last_name', 'civility')
-    fieldsets = ((None, {'fields': ('last_name', 'first_name', 'civility', 'gender', 'email',
-                                    'email_private', 'location', 'postal_code', 'city', 'country', 'phone',
-                                    'phone_mobile', 'birth_date', 'start_activities')}),)
+    list_display = ('person', 'civility')
+    fieldsets = (
+        (
+            None, {
+                'fields': (
+                    'person', 'civility', 'email_private', 'location', 'postal_code',
+                    'city', 'country', 'start_activities'
+                )
+            }
+        ),
+    )
 
 
 class InternshipMaster(SerializableModel):
-    last_name = models.CharField(max_length=50, db_index=True)
-    first_name = models.CharField(max_length=50, blank=True, null=True, db_index=True)
-    civility = models.CharField(max_length=50, blank=True, null=True, choices=Civility.choices())
-    gender = models.CharField(max_length=1, blank=True, null=True, choices=Gender.choices())
-    email = models.EmailField(max_length=255, blank=True, null=True)
+    person = models.ForeignKey('base.Person', blank=True, null=True, on_delete=models.CASCADE)
+
     email_private = models.EmailField(max_length=255, blank=True, null=True, verbose_name='Private email')
+    civility = models.CharField(max_length=50, blank=True, null=True, choices=Civility.choices())
     location = models.CharField(max_length=255, blank=True, null=True)
     postal_code = models.CharField(max_length=20, blank=True, null=True)
     city = models.CharField(max_length=255, blank=True, null=True)
@@ -56,16 +60,13 @@ class InternshipMaster(SerializableModel):
         blank=True, null=True,
         on_delete=models.CASCADE
     )
-    phone = models.CharField(max_length=30, blank=True, null=True)
-    phone_mobile = models.CharField(max_length=30, blank=True, null=True)
-    birth_date = models.DateField(blank=True, null=True)
     start_activities = models.DateField(blank=True, null=True)
 
     def clean(self):
         self.clean_birth_date()
 
     def clean_birth_date(self):
-        if self.birth_date is not None and self.birth_date > timezone.now().date():
+        if self.person.birth_date is not None and self.person.birth_date > timezone.now().date():
             raise ValidationError({"birth_date": _("Birth date must be on or before today's date.")}, code="invalid")
 
     def civility_acronym(self):
@@ -75,7 +76,7 @@ class InternshipMaster(SerializableModel):
             return ""
 
     def __str__(self):
-        return "{}, {}".format(self.last_name, self.first_name)
+        return "{}, {}".format(self.person.last_name, self.person.first_name)
 
 
 def get_by_id(master_id):

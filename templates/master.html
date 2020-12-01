@@ -31,16 +31,16 @@
     <li><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
     <li><a href="{% url 'internships_home' cohort_id=current_cohort.id %}">{{ current_cohort.name }}</a></li>
     <li><a href="{% url 'internships_masters' cohort_id=current_cohort.id %}">{% trans 'Internships masters' %}</a></li>
-    <li class="active">{{ allocated_master.last_name | upper }}, {{ allocated_master.first_name }}</li>
+    <li class="active">{{ allocated_master.person.last_name | upper }}, {{ allocated_master.person.first_name }}</li>
 {% endblock %}
 
 {% block content %}
     <div class="page-header">
-        <h2>
+        <h2
             {% if allocated_master.civility %}
                 {% trans allocated_master.civility_acronym %}
             {% endif %}
-            {{ allocated_master.last_name | upper }}, {{ allocated_master.first_name }}
+            {{ allocated_master.person.last_name | upper }}, {{ allocated_master.person.first_name }}
         </h2>
     </div>
 
@@ -56,7 +56,7 @@
                 <div class="col-md-9">
                     <div class="form-group">
                         <label for="first_name">{% trans 'Full name' %}</label>
-                        <div id="first_name">{{ allocated_master.last_name | upper }}, {{ allocated_master.first_name }}</div>
+                        <div id="first_name">{{ allocated_master.person.last_name | upper }}, {{ allocated_master.person.first_name }}</div>
                     </div>
                 </div>
             </div>
@@ -64,13 +64,13 @@
                 <div class="col-md-3">
                     <div class="form-group">
                         <label for="birth_date">{% trans 'Birth date' %}</label>
-                        <div id="birth_date">{{ allocated_master.birth_date | default_if_none:"" }}</div>
+                        <div id="birth_date">{{ allocated_master.person.birth_date | default_if_none:"" }}</div>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
                         <label for="gender">{% trans 'Gender' %}</label>
-                        <div id="gender">{% if allocated_master.gender %}{% trans allocated_master.gender %}{% endif %}</div>
+                        <div id="gender">{% if allocated_master.person.gender %}{% trans allocated_master.person.gender %}{% endif %}</div>
                     </div>
                 </div>
                 <div class="col-md-3">
@@ -84,7 +84,7 @@
                 <div class="col-md-3">
                     <div class="form-group">
                         <label for="email">{% trans 'Email' %}</label>
-                        <div id="email">{{ allocated_master.email | default_if_none:"" }}</div>
+                        <div id="email">{{ allocated_master.person.email | default_if_none:"" }}</div>
                     </div>
                 </div>
                 <div class="col-md-3">
@@ -96,13 +96,13 @@
                 <div class="col-md-3">
                     <div class="form-group">
                         <label for="phone">{% trans 'Phone' %}</label>
-                        <div id="phone">{{ allocated_master.phone | default_if_none:"" }}</div>
+                        <div id="phone">{{ allocated_master.person.phone | default_if_none:"" }}</div>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
                         <label for="phone_mobile">{% trans 'Phone Number / Mobile Number' %}</label>
-                        <div id="phone_mobile">{{ allocated_master.phone_mobile | default_if_none:"" }}</div>
+                        <div id="phone_mobile">{{ allocated_master.person.phone_mobile | default_if_none:"" }}</div>
                     </div>
                 </div>
             </div>
@@ -166,7 +166,7 @@
             <a class="btn btn-danger pull-right master_btn_delete"
             data-href="{% url 'master_delete' cohort_id=current_cohort.id master_id=allocated_master.id %}"
             data-toggle="modal" data-target="#delete_modal"
-            data-value="{{allocated_master.last_name}} {{allocated_master.first_name}}">
+            data-value="{{allocated_master.person.last_name}} {{allocated_master.person.first_name}}">
                 <span class="glyphicon glyphicon-remove aria-hidden="true"></span>
                 {% trans "Delete" %}
             </a>

@@ -31,6 +31,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
+from internship.forms.Internship_person_form import InternshipPersonForm
 from internship.forms.master import MasterForm
 from internship.models import master_allocation, internship_master, internship_speciality, organization, cohort
 from internship.utils.exporting.masters import export_xls
@@ -47,8 +48,8 @@ def masters(request, cohort_id):
 
     allocations = master_allocation.search(current_cohort, filter_specialty, filter_hospital)
     if filter_name:
-        allocations = allocations.filter(master__last_name__unaccent__icontains=filter_name) | \
-                      allocations.filter(master__first_name__unaccent__icontains=filter_name)
+        allocations = allocations.filter(master__person__last_name__unaccent__icontains=filter_name) | \
+                      allocations.filter(master__person__first_name__unaccent__icontains=filter_name)
     specialties = internship_speciality.find_by_cohort(current_cohort)
     hospitals = organization.find_by_cohort(current_cohort)
     allocations = get_object_list(request, allocations)
@@ -72,7 +73,9 @@ def master_form(request, cohort_id, master_id=None, allocated_master=None):
         allocated_master = internship_master.get_by_id(master_id)
         allocations = master_allocation.find_by_master(current_cohort, allocated_master)
 
-    form = MasterForm(request.POST or None, instance=allocated_master)
+    master_form = MasterForm(request.POST or None, instance=allocated_master)
+    person = allocated_master.person if allocated_master else None
+    person_form = InternshipPersonForm(request.POST or None, instance=person)
     specialties = internship_speciality.find_by_cohort(current_cohort)
     hospitals = organization.find_by_cohort(current_cohort)
     return render(request, "master_form.html", locals())
@@ -100,19 +103,22 @@ def master_delete(request, master_id, cohort_id):
 def master_save(request, cohort_id):
     current_cohort = shortcuts.get_object_or_404(cohort.Cohort, pk=cohort_id)
     allocated_master = internship_master.get_by_id(request.POST.get("id")) if request.POST.get("id") else None
-    form = MasterForm(request.POST, instance=allocated_master)
+    form_master = MasterForm(request.POST, instance=allocated_master)
+    person = allocated_master.person if allocated_master else None
+    form_person = InternshipPersonForm(request.POST, instance=person)
     errors = []
     hospital = ""
-    if form.is_valid():
-        allocated_master = form.instance
+    if form_master.is_valid() and form_person.is_valid():
+        allocated_master = form_master.instance
         if _validate_allocations(request):
-            form.save()
+            form_person.save()
+            form_master.save()
             master_allocation.clean_allocations(current_cohort, allocated_master)
             allocations = _build_allocations(request, allocated_master)
             _save_allocations(allocations)
             hospital = _extract_hospital_id(allocations)
         else:
-            errors.append(form.errors)
+            errors.append(form_master.errors)
             messages.add_message(
                 request,
                 messages.ERROR,
@@ -120,7 +126,7 @@ def master_save(request, cohort_id):
                 "alert-danger"
             )
     else:
-        errors.append(form.errors)
+        errors.append(form_master.errors)
         display_errors(request, errors)
 
     if errors:

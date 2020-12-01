@@ -105,8 +105,8 @@
                 {% for allocation in allocations %}
                     <tr>
                         <td>{% if allocation.master.civility %}{% trans allocation.master.civility_acronym %}{% endif %}</td>
-                        <td>{{ allocation.master.last_name | upper }}</td>
-                        <td>{{ allocation.master.first_name }}</td>
+                        <td>{{ allocation.master.person.last_name | upper }}</td>
+                        <td>{{ allocation.master.person.first_name }}</td>
                         <td>
                             <a class="btn btn-primary" href="{% url 'master' cohort_id=current_cohort.id master_id=allocation.master.id %}">
                                 <span class="glyphicon glyphicon-search" aria-hidden="true"></span>

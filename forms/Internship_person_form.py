@@ -25,19 +25,23 @@
 ##############################################################################
 from django import forms
 
-from internship.models import internship_master
-from reference.models.country import Country
+from base.models.person import Person
 
 
-class MasterForm(forms.ModelForm):
-    country = forms.ModelChoiceField(queryset=Country.objects.order_by('name'), required=False)
+class InternshipPersonForm(forms.ModelForm):
 
     class Meta:
-        model = internship_master.InternshipMaster
+        model = Person
         fields = [
-            'civility', 'email_private', 'location',
-            'postal_code', 'city', 'country', 'start_activities'
+            'last_name',
+            'first_name',
+            'gender',
+            'birth_date',
+            'email',
+            'phone',
+            'phone_mobile'
         ]
         widgets = {
+            'birth_date': forms.DateInput(format="%Y-%m-%d", attrs={'type': 'date'}),
             'start_activities': forms.DateInput(format="%Y-%m-%d", attrs={'type': 'date'})
         }
