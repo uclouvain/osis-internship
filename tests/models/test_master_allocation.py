@@ -57,7 +57,7 @@ class TestInternshipMaster(TestCase):
     def test_find_unallocated_masters(self):
         allocated_masters = MasterAllocation.objects.values("pk").distinct()
         unallocated_masters = InternshipMaster.objects.exclude(id__in=(list([a['pk'] for a in allocated_masters]))) \
-            .order_by('last_name', 'first_name')
+            .order_by('person__last_name', 'person__first_name')
         self.assertEqual(1, unallocated_masters.count())
 
     def test_clean_allocations(self):

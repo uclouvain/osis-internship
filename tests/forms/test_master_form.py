@@ -29,6 +29,7 @@ from django.test import TestCase
 from django.utils import timezone
 
 from internship.forms import master
+from internship.forms.Internship_person_form import InternshipPersonForm
 from internship.tests.factories.organization import OrganizationFactory
 from internship.tests.factories.speciality import SpecialtyFactory
 from internship.views.master import _validate_allocations
@@ -53,15 +54,16 @@ class TestMasterForm(TestCase):
             'birth_date': "1980-01-01",
             'start_activities': "2000-01-01",
         }
-        form = master.MasterForm(data)
-        self.assertTrue(form.is_valid())
+        master_form = master.MasterForm(data)
+        person_form = InternshipPersonForm(data)
+        self.assertTrue(master_form.is_valid() and person_form.is_valid())
 
     def test_invalid_birth_date(self):
         data = {
             "last_name": "test",
             'birth_date': timezone.now().date() + timedelta(days=5),
         }
-        form = master.MasterForm(data)
+        form = InternshipPersonForm(data)
         self.assertFalse(form.is_valid())
 
     def test_invalid_allocation(self):

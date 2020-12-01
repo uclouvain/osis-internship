@@ -24,10 +24,8 @@
 #
 ##############################################################################
 
-from django.core.exceptions import ObjectDoesNotExist, ValidationError
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
-from django.utils import timezone
-from django.utils.translation import gettext_lazy as _
 
 from internship.models.enums.civility import Civility
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
@@ -61,13 +59,6 @@ class InternshipMaster(SerializableModel):
         on_delete=models.CASCADE
     )
     start_activities = models.DateField(blank=True, null=True)
-
-    def clean(self):
-        self.clean_birth_date()
-
-    def clean_birth_date(self):
-        if self.person.birth_date is not None and self.person.birth_date > timezone.now().date():
-            raise ValidationError({"birth_date": _("Birth date must be on or before today's date.")}, code="invalid")
 
     def civility_acronym(self):
         if self.civility:

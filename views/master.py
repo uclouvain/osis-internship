@@ -92,7 +92,7 @@ def master_delete(request, master_id, cohort_id):
     messages.add_message(
         request,
         messages.SUCCESS,
-        "{} : {} {}".format(_('Master deleted'), allocated_master.last_name, allocated_master.first_name),
+        "{} : {} {}".format(_('Master deleted'), allocated_master.person.last_name, allocated_master.person.first_name),
         "alert-success"
     )
     return HttpResponseRedirect(reverse('internships_masters', kwargs={'cohort_id': cohort_id,}))

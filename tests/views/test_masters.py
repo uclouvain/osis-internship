@@ -62,7 +62,7 @@ class MasterTestCase(TestCase):
     @skipUnless('django.contrib.postgres' in INSTALLED_APPS, 'requires django.contrib.postgres')
     def test_search_master_by_name_unaccent(self):
         organization = OrganizationFactory(cohort=self.cohort)
-        master_with_accent = MasterFactory(last_name='Éçàüî')
+        master_with_accent = MasterFactory(person__last_name='Éçàüî')
         MasterAllocationFactory(organization=organization, master=master_with_accent)
         url = reverse('internships_masters', kwargs={
             'cohort_id': self.cohort.id,
