@@ -25,18 +25,17 @@
 ##############################################################################
 from rest_framework import serializers
 
+from base.api.serializers.person import PersonDetailSerializer
 from internship.models.internship_master import InternshipMaster
 
 
 class InternshipMasterSerializer(serializers.HyperlinkedModelSerializer):
+    person = PersonDetailSerializer(read_only=True)
 
     class Meta:
         model = InternshipMaster
         fields = (
             'uuid',
-            'last_name',
-            'first_name',
+            'person',
             'civility',
-            'gender',
-            'email'
         )

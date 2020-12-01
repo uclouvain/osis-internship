@@ -313,21 +313,11 @@ components:
       properties:
           uuid:
             $ref: '#/components/schemas/Uuid'
-          last_name:
-            type: string
-            example: "Dupont"
-          first_name:
-            type: string
-            example: "Jacques"
+          person:
+            $ref: '#/components/schemas/Person'
           civility:
             type: string
             example: "DOCTOR"
-          gender:
-            type: string
-            example: "m"
-          email:
-            type: string
-            example: "jacques.dupont@mail.xyz"
 
     AllocationGet:
       type: object

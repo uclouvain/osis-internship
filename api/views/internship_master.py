@@ -37,13 +37,13 @@ class InternshipMasterList(generics.ListAPIView):
     serializer_class = InternshipMasterSerializer
     queryset = InternshipMaster.objects.all()
     search_fields = (
-        'last_name', 'first_name'
+        'person__last_name', 'person__first_name'
     )
     ordering_fields = (
         'birth_date',
     )
     ordering = (
-        'last_name',
+        'person__last_name',
     )  # Default ordering
 
 
