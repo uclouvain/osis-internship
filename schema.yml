@@ -1,0 +1,561 @@
+openapi: 3.0.0
+info:
+  version: "1"
+  title: Internship API
+  description: 'This API delivers data for the Internship project.'
+  contact:
+    name: 'UCLouvain - OSIS'
+    url: https://github.com/uclouvain/osis
+
+servers:
+  - url: https://{environment}.osis.uclouvain.be/api/v1/internship/
+    variables:
+      environment:
+        default: dev
+        enum:
+          - dev # Development server
+          - qa # Staging server
+          - test # Test server
+  - url: https://osis.uclouvain.be/api/v1/internship/
+    description: Production server
+
+paths:
+  /masters:
+    get:
+      description: Obtain the list of internship masters
+      responses:
+        200:
+          description: Successful get of the list of internship masters
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MasterGet'
+
+  /masters/{uuid}:
+    get:
+      description: Obtain information about a specific master
+      parameters:
+        - in: path
+          name: uuid
+          required: true
+          description: The UUID of the master
+          schema:
+            $ref: '#/components/schemas/Uuid'
+      responses:
+        200:
+          description: Successful get of a master's data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MasterGet'
+
+  /masters_allocations:
+    get:
+      description: Obtain the list of internship-master allocations
+      responses:
+        200:
+          description: Successful get of the list of allocations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AllocationGet'
+
+  /masters_allocations/{uuid}:
+    get:
+      description: Obtain information about a specific master allocation
+      parameters:
+        - in: path
+          name: uuid
+          required: true
+          description: The UUID of the master allocation
+          schema:
+            $ref: '#/components/schemas/Uuid'
+      responses:
+        200:
+          description: Successful get of a master allocation's data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllocationGet'
+
+  /specialties:
+    get:
+      description: Obtain the list of specialties
+      responses:
+        200:
+          description: Successful get of the list of specialties
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SpecialtyGet'
+
+  /specialties/{uuid}:
+    get:
+      description: Obtain information about a specific specialty
+      parameters:
+        - in: path
+          name: uuid
+          required: true
+          description: The UUID of the specialty
+          schema:
+            $ref: '#/components/schemas/Uuid'
+      responses:
+        200:
+          description: Successful get of a specialty's data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SpecialtyGet'
+
+  /cohorts:
+    get:
+      description: Obtain the list of cohorts
+      responses:
+        200:
+          description: Successful get of the list of cohorts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CohortGet'
+
+  /cohorts/{uuid}:
+    get:
+      description: Obtain information about a specific cohort
+      parameters:
+        - in: path
+          name: uuid
+          required: true
+          description: The UUID of the cohort
+          schema:
+            $ref: '#/components/schemas/Uuid'
+      responses:
+        200:
+          description: Successful get of a cohort's data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CohortGet'
+
+  /organizations:
+    get:
+      description: Obtain the list of organizations
+      responses:
+        200:
+          description: Successful get of the list of organizations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrganizationGet'
+
+  /organizations/{uuid}:
+    get:
+      description: Obtain information about a specific organization
+      parameters:
+        - in: path
+          name: uuid
+          required: true
+          description: The UUID of the organization
+          schema:
+            $ref: '#/components/schemas/Uuid'
+      responses:
+        200:
+          description: Successful get of an organization's data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationGet'
+
+  /internships:
+    get:
+      description: Obtain the list of internships
+      responses:
+        200:
+          description: Successful get of the list of internships
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/InternshipGet'
+
+  /internships/{uuid}:
+    get:
+      description: Obtain information about a specific internship
+      parameters:
+        - in: path
+          name: uuid
+          required: true
+          description: The UUID of the internship
+          schema:
+            $ref: '#/components/schemas/Uuid'
+      responses:
+        200:
+          description: Successful get of an internship's data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternshipGet'
+
+  /periods:
+    get:
+      description: Obtain the list of periods
+      responses:
+        200:
+          description: Successful get of the list of periods
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PeriodGet'
+
+  /periods/{uuid}:
+    get:
+      description: Obtain information about a specific period
+      parameters:
+        - in: path
+          name: uuid
+          required: true
+          description: The UUID of the period
+          schema:
+            $ref: '#/components/schemas/Uuid'
+      responses:
+        200:
+          description: Successful get of a period's data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PeriodGet'
+
+  /students:
+    get:
+      description: Obtain the list of students
+      responses:
+        200:
+          description: Successful get of the list of students
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StudentGet'
+
+  /students/{uuid}:
+    get:
+      description: Obtain information about a specific internship student
+      parameters:
+        - in: path
+          name: uuid
+          required: true
+          description: The UUID of the internship student
+          schema:
+            $ref: '#/components/schemas/Uuid'
+      responses:
+        200:
+          description: Successful get of a internship student's data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentGet'
+
+  /students_affectations:
+    get:
+      description: Obtain the list of students affectations
+      responses:
+        200:
+          description: Successful get of the list of students affectations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StudentAffectationGet'
+
+  /students_affectations/{uuid}:
+    get:
+      description: Obtain information about a specific student's affectation
+      parameters:
+        - in: path
+          name: uuid
+          required: true
+          description: The UUID of the student's affectation
+          schema:
+            $ref: '#/components/schemas/Uuid'
+      responses:
+        200:
+          description: Successful get of a student's affectation's data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentAffectationGet'
+
+components:
+  securitySchemes:
+    Token:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Enter your token in the format **Token &lt;token>**
+
+  schemas:
+    MasterGet:
+      type: object
+      properties:
+          uuid:
+            $ref: '#/components/schemas/Uuid'
+          last_name:
+            type: string
+            example: "Dupont"
+          first_name:
+            type: string
+            example: "Jacques"
+          civility:
+            type: string
+            example: "DOCTOR"
+          gender:
+            type: string
+            example: "m"
+          email:
+            type: string
+            example: "jacques.dupont@mail.xyz"
+
+    AllocationGet:
+      type: object
+      properties:
+        uuid:
+          $ref: '#/components/schemas/Uuid'
+        master:
+          $ref: '#/components/schemas/MasterGet'
+        organization:
+          $ref: '#/components/schemas/OrganizationGet'
+        specialty:
+          $ref: '#/components/schemas/SpecialtyGet'
+
+    SpecialtyGet:
+      type: object
+      properties:
+        uuid:
+          $ref: '#/components/schemas/Uuid'
+        name:
+          type: string
+          example: "Xyzetologie"
+        acronym:
+          type: string
+          example: "XYZ"
+        mandatory:
+          type: boolean
+          example: true
+        sequence:
+          type: integer
+          example: 1
+        cohort:
+          $ref: '#/components/schemas/CohortGet'
+        selectable:
+          type: boolean
+          example: true
+
+    CohortGet:
+      type: object
+      properties:
+        uuid:
+          $ref: '#/components/schemas/Uuid'
+        name:
+          type: string
+          example: "R6-2021"
+        description:
+          type: string
+          example: "Student cohort for academic year 2020-2021"
+        publication_start_date:
+          type: string
+          example: 01/04/2020
+        subscription_start_date:
+          type: string
+          example: 01/02/2020
+        subscription_end_date:
+          type: string
+          example: 01/03/2020
+
+    OrganizationGet:
+      type: object
+      properties:
+        uuid:
+          $ref: '#/components/schemas/Uuid'
+        name:
+          type: string
+          example: "CHU XYZ"
+        acronym:
+          type: string
+          example: "XYZ"
+        website:
+          type: string
+          example: "www.chuxyz.be"
+        reference:
+          type: string
+          example: "01"
+        phone:
+          type: string
+          example: "01/01.01.01"
+        location:
+          type: string
+          example: "Rue de l'hôpital"
+        postal_code:
+          type: string
+          example: "1000"
+        city:
+          type: string
+          example: "Bruxelles"
+        country:
+          $ref: '#/components/schemas/Country'
+        cohort:
+          $ref: '#/components/schemas/CohortGet'
+
+    InternshipGet:
+      type: object
+      properties:
+        uuid:
+          $ref: '#/components/schemas/Uuid'
+        name:
+          type: string
+          example: "XYZ"
+        speciality:
+          $ref: '#/components/schemas/SpecialtyGet'
+        cohort:
+          $ref: '#/components/schemas/CohortGet'
+        length_in_periods:
+          type: integer
+          example: 1
+        position:
+          type: integer
+          example: 1
+
+    StudentGet:
+      type: object
+      properties:
+        uuid:
+          $ref: '#/components/schemas/Uuid'
+        person:
+          $ref: '#/components/schemas/Person'
+        location:
+          type: string
+          example: "Rue de la maison, 10"
+        postal_code:
+          type: string
+          example: "1000"
+        city:
+          type: string
+          example: "Bruxelles"
+        country:
+          type: string
+          example: "Belgique"
+        email:
+          type: string
+          example: "jean.pondu@mail.be"
+        phone_mobile:
+          type: string
+          example: "0411/11.11.11"
+        contest:
+          type: string
+          example: "SPECIALIST"
+        cohort:
+          $ref: '#/components/schemas/CohortGet'
+        evolution_score:
+          type: number
+          example: 17
+        evolution_score_reason:
+          type: string
+          example: "reason"
+
+    PeriodGet:
+      type: object
+      properties:
+        uuid:
+          $ref: '#/components/schemas/Uuid'
+        name:
+          type: string
+          example: "P1"
+        date_start:
+          type: string
+          example: "01/02/2020"
+        date_end:
+          type: string
+          example: "01/03/2020"
+
+    StudentAffectationGet:
+      type: object
+      properties:
+        uuid:
+          $ref: '#/components/schemas/Uuid'
+        student:
+          $ref: '#/components/schemas/Student'
+        organization:
+          $ref: '#/components/schemas/OrganizationGet'
+        specialty:
+          $ref: '#/components/schemas/SpecialtyGet'
+        period:
+          $ref: '#/components/schemas/PeriodGet'
+        internship:
+          $ref: '#/components/schemas/InternshipGet'
+
+    Uuid:
+      type: string
+      format: uuid
+      example: "abcd-efgh-ijkl-mnop-1234-5678"
+
+    Student:
+      type: object
+      properties:
+        uuid:
+          $ref: '#/components/schemas/Uuid'
+        registration_id:
+          type: string
+          example: "44444444444"
+        person:
+          $ref: '#/components/schemas/Person'
+
+    Person:
+      type: object
+      properties:
+        uuid:
+          $ref: '#/components/schemas/Uuid'
+        first_name:
+          type: string
+          example: "Dupont"
+        last_name:
+          type: string
+          example: "Jacques"
+        email:
+          type: string
+          example: "jacques.dupont@mail.xyz"
+        gender:
+          type: string
+          example: "M"
+
+    Country:
+      type: object
+      properties:
+        url:
+          type: string
+        uuid:
+          $ref: '#/components/schemas/Uuid'
+        iso_code:
+          type: string
+          example: "BE"
+        name:
+          type: string
+          example: "Belgium"
+        nationality:
+          type: string
+          example: "Belgian"
+
+security:
+  - Token: []
