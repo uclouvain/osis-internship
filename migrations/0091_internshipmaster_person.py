@@ -58,7 +58,7 @@ def create_persons(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('base', '0545_auto_20201126_1645'),
+        ('base', '0543_auto_20201120_1040'),
         ('internship', '0090_masterallocation_uuid'),
     ]
 
