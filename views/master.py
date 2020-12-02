@@ -31,7 +31,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
-from internship.forms.Internship_person_form import InternshipPersonForm
+from internship.forms.internship_person_form import InternshipPersonForm
 from internship.forms.master import MasterForm
 from internship.models import master_allocation, internship_master, internship_speciality, organization, cohort
 from internship.utils.exporting.masters import export_xls
@@ -111,8 +111,10 @@ def master_save(request, cohort_id):
     if form_master.is_valid() and form_person.is_valid():
         allocated_master = form_master.instance
         if _validate_allocations(request):
-            form_person.save()
-            form_master.save()
+            person = form_person.save()
+            master = form_master.save()
+            master.person = person
+            master.save()
             master_allocation.clean_allocations(current_cohort, allocated_master)
             allocations = _build_allocations(request, allocated_master)
             _save_allocations(allocations)
