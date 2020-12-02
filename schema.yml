@@ -311,8 +311,9 @@ components:
     MasterGet:
       type: object
       properties:
-          uuid:
-            $ref: '#/components/schemas/Uuid'
+          url:
+            type: string
+            format: uri
           last_name:
             type: string
             example: "Dupont"
@@ -332,8 +333,9 @@ components:
     AllocationGet:
       type: object
       properties:
-        uuid:
-          $ref: '#/components/schemas/Uuid'
+        url:
+          type: string
+          format: uri
         master:
           $ref: '#/components/schemas/MasterGet'
         organization:
@@ -344,8 +346,9 @@ components:
     SpecialtyGet:
       type: object
       properties:
-        uuid:
-          $ref: '#/components/schemas/Uuid'
+        url:
+          type: string
+          format: uri
         name:
           type: string
           example: "Xyzetologie"
@@ -367,8 +370,9 @@ components:
     CohortGet:
       type: object
       properties:
-        uuid:
-          $ref: '#/components/schemas/Uuid'
+        url:
+          type: string
+          format: uri
         name:
           type: string
           example: "R6-2021"
@@ -388,8 +392,9 @@ components:
     OrganizationGet:
       type: object
       properties:
-        uuid:
-          $ref: '#/components/schemas/Uuid'
+        url:
+          type: string
+          format: uri
         name:
           type: string
           example: "CHU XYZ"
@@ -422,8 +427,9 @@ components:
     InternshipGet:
       type: object
       properties:
-        uuid:
-          $ref: '#/components/schemas/Uuid'
+        url:
+          type: string
+          format: uri
         name:
           type: string
           example: "XYZ"
@@ -441,8 +447,9 @@ components:
     StudentGet:
       type: object
       properties:
-        uuid:
-          $ref: '#/components/schemas/Uuid'
+        url:
+          type: string
+          format: uri
         person:
           $ref: '#/components/schemas/Person'
         location:
@@ -478,8 +485,9 @@ components:
     PeriodGet:
       type: object
       properties:
-        uuid:
-          $ref: '#/components/schemas/Uuid'
+        url:
+          type: string
+          format: uri
         name:
           type: string
           example: "P1"
@@ -493,8 +501,9 @@ components:
     StudentAffectationGet:
       type: object
       properties:
-        uuid:
-          $ref: '#/components/schemas/Uuid'
+        url:
+          type: string
+          format: uri
         student:
           $ref: '#/components/schemas/Student'
         organization:
@@ -545,6 +554,7 @@ components:
       properties:
         url:
           type: string
+          format: uri
         uuid:
           $ref: '#/components/schemas/Uuid'
         iso_code:

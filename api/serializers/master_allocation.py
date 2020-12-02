@@ -32,6 +32,10 @@ from internship.models.master_allocation import MasterAllocation
 
 
 class MasterAllocationSerializer(serializers.HyperlinkedModelSerializer):
+    url = serializers.HyperlinkedIdentityField(
+        view_name='internship_api_v1:master-allocation-detail',
+        lookup_field='uuid'
+    )
     master = InternshipMasterSerializer()
     organization = OrganizationSerializer()
     specialty = InternshipSpecialtySerializer()
@@ -39,7 +43,7 @@ class MasterAllocationSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = MasterAllocation
         fields = (
-            'uuid',
+            'url',
             'master',
             'organization',
             'specialty',
