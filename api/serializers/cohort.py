@@ -29,11 +29,15 @@ from internship.models.cohort import Cohort
 
 
 class CohortSerializer(serializers.HyperlinkedModelSerializer):
+    url = serializers.HyperlinkedIdentityField(
+        view_name='internship_api_v1:cohort-detail',
+        lookup_field='uuid'
+    )
 
     class Meta:
         model = Cohort
         fields = (
-            'uuid',
+            'url',
             'name',
             'description',
             'publication_start_date',

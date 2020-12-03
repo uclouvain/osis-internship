@@ -31,13 +31,17 @@ from internship.models.internship_student_information import InternshipStudentIn
 
 
 class InternshipStudentInformationSerializer(serializers.HyperlinkedModelSerializer):
+    url = serializers.HyperlinkedIdentityField(
+        view_name='internship_api_v1:student-detail',
+        lookup_field='uuid'
+    )
     person = PersonDetailSerializer(read_only=True)
     cohort = CohortSerializer()
 
     class Meta:
         model = InternshipStudentInformation
         fields = (
-            'uuid',
+            'url',
             'person',
             'location',
             'postal_code',

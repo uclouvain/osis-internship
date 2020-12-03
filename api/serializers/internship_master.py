@@ -29,11 +29,15 @@ from internship.models.internship_master import InternshipMaster
 
 
 class InternshipMasterSerializer(serializers.HyperlinkedModelSerializer):
+    url = serializers.HyperlinkedIdentityField(
+        view_name='internship_api_v1:master-detail',
+        lookup_field='uuid'
+    )
 
     class Meta:
         model = InternshipMaster
         fields = (
-            'uuid',
+            'url',
             'last_name',
             'first_name',
             'civility',
