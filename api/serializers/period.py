@@ -30,12 +30,16 @@ from internship.models.period import Period
 
 
 class PeriodSerializer(serializers.HyperlinkedModelSerializer):
+    url = serializers.HyperlinkedIdentityField(
+        view_name='internship_api_v1:period-detail',
+        lookup_field='uuid'
+    )
     cohort = CohortSerializer()
 
     class Meta:
         model = Period
         fields = (
-            'uuid',
+            'url',
             'name',
             'date_start',
             'date_end',

@@ -34,6 +34,10 @@ from internship.models.internship_student_affectation_stat import InternshipStud
 
 
 class InternshipStudentAffectationSerializer(serializers.HyperlinkedModelSerializer):
+    url = serializers.HyperlinkedIdentityField(
+        view_name='internship_api_v1:student-affectation-detail',
+        lookup_field='uuid'
+    )
     student = StudentSerializer()
     organization = OrganizationSerializer()
     speciality = InternshipSpecialtySerializer()
@@ -43,7 +47,7 @@ class InternshipStudentAffectationSerializer(serializers.HyperlinkedModelSeriali
     class Meta:
         model = InternshipStudentAffectationStat
         fields = (
-            'uuid',
+            'url',
             'student',
             'organization',
             'speciality',

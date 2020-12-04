@@ -30,12 +30,16 @@ from internship.models.internship_speciality import InternshipSpeciality
 
 
 class InternshipSpecialtySerializer(serializers.HyperlinkedModelSerializer):
+    url = serializers.HyperlinkedIdentityField(
+        view_name='internship_api_v1:specialty-detail',
+        lookup_field='uuid'
+    )
     cohort = CohortSerializer()
 
     class Meta:
         model = InternshipSpeciality
         fields = (
-            'uuid',
+            'url',
             'name',
             'acronym',
             'mandatory',

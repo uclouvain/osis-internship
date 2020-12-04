@@ -31,13 +31,17 @@ from reference.api.serializers.country import CountrySerializer
 
 
 class OrganizationSerializer(serializers.HyperlinkedModelSerializer):
+    url = serializers.HyperlinkedIdentityField(
+        view_name='internship_api_v1:organization-detail',
+        lookup_field='uuid'
+    )
     country = CountrySerializer(read_only=True)
     cohort = CohortSerializer()
 
     class Meta:
         model = Organization
         fields = (
-            'uuid',
+            'url',
             'name',
             'acronym',
             'website',
