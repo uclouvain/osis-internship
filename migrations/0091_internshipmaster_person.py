@@ -12,17 +12,20 @@ def clean_mails(apps, schema_editor):
 
     # clean multiple mails in field value to keep only one mail and move others to additional_mail
     for master in InternshipMaster.objects.all():
-        if master.person:
-            email = master.person.email
-            if ';' in email:
-                emails = email.split(';')
-                person_email = emails[-1].strip()
-                additional_emails = emails[:-1]
-                master.email_additional = '; '.join(additional_emails)
-                master.email_additional = master.email_additional.strip()
-                master.person.email = person_email
-                master.person.save()
-                master.save()
+        if master.email:
+            for delimiter in [';', ',']:
+                split_to_additional_email(master.email, master, delimiter)
+
+
+def split_to_additional_email(email, master, delimiter):
+    if delimiter in email:
+        emails = email.split(delimiter)
+        person_email = emails[-1].strip()
+        additional_emails = emails[:-1]
+        master.email_additional = '; '.join(additional_emails)
+        master.email_additional = master.email_additional.strip()
+        master.email = person_email
+        master.save()
 
 
 def clean_duplicates(apps, schema_editor):
