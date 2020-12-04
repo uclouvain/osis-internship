@@ -33,7 +33,7 @@ from base.tests.factories.student import StudentFactory
 from internship.tests.factories.cohort import CohortFactory
 from internship.tests.factories.organization import OrganizationFactory
 from internship.tests.factories.period import PeriodFactory
-from internship.utils.exporting.score_encoding_xls import _append_row_data
+from internship.utils.exporting.score_encoding_xls import _append_row_data, _append_evolution_score
 
 EXCUSED_PERIOD_SCORE = None
 EDITED_PERIOD_SCORE = 15
@@ -77,3 +77,21 @@ class XlsExportScoresTestCase(TestCase):
         self.assertEqual(columns[4], NO_SUBMISSION_SCORE)
         self.assertEqual(columns[6], '')
         self.assertEqual(columns[8], EDITED_PERIOD_SCORE)
+
+    def test_append_evolution_score_edited(self):
+        evolution_score = {'computed': 15, 'edited': 20}
+        columns = [self.student.person.last_name, self.student.person.first_name, self.student.registration_id]
+        _append_evolution_score(columns, evolution_score)
+        self.assertEqual(len(columns), 6)
+        self.assertEqual(columns[3], evolution_score['edited'])
+        self.assertEqual(columns[4], evolution_score['computed'])
+        self.assertEqual(columns[5], evolution_score['edited'])
+
+    def test_append_evolution_score_computed(self):
+        evolution_score = 15
+        columns = [self.student.person.last_name, self.student.person.first_name, self.student.registration_id]
+        _append_evolution_score(columns, evolution_score)
+        self.assertEqual(len(columns), 6)
+        self.assertEqual(columns[3], evolution_score)
+        self.assertEqual(columns[4], evolution_score)
+        self.assertEqual(columns[5], '')

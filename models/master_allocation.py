@@ -23,6 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+import uuid as uuid
 from django.contrib import admin
 from django.db import models
 from django.db.models import Q
@@ -36,6 +37,8 @@ class MasterAllocationAdmin(admin.ModelAdmin):
 
 
 class MasterAllocation(models.Model):
+    uuid = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
+
     master = models.ForeignKey('internship.InternshipMaster', on_delete=models.CASCADE)
     organization = models.ForeignKey(
         'internship.Organization',

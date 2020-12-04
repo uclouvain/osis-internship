@@ -27,6 +27,7 @@ import datetime
 import itertools
 import json
 from itertools import groupby
+from numbers import Real
 from operator import itemgetter
 
 from dateutil.utils import today
@@ -46,12 +47,13 @@ from internship.business.scores import InternshipScoreRules
 from internship.forms.score import ScoresFilterForm
 from internship.models.cohort import Cohort
 from internship.models.internship import Internship
-from internship.models.internship_score import InternshipScore
+from internship.models.internship_score import InternshipScore, APD_NUMBER
 from internship.models.internship_score_mapping import InternshipScoreMapping
+from internship.models.internship_score_reason import InternshipScoreReason
 from internship.models.internship_student_affectation_stat import InternshipStudentAffectationStat
 from internship.models.internship_student_information import InternshipStudentInformation
 from internship.models.period import Period, get_effective_periods
-from internship.templatetags.dictionary import is_edited
+from internship.templatetags.dictionary import is_edited, is_excused
 from internship.utils.exporting import score_encoding_xls
 from internship.utils.importing import import_scores, import_eval
 from internship.utils.mails import mails_management
@@ -80,15 +82,20 @@ def scores_encoding(request, cohort_id):
         periods = search_form.get_period(cohort=cohort)
         grades_filter = search_form.get_all_grades_submitted_filter()
         evals_filter = search_form.get_evaluations_submitted_filter()
+        apds_filter = search_form.get_all_apds_validated_filter()
         students_list = _filter_students_with_all_grades_submitted(cohort, students_list, periods, grades_filter)
         students_list = _filter_students_with_evaluations_submitted(students_list, periods, evals_filter)
+        students_list = _filter_students_with_all_apds_validated(cohort, students_list, periods, apds_filter)
 
     students = get_object_list(request, students_list)
     mapping = _prepare_score_table(cohort, periods, students.object_list)
     grades = [grade for grade, _ in InternshipScore.SCORE_CHOICES]
-    context = {'cohort': cohort, 'periods': periods, 'all_periods': all_periods, 'students': students, 'grades': grades,
-               'affectations_count': affectations_count, 'search_form': search_form, 'mapping': list(mapping),
-               'completed_periods': completed_periods}
+    context = {
+        'cohort': cohort, 'periods': periods, 'all_periods': all_periods, 'students': students, 'grades': grades,
+        'affectations_count': affectations_count, 'search_form': search_form, 'mapping': list(mapping),
+        'completed_periods': completed_periods, 'apd_range': range(1, APD_NUMBER + 1),
+        'score_edit_reasons': InternshipScoreReason.objects.all()
+    }
     return render(request, "scores.html", context=context)
 
 
@@ -249,6 +256,7 @@ def save_evolution_score(request, cohort_id):
     edited_score = int(request.POST.get("edited"))
     computed_score = int(request.POST.get("computed"))
     registration_id = request.POST.get("student")
+    reason = request.POST.get("reason")
     scores = _load_json_scores(request)
     student = {
         'registration_id': registration_id,
@@ -260,7 +268,7 @@ def save_evolution_score(request, cohort_id):
     }
 
     if edited_score >= MINIMUM_SCORE and edited_score <= MAXIMUM_SCORE:
-        if _update_evolution_score(cohort, edited_score, registration_id):
+        if _update_evolution_score(cohort, edited_score, registration_id, reason):
             return render(request, "fragment/evolution_score_cell.html", context={
                 "student": student,
             })
@@ -274,13 +282,14 @@ def save_evolution_score(request, cohort_id):
         )
 
 
-def _update_evolution_score(cohort, edited_score, registration_id):
+def _update_evolution_score(cohort, edited_score, registration_id, reason):
     student = Student.objects.get(registration_id=registration_id)
     return InternshipStudentInformation.objects.filter(
         cohort=cohort,
-        person=student.person
+        person=student.person,
     ).update(
-        evolution_score=edited_score
+        evolution_score=edited_score,
+        evolution_score_reason=reason
     )
 
 
@@ -290,7 +299,7 @@ def delete_evolution_score(request, cohort_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
     registration_id = request.POST.get("student")
     computed_score = int(request.POST.get("computed"))
-    scores = json.loads(request.POST['scores'].replace("'", '"'))
+    scores = _load_json_scores(request)
     student = {
         'registration_id': registration_id,
         'evolution_score': computed_score,
@@ -311,10 +320,11 @@ def delete_evolution_score(request, cohort_id):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def save_edited_score(request, cohort_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
-    edited_score = int(request.POST.get("edited"))
-    computed_score = int(request.POST.get("computed"))
+    edited_score = int(request.POST.get("edited") or 0)
+    computed_score = int(request.POST.get("computed") or 0)
     registration_id = request.POST.get("student")
     period_name = request.POST.get("period")
+    reason = request.POST.get("reason")
     student = {'registration_id': registration_id}
     period = {'name': period_name}
     period_score = {
@@ -323,7 +333,7 @@ def save_edited_score(request, cohort_id):
     }
 
     if edited_score >= MINIMUM_SCORE and edited_score <= MAXIMUM_SCORE:
-        if _update_score(cohort, edited_score, period_name, registration_id):
+        if _update_score(cohort, edited_score, period_name, registration_id, reason):
             return render(request, "fragment/score_cell.html", context={
                 "student": student,
                 "period": period,
@@ -366,14 +376,13 @@ def _delete_score(cohort, period_name, registration_id):
     ).update(score=None, excused=False)
 
 
-def _update_score(cohort, edited_score, period_name, registration_id):
-    return InternshipScore.objects.filter(
-        cohort=cohort,
-        period__name=period_name,
-        student__registration_id=registration_id
-    ).update(
-        score=edited_score
-    )
+def _update_score(cohort, edited_score, period_name, registration_id, reason):
+    period = Period.objects.get(cohort=cohort, name=period_name)
+    student = Student.objects.get(registration_id=registration_id)
+    data = {'cohort': cohort, 'student': student, 'period': period}
+    return InternshipScore.objects.filter(**data).update_or_create(**data, defaults={
+        'score': edited_score, 'reason': reason
+    })
 
 
 def _json_response_success():
@@ -406,13 +415,11 @@ def empty_score(request, cohort_id):
 
 
 def _prepare_score_table(cohort, periods, students):
-    persons = students.values_list('person', flat=True)
-    scores = InternshipScore.objects.filter(cohort=cohort, student__person_id__in=list(persons)).select_related(
+    persons = [s.person.pk for s in students]
+    scores = InternshipScore.objects.filter(cohort=cohort, student__person_id__in=persons).select_related(
         'student__person', 'period', 'cohort'
     ).order_by('student__person')
-    mapping = InternshipScoreMapping.objects.filter(cohort=cohort).select_related(
-        'period'
-    )
+    mapping = InternshipScoreMapping.objects.filter(cohort=cohort).select_related('period')
     students_affectations = InternshipStudentAffectationStat.objects.filter(
         student__person_id__in=list(persons),
         period__cohort=cohort,
@@ -474,12 +481,13 @@ def _get_scores_mean(scores, n_periods):
     effective_n_periods = n_periods - _count_emptied_scores(scores)
     for key in scores.keys():
         period_score = _get_period_score(scores[key])
-        evolution_score += period_score / effective_n_periods if period_score else 0
+        evolution_score += period_score / effective_n_periods if period_score and isinstance(period_score, Real) else 0
     return round_half_up(evolution_score)
 
 
 def _get_period_score(score):
-    return score['edited'] if is_edited(score) else score
+    score = score['edited'] if is_edited(score) else score
+    return None if is_excused(score) else score
 
 
 def _count_emptied_scores(scores):
@@ -570,8 +578,10 @@ def _append_period_scores_to_student(period, student, student_scores):
 
 
 def _retrieve_scores_entered_manually(period, student, student_scores):
-    if student_scores[0].score is not None or student_scores[0].excused:
-        student.numeric_scores.update({period.name: student_scores[0].score})
+    student_score = student_scores[0]
+    score = student_score.score
+    if score or student_score.excused:
+        student.numeric_scores.update({period.name: {'excused': score} if student_score.excused else score})
 
 
 def _link_periods_to_specialties(students, students_affectations):
@@ -665,6 +675,20 @@ def _filter_students_with_evaluations_submitted(students, periods, filter):
     return students
 
 
+def _filter_students_with_all_apds_validated(cohort, students, periods, filter):
+    if filter is not None:
+        persons = students.values_list('person', flat=True)
+        scores = InternshipScore.objects.filter(cohort=cohort, student__person_id__in=list(persons)).select_related(
+            'student__person', 'period', 'cohort'
+        ).order_by('student__person')
+        scores = _group_by_students_and_periods(scores)
+        _prepare_students_extra_data(students)
+        _match_scores_with_students(cohort, periods, scores, students)
+        _set_condition_fulfilled_status(students)
+        students = [s for s in students if s.fulfill_condition == filter]
+    return students
+
+
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def upload_scores(request, cohort_id):
@@ -710,9 +734,9 @@ def _process_evaluations(request, cohort, evaluations):
             status=True, evaluations=filtered_evaluations, cohort=cohort
         )
         if status_updated:
-            display_success_messages(request, _('Evaluation status successfully updated for {}'.format(
-                ', '.join(info['periods'])
-            )))
+            display_success_messages(request, _('Evaluation status successfully updated for %(periods)s' % {
+                'periods': ', '.join(info['periods'])
+            }))
         else:
             period = info['period']
             display_error_messages(request, _('An error occured during evaluation status update in {}').format(period))

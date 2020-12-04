@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2019 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2020 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -23,23 +23,38 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.template.defaulttags import register
+from rest_framework import generics
 
-from internship.business.scores import InternshipScoreRules
-from internship.models.internship_score import InternshipScore
-
-
-@register.filter()
-def is_valid(grade, index):
-    if grade == InternshipScoreRules.NA_GRADE:
-        return True
-    return InternshipScoreRules.is_score_valid(index, grade)
+from internship.api.serializers.internship_specialty import InternshipSpecialtySerializer
+from internship.models.internship_speciality import InternshipSpeciality
 
 
-@register.simple_tag
-def is_apd_validated(cohort, student, apd):
-    apd_grades = InternshipScore.objects.filter(
-        cohort=cohort, student__person=student.person
-    ).values_list('APD_{}'.format(apd), flat=True)
-    valid_grades = InternshipScoreRules.get_valid_grades(apd-1)
-    return bool(set(apd_grades).intersection(valid_grades))
+class InternshipSpecialtyList(generics.ListAPIView):
+    """
+       Return a list of specialties with optional filtering.
+    """
+    name = 'specialty-list'
+    serializer_class = InternshipSpecialtySerializer
+    queryset = InternshipSpeciality.objects.all()
+    filterset_fields = (
+        'cohort',
+    )
+    search_fields = (
+        'name', 'acronym'
+    )
+    ordering_fields = (
+        'cohort', 'acronym'
+    )
+    ordering = (
+        'cohort',
+    )  # Default ordering
+
+
+class InternshipSpecialtyDetail(generics.RetrieveAPIView):
+    """
+        Return the detail of the specialty.
+    """
+    name = 'specialty-detail'
+    serializer_class = InternshipSpecialtySerializer
+    queryset = InternshipSpeciality.objects.all()
+    lookup_field = 'uuid'

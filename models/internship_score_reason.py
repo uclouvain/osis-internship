@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2019 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2020 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -23,23 +23,18 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.template.defaulttags import register
 
-from internship.business.scores import InternshipScoreRules
-from internship.models.internship_score import InternshipScore
+from django.db import models
 
-
-@register.filter()
-def is_valid(grade, index):
-    if grade == InternshipScoreRules.NA_GRADE:
-        return True
-    return InternshipScoreRules.is_score_valid(index, grade)
+from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 
 
-@register.simple_tag
-def is_apd_validated(cohort, student, apd):
-    apd_grades = InternshipScore.objects.filter(
-        cohort=cohort, student__person=student.person
-    ).values_list('APD_{}'.format(apd), flat=True)
-    valid_grades = InternshipScoreRules.get_valid_grades(apd-1)
-    return bool(set(apd_grades).intersection(valid_grades))
+class InternshipScoreReasonAdmin(SerializableModelAdmin):
+    list_display = ('text',)
+
+
+class InternshipScoreReason(SerializableModel):
+    text = models.CharField(max_length=255)
+
+    def __str__(self):
+        return u"%s" % self.text

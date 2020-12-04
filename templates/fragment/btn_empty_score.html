@@ -22,12 +22,22 @@
 * see http://www.gnu.org/licenses/.
 {% endcomment %}
 
-<a
-    class="btn btn-xs btn-danger pull-right"
-    data-toggle="modal"
-    data-target="#empty_score"
-    data-student="{{ student.registration_id }}"
-    data-period="{{ period.name }}"
->
-    <icon class="fas fa-ban"></icon>
-</a>
+<div class="cell-actions pull-right">
+
+    <button onclick="editScore(this)"
+            {% if period_score|is_edited %}
+                data-computed="{{ period_score.computed }}"
+            {% else %}
+                data-computed="{{ period_score }}"
+            {% endif %}
+            data-student="{{ student.registration_id }}" data-period="{{ period.name }}"
+            class="btn btn-xs btn-warning btn-score">
+        <i class="fas fa-pencil-alt"></i>
+    </button>
+
+    <button class="btn btn-xs btn-danger" data-toggle="modal" data-target="#empty_score"
+            data-student="{{ student.registration_id }}" data-period="{{ period.name }}">
+        <icon class="fas fa-ban"></icon>
+    </button>
+
+</div>

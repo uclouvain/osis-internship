@@ -127,3 +127,21 @@ input:checked + .slider:before {
     float: right;
     line-height: 1.4;
 }
+
+.btn-score{
+    padding-top:0;
+    line-height: inherit;
+}
+
+.info-icon {
+    font-size: 15px;
+}
+
+.excused {
+    color: darkgrey;
+}
+
+.pagination-index-count {
+    margin-left: 10px;
+    color: grey;
+}

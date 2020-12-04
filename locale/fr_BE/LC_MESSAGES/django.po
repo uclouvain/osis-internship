@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-03-03 10:25+0100\n"
+"POT-Creation-Date: 2020-06-22 16:29+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,12 +16,27 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+#, python-format
+msgid ""
+"\n"
+"                                %(start_index)s to %(end_index)s of "
+"%(total_counts)s students\n"
+"                            "
+msgstr ""
+"\n"
+"                                %(start_index)s à %(end_index)s sur "
+"%(total_counts)s étudiants\n"
+"                            "
+
 msgid "A hospital with the same reference already exists in this cohort"
 msgstr "Un hôpital avec la même référence existe déjà dans cette cohorte"
 
 msgid "A master must be affected to at least one hospital or one specialty."
 msgstr ""
 "Un maître de stage doit être affecté à au moins un hôpital ou une spécialité."
+
+msgid "APD Validation"
+msgstr "Validation APD"
 
 msgid "Accept"
 msgstr "Accepter"
@@ -58,6 +73,9 @@ msgstr "Adresse"
 
 msgid "Affectation's result"
 msgstr "Résultat de l'affectation"
+
+msgid "All APDs validated"
+msgstr "Tous les APDs validés"
 
 msgid "All grades submitted"
 msgstr "Encodage complet"
@@ -98,7 +116,7 @@ msgid "Are you sure ?"
 msgstr "Êtes-vous sur ?"
 
 msgid "Attention"
-msgstr ""
+msgstr "Attention"
 
 msgid "Birth date"
 msgstr "Date de naissance"
@@ -233,7 +251,7 @@ msgid "Editable address"
 msgstr "Adresse modifiable"
 
 msgid "Email"
-msgstr "Email"
+msgstr "Courriel"
 
 msgid "End date"
 msgstr "Date de fin"
@@ -264,14 +282,25 @@ msgstr ""
 "L'importation du statut des évaluations a été interrompue. Les NOMA suivants "
 "n'existent pas pour cette cohorte: %(registration_ids)s"
 
-msgid "Evaluation status successfully updated for {}"
-msgstr "Le statut des évaluations a été correctement mis à jour pour {}"
+#, python-format
+msgid "Evaluation status successfully updated for %(periods)s"
+msgstr ""
+"Le statut des évaluations a été correctement mis à jour pour %(periods)s"
 
 msgid "Evaluations submitted"
 msgstr "Évaluations soumises"
 
+msgid "Evolution"
+msgstr "Évolution"
+
 msgid "Evolution Score:"
 msgstr "Cote d'évolution:"
+
+msgid "Evolution computed"
+msgstr "Évolution calculé"
+
+msgid "Evolution edited"
+msgstr "Évolution modifié"
 
 msgid "Evolution score will <b>not</b> be exported"
 msgstr "Le score d'évolution <b>ne</b> sera <b>pas</b> exporté"
@@ -329,6 +358,9 @@ msgstr "Généraliste"
 
 msgid "Generate solution"
 msgstr "Générer la solution"
+
+msgid "Grade"
+msgstr "Cote"
 
 msgid "Grades not received"
 msgstr "Cotes non reçues"
@@ -505,11 +537,14 @@ msgstr "Hôpital inexistant"
 msgid "No internship"
 msgstr "Aucun stage"
 
+msgid "No reason"
+msgstr "Pas de motif"
+
 msgid "No result"
 msgstr "Aucun résultat"
 
 msgid "Noma"
-msgstr ""
+msgstr "Noma"
 
 msgid "Non mandatory internship"
 msgstr "Stage au choix"
@@ -546,6 +581,9 @@ msgstr "Organisation"
 
 msgid "Other choice"
 msgstr "Autre choix"
+
+msgid "Other reason"
+msgstr "Autre motif"
 
 msgid "Paste"
 msgstr "Coller"
@@ -586,6 +624,9 @@ msgstr "Position"
 msgid "Postal code"
 msgstr "Code postal"
 
+msgid "Predifined reason"
+msgstr "Motif prédéfini"
+
 msgid "Preference"
 msgstr "Préférence"
 
@@ -595,11 +636,20 @@ msgstr "Prioritaire"
 msgid "Private email"
 msgstr "Email Privé"
 
+msgid "Provide a reason for editing score ?"
+msgstr "Fournir un motif de modification de la note ?"
+
+msgid "Provide reason"
+msgstr "Fournir le motif"
+
 msgid "Publication date"
 msgstr "Date de publication"
 
 msgid "Publication must be done after the subscription process."
 msgstr "La publication doit être réalisée après le processus d'inscription."
+
+msgid "Reason"
+msgstr "Motif"
 
 msgid "Reference"
 msgstr "Référence"
@@ -618,6 +668,9 @@ msgstr "Note"
 
 msgid "Score edited. Computed score: "
 msgstr "Note modifiée. Note calculée: "
+
+msgid "Score excused"
+msgstr "Note excusée"
 
 #, python-format
 msgid "Score must be between %(minimum)d and %(maximum)d"
@@ -667,6 +720,9 @@ msgstr "Envoyer un récapitulatif"
 
 msgid "Sequence"
 msgstr "Séquence"
+
+msgid "Show APD validation"
+msgstr "Montrer la validation"
 
 msgid ""
 "Show only students having submitted / not submitted all their grades "
@@ -756,7 +812,9 @@ msgstr "3ème choix"
 msgid ""
 "This action will delete previously edited score that will be reset to the "
 "original computed value."
-msgstr "Cette action supprimera la note précédemment modifiée qui sera réinitialisée à la valeur originalement calculée."
+msgstr ""
+"Cette action supprimera la note précédemment modifiée qui sera réinitialisée "
+"à la valeur originalement calculée."
 
 msgid "This action will send a summary by email to the following students:"
 msgstr "Cette action enverra un email récapitulatif aux étudiants suivants:"
@@ -778,7 +836,7 @@ msgid "Total of internships"
 msgstr "Total de stages"
 
 msgid "Url"
-msgstr ""
+msgstr "Url"
 
 msgid "Website"
 msgstr "Site web"
@@ -792,6 +850,11 @@ msgid ""
 msgstr ""
 "Vous êtes dans la période des inscriptions. Il est recommandé de ne pas "
 "changer les choix au cours de cette période."
+
+msgid ""
+"You may provide a reason for editing score by choosing a justification from "
+"the list below."
+msgstr "Vous pouvez fournir un motif de modification de la note en choisissant parmi les justifications suivantes."
 
 msgid "items per page"
 msgstr "éléments par page"

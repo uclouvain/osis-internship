@@ -32,7 +32,7 @@ APD_NUMBER = 15
 
 class InternshipScoreAdmin(SerializableModelAdmin):
     score_fields = ['APD_{}'.format(index) for index in range(1, APD_NUMBER+1)]
-    list_display = ('student', 'period', *score_fields, 'score')
+    list_display = ('student', 'period', *score_fields, 'score', 'excused', 'reason')
     raw_id_fields = ('student',)
     list_filter = ('cohort',)
     search_fields = ['student__person__first_name', 'student__person__last_name']
@@ -59,6 +59,7 @@ class InternshipScore(SerializableModel):
         )
     score = models.IntegerField(null=True, blank=True)
     excused = models.BooleanField(default=False)
+    reason = models.CharField(max_length=255, null=True, blank=True)
 
     def __str__(self):
         return '{} - {} - {}'.format(self.student, self.period, self.get_scores())

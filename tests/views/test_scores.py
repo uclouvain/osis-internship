@@ -84,8 +84,7 @@ class ScoresEncodingTest(TestCase):
         )
         cls.chosen_internship = InternshipFactory(cohort=cls.cohort, speciality=None)
         internships = [cls.mandatory_internship, cls.long_internship, cls.chosen_internship]
-        periods = [PeriodFactory(cohort=cls.cohort) for _ in range(2)]
-        periods.append(cls.period)
+        periods = [cls.period] + [PeriodFactory(cohort=cls.cohort) for _ in range(2)]
         for student_info in cls.students:
             student = StudentFactory(person=student_info.person)
             for index, internship in enumerate(internships):
@@ -107,6 +106,7 @@ class ScoresEncodingTest(TestCase):
         cls.user = User.objects.create_user('demo', 'demo@demo.org', 'passtest')
         permission = Permission.objects.get(codename='is_internship_manager')
         cls.user.user_permissions.add(permission)
+        cls.all_apds_validated = {'APD_{}'.format(i): 'D' for i in range(1, APD_NUMBER+1)}
 
     def test_view_scores_encoding(self):
         url = reverse('internship_scores_encoding', kwargs={'cohort_id': self.cohort.pk})
@@ -259,6 +259,20 @@ class ScoresEncodingTest(TestCase):
         }
         response = self.client.get(url, data=data)
         self.assertEqual(response.context['students'].object_list, [self.students[0]])
+
+    def test_filter_all_apds_validated(self):
+        student_with_all_apds = Student.objects.first()
+        InternshipScore.objects.filter(student=student_with_all_apds).update(**self.all_apds_validated)
+        url = reverse('internship_scores_encoding', kwargs={'cohort_id': self.cohort.pk})
+        response = self.client.get(url, data={'all_apds_validated_filter': True})
+        self.assertEqual(len(response.context['students'].object_list), 1)
+
+    def test_filter_not_all_apds_validated(self):
+        student_with_not_all_apds = Student.objects.first()
+        InternshipScore.objects.all().exclude(student=student_with_not_all_apds).update(**self.all_apds_validated)
+        url = reverse('internship_scores_encoding', kwargs={'cohort_id': self.cohort.pk})
+        response = self.client.get(url, data={'all_apds_validated_filter': False})
+        self.assertEqual(len(response.context['students'].object_list), 1)
 
     def test_grades_converted_to_numerical_value(self):
         url = reverse('internship_scores_encoding', kwargs={'cohort_id': self.cohort.pk})
@@ -434,6 +448,19 @@ class ScoresEncodingTest(TestCase):
         excused_score = InternshipScore.objects.filter(excused=True)
         self.assertTemplateUsed(response, 'fragment/score_cell.html')
         self.assertTrue(excused_score.exists())
+
+    def test_show_excused_score_disregarded_in_evolution_score_computation(self):
+        student = Student.objects.first()
+        new_score = 10
+        InternshipScore.objects.filter(
+            cohort=self.cohort, student=student, period=self.period
+        ).update(score=new_score, excused=True)
+        url = reverse('internship_scores_encoding', kwargs={'cohort_id': self.cohort.pk})
+        response = self.client.get(url)
+        numeric_scores = response.context['students'].object_list[0].numeric_scores
+        evolution_score = response.context['students'].object_list[0].evolution_score
+        self.assertEqual(numeric_scores[self.period.name], {'excused': new_score})
+        self.assertEqual(evolution_score, 0)
 
     @mock.patch('internship.utils.importing.import_eval.import_xlsx')
     def test_post_upload_eval_success(self, mock_import):
