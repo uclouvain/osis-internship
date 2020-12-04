@@ -29,7 +29,7 @@ from django.test import TestCase
 from django.utils import timezone
 
 from internship.forms import master
-from internship.forms.Internship_person_form import InternshipPersonForm
+from internship.forms.internship_person_form import InternshipPersonForm
 from internship.tests.factories.organization import OrganizationFactory
 from internship.tests.factories.speciality import SpecialtyFactory
 from internship.views.master import _validate_allocations
