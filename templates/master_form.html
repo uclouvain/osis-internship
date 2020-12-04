@@ -53,9 +53,10 @@
                 <input type="hidden" name="id" value="{{ allocated_master.id }}">
                 {% endif %}
                 <div class="row">
-                    {% bootstrap_field master_form.civility form_group_class="form-group col-md-3" label=_("Civility") %}
-                    {% bootstrap_field person_form.last_name form_group_class="form-group col-md-5" label=_("Last name")%}
-                    {% bootstrap_field person_form.first_name form_group_class="form-group col-md-4" label=_("First name") %}
+                    {% bootstrap_field master_form.civility form_group_class="form-group col-md-2" label=_("Civility") %}
+                    {% bootstrap_field person_form.last_name form_group_class="form-group col-md-4" label=_("Last name")%}
+                    {% bootstrap_field person_form.first_name form_group_class="form-group col-md-3" label=_("First name") %}
+                    {% bootstrap_field person_form.email form_group_class="form-group col-md-3" label=_("Email") %}
                 </div>
                 <div class="row">
                     {% bootstrap_field person_form.birth_date form_group_class="form-group col-md-4" label=_("Birth date") %}
@@ -63,7 +64,7 @@
                     {% bootstrap_field master_form.start_activities form_group_class="form-group col-md-4" label=_("Start activities") %}
                 </div>
                 <div class="row">
-                    {% bootstrap_field person_form.email form_group_class="form-group col-md-4" label=_("Email") %}
+                    {% bootstrap_field master_form.email_additional form_group_class="form-group col-md-4" label=_("Additional email") %}
                     {% bootstrap_field master_form.email_private form_group_class="form-group col-md-4" label=_("Private email") %}
                     {% bootstrap_field person_form.phone form_group_class="form-group col-md-2" label=_("Phone") %}
                     {% bootstrap_field person_form.phone_mobile form_group_class="form-group col-md-2" label=_("Phone Number / Mobile Number") %}

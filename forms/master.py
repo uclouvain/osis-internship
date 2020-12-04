@@ -35,7 +35,7 @@ class MasterForm(forms.ModelForm):
     class Meta:
         model = internship_master.InternshipMaster
         fields = [
-            'civility', 'email_private', 'location',
+            'civility', 'email_private', 'email_additional', 'location',
             'postal_code', 'city', 'country', 'start_activities'
         ]
         widgets = {

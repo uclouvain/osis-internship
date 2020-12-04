@@ -53,10 +53,16 @@
                         <div id="civility">{% if allocated_master.civility_acronym %}{% trans allocated_master.civility_acronym %}{% endif %}</div>
                     </div>
                 </div>
-                <div class="col-md-9">
+                <div class="col-md-6">
                     <div class="form-group">
                         <label for="first_name">{% trans 'Full name' %}</label>
                         <div id="first_name">{{ allocated_master.person.last_name | upper }}, {{ allocated_master.person.first_name }}</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="email">{% trans 'Email' %}</label>
+                        <div id="email">{{ allocated_master.person.email | default_if_none:"" }}</div>
                     </div>
                 </div>
             </div>
@@ -83,8 +89,8 @@
             <div class="row">
                 <div class="col-md-3">
                     <div class="form-group">
-                        <label for="email">{% trans 'Email' %}</label>
-                        <div id="email">{{ allocated_master.person.email | default_if_none:"" }}</div>
+                        <label for="email">{% trans 'Additional Email' %}</label>
+                        <div id="email">{{ allocated_master.email_additional | default_if_none:"" }}</div>
                     </div>
                 </div>
                 <div class="col-md-3">

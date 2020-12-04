@@ -7,6 +7,24 @@ from django.db.models import Count, Value, CharField
 from django.db.models.functions import Concat, Upper
 
 
+def clean_mails(apps, schema_editor):
+    InternshipMaster = apps.get_model('internship', 'InternshipMaster')
+
+    # clean multiple mails in field value to keep only one mail and move others to additional_mail
+    for master in InternshipMaster.objects.all():
+        if master.person:
+            email = master.person.email
+            if ';' in email:
+                emails = email.split(';')
+                person_email = emails[-1].strip()
+                additional_emails = emails[:-1]
+                master.email_additional = '; '.join(additional_emails)
+                master.email_additional = master.email_additional.strip()
+                master.person.email = person_email
+                master.person.save()
+                master.save()
+
+
 def clean_duplicates(apps, schema_editor):
     InternshipMaster = apps.get_model('internship', 'InternshipMaster')
     MasterAllocation = apps.get_model('internship', 'MasterAllocation')
@@ -40,7 +58,7 @@ def create_persons(apps, schema_editor):
     Person = apps.get_model('base', 'Person')
     for master in InternshipMaster.objects.all():
         email = master.email or master.email_private
-        if email:
+        if email and not master.person:
             person_instance = Person.objects.create(
                 uuid=uuid.uuid4(),
                 last_name=master.last_name,
@@ -63,6 +81,14 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+        # add additional email field to ensure only one mail will be used for person
+        migrations.AddField(
+            model_name='internshipmaster',
+            name='email_additional',
+            field=models.CharField(blank=True, max_length=255, null=True, verbose_name='Additional email'),
+        ),
+        # clean mails
+        migrations.RunPython(clean_mails, RunPython.noop),
         # clean duplicates
         migrations.RunPython(clean_duplicates, RunPython.noop),
         # link to person fk
