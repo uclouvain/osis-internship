@@ -39,8 +39,8 @@ LAST_COLUMN = 50
 PERIOD_COLUMN_WIDTH = 7
 MAX_COL_LENGTH = 25
 FIELDS = [
-    'last_name', 'first_name', 'civility', 'gender', 'email', 'email_private', 'location', 'postal_code', 'city',
-    'country', 'phone', 'phone_mobile', 'birth_date', 'start_activities'
+    'last_name', 'first_name', 'civility', 'gender', 'email', 'email_private', 'email_additional',
+    'location', 'postal_code', 'city', 'country', 'phone', 'phone_mobile', 'birth_date', 'start_activities'
 ]
 
 
