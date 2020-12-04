@@ -123,6 +123,7 @@ def master_save(request, cohort_id):
             hospital = _extract_hospital_id(allocations)
         else:
             errors.append(form_master.errors)
+            errors.append(form_person.errors)
             messages.add_message(
                 request,
                 messages.ERROR,
@@ -131,6 +132,7 @@ def master_save(request, cohort_id):
             )
     else:
         errors.append(form_master.errors)
+        errors.append(form_person.errors)
         display_errors(request, errors)
 
     if errors:
