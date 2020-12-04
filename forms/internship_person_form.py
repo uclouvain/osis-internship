@@ -23,23 +23,30 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from rest_framework import serializers
+from django import forms
 
-from base.api.serializers.person import PersonDetailSerializer
-from internship.models.internship_master import InternshipMaster
+from base.models.person import Person
 
 
-class InternshipMasterSerializer(serializers.HyperlinkedModelSerializer):
-    person = PersonDetailSerializer(read_only=True)
-    url = serializers.HyperlinkedIdentityField(
-        view_name='internship_api_v1:master-detail',
-        lookup_field='uuid'
-    )
+class InternshipPersonForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super(InternshipPersonForm, self).__init__(*args, **kwargs)
+        self.fields['last_name'].required = True
+        self.fields['first_name'].required = True
 
     class Meta:
-        model = InternshipMaster
-        fields = (
-            'url',
-            'person',
-            'civility',
-        )
+        model = Person
+        fields = [
+            'last_name',
+            'first_name',
+            'gender',
+            'birth_date',
+            'email',
+            'phone',
+            'phone_mobile'
+        ]
+        widgets = {
+            'birth_date': forms.DateInput(format="%Y-%m-%d", attrs={'type': 'date'}),
+            'start_activities': forms.DateInput(format="%Y-%m-%d", attrs={'type': 'date'})
+        }

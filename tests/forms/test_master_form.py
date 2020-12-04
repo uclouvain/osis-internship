@@ -23,10 +23,8 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from datetime import timedelta
 
 from django.test import TestCase
-from django.utils import timezone
 
 from internship.forms import master
 from internship.tests.factories.organization import OrganizationFactory
@@ -39,30 +37,16 @@ class TestMasterForm(TestCase):
     def test_valid_form(self):
         belgium = Country.find_by_uuid("ae40df86-04e9-4e9b-8dca-0c1e26b1476d")
         data = {
-            "first_name": "test",
-            "last_name": "test",
-            "civility": "DOCTOR",
-            "gender": "M",
-            "email": "test@test.com",
             "email_private": "test@test.com",
             "phone_mobile": "00000000",
             "location": "location",
             "postal_code": "1348",
             "city": "city",
             "country": belgium,
-            'birth_date': "1980-01-01",
             'start_activities': "2000-01-01",
         }
-        form = master.MasterForm(data)
-        self.assertTrue(form.is_valid())
-
-    def test_invalid_birth_date(self):
-        data = {
-            "last_name": "test",
-            'birth_date': timezone.now().date() + timedelta(days=5),
-        }
-        form = master.MasterForm(data)
-        self.assertFalse(form.is_valid())
+        master_form = master.MasterForm(data)
+        self.assertTrue(master_form.is_valid())
 
     def test_invalid_allocation(self):
         request = self.client.post("/masters/save/",data={

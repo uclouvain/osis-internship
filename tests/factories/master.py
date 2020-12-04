@@ -26,6 +26,7 @@
 import factory
 from factory.fuzzy import FuzzyChoice
 
+from base.tests.factories.person import PersonFactory
 from internship.models.enums.civility import Civility
 
 
@@ -33,6 +34,5 @@ class MasterFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = 'internship.InternshipMaster'
 
-    first_name = factory.Faker('first_name')
-    last_name = factory.Faker('last_name')
+    person = factory.SubFactory(PersonFactory)
     civility = FuzzyChoice({Civility.DOCTOR.value, Civility.PROFESSOR.value})

@@ -33,7 +33,7 @@
     <li><a href="{% url 'internships_home' cohort_id=current_cohort.id %}">{{ current_cohort.name }}</a></li>
     <li><a href="{% url 'internships_masters' cohort_id=current_cohort.id %}">{% trans 'Internships masters' %}</a></li>
     {% if allocated_master %}
-        <li class="active">{{ allocated_master.last_name | upper }}, {{ allocated_master.first_name }}</li>
+        <li class="active">{{ allocated_master.person.last_name | upper }}, {{ allocated_master.person.first_name }}</li>
     {% else %}
         <li class="active">{% trans 'Add' %}</li>
     {% endif %}
@@ -42,7 +42,7 @@
 {% block content %}
 
     <div class="page-header">
-        <h2>{% trans 'Master' %}: <span id="full_name">{{ allocated_master.last_name | upper }}, {{ allocated_master.first_name }}</span> </h2>
+        <h2>{% trans 'Master' %}: <span id="full_name">{{ allocated_master.person.last_name | upper }}, {{ allocated_master.person.first_name }}</span> </h2>
     </div>
 
     <div class="panel panel-default">
@@ -53,26 +53,27 @@
                 <input type="hidden" name="id" value="{{ allocated_master.id }}">
                 {% endif %}
                 <div class="row">
-                    {% bootstrap_field form.civility form_group_class="form-group col-md-3" label=_("Civility") %}
-                    {% bootstrap_field form.last_name form_group_class="form-group col-md-5" label=_("Last name")%}
-                    {% bootstrap_field form.first_name form_group_class="form-group col-md-4" label=_("First name") %}
+                    {% bootstrap_field master_form.civility form_group_class="form-group col-md-2" label=_("Civility") %}
+                    {% bootstrap_field person_form.last_name form_group_class="form-group col-md-4" label=_("Last name")%}
+                    {% bootstrap_field person_form.first_name form_group_class="form-group col-md-3" label=_("First name") %}
+                    {% bootstrap_field person_form.email form_group_class="form-group col-md-3" label=_("Email") %}
                 </div>
                 <div class="row">
-                    {% bootstrap_field form.birth_date form_group_class="form-group col-md-4" label=_("Birth date") %}
-                    {% bootstrap_field form.gender form_group_class="form-group col-md-4" label=_("Gender") %}
-                    {% bootstrap_field form.start_activities form_group_class="form-group col-md-4" label=_("Start activities") %}
+                    {% bootstrap_field person_form.birth_date form_group_class="form-group col-md-4" label=_("Birth date") %}
+                    {% bootstrap_field person_form.gender form_group_class="form-group col-md-4" label=_("Gender") %}
+                    {% bootstrap_field master_form.start_activities form_group_class="form-group col-md-4" label=_("Start activities") %}
                 </div>
                 <div class="row">
-                    {% bootstrap_field form.email form_group_class="form-group col-md-4" label=_("Email") %}
-                    {% bootstrap_field form.email_private form_group_class="form-group col-md-4" label=_("Private email") %}
-                    {% bootstrap_field form.phone form_group_class="form-group col-md-2" label=_("Phone") %}
-                    {% bootstrap_field form.phone_mobile form_group_class="form-group col-md-2" label=_("Phone Number / Mobile Number") %}
+                    {% bootstrap_field master_form.email_additional form_group_class="form-group col-md-4" label=_("Additional email") %}
+                    {% bootstrap_field master_form.email_private form_group_class="form-group col-md-4" label=_("Private email") %}
+                    {% bootstrap_field person_form.phone form_group_class="form-group col-md-2" label=_("Phone") %}
+                    {% bootstrap_field person_form.phone_mobile form_group_class="form-group col-md-2" label=_("Phone Number / Mobile Number") %}
                 </div>
                 <div class="row">
-                    {% bootstrap_field form.location form_group_class="form-group col-md-4" label=_("Address") %}
-                    {% bootstrap_field form.postal_code form_group_class="form-group col-md-2" label=_("Postal code") %}
-                    {% bootstrap_field form.city form_group_class="form-group col-md-3" label=_("City") %}
-                    {% bootstrap_field form.country form_group_class="form-group col-md-3" label=_("Country") %}
+                    {% bootstrap_field master_form.location form_group_class="form-group col-md-4" label=_("Address") %}
+                    {% bootstrap_field master_form.postal_code form_group_class="form-group col-md-2" label=_("Postal code") %}
+                    {% bootstrap_field master_form.city form_group_class="form-group col-md-3" label=_("City") %}
+                    {% bootstrap_field master_form.country form_group_class="form-group col-md-3" label=_("Country") %}
                 </div>
 
                 <div class="panel panel-default">

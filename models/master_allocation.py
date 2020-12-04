@@ -79,11 +79,11 @@ def search(cohort, specialty, hospital):
         masters = masters.filter(organization=hospital)
 
     if specialty or hospital:
-        return masters.order_by("master__last_name", "master__first_name")
+        return masters.order_by("master__person__last_name", "master__person__first_name")
     else:
         return masters \
             .filter(specialty__isnull=False, organization__isnull=False) \
-            .order_by("master__last_name", "master__first_name")
+            .order_by("master__person__last_name", "master__person__first_name")
 
 
 def clean_allocations(cohort, master):

@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -23,23 +23,30 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from rest_framework import serializers
+from datetime import timedelta
 
-from base.api.serializers.person import PersonDetailSerializer
-from internship.models.internship_master import InternshipMaster
+from django.test import TestCase
+from django.utils import timezone
+
+from internship.forms.internship_person_form import InternshipPersonForm
 
 
-class InternshipMasterSerializer(serializers.HyperlinkedModelSerializer):
-    person = PersonDetailSerializer(read_only=True)
-    url = serializers.HyperlinkedIdentityField(
-        view_name='internship_api_v1:master-detail',
-        lookup_field='uuid'
-    )
+class TestInternshipPersonForm(TestCase):
+    def test_valid_form(self):
+        data = {
+            "first_name": "test",
+            "last_name": "test",
+            "gender": "M",
+            "email": "test@test.com",
+            'birth_date': "1980-01-01",
+        }
+        person_form = InternshipPersonForm(data)
+        self.assertTrue(person_form.is_valid())
 
-    class Meta:
-        model = InternshipMaster
-        fields = (
-            'url',
-            'person',
-            'civility',
-        )
+    def test_invalid_birth_date(self):
+        data = {
+            "last_name": "test",
+            'birth_date': timezone.now().date() + timedelta(days=5),
+        }
+        form = InternshipPersonForm(data)
+        self.assertFalse(form.is_valid())

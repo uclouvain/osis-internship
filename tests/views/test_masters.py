@@ -32,7 +32,9 @@ from django.test import TestCase
 from django.urls import reverse
 
 from backoffice.settings.base import INSTALLED_APPS
+from base.models.person import Person
 from internship.models import master_allocation
+from internship.models.internship_master import InternshipMaster
 from internship.tests.factories.cohort import CohortFactory
 from internship.tests.factories.master import MasterFactory
 from internship.tests.factories.master_allocation import MasterAllocationFactory
@@ -62,7 +64,7 @@ class MasterTestCase(TestCase):
     @skipUnless('django.contrib.postgres' in INSTALLED_APPS, 'requires django.contrib.postgres')
     def test_search_master_by_name_unaccent(self):
         organization = OrganizationFactory(cohort=self.cohort)
-        master_with_accent = MasterFactory(last_name='Éçàüî')
+        master_with_accent = MasterFactory(person__last_name='Éçàüî')
         MasterAllocationFactory(organization=organization, master=master_with_accent)
         url = reverse('internships_masters', kwargs={
             'cohort_id': self.cohort.id,
@@ -99,6 +101,11 @@ class MasterTestCase(TestCase):
 
     def test_delete_master(self):
         master_test = MasterFactory()
+
+        # master and person exists before delete
+        self.assertTrue(InternshipMaster.objects.filter(pk=master_test.pk).exists())
+        self.assertTrue(Person.objects.filter(pk=master_test.person.pk).exists())
+
         fake = faker.Faker()
         organization_test = OrganizationFactory(cohort=self.cohort, reference=fake.random_int(min=10, max=100))
         allocation = MasterAllocationFactory(master=master_test, organization=organization_test)
@@ -114,6 +121,10 @@ class MasterTestCase(TestCase):
         }))
         allocations = master_allocation.find_by_master(self.cohort, master_test)
         self.assertNotIn(allocation, allocations)
+
+        # master and person have been deleted
+        self.assertFalse(InternshipMaster.objects.filter(pk=master_test.pk).exists())
+        self.assertFalse(Person.objects.filter(pk=master_test.person.pk).exists())
 
     def test_export_masters(self):
         url = reverse('master_export', kwargs={'cohort_id': self.cohort.pk})
