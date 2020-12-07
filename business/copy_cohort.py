@@ -61,6 +61,7 @@ def _copy_master_allocations(cohort_from, cohort_to):
 
     for allocation in allocations:
         allocation.pk = None
+        allocation.uuid = uuid.uuid4()
         allocation.organization = _get_new_cohort_hospital(allocation.organization, cohort_to)
         allocation.specialty = _get_new_cohort_specialty(allocation.specialty, cohort_to)
         allocation.save()
