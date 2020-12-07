@@ -9,14 +9,13 @@ def create_persons(apps, schema_editor):
     InternshipMaster = apps.get_model('internship', 'InternshipMaster')
     Person = apps.get_model('base', 'Person')
     for master in InternshipMaster.objects.all():
-        email = master.email or master.email_private
-        if email and not master.person:
+        if not master.person:
             person_instance = Person.objects.create(
                 uuid=uuid.uuid4(),
                 last_name=master.last_name,
                 first_name=master.first_name,
                 gender=master.gender,
-                email=email,
+                email=master.email or master.email_private,
                 phone=master.phone,
                 phone_mobile=master.phone_mobile,
                 birth_date=master.birth_date
