@@ -68,7 +68,10 @@ class InternshipMaster(SerializableModel):
             return ""
 
     def __str__(self):
-        return "{}, {}".format(self.person.last_name, self.person.first_name)
+        try:
+            return "{}, {}".format(self.person.last_name, self.person.first_name)
+        except AttributeError:
+            return "-"
 
 
 def get_by_id(master_id):
