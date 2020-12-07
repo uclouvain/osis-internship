@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-06-22 16:29+0200\n"
+"POT-Creation-Date: 2020-12-07 15:55+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -68,6 +68,9 @@ msgstr "Ajouter une modalité de stage"
 msgid "Add period"
 msgstr "Ajouter une période"
 
+msgid "Additional email"
+msgstr "Email supplémentaire"
+
 msgid "Address"
 msgstr "Adresse"
 
@@ -112,17 +115,11 @@ msgstr "Une erreur s'est produite lors de l'envoi des rappels"
 msgid "An error occured while updating status"
 msgstr "Une erreur s'est produite lors de la mise à jour des statuts"
 
-msgid "Are you sure ?"
-msgstr "Êtes-vous sur ?"
-
 msgid "Attention"
 msgstr "Attention"
 
 msgid "Birth date"
 msgstr "Date de naissance"
-
-msgid "Birth date must be on or before today's date."
-msgstr "La date de naissance doit être antérieure ou égale à la date actuelle."
 
 msgid "Cancel"
 msgstr "Annuler"
@@ -809,6 +806,9 @@ msgstr "Les emails récapitulatifs ont bien été envoyés"
 msgid "Third choice"
 msgstr "3ème choix"
 
+msgid "This action will delete "
+msgstr ""
+
 msgid ""
 "This action will delete previously edited score that will be reset to the "
 "original computed value."
@@ -854,7 +854,9 @@ msgstr ""
 msgid ""
 "You may provide a reason for editing score by choosing a justification from "
 "the list below."
-msgstr "Vous pouvez fournir un motif de modification de la note en choisissant parmi les justifications suivantes."
+msgstr ""
+"Vous pouvez fournir un motif de modification de la note en choisissant parmi "
+"les justifications suivantes."
 
 msgid "items per page"
 msgstr "éléments par page"
@@ -866,3 +868,13 @@ msgstr "ligne %(row_id)s"
 #, python-format
 msgid "student with registration id '%(reg_id)s' not found"
 msgstr "étudiant avec NOMA '%(reg_id)s' introuvable"
+
+#~ msgid "Additional Email"
+#~ msgstr "Email addition"
+
+#~ msgid "Are you sure ?"
+#~ msgstr "Êtes-vous sur ?"
+
+#~ msgid "Birth date must be on or before today's date."
+#~ msgstr ""
+#~ "La date de naissance doit être antérieure ou égale à la date actuelle."

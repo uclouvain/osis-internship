@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-06-22 16:29+0200\n"
+"POT-Creation-Date: 2020-12-07 15:55+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -63,6 +63,9 @@ msgstr ""
 msgid "Add period"
 msgstr ""
 
+msgid "Additional email"
+msgstr ""
+
 msgid "Address"
 msgstr ""
 
@@ -105,16 +108,10 @@ msgstr ""
 msgid "An error occured while updating status"
 msgstr ""
 
-msgid "Are you sure ?"
-msgstr ""
-
 msgid "Attention"
 msgstr ""
 
 msgid "Birth date"
-msgstr ""
-
-msgid "Birth date must be on or before today's date."
 msgstr ""
 
 msgid "Cancel"
@@ -785,6 +782,9 @@ msgid "Summaries have been sent successfully"
 msgstr ""
 
 msgid "Third choice"
+msgstr ""
+
+msgid "This action will delete "
 msgstr ""
 
 msgid ""
