@@ -488,7 +488,7 @@ msgid "Master"
 msgstr "Maître"
 
 msgid "Master deleted"
-msgstr "Maître de stage supprimé : "
+msgstr "Maître de stage supprimé"
 
 msgid "Maximum number of students"
 msgstr "Nombre maximum d'étudiants"
@@ -807,7 +807,7 @@ msgid "Third choice"
 msgstr "3ème choix"
 
 msgid "This action will delete "
-msgstr ""
+msgstr "Cette action supprimera "
 
 msgid ""
 "This action will delete previously edited score that will be reset to the "
@@ -868,13 +868,3 @@ msgstr "ligne %(row_id)s"
 #, python-format
 msgid "student with registration id '%(reg_id)s' not found"
 msgstr "étudiant avec NOMA '%(reg_id)s' introuvable"
-
-#~ msgid "Additional Email"
-#~ msgstr "Email addition"
-
-#~ msgid "Are you sure ?"
-#~ msgstr "Êtes-vous sur ?"
-
-#~ msgid "Birth date must be on or before today's date."
-#~ msgstr ""
-#~ "La date de naissance doit être antérieure ou égale à la date actuelle."
