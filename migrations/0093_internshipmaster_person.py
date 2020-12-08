@@ -8,17 +8,27 @@ from django.db.migrations import RunPython
 def create_persons(apps, schema_editor):
     InternshipMaster = apps.get_model('internship', 'InternshipMaster')
     Person = apps.get_model('base', 'Person')
+
+    master_fields = {field.name for field in InternshipMaster._meta.fields}
+    person_fields = {field.name for field in Person._meta.fields}
+    common_fields = master_fields.intersection(person_fields).difference({'uuid', 'id'})
+
     for master in InternshipMaster.objects.all():
+        # check master has already a person in db that should be linked to
+        if "@uclouvain.be" in master.email:
+            existing_person = Person.objects.get(email=master.email)
+            for field, value in {field: getattr(master, field) for field in common_fields}:
+                if not getattr(existing_person, field):
+                    setattr(existing_person, field, value)
+            existing_person.save()
+            master.person = existing_person
+            master.save()
+        # create person when none exist
         if not master.person:
             person_instance = Person.objects.create(
                 uuid=uuid.uuid4(),
-                last_name=master.last_name,
-                first_name=master.first_name,
-                gender=master.gender,
                 email=master.email or master.email_private,
-                phone=master.phone,
-                phone_mobile=master.phone_mobile,
-                birth_date=master.birth_date
+                **{field: getattr(master, field) for field in common_fields}
             )
             master.person = person_instance
             master.save()
