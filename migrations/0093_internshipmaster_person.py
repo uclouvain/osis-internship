@@ -11,7 +11,7 @@ def create_persons(apps, schema_editor):
 
     master_fields = {field.name for field in InternshipMaster._meta.fields}
     person_fields = {field.name for field in Person._meta.fields}
-    common_fields = master_fields.intersection(person_fields).difference({'uuid', 'id'})
+    common_fields = master_fields.intersection(person_fields).difference({'uuid', 'id', 'email'})
 
     for master in InternshipMaster.objects.all():
         # check master has already a person in db that should be linked to
