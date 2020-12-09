@@ -17,7 +17,7 @@ def create_persons(apps, schema_editor):
         # check master has already a person in db that should be linked to
         if "@uclouvain.be" in master.email:
             existing_person = Person.objects.get(email=master.email)
-            for field, value in {field: getattr(master, field) for field in common_fields}:
+            for field, value in {field: getattr(master, field) for field in common_fields}.items():
                 if not getattr(existing_person, field):
                     setattr(existing_person, field, value)
             existing_person.save()
