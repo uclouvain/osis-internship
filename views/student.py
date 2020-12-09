@@ -173,9 +173,9 @@ def internships_student_read(request, cohort_id, student_id):
         "period__date_start"
     ).annotate(
         master=Concat(
-            Subquery(master.values('master__last_name')[:1]),
+            Subquery(master.values('master__person__last_name')[:1]),
             Value(', '),
-            Subquery(master.values('master__first_name')[:1])
+            Subquery(master.values('master__person__first_name')[:1])
         )
     )
     periods = Period.objects.filter(cohort=cohort).order_by("date_start")
