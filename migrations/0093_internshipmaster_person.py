@@ -24,7 +24,7 @@ def create_persons(apps, schema_editor):
             master.person_id = existing_person.id
             master.save()
         # create person when none exist
-        if not master.person_id and (master.email or master.email_private):
+        elif not master.person_id and (master.email or master.email_private):
             person_instance = Person.objects.create(
                 uuid=uuid.uuid4(),
                 email=master.email or master.email_private,
