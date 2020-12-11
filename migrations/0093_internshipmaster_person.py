@@ -21,10 +21,10 @@ def create_persons(apps, schema_editor):
                 if not getattr(existing_person, field):
                     setattr(existing_person, field, value)
             existing_person.save()
-            master.person = existing_person
+            master.person.id = existing_person.id
             master.save()
         # create person when none exist
-        if (master.email or master.email_private) and not master.person:
+        if not master.person.id and (master.email or master.email_private):
             person_instance = Person.objects.create(
                 uuid=uuid.uuid4(),
                 email=master.email or master.email_private,
