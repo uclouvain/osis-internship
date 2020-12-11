@@ -15,8 +15,9 @@ def create_persons(apps, schema_editor):
 
     for master in InternshipMaster.objects.all():
         # check master has already a person in db that should be linked to
-        if master.email and Person.objects.filter(email=master.email).exists():
-            existing_person = Person.objects.filter(email=master.email).first()
+        master_email = master.email or master.email_private
+        if master_email and Person.objects.filter(email=master_email).exists():
+            existing_person = Person.objects.filter(email=master_email).first()
             for field, value in {field: getattr(master, field) for field in common_fields}.items():
                 if not getattr(existing_person, field):
                     setattr(existing_person, field, value)
@@ -24,10 +25,10 @@ def create_persons(apps, schema_editor):
             master.person_id = existing_person.id
             master.save()
         # create person when none exist
-        elif not master.person_id and (master.email or master.email_private):
+        elif not master.person_id and master_email:
             person_instance = Person.objects.create(
                 uuid=uuid.uuid4(),
-                email=master.email or master.email_private,
+                email=master_email,
                 **{field: getattr(master, field) for field in common_fields}
             )
             master.person = person_instance
