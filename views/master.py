@@ -118,7 +118,7 @@ def master_save(request, cohort_id):
     form_person_address = InternshipPersonAddressForm(request.POST or None, instance=person_address)
     errors = []
     hospital = ""
-    if form_master.is_valid() and form_person.is_valid():
+    if form_master.is_valid() and form_person.is_valid() and form_person_address.is_valid():
         allocated_master = form_master.instance
         if _validate_allocations(request):
             person = form_person.save()
@@ -135,6 +135,7 @@ def master_save(request, cohort_id):
         else:
             errors.append(form_master.errors)
             errors.append(form_person.errors)
+            errors.append(form_person_address.errors)
             messages.add_message(
                 request,
                 messages.ERROR,
@@ -144,6 +145,7 @@ def master_save(request, cohort_id):
     else:
         errors.append(form_master.errors)
         errors.append(form_person.errors)
+        errors.append(form_person_address.errors)
         display_errors(request, errors)
 
     if errors:
