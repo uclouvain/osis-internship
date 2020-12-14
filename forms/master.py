@@ -35,8 +35,7 @@ class MasterForm(forms.ModelForm):
     class Meta:
         model = internship_master.InternshipMaster
         fields = [
-            'civility', 'email_private', 'email_additional', 'location',
-            'postal_code', 'city', 'country', 'start_activities'
+            'civility', 'email_private', 'email_additional', 'start_activities'
         ]
         widgets = {
             'start_activities': forms.DateInput(format="%Y-%m-%d", attrs={'type': 'date'})
