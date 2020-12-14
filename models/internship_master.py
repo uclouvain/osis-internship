@@ -51,14 +51,7 @@ class InternshipMaster(SerializableModel):
     email_private = models.EmailField(max_length=255, blank=True, null=True, verbose_name='Private email')
     email_additional = models.CharField(max_length=255, blank=True, null=True, verbose_name='Additional email')
     civility = models.CharField(max_length=50, blank=True, null=True, choices=Civility.choices())
-    location = models.CharField(max_length=255, blank=True, null=True)
-    postal_code = models.CharField(max_length=20, blank=True, null=True)
-    city = models.CharField(max_length=255, blank=True, null=True)
-    country = models.ForeignKey(
-        'reference.Country',
-        blank=True, null=True,
-        on_delete=models.CASCADE
-    )
+
     start_activities = models.DateField(blank=True, null=True)
 
     def civility_acronym(self):

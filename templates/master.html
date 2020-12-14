@@ -116,26 +116,26 @@
                 <div class="col-md-3">
                     <div class="form-group">
                         <label for="location">{% trans 'Address' %}</label>
-                        <div id="location">{{ allocated_master.location | default_if_none:"" }}</div>
+                        <div id="location">{{ allocated_master_address.location | default_if_none:"" }}</div>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
                         <label for="postal_code">{% trans 'Postal code' %}</label>
-                        <div id="postal_code">{{ allocated_master.postal_code | default_if_none:"" }}</div>
+                        <div id="postal_code">{{ allocated_master_address.postal_code | default_if_none:"" }}</div>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
                         <label for="city">{% trans 'Locality' %}</label>
-                        <div id="city">{{ allocated_master.city | default_if_none:"" }}</div>
+                        <div id="city">{{ allocated_master_address.city | default_if_none:"" }}</div>
                     </div>
                 </div>
 
                 <div class="col-md-3">
                     <div class="form-group">
                         <label for="country">{% trans 'Country' %}</label>
-                        <div id="country">{{ allocated_master.country | default_if_none:"" }}</div>
+                        <div id="country">{{ allocated_master_address.country | default_if_none:"" }}</div>
                     </div>
                 </div>
             </div>
