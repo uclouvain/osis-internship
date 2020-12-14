@@ -25,6 +25,7 @@
 ##############################################################################
 from django import forms
 
+from base.models.enums import person_source_type
 from base.models.person import Person
 
 
@@ -34,6 +35,21 @@ class InternshipPersonForm(forms.ModelForm):
         super(InternshipPersonForm, self).__init__(*args, **kwargs)
         self.fields['last_name'].required = True
         self.fields['first_name'].required = True
+
+        # disable fields for instance source not internship
+        if self.instance.pk and self.instance.source != person_source_type.INTERNSHIP:
+            self.disable_all_fields()
+
+    def disable_all_fields(self):
+        for field in self.fields.values():
+            field.disabled = True
+
+    def save(self, commit=False):
+        person = super(InternshipPersonForm, self).save(commit=commit)
+        if person.pk is None:
+            person.source = person_source_type.INTERNSHIP
+        person.save()
+        return person
 
     class Meta:
         model = Person
