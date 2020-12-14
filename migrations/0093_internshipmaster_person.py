@@ -29,7 +29,8 @@ def create_persons(apps, schema_editor):
             person_instance = Person.objects.create(
                 uuid=uuid.uuid4(),
                 email=master_email,
-                **{field: getattr(master, field) for field in common_fields}
+                **{field: getattr(master, field) for field in common_fields},
+                source='INTERNSHIP'
             )
             master.person = person_instance
             master.save()
