@@ -32,6 +32,7 @@ from django.test import TestCase
 from django.urls import reverse
 
 from backoffice.settings.base import INSTALLED_APPS
+from base.models.enums import person_source_type
 from base.models.person import Person
 from internship.models import master_allocation
 from internship.models.internship_master import InternshipMaster
@@ -100,7 +101,7 @@ class MasterTestCase(TestCase):
         self.assertTemplateUsed(response, 'masters.html')
 
     def test_delete_master(self):
-        master_test = MasterFactory()
+        master_test = MasterFactory(person__source=person_source_type.INTERNSHIP)
 
         # master and person exists before delete
         self.assertTrue(InternshipMaster.objects.filter(pk=master_test.pk).exists())
