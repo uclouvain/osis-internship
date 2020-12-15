@@ -31,11 +31,14 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
+from base.models.enums import person_source_type
+from internship.forms.internship_person_address_form import InternshipPersonAddressForm
 from internship.forms.internship_person_form import InternshipPersonForm
 from internship.forms.master import MasterForm
 from internship.models import master_allocation, internship_master, internship_speciality, organization, cohort
 from internship.utils.exporting.masters import export_xls
 from internship.views.common import display_errors, get_object_list
+from osis_common.decorators.download import set_download_cookie
 
 
 @login_required
@@ -62,6 +65,7 @@ def master(request, cohort_id, master_id):
     current_cohort = shortcuts.get_object_or_404(cohort.Cohort, pk=cohort_id)
     allocated_master = internship_master.get_by_id(master_id)
     allocations = master_allocation.find_by_master(current_cohort, allocated_master)
+    allocated_master_address = allocated_master.person.personaddress_set.first()
     return render(request, "master.html", locals())
 
 
@@ -76,6 +80,8 @@ def master_form(request, cohort_id, master_id=None, allocated_master=None):
     master_form = MasterForm(request.POST or None, instance=allocated_master)
     person = allocated_master.person if allocated_master else None
     person_form = InternshipPersonForm(request.POST or None, instance=person)
+    person_address = person.personaddress_set.first() if person else None
+    person_address_form = InternshipPersonAddressForm(request.POST or None, instance=person_address)
     specialties = internship_speciality.find_by_cohort(current_cohort)
     hospitals = organization.find_by_cohort(current_cohort)
     return render(request, "master_form.html", locals())
@@ -89,7 +95,8 @@ def master_delete(request, master_id, cohort_id):
     allocations = master_allocation.find_by_master(current_cohort, allocated_master)
     current_allocation = allocations.first()
     current_allocation.delete()
-    allocated_master.person.delete()
+    if allocated_master.person.source == person_source_type.INTERNSHIP:
+        allocated_master.person.delete()
     allocated_master.delete()
     messages.add_message(
         request,
@@ -108,12 +115,17 @@ def master_save(request, cohort_id):
     form_master = MasterForm(request.POST, instance=allocated_master)
     person = allocated_master.person if allocated_master else None
     form_person = InternshipPersonForm(request.POST, instance=person)
+    person_address = person.personaddress_set.first() if person else None
+    form_person_address = InternshipPersonAddressForm(request.POST or None, instance=person_address)
     errors = []
     hospital = ""
-    if form_master.is_valid() and form_person.is_valid():
+    if form_master.is_valid() and form_person.is_valid() and form_person_address.is_valid():
         allocated_master = form_master.instance
         if _validate_allocations(request):
             person = form_person.save()
+            address = form_person_address.save(commit=False)
+            address.person = person
+            address.save()
             master = form_master.save()
             master.person = person
             master.save()
@@ -124,6 +136,7 @@ def master_save(request, cohort_id):
         else:
             errors.append(form_master.errors)
             errors.append(form_person.errors)
+            errors.append(form_person_address.errors)
             messages.add_message(
                 request,
                 messages.ERROR,
@@ -133,6 +146,7 @@ def master_save(request, cohort_id):
     else:
         errors.append(form_master.errors)
         errors.append(form_person.errors)
+        errors.append(form_person_address.errors)
         display_errors(request, errors)
 
     if errors:
@@ -144,6 +158,7 @@ def master_save(request, cohort_id):
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
+@set_download_cookie
 def export_masters(request, cohort_id):
     workbook = export_xls()
     response = HttpResponse(workbook, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')

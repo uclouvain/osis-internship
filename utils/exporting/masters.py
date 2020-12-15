@@ -31,6 +31,7 @@ from openpyxl.styles import Font
 from openpyxl.writer.excel import save_virtual_workbook
 
 from base.models.person import Person
+from base.models.person_address import PersonAddress
 from internship.models.internship_master import InternshipMaster
 from internship.models.master_allocation import MasterAllocation
 from internship.utils.exporting.spreadsheet import add_row
@@ -49,6 +50,7 @@ def export_xls():
     worksheet = workbook.active
     models_fields = set(InternshipMaster._meta.fields)
     models_fields |= set(Person._meta.fields)
+    models_fields |= set(PersonAddress._meta.fields)
     meta_fields = [field for field in models_fields if field.name in FIELDS]
     sorted_fields = sorted(meta_fields, key=lambda x: FIELDS.index(x.name))
     _add_header(worksheet, sorted_fields)
@@ -65,7 +67,7 @@ def _add_header(worksheet, fields):
 
 
 def _add_masters(worksheet, fields):
-    fields_names = ['person__{}'.format(field.name) if field in Person._meta.fields else field.name for field in fields]
+    fields_names = _build_fields_names(fields)
     master_allocation = MasterAllocation.objects.filter(master=OuterRef('pk'))
     masters = InternshipMaster.objects.all().order_by('person__last_name', 'person__first_name').annotate(
         specialty=Subquery(master_allocation.values('specialty__name')[:1]),
@@ -73,6 +75,18 @@ def _add_masters(worksheet, fields):
     ).values_list(*fields_names, 'specialty', 'organization').distinct()
     for master in masters:
         add_row(worksheet, master)
+
+
+def _build_fields_names(fields):
+    fields_names = []
+    for field in fields:
+        if field in Person._meta.fields:
+            fields_names.append('person__{}'.format(field.name))
+        elif field in PersonAddress._meta.fields:
+            fields_names.append('person__personaddress__{}'.format(field.name))
+        else:
+            fields_names.append(field.name)
+    return fields_names
 
 
 def _adjust_column_width(worksheet):

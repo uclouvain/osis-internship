@@ -4,6 +4,8 @@ import uuid
 from django.db import migrations, models
 from django.db.migrations import RunPython
 
+from base.models.enums import person_source_type
+
 
 def create_persons(apps, schema_editor):
     InternshipMaster = apps.get_model('internship', 'InternshipMaster')
@@ -30,7 +32,7 @@ def create_persons(apps, schema_editor):
                 uuid=uuid.uuid4(),
                 email=master_email,
                 **{field: getattr(master, field) for field in common_fields},
-                source='INTERNSHIP'
+                source=person_source_type.INTERNSHIP
             )
             master.person = person_instance
             master.save()

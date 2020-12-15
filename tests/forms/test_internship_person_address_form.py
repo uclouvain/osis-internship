@@ -23,56 +23,42 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from datetime import timedelta
 
 from django.test import TestCase
-from django.utils import timezone
 
 from base.models.enums.person_source_type import BASE, INTERNSHIP
-from base.tests.factories.person import PersonFactory
-from internship.forms.internship_person_form import InternshipPersonForm
+from base.tests.factories.person_address import PersonAddressFactory
+from internship.forms.internship_person_address_form import InternshipPersonAddressForm
+from reference.tests.factories.country import CountryFactory
 
 
-class TestInternshipPersonForm(TestCase):
+class TestInternshipPersonAddressForm(TestCase):
     def test_valid_form(self):
         data = {
-            "first_name": "test",
-            "last_name": "test",
-            "gender": "M",
-            "email": "test@test.com",
-            'birth_date': "1980-01-01",
+            "location": "test",
+            "city": "test",
+            "postal_code": "1000",
+            "country": CountryFactory().pk,
         }
-        person_form = InternshipPersonForm(data)
-        self.assertTrue(person_form.is_valid())
+        person_address_form = InternshipPersonAddressForm(data)
+        self.assertTrue(person_address_form.is_valid())
 
-    def test_invalid_birth_date(self):
+    def test_invalid_country(self):
         data = {
-            "last_name": "test",
-            'birth_date': timezone.now().date() + timedelta(days=5),
+            "country": "no_country",
         }
-        form = InternshipPersonForm(data)
+        form = InternshipPersonAddressForm(data)
         self.assertFalse(form.is_valid())
+        self.assertTrue('country' in form.errors.keys())
 
     def test_fields_enabled_for_instance_with_internship_source(self):
-        person = PersonFactory(source=INTERNSHIP)
-        form = InternshipPersonForm(instance=person)
+        person_address = PersonAddressFactory(person__source=INTERNSHIP)
+        form = InternshipPersonAddressForm(instance=person_address)
         for field in form.fields.values():
             self.assertFalse(field.disabled)
 
     def test_fields_disabled_for_other_instance_sources(self):
-        person = PersonFactory(source=BASE)
-        form = InternshipPersonForm(instance=person)
+        person_address = PersonAddressFactory(person__source=BASE)
+        form = InternshipPersonAddressForm(instance=person_address)
         for field in form.fields.values():
             self.assertTrue(field.disabled)
-
-    def test_person_created_with_internship_source(self):
-        data = {
-            "first_name": "test",
-            "last_name": "test",
-            "gender": "M",
-            "email": "test@test.com",
-            'birth_date': "1980-01-01",
-        }
-        form = InternshipPersonForm(data=data)
-        person = form.save()
-        self.assertEqual(person.source, INTERNSHIP)

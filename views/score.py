@@ -58,6 +58,7 @@ from internship.utils.exporting import score_encoding_xls
 from internship.utils.importing import import_scores, import_eval
 from internship.utils.mails import mails_management
 from internship.views.common import get_object_list, round_half_up
+from osis_common.decorators.download import set_download_cookie
 
 CHOSEN_LENGTH = 7
 MINIMUM_SCORE = 0
@@ -788,6 +789,7 @@ def _show_import_success_message(request, period):
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
+@set_download_cookie
 def download_scores(request, cohort_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
     selected_periods = request.POST.getlist('period')
