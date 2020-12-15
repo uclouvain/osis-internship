@@ -9,7 +9,7 @@ def move_master_address_to_person_address(apps, schema_editor):
     PersonAddress = apps.get_model('base', 'PersonAddress')
 
     for master in InternshipMaster.objects.all():
-        if not PersonAddress.objects.filter(person=master.person).exists():
+        if master.person and not PersonAddress.objects.filter(person=master.person).exists():
             PersonAddress.objects.create(
                 person=master.person,
                 location=master.location,
