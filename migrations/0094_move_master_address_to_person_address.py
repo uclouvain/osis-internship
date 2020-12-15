@@ -2,20 +2,27 @@
 
 from django.db import migrations
 from django.db.migrations import RunPython
+from django.db.models import Q
 
 
 def move_master_address_to_person_address(apps, schema_editor):
     InternshipMaster = apps.get_model('internship', 'InternshipMaster')
     PersonAddress = apps.get_model('base', 'PersonAddress')
+    Country = apps.get_model('reference', 'Country')
 
-    for master in InternshipMaster.objects.all():
+    default_country = Country.objects.get(iso_code='BE')
+
+    # create person address only if record has at least one of the following column not null
+    for master in InternshipMaster.objects.filter(
+        Q(location__isnull=False) | Q(postal_code__isnull=False) | Q(city__isnull=False) | Q(country__isnull=False)
+    ):
         if master.person and not PersonAddress.objects.filter(person=master.person).exists():
             PersonAddress.objects.create(
                 person=master.person,
                 location=master.location,
                 postal_code=master.postal_code,
                 city=master.city,
-                country=master.country
+                country=master.country or default_country
             )
 
 
