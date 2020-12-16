@@ -3,6 +3,14 @@ from django.db import migrations, models
 from django.db.migrations import RunPython
 
 
+def clear_generalists(apps, schema_editor):
+    InternshipMaster = apps.get_model('internship', 'InternshipMaster')
+
+    InternshipMaster.objects.filter(
+        masterallocation__specialty__acronym='MG',
+        masterallocation__organization__isnull=True
+    ).distinct().delete()
+
 def clean_mails(apps, schema_editor):
     InternshipMaster = apps.get_model('internship', 'InternshipMaster')
 
@@ -38,5 +46,6 @@ class Migration(migrations.Migration):
             field=models.CharField(blank=True, max_length=255, null=True, verbose_name='Additional email'),
         ),
         # clean mails
+        migrations.RunPython(clear_generalists, RunPython.noop),
         migrations.RunPython(clean_mails, RunPython.noop),
     ]

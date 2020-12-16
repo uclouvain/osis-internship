@@ -36,7 +36,7 @@ def clean_duplicates(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('internship', '0091_clean_master_emails'),
+        ('internship', '0091_clean_master_emails_and_generalists'),
     ]
 
     operations = [
