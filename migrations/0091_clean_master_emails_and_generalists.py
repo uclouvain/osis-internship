@@ -3,6 +3,14 @@ from django.db import migrations, models
 from django.db.migrations import RunPython
 
 
+def clear_generalists(apps, schema_editor):
+    InternshipMaster = apps.get_model('internship', 'InternshipMaster')
+
+    InternshipMaster.objects.filter(
+        masterallocation__specialty__acronym='MG',
+        masterallocation__organization__isnull=True
+    ).distinct().delete()
+
 def clean_mails(apps, schema_editor):
     InternshipMaster = apps.get_model('internship', 'InternshipMaster')
 
