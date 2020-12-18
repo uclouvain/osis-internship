@@ -23,6 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+import json
 from unittest import skipUnless
 
 import faker
@@ -34,12 +35,15 @@ from django.urls import reverse
 from backoffice.settings.base import INSTALLED_APPS
 from base.models.enums import person_source_type
 from base.models.person import Person
+from base.tests.factories.person import PersonFactory
+from base.tests.factories.person_address import PersonAddressFactory
 from internship.models import master_allocation
 from internship.models.internship_master import InternshipMaster
 from internship.tests.factories.cohort import CohortFactory
 from internship.tests.factories.master import MasterFactory
 from internship.tests.factories.master_allocation import MasterAllocationFactory
 from internship.tests.factories.organization import OrganizationFactory
+from internship.tests.factories.speciality import SpecialtyFactory
 from osis_common.document.xls_build import CONTENT_TYPE_XLS
 
 
@@ -132,3 +136,50 @@ class MasterTestCase(TestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, HttpResponse.status_code)
         self.assertEqual(response['content-type'], CONTENT_TYPE_XLS.split(';')[0])
+
+    def test_person_exists(self):
+        person = PersonFactory(source=person_source_type.BASE)
+        person_address = PersonAddressFactory(person=person)
+        url = reverse('person_exists', kwargs={'cohort_id': self.cohort.pk})
+        response = self.client.post(url, data={'email': person.email}, content_type='application/json')
+        person_with_address_dict = {
+            'birth_date': person.birth_date,
+            'city': person_address.city,
+            'country': person_address.country.pk,
+            'email': person.email,
+            'first_name': person.first_name,
+            'gender': person.gender,
+            'id': person.pk,
+            'last_name': person.last_name,
+            'location': person_address.location,
+            'person': person.pk,
+            'phone': person.phone,
+            'postal_code': person_address.postal_code,
+            'source': person.source,
+        }
+        response_dict = json.loads(response.content)
+        for key, value in person_with_address_dict.items():
+            self.assertEqual(value, response_dict[key])
+
+    def test_reload_master_form_with_existing_instance(self):
+        person = PersonFactory(source=person_source_type.BASE)
+        url = reverse('master_new', kwargs={'cohort_id': self.cohort.pk})
+        response = self.client.post(url, data={'existing-person-id': person.pk})
+        self.assertTemplateUsed(response, 'master_form.html')
+        self.assertEqual(response.context['person'], person)
+
+    def test_save_master_form_with_existing_instance(self):
+        person = PersonFactory(source=person_source_type.BASE)
+        hospital = OrganizationFactory(cohort=self.cohort)
+        specialty = SpecialtyFactory(cohort=self.cohort)
+        url = reverse('master_save', kwargs={'cohort_id': self.cohort.pk})
+        response = self.client.post(url, data={
+            'existing-person-id': person.pk,
+            'hospital': hospital.pk,
+            'specialty': specialty.pk
+        })
+        self.assertRedirects(response, '{}?{}'.format(
+            reverse('internships_masters', kwargs={'cohort_id': self.cohort.id}),
+            '{}{}'.format('hospital=', hospital.pk)
+        ))
+        self.assertEqual(InternshipMaster.objects.first().person, person)

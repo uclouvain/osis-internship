@@ -23,15 +23,20 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+import json
+
 from django import shortcuts
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
-from django.http import HttpResponseRedirect, HttpResponse
+from django.forms import model_to_dict
+from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
 from base.models.enums import person_source_type
+from base.models.person import Person
+from base.models.person_address import PersonAddress
 from internship.forms.internship_person_address_form import InternshipPersonAddressForm
 from internship.forms.internship_person_form import InternshipPersonForm
 from internship.forms.master import MasterForm
@@ -65,7 +70,7 @@ def master(request, cohort_id, master_id):
     current_cohort = shortcuts.get_object_or_404(cohort.Cohort, pk=cohort_id)
     allocated_master = internship_master.get_by_id(master_id)
     allocations = master_allocation.find_by_master(current_cohort, allocated_master)
-    allocated_master_address = allocated_master.person.personaddress_set.first()
+    allocated_master_address = allocated_master.person.personaddress_set.first() if allocated_master.person else None
     return render(request, "master.html", locals())
 
 
@@ -79,12 +84,29 @@ def master_form(request, cohort_id, master_id=None, allocated_master=None):
 
     master_form = MasterForm(request.POST or None, instance=allocated_master)
     person = allocated_master.person if allocated_master else None
+    if request.POST.get('existing-person-id'):
+        person = Person.objects.get(pk=request.POST.get('existing-person-id'))
     person_form = InternshipPersonForm(request.POST or None, instance=person)
     person_address = person.personaddress_set.first() if person else None
     person_address_form = InternshipPersonAddressForm(request.POST or None, instance=person_address)
     specialties = internship_speciality.find_by_cohort(current_cohort)
     hospitals = organization.find_by_cohort(current_cohort)
+
+    dynamic_fields = json.dumps(list(person_form.fields.keys()) + list(person_address_form.fields.keys()))
+
     return render(request, "master_form.html", locals())
+
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def person_exists(request, cohort_id):
+    email = json.load(request)['email']
+    person = Person.objects.filter(email=email).first()
+    data = model_to_dict(person) if person else {}
+    person_address = PersonAddress.objects.filter(person=person).first()
+    if person_address:
+        data.update(model_to_dict(person_address, exclude=['id']))
+    return JsonResponse(data if person else {'err': 'not found'})
 
 
 @login_required
@@ -94,16 +116,17 @@ def master_delete(request, master_id, cohort_id):
     allocated_master = internship_master.get_by_id(master_id)
     allocations = master_allocation.find_by_master(current_cohort, allocated_master)
     current_allocation = allocations.first()
-    current_allocation.delete()
-    if allocated_master.person.source == person_source_type.INTERNSHIP:
+    if current_allocation:
+        current_allocation.delete()
+    if allocated_master.person and allocated_master.person.source == person_source_type.INTERNSHIP:
         allocated_master.person.delete()
     allocated_master.delete()
-    messages.add_message(
-        request,
-        messages.SUCCESS,
-        "{} : {} {}".format(_('Master deleted'), allocated_master.person.last_name, allocated_master.person.first_name),
-        "alert-success"
-    )
+    msg_content = "{} : {} {}".format(
+        _('Master deleted'),
+        allocated_master.person.last_name,
+        allocated_master.person.first_name
+    ) if allocated_master.person else "{}".format(_('Master deleted'))
+    messages.add_message(request, messages.SUCCESS, msg_content, "alert-success")
     return HttpResponseRedirect(reverse('internships_masters', kwargs={'cohort_id': cohort_id,}))
 
 
@@ -114,6 +137,8 @@ def master_save(request, cohort_id):
     allocated_master = internship_master.get_by_id(request.POST.get("id")) if request.POST.get("id") else None
     form_master = MasterForm(request.POST, instance=allocated_master)
     person = allocated_master.person if allocated_master else None
+    if not person and request.POST.get('existing-person-id'):
+        person = Person.objects.get(pk=request.POST.get('existing-person-id'))
     form_person = InternshipPersonForm(request.POST, instance=person)
     person_address = person.personaddress_set.first() if person else None
     form_person_address = InternshipPersonAddressForm(request.POST or None, instance=person_address)
