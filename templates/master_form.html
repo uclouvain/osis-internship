@@ -297,15 +297,6 @@
             document.querySelector('#id_email').value = '';
         });
 
-        function fillPersonData(data){
-            for(let field of dynamicFields){
-                const inputField = document.querySelector(`#id_${field}`);
-                // fill and readonly field
-                inputField.value = data[field] || '';
-                inputField.readOnly = true;
-            }
-        }
-
         // clear button reenable fields
         document.querySelector('#clear-button').addEventListener('click', (e) => {
             for(let field of dynamicFields){
