@@ -276,7 +276,7 @@
                 credentials: 'same-origin',
                 headers: {
                   'Accept': 'application/json',
-                  'X-Requested-With': 'XMLHttpRequest', //Necessary to work with request.is_ajax()
+                  'X-Requested-With': 'XMLHttpRequest',
                   'X-CSRFToken': '{{csrf_token}}',
                 },
                 body: JSON.stringify({'email' : email}),
