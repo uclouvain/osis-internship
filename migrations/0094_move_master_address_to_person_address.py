@@ -10,7 +10,7 @@ def move_master_address_to_person_address(apps, schema_editor):
     PersonAddress = apps.get_model('base', 'PersonAddress')
     Country = apps.get_model('reference', 'Country')
 
-    default_country = Country.objects.get(iso_code='BE')
+    default_country = Country.objects.filter(iso_code='BE').first()
 
     # create person address only if record has at least one of the following column not null
     for master in InternshipMaster.objects.filter(
