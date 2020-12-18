@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-07 15:55+0100\n"
+"POT-Creation-Date: 2020-12-18 15:41+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -34,6 +34,13 @@ msgstr "Un hôpital avec la même référence existe déjà dans cette cohorte"
 msgid "A master must be affected to at least one hospital or one specialty."
 msgstr ""
 "Un maître de stage doit être affecté à au moins un hôpital ou une spécialité."
+
+msgid ""
+"A person with this email address has been previously recorded. Form inputs "
+"will be filled based on the existing data."
+msgstr ""
+"Une personne avec cette adresse email existe déjà. Les champs du formulaire "
+"seront pré-remplis sur base des données retrouvées."
 
 msgid "APD Validation"
 msgstr "Validation APD"
@@ -606,6 +613,9 @@ msgstr "Périodes"
 msgid "Periods do not match"
 msgstr "Les périodes ne correspondent pas"
 
+msgid "Person already exists"
+msgstr "Personne déjà existante"
+
 msgid "Phone"
 msgstr "Téléphone"
 
@@ -632,6 +642,9 @@ msgstr "Prioritaire"
 
 msgid "Private email"
 msgstr "Email Privé"
+
+msgid "Proceed"
+msgstr "Continuer"
 
 msgid "Provide a reason for editing score ?"
 msgstr "Fournir un motif de modification de la note ?"
