@@ -141,7 +141,7 @@ class MasterTestCase(TestCase):
         person = PersonFactory(source=person_source_type.BASE)
         person_address = PersonAddressFactory(person=person)
         url = reverse('person_exists', kwargs={'cohort_id': self.cohort.pk})
-        response = self.client.post(url, data={'email': person.email}, content_type='application/json')
+        response = self.client.post(url, data=json.dumps({'email': person.email}), content_type='application/json')
         person_with_address_dict = {
             'birth_date': person.birth_date,
             'city': person_address.city,
