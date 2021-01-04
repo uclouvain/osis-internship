@@ -157,7 +157,7 @@ class MasterTestCase(TestCase):
             'postal_code': person_address.postal_code,
             'source': person.source,
         }
-        response_dict = json.loads(response.content)
+        response_dict = json.loads(response.content.decode('utf-8'))
         for key, value in person_with_address_dict.items():
             self.assertEqual(value, response_dict[key])
 

@@ -100,7 +100,7 @@ def master_form(request, cohort_id, master_id=None, allocated_master=None):
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def person_exists(request, cohort_id):
-    email = json.load(request)['email']
+    email = json.loads(request.body.decode("utf-8"))['email']
     person = Person.objects.filter(email=email).first()
     data = model_to_dict(person) if person else {}
     person_address = PersonAddress.objects.filter(person=person).first()
