@@ -244,7 +244,7 @@
 
         const email = document.querySelector('#id_email');
 
-
+        {% if not allocated_master %}
         // listen to finished typing email with 1sec latency
         let timer;
         email.addEventListener('keyup', (e) =>{
@@ -254,6 +254,26 @@
                 checkPersonExists(value);
             }, 1000);
         });
+
+        document.querySelector('#fill-data-button').addEventListener('click', (e) => {
+            document.querySelector('#existing-person-id').value = personData['id'];
+            document.querySelector('#existing-person-form').submit();
+        });
+
+        document.querySelector('#cancel-fill-button').addEventListener('click', (e) => {
+            document.querySelector('#id_email').value = '';
+        });
+
+        // clear button reenable fields
+        document.querySelector('#clear-button').addEventListener('click', (e) => {
+            for(let field of dynamicFields){
+                const inputField = document.querySelector(`#id_${field}`);
+                inputField.readOnly = false;
+                inputField.value = '';
+            }
+        });
+
+        {% endif %}
 
         function checkPersonExists(email) {
             fetch('{% url 'person_exists' cohort_id=current_cohort.id %}', {
@@ -273,23 +293,7 @@
             });
         }
 
-        document.querySelector('#fill-data-button').addEventListener('click', (e) => {
-            document.querySelector('#existing-person-id').value = personData['id'];
-            document.querySelector('#existing-person-form').submit();
-        });
 
-        document.querySelector('#cancel-fill-button').addEventListener('click', (e) => {
-            document.querySelector('#id_email').value = '';
-        });
-
-        // clear button reenable fields
-        document.querySelector('#clear-button').addEventListener('click', (e) => {
-            for(let field of dynamicFields){
-                const inputField = document.querySelector(`#id_${field}`);
-                inputField.readOnly = false;
-                inputField.value = '';
-            }
-        });
 
     </script>
 {% endblock %}
