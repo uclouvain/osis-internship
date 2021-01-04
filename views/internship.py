@@ -38,6 +38,7 @@ from internship import models as mdl_int
 from internship.forms.form_offer_preference import OfferPreferenceForm, OfferPreferenceFormSet
 from internship.forms.form_select_speciality import SpecialityForm
 from internship.forms.internship import InternshipForm
+from internship.models.period import Period
 from internship.views.common import display_errors
 
 
@@ -395,7 +396,7 @@ def _is_correct_speciality(offer, speciality):
 
 
 def _get_dict_of_periods(cohort):
-    periods = mdl_int.period.find_by_cohort(cohort)
+    periods = Period.objects.filter(cohort=cohort).order_by("date_start")
     periods_dict = dict()
     for period in periods:
         periods_dict[period.name] = period

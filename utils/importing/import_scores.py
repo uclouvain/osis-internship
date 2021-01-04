@@ -31,7 +31,6 @@ from openpyxl import load_workbook
 from base.models import student
 from internship.models.internship_score import InternshipScore
 from internship.models.internship_student_information import find_by_person
-from internship.models.period import Period
 
 APDS_COUNT = 15
 LINE_INTERVAL = 2
@@ -42,7 +41,7 @@ NUMBER_REGEX = r'(\d+)'
 def import_xlsx(cohort, xlsxfile, period):
     workbook = load_workbook(filename=xlsxfile, read_only=True)
     worksheet = workbook.active
-    period = Period.objects.get(name=period, cohort=cohort)
+    period = cohort.period_set.get(name=period)
     worksheet_period = list(worksheet.rows)[0][0].value
     errors = _search_worksheet_for_errors(cohort, period, worksheet, worksheet_period)
     if errors:

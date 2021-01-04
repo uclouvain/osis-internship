@@ -3,8 +3,7 @@ from django.db.models import Q
 from django.forms import Form
 from django.utils.translation import gettext as _
 
-from internship.models.internship_student_information import InternshipStudentInformation
-from internship.models.period import Period, get_effective_periods
+from internship.models.period import get_effective_periods
 
 
 class ScoresFilterForm(Form):
@@ -48,12 +47,12 @@ class ScoresFilterForm(Form):
     def __init__(self, *args, **kwargs):
         cohort = kwargs.pop('cohort')
         super(ScoresFilterForm, self).__init__(*args, **kwargs)
-        self.fields['period'].queryset = Period.objects.filter(cohort=cohort).order_by('date_start')
+        self.fields['period'].queryset = cohort.period_set.all().order_by('date_start')
 
     def get_students(self, cohort):
         free_text = self.cleaned_data.get('free_text')
 
-        qs = InternshipStudentInformation.objects.filter(cohort=cohort).select_related(
+        qs = cohort.internshipstudentinformation_set.all().select_related(
             'person'
         ).order_by('person__last_name')
 

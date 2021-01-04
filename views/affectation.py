@@ -42,7 +42,17 @@ from internship.models import internship_student_affectation_stat
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def run_affectation(request, cohort_id):
-    cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
+    cohort = get_object_or_404(
+        models.cohort.Cohort.objects.prefetch_related(
+            'internshipstudentinformation_set',
+            'internship_set',
+            'internshipspeciality_set',
+            'organization_set',
+            'internshipoffer_set',
+            'period_set',
+        ),
+        pk=cohort_id
+    )
     if request.method == 'POST':
         start_date_time = timezone.now()  # To register the beginning of the algorithm.
 
