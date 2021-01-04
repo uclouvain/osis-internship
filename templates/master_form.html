@@ -251,7 +251,9 @@
             window.clearTimeout(timer);
             const value = e.target.value;
             timer = setTimeout(() => {
-                checkPersonExists(value);
+                if(value){
+                    checkPersonExists(value);
+                }
             }, 1000);
         });
 
