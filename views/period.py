@@ -41,7 +41,7 @@ from internship.views.common import display_errors
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internships_periods(request, cohort_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
-    periods = mdl_internship.period.find_by_cohort(cohort)
+    periods = Period.objects.filter(cohort=cohort).order_by("date_start")
     context = {'periods': periods, 'cohort': cohort}
     return render(request, "periods.html", context)
 

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-07 15:55+0100\n"
+"POT-Creation-Date: 2020-12-18 15:41+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -28,6 +28,11 @@ msgid "A hospital with the same reference already exists in this cohort"
 msgstr ""
 
 msgid "A master must be affected to at least one hospital or one specialty."
+msgstr ""
+
+msgid ""
+"A person with this email address has been previously recorded. Form inputs "
+"will be filled based on the existing data."
 msgstr ""
 
 msgid "APD Validation"
@@ -590,6 +595,9 @@ msgstr ""
 msgid "Periods do not match"
 msgstr ""
 
+msgid "Person already exists"
+msgstr ""
+
 msgid "Phone"
 msgstr ""
 
@@ -615,6 +623,9 @@ msgid "Priority"
 msgstr ""
 
 msgid "Private email"
+msgstr ""
+
+msgid "Proceed"
 msgstr ""
 
 msgid "Provide a reason for editing score ?"

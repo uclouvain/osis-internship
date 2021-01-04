@@ -47,10 +47,13 @@
 
     <div class="panel panel-default">
         <div class="panel-body">
-            <form action="{%url 'master_save' cohort_id=current_cohort.id %}" method="POST" class="form">
+            <form action="{%url 'master_save' cohort_id=current_cohort.id %}" method="POST" class="form" id="master-form">
                 {% csrf_token %}
                 {% if allocated_master.id %}
-                <input type="hidden" name="id" value="{{ allocated_master.id }}">
+                    <input type="hidden" name="id" value="{{ allocated_master.id }}">
+                {% endif %}
+                {% if person %}
+                <input type="hidden" id="existing-person-id" name="existing-person-id" value="{{ person.pk }}">
                 {% endif %}
                 <div class="row">
                     {% bootstrap_field master_form.civility form_group_class="form-group col-md-2" label=_("Civility") %}
@@ -159,9 +162,23 @@
                     <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                     {% trans "Cancel" %}
                 </a>
+                {% if not master_id %}
+                <button type="button" id="clear-button" class="btn btn-danger pull-right">
+                    <span class="glyphicon glyphicon-erase" aria-hidden="true"></span>
+                    {% trans "Clear" %}
+                </button>
+                {% endif %}
+            </form>
+            <form action="{%url 'master_new' cohort_id=current_cohort.id %}" method="POST" class="form" id="existing-person-form">
+                {% csrf_token %}
+                <input type="hidden" id="existing-person-id" name="existing-person-id">
             </form>
         </div>
     </div>
+
+    <!-- Modal -->
+    {% include 'fragment/fill_master_person_info_modal.html' %}
+
 {% endblock %}
 
 {% block script %}
@@ -221,6 +238,58 @@
             $('#hospital').val("");
             $('#specialty').val("");
         };
+
+        const dynamicFields = {{ dynamic_fields | safe }};
+        let personData;
+
+        const email = document.querySelector('#id_email');
+
+
+        // listen to finished typing email with 1sec latency
+        let timer;
+        email.addEventListener('keyup', (e) =>{
+            window.clearTimeout(timer);
+            const value = e.target.value;
+            timer = setTimeout(() => {
+                checkPersonExists(value);
+            }, 1000);
+        });
+
+        function checkPersonExists(email) {
+            fetch('{% url 'person_exists' cohort_id=current_cohort.id %}', {
+                method: 'POST',
+                credentials: 'same-origin',
+                headers: {
+                  'Accept': 'application/json',
+                  'X-Requested-With': 'XMLHttpRequest',
+                  'X-CSRFToken': '{{csrf_token}}',
+                },
+                body: JSON.stringify({'email' : email}),
+            }).then(response => response.json()).then(data => {
+                if(!data['err'] && data['source'] !== 'INTERNSHIP'){
+                    personData = data;
+                    $('#fillPersonDataModal').modal();
+                }
+            });
+        }
+
+        document.querySelector('#fill-data-button').addEventListener('click', (e) => {
+            document.querySelector('#existing-person-id').value = personData['id'];
+            document.querySelector('#existing-person-form').submit();
+        });
+
+        document.querySelector('#cancel-fill-button').addEventListener('click', (e) => {
+            document.querySelector('#id_email').value = '';
+        });
+
+        // clear button reenable fields
+        document.querySelector('#clear-button').addEventListener('click', (e) => {
+            for(let field of dynamicFields){
+                const inputField = document.querySelector(`#id_${field}`);
+                inputField.readOnly = false;
+                inputField.value = '';
+            }
+        });
 
     </script>
 {% endblock %}

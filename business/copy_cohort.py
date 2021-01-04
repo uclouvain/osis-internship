@@ -4,8 +4,8 @@ from internship.models import internship
 from internship.models import internship_speciality
 from internship.models import master_allocation
 from internship.models import organization
-from internship.models import period
 from internship.models.internship_speciality import InternshipSpeciality
+from internship.models.period import Period
 
 
 def copy_from_origin(cohort):
@@ -36,7 +36,7 @@ def _copy_specialties(cohort_from, cohort_to):
 
 
 def _copy_periods(cohort_from, cohort_to):
-    periods = period.find_by_cohort(cohort_from)
+    periods = Period.objects.filter(cohort=cohort_from).order_by("date_start")
     for prd in periods:
         prd.pk = None
         prd.uuid = uuid.uuid4()

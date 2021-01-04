@@ -48,16 +48,15 @@ class Period(SerializableModel):
         self.clean_start_date()
 
     def clean_start_date(self):
-        if all([self.date_start, self.date_end]):
-            if self.date_start >= self.date_end:
-                raise ValidationError({"date_start": _("Start date must be earlier than end date.")})
+        if all([self.date_start, self.date_end]) and self.date_start >= self.date_end:
+            raise ValidationError({"date_start": _("Start date must be earlier than end date.")})
 
     def number(self):
         return int(self.name[1])
 
     @property
     def is_active(self):
-        return date.today() >= self.date_start and date.today() <= self.date_end
+        return self.date_start <= date.today() <= self.date_end
 
     @property
     def is_past(self):
@@ -72,10 +71,10 @@ def search(**kwargs):
     return Period.objects.filter(**kwargs).select_related().order_by("date_start")
 
 
-def find_by_cohort(cohort):
-    return Period.objects.filter(cohort=cohort).order_by("date_start")
-
-
 def get_effective_periods(cohort_id):
-    qs = Period.objects.filter(cohort__pk=cohort_id).order_by("date_end")
+    qs = Period.objects.filter(
+        cohort__pk=cohort_id
+    ).prefetch_related(
+        'internshipstudentaffectationstat_set'
+    ).order_by("date_end")
     return qs.exclude(pk=qs.last().pk)

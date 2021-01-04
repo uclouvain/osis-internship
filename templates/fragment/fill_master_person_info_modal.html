@@ -1,0 +1,19 @@
+{% load i18n bootstrap3 %}
+
+<div class="modal fade" id="fillPersonDataModal" tabindex="-1" role="dialog" aria-labelledby="fillPersonDataModal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="fillPersonDataModal">{% trans 'Person already exists' %}</h4>
+      </div>
+      <div class="modal-body">
+        {% trans 'A person with this email address has been previously recorded. Form inputs will be filled based on the existing data.' %}
+      </div>
+      <div class="modal-footer">
+        <button id="cancel-fill-button" type="button" class="btn btn-default" data-dismiss="modal">{% trans 'Cancel' %}</button>
+        <a id="fill-data-button" type="button" class="btn btn-primary" data-dismiss="modal">{% trans 'Proceed' %}</a>
+      </div>
+    </div>
+  </div>
+</div>
