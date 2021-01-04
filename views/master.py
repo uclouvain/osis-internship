@@ -26,6 +26,7 @@
 from django import shortcuts
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
+from django.db.models import F
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 from django.urls import reverse
@@ -50,6 +51,7 @@ def masters(request, cohort_id):
     filter_name = request.GET.get('name', '')
 
     allocations = master_allocation.search(current_cohort, filter_specialty, filter_hospital)
+    allocations = allocations.annotate(user=F('master__person__user'))
     if filter_name:
         allocations = allocations.filter(master__person__last_name__unaccent__icontains=filter_name) | \
                       allocations.filter(master__person__first_name__unaccent__icontains=filter_name)
