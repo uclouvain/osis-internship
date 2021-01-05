@@ -95,6 +95,7 @@
                     <th class="no-sort">{% trans 'Details' %}</th>
                     <th class="no-sort">{% trans 'Specialty' %}</th>
                     <th class="no-sort">{% trans 'Hospital' %}</th>
+                    <th class="no-sort text-center">{% trans 'User account' %}</th>
                     <a href="{% url 'master_new' cohort_id=current_cohort.id %}" class="btn btn-primary pull-right" style="margin-top: 15px; margin-right:15px;">
                         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                         {% trans 'Add' %}
@@ -118,16 +119,31 @@
                         {% else %}
                             <td>-</td>
                         {% endif %}
+                        {% if allocation.user.is_active %}
+                            <td class="text-center">l
+                                <span title="{% trans 'User account is active' %}" class="text-success glyphicon glyphicon-ok-circle"></span>
+                            </td>
+                        {% elif allocation.user %}
+                            <td class="text-center">
+                                <span title="{% trans 'Activation pending' %}" class="text-info glyphicon glyphicon-time"></span>
+                            </td>
+                        {% else %}
+                            <td class="text-center">
+                                <span title="{% trans 'No user account created' %}" class="text-danger glyphicon glyphicon-remove-circle"></span>
+                            </td>
+                        {% endif %}
                     </tr>
                 {% empty %}
                     <tr>
-                        <td colspan="6">{% trans 'No data corresponds to the filters above. Make a choice, please.' %}</td>
+                        <td colspan="7">
+                            {% trans 'No data corresponds to the filters above. Make a choice, please.' %}
+                        </td>
                     </tr>
                 {% endfor %}
             </tbody>
             <tfoot>
                 <tr>
-                    <td colspan="4">
+                    <td colspan="5">
                         {% bootstrap_pagination allocations extra=request.GET.urlencode %}
                     </td>
                     <td colspan="2">

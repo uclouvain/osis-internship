@@ -30,6 +30,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.forms import model_to_dict
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
+from django.db.models import F
 from django.shortcuts import render
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
@@ -55,6 +56,7 @@ def masters(request, cohort_id):
     filter_name = request.GET.get('name', '')
 
     allocations = master_allocation.search(current_cohort, filter_specialty, filter_hospital)
+    allocations = allocations.annotate(user=F('master__person__user'))
     if filter_name:
         allocations = allocations.filter(master__person__last_name__unaccent__icontains=filter_name) | \
                       allocations.filter(master__person__first_name__unaccent__icontains=filter_name)

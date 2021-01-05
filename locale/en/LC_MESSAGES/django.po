@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-18 15:41+0100\n"
+"POT-Creation-Date: 2021-01-05 09:53+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -48,6 +48,9 @@ msgid "Acronym already exists"
 msgstr ""
 
 msgid "Actions"
+msgstr ""
+
+msgid "Activation pending"
 msgstr ""
 
 msgid "Add"
@@ -529,6 +532,9 @@ msgstr ""
 msgid "No result"
 msgstr ""
 
+msgid "No user account created"
+msgstr ""
+
 msgid "Noma"
 msgstr ""
 
@@ -821,6 +827,12 @@ msgid "Total of internships"
 msgstr ""
 
 msgid "Url"
+msgstr ""
+
+msgid "User account"
+msgstr ""
+
+msgid "User account is active"
 msgstr ""
 
 msgid "Website"
