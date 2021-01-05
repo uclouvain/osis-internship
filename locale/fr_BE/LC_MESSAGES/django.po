@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-18 15:41+0100\n"
+"POT-Creation-Date: 2021-01-05 09:53+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -56,6 +56,9 @@ msgstr "Sigle déjà existant"
 
 msgid "Actions"
 msgstr "Actions"
+
+msgid "Activation pending"
+msgstr "Activation en attente"
 
 msgid "Add"
 msgstr "Ajouter"
@@ -547,6 +550,9 @@ msgstr "Pas de motif"
 msgid "No result"
 msgstr "Aucun résultat"
 
+msgid "No user account created"
+msgstr "Pas de compte utilisateur créé"
+
 msgid "Noma"
 msgstr "Noma"
 
@@ -850,6 +856,12 @@ msgstr "Total de stages"
 
 msgid "Url"
 msgstr "Url"
+
+msgid "User account"
+msgstr "Compte utilisateur"
+
+msgid "User account is active"
+msgstr "Le compte utilisateur est actif"
 
 msgid "Website"
 msgstr "Site web"
