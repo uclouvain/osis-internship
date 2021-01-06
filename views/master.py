@@ -28,9 +28,9 @@ import json
 from django import shortcuts
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
+from django.db.models import F
 from django.forms import model_to_dict
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
-from django.db.models import F
 from django.shortcuts import render
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
@@ -104,7 +104,7 @@ def master_form(request, cohort_id, master_id=None, allocated_master=None):
 def person_exists(request, cohort_id):
     email = json.loads(request.body.decode("utf-8"))['email']
     person = Person.objects.filter(email=email).first()
-    data = model_to_dict(person) if person else {}
+    data = model_to_dict(person, exclude=['user', 'managed_entities']) if person else {}
     person_address = PersonAddress.objects.filter(person=person).first()
     if person_address:
         data.update(model_to_dict(person_address, exclude=['id']))
