@@ -192,7 +192,7 @@
 {% block script %}
 <script>
     $("#id_check_all").click(function() {
-        $('input:checkbox.selected_object').not(this).prop('checked', this.checked);
+        $('input:checkbox.selected_object').prop('checked', this.checked);
     });
 
     $("#actions").click(() => {
