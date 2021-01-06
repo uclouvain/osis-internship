@@ -28,11 +28,10 @@ import json
 from django import shortcuts
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
-from django.db.models import F
+from django.contrib.auth.models import User
 from django.forms import model_to_dict
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
-from django.db.models import F
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
@@ -43,6 +42,7 @@ from internship.forms.internship_person_address_form import InternshipPersonAddr
 from internship.forms.internship_person_form import InternshipPersonForm
 from internship.forms.master import MasterForm
 from internship.models import master_allocation, internship_master, internship_speciality, organization, cohort
+from internship.models.internship_master import InternshipMaster
 from internship.utils.exporting.masters import export_xls
 from internship.views.common import display_errors, get_object_list
 from osis_common.decorators.download import set_download_cookie
@@ -57,7 +57,6 @@ def masters(request, cohort_id):
     filter_name = request.GET.get('name', '')
 
     allocations = master_allocation.search(current_cohort, filter_specialty, filter_hospital)
-    allocations = allocations.annotate(user=F('master__person__user'))
     if filter_name:
         allocations = allocations.filter(master__person__last_name__unaccent__icontains=filter_name) | \
                       allocations.filter(master__person__first_name__unaccent__icontains=filter_name)
@@ -65,6 +64,35 @@ def masters(request, cohort_id):
     hospitals = organization.find_by_cohort(current_cohort)
     allocations = get_object_list(request, allocations)
     return render(request, "masters.html", locals())
+
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def create_user_accounts(request, cohort_id):
+    selected_masters = InternshipMaster.objects.filter(
+        pk__in=request.POST.getlist('selected_master')
+    ).select_related('person')
+    for master in selected_masters:
+        user, created = User.objects.get_or_create(
+            username=master.person.email,
+            defaults={
+                'first_name': master.person.first_name,
+                'last_name': master.person.last_name,
+                'email': master.person.email,
+                'is_active': False
+            }
+        )
+        if created:
+            master.person.user = user
+            master.person.save()
+            messages.add_message(
+                request, messages.SUCCESS, 'Successfully created account for {}'.format(master.person), "alert-success"
+            )
+        else:
+            messages.add_message(
+                request, messages.WARNING, 'User account for {} already exists'.format(master.person), "alert-warning"
+            )
+    return redirect(reverse('internships_masters',  kwargs={'cohort_id': cohort_id}))
 
 
 @login_required

@@ -76,11 +76,35 @@
             <div class="col-md-5">
                 <button type="submit" class="btn btn-default" style="margin-top: 26px;">
                     <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-                    {% trans 'Search' %}</button>
-                <a href="{% url 'master_export' cohort_id=current_cohort.id %}" class="btn btn-default pull-right download" style="margin-top: 26px;">
-                    <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
-                    {% trans 'Export to XLSX' %}
-                </a>
+                    {% trans 'Search' %}
+                </button>
+                <button id="actions" type="button" class="btn btn-default pull-right" data-toggle="dropdown" aria-haspopup="true"
+                        aria-expanded="false" style="margin-top: 26px;">
+                    <span class="glyphicon glyphicon-cog" aria-hidden="true"></span> {% trans 'Actions' %}
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-large row text-right pull-right">
+                    <li>
+                        <a href="{% url 'master_new' cohort_id=current_cohort.id %}">
+                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                            {% trans 'Add new master' %}
+                        </a>
+                    </li>
+                    <li role="separator" class="divider"></li>
+                    <li>
+                        <a href="{% url 'master_export' cohort_id=current_cohort.id %}" class="download">
+                            <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
+                            {% trans 'Export to XLSX' %}
+                        </a>
+                    </li>
+                    <li role="separator" class="divider"></li>
+                    <li id="li_create_account" class="disabled">
+                        <a href="#" data-target="#create_account" id="btn_create_account">
+                            <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                            {% trans 'Create user account' %}
+                        </a>
+                    </li>
+                </ul>
             </div>
         </div>
     </form>
@@ -89,6 +113,9 @@
         <table class="table table-hover" id="order_master">
             <thead>
                 <tr>
+                    <th>
+                        <input id="id_check_all" type="checkbox" name="check_all" title="{% trans 'Check All' %}"/>
+                    </th>
                     <th class="no-sort">{% trans 'Civility' %}</th>
                     <th class="searchable">{% trans 'Name' %}</th>
                     <th class="searchable">{% trans 'First name' %}</th>
@@ -96,54 +123,58 @@
                     <th class="no-sort">{% trans 'Specialty' %}</th>
                     <th class="no-sort">{% trans 'Hospital' %}</th>
                     <th class="no-sort text-center">{% trans 'User account' %}</th>
-                    <a href="{% url 'master_new' cohort_id=current_cohort.id %}" class="btn btn-primary pull-right" style="margin-top: 15px; margin-right:15px;">
-                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                        {% trans 'Add' %}
-                    </a>
                 </tr>
             </thead>
             <tbody>
-                {% for allocation in allocations %}
-                    <tr>
-                        <td>{% if allocation.master.civility %}{% trans allocation.master.civility_acronym %}{% endif %}</td>
-                        <td>{{ allocation.master.person.last_name | upper }}</td>
-                        <td>{{ allocation.master.person.first_name }}</td>
-                        <td>
-                            <a class="btn btn-primary" href="{% url 'master' cohort_id=current_cohort.id master_id=allocation.master.id %}">
-                                <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-                            </a>
-                        </td>
-                        <td>{{ allocation.specialty | default_if_none:'-' }}</td>
-                        {% if allocation.organization %}
-                            <td>{{ allocation.organization.reference }} - {{ allocation.organization }}</td>
-                        {% else %}
-                            <td>-</td>
-                        {% endif %}
-                        {% if allocation.user.is_active %}
-                            <td class="text-center">l
-                                <span title="{% trans 'User account is active' %}" class="text-success glyphicon glyphicon-ok-circle"></span>
+                <form action="{% url 'create_accounts' cohort_id=current_cohort.id %}" method="post" id="create_account_form">
+                    {% csrf_token %}
+                    {% for allocation in allocations %}
+                        <tr>
+                            <td>
+                              <input type="checkbox" name="selected_master" class="selected_object" data-master="{{ allocation.master }}" value="{{ allocation.master.pk }}"/>
                             </td>
-                        {% elif allocation.user %}
-                            <td class="text-center">
-                                <span title="{% trans 'Activation pending' %}" class="text-info glyphicon glyphicon-time"></span>
+                            <td>{% if allocation.master.civility %}{% trans allocation.master.civility_acronym %}{% endif %}</td>
+                            <td>{{ allocation.master.person.last_name | upper }}</td>
+                            <td>{{ allocation.master.person.first_name }}</td>
+                            <td>
+                                <a class="btn btn-primary" href="{% url 'master' cohort_id=current_cohort.id master_id=allocation.master.id %}">
+                                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                                </a>
                             </td>
-                        {% else %}
-                            <td class="text-center">
-                                <span title="{% trans 'No user account created' %}" class="text-danger glyphicon glyphicon-remove-circle"></span>
+                            <td>{{ allocation.specialty | default_if_none:'-' }}</td>
+                            {% if allocation.organization %}
+                                <td>{{ allocation.organization.reference }} - {{ allocation.organization }}</td>
+                            {% else %}
+                                <td>-</td>
+                            {% endif %}
+                            {% with allocation.master.person.user as user %}
+                                {% if user and user.is_active %}
+                                    <td class="text-center">
+                                        <span title="{% trans 'User account is active' %}" class="text-success glyphicon glyphicon-ok-circle"></span>
+                                    </td>
+                                {% elif user %}
+                                    <td class="text-center">
+                                        <span title="{% trans 'Activation pending' %}" class="text-info glyphicon glyphicon-time"></span>
+                                    </td>
+                                {% else %}
+                                    <td class="text-center">
+                                        <span title="{% trans 'No user account created' %}" class="text-danger glyphicon glyphicon-remove-circle"></span>
+                                    </td>
+                                {% endif %}
+                            {% endwith  %}
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="8">
+                                {% trans 'No data corresponds to the filters above. Make a choice, please.' %}
                             </td>
-                        {% endif %}
-                    </tr>
-                {% empty %}
-                    <tr>
-                        <td colspan="7">
-                            {% trans 'No data corresponds to the filters above. Make a choice, please.' %}
-                        </td>
-                    </tr>
-                {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </form>
             </tbody>
             <tfoot>
                 <tr>
-                    <td colspan="5">
+                    <td colspan="6">
                         {% bootstrap_pagination allocations extra=request.GET.urlencode %}
                     </td>
                     <td colspan="2">
@@ -153,4 +184,41 @@
             </tfoot>
         </table>
     </div>
+
+    {% include 'fragment/create_master_account_modal.html' %}
+
+{% endblock %}
+
+{% block script %}
+<script>
+    $("#id_check_all").click(function() {
+        $('input:checkbox.selected_object').not(this).prop('checked', this.checked);
+    });
+
+    $("#actions").click(() => {
+        $("#li_create_account").toggleClass(
+            'disabled',
+            $("input[name='selected_master']:checked").length<1
+        );
+    });
+
+    $(document).on('click', '[data-target="#create_account"]', function(){
+        $.each($("input[name='selected_master']:checked"), function() {
+            $("#selected_masters").append(
+                '<li>'+$(this).data('master')+'</li>'
+            );
+        });
+        if(!$("#li_create_account").hasClass('disabled')){
+            $("#create_account").modal("show");
+        }
+    });
+
+    $("#create_account").on("hidden.bs.modal", () => {
+        $("#selected_masters").empty();
+    });
+
+    function createAccount(){
+        $("#create_account_form").submit();
+    }
+</script>
 {% endblock %}
