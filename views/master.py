@@ -76,7 +76,8 @@ def create_user_accounts(request, cohort_id):
         user, created = User.objects.get_or_create(
             username=master.person.email,
             defaults={
-                'first_name': master.person.first_name,
+                # FIXME : useless in django 3 (user.first_name max_length is 30)
+                'first_name': master.person.first_name[:30],
                 'last_name': master.person.last_name,
                 'email': master.person.email,
                 'is_active': False

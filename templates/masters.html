@@ -129,9 +129,12 @@
                 <form action="{% url 'create_accounts' cohort_id=current_cohort.id %}" method="post" id="create_account_form">
                     {% csrf_token %}
                     {% for allocation in allocations %}
+                        {% with allocation.master.person.user as user %}
                         <tr>
                             <td>
-                              <input type="checkbox" name="selected_master" class="selected_object" data-master="{{ allocation.master }}" value="{{ allocation.master.pk }}"/>
+                              <input type="checkbox" name="selected_master" class="selected_object"
+                                     data-master="{{ allocation.master }}" value="{{ allocation.master.pk }}"
+                                     {% if user and user.is_active %} disabled {% endif %}/>
                             </td>
                             <td>{% if allocation.master.civility %}{% trans allocation.master.civility_acronym %}{% endif %}</td>
                             <td>{{ allocation.master.person.last_name | upper }}</td>
@@ -147,22 +150,21 @@
                             {% else %}
                                 <td>-</td>
                             {% endif %}
-                            {% with allocation.master.person.user as user %}
-                                {% if user and user.is_active %}
-                                    <td class="text-center">
-                                        <span title="{% trans 'User account is active' %}" class="text-success glyphicon glyphicon-ok-circle"></span>
-                                    </td>
-                                {% elif user %}
-                                    <td class="text-center">
-                                        <span title="{% trans 'Activation pending' %}" class="text-info glyphicon glyphicon-time"></span>
-                                    </td>
-                                {% else %}
-                                    <td class="text-center">
-                                        <span title="{% trans 'No user account created' %}" class="text-danger glyphicon glyphicon-remove-circle"></span>
-                                    </td>
-                                {% endif %}
-                            {% endwith  %}
+                            {% if user and user.is_active %}
+                                <td class="text-center">
+                                    <span title="{% trans 'User account is active' %}" class="text-success glyphicon glyphicon-ok-circle"></span>
+                                </td>
+                            {% elif user %}
+                                <td class="text-center">
+                                    <span title="{% trans 'Activation pending' %}" class="text-info glyphicon glyphicon-time"></span>
+                                </td>
+                            {% else %}
+                                <td class="text-center">
+                                    <span title="{% trans 'No user account created' %}" class="text-danger glyphicon glyphicon-remove-circle"></span>
+                                </td>
+                            {% endif %}
                         </tr>
+                        {% endwith  %}
                     {% empty %}
                         <tr>
                             <td colspan="8">
@@ -192,8 +194,14 @@
 {% block script %}
 <script>
     $("#id_check_all").click(function() {
-        $('input:checkbox.selected_object').prop('checked', this.checked);
+        $('input:checkbox.selected_object').not(':disabled').prop('checked', this.checked);
     });
+
+    $('input:checkbox.selected_object').click(function(){
+        const potentially_selectable_checkboxes_number = $('input:checkbox.selected_object').not(':disabled').size();
+        const selected_checkboxes_number = $('input:checkbox.selected_object:checked').size();
+        $("#id_check_all").prop('checked', selected_checkboxes_number === potentially_selectable_checkboxes_number);
+    })
 
     $("#actions").click(() => {
         $("#li_create_account").toggleClass(
