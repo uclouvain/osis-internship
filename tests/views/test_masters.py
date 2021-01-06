@@ -26,6 +26,7 @@
 import json
 from unittest import skipUnless
 
+import factory
 import faker
 from django.contrib.auth.models import Permission, User
 from django.http import HttpResponse
@@ -183,3 +184,27 @@ class MasterTestCase(TestCase):
             '{}{}'.format('hospital=', hospital.pk)
         ))
         self.assertEqual(InternshipMaster.objects.first().person, person)
+
+    def test_create_user_account_for_internship_master(self):
+        master = MasterFactory(person__user=None)
+        url = reverse('create_accounts', kwargs={'cohort_id': self.cohort.pk})
+        response = self.client.post(url, data={
+            'selected_master': [master.pk]
+        })
+        master.refresh_from_db()
+        self.assertTrue(master.person.user)
+        messages_list = [msg for msg in response.wsgi_request._messages]
+        self.assertEqual(messages_list[0].level_tag, "success")
+        self.assertIn(str(master.person), messages_list[0].message)
+
+    def test_user_account_already_exists_for_internship_master(self):
+        master = MasterFactory(person__user__username=factory.SelfAttribute('email'))
+        url = reverse('create_accounts', kwargs={'cohort_id': self.cohort.pk})
+        response = self.client.post(url, data={
+            'selected_master': [master.pk]
+        })
+        master.refresh_from_db()
+        self.assertTrue(master.person.user)
+        messages_list = [msg for msg in response.wsgi_request._messages]
+        self.assertEqual(messages_list[0].level_tag, "warning")
+        self.assertIn(str(master.person), messages_list[0].message)
