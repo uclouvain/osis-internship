@@ -26,7 +26,6 @@
 import json
 from unittest import skipUnless
 
-import factory
 import faker
 from django.contrib.auth.models import Permission, User
 from django.http import HttpResponse
@@ -39,6 +38,7 @@ from base.models.person import Person
 from base.tests.factories.person import PersonFactory
 from base.tests.factories.person_address import PersonAddressFactory
 from internship.models import master_allocation
+from internship.models.enums.user_account_status import UserAccountStatus
 from internship.models.internship_master import InternshipMaster
 from internship.tests.factories.cohort import CohortFactory
 from internship.tests.factories.master import MasterFactory
@@ -186,25 +186,21 @@ class MasterTestCase(TestCase):
         self.assertEqual(InternshipMaster.objects.first().person, person)
 
     def test_create_user_account_for_internship_master(self):
-        master = MasterFactory(person__user=None)
+        master = MasterFactory()
         url = reverse('create_accounts', kwargs={'cohort_id': self.cohort.pk})
         response = self.client.post(url, data={
             'selected_master': [master.pk]
         })
-        master.refresh_from_db()
-        self.assertTrue(master.person.user)
         messages_list = [msg for msg in response.wsgi_request._messages]
         self.assertEqual(messages_list[0].level_tag, "success")
         self.assertIn(str(master.person), messages_list[0].message)
 
     def test_user_account_already_exists_for_internship_master(self):
-        master = MasterFactory(person__user__username=factory.SelfAttribute('email'))
+        master = MasterFactory(user_account_status=UserAccountStatus.PENDING.name)
         url = reverse('create_accounts', kwargs={'cohort_id': self.cohort.pk})
         response = self.client.post(url, data={
             'selected_master': [master.pk]
         })
-        master.refresh_from_db()
-        self.assertTrue(master.person.user)
         messages_list = [msg for msg in response.wsgi_request._messages]
         self.assertEqual(messages_list[0].level_tag, "warning")
         self.assertIn(str(master.person), messages_list[0].message)

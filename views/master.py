@@ -28,7 +28,6 @@ import json
 from django import shortcuts
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
-from django.contrib.auth.models import User
 from django.forms import model_to_dict
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
@@ -42,6 +41,8 @@ from internship.forms.internship_person_address_form import InternshipPersonAddr
 from internship.forms.internship_person_form import InternshipPersonForm
 from internship.forms.master import MasterForm
 from internship.models import master_allocation, internship_master, internship_speciality, organization, cohort
+from internship.models.enums import user_account_status
+from internship.models.enums.user_account_status import UserAccountStatus
 from internship.models.internship_master import InternshipMaster
 from internship.utils.exporting.masters import export_xls
 from internship.views.common import display_errors, get_object_list
@@ -63,6 +64,7 @@ def masters(request, cohort_id):
     specialties = internship_speciality.find_by_cohort(current_cohort)
     hospitals = organization.find_by_cohort(current_cohort)
     allocations = get_object_list(request, allocations)
+    account_status = user_account_status.UserAccountStatus.__members__
     return render(request, "masters.html", locals())
 
 
@@ -73,19 +75,9 @@ def create_user_accounts(request, cohort_id):
         pk__in=request.POST.getlist('selected_master')
     ).select_related('person')
     for master in selected_masters:
-        user, created = User.objects.get_or_create(
-            username=master.person.email,
-            defaults={
-                # FIXME : useless in django 3 (user.first_name max_length is 30)
-                'first_name': master.person.first_name[:30],
-                'last_name': master.person.last_name,
-                'email': master.person.email,
-                'is_active': False
-            }
-        )
-        if created:
-            master.person.user = user
-            master.person.save()
+        if master.user_account_status == UserAccountStatus.INACTIVE.name:
+            master.user_account_status = UserAccountStatus.PENDING.name
+            master.save()
             messages.add_message(
                 request, messages.SUCCESS, 'Successfully created account for {}'.format(master.person), "alert-success"
             )
