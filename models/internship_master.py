@@ -28,6 +28,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 
 from internship.models.enums.civility import Civility
+from internship.models.enums.user_account_status import UserAccountStatus
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 
 
@@ -53,6 +54,12 @@ class InternshipMaster(SerializableModel):
     civility = models.CharField(max_length=50, blank=True, null=True, choices=Civility.choices())
 
     start_activities = models.DateField(blank=True, null=True)
+
+    user_account_status = models.CharField(
+        max_length=50,
+        choices=UserAccountStatus.choices(),
+        default=UserAccountStatus.INACTIVE.value,
+    )
 
     def civility_acronym(self):
         if self.civility:

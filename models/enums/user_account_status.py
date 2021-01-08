@@ -23,18 +23,11 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import factory
-from factory.fuzzy import FuzzyChoice
 
-from base.tests.factories.person import PersonFactory
-from internship.models.enums.civility import Civility
-from internship.models.enums.user_account_status import UserAccountStatus
+from osis_common.utils.enumerations import ChoiceEnum
 
 
-class MasterFactory(factory.django.DjangoModelFactory):
-    class Meta:
-        model = 'internship.InternshipMaster'
-
-    person = factory.SubFactory(PersonFactory)
-    civility = FuzzyChoice({Civility.DOCTOR.value, Civility.PROFESSOR.value})
-    user_account_status = UserAccountStatus.INACTIVE.name
+class UserAccountStatus(ChoiceEnum):
+    INACTIVE = "inactive"
+    PENDING = "pending"
+    ACTIVE = "active"
