@@ -450,15 +450,15 @@ class ScoresEncodingTest(TestCase):
         self.assertTrue(excused_score.exists())
 
     def test_show_excused_score_disregarded_in_evolution_score_computation(self):
-        student = Student.objects.first()
+        student_info = InternshipStudentInformationFactory(cohort=self.cohort)
+        student = StudentFactory(person=student_info.person)
         new_score = 10
-        InternshipScore.objects.filter(
-            cohort=self.cohort, student=student, period=self.period
-        ).update(score=new_score, excused=True)
+        ScoreFactory(student=student, period=self.period, cohort=self.cohort, excused=True, score=new_score)
         url = reverse('internship_scores_encoding', kwargs={'cohort_id': self.cohort.pk})
         response = self.client.get(url)
-        numeric_scores = response.context['students'].object_list[0].numeric_scores
-        evolution_score = response.context['students'].object_list[0].evolution_score
+        filtered_object_list = [obj for obj in response.context['students'].object_list if obj == student_info]
+        numeric_scores = filtered_object_list[0].numeric_scores
+        evolution_score = filtered_object_list[0].evolution_score
         self.assertEqual(numeric_scores[self.period.name], {'excused': new_score})
         self.assertEqual(evolution_score, 0)
 
