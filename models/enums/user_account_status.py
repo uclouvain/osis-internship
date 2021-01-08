@@ -23,7 +23,6 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.utils.translation import gettext_lazy as _
 
 from osis_common.utils.enumerations import ChoiceEnum
 
@@ -32,7 +31,3 @@ class UserAccountStatus(ChoiceEnum):
     INACTIVE = "inactive"
     PENDING = "pending"
     ACTIVE = "active"
-
-    @classmethod
-    def choices(cls):
-        return tuple((x.value[:1].upper(), _(x.value)) for x in cls)

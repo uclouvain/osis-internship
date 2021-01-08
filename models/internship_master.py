@@ -58,7 +58,7 @@ class InternshipMaster(SerializableModel):
     user_account_status = models.CharField(
         max_length=50,
         choices=UserAccountStatus.choices(),
-        default=UserAccountStatus.INACTIVE.name,
+        default=UserAccountStatus.INACTIVE.value,
     )
 
     def civility_acronym(self):
