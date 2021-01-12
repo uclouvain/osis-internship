@@ -23,15 +23,26 @@ paths:
   /masters:
     get:
       description: Obtain the list of internship masters
+      parameters:
+        - in: query
+          name: search
+          schema:
+            type: string
+          required: false
       responses:
         200:
           description: Successful get of the list of internship masters
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/MasterGet'
+                anyOf:
+                  - $ref: "#/components/schemas/Paging"
+                  - type: object
+                    properties:
+                      results:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/MasterGet'
 
   /masters/{uuid}:
     get:
@@ -60,9 +71,14 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/AllocationGet'
+                anyOf:
+                  - $ref: "#/components/schemas/Paging"
+                  - type: object
+                    properties:
+                      results:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/AllocationGet'
 
   /masters_allocations/{uuid}:
     get:
@@ -91,9 +107,14 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/SpecialtyGet'
+                anyOf:
+                  - $ref: "#/components/schemas/Paging"
+                  - type: object
+                    properties:
+                      results:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/SpecialtyGet'
 
   /specialties/{uuid}:
     get:
@@ -122,9 +143,14 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/CohortGet'
+                anyOf:
+                  - $ref: "#/components/schemas/Paging"
+                  - type: object
+                    properties:
+                      results:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/CohortGet'
 
   /cohorts/{uuid}:
     get:
@@ -153,9 +179,14 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/OrganizationGet'
+                anyOf:
+                  - $ref: "#/components/schemas/Paging"
+                  - type: object
+                    properties:
+                      results:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/OrganizationGet'
 
   /organizations/{uuid}:
     get:
@@ -184,9 +215,14 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/InternshipGet'
+                anyOf:
+                  - $ref: "#/components/schemas/Paging"
+                  - type: object
+                    properties:
+                      results:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/InternshipGet'
 
   /internships/{uuid}:
     get:
@@ -215,9 +251,14 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/PeriodGet'
+                anyOf:
+                  - $ref: "#/components/schemas/Paging"
+                  - type: object
+                    properties:
+                      results:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/PeriodGet'
 
   /periods/{uuid}:
     get:
@@ -246,9 +287,14 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/StudentGet'
+                anyOf:
+                  - $ref: "#/components/schemas/Paging"
+                  - type: object
+                    properties:
+                      results:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/StudentGet'
 
   /students/{uuid}:
     get:
@@ -277,9 +323,14 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/StudentAffectationGet'
+                anyOf:
+                  - $ref: "#/components/schemas/Paging"
+                  - type: object
+                    properties:
+                      results:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/StudentAffectationGet'
 
   /students_affectations/{uuid}:
     get:
@@ -319,6 +370,7 @@ components:
           civility:
             type: string
             example: "DOCTOR"
+
 
     AllocationGet:
       type: object
@@ -556,6 +608,15 @@ components:
         nationality:
           type: string
           example: "Belgian"
+
+    Paging:
+      properties:
+        count:
+          type: number
+        next:
+          type: string
+        previous:
+          type: string
 
 security:
   - Token: []
