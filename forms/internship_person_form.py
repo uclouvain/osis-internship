@@ -34,7 +34,6 @@ class InternshipPersonForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(InternshipPersonForm, self).__init__(*args, **kwargs)
         self.fields['last_name'].required = True
-        self.fields['first_name'].required = True
 
         # disable fields for instance source not internship
         if self.instance.pk and self.instance.source != person_source_type.INTERNSHIP:

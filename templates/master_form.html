@@ -56,10 +56,13 @@
                 <input type="hidden" id="existing-person-id" name="existing-person-id" value="{{ person.pk }}">
                 {% endif %}
                 <div class="row">
+                    {% bootstrap_field person_form.email form_group_class="form-group col-md-3" label=_("Email") %}
+                </div>
+                <hr/>
+                <div class="row">
                     {% bootstrap_field master_form.civility form_group_class="form-group col-md-2" label=_("Civility") %}
                     {% bootstrap_field person_form.last_name form_group_class="form-group col-md-4" label=_("Last name")%}
                     {% bootstrap_field person_form.first_name form_group_class="form-group col-md-3" label=_("First name") %}
-                    {% bootstrap_field person_form.email form_group_class="form-group col-md-3" label=_("Email") %}
                 </div>
                 <div class="row">
                     {% bootstrap_field person_form.birth_date form_group_class="form-group col-md-4" label=_("Birth date") %}
@@ -163,10 +166,10 @@
                     {% trans "Cancel" %}
                 </a>
                 {% if not master_id %}
-                <button type="button" id="clear-button" class="btn btn-danger pull-right">
+                <a href="{% url 'master_new' cohort_id=current_cohort.id %}" id="clear-button" class="btn btn-danger pull-right">
                     <span class="glyphicon glyphicon-erase" aria-hidden="true"></span>
                     {% trans "Clear" %}
-                </button>
+                </a>
                 {% endif %}
             </form>
             <form action="{%url 'master_new' cohort_id=current_cohort.id %}" method="POST" class="form" id="existing-person-form">
@@ -265,16 +268,6 @@
         document.querySelector('#cancel-fill-button').addEventListener('click', (e) => {
             document.querySelector('#id_email').value = '';
         });
-
-        // clear button reenable fields
-        document.querySelector('#clear-button').addEventListener('click', (e) => {
-            for(let field of dynamicFields){
-                const inputField = document.querySelector(`#id_${field}`);
-                inputField.readOnly = false;
-                inputField.value = '';
-            }
-        });
-
         {% endif %}
 
         function checkPersonExists(email) {
