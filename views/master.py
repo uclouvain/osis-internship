@@ -26,6 +26,7 @@
 import json
 
 from django import shortcuts
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.forms import model_to_dict
@@ -37,6 +38,7 @@ from django.utils.translation import gettext_lazy as _
 from base.models.enums import person_source_type
 from base.models.person import Person
 from base.models.person_address import PersonAddress
+from internship.business.email import send_email
 from internship.forms.internship_person_address_form import InternshipPersonAddressForm
 from internship.forms.internship_person_form import InternshipPersonForm
 from internship.forms.master import MasterForm
@@ -47,6 +49,7 @@ from internship.models.internship_master import InternshipMaster
 from internship.utils.exporting.masters import export_xls
 from internship.views.common import display_errors, get_object_list
 from osis_common.decorators.download import set_download_cookie
+from osis_common.messaging import message_config
 
 
 @login_required
@@ -75,17 +78,42 @@ def create_user_accounts(request, cohort_id):
         pk__in=request.POST.getlist('selected_master')
     ).select_related('person')
     for master in selected_masters:
+        _send_creation_account_email(master, request.user)
         if master.user_account_status == UserAccountStatus.INACTIVE.name:
             master.user_account_status = UserAccountStatus.PENDING.name
             master.save()
             messages.add_message(
-                request, messages.SUCCESS, 'Successfully created account for {}'.format(master.person), "alert-success"
+                request, messages.SUCCESS, 'An email for account creation was sent to {}'.format(master.person), "alert-success"
             )
         else:
             messages.add_message(
-                request, messages.WARNING, 'User account for {} already exists'.format(master.person), "alert-warning"
+                request, messages.WARNING, 'User account creation for {} is already pending, an email was sent again'.format(master.person), "alert-warning"
             )
     return redirect(reverse('internships_masters',  kwargs={'cohort_id': cohort_id}))
+
+
+def _send_creation_account_email(master, connected_user=None):
+    account_creation_link = '{}?email={}'.format(settings.INTERNSHIP_PORTAL_ACCOUNT_CREATION_URL, master.person.email)
+    send_email(
+        template_references={
+            'html': 'internship_create_master_account_email_html',
+            'txt': 'internship_create_master_account_email_txt',
+        },
+        data={
+            'template': {
+                'link': account_creation_link
+            },
+            'subject': {}
+        },
+        receivers=[
+            message_config.create_receiver(
+                master.id,
+                master.person.email,
+                None
+            )
+        ],
+        connected_user=connected_user
+    )
 
 
 @login_required
