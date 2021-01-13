@@ -78,7 +78,7 @@ msgid "Add internship modality"
 msgstr "Ajouter une modalité de stage"
 
 msgid "Add new master"
-msgstr ""
+msgstr "Ajouter un nouveau maître de stage"
 
 msgid "Add period"
 msgstr "Ajouter une période"
@@ -229,15 +229,11 @@ msgstr "Créer une période"
 msgid "Create a specialty"
 msgstr "Créer une spécialité"
 
-#, fuzzy
-#| msgid "Internships masters"
 msgid "Create internship master account"
-msgstr "Maîtres de stages"
+msgstr "Créer un compte utilisateur pour le(s) maître(s) de stage"
 
-#, fuzzy
-#| msgid "User account"
 msgid "Create user account"
-msgstr "Compte utilisateur"
+msgstr "Créer un compte utilisateur"
 
 msgid "Current internship"
 msgstr "Stage en cours"
