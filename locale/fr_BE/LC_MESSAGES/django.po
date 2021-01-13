@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-08 15:15+0100\n"
+"POT-Creation-Date: 2021-01-13 10:21+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -41,7 +41,8 @@ msgid ""
 "will be overwritten."
 msgstr ""
 "Une personne avec cette adresse email existe déjà. Les champs du formulaire "
-"seront pré-remplis sur base des données retrouvées. Les champs contenant déjà des informations seront écrasés."
+"seront pré-remplis sur base des données retrouvées. Les champs contenant "
+"déjà des informations seront écrasés."
 
 msgid "APD Validation"
 msgstr "Validation APD"
@@ -76,6 +77,9 @@ msgstr "Ajouter un hôpital"
 msgid "Add internship modality"
 msgstr "Ajouter une modalité de stage"
 
+msgid "Add new master"
+msgstr ""
+
 msgid "Add period"
 msgstr "Ajouter une période"
 
@@ -108,6 +112,9 @@ msgstr "Affectation"
 
 msgid "Allocation Sum up"
 msgstr "Bilan des affectations"
+
+msgid "An email for account creation was sent to {}"
+msgstr "Un email pour procédcer à la création d'un compte a été envoyé à {}"
 
 msgid "An error occured during evaluation status update in {}"
 msgstr ""
@@ -213,11 +220,24 @@ msgstr "Compte"
 msgid "Country"
 msgstr "Pays"
 
+msgid "Create"
+msgstr ""
+
 msgid "Create a period"
 msgstr "Créer une période"
 
 msgid "Create a specialty"
 msgstr "Créer une spécialité"
+
+#, fuzzy
+#| msgid "Internships masters"
+msgid "Create internship master account"
+msgstr "Maîtres de stages"
+
+#, fuzzy
+#| msgid "User account"
+msgid "Create user account"
+msgstr "Compte utilisateur"
 
 msgid "Current internship"
 msgstr "Stage en cours"
@@ -512,6 +532,12 @@ msgstr "Moyenne de mois non consécutifs"
 
 msgid "Modality"
 msgstr "Modalité"
+
+msgid ""
+"N.B. an activation email will be sent if the user account already exists"
+msgstr ""
+"N.B. un email d'activation sera à nouveau envoyé si le compte utilisateur "
+"existe déjà."
 
 msgid "NOMA"
 msgstr "NOMA"
@@ -826,6 +852,12 @@ msgstr "Les emails récapitulatifs ont bien été envoyés"
 msgid "Third choice"
 msgstr "3ème choix"
 
+msgid ""
+"This action will create a user account and send an activation email to the "
+"following internship masters:"
+msgstr ""
+"Cette action enverra un email d'activation aux maîtres de stage suivants:"
+
 msgid "This action will delete "
 msgstr "Cette action supprimera "
 
@@ -860,6 +892,10 @@ msgstr "Url"
 
 msgid "User account"
 msgstr "Compte utilisateur"
+
+msgid ""
+"User account creation for {} is already pending, an email was sent again"
+msgstr "La création du compte utilisateur de {} est déjà en attente, un email a été envoyé à nouveau"
 
 msgid "User account is active"
 msgstr "Le compte utilisateur est actif"

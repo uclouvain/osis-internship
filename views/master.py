@@ -83,11 +83,14 @@ def create_user_accounts(request, cohort_id):
             master.user_account_status = UserAccountStatus.PENDING.name
             master.save()
             messages.add_message(
-                request, messages.SUCCESS, 'An email for account creation was sent to {}'.format(master.person), "alert-success"
+                request, messages.SUCCESS,
+                _('An email for account creation was sent to {}').format(master.person), "alert-success"
             )
         else:
             messages.add_message(
-                request, messages.WARNING, 'User account creation for {} is already pending, an email was sent again'.format(master.person), "alert-warning"
+                request, messages.WARNING,
+                _('User account creation for {} is already pending, an email was sent again').format(master.person),
+                "alert-warning"
             )
     return redirect(reverse('internships_masters',  kwargs={'cohort_id': cohort_id}))
 
