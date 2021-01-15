@@ -40,11 +40,20 @@ class InternshipStudentAffectationList(generics.ListAPIView):
         # search by student person
     )
     ordering_fields = (
-        'period',
+        'period__name',
     )
     ordering = (
-        'period',
+        'period__name',
     )  # Default ordering
+
+    def get_queryset(self):
+        # TODO: use another way to retrieve student affectations in order to not retrieve all objects without params
+        specialty_uuid = self.request.query_params.get('specialty')
+        organization_uuid = self.request.query_params.get('organization')
+        qs = InternshipStudentAffectationStat.objects.select_related('organization', 'speciality').filter(
+            speciality__uuid=specialty_uuid, organization__uuid=organization_uuid
+        )
+        return qs
 
 
 class InternshipStudentAffectationDetail(generics.RetrieveAPIView):

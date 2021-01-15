@@ -38,11 +38,19 @@ class PeriodAdmin(SerializableModelAdmin):
     list_filter = ('cohort',)
 
 
+class ActivePeriod(models.Manager):
+    def get_queryset(self):
+        current_date = date.today()
+        return super().get_queryset().filter(date_start__lte=current_date, date_end__gte=current_date)
+
+
 class Period(SerializableModel):
     name = models.CharField(max_length=255)
     date_start = models.DateField()
     date_end = models.DateField()
     cohort = models.ForeignKey('internship.cohort', on_delete=models.CASCADE)
+
+    active = ActivePeriod()
 
     def clean(self):
         self.clean_start_date()

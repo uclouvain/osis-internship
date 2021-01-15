@@ -44,8 +44,8 @@ urlpatterns = [
     url(r'^masters/(?P<uuid>[0-9a-f-]+)$', InternshipMasterDetail.as_view(), name=InternshipMasterDetail.name),
     url(r'^masters/(?P<uuid>[0-9a-f-]+)/activate_account/$', InternshipMasterActivateAccount.as_view(),
         name=InternshipMasterActivateAccount.name),
+    url(r'^masters/(?P<uuid>[0-9a-f-]+)/allocations/$', MasterAllocationList.as_view(), name=MasterAllocationList.name),
 
-    url(r'^masters_allocations/$', MasterAllocationList.as_view(), name=MasterAllocationList.name),
     url(r'^masters_allocations/(?P<uuid>[0-9a-f-]+)$', MasterAllocationDetail.as_view(), name=MasterAllocationDetail.name),
 
     url(r'^specialties/$', InternshipSpecialtyList.as_view(), name=InternshipSpecialtyList.name),

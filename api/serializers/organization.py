@@ -42,6 +42,7 @@ class OrganizationSerializer(serializers.HyperlinkedModelSerializer):
         model = Organization
         fields = (
             'url',
+            'uuid',
             'name',
             'acronym',
             'website',

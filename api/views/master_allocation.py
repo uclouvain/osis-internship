@@ -24,9 +24,12 @@
 #
 ##############################################################################
 from rest_framework import generics
+from rest_framework.generics import get_object_or_404
 
 from internship.api.serializers.master_allocation import MasterAllocationSerializer
+from internship.models.internship_master import InternshipMaster
 from internship.models.master_allocation import MasterAllocation
+from internship.models.period import Period
 
 
 class MasterAllocationList(generics.ListAPIView):
@@ -35,7 +38,7 @@ class MasterAllocationList(generics.ListAPIView):
     """
     name = 'master-allocation-list'
     serializer_class = MasterAllocationSerializer
-    queryset = MasterAllocation.objects.all()
+    queryset = MasterAllocation.objects.all().select_related('master')
     search_fields = (
         'organization', 'specialty'
     )
@@ -45,6 +48,14 @@ class MasterAllocationList(generics.ListAPIView):
     ordering = (
         'organization',
     )  # Default ordering
+
+    def get_queryset(self):
+        master = get_object_or_404(InternshipMaster, uuid=self.kwargs['uuid'])
+        qs = MasterAllocation.objects.filter(master=master).select_related('organization', 'specialty')
+        if self.request.query_params.get('current'):
+            current_cohort = Period.active.first().cohort
+            qs = qs.filter(specialty__cohort=current_cohort, organization__cohort=current_cohort)
+        return qs
 
 
 class MasterAllocationDetail(generics.RetrieveAPIView):
