@@ -9,7 +9,7 @@ def send_email(template_references, receivers, data, connected_user=None):
         receivers,
         data['template'],
         data['subject'],
-        data.get('attachment', None)
+        data.get('attachment')
     )
     send_message.send_messages(
         message_content=message_content,

@@ -62,6 +62,24 @@ paths:
               schema:
                 $ref: '#/components/schemas/MasterGet'
 
+  /masters/{uuid}/activate_account/:
+    put:
+      description: Set master account activation status to ACTIVE
+      parameters:
+        - in: path
+          name: uuid
+          required: true
+          description: The UUID of the master
+          schema:
+            $ref: '#/components/schemas/Uuid'
+      responses:
+        200:
+          description: Successful master's account status update.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MasterGet'
+
   /masters_allocations:
     get:
       description: Obtain the list of internship-master allocations
@@ -365,6 +383,8 @@ components:
           url:
             type: string
             format: uri
+          uuid:
+            type: string
           person:
             $ref: '#/components/schemas/Person'
           civility:
