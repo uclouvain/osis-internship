@@ -114,7 +114,7 @@ msgid "Allocation Sum up"
 msgstr "Bilan des affectations"
 
 msgid "An email for account creation was sent to {}"
-msgstr "Un email pour procédcer à la création d'un compte a été envoyé à {}"
+msgstr "Un email pour procéder à la création d'un compte a été envoyé à {}"
 
 msgid "An error occured during evaluation status update in {}"
 msgstr ""
@@ -221,7 +221,7 @@ msgid "Country"
 msgstr "Pays"
 
 msgid "Create"
-msgstr ""
+msgstr "Créer"
 
 msgid "Create a period"
 msgstr "Créer une période"
