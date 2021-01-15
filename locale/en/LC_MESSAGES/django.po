@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-08 15:15+0100\n"
+"POT-Creation-Date: 2021-01-13 10:21+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -69,6 +69,9 @@ msgstr ""
 msgid "Add internship modality"
 msgstr ""
 
+msgid "Add new master"
+msgstr ""
+
 msgid "Add period"
 msgstr ""
 
@@ -100,6 +103,9 @@ msgid "Allocation"
 msgstr ""
 
 msgid "Allocation Sum up"
+msgstr ""
+
+msgid "An email for account creation was sent to {}"
 msgstr ""
 
 msgid "An error occured during evaluation status update in {}"
@@ -204,10 +210,19 @@ msgstr ""
 msgid "Country"
 msgstr ""
 
+msgid "Create"
+msgstr ""
+
 msgid "Create a period"
 msgstr ""
 
 msgid "Create a specialty"
+msgstr ""
+
+msgid "Create internship master account"
+msgstr ""
+
+msgid "Create user account"
 msgstr ""
 
 msgid "Current internship"
@@ -495,6 +510,10 @@ msgid "Mean of nonconsecutive months"
 msgstr ""
 
 msgid "Modality"
+msgstr ""
+
+msgid ""
+"N.B. an activation email will be sent if the user account already exists"
 msgstr ""
 
 msgid "NOMA"
@@ -802,6 +821,11 @@ msgstr ""
 msgid "Third choice"
 msgstr ""
 
+msgid ""
+"This action will create a user account and send an activation email to the "
+"following internship masters:"
+msgstr ""
+
 msgid "This action will delete "
 msgstr ""
 
@@ -831,6 +855,10 @@ msgid "Url"
 msgstr ""
 
 msgid "User account"
+msgstr ""
+
+msgid ""
+"User account creation for {} is already pending, an email was sent again"
 msgstr ""
 
 msgid "User account is active"

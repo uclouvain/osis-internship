@@ -29,7 +29,7 @@ from unittest import skipUnless
 import faker
 from django.contrib.auth.models import Permission, User
 from django.http import HttpResponse
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from django.urls import reverse
 
 from backoffice.settings.base import INSTALLED_APPS
@@ -185,6 +185,7 @@ class MasterTestCase(TestCase):
         ))
         self.assertEqual(InternshipMaster.objects.first().person, person)
 
+    @override_settings(INTERNSHIP_PORTAL_ACCOUNT_CREATION_URL='fake_url')
     def test_create_user_account_for_internship_master(self):
         master = MasterFactory()
         url = reverse('create_accounts', kwargs={'cohort_id': self.cohort.pk})
@@ -195,6 +196,7 @@ class MasterTestCase(TestCase):
         self.assertEqual(messages_list[0].level_tag, "success")
         self.assertIn(str(master.person), messages_list[0].message)
 
+    @override_settings(INTERNSHIP_PORTAL_ACCOUNT_CREATION_URL='fake_url')
     def test_user_account_already_exists_for_internship_master(self):
         master = MasterFactory(user_account_status=UserAccountStatus.PENDING.name)
         url = reverse('create_accounts', kwargs={'cohort_id': self.cohort.pk})

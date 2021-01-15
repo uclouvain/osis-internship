@@ -27,7 +27,8 @@ from django.conf.urls import url
 
 from internship.api.views.cohort import CohortList, CohortDetail
 from internship.api.views.internship import InternshipList, InternshipDetail
-from internship.api.views.internship_master import InternshipMasterList, InternshipMasterDetail
+from internship.api.views.internship_master import InternshipMasterList, InternshipMasterDetail, \
+    InternshipMasterActivateAccount
 from internship.api.views.internship_specialty import InternshipSpecialtyList, InternshipSpecialtyDetail
 from internship.api.views.internship_student_affectation_stat import InternshipStudentAffectationList, \
     InternshipStudentAffectationDetail
@@ -41,6 +42,8 @@ app_name = "internship"
 urlpatterns = [
     url(r'^masters/$', InternshipMasterList.as_view(), name=InternshipMasterList.name),
     url(r'^masters/(?P<uuid>[0-9a-f-]+)$', InternshipMasterDetail.as_view(), name=InternshipMasterDetail.name),
+    url(r'^masters/(?P<uuid>[0-9a-f-]+)/activate_account/$', InternshipMasterActivateAccount.as_view(),
+        name=InternshipMasterActivateAccount.name),
 
     url(r'^masters_allocations/$', MasterAllocationList.as_view(), name=MasterAllocationList.name),
     url(r'^masters_allocations/(?P<uuid>[0-9a-f-]+)$', MasterAllocationDetail.as_view(), name=MasterAllocationDetail.name),

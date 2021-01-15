@@ -40,6 +40,8 @@ class InternshipMasterSerializer(serializers.HyperlinkedModelSerializer):
         model = InternshipMaster
         fields = (
             'url',
+            'uuid',
             'person',
             'civility',
+            'user_account_status'
         )

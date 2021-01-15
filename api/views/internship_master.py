@@ -24,8 +24,10 @@
 #
 ##############################################################################
 from rest_framework import generics
+from rest_framework.response import Response
 
 from internship.api.serializers.internship_master import InternshipMasterSerializer
+from internship.models.enums.user_account_status import UserAccountStatus
 from internship.models.internship_master import InternshipMaster
 
 
@@ -37,7 +39,7 @@ class InternshipMasterList(generics.ListAPIView):
     serializer_class = InternshipMasterSerializer
     queryset = InternshipMaster.objects.all()
     search_fields = (
-        'person__last_name', 'person__first_name'
+        'person__last_name', 'person__first_name', 'person__email'
     )
     ordering_fields = (
         'birth_date',
@@ -55,3 +57,23 @@ class InternshipMasterDetail(generics.RetrieveAPIView):
     serializer_class = InternshipMasterSerializer
     queryset = InternshipMaster.objects.all()
     lookup_field = 'uuid'
+
+
+class InternshipMasterActivateAccount(generics.RetrieveUpdateAPIView):
+    """
+        Set internship master's user account status to ACTIVE
+    """
+    name = 'master-activate-account'
+    serializer_class = InternshipMasterSerializer
+    queryset = InternshipMaster.objects.all()
+    lookup_field = 'uuid'
+
+    """
+    Update user account status.
+    """
+    def update(self, request, *args, **kwargs):
+        master = self.get_object()
+        master.user_account_status = UserAccountStatus.ACTIVE.name
+        master.save()
+        serializer = self.get_serializer(master)
+        return Response(serializer.data)

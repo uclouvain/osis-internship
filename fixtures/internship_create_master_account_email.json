@@ -1,0 +1,22 @@
+[
+{
+    "model": "osis_common.messagetemplate",
+    "fields": {
+        "reference": "internship_create_master_account_email_html",
+        "subject": "STAC - Compte utilisateur pour encodage des cotes de stage",
+        "template": "<i>Ceci est un message automatique généré par le serveur OSIS. Merci de ne pas y répondre.</i><br/><p>Bonjour,<br/>Afin de procéder à l'encodage des cotes de stage, merci de créer un compte utilisateur via le lien suivant: <a href='{{link}}'>{{link}}</a></p> Bien à vous.</p>",
+        "format": "HTML",
+        "language": "fr-be"
+    }
+},
+{
+    "model": "osis_common.messagetemplate",
+    "fields": {
+        "reference": "internship_create_master_account_email_txt",
+        "subject": "STAC - Compte utilisateur pour encodage des cotes de stage",
+        "template": "Ceci est un message automatique généré par le serveur OSIS. Merci de ne pas y répondre. Bonjour, afin de procéder à l'encodage des cotes de stage, merci de créer un compte utilisateur via le lien suivant: {{link}}. Bien à vous.",
+        "format": "PLAIN",
+        "language": "fr-be"
+    }
+}
+]
