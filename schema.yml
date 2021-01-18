@@ -645,6 +645,37 @@ components:
           type: string
         score:
           type: number
+        APD_1:
+          type: string
+        APD_2:
+          type: string
+        APD_3:
+          type: string
+        APD_4:
+          type: string
+        APD_5:
+          type: string
+        APD_6:
+          type: string
+        APD_7:
+          type: string
+        APD_8:
+          type: string
+        APD_9:
+          type: string
+        APD_10:
+          type: string
+        APD_11:
+          type: string
+        APD_12:
+          type: string
+        APD_13:
+          type: string
+        APD_14:
+          type: string
+        APD_15:
+          type: string
+
 
     Uuid:
       type: string
