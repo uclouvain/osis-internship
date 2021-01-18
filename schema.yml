@@ -391,6 +391,30 @@ paths:
               schema:
                 $ref: '#/components/schemas/StudentAffectationGet'
 
+  /scores/{student_uuid}/{period_uuid}:
+    get:
+      description: Obtain information about a specific student's score for a given period
+      parameters:
+        - in: path
+          name: student_uuid
+          required: true
+          description: The UUID of the student
+          schema:
+            $ref: '#/components/schemas/Uuid'
+        - in: path
+          name: period_uuid
+          required: true
+          description: The UUID of the period
+          schema:
+            $ref: '#/components/schemas/Uuid'
+      responses:
+        200:
+          description: Successful get of a student's score for a given period.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScoreGet'
+
 components:
   securitySchemes:
     Token:
@@ -603,6 +627,24 @@ components:
           $ref: '#/components/schemas/PeriodGet'
         internship:
           $ref: '#/components/schemas/InternshipGet'
+
+    ScoreGet:
+      type: object
+      properties:
+        uuid:
+          $ref: '#/components/schemas/Uuid'
+        student:
+          $ref: '#/components/schemas/Student'
+        period:
+          $ref: '#/components/schemas/PeriodGet'
+        cohort:
+          $ref: '#/components/schemas/CohortGet'
+        excused:
+          type: boolean
+        reason:
+          type: string
+        score:
+          type: number
 
     Uuid:
       type: string
