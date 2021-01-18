@@ -50,6 +50,7 @@ class Period(SerializableModel):
     date_end = models.DateField()
     cohort = models.ForeignKey('internship.cohort', on_delete=models.CASCADE)
 
+    objects = models.Manager()
     active = ActivePeriod()
 
     def clean(self):

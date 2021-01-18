@@ -39,9 +39,6 @@ class InternshipScoreDetail(generics.RetrieveAPIView):
     lookup_field = None
 
     def get_object(self):
-        print(self.kwargs)
-        score = get_object_or_404(
+        return get_object_or_404(
             InternshipScore, student__uuid=self.kwargs.get('student'), period__uuid=self.kwargs.get('period')
         )
-        print(score)
-        return score
