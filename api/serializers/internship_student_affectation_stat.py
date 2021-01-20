@@ -48,6 +48,7 @@ class InternshipStudentAffectationSerializer(serializers.HyperlinkedModelSeriali
         model = InternshipStudentAffectationStat
         fields = (
             'url',
+            'uuid',
             'student',
             'organization',
             'speciality',

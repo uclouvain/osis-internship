@@ -601,6 +601,8 @@ components:
         url:
           type: string
           format: uri
+        uuid:
+          $ref: '#/components/schemas/Uuid'
         name:
           type: string
           example: "P1"
