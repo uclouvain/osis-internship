@@ -50,6 +50,20 @@ class InternshipScoreSerializer(serializers.HyperlinkedModelSerializer):
             'excused',
             'reason',
             'cohort',
+            'comments',
+            'objectives',
             *_apd_fields()
         )
 
+
+class InternshipScorePutSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = InternshipScore
+        fields = (
+            'uuid',
+            'score',
+            'comments',
+            'objectives',
+            *_apd_fields()
+        )

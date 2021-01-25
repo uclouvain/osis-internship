@@ -53,6 +53,9 @@ class InternshipStudentAffectationList(generics.ListAPIView):
         qs = InternshipStudentAffectationStat.objects.select_related('organization', 'speciality').filter(
             speciality__uuid=specialty_uuid, organization__uuid=organization_uuid
         )
+        period = self.request.query_params.get('period')
+        if period:
+            qs = qs.filter(period__name=period)
         return qs
 
 

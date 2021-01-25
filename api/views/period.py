@@ -47,6 +47,42 @@ class PeriodList(generics.ListAPIView):
     )  # Default ordering
 
 
+class PeriodActiveList(generics.ListAPIView):
+    """
+       Return a list of active periods with optional filtering.
+    """
+    name = 'period-active-list'
+    serializer_class = PeriodSerializer
+    queryset = Period.active.all()
+    search_fields = (
+        'name'
+    )
+    ordering_fields = (
+        'date_start',
+    )
+    ordering = (
+        'date_start',
+    )  # Default ordering
+
+
+class PeriodActiveList(generics.ListAPIView):
+    """
+       Return a list of active periods with optional filtering.
+    """
+    name = 'period-active-list'
+    serializer_class = PeriodSerializer
+    queryset = Period.active.all()
+    search_fields = (
+        'name'
+    )
+    ordering_fields = (
+        'date_start',
+    )
+    ordering = (
+        'date_start',
+    )  # Default ordering
+
+
 class PeriodDetail(generics.RetrieveAPIView):
     """
         Return the detail of the period

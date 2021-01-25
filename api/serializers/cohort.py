@@ -38,6 +38,7 @@ class CohortSerializer(serializers.HyperlinkedModelSerializer):
         model = Cohort
         fields = (
             'url',
+            'uuid',
             'name',
             'description',
             'publication_start_date',

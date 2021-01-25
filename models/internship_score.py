@@ -61,6 +61,9 @@ class InternshipScore(SerializableModel):
     excused = models.BooleanField(default=False)
     reason = models.CharField(max_length=255, null=True, blank=True)
 
+    comments = models.JSONField(null=True, blank=True)
+    objectives = models.JSONField(null=True, blank=True)
+
     def __str__(self):
         return '{} - {} - {}'.format(self.student, self.period, self.get_scores())
 

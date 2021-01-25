@@ -290,6 +290,24 @@ paths:
                         items:
                           $ref: '#/components/schemas/PeriodGet'
 
+  /periods/active:
+    get:
+      description: Obtain the list of active periods
+      responses:
+        200:
+          description: Successful get of the list of active periods
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - $ref: "#/components/schemas/Paging"
+                  - type: object
+                    properties:
+                      results:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/PeriodGet'
+
   /periods/{uuid}:
     get:
       description: Obtain information about a specific period
@@ -358,6 +376,11 @@ paths:
           schema:
             type: string
           required: true
+        - in: query
+          name: period
+          schema:
+            type: string
+          required: false
       responses:
         200:
           description: Successful get of the list of students affectations
@@ -393,7 +416,7 @@ paths:
 
   /scores/{student_uuid}/{period_uuid}:
     get:
-      description: Obtain information about a specific student's score for a given period
+      description: Get or create information about a specific student's score for a given period
       parameters:
         - in: path
           name: student_uuid
@@ -409,11 +432,35 @@ paths:
             $ref: '#/components/schemas/Uuid'
       responses:
         200:
-          description: Successful get of a student's score for a given period.
+          description: Successful get or create of a student's score for a given period.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ScoreGet'
+    put:
+      description: Update a student's score for a given period
+      parameters:
+        - in: path
+          name: student_uuid
+          required: true
+          description: The UUID of the student
+          schema:
+            $ref: '#/components/schemas/Uuid'
+        - in: path
+          name: period_uuid
+          required: true
+          description: The UUID of the period
+          schema:
+            $ref: '#/components/schemas/Uuid'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScoreGet'
+      responses:
+        201:
+          description: Successful update of a score for a given period
 
 components:
   securitySchemes:
@@ -647,6 +694,10 @@ components:
           type: string
         score:
           type: number
+        comments:
+          type: object
+        objectives:
+          type: object
         APD_1:
           type: string
         APD_2:

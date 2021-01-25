@@ -24,21 +24,32 @@
 #
 ##############################################################################
 from rest_framework import generics
-from rest_framework.generics import get_object_or_404
 
-from internship.api.serializers.internship_score import InternshipScoreSerializer
+from base.models.student import Student
+from internship.api.serializers.internship_score import InternshipScoreSerializer, InternshipScorePutSerializer
 from internship.models.internship_score import InternshipScore
+from internship.models.period import Period
 
 
-class InternshipScoreDetail(generics.RetrieveAPIView):
+class InternshipScoreCreateRetrieveUpdate(generics.RetrieveUpdateAPIView):
     """
        Return an internship score detail
     """
     name = 'score-detail'
-    serializer_class = InternshipScoreSerializer
     lookup_field = None
 
+    def get_serializer_class(self):
+        if self.request.method in ['PUT', 'PATCH']:
+            return InternshipScorePutSerializer
+        return InternshipScoreSerializer
+
     def get_object(self):
-        return get_object_or_404(
-            InternshipScore, student__uuid=self.kwargs.get('student'), period__uuid=self.kwargs.get('period')
-        )
+        try:
+            return InternshipScore.objects.get(
+                student__uuid=self.kwargs.get('student'), period__uuid=self.kwargs.get('period')
+            )
+        except InternshipScore.DoesNotExist:
+            student = Student.objects.get(uuid=self.kwargs.get('student'))
+            period = Period.objects.get(uuid=self.kwargs.get('period'))
+            if student and period:
+                return InternshipScore.objects.create(student=student, period=period, cohort=period.cohort)
