@@ -47,9 +47,8 @@ class InternshipStudentAffectationList(generics.ListAPIView):
     )  # Default ordering
 
     def get_queryset(self):
-        # TODO: use another way to retrieve student affectations in order to not retrieve all objects without params
-        specialty_uuid = self.request.query_params.get('specialty')
-        organization_uuid = self.request.query_params.get('organization')
+        specialty_uuid = self.kwargs.get('specialty')
+        organization_uuid = self.kwargs.get('organization')
         qs = InternshipStudentAffectationStat.objects.select_related('organization', 'speciality').filter(
             speciality__uuid=specialty_uuid, organization__uuid=organization_uuid
         )

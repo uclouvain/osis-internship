@@ -62,13 +62,14 @@ urlpatterns = [
     url(r'^internships/(?P<uuid>[0-9a-f-]+)$', InternshipDetail.as_view(), name=InternshipDetail.name),
 
     url(r'^students/$', InternshipStudentInformationList.as_view(), name=InternshipStudentInformationList.name),
-    url(r'^students/(?P<uuid>[0-9a-f-]+)$', InternshipStudentInformationDetail.as_view(), name=InternshipStudentInformationDetail.name),
+    url(r'^students/(?P<uuid>[0-9a-f-]+)$', InternshipStudentInformationDetail.as_view(),
+        name=InternshipStudentInformationDetail.name),
 
     url(r'^periods/$', PeriodList.as_view(), name=PeriodList.name),
     url(r'^periods/(?P<uuid>[0-9a-f-]+)$', PeriodDetail.as_view(), name=PeriodDetail.name),
 
-    url(r'^students_affectations/$', InternshipStudentAffectationList.as_view(),
-        name=InternshipStudentAffectationList.name),
+    url(r'^students_affectations/(?P<specialty_uuid>[0-9a-f-]+)/(?P<organization_uuid>[0-9a-f-]+)$',
+        InternshipStudentAffectationList.as_view(), name=InternshipStudentAffectationList.name),
     url(r'^students_affectations/(?P<uuid>[0-9a-f-]+)$', InternshipStudentAffectationDetail.as_view(),
         name=InternshipStudentAffectationDetail.name),
 

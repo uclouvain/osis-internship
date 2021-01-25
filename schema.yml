@@ -354,12 +354,12 @@ paths:
     get:
       description: Obtain the list of students affectations
       parameters:
-        - in: query
+        - in: path
           name: organization
           schema:
             type: string
           required: true
-        - in: query
+        - in: path
           name: specialty
           schema:
             type: string
