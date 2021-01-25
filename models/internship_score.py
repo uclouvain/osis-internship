@@ -23,6 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.contrib.postgres.fields import JSONField
 from django.db import models
 
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
@@ -61,8 +62,9 @@ class InternshipScore(SerializableModel):
     excused = models.BooleanField(default=False)
     reason = models.CharField(max_length=255, null=True, blank=True)
 
-    comments = models.JSONField(null=True, blank=True)
-    objectives = models.JSONField(null=True, blank=True)
+    #TODO: import JSONField from models in Django 3
+    comments = JSONField(null=True, blank=True)
+    objectives = JSONField(null=True, blank=True)
 
     def __str__(self):
         return '{} - {} - {}'.format(self.student, self.period, self.get_scores())
