@@ -35,7 +35,6 @@ class PeriodList(generics.ListAPIView):
     """
     name = 'period-list'
     serializer_class = PeriodSerializer
-    queryset = Period.objects.all()
     search_fields = (
         'name'
     )
@@ -46,41 +45,9 @@ class PeriodList(generics.ListAPIView):
         'date_start',
     )  # Default ordering
 
-
-class PeriodActiveList(generics.ListAPIView):
-    """
-       Return a list of active periods with optional filtering.
-    """
-    name = 'period-active-list'
-    serializer_class = PeriodSerializer
-    queryset = Period.active.all()
-    search_fields = (
-        'name'
-    )
-    ordering_fields = (
-        'date_start',
-    )
-    ordering = (
-        'date_start',
-    )  # Default ordering
-
-
-class PeriodActiveList(generics.ListAPIView):
-    """
-       Return a list of active periods with optional filtering.
-    """
-    name = 'period-active-list'
-    serializer_class = PeriodSerializer
-    queryset = Period.active.all()
-    search_fields = (
-        'name'
-    )
-    ordering_fields = (
-        'date_start',
-    )
-    ordering = (
-        'date_start',
-    )  # Default ordering
+    def get_queryset(self):
+        active = self.request.query_params.get('active', False)
+        return Period.active.all() if active else Period.objects.all()
 
 
 class PeriodDetail(generics.RetrieveAPIView):

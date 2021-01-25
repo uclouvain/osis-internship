@@ -275,27 +275,15 @@ paths:
   /periods:
     get:
       description: Obtain the list of periods
+      parameters:
+        - in: query
+          name: active
+          schema:
+            type: boolean
+          required: false
       responses:
         200:
           description: Successful get of the list of periods
-          content:
-            application/json:
-              schema:
-                anyOf:
-                  - $ref: "#/components/schemas/Paging"
-                  - type: object
-                    properties:
-                      results:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/PeriodGet'
-
-  /periods/active:
-    get:
-      description: Obtain the list of active periods
-      responses:
-        200:
-          description: Successful get of the list of active periods
           content:
             application/json:
               schema:

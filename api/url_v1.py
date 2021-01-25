@@ -37,7 +37,7 @@ from internship.api.views.internship_student_information import InternshipStuden
     InternshipStudentInformationDetail
 from internship.api.views.master_allocation import MasterAllocationList, MasterAllocationDetail
 from internship.api.views.organization import OrganizationList, OrganizationDetail
-from internship.api.views.period import PeriodList, PeriodDetail, PeriodActiveList
+from internship.api.views.period import PeriodList, PeriodDetail
 
 app_name = "internship"
 urlpatterns = [
@@ -65,7 +65,6 @@ urlpatterns = [
     url(r'^students/(?P<uuid>[0-9a-f-]+)$', InternshipStudentInformationDetail.as_view(), name=InternshipStudentInformationDetail.name),
 
     url(r'^periods/$', PeriodList.as_view(), name=PeriodList.name),
-    url(r'^periods/active$', PeriodActiveList.as_view(), name=PeriodActiveList.name),
     url(r'^periods/(?P<uuid>[0-9a-f-]+)$', PeriodDetail.as_view(), name=PeriodDetail.name),
 
     url(r'^students_affectations/$', InternshipStudentAffectationList.as_view(),
