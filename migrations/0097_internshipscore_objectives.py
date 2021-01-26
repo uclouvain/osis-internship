@@ -13,6 +13,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='internshipscore',
             name='objectives',
-            field=JSONField(blank=True, null=True),
+            field=JSONField(default=dict),
         ),
     ]
