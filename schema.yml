@@ -350,7 +350,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/StudentGet'
 
-  /students_affectations:
+  /students_affectations/{specialty}/{organization}:
     get:
       description: Obtain the list of students affectations
       parameters:
@@ -368,6 +368,12 @@ paths:
           name: period
           schema:
             type: string
+          required: false
+        - in: query
+          name: with_score
+          schema:
+            type: boolean
+            default: false
           required: false
       responses:
         200:
