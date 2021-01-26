@@ -23,7 +23,9 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+import operator
 from distutils.util import strtobool
+from functools import reduce
 
 from django.db.models import Q
 from rest_framework import generics
@@ -65,9 +67,9 @@ class InternshipStudentAffectationList(generics.ListAPIView):
         return qs
 
     def _filter_affectations_with_score(self, qs):
-        has_at_least_one_apd_evaluated = Q()
-        for index in range(1, APD_NUMBER + 1):
-            has_at_least_one_apd_evaluated |= Q(**{'APD_{}__isnull'.format(index): False})
+        has_at_least_one_apd_evaluated = reduce(
+            operator.or_, [Q(**{'APD_{}__isnull'.format(index): False}) for index in range(1, APD_NUMBER + 1)]
+        )
         scores = InternshipScore.objects.filter(
             student__pk__in=qs.values('student_id'),
             period__pk__in=qs.values('period_id'),
