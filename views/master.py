@@ -25,6 +25,7 @@
 ##############################################################################
 import json
 
+import requests
 from django import shortcuts
 from django.conf import settings
 from django.contrib import messages
@@ -77,26 +78,84 @@ def create_user_accounts(request, cohort_id):
     selected_masters = InternshipMaster.objects.filter(
         pk__in=request.POST.getlist('selected_master')
     ).select_related('person')
+
+    filter_specialty = int(request.GET.get('specialty', 0))
+    filter_hospital = int(request.GET.get('hospital', 0))
+    filter_name = request.GET.get('name', '')
+
     for master in selected_masters:
-        _send_creation_account_email(master, request.user)
-        if master.user_account_status == UserAccountStatus.INACTIVE.name:
-            master.user_account_status = UserAccountStatus.PENDING.name
-            master.save()
-            messages.add_message(
-                request, messages.SUCCESS,
-                _('An email for account creation was sent to {}').format(master.person), "alert-success"
-            )
+        _create_master_user_account(request, master)
+
+    return redirect(
+        "{url}?{query_params}".format(
+            url=reverse('internships_masters',  kwargs={'cohort_id': cohort_id}),
+            query_params='hospital={}&specialty={}&name={}'.format(filter_hospital, filter_specialty, filter_name)
+        )
+    )
+
+
+def _create_master_user_account(request, master):
+    if master.person.birth_date:
+        response = _create_ldap_user_account(master)
+        if response.status_code == 200:
+            _send_creation_account_email(master, connected_user=request.user)
+            _update_user_account_status(master, request)
         else:
-            messages.add_message(
-                request, messages.WARNING,
-                _('User account creation for {} is already pending, an email was sent again').format(master.person),
-                "alert-warning"
-            )
-    return redirect(reverse('internships_masters',  kwargs={'cohort_id': cohort_id}))
+            _display_creation_error_msg(master, request)
+    else:
+        _display_no_birth_date_error_msg(master, request)
+
+
+def _display_no_birth_date_error_msg(master, request):
+    messages.add_message(
+        request, messages.ERROR,
+        _('Unable to create a user account for {}: no birth date set').format(master.person),
+        "alert-error"
+    )
+
+
+def _display_creation_error_msg(master, request):
+    messages.add_message(
+        request, messages.ERROR,
+        _('An error occured while creating a user account for {}').format(master.person),
+        "alert-error"
+    )
+
+
+def _update_user_account_status(master, request):
+    if master.user_account_status == UserAccountStatus.INACTIVE.name:
+        master.user_account_status = UserAccountStatus.PENDING.name
+        master.save()
+        messages.add_message(
+            request, messages.SUCCESS,
+            _('An email for account creation was sent to {}').format(master.person), "alert-success"
+        )
+    else:
+        messages.add_message(
+            request, messages.WARNING,
+            _('User account creation for {} is already pending, an email was sent again').format(master.person),
+            "alert-warning"
+        )
+
+
+def _create_ldap_user_account(master):
+    response = requests.post(
+        headers={'Content-Type': 'application/json'},
+        data=json.dumps({
+            "id": str(master.person.uuid),
+            "datenaissance": master.person.birth_date.strftime('%Y%m%d%fZ'),
+            "prenom": master.person.first_name,
+            "nom": master.person.last_name,
+            "email": master.person.email
+        }),
+        url="https://gildap.sipr.ucl.ac.be/osis/createUser/"
+    )
+    return response
 
 
 def _send_creation_account_email(master, connected_user=None):
-    account_creation_link = '{}?email={}'.format(settings.INTERNSHIP_PORTAL_ACCOUNT_CREATION_URL, master.person.email)
+    set_password_link = '{}?email={}'.format(settings.LDAP_ACCOUNT_CONFIGURATION_URL, master.person.email)
+
     send_email(
         template_references={
             'html': 'internship_create_master_account_email_html',
@@ -104,7 +163,8 @@ def _send_creation_account_email(master, connected_user=None):
         },
         data={
             'template': {
-                'link': account_creation_link
+                'set_password_link': set_password_link,
+                'score_encoding_link': settings.INTERNSHIP_SCORE_ENCODING_URL
             },
             'subject': {}
         },

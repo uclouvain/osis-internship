@@ -126,7 +126,7 @@
                 </tr>
             </thead>
             <tbody>
-                <form action="{% url 'create_accounts' cohort_id=current_cohort.id %}" method="post" id="create_account_form">
+                <form action="{% url 'create_accounts' cohort_id=current_cohort.id %}?{{ request.GET.urlencode }}" method="post" id="create_account_form">
                     {% csrf_token %}
                     {% for allocation in allocations %}
                         <tr>
