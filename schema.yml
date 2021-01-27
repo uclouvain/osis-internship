@@ -80,9 +80,21 @@ paths:
               schema:
                 $ref: '#/components/schemas/MasterGet'
 
-  /masters_allocations:
+  /masters/{uuid}/allocations/:
     get:
       description: Obtain the list of internship-master allocations
+      parameters:
+          - in: path
+            name: uuid
+            required: true
+            description: The UUID of the master
+            schema:
+              $ref: '#/components/schemas/Uuid'
+          - in: query
+            name: current
+            schema:
+              type: boolean
+            required: false
       responses:
         200:
           description: Successful get of the list of allocations
@@ -263,6 +275,12 @@ paths:
   /periods:
     get:
       description: Obtain the list of periods
+      parameters:
+        - in: query
+          name: active
+          schema:
+            type: boolean
+          required: false
       responses:
         200:
           description: Successful get of the list of periods
@@ -332,9 +350,31 @@ paths:
               schema:
                 $ref: '#/components/schemas/StudentGet'
 
-  /students_affectations:
+  /students_affectations/{specialty}/{organization}:
     get:
       description: Obtain the list of students affectations
+      parameters:
+        - in: path
+          name: organization
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: specialty
+          schema:
+            type: string
+          required: true
+        - in: query
+          name: period
+          schema:
+            type: string
+          required: false
+        - in: query
+          name: with_score
+          schema:
+            type: boolean
+            default: false
+          required: false
       responses:
         200:
           description: Successful get of the list of students affectations
@@ -368,6 +408,54 @@ paths:
               schema:
                 $ref: '#/components/schemas/StudentAffectationGet'
 
+  /scores/{student_uuid}/{period_uuid}:
+    get:
+      description: Get or create information about a specific student's score for a given period
+      parameters:
+        - in: path
+          name: student_uuid
+          required: true
+          description: The UUID of the student
+          schema:
+            $ref: '#/components/schemas/Uuid'
+        - in: path
+          name: period_uuid
+          required: true
+          description: The UUID of the period
+          schema:
+            $ref: '#/components/schemas/Uuid'
+      responses:
+        200:
+          description: Successful get or create of a student's score for a given period.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScoreGet'
+    put:
+      description: Update a student's score for a given period
+      parameters:
+        - in: path
+          name: student_uuid
+          required: true
+          description: The UUID of the student
+          schema:
+            $ref: '#/components/schemas/Uuid'
+        - in: path
+          name: period_uuid
+          required: true
+          description: The UUID of the period
+          schema:
+            $ref: '#/components/schemas/Uuid'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScoreGet'
+      responses:
+        201:
+          description: Successful update of a score for a given period
+
 components:
   securitySchemes:
     Token:
@@ -384,7 +472,7 @@ components:
             type: string
             format: uri
           uuid:
-            type: string
+            $ref: '#/components/schemas/Uuid'
           person:
             $ref: '#/components/schemas/Person'
           civility:
@@ -411,6 +499,8 @@ components:
         url:
           type: string
           format: uri
+        uuid:
+          $ref: '#/components/schemas/Uuid'
         name:
           type: string
           example: "Xyzetologie"
@@ -457,6 +547,8 @@ components:
         url:
           type: string
           format: uri
+        uuid:
+          $ref: '#/components/schemas/Uuid'
         name:
           type: string
           example: "CHU XYZ"
@@ -550,6 +642,8 @@ components:
         url:
           type: string
           format: uri
+        uuid:
+          $ref: '#/components/schemas/Uuid'
         name:
           type: string
           example: "P1"
@@ -576,6 +670,59 @@ components:
           $ref: '#/components/schemas/PeriodGet'
         internship:
           $ref: '#/components/schemas/InternshipGet'
+
+    ScoreGet:
+      type: object
+      properties:
+        uuid:
+          $ref: '#/components/schemas/Uuid'
+        student:
+          $ref: '#/components/schemas/Student'
+        period:
+          $ref: '#/components/schemas/PeriodGet'
+        cohort:
+          $ref: '#/components/schemas/CohortGet'
+        excused:
+          type: boolean
+        reason:
+          type: string
+        score:
+          type: number
+        comments:
+          type: object
+        objectives:
+          type: object
+        APD_1:
+          type: string
+        APD_2:
+          type: string
+        APD_3:
+          type: string
+        APD_4:
+          type: string
+        APD_5:
+          type: string
+        APD_6:
+          type: string
+        APD_7:
+          type: string
+        APD_8:
+          type: string
+        APD_9:
+          type: string
+        APD_10:
+          type: string
+        APD_11:
+          type: string
+        APD_12:
+          type: string
+        APD_13:
+          type: string
+        APD_14:
+          type: string
+        APD_15:
+          type: string
+
 
     Uuid:
       type: string

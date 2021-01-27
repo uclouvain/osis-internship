@@ -29,6 +29,7 @@ from internship.api.views.cohort import CohortList, CohortDetail
 from internship.api.views.internship import InternshipList, InternshipDetail
 from internship.api.views.internship_master import InternshipMasterList, InternshipMasterDetail, \
     InternshipMasterActivateAccount
+from internship.api.views.internship_score import InternshipScoreCreateRetrieveUpdate
 from internship.api.views.internship_specialty import InternshipSpecialtyList, InternshipSpecialtyDetail
 from internship.api.views.internship_student_affectation_stat import InternshipStudentAffectationList, \
     InternshipStudentAffectationDetail
@@ -44,8 +45,8 @@ urlpatterns = [
     url(r'^masters/(?P<uuid>[0-9a-f-]+)$', InternshipMasterDetail.as_view(), name=InternshipMasterDetail.name),
     url(r'^masters/(?P<uuid>[0-9a-f-]+)/activate_account/$', InternshipMasterActivateAccount.as_view(),
         name=InternshipMasterActivateAccount.name),
+    url(r'^masters/(?P<uuid>[0-9a-f-]+)/allocations/$', MasterAllocationList.as_view(), name=MasterAllocationList.name),
 
-    url(r'^masters_allocations/$', MasterAllocationList.as_view(), name=MasterAllocationList.name),
     url(r'^masters_allocations/(?P<uuid>[0-9a-f-]+)$', MasterAllocationDetail.as_view(), name=MasterAllocationDetail.name),
 
     url(r'^specialties/$', InternshipSpecialtyList.as_view(), name=InternshipSpecialtyList.name),
@@ -61,11 +62,17 @@ urlpatterns = [
     url(r'^internships/(?P<uuid>[0-9a-f-]+)$', InternshipDetail.as_view(), name=InternshipDetail.name),
 
     url(r'^students/$', InternshipStudentInformationList.as_view(), name=InternshipStudentInformationList.name),
-    url(r'^students/(?P<uuid>[0-9a-f-]+)$', InternshipStudentInformationDetail.as_view(), name=InternshipStudentInformationDetail.name),
+    url(r'^students/(?P<uuid>[0-9a-f-]+)$', InternshipStudentInformationDetail.as_view(),
+        name=InternshipStudentInformationDetail.name),
 
     url(r'^periods/$', PeriodList.as_view(), name=PeriodList.name),
     url(r'^periods/(?P<uuid>[0-9a-f-]+)$', PeriodDetail.as_view(), name=PeriodDetail.name),
 
-    url(r'^students_affectations/$', InternshipStudentAffectationList.as_view(), name=InternshipStudentAffectationList.name),
-    url(r'^students_affectations/(?P<uuid>[0-9a-f-]+)$', InternshipStudentAffectationDetail.as_view(), name=InternshipStudentAffectationDetail.name),
+    url(r'^students_affectations/(?P<specialty_uuid>[0-9a-f-]+)/(?P<organization_uuid>[0-9a-f-]+)$',
+        InternshipStudentAffectationList.as_view(), name=InternshipStudentAffectationList.name),
+    url(r'^students_affectations/(?P<uuid>[0-9a-f-]+)$', InternshipStudentAffectationDetail.as_view(),
+        name=InternshipStudentAffectationDetail.name),
+
+    url(r'^scores/(?P<student>[0-9a-f-]+)/(?P<period>[0-9a-f-]+)$', InternshipScoreCreateRetrieveUpdate.as_view(),
+        name=InternshipScoreCreateRetrieveUpdate.name),
 ]

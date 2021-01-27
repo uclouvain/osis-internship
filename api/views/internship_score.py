@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2020 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2021 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -25,36 +25,31 @@
 ##############################################################################
 from rest_framework import generics
 
-from internship.api.serializers.period import PeriodSerializer
+from base.models.student import Student
+from internship.api.serializers.internship_score import InternshipScoreSerializer, InternshipScorePutSerializer
+from internship.models.internship_score import InternshipScore
 from internship.models.period import Period
 
 
-class PeriodList(generics.ListAPIView):
+class InternshipScoreCreateRetrieveUpdate(generics.RetrieveUpdateAPIView):
     """
-       Return a list of periods with optional filtering.
+       Return an internship score detail
     """
-    name = 'period-list'
-    serializer_class = PeriodSerializer
-    search_fields = (
-        'name'
-    )
-    ordering_fields = (
-        'date_start',
-    )
-    ordering = (
-        'date_start',
-    )  # Default ordering
+    name = 'score-detail'
+    lookup_field = None
 
-    def get_queryset(self):
-        active = self.request.query_params.get('active', False)
-        return Period.active.all() if active else Period.objects.all()
+    def get_serializer_class(self):
+        if self.request.method in ['PUT', 'PATCH']:
+            return InternshipScorePutSerializer
+        return InternshipScoreSerializer
 
-
-class PeriodDetail(generics.RetrieveAPIView):
-    """
-        Return the detail of the period
-    """
-    name = 'period-detail'
-    serializer_class = PeriodSerializer
-    queryset = Period.objects.all()
-    lookup_field = 'uuid'
+    def get_object(self):
+        try:
+            return InternshipScore.objects.get(
+                student__uuid=self.kwargs.get('student'), period__uuid=self.kwargs.get('period')
+            )
+        except InternshipScore.DoesNotExist:
+            student = Student.objects.get(uuid=self.kwargs.get('student'))
+            period = Period.objects.get(uuid=self.kwargs.get('period'))
+            if student and period:
+                return InternshipScore.objects.create(student=student, period=period, cohort=period.cohort)

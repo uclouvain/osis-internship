@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2020 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2021 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -25,32 +25,45 @@
 ##############################################################################
 from rest_framework import serializers
 
+from base.api.serializers.student import StudentSerializer
 from internship.api.serializers.cohort import CohortSerializer
-from internship.models.organization import Organization
-from reference.api.serializers.country import CountrySerializer
+from internship.api.serializers.period import PeriodSerializer
+from internship.models.internship_score import APD_NUMBER, InternshipScore
 
 
-class OrganizationSerializer(serializers.HyperlinkedModelSerializer):
-    url = serializers.HyperlinkedIdentityField(
-        view_name='internship_api_v1:organization-detail',
-        lookup_field='uuid'
-    )
-    country = CountrySerializer(read_only=True)
+def _apd_fields():
+    return ['APD_{}'.format(index) for index in range(1, APD_NUMBER + 1)]
+
+
+class InternshipScoreSerializer(serializers.HyperlinkedModelSerializer):
+    student = StudentSerializer()
+    period = PeriodSerializer()
     cohort = CohortSerializer()
 
     class Meta:
-        model = Organization
+        model = InternshipScore
         fields = (
-            'url',
             'uuid',
-            'name',
-            'acronym',
-            'website',
-            'reference',
-            'phone',
-            'location',
-            'postal_code',
-            'city',
-            'country',
+            'student',
+            'period',
+            'score',
+            'excused',
+            'reason',
             'cohort',
+            'comments',
+            'objectives',
+            *_apd_fields()
+        )
+
+
+class InternshipScorePutSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = InternshipScore
+        fields = (
+            'uuid',
+            'score',
+            'comments',
+            'objectives',
+            *_apd_fields()
         )

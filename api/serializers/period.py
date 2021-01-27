@@ -40,6 +40,7 @@ class PeriodSerializer(serializers.HyperlinkedModelSerializer):
         model = Period
         fields = (
             'url',
+            'uuid',
             'name',
             'date_start',
             'date_end',

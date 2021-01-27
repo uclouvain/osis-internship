@@ -23,9 +23,15 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+import operator
+from distutils.util import strtobool
+from functools import reduce
+
+from django.db.models import Q
 from rest_framework import generics
 
 from internship.api.serializers.internship_student_affectation_stat import InternshipStudentAffectationSerializer
+from internship.models.internship_score import InternshipScore, APD_NUMBER
 from internship.models.internship_student_affectation_stat import InternshipStudentAffectationStat
 
 
@@ -40,11 +46,37 @@ class InternshipStudentAffectationList(generics.ListAPIView):
         # search by student person
     )
     ordering_fields = (
-        'period',
+        'period__name',
     )
     ordering = (
-        'period',
+        'period__name',
     )  # Default ordering
+
+    def get_queryset(self):
+        specialty_uuid = self.kwargs.get('specialty_uuid')
+        organization_uuid = self.kwargs.get('organization_uuid')
+        qs = InternshipStudentAffectationStat.objects.select_related('organization', 'speciality').filter(
+            speciality__uuid=specialty_uuid, organization__uuid=organization_uuid
+        )
+        with_score = bool(strtobool(self.request.query_params.get('with_score')))
+        period = self.request.query_params.get('period')
+        if period:
+            qs = qs.filter(period__name=period)
+        if with_score:
+            qs = self._filter_affectations_with_score(qs)
+        return qs
+
+    def _filter_affectations_with_score(self, qs):
+        has_at_least_one_apd_evaluated = reduce(
+            operator.or_, [Q(**{'APD_{}__isnull'.format(index): False}) for index in range(1, APD_NUMBER + 1)]
+        )
+        scores = InternshipScore.objects.filter(
+            student__pk__in=qs.values('student_id'),
+            period__pk__in=qs.values('period_id'),
+        ).filter(has_at_least_one_apd_evaluated)
+        students_with_scores = scores.values_list('student_id')
+        qs = qs.filter(student_id__in=students_with_scores)
+        return qs
 
 
 class InternshipStudentAffectationDetail(generics.RetrieveAPIView):

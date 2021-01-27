@@ -77,3 +77,13 @@ class InternshipMasterActivateAccount(generics.RetrieveUpdateAPIView):
         master.save()
         serializer = self.get_serializer(master)
         return Response(serializer.data)
+
+
+class InternshipMasterDetail(generics.RetrieveAPIView):
+    """
+        Return the detail of the internship master.
+    """
+    name = 'master-detail'
+    serializer_class = InternshipMasterSerializer
+    queryset = InternshipMaster.objects.all()
+    lookup_field = 'uuid'

@@ -40,6 +40,7 @@ class InternshipSpecialtySerializer(serializers.HyperlinkedModelSerializer):
         model = InternshipSpeciality
         fields = (
             'url',
+            'uuid',
             'name',
             'acronym',
             'mandatory',
