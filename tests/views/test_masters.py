@@ -24,6 +24,7 @@
 #
 ##############################################################################
 import json
+from types import SimpleNamespace
 from unittest import skipUnless
 
 import faker
@@ -31,6 +32,8 @@ from django.contrib.auth.models import Permission, User
 from django.http import HttpResponse
 from django.test import TestCase, override_settings
 from django.urls import reverse
+from django.utils.datetime_safe import date
+from mock import patch
 
 from backoffice.settings.base import INSTALLED_APPS
 from base.models.enums import person_source_type
@@ -186,8 +189,9 @@ class MasterTestCase(TestCase):
         self.assertEqual(InternshipMaster.objects.first().person, person)
 
     @override_settings(INTERNSHIP_PORTAL_ACCOUNT_CREATION_URL='fake_url')
-    def test_create_user_account_for_internship_master(self):
-        master = MasterFactory()
+    @patch('internship.views.master._create_ldap_user_account', return_value=SimpleNamespace(status_code=200))
+    def test_create_user_account_for_internship_master(self, mock_ldap_api_call):
+        master = MasterFactory(person=PersonFactory(birth_date=date.today()))
         url = reverse('create_accounts', kwargs={'cohort_id': self.cohort.pk})
         response = self.client.post(url, data={
             'selected_master': [master.pk]
@@ -196,9 +200,23 @@ class MasterTestCase(TestCase):
         self.assertEqual(messages_list[0].level_tag, "success")
         self.assertIn(str(master.person), messages_list[0].message)
 
+    def test_create_user_account_for_internship_master_with_no_birth_date(self):
+        master = MasterFactory(person=PersonFactory(birth_date=None))
+        url = reverse('create_accounts', kwargs={'cohort_id': self.cohort.pk})
+        response = self.client.post(url, data={
+            'selected_master': [master.pk]
+        })
+        messages_list = [msg for msg in response.wsgi_request._messages]
+        self.assertEqual(messages_list[0].level_tag, "error")
+        self.assertIn(str(master.person), messages_list[0].message)
+
     @override_settings(INTERNSHIP_PORTAL_ACCOUNT_CREATION_URL='fake_url')
-    def test_user_account_already_exists_for_internship_master(self):
-        master = MasterFactory(user_account_status=UserAccountStatus.PENDING.name)
+    @patch('internship.views.master._create_ldap_user_account', return_value=SimpleNamespace(status_code=200))
+    def test_user_account_already_exists_for_internship_master(self, mock_ldap_api_call):
+        master = MasterFactory(
+            user_account_status=UserAccountStatus.PENDING.name,
+            person=PersonFactory(birth_date=date.today())
+        )
         url = reverse('create_accounts', kwargs={'cohort_id': self.cohort.pk})
         response = self.client.post(url, data={
             'selected_master': [master.pk]
