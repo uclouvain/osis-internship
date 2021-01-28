@@ -148,7 +148,7 @@ def _create_ldap_user_account(master):
             "nom": master.person.last_name,
             "email": master.person.email
         }),
-        url="https://gildap.sipr.ucl.ac.be/osis/createUser/"
+        url=settings.LDAP_ACCOUNT_CREATION_URL
     )
     return response
 
