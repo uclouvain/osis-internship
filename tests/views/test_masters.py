@@ -188,7 +188,8 @@ class MasterTestCase(TestCase):
         ))
         self.assertEqual(InternshipMaster.objects.first().person, person)
 
-    @override_settings(INTERNSHIP_PORTAL_ACCOUNT_CREATION_URL='fake_url')
+    @override_settings(INTERNSHIP_SCORE_ENCODING_URL='fake_url')
+    @override_settings(LDAP_ACCOUNT_CONFIGURATION_URL='fake_url')
     @patch('internship.views.master._create_ldap_user_account', return_value=SimpleNamespace(status_code=200))
     def test_create_user_account_for_internship_master(self, mock_ldap_api_call):
         master = MasterFactory(person=PersonFactory(birth_date=date.today()))
@@ -210,7 +211,8 @@ class MasterTestCase(TestCase):
         self.assertEqual(messages_list[0].level_tag, "error")
         self.assertIn(str(master.person), messages_list[0].message)
 
-    @override_settings(INTERNSHIP_PORTAL_ACCOUNT_CREATION_URL='fake_url')
+    @override_settings(INTERNSHIP_SCORE_ENCODING_URL='fake_url')
+    @override_settings(LDAP_ACCOUNT_CONFIGURATION_URL='fake_url')
     @patch('internship.views.master._create_ldap_user_account', return_value=SimpleNamespace(status_code=200))
     def test_user_account_already_exists_for_internship_master(self, mock_ldap_api_call):
         master = MasterFactory(
