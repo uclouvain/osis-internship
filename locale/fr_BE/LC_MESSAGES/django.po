@@ -887,7 +887,7 @@ msgid "Total of internships"
 msgstr "Total de stages"
 
 msgid "Unable to create a user account for {}: no birth date set"
-msgstr ""
+msgstr "Impossible de créer un compte utilisateur pour {}: pas de date de naissance encodée"
 
 msgid "Url"
 msgstr "Url"
