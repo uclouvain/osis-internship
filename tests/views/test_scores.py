@@ -450,7 +450,7 @@ class ScoresEncodingTest(TestCase):
         self.assertTrue(excused_score.exists())
 
     def test_show_excused_score_disregarded_in_evolution_score_computation(self):
-        student_info = InternshipStudentInformationFactory(cohort=self.cohort)
+        student_info = InternshipStudentInformationFactory(cohort=self.cohort, person__last_name="A")
         student = StudentFactory(person=student_info.person)
         new_score = 10
         ScoreFactory(student=student, period=self.period, cohort=self.cohort, excused=True, score=new_score)

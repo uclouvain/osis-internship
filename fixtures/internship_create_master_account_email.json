@@ -4,7 +4,7 @@
     "fields": {
         "reference": "internship_create_master_account_email_html",
         "subject": "STAC - Compte utilisateur pour encodage des cotes de stage",
-        "template": "<i>Ceci est un message automatique généré par le serveur OSIS. Merci de ne pas y répondre.</i><br/><p>Bonjour,<br/>Afin de procéder à l'encodage des cotes de stage, merci de créer un compte utilisateur via le lien suivant: <a href='{{link}}'>{{link}}</a></p> Bien à vous.</p>",
+        "template": "<i>Ceci est un message automatique généré par le serveur OSIS. Merci de ne pas y répondre.</i><br/><p>Bonjour,<br/>Afin de procéder à l'encodage des cotes de stage, veuillez suivre les instructions suivantes: <ul><li>confirmer votre compte utilisateur en définissant un mot de passe via ce lien: <a href='{{set_password_link}}'>{{set_password_link}}</a></li><li>connectez-vous à la plateforme d'encodage via ce lien <a href='{{score_encoding_link}}'>{{score_encoding_link}}</a></li></p> Bien à vous.</p>",
         "format": "HTML",
         "language": "fr-be"
     }
@@ -14,7 +14,7 @@
     "fields": {
         "reference": "internship_create_master_account_email_txt",
         "subject": "STAC - Compte utilisateur pour encodage des cotes de stage",
-        "template": "Ceci est un message automatique généré par le serveur OSIS. Merci de ne pas y répondre. Bonjour, afin de procéder à l'encodage des cotes de stage, merci de créer un compte utilisateur via le lien suivant: {{link}}. Bien à vous.",
+        "template": "Ceci est un message automatique généré par le serveur OSIS. Merci de ne pas y répondre. Bonjour, afin de procéder à l'encodage des cotes de stage, merci de confirmer votre compte utilisateur via le lien suivant: {{set_password_link}} et connectez-vous ensuite via ce lien: {{score_encoding_link}} Bien à vous.",
         "format": "PLAIN",
         "language": "fr-be"
     }
