@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-25 11:05+0100\n"
+"POT-Creation-Date: 2021-01-28 15:02+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -115,6 +115,9 @@ msgid "An error occured during score deletion"
 msgstr ""
 
 msgid "An error occured during score update"
+msgstr ""
+
+msgid "An error occured while creating a user account for {}"
 msgstr ""
 
 msgid "An error occured while sending reminders"
@@ -849,6 +852,9 @@ msgid "Total cost of solution"
 msgstr ""
 
 msgid "Total of internships"
+msgstr ""
+
+msgid "Unable to create a user account for {}: no birth date set"
 msgstr ""
 
 msgid "Url"
