@@ -375,6 +375,17 @@ paths:
             type: boolean
             default: false
           required: false
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          required: false
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          required: false
+
       responses:
         200:
           description: Successful get of the list of students affectations
