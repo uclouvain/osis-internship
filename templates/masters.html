@@ -133,7 +133,7 @@
                             <td>
                               <input type="checkbox" name="selected_master" class="selected_object"
                                      data-master="{{ allocation.master }}" value="{{ allocation.master.pk }}"
-                                     {% if allocation.master.user_account_status == account_status.ACTIVE.name %} disabled {% endif %}/>
+                                     {% if allocation.master.user_account_status == account_status.ACTIVE.value %} disabled {% endif %}/>
                             </td>
                             <td>{% if allocation.master.civility %}{% trans allocation.master.civility_acronym %}{% endif %}</td>
                             <td>{{ allocation.master.person.last_name | upper }}</td>
@@ -149,11 +149,11 @@
                             {% else %}
                                 <td>-</td>
                             {% endif %}
-                            {% if allocation.master.user_account_status == account_status.ACTIVE.name %}
+                            {% if allocation.master.user_account_status == account_status.ACTIVE.value %}
                                 <td class="text-center">
                                     <span title="{% trans 'User account is active' %}" class="text-success glyphicon glyphicon-ok-circle"></span>
                                 </td>
-                            {% elif allocation.master.user_account_status == account_status.PENDING.name %}
+                            {% elif allocation.master.user_account_status == account_status.PENDING.value %}
                                 <td class="text-center">
                                     <span title="{% trans 'Activation pending' %}" class="text-info glyphicon glyphicon-time"></span>
                                 </td>

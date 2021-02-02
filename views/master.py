@@ -123,8 +123,8 @@ def _display_creation_error_msg(master, request):
 
 
 def _update_user_account_status(master, request):
-    if master.user_account_status == UserAccountStatus.INACTIVE.name:
-        master.user_account_status = UserAccountStatus.PENDING.name
+    if master.user_account_status == UserAccountStatus.INACTIVE.value:
+        master.user_account_status = UserAccountStatus.PENDING.value
         master.save()
         messages.add_message(
             request, messages.SUCCESS,

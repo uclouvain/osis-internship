@@ -60,7 +60,7 @@ class InternshipStudentAffectationList(generics.ListAPIView):
         )
         with_score = bool(strtobool(self.request.query_params.get('with_score')))
         period = self.request.query_params.get('period')
-        if period:
+        if period and period != "all":
             qs = qs.filter(period__name=period)
         if with_score:
             qs = self._filter_affectations_with_score(qs)

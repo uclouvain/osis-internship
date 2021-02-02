@@ -38,8 +38,7 @@ class InternshipMasterAdmin(SerializableModelAdmin):
         (
             None, {
                 'fields': (
-                    'person', 'civility', 'email_private', 'location', 'postal_code',
-                    'city', 'country', 'start_activities'
+                    'person', 'civility', 'email_private', 'email_additional', 'start_activities', 'user_account_status'
                 )
             }
         ),
