@@ -37,4 +37,4 @@ class MasterFactory(factory.django.DjangoModelFactory):
 
     person = factory.SubFactory(PersonFactory)
     civility = FuzzyChoice({Civility.DOCTOR.value, Civility.PROFESSOR.value})
-    user_account_status = UserAccountStatus.INACTIVE.name
+    user_account_status = UserAccountStatus.INACTIVE.value
