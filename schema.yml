@@ -368,6 +368,7 @@ paths:
           name: period
           schema:
             type: string
+            default: all
           required: false
         - in: query
           name: with_score
