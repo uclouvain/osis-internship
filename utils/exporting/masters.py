@@ -61,7 +61,7 @@ def export_xls():
 
 def _add_header(worksheet, fields):
     fields_verbose_names = [_(field.verbose_name.capitalize()) for field in fields]
-    fields_verbose_names.extend([_("Specialty"), _("Organization")])
+    fields_verbose_names.extend([_("Specialty"), _("Organization"), "Ref"])
     add_row(worksheet, fields_verbose_names)
     worksheet.row_dimensions[1].font = Font(bold=True)
 
@@ -71,8 +71,9 @@ def _add_masters(worksheet, fields):
     master_allocation = MasterAllocation.objects.filter(master=OuterRef('pk'))
     masters = InternshipMaster.objects.all().order_by('person__last_name', 'person__first_name').annotate(
         specialty=Subquery(master_allocation.values('specialty__name')[:1]),
-        organization=Subquery(master_allocation.values('organization__name')[:1])
-    ).values_list(*fields_names, 'specialty', 'organization').distinct()
+        organization=Subquery(master_allocation.values('organization__name')[:1]),
+        organization_ref=Subquery(master_allocation.values('organization__reference')[:1])
+    ).values_list(*fields_names, 'specialty', 'organization', 'organization_ref').distinct()
     for master in masters:
         add_row(worksheet, master)
 
