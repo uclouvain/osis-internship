@@ -122,6 +122,7 @@
                     <th class="no-sort">{% trans 'Details' %}</th>
                     <th class="no-sort">{% trans 'Specialty' %}</th>
                     <th class="no-sort">{% trans 'Hospital' %}</th>
+                    <th class="no-sort">{% trans 'Role' %}</th>
                     <th class="no-sort text-center">{% trans 'User account' %}</th>
                 </tr>
             </thead>
@@ -149,6 +150,7 @@
                             {% else %}
                                 <td>-</td>
                             {% endif %}
+                            <td>{{ allocation.master.role.0 }}</td>
                             {% if allocation.master.user_account_status == account_status.ACTIVE.value %}
                                 <td class="text-center">
                                     <span title="{% trans 'User account is active' %}" class="text-success glyphicon glyphicon-ok-circle"></span>

@@ -43,5 +43,6 @@ class InternshipMasterSerializer(serializers.HyperlinkedModelSerializer):
             'uuid',
             'person',
             'civility',
-            'user_account_status'
+            'user_account_status',
+            'role'
         )

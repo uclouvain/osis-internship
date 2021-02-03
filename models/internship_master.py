@@ -26,10 +26,15 @@
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
+from django.utils.translation import gettext as _
 
 from internship.models.enums.civility import Civility
 from internship.models.enums.user_account_status import UserAccountStatus
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
+
+MASTER = 'MASTER'
+DELEGATE = 'DELEGATE'
+ROLE_CHOICES = [(MASTER, _('Master')), (DELEGATE, _('Delegate'))]
 
 
 class InternshipMasterAdmin(SerializableModelAdmin):
@@ -58,6 +63,12 @@ class InternshipMaster(SerializableModel):
         max_length=50,
         choices=UserAccountStatus.choices(),
         default=UserAccountStatus.INACTIVE.value,
+    )
+
+    role = models.CharField(
+        max_length=50,
+        choices=ROLE_CHOICES,
+        default=MASTER,
     )
 
     def civility_acronym(self):
