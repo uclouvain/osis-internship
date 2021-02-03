@@ -84,7 +84,11 @@ def create_user_accounts(request, cohort_id):
     filter_name = request.GET.get('name', '')
 
     for master in selected_masters:
-        _create_master_user_account(request, master)
+        if _user_already_exists_for_master(master):
+            _send_creation_account_email(master, connected_user=request.user)
+            _show_user_already_exists_msg(request, master)
+        else:
+            _create_master_user_account(request, master)
 
     return redirect(
         "{url}?{query_params}".format(
@@ -92,6 +96,10 @@ def create_user_accounts(request, cohort_id):
             query_params='hospital={}&specialty={}&name={}'.format(filter_hospital, filter_specialty, filter_name)
         )
     )
+
+
+def _user_already_exists_for_master(master):
+    return master.user_account_status != UserAccountStatus.INACTIVE.value
 
 
 def _create_master_user_account(request, master):
@@ -131,11 +139,15 @@ def _update_user_account_status(master, request):
             _('An email for account creation was sent to {}').format(master.person), "alert-success"
         )
     else:
-        messages.add_message(
-            request, messages.WARNING,
-            _('User account creation for {} is already pending, an email was sent again').format(master.person),
-            "alert-warning"
-        )
+        _show_user_already_exists_msg(request, master)
+
+
+def _show_user_already_exists_msg(request, master):
+    messages.add_message(
+        request, messages.WARNING,
+        _('User account creation for {} is already pending, an email was sent again').format(master.person),
+        "alert-warning"
+    )
 
 
 def _create_ldap_user_account(master):
