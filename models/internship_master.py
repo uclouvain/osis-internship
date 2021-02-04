@@ -26,7 +26,6 @@
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
-from django.utils.translation import gettext as _
 
 from internship.models.enums.civility import Civility
 from internship.models.enums.user_account_status import UserAccountStatus
@@ -34,7 +33,7 @@ from osis_common.models.serializable_model import SerializableModel, Serializabl
 
 MASTER = 'MASTER'
 DELEGATE = 'DELEGATE'
-ROLE_CHOICES = [(MASTER, _('Master')), (DELEGATE, _('Delegate'))]
+ROLE_CHOICES = [(MASTER, 'Master'), (DELEGATE, 'Delegate')]
 
 
 class InternshipMasterAdmin(SerializableModelAdmin):
