@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-28 15:02+0100\n"
+"POT-Creation-Date: 2021-02-04 11:32+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -232,6 +232,9 @@ msgid "Current internship"
 msgstr ""
 
 msgid "Date format"
+msgstr ""
+
+msgid "Delegate"
 msgstr ""
 
 msgid "Delete"
@@ -679,6 +682,9 @@ msgid "Report to the hospital"
 msgstr ""
 
 msgid "Return"
+msgstr ""
+
+msgid "Role"
 msgstr ""
 
 msgid "Save"

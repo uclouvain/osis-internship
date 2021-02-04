@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-28 15:02+0100\n"
+"POT-Creation-Date: 2021-02-04 11:32+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -128,7 +128,8 @@ msgid "An error occured during score update"
 msgstr "Une erreur est survenue lors de l'édition de la note"
 
 msgid "An error occured while creating a user account for {}"
-msgstr "Une erreur s'est produite lors de la création du compte utilisateur pour {}"
+msgstr ""
+"Une erreur s'est produite lors de la création du compte utilisateur pour {}"
 
 msgid "An error occured while sending reminders"
 msgstr "Une erreur s'est produite lors de l'envoi des rappels"
@@ -243,6 +244,9 @@ msgstr "Stage en cours"
 
 msgid "Date format"
 msgstr "Format de date"
+
+msgid "Delegate"
+msgstr "Délégué"
 
 msgid "Delete"
 msgstr "Supprimer"
@@ -702,6 +706,9 @@ msgstr "Rapport pour l'hôpital"
 msgid "Return"
 msgstr "Retour"
 
+msgid "Role"
+msgstr "Role"
+
 msgid "Save"
 msgstr "Enregistrer"
 
@@ -887,7 +894,9 @@ msgid "Total of internships"
 msgstr "Total de stages"
 
 msgid "Unable to create a user account for {}: no birth date set"
-msgstr "Impossible de créer un compte utilisateur pour {}: pas de date de naissance encodée"
+msgstr ""
+"Impossible de créer un compte utilisateur pour {}: pas de date de naissance "
+"encodée"
 
 msgid "Url"
 msgstr "Url"

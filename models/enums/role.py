@@ -23,22 +23,15 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django import forms
+from django.utils.translation import gettext_lazy as _
 
-from internship.models import internship_master
-from internship.models.enums.role import Role
-from reference.models.country import Country
+from osis_common.utils.enumerations import ChoiceEnum
 
 
-class MasterForm(forms.ModelForm):
-    country = forms.ModelChoiceField(queryset=Country.objects.order_by('name'), required=False)
-    role = forms.ChoiceField(choices=Role.choices(), required=True)
+class Role(ChoiceEnum):
+    MASTER = 'MASTER'
+    DELEGATE = 'DELEGATE'
 
-    class Meta:
-        model = internship_master.InternshipMaster
-        fields = [
-            'civility', 'email_private', 'email_additional', 'start_activities', 'role'
-        ]
-        widgets = {
-            'start_activities': forms.DateInput(format="%Y-%m-%d", attrs={'type': 'date'})
-        }
+    @classmethod
+    def choices(cls):
+        return tuple((x.value, _(x.value)) for x in cls)

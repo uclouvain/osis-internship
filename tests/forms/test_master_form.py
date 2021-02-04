@@ -27,7 +27,7 @@
 from django.test import TestCase
 
 from internship.forms import master
-from internship.models.internship_master import MASTER
+from internship.models.enums.role import Role
 from internship.tests.factories.organization import OrganizationFactory
 from internship.tests.factories.speciality import SpecialtyFactory
 from internship.views.master import _validate_allocations
@@ -45,7 +45,7 @@ class TestMasterForm(TestCase):
             "city": "city",
             "country": belgium,
             'start_activities': "2000-01-01",
-            "role": MASTER,
+            "role": Role.MASTER,
         }
         master_form = master.MasterForm(data)
         self.assertTrue(master_form.is_valid())
