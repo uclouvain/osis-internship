@@ -71,7 +71,7 @@ def find_by_master(cohort, a_master):
     return find_by_cohort(cohort).filter(master=a_master)
 
 
-def search(cohort, specialty, hospital, role=Role.MASTER):
+def search(cohort, specialty, hospital, role=Role.MASTER.value):
     masters = find_by_cohort(cohort)
 
     if role:

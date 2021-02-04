@@ -61,7 +61,7 @@ def masters(request, cohort_id):
     filter_specialty = int(request.GET.get('specialty', 0))
     filter_hospital = int(request.GET.get('hospital', 0))
     filter_name = request.GET.get('name', '')
-    filter_role = request.GET.get('role', Role.MASTER)
+    filter_role = request.GET.get('role', Role.MASTER.value)
 
     allocations = master_allocation.search(current_cohort, filter_specialty, filter_hospital, filter_role)
     if filter_name:

@@ -45,7 +45,7 @@ class TestMasterForm(TestCase):
             "city": "city",
             "country": belgium,
             'start_activities': "2000-01-01",
-            "role": Role.MASTER,
+            "role": Role.MASTER.value,
         }
         master_form = master.MasterForm(data)
         self.assertTrue(master_form.is_valid())

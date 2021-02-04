@@ -182,7 +182,7 @@ class MasterTestCase(TestCase):
             'existing-person-id': person.pk,
             'hospital': hospital.pk,
             'specialty': specialty.pk,
-            'role': Role.MASTER,
+            'role': Role.MASTER.value,
         })
         self.assertRedirects(response, '{}?{}'.format(
             reverse('internships_masters', kwargs={'cohort_id': self.cohort.id}),
