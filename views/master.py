@@ -46,7 +46,7 @@ from internship.forms.master import MasterForm
 from internship.models import master_allocation, internship_master, internship_speciality, organization, cohort
 from internship.models.enums import user_account_status
 from internship.models.enums.user_account_status import UserAccountStatus
-from internship.models.internship_master import InternshipMaster
+from internship.models.internship_master import InternshipMaster, MASTER
 from internship.utils.exporting.masters import export_xls
 from internship.views.common import display_errors, get_object_list
 from osis_common.decorators.download import set_download_cookie
@@ -60,8 +60,9 @@ def masters(request, cohort_id):
     filter_specialty = int(request.GET.get('specialty', 0))
     filter_hospital = int(request.GET.get('hospital', 0))
     filter_name = request.GET.get('name', '')
+    filter_role = request.GET.get('role', MASTER)
 
-    allocations = master_allocation.search(current_cohort, filter_specialty, filter_hospital)
+    allocations = master_allocation.search(current_cohort, filter_specialty, filter_hospital, filter_role)
     if filter_name:
         allocations = allocations.filter(master__person__last_name__unaccent__icontains=filter_name) | \
                       allocations.filter(master__person__first_name__unaccent__icontains=filter_name)

@@ -42,7 +42,7 @@ from base.tests.factories.person import PersonFactory
 from base.tests.factories.person_address import PersonAddressFactory
 from internship.models import master_allocation
 from internship.models.enums.user_account_status import UserAccountStatus
-from internship.models.internship_master import InternshipMaster
+from internship.models.internship_master import InternshipMaster, MASTER
 from internship.tests.factories.cohort import CohortFactory
 from internship.tests.factories.master import MasterFactory
 from internship.tests.factories.master_allocation import MasterAllocationFactory
@@ -180,7 +180,8 @@ class MasterTestCase(TestCase):
         response = self.client.post(url, data={
             'existing-person-id': person.pk,
             'hospital': hospital.pk,
-            'specialty': specialty.pk
+            'specialty': specialty.pk,
+            'role': MASTER,
         })
         self.assertRedirects(response, '{}?{}'.format(
             reverse('internships_masters', kwargs={'cohort_id': self.cohort.id}),
