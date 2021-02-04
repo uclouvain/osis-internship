@@ -70,10 +70,19 @@
                 <div class="form-group">
                     <label for="filter_name">{% trans 'Name' %}/{% trans 'First name' %}</label>
                     <input name="name" id="filter_name" class="form-control">
-
                 </div>
             </div>
-            <div class="col-md-5">
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label for="filter_role">{% trans 'Role' %}/{% trans 'Role' %}</label>
+                    <select name="role" id="filter_role" class="form-control">
+                        <option value="" {% if filter_role == "" %}selected{% endif %}>--</option>
+                        <option value="MASTER" {% if filter_role == "MASTER" %}selected{% endif %}>{% trans 'Master' %}</option>
+                        <option value="DELEGATE" {% if filter_role == "DELEGATE" %}selected{% endif %}>{% trans 'Delegate' %}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-3">
                 <button type="submit" class="btn btn-default" style="margin-top: 26px;">
                     <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
                     {% trans 'Search' %}
@@ -122,6 +131,7 @@
                     <th class="no-sort">{% trans 'Details' %}</th>
                     <th class="no-sort">{% trans 'Specialty' %}</th>
                     <th class="no-sort">{% trans 'Hospital' %}</th>
+                    <th class="no-sort">{% trans 'Role' %}</th>
                     <th class="no-sort text-center">{% trans 'User account' %}</th>
                 </tr>
             </thead>
@@ -149,6 +159,7 @@
                             {% else %}
                                 <td>-</td>
                             {% endif %}
+                            <td>{{ allocation.master.role.0 }}</td>
                             {% if allocation.master.user_account_status == account_status.ACTIVE.value %}
                                 <td class="text-center">
                                     <span title="{% trans 'User account is active' %}" class="text-success glyphicon glyphicon-ok-circle"></span>

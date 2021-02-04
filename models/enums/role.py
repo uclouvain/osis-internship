@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2020 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2019 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -23,26 +23,15 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from rest_framework import serializers
+from django.utils.translation import gettext_lazy as _
 
-from base.api.serializers.person import PersonDetailSerializer
-from internship.models.internship_master import InternshipMaster
+from osis_common.utils.enumerations import ChoiceEnum
 
 
-class InternshipMasterSerializer(serializers.HyperlinkedModelSerializer):
-    person = PersonDetailSerializer(read_only=True)
-    url = serializers.HyperlinkedIdentityField(
-        view_name='internship_api_v1:master-detail',
-        lookup_field='uuid'
-    )
+class Role(ChoiceEnum):
+    MASTER = 'MASTER'
+    DELEGATE = 'DELEGATE'
 
-    class Meta:
-        model = InternshipMaster
-        fields = (
-            'url',
-            'uuid',
-            'person',
-            'civility',
-            'user_account_status',
-            'role'
-        )
+    @classmethod
+    def choices(cls):
+        return tuple((x.value, _(x.value)) for x in cls)

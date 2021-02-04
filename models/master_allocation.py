@@ -28,6 +28,8 @@ from django.contrib import admin
 from django.db import models
 from django.db.models import Q
 
+from internship.models.enums.role import Role
+
 
 class MasterAllocationAdmin(admin.ModelAdmin):
     list_display = ('master', 'organization', 'specialty', 'cohort')
@@ -69,8 +71,11 @@ def find_by_master(cohort, a_master):
     return find_by_cohort(cohort).filter(master=a_master)
 
 
-def search(cohort, specialty, hospital):
+def search(cohort, specialty, hospital, role=Role.MASTER.value):
     masters = find_by_cohort(cohort)
+
+    if role:
+        masters = masters.filter(master__role=role)
 
     if specialty:
         masters = masters.filter(specialty=specialty)

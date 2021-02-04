@@ -490,6 +490,9 @@ components:
           civility:
             type: string
             example: "DOCTOR"
+          role:
+            type: string
+            example: "MASTER"
 
 
     AllocationGet:
