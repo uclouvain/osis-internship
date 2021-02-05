@@ -26,11 +26,12 @@
 from rest_framework import serializers
 
 from base.api.serializers.person import PersonDetailSerializer
+from base.models.person import Person
 from internship.models.internship_master import InternshipMaster
 
 
 class InternshipMasterSerializer(serializers.HyperlinkedModelSerializer):
-    person = PersonDetailSerializer(read_only=True)
+    person = PersonDetailSerializer()
     url = serializers.HyperlinkedIdentityField(
         view_name='internship_api_v1:master-detail',
         lookup_field='uuid'
@@ -46,3 +47,10 @@ class InternshipMasterSerializer(serializers.HyperlinkedModelSerializer):
             'user_account_status',
             'role'
         )
+
+    def create(self, *args, **kwargs):
+        person = Person(**self.initial_data['person'])
+        person.save()
+        master = InternshipMaster(person=person, role=self.initial_data['role'], civility=self.initial_data['civility'])
+        master.save()
+        return master

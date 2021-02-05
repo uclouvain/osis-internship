@@ -20,7 +20,7 @@ servers:
     description: Production server
 
 paths:
-  /masters:
+  /masters/:
     get:
       description: Obtain the list of internship masters
       parameters:
@@ -43,6 +43,17 @@ paths:
                         type: array
                         items:
                           $ref: '#/components/schemas/MasterGet'
+    post:
+      description: Create new internship master
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MasterGet'
+      responses:
+        200:
+          description: Successfully created an internship master
 
   /masters/{uuid}:
     get:
@@ -127,6 +138,41 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AllocationGet'
+
+  /masters_allocations/{specialty}/{organization}:
+    get:
+      description: Obtain the list of master allocations filtered by specialty and organization
+      parameters:
+        - in: path
+          name: organization
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: specialty
+          schema:
+            type: string
+          required: true
+        - in: query
+          name: role
+          schema:
+            type: string
+            default: all
+          required: false
+      responses:
+        200:
+          description: Successful get of the list of masters allocations
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - $ref: "#/components/schemas/Paging"
+                  - type: object
+                    properties:
+                      results:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/SpecialtyGet'
 
   /specialties:
     get:

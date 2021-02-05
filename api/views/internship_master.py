@@ -31,9 +31,9 @@ from internship.models.enums.user_account_status import UserAccountStatus
 from internship.models.internship_master import InternshipMaster
 
 
-class InternshipMasterList(generics.ListAPIView):
+class InternshipMasterListCreate(generics.ListCreateAPIView):
     """
-       Return a list of internship masters with optional filtering.
+       Return a list of internship masters with optional filtering or create one.
     """
     name = 'master-list'
     serializer_class = InternshipMasterSerializer
@@ -49,9 +49,9 @@ class InternshipMasterList(generics.ListAPIView):
     )  # Default ordering
 
 
-class InternshipMasterDetail(generics.RetrieveAPIView):
+class InternshipMasterUpdateDetail(generics.RetrieveUpdateAPIView):
     """
-        Return the detail of the internship master.
+        Return the detail of the internship master or create one.
     """
     name = 'master-detail'
     serializer_class = InternshipMasterSerializer
@@ -77,13 +77,3 @@ class InternshipMasterActivateAccount(generics.RetrieveUpdateAPIView):
         master.save()
         serializer = self.get_serializer(master)
         return Response(serializer.data)
-
-
-class InternshipMasterDetail(generics.RetrieveAPIView):
-    """
-        Return the detail of the internship master.
-    """
-    name = 'master-detail'
-    serializer_class = InternshipMasterSerializer
-    queryset = InternshipMaster.objects.all()
-    lookup_field = 'uuid'

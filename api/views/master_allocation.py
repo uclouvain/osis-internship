@@ -32,7 +32,7 @@ from internship.models.master_allocation import MasterAllocation
 from internship.models.period import Period
 
 
-class MasterAllocationList(generics.ListAPIView):
+class MasterAllocationListCreate(generics.ListCreateAPIView):
     """
        Return a list of master allocations with optional filtering.
     """
@@ -42,9 +42,7 @@ class MasterAllocationList(generics.ListAPIView):
     search_fields = (
         'organization', 'specialty'
     )
-    ordering_fields = (
-        'birth_date', 'specialty'
-    )
+    ordering_fields = ('specialty')
     ordering = (
         'organization',
     )  # Default ordering
@@ -58,7 +56,30 @@ class MasterAllocationList(generics.ListAPIView):
         return qs
 
 
-class MasterAllocationDetail(generics.RetrieveAPIView):
+class FilteredAllocationsList(generics.ListAPIView):
+    """
+       Return a list of master allocations with optional filtering.
+    """
+    name = 'filtered-allocations-list'
+    serializer_class = MasterAllocationSerializer
+    queryset = MasterAllocation.objects.all().select_related('master')
+
+    def get_queryset(self):
+        organization_uuid = self.kwargs['organization_uuid']
+        specialty_uuid = self.kwargs['specialty_uuid']
+        qs = MasterAllocation.objects.filter(
+            specialty__uuid=specialty_uuid,
+            organization__uuid=organization_uuid
+        ).select_related('master')
+
+        role = self.request.query_params.get('role')
+        if role:
+            qs = qs.filter(master__role=role)
+
+        return qs
+
+
+class MasterAllocationUpdateDetail(generics.RetrieveUpdateAPIView):
     """
         Return the detail of the internship master allocation.
     """
