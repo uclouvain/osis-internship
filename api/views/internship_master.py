@@ -73,7 +73,7 @@ class InternshipMasterActivateAccount(generics.RetrieveUpdateAPIView):
     """
     def update(self, request, *args, **kwargs):
         master = self.get_object()
-        master.user_account_status = UserAccountStatus.ACTIVE.name
+        master.user_account_status = UserAccountStatus.ACTIVE.value
         master.save()
         serializer = self.get_serializer(master)
         return Response(serializer.data)

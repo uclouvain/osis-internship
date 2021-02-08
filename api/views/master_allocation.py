@@ -56,7 +56,7 @@ class MasterAllocationListCreate(generics.ListCreateAPIView):
         return qs
 
 
-class FilteredAllocationsList(generics.ListAPIView):
+class FilteredAllocationsList(generics.ListCreateAPIView):
     """
        Return a list of master allocations with optional filtering.
     """
