@@ -54,6 +54,10 @@ paths:
       responses:
         200:
           description: Successfully created an internship master
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MasterGet'
 
   /masters/{uuid}:
     get:
@@ -173,6 +177,32 @@ paths:
                         type: array
                         items:
                           $ref: '#/components/schemas/SpecialtyGet'
+    post:
+      description: Create new internship allocation
+      parameters:
+        - in: path
+          name: organization
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: specialty
+          schema:
+            type: string
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AllocationGet'
+      responses:
+        200:
+          description: Successfully created an internship master allocation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllocationGet'
 
   /specialties:
     get:
@@ -818,6 +848,10 @@ components:
         gender:
           type: string
           example: "M"
+        birth_date:
+          type: string
+          format: date
+          example: "1989-01-01"
 
     Country:
       type: object
