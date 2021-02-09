@@ -26,6 +26,7 @@
 from rest_framework import serializers
 
 from base.api.serializers.person import PersonDetailSerializer
+from base.models.enums.person_source_type import INTERNSHIP
 from base.models.person import Person
 from internship.models.internship_master import InternshipMaster
 
@@ -49,8 +50,21 @@ class InternshipMasterSerializer(serializers.HyperlinkedModelSerializer):
         )
 
     def create(self, *args, **kwargs):
-        person = Person(**self.initial_data['person'])
-        person.save()
-        master = InternshipMaster(person=person, role=self.initial_data['role'], civility=self.initial_data['civility'])
-        master.save()
+        master = _master_exists(self.initial_data['email'])
+        if not master:
+            person = Person(**self.initial_data['person'], source=INTERNSHIP)
+            person.save()
+            master = InternshipMaster(
+                person=person,
+                role=self.initial_data['role'],
+                civility=self.initial_data['civility']
+            )
+            master.save()
         return master
+
+
+def _master_exists(email):
+    try:
+        return InternshipMaster.objects.get(person__email=email)
+    except InternshipMaster.DoesNotExist:
+        return None
