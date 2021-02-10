@@ -28,7 +28,10 @@ from rest_framework import serializers
 from internship.api.serializers.internship_master import InternshipMasterSerializer
 from internship.api.serializers.internship_specialty import InternshipSpecialtySerializer
 from internship.api.serializers.organization import OrganizationSerializer
+from internship.models.internship_master import InternshipMaster
+from internship.models.internship_speciality import InternshipSpeciality
 from internship.models.master_allocation import MasterAllocation
+from internship.models.organization import Organization
 
 
 class MasterAllocationSerializer(serializers.HyperlinkedModelSerializer):
@@ -44,7 +47,16 @@ class MasterAllocationSerializer(serializers.HyperlinkedModelSerializer):
         model = MasterAllocation
         fields = (
             'url',
+            'uuid',
             'master',
             'organization',
             'specialty',
         )
+
+    def create(self, *args, **kwargs):
+        master = InternshipMaster.objects.get(uuid=self.initial_data['master']['uuid'])
+        organization = Organization.objects.get(uuid=self.initial_data['organization']['uuid'])
+        specialty = InternshipSpeciality.objects.get(uuid=self.initial_data['specialty']['uuid'])
+        allocation = MasterAllocation(master=master, organization=organization, specialty=specialty)
+        allocation.save()
+        return allocation

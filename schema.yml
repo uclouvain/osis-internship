@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  version: "1"
+  version: "1.0.8"
   title: Internship API
   description: 'This API delivers data for the Internship project.'
   contact:
@@ -20,7 +20,7 @@ servers:
     description: Production server
 
 paths:
-  /masters:
+  /masters/:
     get:
       description: Obtain the list of internship masters
       parameters:
@@ -43,6 +43,21 @@ paths:
                         type: array
                         items:
                           $ref: '#/components/schemas/MasterGet'
+    post:
+      description: Create new internship master
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MasterGet'
+      responses:
+        200:
+          description: Successfully created an internship master
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MasterGet'
 
   /masters/{uuid}:
     get:
@@ -123,6 +138,83 @@ paths:
       responses:
         200:
           description: Successful get of a master allocation's data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllocationGet'
+    delete:
+      description: Delete a master allocation
+      parameters:
+        - in: path
+          name: uuid
+          required: true
+          description: The UUID of the master allocation
+          schema:
+            $ref: '#/components/schemas/Uuid'
+      responses:
+        200:
+          description: Successful delete of a master allocation's data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllocationGet'
+
+  /masters_allocations/{specialty}/{organization}:
+    get:
+      description: Obtain the list of master allocations filtered by specialty and organization
+      parameters:
+        - in: path
+          name: organization
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: specialty
+          schema:
+            type: string
+          required: true
+        - in: query
+          name: role
+          schema:
+            type: string
+            default: all
+          required: false
+      responses:
+        200:
+          description: Successful get of the list of masters allocations
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - $ref: "#/components/schemas/Paging"
+                  - type: object
+                    properties:
+                      results:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/SpecialtyGet'
+    post:
+      description: Create new internship allocation
+      parameters:
+        - in: path
+          name: organization
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: specialty
+          schema:
+            type: string
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AllocationGet'
+      responses:
+        200:
+          description: Successfully created an internship master allocation
           content:
             application/json:
               schema:
@@ -501,6 +593,8 @@ components:
         url:
           type: string
           format: uri
+        uuid:
+          $ref: '#/components/schemas/Uuid'
         master:
           $ref: '#/components/schemas/MasterGet'
         organization:
@@ -772,6 +866,10 @@ components:
         gender:
           type: string
           example: "M"
+        birth_date:
+          type: string
+          format: date
+          example: "1989-01-01"
 
     Country:
       type: object

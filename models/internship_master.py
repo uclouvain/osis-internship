@@ -35,11 +35,13 @@ from osis_common.models.serializable_model import SerializableModel, Serializabl
 
 class InternshipMasterAdmin(SerializableModelAdmin):
     list_display = ('person', 'civility')
+    search_fields = ['person__last_name', 'person__first_name']
     fieldsets = (
         (
             None, {
                 'fields': (
-                    'person', 'civility', 'email_private', 'email_additional', 'start_activities', 'user_account_status'
+                    'person', 'civility', 'email_private', 'email_additional',
+                    'start_activities', 'user_account_status', 'role'
                 )
             }
         ),
