@@ -47,6 +47,7 @@ class MasterAllocationSerializer(serializers.HyperlinkedModelSerializer):
         model = MasterAllocation
         fields = (
             'url',
+            'uuid',
             'master',
             'organization',
             'specialty',

@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  version: "1"
+  version: "1.0.8"
   title: Internship API
   description: 'This API delivers data for the Internship project.'
   contact:
@@ -138,6 +138,22 @@ paths:
       responses:
         200:
           description: Successful get of a master allocation's data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllocationGet'
+    delete:
+      description: Delete a master allocation
+      parameters:
+        - in: path
+          name: uuid
+          required: true
+          description: The UUID of the master allocation
+          schema:
+            $ref: '#/components/schemas/Uuid'
+      responses:
+        200:
+          description: Successful delete of a master allocation's data.
           content:
             application/json:
               schema:
@@ -577,6 +593,8 @@ components:
         url:
           type: string
           format: uri
+        uuid:
+          $ref: '#/components/schemas/Uuid'
         master:
           $ref: '#/components/schemas/MasterGet'
         organization:

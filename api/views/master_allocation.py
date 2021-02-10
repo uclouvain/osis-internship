@@ -79,7 +79,7 @@ class FilteredAllocationsList(generics.ListCreateAPIView):
         return qs
 
 
-class MasterAllocationUpdateDetail(generics.RetrieveUpdateAPIView):
+class MasterAllocationUpdateDeleteDetail(generics.RetrieveUpdateDestroyAPIView):
     """
         Return the detail of the internship master allocation.
     """
