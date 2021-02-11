@@ -2,6 +2,8 @@
 
 from django.db import migrations, models
 
+import internship
+
 
 class Migration(migrations.Migration):
 
