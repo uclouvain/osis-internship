@@ -66,7 +66,7 @@ class InternshipMaster(SerializableModel):
     role = models.CharField(
         max_length=50,
         choices=Role.choices(),
-        default=Role.MASTER,
+        default=Role.MASTER.value,
     )
 
     def civility_acronym(self):
