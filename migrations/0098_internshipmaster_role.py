@@ -13,6 +13,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='internshipmaster',
             name='role',
-            field=models.CharField(choices=[('MASTER', 'MASTER'), ('DELEGATE', 'DELEGATE')], default='MASTER', max_length=50),
+            field=models.CharField(choices=[('MASTER', 'MASTER'), ('DELEGATE', 'DELEGATE')], default=internship.models.enums.role.Role['MASTER'], max_length=50),
         ),
     ]
