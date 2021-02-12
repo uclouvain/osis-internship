@@ -64,6 +64,9 @@ class Period(SerializableModel):
     def number(self):
         return int(self.name[1])
 
+    def update_mail_status(self, status):
+        self.sent_reminder_mail = status
+
     @property
     def is_active(self):
         return self.date_start <= date.today() <= self.date_end

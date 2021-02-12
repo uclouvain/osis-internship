@@ -27,11 +27,15 @@ import datetime
 from unittest import mock
 
 from django.test import TestCase
+from django.utils.datetime_safe import date
 
 from base.tests.factories.student import StudentFactory
+from internship.models.enums.user_account_status import UserAccountStatus
 from internship.tests.factories.cohort import CohortFactory
 from internship.tests.factories.internship_student_information import InternshipStudentInformationFactory
+from internship.tests.factories.master_allocation import MasterAllocationFactory
 from internship.tests.factories.period import PeriodFactory
+from internship.tests.factories.student_affectation_stat import StudentAffectationStatFactory
 from internship.utils.mails import mails_management
 
 
@@ -53,3 +57,38 @@ class InternshipScoreRecapTest(TestCase):
 
         mails_management.send_score_encoding_recap(data, None)
         self.assertTrue(mock_send_messages.called)
+
+
+class InternshipPeriodEncodingReminderTest(TestCase):
+
+    def setUp(self) -> None:
+        self.cohort = CohortFactory()
+        self.period = PeriodFactory(cohort=self.cohort, date_end=date.today())
+        self.active_master_allocation = MasterAllocationFactory(
+            specialty__cohort=self.cohort, organization__cohort=self.cohort,
+            master__user_account_status=UserAccountStatus.ACTIVE.value
+        )
+        self.student_affectation = StudentAffectationStatFactory(
+            speciality=self.active_master_allocation.specialty,
+            organization=self.active_master_allocation.organization,
+            period=self.period
+        )
+        self.inactive_master_allocation = MasterAllocationFactory(
+            specialty__cohort=self.cohort, organization__cohort=self.cohort,
+            master__user_account_status=UserAccountStatus.INACTIVE.value
+        )
+
+    @mock.patch('internship.utils.mails.mails_management.send_messages')
+    def test_send_internship_period_encoding_reminder_only_to_active_master_with_affectations(self, mock_send_messages):
+        mails_management.send_internship_period_encoding_reminder(self.period)
+        _, args = mock_send_messages.call_args
+        self.assertTrue(mock_send_messages.called)
+        self.assertEqual(args['message_content']['template_base_data'], {'period': self.period.name})
+        self.assertEqual(args['message_content']['receivers'], [
+            {
+                'receiver_email': self.active_master_allocation.master.person.email,
+                'receiver_person_id': self.active_master_allocation.master.person_id,
+                'receiver_lang': None,
+            }
+        ])
+        self.assertTrue(self.period.sent_reminder_mail)
