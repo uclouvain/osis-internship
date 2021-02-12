@@ -23,6 +23,8 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.conf import settings
+
 from internship.models.enums.user_account_status import UserAccountStatus
 from internship.models.internship_student_affectation_stat import InternshipStudentAffectationStat
 from internship.models.internship_student_information import InternshipStudentInformation
@@ -69,8 +71,8 @@ def send_internship_period_encoding_reminder(period):
     deduped_active_masters = list({master['email']: master for master in active_masters}.values())
 
     message_content = message_config.create_message_content(
-        html_template_ref='internship_score_encoding_recap_email_html',
-        txt_template_ref='internship_score_encoding_recap_email_txt',
+        html_template_ref='internship_end_period_reminder_html',
+        txt_template_ref='internship_end_period_reminder_txt',
         tables=[],
         receivers=[message_config.create_receiver(
             master['person_id'],
@@ -79,6 +81,7 @@ def send_internship_period_encoding_reminder(period):
         ) for master in deduped_active_masters],
         template_base_data={
             'period': period.name,
+            'link': settings.INTERNSHIP_SCORE_ENCODING_URL
         },
         subject_data={'period': period.name}
     )
