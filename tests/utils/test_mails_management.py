@@ -26,6 +26,7 @@
 import datetime
 from unittest import mock
 
+from django.conf import settings
 from django.test import TestCase
 from django.utils.datetime_safe import date
 
@@ -83,7 +84,10 @@ class InternshipPeriodEncodingReminderTest(TestCase):
         mails_management.send_internship_period_encoding_reminder(self.period)
         _, args = mock_send_messages.call_args
         self.assertTrue(mock_send_messages.called)
-        self.assertEqual(args['message_content']['template_base_data'], {'period': self.period.name})
+        self.assertEqual(args['message_content']['template_base_data'], {
+            'link': settings.INTERNSHIP_SCORE_ENCODING_URL,
+            'period': self.period.name
+        })
         self.assertEqual(args['message_content']['receivers'], [
             {
                 'receiver_email': self.active_master_allocation.master.person.email,
@@ -91,4 +95,4 @@ class InternshipPeriodEncodingReminderTest(TestCase):
                 'receiver_lang': None,
             }
         ])
-        self.assertTrue(self.period.sent_reminder_mail)
+        self.assertTrue(self.period.reminder_mail_sent)

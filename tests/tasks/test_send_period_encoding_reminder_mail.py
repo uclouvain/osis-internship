@@ -39,6 +39,6 @@ class TestSendPeriodEncodingReminderMail(TestCase):
 
     @mock.patch('internship.tasks.send_period_encoding_reminder_mail.send_internship_period_encoding_reminder')
     def test_reminder_not_sent_when_already_sent(self, mock_send_mail):
-        PeriodFactory(date_end=date.today(), sent_reminder_mail=True)
+        PeriodFactory(date_end=date.today(), reminder_mail_sent=True)
         send_period_encoding_reminder_mail.run()
         self.assertFalse(mock_send_mail.called)

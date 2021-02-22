@@ -13,6 +13,6 @@ DAYS_BEFORE = 15
 def run() -> dict:
     active_period = Period.active.first()
     trigger_date = active_period.date_end - timedelta(days=DAYS_BEFORE)
-    if date.today() >= trigger_date and not active_period.sent_reminder_mail:
+    if date.today() >= trigger_date and not active_period.reminder_mail_sent:
         send_internship_period_encoding_reminder(active_period)
     return {}

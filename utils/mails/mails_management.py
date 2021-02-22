@@ -59,8 +59,9 @@ def send_score_encoding_recap(data, connected_user):
 
 def send_internship_period_encoding_reminder(period):
     effective_internships = _get_effective_internships(period)
-    specialties = [i.speciality_id for i in effective_internships]
-    organizations = [i.organization_id for i in effective_internships]
+
+    specialties, organizations = zip(*[(i.speciality_id, i.organization_id) for i in effective_internships])
+
     active_user_allocations = _get_active_user_allocations(organizations, specialties)
 
     active_masters = [{

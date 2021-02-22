@@ -38,4 +38,4 @@ class PeriodFactory(factory.django.DjangoModelFactory):
     date_start = factory.LazyAttribute(lambda obj: pendulum.today().start_of('month')._datetime)
     date_end = factory.LazyAttribute(lambda obj: pendulum.instance(obj.date_start).end_of('month')._datetime)
     cohort = factory.SubFactory(CohortFactory)
-    sent_reminder_mail = False
+    reminder_mail_sent = False

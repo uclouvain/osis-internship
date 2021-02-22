@@ -12,7 +12,7 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AddField(
             model_name='period',
-            name='sent_reminder_mail',
+            name='reminder_mail_sent',
             field=models.BooleanField(default=False),
         ),
     ]
