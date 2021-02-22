@@ -23,7 +23,12 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.conf import settings
+
+from internship.models.enums.user_account_status import UserAccountStatus
+from internship.models.internship_student_affectation_stat import InternshipStudentAffectationStat
 from internship.models.internship_student_information import InternshipStudentInformation
+from internship.models.master_allocation import MasterAllocation
 from osis_common.messaging import message_config
 from osis_common.messaging.send_message import send_messages
 
@@ -50,3 +55,51 @@ def send_score_encoding_recap(data, connected_user):
         subject_data={}
     )
     send_messages(message_content=message_content, connected_user=connected_user)
+
+
+def send_internship_period_encoding_reminder(period):
+    effective_internships = _get_effective_internships(period)
+
+    specialties, organizations = zip(*[(i.speciality_id, i.organization_id) for i in effective_internships])
+
+    active_user_allocations = _get_active_user_allocations(organizations, specialties)
+
+    active_masters = [{
+        'person_id': allocation.master.person_id,
+        'email': allocation.master.person.email
+    } for allocation in active_user_allocations]
+
+    deduped_active_masters = list({master['email']: master for master in active_masters}.values())
+
+    message_content = message_config.create_message_content(
+        html_template_ref='internship_end_period_reminder_html',
+        txt_template_ref='internship_end_period_reminder_txt',
+        tables=[],
+        receivers=[message_config.create_receiver(
+            master['person_id'],
+            master['email'],
+            None
+        ) for master in deduped_active_masters],
+        template_base_data={
+            'period': period.name,
+            'link': settings.INTERNSHIP_SCORE_ENCODING_URL
+        },
+        subject_data={'period': period.name}
+    )
+    send_messages(message_content=message_content)
+    period.update_mail_status(True)
+
+
+def _get_active_user_allocations(organizations, specialties):
+    return MasterAllocation.objects.filter(
+        specialty_id__in=specialties,
+        organization_id__in=organizations,
+        master__user_account_status=UserAccountStatus.ACTIVE.value
+    ).select_related('master__person')
+
+
+def _get_effective_internships(period):
+    effective_internships = InternshipStudentAffectationStat.objects.filter(
+        period=period
+    ).values_list('speciality_id', 'organization_id', named=True)
+    return effective_internships

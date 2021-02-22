@@ -33,7 +33,7 @@ from osis_common.models.serializable_model import SerializableModel, Serializabl
 
 
 class PeriodAdmin(SerializableModelAdmin):
-    list_display = ('name', 'date_start', 'date_end', 'cohort')
+    list_display = ('name', 'date_start', 'date_end', 'cohort', 'reminder_mail_sent')
     fieldsets = ((None, {'fields': ('name', 'date_start', 'date_end', 'cohort')}),)
     list_filter = ('cohort',)
 
@@ -49,6 +49,7 @@ class Period(SerializableModel):
     date_start = models.DateField()
     date_end = models.DateField()
     cohort = models.ForeignKey('internship.cohort', on_delete=models.CASCADE)
+    reminder_mail_sent = models.BooleanField(default=False)
 
     objects = models.Manager()
     active = ActivePeriod()
@@ -62,6 +63,9 @@ class Period(SerializableModel):
 
     def number(self):
         return int(self.name[1])
+
+    def update_mail_status(self, status):
+        self.reminder_mail_sent = status
 
     @property
     def is_active(self):
