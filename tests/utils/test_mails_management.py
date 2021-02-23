@@ -93,4 +93,5 @@ class InternshipPeriodEncodingReminderTest(TestCase):
             'receiver_email': self.active_master_allocation.master.person.email,
             'receiver_person_id': self.active_master_allocation.master.person_id,
         })
+        self.period.refresh_from_db()
         self.assertTrue(self.period.reminder_mail_sent)
