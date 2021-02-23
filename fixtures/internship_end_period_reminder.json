@@ -3,7 +3,7 @@
     "model": "osis_common.messagetemplate",
     "fields": {
         "reference": "internship_end_period_reminder_html",
-        "subject": "STAC - Encodage des cotes pour {{ period }}",
+        "subject": "STAC - Encodage des cotes pour {period}",
         "template": "<i>Ceci est un message automatique généré par le serveur OSIS. Merci de ne pas y répondre.</i><br/><p>Bonjour,<br/>L'encodage des cotes de stage pour la période {{ period }} est maintenant accessible sur la plateforme via le lien suivant:</p><a href='{{ link }}'>{{ link }}</a><p>Bien à vous.</p>",
         "format": "HTML",
         "language": "fr-be"
@@ -13,7 +13,7 @@
     "model": "osis_common.messagetemplate",
     "fields": {
         "reference": "internship_end_period_reminder_txt",
-        "subject": "STAC - Encodage des cotes pour {{ period }}",
+        "subject": "STAC - Encodage des cotes pour {period}",
         "template": "Ceci est un message automatique généré par le serveur OSIS. Merci de ne pas y répondre. Bonjour, l'encodage des cotes de stage pour la période {{ period }} est maintenant accessible sur la plateforme via le lien suivant: {{ link }} Bien à vous.",
         "format": "PLAIN",
         "language": "fr-be"
