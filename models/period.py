@@ -66,6 +66,7 @@ class Period(SerializableModel):
 
     def update_mail_status(self, status):
         self.reminder_mail_sent = status
+        self.save()
 
     @property
     def is_active(self):
