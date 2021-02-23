@@ -41,3 +41,4 @@ To execute a specific test that is under development:
 [base]: https://github.com/uclouvain/osis/tree/dev/base
 [reference]: https://github.com/uclouvain/osis/tree/dev/reference
 [osis-common]: https://github.com/uclouvain/osis-common
+.
