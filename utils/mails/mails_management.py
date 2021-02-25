@@ -61,17 +61,16 @@ def send_score_encoding_recap(data, connected_user):
 def send_internship_period_encoding_reminder(period):
     organizations, specialties = _get_effective_internships_data(period)
     active_user_allocations = _get_active_user_allocations(organizations, specialties)
-    deduped_active_masters = _get_deduped_active_masters(active_user_allocations)
+    deduplicated_active_masters = _get_deduplicated_active_masters(active_user_allocations)
 
     message_content = message_config.create_message_content(
         html_template_ref='internship_end_period_reminder_html',
         txt_template_ref='internship_end_period_reminder_txt',
         tables=[],
-        receivers=[message_config.create_receiver(
-            master['person_id'],
-            master['email'],
-            None
-        ) for master in deduped_active_masters],
+        receivers=[
+            message_config.create_receiver(master_person_id, master_email, None)
+            for master_person_id, master_email in deduplicated_active_masters
+        ],
         template_base_data={
             'period': period.name,
             'link': settings.INTERNSHIP_SCORE_ENCODING_URL
@@ -127,13 +126,8 @@ def _get_effective_internships_data(period):
     return organizations, specialties
 
 
-def _get_deduped_active_masters(active_user_allocations):
-    active_masters = [{
-        'person_id': allocation.master.person_id,
-        'email': allocation.master.person.email
-    } for allocation in active_user_allocations]
-    deduped_active_masters = list({master['email']: master for master in active_masters}.values())
-    return deduped_active_masters
+def _get_deduplicated_active_masters(active_user_allocations):
+    return set([(alloc.master.person_id, alloc.master.person.email) for alloc in active_user_allocations])
 
 
 def _get_allocation_scores(allocation, period, students_affectations):
