@@ -118,7 +118,8 @@ class InternshipPeriodEncodingRecapTest(TestCase):
         )
 
     @mock.patch('internship.utils.mails.mails_management.send_messages')
-    def test_send_internship_period_encoding_recap_only_to_active_master_with_affectations(self, mock_send_messages):
+    def test_send_internship_period_encoding_recap_only_to_active_master_create_empty_score(self, mock_send_messages):
+        self.assertFalse(InternshipScore.objects.exists())
         mails_management.send_internship_period_encoding_recap(self.period)
         _, args = mock_send_messages.call_args
         self.assertTrue(mock_send_messages.called)
@@ -130,7 +131,7 @@ class InternshipPeriodEncodingRecapTest(TestCase):
         }
         for key in data.keys():
             self.assertEqual(args['message_content']['template_base_data'][key], data[key])
-        self.assertEqual(args['message_content']['template_base_data']['scores'][0], InternshipScore.objects.first())
+        self.assertTrue(InternshipScore.objects.exists())
         self.assertEqual(args['message_content']['receivers'][0], {
             **args['message_content']['receivers'][0],
             'receiver_email': self.allocation.master.person.email,
