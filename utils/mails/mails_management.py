@@ -83,7 +83,7 @@ def send_internship_period_encoding_reminder(period):
     period.save()
 
 
-def send_internship_period_encoding_recap(period):
+def send_internship_score_encoding_recaps(period):
     organizations, specialties = _get_effective_internships_data(period)
     active_user_allocations = _get_active_user_allocations(organizations, specialties)
     students_affectations = InternshipStudentAffectationStat.objects.filter(period=period)
@@ -151,5 +151,6 @@ def _get_allocation_scores(allocation, period, students_affectations):
 def _fill_with_empty_scores(period, students):
     InternshipScore.objects.bulk_create(
         [InternshipScore(student_id=student, period=period, cohort=period.cohort) for student in students],
-        ignore_conflicts=True
+        ignore_conflicts=True,
+        batch_size=1000
     )

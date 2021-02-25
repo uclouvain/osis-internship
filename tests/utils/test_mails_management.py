@@ -67,7 +67,8 @@ class InternshipPeriodEncodingReminderTest(TestCase):
         self.cohort = CohortFactory()
         self.period = PeriodFactory(cohort=self.cohort, date_end=date.today())
         self.active_master_allocation = MasterAllocationFactory(
-            specialty__cohort=self.cohort, organization__cohort=self.cohort,
+            specialty__cohort=self.cohort,
+            organization__cohort=self.cohort,
             master__user_account_status=UserAccountStatus.ACTIVE.value
         )
         self.student_affectation = StudentAffectationStatFactory(
@@ -76,7 +77,8 @@ class InternshipPeriodEncodingReminderTest(TestCase):
             period=self.period
         )
         self.inactive_master_allocation = MasterAllocationFactory(
-            specialty__cohort=self.cohort, organization__cohort=self.cohort,
+            specialty__cohort=self.cohort,
+            organization__cohort=self.cohort,
             master__user_account_status=UserAccountStatus.INACTIVE.value
         )
 
@@ -104,7 +106,8 @@ class InternshipPeriodEncodingRecapTest(TestCase):
         self.cohort = CohortFactory()
         self.period = PeriodFactory(cohort=self.cohort)
         self.allocation = MasterAllocationFactory(
-            specialty__cohort=self.cohort, organization__cohort=self.cohort,
+            specialty__cohort=self.cohort,
+            organization__cohort=self.cohort,
             master__user_account_status=UserAccountStatus.ACTIVE.value
         )
         self.affectation = StudentAffectationStatFactory(
@@ -113,14 +116,15 @@ class InternshipPeriodEncodingRecapTest(TestCase):
             period=self.period
         )
         self.inactive_master_allocation = MasterAllocationFactory(
-            specialty=self.allocation.specialty, organization=self.allocation.organization,
+            specialty=self.allocation.specialty,
+            organization=self.allocation.organization,
             master__user_account_status=UserAccountStatus.INACTIVE.value
         )
 
     @mock.patch('internship.utils.mails.mails_management.send_messages')
     def test_send_internship_period_encoding_recap_only_to_active_master_create_empty_score(self, mock_send_messages):
         self.assertFalse(InternshipScore.objects.exists())
-        mails_management.send_internship_period_encoding_recap(self.period)
+        mails_management.send_internship_score_encoding_recaps(self.period)
         _, args = mock_send_messages.call_args
         self.assertTrue(mock_send_messages.called)
         data = {
