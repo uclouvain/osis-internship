@@ -32,6 +32,7 @@ from django.utils.datetime_safe import date
 
 from base.tests.factories.student import StudentFactory
 from internship.models.enums.user_account_status import UserAccountStatus
+from internship.models.internship_score import APD_NUMBER, InternshipScore
 from internship.tests.factories.cohort import CohortFactory
 from internship.tests.factories.internship_student_information import InternshipStudentInformationFactory
 from internship.tests.factories.master_allocation import MasterAllocationFactory
@@ -95,3 +96,43 @@ class InternshipPeriodEncodingReminderTest(TestCase):
         })
         self.period.refresh_from_db()
         self.assertTrue(self.period.reminder_mail_sent)
+
+
+class InternshipPeriodEncodingRecapTest(TestCase):
+
+    def setUp(self) -> None:
+        self.cohort = CohortFactory()
+        self.period = PeriodFactory(cohort=self.cohort)
+        self.allocation = MasterAllocationFactory(
+            specialty__cohort=self.cohort, organization__cohort=self.cohort,
+            master__user_account_status=UserAccountStatus.ACTIVE.value
+        )
+        self.affectation = StudentAffectationStatFactory(
+            speciality=self.allocation.specialty,
+            organization=self.allocation.organization,
+            period=self.period
+        )
+        self.inactive_master_allocation = MasterAllocationFactory(
+            specialty=self.allocation.specialty, organization=self.allocation.organization,
+            master__user_account_status=UserAccountStatus.INACTIVE.value
+        )
+
+    @mock.patch('internship.utils.mails.mails_management.send_messages')
+    def test_send_internship_period_encoding_recap_only_to_active_master_with_affectations(self, mock_send_messages):
+        mails_management.send_internship_period_encoding_recap(self.period)
+        _, args = mock_send_messages.call_args
+        self.assertTrue(mock_send_messages.called)
+        data = {
+            'apds': ['{}'.format(index) for index in range(1, APD_NUMBER + 1)],
+            'allocation': self.allocation,
+            'period': self.period.name,
+            'link': settings.INTERNSHIP_SCORE_ENCODING_URL,
+        }
+        for key in data.keys():
+            self.assertEqual(args['message_content']['template_base_data'][key], data[key])
+        self.assertEqual(args['message_content']['template_base_data']['scores'][0], InternshipScore.objects.first())
+        self.assertEqual(args['message_content']['receivers'][0], {
+            **args['message_content']['receivers'][0],
+            'receiver_email': self.allocation.master.person.email,
+            'receiver_person_id': self.allocation.master.person_id,
+        })
