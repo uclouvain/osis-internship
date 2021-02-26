@@ -71,3 +71,6 @@ class InternshipScore(SerializableModel):
 
     def get_scores(self):
         return [vars(self)['APD_{}'.format(index)] for index in range(1, APD_NUMBER+1)]
+
+    class Meta:
+        unique_together = ['student', 'period']

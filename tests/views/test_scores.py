@@ -324,7 +324,7 @@ class ScoresEncodingTest(TestCase):
     def test_ajax_delete_score(self):
         edited_score = 10
         computed_score = 20
-        student = Student.objects.first()
+        student = StudentFactory()
         score = ScoreFactory(cohort=self.cohort, student=student, period=self.period, score=edited_score)
         url = reverse('delete_edited_score', kwargs={'cohort_id': self.cohort.pk})
         self.assertEqual(score.score, edited_score)

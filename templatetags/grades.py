@@ -43,3 +43,8 @@ def is_apd_validated(cohort, student, apd):
     ).values_list('APD_{}'.format(apd), flat=True)
     valid_grades = InternshipScoreRules.get_valid_grades(apd-1)
     return bool(set(apd_grades).intersection(valid_grades))
+
+
+@register.filter()
+def get_apd_value(score, apd):
+    return getattr(score, 'APD_{}'.format(apd), '-')

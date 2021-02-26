@@ -1,0 +1,22 @@
+[
+{
+    "model": "osis_common.messagetemplate",
+    "fields": {
+        "reference": "internship_end_period_recap_html",
+        "subject": "STAC - Récapitulatif des cotes de stage pour {period}",
+        "template": "{% load grades %}<i>Ceci est un message automatique généré par le serveur OSIS. Merci de ne pas y répondre.</i><br/><p>Bonjour,<br/>Voici un récapitulatif des cotes de stage pour la période {{ period }}: <p><b> {{ allocation.organization.name }} - {{ allocation.specialty.name }} </b></p> <table><thead><tr><th>Stagiaire</th>{% for apd in apds %}<th>{{ apd }}</th>{%endfor%}</tr><tbody> {% for score in scores %} <tr><td><span style='text-transform: uppercase;'>{{ score.student.person.last_name }}</span>, {{score.student.person.first_name }}</td>{% for apd in apds %}<td>{% with \"\"|add:apd as apdFilter %}\n{{score|get_apd_value:apdFilter|default_if_none:'-'}}{% endwith %}</td>{% endfor %}</tr>{% endfor %} </tbody></table><p> Vous pouvez toujours modifier celles-ci en vous rendant sur la plateforme via le lien suivant:</p><a href='{{ link }}'>{{ link }}</a><p>Bien à vous.</p>",
+        "format": "HTML",
+        "language": "fr-be"
+    }
+},
+{
+    "model": "osis_common.messagetemplate",
+    "fields": {
+        "reference": "internship_end_period_recap_txt",
+        "subject": "STAC - Récapitulatif des cotes de stage pour {period}",
+        "template": "Ceci est un message automatique généré par le serveur OSIS. Merci de ne pas y répondre. Bonjour, voici un récapitulatif des cotes de stage pour la période {{ period }}: {{ allocation.organization.name }} - {{ allocation.specialty.name }} {% for score in scores %} {{ score }} {% endfor %} Vous pouvez toujours modifier celles-ci en vous rendant sur la plateforme via le lien suivant: {{ link }}' Bien à vous.",
+        "format": "PLAIN",
+        "language": "fr-be"
+    }
+}
+]
