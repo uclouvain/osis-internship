@@ -133,19 +133,5 @@ def get_hospital_error(cohort):
 def sort_organizations(organizations):
     """
         Function to sort the organization by the reference
-        Param:
-            sort_organizations : list of organizations to sort
-        Get the reference of the organization, transform and sort by the int key
-        Recreate the list with the reference research
     """
-    tab = []
-    number_ref = []
-    for organization in organizations:
-        if organization is not None:
-            number_ref.append(organization.reference)
-    if number_ref:
-        number_ref = sorted(number_ref, key=int)
-        for i in number_ref:
-            organization = search(reference=i)
-            tab.append(organization[0])
-    return tab
+    return sorted(organizations, key=lambda x: x.reference)
