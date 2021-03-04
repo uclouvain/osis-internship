@@ -425,7 +425,7 @@ def empty_score(request, cohort_id):
 
 def _prepare_score_table(cohort, periods, students):
     persons = [student.person.pk for student in students]
-    scores = cohort.internshipscore_set.filter(student__person_id__in=persons).select_related(
+    scores = cohort.internshipscore_set.filter(student__person_id__in=persons, validated=True).select_related(
         'student__person', 'period', 'cohort'
     ).order_by('student__person')
     mapping = cohort.internshipscoremapping_set.all().select_related('period')
