@@ -36,6 +36,7 @@ from django.test import TestCase
 from django.urls import reverse
 from django.utils.datetime_safe import date
 from django.utils.translation import gettext as _
+from mock import Mock
 from rest_framework import status
 
 from backoffice.settings.base import INSTALLED_APPS
@@ -94,7 +95,7 @@ class ScoresEncodingTest(TestCase):
                     speciality=internship.speciality if internship.speciality else SpecialtyFactory(),
                     period=periods[index]
                 )
-            ScoreFactory(student=student, period=cls.period, cohort=cls.cohort, APD_1='A')
+            ScoreFactory(student=student, period=cls.period, cohort=cls.cohort, APD_1='A', validated=True)
         for apd in range(1, APD_NUMBER):
             ScoreMappingFactory(
                 period=cls.period,
@@ -325,7 +326,9 @@ class ScoresEncodingTest(TestCase):
         edited_score = 10
         computed_score = 20
         student = StudentFactory()
-        score = ScoreFactory(cohort=self.cohort, student=student, period=self.period, score=edited_score)
+        score = ScoreFactory(
+            cohort=self.cohort, student=student, period=self.period, score=edited_score, validated=True
+        )
         url = reverse('delete_edited_score', kwargs={'cohort_id': self.cohort.pk})
         self.assertEqual(score.score, edited_score)
         response = self.client.post(url, data={
@@ -343,7 +346,7 @@ class ScoresEncodingTest(TestCase):
         student = StudentFactory(person=student_info.person)
         period = PeriodFactory(name='PTEST', cohort=self.cohort, date_end=date.today()-timedelta(days=1))
         StudentAffectationStatFactory(student=student, period=period)
-        ScoreFactory(period=self.period, student=student, cohort=self.cohort)
+        ScoreFactory(period=self.period, student=student, cohort=self.cohort, validated=True)
         url = reverse('send_summary', kwargs={'cohort_id': self.cohort.pk, 'period_id': period.pk})
         response = self.client.post(url, data={
             'selected_student': [student_info.pk]
@@ -377,8 +380,8 @@ class ScoresEncodingTest(TestCase):
         student_info = InternshipStudentInformationFactory(person__last_name=student_name, cohort=self.cohort)
         student = StudentFactory(person=student_info.person)
         PeriodFactory(name='last_period', cohort=self.cohort)
-        ScoreFactory(student=student, period=self.period, cohort=self.cohort, APD_1='A')
-        ScoreFactory(student=student, period=self.other_period, cohort=self.cohort, APD_1='C')
+        ScoreFactory(student=student, period=self.period, cohort=self.cohort, APD_1='A', validated=True)
+        ScoreFactory(student=student, period=self.other_period, cohort=self.cohort, APD_1='C', validated=True)
         ScoreMappingFactory(
             period=self.other_period,
             cohort=self.cohort,
@@ -453,7 +456,9 @@ class ScoresEncodingTest(TestCase):
         student_info = InternshipStudentInformationFactory(cohort=self.cohort, person__last_name="A")
         student = StudentFactory(person=student_info.person)
         new_score = 10
-        ScoreFactory(student=student, period=self.period, cohort=self.cohort, excused=True, score=new_score)
+        ScoreFactory(
+            student=student, period=self.period, cohort=self.cohort, excused=True, score=new_score, validated=True
+        )
         url = reverse('internship_scores_encoding', kwargs={'cohort_id': self.cohort.pk})
         response = self.client.get(url)
         filtered_object_list = [obj for obj in response.context['students'].object_list if obj == student_info]
@@ -506,3 +511,36 @@ class ScoresEncodingTest(TestCase):
         self.assertRedirects(response, redirect_url)
         self.assertEqual(messages_list[0].level_tag, 'error')
         self.assertIn(student.registration_id, str(messages_list[0]))
+
+    def test_show_only_validated_scores(self):
+        # create student with no validated score
+        student_with_no_validated_score = StudentFactory(
+            person=InternshipStudentInformationFactory(person__last_name='AAA', cohort=self.cohort).person
+        )
+        ScoreFactory(
+            period=self.period, student=student_with_no_validated_score, cohort=self.cohort, APD_1='A', validated=False
+        )
+        url = reverse('internship_scores_encoding', kwargs={'cohort_id': self.cohort.pk})
+        response = self.client.get(url)
+        student_with_score_not_validated = response.context['students'].object_list[0]
+        student_with_score_validated = response.context['students'].object_list[1]
+        self.assertTrue(student_with_score_validated.scores)
+        self.assertFalse(student_with_score_not_validated.scores)
+
+    @mock.patch('internship.utils.exporting.score_encoding_xls.export_xls_with_scores')
+    def test_export_only_validated_scores(self, mock_export: Mock):
+        # create student with no validated score
+        student_with_no_validated_score = StudentFactory(
+            person=InternshipStudentInformationFactory(person__last_name='AAA', cohort=self.cohort).person
+        )
+        ScoreFactory(
+            period=self.period, student=student_with_no_validated_score, cohort=self.cohort, APD_1='A', validated=False
+        )
+        url = reverse('internship_download_scores', kwargs={'cohort_id': self.cohort.pk})
+        self.client.post(url, data={'period': self.period.name})
+        args, kwargs = mock_export.call_args
+        exported_students = args[2]
+        student_with_score_not_validated = exported_students[0]
+        student_with_score_validated = exported_students[1]
+        self.assertFalse(student_with_score_not_validated.scores)
+        self.assertTrue(student_with_score_validated.scores)
