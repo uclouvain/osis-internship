@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  version: "1.0.8"
+  version: "1.0.9"
   title: Internship API
   description: 'This API delivers data for the Internship project.'
   contact:
@@ -801,6 +801,8 @@ components:
           type: object
         objectives:
           type: object
+        validated:
+          type: boolean
         APD_1:
           type: string
         APD_2:
