@@ -33,9 +33,9 @@ APD_NUMBER = 15
 
 class InternshipScoreAdmin(SerializableModelAdmin):
     score_fields = ['APD_{}'.format(index) for index in range(1, APD_NUMBER+1)]
-    list_display = ('student', 'period', *score_fields, 'score', 'excused', 'reason')
+    list_display = ('student', 'period', *score_fields, 'score', 'excused', 'reason', 'validated')
     raw_id_fields = ('student',)
-    list_filter = ('cohort',)
+    list_filter = ('cohort', 'validated')
     search_fields = ['student__person__first_name', 'student__person__last_name']
 
 
@@ -65,6 +65,8 @@ class InternshipScore(SerializableModel):
     # TODO: import JSONField from models in Django 3
     comments = JSONField(default=dict)
     objectives = JSONField(default=dict)
+
+    validated = models.BooleanField(default=False)
 
     def __str__(self):
         return '{} - {} - {}'.format(self.student, self.period, self.get_scores())

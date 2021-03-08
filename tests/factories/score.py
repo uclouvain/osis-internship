@@ -44,6 +44,8 @@ class ScoreFactory(factory.django.DjangoModelFactory):
     APD_1 = FuzzyChoice(['A', 'B', 'C', 'D'])
     score = None
 
+    validated = False
+
 
 class ScoreMappingFactory(factory.django.DjangoModelFactory):
     class Meta:
