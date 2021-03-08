@@ -64,11 +64,7 @@ class ValidateInternshipScore(generics.RetrieveUpdateAPIView):
     name = 'score-validation'
     lookup_field = None
 
-    def get_serializer_class(self):
-        if self.request.method in ['PUT', 'PATCH']:
-            return InternshipScorePutSerializer
-
-    def post(self):
+    def get(self, request, *args, **kwargs) -> Response:
         try:
             affectation = InternshipStudentAffectationStat.objects.get(uuid=self.kwargs.get('affectation'))
             score = InternshipScore.objects.get(student=affectation.student, period=affectation.period)
