@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  version: "1.0.9"
+  version: "1.0.10"
   title: Internship API
   description: 'This API delivers data for the Internship project.'
   contact:
@@ -559,6 +559,31 @@ paths:
       responses:
         201:
           description: Successful update of a score for a given period
+
+
+  /scores/{affectation_uuid}/validate:
+    get:
+      description: Validate a score
+      parameters:
+        - in: path
+          name: affectation_uuid
+          required: true
+          description: The UUID of the period
+          schema:
+            $ref: '#/components/schemas/Uuid'
+      responses:
+        200:
+          description: Successfully validated an internship score
+        404:
+          description: Affectation or score not found, validation aborted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: The message describing the error
 
 components:
   securitySchemes:

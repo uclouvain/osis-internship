@@ -66,5 +66,6 @@ class InternshipScorePutSerializer(serializers.HyperlinkedModelSerializer):
             'score',
             'comments',
             'objectives',
+            'validated',
             *_apd_fields()
         )

@@ -29,7 +29,7 @@ from internship.api.views.cohort import CohortList, CohortDetail
 from internship.api.views.internship import InternshipList, InternshipDetail
 from internship.api.views.internship_master import InternshipMasterListCreate, \
     InternshipMasterActivateAccount, InternshipMasterUpdateDetail
-from internship.api.views.internship_score import InternshipScoreCreateRetrieveUpdate
+from internship.api.views.internship_score import InternshipScoreCreateRetrieveUpdate, ValidateInternshipScore
 from internship.api.views.internship_specialty import InternshipSpecialtyList, InternshipSpecialtyDetail
 from internship.api.views.internship_student_affectation_stat import InternshipStudentAffectationList, \
     InternshipStudentAffectationDetail
@@ -81,4 +81,6 @@ urlpatterns = [
 
     url(r'^scores/(?P<student>[0-9a-f-]+)/(?P<period>[0-9a-f-]+)$', InternshipScoreCreateRetrieveUpdate.as_view(),
         name=InternshipScoreCreateRetrieveUpdate.name),
+    url(r'^scores/(?P<affectation>[0-9a-f-]+)/validate/$', ValidateInternshipScore.as_view(),
+        name=ValidateInternshipScore.name),
 ]

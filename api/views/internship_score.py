@@ -23,11 +23,13 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from rest_framework import generics
+from rest_framework import generics, status
+from rest_framework.response import Response
 
 from base.models.student import Student
 from internship.api.serializers.internship_score import InternshipScoreSerializer, InternshipScorePutSerializer
 from internship.models.internship_score import InternshipScore
+from internship.models.internship_student_affectation_stat import InternshipStudentAffectationStat
 from internship.models.period import Period
 
 
@@ -53,3 +55,25 @@ class InternshipScoreCreateRetrieveUpdate(generics.RetrieveUpdateAPIView):
             period = Period.objects.get(uuid=self.kwargs.get('period'))
             if student and period:
                 return InternshipScore.objects.create(student=student, period=period, cohort=period.cohort)
+
+
+class ValidateInternshipScore(generics.RetrieveUpdateAPIView):
+    """
+      Validate an internship score
+    """
+    name = 'score-validation'
+    lookup_field = None
+
+    def get_serializer_class(self):
+        if self.request.method in ['PUT', 'PATCH']:
+            return InternshipScorePutSerializer
+
+    def post(self):
+        try:
+            affectation = InternshipStudentAffectationStat.objects.get(uuid=self.kwargs.get('affectation'))
+            score = InternshipScore.objects.get(student=affectation.student, period=affectation.period)
+            score.validated = True
+            score.save()
+            return Response(status=status.HTTP_200_OK)
+        except (InternshipStudentAffectationStat.DoesNotExist, InternshipScore.DoesNotExist) as e:
+            return Response(data={'error': e.message}, status=status.HTTP_404_NOT_FOUND)
