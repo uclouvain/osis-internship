@@ -47,7 +47,6 @@ class InternshipMasterSerializer(serializers.HyperlinkedModelSerializer):
             'person',
             'civility',
             'user_account_status',
-            'role'
         )
 
     def create(self, *args, **kwargs):
@@ -57,7 +56,6 @@ class InternshipMasterSerializer(serializers.HyperlinkedModelSerializer):
             person.save()
             master = InternshipMaster(
                 person=person,
-                role=self.initial_data['role'],
                 civility=self.initial_data['civility']
             )
             master.save()

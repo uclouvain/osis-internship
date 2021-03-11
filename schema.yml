@@ -607,9 +607,6 @@ components:
           civility:
             type: string
             example: "DOCTOR"
-          role:
-            type: string
-            example: "MASTER"
 
 
     AllocationGet:
@@ -626,6 +623,9 @@ components:
           $ref: '#/components/schemas/OrganizationGet'
         specialty:
           $ref: '#/components/schemas/SpecialtyGet'
+        role:
+          type: string
+          example: "MASTER"
 
     SpecialtyGet:
       type: object

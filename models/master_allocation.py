@@ -32,10 +32,10 @@ from internship.models.enums.role import Role
 
 
 class MasterAllocationAdmin(admin.ModelAdmin):
-    list_display = ('master', 'organization', 'specialty', 'cohort')
+    list_display = ('master', 'organization', 'specialty', 'cohort', 'role')
     fieldsets = ((None, {'fields': ('master', 'organization', 'specialty')}),)
     raw_id_fields = ('master', 'organization', 'specialty')
-    list_filter = ('organization__cohort', 'specialty__cohort')
+    list_filter = ('organization__cohort', 'specialty__cohort', 'role')
 
 
 class MasterAllocation(models.Model):
@@ -51,6 +51,12 @@ class MasterAllocation(models.Model):
         'internship.InternshipSpeciality',
         blank=True, null=True,
         on_delete=models.CASCADE
+    )
+
+    role = models.CharField(
+        max_length=50,
+        choices=Role.choices(),
+        default=Role.MASTER.value,
     )
 
     def cohort(self):
@@ -75,7 +81,7 @@ def search(cohort, specialty, hospital, role=Role.MASTER.value):
     masters = find_by_cohort(cohort)
 
     if role:
-        masters = masters.filter(master__role=role)
+        masters = masters.filter(role=role)
 
     if specialty:
         masters = masters.filter(specialty=specialty)

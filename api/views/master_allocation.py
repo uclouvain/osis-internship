@@ -74,7 +74,7 @@ class FilteredAllocationsList(generics.ListCreateAPIView):
 
         role = self.request.query_params.get('role')
         if role:
-            qs = qs.filter(master__role=role)
+            qs = qs.filter(role=role)
 
         return qs
 
