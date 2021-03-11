@@ -344,13 +344,14 @@ def _build_allocations(request, allocated_master):
     for hospital_id, specialty_id, role in allocations_data:
         hospital = organization.get_by_id(hospital_id) if hospital_id else None
         specialty = internship_speciality.get_by_id(specialty_id) if specialty_id else None
-        allocation = master_allocation.MasterAllocation(
-            master=allocated_master,
-            organization=hospital,
-            specialty=specialty,
-            role=role
-        )
-        allocations.append(allocation)
+        if role:
+            allocation = master_allocation.MasterAllocation(
+                master=allocated_master,
+                organization=hospital,
+                specialty=specialty,
+                role=role
+            )
+            allocations.append(allocation)
 
     return allocations
 

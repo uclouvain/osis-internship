@@ -33,7 +33,7 @@ from internship.models.enums.role import Role
 
 class MasterAllocationAdmin(admin.ModelAdmin):
     list_display = ('master', 'organization', 'specialty', 'cohort', 'role')
-    fieldsets = ((None, {'fields': ('master', 'organization', 'specialty')}),)
+    fieldsets = ((None, {'fields': ('master', 'organization', 'specialty', 'role')}),)
     raw_id_fields = ('master', 'organization', 'specialty')
     list_filter = ('organization__cohort', 'specialty__cohort', 'role')
 
