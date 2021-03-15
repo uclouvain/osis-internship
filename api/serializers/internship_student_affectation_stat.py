@@ -24,11 +24,11 @@
 #
 ##############################################################################
 from rest_framework import serializers
+from rest_framework.fields import UUIDField
 
 from base.api.serializers.student import StudentSerializer
 from internship.api.serializers.internship import InternshipSerializer
-from internship.api.serializers.internship_specialty import InternshipSpecialtySerializer
-from internship.api.serializers.organization import OrganizationSerializer
+from internship.api.serializers.internship_score import InternshipScoreSerializer
 from internship.api.serializers.period import PeriodSerializer
 from internship.models.internship_student_affectation_stat import InternshipStudentAffectationStat
 
@@ -38,11 +38,12 @@ class InternshipStudentAffectationSerializer(serializers.HyperlinkedModelSeriali
         view_name='internship_api_v1:student-affectation-detail',
         lookup_field='uuid'
     )
-    student = StudentSerializer()
-    organization = OrganizationSerializer()
-    speciality = InternshipSpecialtySerializer()
-    internship = InternshipSerializer()
-    period = PeriodSerializer()
+    student = StudentSerializer(read_only=True)
+    organization = UUIDField()
+    speciality = UUIDField()
+    internship = InternshipSerializer(read_only=True)
+    period = PeriodSerializer(read_only=True)
+    score = InternshipScoreSerializer(read_only=True)
 
     class Meta:
         model = InternshipStudentAffectationStat
@@ -54,4 +55,5 @@ class InternshipStudentAffectationSerializer(serializers.HyperlinkedModelSeriali
             'speciality',
             'period',
             'internship',
+            'score'
         )

@@ -32,6 +32,7 @@ from internship.models.master_allocation import MasterAllocation
 from internship.models.period import Period
 
 
+# TODO: Move to master api view
 class MasterAllocationListCreate(generics.ListCreateAPIView):
     """
        Return a list of master allocations with optional filtering.
@@ -56,6 +57,7 @@ class MasterAllocationListCreate(generics.ListCreateAPIView):
         return qs
 
 
+# TODO : Rename as MasterAllocationListCreate
 class FilteredAllocationsList(generics.ListCreateAPIView):
     """
        Return a list of master allocations with optional filtering.

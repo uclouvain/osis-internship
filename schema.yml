@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  version: "1.0.10"
+  version: "1.1.0"
   title: Internship API
   description: 'This API delivers data for the Internship project.'
   contact:
@@ -35,14 +35,9 @@ paths:
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: "#/components/schemas/Paging"
-                  - type: object
-                    properties:
-                      results:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/MasterGet'
+                $ref: "#/components/schemas/MasterPaging"
+      tags:
+        - internship
     post:
       description: Create new internship master
       requestBody:
@@ -58,7 +53,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MasterGet'
-
+      tags:
+        - internship
   /masters/{uuid}:
     get:
       description: Obtain information about a specific master
@@ -76,7 +72,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MasterGet'
-
+      tags:
+        - internship
   /masters/{uuid}/activate_account/:
     put:
       description: Set master account activation status to ACTIVE
@@ -94,7 +91,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MasterGet'
-
+      tags:
+        - internship
   /masters/{uuid}/allocations/:
     get:
       description: Obtain the list of internship-master allocations
@@ -116,15 +114,9 @@ paths:
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: "#/components/schemas/Paging"
-                  - type: object
-                    properties:
-                      results:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/AllocationGet'
-
+                $ref: "#/components/schemas/AllocationPaging"
+      tags:
+        - internship
   /masters_allocations/{uuid}:
     get:
       description: Obtain information about a specific master allocation
@@ -142,6 +134,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AllocationGet'
+      tags:
+        - internship
     delete:
       description: Delete a master allocation
       parameters:
@@ -158,7 +152,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AllocationGet'
-
+      tags:
+        - internship
   /masters_allocations/{specialty}/{organization}:
     get:
       description: Obtain the list of master allocations filtered by specialty and organization
@@ -185,14 +180,9 @@ paths:
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: "#/components/schemas/Paging"
-                  - type: object
-                    properties:
-                      results:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/SpecialtyGet'
+                $ref: "#/components/schemas/AllocationPaging"
+      tags:
+        - internship
     post:
       description: Create new internship allocation
       parameters:
@@ -219,7 +209,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AllocationGet'
-
+      tags:
+        - internship
   /specialties:
     get:
       description: Obtain the list of specialties
@@ -229,15 +220,9 @@ paths:
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: "#/components/schemas/Paging"
-                  - type: object
-                    properties:
-                      results:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/SpecialtyGet'
-
+                $ref: "#/components/schemas/SpecialtyPaging"
+      tags:
+        - internship
   /specialties/{uuid}:
     get:
       description: Obtain information about a specific specialty
@@ -255,7 +240,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SpecialtyGet'
-
+      tags:
+        - internship
   /cohorts:
     get:
       description: Obtain the list of cohorts
@@ -265,15 +251,9 @@ paths:
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: "#/components/schemas/Paging"
-                  - type: object
-                    properties:
-                      results:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/CohortGet'
-
+                $ref: "#/components/schemas/CohortPaging"
+      tags:
+        - internship
   /cohorts/{uuid}:
     get:
       description: Obtain information about a specific cohort
@@ -291,7 +271,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CohortGet'
-
+      tags:
+        - internship
   /organizations:
     get:
       description: Obtain the list of organizations
@@ -301,15 +282,9 @@ paths:
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: "#/components/schemas/Paging"
-                  - type: object
-                    properties:
-                      results:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/OrganizationGet'
-
+                $ref: "#/components/schemas/OrganizationPaging"
+      tags:
+        - internship
   /organizations/{uuid}:
     get:
       description: Obtain information about a specific organization
@@ -327,7 +302,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/OrganizationGet'
-
+      tags:
+        - internship
   /internships:
     get:
       description: Obtain the list of internships
@@ -337,15 +313,9 @@ paths:
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: "#/components/schemas/Paging"
-                  - type: object
-                    properties:
-                      results:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/InternshipGet'
-
+                $ref: "#/components/schemas/InternshipPaging"
+      tags:
+        - internship
   /internships/{uuid}:
     get:
       description: Obtain information about a specific internship
@@ -363,7 +333,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/InternshipGet'
-
+      tags:
+        - internship
   /periods:
     get:
       description: Obtain the list of periods
@@ -379,15 +350,9 @@ paths:
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: "#/components/schemas/Paging"
-                  - type: object
-                    properties:
-                      results:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/PeriodGet'
-
+                $ref: "#/components/schemas/PeriodPaging"
+      tags:
+        - internship
   /periods/{uuid}:
     get:
       description: Obtain information about a specific period
@@ -405,7 +370,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PeriodGet'
-
+      tags:
+        - internship
   /students:
     get:
       description: Obtain the list of students
@@ -415,15 +381,9 @@ paths:
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: "#/components/schemas/Paging"
-                  - type: object
-                    properties:
-                      results:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/StudentGet'
-
+                $ref: "#/components/schemas/StudentPaging"
+      tags:
+        - internship
   /students/{uuid}:
     get:
       description: Obtain information about a specific internship student
@@ -441,7 +401,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/StudentGet'
-
+      tags:
+        - internship
   /students_affectations/{specialty}/{organization}:
     get:
       description: Obtain the list of students affectations
@@ -463,12 +424,6 @@ paths:
             default: all
           required: false
         - in: query
-          name: with_score
-          schema:
-            type: boolean
-            default: false
-          required: false
-        - in: query
           name: limit
           schema:
             type: integer
@@ -478,22 +433,43 @@ paths:
           schema:
             type: integer
           required: false
-
       responses:
         200:
           description: Successful get of the list of students affectations
           content:
             application/json:
               schema:
-                anyOf:
-                  - $ref: "#/components/schemas/Paging"
-                  - type: object
-                    properties:
-                      results:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/StudentAffectationGet'
-
+                $ref: "#/components/schemas/StudentAffectationPaging"
+      tags:
+        - internship
+  /students_affectations/{specialty}/{organization}/stats/:
+    get:
+      description: Obtain the list of students affectations
+      parameters:
+        - in: path
+          name: organization
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: specialty
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: Successful get of students affectations stats
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total_count:
+                    type: integer
+                  validated_count:
+                    type: integer
+      tags:
+        - internship
   /students_affectations/{uuid}:
     get:
       description: Obtain information about a specific student's affectation
@@ -511,7 +487,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/StudentAffectationGet'
-
+      tags:
+        - internship
   /scores/{student_uuid}/{period_uuid}:
     get:
       description: Get or create information about a specific student's score for a given period
@@ -535,6 +512,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ScoreGet'
+      tags:
+        - internship
     put:
       description: Update a student's score for a given period
       parameters:
@@ -559,7 +538,8 @@ paths:
       responses:
         201:
           description: Successful update of a score for a given period
-
+      tags:
+        - internship
 
   /scores/{affectation_uuid}/validate:
     get:
@@ -584,7 +564,8 @@ paths:
                   error:
                     type: string
                     description: The message describing the error
-
+      tags:
+        - internship
 components:
   securitySchemes:
     Token:
@@ -606,8 +587,14 @@ components:
             $ref: '#/components/schemas/Person'
           civility:
             type: string
+            nullable: true
             example: "DOCTOR"
-
+          user_account_status:
+            type: string
+            enum:
+              - "active"
+              - "pending"
+              - "inactive"
 
     AllocationGet:
       type: object
@@ -646,6 +633,7 @@ components:
           example: true
         sequence:
           type: integer
+          nullable: true
           example: 1
         cohort:
           $ref: '#/components/schemas/CohortGet'
@@ -659,11 +647,14 @@ components:
         url:
           type: string
           format: uri
+        uuid:
+          $ref: '#/components/schemas/Uuid'
         name:
           type: string
           example: "R6-2021"
         description:
           type: string
+          nullable: true
           example: "Student cohort for academic year 2020-2021"
         publication_start_date:
           type: string
@@ -691,21 +682,26 @@ components:
           example: "XYZ"
         website:
           type: string
+          nullable: true
           example: "www.chuxyz.be"
         reference:
           type: string
           example: "01"
         phone:
           type: string
+          nullable: true
           example: "01/01.01.01"
         location:
           type: string
+          nullable: true
           example: "Rue de l'hôpital"
         postal_code:
           type: string
+          nullable: true
           example: "1000"
         city:
           type: string
+          nullable: true
           example: "Bruxelles"
         country:
           $ref: '#/components/schemas/Country'
@@ -718,6 +714,8 @@ components:
         url:
           type: string
           format: uri
+        uuid:
+          $ref: '#/components/schemas/Uuid'
         name:
           type: string
           example: "XYZ"
@@ -738,36 +736,47 @@ components:
         url:
           type: string
           format: uri
+        uuid:
+          $ref: '#/components/schemas/Uuid'
         person:
           $ref: '#/components/schemas/Person'
         location:
           type: string
+          nullable: true
           example: "Rue de la maison, 10"
         postal_code:
           type: string
+          nullable: true
           example: "1000"
         city:
           type: string
+          nullable: true
           example: "Bruxelles"
         country:
           type: string
+          nullable: true
           example: "Belgique"
         email:
           type: string
+          nullable: true
           example: "jean.pondu@mail.be"
         phone_mobile:
           type: string
+          nullable: true
           example: "0411/11.11.11"
         contest:
           type: string
+          nullable: true
           example: "SPECIALIST"
         cohort:
           $ref: '#/components/schemas/CohortGet'
         evolution_score:
           type: number
+          nullable: true
           example: 17
         evolution_score_reason:
           type: string
+          nullable: true
           example: "reason"
 
     PeriodGet:
@@ -780,6 +789,7 @@ components:
           $ref: '#/components/schemas/Uuid'
         name:
           type: string
+          nullable: true
           example: "P1"
         date_start:
           type: string
@@ -787,6 +797,8 @@ components:
         date_end:
           type: string
           example: "01/03/2020"
+        cohort:
+          $ref: '#/components/schemas/CohortGet'
 
     StudentAffectationGet:
       type: object
@@ -794,16 +806,20 @@ components:
         url:
           type: string
           format: uri
+        uuid:
+          $ref: '#/components/schemas/Uuid'
         student:
           $ref: '#/components/schemas/Student'
         organization:
-          $ref: '#/components/schemas/OrganizationGet'
-        specialty:
-          $ref: '#/components/schemas/SpecialtyGet'
+          $ref: '#/components/schemas/Uuid'
+        speciality:
+          $ref: '#/components/schemas/Uuid'
         period:
           $ref: '#/components/schemas/PeriodGet'
         internship:
           $ref: '#/components/schemas/InternshipGet'
+        score:
+          $ref: '#/components/schemas/ScoreGet'
 
     ScoreGet:
       type: object
@@ -820,44 +836,63 @@ components:
           type: boolean
         reason:
           type: string
+          nullable: true
         score:
           type: number
+          nullable: true
         comments:
           type: object
+          nullable: true
         objectives:
           type: object
+          nullable: true
         validated:
           type: boolean
         APD_1:
           type: string
+          nullable: true
         APD_2:
           type: string
+          nullable: true
         APD_3:
           type: string
+          nullable: true
         APD_4:
           type: string
+          nullable: true
         APD_5:
           type: string
+          nullable: true
         APD_6:
           type: string
+          nullable: true
         APD_7:
           type: string
+          nullable: true
         APD_8:
           type: string
+          nullable: true
         APD_9:
           type: string
+          nullable: true
         APD_10:
           type: string
+          nullable: true
         APD_11:
           type: string
+          nullable: true
         APD_12:
           type: string
+          nullable: true
         APD_13:
           type: string
+          nullable: true
         APD_14:
           type: string
+          nullable: true
         APD_15:
           type: string
+          nullable: true
 
 
     Uuid:
@@ -883,18 +918,22 @@ components:
           $ref: '#/components/schemas/Uuid'
         first_name:
           type: string
+          nullable: true
           example: "Dupont"
         last_name:
           type: string
           example: "Jacques"
         email:
           type: string
+          nullable: true
           example: "jacques.dupont@mail.xyz"
         gender:
           type: string
+          nullable: true
           example: "M"
         birth_date:
           type: string
+          nullable: true
           format: date
           example: "1989-01-01"
 
@@ -916,14 +955,146 @@ components:
           type: string
           example: "Belgian"
 
-    Paging:
+    PeriodPaging:
       properties:
         count:
           type: number
         next:
           type: string
+          nullable: true
         previous:
           type: string
+          nullable: true
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/PeriodGet'
+    MasterPaging:
+      properties:
+        count:
+          type: number
+        next:
+          type: string
+          nullable: true
+        previous:
+          type: string
+          nullable: true
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/MasterGet'
+    AllocationPaging:
+      properties:
+        count:
+          type: number
+        next:
+          type: string
+          nullable: true
+        previous:
+          type: string
+          nullable: true
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/AllocationGet'
+    SpecialtyPaging:
+      properties:
+        count:
+          type: number
+        next:
+          type: string
+          nullable: true
+        previous:
+          type: string
+          nullable: true
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/SpecialtyGet'
+    CohortPaging:
+      properties:
+        count:
+          type: number
+        next:
+          type: string
+          nullable: true
+        previous:
+          type: string
+          nullable: true
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/CohortGet'
+    OrganizationPaging:
+      properties:
+        count:
+          type: number
+        next:
+          type: string
+          nullable: true
+        previous:
+          type: string
+          nullable: true
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrganizationGet'
+    InternshipPaging:
+      properties:
+        count:
+          type: number
+        next:
+          type: string
+          nullable: true
+        previous:
+          type: string
+          nullable: true
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/InternshipGet'
+    StudentPaging:
+      properties:
+        count:
+          type: number
+        next:
+          type: string
+          nullable: true
+        previous:
+          type: string
+          nullable: true
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/StudentGet'
+    StudentAffectationPaging:
+      properties:
+        count:
+          type: number
+        next:
+          type: string
+          nullable: true
+        previous:
+          type: string
+          nullable: true
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/StudentAffectationGet'
+    ScorePaging:
+      properties:
+        count:
+          type: number
+        next:
+          type: string
+          nullable: true
+        previous:
+          type: string
+          nullable: true
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ScoreGet'
 
 security:
   - Token: []

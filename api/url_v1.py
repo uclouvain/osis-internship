@@ -32,7 +32,7 @@ from internship.api.views.internship_master import InternshipMasterListCreate, \
 from internship.api.views.internship_score import InternshipScoreCreateRetrieveUpdate, ValidateInternshipScore
 from internship.api.views.internship_specialty import InternshipSpecialtyList, InternshipSpecialtyDetail
 from internship.api.views.internship_student_affectation_stat import InternshipStudentAffectationList, \
-    InternshipStudentAffectationDetail
+    InternshipStudentAffectationDetail, InternshipStudentAffectationStats
 from internship.api.views.internship_student_information import InternshipStudentInformationList, \
     InternshipStudentInformationDetail
 from internship.api.views.master_allocation import MasterAllocationListCreate, MasterAllocationUpdateDeleteDetail, \
@@ -51,7 +51,7 @@ urlpatterns = [
 
     url(r'^masters_allocations/(?P<uuid>[0-9a-f-]+)$', MasterAllocationUpdateDeleteDetail.as_view(),
         name=MasterAllocationUpdateDeleteDetail.name),
-    url(r'^masters_allocations/(?P<specialty_uuid>[0-9a-f-]+)/(?P<organization_uuid>[0-9a-f-]+)$',
+    url(r'^masters_allocations/$',
         FilteredAllocationsList.as_view(),
         name=FilteredAllocationsList.name),
 
@@ -76,6 +76,8 @@ urlpatterns = [
 
     url(r'^students_affectations/(?P<specialty_uuid>[0-9a-f-]+)/(?P<organization_uuid>[0-9a-f-]+)$',
         InternshipStudentAffectationList.as_view(), name=InternshipStudentAffectationList.name),
+    url(r'^students_affectations/(?P<specialty_uuid>[0-9a-f-]+)/(?P<organization_uuid>[0-9a-f-]+)/stats/$',
+        InternshipStudentAffectationStats.as_view(), name=InternshipStudentAffectationStats.name),
     url(r'^students_affectations/(?P<uuid>[0-9a-f-]+)$', InternshipStudentAffectationDetail.as_view(),
         name=InternshipStudentAffectationDetail.name),
 
