@@ -33,9 +33,9 @@ APD_NUMBER = 15
 
 class InternshipScoreAdmin(SerializableModelAdmin):
     score_fields = ['APD_{}'.format(index) for index in range(1, APD_NUMBER+1)]
-    list_display = ('student', 'period', *score_fields, 'score', 'excused', 'reason', 'validated')
+    list_display = ('student', 'period', *score_fields, 'score', 'excused', 'reason', 'validated', 'student_affectation')
     raw_id_fields = ('student',)
-    list_filter = ('cohort', 'validated')
+    list_filter = ('cohort', 'validated', 'student_affectation__speciality__name')
     search_fields = ['student__person__first_name', 'student__person__last_name']
 
 
@@ -48,9 +48,19 @@ class InternshipScore(SerializableModel):
         ('D', 'D')
     )
 
+    student_affectation = models.OneToOneField(
+        'internship.InternshipStudentAffectationStat',
+        on_delete=models.PROTECT,
+        related_name='score',
+        null=True
+    )
+
+    # TODO : Deprecated
+
     student = models.ForeignKey('base.student', on_delete=models.PROTECT)
     period = models.ForeignKey('internship.period', on_delete=models.PROTECT)
     cohort = models.ForeignKey('internship.cohort', on_delete=models.PROTECT)
+
     for index in range(1, APD_NUMBER+1):
         vars()['APD_{}'.format(index)] = models.CharField(
             max_length=1,
