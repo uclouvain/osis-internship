@@ -554,6 +554,13 @@ paths:
       responses:
         200:
           description: Successfully validated an internship score
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
         404:
           description: Affectation or score not found, validation aborted
           content:
@@ -561,6 +568,8 @@ paths:
               schema:
                 type: object
                 properties:
+                  success:
+                    type: boolean
                   error:
                     type: string
                     description: The message describing the error
@@ -817,7 +826,7 @@ components:
         period:
           $ref: '#/components/schemas/PeriodGet'
         internship:
-          $ref: '#/components/schemas/InternshipGet'
+          type: string
         score:
           $ref: '#/components/schemas/ScoreGet'
 
@@ -829,9 +838,9 @@ components:
         student:
           $ref: '#/components/schemas/Student'
         period:
-          $ref: '#/components/schemas/PeriodGet'
+          type: string
         cohort:
-          $ref: '#/components/schemas/CohortGet'
+          type: string
         excused:
           type: boolean
         reason:
@@ -905,11 +914,10 @@ components:
       properties:
         uuid:
           $ref: '#/components/schemas/Uuid'
-        registration_id:
+        first_name:
           type: string
-          example: "44444444444"
-        person:
-          $ref: '#/components/schemas/Person'
+        last_name:
+          type: string
 
     Person:
       type: object

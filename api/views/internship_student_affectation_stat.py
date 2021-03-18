@@ -24,7 +24,6 @@
 #
 ##############################################################################
 
-from django.db.models import OuterRef, Subquery
 from django.http import JsonResponse
 from rest_framework import generics
 
@@ -53,10 +52,11 @@ class InternshipStudentAffectationList(generics.ListAPIView):
     def get_queryset(self):
         specialty_uuid = self.kwargs.get('specialty_uuid')
         organization_uuid = self.kwargs.get('organization_uuid')
-        score = InternshipScore.objects.filter(student=OuterRef('student'), cohort=OuterRef('period__cohort'))
-        qs = InternshipStudentAffectationStat.objects.select_related('organization', 'speciality').filter(
+        qs = InternshipStudentAffectationStat.objects.select_related(
+            'student', 'score', 'organization', 'speciality', 'period', 'internship'
+        ).filter(
             speciality__uuid=specialty_uuid, organization__uuid=organization_uuid
-        ).annotate(score_id=Subquery(score.values('pk')[:1]))
+        )
 
         period = self.request.query_params.get('period')
 

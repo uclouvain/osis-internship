@@ -70,6 +70,6 @@ class ValidateInternshipScore(generics.RetrieveUpdateAPIView):
             score = InternshipScore.objects.get(student=affectation.student, period=affectation.period)
             score.validated = True
             score.save()
-            return Response(status=status.HTTP_200_OK)
+            return Response(data={'success': True}, status=status.HTTP_200_OK)
         except (InternshipStudentAffectationStat.DoesNotExist, InternshipScore.DoesNotExist) as e:
-            return Response(data={'error': e.message}, status=status.HTTP_404_NOT_FOUND)
+            return Response(data={'success': False, 'error': e.message}, status=status.HTTP_404_NOT_FOUND)
