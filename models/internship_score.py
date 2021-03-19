@@ -33,7 +33,9 @@ APD_NUMBER = 15
 
 class InternshipScoreAdmin(SerializableModelAdmin):
     score_fields = ['APD_{}'.format(index) for index in range(1, APD_NUMBER+1)]
-    list_display = ('student', 'period', *score_fields, 'score', 'excused', 'reason', 'validated', 'student_affectation')
+    list_display = (
+        'student', 'period', *score_fields, 'score', 'excused', 'reason', 'validated', 'student_affectation'
+    )
     raw_id_fields = ('student',)
     list_filter = ('cohort', 'validated', 'student_affectation__speciality__name')
     search_fields = ['student__person__first_name', 'student__person__last_name']
