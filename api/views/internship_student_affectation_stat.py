@@ -53,11 +53,10 @@ class InternshipStudentAffectationList(generics.ListAPIView):
         specialty_uuid = self.kwargs.get('specialty_uuid')
         organization_uuid = self.kwargs.get('organization_uuid')
         qs = InternshipStudentAffectationStat.objects.select_related(
-            'student', 'score', 'organization', 'speciality', 'period', 'internship'
+            'student__person', 'score', 'organization', 'speciality', 'period__cohort', 'internship'
         ).filter(
             speciality__uuid=specialty_uuid, organization__uuid=organization_uuid
         )
-
         period = self.request.query_params.get('period')
 
         if period and period != "all":
