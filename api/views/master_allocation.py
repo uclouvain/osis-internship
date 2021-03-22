@@ -67,8 +67,8 @@ class FilteredAllocationsList(generics.ListCreateAPIView):
     queryset = MasterAllocation.objects.all().select_related('master')
 
     def get_queryset(self):
-        organization_uuid = self.kwargs['organization_uuid']
-        specialty_uuid = self.kwargs['specialty_uuid']
+        organization_uuid = self.request.query_params.get('organization_uuid')
+        specialty_uuid = self.request.query_params.get('specialty_uuid')
         qs = MasterAllocation.objects.filter(
             specialty__uuid=specialty_uuid,
             organization__uuid=organization_uuid

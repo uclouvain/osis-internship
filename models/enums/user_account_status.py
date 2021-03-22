@@ -23,11 +23,12 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.utils.translation import gettext as _
 
-from osis_common.utils.enumerations import ChoiceEnum
+from base.models.utils.utils import ChoiceEnum
 
 
 class UserAccountStatus(ChoiceEnum):
-    INACTIVE = "inactive"
-    PENDING = "pending"
-    ACTIVE = "active"
+    INACTIVE = _("inactive")
+    PENDING = _("pending")
+    ACTIVE = _("active")

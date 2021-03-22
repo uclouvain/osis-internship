@@ -59,7 +59,7 @@ class InternshipMasterUpdateDetail(generics.RetrieveUpdateAPIView):
     lookup_field = 'uuid'
 
 
-class InternshipMasterActivateAccount(generics.RetrieveUpdateAPIView):
+class InternshipMasterActivateAccount(generics.GenericAPIView):
     """
         Set internship master's user account status to ACTIVE
     """
@@ -71,9 +71,9 @@ class InternshipMasterActivateAccount(generics.RetrieveUpdateAPIView):
     """
     Update user account status.
     """
-    def update(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         master = self.get_object()
-        master.user_account_status = UserAccountStatus.ACTIVE.value
+        master.user_account_status = UserAccountStatus.ACTIVE.name
         master.save()
         serializer = self.get_serializer(master)
         return Response(serializer.data)
