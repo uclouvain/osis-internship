@@ -118,7 +118,7 @@ def send_recap(request, cohort_id, period_id=None):
         period__in=periods, student__person__in=selected_persons
     ).order_by('period__date_start').values_list('student__person', 'period')
     scores = InternshipScore.objects.filter(
-        cohort__id=cohort_id, student__person__in=selected_persons
+        cohort__id=cohort_id, student__person__in=selected_persons, validated=True
     ).values_list('student__person', 'period')
 
     persons_dict = {person: {p.name: _("No internship") for p in periods} for person in selected_persons}
