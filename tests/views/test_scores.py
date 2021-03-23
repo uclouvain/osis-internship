@@ -95,7 +95,12 @@ class ScoresEncodingTest(TestCase):
                     speciality=internship.speciality if internship.speciality else SpecialtyFactory(),
                     period=periods[index]
                 )
-            ScoreFactory(student=student, period=cls.period, cohort=cls.cohort, APD_1='A', validated=True)
+            ScoreFactory(
+                student_affectation__student=student,
+                student_affectation__period=cls.period,
+                APD_1='A',
+                validated=True
+            )
         for apd in range(1, APD_NUMBER):
             ScoreMappingFactory(
                 period=cls.period,
@@ -309,7 +314,10 @@ class ScoresEncodingTest(TestCase):
         edited_score = 10
         computed_score = 20
         student = Student.objects.first()
-        score = InternshipScore.objects.get(student=student, period=self.period)
+        score = InternshipScore.objects.get(
+            student_affectation__student=student,
+            student_affectation__period=self.period
+        )
         self.assertIsNone(score.score)
         url = reverse('save_edited_score', kwargs={'cohort_id': self.cohort.pk})
         response = self.client.post(url, data={
@@ -327,12 +335,15 @@ class ScoresEncodingTest(TestCase):
         computed_score = 20
         student = StudentFactory()
         score = ScoreFactory(
-            cohort=self.cohort, student=student, period=self.period, score=edited_score, validated=True
+            student_affectation__student=student,
+            student_affectation__period=self.period,
+            score=edited_score,
+            validated=True
         )
         url = reverse('delete_edited_score', kwargs={'cohort_id': self.cohort.pk})
         self.assertEqual(score.score, edited_score)
         response = self.client.post(url, data={
-            'student': score.student.registration_id,
+            'student': score.student_affectation.student.registration_id,
             'computed': computed_score,
             'period': self.period.name,
         })
@@ -346,7 +357,7 @@ class ScoresEncodingTest(TestCase):
         student = StudentFactory(person=student_info.person)
         period = PeriodFactory(name='PTEST', cohort=self.cohort, date_end=date.today()-timedelta(days=1))
         StudentAffectationStatFactory(student=student, period=period)
-        ScoreFactory(period=self.period, student=student, cohort=self.cohort, validated=True)
+        ScoreFactory(period=self.period, student_affectation__student=student, cohort=self.cohort, validated=True)
         url = reverse('send_summary', kwargs={'cohort_id': self.cohort.pk, 'period_id': period.pk})
         response = self.client.post(url, data={
             'selected_student': [student_info.pk]
@@ -380,8 +391,18 @@ class ScoresEncodingTest(TestCase):
         student_info = InternshipStudentInformationFactory(person__last_name=student_name, cohort=self.cohort)
         student = StudentFactory(person=student_info.person)
         PeriodFactory(name='last_period', cohort=self.cohort)
-        ScoreFactory(student=student, period=self.period, cohort=self.cohort, APD_1='A', validated=True)
-        ScoreFactory(student=student, period=self.other_period, cohort=self.cohort, APD_1='C', validated=True)
+        ScoreFactory(
+            student_affectation__student=student,
+            student_affectation__period=self.period,
+            APD_1='A',
+            validated=True
+        )
+        ScoreFactory(
+            student_affectation__student=student,
+            student_affectation__period=self.other_period,
+            APD_1='C',
+            validated=True
+        )
         ScoreMappingFactory(
             period=self.other_period,
             cohort=self.cohort,
@@ -457,7 +478,11 @@ class ScoresEncodingTest(TestCase):
         student = StudentFactory(person=student_info.person)
         new_score = 10
         ScoreFactory(
-            student=student, period=self.period, cohort=self.cohort, excused=True, score=new_score, validated=True
+            student_affectation__student=student,
+            student_affectation__period=self.period,
+            excused=True,
+            score=new_score,
+            validated=True
         )
         url = reverse('internship_scores_encoding', kwargs={'cohort_id': self.cohort.pk})
         response = self.client.get(url)
@@ -518,7 +543,10 @@ class ScoresEncodingTest(TestCase):
             person=InternshipStudentInformationFactory(person__last_name='AAA', cohort=self.cohort).person
         )
         ScoreFactory(
-            period=self.period, student=student_with_no_validated_score, cohort=self.cohort, APD_1='A', validated=False
+            student_affectation__period=self.period,
+            student_affectation__student=student_with_no_validated_score,
+            APD_1='A',
+            validated=False
         )
         url = reverse('internship_scores_encoding', kwargs={'cohort_id': self.cohort.pk})
         response = self.client.get(url)
@@ -534,7 +562,11 @@ class ScoresEncodingTest(TestCase):
             person=InternshipStudentInformationFactory(person__last_name='AAA', cohort=self.cohort).person
         )
         ScoreFactory(
-            period=self.period, student=student_with_no_validated_score, cohort=self.cohort, APD_1='A', validated=False
+            student_affectation__period=self.period,
+            student_affectation__student=student_with_no_validated_score,
+            cohort=self.cohort,
+            APD_1='A',
+            validated=False
         )
         url = reverse('internship_download_scores', kwargs={'cohort_id': self.cohort.pk})
         self.client.post(url, data={'period': self.period.name})

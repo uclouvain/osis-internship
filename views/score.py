@@ -70,7 +70,6 @@ def scores_encoding(request, cohort_id):
     cohort = get_object_or_404(
         Cohort.objects.prefetch_related(
             'internshipstudentinformation_set',
-            'internshipscore_set',
             'period_set'
         ),
         pk=cohort_id
@@ -379,7 +378,7 @@ def delete_edited_score(request, cohort_id):
 
 
 def _delete_score(cohort, period_name, registration_id):
-    return cohort.internshipscore_set.filter(
+    return InternshipScore.objects.filter(
         period__name=period_name,
         student__registration_id=registration_id
     ).update(score=None, excused=False)
@@ -388,7 +387,7 @@ def _delete_score(cohort, period_name, registration_id):
 def _update_score(cohort, edited_score, period_name, registration_id, reason):
     period = cohort.period_set.get(name=period_name)
     student = Student.objects.get(registration_id=registration_id)
-    data = {'cohort': cohort, 'student': student, 'period': period}
+    data = {'student_affectation__student': student, 'student_affectation__period': period}
     return InternshipScore.objects.filter(**data).update_or_create(**data, defaults={
         'score': edited_score, 'reason': reason
     })
@@ -413,7 +412,7 @@ def empty_score(request, cohort_id):
     student = Student.objects.get(registration_id=request.POST.get('registration_id'))
     period = cohort.period_set.get(name=request.POST.get("period_name"))
     score, created = InternshipScore.objects.update_or_create(
-        cohort=cohort, period=period, student=student, defaults={'excused': True}
+        student_affectation__period=period, student_affectation__student=student, defaults={'excused': True}
     )
     if score:
         return render(request, "fragment/score_cell.html", context={
@@ -425,8 +424,8 @@ def empty_score(request, cohort_id):
 
 def _prepare_score_table(cohort, periods, students):
     persons = [student.person.pk for student in students]
-    scores = cohort.internshipscore_set.filter(student__person_id__in=persons, validated=True).select_related(
-        'student__person', 'period', 'cohort'
+    scores = InternshipScore.objects.filter(student__person_id__in=persons, validated=True).select_related(
+        'student_affectation__student__person', 'period', 'cohort'
     ).order_by('student__person')
     mapping = cohort.internshipscoremapping_set.all().select_related('period')
     students_affectations = InternshipStudentAffectationStat.objects.filter(

@@ -131,20 +131,16 @@ def _get_deduplicated_active_masters(active_user_allocations):
 
 
 def _get_allocation_scores(allocation, period, students_affectations):
-    students = students_affectations.filter(
-        organization=allocation.organization,
-        speciality=allocation.specialty
-    ).values_list('student_id', flat=True)
-    _fill_with_empty_scores(period, students)
+    _fill_with_empty_scores(period, students_affectations)
     scores = InternshipScore.objects.filter(
-        period=period, student_id__in=students
+        student_affectation__in=students_affectations
     ).select_related('student__person')
     return scores
 
 
-def _fill_with_empty_scores(period, students):
+def _fill_with_empty_scores(period, students_affectations):
     InternshipScore.objects.bulk_create(
-        [InternshipScore(student_id=student, period=period, cohort=period.cohort) for student in students],
+        [InternshipScore(student_affectation=affectation) for affectation in students_affectations],
         ignore_conflicts=True,
         batch_size=1000
     )

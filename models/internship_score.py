@@ -34,11 +34,19 @@ APD_NUMBER = 15
 class InternshipScoreAdmin(SerializableModelAdmin):
     score_fields = ['APD_{}'.format(index) for index in range(1, APD_NUMBER+1)]
     list_display = (
-        'student', 'period', *score_fields, 'score', 'excused', 'reason', 'validated', 'student_affectation'
+        'student', 'period', 'cohort',
+        *score_fields, 'score', 'excused', 'reason', 'validated',
     )
     raw_id_fields = ('student',)
-    list_filter = ('cohort', 'validated', 'student_affectation__speciality__name')
-    search_fields = ['student__person__first_name', 'student__person__last_name']
+    list_filter = ('student_affectation__period__cohort', 'validated', 'student_affectation__speciality__name')
+    search_fields = [
+        'student__person__first_name',
+        'student__person__last_name'
+    ]
+    list_select_related = (
+        'student_affectation__period__cohort',
+        'student_affectation__student__person',
+    )
 
 
 class InternshipScore(SerializableModel):
@@ -56,12 +64,6 @@ class InternshipScore(SerializableModel):
         related_name='score',
         null=True
     )
-
-    # TODO : Deprecated
-
-    student = models.ForeignKey('base.student', on_delete=models.PROTECT)
-    period = models.ForeignKey('internship.period', on_delete=models.PROTECT)
-    cohort = models.ForeignKey('internship.cohort', on_delete=models.PROTECT)
 
     for index in range(1, APD_NUMBER+1):
         vars()['APD_{}'.format(index)] = models.CharField(
@@ -81,10 +83,19 @@ class InternshipScore(SerializableModel):
     validated = models.BooleanField(default=False)
 
     def __str__(self):
-        return '{} - {} - {}'.format(self.student, self.period, self.get_scores())
+        return '{} - {}'.format(self.student_affectation, self.get_scores())
 
     def get_scores(self):
         return [vars(self)['APD_{}'.format(index)] for index in range(1, APD_NUMBER+1)]
 
-    class Meta:
-        unique_together = ['student', 'period']
+    @property
+    def student(self):
+        return self.student_affectation.student
+
+    @property
+    def period(self):
+        return self.student_affectation.period
+
+    @property
+    def cohort(self):
+        return self.student_affectation.period.cohort
