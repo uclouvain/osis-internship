@@ -114,7 +114,7 @@ def _get_active_user_allocations(organizations, specialties):
     return MasterAllocation.objects.filter(
         specialty_id__in=specialties,
         organization_id__in=organizations,
-        master__user_account_status=UserAccountStatus.ACTIVE.value
+        master__user_account_status=UserAccountStatus.ACTIVE.name
     ).select_related('master__person', 'organization', 'specialty')
 
 
