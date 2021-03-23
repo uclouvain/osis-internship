@@ -63,7 +63,7 @@ class MasterAllocationSerializer(serializers.HyperlinkedModelSerializer):
             master=master,
             organization=organization,
             specialty=specialty,
-            role=Role.DELEGATE.value
+            role=Role.DELEGATE.name
         )
         allocation.save()
         return allocation

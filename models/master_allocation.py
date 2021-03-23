@@ -56,7 +56,7 @@ class MasterAllocation(models.Model):
     role = models.CharField(
         max_length=50,
         choices=Role.choices(),
-        default=Role.MASTER.value,
+        default=Role.MASTER.name,
     )
 
     def cohort(self):
@@ -77,7 +77,7 @@ def find_by_master(cohort, a_master):
     return find_by_cohort(cohort).filter(master=a_master)
 
 
-def search(cohort, specialty, hospital, role=Role.MASTER.value):
+def search(cohort, specialty, hospital, role=Role.MASTER.name):
     masters = find_by_cohort(cohort)
 
     if role:
