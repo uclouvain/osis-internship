@@ -234,7 +234,7 @@ class ScoresEncodingTest(TestCase):
 
     def test_filter_all_grades_submitted(self):
         student_without_score = Student.objects.first()
-        InternshipScore.objects.filter(student=student_without_score).delete()
+        InternshipScore.objects.filter(student_affectation__student=student_without_score).delete()
         url = reverse('internship_scores_encoding', kwargs={'cohort_id': self.cohort.pk})
         data = {
             'period': self.period.pk,
@@ -245,7 +245,7 @@ class ScoresEncodingTest(TestCase):
 
     def test_filter_not_all_grades_submitted(self):
         student_without_score = Student.objects.first()
-        InternshipScore.objects.filter(student=student_without_score).delete()
+        InternshipScore.objects.filter(student_affectation__student=student_without_score).delete()
         url = reverse('internship_scores_encoding', kwargs={'cohort_id': self.cohort.pk})
         data = {
             'period': self.period.pk,
@@ -268,14 +268,18 @@ class ScoresEncodingTest(TestCase):
 
     def test_filter_all_apds_validated(self):
         student_with_all_apds = Student.objects.first()
-        InternshipScore.objects.filter(student=student_with_all_apds).update(**self.all_apds_validated)
+        InternshipScore.objects.filter(student_affectation__student=student_with_all_apds).update(
+            **self.all_apds_validated
+        )
         url = reverse('internship_scores_encoding', kwargs={'cohort_id': self.cohort.pk})
         response = self.client.get(url, data={'all_apds_validated_filter': True})
         self.assertEqual(len(response.context['students'].object_list), 1)
 
     def test_filter_not_all_apds_validated(self):
         student_with_not_all_apds = Student.objects.first()
-        InternshipScore.objects.all().exclude(student=student_with_not_all_apds).update(**self.all_apds_validated)
+        InternshipScore.objects.all().exclude(student_affectation__student=student_with_not_all_apds).update(
+            **self.all_apds_validated
+        )
         url = reverse('internship_scores_encoding', kwargs={'cohort_id': self.cohort.pk})
         response = self.client.get(url, data={'all_apds_validated_filter': False})
         self.assertEqual(len(response.context['students'].object_list), 1)
@@ -356,8 +360,8 @@ class ScoresEncodingTest(TestCase):
         student_info = InternshipStudentInformationFactory(cohort=self.cohort)
         student = StudentFactory(person=student_info.person)
         period = PeriodFactory(name='PTEST', cohort=self.cohort, date_end=date.today()-timedelta(days=1))
-        StudentAffectationStatFactory(student=student, period=period)
-        ScoreFactory(period=self.period, student_affectation__student=student, cohort=self.cohort, validated=True)
+        student_affectation = StudentAffectationStatFactory(student=student, period=period)
+        ScoreFactory(student_affectation=student_affectation, validated=True)
         url = reverse('send_summary', kwargs={'cohort_id': self.cohort.pk, 'period_id': period.pk})
         response = self.client.post(url, data={
             'selected_student': [student_info.pk]
@@ -496,10 +500,9 @@ class ScoresEncodingTest(TestCase):
     def test_post_upload_eval_success(self, mock_import):
         student_info = self.students[0]
         student = Student.objects.get(person=student_info.person)
-        student_period_affectation = InternshipStudentAffectationStat.objects.get(
-            student=student,
-            period=self.period
-        )
+        student_period_affectation = InternshipStudentAffectationStat.objects.filter(
+            student=student, period=self.period
+        ).first()
         self.assertFalse(student_period_affectation.internship_evaluated)
         mock_import.return_value = [{'registration_id': student.registration_id, 'period': self.period.name}]
         url = reverse('internship_upload_eval', kwargs={
@@ -564,7 +567,6 @@ class ScoresEncodingTest(TestCase):
         ScoreFactory(
             student_affectation__period=self.period,
             student_affectation__student=student_with_no_validated_score,
-            cohort=self.cohort,
             APD_1='A',
             validated=False
         )
