@@ -29,13 +29,13 @@ from internship.api.serializers.master_allocation import MasterAllocationSeriali
 from internship.models.master_allocation import MasterAllocation
 
 
-class MasterAllocationList(generics.ListCreateAPIView):
+class MasterAllocationList(generics.ListAPIView):
     """
        Return a list of master allocations with optional filtering.
     """
     name = 'filtered-allocations-list'
     serializer_class = MasterAllocationSerializer
-    queryset = MasterAllocation.objects.all().select_related('master')
+    queryset = MasterAllocation.objects.all()
 
     def get_queryset(self):
         organization_uuid = self.request.query_params.get('organization_uuid')
@@ -43,7 +43,7 @@ class MasterAllocationList(generics.ListCreateAPIView):
         qs = MasterAllocation.objects.filter(
             specialty__uuid=specialty_uuid,
             organization__uuid=organization_uuid
-        ).select_related('master')
+        ).select_related('master__person', 'organization__country', 'specialty__cohort')
 
         role = self.request.query_params.get('role')
         if role:

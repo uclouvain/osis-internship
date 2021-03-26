@@ -89,7 +89,7 @@ class InternshipMasterAllocationListCreate(generics.ListCreateAPIView):
     """
     name = 'master-allocation-list'
     serializer_class = MasterAllocationSerializer
-    queryset = MasterAllocation.objects.all().select_related('master')
+    queryset = MasterAllocation.objects.all()
     search_fields = (
         'organization', 'specialty'
     )
@@ -100,7 +100,9 @@ class InternshipMasterAllocationListCreate(generics.ListCreateAPIView):
 
     def get_queryset(self):
         master = get_object_or_404(InternshipMaster, uuid=self.kwargs['uuid'])
-        qs = MasterAllocation.objects.filter(master=master).select_related('organization', 'specialty')
+        qs = MasterAllocation.objects.filter(master=master).select_related(
+            'master__person', 'organization__country', 'specialty__cohort'
+        )
         if self.request.query_params.get('current'):
             current_cohort = Period.active.first().cohort
             qs = qs.filter(specialty__cohort=current_cohort, organization__cohort=current_cohort)

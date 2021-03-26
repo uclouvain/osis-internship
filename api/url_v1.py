@@ -23,7 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.conf.urls import url
+from django.urls import path
 
 from internship.api.views.cohort import CohortList, CohortDetail
 from internship.api.views.internship import InternshipList, InternshipDetail
@@ -42,46 +42,46 @@ from internship.api.views.period import PeriodList, PeriodDetail
 
 app_name = "internship"
 urlpatterns = [
-    url(r'^masters$', InternshipMasterListCreate.as_view(), name=InternshipMasterListCreate.name),
-    url(r'^masters/(?P<uuid>[0-9a-f-]+)/$', InternshipMasterUpdateDetail.as_view(),
-        name=InternshipMasterUpdateDetail.name),
-    url(r'^masters/(?P<uuid>[0-9a-f-]+)/activate_account/$', InternshipMasterActivateAccount.as_view(),
-        name=InternshipMasterActivateAccount.name),
-    url(r'^masters/(?P<uuid>[0-9a-f-]+)/allocations$', InternshipMasterAllocationListCreate.as_view(),
-        name=InternshipMasterAllocationListCreate.name),
+    path('masters', InternshipMasterListCreate.as_view(), name=InternshipMasterListCreate.name),
+    path('masters/<uuid:uuid>/', InternshipMasterUpdateDetail.as_view(),
+         name=InternshipMasterUpdateDetail.name),
+    path('masters/<uuid:uuid>/activate_account/', InternshipMasterActivateAccount.as_view(),
+         name=InternshipMasterActivateAccount.name),
+    path('masters/<uuid:uuid>/allocations', InternshipMasterAllocationListCreate.as_view(),
+         name=InternshipMasterAllocationListCreate.name),
 
-    url(r'^masters_allocations/(?P<uuid>[0-9a-f-]+)/$', MasterAllocationUpdateDeleteDetail.as_view(),
-        name=MasterAllocationUpdateDeleteDetail.name),
-    url(r'^masters_allocations$', MasterAllocationList.as_view(), name=MasterAllocationList.name),
+    path('masters_allocations/<uuid:uuid>/', MasterAllocationUpdateDeleteDetail.as_view(),
+         name=MasterAllocationUpdateDeleteDetail.name),
+    path('masters_allocations', MasterAllocationList.as_view(), name=MasterAllocationList.name),
 
-    url(r'^specialties$', InternshipSpecialtyList.as_view(), name=InternshipSpecialtyList.name),
-    url(r'^specialties/(?P<uuid>[0-9a-f-]+)/$', InternshipSpecialtyDetail.as_view(), name=InternshipSpecialtyDetail.name),
+    path('specialties', InternshipSpecialtyList.as_view(), name=InternshipSpecialtyList.name),
+    path('specialties/<uuid:uuid>/', InternshipSpecialtyDetail.as_view(), name=InternshipSpecialtyDetail.name),
 
-    url(r'^cohorts$', CohortList.as_view(), name=CohortList.name),
-    url(r'^cohorts/(?P<uuid>[0-9a-f-]+)/$', CohortDetail.as_view(), name=CohortDetail.name),
+    path('cohorts', CohortList.as_view(), name=CohortList.name),
+    path('cohorts/<uuid:uuid>/', CohortDetail.as_view(), name=CohortDetail.name),
 
-    url(r'^organizations$', OrganizationList.as_view(), name=OrganizationList.name),
-    url(r'^organizations/(?P<uuid>[0-9a-f-]+)/$', OrganizationDetail.as_view(), name=OrganizationDetail.name),
+    path('organizations', OrganizationList.as_view(), name=OrganizationList.name),
+    path('organizations/<uuid:uuid>/', OrganizationDetail.as_view(), name=OrganizationDetail.name),
 
-    url(r'^internships$', InternshipList.as_view(), name=InternshipList.name),
-    url(r'^internships/(?P<uuid>[0-9a-f-]+)/$', InternshipDetail.as_view(), name=InternshipDetail.name),
+    path('internships', InternshipList.as_view(), name=InternshipList.name),
+    path('internships/<uuid:uuid>/', InternshipDetail.as_view(), name=InternshipDetail.name),
 
-    url(r'^students$', InternshipStudentInformationList.as_view(), name=InternshipStudentInformationList.name),
-    url(r'^students/(?P<uuid>[0-9a-f-]+)/$', InternshipStudentInformationDetail.as_view(),
-        name=InternshipStudentInformationDetail.name),
+    path('students', InternshipStudentInformationList.as_view(), name=InternshipStudentInformationList.name),
+    path('students/<uuid:uuid>/', InternshipStudentInformationDetail.as_view(),
+         name=InternshipStudentInformationDetail.name),
 
-    url(r'^periods$', PeriodList.as_view(), name=PeriodList.name),
-    url(r'^periods/(?P<uuid>[0-9a-f-]+)/$', PeriodDetail.as_view(), name=PeriodDetail.name),
+    path('periods', PeriodList.as_view(), name=PeriodList.name),
+    path('periods/<uuid:uuid>/', PeriodDetail.as_view(), name=PeriodDetail.name),
 
-    url(r'^students_affectations/(?P<specialty_uuid>[0-9a-f-]+)/(?P<organization_uuid>[0-9a-f-]+)$',
-        InternshipStudentAffectationList.as_view(), name=InternshipStudentAffectationList.name),
-    url(r'^students_affectations/(?P<specialty_uuid>[0-9a-f-]+)/(?P<organization_uuid>[0-9a-f-]+)/stats/$',
-        InternshipStudentAffectationStats.as_view(), name=InternshipStudentAffectationStats.name),
-    url(r'^students_affectations/(?P<uuid>[0-9a-f-]+)/$', InternshipStudentAffectationDetail.as_view(),
-        name=InternshipStudentAffectationDetail.name),
+    path('students_affectations/<uuid:specialty_uuid>/<uuid:organization_uuid>',
+         InternshipStudentAffectationList.as_view(), name=InternshipStudentAffectationList.name),
+    path('students_affectations/<uuid:specialty_uuid>/<uuid:organization_uuid>/stats/',
+         InternshipStudentAffectationStats.as_view(), name=InternshipStudentAffectationStats.name),
+    path('students_affectations/<uuid:uuid>/', InternshipStudentAffectationDetail.as_view(),
+         name=InternshipStudentAffectationDetail.name),
 
-    url(r'^scores/(?P<uuid>[0-9a-f-]+)/$', InternshipScoreCreateRetrieveUpdate.as_view(),
-        name=InternshipScoreCreateRetrieveUpdate.name),
-    url(r'^scores/(?P<affectation>[0-9a-f-]+)/validate/$', ValidateInternshipScore.as_view(),
-        name=ValidateInternshipScore.name),
+    path('scores/<uuid:uuid>/', InternshipScoreCreateRetrieveUpdate.as_view(),
+         name=InternshipScoreCreateRetrieveUpdate.name),
+    path('scores/<uuid:affectation>/validate/', ValidateInternshipScore.as_view(),
+         name=ValidateInternshipScore.name),
 ]

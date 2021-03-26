@@ -39,7 +39,7 @@ class InternshipStudentAffectationSerializer(serializers.HyperlinkedModelSeriali
     )
     student = InternshipStudentSerializer(read_only=True)
     organization = UUIDField(source='organization.uuid', read_only=True)
-    speciality = UUIDField(source='organization.uuid', read_only=True)
+    speciality = UUIDField(source='speciality.uuid', read_only=True)
     internship = serializers.CharField(read_only=True, source='internship.name')
     period = PeriodSerializer(read_only=True)
     score = InternshipScoreListSerializer(read_only=True)

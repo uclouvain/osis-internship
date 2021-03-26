@@ -23,21 +23,22 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+import uuid as uuid
+from django.contrib.admin import ModelAdmin
 from django.contrib.postgres.fields import JSONField
 from django.db import models
-
-from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
+from django.db.models import Model
 
 APD_NUMBER = 15
 
 
-class InternshipScoreAdmin(SerializableModelAdmin):
+class InternshipScoreAdmin(ModelAdmin):
     score_fields = ['APD_{}'.format(index) for index in range(1, APD_NUMBER+1)]
     list_display = (
         'student', 'period', 'cohort',
         *score_fields, 'score', 'excused', 'reason', 'validated',
     )
-    raw_id_fields = ('student',)
+    raw_id_fields = ('student_affectation',)
     list_filter = ('student_affectation__period__cohort', 'validated', 'student_affectation__speciality__name')
     search_fields = [
         'student__person__first_name',
@@ -49,7 +50,9 @@ class InternshipScoreAdmin(SerializableModelAdmin):
     )
 
 
-class InternshipScore(SerializableModel):
+class InternshipScore(Model):
+
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, db_index=True)
 
     SCORE_CHOICES = (
         ('A', 'A'),

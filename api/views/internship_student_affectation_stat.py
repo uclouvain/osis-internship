@@ -28,7 +28,6 @@ from django.http import JsonResponse
 from rest_framework import generics
 
 from internship.api.serializers.internship_student_affectation_stat import InternshipStudentAffectationSerializer
-from internship.models.internship_score import InternshipScore
 from internship.models.internship_student_affectation_stat import InternshipStudentAffectationStat
 
 
@@ -82,19 +81,14 @@ class InternshipStudentAffectationStats(generics.RetrieveAPIView):
     name = 'student-affectation-stats'
 
     def get(self, request, *args, **kwargs):
-        specialty_uuid = self.kwargs.get('specialty_uuid')
-        organization_uuid = self.kwargs.get('organization_uuid')
+        specialty_uuid = self.kwargs['specialty_uuid']
+        organization_uuid = self.kwargs['organization_uuid']
 
         qs = InternshipStudentAffectationStat.objects.filter(
             speciality__uuid=specialty_uuid, organization__uuid=organization_uuid
         )
         total_affectations_count = qs.count()
 
-        scores = InternshipScore.objects.filter(
-            student__pk__in=qs.values('student_id'),
-            period__pk__in=qs.values('period_id'),
-            validated=True
-        )
-        validated_affectations_count = scores.count()
+        validated_scores_count = qs.filter(score__validated=True).count()
 
-        return JsonResponse({'total_count': total_affectations_count, 'validated_count': validated_affectations_count})
+        return JsonResponse({'total_count': total_affectations_count, 'validated_count': validated_scores_count})
