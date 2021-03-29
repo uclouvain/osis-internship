@@ -63,9 +63,12 @@ class MasterAllocation(models.Model):
         return self.specialty.cohort if self.specialty else (self.organization.cohort if self.organization else None)
 
     def save(self, *args, **kwargs):
-        existing = MasterAllocation.objects.filter(master=self.master,
-                                                   organization=self.organization,
-                                                   specialty=self.specialty)
+        existing = MasterAllocation.objects.filter(
+            master=self.master,
+            organization=self.organization,
+            specialty=self.specialty,
+            role=self.role
+        )
         if not existing:
             super(MasterAllocation, self).save(*args, **kwargs)
 

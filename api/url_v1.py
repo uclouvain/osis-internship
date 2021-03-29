@@ -27,16 +27,15 @@ from django.urls import path
 
 from internship.api.views.cohort import CohortList, CohortDetail
 from internship.api.views.internship import InternshipList, InternshipDetail
-from internship.api.views.internship_master import InternshipMasterListCreate, \
-    InternshipMasterActivateAccount, InternshipMasterUpdateDetail, InternshipMasterAllocationListCreate
+from internship.api.views.internship_master import InternshipMasterActivateAccount, InternshipMasterUpdateDetail, \
+    InternshipMasterAllocationListCreate, InternshipMasterListCreate
 from internship.api.views.internship_score import InternshipScoreCreateRetrieveUpdate, ValidateInternshipScore
 from internship.api.views.internship_specialty import InternshipSpecialtyList, InternshipSpecialtyDetail
 from internship.api.views.internship_student_affectation_stat import InternshipStudentAffectationList, \
     InternshipStudentAffectationDetail, InternshipStudentAffectationStats
 from internship.api.views.internship_student_information import InternshipStudentInformationList, \
     InternshipStudentInformationDetail
-from internship.api.views.master_allocation import MasterAllocationUpdateDeleteDetail, \
-    MasterAllocationList
+from internship.api.views.master_allocation import MasterAllocationUpdateDeleteDetail, MasterAllocationListCreate
 from internship.api.views.organization import OrganizationList, OrganizationDetail
 from internship.api.views.period import PeriodList, PeriodDetail
 
@@ -52,7 +51,7 @@ urlpatterns = [
 
     path('masters_allocations/<uuid:uuid>/', MasterAllocationUpdateDeleteDetail.as_view(),
          name=MasterAllocationUpdateDeleteDetail.name),
-    path('masters_allocations', MasterAllocationList.as_view(), name=MasterAllocationList.name),
+    path('masters_allocations', MasterAllocationListCreate.as_view(), name=MasterAllocationListCreate.name),
 
     path('specialties', InternshipSpecialtyList.as_view(), name=InternshipSpecialtyList.name),
     path('specialties/<uuid:uuid>/', InternshipSpecialtyDetail.as_view(), name=InternshipSpecialtyDetail.name),

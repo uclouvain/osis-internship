@@ -56,9 +56,9 @@ class MasterAllocationSerializer(serializers.HyperlinkedModelSerializer):
         )
 
     def create(self, *args, **kwargs):
-        master = InternshipMaster.objects.get(uuid=self.validated_data['master']['uuid'])
-        organization = Organization.objects.get(uuid=self.validated_data['organization']['uuid'])
-        specialty = InternshipSpeciality.objects.get(uuid=self.validated_data['specialty']['uuid'])
+        master = InternshipMaster.objects.get(uuid=self.initial_data['master']['uuid'])
+        organization = Organization.objects.get(uuid=self.initial_data['organization']['uuid'])
+        specialty = InternshipSpeciality.objects.get(uuid=self.initial_data['specialty']['uuid'])
         allocation = MasterAllocation(
             master=master,
             organization=organization,
