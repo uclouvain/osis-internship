@@ -24,58 +24,29 @@
 #
 ##############################################################################
 from rest_framework import generics
-from rest_framework.generics import get_object_or_404
 
 from internship.api.serializers.master_allocation import MasterAllocationSerializer
-from internship.models.internship_master import InternshipMaster
 from internship.models.master_allocation import MasterAllocation
-from internship.models.period import Period
 
 
 class MasterAllocationListCreate(generics.ListCreateAPIView):
     """
-       Return a list of master allocations with optional filtering.
-    """
-    name = 'master-allocation-list'
-    serializer_class = MasterAllocationSerializer
-    queryset = MasterAllocation.objects.all().select_related('master')
-    search_fields = (
-        'organization', 'specialty'
-    )
-    ordering_fields = ('specialty')
-    ordering = (
-        'organization',
-    )  # Default ordering
-
-    def get_queryset(self):
-        master = get_object_or_404(InternshipMaster, uuid=self.kwargs['uuid'])
-        qs = MasterAllocation.objects.filter(master=master).select_related('organization', 'specialty')
-        if self.request.query_params.get('current'):
-            current_cohort = Period.active.first().cohort
-            qs = qs.filter(specialty__cohort=current_cohort, organization__cohort=current_cohort)
-        return qs
-
-
-class FilteredAllocationsList(generics.ListCreateAPIView):
-    """
-       Return a list of master allocations with optional filtering.
+       Return a list of master allocations with optional filtering or create one.
     """
     name = 'filtered-allocations-list'
     serializer_class = MasterAllocationSerializer
-    queryset = MasterAllocation.objects.all().select_related('master')
+    queryset = MasterAllocation.objects.all()
 
     def get_queryset(self):
-        organization_uuid = self.kwargs['organization_uuid']
-        specialty_uuid = self.kwargs['specialty_uuid']
+        organization_uuid = self.request.query_params.get('organization')
+        specialty_uuid = self.request.query_params.get('specialty')
         qs = MasterAllocation.objects.filter(
             specialty__uuid=specialty_uuid,
             organization__uuid=organization_uuid
-        ).select_related('master')
-
+        ).select_related('master__person', 'organization__country', 'specialty__cohort')
         role = self.request.query_params.get('role')
         if role:
-            qs = qs.filter(master__role=role)
-
+            qs = qs.filter(role=role)
         return qs
 
 

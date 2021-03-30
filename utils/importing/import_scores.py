@@ -89,7 +89,7 @@ def _import_score(row, cohort, period):
         scores.append(row[i+LINE_INTERVAL+1].value)
     existing_student = student.find_by_registration_id(registration_id)
     internship_score, created = InternshipScore.objects.get_or_create(
-        student=existing_student, period=period, cohort=cohort, validated=True
+        student_affectation__student=existing_student, student_affectation__period=period, validated=True
     )
     for index, score in enumerate(scores):
         internship_score.__setattr__('APD_{}'.format(index+1), score)

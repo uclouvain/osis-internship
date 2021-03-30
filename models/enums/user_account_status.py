@@ -23,11 +23,10 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-
-from osis_common.utils.enumerations import ChoiceEnum
+from base.models.utils.utils import ChoiceEnum
 
 
 class UserAccountStatus(ChoiceEnum):
-    INACTIVE = "inactive"
-    PENDING = "pending"
-    ACTIVE = "active"
+    INACTIVE = "INACTIVE"
+    PENDING = "PENDING"
+    ACTIVE = "ACTIVE"
