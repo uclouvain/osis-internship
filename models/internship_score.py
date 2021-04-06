@@ -80,8 +80,8 @@ class InternshipScore(Model):
     reason = models.CharField(max_length=255, null=True, blank=True)
 
     # TODO: import JSONField from models in Django 3
-    comments = JSONField(default=dict)
-    objectives = JSONField(default=dict)
+    comments = JSONField(default=dict, blank=True)
+    objectives = JSONField(default=dict, blank=True)
 
     validated = models.BooleanField(default=False)
 
@@ -93,21 +93,12 @@ class InternshipScore(Model):
 
     @property
     def student(self):
-        try:
-            return self.student_affectation.student
-        except AttributeError:
-            return None
+        return self.student_affectation.student if self.student_affectation else None
 
     @property
     def period(self):
-        try:
-            return self.student_affectation.period
-        except AttributeError:
-            return None
+        return self.student_affectation.period if self.student_affectation else None
 
     @property
     def cohort(self):
-        try:
-            return self.student_affectation.cohort
-        except AttributeError:
-            return None
+        return self.period.cohort if self.period else None

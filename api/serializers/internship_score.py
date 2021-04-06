@@ -43,7 +43,7 @@ class InternshipScoreListSerializer(serializers.ModelSerializer):
         )
 
 
-class InternshipScoreDetailSerializer(serializers.HyperlinkedModelSerializer):
+class InternshipScoreDetailSerializer(serializers.ModelSerializer):
     cohort = serializers.CharField(read_only=True, source='cohort.name')
 
     class Meta:
