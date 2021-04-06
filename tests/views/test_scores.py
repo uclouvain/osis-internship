@@ -372,6 +372,7 @@ class ScoresEncodingTest(TestCase):
             messages_list
         )
         self.assertTrue(mock_send_mail.called)
+        self.assertIn(_("Grades received"), str(mock_send_mail.call_args.kwargs['data']['periods']))
 
     def test_ajax_save_evaluation_status(self):
         affectation = StudentAffectationStatFactory(

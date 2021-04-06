@@ -41,8 +41,8 @@ class InternshipScoreAdmin(ModelAdmin):
     raw_id_fields = ('student_affectation',)
     list_filter = ('student_affectation__period__cohort', 'validated', 'student_affectation__speciality__name')
     search_fields = [
-        'student__person__first_name',
-        'student__person__last_name'
+        'student_affectation__student__person__first_name',
+        'student_affectation__student__person__last_name'
     ]
     list_select_related = (
         'student_affectation__period__cohort',
@@ -93,12 +93,21 @@ class InternshipScore(Model):
 
     @property
     def student(self):
-        return self.student_affectation.student
+        try:
+            return self.student_affectation.student
+        except AttributeError:
+            return None
 
     @property
     def period(self):
-        return self.student_affectation.period
+        try:
+            return self.student_affectation.period
+        except AttributeError:
+            return None
 
     @property
     def cohort(self):
-        return self.student_affectation.period.cohort
+        try:
+            return self.student_affectation.cohort
+        except AttributeError:
+            return None
