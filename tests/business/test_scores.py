@@ -40,7 +40,10 @@ class InternshipScoreRulesTest(TestCase):
         cls.cohort = CohortFactory()
         cls.student = StudentFactory()
         cls.period = PeriodFactory(cohort=cls.cohort)
-        cls.internship_score = ScoreFactory(student=cls.student, period=cls.period, cohort=cls.cohort)
+        cls.internship_score = ScoreFactory(
+            student_affectation__student=cls.student,
+            student_affectation__period=cls.period,
+        )
 
     def test_student_fulfill_requirements(self):
         for index in [index for index in range(0, APD_NUMBER)]:

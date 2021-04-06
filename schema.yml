@@ -146,12 +146,8 @@ paths:
           schema:
             $ref: '#/components/schemas/Uuid'
       responses:
-        200:
+        204:
           description: Successful delete of a master allocation's data.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AllocationGet'
       tags:
         - internship
   /masters_allocations:
@@ -562,15 +558,16 @@ components:
           user_account_status:
             type: string
             enum:
-              - "active"
-              - "pending"
-              - "inactive"
+              - "ACTIVE"
+              - "PENDING"
+              - "INACTIVE"
 
     AllocationGet:
       type: object
       properties:
         url:
           type: string
+          nullable: true
           format: uri
         uuid:
           $ref: '#/components/schemas/Uuid'
@@ -589,6 +586,7 @@ components:
       properties:
         url:
           type: string
+          nullable: true
           format: uri
         uuid:
           $ref: '#/components/schemas/Uuid'
@@ -616,6 +614,7 @@ components:
       properties:
         url:
           type: string
+          nullable: true
           format: uri
         uuid:
           $ref: '#/components/schemas/Uuid'
@@ -641,6 +640,7 @@ components:
       properties:
         url:
           type: string
+          nullable: true
           format: uri
         uuid:
           $ref: '#/components/schemas/Uuid'
@@ -683,6 +683,7 @@ components:
       properties:
         url:
           type: string
+          nullable: true
           format: uri
         uuid:
           $ref: '#/components/schemas/Uuid'
@@ -705,6 +706,7 @@ components:
       properties:
         url:
           type: string
+          nullable: true
           format: uri
         uuid:
           $ref: '#/components/schemas/Uuid'
@@ -754,6 +756,7 @@ components:
       properties:
         url:
           type: string
+          nullable: true
           format: uri
         uuid:
           $ref: '#/components/schemas/Uuid'
@@ -775,6 +778,7 @@ components:
       properties:
         url:
           type: string
+          nullable: true
           format: uri
         uuid:
           $ref: '#/components/schemas/Uuid'
@@ -953,7 +957,6 @@ components:
         birth_date:
           type: string
           nullable: true
-          format: date
           example: "1989-01-01"
 
     Country:
@@ -961,6 +964,7 @@ components:
       properties:
         url:
           type: string
+          nullable: true
           format: uri
         uuid:
           $ref: '#/components/schemas/Uuid'

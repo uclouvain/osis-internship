@@ -61,7 +61,7 @@ def masters(request, cohort_id):
     filter_specialty = int(request.GET.get('specialty', 0))
     filter_hospital = int(request.GET.get('hospital', 0))
     filter_name = request.GET.get('name', '')
-    filter_role = request.GET.get('role', Role.MASTER.value)
+    filter_role = request.GET.get('role', Role.MASTER.name)
 
     allocations = master_allocation.search(current_cohort, filter_specialty, filter_hospital, filter_role)
     if filter_name:
@@ -101,7 +101,7 @@ def create_user_accounts(request, cohort_id):
 
 
 def _user_already_exists_for_master(master):
-    return master.user_account_status != UserAccountStatus.INACTIVE.value
+    return master.user_account_status != UserAccountStatus.INACTIVE.name
 
 
 def _create_master_user_account(request, master):
@@ -133,8 +133,8 @@ def _display_creation_error_msg(master, request):
 
 
 def _update_user_account_status(master, request):
-    if master.user_account_status == UserAccountStatus.INACTIVE.value:
-        master.user_account_status = UserAccountStatus.PENDING.value
+    if master.user_account_status == UserAccountStatus.INACTIVE.name:
+        master.user_account_status = UserAccountStatus.PENDING.name
         master.save()
         messages.add_message(
             request, messages.SUCCESS,
