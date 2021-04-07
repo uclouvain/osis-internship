@@ -79,7 +79,7 @@ urlpatterns = [
     path('students_affectations/<uuid:uuid>/', InternshipStudentAffectationDetail.as_view(),
          name=InternshipStudentAffectationDetail.name),
 
-    path('scores/<uuid:uuid>/', InternshipScoreCreateRetrieveUpdate.as_view(),
+    path('scores/<uuid:affectation_uuid>/', InternshipScoreCreateRetrieveUpdate.as_view(),
          name=InternshipScoreCreateRetrieveUpdate.name),
     path('scores/<uuid:affectation>/validate/', ValidateInternshipScore.as_view(),
          name=ValidateInternshipScore.name),

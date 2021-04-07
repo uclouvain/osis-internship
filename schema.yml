@@ -475,14 +475,14 @@ paths:
       tags:
         - internship
 
-  /scores/{uuid}/:
+  /scores/{affectation_uuid}/:
     get:
       description: Get score detail
       parameters:
         - in: path
-          name: uuid
+          name: affectation_uuid
           required: true
-          description: The UUID of the master
+          description: The UUID of the affectation
           schema:
             $ref: '#/components/schemas/Uuid'
       responses:
@@ -498,9 +498,9 @@ paths:
       description: Update a student's score for a given period
       parameters:
         - in: path
-          name: uuid
+          name: affectation_uuid
           required: true
-          description: The UUID of the master
+          description: The UUID of the affectation
           schema:
             $ref: '#/components/schemas/Uuid'
       requestBody:

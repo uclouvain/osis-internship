@@ -28,6 +28,7 @@ from rest_framework.response import Response
 
 from internship.api.serializers.internship_score import InternshipScoreDetailSerializer, InternshipScorePutSerializer
 from internship.models.internship_score import InternshipScore
+from internship.models.internship_student_affectation_stat import InternshipStudentAffectationStat
 
 
 class InternshipScoreCreateRetrieveUpdate(generics.RetrieveUpdateAPIView):
@@ -42,6 +43,16 @@ class InternshipScoreCreateRetrieveUpdate(generics.RetrieveUpdateAPIView):
         if self.request.method in ['PUT', 'PATCH']:
             return InternshipScorePutSerializer
         return InternshipScoreDetailSerializer
+
+    def get_object(self):
+        try:
+            return InternshipScore.objects.get(student_affectation__uuid=self.kwargs['affectation_uuid'])
+        except InternshipScore.DoesNotExist:
+            affectation = InternshipStudentAffectationStat.objects.get(
+                uuid=self.kwargs['affectation_uuid']
+            )
+            if affectation:
+                return InternshipScore.objects.create(student_affectation=affectation)
 
 
 class ValidateInternshipScore(generics.GenericAPIView):
