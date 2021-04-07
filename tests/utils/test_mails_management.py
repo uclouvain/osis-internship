@@ -135,7 +135,6 @@ class InternshipPeriodEncodingRecapTest(TestCase):
         }
         for key in data.keys():
             self.assertEqual(args['message_content']['template_base_data'][key], data[key])
-        self.assertTrue(InternshipScore.objects.exists())
         self.assertEqual(args['message_content']['receivers'][0], {
             **args['message_content']['receivers'][0],
             'receiver_email': self.allocation.master.person.email,
