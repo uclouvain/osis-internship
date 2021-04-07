@@ -55,5 +55,5 @@ def _count_delegates_without_user(cohort):
     return MasterAllocation.objects.filter(
         organization__cohort=cohort,
         role=Role.DELEGATE.name,
-        master__user_account_status=UserAccountStatus.INACTIVE.value
+        master__user_account_status=UserAccountStatus.INACTIVE.name
     ).count()
