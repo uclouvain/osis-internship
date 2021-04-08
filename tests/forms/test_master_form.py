@@ -45,35 +45,46 @@ class TestMasterForm(TestCase):
             "city": "city",
             "country": belgium,
             'start_activities': "2000-01-01",
-            "role": Role.MASTER.value,
         }
         master_form = master.MasterForm(data)
         self.assertTrue(master_form.is_valid())
 
-    def test_invalid_allocation(self):
+    def test_invalid_allocation_no_specialty_or_hospital(self):
         request = self.client.post("/masters/save/",data={
             "specialty": [''],
-            "hospital": ['']
+            "hospital": [''],
+            "role": [Role.MASTER],
+        }).wsgi_request
+        self.assertFalse(_validate_allocations(request))
+
+    def test_invalid_allocation_no_role(self):
+        request = self.client.post("/masters/save/",data={
+            "specialty": [SpecialtyFactory()],
+            "hospital": [OrganizationFactory()],
+            "role": [''],
         }).wsgi_request
         self.assertFalse(_validate_allocations(request))
 
     def test_valid_allocation_one_specialty(self):
         request = self.client.post("/masters/save/",data={
             "specialty": [''],
-            "hospital": [OrganizationFactory()]
+            "hospital": [OrganizationFactory()],
+            "role": [Role.MASTER],
         }).wsgi_request
         self.assertTrue(_validate_allocations(request))
 
     def test_valid_allocation_one_hospital(self):
         request = self.client.post("/masters/save/",data={
             "specialty": [SpecialtyFactory()],
-            "hospital": ['']
+            "hospital": [''],
+            "role": [Role.MASTER],
         }).wsgi_request
         self.assertTrue(_validate_allocations(request))
 
     def test_valid_allocation_both(self):
         request = self.client.post("/masters/save/",data={
             "specialty": [SpecialtyFactory()],
-            "hospital": [OrganizationFactory()]
+            "hospital": [OrganizationFactory()],
+            "role": [Role.MASTER],
         }).wsgi_request
         self.assertTrue(_validate_allocations(request))

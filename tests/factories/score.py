@@ -27,18 +27,16 @@
 import factory.django
 from factory.fuzzy import FuzzyChoice
 
-from base.tests.factories.student import StudentFactory
 from internship.tests.factories.cohort import CohortFactory
 from internship.tests.factories.period import PeriodFactory
+from internship.tests.factories.student_affectation_stat import StudentAffectationStatFactory
 
 
 class ScoreFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = 'internship.InternshipScore'
 
-    student = factory.SubFactory(StudentFactory)
-    cohort = factory.SubFactory(CohortFactory)
-    period = factory.SubFactory(PeriodFactory)
+    student_affectation = factory.SubFactory(StudentAffectationStatFactory)
     excused = False
 
     APD_1 = FuzzyChoice(['A', 'B', 'C', 'D'])

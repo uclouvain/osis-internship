@@ -1,6 +1,7 @@
 from celery.schedules import crontab
 
 from backoffice.celery import app as celery_app
+from . import send_period_encoding_recap_mail
 from . import send_period_encoding_reminder_mail
 
 celery_app.conf.beat_schedule.update({
@@ -9,9 +10,6 @@ celery_app.conf.beat_schedule.update({
         # execute daily at 8am
         'schedule': crontab(minute=0, hour=8)
     },
-})
-
-celery_app.conf.beat_schedule.update({
     '|Internship| Send period encoding recap': {
         'task': 'internship.tasks.send_period_encoding_recap_mail.run',
         # execute daily at 8am

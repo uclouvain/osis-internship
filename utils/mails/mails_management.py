@@ -26,7 +26,7 @@
 from django.conf import settings
 
 from internship.models.enums.user_account_status import UserAccountStatus
-from internship.models.internship_score import InternshipScore, APD_NUMBER
+from internship.models.internship_score import APD_NUMBER
 from internship.models.internship_student_affectation_stat import InternshipStudentAffectationStat
 from internship.models.internship_student_information import InternshipStudentInformation
 from internship.models.master_allocation import MasterAllocation
@@ -85,10 +85,13 @@ def send_internship_period_encoding_reminder(period):
 def send_internship_score_encoding_recaps(period):
     organizations, specialties = _get_effective_internships_data(period)
     active_user_allocations = _get_active_user_allocations(organizations, specialties)
-    students_affectations = InternshipStudentAffectationStat.objects.filter(period=period)
 
     for allocation in active_user_allocations:
-        scores = _get_allocation_scores(allocation, period, students_affectations)
+        affectations = InternshipStudentAffectationStat.objects.filter(
+            period=period,
+            speciality=allocation.specialty,
+            organization=allocation.organization
+        ).select_related('score', 'student__person').order_by('student__person__last_name')
         message_content = message_config.create_message_content(
             html_template_ref='internship_end_period_recap_html',
             txt_template_ref='internship_end_period_recap_txt',
@@ -101,7 +104,7 @@ def send_internship_score_encoding_recaps(period):
             template_base_data={
                 'apds': ['{}'.format(index) for index in range(1, APD_NUMBER+1)],
                 'allocation': allocation,
-                'scores': scores,
+                'affectations': affectations,
                 'period': period.name,
                 'link': settings.INTERNSHIP_SCORE_ENCODING_URL
             },
@@ -114,7 +117,7 @@ def _get_active_user_allocations(organizations, specialties):
     return MasterAllocation.objects.filter(
         specialty_id__in=specialties,
         organization_id__in=organizations,
-        master__user_account_status=UserAccountStatus.ACTIVE.value
+        master__user_account_status=UserAccountStatus.ACTIVE.name
     ).select_related('master__person', 'organization', 'specialty')
 
 
@@ -128,23 +131,3 @@ def _get_effective_internships_data(period):
 
 def _get_deduplicated_active_masters(active_user_allocations):
     return set([(alloc.master.person_id, alloc.master.person.email) for alloc in active_user_allocations])
-
-
-def _get_allocation_scores(allocation, period, students_affectations):
-    students = students_affectations.filter(
-        organization=allocation.organization,
-        speciality=allocation.specialty
-    ).values_list('student_id', flat=True)
-    _fill_with_empty_scores(period, students)
-    scores = InternshipScore.objects.filter(
-        period=period, student_id__in=students
-    ).select_related('student__person')
-    return scores
-
-
-def _fill_with_empty_scores(period, students):
-    InternshipScore.objects.bulk_create(
-        [InternshipScore(student_id=student, period=period, cohort=period.cohort) for student in students],
-        ignore_conflicts=True,
-        batch_size=1000
-    )

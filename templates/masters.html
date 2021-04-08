@@ -159,7 +159,7 @@
                             {% else %}
                                 <td>-</td>
                             {% endif %}
-                            <td>{{ allocation.master.role.0 }}</td>
+                            <td>{{ allocation.role.0 }}</td>
                             {% if allocation.master.user_account_status == account_status.ACTIVE.value %}
                                 <td class="text-center">
                                     <span title="{% trans 'User account is active' %}" class="text-success glyphicon glyphicon-ok-circle"></span>

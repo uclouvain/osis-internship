@@ -45,10 +45,18 @@ class TestGrades(TestCase):
         cls.cohort = CohortFactory()
 
         cls.good_student = StudentFactory()
-        cls.score = ScoreFactory(cohort=cls.cohort, student=cls.good_student, APD_1='D')
+        cls.score = ScoreFactory(
+            student_affectation__period__cohort=cls.cohort,
+            student_affectation__student=cls.good_student,
+            APD_1='D'
+        )
 
         cls.bad_student = StudentFactory()
-        cls.score = ScoreFactory(cohort=cls.cohort, student=cls.bad_student, APD_1='A')
+        cls.score = ScoreFactory(
+            student_affectation__period__cohort=cls.cohort,
+            student_affectation__student=cls.bad_student,
+            APD_1='A'
+        )
 
     def test_is_grade_valid_na(self):
         self.assertTrue(is_valid(self.na_grade, self.apd_index))

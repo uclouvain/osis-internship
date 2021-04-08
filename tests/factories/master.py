@@ -28,7 +28,6 @@ from factory.fuzzy import FuzzyChoice
 
 from base.tests.factories.person import PersonFactory
 from internship.models.enums.civility import Civility
-from internship.models.enums.role import Role
 from internship.models.enums.user_account_status import UserAccountStatus
 
 
@@ -38,5 +37,4 @@ class MasterFactory(factory.django.DjangoModelFactory):
 
     person = factory.SubFactory(PersonFactory)
     civility = FuzzyChoice({Civility.DOCTOR.value, Civility.PROFESSOR.value})
-    user_account_status = UserAccountStatus.INACTIVE.value
-    role = Role.MASTER.value
+    user_account_status = UserAccountStatus.INACTIVE.name

@@ -23,15 +23,9 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.utils.translation import gettext_lazy as _
-
-from osis_common.utils.enumerations import ChoiceEnum
+from base.models.utils.utils import ChoiceEnum
 
 
 class Role(ChoiceEnum):
     MASTER = 'MASTER'
     DELEGATE = 'DELEGATE'
-
-    @classmethod
-    def choices(cls):
-        return tuple((x.value, _(x.value)) for x in cls)

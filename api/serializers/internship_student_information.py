@@ -42,6 +42,7 @@ class InternshipStudentInformationSerializer(serializers.HyperlinkedModelSeriali
         model = InternshipStudentInformation
         fields = (
             'url',
+            'uuid',
             'person',
             'location',
             'postal_code',
