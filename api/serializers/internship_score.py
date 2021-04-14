@@ -55,6 +55,7 @@ class InternshipScoreDetailSerializer(serializers.ModelSerializer):
             'comments',
             'objectives',
             'validated',
+            'student_presence',
             *_apd_fields()
         )
 
@@ -69,5 +70,6 @@ class InternshipScorePutSerializer(serializers.HyperlinkedModelSerializer):
             'comments',
             'objectives',
             'validated',
+            'student_presence',
             *_apd_fields()
         )
