@@ -28,7 +28,10 @@ from django.shortcuts import render, get_object_or_404
 from django.views.decorators import http
 
 from internship.models.cohort import Cohort
+from internship.models.enums.role import Role
+from internship.models.enums.user_account_status import UserAccountStatus
 from internship.models.internship_offer import find_internships
+from internship.models.master_allocation import MasterAllocation
 
 
 @login_required
@@ -36,7 +39,7 @@ from internship.models.internship_offer import find_internships
 def cohort_home(request, cohort_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
     blockable = find_internships(cohort).filter(selectable=True).count() > 0
-    context = {'blockable': blockable, 'cohort': cohort}
+    context = {'blockable': blockable, 'cohort': cohort, 'users_to_activate': _count_delegates_without_user(cohort)}
     return render(request, "internship/home.html", context=context)
 
 
@@ -46,3 +49,11 @@ def cohort_home(request, cohort_id):
 def view_cohort_selection(request):
     cohorts = Cohort.objects.all()
     return render(request, 'cohort/selection.html', {'cohorts': cohorts})
+
+
+def _count_delegates_without_user(cohort):
+    return MasterAllocation.objects.filter(
+        organization__cohort=cohort,
+        role=Role.DELEGATE.name,
+        master__user_account_status=UserAccountStatus.INACTIVE.name
+    ).count()

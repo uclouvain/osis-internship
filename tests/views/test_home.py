@@ -28,7 +28,10 @@ from django.test import TestCase
 from django.urls import reverse
 
 from internship.models.cohort import Cohort
+from internship.models.enums.role import Role
+from internship.models.enums.user_account_status import UserAccountStatus
 from internship.tests.factories.cohort import CohortFactory
+from internship.tests.factories.master_allocation import MasterAllocationFactory
 
 
 class ViewHomeTest(TestCase):
@@ -74,3 +77,19 @@ class ViewHomeTest(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['cohort'], cohort)
+
+    def test_count_delegates_without_user_account(self):
+        cohort = CohortFactory()
+
+        MasterAllocationFactory(
+            organization__cohort=cohort,
+            role=Role.DELEGATE.name,
+            master__user_account_status=UserAccountStatus.INACTIVE.value
+        )
+
+        response = self.client.post(reverse('internships_home', kwargs={
+            'cohort_id': cohort.id
+        }))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['users_to_activate'], 1)

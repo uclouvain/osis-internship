@@ -25,6 +25,7 @@
 ##############################################################################
 import factory.django
 
+from internship.models.enums.role import Role
 from internship.tests.factories.master import MasterFactory
 from internship.tests.factories.organization import OrganizationFactory
 from internship.tests.factories.speciality import SpecialtyFactory
@@ -37,3 +38,4 @@ class MasterAllocationFactory(factory.django.DjangoModelFactory):
     organization = factory.SubFactory(OrganizationFactory)
     specialty = factory.SubFactory(SpecialtyFactory)
     master = factory.SubFactory(MasterFactory)
+    role = Role.MASTER.name

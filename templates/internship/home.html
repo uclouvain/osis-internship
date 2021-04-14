@@ -58,6 +58,9 @@
                 <div class="col-md-1"><i class="fa fa-user-md" style="font-size: 400%; color: #6699FF;"></i></div>
                 <div class="col-md-5">
                     <h4 class="media-heading"><a href="{% url 'internships_masters' cohort_id=cohort.id %}">{% trans 'Internships masters' %}</a></h4>
+                    {% if users_to_activate %}
+                        <span class="label label-info">{{ users_to_activate }} {% trans 'delegate(s) without user account' %}</span>
+                    {% endif %}
                 </div>
             </div>
             <br>

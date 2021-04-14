@@ -69,7 +69,7 @@ class InternshipPeriodEncodingReminderTest(TestCase):
         self.active_master_allocation = MasterAllocationFactory(
             specialty__cohort=self.cohort,
             organization__cohort=self.cohort,
-            master__user_account_status=UserAccountStatus.ACTIVE.value
+            master__user_account_status=UserAccountStatus.ACTIVE.name
         )
         self.student_affectation = StudentAffectationStatFactory(
             speciality=self.active_master_allocation.specialty,
@@ -79,7 +79,7 @@ class InternshipPeriodEncodingReminderTest(TestCase):
         self.inactive_master_allocation = MasterAllocationFactory(
             specialty__cohort=self.cohort,
             organization__cohort=self.cohort,
-            master__user_account_status=UserAccountStatus.INACTIVE.value
+            master__user_account_status=UserAccountStatus.INACTIVE.name
         )
 
     @mock.patch('internship.utils.mails.mails_management.send_messages')
@@ -108,7 +108,7 @@ class InternshipPeriodEncodingRecapTest(TestCase):
         self.allocation = MasterAllocationFactory(
             specialty__cohort=self.cohort,
             organization__cohort=self.cohort,
-            master__user_account_status=UserAccountStatus.ACTIVE.value
+            master__user_account_status=UserAccountStatus.ACTIVE.name
         )
         self.affectation = StudentAffectationStatFactory(
             speciality=self.allocation.specialty,
@@ -118,7 +118,7 @@ class InternshipPeriodEncodingRecapTest(TestCase):
         self.inactive_master_allocation = MasterAllocationFactory(
             specialty=self.allocation.specialty,
             organization=self.allocation.organization,
-            master__user_account_status=UserAccountStatus.INACTIVE.value
+            master__user_account_status=UserAccountStatus.INACTIVE.name
         )
 
     @mock.patch('internship.utils.mails.mails_management.send_messages')
@@ -135,7 +135,6 @@ class InternshipPeriodEncodingRecapTest(TestCase):
         }
         for key in data.keys():
             self.assertEqual(args['message_content']['template_base_data'][key], data[key])
-        self.assertTrue(InternshipScore.objects.exists())
         self.assertEqual(args['message_content']['receivers'][0], {
             **args['message_content']['receivers'][0],
             'receiver_email': self.allocation.master.person.email,

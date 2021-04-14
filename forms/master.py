@@ -26,18 +26,16 @@
 from django import forms
 
 from internship.models import internship_master
-from internship.models.enums.role import Role
 from reference.models.country import Country
 
 
 class MasterForm(forms.ModelForm):
     country = forms.ModelChoiceField(queryset=Country.objects.order_by('name'), required=False)
-    role = forms.ChoiceField(choices=Role.choices(), required=True)
 
     class Meta:
         model = internship_master.InternshipMaster
         fields = [
-            'civility', 'email_private', 'email_additional', 'start_activities', 'role'
+            'civility', 'email_private', 'email_additional', 'start_activities'
         ]
         widgets = {
             'start_activities': forms.DateInput(format="%Y-%m-%d", attrs={'type': 'date'})
