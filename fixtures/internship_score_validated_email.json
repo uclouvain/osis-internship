@@ -1,0 +1,22 @@
+[
+{
+    "model": "osis_common.messagetemplate",
+    "fields": {
+        "reference": "internship_score_validated_email_html",
+        "subject": "STAC - Cotes validées pour {period} par votre maître de stage",
+        "template": "<i>Ceci est un message automatique généré par le serveur OSIS. Merci de ne pas y répondre.</i><br/><p>Bonjour,<br/>L'encodage des cotes de stage pour la période {{ period }} a été validé par votre maître de stage. Vous pouvez désormais consulter ces cotes sur le portail étudiant en y accédant via le lien suivant:</p><a href='{{ link }}'>{{ link }}</a><p>Bien à vous.</p>",
+        "format": "HTML",
+        "language": "fr-be"
+    }
+},
+{
+    "model": "osis_common.messagetemplate",
+    "fields": {
+        "reference": "internship_score_validated_email_txt",
+        "subject": "STAC - Cotes validées pour {period} par votre maître de stage",
+        "template": "Ceci est un message automatique généré par le serveur OSIS. Merci de ne pas y répondre. Bonjour, l'encodage des cotes de stage pour la période {{ period }} a été validé par votre maître de stage. Vous pouvez désormais consulter ces cotes sur le portail étudiant en y accédant via le lien suivant: {{ link }} Bien à vous.",
+        "format": "PLAIN",
+        "language": "fr-be"
+    }
+}
+]
