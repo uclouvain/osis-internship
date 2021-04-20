@@ -39,6 +39,7 @@ class InternshipScoreListSerializer(serializers.ModelSerializer):
         fields = (
             'uuid',
             'validated',
+            'student_presence',
             *_apd_fields()
         )
 
