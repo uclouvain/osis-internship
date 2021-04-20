@@ -920,6 +920,9 @@ components:
         APD_15:
           type: string
           nullable: true
+        student_presence:
+          type: boolean
+          nullable: true
 
 
     Uuid:
