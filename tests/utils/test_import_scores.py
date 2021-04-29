@@ -36,6 +36,7 @@ from internship.models.internship_score import InternshipScore
 from internship.tests.factories.cohort import CohortFactory
 from internship.tests.factories.internship_student_information import InternshipStudentInformationFactory
 from internship.tests.factories.period import PeriodFactory
+from internship.tests.factories.student_affectation_stat import StudentAffectationStatFactory
 from internship.utils.importing.import_scores import import_xlsx
 
 APDS_COUNT = 15
@@ -90,6 +91,7 @@ class XlsImportScoresTestCase(TestCase):
     def generate_workbook(self):
         students = [StudentFactory() for _ in range(0, 10)]
         [InternshipStudentInformationFactory(person=student.person, cohort=self.cohort) for student in students]
+        [StudentAffectationStatFactory(student=student, period=self.period) for student in students]
         workbook = openpyxl.Workbook()
         worksheet = workbook.active
         worksheet.cell(row=1, column=1).value = 'PERIOD{}'.format(self.period.name)

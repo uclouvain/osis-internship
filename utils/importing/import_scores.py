@@ -30,7 +30,9 @@ from openpyxl import load_workbook
 
 from base.models import student
 from internship.models.internship_score import InternshipScore
+from internship.models.internship_student_affectation_stat import InternshipStudentAffectationStat
 from internship.models.internship_student_information import find_by_person
+from osis_common.utils.models import get_object_or_none
 
 APDS_COUNT = 15
 LINE_INTERVAL = 2
@@ -88,12 +90,19 @@ def _import_score(row, cohort, period):
     for i in range(1, APDS_COUNT*LINE_INTERVAL, LINE_INTERVAL):
         scores.append(row[i+LINE_INTERVAL+1].value)
     existing_student = student.find_by_registration_id(registration_id)
-    internship_score, created = InternshipScore.objects.get_or_create(
-        student_affectation__student=existing_student, student_affectation__period=period, validated=True
+    student_affectation = get_object_or_none(
+        InternshipStudentAffectationStat,
+        student=existing_student,
+        period=period
     )
-    for index, score in enumerate(scores):
-        internship_score.__setattr__('APD_{}'.format(index+1), score)
-    internship_score.save()
+    if student_affectation:
+        internship_score, created = InternshipScore.objects.get_or_create(
+            student_affectation=student_affectation,
+            defaults={'validated': True}
+        )
+        for index, score in enumerate(scores):
+            internship_score.__setattr__('APD_{}'.format(index+1), score)
+        internship_score.save()
 
 
 def _student_is_in_cohort(student, cohort):
