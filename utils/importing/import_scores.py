@@ -102,6 +102,7 @@ def _import_score(row, cohort, period):
         )
         for index, score in enumerate(scores):
             internship_score.__setattr__('APD_{}'.format(index+1), score)
+        internship_score.validated = True
         internship_score.save()
 
 
