@@ -21,7 +21,7 @@ class Migration(migrations.Migration):
             field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='internship.Cohort'),
             preserve_default=False
         ),
-        migrations.RunPython(linkToDefaultCohort),
+        migrations.RunPython(linkToDefaultCohort, elidable=True),
         migrations.AlterField(
             model_name='internshipoffer',
             name='cohort',
