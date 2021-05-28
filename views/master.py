@@ -36,7 +36,6 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
-from base.models.enums import person_source_type
 from base.models.person import Person
 from base.models.person_address import PersonAddress
 from internship.business.email import send_email
@@ -244,15 +243,13 @@ def person_exists(request, cohort_id):
 def master_delete(request, master_id, cohort_id):
     current_cohort = shortcuts.get_object_or_404(cohort.Cohort, pk=cohort_id)
     allocated_master = internship_master.get_by_id(master_id)
-    allocations = master_allocation.find_by_master(current_cohort, allocated_master)
-    current_allocation = allocations.first()
-    if current_allocation:
-        current_allocation.delete()
-    if allocated_master.person and allocated_master.person.source == person_source_type.INTERNSHIP:
-        allocated_master.person.delete()
-    allocated_master.delete()
-    msg_content = "{} : {} {}".format(
-        _('Master deleted'),
+    current_allocations = master_allocation.find_by_master(current_cohort, allocated_master)
+    # will only delete current allocations
+    if current_allocations:
+        current_allocations.delete()
+    msg_content = "{} {} : {} {}".format(
+        _('Master allocations deleted in'),
+        current_cohort,
         allocated_master.person.last_name,
         allocated_master.person.first_name
     ) if allocated_master.person else "{}".format(_('Master deleted'))
