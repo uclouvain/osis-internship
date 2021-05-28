@@ -109,7 +109,7 @@ class MasterTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'masters.html')
 
-    def test_delete_master(self):
+    def test_delete_master_only_delete_allocations(self):
         master_test = MasterFactory(person__source=person_source_type.INTERNSHIP)
 
         # master and person exists before delete
@@ -132,9 +132,9 @@ class MasterTestCase(TestCase):
         allocations = master_allocation.find_by_master(self.cohort, master_test)
         self.assertNotIn(allocation, allocations)
 
-        # master and person have been deleted
-        self.assertFalse(InternshipMaster.objects.filter(pk=master_test.pk).exists())
-        self.assertFalse(Person.objects.filter(pk=master_test.person.pk).exists())
+        # master and person have NOT been deleted
+        self.assertTrue(InternshipMaster.objects.filter(pk=master_test.pk).exists())
+        self.assertTrue(Person.objects.filter(pk=master_test.person.pk).exists())
 
     def test_export_masters(self):
         url = reverse('master_export', kwargs={'cohort_id': self.cohort.pk})
