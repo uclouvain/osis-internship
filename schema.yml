@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  version: "1.1.1"
+  version: "1.1.2"
   title: Internship API
   description: 'This API delivers data for the Internship project.'
   contact:
@@ -863,6 +863,9 @@ components:
         APD_15:
           type: string
           nullable: true
+        student_presence:
+          type: boolean
+          nullable: true
 
     ScoreListGet:
       type: object
@@ -916,6 +919,9 @@ components:
           nullable: true
         APD_15:
           type: string
+          nullable: true
+        student_presence:
+          type: boolean
           nullable: true
 
 

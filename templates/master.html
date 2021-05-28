@@ -174,7 +174,7 @@
             <a class="btn btn-danger pull-right master_btn_delete"
             data-href="{% url 'master_delete' cohort_id=current_cohort.id master_id=allocated_master.id %}"
             data-toggle="modal" data-target="#delete_modal"
-            data-value="{{allocated_master.person.last_name}} {{allocated_master.person.first_name}}">
+            data-value="{% trans 'the allocation(s) for' %} {{allocated_master.person.last_name}} {{allocated_master.person.first_name}} {% trans 'in' %} {{ current_cohort }}">
                 <span class="glyphicon glyphicon-remove aria-hidden="true"></span>
                 {% trans "Delete" %}
             </a>

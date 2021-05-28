@@ -29,6 +29,7 @@ from rest_framework.response import Response
 from internship.api.serializers.internship_score import InternshipScoreDetailSerializer, InternshipScorePutSerializer
 from internship.models.internship_score import InternshipScore
 from internship.models.internship_student_affectation_stat import InternshipStudentAffectationStat
+from internship.utils.mails.mails_management import send_score_validated_email
 
 
 class InternshipScoreCreateRetrieveUpdate(generics.RetrieveUpdateAPIView):
@@ -65,8 +66,10 @@ class ValidateInternshipScore(generics.GenericAPIView):
     queryset = InternshipScore.objects.all()
 
     def post(self, request, *args, **kwargs) -> Response:
-        object = self.get_object()
-        object.validated = True
-        object.save()
+        score = self.get_object()
+        score.validated = True
+        score.save()
+        if score.student_affectation:
+            send_score_validated_email(score)
         return Response(status=status.HTTP_204_NO_CONTENT)
 

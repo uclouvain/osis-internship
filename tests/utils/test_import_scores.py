@@ -36,6 +36,7 @@ from internship.models.internship_score import InternshipScore
 from internship.tests.factories.cohort import CohortFactory
 from internship.tests.factories.internship_student_information import InternshipStudentInformationFactory
 from internship.tests.factories.period import PeriodFactory
+from internship.tests.factories.score import ScoreFactory
 from internship.tests.factories.student_affectation_stat import StudentAffectationStatFactory
 from internship.utils.importing.import_scores import import_xlsx
 
@@ -65,6 +66,8 @@ class XlsImportScoresTestCase(TestCase):
         mock_workbook.return_value = self.workbook
         import_xlsx(self.cohort, self.file, self.period.name)
         self.assertEqual(InternshipScore.objects.count(), 10)
+        for score in InternshipScore.objects.all():
+            self.assertTrue(score.validated)
 
     @mock.patch('internship.utils.importing.import_scores.load_workbook')
     def test_import_scores_abort_with_wrong_registration_id(self, mock_workbook):
@@ -74,7 +77,7 @@ class XlsImportScoresTestCase(TestCase):
         workbook.worksheets[0].cell(row=row_error_number, column=1).value = invalid_registration_id
         mock_workbook.return_value = workbook
         errors = import_xlsx(self.cohort, self.file, self.period.name)
-        self.assertEqual(InternshipScore.objects.count(), 0)
+        self.assertEqual(InternshipScore.objects.count(), 1)
         for row_error in errors['registration_error']:
             self.assertEqual(row_error[0].row, row_error_number)
             self.assertEqual(row_error[0].value, invalid_registration_id)
@@ -86,12 +89,16 @@ class XlsImportScoresTestCase(TestCase):
         mock_workbook.return_value = workbook
         errors = import_xlsx(self.cohort, self.file, self.period.name)
         self.assertEqual(errors['period_error'], 'invalid_period')
-        self.assertEqual(InternshipScore.objects.count(), 0)
+        self.assertEqual(InternshipScore.objects.count(), 1)
 
     def generate_workbook(self):
         students = [StudentFactory() for _ in range(0, 10)]
         [InternshipStudentInformationFactory(person=student.person, cohort=self.cohort) for student in students]
-        [StudentAffectationStatFactory(student=student, period=self.period) for student in students]
+        affectations = [StudentAffectationStatFactory(student=student, period=self.period) for student in students]
+        self.existing_score_not_validated = ScoreFactory(
+            student_affectation=affectations[0],
+            validated=False
+        )
         workbook = openpyxl.Workbook()
         worksheet = workbook.active
         worksheet.cell(row=1, column=1).value = 'PERIOD{}'.format(self.period.name)
