@@ -52,11 +52,11 @@ class InternshipMasterSerializer(serializers.HyperlinkedModelSerializer):
     def create(self, *args, **kwargs):
         master = get_object_or_none(InternshipMaster, person__email=self.validated_data['person']['email'])
         if not master:
-            person = Person(**self.validated_data['person'], source=INTERNSHIP)
-            person.save()
-            master = InternshipMaster(
-                person=person,
-                civility=self.validated_data['civility']
-            )
+            email = self.validated_data['person'].pop('email')
+            person, created = Person.objects.get_or_create(email=email, defaults={
+                **self.validated_data['person'],
+                'source': INTERNSHIP
+            })
+            master = InternshipMaster(person=person, civility=self.validated_data['civility'])
             master.save()
         return master

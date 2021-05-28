@@ -113,6 +113,25 @@ def send_internship_score_encoding_recaps(period):
         send_messages(message_content=message_content)
 
 
+def send_score_validated_email(score):
+    message_content = message_config.create_message_content(
+        html_template_ref='internship_score_validated_email_html',
+        txt_template_ref='internship_score_validated_email_txt',
+        tables=[],
+        receivers=[message_config.create_receiver(
+            score.student_affectation.student.person_id,
+            score.student_affectation.student.person.email,
+            None
+        )],
+        template_base_data={
+            'period': score.student_affectation.period.name,
+            'link': settings.INTERNSHIP_SCORE_ENCODING_URL
+        },
+        subject_data={'period': score.student_affectation.period.name}
+    )
+    send_messages(message_content=message_content)
+
+
 def _get_active_user_allocations(organizations, specialties):
     return MasterAllocation.objects.filter(
         specialty_id__in=specialties,

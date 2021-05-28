@@ -104,6 +104,7 @@ class InternshipMasterAllocationListCreate(generics.ListCreateAPIView):
             'master__person', 'organization__country', 'specialty__cohort'
         )
         if self.request.query_params.get('current'):
-            current_cohort = Period.active.first().cohort
+            active_period = Period.active.first()
+            current_cohort = Period.active.first().cohort if active_period else Period.past.first().cohort
             qs = qs.filter(specialty__cohort=current_cohort, organization__cohort=current_cohort)
         return qs

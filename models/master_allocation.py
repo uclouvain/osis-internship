@@ -36,6 +36,7 @@ class MasterAllocationAdmin(admin.ModelAdmin):
     fieldsets = ((None, {'fields': ('master', 'organization', 'specialty', 'role')}),)
     raw_id_fields = ('master', 'organization', 'specialty')
     list_filter = ('organization__cohort', 'specialty__cohort', 'role')
+    search_fields = ['master__person__last_name', 'master__person__first_name']
 
 
 class MasterAllocation(models.Model):
