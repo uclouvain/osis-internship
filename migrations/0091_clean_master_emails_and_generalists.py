@@ -46,6 +46,6 @@ class Migration(migrations.Migration):
             field=models.CharField(blank=True, max_length=255, null=True, verbose_name='Additional email'),
         ),
         # clean mails
-        migrations.RunPython(clear_generalists, RunPython.noop),
-        migrations.RunPython(clean_mails, RunPython.noop),
+        migrations.RunPython(clear_generalists, RunPython.noop, elidable=True),
+        migrations.RunPython(clean_mails, RunPython.noop, elidable=True),
     ]

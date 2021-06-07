@@ -54,7 +54,7 @@ class Migration(migrations.Migration):
                                     to='base.person'),
         ),
         # create persons based on data
-        migrations.RunPython(create_persons, RunPython.noop),
+        migrations.RunPython(create_persons, RunPython.noop, elidable=True),
         # remove fields that are available in Person table
         migrations.RemoveField(
             model_name='internshipmaster',

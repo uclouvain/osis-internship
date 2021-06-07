@@ -15,7 +15,7 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(set_uuid_field_2),
+        migrations.RunPython(set_uuid_field_2, elidable=True),
 
         migrations.AlterField(
             model_name='periodinternshipplaces',
