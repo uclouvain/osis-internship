@@ -14,5 +14,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(cleanupStudentInternshipsAndPersons)
+        migrations.RunPython(cleanupStudentInternshipsAndPersons, elidable=True)
     ]

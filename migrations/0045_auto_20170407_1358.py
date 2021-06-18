@@ -12,5 +12,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunSQL("select setval('internship_internship_id_seq', 10);")
+        migrations.RunSQL("select setval('internship_internship_id_seq', 10);", elidable=True)
     ]

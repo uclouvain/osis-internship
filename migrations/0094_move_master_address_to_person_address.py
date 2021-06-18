@@ -33,7 +33,7 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(move_master_address_to_person_address, RunPython.noop),
+        migrations.RunPython(move_master_address_to_person_address, RunPython.noop, elidable=True),
         migrations.RemoveField(
             model_name='internshipmaster',
             name='city',

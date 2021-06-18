@@ -41,5 +41,5 @@ class Migration(migrations.Migration):
 
     operations = [
         # clean duplicates
-        migrations.RunPython(clean_duplicates, RunPython.noop),
+        migrations.RunPython(clean_duplicates, RunPython.noop, elidable=True),
     ]
