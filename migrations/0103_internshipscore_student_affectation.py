@@ -33,5 +33,5 @@ class Migration(migrations.Migration):
             name='student_affectation',
             field=models.OneToOneField(null=True, on_delete=django.db.models.deletion.PROTECT, related_name='score', to='internship.internshipstudentaffectationstat'),
         ),
-        migrations.RunPython(link_scores_with_affectations, reverse_code=RunPython.noop)
+        migrations.RunPython(link_scores_with_affectations, reverse_code=RunPython.noop, elidable=True)
     ]

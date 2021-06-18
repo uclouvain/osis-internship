@@ -23,5 +23,5 @@ class Migration(migrations.Migration):
             name='user_account_status',
             field=models.CharField(choices=[('INACTIVE', 'INACTIVE'), ('PENDING', 'PENDING'), ('ACTIVE', 'ACTIVE')], default='INACTIVE', max_length=50),
         ),
-        migrations.RunPython(convert_status_values_to_upper, reverse_code=RunPython.noop)
+        migrations.RunPython(convert_status_values_to_upper, reverse_code=RunPython.noop, elidable=True)
     ]
