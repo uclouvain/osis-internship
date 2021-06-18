@@ -23,23 +23,36 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+import uuid as uuid
+from django.contrib.admin import ModelAdmin
 from django.contrib.postgres.fields import JSONField
 from django.db import models
-
-from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
+from django.db.models import Model
 
 APD_NUMBER = 15
 
 
-class InternshipScoreAdmin(SerializableModelAdmin):
+class InternshipScoreAdmin(ModelAdmin):
     score_fields = ['APD_{}'.format(index) for index in range(1, APD_NUMBER+1)]
-    list_display = ('student', 'period', *score_fields, 'score', 'excused', 'reason', 'validated')
-    raw_id_fields = ('student',)
-    list_filter = ('cohort', 'validated')
-    search_fields = ['student__person__first_name', 'student__person__last_name']
+    list_display = (
+        'student', 'period', 'cohort',
+        *score_fields, 'score', 'excused', 'reason', 'validated',
+    )
+    raw_id_fields = ('student_affectation',)
+    list_filter = ('student_affectation__period__cohort', 'validated', 'student_affectation__speciality__name')
+    search_fields = [
+        'student_affectation__student__person__first_name',
+        'student_affectation__student__person__last_name'
+    ]
+    list_select_related = (
+        'student_affectation__period__cohort',
+        'student_affectation__student__person',
+    )
 
 
-class InternshipScore(SerializableModel):
+class InternshipScore(Model):
+
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, db_index=True)
 
     SCORE_CHOICES = (
         ('A', 'A'),
@@ -48,9 +61,13 @@ class InternshipScore(SerializableModel):
         ('D', 'D')
     )
 
-    student = models.ForeignKey('base.student', on_delete=models.PROTECT)
-    period = models.ForeignKey('internship.period', on_delete=models.PROTECT)
-    cohort = models.ForeignKey('internship.cohort', on_delete=models.PROTECT)
+    student_affectation = models.OneToOneField(
+        'internship.InternshipStudentAffectationStat',
+        on_delete=models.PROTECT,
+        related_name='score',
+        null=True
+    )
+
     for index in range(1, APD_NUMBER+1):
         vars()['APD_{}'.format(index)] = models.CharField(
             max_length=1,
@@ -63,16 +80,26 @@ class InternshipScore(SerializableModel):
     reason = models.CharField(max_length=255, null=True, blank=True)
 
     # TODO: import JSONField from models in Django 3
-    comments = JSONField(default=dict)
-    objectives = JSONField(default=dict)
+    comments = JSONField(default=dict, blank=True)
+    objectives = JSONField(default=dict, blank=True)
 
     validated = models.BooleanField(default=False)
+    student_presence = models.NullBooleanField()
 
     def __str__(self):
-        return '{} - {} - {}'.format(self.student, self.period, self.get_scores())
+        return '{} - {}'.format(self.student_affectation, self.get_scores())
 
     def get_scores(self):
         return [vars(self)['APD_{}'.format(index)] for index in range(1, APD_NUMBER+1)]
 
-    class Meta:
-        unique_together = ['student', 'period']
+    @property
+    def student(self):
+        return self.student_affectation.student if self.student_affectation else None
+
+    @property
+    def period(self):
+        return self.student_affectation.period if self.student_affectation else None
+
+    @property
+    def cohort(self):
+        return self.period.cohort if self.period else None

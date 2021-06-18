@@ -31,5 +31,5 @@ class Migration(migrations.Migration):
             name='validated',
             field=models.BooleanField(default=False),
         ),
-        migrations.RunPython(validate_existing_filled_scores, RunPython.noop),
+        migrations.RunPython(validate_existing_filled_scores, RunPython.noop,elidable=True),
     ]

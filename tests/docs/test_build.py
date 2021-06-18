@@ -23,6 +23,9 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.conf import settings
+from django.test import SimpleTestCase
+
 import os
 import os.path
 import subprocess
@@ -33,14 +36,16 @@ from unittest.mock import patch
 from internship.docs.build import generate_pdf, generate_homepage, generate_html, get_path, show_help
 
 
-class TestDocumentationBuild(unittest.TestCase):
-
-    path_args = ["-p", "internship/docs/"]
+class TestDocumentationBuild(SimpleTestCase):
+    internship_doc_path = "{}/internship/docs/".format(settings.BASE_DIR)
+    path_args = ["-p", internship_doc_path]
 
     def test_generate_pdf(self):
         try:
             run_under_args_context(generate_pdf, self.path_args)
-            self.assertTrue(os.path.isfile("internship/docs/user-manual_fr.pdf"))
+
+            expected_file_created = "{}/user-manual_fr.pdf".format(self.internship_doc_path)
+            self.assertTrue(os.path.isfile(expected_file_created))
             checkout_modified_files('docs/user-manual_fr.pdf')
         except FileNotFoundError:
             self.assertTrue(True)
@@ -48,19 +53,23 @@ class TestDocumentationBuild(unittest.TestCase):
     def test_generate_html(self):
         try:
             run_under_args_context(generate_html, self.path_args)
-            self.assertTrue(os.path.isfile("internship/docs/user-manual_fr.html"))
+
+            expected_file_created = "{}/user-manual_fr.html".format(self.internship_doc_path)
+            self.assertTrue(os.path.isfile(expected_file_created))
             checkout_modified_files('docs/user-manual_fr.html')
         except FileNotFoundError:
             self.assertTrue(True)
 
     def test_generate_homepage(self):
         run_under_args_context(generate_homepage, self.path_args)
-        self.assertTrue(os.path.isfile("internship/docs/index.html"))
+
+        expected_file_created = "{}/index.html".format(self.internship_doc_path)
+        self.assertTrue(os.path.isfile(expected_file_created))
 
     def test_get_path(self):
         self.assertEqual(get_path(), "")
         with patch.object(sys, 'argv', self.path_args):
-            self.assertEqual(get_path(), "internship/docs/")
+            self.assertEqual(get_path(), self.internship_doc_path)
 
     def test_show_help(self):
         self.assertFalse(show_help())

@@ -25,9 +25,6 @@
 ##############################################################################
 from rest_framework import serializers
 
-from base.api.serializers.student import StudentSerializer
-from internship.api.serializers.cohort import CohortSerializer
-from internship.api.serializers.period import PeriodSerializer
 from internship.models.internship_score import APD_NUMBER, InternshipScore
 
 
@@ -35,24 +32,31 @@ def _apd_fields():
     return ['APD_{}'.format(index) for index in range(1, APD_NUMBER + 1)]
 
 
-class InternshipScoreSerializer(serializers.HyperlinkedModelSerializer):
-    student = StudentSerializer()
-    period = PeriodSerializer()
-    cohort = CohortSerializer()
+class InternshipScoreListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = InternshipScore
         fields = (
             'uuid',
-            'student',
-            'period',
+            'validated',
+            'student_presence',
+            *_apd_fields()
+        )
+
+
+class InternshipScoreDetailSerializer(serializers.ModelSerializer):
+    cohort = serializers.CharField(read_only=True, source='cohort.name')
+
+    class Meta:
+        model = InternshipScore
+        fields = (
+            'uuid',
             'score',
-            'excused',
-            'reason',
             'cohort',
             'comments',
             'objectives',
             'validated',
+            'student_presence',
             *_apd_fields()
         )
 
@@ -67,5 +71,6 @@ class InternshipScorePutSerializer(serializers.HyperlinkedModelSerializer):
             'comments',
             'objectives',
             'validated',
+            'student_presence',
             *_apd_fields()
         )

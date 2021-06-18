@@ -15,5 +15,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(add_init_internship_manager_group),
+        migrations.RunPython(add_init_internship_manager_group, elidable=True),
     ]

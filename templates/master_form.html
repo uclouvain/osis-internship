@@ -63,7 +63,6 @@
                     {% bootstrap_field master_form.civility form_group_class="form-group col-md-2" label=_("Civility") %}
                     {% bootstrap_field person_form.last_name form_group_class="form-group col-md-4" label=_("Last name")%}
                     {% bootstrap_field person_form.first_name form_group_class="form-group col-md-3" label=_("First name") %}
-                    {% bootstrap_field master_form.role form_group_class="form-group col-md-3" label=_("Role") %}
                 </div>
                 <div class="row">
                     {% bootstrap_field person_form.birth_date form_group_class="form-group col-md-4" label=_("Birth date") %}
@@ -90,6 +89,7 @@
                             <tr>
                                 <th>{% trans 'Hospital' %}</th>
                                 <th>{% trans 'Specialty' %}</th>
+                                <th>{% trans 'Role' %}</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -121,6 +121,16 @@
                                         </select>
                                     </td>
                                     <td>
+                                        <select name="role" id="role" class="form-control">
+                                            <option value="">--</option>
+                                            {% for role in roles %}
+                                                <option value="{{ role.0 }}" {% if allocation.role == role.0 %} selected {% endif %}>
+                                                    {{ role.0.0 }}
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+                                    </td>
+                                        <td>
                                         <button type="button" class="btn btn-default" id="remove_allocation_{{ forloop.counter0 }}">
                                             <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
                                         </button>
@@ -141,6 +151,14 @@
                                         <option value="">--</option>
                                         {% for specialty in specialties %}
                                             <option value="{{ specialty.id }}">{{ specialty.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </td>
+                                <td>
+                                    <select name="role" id="role" class="form-control">
+                                        <option value="">--</option>
+                                        {% for role in roles %}
+                                            <option value="{{ role.0 }}">{{ role.0.0 }}</option>
                                         {% endfor %}
                                     </select>
                                 </td>

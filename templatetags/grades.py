@@ -39,7 +39,7 @@ def is_valid(grade, index):
 @register.simple_tag
 def is_apd_validated(cohort, student, apd):
     apd_grades = InternshipScore.objects.filter(
-        cohort=cohort, student__person=student.person
+        student_affectation__period__cohort=cohort, student_affectation__student__person=student.person
     ).values_list('APD_{}'.format(apd), flat=True)
     valid_grades = InternshipScoreRules.get_valid_grades(apd-1)
     return bool(set(apd_grades).intersection(valid_grades))

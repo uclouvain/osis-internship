@@ -26,11 +26,10 @@
 from rest_framework import generics, status
 from rest_framework.response import Response
 
-from base.models.student import Student
-from internship.api.serializers.internship_score import InternshipScoreSerializer, InternshipScorePutSerializer
+from internship.api.serializers.internship_score import InternshipScoreDetailSerializer, InternshipScorePutSerializer
 from internship.models.internship_score import InternshipScore
 from internship.models.internship_student_affectation_stat import InternshipStudentAffectationStat
-from internship.models.period import Period
+from internship.utils.mails.mails_management import send_score_validated_email
 
 
 class InternshipScoreCreateRetrieveUpdate(generics.RetrieveUpdateAPIView):
@@ -38,38 +37,39 @@ class InternshipScoreCreateRetrieveUpdate(generics.RetrieveUpdateAPIView):
        Return an internship score detail
     """
     name = 'score-detail'
-    lookup_field = None
+    lookup_field = 'uuid'
+    queryset = InternshipScore.objects.all()
 
     def get_serializer_class(self):
         if self.request.method in ['PUT', 'PATCH']:
             return InternshipScorePutSerializer
-        return InternshipScoreSerializer
+        return InternshipScoreDetailSerializer
 
     def get_object(self):
         try:
-            return InternshipScore.objects.get(
-                student__uuid=self.kwargs.get('student'), period__uuid=self.kwargs.get('period')
-            )
+            return InternshipScore.objects.get(student_affectation__uuid=self.kwargs['affectation_uuid'])
         except InternshipScore.DoesNotExist:
-            student = Student.objects.get(uuid=self.kwargs.get('student'))
-            period = Period.objects.get(uuid=self.kwargs.get('period'))
-            if student and period:
-                return InternshipScore.objects.create(student=student, period=period, cohort=period.cohort)
+            affectation = InternshipStudentAffectationStat.objects.get(
+                uuid=self.kwargs['affectation_uuid']
+            )
+            if affectation:
+                return InternshipScore.objects.create(student_affectation=affectation)
 
 
-class ValidateInternshipScore(generics.RetrieveUpdateAPIView):
+class ValidateInternshipScore(generics.GenericAPIView):
     """
       Validate an internship score
     """
     name = 'score-validation'
-    lookup_field = None
+    lookup_field = 'student_affectation__uuid'
+    lookup_url_kwarg = 'affectation'
+    queryset = InternshipScore.objects.all()
 
-    def get(self, request, *args, **kwargs) -> Response:
-        try:
-            affectation = InternshipStudentAffectationStat.objects.get(uuid=self.kwargs.get('affectation'))
-            score = InternshipScore.objects.get(student=affectation.student, period=affectation.period)
-            score.validated = True
-            score.save()
-            return Response(status=status.HTTP_200_OK)
-        except (InternshipStudentAffectationStat.DoesNotExist, InternshipScore.DoesNotExist) as e:
-            return Response(data={'error': e.message}, status=status.HTTP_404_NOT_FOUND)
+    def post(self, request, *args, **kwargs) -> Response:
+        score = self.get_object()
+        score.validated = True
+        score.save()
+        if score.student_affectation:
+            send_score_validated_email(score)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+

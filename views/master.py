@@ -36,7 +36,6 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
-from base.models.enums import person_source_type
 from base.models.person import Person
 from base.models.person_address import PersonAddress
 from internship.business.email import send_email
@@ -61,7 +60,7 @@ def masters(request, cohort_id):
     filter_specialty = int(request.GET.get('specialty', 0))
     filter_hospital = int(request.GET.get('hospital', 0))
     filter_name = request.GET.get('name', '')
-    filter_role = request.GET.get('role', Role.MASTER.value)
+    filter_role = request.GET.get('role', Role.MASTER.name)
 
     allocations = master_allocation.search(current_cohort, filter_specialty, filter_hospital, filter_role)
     if filter_name:
@@ -101,7 +100,7 @@ def create_user_accounts(request, cohort_id):
 
 
 def _user_already_exists_for_master(master):
-    return master.user_account_status != UserAccountStatus.INACTIVE.value
+    return master.user_account_status != UserAccountStatus.INACTIVE.name
 
 
 def _create_master_user_account(request, master):
@@ -133,8 +132,8 @@ def _display_creation_error_msg(master, request):
 
 
 def _update_user_account_status(master, request):
-    if master.user_account_status == UserAccountStatus.INACTIVE.value:
-        master.user_account_status = UserAccountStatus.PENDING.value
+    if master.user_account_status == UserAccountStatus.INACTIVE.name:
+        master.user_account_status = UserAccountStatus.PENDING.name
         master.save()
         messages.add_message(
             request, messages.SUCCESS,
@@ -220,6 +219,7 @@ def master_form(request, cohort_id, master_id=None, allocated_master=None):
     person_address_form = InternshipPersonAddressForm(request.POST or None, instance=person_address)
     specialties = internship_speciality.find_by_cohort(current_cohort)
     hospitals = organization.find_by_cohort(current_cohort)
+    roles = Role.choices()
 
     dynamic_fields = json.dumps(list(person_form.fields.keys()) + list(person_address_form.fields.keys()))
 
@@ -243,15 +243,13 @@ def person_exists(request, cohort_id):
 def master_delete(request, master_id, cohort_id):
     current_cohort = shortcuts.get_object_or_404(cohort.Cohort, pk=cohort_id)
     allocated_master = internship_master.get_by_id(master_id)
-    allocations = master_allocation.find_by_master(current_cohort, allocated_master)
-    current_allocation = allocations.first()
-    if current_allocation:
-        current_allocation.delete()
-    if allocated_master.person and allocated_master.person.source == person_source_type.INTERNSHIP:
-        allocated_master.person.delete()
-    allocated_master.delete()
-    msg_content = "{} : {} {}".format(
-        _('Master deleted'),
+    current_allocations = master_allocation.find_by_master(current_cohort, allocated_master)
+    # will only delete current allocations
+    if current_allocations:
+        current_allocations.delete()
+    msg_content = "{} {} : {} {}".format(
+        _('Master allocations deleted in'),
+        current_cohort,
         allocated_master.person.last_name,
         allocated_master.person.first_name
     ) if allocated_master.person else "{}".format(_('Master deleted'))
@@ -294,7 +292,7 @@ def master_save(request, cohort_id):
             messages.add_message(
                 request,
                 messages.ERROR,
-                _('A master must be affected to at least one hospital or one specialty.'),
+                _('A master must be affected to at least one hospital or one specialty with a role.'),
                 "alert-danger"
             )
     else:
@@ -331,17 +329,26 @@ def _build_allocations(request, allocated_master):
         specialties = request.POST.getlist('specialty')
         specialties = _clean_empty_strings(specialties)
 
-    allocations_ids = list(zip(hospitals, specialties))
+    roles = []
+    if 'role' in request.POST:
+        roles = request.POST.getlist('role')
+        roles = _clean_empty_strings(roles)
+
+    allocations_data = list(zip(hospitals, specialties, roles))
 
     allocations = []
 
-    for hospital_id, specialty_id in allocations_ids:
+    for hospital_id, specialty_id, role in allocations_data:
         hospital = organization.get_by_id(hospital_id) if hospital_id else None
         specialty = internship_speciality.get_by_id(specialty_id) if specialty_id else None
-        allocation = master_allocation.MasterAllocation(master=allocated_master,
-                                                        organization=hospital,
-                                                        specialty=specialty)
-        allocations.append(allocation)
+        if role:
+            allocation = master_allocation.MasterAllocation(
+                master=allocated_master,
+                organization=hospital,
+                specialty=specialty,
+                role=role
+            )
+            allocations.append(allocation)
 
     return allocations
 
@@ -363,5 +370,7 @@ def _extract_hospital_id(allocations):
 
 
 def _validate_allocations(request):
-    hospitals, specialties = request.POST.getlist('hospital'), request.POST.getlist('specialty')
-    return hospitals[0] is not '' or specialties[0] is not ''
+    hospitals = request.POST.getlist('hospital')
+    specialties = request.POST.getlist('specialty')
+    roles = request.POST.getlist('role')
+    return (hospitals[0] is not '' or specialties[0] is not '') and roles[0] is not ''

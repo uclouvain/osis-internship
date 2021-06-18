@@ -47,18 +47,16 @@ class InternshipMasterSerializer(serializers.HyperlinkedModelSerializer):
             'person',
             'civility',
             'user_account_status',
-            'role'
         )
 
     def create(self, *args, **kwargs):
-        master = get_object_or_none(InternshipMaster, person__email=self.initial_data['person']['email'])
+        master = get_object_or_none(InternshipMaster, person__email=self.validated_data['person']['email'])
         if not master:
-            person = Person(**self.initial_data['person'], source=INTERNSHIP)
-            person.save()
-            master = InternshipMaster(
-                person=person,
-                role=self.initial_data['role'],
-                civility=self.initial_data['civility']
-            )
+            email = self.validated_data['person'].pop('email')
+            person, created = Person.objects.get_or_create(email=email, defaults={
+                **self.validated_data['person'],
+                'source': INTERNSHIP
+            })
+            master = InternshipMaster(person=person, civility=self.validated_data['civility'])
             master.save()
         return master

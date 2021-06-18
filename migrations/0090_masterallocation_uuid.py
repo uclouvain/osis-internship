@@ -23,7 +23,7 @@ class Migration(migrations.Migration):
             name='uuid',
             field=models.UUIDField(blank=True, null=True),
         ),
-        migrations.RunPython(create_uuid),
+        migrations.RunPython(create_uuid, elidable=True),
         migrations.AlterField(
             model_name='masterallocation',
             name='uuid',
