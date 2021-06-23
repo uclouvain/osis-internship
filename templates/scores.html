@@ -133,7 +133,7 @@
                     </div>
                 </form>
                 <div class="table-responsive">
-                  <table class="table">
+                  <table class="table table-fix-header">
                     <tr>
                         <strong class="pagination-index-count">
                             {% blocktrans with start_index=students.start_index end_index=students.end_index total_counts=students.paginator.count %}
@@ -141,7 +141,7 @@
                             {% endblocktrans %}
                         </strong>
                     </tr>
-                      <tr>
+                      <tr class="header-row">
                         {% if students %}
                             <th>
                                 <input id="id_check_all" type="checkbox" name="check_all" title="{% trans 'Check All' %}"/>
@@ -414,6 +414,36 @@
 
     //trigger first msg appearing in modal
     switchEvolutionScoreModalMsg(all_periods_count);
+
+    let tableHeader = $('.header-row');
+    let clone = tableHeader.clone();
+    clone.children().each(function(index) {
+        $(this).outerWidth($(tableHeader.children()[index]).outerWidth());
+    });
+
+    // sticky table header
+    $(document).on('scroll', ()=>{
+        if(window.scrollY >= tableHeader.position().top - tableHeader.height()){
+            clone.prependTo($('.table-fix-header tbody'));
+            clone.css('position','fixed');
+            clone.css('width', $('tbody').width());
+            clone.css('top', $('.navbar').height());
+        } else {
+            clone.remove();
+            clone.css('position','relative');
+            clone.css('top', 0);
+        }
+    });
+
+    // reset sticky header on resize
+    $(window).resize(()=>{
+        clone.remove();
+        tableHeader = $('.header-row');
+        clone = tableHeader.clone();
+        clone.children().each(function(index) {
+            $(this).outerWidth($(tableHeader.children()[index]).outerWidth());
+        }
+    });
 
     </script>
 {% endblock %}
