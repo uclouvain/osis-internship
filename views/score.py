@@ -122,10 +122,7 @@ def score_detail_form(request, cohort_id, student_registration_id, period_id):
         student_affectation__student__registration_id=student_registration_id,
         student_affectation__period_id=period_id,
     )
-    master = MasterAllocation.objects.filter(
-        specialty=score.student_affectation.speciality,
-        organization=score.student_affectation.organization
-    ).first().master
+    master = _get_main_internship_master(score)
     apds = range(1, APD_NUMBER+1)
 
     if request.POST:
@@ -151,6 +148,14 @@ def score_detail_form(request, cohort_id, student_registration_id, period_id):
     }
 
     return render(request, "score_form.html", context=context)
+
+
+def _get_main_internship_master(score):
+    main_master_allocation = MasterAllocation.objects.filter(
+        specialty=score.student_affectation.speciality,
+        organization=score.student_affectation.organization
+    ).first()
+    return main_master_allocation.master if main_master_allocation else None
 
 
 def _cache_apd_form_values(apds_data, score):

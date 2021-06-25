@@ -43,6 +43,7 @@ from backoffice.settings.base import INSTALLED_APPS
 from base.models.student import Student
 from base.tests.factories.person import PersonFactory
 from base.tests.factories.student import StudentFactory
+from base.utils.cache import RequestCache
 from internship.models.internship_score import InternshipScore, APD_NUMBER
 from internship.models.internship_score_mapping import InternshipScoreMapping
 from internship.models.internship_student_affectation_stat import InternshipStudentAffectationStat
@@ -60,6 +61,9 @@ from osis_common.document.xls_build import CONTENT_TYPE_XLS
 class ScoresEncodingTest(TestCase):
     def setUp(self):
         self.client.force_login(self.user)
+
+        url = reverse('internship_scores_encoding', kwargs={'cohort_id': self.cohort.pk})
+        RequestCache(user=self.user, path=url).clear()
 
     @classmethod
     def setUpTestData(cls):
@@ -578,3 +582,57 @@ class ScoresEncodingTest(TestCase):
         student_with_score_validated = exported_students[1]
         self.assertFalse(student_with_score_not_validated.scores)
         self.assertTrue(student_with_score_validated.scores)
+
+    def test_form_edit_score_consultation(self):
+        score = ScoreFactory(
+            student_affectation__period=self.period,
+            APD_1='A',
+            validated=False
+        )
+        url = reverse('internship_edit_score', kwargs={
+            'cohort_id': self.cohort.pk,
+            'student_registration_id': score.student_affectation.student.registration_id,
+            'period_id': self.period.pk
+        })
+        response = self.client.get(url)
+        self.assertTemplateUsed(response, "score_form.html")
+
+    def test_form_edit_score_post_invalid(self):
+        score = ScoreFactory(
+            student_affectation__period=self.period,
+            APD_1='A',
+            validated=False
+        )
+        url = reverse('internship_edit_score', kwargs={
+            'cohort_id': self.cohort.pk,
+            'student_registration_id': score.student_affectation.student.registration_id,
+            'period_id': self.period.pk
+        })
+        response = self.client.post(url, data={'apd-1': 'B'})
+        messages_list = [msg for msg in response.wsgi_request._messages]
+        self.assertTemplateUsed(response, "score_form.html")
+        self.assertEqual(messages_list[0].level_tag, 'error')
+        # keep user input values when reloading form if error
+        self.assertEqual(response.context['score'].APD_1, 'B')
+
+    def test_form_edit_score_post_valid(self):
+        score = ScoreFactory(
+            student_affectation__period=self.period,
+            APD_1='A',
+            validated=False
+        )
+        url = reverse('internship_edit_score', kwargs={
+            'cohort_id': self.cohort.pk,
+            'student_registration_id': score.student_affectation.student.registration_id,
+            'period_id': self.period.pk
+        })
+        response = self.client.post(url, data={
+            'apd-1': 'B',
+            'apd-2': 'B',
+            'apd-3': 'B',
+            'apd-4': 'B',
+            'apd-5': 'B',
+        })
+        messages_list = [msg for msg in response.wsgi_request._messages]
+        self.assertRedirects(response, reverse('internship_scores_encoding', kwargs={'cohort_id': self.cohort.pk}))
+        self.assertEqual(messages_list[0].level_tag, 'success')
