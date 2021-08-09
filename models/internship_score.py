@@ -30,6 +30,8 @@ from django.db import models
 from django.db.models import Model
 
 APD_NUMBER = 15
+MIN_APDS = 5
+MAX_APDS = 9
 
 
 class InternshipScoreAdmin(ModelAdmin):
