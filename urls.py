@@ -154,6 +154,8 @@ urlpatterns = [
 
             url(r'^scores_encoding/', include([
                 url(r'^$', score.scores_encoding, name='internship_scores_encoding'),
+                url(r'^edit/(?P<student_registration_id>[0-9]+)/(?P<period_id>[0-9]+)$', score.score_detail_form,
+                    name='internship_edit_score'),
                 url(r'^upload_scores/$', score.upload_scores, name='internship_upload_scores'),
                 url(r'^upload_eval/$', score.upload_eval, name='internship_upload_eval'),
                 url(r'^download/$', score.download_scores, name='internship_download_scores'),
