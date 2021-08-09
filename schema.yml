@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  version: "1.1.2"
+  version: "1.1.3"
   title: Internship API
   description: 'This API delivers data for the Internship project.'
   contact:
@@ -29,6 +29,11 @@ paths:
           schema:
             type: string
           required: false
+        - $ref: '#/components/parameters/Accept-Language'
+        - $ref: '#/components/parameters/X-User-FirstName'
+        - $ref: '#/components/parameters/X-User-LastName'
+        - $ref: '#/components/parameters/X-User-Email'
+        - $ref: '#/components/parameters/X-User-GlobalID'
       responses:
         200:
           description: Successful get of the list of internship masters
@@ -40,6 +45,12 @@ paths:
         - internship
     post:
       description: Create new internship master
+      parameters:
+        - $ref: '#/components/parameters/Accept-Language'
+        - $ref: '#/components/parameters/X-User-FirstName'
+        - $ref: '#/components/parameters/X-User-LastName'
+        - $ref: '#/components/parameters/X-User-Email'
+        - $ref: '#/components/parameters/X-User-GlobalID'
       requestBody:
         required: true
         content:
@@ -65,6 +76,11 @@ paths:
           description: The UUID of the master
           schema:
             $ref: '#/components/schemas/Uuid'
+        - $ref: '#/components/parameters/Accept-Language'
+        - $ref: '#/components/parameters/X-User-FirstName'
+        - $ref: '#/components/parameters/X-User-LastName'
+        - $ref: '#/components/parameters/X-User-Email'
+        - $ref: '#/components/parameters/X-User-GlobalID'
       responses:
         200:
           description: Successful get of a master's data.
@@ -84,6 +100,11 @@ paths:
           description: The UUID of the master
           schema:
             $ref: '#/components/schemas/Uuid'
+        - $ref: '#/components/parameters/Accept-Language'
+        - $ref: '#/components/parameters/X-User-FirstName'
+        - $ref: '#/components/parameters/X-User-LastName'
+        - $ref: '#/components/parameters/X-User-Email'
+        - $ref: '#/components/parameters/X-User-GlobalID'
       responses:
         200:
           description: Successful master's account status update.
@@ -108,6 +129,11 @@ paths:
             schema:
               type: boolean
             required: false
+          - $ref: '#/components/parameters/Accept-Language'
+          - $ref: '#/components/parameters/X-User-FirstName'
+          - $ref: '#/components/parameters/X-User-LastName'
+          - $ref: '#/components/parameters/X-User-Email'
+          - $ref: '#/components/parameters/X-User-GlobalID'
       responses:
         200:
           description: Successful get of the list of allocations
@@ -127,6 +153,11 @@ paths:
           description: The UUID of the master allocation
           schema:
             $ref: '#/components/schemas/Uuid'
+        - $ref: '#/components/parameters/Accept-Language'
+        - $ref: '#/components/parameters/X-User-FirstName'
+        - $ref: '#/components/parameters/X-User-LastName'
+        - $ref: '#/components/parameters/X-User-Email'
+        - $ref: '#/components/parameters/X-User-GlobalID'
       responses:
         200:
           description: Successful get of a master allocation's data.
@@ -145,6 +176,11 @@ paths:
           description: The UUID of the master allocation
           schema:
             $ref: '#/components/schemas/Uuid'
+        - $ref: '#/components/parameters/Accept-Language'
+        - $ref: '#/components/parameters/X-User-FirstName'
+        - $ref: '#/components/parameters/X-User-LastName'
+        - $ref: '#/components/parameters/X-User-Email'
+        - $ref: '#/components/parameters/X-User-GlobalID'
       responses:
         204:
           description: Successful delete of a master allocation's data.
@@ -170,6 +206,11 @@ paths:
             type: string
             default: all
           required: false
+        - $ref: '#/components/parameters/Accept-Language'
+        - $ref: '#/components/parameters/X-User-FirstName'
+        - $ref: '#/components/parameters/X-User-LastName'
+        - $ref: '#/components/parameters/X-User-Email'
+        - $ref: '#/components/parameters/X-User-GlobalID'
       responses:
         200:
           description: Successful get of the list of masters allocations
@@ -181,6 +222,12 @@ paths:
         - internship
     post:
       description: Create new internship allocation
+      parameters:
+        - $ref: '#/components/parameters/Accept-Language'
+        - $ref: '#/components/parameters/X-User-FirstName'
+        - $ref: '#/components/parameters/X-User-LastName'
+        - $ref: '#/components/parameters/X-User-Email'
+        - $ref: '#/components/parameters/X-User-GlobalID'
       requestBody:
         required: true
         content:
@@ -199,6 +246,12 @@ paths:
   /specialties:
     get:
       description: Obtain the list of specialties
+      parameters:
+        - $ref: '#/components/parameters/Accept-Language'
+        - $ref: '#/components/parameters/X-User-FirstName'
+        - $ref: '#/components/parameters/X-User-LastName'
+        - $ref: '#/components/parameters/X-User-Email'
+        - $ref: '#/components/parameters/X-User-GlobalID'
       responses:
         200:
           description: Successful get of the list of specialties
@@ -218,6 +271,11 @@ paths:
           description: The UUID of the specialty
           schema:
             $ref: '#/components/schemas/Uuid'
+        - $ref: '#/components/parameters/Accept-Language'
+        - $ref: '#/components/parameters/X-User-FirstName'
+        - $ref: '#/components/parameters/X-User-LastName'
+        - $ref: '#/components/parameters/X-User-Email'
+        - $ref: '#/components/parameters/X-User-GlobalID'
       responses:
         200:
           description: Successful get of a specialty's data.
@@ -230,6 +288,12 @@ paths:
   /cohorts:
     get:
       description: Obtain the list of cohorts
+      parameters:
+        - $ref: '#/components/parameters/Accept-Language'
+        - $ref: '#/components/parameters/X-User-FirstName'
+        - $ref: '#/components/parameters/X-User-LastName'
+        - $ref: '#/components/parameters/X-User-Email'
+        - $ref: '#/components/parameters/X-User-GlobalID'
       responses:
         200:
           description: Successful get of the list of cohorts
@@ -249,6 +313,11 @@ paths:
           description: The UUID of the cohort
           schema:
             $ref: '#/components/schemas/Uuid'
+        - $ref: '#/components/parameters/Accept-Language'
+        - $ref: '#/components/parameters/X-User-FirstName'
+        - $ref: '#/components/parameters/X-User-LastName'
+        - $ref: '#/components/parameters/X-User-Email'
+        - $ref: '#/components/parameters/X-User-GlobalID'
       responses:
         200:
           description: Successful get of a cohort's data.
@@ -261,6 +330,12 @@ paths:
   /organizations:
     get:
       description: Obtain the list of organizations
+      parameters:
+        - $ref: '#/components/parameters/Accept-Language'
+        - $ref: '#/components/parameters/X-User-FirstName'
+        - $ref: '#/components/parameters/X-User-LastName'
+        - $ref: '#/components/parameters/X-User-Email'
+        - $ref: '#/components/parameters/X-User-GlobalID'
       responses:
         200:
           description: Successful get of the list of organizations
@@ -280,6 +355,11 @@ paths:
           description: The UUID of the organization
           schema:
             $ref: '#/components/schemas/Uuid'
+        - $ref: '#/components/parameters/Accept-Language'
+        - $ref: '#/components/parameters/X-User-FirstName'
+        - $ref: '#/components/parameters/X-User-LastName'
+        - $ref: '#/components/parameters/X-User-Email'
+        - $ref: '#/components/parameters/X-User-GlobalID'
       responses:
         200:
           description: Successful get of an organization's data.
@@ -292,6 +372,12 @@ paths:
   /internships:
     get:
       description: Obtain the list of internships
+      parameters:
+        - $ref: '#/components/parameters/Accept-Language'
+        - $ref: '#/components/parameters/X-User-FirstName'
+        - $ref: '#/components/parameters/X-User-LastName'
+        - $ref: '#/components/parameters/X-User-Email'
+        - $ref: '#/components/parameters/X-User-GlobalID'
       responses:
         200:
           description: Successful get of the list of internships
@@ -311,6 +397,11 @@ paths:
           description: The UUID of the internship
           schema:
             $ref: '#/components/schemas/Uuid'
+        - $ref: '#/components/parameters/Accept-Language'
+        - $ref: '#/components/parameters/X-User-FirstName'
+        - $ref: '#/components/parameters/X-User-LastName'
+        - $ref: '#/components/parameters/X-User-Email'
+        - $ref: '#/components/parameters/X-User-GlobalID'
       responses:
         200:
           description: Successful get of an internship's data.
@@ -329,6 +420,11 @@ paths:
           schema:
             type: boolean
           required: false
+        - $ref: '#/components/parameters/Accept-Language'
+        - $ref: '#/components/parameters/X-User-FirstName'
+        - $ref: '#/components/parameters/X-User-LastName'
+        - $ref: '#/components/parameters/X-User-Email'
+        - $ref: '#/components/parameters/X-User-GlobalID'
       responses:
         200:
           description: Successful get of the list of periods
@@ -348,6 +444,11 @@ paths:
           description: The UUID of the period
           schema:
             $ref: '#/components/schemas/Uuid'
+        - $ref: '#/components/parameters/Accept-Language'
+        - $ref: '#/components/parameters/X-User-FirstName'
+        - $ref: '#/components/parameters/X-User-LastName'
+        - $ref: '#/components/parameters/X-User-Email'
+        - $ref: '#/components/parameters/X-User-GlobalID'
       responses:
         200:
           description: Successful get of a period's data.
@@ -360,6 +461,12 @@ paths:
   /students:
     get:
       description: Obtain the list of students
+      parameters:
+        - $ref: '#/components/parameters/Accept-Language'
+        - $ref: '#/components/parameters/X-User-FirstName'
+        - $ref: '#/components/parameters/X-User-LastName'
+        - $ref: '#/components/parameters/X-User-Email'
+        - $ref: '#/components/parameters/X-User-GlobalID'
       responses:
         200:
           description: Successful get of the list of students
@@ -379,6 +486,11 @@ paths:
           description: The UUID of the internship student
           schema:
             $ref: '#/components/schemas/Uuid'
+        - $ref: '#/components/parameters/Accept-Language'
+        - $ref: '#/components/parameters/X-User-FirstName'
+        - $ref: '#/components/parameters/X-User-LastName'
+        - $ref: '#/components/parameters/X-User-Email'
+        - $ref: '#/components/parameters/X-User-GlobalID'
       responses:
         200:
           description: Successful get of a internship student's data.
@@ -418,6 +530,11 @@ paths:
           schema:
             type: integer
           required: false
+        - $ref: '#/components/parameters/Accept-Language'
+        - $ref: '#/components/parameters/X-User-FirstName'
+        - $ref: '#/components/parameters/X-User-LastName'
+        - $ref: '#/components/parameters/X-User-Email'
+        - $ref: '#/components/parameters/X-User-GlobalID'
       responses:
         200:
           description: Successful get of the list of students affectations
@@ -441,6 +558,11 @@ paths:
           schema:
             type: string
           required: true
+        - $ref: '#/components/parameters/Accept-Language'
+        - $ref: '#/components/parameters/X-User-FirstName'
+        - $ref: '#/components/parameters/X-User-LastName'
+        - $ref: '#/components/parameters/X-User-Email'
+        - $ref: '#/components/parameters/X-User-GlobalID'
       responses:
         200:
           description: Successful get of students affectations stats
@@ -465,6 +587,11 @@ paths:
           description: The UUID of the student's affectation
           schema:
             $ref: '#/components/schemas/Uuid'
+        - $ref: '#/components/parameters/Accept-Language'
+        - $ref: '#/components/parameters/X-User-FirstName'
+        - $ref: '#/components/parameters/X-User-LastName'
+        - $ref: '#/components/parameters/X-User-Email'
+        - $ref: '#/components/parameters/X-User-GlobalID'
       responses:
         200:
           description: Successful get of a student's affectation's data.
@@ -485,6 +612,11 @@ paths:
           description: The UUID of the affectation
           schema:
             $ref: '#/components/schemas/Uuid'
+        - $ref: '#/components/parameters/Accept-Language'
+        - $ref: '#/components/parameters/X-User-FirstName'
+        - $ref: '#/components/parameters/X-User-LastName'
+        - $ref: '#/components/parameters/X-User-Email'
+        - $ref: '#/components/parameters/X-User-GlobalID'
       responses:
         200:
           description: Successful get or create of a student's score for a given period.
@@ -503,6 +635,11 @@ paths:
           description: The UUID of the affectation
           schema:
             $ref: '#/components/schemas/Uuid'
+        - $ref: '#/components/parameters/Accept-Language'
+        - $ref: '#/components/parameters/X-User-FirstName'
+        - $ref: '#/components/parameters/X-User-LastName'
+        - $ref: '#/components/parameters/X-User-Email'
+        - $ref: '#/components/parameters/X-User-GlobalID'
       requestBody:
         required: true
         content:
@@ -525,6 +662,11 @@ paths:
           description: The UUID of the period
           schema:
             $ref: '#/components/schemas/Uuid'
+        - $ref: '#/components/parameters/Accept-Language'
+        - $ref: '#/components/parameters/X-User-FirstName'
+        - $ref: '#/components/parameters/X-User-LastName'
+        - $ref: '#/components/parameters/X-User-Email'
+        - $ref: '#/components/parameters/X-User-GlobalID'
       responses:
         204:
           description: Successfully validated an internship score
@@ -539,8 +681,45 @@ components:
       in: header
       name: Authorization
       description: Enter your token in the format **Token &lt;token>**
-
+  parameters:
+    X-User-FirstName:
+      in: header
+      name: X-User-FirstName
+      schema:
+        type: string
+      required: false
+    X-User-LastName:
+      in: header
+      name: X-User-LastName
+      schema:
+        type: string
+      required: false
+    X-User-Email:
+      in: header
+      name: X-User-Email
+      schema:
+        type: string
+      required: false
+    X-User-GlobalID:
+      in: header
+      name: X-User-GlobalID
+      schema:
+        type: string
+      required: false
+    Accept-Language:
+      in: header
+      name: Accept-Language
+      description: >
+        The header advertises which languages the client is able to understand, and which locale variant is preferred. (By languages, we mean natural languages, such as English, and not programming languages.)
+      schema:
+        $ref: '#/components/schemas/AcceptedLanguageEnum'
+      required: false
   schemas:
+    AcceptedLanguageEnum:
+      type: string
+      enum:
+        - 'en'
+        - 'fr-be'
     MasterGet:
       type: object
       properties:
@@ -561,7 +740,6 @@ components:
               - "ACTIVE"
               - "PENDING"
               - "INACTIVE"
-
     AllocationGet:
       type: object
       properties:
@@ -580,7 +758,6 @@ components:
         role:
           type: string
           example: "MASTER"
-
     SpecialtyGet:
       type: object
       properties:
@@ -608,7 +785,6 @@ components:
         selectable:
           type: boolean
           example: true
-
     CohortGet:
       type: object
       properties:
@@ -634,7 +810,6 @@ components:
         subscription_end_date:
           type: string
           example: 01/03/2020
-
     OrganizationGet:
       type: object
       properties:
@@ -677,7 +852,6 @@ components:
           $ref: '#/components/schemas/Country'
         cohort:
           $ref: '#/components/schemas/CohortGet'
-
     InternshipGet:
       type: object
       properties:
@@ -700,7 +874,6 @@ components:
         position:
           type: integer
           example: 1
-
     StudentGet:
       type: object
       properties:
@@ -750,7 +923,6 @@ components:
           type: string
           nullable: true
           example: "reason"
-
     PeriodGet:
       type: object
       properties:
@@ -772,7 +944,6 @@ components:
           example: "01/03/2020"
         cohort:
           $ref: '#/components/schemas/CohortGet'
-
     StudentAffectationGet:
       type: object
       properties:
@@ -794,7 +965,6 @@ components:
           type: string
         score:
           $ref: '#/components/schemas/ScoreListGet'
-
     ScoreGet:
       type: object
       properties:
@@ -866,7 +1036,6 @@ components:
         student_presence:
           type: boolean
           nullable: true
-
     ScoreListGet:
       type: object
       nullable: true
@@ -923,13 +1092,10 @@ components:
         student_presence:
           type: boolean
           nullable: true
-
-
     Uuid:
       type: string
       format: uuid
       example: "abcd-efgh-ijkl-mnop-1234-5678"
-
     Student:
       type: object
       properties:
@@ -939,7 +1105,6 @@ components:
           type: string
         last_name:
           type: string
-
     Person:
       type: object
       properties:
@@ -964,7 +1129,6 @@ components:
           type: string
           nullable: true
           example: "1989-01-01"
-
     Country:
       type: object
       properties:
@@ -983,7 +1147,6 @@ components:
         nationality:
           type: string
           example: "Belgian"
-
     PeriodPaging:
       properties:
         count:
@@ -1124,6 +1287,5 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ScoreGet'
-
 security:
   - Token: []
