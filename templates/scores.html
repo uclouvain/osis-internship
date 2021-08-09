@@ -81,6 +81,11 @@
                             <button type="submit" class="btn btn-primary" style="margin-top: 26px;">
                                 <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
                             </button>
+                            <button type="button" id="btn_clear_filter" style="margin-top: 26px;"
+                                    class="btn btn-default" role="button"
+                                    onclick="$('#form_clear_filter').submit();">
+                                <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+                            </button>
                         </div>
                         <div class="col-md-2 pull-right">
                             <div class="dropdown text-right">
@@ -132,8 +137,11 @@
                         </div>
                     </div>
                 </form>
+
+                {% include 'fragment/search_form_reset.html' %}
+
                 <div class="table-responsive">
-                  <table class="table">
+                  <table class="table table-fix-header">
                     <tr>
                         <strong class="pagination-index-count">
                             {% blocktrans with start_index=students.start_index end_index=students.end_index total_counts=students.paginator.count %}
@@ -141,7 +149,7 @@
                             {% endblocktrans %}
                         </strong>
                     </tr>
-                      <tr>
+                      <tr class="header-row">
                         {% if students %}
                             <th>
                                 <input id="id_check_all" type="checkbox" name="check_all" title="{% trans 'Check All' %}"/>
@@ -149,6 +157,7 @@
                         {% endif %}
                         <th></th>
                         <th>{% trans 'Student' %}</th>
+                        <th>{% trans 'Edit' %}</th>
                         <th  class="overflow-cell" style="max-width:7vw;">{% trans 'Period' %}</th>
                         <th>{% trans 'Internship' %}</th>
                         <th>{% trans 'Specialty' %}</th>
@@ -181,9 +190,20 @@
                           <td style="max-width: 10vw;" class="overflow-cell" rowspan="{{ periods|length|add:1 }}">{{ student }}</td>
                       </tr>
                         {% for period in periods %}
-                          <tr {% if period == last_complete_period and last_period is not last_completed_period %}
+
+                          <tr onmouseover="showEditScoreBtn({{ student.pk }}, {{ period.pk }})"
+                              onmouseout="hideEditScoreBtn({{ student.pk }}, {{ period.pk }})"
+                                  {% if period == last_complete_period and last_period is not last_completed_period %}
                               class="last-completed-period"
                           {% endif %}>
+                            <td style="text-align: center;">
+                            {% if student.scores|has_substr:period %}
+                              <a href="{% url 'internship_edit_score' cohort_id=cohort.pk student_registration_id=student.registration_id period_id=period.pk%}" type="button" class="btn btn-xs btn-default btn-edit-score" style="display: none;"
+                              id="edit-btn-{{ student.pk }}-{{ period.pk }}">
+                                <icon class="far fa-edit"></icon>
+                              </a>
+                            {% endif %}
+                            </td>
                             <td>
                                 {{ period }}
                             {% if period.is_active  %}
@@ -248,7 +268,7 @@
                             </tr>
                             {% if search_form.show_apds_validation.value %}
                             <tr>
-                                <td colspan="7" style="text-align: right;">{% trans 'APD Validation' %}</td>
+                                <td colspan="8" style="text-align: right;">{% trans 'APD Validation' %}</td>
                                 {% for apd in apd_range %}
                                     <td class="hidden-sm hidden-xs text-center">
                                         {% is_apd_validated cohort student apd as success %}
@@ -414,6 +434,44 @@
 
     //trigger first msg appearing in modal
     switchEvolutionScoreModalMsg(all_periods_count);
+
+    let tableHeader = $('.header-row');
+    let clone = tableHeader.clone();
+    clone.children().each(function(index) {
+        $(this).outerWidth($(tableHeader.children()[index]).outerWidth());
+    });
+
+    // sticky table header
+    $(document).on('scroll', ()=>{
+        if(window.scrollY >= tableHeader.position().top - tableHeader.height()){
+            clone.prependTo($('.table-fix-header tbody'));
+            clone.css('position','fixed');
+            clone.css('width', $('tbody').width());
+            clone.css('top', $('.navbar').height());
+        } else {
+            clone.remove();
+            clone.css('position','relative');
+            clone.css('top', 0);
+        }
+    });
+
+    // reset sticky header on resize
+    $(window).resize(()=>{
+        clone.remove();
+        tableHeader = $('.header-row');
+        clone = tableHeader.clone();
+        clone.children().each(function(index) {
+            $(this).outerWidth($(tableHeader.children()[index]).outerWidth());
+        });
+    });
+
+    function showEditScoreBtn(studentId, periodId){
+        $(`#edit-btn-${studentId}-${periodId}`).show();
+    }
+
+    function hideEditScoreBtn(studentId, periodId){
+        $(`#edit-btn-${studentId}-${periodId}`).hide();
+    }
 
     </script>
 {% endblock %}

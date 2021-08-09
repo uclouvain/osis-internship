@@ -42,15 +42,17 @@ from django.utils.html import escape
 from django.utils.translation import gettext as _
 
 from base.models.student import Student
+from base.utils.cache import cache_filter
 from base.views.common import display_error_messages, display_success_messages
 from internship.business.scores import InternshipScoreRules
 from internship.forms.score import ScoresFilterForm
 from internship.models.cohort import Cohort
-from internship.models.internship_score import InternshipScore, APD_NUMBER
+from internship.models.internship_score import InternshipScore, APD_NUMBER, MIN_APDS, MAX_APDS
 from internship.models.internship_score_mapping import InternshipScoreMapping
 from internship.models.internship_score_reason import InternshipScoreReason
 from internship.models.internship_student_affectation_stat import InternshipStudentAffectationStat
 from internship.models.internship_student_information import InternshipStudentInformation
+from internship.models.master_allocation import MasterAllocation
 from internship.models.period import get_effective_periods
 from internship.templatetags.dictionary import is_edited, is_excused
 from internship.utils.exporting import score_encoding_xls
@@ -63,9 +65,12 @@ CHOSEN_LENGTH = 7
 MINIMUM_SCORE = 0
 MAXIMUM_SCORE = 20
 
+UPDATE_SCORE_ERROR_MSG = _("An error occured during score update")
+
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
+@cache_filter()
 def scores_encoding(request, cohort_id):
     cohort = get_object_or_404(
         Cohort.objects.prefetch_related(
@@ -102,6 +107,72 @@ def scores_encoding(request, cohort_id):
         'score_edit_reasons': InternshipScoreReason.objects.all()
     }
     return render(request, "scores.html", context=context)
+
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def score_detail_form(request, cohort_id, student_registration_id, period_id):
+    cohort = Cohort.objects.get(pk=cohort_id)
+    score = InternshipScore.objects.select_related(
+        'student_affectation__student',
+        'student_affectation__period',
+        'student_affectation__speciality',
+        'student_affectation__organization'
+    ).get(
+        student_affectation__student__registration_id=student_registration_id,
+        student_affectation__period_id=period_id,
+    )
+    master = _get_main_internship_master(score)
+    apds = range(1, APD_NUMBER+1)
+
+    if request.POST:
+        apds_data = {'APD_{}'.format(apd): request.POST.get('apd-{}'.format(apd)) for apd in apds}
+        if _validate_score(request, apds_data):
+            update = InternshipScore.objects.filter(pk=score.pk).update(**apds_data)
+            if update:
+                messages.add_message(request, messages.SUCCESS, _('Score updated successfully for {}'.format(
+                    score.student_affectation
+                )))
+                return redirect(reverse('internship_scores_encoding', kwargs={'cohort_id': cohort_id}))
+            else:
+                messages.add_message(request, messages.ERROR, UPDATE_SCORE_ERROR_MSG)
+        else:
+            _cache_apd_form_values(apds_data, score)
+
+    context = {
+        'cohort': cohort,
+        'score': score,
+        'master': master,
+        'apds': apds,
+        'available_grades': [grade for grade, _ in InternshipScore.SCORE_CHOICES],
+    }
+
+    return render(request, "score_form.html", context=context)
+
+
+def _get_main_internship_master(score):
+    main_master_allocation = MasterAllocation.objects.filter(
+        specialty=score.student_affectation.speciality,
+        organization=score.student_affectation.organization
+    ).first()
+    return main_master_allocation.master if main_master_allocation else None
+
+
+def _cache_apd_form_values(apds_data, score):
+    for apd, value in apds_data.items():
+        vars(score)[apd] = value
+
+
+def _validate_score(request, apds_data):
+    filled_apds_data = dict(filter(lambda apd: apd[1], apds_data.items()))
+    if not MIN_APDS <= len(filled_apds_data) <= MAX_APDS:
+        messages.add_message(
+            request,
+            messages.ERROR,
+            _("An evaluation should include minimum {} and maximum {} evaluated APDs").format(MIN_APDS, MAX_APDS)
+        )
+        return False
+    return True
 
 
 @login_required
@@ -281,7 +352,7 @@ def save_evolution_score(request, cohort_id):
                 "student": student,
             })
         else:
-            return _json_response_error(_("An error occured during score update"))
+            return _json_response_error(UPDATE_SCORE_ERROR_MSG)
     else:
         return _json_response_error(
             _("Score must be between %(minimum)d and %(maximum)d") % {
@@ -351,7 +422,7 @@ def save_edited_score(request, cohort_id):
                 "period_score": period_score,
             })
         else:
-            return _json_response_error(_("An error occured during score update"))
+            return _json_response_error(UPDATE_SCORE_ERROR_MSG)
     else:
         return _json_response_error(
             _("Score must be between %(minimum)d and %(maximum)d") % {

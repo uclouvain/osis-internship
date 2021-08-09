@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-05-28 08:38+0200\n"
+"POT-Creation-Date: 2021-06-25 14:40+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -139,6 +139,9 @@ msgstr "Une erreur s'est produite lors de l'envoi des rappels"
 
 msgid "An error occured while updating status"
 msgstr "Une erreur s'est produite lors de la mise à jour des statuts"
+
+msgid "An evaluation should include minimum {} and maximum {} evaluated APDs"
+msgstr "Une évaluation doit inclure au minimum {} et au maximum {} APD évalués"
 
 msgid "Attention"
 msgstr "Attention"
@@ -454,6 +457,9 @@ msgstr "Affectation des stages"
 msgid "Internship choice"
 msgstr "Choix de stage"
 
+msgid "Internship master"
+msgstr "Maître de stage"
+
 msgid "Internship modality"
 msgstr "Modalité de stage"
 
@@ -703,6 +709,9 @@ msgstr "La publication doit être réalisée après le processus d'inscription."
 msgid "Reason"
 msgstr "Motif"
 
+msgid "Received internship grades"
+msgstr "Évaluation de stage reçue"
+
 msgid "Reference"
 msgstr "Référence"
 
@@ -730,6 +739,9 @@ msgstr "Note excusée"
 #, python-format
 msgid "Score must be between %(minimum)d and %(maximum)d"
 msgstr "La note doit être comprise entre %(minimum)d et %(maximum)d"
+
+msgid "Score updated successfully for {}"
+msgstr "Évaluation mise à jour pour {}"
 
 msgid "Scores"
 msgstr "Notes"
