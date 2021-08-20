@@ -38,7 +38,7 @@ class TestInternshipPersonForm(TestCase):
         data = {
             "first_name": "test",
             "last_name": "test",
-            "gender": "M",
+            "gender": "H",
             "email": "test@test.com",
             'birth_date': "1980-01-01",
         }
@@ -69,7 +69,7 @@ class TestInternshipPersonForm(TestCase):
         data = {
             "first_name": "test",
             "last_name": "test",
-            "gender": "M",
+            "gender": "H",
             "email": "test@test.com",
             'birth_date': "1980-01-01",
         }
