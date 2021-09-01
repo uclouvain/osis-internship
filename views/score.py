@@ -545,6 +545,7 @@ def _prepare_students_extra_data(students):
         student.specialties = {}
         student.organizations = {}
         student.evaluations = {}
+        student.comments = {}
 
 
 def _compute_evolution_score(students, cohort_id):
@@ -641,7 +642,7 @@ def _match_scores_with_students(cohort, periods, scores, students):
         for period in periods:
             if student.person.pk in scores.keys() and period.pk in scores[student.person.pk].keys():
                 student_scores = scores[student.person.pk][period.pk]
-                _append_period_scores_to_student(period, student, list(student_scores))
+                _append_period_scores_and_comments_to_student(period, student, list(student_scores))
 
 
 def _set_condition_fulfilled_status(students):
@@ -653,10 +654,12 @@ def _get_mapping_score(period, apd):
     return lambda x: x.period.name == period and x.apd == apd
 
 
-def _append_period_scores_to_student(period, student, student_scores):
+def _append_period_scores_and_comments_to_student(period, student, student_scores):
     if student_scores:
         scores = student_scores[0].get_scores()
+        comments = student_scores[0].comments
         student.scores += (period.name, scores),
+        student.comments.update({period.name: comments})
         _retrieve_scores_entered_manually(period, student, student_scores)
 
 

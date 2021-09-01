@@ -165,6 +165,7 @@
                           {% for i in i|rjust:15 %}
                             <th class="hidden-sm hidden-xs text-center">APD {{forloop.counter}}</th>
                           {% endfor %}
+                        <th>Com.</th>
                         <th>{% trans 'Score' %}</th>
                       </tr>
                         {% if periods.count == 1 %}
@@ -243,6 +244,15 @@
                                     {% endfor %}
                                 {% endif %}
                             {% endfor %}
+                            <td>
+                            {% with student.comments|get_item:period.name as comments%}
+                                {% if comments %}
+                                <a data-toggle="modal" data-target="#comments-modal" type="button" class="btn btn-xs btn-default btn-edit-score" id="comment-btn-{{ student.pk }}-{{ period.pk }}" data-student="{{ student }}" data-period="{{ period }}" data-comments="{{ comments|to_json }}" data-organization="{{ student.organizations|get_item:period.name }}" data-specialty="{{ student.specialties|get_item:period.name }}">
+                                    <icon class="far fa-comment"></icon>
+                                </a>
+                                {% endif %}
+                            {% endwith %}
+                            </td>
                             {% with student.periods_scores|get_item:period.name as period_score%}
                                   {% if period_score %}
                                     <td style="width: 140px;"
@@ -385,6 +395,8 @@
 
     {% include 'fragment/justify_score_edition_modal.html' %}
 
+    {% include 'fragment/internship_comments_modal.html' %}
+
 {% endblock %}
 
 {% block script %}
@@ -472,6 +484,32 @@
     function hideEditScoreBtn(studentId, periodId){
         $(`#edit-btn-${studentId}-${periodId}`).hide();
     }
+
+    //triggered when comments modal is about to be shown
+    $('#comments-modal').on('show.bs.modal', function(e) {
+        const student = $(e.relatedTarget).data('student');
+        const period = $(e.relatedTarget).data('period');
+        const comments = $(e.relatedTarget).data('comments');
+        const specialty = $(e.relatedTarget).data('specialty');
+        const organization = $(e.relatedTarget).data('organization');
+
+        console.log(specialty);
+        console.log(organization);
+
+        $(e.currentTarget).find('#modal-student-period').text(`${student} - ${period}`);
+
+        let commentsModalBody = $(e.currentTarget).find('#modal-comments');
+        let commentsModalBodyContent = $('<span/>');
+
+        for (const [key, comment] of Object.entries(comments)) {
+          commentsModalBodyContent.append("" +
+              "<div class='panel panel-default'>" +
+              `<div class='panel-heading' style='text-transform: capitalize;'>${key}</div>` +
+              `<div class='panel-body'>${comment}</div>`
+          );
+        }
+        commentsModalBody.html(commentsModalBodyContent);
+    });
 
     </script>
 {% endblock %}

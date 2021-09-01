@@ -23,6 +23,8 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+import json
+
 from django.template.defaulttags import register
 
 
@@ -45,3 +47,8 @@ def is_edited(val):
 @register.filter
 def is_excused(val):
     return type(val) is dict and 'excused' in val.keys()
+
+
+@register.filter
+def to_json(dict):
+    return json.dumps(dict)
