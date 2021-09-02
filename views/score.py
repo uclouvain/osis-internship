@@ -509,9 +509,9 @@ def _prepare_score_table(cohort, periods, students):
     ).select_related(
         'student', 'period', 'speciality'
     ).values(
-        'student__person', 'student__registration_id', 'period__name', 'organization__reference',
-        'speciality__acronym', 'speciality__sequence', 'internship__speciality_id', 'internship__name',
-        'internship__length_in_periods', 'internship_evaluated'
+        'student__person', 'student__registration_id', 'period__name', 'organization__reference', 'organization__name',
+        'speciality__acronym', 'speciality__sequence', 'speciality__name', 'internship__speciality_id',
+        'internship__name', 'internship__length_in_periods', 'internship_evaluated'
     ).order_by('period__date_start')
 
     scores = _group_by_students_and_periods(scores)
@@ -680,7 +680,13 @@ def _update_student_specialties(student, students_affectations):
         if affectation['student__person'] == student.person.pk:
             _annotate_non_mandatory_internship(affectation)
             acronym = _get_acronym_with_sequence(affectation)
-            student.specialties.update({affectation['period__name']: acronym})
+            specialty_name = affectation['speciality__name']
+            student.specialties.update({
+                affectation['period__name']: {
+                    'acronym': acronym,
+                    'name': specialty_name
+                }
+            })
 
 
 def _get_acronym_with_sequence(affectation):
@@ -703,10 +709,13 @@ def update_student_organizations(student, students_affectations):
         if affectation['student__person'] == student.person.pk:
             student.organizations.update(
                 {
-                    affectation['period__name']: "{}{}".format(
-                        affectation['speciality__acronym'],
-                        affectation['organization__reference']
-                    )
+                    affectation['period__name']: {
+                        "reference": "{}{}".format(
+                            affectation['speciality__acronym'],
+                            affectation['organization__reference']
+                        ),
+                        "name": affectation['organization__name']
+                    }
                 }
             )
 

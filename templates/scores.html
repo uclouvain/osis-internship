@@ -211,8 +211,12 @@
                                   <icon style="font-size: 11px; color: #333;" class="glyphicon glyphicon-time"></icon>
                             {% endif %}
                             </td>
-                            <td>{{ student.specialties|get_item:period.name }}</td>
-                            <td>{{ student.organizations|get_item:period.name }}</td>
+                            {% with student.specialties|get_item:period.name as specialty %}
+                                <td title="{{ specialty.name }}">{{ specialty.acronym }}</td>
+                            {% endwith %}
+                            {% with student.organizations|get_item:period.name as organization %}
+                                <td title="{{ organization.name }}">{{ organization.reference }}</td>
+                            {% endwith %}
                             <td>
                                 <label class="switch">
                                   <input type="checkbox"  data-period="{{ period }}" data-student="{{ student.registration_id }}"
@@ -247,7 +251,7 @@
                             <td>
                             {% with student.comments|get_item:period.name as comments%}
                                 {% if comments %}
-                                <a data-toggle="modal" data-target="#comments-modal" type="button" class="btn btn-xs btn-default btn-edit-score" id="comment-btn-{{ student.pk }}-{{ period.pk }}" data-student="{{ student }}" data-period="{{ period }}" data-comments="{{ comments|to_json }}" data-organization="{{ student.organizations|get_item:period.name }}" data-specialty="{{ student.specialties|get_item:period.name }}">
+                                <a data-toggle="modal" data-target="#comments-modal" type="button" class="btn btn-xs btn-default btn-edit-score" id="comment-btn-{{ student.pk }}-{{ period.pk }}" data-student="{{ student }}" data-period="{{ period }}" data-comments="{{ comments|to_json }}" data-organization="{{ student.organizations|get_item:period.name|to_json }}" data-specialty="{{ student.specialties|get_item:period.name|to_json }}">
                                     <icon class="far fa-comment"></icon>
                                 </a>
                                 {% endif %}
@@ -493,10 +497,9 @@
         const specialty = $(e.relatedTarget).data('specialty');
         const organization = $(e.relatedTarget).data('organization');
 
-        console.log(specialty);
-        console.log(organization);
-
         $(e.currentTarget).find('#modal-student-period').text(`${student} - ${period}`);
+
+        $(e.currentTarget).find('#modal-internship').text(`${specialty.name} - ${organization.name}`);
 
         let commentsModalBody = $(e.currentTarget).find('#modal-comments');
         let commentsModalBodyContent = $('<span/>');
