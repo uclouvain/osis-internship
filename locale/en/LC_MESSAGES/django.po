@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-06-25 14:40+0200\n"
+"POT-Creation-Date: 2021-09-02 10:58+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -381,6 +381,9 @@ msgstr ""
 msgid "Generate solution"
 msgstr ""
 
+msgid "Good performance example"
+msgstr ""
+
 msgid "Grade"
 msgstr ""
 
@@ -418,6 +421,9 @@ msgstr ""
 msgid "Imposed choices"
 msgstr ""
 
+msgid "Improvement areas"
+msgstr ""
+
 msgid "In all fields"
 msgstr ""
 
@@ -427,6 +433,9 @@ msgid ""
 msgstr ""
 
 msgid "Inject"
+msgstr ""
+
+msgid "Intermediary evaluation"
 msgstr ""
 
 msgid "Internship"
@@ -839,6 +848,9 @@ msgid "Studies"
 msgstr ""
 
 msgid "Submit choices"
+msgstr ""
+
+msgid "Suggestions"
 msgstr ""
 
 msgid "Summaries have been sent successfully"

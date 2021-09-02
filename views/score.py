@@ -659,7 +659,7 @@ def _append_period_scores_and_comments_to_student(period, student, student_score
         scores = student_scores[0].get_scores()
         comments = student_scores[0].comments
         student.scores += (period.name, scores),
-        student.comments.update({period.name: comments})
+        student.comments.update({period.name: _replace_comments_keys_with_translations(comments)})
         _retrieve_scores_entered_manually(period, student, student_scores)
 
 
@@ -969,3 +969,13 @@ def _update_or_create_apd_mapping(cohort, grade, period, enum_item):
     if int(value) != 0 and vars(mapping)['score_{}'.format(grade)] != int(value):
         vars(mapping)['score_{}'.format(grade)] = value
         mapping.save()
+
+
+def _replace_comments_keys_with_translations(comments):
+    comments_keys_mapping = {
+        'impr_areas': _('Improvement areas'),
+        'suggestions': _('Suggestions'),
+        'good_perf_ex': _('Good performance example'),
+        'intermediary_evaluation': _('Intermediary evaluation')
+    }
+    return {comments_keys_mapping[k]: v for k, v in comments.items()}
