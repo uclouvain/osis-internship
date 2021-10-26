@@ -354,7 +354,7 @@ def _build_allocations(request, allocated_master):
 
 
 def _clean_empty_strings(a_list):
-    return [x if x is not '' else None for x in a_list]
+    return [x if x != '' else None for x in a_list]
 
 
 def _save_allocations(allocations):
@@ -373,4 +373,4 @@ def _validate_allocations(request):
     hospitals = request.POST.getlist('hospital')
     specialties = request.POST.getlist('specialty')
     roles = request.POST.getlist('role')
-    return (hospitals[0] is not '' or specialties[0] is not '') and roles[0] is not ''
+    return (hospitals[0] != '' or specialties[0] != '') and roles[0] != ''

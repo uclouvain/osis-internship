@@ -26,7 +26,6 @@
 from collections import OrderedDict
 from collections import defaultdict
 from operator import itemgetter
-from statistics import mean, stdev
 
 from base.models.student import Student
 from internship import models
@@ -36,6 +35,7 @@ from internship.models.enums.choice_type import ChoiceType
 from internship.models.internship import Internship
 from internship.models.internship_choice import InternshipChoice
 from internship.models.period import Period
+from statistics import mean, stdev
 
 HOSPITAL_ERROR = 999  # Reference of the hospital "erreur"
 
@@ -86,7 +86,7 @@ def compute_stats(cohort, sol):
         mean_array.append(cost)
         # Iterate over all periods of the student
         for period, affectation in periods.items():
-            if period is not 'score' and affectation is not None:
+            if period != 'score' and affectation is not None:
                 if affectation.internship is not None and affectation.internship.speciality is None:
                     if affectation.internship.name not in non_mandatory_internships_stats.keys():
                         non_mandatory_internships_stats.update({affectation.internship.name: {'count': 0, 'perc': 0}})
