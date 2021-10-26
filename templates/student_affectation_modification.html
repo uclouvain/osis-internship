@@ -31,18 +31,18 @@
     <li><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
     <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></li>
     <li><a href="{% url 'internships_student_resume' cohort_id=cohort.id %}">{% trans 'Students' %}</a></li>
-    <li class="active"><a href="{% url 'internships_student_read' cohort_id=cohort.id student_id=information.student.id %}">
-        {{ information.student.person.last_name }} {{ information.student.person.first_name }}</a>
+    <li class="active"><a href="{% url 'internships_student_read' cohort_id=cohort.id student_id=student_id %}">
+        {{ student.person.last_name }} {{ student.person.first_name }}</a>
     </li>
     <li>{% trans 'Student affectation' %}</li>
 {% endblock %}
 
 {% block content %}
     <div class="page-header">
-        <h2>{% trans 'Student affectation' %}: {{ information.student.person.last_name }} {{ information.student.person.first_name }}</h2>
+        <h2>{% trans 'Student affectation' %}: {{ student.person.last_name }} {{ student.person.first_name }}</h2>
     </div>
 
-    <form method="post" action="{% url 'student_save_affectation_modification' cohort_id=cohort.id student_id=information.student.id %}">
+    <form method="post" action="{% url 'student_save_affectation_modification' cohort_id=cohort.id student_id=student_id %}">
         {% csrf_token %}
 
         <table class="table table-striped">
@@ -50,7 +50,7 @@
                 <tr>
                     <th>{% trans 'Period' %}</th>
                     <th>{% trans 'Modality' %}</th>
-                    <th>{% trans 'Speciality' %}</th>
+                    <th>{% trans 'Specialty' %}</th>
                     <th>{% trans 'Hospital' %}</th>
                 </tr>
             </thead>
@@ -77,16 +77,16 @@
                         <td>
                             <select name="specialty" class="form-control">
                                 <option value="">--</option>
-                                {% for speciality in specialities %}
-                                    <option value="{{speciality.name}}"
+                                {% for specialty in specialties %}
+                                    <option value="{{specialty.name}}"
                                         {% for affectation in affectations %}
                                             {% if affectation.period == period %}
-                                                {% if speciality.id == affectation.speciality.id %}
+                                                {% if specialty.id == affectation.speciality_id %}
                                                     selected
                                                 {% endif %}
                                             {% endif %}
                                         {% endfor %}>
-                                        {{speciality.acronym}}
+                                        {{specialty.acronym}}
                                     </option>
                                 {% endfor %}
                             </select>

@@ -35,8 +35,10 @@ from openpyxl.writer.excel import save_virtual_workbook
 
 from backoffice.settings.base import INSTALLED_APPS
 from base.tests.factories.person import PersonFactory
+from base.tests.factories.person_address import PersonAddressFactory
 from base.tests.factories.student import StudentFactory
 from base.tests.models import test_student
+from internship.models.internship_choice import InternshipChoice
 from internship.models.internship_student_information import find_by_cohort, InternshipStudentInformation
 from internship.tests.factories.cohort import CohortFactory
 from internship.tests.factories.internship import InternshipFactory
@@ -238,3 +240,46 @@ class StudentsListImport(TestCase):
         })
         self.assertEqual(len(find_by_cohort(self.cohort.id)),0)
         self.assertRedirects(response, reverse('internships_student_resume', kwargs={"cohort_id": self.cohort.id}))
+
+
+class StudentsAffectationModification(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.user = User.objects.create_user('demo', email='demo@demo.org', password='password')
+        permission = Permission.objects.get(codename='is_internship_manager')
+        cls.user.user_permissions.add(permission)
+
+        cls.cohort = CohortFactory()
+
+        cls.student = StudentFactory()
+        PersonAddressFactory(person=cls.student.person)
+        InternshipStudentInformationFactory(person=cls.student.person, cohort=cls.cohort)
+
+        cls.periods = [PeriodFactory(name='P{}'.format(p), cohort=cls.cohort) for p in range(1, 7)]
+        cls.affectations = [StudentAffectationStatFactory(
+            student=cls.student,
+            period=period,
+            organization__cohort=cls.cohort
+        ) for period in cls.periods]
+        cls.choices = InternshipChoice(student=cls.student)
+
+    def setUp(self):
+        self.client.force_login(self.user)
+
+    def test_should_show_student_affectations_form(self):
+        url = reverse('internship_student_affectation_modification', kwargs={
+            'cohort_id': self.cohort.pk, 'student_id': self.student.pk
+        })
+        context = self.client.get(url).context
+
+        self.assertListEqual(list(context['organizations']), [a.organization for a in self.affectations])
+        self.assertListEqual(list(context['periods']), [a.period for a in self.affectations])
+        self.assertListEqual(list(context['affectations']), self.affectations)
+        self.assertListEqual(list(context['internships'].values()), [a.internship_id for a in self.affectations])
+
+    def test_should_update_student_affectations(self):
+        url = reverse('student_save_affectation_modification', kwargs={
+            'cohort_id': self.cohort.pk, 'student_id': self.student.pk
+        })
+        response = self.client.get(url)
+        # TO BE CONTINUED
