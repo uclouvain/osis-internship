@@ -297,6 +297,15 @@ def student_save_affectation_modification(request, cohort_id, student_id):
                                                                                                organization.name,
                                                                                                period.name))
 
+    student_affectations = InternshipStudentAffectationStat.objects.filter(student=student, period__cohort=cohort)
+    if _has_validated_score(student_affectations):
+        check_error_present = True
+        messages.add_message(
+            request, messages.ERROR, _(
+                "Cannot edit affectations because at least one affectation has a linked validated score"
+            )
+        )
+
     if not check_error_present:
         mdl_int.internship_student_affectation_stat.delete_affectations(student, cohort)
         for num_period in range(0, num_periods):
@@ -423,3 +432,7 @@ def _convert_differences_to_json(differences):
             new_records_count += 1
     data_json = json.dumps(data_json, cls=DjangoJSONEncoder)
     return data_json, new_records_count
+
+
+def _has_validated_score(affectations):
+    return any(validated_score for validated_score in affectations.values_list('score__validated', flat=True))
