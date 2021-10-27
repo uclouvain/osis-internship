@@ -14,6 +14,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='internshipscore',
             name='student_affectation',
-            field=models.OneToOneField(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='score', to='internship.InternshipStudentAffectationStat'),
+            field=models.OneToOneField(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='score', to='internship.InternshipStudentAffectationStat'),  # noqa
         ),
     ]

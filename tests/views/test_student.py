@@ -262,6 +262,7 @@ class StudentsAffectationModification(TestCase):
         InternshipStudentInformationFactory(person=cls.student.person, cohort=cls.cohort)
 
         cls.periods = [PeriodFactory(name='P{}'.format(p), cohort=cls.cohort) for p in range(1, 7)]
+
         cls.affectations = [StudentAffectationStatFactory(
             student=cls.student,
             period=period,
@@ -270,7 +271,10 @@ class StudentsAffectationModification(TestCase):
             internship__cohort=cls.cohort
         ) for period in cls.periods]
 
-        cls.offers = [OfferFactory(organization=a.organization, speciality=a.speciality, cohort=cls.cohort) for a in cls.affectations]
+        cls.offers = [OfferFactory(
+            organization=a.organization, speciality=a.speciality, cohort=cls.cohort
+        ) for a in cls.affectations]
+
         cls.scores = [ScoreFactory(student_affectation=a) for a in cls.affectations]
         cls.choices = InternshipChoice(student=cls.student)
 

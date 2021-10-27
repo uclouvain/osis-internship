@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-06-25 14:40+0200\n"
+"POT-Creation-Date: 2021-10-27 14:07+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -154,6 +154,11 @@ msgstr "Annuler"
 
 msgid "Cannot apply same preference on distinct offers"
 msgstr "Impossible d'appliquer la même préférence sur des offres distinctes"
+
+msgid ""
+"Cannot edit affectations because at least one affectation has a linked "
+"validated score"
+msgstr "Impossible de modifier les affectations de stages car une affectation au moins est liée a une évaluation validée"
 
 msgid "Cannot select same offer"
 msgstr "Impossible de sélectionner la même offre"
@@ -806,9 +811,6 @@ msgstr "Sociaux"
 
 msgid "Specialist"
 msgstr "Spécialiste"
-
-msgid "Speciality"
-msgstr "Spécialité"
 
 msgid "Specialties"
 msgstr "Spécialités"
