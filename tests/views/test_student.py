@@ -23,7 +23,6 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from gettext import gettext
 from unittest import skipUnless
 
 from django.contrib.auth.models import Permission, User
@@ -32,6 +31,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from django.urls import reverse
 from django.utils.datetime_safe import date
+from django.utils.translation import gettext_lazy
 from openpyxl import Workbook
 from openpyxl.writer.excel import save_virtual_workbook
 
@@ -301,7 +301,7 @@ class StudentsAffectationModification(TestCase):
         })
         response = self.client.get(url)
         error_msg = [m.message for m in get_messages(response.wsgi_request)][0]
-        self.assertEqual(error_msg, gettext(
+        self.assertEqual(error_msg, gettext_lazy(
             'Cannot edit affectations because at least one affectation has a linked validated score'
         ))
         self.assertRedirects(response, reverse('internship_student_affectation_modification', kwargs={
@@ -332,4 +332,3 @@ class StudentsAffectationModification(TestCase):
         self.assertTrue(InternshipStudentAffectationStat.objects.filter(
             student=self.student, organization=new_organization
         ).exists())
-
