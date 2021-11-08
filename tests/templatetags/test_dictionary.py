@@ -42,4 +42,3 @@ class TestDictionary(TestCase):
 
     def test_to_json_converts_dict_to_json(self):
         self.assertEqual(to_json(self.dict), '{"key": "value"}')
-
