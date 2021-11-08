@@ -61,8 +61,11 @@ def masters(request, cohort_id):
     filter_hospital = int(request.GET.get('hospital', 0))
     filter_name = request.GET.get('name', '')
     filter_role = request.GET.get('role', Role.MASTER.name)
+    filter_account = request.GET.get('account', '')
 
-    allocations = master_allocation.search(current_cohort, filter_specialty, filter_hospital, filter_role)
+    allocations = master_allocation.search(
+        current_cohort, filter_specialty, filter_hospital, role=filter_role, account=filter_account
+    )
     if filter_name:
         allocations = allocations.filter(master__person__last_name__unaccent__icontains=filter_name) | \
                       allocations.filter(master__person__first_name__unaccent__icontains=filter_name)
