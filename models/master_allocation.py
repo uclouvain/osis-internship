@@ -24,6 +24,7 @@
 #
 ##############################################################################
 import uuid as uuid
+
 from django.contrib import admin
 from django.db import models
 from django.db.models import Q
@@ -81,7 +82,7 @@ def find_by_master(cohort, a_master):
     return find_by_cohort(cohort).filter(master=a_master)
 
 
-def search(cohort, specialty, hospital, role=Role.MASTER.name):
+def search(cohort, specialty, hospital, account, role=Role.MASTER.name):
     masters = find_by_cohort(cohort)
 
     if role:
@@ -92,6 +93,9 @@ def search(cohort, specialty, hospital, role=Role.MASTER.name):
 
     if hospital:
         masters = masters.filter(organization=hospital)
+
+    if account:
+        masters = masters.filter(master__user_account_status=account)
 
     if specialty or hospital:
         return masters.order_by("master__person__last_name", "master__person__first_name")
