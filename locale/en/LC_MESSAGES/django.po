@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-27 14:07+0200\n"
+"POT-Creation-Date: 2021-11-08 09:53+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -44,6 +44,9 @@ msgstr ""
 msgid "Accept"
 msgstr ""
 
+msgid "Account"
+msgstr ""
+
 msgid "Acronym"
 msgstr ""
 
@@ -54,6 +57,9 @@ msgid "Actions"
 msgstr ""
 
 msgid "Activation pending"
+msgstr ""
+
+msgid "Active"
 msgstr ""
 
 msgid "Add"
@@ -426,6 +432,9 @@ msgstr ""
 msgid "In all fields"
 msgstr ""
 
+msgid "Inactive"
+msgstr ""
+
 msgid ""
 "Inform the sequence in which the columns must appear in the report to the "
 "hospital. Fields without number are not added to the report."
@@ -623,6 +632,9 @@ msgid "Paste"
 msgstr ""
 
 msgid "Paste Period"
+msgstr ""
+
+msgid "Pending"
 msgstr ""
 
 msgid "Period"

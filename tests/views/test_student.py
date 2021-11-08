@@ -287,10 +287,16 @@ class StudentsAffectationModification(TestCase):
         })
         context = self.client.get(url).context
 
-        self.assertListEqual(list(context['organizations']), [a.organization for a in self.affectations])
-        self.assertListEqual(list(context['periods']), [a.period for a in self.affectations])
-        self.assertListEqual(list(context['affectations']), self.affectations)
-        self.assertListEqual(list(context['internships'].values()), [a.internship_id for a in self.affectations])
+        self.assertListEqual(
+            list(context['organizations']),
+            sorted([a.organization for a in self.affectations], key=lambda o: o.reference)
+        )
+        self.assertListEqual(
+            list(context['periods']),
+            sorted([a.period for a in self.affectations], key=lambda p: p.date_start)
+        )
+        self.assertEqual(list(context['affectations']), self.affectations)
+        self.assertEqual(list(context['internships'].values()), [a.internship_id for a in self.affectations])
 
     def test_should_not_update_student_affectations_if_validated_score_exists_in_affectations(self):
         self.scores[0].validated = True
