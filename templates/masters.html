@@ -72,9 +72,9 @@
                     <input name="name" id="filter_name" class="form-control">
                 </div>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-1">
                 <div class="form-group">
-                    <label for="filter_role">{% trans 'Role' %}/{% trans 'Role' %}</label>
+                    <label for="filter_role">{% trans 'Role' %}</label>
                     <select name="role" id="filter_role" class="form-control">
                         <option value="" {% if filter_role == "" %}selected{% endif %}>--</option>
                         <option value="MASTER" {% if filter_role == "MASTER" %}selected{% endif %}>{% trans 'Master' %}</option>
@@ -82,8 +82,19 @@
                     </select>
                 </div>
             </div>
+            <div class="col-md-1">
+                <div class="form-group">
+                    <label for="filter_account">{% trans 'Account' %}</label>
+                    <select name="account" id="filter_account" class="form-control">
+                        <option value="" {% if filter_role == "" %}selected{% endif %}>--</option>
+                        <option value="ACTIVE" {% if filter_account == "ACTIVE" %}selected{% endif %}>{% trans 'Active' %}</option>
+                        <option value="PENDING" {% if filter_account == "PENDING" %}selected{% endif %}>{% trans 'Pending' %}</option>
+                        <option value="INACTIVE" {% if filter_account == "INACTIVE" %}selected{% endif %}>{% trans 'Inactive' %}</option>
+                    </select>
+                </div>
+            </div>
             <div class="col-md-3">
-                <button type="submit" class="btn btn-default" style="margin-top: 26px;">
+                <button type="submit" class="btn btn-primary" style="margin-top: 26px;">
                     <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
                     {% trans 'Search' %}
                 </button>
