@@ -23,6 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+import itertools
 import json
 from io import BytesIO
 
@@ -235,33 +236,26 @@ def student_save_information_modification(request, cohort_id, student_id):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internship_student_affectation_modification(request, cohort_id, student_id):
     cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)
-    internship_choice = mdl_int.internship_choice.search(student__pk=student_id)
-    if not internship_choice:
-        student = mdl.student.find_by_id(student_id)
-        information = mdl_int.internship_choice.InternshipChoice()
-        information.student = student
-    else:
-        information = internship_choice.first()
-    organizations = mdl_int.organization.search(cohort=cohort)
-    organizations = mdl_int.organization.sort_organizations(organizations)
-
-    specialities = mdl_int.internship_speciality.find_all(cohort=cohort)
-    for speciality in specialities:
-        number = [int(s) for s in speciality.name.split() if s.isdigit()]
-        if number:
-            speciality.acronym = speciality.acronym + " " + str(number[0])
+    student = get_object_or_404(Student, pk=student_id)
+    organizations = mdl_int.organization.search(cohort=cohort).order_by('reference')
+    specialties = mdl_int.internship_speciality.find_all(cohort=cohort)
+    _append_numbers_to_acronyms(specialties)
     periods = mdl_int.period.search(cohort=cohort)
-
     modalities = mdl_int.internship.find_by_cohort(cohort).order_by("name")
+    affectations = mdl_int.internship_student_affectation_stat.search(student__pk=student_id, period__in=periods)
 
-    affectations = mdl_int.internship_student_affectation_stat.search(student__pk=student_id)
-    internships = {}
-    for period in periods:
-        affectation = _get_affectation_for_period(affectations, period)
-        if affectation and affectation.internship:
-            internships[period.id] = affectation.internship.id
+    internships = {
+        p: next(_.internship_id for _ in a) for p, a in itertools.groupby(affectations, lambda a: a.period_id)
+    }
 
     return render(request, "student_affectation_modification.html", locals())
+
+
+def _append_numbers_to_acronyms(specialties):
+    for specialty in specialties:
+        number = [int(s) for s in specialty.name.split() if s.isdigit()]
+        if number:
+            specialty.acronym += str(number[0])
 
 
 @login_required
@@ -303,7 +297,16 @@ def student_save_affectation_modification(request, cohort_id, student_id):
                                                                                                organization.name,
                                                                                                period.name))
 
-    if not check_error_present and num_periods > 0:
+    student_affectations = InternshipStudentAffectationStat.objects.filter(student=student, period__cohort=cohort)
+    if _has_validated_score(student_affectations):
+        check_error_present = True
+        messages.add_message(
+            request, messages.ERROR, _(
+                "Cannot edit affectations because at least one affectation has a linked validated score"
+            )
+        )
+
+    if not check_error_present:
         mdl_int.internship_student_affectation_stat.delete_affectations(student, cohort)
         for num_period in range(0, num_periods):
             if organizations[num_period]:
@@ -368,13 +371,6 @@ def internships_student_import_update(request, cohort_id, differences=None):
     return render(request, "students_update.html", locals())
 
 
-def _get_affectation_for_period(affectations, period):
-    for affectation in affectations:
-        if affectation.period == period:
-            return affectation
-    return None
-
-
 def _get_students_with_status(request, cohort, filters):
 
     active_period = Period.objects.filter(
@@ -436,3 +432,7 @@ def _convert_differences_to_json(differences):
             new_records_count += 1
     data_json = json.dumps(data_json, cls=DjangoJSONEncoder)
     return data_json, new_records_count
+
+
+def _has_validated_score(affectations):
+    return any(validated_score for validated_score in affectations.values_list('score__validated', flat=True))

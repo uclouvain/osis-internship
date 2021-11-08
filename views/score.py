@@ -509,9 +509,9 @@ def _prepare_score_table(cohort, periods, students):
     ).select_related(
         'student', 'period', 'speciality'
     ).values(
-        'student__person', 'student__registration_id', 'period__name', 'organization__reference',
-        'speciality__acronym', 'speciality__sequence', 'internship__speciality_id', 'internship__name',
-        'internship__length_in_periods', 'internship_evaluated'
+        'student__person', 'student__registration_id', 'period__name', 'organization__reference', 'organization__name',
+        'speciality__acronym', 'speciality__sequence', 'speciality__name', 'internship__speciality_id',
+        'internship__name', 'internship__length_in_periods', 'internship_evaluated'
     ).order_by('period__date_start')
 
     scores = _group_by_students_and_periods(scores)
@@ -545,6 +545,7 @@ def _prepare_students_extra_data(students):
         student.specialties = {}
         student.organizations = {}
         student.evaluations = {}
+        student.comments = {}
 
 
 def _compute_evolution_score(students, cohort_id):
@@ -641,7 +642,7 @@ def _match_scores_with_students(cohort, periods, scores, students):
         for period in periods:
             if student.person.pk in scores.keys() and period.pk in scores[student.person.pk].keys():
                 student_scores = scores[student.person.pk][period.pk]
-                _append_period_scores_to_student(period, student, list(student_scores))
+                _append_period_scores_and_comments_to_student(period, student, list(student_scores))
 
 
 def _set_condition_fulfilled_status(students):
@@ -653,10 +654,12 @@ def _get_mapping_score(period, apd):
     return lambda x: x.period.name == period and x.apd == apd
 
 
-def _append_period_scores_to_student(period, student, student_scores):
+def _append_period_scores_and_comments_to_student(period, student, student_scores):
     if student_scores:
         scores = student_scores[0].get_scores()
+        comments = student_scores[0].comments
         student.scores += (period.name, scores),
+        student.comments.update({period.name: _replace_comments_keys_with_translations(comments)})
         _retrieve_scores_entered_manually(period, student, student_scores)
 
 
@@ -677,7 +680,13 @@ def _update_student_specialties(student, students_affectations):
         if affectation['student__person'] == student.person.pk:
             _annotate_non_mandatory_internship(affectation)
             acronym = _get_acronym_with_sequence(affectation)
-            student.specialties.update({affectation['period__name']: acronym})
+            specialty_name = affectation['speciality__name']
+            student.specialties.update({
+                affectation['period__name']: {
+                    'acronym': acronym,
+                    'name': specialty_name
+                }
+            })
 
 
 def _get_acronym_with_sequence(affectation):
@@ -700,10 +709,13 @@ def update_student_organizations(student, students_affectations):
         if affectation['student__person'] == student.person.pk:
             student.organizations.update(
                 {
-                    affectation['period__name']: "{}{}".format(
-                        affectation['speciality__acronym'],
-                        affectation['organization__reference']
-                    )
+                    affectation['period__name']: {
+                        "reference": "{}{}".format(
+                            affectation['speciality__acronym'],
+                            affectation['organization__reference']
+                        ),
+                        "name": affectation['organization__name']
+                    }
                 }
             )
 
@@ -957,3 +969,13 @@ def _update_or_create_apd_mapping(cohort, grade, period, enum_item):
     if int(value) != 0 and vars(mapping)['score_{}'.format(grade)] != int(value):
         vars(mapping)['score_{}'.format(grade)] = value
         mapping.save()
+
+
+def _replace_comments_keys_with_translations(comments):
+    comments_keys_mapping = {
+        'impr_areas': _('Improvement areas'),
+        'suggestions': _('Suggestions'),
+        'good_perf_ex': _('Good performance example'),
+        'intermediary_evaluation': _('Intermediary evaluation')
+    }
+    return {comments_keys_mapping[k]: v for k, v in comments.items()}
