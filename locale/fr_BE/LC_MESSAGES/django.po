@@ -409,6 +409,9 @@ msgstr "Généraliste"
 msgid "Generate solution"
 msgstr "Générer la solution"
 
+msgid "Good performance example"
+msgstr "Exemples de bonnes performances"
+
 msgid "Grade"
 msgstr "Cote"
 
@@ -448,6 +451,9 @@ msgstr "Importer cotes de stage"
 msgid "Imposed choices"
 msgstr "Choix imposés"
 
+msgid "Improvement areas"
+msgstr "Points à améliorer"
+
 msgid "In all fields"
 msgstr "Dans tous les champs"
 
@@ -463,6 +469,9 @@ msgstr ""
 
 msgid "Inject"
 msgstr "Injecter"
+
+msgid "Intermediary evaluation"
+msgstr "Évaluation intermédiaire"
 
 msgid "Internship"
 msgstr "Stage"
@@ -885,6 +894,9 @@ msgstr "Études"
 
 msgid "Submit choices"
 msgstr "Soumettre les choix"
+
+msgid "Suggestions"
+msgstr "Méthodes d'apprentissage suggérées"
 
 msgid "Summaries have been sent successfully"
 msgstr "Les emails récapitulatifs ont bien été envoyés"

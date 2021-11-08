@@ -392,6 +392,9 @@ msgstr ""
 msgid "Generate solution"
 msgstr ""
 
+msgid "Good performance example"
+msgstr ""
+
 msgid "Grade"
 msgstr ""
 
@@ -429,6 +432,9 @@ msgstr ""
 msgid "Imposed choices"
 msgstr ""
 
+msgid "Improvement areas"
+msgstr ""
+
 msgid "In all fields"
 msgstr ""
 
@@ -441,6 +447,9 @@ msgid ""
 msgstr ""
 
 msgid "Inject"
+msgstr ""
+
+msgid "Intermediary evaluation"
 msgstr ""
 
 msgid "Internship"
@@ -853,6 +862,9 @@ msgid "Studies"
 msgstr ""
 
 msgid "Submit choices"
+msgstr ""
+
+msgid "Suggestions"
 msgstr ""
 
 msgid "Summaries have been sent successfully"

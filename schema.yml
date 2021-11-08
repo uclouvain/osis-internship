@@ -1092,6 +1092,9 @@ components:
         student_presence:
           type: boolean
           nullable: true
+        comments:
+          type: object
+          nullable: true
     Uuid:
       type: string
       format: uuid

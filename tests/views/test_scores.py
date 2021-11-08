@@ -636,3 +636,21 @@ class ScoresEncodingTest(TestCase):
         messages_list = [msg for msg in response.wsgi_request._messages]
         self.assertRedirects(response, reverse('internship_scores_encoding', kwargs={'cohort_id': self.cohort.pk}))
         self.assertEqual(messages_list[0].level_tag, 'success')
+
+    def test_should_display_internship_comments(self):
+        # create student with comment
+        student_with_comment = StudentFactory(
+            person=InternshipStudentInformationFactory(person__last_name='AAA', cohort=self.cohort).person
+        )
+        comment_content = "test comment"
+        ScoreFactory(
+            student_affectation__period=self.period,
+            student_affectation__student=student_with_comment,
+            APD_1='A',
+            validated=True,
+            comments={"impr_areas": comment_content}
+        )
+        url = reverse('internship_scores_encoding', kwargs={'cohort_id': self.cohort.pk})
+        response = self.client.get(url)
+        student_with_comment = response.context['students'].object_list[0]
+        self.assertEqual(student_with_comment.comments[self.period.name], {_("Improvement areas"): comment_content})

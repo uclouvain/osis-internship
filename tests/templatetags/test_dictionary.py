@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2019 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2021 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -23,32 +23,22 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import json
 
-from django.template.defaulttags import register
+from django.test import TestCase
 
-
-@register.filter
-def get_item(dictionary, key):
-    val = dictionary.get(key, "")
-    return val
+from internship.templatetags.dictionary import get_item, has_substr, to_json
 
 
-@register.filter
-def has_substr(dictionary, key):
-    return "'{}'".format(key) in str(dictionary)
+class TestDictionary(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.dict = {'key': 'value'}
 
+    def test_get_item_with_given_key_should_return_value(self):
+        self.assertEqual(get_item(self.dict, 'key'), self.dict['key'])
 
-@register.filter
-def is_edited(val):
-    return type(val) is dict and 'edited' in val.keys()
+    def test_has_substr_should_assert_str_is_in_dict(self):
+        self.assertEqual(has_substr(self.dict, 'key'), 'key' in str(self.dict))
 
-
-@register.filter
-def is_excused(val):
-    return type(val) is dict and 'excused' in val.keys()
-
-
-@register.filter
-def to_json(dict):
-    return json.dumps(dict)
+    def test_to_json_converts_dict_to_json(self):
+        self.assertEqual(to_json(self.dict), '{"key": "value"}')
