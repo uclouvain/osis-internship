@@ -82,7 +82,7 @@ def _complete_student_row_by_internship(columns, internship, periods, student):
 
 def _append_row_data(columns, period, student):
     if period.name in student.organizations.keys():
-        columns.append(student.organizations[period.name])
+        columns.append(student.organizations[period.name]['reference'])
     else:
         columns.append('')
     if period.name in student.periods_scores.keys():
@@ -135,7 +135,7 @@ def _append_evolution_score(columns, score):
 def _complete_student_row_for_all_internships(columns, periods, student):
     for period in periods:
         if period.name in student.specialties.keys():
-            columns.append(student.specialties[period.name])
+            columns.append(student.specialties[period.name]['acronym'])
         else:
             columns.append('')
         _append_row_data(columns, period, student)

@@ -61,8 +61,11 @@ def masters(request, cohort_id):
     filter_hospital = int(request.GET.get('hospital', 0))
     filter_name = request.GET.get('name', '')
     filter_role = request.GET.get('role', Role.MASTER.name)
+    filter_account = request.GET.get('account', '')
 
-    allocations = master_allocation.search(current_cohort, filter_specialty, filter_hospital, filter_role)
+    allocations = master_allocation.search(
+        current_cohort, filter_specialty, filter_hospital, role=filter_role, account=filter_account
+    )
     if filter_name:
         allocations = allocations.filter(master__person__last_name__unaccent__icontains=filter_name) | \
                       allocations.filter(master__person__first_name__unaccent__icontains=filter_name)
@@ -354,7 +357,7 @@ def _build_allocations(request, allocated_master):
 
 
 def _clean_empty_strings(a_list):
-    return [x if x is not '' else None for x in a_list]
+    return [x if x != '' else None for x in a_list]
 
 
 def _save_allocations(allocations):
@@ -373,4 +376,4 @@ def _validate_allocations(request):
     hospitals = request.POST.getlist('hospital')
     specialties = request.POST.getlist('specialty')
     roles = request.POST.getlist('role')
-    return (hospitals[0] is not '' or specialties[0] is not '') and roles[0] is not ''
+    return (hospitals[0] != '' or specialties[0] != '') and roles[0] != ''

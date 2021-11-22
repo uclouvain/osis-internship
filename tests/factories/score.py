@@ -42,6 +42,8 @@ class ScoreFactory(factory.django.DjangoModelFactory):
     APD_1 = FuzzyChoice(['A', 'B', 'C', 'D'])
     score = None
 
+    comments = {}
+
     validated = False
 
 

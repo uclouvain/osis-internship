@@ -81,7 +81,8 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <label for="birth_date">{% trans 'Birth date' %}</label>
-                            <input type="date" name="birth_date" id="birth_date" class="form-control" value="{{ student.birth_date | date:'Y-m-d' | default_if_none:'' }}" readonly>
+                            <input type="date" name="birth_date" id="birth_date" class="form-control"
+                                   value="{{ student.birth_date | date:'Y-m-d' | default_if_none:'' }}" readonly>
                         </div>
                     </div>
                 </div>
@@ -91,14 +92,15 @@
                             <label for="gender">{% trans 'Gender' %}</label>
                             <select name="gender" id="gender" class="form-control" readonly>
                                 <option value="F" {{ female_selected }}>{% trans 'Female' %}</option>
-                                <option value="M" {{ male_selected }}>{% trans 'Male' %}</option>
+                                <option value="H" {{ male_selected }}>{% trans 'Male' %}</option>
                             </select>
                         </div>
                     </div>
                     <div class="col-md-5">
                         <div class="form-group">
                             <label for="email">{% trans 'Email' %}</label>
-                            <input type="email" name="email" id="email" class="form-control" value="{{ student.email | default_if_none:'' }}">
+                            <input type="email" name="email" id="email" class="form-control"
+                                   value="{{ student.email | default_if_none:'' }}">
                         </div>
                     </div>
                     <div class="col-md-4">

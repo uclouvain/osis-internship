@@ -51,9 +51,9 @@ class XlsExportScoresTestCase(TestCase):
         cls.user = PersonWithPermissionsFactory('is_internship_manager').user
         cls.student = StudentFactory()
         cls.student.organizations = {
-            cls.past_period_no_scores_submitted.name: OrganizationFactory().reference,
-            cls.past_period_excused.name: OrganizationFactory().reference,
-            cls.past_period_edited.name: OrganizationFactory().reference,
+            cls.past_period_no_scores_submitted.name: {'reference': OrganizationFactory().reference},
+            cls.past_period_excused.name: {'reference': OrganizationFactory().reference},
+            cls.past_period_edited.name: {'reference': OrganizationFactory().reference},
         }
         cls.student.periods_scores = {
             cls.past_period_no_scores_submitted.name: NO_SUBMISSION_SCORE,
