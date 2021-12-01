@@ -24,6 +24,7 @@
 #
 ##############################################################################
 import uuid as uuid
+
 from django.contrib.admin import ModelAdmin
 from django.contrib.postgres.fields import JSONField
 from django.db import models
@@ -65,7 +66,7 @@ class InternshipScore(Model):
 
     student_affectation = models.OneToOneField(
         'internship.InternshipStudentAffectationStat',
-        on_delete=models.PROTECT,
+        on_delete=models.CASCADE,
         related_name='score',
         null=True
     )

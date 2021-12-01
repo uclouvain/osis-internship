@@ -40,6 +40,7 @@ class InternshipScoreListSerializer(serializers.ModelSerializer):
             'uuid',
             'validated',
             'student_presence',
+            'comments',
             *_apd_fields()
         )
 

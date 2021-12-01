@@ -26,23 +26,31 @@
 from unittest import skipUnless
 
 from django.contrib.auth.models import Permission, User
+from django.contrib.messages import get_messages
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from django.urls import reverse
 from django.utils.datetime_safe import date
+from django.utils.translation import gettext_lazy
 from openpyxl import Workbook
 from openpyxl.writer.excel import save_virtual_workbook
 
 from backoffice.settings.base import INSTALLED_APPS
 from base.tests.factories.person import PersonFactory
+from base.tests.factories.person_address import PersonAddressFactory
 from base.tests.factories.student import StudentFactory
 from base.tests.models import test_student
+from internship.models.internship_choice import InternshipChoice
+from internship.models.internship_student_affectation_stat import InternshipStudentAffectationStat
 from internship.models.internship_student_information import find_by_cohort, InternshipStudentInformation
 from internship.tests.factories.cohort import CohortFactory
 from internship.tests.factories.internship import InternshipFactory
 from internship.tests.factories.internship_choice import create_internship_choice
 from internship.tests.factories.internship_student_information import InternshipStudentInformationFactory
+from internship.tests.factories.offer import OfferFactory
+from internship.tests.factories.organization import OrganizationFactory
 from internship.tests.factories.period import PeriodFactory
+from internship.tests.factories.score import ScoreFactory
 from internship.tests.factories.student_affectation_stat import StudentAffectationStatFactory
 from internship.tests.models import test_organization, test_internship_speciality, test_internship_student_information
 from internship.tests.utils.test_student_loader import generate_record
@@ -238,3 +246,95 @@ class StudentsListImport(TestCase):
         })
         self.assertEqual(len(find_by_cohort(self.cohort.id)),0)
         self.assertRedirects(response, reverse('internships_student_resume', kwargs={"cohort_id": self.cohort.id}))
+
+
+class StudentsAffectationModification(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.user = User.objects.create_user('demo', email='demo@demo.org', password='password')
+        permission = Permission.objects.get(codename='is_internship_manager')
+        cls.user.user_permissions.add(permission)
+
+        cls.cohort = CohortFactory()
+
+        cls.student = StudentFactory()
+        PersonAddressFactory(person=cls.student.person)
+        InternshipStudentInformationFactory(person=cls.student.person, cohort=cls.cohort)
+
+        cls.periods = [PeriodFactory(name='P{}'.format(p), cohort=cls.cohort) for p in range(1, 7)]
+
+        cls.affectations = [StudentAffectationStatFactory(
+            student=cls.student,
+            period=period,
+            organization__cohort=cls.cohort,
+            speciality__cohort=cls.cohort,
+            internship__cohort=cls.cohort
+        ) for period in cls.periods]
+
+        cls.offers = [OfferFactory(
+            organization=a.organization, speciality=a.speciality, cohort=cls.cohort
+        ) for a in cls.affectations]
+
+        cls.scores = [ScoreFactory(student_affectation=a) for a in cls.affectations]
+        cls.choices = InternshipChoice(student=cls.student)
+
+    def setUp(self):
+        self.client.force_login(self.user)
+
+    def test_should_show_student_affectations_form(self):
+        url = reverse('internship_student_affectation_modification', kwargs={
+            'cohort_id': self.cohort.pk, 'student_id': self.student.pk
+        })
+        context = self.client.get(url).context
+
+        self.assertListEqual(
+            list(context['organizations']),
+            sorted([a.organization for a in self.affectations], key=lambda o: o.reference)
+        )
+        self.assertListEqual(
+            list(context['periods']),
+            sorted([a.period for a in self.affectations], key=lambda p: p.date_start)
+        )
+        self.assertEqual(list(context['affectations']), self.affectations)
+        self.assertEqual(list(context['internships'].values()), [a.internship_id for a in self.affectations])
+
+    def test_should_not_update_student_affectations_if_validated_score_exists_in_affectations(self):
+        self.scores[0].validated = True
+        self.scores[0].save()
+
+        url = reverse('student_save_affectation_modification', kwargs={
+            'cohort_id': self.cohort.pk, 'student_id': self.student.pk
+        })
+        response = self.client.get(url)
+        error_msg = [m.message for m in get_messages(response.wsgi_request)][0]
+        self.assertEqual(error_msg, gettext_lazy(
+            'Cannot edit affectations because at least one affectation has a linked validated score'
+        ))
+        self.assertRedirects(response, reverse('internship_student_affectation_modification', kwargs={
+            'cohort_id': self.cohort.pk, 'student_id': self.student.pk
+        }))
+
+    def test_should_update_student_affectations(self):
+        organizations = [a.organization for a in self.affectations]
+        new_organization = OrganizationFactory(cohort=self.cohort)
+        organizations[0] = new_organization
+        OfferFactory(organization=new_organization, speciality=self.affectations[0].speciality, cohort=self.cohort)
+
+        url = reverse('student_save_affectation_modification', kwargs={
+            'cohort_id': self.cohort.pk, 'student_id': self.student.pk
+        })
+
+        response = self.client.post(url, data={
+            'organization': [o.reference for o in organizations],
+            'period': self.periods,
+            'specialty': [a.speciality.name for a in self.affectations],
+            'internship': [a.internship.pk for a in self.affectations]
+        })
+
+        self.assertRedirects(response, reverse('internships_student_read', kwargs={
+            'cohort_id': self.cohort.pk, 'student_id': self.student.pk
+        }))
+
+        self.assertTrue(InternshipStudentAffectationStat.objects.filter(
+            student=self.student, organization=new_organization
+        ).exists())

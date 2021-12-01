@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-06-25 14:40+0200\n"
+"POT-Creation-Date: 2021-11-08 09:53+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -44,6 +44,9 @@ msgstr ""
 msgid "Accept"
 msgstr ""
 
+msgid "Account"
+msgstr ""
+
 msgid "Acronym"
 msgstr ""
 
@@ -54,6 +57,9 @@ msgid "Actions"
 msgstr ""
 
 msgid "Activation pending"
+msgstr ""
+
+msgid "Active"
 msgstr ""
 
 msgid "Add"
@@ -141,6 +147,11 @@ msgid "Cancel"
 msgstr ""
 
 msgid "Cannot apply same preference on distinct offers"
+msgstr ""
+
+msgid ""
+"Cannot edit affectations because at least one affectation has a linked "
+"validated score"
 msgstr ""
 
 msgid "Cannot select same offer"
@@ -381,6 +392,9 @@ msgstr ""
 msgid "Generate solution"
 msgstr ""
 
+msgid "Good performance example"
+msgstr ""
+
 msgid "Grade"
 msgstr ""
 
@@ -418,7 +432,13 @@ msgstr ""
 msgid "Imposed choices"
 msgstr ""
 
+msgid "Improvement areas"
+msgstr ""
+
 msgid "In all fields"
+msgstr ""
+
+msgid "Inactive"
 msgstr ""
 
 msgid ""
@@ -427,6 +447,9 @@ msgid ""
 msgstr ""
 
 msgid "Inject"
+msgstr ""
+
+msgid "Intermediary evaluation"
 msgstr ""
 
 msgid "Internship"
@@ -620,6 +643,9 @@ msgstr ""
 msgid "Paste Period"
 msgstr ""
 
+msgid "Pending"
+msgstr ""
+
 msgid "Period"
 msgstr ""
 
@@ -778,9 +804,6 @@ msgstr ""
 msgid "Specialist"
 msgstr ""
 
-msgid "Speciality"
-msgstr ""
-
 msgid "Specialties"
 msgstr ""
 
@@ -839,6 +862,9 @@ msgid "Studies"
 msgstr ""
 
 msgid "Submit choices"
+msgstr ""
+
+msgid "Suggestions"
 msgstr ""
 
 msgid "Summaries have been sent successfully"
