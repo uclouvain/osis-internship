@@ -1146,10 +1146,14 @@ components:
           example: "BE"
         name:
           type: string
+          example: "Belgique"
+        name_en:
+          type: string
           example: "Belgium"
         nationality:
           type: string
           example: "Belgian"
+          nullable: true
     PeriodPaging:
       properties:
         count:
