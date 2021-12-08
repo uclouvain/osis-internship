@@ -56,7 +56,7 @@ from internship.models.internship_student_affectation_stat import InternshipStud
 from internship.models.internship_student_information import InternshipStudentInformation
 from internship.models.master_allocation import MasterAllocation
 from internship.models.organization import Organization
-from internship.models.period import Period
+from internship.models.period import Period, get_effective_periods
 from internship.utils.importing.import_students import import_xlsx
 from internship.views.common import display_errors, get_object_list
 from reference.models.country import Country
@@ -296,9 +296,13 @@ def student_save_affectation_modification(request, cohort_id, student_id):
                                                                                                organization.reference,
                                                                                                organization.name,
                                                                                                period.name))
+    student_affectations_to_update = InternshipStudentAffectationStat.objects.filter(
+        student=student,
+        period__cohort=cohort,
+        period__name__in=periods
+    ).order_by('period__date_start')
 
-    student_affectations = InternshipStudentAffectationStat.objects.filter(student=student, period__cohort=cohort)
-    if _has_validated_score(student_affectations):
+    if _has_validated_score(student_affectations_to_update):
         check_error_present = True
         messages.add_message(
             request, messages.ERROR, _(
@@ -307,25 +311,34 @@ def student_save_affectation_modification(request, cohort_id, student_id):
         )
 
     if not check_error_present:
-        mdl_int.internship_student_affectation_stat.delete_affectations(student, cohort)
-        for num_period in range(0, num_periods):
-            if organizations[num_period]:
-                organization = mdl_int.organization.search(cohort=cohort, reference=organizations[num_period])[0]
-                specialty = mdl_int.internship_speciality.search(cohort=cohort, name=specialties[num_period])[0]
-                period = mdl_int.period.search(cohort=cohort, name=periods[num_period])[0]
-                student_choices = mdl_int.internship_choice.search(student=student, speciality=specialty)
-                internship = None
-                if internships[num_period]:
-                    internship = mdl_int.internship.get_by_id(internships[num_period])
-                affectation = mdl_int.internship_student_affectation_stat.build(student, organization, specialty,
-                                                                                period, internship, student_choices)
-                affectation.save()
-
+        update_data = _build_update_data(cohort, organizations, specialties, internships)
+        update_selected_student_affectations(student_affectations_to_update, update_data)
         redirect_url = reverse('internships_student_read', kwargs={"cohort_id": cohort.id, "student_id": student.id})
     else:
         redirect_url = reverse('internship_student_affectation_modification', kwargs={"cohort_id": cohort.id,
                                                                                       "student_id": student.id})
     return HttpResponseRedirect(redirect_url)
+
+
+def update_selected_student_affectations(affectations_to_update, update_data):
+    for affectation in affectations_to_update:
+        period_update = update_data[affectation.period.name]
+        affectation.internship = period_update['internship']
+        affectation.speciality = period_update['specialty']
+        affectation.organization = period_update['organization']
+        affectation.save()
+
+
+def _build_update_data(cohort, organizations, specialties, internships):
+    cohort_periods = get_effective_periods(cohort.pk)
+    return {
+        period.name: {
+            'internship': cohort.internship_set.get(id=internships[index]),
+            'specialty': cohort.internshipspeciality_set.get(name=specialties[index]),
+            'organization': cohort.organization_set.get(reference=organizations[index])
+        }
+        for index, period in enumerate(cohort_periods)
+    }
 
 
 @login_required
