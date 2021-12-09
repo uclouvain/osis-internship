@@ -280,22 +280,9 @@ def student_save_affectation_modification(request, cohort_id, student_id):
     if 'internship' in request.POST:
         internships = request.POST.getlist('internship')
 
-    check_error_present = False
-    num_periods = len(periods)
-    for num_period in range(0, num_periods):
-        if organizations[num_period]:
-            organization = mdl_int.organization.search(cohort=cohort, reference=organizations[num_period])[0]
-            specialty = mdl_int.internship_speciality.search(cohort=cohort, name=specialties[num_period])[0]
-            period = mdl_int.period.search(cohort=cohort, name=periods[num_period])[0]
-            check_internship_present = mdl_int.internship_offer.search(cohort=cohort,
-                                                                       organization=organization,
-                                                                       speciality=specialty)
-            if len(check_internship_present) == 0:
-                check_error_present = True
-                messages.add_message(request, messages.ERROR, "{} : {}-{} ({})=> error".format(specialty.name,
-                                                                                               organization.reference,
-                                                                                               organization.name,
-                                                                                               period.name))
+    update_data = _build_update_data(cohort, organizations, specialties, internships)
+    error = _check_error_present(cohort, periods, request, update_data)
+
     student_affectations_to_update = InternshipStudentAffectationStat.objects.filter(
         student=student,
         period__cohort=cohort,
@@ -303,21 +290,38 @@ def student_save_affectation_modification(request, cohort_id, student_id):
     ).order_by('period__date_start')
 
     if _has_validated_score(student_affectations_to_update):
-        check_error_present = True
+        error = True
         messages.add_message(
             request, messages.ERROR, _(
                 "Cannot edit affectations because at least one affectation has a linked validated score"
             )
         )
 
-    if not check_error_present:
-        update_data = _build_update_data(cohort, organizations, specialties, internships)
+    if not error:
         update_selected_student_affectations(student_affectations_to_update, update_data)
-        redirect_url = reverse('internships_student_read', kwargs={"cohort_id": cohort.id, "student_id": student.id})
+        redirect_url = reverse('internships_student_read', kwargs={
+            "cohort_id": cohort.id, "student_id": student.id
+        })+"?tab=affectations"
     else:
         redirect_url = reverse('internship_student_affectation_modification', kwargs={"cohort_id": cohort.id,
                                                                                       "student_id": student.id})
     return HttpResponseRedirect(redirect_url)
+
+
+def _check_error_present(cohort, periods, request, update_data):
+    error = False
+    for period in periods:
+        organization, specialty = (update_data[period]['organization'], update_data[period]['specialty'])
+        if not _is_internship_available(cohort, update_data[period]['organization'], update_data[period]['specialty']):
+            error = True
+            messages.add_message(request, messages.ERROR, "{} : {}-{} ({})=> error".format(
+                specialty.name, organization.reference, organization.name, period
+            ))
+    return error
+
+
+def _is_internship_available(cohort, organization, specialty):
+    return mdl_int.internship_offer.search(cohort=cohort, organization=organization, speciality=specialty).exists()
 
 
 def update_selected_student_affectations(affectations_to_update, update_data):
