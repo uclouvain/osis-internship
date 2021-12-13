@@ -280,44 +280,49 @@ def student_save_affectation_modification(request, cohort_id, student_id):
     if 'internship' in request.POST:
         internships = request.POST.getlist('internship')
 
-    update_data = _build_update_data(cohort, organizations, specialties, internships)
-    error = _check_error_present(cohort, periods, request, update_data)
-
     student_affectations_to_update = InternshipStudentAffectationStat.objects.filter(
         student=student,
         period__cohort=cohort,
         period__name__in=periods
-    ).order_by('period__date_start')
+    ).order_by('period__date_start').select_related('internship', 'speciality', 'organization', 'period')
 
-    if _has_validated_score(student_affectations_to_update):
-        error = True
+    update_data = _build_update_data(cohort, organizations, specialties, internships)
+
+    if _has_validated_score(request, student_affectations_to_update) or \
+            not _chosen_internships_available(request, cohort, periods, update_data):
+        redirect_url = reverse('internship_student_affectation_modification', kwargs={
+            "cohort_id": cohort.id, "student_id": student.id
+        })
+    else:
+        update_selected_student_affectations(student_affectations_to_update, update_data)
+        redirect_url = reverse('internships_student_read', kwargs={
+            "cohort_id": cohort.id, "student_id": student.id
+        })+"?tab=affectations"
+
+    return HttpResponseRedirect(redirect_url)
+
+
+def _chosen_internships_available(request, cohort, periods, update_data):
+    availability = True
+    for period in periods:
+        organization, specialty = update_data[period]['organization'], update_data[period]['specialty']
+        if not _is_internship_available(cohort, organization, specialty):
+            availability = False
+            messages.add_message(request, messages.ERROR, "{} : {}-{} ({})=> error".format(
+                specialty.name, organization.reference, organization.name, period
+            ))
+    return availability
+
+
+def _has_validated_score(request, affectations):
+    if any(validated_score for validated_score in affectations.values_list('score__validated', flat=True)):
         messages.add_message(
             request, messages.ERROR, _(
                 "Cannot edit affectations because at least one affectation has a linked validated score"
             )
         )
-
-    if not error:
-        update_selected_student_affectations(student_affectations_to_update, update_data)
-        redirect_url = reverse('internships_student_read', kwargs={
-            "cohort_id": cohort.id, "student_id": student.id
-        })+"?tab=affectations"
-    else:
-        redirect_url = reverse('internship_student_affectation_modification', kwargs={"cohort_id": cohort.id,
-                                                                                      "student_id": student.id})
-    return HttpResponseRedirect(redirect_url)
-
-
-def _check_error_present(cohort, periods, request, update_data):
-    error = False
-    for period in periods:
-        organization, specialty = (update_data[period]['organization'], update_data[period]['specialty'])
-        if not _is_internship_available(cohort, update_data[period]['organization'], update_data[period]['specialty']):
-            error = True
-            messages.add_message(request, messages.ERROR, "{} : {}-{} ({})=> error".format(
-                specialty.name, organization.reference, organization.name, period
-            ))
-    return error
+        return True
+    return False
 
 
 def _is_internship_available(cohort, organization, specialty):
@@ -449,7 +454,3 @@ def _convert_differences_to_json(differences):
             new_records_count += 1
     data_json = json.dumps(data_json, cls=DjangoJSONEncoder)
     return data_json, new_records_count
-
-
-def _has_validated_score(affectations):
-    return any(validated_score for validated_score in affectations.values_list('score__validated', flat=True))
