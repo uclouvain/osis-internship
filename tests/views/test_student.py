@@ -349,3 +349,26 @@ class StudentsAffectationModification(TestCase):
         self.assertTrue(InternshipStudentAffectationStat.objects.filter(
             student=self.student, organization=new_organization
         ).exists())
+
+    def test_should_delete_student_affectations_when_at_least_one_post_data_is_set_to_empty(self):
+        organizations = [a.organization.reference for a in self.affectations]
+        organizations[0] = ''  # empty first organization post data
+
+        url = reverse('student_save_affectation_modification', kwargs={
+            'cohort_id': self.cohort.pk, 'student_id': self.student.pk
+        })
+
+        response = self.client.post(url, data={
+            'organization': organizations,
+            'period': self.periods[0],
+            'specialty': [a.speciality.name for a in self.affectations],
+            'internship': [a.internship.pk for a in self.affectations]
+        })
+
+        self.assertRedirects(response, reverse('internships_student_read', kwargs={
+            'cohort_id': self.cohort.pk, 'student_id': self.student.pk
+        })+"?tab=affectations")
+
+        self.assertFalse(InternshipStudentAffectationStat.objects.filter(
+            student=self.student, period=self.periods[0]
+        ).exists())
