@@ -56,7 +56,7 @@ from internship.models.internship_student_affectation_stat import InternshipStud
 from internship.models.internship_student_information import InternshipStudentInformation
 from internship.models.master_allocation import MasterAllocation
 from internship.models.organization import Organization
-from internship.models.period import Period
+from internship.models.period import Period, get_effective_periods
 from internship.utils.importing.import_students import import_xlsx
 from internship.views.common import display_errors, get_object_list
 from reference.models.country import Country
@@ -280,52 +280,74 @@ def student_save_affectation_modification(request, cohort_id, student_id):
     if 'internship' in request.POST:
         internships = request.POST.getlist('internship')
 
-    check_error_present = False
-    num_periods = len(periods)
-    for num_period in range(0, num_periods):
-        if organizations[num_period]:
-            organization = mdl_int.organization.search(cohort=cohort, reference=organizations[num_period])[0]
-            specialty = mdl_int.internship_speciality.search(cohort=cohort, name=specialties[num_period])[0]
-            period = mdl_int.period.search(cohort=cohort, name=periods[num_period])[0]
-            check_internship_present = mdl_int.internship_offer.search(cohort=cohort,
-                                                                       organization=organization,
-                                                                       speciality=specialty)
-            if len(check_internship_present) == 0:
-                check_error_present = True
-                messages.add_message(request, messages.ERROR, "{} : {}-{} ({})=> error".format(specialty.name,
-                                                                                               organization.reference,
-                                                                                               organization.name,
-                                                                                               period.name))
+    student_affectations_to_update = InternshipStudentAffectationStat.objects.filter(
+        student=student,
+        period__cohort=cohort,
+        period__name__in=periods
+    ).order_by('period__date_start').select_related('internship', 'speciality', 'organization', 'period')
 
-    student_affectations = InternshipStudentAffectationStat.objects.filter(student=student, period__cohort=cohort)
-    if _has_validated_score(student_affectations):
-        check_error_present = True
+    update_data = _build_update_data(cohort, organizations, specialties, internships)
+
+    if _has_validated_score(request, student_affectations_to_update) or \
+            not _chosen_internships_available(request, cohort, periods, update_data):
+        redirect_url = reverse('internship_student_affectation_modification', kwargs={
+            "cohort_id": cohort.id, "student_id": student.id
+        })
+    else:
+        update_selected_student_affectations(student_affectations_to_update, update_data)
+        redirect_url = reverse('internships_student_read', kwargs={
+            "cohort_id": cohort.id, "student_id": student.id
+        })+"?tab=affectations"
+
+    return HttpResponseRedirect(redirect_url)
+
+
+def _chosen_internships_available(request, cohort, periods, update_data):
+    availability = True
+    for period in periods:
+        organization, specialty = update_data[period]['organization'], update_data[period]['specialty']
+        if not _is_internship_available(cohort, organization, specialty):
+            availability = False
+            messages.add_message(request, messages.ERROR, "{} : {}-{} ({})=> error".format(
+                specialty.name, organization.reference, organization.name, period
+            ))
+    return availability
+
+
+def _has_validated_score(request, affectations):
+    if any(validated_score for validated_score in affectations.values_list('score__validated', flat=True)):
         messages.add_message(
             request, messages.ERROR, _(
                 "Cannot edit affectations because at least one affectation has a linked validated score"
             )
         )
+        return True
+    return False
 
-    if not check_error_present:
-        mdl_int.internship_student_affectation_stat.delete_affectations(student, cohort)
-        for num_period in range(0, num_periods):
-            if organizations[num_period]:
-                organization = mdl_int.organization.search(cohort=cohort, reference=organizations[num_period])[0]
-                specialty = mdl_int.internship_speciality.search(cohort=cohort, name=specialties[num_period])[0]
-                period = mdl_int.period.search(cohort=cohort, name=periods[num_period])[0]
-                student_choices = mdl_int.internship_choice.search(student=student, speciality=specialty)
-                internship = None
-                if internships[num_period]:
-                    internship = mdl_int.internship.get_by_id(internships[num_period])
-                affectation = mdl_int.internship_student_affectation_stat.build(student, organization, specialty,
-                                                                                period, internship, student_choices)
-                affectation.save()
 
-        redirect_url = reverse('internships_student_read', kwargs={"cohort_id": cohort.id, "student_id": student.id})
-    else:
-        redirect_url = reverse('internship_student_affectation_modification', kwargs={"cohort_id": cohort.id,
-                                                                                      "student_id": student.id})
-    return HttpResponseRedirect(redirect_url)
+def _is_internship_available(cohort, organization, specialty):
+    return mdl_int.internship_offer.search(cohort=cohort, organization=organization, speciality=specialty).exists()
+
+
+def update_selected_student_affectations(affectations_to_update, update_data):
+    for affectation in affectations_to_update:
+        period_update = update_data[affectation.period.name]
+        affectation.internship = period_update['internship']
+        affectation.speciality = period_update['specialty']
+        affectation.organization = period_update['organization']
+        affectation.save()
+
+
+def _build_update_data(cohort, organizations, specialties, internships):
+    cohort_periods = get_effective_periods(cohort.pk)
+    return {
+        period.name: {
+            'internship': cohort.internship_set.get(id=internships[index]),
+            'specialty': cohort.internshipspeciality_set.get(name=specialties[index]),
+            'organization': cohort.organization_set.get(reference=organizations[index])
+        }
+        for index, period in enumerate(cohort_periods)
+    }
 
 
 @login_required
@@ -432,7 +454,3 @@ def _convert_differences_to_json(differences):
             new_records_count += 1
     data_json = json.dumps(data_json, cls=DjangoJSONEncoder)
     return data_json, new_records_count
-
-
-def _has_validated_score(affectations):
-    return any(validated_score for validated_score in affectations.values_list('score__validated', flat=True))
