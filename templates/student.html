@@ -140,11 +140,11 @@
         <div class="panel panel-default">
           <div class="panel-body">
             <ul class="nav nav-tabs">
-                <li class="active"><a data-toggle="tab" href="#tab_choice">{% trans 'Choices received by administration' %}</a></li>
-                <li><a data-toggle="tab" href="#tab_rep">{% trans 'Student affectation' %}</a></li>
+                <li {% if not request.GET.tab %}class="active"{% endif %}><a data-toggle="tab" href="#tab_choice">{% trans 'Choices received by administration' %}</a></li>
+                <li {% if request.GET.tab == 'affectations' %}class="active"{% endif %}><a data-toggle="tab" href="#tab_rep">{% trans 'Student affectation' %}</a></li>
             </ul>
             <div class="tab-content">
-                <div id="tab_choice" class="tab-pane fade in active">
+                <div id="tab_choice" class="tab-pane fade in {% if not request.GET.tab %} active{% endif %}">
                     <br>
                     {% for internship in internships %}
                         <label>{% trans 'Internship' %} {{ internship.name }}</label><br/>
@@ -162,7 +162,7 @@
                     <br>
                 </div>
 
-                <div id="tab_rep" class="tab-pane fade">
+                <div id="tab_rep" class="tab-pane fade {% if request.GET.tab == 'affectations' %}in active{% endif %}">
                     <div align="right">
                         <br>
                         <a class="btn btn-default" target="_blank" id="lnk_students_affectation"

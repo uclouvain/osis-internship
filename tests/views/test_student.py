@@ -23,6 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from datetime import timedelta
 from unittest import skipUnless
 
 from django.contrib.auth.models import Permission, User
@@ -209,8 +210,10 @@ class StudentsListImport(TestCase):
         })
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "students_update.html")
-        self.assertEqual(len(find_by_cohort(self.cohort.id)),10)
-        self.assertRedirects(apply_response, reverse('internships_student_resume', kwargs={"cohort_id": self.cohort.id}))
+        self.assertEqual(len(find_by_cohort(self.cohort.id)), 10)
+        self.assertRedirects(
+            apply_response, reverse('internships_student_resume', kwargs={"cohort_id": self.cohort.id})
+        )
 
     def test_valid_import_with_edited_row(self):
         uploaded_file = SimpleUploadedFile('student_list.xlsx', self.file_content)
@@ -228,7 +231,7 @@ class StudentsListImport(TestCase):
         student = InternshipStudentInformation.objects.get(pk=data.pk)
         self.assertEqual(approve_update_response.status_code, 200)
         self.assertTemplateUsed(approve_update_response, "students_update.html")
-        self.assertNotEqual(student.location,"Edited_Location")
+        self.assertNotEqual(student.location, "Edited_Location")
 
         apply_update_response = self.client.post(self.apply_update_url, {
             'data': approve_update_response.context['data_json']
@@ -237,14 +240,14 @@ class StudentsListImport(TestCase):
         self.assertRedirects(apply_update_response, reverse('internships_student_resume', kwargs={
             "cohort_id": self.cohort.id
         }))
-        self.assertEqual(student.location,"Edited_Location")
+        self.assertEqual(student.location, "Edited_Location")
 
     def test_invalid_import(self):
         invalid_file = SimpleUploadedFile('invalid_file.txt', self.file_content)
         response = self.client.post(self.import_url, {
             'file_upload': invalid_file
         })
-        self.assertEqual(len(find_by_cohort(self.cohort.id)),0)
+        self.assertEqual(len(find_by_cohort(self.cohort.id)), 0)
         self.assertRedirects(response, reverse('internships_student_resume', kwargs={"cohort_id": self.cohort.id}))
 
 
@@ -261,7 +264,10 @@ class StudentsAffectationModification(TestCase):
         PersonAddressFactory(person=cls.student.person)
         InternshipStudentInformationFactory(person=cls.student.person, cohort=cls.cohort)
 
-        cls.periods = [PeriodFactory(name='P{}'.format(p), cohort=cls.cohort) for p in range(1, 7)]
+        cls.periods = [
+            PeriodFactory(name='P{}'.format(p), date_end=date.today() + timedelta(days=p*30), cohort=cls.cohort)
+            for p in range(1, 8)
+        ]
 
         cls.affectations = [StudentAffectationStatFactory(
             student=cls.student,
@@ -269,7 +275,7 @@ class StudentsAffectationModification(TestCase):
             organization__cohort=cls.cohort,
             speciality__cohort=cls.cohort,
             internship__cohort=cls.cohort
-        ) for period in cls.periods]
+        ) for period in cls.periods[:-1]]
 
         cls.offers = [OfferFactory(
             organization=a.organization, speciality=a.speciality, cohort=cls.cohort
@@ -292,8 +298,8 @@ class StudentsAffectationModification(TestCase):
             sorted([a.organization for a in self.affectations], key=lambda o: o.reference)
         )
         self.assertListEqual(
-            list(context['periods']),
-            sorted([a.period for a in self.affectations], key=lambda p: p.date_start)
+            list(context['periods'])[:-1],
+            sorted([a.period for a in self.affectations], key=lambda p: p.date_end)
         )
         self.assertEqual(list(context['affectations']), self.affectations)
         self.assertEqual(list(context['internships'].values()), [a.internship_id for a in self.affectations])
@@ -305,7 +311,12 @@ class StudentsAffectationModification(TestCase):
         url = reverse('student_save_affectation_modification', kwargs={
             'cohort_id': self.cohort.pk, 'student_id': self.student.pk
         })
-        response = self.client.get(url)
+        response = self.client.post(url, data={
+            'period': self.periods[0],
+            'internship': [a.internship.id for a in self.affectations],
+            'specialty': [a.speciality.name for a in self.affectations],
+            'organization': [a.organization.reference for a in self.affectations]
+        })
         error_msg = [m.message for m in get_messages(response.wsgi_request)][0]
         self.assertEqual(error_msg, gettext_lazy(
             'Cannot edit affectations because at least one affectation has a linked validated score'
@@ -326,15 +337,38 @@ class StudentsAffectationModification(TestCase):
 
         response = self.client.post(url, data={
             'organization': [o.reference for o in organizations],
-            'period': self.periods,
+            'period': self.periods[0],
             'specialty': [a.speciality.name for a in self.affectations],
             'internship': [a.internship.pk for a in self.affectations]
         })
 
         self.assertRedirects(response, reverse('internships_student_read', kwargs={
             'cohort_id': self.cohort.pk, 'student_id': self.student.pk
-        }))
+        })+"?tab=affectations")
 
         self.assertTrue(InternshipStudentAffectationStat.objects.filter(
             student=self.student, organization=new_organization
+        ).exists())
+
+    def test_should_delete_student_affectations_when_at_least_one_post_data_is_set_to_empty(self):
+        organizations = [a.organization.reference for a in self.affectations]
+        organizations[0] = ''  # empty first organization post data
+
+        url = reverse('student_save_affectation_modification', kwargs={
+            'cohort_id': self.cohort.pk, 'student_id': self.student.pk
+        })
+
+        response = self.client.post(url, data={
+            'organization': organizations,
+            'period': self.periods[0],
+            'specialty': [a.speciality.name for a in self.affectations],
+            'internship': [a.internship.pk for a in self.affectations]
+        })
+
+        self.assertRedirects(response, reverse('internships_student_read', kwargs={
+            'cohort_id': self.cohort.pk, 'student_id': self.student.pk
+        })+"?tab=affectations")
+
+        self.assertFalse(InternshipStudentAffectationStat.objects.filter(
+            student=self.student, period=self.periods[0]
         ).exists())

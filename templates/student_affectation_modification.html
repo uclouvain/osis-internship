@@ -59,10 +59,10 @@
                     <tr>
                         <td>
                             {{ period | default_if_none:'-' }}
-                            <input class="hidden" name="period" value="{{ period }}">
+                            <input id="period-input-{{ period }}" class="hidden" name="period" value="{{ period }}" disabled>
                         </td>
                         <td>
-                            <select name="internship" class="form-control">
+                            <select name="internship" class="form-control" data-period="{{ period }}">
                                 <option value="">--</option>
                                 {% for modality in modalities %}
                                     <option value="{{modality.id}}"
@@ -75,7 +75,7 @@
                             </select>
                         </td>
                         <td>
-                            <select name="specialty" class="form-control">
+                            <select name="specialty" class="form-control" data-period="{{ period }}">
                                 <option value="">--</option>
                                 {% for specialty in specialties %}
                                     <option value="{{specialty.name}}"
@@ -92,7 +92,7 @@
                             </select>
                         </td>
                         <td>
-                            <select name="organization" class="form-control">
+                            <select name="organization" class="form-control" data-period="{{ period }}">
                                 <option value="">--</option>
                                 {% for organization in organizations %}
                                     <option value="{{organization.reference}}"
@@ -117,4 +117,18 @@
         </button>
     </form>
     <br>
+{% endblock %}
+
+{% block script %}
+
+    <script>
+        document.querySelectorAll('select').forEach((element) => {
+            element.addEventListener('change', (e) => {
+                const period = e.target.dataset.period;
+                document.querySelector(`#period-input-${period}`).disabled = false;
+            });
+        });
+
+    </script>
+
 {% endblock %}
