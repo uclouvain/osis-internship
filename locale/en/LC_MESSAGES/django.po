@@ -38,6 +38,9 @@ msgid ""
 "will be overwritten."
 msgstr ""
 
+msgid "A subspecialty must exclusively define a name"
+msgstr ""
+
 msgid "APD Validation"
 msgstr ""
 
@@ -638,6 +641,9 @@ msgid "Other choice"
 msgstr ""
 
 msgid "Other reason"
+msgstr ""
+
+msgid "Parent specialty"
 msgstr ""
 
 msgid "Paste"

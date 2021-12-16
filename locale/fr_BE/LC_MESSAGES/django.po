@@ -47,6 +47,9 @@ msgstr ""
 "seront pré-remplis sur base des données retrouvées. Les champs contenant "
 "déjà des informations seront écrasés."
 
+msgid "A subspecialty must exclusively define a name"
+msgstr "Une sous-specialité doit exclusivement définir un nom"
+
 msgid "APD Validation"
 msgstr "Validation APD"
 
@@ -664,6 +667,9 @@ msgstr "Autre choix"
 
 msgid "Other reason"
 msgstr "Autre motif"
+
+msgid "Parent specialty"
+msgstr "Spécialité parente"
 
 msgid "Paste"
 msgstr "Coller"

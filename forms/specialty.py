@@ -36,5 +36,11 @@ class SpecialtyForm(forms.ModelForm):
             'acronym',
             'mandatory',
             'sequence',
-            'selectable'
+            'selectable',
+            'parent'
         ]
+
+    def __init__(self, *args, **kwargs):
+        cohort_id = kwargs.pop('cohort_id')
+        super().__init__(*args, **kwargs)
+        self.fields['parent'].queryset = InternshipSpeciality.objects.filter(cohort__pk=cohort_id)

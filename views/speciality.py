@@ -25,6 +25,7 @@
 ##############################################################################
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
+from django.db.models import Case, When, F
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
@@ -38,7 +39,12 @@ from internship.forms.specialty import SpecialtyForm
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def specialities(request, cohort_id):
     cohort = get_object_or_404(mdl.cohort.Cohort, pk=cohort_id)
-    specialties = mdl.internship_speciality.find_all(cohort=cohort)
+    specialties = mdl.internship_speciality.find_all(cohort=cohort).annotate(
+        ordering_acronym=Case(
+            When(parent=None, then=F('acronym')),
+            default=F('parent__acronym'),
+        ),
+    ).order_by('ordering_acronym', '-parent')
     context = {'specialities': specialties, 'cohort': cohort}
     return render(request, "specialities.html", context)
 
@@ -47,7 +53,7 @@ def specialities(request, cohort_id):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def speciality_create(request, cohort_id, speciality=None):
     cohort = get_object_or_404(mdl.cohort.Cohort, pk=cohort_id)
-    form = SpecialtyForm(request.POST or None)
+    form = SpecialtyForm(request.POST or None, cohort_id=cohort_id)
     return render(request, "speciality_form.html", locals())
 
 
@@ -55,6 +61,7 @@ def speciality_create(request, cohort_id, speciality=None):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def speciality_save(request, cohort_id, speciality_id):
     cohort = get_object_or_404(mdl.cohort.Cohort, pk=cohort_id)
+    check_speciality = False
 
     if speciality_id:
         check_speciality = mdl.internship_speciality.InternshipSpeciality.objects.filter(pk=speciality_id,
@@ -69,11 +76,11 @@ def speciality_save(request, cohort_id, speciality_id):
     speciality.name = request.POST.get('name')
 
     check_acronym = False
-    if speciality.acronym != request.POST.get('acronym'):
-        speciality.acronym = request.POST.get('acronym')
+    if request.POST.get('acronym') and speciality.acronym != request.POST.get('acronym'):
         check_acronym = mdl.internship_speciality.acronym_exists(cohort, speciality.acronym)
+    speciality.acronym = request.POST.get('acronym')
 
-    if request.POST.get('sequence').strip():
+    if request.POST.get('sequence') and request.POST.get('sequence').strip():
         speciality.sequence = int(request.POST.get('sequence'))
     else:
         speciality.sequence = None
@@ -87,6 +94,23 @@ def speciality_save(request, cohort_id, speciality_id):
     if request.POST.get('selectable'):
         selectable = True
     speciality.selectable = selectable
+
+    parent = request.POST.get('parent')
+    if parent and any([speciality.selectable, speciality.mandatory, speciality.sequence, speciality.acronym]):
+        messages.add_message(request, messages.ERROR, _(
+            "A subspecialty must exclusively define a name and should not be mandatory nor selectable"
+        ))
+        if check_speciality:
+            return HttpResponseRedirect(
+                reverse('speciality_modification', kwargs={
+                    'cohort_id': cohort.id, 'speciality_id': speciality_id
+                })
+            )
+        else:
+            return HttpResponseRedirect(
+                reverse('speciality_create', kwargs={'cohort_id': cohort.id})
+            )
+    speciality.parent_id = parent
 
     if check_acronym:
         messages.add_message(request, messages.ERROR, "{} : {}".format(_('Acronym already exists'),
@@ -111,8 +135,7 @@ def modify(request, cohort_id, speciality_id):
     cohort = get_object_or_404(mdl.cohort.Cohort, pk=cohort_id)
     speciality = get_object_or_404(mdl.internship_speciality.InternshipSpeciality,
                                    pk=speciality_id, cohort=cohort)
-    form = SpecialtyForm(request.POST or None, instance=speciality)
-
+    form = SpecialtyForm(request.POST or None, instance=speciality, cohort_id=cohort_id)
     return render(request, "speciality_form.html", locals())
 
 
