@@ -70,7 +70,7 @@ class IsSubspecialtyFilter(admin.SimpleListFilter):
     parameter_name = 'is_subspecialty'
 
     def lookups(self, request, model_admin):
-        return (('Yes', 'Yes'),('No', 'No'),)
+        return ('Yes', 'Yes'), ('No', 'No'),
 
     def queryset(self, request, queryset):
         return queryset.filter(parent__is_null=self.value() == 'Yes')
@@ -120,4 +120,3 @@ def set_speciality_unique(specialities):
 
     specialities = [x for x in specialities if x != 0]
     return specialities
-
