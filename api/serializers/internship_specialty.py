@@ -35,6 +35,7 @@ class InternshipSpecialtySerializer(serializers.HyperlinkedModelSerializer):
         lookup_field='uuid'
     )
     cohort = CohortSerializer()
+    parent = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = InternshipSpeciality
@@ -46,5 +47,12 @@ class InternshipSpecialtySerializer(serializers.HyperlinkedModelSerializer):
             'mandatory',
             'sequence',
             'cohort',
-            'selectable'
+            'selectable',
+            'parent'
         )
+
+    def get_parent(self, obj):
+        if obj.parent:
+            serializer = InternshipSpecialtySerializer(instance=obj.parent, context=self.context)
+            return serializer.data
+        return obj.parent
