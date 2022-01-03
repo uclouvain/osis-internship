@@ -47,12 +47,10 @@ msgstr ""
 "seront pré-remplis sur base des données retrouvées. Les champs contenant "
 "déjà des informations seront écrasés."
 
-#, fuzzy
-#| msgid "A subspecialty must exclusively define a name"
 msgid ""
 "A subspecialty must exclusively define a name and should not be mandatory "
 "nor selectable"
-msgstr "Une sous-specialité doit exclusivement définir un nom"
+msgstr "Une sous-specialité doit exclusivement définir un nom et ne doit ni être obligatoire ni sélectionnable"
 
 msgid "APD Validation"
 msgstr "Validation APD"
