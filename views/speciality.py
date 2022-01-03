@@ -77,7 +77,7 @@ def speciality_save(request, cohort_id, speciality_id):
 
     check_acronym = False
     if request.POST.get('acronym') and speciality.acronym != request.POST.get('acronym'):
-        check_acronym = mdl.internship_speciality.acronym_exists(cohort, speciality.acronym)
+        check_acronym = mdl.internship_speciality.acronym_exists(cohort, request.POST.get('acronym'))
     speciality.acronym = request.POST.get('acronym')
 
     if request.POST.get('sequence') and request.POST.get('sequence').strip():
