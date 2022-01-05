@@ -773,6 +773,7 @@ components:
           example: "Xyzetologie"
         acronym:
           type: string
+          nullable: true
           example: "XYZ"
         mandatory:
           type: boolean
