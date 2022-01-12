@@ -1,0 +1,42 @@
+##############################################################################
+#
+#    OSIS stands for Open Student Information System. It's an application
+#    designed to manage the core business of higher education institutions,
+#    such as universities, faculties, institutes and professional schools.
+#    The core business involves the administration of students, teachers,
+#    courses, programs and so on.
+#
+#    Copyright (C) 2015-2021 Université catholique de Louvain (http://www.uclouvain.be)
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    A copy of this license - GNU General Public License - is available
+#    at the root of the source code of this program.  If not,
+#    see http://www.gnu.org/licenses/.
+#
+##############################################################################
+from django import forms
+from django.utils.translation import gettext_lazy as _
+
+from internship.models.enums.response_type import ResponseType
+from internship.models.internship_place_evaluation_item import PlaceEvaluationItem
+
+
+class PlaceEvaluationItemForm(forms.ModelForm):
+    order = forms.IntegerField(label=_('Order'), min_value=1)
+    statement = forms.CharField(label=_('Statement'), widget=forms.Textarea(attrs={'rows': 5}))
+    type = forms.ChoiceField(label=_('Type'), choices=ResponseType.choices())
+    options = forms.CharField(label=_('Options'), required=False)
+    active = forms.BooleanField(label=_('Active'))
+
+    class Meta:
+        model = PlaceEvaluationItem
+        fields = ['order', 'statement', 'type', 'options', 'active']

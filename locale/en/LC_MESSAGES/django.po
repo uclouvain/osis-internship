@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-03 10:42+0100\n"
+"POT-Creation-Date: 2022-01-12 10:42+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -80,6 +80,9 @@ msgid "Add hospital"
 msgstr ""
 
 msgid "Add internship modality"
+msgstr ""
+
+msgid "Add item"
 msgstr ""
 
 msgid "Add new master"
@@ -252,6 +255,9 @@ msgstr ""
 msgid "Current internship"
 msgstr ""
 
+msgid "Current period"
+msgstr ""
+
 msgid "Date format"
 msgstr ""
 
@@ -382,6 +388,9 @@ msgstr ""
 msgid "Following modifications will be applied:"
 msgstr ""
 
+msgid "Form"
+msgstr ""
+
 msgid "Fourth choice"
 msgstr ""
 
@@ -487,6 +496,9 @@ msgstr ""
 msgid "Internship's detail successfully edited for the following periods: {}"
 msgstr ""
 
+msgid "Internship's place evaluation"
+msgstr ""
+
 msgid "Internships"
 msgstr ""
 
@@ -507,6 +519,9 @@ msgstr ""
 
 #, python-format
 msgid "Internships ratings successfully imported for period %(period)s"
+msgstr ""
+
+msgid "Item"
 msgstr ""
 
 msgid "Language"
@@ -633,6 +648,9 @@ msgstr ""
 msgid "Number of students who chosed this organization"
 msgstr ""
 
+msgid "Options"
+msgstr ""
+
 msgid "Order position"
 msgstr ""
 
@@ -730,6 +748,12 @@ msgid "Reference"
 msgstr ""
 
 msgid "Report to the hospital"
+msgstr ""
+
+msgid "Response type"
+msgstr ""
+
+msgid "Results"
 msgstr ""
 
 msgid "Return"
@@ -837,6 +861,9 @@ msgid "Start date"
 msgstr ""
 
 msgid "Start date must be earlier than end date."
+msgstr ""
+
+msgid "Statement"
 msgstr ""
 
 msgid "Statistics"

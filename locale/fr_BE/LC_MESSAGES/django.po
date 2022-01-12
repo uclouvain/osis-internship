@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-03 10:42+0100\n"
+"POT-Creation-Date: 2022-01-12 10:42+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -50,7 +50,9 @@ msgstr ""
 msgid ""
 "A subspecialty must exclusively define a name and should not be mandatory "
 "nor selectable"
-msgstr "Une sous-specialité doit exclusivement définir un nom et ne doit ni être obligatoire ni sélectionnable"
+msgstr ""
+"Une sous-specialité doit exclusivement définir un nom et ne doit ni être "
+"obligatoire ni sélectionnable"
 
 msgid "APD Validation"
 msgstr "Validation APD"
@@ -90,6 +92,9 @@ msgstr "Ajouter un hôpital"
 
 msgid "Add internship modality"
 msgstr "Ajouter une modalité de stage"
+
+msgid "Add item"
+msgstr "Ajouter une question"
 
 msgid "Add new master"
 msgstr "Ajouter un nouveau maître de stage"
@@ -266,6 +271,11 @@ msgstr "Créer un compte utilisateur"
 msgid "Current internship"
 msgstr "Stage en cours"
 
+#, fuzzy
+#| msgid "Create a period"
+msgid "Current period"
+msgstr "Créer une période"
+
 msgid "Date format"
 msgstr "Format de date"
 
@@ -399,6 +409,9 @@ msgstr "Prénom"
 msgid "Following modifications will be applied:"
 msgstr "Les modifications suivantes seront appliquées:"
 
+msgid "Form"
+msgstr "Formulaire"
+
 msgid "Fourth choice"
 msgstr "4ème choix"
 
@@ -509,6 +522,9 @@ msgid "Internship's detail successfully edited for the following periods: {}"
 msgstr ""
 "Affectations de stage modifiées avec succès pour les périodes suivantes: {}"
 
+msgid "Internship's place evaluation"
+msgstr "Évaluation du lieu de stage"
+
 msgid "Internships"
 msgstr "Stages"
 
@@ -530,6 +546,9 @@ msgstr "Offres de stage"
 #, python-format
 msgid "Internships ratings successfully imported for period %(period)s"
 msgstr "Cotes de stage importées avec succès pour la période %(period)s"
+
+msgid "Item"
+msgstr "Question"
 
 msgid "Language"
 msgstr "Langue"
@@ -659,6 +678,9 @@ msgstr "Nombre d'étudiants"
 msgid "Number of students who chosed this organization"
 msgstr "Nombre total d'étudiants ayant choisi cet hôpital"
 
+msgid "Options"
+msgstr "Options"
+
 msgid "Order position"
 msgstr "Position de tri"
 
@@ -757,6 +779,12 @@ msgstr "Référence"
 
 msgid "Report to the hospital"
 msgstr "Rapport pour l'hôpital"
+
+msgid "Response type"
+msgstr "Type de réponse"
+
+msgid "Results"
+msgstr "Résultats"
 
 msgid "Return"
 msgstr "Retour"
@@ -870,6 +898,9 @@ msgstr "Date de début"
 
 msgid "Start date must be earlier than end date."
 msgstr "La date d'ouverture doit être antérieure à la date de fermeture."
+
+msgid "Statement"
+msgstr "Énoncé"
 
 msgid "Statistics"
 msgstr "Statistiques"
