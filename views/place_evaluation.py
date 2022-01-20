@@ -25,7 +25,7 @@
 ##############################################################################
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
-from django.db import IntegrityError, transaction
+from django.db import transaction
 from django.db.models import Prefetch
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils.translation import gettext_lazy as _
@@ -60,7 +60,7 @@ def internship_place_evaluation_item_new(request, cohort_id):
     if request.POST:
         form, saved = internship_place_evaluation_item_save(request, cohort_id)
         if saved:
-            messages.add_message(request, messages.SUCCESS, _('Successfully saved item {}'.format(form.instance)))
+            messages.add_message(request, messages.SUCCESS, _('Successfully saved item {}').format(form.instance))
             return redirect('place_evaluation', cohort_id=cohort_id)
 
     return render(request, "place_evaluation_item_form.html", context={
@@ -78,11 +78,8 @@ def internship_place_evaluation_item_save(request, cohort_id, item=None):
         item = form.save(commit=False)
         item.options = request.POST.getlist('options')
         item.cohort_id = cohort_id
-        try:
-            item.save()
-            return form, True
-        except IntegrityError:
-            messages.add_message(request, level=messages.ERROR, message=_('An item with same order key already exists'))
+        item.save()
+        return form, True
     return form, False
 
 
@@ -96,7 +93,7 @@ def internship_place_evaluation_item_edit(request, cohort_id, item_id):
     if request.POST:
         form, saved = internship_place_evaluation_item_save(request, cohort_id, evaluation_item)
         if saved:
-            messages.add_message(request, messages.SUCCESS, _('Successfully saved item {}'.format(form.instance)))
+            messages.add_message(request, messages.SUCCESS, _('Successfully saved item {}').format(form.instance))
             return redirect('place_evaluation', cohort_id=cohort_id)
 
     return render(request, "place_evaluation_item_form.html", context={
@@ -111,5 +108,21 @@ def internship_place_evaluation_item_edit(request, cohort_id, item_id):
 def internship_place_evaluation_item_delete(request, cohort_id, item_id):
     item = PlaceEvaluationItem.objects.get(pk=item_id)
     item.delete()
-    messages.add_message(request, messages.SUCCESS, message=_('Successfully deleted item {}'.format(item)))
+    messages.add_message(request, messages.SUCCESS, message=_('Successfully deleted item {}').format(item))
+    return redirect('place_evaluation', cohort_id=cohort_id)
+
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def internship_place_evaluation_item_move_up(request, cohort_id, item_id):
+    item = PlaceEvaluationItem.objects.get(pk=item_id)
+    item.move_up()
+    return redirect('place_evaluation', cohort_id=cohort_id)
+
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def internship_place_evaluation_item_move_down(request, cohort_id, item_id):
+    item = PlaceEvaluationItem.objects.get(pk=item_id)
+    item.move_down()
     return redirect('place_evaluation', cohort_id=cohort_id)

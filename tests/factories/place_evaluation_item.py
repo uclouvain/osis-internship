@@ -32,8 +32,6 @@ from internship.tests.factories.cohort import CohortFactory
 class PlaceEvaluationItemFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = 'internship.PlaceEvaluationItem'
-
-    order = 1
     statement = 'Statement'
     cohort = factory.SubFactory(CohortFactory)
     type = ResponseType.OPEN.name

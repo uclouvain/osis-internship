@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-20 11:20+0100\n"
+"POT-Creation-Date: 2022-01-20 15:00+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -146,9 +146,6 @@ msgid "An error occured while updating status"
 msgstr ""
 
 msgid "An evaluation should include minimum {} and maximum {} evaluated APDs"
-msgstr ""
-
-msgid "An item with same order key already exists"
 msgstr ""
 
 msgid "Aptitudes conditions fulfilled"
@@ -618,6 +615,9 @@ msgstr ""
 msgid "No data corresponds to the filters above. Make a choice, please."
 msgstr ""
 
+msgid "No evaluation items found for this cohort"
+msgstr ""
+
 msgid "No hospital"
 msgstr ""
 
@@ -661,6 +661,9 @@ msgid "Number of students"
 msgstr ""
 
 msgid "Number of students who chosed this organization"
+msgstr ""
+
+msgid "Open"
 msgstr ""
 
 msgid "Options"
@@ -963,9 +966,6 @@ msgid "Total cost of solution"
 msgstr ""
 
 msgid "Total of internships"
-msgstr ""
-
-msgid "Type"
 msgstr ""
 
 msgid "Unable to create a user account for {}: no birth date set"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-20 11:20+0100\n"
+"POT-Creation-Date: 2022-01-20 15:00+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -161,9 +161,6 @@ msgstr "Une erreur s'est produite lors de la mise à jour des statuts"
 
 msgid "An evaluation should include minimum {} and maximum {} evaluated APDs"
 msgstr "Une évaluation doit inclure au minimum {} et au maximum {} APD évalués"
-
-msgid "An item with same order key already exists"
-msgstr "Une question avec la même référence d'ordre existe déjà"
 
 msgid "Aptitudes conditions fulfilled"
 msgstr "Conditions d'aptitudes remplies"
@@ -646,6 +643,9 @@ msgstr ""
 "Aucune donnée ne correspond aux filtres ci-dessus. Faites un choix, s'il "
 "vous plaît."
 
+msgid "No evaluation items found for this cohort"
+msgstr "Aucune question trouvée pour cette cohorte"
+
 msgid "No hospital"
 msgstr "Hôpital inexistant"
 
@@ -690,6 +690,9 @@ msgstr "Nombre d'étudiants"
 
 msgid "Number of students who chosed this organization"
 msgstr "Nombre total d'étudiants ayant choisi cet hôpital"
+
+msgid "Open"
+msgstr "Ouverte"
 
 msgid "Options"
 msgstr "Options"
@@ -1004,9 +1007,6 @@ msgstr "Coût total de la solution"
 msgid "Total of internships"
 msgstr "Total de stages"
 
-msgid "Type"
-msgstr "Type"
-
 msgid "Unable to create a user account for {}: no birth date set"
 msgstr ""
 "Impossible de créer un compte utilisateur pour {}: pas de date de naissance "
@@ -1066,6 +1066,3 @@ msgstr "étudiant avec NOMA '%(reg_id)s' introuvable"
 
 msgid "the allocation(s) for"
 msgstr "les affectations pour"
-
-msgid "Open"
-msgstr "Ouverte"

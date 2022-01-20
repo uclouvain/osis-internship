@@ -28,7 +28,7 @@ import uuid as uuid
 from django.contrib.admin import ModelAdmin
 from django.contrib.postgres.fields import JSONField
 from django.db import models
-from django.db.models import Model
+from ordered_model.models import OrderedModel
 
 from internship.models.enums.response_type import ResponseType
 
@@ -39,20 +39,18 @@ class PlaceEvaluationItemAdmin(ModelAdmin):
     search_fields = ["statement"]
 
 
-class PlaceEvaluationItem(Model):
+class PlaceEvaluationItem(OrderedModel):
 
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, db_index=True)
 
     cohort = models.ForeignKey('internship.Cohort', on_delete=models.CASCADE, null=True)
-    order = models.IntegerField()
     statement = models.CharField(max_length=300)
     type = models.CharField(choices=ResponseType.choices(), default=ResponseType.OPEN.value, max_length=10)
     options = JSONField(default=list)
 
     active = models.BooleanField(default=True)
 
+    order_with_respect_to = 'cohort'
+
     def __str__(self):
         return '({}) {}'.format(self.order, self.statement)
-
-    class Meta:
-        unique_together = ('cohort', 'order')

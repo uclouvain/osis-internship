@@ -46,7 +46,7 @@
             <div class="panel panel-body">
             <div class="row form-group">
                 <div class="col-md-12">
-                    <a href="{% url 'place_evaluation_new' cohort.id %}" type="button" class="btn btn-primary">
+                    <a href="{% url 'place_evaluation_new' cohort.id %}" type="button" class="btn btn-primary pull-right">
                         <i class="fas fa-plus-circle"></i>
                         <span>{% trans 'Add item' %}</span>
                     </a>
@@ -59,6 +59,7 @@
                         <th>{% trans 'Statement' %}</th>
                         <th>{% trans 'Response type' %}</th>
                         <th>{% trans 'Options' %}</th>
+                        <th style="text-align: center;">{% trans 'Order' %}</th>
                         <th style="text-align: center;">{% trans 'Edit' %}</th>
                         <th style="text-align: center;">{% trans 'Delete' %}</th>
                       </tr>
@@ -78,8 +79,18 @@
                                 <span>-</span>
                             {% endif %}
                         </td>
+                          <td style="text-align: center;">
+                            <a href="{% url 'place_evaluation_item_move_up' cohort.id item.id %}" type="button" class="btn btn-xs btn-default"
+                            {% if item == cohort.evaluation_items|first %} disabled onclick="return false;" {% endif %}>
+                                <icon class="fas fa-arrow-up"></icon>
+                            </a>
+                            <a href="{% url 'place_evaluation_item_move_down' cohort.id item.id %}" type="button" class="btn btn-xs btn-default"
+                            {% if item == cohort.evaluation_items|last %} disabled onclick="return false;" {% endif %}>
+                                <icon class="fas fa-arrow-down"></icon>
+                            </a>
+                        </td>
                         <td style="text-align: center;">
-                            <a href="{% url 'place_evaluation_edit' cohort.id item.id %}" type="button" class="btn btn-xs btn-default btn-edit-score">
+                            <a href="{% url 'place_evaluation_edit' cohort.id item.id %}" type="button" class="btn btn-xs btn-default">
                                 <icon class="far fa-edit"></icon>
                             </a>
                         </td>
@@ -87,17 +98,25 @@
                             <a id="delete_item_{{item.id}}"
                                data-href="{% url 'place_evaluation_delete' cohort.id item.id %}"
                                data-toggle="modal" data-target="#delete_modal"
-                               data-value="{{ item }}" type="button" class="btn btn-xs btn-danger btn-edit-score">
+                               data-value="{{ item }}" type="button" class="btn btn-xs btn-danger">
                                 <icon class="fas fa-trash"></icon>
                             </a>
                         </td>
                       </tr>
+                      {% empty %}
+                        <tr>
+                            <td colspan="9">{% trans 'No evaluation items found for this cohort' %}</td>
+                        </tr>
                       {% endfor %}
                   </table>
                 </div>
             </div>
         </div>
+        <div id="results" class="tab-pane fade in">
+
+        </div>
     </div>
+
 
     {% include "fragment/delete_confirmation_modal.html" %}
 
