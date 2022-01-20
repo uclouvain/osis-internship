@@ -156,3 +156,10 @@ input:checked + .slider:before {
     max-height: calc(100vh - 212px);
     overflow-y: auto;
 }
+
+#options-panel{
+    display: block;
+    padding: 20px;
+    border: 1px solid lightgray;
+    border-radius: 5px;
+}

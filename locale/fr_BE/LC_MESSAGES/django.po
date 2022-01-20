@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-03 10:42+0100\n"
+"POT-Creation-Date: 2022-01-20 11:20+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -50,7 +50,9 @@ msgstr ""
 msgid ""
 "A subspecialty must exclusively define a name and should not be mandatory "
 "nor selectable"
-msgstr "Une sous-specialité doit exclusivement définir un nom et ne doit ni être obligatoire ni sélectionnable"
+msgstr ""
+"Une sous-specialité doit exclusivement définir un nom et ne doit ni être "
+"obligatoire ni sélectionnable"
 
 msgid "APD Validation"
 msgstr "Validation APD"
@@ -91,8 +93,14 @@ msgstr "Ajouter un hôpital"
 msgid "Add internship modality"
 msgstr "Ajouter une modalité de stage"
 
+msgid "Add item"
+msgstr "Ajouter une question"
+
 msgid "Add new master"
 msgstr "Ajouter un nouveau maître de stage"
+
+msgid "Add option"
+msgstr "Ajouter une option"
 
 msgid "Add period"
 msgstr "Ajouter une période"
@@ -153,6 +161,15 @@ msgstr "Une erreur s'est produite lors de la mise à jour des statuts"
 
 msgid "An evaluation should include minimum {} and maximum {} evaluated APDs"
 msgstr "Une évaluation doit inclure au minimum {} et au maximum {} APD évalués"
+
+msgid "An item with same order key already exists"
+msgstr "Une question avec la même référence d'ordre existe déjà"
+
+msgid "Aptitudes conditions fulfilled"
+msgstr "Conditions d'aptitudes remplies"
+
+msgid "Aptitudes conditions not fulfilled"
+msgstr "Conditions d'aptitudes non remplies"
 
 msgid "Attention"
 msgstr "Attention"
@@ -265,6 +282,9 @@ msgstr "Créer un compte utilisateur"
 
 msgid "Current internship"
 msgstr "Stage en cours"
+
+msgid "Current period"
+msgstr "Période actuelle"
 
 msgid "Date format"
 msgstr "Format de date"
@@ -399,6 +419,9 @@ msgstr "Prénom"
 msgid "Following modifications will be applied:"
 msgstr "Les modifications suivantes seront appliquées:"
 
+msgid "Form"
+msgstr "Formulaire"
+
 msgid "Fourth choice"
 msgstr "4ème choix"
 
@@ -509,6 +532,9 @@ msgid "Internship's detail successfully edited for the following periods: {}"
 msgstr ""
 "Affectations de stage modifiées avec succès pour les périodes suivantes: {}"
 
+msgid "Internship's place evaluation"
+msgstr "Évaluation du lieu de stage"
+
 msgid "Internships"
 msgstr "Stages"
 
@@ -530,6 +556,9 @@ msgstr "Offres de stage"
 #, python-format
 msgid "Internships ratings successfully imported for period %(period)s"
 msgstr "Cotes de stage importées avec succès pour la période %(period)s"
+
+msgid "Item"
+msgstr "Question"
 
 msgid "Language"
 msgstr "Langue"
@@ -597,6 +626,9 @@ msgstr "Nom"
 msgid "New internship"
 msgstr "Nouveau stage"
 
+msgid "New item"
+msgstr "Nouvelle question"
+
 msgid "New records"
 msgstr "Nouveaux enregistrements"
 
@@ -658,6 +690,12 @@ msgstr "Nombre d'étudiants"
 
 msgid "Number of students who chosed this organization"
 msgstr "Nombre total d'étudiants ayant choisi cet hôpital"
+
+msgid "Options"
+msgstr "Options"
+
+msgid "Order"
+msgstr "Ordre"
 
 msgid "Order position"
 msgstr "Position de tri"
@@ -757,6 +795,12 @@ msgstr "Référence"
 
 msgid "Report to the hospital"
 msgstr "Rapport pour l'hôpital"
+
+msgid "Response type"
+msgstr "Type de réponse"
+
+msgid "Results"
+msgstr "Résultats"
 
 msgid "Return"
 msgstr "Retour"
@@ -871,6 +915,9 @@ msgstr "Date de début"
 msgid "Start date must be earlier than end date."
 msgstr "La date d'ouverture doit être antérieure à la date de fermeture."
 
+msgid "Statement"
+msgstr "Énoncé"
+
 msgid "Statistics"
 msgstr "Statistiques"
 
@@ -906,6 +953,12 @@ msgstr "Études"
 
 msgid "Submit choices"
 msgstr "Soumettre les choix"
+
+msgid "Successfully deleted item {}"
+msgstr "Question {} supprimée avec succès"
+
+msgid "Successfully saved item {}"
+msgstr "Question {} enregistrée avec succès"
 
 msgid "Suggestions"
 msgstr "Méthodes d'apprentissage suggérées"
@@ -951,6 +1004,9 @@ msgstr "Coût total de la solution"
 msgid "Total of internships"
 msgstr "Total de stages"
 
+msgid "Type"
+msgstr "Type"
+
 msgid "Unable to create a user account for {}: no birth date set"
 msgstr ""
 "Impossible de créer un compte utilisateur pour {}: pas de date de naissance "
@@ -991,9 +1047,6 @@ msgstr ""
 "Vous pouvez fournir un motif de modification de la note en choisissant parmi "
 "les justifications suivantes."
 
-msgid "and existing subspecialties"
-msgstr "et ses sous-spécialités existantes"
-
 msgid "delegate(s) without user account"
 msgstr "délégué(s) sans compte utilisateur"
 
@@ -1013,3 +1066,6 @@ msgstr "étudiant avec NOMA '%(reg_id)s' introuvable"
 
 msgid "the allocation(s) for"
 msgstr "les affectations pour"
+
+msgid "Open"
+msgstr "Ouverte"

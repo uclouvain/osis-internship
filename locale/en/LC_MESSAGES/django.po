@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-03 10:42+0100\n"
+"POT-Creation-Date: 2022-01-20 11:20+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -82,7 +82,13 @@ msgstr ""
 msgid "Add internship modality"
 msgstr ""
 
+msgid "Add item"
+msgstr ""
+
 msgid "Add new master"
+msgstr ""
+
+msgid "Add option"
 msgstr ""
 
 msgid "Add period"
@@ -140,6 +146,15 @@ msgid "An error occured while updating status"
 msgstr ""
 
 msgid "An evaluation should include minimum {} and maximum {} evaluated APDs"
+msgstr ""
+
+msgid "An item with same order key already exists"
+msgstr ""
+
+msgid "Aptitudes conditions fulfilled"
+msgstr ""
+
+msgid "Aptitudes conditions not fulfilled"
 msgstr ""
 
 msgid "Attention"
@@ -250,6 +265,9 @@ msgid "Create user account"
 msgstr ""
 
 msgid "Current internship"
+msgstr ""
+
+msgid "Current period"
 msgstr ""
 
 msgid "Date format"
@@ -382,6 +400,9 @@ msgstr ""
 msgid "Following modifications will be applied:"
 msgstr ""
 
+msgid "Form"
+msgstr ""
+
 msgid "Fourth choice"
 msgstr ""
 
@@ -487,6 +508,9 @@ msgstr ""
 msgid "Internship's detail successfully edited for the following periods: {}"
 msgstr ""
 
+msgid "Internship's place evaluation"
+msgstr ""
+
 msgid "Internships"
 msgstr ""
 
@@ -507,6 +531,9 @@ msgstr ""
 
 #, python-format
 msgid "Internships ratings successfully imported for period %(period)s"
+msgstr ""
+
+msgid "Item"
 msgstr ""
 
 msgid "Language"
@@ -573,6 +600,9 @@ msgstr ""
 msgid "New internship"
 msgstr ""
 
+msgid "New item"
+msgstr ""
+
 msgid "New records"
 msgstr ""
 
@@ -631,6 +661,12 @@ msgid "Number of students"
 msgstr ""
 
 msgid "Number of students who chosed this organization"
+msgstr ""
+
+msgid "Options"
+msgstr ""
+
+msgid "Order"
 msgstr ""
 
 msgid "Order position"
@@ -730,6 +766,12 @@ msgid "Reference"
 msgstr ""
 
 msgid "Report to the hospital"
+msgstr ""
+
+msgid "Response type"
+msgstr ""
+
+msgid "Results"
 msgstr ""
 
 msgid "Return"
@@ -839,6 +881,9 @@ msgstr ""
 msgid "Start date must be earlier than end date."
 msgstr ""
 
+msgid "Statement"
+msgstr ""
+
 msgid "Statistics"
 msgstr ""
 
@@ -873,6 +918,12 @@ msgid "Studies"
 msgstr ""
 
 msgid "Submit choices"
+msgstr ""
+
+msgid "Successfully deleted item {}"
+msgstr ""
+
+msgid "Successfully saved item {}"
 msgstr ""
 
 msgid "Suggestions"
@@ -914,6 +965,9 @@ msgstr ""
 msgid "Total of internships"
 msgstr ""
 
+msgid "Type"
+msgstr ""
+
 msgid "Unable to create a user account for {}: no birth date set"
 msgstr ""
 
@@ -944,9 +998,6 @@ msgstr ""
 msgid ""
 "You may provide a reason for editing score by choosing a justification from "
 "the list below."
-msgstr ""
-
-msgid "and existing subspecialties"
 msgstr ""
 
 msgid "delegate(s) without user account"
