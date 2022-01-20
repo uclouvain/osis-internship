@@ -1,6 +1,7 @@
 {% extends "layout.html" %}
 {% load static %}
 {% load i18n %}
+{% load place_evaluation %}
 
 {% comment "License" %}
     * OSIS stands for Open Student Information System. It's an application
@@ -45,10 +46,10 @@
             <div class="panel panel-body">
             <div class="row form-group">
                 <div class="col-md-12">
-                    <button class="btn btn-primary">
+                    <a href="{% url 'place_evaluation_new' cohort.id %}" type="button" class="btn btn-primary">
                         <i class="fas fa-plus-circle"></i>
                         <span>{% trans 'Add item' %}</span>
-                    </button>
+                    </a>
                 </div>
             </div>
                 <div class="table-responsive">
@@ -65,13 +66,17 @@
                       <tr>
                         <td>{{ item.order }}</td>
                         <td>{{ item.statement }}</td>
-                        <td>{{ item.type }}</td>
+                        <td>{{ item.type|get_evaluation_item_type }}</td>
                         <td>
+                            {% if item.type == "CHOICE" %}
                             <ul>
                                 {% for option in item.options %}
                                 <li>{{ option}}</li>
                                 {% endfor %}
                             </ul>
+                            {% else %}
+                                <span>-</span>
+                            {% endif %}
                         </td>
                         <td style="text-align: center;">
                             <a href="{% url 'place_evaluation_edit' cohort.id item.id %}" type="button" class="btn btn-xs btn-default btn-edit-score">
@@ -79,7 +84,10 @@
                             </a>
                         </td>
                         <td style="text-align: center;">
-                            <a href="" type="button" class="btn btn-xs btn-danger btn-edit-score">
+                            <a id="delete_item_{{item.id}}"
+                               data-href="{% url 'place_evaluation_delete' cohort.id item.id %}"
+                               data-toggle="modal" data-target="#delete_modal"
+                               data-value="{{ item }}" type="button" class="btn btn-xs btn-danger btn-edit-score">
                                 <icon class="fas fa-trash"></icon>
                             </a>
                         </td>
@@ -90,4 +98,11 @@
             </div>
         </div>
     </div>
+
+    {% include "fragment/delete_confirmation_modal.html" %}
+
+{% endblock %}
+
+{% block script %}
+    <script type="text/javascript" src="{% static "js/internship.js" %}?version={{ js }}"></script>
 {% endblock %}

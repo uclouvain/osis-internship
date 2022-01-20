@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-12 10:42+0100\n"
+"POT-Creation-Date: 2022-01-20 11:20+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -88,6 +88,9 @@ msgstr ""
 msgid "Add new master"
 msgstr ""
 
+msgid "Add option"
+msgstr ""
+
 msgid "Add period"
 msgstr ""
 
@@ -143,6 +146,15 @@ msgid "An error occured while updating status"
 msgstr ""
 
 msgid "An evaluation should include minimum {} and maximum {} evaluated APDs"
+msgstr ""
+
+msgid "An item with same order key already exists"
+msgstr ""
+
+msgid "Aptitudes conditions fulfilled"
+msgstr ""
+
+msgid "Aptitudes conditions not fulfilled"
 msgstr ""
 
 msgid "Attention"
@@ -588,6 +600,9 @@ msgstr ""
 msgid "New internship"
 msgstr ""
 
+msgid "New item"
+msgstr ""
+
 msgid "New records"
 msgstr ""
 
@@ -649,6 +664,9 @@ msgid "Number of students who chosed this organization"
 msgstr ""
 
 msgid "Options"
+msgstr ""
+
+msgid "Order"
 msgstr ""
 
 msgid "Order position"
@@ -902,6 +920,12 @@ msgstr ""
 msgid "Submit choices"
 msgstr ""
 
+msgid "Successfully deleted item {}"
+msgstr ""
+
+msgid "Successfully saved item {}"
+msgstr ""
+
 msgid "Suggestions"
 msgstr ""
 
@@ -941,6 +965,9 @@ msgstr ""
 msgid "Total of internships"
 msgstr ""
 
+msgid "Type"
+msgstr ""
+
 msgid "Unable to create a user account for {}: no birth date set"
 msgstr ""
 
@@ -971,9 +998,6 @@ msgstr ""
 msgid ""
 "You may provide a reason for editing score by choosing a justification from "
 "the list below."
-msgstr ""
-
-msgid "and existing subspecialties"
 msgstr ""
 
 msgid "delegate(s) without user account"

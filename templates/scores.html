@@ -183,9 +183,9 @@
                           </td>
                           <td rowspan="{{ periods|length|add:1 }}">
                               {% if not student.fulfill_condition %}
-                                  <icon title="Aptitudes conditions not fulfilled" class="glyphicon glyphicon-remove-sign text-danger"></icon>
+                                  <icon title="{% trans 'Aptitudes conditions not fulfilled' %}" class="glyphicon glyphicon-remove-sign text-danger"></icon>
                               {% else %}
-                                  <icon title="Aptitudes conditions fulfilled" class="glyphicon glyphicon-ok-sign text-success"></icon>
+                                  <icon title="{% trans 'Aptitudes conditions fulfilled' %}" class="glyphicon glyphicon-ok-sign text-success"></icon>
                               {% endif %}
                           </td>
                           <td style="max-width: 10vw;" class="overflow-cell" rowspan="{{ periods|length|add:1 }}">{{ student }}</td>

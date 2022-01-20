@@ -35,7 +35,7 @@ class PlaceEvaluationItemForm(forms.ModelForm):
     statement = forms.CharField(label=_('Statement'), widget=forms.Textarea(attrs={'rows': 5}))
     type = forms.ChoiceField(label=_('Type'), choices=ResponseType.choices())
     options = forms.CharField(label=_('Options'), required=False)
-    active = forms.BooleanField(label=_('Active'))
+    active = forms.BooleanField(label=_('Active'), required=False)
 
     class Meta:
         model = PlaceEvaluationItem

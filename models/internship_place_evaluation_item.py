@@ -46,10 +46,13 @@ class PlaceEvaluationItem(Model):
     cohort = models.ForeignKey('internship.Cohort', on_delete=models.CASCADE, null=True)
     order = models.IntegerField()
     statement = models.CharField(max_length=300)
-    type = models.CharField(choices=ResponseType.choices(), default=ResponseType.OPEN.name, max_length=10)
+    type = models.CharField(choices=ResponseType.choices(), default=ResponseType.OPEN.value, max_length=10)
     options = JSONField(default=list)
 
     active = models.BooleanField(default=True)
 
     def __str__(self):
-        return '({}) {} - {} : '.format(self.order, self.statement, self.type, self.options)
+        return '({}) {}'.format(self.order, self.statement)
+
+    class Meta:
+        unique_together = ('cohort', 'order')
