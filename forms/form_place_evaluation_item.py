@@ -26,17 +26,13 @@
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
-from internship.models.enums.response_type import ResponseType
 from internship.models.internship_place_evaluation_item import PlaceEvaluationItem
 
 
 class PlaceEvaluationItemForm(forms.ModelForm):
-    order = forms.IntegerField(label=_('Order'), min_value=1)
     statement = forms.CharField(label=_('Statement'), widget=forms.Textarea(attrs={'rows': 5}))
-    type = forms.ChoiceField(label=_('Type'), choices=ResponseType.choices())
     options = forms.CharField(label=_('Options'), required=False)
-    active = forms.BooleanField(label=_('Active'), required=False)
 
     class Meta:
         model = PlaceEvaluationItem
-        fields = ['order', 'statement', 'type', 'options', 'active']
+        fields = ['statement', 'type', 'options', 'active']

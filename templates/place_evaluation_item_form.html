@@ -55,9 +55,6 @@
         <div class="panel-body">
         {% csrf_token %}
             <div class="row">
-                {% bootstrap_field form.order form_group_class="form-group col-md-1" %}
-            </div>
-            <div class="row">
                 {% bootstrap_field form.statement form_group_class="form-group col-md-11" %}
             </div>
             <div class="row">
