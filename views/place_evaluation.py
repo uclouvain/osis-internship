@@ -26,6 +26,7 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.db import IntegrityError, transaction
+from django.db.models import Prefetch
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils.translation import gettext_lazy as _
 
@@ -37,9 +38,14 @@ from internship.models.internship_place_evaluation_item import PlaceEvaluationIt
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internship_place_evaluation(request, cohort_id):
-    cohort = get_object_or_404(Cohort, pk=cohort_id)
-    evaluation_items = PlaceEvaluationItem.objects.filter(cohort=cohort)
-    return render(request, "place_evaluation.html", context={'cohort': cohort, 'evaluation_items': evaluation_items})
+    cohort = cohort = get_object_or_404(
+        Cohort.objects.prefetch_related(Prefetch(
+            'placeevaluationitem_set',
+            to_attr='evaluation_items'
+        )),
+        pk=cohort_id
+    )
+    return render(request, "place_evaluation.html", context={'cohort': cohort})
 
 
 @login_required

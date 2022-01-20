@@ -62,7 +62,7 @@
                         <th style="text-align: center;">{% trans 'Edit' %}</th>
                         <th style="text-align: center;">{% trans 'Delete' %}</th>
                       </tr>
-                      {% for item in evaluation_items %}
+                      {% for item in cohort.evaluation_items %}
                       <tr>
                         <td>{{ item.order }}</td>
                         <td>{{ item.statement }}</td>
