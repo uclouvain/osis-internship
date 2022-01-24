@@ -48,6 +48,7 @@
                                 {% url 'speciality_new' cohort_id=cohort.id %}
                           {% endif %}" method="post">
                 {% csrf_token %}
+
                 <div class="row">
                     {% bootstrap_field form.name form_group_class="form-group col-md-8" label=_("Name") %}
                     {% bootstrap_field form.sequence form_group_class="form-group col-md-2" label=_("Sequence") %}
@@ -59,10 +60,15 @@
                     {% bootstrap_field form.selectable form_group_class="form-group col-md-10" label=_("Selectable by the student") %}
                 </div>
 
+                <div class="row">
+                    {% bootstrap_field form.parent form_group_class="form-group col-md-2" label=_("Parent specialty") %}
+                </div>
+
                 <br>
                 <button type="submit" class="btn btn-primary" title="{% trans 'Save'%}" id="bt_interships_new">
                     <span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'Save'%}
                 </button>
+
                 <a href="{% url 'internships_specialities' cohort_id=cohort.id %}" class="btn btn-default" title="{% trans 'Return'%}"
                     id="lnk_internships" >
                     <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span> {% trans 'Return' %}
@@ -70,4 +76,19 @@
             </form>
         </div>
     </div>
+{% endblock %}
+
+
+{% block script %}
+
+    <script>
+        const parentSelect = document.querySelector("#id_parent");
+        const parentFormGroup = parentSelect.closest('.form-group');
+        const triggerFormInputs = (disabled) => document.querySelectorAll(".form-group:not(.required_field) input").forEach((el) => el.disabled = disabled);
+
+        parentSelect.addEventListener('change', (e) => triggerFormInputs(e.target.selectedIndex !== 0));
+        triggerFormInputs(Boolean(parentSelect.value))
+
+    </script>
+
 {% endblock %}

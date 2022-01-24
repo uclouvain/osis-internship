@@ -1,0 +1,139 @@
+{% extends "layout.html" %}
+{% load static %}
+{% load i18n %}
+{% load bootstrap3 %}
+
+{% comment "License" %}
+    * OSIS stands for Open Student Information System. It's an application
+    * designed to manage the core business of higher education institutions,
+    * such as universities, faculties, institutes and professional schools.
+    * The core business involves the administration of students, teachers,
+    * courses, programs and so on.
+    *
+    * Copyright (C) 2015-2021 Université catholique de Louvain (http://www.uclouvain.be)
+    *
+    * This program is free software: you can redistribute it and/or modify
+    * it under the terms of the GNU General Public License as published by
+    * the Free Software Foundation, either version 3 of the License, or
+    * (at your option) any later version.
+    *
+    * This program is distributed in the hope that it will be useful,
+    * but WITHOUT ANY WARRANTY; without even the implied warranty of
+    * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    * GNU General Public License for more details.
+    *
+    * A copy of this license - GNU General Public License - is available
+    * at the root of the source code of this program.  If not,
+    * see http://www.gnu.org/licenses/.
+{% endcomment %}
+
+{% block style %}
+    <link rel="stylesheet" href="{% static 'css/internship.css' %}">
+{% endblock %}
+
+{% block breadcrumb %}
+    <li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
+    <li><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
+    <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></li>
+    <li><a href="{% url 'place_evaluation' cohort_id=cohort.id %}">{% trans "Internship's place evaluation"  %}</a></li>
+    {% if item %}
+        <li class="active">{% trans 'Item' %} {{ item.order }}</li>
+    {% else %}
+        <li class="active">{% trans 'New item' %}</li>
+    {% endif %}
+{% endblock %}
+
+{% block header_content %}
+  <div class="page-header">
+      <h2>{% trans "Internship's place evaluation"  %}</h2>
+  </div>
+{% endblock %}
+
+{% block content %}
+    <form method="post">
+    <div class="panel panel-default">
+        <div class="panel-body">
+        {% csrf_token %}
+            <div class="row">
+                {% bootstrap_field form.statement form_group_class="form-group col-md-11" %}
+            </div>
+            <div class="row">
+                {% bootstrap_field form.type form_group_class="form-group col-md-2" %}
+            </div>
+            <div id="options-row" class="row">
+                <div class="col-md-6">
+                    <label>Options</label>
+                    <span id="options-panel">
+                        <span id="options">
+                        {% for option in form.instance.options %}
+                        <div id="option">
+                            <div class="form-group">
+                                <input type="text" name="options" class="form-control" style="display: inline-block; width: 80%;" value="{{ option }}">
+                                <button type="button" class="btn btn-default removeButton" onclick="removeOption(this);">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        </span>
+                        <button type="button" class="btn btn-default" onclick="addOption();">
+                            <i class="fas fa-plus-circle"></i>
+                            {% trans 'Add option' %}
+                        </button>
+                    </span>
+                </div>
+            </div>
+            <div class="row">
+                {% bootstrap_field form.active form_group_class="form-group col-md-2" %}
+            </div>
+        </div>
+        <div class="panel-footer">
+            <div class="row form-group">
+                <div class="col-md-12">
+                    <button type="submit" class="btn btn-primary    ">
+                        <i class="fas fa-save"></i>
+                        <span>{% trans 'Save' %}</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        </div>
+    </form>
+
+{% endblock %}
+
+{% block script %}
+<script>
+    const options = document.querySelector('#options');
+    const option = document.querySelector('#option');
+    const optionsRow = document.querySelector("#options-row");
+
+    const chosenType = document.querySelector("#id_type");
+    const CHOICE = "CHOICE";
+
+    chosenType.addEventListener('change', (e) => {
+        optionsRow.style.display = e.target.value === CHOICE ? "block": "none";
+    });
+    chosenType.dispatchEvent(new Event('change'));
+
+    function addOption(){
+        const optionElement = option.cloneNode(true);
+        optionElement.querySelector('input').value = "";
+        options.append(optionElement);
+        refreshOptionsRemoveState();
+    }
+
+    function removeOption(element){
+        element.closest('#option').remove();
+        refreshOptionsRemoveState();
+    }
+
+    function refreshOptionsRemoveState(){
+        document.querySelectorAll('.removeButton').forEach((el) => el.disabled = options.children.length <=1);
+    }
+
+    refreshOptionsRemoveState();
+
+</script>
+
+{% endblock %}

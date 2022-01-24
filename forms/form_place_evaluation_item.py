@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2019 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2021 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -24,23 +24,15 @@
 #
 ##############################################################################
 from django import forms
+from django.utils.translation import gettext_lazy as _
 
-from internship.models.internship_speciality import InternshipSpeciality
+from internship.models.internship_place_evaluation_item import PlaceEvaluationItem
 
 
-class SpecialtyForm(forms.ModelForm):
+class PlaceEvaluationItemForm(forms.ModelForm):
+    statement = forms.CharField(label=_('Statement'), widget=forms.Textarea(attrs={'rows': 5}))
+    options = forms.CharField(label=_('Options'), required=False)
+
     class Meta:
-        model = InternshipSpeciality
-        fields = [
-            'name',
-            'acronym',
-            'mandatory',
-            'sequence',
-            'selectable',
-            'parent'
-        ]
-
-    def __init__(self, *args, **kwargs):
-        cohort_id = kwargs.pop('cohort_id')
-        super().__init__(*args, **kwargs)
-        self.fields['parent'].queryset = InternshipSpeciality.objects.filter(cohort__pk=cohort_id)
+        model = PlaceEvaluationItem
+        fields = ['statement', 'type', 'options', 'active']

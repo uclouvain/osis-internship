@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2019 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -23,24 +23,17 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django import forms
 
-from internship.models.internship_speciality import InternshipSpeciality
+from django.test import SimpleTestCase
+from django.utils.translation import gettext_lazy as _
+
+from internship.models.enums.response_type import ResponseType
+from internship.templatetags.place_evaluation import get_evaluation_item_type
 
 
-class SpecialtyForm(forms.ModelForm):
-    class Meta:
-        model = InternshipSpeciality
-        fields = [
-            'name',
-            'acronym',
-            'mandatory',
-            'sequence',
-            'selectable',
-            'parent'
-        ]
+class TestPlaceEvaluationTemplatetag(SimpleTestCase):
+    def test_get_display_type_for_evaluation_item_open(self):
+        self.assertEqual(get_evaluation_item_type(ResponseType.OPEN.name), _(ResponseType.OPEN.value))
 
-    def __init__(self, *args, **kwargs):
-        cohort_id = kwargs.pop('cohort_id')
-        super().__init__(*args, **kwargs)
-        self.fields['parent'].queryset = InternshipSpeciality.objects.filter(cohort__pk=cohort_id)
+    def test_get_display_type_for_evaluation_item_with_choices(self):
+        self.assertEqual(get_evaluation_item_type(ResponseType.CHOICE.name), _(ResponseType.CHOICE.value))

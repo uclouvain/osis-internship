@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2019 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2021 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -23,24 +23,11 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django import forms
+from django.template.defaulttags import register
 
-from internship.models.internship_speciality import InternshipSpeciality
+from internship.models.enums.response_type import ResponseType
 
 
-class SpecialtyForm(forms.ModelForm):
-    class Meta:
-        model = InternshipSpeciality
-        fields = [
-            'name',
-            'acronym',
-            'mandatory',
-            'sequence',
-            'selectable',
-            'parent'
-        ]
-
-    def __init__(self, *args, **kwargs):
-        cohort_id = kwargs.pop('cohort_id')
-        super().__init__(*args, **kwargs)
-        self.fields['parent'].queryset = InternshipSpeciality.objects.filter(cohort__pk=cohort_id)
+@register.filter()
+def get_evaluation_item_type(item_type):
+    return next(type[1] for type in ResponseType.choices() if type[0] == item_type)
