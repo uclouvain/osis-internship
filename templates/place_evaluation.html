@@ -1,0 +1,127 @@
+{% extends "layout.html" %}
+{% load static %}
+{% load i18n %}
+{% load place_evaluation %}
+
+{% comment "License" %}
+    * OSIS stands for Open Student Information System. It's an application
+    * designed to manage the core business of higher education institutions,
+    * such as universities, faculties, institutes and professional schools.
+    * The core business involves the administration of students, teachers,
+    * courses, programs and so on.
+    *
+    * Copyright (C) 2015-2021 Université catholique de Louvain (http://www.uclouvain.be)
+    *
+    * This program is free software: you can redistribute it and/or modify
+    * it under the terms of the GNU General Public License as published by
+    * the Free Software Foundation, either version 3 of the License, or
+    * (at your option) any later version.
+    *
+    * This program is distributed in the hope that it will be useful,
+    * but WITHOUT ANY WARRANTY; without even the implied warranty of
+    * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    * GNU General Public License for more details.
+    *
+    * A copy of this license - GNU General Public License - is available
+    * at the root of the source code of this program.  If not,
+    * see http://www.gnu.org/licenses/.
+{% endcomment %}
+
+{% block breadcrumb %}
+    <li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
+    <li><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
+    <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></li>
+    <li class="active">{% trans "Internship's place evaluation"  %}</li>
+{% endblock %}
+{% block content %}
+  <div class="page-header">
+      <h2>{% trans "Internship's place evaluation"  %}</h2>
+  </div>
+    <ul id="tabs" class="nav nav-tabs">
+      <li role="form" class="active"><a data-toggle="tab" href="#form">{% trans 'Form' %}</a></li>
+      <li role="results"><a data-toggle="tab" href="#results">{% trans 'Results' %}</a></li>
+    </ul>
+    <div class="tab-content">
+        <div id="form" class="tab-pane fade in active">
+            <div class="panel panel-body">
+            <div class="row form-group">
+                <div class="col-md-12">
+                    <a href="{% url 'place_evaluation_new' cohort.id %}" type="button" class="btn btn-primary pull-right">
+                        <i class="fas fa-plus-circle"></i>
+                        <span>{% trans 'Add item' %}</span>
+                    </a>
+                </div>
+            </div>
+                <div class="table-responsive">
+                  <table class="table table-fix-header table-hover">
+                      <tr>
+                        <th>{% trans 'Item' %}</th>
+                        <th>{% trans 'Statement' %}</th>
+                        <th>{% trans 'Response type' %}</th>
+                        <th>{% trans 'Options' %}</th>
+                        <th style="text-align: center;">{% trans 'Order' %}</th>
+                        <th style="text-align: center;">{% trans 'Edit' %}</th>
+                        <th style="text-align: center;">{% trans 'Delete' %}</th>
+                      </tr>
+                      {% for item in cohort.evaluation_items %}
+                      <tr>
+                        <td>{{ item.order }}</td>
+                        <td>{{ item.statement }}</td>
+                        <td>{{ item.type|get_evaluation_item_type }}</td>
+                        <td>
+                            {% if item.type == "CHOICE" %}
+                            <ul>
+                                {% for option in item.options %}
+                                <li>{{ option}}</li>
+                                {% endfor %}
+                            </ul>
+                            {% else %}
+                                <span>-</span>
+                            {% endif %}
+                        </td>
+                          <td style="text-align: center;">
+                            <a href="{% url 'place_evaluation_item_move_up' cohort.id item.id %}" type="button" class="btn btn-xs btn-default"
+                            {% if item == cohort.evaluation_items|first %} disabled onclick="return false;" {% endif %}>
+                                <icon class="fas fa-arrow-up"></icon>
+                            </a>
+                            <a href="{% url 'place_evaluation_item_move_down' cohort.id item.id %}" type="button" class="btn btn-xs btn-default"
+                            {% if item == cohort.evaluation_items|last %} disabled onclick="return false;" {% endif %}>
+                                <icon class="fas fa-arrow-down"></icon>
+                            </a>
+                        </td>
+                        <td style="text-align: center;">
+                            <a href="{% url 'place_evaluation_edit' cohort.id item.id %}" type="button" class="btn btn-xs btn-default">
+                                <icon class="far fa-edit"></icon>
+                            </a>
+                        </td>
+                        <td style="text-align: center;">
+                            <a id="delete_item_{{item.id}}"
+                               data-href="{% url 'place_evaluation_delete' cohort.id item.id %}"
+                               data-toggle="modal" data-target="#delete_modal"
+                               data-value="{{ item }}" type="button" class="btn btn-xs btn-danger">
+                                <icon class="fas fa-trash"></icon>
+                            </a>
+                        </td>
+                      </tr>
+                      {% empty %}
+                        <tr>
+                            <td colspan="9">{% trans 'No evaluation items found for this cohort' %}</td>
+                        </tr>
+                      {% endfor %}
+                  </table>
+                </div>
+            </div>
+        </div>
+        <div id="results" class="tab-pane fade in">
+
+        </div>
+    </div>
+
+
+    {% include "fragment/delete_confirmation_modal.html" %}
+
+{% endblock %}
+
+{% block script %}
+    <script type="text/javascript" src="{% static "js/internship.js" %}?version={{ js }}"></script>
+{% endblock %}

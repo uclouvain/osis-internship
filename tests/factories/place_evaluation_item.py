@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2020 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -23,36 +23,16 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from rest_framework import serializers
+import factory.fuzzy
 
-from internship.api.serializers.cohort import CohortSerializer
-from internship.models.internship_speciality import InternshipSpeciality
+from internship.models.enums.response_type import ResponseType
+from internship.tests.factories.cohort import CohortFactory
 
 
-class InternshipSpecialtySerializer(serializers.HyperlinkedModelSerializer):
-    url = serializers.HyperlinkedIdentityField(
-        view_name='internship_api_v1:specialty-detail',
-        lookup_field='uuid'
-    )
-    cohort = CohortSerializer()
-    parent = serializers.SerializerMethodField(read_only=True)
-
+class PlaceEvaluationItemFactory(factory.django.DjangoModelFactory):
     class Meta:
-        model = InternshipSpeciality
-        fields = (
-            'url',
-            'uuid',
-            'name',
-            'acronym',
-            'mandatory',
-            'sequence',
-            'cohort',
-            'selectable',
-            'parent'
-        )
-
-    def get_parent(self, obj):
-        if obj.parent:
-            serializer = InternshipSpecialtySerializer(instance=obj.parent, context=self.context)
-            return serializer.data
-        return None
+        model = 'internship.PlaceEvaluationItem'
+    statement = 'Statement'
+    cohort = factory.SubFactory(CohortFactory)
+    type = ResponseType.OPEN.name
+    active = True

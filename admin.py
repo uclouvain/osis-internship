@@ -26,7 +26,7 @@
 from django.contrib import admin
 
 from internship.models import *
-from internship.models import internship_score_reason
+from internship.models import internship_score_reason, internship_place_evaluation_item
 
 admin.site.register(cohort.Cohort, cohort.CohortAdmin)
 
@@ -68,3 +68,6 @@ admin.site.register(internship_score_mapping.InternshipScoreMapping,
 
 admin.site.register(internship_score_reason.InternshipScoreReason,
                     internship_score_reason.InternshipScoreReasonAdmin)
+
+admin.site.register(internship_place_evaluation_item.PlaceEvaluationItem,
+                    internship_place_evaluation_item.PlaceEvaluationItemAdmin)

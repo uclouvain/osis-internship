@@ -76,7 +76,7 @@ def _add_sheet_content(internship, periods, students, worksheet):
 
 def _complete_student_row_by_internship(columns, internship, periods, student):
     for period in periods:
-        if period.name in student.specialties.keys() and student.specialties[period.name] == internship:
+        if period.name in student.specialties.keys() and student.specialties[period.name]['acronym'] == internship:
             _append_row_data(columns, period, student)
 
 

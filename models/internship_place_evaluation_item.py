@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2020 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2021 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -23,36 +23,34 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from rest_framework import serializers
+import uuid as uuid
 
-from internship.api.serializers.cohort import CohortSerializer
-from internship.models.internship_speciality import InternshipSpeciality
+from django.contrib.admin import ModelAdmin
+from django.contrib.postgres.fields import JSONField
+from django.db import models
+from ordered_model.models import OrderedModel
+
+from internship.models.enums.response_type import ResponseType
 
 
-class InternshipSpecialtySerializer(serializers.HyperlinkedModelSerializer):
-    url = serializers.HyperlinkedIdentityField(
-        view_name='internship_api_v1:specialty-detail',
-        lookup_field='uuid'
-    )
-    cohort = CohortSerializer()
-    parent = serializers.SerializerMethodField(read_only=True)
+class PlaceEvaluationItemAdmin(ModelAdmin):
+    list_display = ("order", "statement", "type",)
+    list_filter = ("type",)
+    search_fields = ["statement"]
 
-    class Meta:
-        model = InternshipSpeciality
-        fields = (
-            'url',
-            'uuid',
-            'name',
-            'acronym',
-            'mandatory',
-            'sequence',
-            'cohort',
-            'selectable',
-            'parent'
-        )
 
-    def get_parent(self, obj):
-        if obj.parent:
-            serializer = InternshipSpecialtySerializer(instance=obj.parent, context=self.context)
-            return serializer.data
-        return None
+class PlaceEvaluationItem(OrderedModel):
+
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, db_index=True)
+
+    cohort = models.ForeignKey('internship.Cohort', on_delete=models.CASCADE, null=True)
+    statement = models.CharField(max_length=300)
+    type = models.CharField(choices=ResponseType.choices(), default=ResponseType.OPEN.value, max_length=10)
+    options = JSONField(default=list)
+
+    active = models.BooleanField(default=True)
+
+    order_with_respect_to = 'cohort'
+
+    def __str__(self):
+        return '({}) {}'.format(self.order, self.statement)
