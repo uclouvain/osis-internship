@@ -526,8 +526,7 @@ msgid "Internship type"
 msgstr "Type de stage"
 
 msgid "Internship's detail successfully edited for the following periods: {}"
-msgstr ""
-"Affectations de stage modifiées avec succès pour les périodes suivantes: {}"
+msgstr "Affectations de stage modifiées avec succès pour les périodes suivantes: {}"
 
 msgid "Internship's place evaluation"
 msgstr "Évaluation du lieu de stage"
