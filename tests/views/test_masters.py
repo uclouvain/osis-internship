@@ -44,6 +44,7 @@ from internship.models import master_allocation
 from internship.models.enums.role import Role
 from internship.models.enums.user_account_status import UserAccountStatus
 from internship.models.internship_master import InternshipMaster
+from internship.models.master_allocation import MasterAllocation
 from internship.tests.factories.cohort import CohortFactory
 from internship.tests.factories.master import MasterFactory
 from internship.tests.factories.master_allocation import MasterAllocationFactory
@@ -228,3 +229,23 @@ class MasterTestCase(TestCase):
         messages_list = [msg for msg in response.wsgi_request._messages]
         self.assertEqual(messages_list[0].level_tag, "warning")
         self.assertIn(str(master.person), messages_list[0].message)
+
+    def test_master_transfer_to_new_cohort(self):
+        allocation = MasterAllocationFactory(specialty__cohort=self.cohort, organization__cohort=self.cohort)
+        new_cohort = CohortFactory()
+        OrganizationFactory(cohort=new_cohort, reference=allocation.organization.reference)
+        SpecialtyFactory(cohort=new_cohort, acronym=allocation.specialty.acronym)
+
+        url = reverse('transfer_allocation', kwargs={'cohort_id': self.cohort.pk})
+        response = self.client.post(url, data={
+            'selected_masters': [allocation.master.pk],
+            'selected_cohort': new_cohort.pk,
+        })
+
+        transferred_allocation = MasterAllocation.objects.get(specialty__cohort=new_cohort)
+
+        self.assertEqual(transferred_allocation.master, allocation.master)
+        self.assertEqual(transferred_allocation.cohort(), new_cohort)
+
+        messages_list = [msg for msg in response.wsgi_request._messages]
+        self.assertEqual(messages_list[0].level_tag, "success")
