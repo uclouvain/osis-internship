@@ -38,7 +38,7 @@ from internship.models.internship_place_evaluation_item import PlaceEvaluationIt
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internship_place_evaluation(request, cohort_id):
-    cohort = cohort = get_object_or_404(
+    cohort = get_object_or_404(
         Cohort.objects.prefetch_related(Prefetch(
             'placeevaluationitem_set',
             to_attr='evaluation_items'
