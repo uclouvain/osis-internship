@@ -14,7 +14,7 @@ def copy_from_origin(cohort):
         _copy_specialties(cohort.originated_from, cohort)
         _copy_periods(cohort.originated_from, cohort)
         _copy_internships(cohort.originated_from, cohort)
-        _copy_master_allocations(cohort.originated_from, cohort)
+        copy_master_allocations(cohort.originated_from, cohort)
 
 
 def _copy_organizations(cohort_from, cohort_to):
@@ -55,9 +55,10 @@ def _copy_internships(cohort_from, cohort_to):
         intern.save()
 
 
-def _copy_master_allocations(cohort_from, cohort_to):
+def copy_master_allocations(cohort_from, cohort_to, selected_allocations=None):
     """ This function must come after _copy_organizations and _copy_specialties because it needs the new ones. """
-    allocations = master_allocation.find_by_cohort(cohort_from)
+
+    allocations = selected_allocations if selected_allocations else master_allocation.find_by_cohort(cohort_from)
 
     for allocation in allocations:
         allocation.pk = None

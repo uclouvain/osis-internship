@@ -52,6 +52,7 @@ urlpatterns = [
                 url(r'^(?P<master_id>[0-9]+)$', master.master, name='master'),
                 url(r'^(?P<master_id>[0-9]+)/form/$', master.master_form, name='master_edit'),
                 url(r'^create_accounts/$', master.create_user_accounts, name='create_accounts'),
+                url(r'^transfer_allocation/$', master.transfer_master_allocation_to_cohort, name='transfer_allocation'),
                 url(r'^form/$', master.master_form, name='master_new'),
                 url(r'^form/ajax/person_exists/$', master.person_exists, name='person_exists'),
                 url(r'^save/$', master.master_save, name="master_save"),
