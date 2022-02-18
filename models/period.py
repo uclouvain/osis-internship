@@ -59,6 +59,7 @@ class Period(SerializableModel):
     date_end = models.DateField()
     cohort = models.ForeignKey('internship.cohort', on_delete=models.CASCADE)
     reminder_mail_sent = models.BooleanField(default=False)
+    remedial = models.BooleanField(default=False)
 
     objects = models.Manager()
     active = ActivePeriod()
@@ -91,10 +92,41 @@ def search(**kwargs):
     return Period.objects.filter(**kwargs).select_related().order_by("date_start")
 
 
-def get_effective_periods(cohort_id):
-    qs = Period.objects.filter(
-        cohort__pk=cohort_id
+def get_assignable_periods(cohort_id):
+    periods = Period.objects.filter(
+        cohort__pk=cohort_id,
+        remedial=False
     ).prefetch_related(
         'internshipstudentaffectationstat_set'
     ).order_by("date_end")
-    return qs.exclude(pk=qs.last().pk)
+    periods = periods.exclude(pk=periods.last().pk)
+    return periods
+
+
+def get_remedial_periods(cohort_id):
+    return Period.objects.filter(
+        cohort__pk=cohort_id,
+        remedial=True
+    ).prefetch_related(
+        'internshipstudentaffectationstat_set'
+    ).order_by("date_end")
+
+
+def get_effective_periods(cohort_id):
+    periods = Period.objects.filter(
+        cohort__pk=cohort_id,
+        remedial=False
+    ).prefetch_related(
+        'internshipstudentaffectationstat_set'
+    ).order_by("date_end")
+
+    periods = periods.exclude(pk=periods.last().pk)
+
+    remedial_periods = Period.objects.filter(
+        cohort__pk=cohort_id,
+        remedial=True
+    ).prefetch_related(
+        'internshipstudentaffectationstat_set'
+    ).order_by("date_end")
+
+    return periods | remedial_periods

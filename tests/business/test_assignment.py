@@ -72,6 +72,7 @@ class AssignmentTest(TestCase):
         cls.hospital_error = OrganizationFactory(name='Hospital Error', cohort=cls.cohort, reference=999)
         cls.organizations = [OrganizationFactory(cohort=cls.cohort) for _ in range(0, N_ORGANIZATIONS)]
         cls.periods = [PeriodFactory(cohort=cls.cohort) for _ in range(0, N_PERIODS)]
+        cls.remedial_period = PeriodFactory(cohort=cls.cohort, remedial=True)
 
         cls.specialties = cls.mandatory_specialties + cls.non_mandatory_specialties
         cls.internships = cls.mandatory_internships + cls.non_mandatory_internships
@@ -93,6 +94,16 @@ class AssignmentTest(TestCase):
         cls.user = User.objects.create_user('demo', 'demo@demo.org', 'passtest')
         permission = Permission.objects.get(codename='is_internship_manager')
         cls.user.user_permissions.add(permission)
+
+    def test_algorithm_execution_all_periods_assigned(self):
+        for student in self.students:
+            student_affectations = self.affectations.filter(student=student)
+            self.assertEqual(len(student_affectations), len(self.periods)-1)
+
+    def test_algorithm_discard_remedial_periods(self):
+        for student in self.students:
+            student_affectations = self.affectations.filter(student=student, period=self.remedial_period)
+            self.assertFalse(student_affectations)
 
     def test_algorithm_execution_all_periods_assigned(self):
         for student in self.students:

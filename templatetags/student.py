@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2019 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -23,20 +23,14 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import factory.fuzzy
-import pendulum
+from django.template.defaulttags import register
 
-from internship.tests.factories.cohort import CohortFactory
+from internship.models.internship_student_affectation_stat import InternshipStudentAffectationStat
 
 
-class PeriodFactory(factory.django.DjangoModelFactory):
-    class Meta:
-        model = 'internship.Period'
-
-    name = factory.Sequence(lambda n: 'P%d' % n)
-
-    date_start = factory.LazyAttribute(lambda obj: pendulum.today().start_of('month')._datetime)
-    date_end = factory.LazyAttribute(lambda obj: pendulum.instance(obj.date_start).end_of('month')._datetime)
-    cohort = factory.SubFactory(CohortFactory)
-    reminder_mail_sent = False
-    remedial = False
+@register.filter()
+def has_remedial(student, period=None):
+    qs = InternshipStudentAffectationStat.objects.filter(student__person=student.person, period__remedial=True)
+    if period:
+        qs = qs.filter(period=period)
+    return qs.exists()

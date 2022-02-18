@@ -53,8 +53,9 @@ from internship.models.internship_score_reason import InternshipScoreReason
 from internship.models.internship_student_affectation_stat import InternshipStudentAffectationStat
 from internship.models.internship_student_information import InternshipStudentInformation
 from internship.models.master_allocation import MasterAllocation
-from internship.models.period import get_effective_periods
+from internship.models.period import get_effective_periods, get_assignable_periods
 from internship.templatetags.dictionary import is_edited, is_excused
+from internship.templatetags.student import has_remedial
 from internship.utils.exporting import score_encoding_xls
 from internship.utils.importing import import_scores, import_eval
 from internship.utils.mails import mails_management
@@ -80,6 +81,7 @@ def scores_encoding(request, cohort_id):
         pk=cohort_id
     )
     all_periods = get_effective_periods(cohort_id)
+    assignable_periods = get_assignable_periods(cohort_id)
     periods = all_periods.order_by('date_end')
     completed_periods = periods.filter(date_end__lt=today())
     search_form = ScoresFilterForm(request.GET, cohort=cohort)
@@ -101,9 +103,9 @@ def scores_encoding(request, cohort_id):
     mapping = _prepare_score_table(cohort, periods, students.object_list)
     grades = [grade for grade, _ in InternshipScore.SCORE_CHOICES]
     context = {
-        'cohort': cohort, 'periods': periods, 'all_periods': all_periods, 'students': students, 'grades': grades,
-        'affectations_count': affectations_count, 'search_form': search_form, 'mapping': list(mapping),
-        'completed_periods': completed_periods, 'apd_range': range(1, APD_NUMBER + 1),
+        'cohort': cohort, 'periods': periods, 'mandatory_periods': assignable_periods, 'all_periods': all_periods,
+        'students': students, 'grades': grades, 'affectations_count': affectations_count, 'search_form': search_form,
+        'mapping': list(mapping), 'completed_periods': completed_periods, 'apd_range': range(1, APD_NUMBER + 1),
         'score_edit_reasons': InternshipScoreReason.objects.all()
     }
     return render(request, "scores.html", context=context)
@@ -524,6 +526,7 @@ def _prepare_score_table(cohort, periods, students):
     _link_periods_to_specialties(students, students_affectations)
     _link_periods_to_evaluations(students, students_affectations)
     _append_registration_ids(students, students_affectations)
+    _append_remedials_count(students, students_affectations)
     _compute_evolution_score(students, cohort.id)
     return mapping
 
@@ -546,6 +549,7 @@ def _prepare_students_extra_data(students):
         student.organizations = {}
         student.evaluations = {}
         student.comments = {}
+        student.remedial_periods_count = 0
 
 
 def _compute_evolution_score(students, cohort_id):
@@ -729,6 +733,15 @@ def _append_registration_ids(students, students_affectations):
     for student in students:
         student.registration_id = None
         _append_student_registration_id(student, students_affectations)
+
+
+def _append_remedials_count(students, students_affectations):
+    for student in students:
+        if has_remedial(student):
+            student.remedial_periods_count = students_affectations.filter(
+                period__remedial=True,
+                student__person=student.person
+            ).count()
 
 
 def _append_student_registration_id(student, students_affectations):
