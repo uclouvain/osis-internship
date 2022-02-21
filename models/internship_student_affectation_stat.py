@@ -102,9 +102,15 @@ def build(student, organization, specialty, period, internship, student_choices)
     else:
         affectation.speciality = internship.speciality
 
+    check_choices(affectation, organization, student_choices)
+
+    return affectation
+
+
+def check_choices(affectation, organization, student_choices):
     check_choice = False
     for student_choice in student_choices:
-        if student_choice.organization == organization:
+        if student_choice.organization == organization and student_choice.speciality == affectation.speciality:
             affectation.choice = student_choice.choice
             check_choice = True
             if student_choice.choice == 1:
@@ -118,5 +124,3 @@ def build(student, organization, specialty, period, internship, student_choices)
     if not check_choice:
         affectation.choice = ChoiceType.IMPOSED.value
         affectation.cost = Costs.IMPOSED.value
-
-    return affectation
