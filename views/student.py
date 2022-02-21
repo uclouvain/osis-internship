@@ -53,7 +53,7 @@ from internship.models.cohort import Cohort
 from internship.models.internship import Internship
 from internship.models.internship_choice import InternshipChoice
 from internship.models.internship_speciality import InternshipSpeciality
-from internship.models.internship_student_affectation_stat import InternshipStudentAffectationStat
+from internship.models.internship_student_affectation_stat import InternshipStudentAffectationStat, check_choices
 from internship.models.internship_student_information import InternshipStudentInformation
 from internship.models.master_allocation import MasterAllocation
 from internship.models.organization import Organization
@@ -265,6 +265,8 @@ def student_save_affectation_modification(request, cohort_id, student_id):
     cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)
     student = mdl.student.find_by_id(student_id)
 
+    student_choices = InternshipChoice.objects.filter(student=student, internship__cohort=cohort)
+
     periods = []
     if 'period' in request.POST:
         periods = request.POST.getlist('period')
@@ -281,7 +283,7 @@ def student_save_affectation_modification(request, cohort_id, student_id):
     if 'internship' in request.POST:
         internships = request.POST.getlist('internship')
 
-    student_affectations_to_update = _get_or_create_affectations_to_update(cohort, periods, student)
+    student_affectations_to_update = _get_or_create_affectations_to_update(cohort, periods, student, student_choices)
 
     update_data = _build_update_data(cohort, organizations, specialties, internships)
 
@@ -291,7 +293,7 @@ def student_save_affectation_modification(request, cohort_id, student_id):
             "cohort_id": cohort.id, "student_id": student.id
         })
     else:
-        update_selected_student_affectations(request, student_affectations_to_update, update_data)
+        update_selected_student_affectations(request, student_affectations_to_update, update_data, student_choices)
         redirect_url = reverse('internships_student_read', kwargs={
             "cohort_id": cohort.id, "student_id": student.id
         })+"?tab=affectations"
@@ -299,7 +301,7 @@ def student_save_affectation_modification(request, cohort_id, student_id):
     return HttpResponseRedirect(redirect_url)
 
 
-def _get_or_create_affectations_to_update(cohort, periods, student):
+def _get_or_create_affectations_to_update(cohort, periods, student, student_choices):
     affectations = InternshipStudentAffectationStat.objects.filter(
         student=student,
         period__cohort=cohort,
@@ -311,11 +313,11 @@ def _get_or_create_affectations_to_update(cohort, periods, student):
         cohort=cohort
     )
 
-    created_affectations = _build_missing_affectations(student, periods_to_create)
+    created_affectations = _build_missing_affectations(student, periods_to_create, student_choices)
     return sorted(list(affectations) + created_affectations, key=lambda affectation: affectation.period.name)
 
 
-def _build_missing_affectations(student, periods_to_create):
+def _build_missing_affectations(student, periods_to_create, student_choices):
     return [
         internship_student_affectation_stat.build(
             student=student,
@@ -323,7 +325,7 @@ def _build_missing_affectations(student, periods_to_create):
             specialty=None,
             period=period,
             internship=None,
-            student_choices=[]
+            student_choices=student_choices
         )
         for period in periods_to_create
         if not InternshipStudentAffectationStat.objects.filter(student=student, period=period).exists()
@@ -357,7 +359,7 @@ def _is_internship_available(cohort, organization, specialty):
     return mdl_int.internship_offer.search(cohort=cohort, organization=organization, speciality=specialty).exists()
 
 
-def update_selected_student_affectations(request, affectations_to_update, update_data):
+def update_selected_student_affectations(request, affectations_to_update, update_data, student_choices):
     for affectation in affectations_to_update:
         period_update = update_data[affectation.period.name]
         if not all([period_update['internship'], period_update['specialty'], period_update['organization']]):
@@ -366,6 +368,7 @@ def update_selected_student_affectations(request, affectations_to_update, update
             affectation.internship = period_update['internship']
             affectation.speciality = period_update['specialty']
             affectation.organization = period_update['organization']
+            check_choices(affectation, affectation.organization, student_choices)
             affectation.save()
 
     updated_periods = [affectation.period.name for affectation in affectations_to_update]
