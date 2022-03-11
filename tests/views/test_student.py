@@ -274,7 +274,8 @@ class StudentsAffectationModification(TestCase):
             period=period,
             organization__cohort=cls.cohort,
             speciality__cohort=cls.cohort,
-            internship__cohort=cls.cohort
+            internship__cohort=cls.cohort,
+            cost=1,
         ) for period in cls.periods[:-1]]
 
         cls.offers = [OfferFactory(
@@ -327,6 +328,7 @@ class StudentsAffectationModification(TestCase):
 
     def test_should_update_student_affectations(self):
         organizations = [a.organization for a in self.affectations]
+        initial_cost = self.affectations[0].cost
         new_organization = OrganizationFactory(cohort=self.cohort)
         organizations[0] = new_organization
         OfferFactory(organization=new_organization, speciality=self.affectations[0].speciality, cohort=self.cohort)
@@ -346,9 +348,11 @@ class StudentsAffectationModification(TestCase):
             'cohort_id': self.cohort.pk, 'student_id': self.student.pk
         })+"?tab=affectations")
 
-        self.assertTrue(InternshipStudentAffectationStat.objects.filter(
-            student=self.student, organization=new_organization
-        ).exists())
+        updated_affectation = self.affectations[0]
+        updated_affectation.refresh_from_db()
+
+        self.assertTrue(updated_affectation)
+        self.assertGreater(updated_affectation.cost, initial_cost)
 
     def test_should_delete_student_affectations_when_at_least_one_post_data_is_set_to_empty(self):
         organizations = [a.organization.reference for a in self.affectations]
