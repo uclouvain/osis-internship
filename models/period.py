@@ -92,41 +92,24 @@ def search(**kwargs):
     return Period.objects.filter(**kwargs).select_related().order_by("date_start")
 
 
-def get_assignable_periods(cohort_id):
-    periods = Period.objects.filter(
+def get_periods(cohort_id, remedial: bool):
+    return Period.objects.filter(
         cohort__pk=cohort_id,
-        remedial=False
+        remedial=remedial
     ).prefetch_related(
         'internshipstudentaffectationstat_set'
     ).order_by("date_end")
+
+
+def get_assignable_periods(cohort_id):
+    periods = get_periods(cohort_id, remedial=False)
     periods = periods.exclude(pk=periods.last().pk)
     return periods
 
 
 def get_remedial_periods(cohort_id):
-    return Period.objects.filter(
-        cohort__pk=cohort_id,
-        remedial=True
-    ).prefetch_related(
-        'internshipstudentaffectationstat_set'
-    ).order_by("date_end")
+    return get_periods(cohort_id, remedial=True)
 
 
 def get_effective_periods(cohort_id):
-    periods = Period.objects.filter(
-        cohort__pk=cohort_id,
-        remedial=False
-    ).prefetch_related(
-        'internshipstudentaffectationstat_set'
-    ).order_by("date_end")
-
-    periods = periods.exclude(pk=periods.last().pk)
-
-    remedial_periods = Period.objects.filter(
-        cohort__pk=cohort_id,
-        remedial=True
-    ).prefetch_related(
-        'internshipstudentaffectationstat_set'
-    ).order_by("date_end")
-
-    return periods | remedial_periods
+    return get_assignable_periods(cohort_id) | get_remedial_periods(cohort_id)
