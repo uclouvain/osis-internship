@@ -35,7 +35,7 @@ from internship.models.enums.affectation_type import AffectationType
 from internship.models.enums.choice_type import ChoiceType
 from internship.models.internship import Internship
 from internship.models.internship_choice import InternshipChoice
-from internship.models.period import Period
+from internship.models.period import get_assignable_periods, get_effective_periods
 from statistics import mean, stdev
 
 HOSPITAL_ERROR = 999  # Reference of the hospital "erreur"
@@ -241,7 +241,7 @@ def compute_stats(cohort, sol):
 
 
 def load_solution_table(data, cohort):
-    periods = models.period.Period.objects.filter(cohort=cohort).order_by('date_end')
+    periods = get_assignable_periods(cohort_id=cohort.id)
     period_ids = periods.values_list("id", flat=True)
     prd_internship_places = period_internship_places.PeriodInternshipPlaces.objects.filter(
         period_id__in=period_ids
@@ -290,13 +290,13 @@ def load_solution_table(data, cohort):
 
 
 def load_solution_sol(cohort, student_affectations):
-    keys = Period.objects.filter(cohort=cohort).order_by('date_end').values_list("name", flat=True)
+    keys = get_effective_periods(cohort_id=cohort.id).values_list("name", flat=True)
     internships = Internship.objects.filter(cohort=cohort)
     priority_choices = InternshipChoice.objects.filter(internship__in=internships, priority=True)
     students = Student.objects.filter(id__in=priority_choices.values("student").distinct())
     sol = {}
     for item in student_affectations:
-        # Initialize 12 empty period of each student
+        # Initialize empty periods of each student
         if item.student not in sol:
             sol[item.student] = {key: None for key in keys}
             # Sort the periods by name P1, P2, ...
