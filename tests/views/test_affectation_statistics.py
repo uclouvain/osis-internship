@@ -103,6 +103,3 @@ class ViewAffectationStatisticsTestCase(TestCase):
 
         self.assertEqual(ordered_keys.index('A1'), 0)
         self.assertEqual(ordered_keys.index('Z1'), len(ordered_keys) - 1)
-        self.assertEqual(ordered_keys.index('P10'), 11)
-
-
