@@ -103,7 +103,8 @@ def get_periods(cohort_id, remedial: bool):
 
 def get_assignable_periods(cohort_id):
     periods = get_periods(cohort_id, remedial=False)
-    periods = periods.exclude(pk=periods.last().pk)
+    if periods:
+        periods = periods.exclude(pk=periods.last().pk)
     return periods
 
 
