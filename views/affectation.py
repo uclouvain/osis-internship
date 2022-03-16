@@ -37,6 +37,7 @@ from django.utils import timezone
 from internship import models
 from internship.business import assignment, statistics
 from internship.models import internship_student_affectation_stat
+from internship.models.period import get_assignable_periods, get_effective_periods
 
 
 @login_required
@@ -75,7 +76,7 @@ def run_affectation(request, cohort_id):
 def view_hospitals(request, cohort_id):
     cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
     sol, table, stats, internship_errors = None, None, None, None
-    periods = models.period.Period.objects.filter(cohort=cohort).order_by('date_end')
+    periods = get_assignable_periods(cohort_id=cohort_id)
     period_ids = periods.values_list("id", flat=True)
 
     student_affectations = internship_student_affectation_stat.InternshipStudentAffectationStat.objects\
@@ -99,7 +100,7 @@ def view_hospitals(request, cohort_id):
 def view_students(request, cohort_id):
     cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
     sol, tabl = None, None
-    periods = models.period.Period.objects.filter(cohort=cohort).order_by('date_end')
+    periods = get_effective_periods(cohort_id=cohort_id)
     period_ids = periods.values_list("id", flat=True)
 
     student_affectations = internship_student_affectation_stat.InternshipStudentAffectationStat.objects\

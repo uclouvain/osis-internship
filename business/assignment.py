@@ -43,7 +43,7 @@ from internship.models.internship_choice import InternshipChoice, find_students_
 from internship.models.internship_enrollment import InternshipEnrollment
 from internship.models.internship_student_affectation_stat import InternshipStudentAffectationStat
 from internship.models.organization import Organization
-from internship.models.period import Period
+from internship.models.period import Period, get_assignable_periods
 from internship.models.period_internship_places import PeriodInternshipPlaces
 from internship.utils.assignment.period_place_utils import *
 from internship.utils.assignment.period_utils import group_periods_by_consecutives, map_period_ids
@@ -90,10 +90,9 @@ class Assignment:
         self.offers = self.cohort.internshipoffer_set.all()
         self.offer_ids = self.offers.values_list("id", flat=True)
         self.available_places = PeriodInternshipPlaces.objects.filter(internship_offer_id__in=self.offer_ids).values()
-        last_period = self.cohort.period_set.all().order_by('date_end').last()
-        self.periods = self.cohort.period_set.all().extra(
+        self.periods = get_assignable_periods(self.cohort.pk).extra(
             select={"period_number": "CAST(substr(name, 2) AS INTEGER)"}
-        ).exclude(name=last_period.name).order_by("period_number")
+        ).order_by("period_number")
 
         self.choices = InternshipChoice.objects.filter(internship__cohort=self.cohort).select_related(
             'student', 'internship'
