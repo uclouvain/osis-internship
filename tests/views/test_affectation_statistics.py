@@ -23,7 +23,9 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from datetime import timedelta
 
+import pendulum
 from django.contrib.auth.models import User, Permission
 from django.test import TestCase
 from django.urls import reverse
@@ -87,7 +89,13 @@ class ViewAffectationStatisticsTestCase(TestCase):
     def test_load_solution_should_sort_periods_for_humans(self):
         specialty = SpecialtyFactory(cohort=self.cohort)
 
-        periods = [PeriodFactory(cohort=self.cohort) for _ in range(11)]
+        periods = [
+            PeriodFactory(
+                cohort=self.cohort,
+                date_end=pendulum.today().add_timedelta(timedelta(days=30*_)).end_of('month')
+            ) for _ in range(11)
+        ]
+
         periods.insert(1, PeriodFactory(name="A1", cohort=self.cohort))
         periods.insert(-1, PeriodFactory(name="Z1", cohort=self.cohort))
 
