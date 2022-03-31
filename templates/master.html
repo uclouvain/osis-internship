@@ -147,6 +147,7 @@
                         <tr>
                             <th>{% trans 'Hospital' %}</th>
                             <th>{% trans 'Specialty' %}</th>
+                            <th>{% trans 'Subspecialty' %}</th>
                             <th>{% trans 'Role' %}</th>
                         </tr>
                     </thead>
@@ -154,7 +155,13 @@
                         {% for allocation in allocations %}
                             <tr>
                                 <td>{{ allocation.organization.reference | default_if_none:"" }} - {{ allocation.organization | default_if_none:"" }}</td>
-                                <td>{{ allocation.specialty | default_if_none:"" }}</td>
+                                {% if allocation.specialty.is_subspecialty %}
+                                    <td>{{ allocation.specialty.parent | default_if_none:"" }}</td>
+                                    <td>{{ allocation.specialty | default_if_none:"" }}</td>
+                                {% else %}
+                                    <td>{{ allocation.specialty | default_if_none:"" }}</td>
+                                    <td></td>
+                                {% endif %}
                                 <td>{{ allocation.role.0 }}</td>
                             </tr>
                         {% empty %}

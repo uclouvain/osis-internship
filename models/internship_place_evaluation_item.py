@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2019 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2021 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -23,24 +23,34 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django import forms
+import uuid as uuid
 
-from internship.models.internship_speciality import InternshipSpeciality
+from django.contrib.admin import ModelAdmin
+from django.db import models
+from django.db.models import JSONField
+from ordered_model.models import OrderedModel
+
+from internship.models.enums.response_type import ResponseType
 
 
-class SpecialtyForm(forms.ModelForm):
-    class Meta:
-        model = InternshipSpeciality
-        fields = [
-            'name',
-            'acronym',
-            'mandatory',
-            'sequence',
-            'selectable',
-            'parent'
-        ]
+class PlaceEvaluationItemAdmin(ModelAdmin):
+    list_display = ("order", "statement", "type",)
+    list_filter = ("type",)
+    search_fields = ["statement"]
 
-    def __init__(self, *args, **kwargs):
-        cohort_id = kwargs.pop('cohort_id')
-        super().__init__(*args, **kwargs)
-        self.fields['parent'].queryset = InternshipSpeciality.objects.filter(cohort__pk=cohort_id)
+
+class PlaceEvaluationItem(OrderedModel):
+
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, db_index=True)
+
+    cohort = models.ForeignKey('internship.Cohort', on_delete=models.CASCADE, null=True)
+    statement = models.CharField(max_length=300)
+    type = models.CharField(choices=ResponseType.choices(), default=ResponseType.OPEN.value, max_length=10)
+    options = JSONField(default=list)
+
+    active = models.BooleanField(default=True)
+
+    order_with_respect_to = 'cohort'
+
+    def __str__(self):
+        return '({}) {}'.format(self.order, self.statement)

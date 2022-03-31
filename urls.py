@@ -26,7 +26,7 @@
 from django.conf.urls import include, url
 
 from internship.views import (
-    affectation, home, internship, master, offer, period, place, score, speciality, student, cohort
+    affectation, home, internship, master, offer, period, place, score, speciality, student, cohort, place_evaluation
 )
 
 urlpatterns = [
@@ -168,6 +168,20 @@ urlpatterns = [
                 url(r'^ajax/refresh_evolution_score/$', score.refresh_evolution_score, name='refresh_evolution_score'),
                 url(r'^ajax/empty_score/$', score.empty_score, name='empty_score'),
                 url(r'^send_summary(?:/(?P<period_id>[0-9]+)/)?$', score.send_recap, name='send_summary'),
+            ])),
+
+            url(r'^internship_evaluation/', include([
+                url(r'^$', place_evaluation.internship_place_evaluation, name='place_evaluation'),
+                url(r'^new/$', place_evaluation.internship_place_evaluation_item_new,
+                    name='place_evaluation_new'),
+                url(r'^edit/(?P<item_id>[0-9]+)$', place_evaluation.internship_place_evaluation_item_edit,
+                    name='place_evaluation_edit'),
+                url(r'^delete/(?P<item_id>[0-9]+)$', place_evaluation.internship_place_evaluation_item_delete,
+                    name='place_evaluation_delete'),
+                url(r'^move_up/(?P<item_id>[0-9]+)$', place_evaluation.internship_place_evaluation_item_move_up,
+                    name='place_evaluation_item_move_up'),
+                url(r'^move_down/(?P<item_id>[0-9]+)$', place_evaluation.internship_place_evaluation_item_move_down,
+                    name='place_evaluation_item_move_down'),
             ])),
         ])),
     ])),

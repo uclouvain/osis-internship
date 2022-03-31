@@ -23,24 +23,15 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django import forms
+from django.utils.translation import gettext_lazy as _
 
-from internship.models.internship_speciality import InternshipSpeciality
+from osis_common.utils.enumerations import ChoiceEnum
 
 
-class SpecialtyForm(forms.ModelForm):
-    class Meta:
-        model = InternshipSpeciality
-        fields = [
-            'name',
-            'acronym',
-            'mandatory',
-            'sequence',
-            'selectable',
-            'parent'
-        ]
+class ResponseType(ChoiceEnum):
+    CHOICE = _("Choice")
+    OPEN = _("Open")
 
-    def __init__(self, *args, **kwargs):
-        cohort_id = kwargs.pop('cohort_id')
-        super().__init__(*args, **kwargs)
-        self.fields['parent'].queryset = InternshipSpeciality.objects.filter(cohort__pk=cohort_id)
+    @classmethod
+    def choices(cls):
+        return tuple((x.name.upper(), x.value) for x in cls)

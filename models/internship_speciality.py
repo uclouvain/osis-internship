@@ -23,6 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.contrib import admin
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 
@@ -30,18 +31,20 @@ from osis_common.models.serializable_model import SerializableModel, Serializabl
 
 
 class InternshipSpecialityAdmin(SerializableModelAdmin):
-    list_display = ('name', 'acronym', 'mandatory', 'cohort', 'sequence', 'selectable')
-    fieldsets = ((None, {'fields': ('name', 'acronym', 'sequence', 'mandatory', 'cohort', 'selectable')}),)
-    list_filter = ('cohort', 'selectable')
+    list_display = ('name', 'acronym', 'mandatory', 'cohort', 'sequence', 'selectable', 'is_subspecialty')
+    fieldsets = ((None, {'fields': ('name', 'acronym', 'sequence', 'mandatory', 'cohort', 'selectable', 'parent')}),)
+    list_filter = ('cohort', 'selectable', 'parent')
 
 
 class InternshipSpeciality(SerializableModel):
     name = models.CharField(max_length=125)
-    acronym = models.CharField(max_length=125)
+    acronym = models.CharField(max_length=125, null=True, blank=True)
     mandatory = models.BooleanField(default=False)
     sequence = models.IntegerField(blank=True, null=True)
     cohort = models.ForeignKey('internship.Cohort', on_delete=models.CASCADE)
     selectable = models.BooleanField(default=True)
+
+    parent = models.ForeignKey("InternshipSpeciality", on_delete=models.CASCADE, null=True, blank=True)
 
     def acronym_with_sequence(self):
         if self.sequence:
@@ -49,11 +52,28 @@ class InternshipSpeciality(SerializableModel):
         else:
             return self.acronym
 
+    def is_subspecialty(self):
+        return self.parent is not None
+
+    # enable list display as logo in admin
+    is_subspecialty.boolean = True
+
     def __str__(self):
         return self.name
 
     class Meta:
         ordering = ('name',)
+
+
+class IsSubspecialtyFilter(admin.SimpleListFilter):
+    title = 'is_subspecialty'
+    parameter_name = 'is_subspecialty'
+
+    def lookups(self, request, model_admin):
+        return ('Yes', 'Yes'), ('No', 'No'),
+
+    def queryset(self, request, queryset):
+        return queryset.filter(parent__is_null=self.value() == 'Yes')
 
 
 def search(**kwargs):

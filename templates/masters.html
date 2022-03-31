@@ -164,7 +164,14 @@
                                     <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
                                 </a>
                             </td>
-                            <td>{{ allocation.specialty | default_if_none:'-' }}</td>
+                            <td>
+                                {% if allocation.specialty.is_subspecialty %}
+                                    {{ allocation.specialty.parent | default_if_none:'-' }}
+                                    <i title="{% trans 'Subspecialty' %}: {{ allocation.specialty}}" class="fas fa-info-circle text-info"></i>
+                                {% else %}
+                                    {{ allocation.specialty | default_if_none:'-' }}
+                                {% endif %}
+                            </td>
                             {% if allocation.organization %}
                                 <td>{{ allocation.organization.reference }} - {{ allocation.organization }}</td>
                             {% else %}

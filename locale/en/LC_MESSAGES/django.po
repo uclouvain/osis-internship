@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-14 16:59+0100\n"
+"POT-Creation-Date: 2022-02-04 12:20+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -36,6 +36,11 @@ msgid ""
 "A person with this email address has been previously recorded. Form inputs "
 "will be filled based on the existing data. Fields with existing information "
 "will be overwritten."
+msgstr ""
+
+msgid ""
+"A subspecialty must exclusively define a name and should not be mandatory "
+"nor selectable"
 msgstr ""
 
 msgid "APD Validation"
@@ -77,7 +82,13 @@ msgstr ""
 msgid "Add internship modality"
 msgstr ""
 
+msgid "Add item"
+msgstr ""
+
 msgid "Add new master"
+msgstr ""
+
+msgid "Add option"
 msgstr ""
 
 msgid "Add period"
@@ -135,6 +146,12 @@ msgid "An error occured while updating status"
 msgstr ""
 
 msgid "An evaluation should include minimum {} and maximum {} evaluated APDs"
+msgstr ""
+
+msgid "Aptitudes conditions fulfilled"
+msgstr ""
+
+msgid "Aptitudes conditions not fulfilled"
 msgstr ""
 
 msgid "Attention"
@@ -245,6 +262,9 @@ msgid "Create user account"
 msgstr ""
 
 msgid "Current internship"
+msgstr ""
+
+msgid "Current period"
 msgstr ""
 
 msgid "Date format"
@@ -377,6 +397,9 @@ msgstr ""
 msgid "Following modifications will be applied:"
 msgstr ""
 
+msgid "Form"
+msgstr ""
+
 msgid "Fourth choice"
 msgstr ""
 
@@ -482,6 +505,9 @@ msgstr ""
 msgid "Internship's detail successfully edited for the following periods: {}"
 msgstr ""
 
+msgid "Internship's place evaluation"
+msgstr ""
+
 msgid "Internships"
 msgstr ""
 
@@ -502,6 +528,9 @@ msgstr ""
 
 #, python-format
 msgid "Internships ratings successfully imported for period %(period)s"
+msgstr ""
+
+msgid "Item"
 msgstr ""
 
 msgid "Language"
@@ -568,6 +597,9 @@ msgstr ""
 msgid "New internship"
 msgstr ""
 
+msgid "New item"
+msgstr ""
+
 msgid "New records"
 msgstr ""
 
@@ -581,6 +613,9 @@ msgid "No assignment available"
 msgstr ""
 
 msgid "No data corresponds to the filters above. Make a choice, please."
+msgstr ""
+
+msgid "No evaluation items found for this cohort"
 msgstr ""
 
 msgid "No hospital"
@@ -628,6 +663,15 @@ msgstr ""
 msgid "Number of students who chosed this organization"
 msgstr ""
 
+msgid "Open"
+msgstr ""
+
+msgid "Options"
+msgstr ""
+
+msgid "Order"
+msgstr ""
+
 msgid "Order position"
 msgstr ""
 
@@ -638,6 +682,9 @@ msgid "Other choice"
 msgstr ""
 
 msgid "Other reason"
+msgstr ""
+
+msgid "Parent specialty"
 msgstr ""
 
 msgid "Paste"
@@ -722,6 +769,12 @@ msgid "Reference"
 msgstr ""
 
 msgid "Report to the hospital"
+msgstr ""
+
+msgid "Response type"
+msgstr ""
+
+msgid "Results"
 msgstr ""
 
 msgid "Return"
@@ -831,6 +884,9 @@ msgstr ""
 msgid "Start date must be earlier than end date."
 msgstr ""
 
+msgid "Statement"
+msgstr ""
+
 msgid "Statistics"
 msgstr ""
 
@@ -865,6 +921,15 @@ msgid "Studies"
 msgstr ""
 
 msgid "Submit choices"
+msgstr ""
+
+msgid "Subspecialty"
+msgstr ""
+
+msgid "Successfully deleted item {}"
+msgstr ""
+
+msgid "Successfully saved item {}"
 msgstr ""
 
 msgid "Suggestions"
