@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-02-04 12:20+0100\n"
+"POT-Creation-Date: 2022-02-16 14:31+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -623,6 +623,9 @@ msgstr "Nom"
 msgid "New internship"
 msgstr "Nouveau stage"
 
+msgid "New internship's master"
+msgstr "Nouveau maître de stage"
+
 msgid "New item"
 msgstr "Nouvelle question"
 
@@ -795,6 +798,9 @@ msgstr "Évaluation de stage reçue"
 
 msgid "Reference"
 msgstr "Référence"
+
+msgid "Remedial"
+msgstr "Rattrapage"
 
 msgid "Report to the hospital"
 msgstr "Rapport pour l'hôpital"
@@ -972,6 +978,13 @@ msgstr "Méthodes d'apprentissage suggérées"
 msgid "Summaries have been sent successfully"
 msgstr "Les emails récapitulatifs ont bien été envoyés"
 
+msgid ""
+"The following masters/delegates allocations have been transferred to cohort "
+"{}: "
+msgstr ""
+"Les attributions suivantes des maîtres/délégués de stage ont été transférées "
+"dans la cohorte {}:"
+
 msgid "Third choice"
 msgstr "3ème choix"
 
@@ -1001,6 +1014,13 @@ msgstr ""
 "Cette action supprimera la note de cet étudiant pour cette période et celle-"
 "ci sera décomptée du calcul de la cote d'évolution."
 
+msgid ""
+"This action will transfer all selected master's allocations to the folowing "
+"cohort:"
+msgstr ""
+"Cette action transférera les attributions de stages sélectionnées dans la "
+"cohorte suivante:"
+
 msgid "This may take several minutes"
 msgstr "Cela peut prendre quelques minutes"
 
@@ -1009,6 +1029,15 @@ msgstr "Coût total de la solution"
 
 msgid "Total of internships"
 msgstr "Total de stages"
+
+msgid "Transfer"
+msgstr "Transférer"
+
+msgid "Transfer master(s) to cohort"
+msgstr "Transférer vers une cohorte"
+
+msgid "Transfer to cohort"
+msgstr "Transférer vers une cohorte"
 
 msgid "Unable to create a user account for {}: no birth date set"
 msgstr ""
@@ -1026,6 +1055,9 @@ msgid ""
 msgstr ""
 "La création du compte utilisateur de {} est déjà en attente, un email a été "
 "envoyé à nouveau"
+
+msgid "User account for {} is already active, nothing done"
+msgstr "Le compte utilisateur de {} est déjà actif, aucune action réalisée"
 
 msgid "User account is active"
 msgstr "Le compte utilisateur est actif"

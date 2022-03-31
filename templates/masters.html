@@ -124,6 +124,13 @@
                             {% trans 'Create user account' %}
                         </a>
                     </li>
+                    <li role="separator" class="divider"></li>
+                    <li id="li_transfer_to_cohort">
+                        <a href="#" data-toggle="modal" data-target="#transfer_cohort" id="btn_transfer">
+                            <span class="glyphicon glyphicon-transfer" aria-hidden="true"></span>
+                            {% trans 'Transfer to cohort' %}
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -153,8 +160,7 @@
                         <tr>
                             <td>
                               <input type="checkbox" name="selected_master" class="selected_object"
-                                     data-master="{{ allocation.master }}" value="{{ allocation.master.pk }}"
-                                     {% if allocation.master.user_account_status == account_status.ACTIVE.value %} disabled {% endif %}/>
+                                     data-master="{{ allocation.master }}" value="{{ allocation.master.pk }}"/>
                             </td>
                             <td>{% if allocation.master.civility %}{% trans allocation.master.civility_acronym %}{% endif %}</td>
                             <td>{{ allocation.master.person.last_name | upper }}</td>
@@ -215,6 +221,7 @@
     </div>
 
     {% include 'fragment/create_master_account_modal.html' %}
+    {% include 'fragment/transfer_master_cohort_modal.html' %}
 
 {% endblock %}
 
@@ -255,5 +262,17 @@
     function createAccount(){
         $("#create_account_form").submit();
     }
+
+    function transferAllocationCohort(){
+        const selectedMasters = document.querySelectorAll("input[name='selected_master']:checked");
+        const transferForm = document.querySelector('#transfer_cohort_form');
+        selectedMasters.forEach((master) => {
+            const input = document.createElement('input');
+            Object.assign(input, {'name': 'selected_masters', 'type': 'hidden', 'value': master.defaultValue});
+            transferForm.append(input);
+        })
+        transferForm.submit();
+    }
+
 </script>
 {% endblock %}

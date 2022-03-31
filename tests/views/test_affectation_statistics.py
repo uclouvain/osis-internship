@@ -23,13 +23,17 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from datetime import timedelta
 
+import pendulum
 from django.contrib.auth.models import User, Permission
 from django.test import TestCase
 from django.urls import reverse
 
+from internship.business.statistics import load_solution_sol
 from internship.tests.factories.cohort import CohortFactory
 from internship.tests.factories.organization import OrganizationFactory
+from internship.tests.factories.period import PeriodFactory
 from internship.tests.factories.speciality import SpecialtyFactory
 from internship.tests.factories.student_affectation_stat import StudentAffectationStatFactory
 
@@ -81,3 +85,29 @@ class ViewAffectationStatisticsTestCase(TestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'internship_affectation_statistics.html')
+
+    def test_load_solution_should_sort_periods_for_humans(self):
+        specialty = SpecialtyFactory(cohort=self.cohort)
+
+        periods = [
+            PeriodFactory(
+                cohort=self.cohort,
+                date_end=pendulum.today().add_timedelta(timedelta(days=30*_)).end_of('month')
+            ) for _ in range(11)
+        ]
+
+        periods.insert(1, PeriodFactory(name="A1", cohort=self.cohort))
+        periods.insert(-1, PeriodFactory(name="Z1", cohort=self.cohort))
+
+        organization = OrganizationFactory(cohort=self.cohort)
+        affectations = [
+            StudentAffectationStatFactory(period=p, organization=organization, speciality=specialty) for p in periods
+        ]
+
+        sol = load_solution_sol(self.cohort, affectations)
+
+        ordered_keys = list(sol[list(sol.keys())[0]].keys())
+        ordered_keys.remove('score')
+
+        self.assertEqual(ordered_keys.index('A1'), 0)
+        self.assertEqual(ordered_keys.index('Z1'), len(ordered_keys) - 1)

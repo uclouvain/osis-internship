@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-02-04 12:20+0100\n"
+"POT-Creation-Date: 2022-02-16 14:31+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -597,6 +597,9 @@ msgstr ""
 msgid "New internship"
 msgstr ""
 
+msgid "New internship's master"
+msgstr ""
+
 msgid "New item"
 msgstr ""
 
@@ -766,6 +769,9 @@ msgid "Received internship grades"
 msgstr ""
 
 msgid "Reference"
+msgstr ""
+
+msgid "Remedial"
 msgstr ""
 
 msgid "Report to the hospital"
@@ -938,6 +944,11 @@ msgstr ""
 msgid "Summaries have been sent successfully"
 msgstr ""
 
+msgid ""
+"The following masters/delegates allocations have been transferred to cohort "
+"{}: "
+msgstr ""
+
 msgid "Third choice"
 msgstr ""
 
@@ -962,6 +973,11 @@ msgid ""
 "will be discarded from the evolution score computation."
 msgstr ""
 
+msgid ""
+"This action will transfer all selected master's allocations to the folowing "
+"cohort:"
+msgstr ""
+
 msgid "This may take several minutes"
 msgstr ""
 
@@ -969,6 +985,15 @@ msgid "Total cost of solution"
 msgstr ""
 
 msgid "Total of internships"
+msgstr ""
+
+msgid "Transfer"
+msgstr ""
+
+msgid "Transfer master(s) to cohort"
+msgstr ""
+
+msgid "Transfer to cohort"
 msgstr ""
 
 msgid "Unable to create a user account for {}: no birth date set"
@@ -982,6 +1007,9 @@ msgstr ""
 
 msgid ""
 "User account creation for {} is already pending, an email was sent again"
+msgstr ""
+
+msgid "User account for {} is already active, nothing done"
 msgstr ""
 
 msgid "User account is active"

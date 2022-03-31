@@ -4,6 +4,7 @@
 {% load mapping %}
 {% load grades %}
 {% load pagination %}
+{% load student %}
 {% load i18n bootstrap3 %}
 
 {% comment "License" %}
@@ -176,27 +177,55 @@
                         {% csrf_token %}
                         {% with last_complete_period=completed_periods.last last_period=periods.last %}
                         {% for student in students %}
+                        {% with has_remedial=student|has_remedial %}
                          <tr>
-                          <td rowspan="{{ periods|length|add:1 }}">
-                              <input type="checkbox" name="selected_student" class="selected_object" data-periods="{{ student.periods_scores }}"
-                                     data-student="{{ student }}" value="{{ student.pk }}"/>
-                          </td>
-                          <td rowspan="{{ periods|length|add:1 }}">
-                              {% if not student.fulfill_condition %}
-                                  <icon title="{% trans 'Aptitudes conditions not fulfilled' %}" class="glyphicon glyphicon-remove-sign text-danger"></icon>
-                              {% else %}
-                                  <icon title="{% trans 'Aptitudes conditions fulfilled' %}" class="glyphicon glyphicon-ok-sign text-success"></icon>
-                              {% endif %}
-                          </td>
-                          <td style="max-width: 10vw;" class="overflow-cell" rowspan="{{ periods|length|add:1 }}">{{ student }}</td>
-                      </tr>
+                             {% with rowspan_no_remedial=mandatory_periods|length|add:1 %}
+                             {% with rowspan_remedial=student.remedial_periods_count %}
+                              <td
+                                {% if has_remedial %}
+                                    rowspan="{{ rowspan_no_remedial|add:rowspan_remedial }}"
+                                {% else %}
+                                    rowspan="{{ rowspan_no_remedial }}"
+                                {% endif %}>
+                                    <input type="checkbox" name="selected_student" class="selected_object"
+                                        data-periods="{{ student.periods_scores }}"
+                                        data-student="{{ student }}"
+                                        value="{{ student.pk }}"
+                                    />
+                              </td>
+                              <td
+                                {% if has_remedial %}
+                                    rowspan="{{ rowspan_no_remedial|add:rowspan_remedial }}"
+                                {% else %}
+                                    rowspan="{{ rowspan_no_remedial }}"
+                                {% endif %}>
+                                {% if not student.fulfill_condition %}
+                                    <icon title="{% trans 'Aptitudes conditions not fulfilled' %}"
+                                        class="glyphicon glyphicon-remove-sign text-danger">
+                                    </icon>
+                                {% else %}
+                                      <icon title="{% trans 'Aptitudes conditions fulfilled' %}"
+                                        class="glyphicon glyphicon-ok-sign text-success"></icon>
+                                  {% endif %}
+                              </td>
+                              <td style="max-width: 10vw;" class="overflow-cell"
+                                {% if has_remedial %}
+                                    rowspan="{{ rowspan_no_remedial|add:rowspan_remedial }}"
+                                {% else %}
+                                    rowspan="{{ rowspan_no_remedial }}"
+                                {% endif %}>
+                                {{ student }}
+                              </td>
+                              {% endwith %}
+                              {% endwith %}
+                        </tr>
                         {% for period in periods %}
-
+                          {% if not period.remedial or student|has_remedial:period %}
                           <tr onmouseover="showEditScoreBtn({{ student.pk }}, {{ period.pk }})"
                               onmouseout="hideEditScoreBtn({{ student.pk }}, {{ period.pk }})"
-                                  {% if period == last_complete_period and last_period is not last_completed_period %}
-                              class="last-completed-period"
-                          {% endif %}>
+                              {% if period == last_complete_period and last_period is not last_completed_period %}
+                                class="last-completed-period"
+                              {% endif %}>
                             <td style="text-align: center;">
                             {% if student.scores|has_substr:period %}
                               <a href="{% url 'internship_edit_score' cohort_id=cohort.pk student_registration_id=student.registration_id period_id=period.pk%}" type="button" class="btn btn-xs btn-default btn-edit-score" style="display: none;"
@@ -278,8 +307,11 @@
                                       {% endif %}
                                 {% endif %}
                             {% endwith %}
-                          {% endfor %}
                             </tr>
+
+                            {% endif %}
+                          {% endfor %}
+
                             {% if search_form.show_apds_validation.value %}
                             <tr>
                                 <td colspan="8" style="text-align: right;">{% trans 'APD Validation' %}</td>
@@ -289,11 +321,13 @@
                                         <icon class="fas fa-circle {% if success %} text-success {% else %} text-danger {% endif %}"></icon>
                                     </td>
                                 {% endfor %}
+                                <td colspan="3"></td>
                             </tr>
                             {% endif %}
                             {% if periods|length == all_periods|length %}
                                 {% include 'fragment/evolution_score_cell.html' %}
                             {% endif %}
+                            {% endwith %}
                         {% empty %}
                             <tr>
                                 {% trans 'No result' %}

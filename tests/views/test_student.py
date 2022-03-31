@@ -294,7 +294,7 @@ class StudentsAffectationModification(TestCase):
             sorted([a.organization for a in self.affectations], key=lambda o: o.reference)
         )
         self.assertListEqual(
-            list(context['periods'])[:-1],
+            list(context['periods']),
             sorted([a.period for a in self.affectations], key=lambda p: p.date_end)
         )
         self.assertEqual(list(context['affectations']), self.affectations)

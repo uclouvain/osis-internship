@@ -42,7 +42,14 @@
 {% block content %}
 
     <div class="page-header">
-        <h2>{% trans 'Master' %}: <span id="full_name">{{ allocated_master.person.last_name | upper }}, {{ allocated_master.person.first_name }}</span> </h2>
+        {% if allocated_master %}
+            <h2>
+                {% if allocated_master.civility %}{% trans allocated_master.civility_acronym %}{% endif %}
+                <span id="full_name">{{ allocated_master.person.last_name | upper }}, {{ allocated_master.person.first_name }}</span>
+            </h2>
+        {% else %}
+            <h2>{% trans "New internship's master"  %}</h2>
+        {% endif %}
     </div>
 
     <div class="panel panel-default">
