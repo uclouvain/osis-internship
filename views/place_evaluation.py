@@ -116,7 +116,7 @@ def internship_place_evaluation_item_delete(request, cohort_id, item_id):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internship_place_evaluation_item_move_up(request, cohort_id, item_id):
     item = PlaceEvaluationItem.objects.get(pk=item_id)
-    item.move_up()
+    item.up()
     return redirect('place_evaluation', cohort_id=cohort_id)
 
 
@@ -124,5 +124,5 @@ def internship_place_evaluation_item_move_up(request, cohort_id, item_id):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internship_place_evaluation_item_move_down(request, cohort_id, item_id):
     item = PlaceEvaluationItem.objects.get(pk=item_id)
-    item.move_down()
+    item.down()
     return redirect('place_evaluation', cohort_id=cohort_id)
