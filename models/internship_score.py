@@ -26,8 +26,8 @@
 import uuid as uuid
 
 from django.contrib.admin import ModelAdmin
+from django.contrib.postgres.fields import JSONField
 from django.db import models
-from django.db.models import JSONField
 from django.db.models import Model
 
 APD_NUMBER = 15
