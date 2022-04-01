@@ -52,12 +52,18 @@ class TestSearchByStudentOrChoice(TestCase):
             person=self.other_student.person,
             cohort=self.cohort)
 
-        self.choice_1 = create_internship_choice(self.organization, self.student, self.speciality,
-                                                internship=self.other_internship)
-        self.choice_2 = create_internship_choice(self.organization, self.student, self.speciality,
-                                                internship=self.internship)
-        self.choice_3 = create_internship_choice(self.organization, self.other_student, self.speciality,
-                                                internship=self.other_internship)
+        self.choice_1 = create_internship_choice(
+            self.organization, self.student, self.speciality,
+            internship=self.other_internship
+        )
+        self.choice_2 = create_internship_choice(
+            self.organization, self.student, self.speciality,
+            internship=self.internship
+        )
+        self.choice_3 = create_internship_choice(
+            self.organization, self.other_student, self.speciality,
+            internship=self.other_internship
+        )
 
     def test_duplicates_are_forbidden(self):
         with self.assertRaises(IntegrityError):
