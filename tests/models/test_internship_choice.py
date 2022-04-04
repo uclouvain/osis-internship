@@ -37,28 +37,27 @@ from internship.tests.models import test_organization, test_internship_specialit
 
 
 class TestSearchByStudentOrChoice(TestCase):
-    @classmethod
-    def setUpTestData(cls):
-        cls.organization = test_organization.create_organization()
-        cls.student = test_student.create_student(first_name="first", last_name="last", registration_id="64641200")
-        cls.other_student = test_student.create_student(first_name="first", last_name="last", registration_id="606012")
-        cls.cohort = CohortFactory()
-        cls.speciality = test_internship_speciality.create_speciality(cohort=cls.cohort)
-        cls.internship = InternshipFactory(cohort=cls.cohort)
-        cls.other_internship = InternshipFactory(cohort=cls.cohort)
-        cls.student_information = test_internship_student_information.create_student_information(
-            person=cls.student.person,
-            cohort=cls.cohort)
-        cls.other_student_information = test_internship_student_information.create_student_information(
-            person=cls.other_student.person,
-            cohort=cls.cohort)
+    def setUp(self):
+        self.organization = test_organization.create_organization()
+        self.student = test_student.create_student(first_name="first", last_name="last", registration_id="64641200")
+        self.other_student = test_student.create_student(first_name="first", last_name="last", registration_id="606012")
+        self.cohort = CohortFactory()
+        self.speciality = test_internship_speciality.create_speciality(cohort=self.cohort)
+        self.internship = InternshipFactory(cohort=self.cohort)
+        self.other_internship = InternshipFactory(cohort=self.cohort)
+        self.student_information = test_internship_student_information.create_student_information(
+            person=self.student.person,
+            cohort=self.cohort)
+        self.other_student_information = test_internship_student_information.create_student_information(
+            person=self.other_student.person,
+            cohort=self.cohort)
 
-        cls.choice_1 = create_internship_choice(cls.organization, cls.student, cls.speciality,
-                                                internship=cls.other_internship)
-        cls.choice_2 = create_internship_choice(cls.organization, cls.student, cls.speciality,
-                                                internship=cls.internship)
-        cls.choice_3 = create_internship_choice(cls.organization, cls.other_student, cls.speciality,
-                                                internship=cls.other_internship)
+        self.choice_1 = create_internship_choice(self.organization, self.student, self.speciality,
+                                                internship=self.other_internship)
+        self.choice_2 = create_internship_choice(self.organization, self.student, self.speciality,
+                                                internship=self.internship)
+        self.choice_3 = create_internship_choice(self.organization, self.other_student, self.speciality,
+                                                internship=self.other_internship)
 
     def test_duplicates_are_forbidden(self):
         with self.assertRaises(IntegrityError):
