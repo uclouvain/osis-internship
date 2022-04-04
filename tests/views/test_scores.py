@@ -62,7 +62,11 @@ class ScoresEncodingTest(TestCase):
     def setUp(self):
         self.cohort = CohortFactory()
         self.period = PeriodFactory(name='P1', date_end=date.today() - relativedelta(months=2), cohort=self.cohort)
-        self.other_period = PeriodFactory(name='P2', date_end=date.today() - relativedelta(months=1),  cohort=self.cohort, )
+        self.other_period = PeriodFactory(
+            name='P2',
+            date_end=date.today() - relativedelta(months=1),
+            cohort=self.cohort,
+        )
         self.xlsfile = SimpleUploadedFile(
             name='upload.xls',
             content=str.encode('test'),
@@ -105,7 +109,11 @@ class ScoresEncodingTest(TestCase):
                 score_A=20, score_B=15, score_C=10, score_D=0,
                 apd=apd
             )
-        self.unused_period = PeriodFactory(name="P99", cohort=self.cohort, date_end=date.today() + relativedelta(months=+2))
+        self.unused_period = PeriodFactory(
+            name="P99",
+            cohort=self.cohort,
+            date_end=date.today() + relativedelta(months=+2)
+        )
         self.user = User.objects.create_user('demo', 'demo@demo.org', 'passtest')
         permission = Permission.objects.get(codename='is_internship_manager')
         self.user.user_permissions.add(permission)

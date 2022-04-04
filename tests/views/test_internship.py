@@ -213,8 +213,13 @@ class TestModifyStudentChoices(TestCase):
 
 class TestModifyPeriods(TestCase):
     def setUp(self):
-        self.user = User.objects.create_user("username", "test@test.com", "passtest",
-            first_name='first_name', last_name='last_name')
+        self.user = User.objects.create_user(
+            "username",
+            "test@test.com",
+            "passtest",
+            first_name='first_name',
+            last_name='last_name'
+        )
         self.user.save()
         add_permission(self.user, "is_internship_manager")
         self.person = test_person.create_person_with_user(self.user)
@@ -223,8 +228,11 @@ class TestModifyPeriods(TestCase):
 
         self.speciality = test_internship_speciality.create_speciality(name="urgence", cohort=self.cohort)
         self.organization = test_organization.create_organization(reference="01", cohort=self.cohort)
-        self.offer = test_internship_offer.create_specific_internship_offer(self.organization, self.speciality,
-            cohort=self.cohort)
+        self.offer = test_internship_offer.create_specific_internship_offer(
+            self.organization,
+            self.speciality,
+            cohort=self.cohort
+        )
 
         MAX_PERIOD = 12
         for period in range(1, MAX_PERIOD + 1):
