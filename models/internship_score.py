@@ -87,7 +87,7 @@ class InternshipScore(Model):
     objectives = JSONField(default=dict, blank=True)
 
     validated = models.BooleanField(default=False)
-    student_presence = models.NullBooleanField()
+    student_presence = models.BooleanField(null=True)
 
     def __str__(self):
         return '{} - {}'.format(self.student_affectation, self.get_scores())

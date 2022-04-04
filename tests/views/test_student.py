@@ -60,31 +60,28 @@ from internship.views.student import import_students, internships_student_import
 
 
 class TestStudentResume(TestCase):
-    @classmethod
-    def setUpTestData(cls):
-        cls.cohort = CohortFactory()
-        organization = test_organization.create_organization(cohort=cls.cohort)
-        cls.student_1 = test_student.create_student(first_name="first", last_name="last", registration_id="64641200")
-        cls.student_2 = test_student.create_student(first_name="first", last_name="last", registration_id="606012")
-        speciality = test_internship_speciality.create_speciality(cohort=cls.cohort)
-
-        cls.internship = InternshipFactory(cohort=cls.cohort)
-        cls.internship_2 = InternshipFactory(cohort=cls.cohort)
-        cls.internship_3 = InternshipFactory(cohort=cls.cohort)
-        cls.internship_4 = InternshipFactory(cohort=cls.cohort)
-
-        cls.choice_1 = create_internship_choice(organization, cls.student_1, speciality, internship=cls.internship)
-        cls.choice_2 = create_internship_choice(organization, cls.student_1, speciality, internship=cls.internship_2)
-        cls.choice_3 = create_internship_choice(organization, cls.student_1, speciality, internship=cls.internship_3)
-        cls.choice_4 = create_internship_choice(organization, cls.student_1, speciality, internship=cls.internship_4)
-        cls.choice_5 = create_internship_choice(organization, cls.student_2, speciality, internship=cls.internship)
-        cls.choice_6 = create_internship_choice(organization, cls.student_2, speciality, internship=cls.internship_2)
-        cls.choice_7 = create_internship_choice(organization, cls.student_2, speciality, internship=cls.internship_3)
-        cls.url = reverse(internships_student_resume, kwargs={
-            'cohort_id': cls.cohort.id,
-        })
-
     def setUp(self):
+        self.cohort = CohortFactory()
+        organization = test_organization.create_organization(cohort=self.cohort)
+        self.student_1 = test_student.create_student(first_name="first", last_name="last", registration_id="64641200")
+        self.student_2 = test_student.create_student(first_name="first", last_name="last", registration_id="606012")
+        speciality = test_internship_speciality.create_speciality(cohort=self.cohort)
+
+        self.internship = InternshipFactory(cohort=self.cohort)
+        self.internship_2 = InternshipFactory(cohort=self.cohort)
+        self.internship_3 = InternshipFactory(cohort=self.cohort)
+        self.internship_4 = InternshipFactory(cohort=self.cohort)
+
+        self.choice_1 = create_internship_choice(organization, self.student_1, speciality, internship=self.internship)
+        self.choice_2 = create_internship_choice(organization, self.student_1, speciality, internship=self.internship_2)
+        self.choice_3 = create_internship_choice(organization, self.student_1, speciality, internship=self.internship_3)
+        self.choice_4 = create_internship_choice(organization, self.student_1, speciality, internship=self.internship_4)
+        self.choice_5 = create_internship_choice(organization, self.student_2, speciality, internship=self.internship)
+        self.choice_6 = create_internship_choice(organization, self.student_2, speciality, internship=self.internship_2)
+        self.choice_7 = create_internship_choice(organization, self.student_2, speciality, internship=self.internship_3)
+        self.url = reverse(internships_student_resume, kwargs={
+            'cohort_id': self.cohort.id,
+        })
         self.response = self.client.get(self.url)
 
     def test_get_students_status_empty(self):
@@ -252,40 +249,38 @@ class StudentsListImport(TestCase):
 
 
 class StudentsAffectationModification(TestCase):
-    @classmethod
-    def setUpTestData(cls):
-        cls.user = User.objects.create_user('demo', email='demo@demo.org', password='password')
+    def setUp(self):
+        self.user = User.objects.create_user('demo', email='demo@demo.org', password='password')
         permission = Permission.objects.get(codename='is_internship_manager')
-        cls.user.user_permissions.add(permission)
+        self.user.user_permissions.add(permission)
 
-        cls.cohort = CohortFactory()
+        self.cohort = CohortFactory()
 
-        cls.student = StudentFactory()
-        PersonAddressFactory(person=cls.student.person)
-        InternshipStudentInformationFactory(person=cls.student.person, cohort=cls.cohort)
+        self.student = StudentFactory()
+        PersonAddressFactory(person=self.student.person)
+        InternshipStudentInformationFactory(person=self.student.person, cohort=self.cohort)
 
-        cls.periods = [
-            PeriodFactory(name='P{}'.format(p), date_end=date.today() + timedelta(days=p*30), cohort=cls.cohort)
+        self.periods = [
+            PeriodFactory(name='P{}'.format(p), date_end=date.today() + timedelta(days=p*30), cohort=self.cohort)
             for p in range(1, 8)
         ]
 
-        cls.affectations = [StudentAffectationStatFactory(
-            student=cls.student,
+        self.affectations = [StudentAffectationStatFactory(
+            student=self.student,
             period=period,
-            organization__cohort=cls.cohort,
-            speciality__cohort=cls.cohort,
-            internship__cohort=cls.cohort,
+            organization__cohort=self.cohort,
+            speciality__cohort=self.cohort,
+            internship__cohort=self.cohort,
             cost=1,
-        ) for period in cls.periods[:-1]]
+        ) for period in self.periods[:-1]]
 
-        cls.offers = [OfferFactory(
-            organization=a.organization, speciality=a.speciality, cohort=cls.cohort
-        ) for a in cls.affectations]
+        self.offers = [OfferFactory(
+            organization=a.organization, speciality=a.speciality, cohort=self.cohort
+        ) for a in self.affectations]
 
-        cls.scores = [ScoreFactory(student_affectation=a) for a in cls.affectations]
-        cls.choices = InternshipChoice(student=cls.student)
+        self.scores = [ScoreFactory(student_affectation=a) for a in self.affectations]
+        self.choices = InternshipChoice(student=self.student)
 
-    def setUp(self):
         self.client.force_login(self.user)
 
     def test_should_show_student_affectations_form(self):

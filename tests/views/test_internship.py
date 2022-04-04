@@ -212,28 +212,34 @@ class TestModifyStudentChoices(TestCase):
 
 
 class TestModifyPeriods(TestCase):
-    @classmethod
-    def setUpTestData(cls):
-        cls.user = User.objects.create_user("username", "test@test.com", "passtest",
-                                             first_name='first_name', last_name='last_name')
-        cls.user.save()
-        add_permission(cls.user, "is_internship_manager")
-        cls.person = test_person.create_person_with_user(cls.user)
+    def setUp(self):
+        self.user = User.objects.create_user(
+            "username",
+            "test@test.com",
+            "passtest",
+            first_name='first_name',
+            last_name='last_name'
+        )
+        self.user.save()
+        add_permission(self.user, "is_internship_manager")
+        self.person = test_person.create_person_with_user(self.user)
 
-        cls.cohort = CohortFactory()
+        self.cohort = CohortFactory()
 
-        cls.speciality = test_internship_speciality.create_speciality(name="urgence", cohort=cls.cohort)
-        cls.organization = test_organization.create_organization(reference="01", cohort=cls.cohort)
-        cls.offer = test_internship_offer.create_specific_internship_offer(cls.organization, cls.speciality,
-                                                                            cohort=cls.cohort)
+        self.speciality = test_internship_speciality.create_speciality(name="urgence", cohort=self.cohort)
+        self.organization = test_organization.create_organization(reference="01", cohort=self.cohort)
+        self.offer = test_internship_offer.create_specific_internship_offer(
+            self.organization,
+            self.speciality,
+            cohort=self.cohort
+        )
 
         MAX_PERIOD = 12
         for period in range(1, MAX_PERIOD + 1):
-            test_period.create_period("P%d" % period, cohort=cls.cohort)
+            test_period.create_period("P%d" % period, cohort=self.cohort)
 
-        cls.internship_offer = OfferFactory(cohort=cls.cohort)
+        self.internship_offer = OfferFactory(cohort=self.cohort)
 
-    def setUp(self):
         self.client.force_login(self.user)
 
     def testAccessUrl(self):
