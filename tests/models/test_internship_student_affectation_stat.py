@@ -36,12 +36,11 @@ from internship.tests.factories.speciality import SpecialtyFactory
 
 
 class TestInternshipStudentAffectationStat(TestCase):
-    @classmethod
-    def setUpTestData(cls):
-        cls.organization = OrganizationFactory()
-        cls.student = StudentFactory()
-        cls.specialty = SpecialtyFactory()
-        cls.period = PeriodFactory()
+    def setUp(self) -> None:
+        self.organization = OrganizationFactory()
+        self.student = StudentFactory()
+        self.specialty = SpecialtyFactory()
+        self.period = PeriodFactory()
 
     def test_build_without_choices(self):
         student_choices = []
