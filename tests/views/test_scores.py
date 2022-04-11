@@ -65,7 +65,9 @@ class ScoresEncodingTest(TestCase):
         self.other_period = PeriodFactory(
             name='P2',
             date_end=date.today() - relativedelta(months=1),
-            cohort=self.cohort, )
+            cohort=self.cohort,
+        )
+
         self.xlsfile = SimpleUploadedFile(
             name='upload.xls',
             content=str.encode('test'),
