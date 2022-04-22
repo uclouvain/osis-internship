@@ -1036,7 +1036,7 @@ msgid ""
 "This action will extend all selected master's user account validity by 1 "
 "year."
 msgstr ""
-"Cette action prolongera d'1 année les comptes utilisateurs des maîtres de stages sélectionnés."
+"Cette action prolongera d'une année les comptes utilisateurs des maîtres de stages sélectionnés."
 
 msgid "This action will send a summary by email to the following students:"
 msgstr "Cette action enverra un email récapitulatif aux étudiants suivants:"

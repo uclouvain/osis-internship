@@ -14,7 +14,7 @@ def retrieve_master_user_account_expiration_date(apps, schema_editor):
     for master in InternshipMaster.objects.exclude(
             user_account_status=UserAccountStatus.INACTIVE.name,
             user_account_expiration_date__isnull=True
-    ):
+    ).select_related('person'):
         response = requests.get(
             headers={'Content-Type': 'application/json'},
             url=settings.LDAP_ACCOUNT_DESCRIPTION_URL + str(master.person.uuid)

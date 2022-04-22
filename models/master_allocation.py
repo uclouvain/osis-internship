@@ -103,14 +103,14 @@ def search(cohort, specialty, hospital, account=None, expiry=None, role=Role.MAS
     if expiry:
         if expiry == UserAccountExpiry.EXPIRED.value:
             masters = masters.filter(master__user_account_expiration_date__lte=datetime.now())
-        if expiry == UserAccountExpiry.LT_3MONTHS.value:
+        elif expiry == UserAccountExpiry.LT_3MONTHS.value:
             masters = masters.filter(
                 master__user_account_expiration_date__range=(
                     datetime.now() + timedelta(days=1),
                     datetime.now() + timedelta(days=31)
                 )
             )
-        if expiry == UserAccountExpiry.GT_3MONTHS.value:
+        elif expiry == UserAccountExpiry.GT_3MONTHS.value:
             masters = masters.filter(master__user_account_expiration_date__gte=datetime.now() + timedelta(days=31))
 
     if specialty or hospital:
