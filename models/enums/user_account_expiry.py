@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2019 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -23,19 +23,16 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import factory
-from factory.fuzzy import FuzzyChoice
-
-from base.tests.factories.person import PersonFactory
-from internship.models.enums.civility import Civility
-from internship.models.enums.user_account_status import UserAccountStatus
+from base.models.utils.utils import ChoiceEnum
 
 
-class MasterFactory(factory.django.DjangoModelFactory):
-    class Meta:
-        model = 'internship.InternshipMaster'
+class UserAccountExpiry(ChoiceEnum):
+    EXPIRED = "EXPIRED"
+    GT_3MONTHS = ">3MONTHS"
+    LT_3MONTHS = "<3MONTHS"
 
-    person = factory.SubFactory(PersonFactory)
-    civility = FuzzyChoice({Civility.DOCTOR.value, Civility.PROFESSOR.value})
-    user_account_status = UserAccountStatus.INACTIVE.name
-    user_account_expiration_date = None
+
+class UserAccountExpiryLevel(ChoiceEnum):
+    OK = "ok"
+    WARNING = "warning"
+    DANGER = "danger"

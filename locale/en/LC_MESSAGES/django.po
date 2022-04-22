@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-02-16 14:31+0100\n"
+"POT-Creation-Date: 2022-04-22 11:20+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,6 +22,15 @@ msgid ""
 "                                %(start_index)s to %(end_index)s of "
 "%(total_counts)s students\n"
 "                            "
+msgstr ""
+
+msgid "< 1 month"
+msgstr ""
+
+msgid "< 3 months"
+msgstr ""
+
+msgid "> 3 months"
 msgstr ""
 
 msgid "A hospital with the same reference already exists in this cohort"
@@ -50,6 +59,9 @@ msgid "Accept"
 msgstr ""
 
 msgid "Account"
+msgstr ""
+
+msgid "Account expiry"
 msgstr ""
 
 msgid "Acronym"
@@ -137,6 +149,9 @@ msgid "An error occured during score update"
 msgstr ""
 
 msgid "An error occured while creating a user account for {}"
+msgstr ""
+
+msgid "An error occured while extending the user account validity for {}"
 msgstr ""
 
 msgid "An error occured while sending reminders"
@@ -361,6 +376,12 @@ msgstr ""
 msgid "Evolution score will be exported"
 msgstr ""
 
+msgid "Expired"
+msgstr ""
+
+msgid "Expiry"
+msgstr ""
+
 msgid "Export"
 msgstr ""
 
@@ -374,6 +395,12 @@ msgid "Export scores"
 msgstr ""
 
 msgid "Export to XLSX"
+msgstr ""
+
+msgid "Extend"
+msgstr ""
+
+msgid "Extend user account validity"
 msgstr ""
 
 msgid "Female"
@@ -965,6 +992,11 @@ msgid ""
 "original computed value."
 msgstr ""
 
+msgid ""
+"This action will extend all selected master's user account validity by 1 "
+"year."
+msgstr ""
+
 msgid "This action will send a summary by email to the following students:"
 msgstr ""
 
@@ -1012,7 +1044,13 @@ msgstr ""
 msgid "User account for {} is already active, nothing done"
 msgstr ""
 
+msgid "User account for {} is inactive, nothing done"
+msgstr ""
+
 msgid "User account is active"
+msgstr ""
+
+msgid "User account validity extended for {}"
 msgstr ""
 
 msgid "Website"
@@ -1049,4 +1087,7 @@ msgid "student with registration id '%(reg_id)s' not found"
 msgstr ""
 
 msgid "the allocation(s) for"
+msgstr ""
+
+msgid "{} day(s)"
 msgstr ""

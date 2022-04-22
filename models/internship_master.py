@@ -40,7 +40,7 @@ class InternshipMasterAdmin(SerializableModelAdmin):
             None, {
                 'fields': (
                     'person', 'civility', 'email_private', 'email_additional',
-                    'start_activities', 'user_account_status'
+                    'start_activities', 'user_account_status', 'user_account_expiration_date',
                 )
             }
         ),
@@ -61,6 +61,8 @@ class InternshipMaster(SerializableModel):
         choices=UserAccountStatus.choices(),
         default=UserAccountStatus.INACTIVE.name,
     )
+
+    user_account_expiration_date = models.DateField(blank=True, null=True)
 
     def civility_acronym(self):
         if self.civility:

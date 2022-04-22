@@ -20,11 +20,6 @@
     animation: spin 2s linear infinite;
 }
 
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
 .has-error + .tooltip.top > .tooltip-inner{
     background-color: #a94442;
 }
@@ -162,4 +157,20 @@ input:checked + .slider:before {
     padding: 20px;
     border: 1px solid lightgray;
     border-radius: 5px;
+}
+
+.expiry-danger {
+    background-color: #a94442 !important;
+}
+
+.expiry-warning {
+    background-color: #f0ad4e !important;
+}
+
+.expiry-ok {
+    background-color: #5cb85c !important;
+}
+
+li.disabled a {
+    pointer-events: none;
 }

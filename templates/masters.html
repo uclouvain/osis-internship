@@ -1,6 +1,7 @@
 {% extends "layout.html" %}
 {% load static %}
 {% load pagination %}
+{% load user_account %}
 {% load i18n bootstrap3 %}
 
 {% comment "License" %}
@@ -27,6 +28,10 @@
     * see http://www.gnu.org/licenses/.
 {% endcomment %}
 
+{% block style %}
+    <link rel="stylesheet" href="{% static 'css/internship.css' %}">
+{% endblock %}
+
 {% block breadcrumb %}
     <li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
     <li><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
@@ -40,7 +45,7 @@
 
     <form action="{%url 'internships_masters' cohort_id=current_cohort.id %}" method="get" class="">
         <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-2">
                 <div class="form-group">
                     <label for="filter_hospital">{% trans 'Hospital' %}</label>
                     <select name="hospital" id="filter_hospital" class="form-control">
@@ -86,10 +91,21 @@
                 <div class="form-group">
                     <label for="filter_account">{% trans 'Account' %}</label>
                     <select name="account" id="filter_account" class="form-control">
-                        <option value="" {% if filter_role == "" %}selected{% endif %}>--</option>
+                        <option value="" {% if filter_account == "" %}selected{% endif %}>--</option>
                         <option value="ACTIVE" {% if filter_account == "ACTIVE" %}selected{% endif %}>{% trans 'Active' %}</option>
                         <option value="PENDING" {% if filter_account == "PENDING" %}selected{% endif %}>{% trans 'Pending' %}</option>
                         <option value="INACTIVE" {% if filter_account == "INACTIVE" %}selected{% endif %}>{% trans 'Inactive' %}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-1">
+                <div class="form-group">
+                    <label for="filter_expiry">{% trans 'Expiry' %}</label>
+                    <select name="expiry" id="filter_expiry" class="form-control">
+                        <option value="" {% if filter_expiry == "" %}selected{% endif %}>--</option>
+                        <option value="<3MONTHS" {% if filter_expiry == "<3MONTHS" %}selected{% endif %}>{% trans '< 3 months' %}</option>
+                        <option value=">3MONTHS" {% if filter_expiry == ">3MONTHS" %}selected{% endif %}>{% trans '> 3 months' %}</option>
+                        <option value="EXPIRED" {% if filter_expiry == "EXPIRED" %}selected{% endif %}>{% trans 'Expired' %}</option>
                     </select>
                 </div>
             </div>
@@ -125,7 +141,14 @@
                         </a>
                     </li>
                     <li role="separator" class="divider"></li>
-                    <li id="li_transfer_to_cohort">
+                    <li id="li_extend_validity" class="disabled">
+                        <a href="#" data-toggle="modal" data-target="#extend_validity" id="btn_extend_validity">
+                            <span class="glyphicon glyphicon-resize-horizontal" aria-hidden="true"></span>
+                            {% trans 'Extend user account validity' %}
+                        </a>
+                    </li>
+                    <li role="separator" class="divider"></li>
+                    <li id="li_transfer_to_cohort" class="disabled">
                         <a href="#" data-toggle="modal" data-target="#transfer_cohort" id="btn_transfer">
                             <span class="glyphicon glyphicon-transfer" aria-hidden="true"></span>
                             {% trans 'Transfer to cohort' %}
@@ -151,6 +174,7 @@
                     <th class="no-sort">{% trans 'Hospital' %}</th>
                     <th class="no-sort">{% trans 'Role' %}</th>
                     <th class="no-sort text-center">{% trans 'User account' %}</th>
+                    <th class="no-sort text-center">{% trans 'Account expiry' %}</th>
                 </tr>
             </thead>
             <tbody>
@@ -183,7 +207,7 @@
                             {% else %}
                                 <td>-</td>
                             {% endif %}
-                            <td>{{ allocation.role.0 }}</td>
+                            <td title="{{ allocation.role }}">{{ allocation.role.0 }}</td>
                             {% if allocation.master.user_account_status == account_status.ACTIVE.value %}
                                 <td class="text-center">
                                     <span title="{% trans 'User account is active' %}" class="text-success glyphicon glyphicon-ok-circle"></span>
@@ -197,10 +221,13 @@
                                     <span title="{% trans 'No user account created' %}" class="text-danger glyphicon glyphicon-remove-circle"></span>
                                 </td>
                             {% endif %}
+                            <td class="text-center">
+                                {% user_account_expiry allocation.master.user_account_expiration_date %}
+                            </td>
                         </tr>
                     {% empty %}
                         <tr>
-                            <td colspan="8">
+                            <td colspan="9">
                                 {% trans 'No data corresponds to the filters above. Make a choice, please.' %}
                             </td>
                         </tr>
@@ -212,7 +239,7 @@
                     <td colspan="6">
                         {% bootstrap_pagination allocations extra=request.GET.urlencode %}
                     </td>
-                    <td colspan="3">
+                    <td colspan="4">
                         {% pagination_size_select %}
                     </td>
                 </tr>
@@ -222,6 +249,7 @@
 
     {% include 'fragment/create_master_account_modal.html' %}
     {% include 'fragment/transfer_master_cohort_modal.html' %}
+    {% include 'fragment/extend_master_user_account_validity.html' %}
 
 {% endblock %}
 
@@ -238,7 +266,7 @@
     })
 
     $("#actions").click(() => {
-        $("#li_create_account").toggleClass(
+        $("#li_create_account, #li_extend_validity, #li_transfer_to_cohort").toggleClass(
             'disabled',
             $("input[name='selected_master']:checked").length<1
         );
@@ -264,14 +292,24 @@
     }
 
     function transferAllocationCohort(){
-        const selectedMasters = document.querySelectorAll("input[name='selected_master']:checked");
         const transferForm = document.querySelector('#transfer_cohort_form');
+        appendSelectedMasterInputTo(transferForm);
+        transferForm.submit();
+    }
+
+    function extendUserAccountValidity(){
+        const extendForm = document.querySelector('#extend_user_account_validity_form');
+        appendSelectedMasterInputTo(extendForm);
+        extendForm.submit();
+    }
+
+    function appendSelectedMasterInputTo(form) {
+        const selectedMasters = document.querySelectorAll("input[name='selected_master']:checked");
         selectedMasters.forEach((master) => {
             const input = document.createElement('input');
             Object.assign(input, {'name': 'selected_masters', 'type': 'hidden', 'value': master.defaultValue});
-            transferForm.append(input);
+            form.append(input);
         })
-        transferForm.submit();
     }
 
 </script>

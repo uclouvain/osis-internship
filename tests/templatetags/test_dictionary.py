@@ -24,14 +24,14 @@
 #
 ##############################################################################
 
-from django.test import TestCase
+from django.test import SimpleTestCase
 
 from internship.templatetags.dictionary import get_item, has_substr, to_json
 
 
-class TestDictionary(TestCase):
+class TestDictionary(SimpleTestCase):
     @classmethod
-    def setUpTestData(cls):
+    def setUp(cls):
         cls.dict = {'key': 'value'}
 
     def test_get_item_with_given_key_should_return_value(self):
