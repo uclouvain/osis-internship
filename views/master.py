@@ -24,6 +24,7 @@
 #
 ##############################################################################
 import json
+from datetime import timedelta
 
 import requests
 from django import shortcuts
@@ -35,6 +36,7 @@ from django.forms import model_to_dict
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
+from django.utils.datetime_safe import datetime
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 
@@ -57,6 +59,9 @@ from internship.views.common import display_errors, get_object_list
 from osis_common.decorators.download import set_download_cookie
 from osis_common.messaging import message_config
 
+# user account is valid for 1 year
+INTERNSHIP_MASTER_USER_ACCOUNT_EXPIRY_DAYS = 365
+
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
@@ -69,10 +74,13 @@ def masters(request, cohort_id):
     filter_name = request.GET.get('name', '')
     filter_role = request.GET.get('role', Role.MASTER.name)
     filter_account = request.GET.get('account', '')
+    filter_expiry = request.GET.get('expiry', '')
 
     allocations = master_allocation.search(
-        current_cohort, filter_specialty, filter_hospital, role=filter_role, account=filter_account
+        current_cohort, filter_specialty, filter_hospital,
+        role=filter_role, account=filter_account, expiry=filter_expiry
     )
+
     if filter_name:
         allocations = allocations.filter(master__person__last_name__unaccent__icontains=filter_name) | \
                       allocations.filter(master__person__first_name__unaccent__icontains=filter_name)
@@ -80,6 +88,7 @@ def masters(request, cohort_id):
     hospitals = organization.find_by_cohort(current_cohort)
     allocations = get_object_list(request, allocations)
     account_status = user_account_status.UserAccountStatus.__members__
+
     return render(request, "masters.html", locals())
 
 
@@ -89,10 +98,6 @@ def create_user_accounts(request, cohort_id):
     selected_masters = InternshipMaster.objects.filter(
         pk__in=request.POST.getlist('selected_master')
     ).select_related('person')
-
-    filter_specialty = int(request.GET.get('specialty', 0))
-    filter_hospital = int(request.GET.get('hospital', 0))
-    filter_name = request.GET.get('name', '')
 
     for master in selected_masters:
         if master.user_account_status == UserAccountStatus.ACTIVE.name:
@@ -142,6 +147,9 @@ def _display_creation_error_msg(master, request):
 def _update_user_account_status(master, request):
     if master.user_account_status == UserAccountStatus.INACTIVE.name:
         master.user_account_status = UserAccountStatus.PENDING.name
+        master.user_account_expiration_date = datetime.today() + timedelta(
+            days=INTERNSHIP_MASTER_USER_ACCOUNT_EXPIRY_DAYS
+        )
         master.save()
         messages.add_message(
             request, messages.SUCCESS,
@@ -167,6 +175,14 @@ def _show_user_account_active_msg(request, master):
     )
 
 
+def _show_user_account_inactive_msg(request, master):
+    messages.add_message(
+        request, messages.WARNING,
+        _('User account for {} is inactive, nothing done').format(master.person),
+        "alert-warning"
+    )
+
+
 def _create_ldap_user_account(master):
     response = requests.post(
         headers={'Content-Type': 'application/json'},
@@ -180,6 +196,40 @@ def _create_ldap_user_account(master):
         url=settings.LDAP_ACCOUNT_CREATION_URL
     )
     return response
+
+
+def _extend_ldap_account_validity(request, master):
+    new_validity = datetime.today() + timedelta(days=INTERNSHIP_MASTER_USER_ACCOUNT_EXPIRY_DAYS)
+    response = requests.post(
+        headers={'Content-Type': 'application/json'},
+        data=json.dumps({
+            "id": str(master.person.uuid),
+            "validite": new_validity.strftime('%Y%m%d')
+        }),
+        url=settings.LDAP_ACCOUNT_MODIFICATION_URL
+    )
+    if response.status_code == HttpResponse.status_code and response.json()['status'] != 'error':
+        master.user_account_expiration_date = datetime.today() + timedelta(
+            days=INTERNSHIP_MASTER_USER_ACCOUNT_EXPIRY_DAYS
+        )
+        master.save()
+        _display_extension_success_msg(request, master)
+    else:
+        _display_extension_error_msg(request, master)
+
+
+def _display_extension_success_msg(request, master):
+    messages.add_message(
+        request, messages.SUCCESS,
+        _('User account validity extended for {}').format(master.person),
+    )
+
+
+def _display_extension_error_msg(request, master):
+    messages.add_message(
+        request, messages.ERROR,
+        _('An error occured while extending the user account validity for {}').format(master.person),
+    )
 
 
 def _send_creation_account_email(master, connected_user=None):
@@ -205,6 +255,27 @@ def _send_creation_account_email(master, connected_user=None):
             )
         ],
         connected_user=connected_user
+    )
+
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def extend_accounts_validity(request, cohort_id):
+    selected_masters = InternshipMaster.objects.filter(
+        pk__in=request.POST.getlist('selected_masters')
+    ).select_related('person')
+
+    for master in selected_masters:
+        if master.user_account_status == UserAccountStatus.ACTIVE.name:
+            _extend_ldap_account_validity(request, master)
+        else:
+            _show_user_account_inactive_msg(request, master)
+
+    return redirect(
+        "{url}?{query_params}".format(
+            url=reverse('internships_masters',  kwargs={'cohort_id': cohort_id}),
+            query_params=_get_request_filters_params(request)
+        )
     )
 
 

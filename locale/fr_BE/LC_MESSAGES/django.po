@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-02-16 14:31+0100\n"
+"POT-Creation-Date: 2022-04-22 11:20+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -27,6 +27,15 @@ msgstr ""
 "                                %(start_index)s à %(end_index)s sur "
 "%(total_counts)s étudiants\n"
 "                            "
+
+msgid "< 1 month"
+msgstr "< 1 mois"
+
+msgid "< 3 months"
+msgstr "< 3 mois"
+
+msgid "> 3 months"
+msgstr "> 3 mois"
 
 msgid "A hospital with the same reference already exists in this cohort"
 msgstr "Un hôpital avec la même référence existe déjà dans cette cohorte"
@@ -62,6 +71,9 @@ msgstr "Accepter"
 
 msgid "Account"
 msgstr "Compte"
+
+msgid "Account expiry"
+msgstr "Expiration"
 
 msgid "Acronym"
 msgstr "Acronyme"
@@ -152,6 +164,10 @@ msgstr "Une erreur est survenue lors de l'édition de la note"
 msgid "An error occured while creating a user account for {}"
 msgstr ""
 "Une erreur s'est produite lors de la création du compte utilisateur pour {}"
+
+msgid "An error occured while extending the user account validity for {}"
+msgstr ""
+"Une erreur s'est produite lors de la prolongation du compte utilisateur pour {}"
 
 msgid "An error occured while sending reminders"
 msgstr "Une erreur s'est produite lors de l'envoi des rappels"
@@ -380,6 +396,12 @@ msgstr "Le score d'évolution <b>ne</b> sera <b>pas</b> exporté"
 msgid "Evolution score will be exported"
 msgstr "Le score d'évolution sera exporté"
 
+msgid "Expired"
+msgstr "Expiré"
+
+msgid "Expiry"
+msgstr "Expiration"
+
 msgid "Export"
 msgstr "Exporter"
 
@@ -394,6 +416,12 @@ msgstr "Exporter les notes"
 
 msgid "Export to XLSX"
 msgstr "Exporter vers XLSX"
+
+msgid "Extend"
+msgstr "Prolonger"
+
+msgid "Extend user account validity"
+msgstr "Prolonger la validité d'un compte utilisateur"
 
 msgid "Female"
 msgstr "Femme"
@@ -1004,6 +1032,12 @@ msgstr ""
 "Cette action supprimera la note précédemment modifiée qui sera réinitialisée "
 "à la valeur originalement calculée."
 
+msgid ""
+"This action will extend all selected master's user account validity by 1 "
+"year."
+msgstr ""
+"Cette action prolongera d'une année les comptes utilisateurs des maîtres de stages sélectionnés."
+
 msgid "This action will send a summary by email to the following students:"
 msgstr "Cette action enverra un email récapitulatif aux étudiants suivants:"
 
@@ -1059,8 +1093,14 @@ msgstr ""
 msgid "User account for {} is already active, nothing done"
 msgstr "Le compte utilisateur de {} est déjà actif, aucune action réalisée"
 
+msgid "User account for {} is inactive, nothing done"
+msgstr "Le compte utilisateur de {} est inactif, aucune action réalisée"
+
 msgid "User account is active"
 msgstr "Le compte utilisateur est actif"
+
+msgid "User account validity extended for {}"
+msgstr "Validité du compte utilisateur prolongée pour {}"
 
 msgid "Website"
 msgstr "Site web"
@@ -1101,3 +1141,6 @@ msgstr "étudiant avec NOMA '%(reg_id)s' introuvable"
 
 msgid "the allocation(s) for"
 msgstr "les affectations pour"
+
+msgid "{} day(s)"
+msgstr "{} jour(s)"
