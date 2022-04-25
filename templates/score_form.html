@@ -47,7 +47,9 @@
       <div class="panel-heading">
           {% trans 'Received internship grades' %}
           <span class="pull-right">
-              <strong>{% trans 'Internship master' %}</strong>: {{ master }}
+              <strong>{% trans 'Internship master' %} </strong>: {{ master }}
+              <strong>|</strong>
+              <strong>{% trans 'Validated by' %} </strong>: {{ score.validated_by }}
           </span>
       </div>
         <div class="panel-body">

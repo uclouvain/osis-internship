@@ -87,6 +87,8 @@ class InternshipScore(Model):
     objectives = JSONField(default=dict, blank=True)
 
     validated = models.BooleanField(default=False)
+    validated_by = models.ForeignKey('internship.InternshipMaster', blank=True, null=True, on_delete=models.CASCADE)
+
     student_presence = models.BooleanField(null=True)
 
     def __str__(self):
