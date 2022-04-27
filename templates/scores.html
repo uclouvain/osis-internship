@@ -241,10 +241,18 @@
                             {% endif %}
                             </td>
                             {% with student.specialties|get_item:period.name as specialty %}
-                                <td title="{{ specialty.name }}">{{ specialty.acronym }}</td>
+                                <td title="{{ specialty.name  | default_if_none:_('No specialty') }}">
+                                    {{ specialty.acronym | default_if_none:'-' }}
+                                    </td>
                             {% endwith %}
                             {% with student.organizations|get_item:period.name as organization %}
-                                <td title="{{ organization.name }}">{{ organization.reference }}</td>
+                                <td title="{{ organization.name | default_if_none:_('No organization') }}">
+                                {% if organization.name %}
+                                    {{ organization.reference }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                                </td>
                             {% endwith %}
                             <td>
                                 <label class="switch">
