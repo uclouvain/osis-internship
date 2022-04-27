@@ -91,18 +91,18 @@ class ScoresEncodingTest(TestCase):
         for student_info in self.students:
             student = StudentFactory(person=student_info.person)
             for index, internship in enumerate(internships):
-                StudentAffectationStatFactory(
+                affectation = StudentAffectationStatFactory(
                     student=student,
                     internship=internship,
                     speciality=internship.speciality if internship.speciality else SpecialtyFactory(),
                     period=periods[index]
                 )
-            ScoreFactory(
-                student_affectation__student=student,
-                student_affectation__period=self.period,
-                APD_1='A',
-                validated=True
-            )
+                if affectation.period.name == 'P1':
+                    ScoreFactory(
+                        student_affectation=affectation,
+                        APD_1='A',
+                        validated=True
+                    )
         for apd in range(1, APD_NUMBER):
             ScoreMappingFactory(
                 period=self.period,
@@ -504,7 +504,7 @@ class ScoresEncodingTest(TestCase):
         filtered_object_list = [obj for obj in response.context['students'].object_list if obj == student_info]
         numeric_scores = filtered_object_list[0].numeric_scores
         evolution_score = filtered_object_list[0].evolution_score
-        self.assertEqual(numeric_scores[self.period.name], {'excused': new_score})
+        self.assertEqual(numeric_scores[self.period.name], {'excused': new_score, 'reason': None})
         self.assertEqual(evolution_score, 0)
 
     @mock.patch('internship.utils.importing.import_eval.import_xlsx')
