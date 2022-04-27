@@ -187,6 +187,7 @@ function saveEvolutionScore(data, cell){
         data: data,
         success: response => {
             cell.closest('tr').innerHTML = response;
+            $('[data-toggle="tooltip"]').tooltip();
         },
         error: data => {
             showErrorTooltip(cell, data);
@@ -252,6 +253,7 @@ function showErrorTooltip(cell, data) {
 }
 
 function refreshEvolutionScore(data){
+    $('[data-toggle="tooltip"]').tooltip();
     let score_element = $(`#evolution_score_${data.student}`);
     let score_info_element = $(`#evolution_score_info_${data.student}`);
     data.scores = score_element.data('scores');
@@ -260,8 +262,9 @@ function refreshEvolutionScore(data){
         method: "POST",
         data: data,
         success: response => {
-            if(response)
+            if(response) {
                 buildAndReplaceEvolutionScore(response, score_element, score_info_element)
+            }
         }
     })
 }
@@ -272,6 +275,7 @@ function buildAndReplaceEvolutionScore(response, score_element, score_info_eleme
     if (!score_element.data('edited')) {
         score_element[0].innerHTML = evolution_score;
     } else {
-        score_info_element.attr('title', response['computed_title_text'] + evolution_score);
+        score_info_element.attr('data-original-title', response['computed_title_text'] + evolution_score);
     }
+    $('[data-toggle="tooltip"]').tooltip();
 }

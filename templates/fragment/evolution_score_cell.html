@@ -9,10 +9,16 @@
         {% if student.evolution_score|is_edited %}
         <div class="score-cell-value">
             <span id="evolution_score_{{ student.registration_id }}" data-edited="true" data-scores="{{ student.periods_scores }}">
-                {{ student.evolution_score.edited }}
+                {{ student.evolution_score.edited.score }}
             </span>
-            <i id="evolution_score_info_{{ student.registration_id }}" style="font-size: 15px; top: 3px;" class="fas fa-info-circle text-info"
-               title="{% trans "Score edited. Computed score: " %}{{ student.evolution_score.computed }}">
+            <i id="evolution_score_info_{{ student.registration_id }}" data-html="true" data-toggle="tooltip" data-placement="left" title="
+                {% trans "Score edited. Computed score: " %}
+                <strong>{{ student.evolution_score.computed }}</strong>
+                <br/>
+                {% if student.evolution_score.edited.reason %}
+                    <strong>{% trans 'Reason' %}</strong> : {{ student.evolution_score.edited.reason }}
+                {% endif %}"
+                style="font-size: 15px; top: 3px;" class="fas fa-info-circle text-info">
             </i>
         </div>
         {% else %}
