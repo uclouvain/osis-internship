@@ -1110,6 +1110,9 @@ msgstr "Le compte utilisateur est actif"
 msgid "User account validity extended for {}"
 msgstr "Validité du compte utilisateur prolongée pour {}"
 
+msgid "Validated by"
+msgstr "Validé par"
+
 msgid "Website"
 msgstr "Site web"
 

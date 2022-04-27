@@ -1059,6 +1059,9 @@ msgstr ""
 msgid "User account validity extended for {}"
 msgstr ""
 
+msgid "Validated by"
+msgstr ""
+
 msgid "Website"
 msgstr ""
 
