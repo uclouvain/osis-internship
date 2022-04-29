@@ -116,14 +116,19 @@ def scores_encoding(request, cohort_id):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def score_detail_form(request, cohort_id, student_registration_id, period_id):
     cohort = Cohort.objects.get(pk=cohort_id)
-    score = InternshipScore.objects.select_related(
+    student = Student.objects.get(registration_id=student_registration_id)
+    student_affectation, created = InternshipStudentAffectationStat.objects.get_or_create(
+        student__registration_id=student_registration_id,
+        period_id=period_id,
+        defaults={'cost': 0, 'student': student}
+    )
+    score, created = InternshipScore.objects.select_related(
         'student_affectation__student',
         'student_affectation__period',
         'student_affectation__speciality',
         'student_affectation__organization'
-    ).get(
-        student_affectation__student__registration_id=student_registration_id,
-        student_affectation__period_id=period_id,
+    ).get_or_create(
+        student_affectation=student_affectation
     )
     master = _get_main_internship_master(score)
     apds = range(1, APD_NUMBER + 1)
@@ -131,7 +136,11 @@ def score_detail_form(request, cohort_id, student_registration_id, period_id):
     if request.POST:
         apds_data = {'APD_{}'.format(apd): request.POST.get('apd-{}'.format(apd)) for apd in apds}
         if _validate_score(request, apds_data):
-            update = InternshipScore.objects.filter(pk=score.pk).update(**apds_data)
+            update = InternshipScore.objects.filter(pk=score.pk).update(
+                **apds_data,
+                validated=True,
+                validated_by=request.user.person
+            )
             if update:
                 messages.add_message(request, messages.SUCCESS, _('Score updated successfully for {}'.format(
                     score.student_affectation

@@ -227,12 +227,10 @@
                                 class="last-completed-period"
                               {% endif %}>
                             <td style="text-align: center;">
-                            {% if student.scores|has_substr:period %}
                               <a href="{% url 'internship_edit_score' cohort_id=cohort.pk student_registration_id=student.registration_id period_id=period.pk%}" type="button" class="btn btn-xs btn-default btn-edit-score" style="display: none;"
                               id="edit-btn-{{ student.pk }}-{{ period.pk }}">
                                 <icon class="far fa-edit"></icon>
                               </a>
-                            {% endif %}
                             </td>
                             <td>
                                 {{ period }}
